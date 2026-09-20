@@ -319,6 +319,15 @@ window.addEventListener("unhandledrejection", function (e) {
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBER_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
 </script>
 <script src="js/game.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME SCRIPT LOAD ERROR'"></script>
+<script>
+/* Do not make multi-megabyte story artwork part of the critical boot path. */
+setTimeout(function(){
+  var m=document.getElementById("bootMsg");
+  var s=document.createElement("script"); s.src="js/late-assets.js";
+  s.onerror=function(){ console.warn("optional late artwork failed to load"); };
+  document.body.appendChild(s);
+},2500);
+</script>
 
 <!-- EMBERFELL_HOME_TOWN_BGM -->
 <audio id="emberfellHomeTownBgm" loop preload="auto" style="display:none" aria-hidden="true">
