@@ -269,6 +269,8 @@
     } catch (e) {}
   }
   window.addEventListener("error", function (e) {
+    /* Resource/image errors have no useful JS message and are non-fatal now. */
+    if (!e || !e.message) { try { console.warn("EMBERFELL resource error", e && e.target); } catch (_) {} return; }
     show("EMBERFELL: SCRIPT ERROR",
          (e.message || "error") + "\n  " + (e.filename || "?") +
          " line " + e.lineno + ":" + e.colno +
@@ -301,8 +303,9 @@
 
 <script>
 window.addEventListener("error", function (e) {
-  var m = (e && (e.message || "")) + "";
-  var d = (e && e.error && e.error.stack) ? ("\n" + e.error.stack) : "";
+  if (!e || !e.message) return;
+  var m = (e.message || "") + "";
+  var d = (e.error && e.error.stack) ? ("\n" + e.error.stack) : "";
   window.__boot = (window.__boot || "") + "\nERROR: " + m + d;
   var el = document.getElementById("bootMsg") || document.getElementById("bootmsg");
   if (el) el.textContent = m + d;
