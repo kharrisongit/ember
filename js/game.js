@@ -2203,7 +2203,9 @@ function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
   }
 }
 async function loadAtlasPages() {
-  // Limit simultaneous decodes to avoid a large startup memory spike.
+  // Critical boot should only decode the packed atlas pages. Optional/story
+  // sheets are deferred until after the game is alive; one bad auxiliary
+  // image must not blank the entire game.
   let next = 0;
   async function worker() {
     while (next < ATLAS_PAGES.length) {
@@ -2216,7 +2218,7 @@ async function loadAtlasPages() {
     }
   }
   await Promise.all([worker(), worker(), worker()]);
-  if (knightStoryImg.decode) await knightStoryImg.decode();
+  /* Auxiliary/story art is non-critical during boot. */
   /* Register patches deterministically after every original page. */
   for (const [x, y, w, h, src] of ATLAS_PATCHES) {
     const img = new Image();
@@ -2225,10 +2227,18 @@ async function loadAtlasPages() {
     });
     registerAtlasPage({ img, x, y, w, h });
   }
-  await prepareGreenScene();
-  await loadDesertNpcAssets();
-  await loadDockOriginalAssets();
-  await loadRoyalAssets();
+  // Defer auxiliary decodes so a missing/corrupt optional sheet cannot fail boot.
+  setTimeout(async () => {
+    for (const job of [
+      () => knightStoryImg.decode ? knightStoryImg.decode() : Promise.resolve(),
+      () => prepareGreenScene(),
+      () => loadDesertNpcAssets(),
+      () => loadDockOriginalAssets(),
+      () => loadRoyalAssets()
+    ]) {
+      try { await job(); } catch (e) { console.warn("optional atlas asset failed", e); }
+    }
+  }, 0);
 }
 
 
@@ -15350,7 +15360,13 @@ atlasImg.onload = () => {
   }, 20000);
 };
 atlasImg.onerror = () => { document.body.innerHTML = "<p style='color:#fff;padding:20px'>atlas failed to load</p>"; };
-loadAtlasPages().then(() => atlasImg.onload()).catch(() => atlasImg.onerror());
+loadAtlasPages().then(() => atlasImg.onload()).catch((e) => {
+  try {
+    window.__boot = (window.__boot || "") + "\\nATLAS LOAD FAILED: " + (e && (e.stack || e.message || e));
+    const m = document.getElementById("bootMsg"); if (m) m.textContent = "ATLAS ERROR: " + (e && (e.message || e));
+  } catch (_) {}
+  atlasImg.onerror();
+});
 
 window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_GZ, applyWorld, W, SPR, DEFS, NAMES, P, loadMap, buildPatch, fitZoom, overviewZoom,
                get NAMES2(){return NAMES;}, get W2(){return W;}, movePlayer, canStand,
