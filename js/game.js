@@ -1466,8 +1466,8 @@ function kingDragonSprite(f) {
   const st = (f.st === 'swing' || f.st === 'wind') ? 'atk' : 'fly';
   return 'kdnew_' + st + '_' + d;
 }
-// Layout edits use stable map-local identities and absolute saved positions.
-const actorLayouts = (() => { try { return JSON.parse(localStorage.getItem('emberfell.actor-layout.v1')||'{}'); } catch(e) { return {}; } })();
+// DEV layout edits are session-only. COPY exports them; RESET/reload discards them.
+const actorLayouts = {};
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
   if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
@@ -1541,11 +1541,7 @@ function moveEditorActor(o,x,y,save=false) {
     o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;
     for(const k of ['talkX','talkY','patrol','sy'])o[k]=info.source[k];
   }else shiftActorData(MD,o,x,y,true);
-  if(save){
-    (actorLayouts[MAPID] ||= {})[info.key]={x,y};
-    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}
-    catch(e){toast('Layout moved, but device storage is full. Use COPY to keep the changes.');}
-  }
+  if(save) (actorLayouts[MAPID] ||= {})[info.key]={x,y};
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
@@ -10510,6 +10506,7 @@ tap(document.getElementById("bReset"), () => {
     return;
   }
   resetArmed = false;
+  delete actorLayouts[MAPID];
   setBuild(false); setPaint(false);
   editing = false; bEdit.classList.remove("on"); editEl.style.display = "none";
   loadMap(MAPID, true);
@@ -10864,7 +10861,6 @@ function deleteSelected() {
   if(selected.editableWall){
     const key=editorActorInfo(selected).key;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[key]={x:selected.x,y:selected.y,deleted:true};
-    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}catch(e){toast('Use COPY to keep this wall deletion.');}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(editorActorInfo(selected)){toast("This actor can be moved. Keep its story identity intact.");return;}
