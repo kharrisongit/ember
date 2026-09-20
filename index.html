@@ -257,7 +257,7 @@
   var shown = false;
   function show(title, msg) {
     if (shown) return; shown = true;
-    if (!window.__bootBanner) return;
+    /* boot recovery: always surface startup failures */
     try {
       var d = document.createElement("div");
       d.setAttribute("style",
@@ -304,7 +304,7 @@ window.addEventListener("error", function (e) {
   var m = (e && (e.message || "")) + "";
   var d = (e && e.error && e.error.stack) ? ("\n" + e.error.stack) : "";
   window.__boot = (window.__boot || "") + "\nERROR: " + m + d;
-  var el = document.getElementById("bootmsg");
+  var el = document.getElementById("bootMsg") || document.getElementById("bootmsg");
   if (el) el.textContent = m + d;
 });
 window.addEventListener("unhandledrejection", function (e) {
@@ -318,7 +318,9 @@ window.addEventListener("unhandledrejection", function (e) {
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBER_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
 </script>
-<script src="js/game.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME SCRIPT LOAD ERROR'"></script>
+<script src="js/game.js"
+ onload="setTimeout(function(){var m=document.getElementById('bootMsg');if(m&&m.textContent==='starting game code')m.textContent='GAME FILE LOADED — CODE DID NOT START';},1500)"
+ onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME SCRIPT LOAD ERROR'"></script>
 <script>
 /* Do not make multi-megabyte story artwork part of the critical boot path. */
 setTimeout(function(){
