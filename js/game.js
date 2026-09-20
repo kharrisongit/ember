@@ -2255,8 +2255,11 @@ function resize() {
   cv.style.width = VW + "px"; cv.style.height = VH + "px";
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.imageSmoothingEnabled = false;
-  if (!cameraOwnsView() && !camFree && mode === "play") { cam.z = playZoom(); clampCam(); }
-  if (hatchCamera) hatchCamera.goal = null; // Reframe only for a real viewport change.
+  /* resize() can run from ResizeObserver during early boot, before the later
+     cinematic camera bindings have initialized. Avoid their TDZ here. */
+  const cinematicReady = (typeof window.__emberRuntimeReady !== "undefined" && window.__emberRuntimeReady);
+  if ((!cinematicReady || !cameraOwnsView()) && !camFree && mode === "play") { cam.z = playZoom(); clampCam(); }
+  if (cinematicReady && hatchCamera) hatchCamera.goal = null; // Reframe only for a real viewport change.
   mapDirty = true;
 }
 function auditPlacements() {
@@ -5495,6 +5498,7 @@ let hatchScene = null;
 let hatchExit = false;
 let hatchCamera = null;
 let deflectCamera = null;
+window.__emberRuntimeReady = true;
 function cameraOwnsView() { return !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
 function stepDeflectCamera(dt) {
   const c = deflectCamera;
