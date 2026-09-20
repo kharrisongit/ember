@@ -2687,6 +2687,27 @@ function renderChunk(cx, cy) {
     const sp = SPR[MD.roomArt || "witch_room"];
     g.fillStyle = MD.bg; g.fillRect(0, 0, CHUNK, CHUNK);
     drawGameImage(g, atlasImg, sp[0], sp[1], sp[2], sp[3], -cx * CHUNK, -cy * CHUNK, sp[2], sp[3]);
+    // House furnishings originate in the baked room image. Once exposed as
+    // movable crops, erase their source rectangles from the cached background
+    // and let drawWorld render those crops as independent layers.
+    if (MD.roomActors && MD.roomActors.some(a => a.movableRoomCrop)) {
+      for (const a of MD.roomActors) {
+        if (!a.movableRoomCrop || !a.roomCrop) continue;
+        const [rx,ry,rw,rh]=a.roomCrop;
+        const ix=Math.max(rx,cx*CHUNK), iy=Math.max(ry,cy*CHUNK);
+        const ax=Math.min(rx+rw,(cx+1)*CHUNK), ay=Math.min(ry+rh,(cy+1)*CHUNK);
+        if(ax<=ix||ay<=iy)continue;
+        // Reconstruct a neutral floor patch from nearby floor pixels instead
+        // of leaving the original furniture painted underneath.
+        const sx=Math.max(0,Math.min(sp[2]-1,rx-2));
+        const sy=Math.max(0,Math.min(sp[3]-1,ry+rh+2));
+        g.save();
+        g.beginPath();g.rect(ix-cx*CHUNK,iy-cy*CHUNK,ax-ix,ay-iy);g.clip();
+        for(let yy=iy;yy<ay;yy+=8)for(let xx=ix;xx<ax;xx+=8)
+          drawGameImage(g,atlasImg,sp[0]+sx,sp[1]+sy,1,1,xx-cx*CHUNK,yy-cy*CHUNK,8,8);
+        g.restore();
+      }
+    }
     return cv;
   }
   const tx0 = (cx * CHUNK) / TS, ty0 = (cy * CHUNK) / TS, n = CHUNK / TS;
