@@ -4467,40 +4467,43 @@ const BACKDROP = /^(sw_gnd|sw_dirt|mtn_3_|rc_walls|rc_floor|sw_wall)/;
 const MOUNTAIN = /^(mtn_|mts_|mtv_|vmt_|mtd_|mtw_|mte_)/;
 function pickObject(wx, wy) {
   const actor=pickEditorActor(wx,wy);if(actor)return actor;
-  let best = null, bestArea = 1e9;
-  const grabbable = nm => nm && !BACKDROP.test(nm);
-  const interiorObject = o => interiorMoveMode() && o && !o.feat;
+  let best = null, bestArea = 1e9, bestLayer = -1;
   let fab = null, fabArea = 1e9;
+  const inside = interiorMoveMode();
+  const grabbable = nm => nm && !BACKDROP.test(nm);
+  // In interiors, prefer the visually topmost/smallest prop under the finger.
+  // Rugs/floors remain selectable as a fallback when no furniture/prop overlaps.
+  const consider=(hit,sp,nm,layer)=>{
+    const area=sp[2]*sp[3];
+    const fabric=FABRIC.test(nm||"");
+    if(fabric){ if(area<fabArea){fabArea=area;fab=hit;} return; }
+    if(inside){
+      if(layer>bestLayer || (layer===bestLayer && area<bestArea)){bestLayer=layer;bestArea=area;best=hit;}
+    }else if(area<bestArea){bestArea=area;best=hit;}
+  };
+  let layer=0;
   for (const o of objs.concat(fobjs)) {
-    if (deleted.has(o.id) || hidden.has(o.id)) continue;
-    const s = SPR[NAMES[o.s]];
-    if (!s) continue;      /* nothing there to stand in the way of */
-    if (!grabbable(NAMES[o.s]) && !interiorObject(o)) continue;
-    const x0 = o.x + (o.wx || 0) - s[2] / 2, y0 = o.y + (o.wy || 0) - s[3];
-    if (wx < x0 || wx > x0 + s[2] || wy < y0 || wy > y0 + s[3]) continue;
-    const a = s[2] * s[3];
-    if (FABRIC.test(NAMES[o.s])) {
-      if (a < fabArea) { fabArea = a; fab = o; }
-    } else if (a < bestArea) { bestArea = a; best = o; }
+    if (deleted.has(o.id) || hidden.has(o.id)) { layer++; continue; }
+    const nm=NAMES[o.s], s=SPR[nm];
+    if (!s) { layer++; continue; }
+    if (!inside && !grabbable(nm)) { layer++; continue; }
+    const x0=o.x+(o.wx||0)-s[2]/2, y0=o.y+(o.wy||0)-s[3];
+    if(wx>=x0&&wx<=x0+s[2]&&wy>=y0&&wy<=y0+s[3]) consider(o,s,nm,layer);
+    layer++;
   }
-  const layers = [["s", scat], ["a", sanm]];
-  for (const [tag, arr] of layers)
-    for (let i = 0; i < arr.length; i += 3) {
-      const key = tag + i;
-      if (decorGone.has(key)) continue;
-      const sp = SPR[NAMES[arr[i]]]; if (!sp) continue;
-      if (MOUNTAIN.test(NAMES[arr[i]])) continue;
-      if (!grabbable(NAMES[arr[i]]) && !interiorMoveMode()) continue;
-      const x0 = arr[i + 1] - sp[2] / 2, y0 = arr[i + 2] - sp[3];
-      if (wx < x0 || wx > x0 + sp[2] || wy < y0 || wy > y0 + sp[3]) continue;
-      const a = /^(shc_|shcap_|cliff_|sett_|ifloor_|iwall_|cvf|cvrub_)/.test(NAMES[arr[i]])
-                ? 1e8 : sp[2] * sp[3];
-      const hit = { decor: tag, di: i, s: arr[i], x: arr[i + 1], y: arr[i + 2],
-                    id: "decor:" + key };
-      if (FABRIC.test(NAMES[arr[i]])) {
-        if (a < fabArea) { fabArea = a; fab = hit; }
-      } else if (a < bestArea) { bestArea = a; best = hit; }
+  for (const [tag, arr] of [["s",scat],["a",sanm]]) {
+    for(let i=0;i<arr.length;i+=3){
+      const key=tag+i,nm=NAMES[arr[i]],sp=SPR[nm];
+      if(decorGone.has(key)||!sp){layer++;continue;}
+      if(!inside&&(MOUNTAIN.test(nm)||!grabbable(nm))){layer++;continue;}
+      const x0=arr[i+1]-sp[2]/2,y0=arr[i+2]-sp[3];
+      if(wx>=x0&&wx<=x0+sp[2]&&wy>=y0&&wy<=y0+sp[3]){
+        const hit={decor:tag,di:i,s:arr[i],x:arr[i+1],y:arr[i+2],id:"decor:"+key};
+        consider(hit,sp,nm,layer);
+      }
+      layer++;
     }
+  }
   return best || fab;
 }
 function mapTouchStart(t) {
@@ -4560,6 +4563,8 @@ function mapTouchStart(t) {
     if (hit) {
       dragObj = hit;
       selected = hit; refreshSel();
+    } else if (interiorMoveMode()) {
+      toast("No movable object under your finger");
     }
   }
 }
