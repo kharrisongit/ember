@@ -1473,6 +1473,10 @@ function editorActorInfo(o) {
   if(ai>=0)return {kind:'actor', index:ai, key:o.editKey||'actor:'+ai+':'+o.spr, source:o};
   return null;
 }
+function interiorMoveMode(){ return MAPID !== "world"; }
+function editorProtectedActor(o){
+  return !!(o && (o.sceneReserved || o.stairTo || o.royalDoor || o.editableWall));
+}
 function editorSprite(o) {
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
@@ -1526,7 +1530,7 @@ function moveEditorActor(o,x,y,save=false) {
 function pickEditorActor(wx,wy) {
   let best=null,area=Infinity;
   for(const o of [...(MD.roomActors||[]),...npcs]){
-    if(o.editorDeleted)continue;
+    if(o.editorDeleted || (interiorMoveMode() && editorProtectedActor(o)))continue;
     if(npcs.includes(o)&&!npcHere(o))continue;
     const sp=editorSprite(o);if(!sp)continue;
     const w=sp[2],h=sp[3];
@@ -4465,12 +4469,13 @@ function pickObject(wx, wy) {
   const actor=pickEditorActor(wx,wy);if(actor)return actor;
   let best = null, bestArea = 1e9;
   const grabbable = nm => nm && !BACKDROP.test(nm);
+  const interiorObject = o => interiorMoveMode() && o && !o.feat;
   let fab = null, fabArea = 1e9;
   for (const o of objs.concat(fobjs)) {
     if (deleted.has(o.id) || hidden.has(o.id)) continue;
     const s = SPR[NAMES[o.s]];
     if (!s) continue;      /* nothing there to stand in the way of */
-    if (!grabbable(NAMES[o.s])) continue;
+    if (!grabbable(NAMES[o.s]) && !interiorObject(o)) continue;
     const x0 = o.x + (o.wx || 0) - s[2] / 2, y0 = o.y + (o.wy || 0) - s[3];
     if (wx < x0 || wx > x0 + s[2] || wy < y0 || wy > y0 + s[3]) continue;
     const a = s[2] * s[3];
@@ -4485,7 +4490,7 @@ function pickObject(wx, wy) {
       if (decorGone.has(key)) continue;
       const sp = SPR[NAMES[arr[i]]]; if (!sp) continue;
       if (MOUNTAIN.test(NAMES[arr[i]])) continue;
-      if (!grabbable(NAMES[arr[i]])) continue;
+      if (!grabbable(NAMES[arr[i]]) && !interiorMoveMode()) continue;
       const x0 = arr[i + 1] - sp[2] / 2, y0 = arr[i + 2] - sp[3];
       if (wx < x0 || wx > x0 + sp[2] || wy < y0 || wy > y0 + sp[3]) continue;
       const a = /^(shc_|shcap_|cliff_|sett_|ifloor_|iwall_|cvf|cvrub_)/.test(NAMES[arr[i]])
@@ -10682,7 +10687,7 @@ tap(bEdit, () => {
   if (editing) { setPaint(false); setBuild(false); }
   bEdit.classList.toggle("on", editing);
   editEl.style.display = editing ? "block" : "none";
-  soloTool(editing ? "MOVE THINGS" : null);
+  soloTool(editing ? (interiorMoveMode() ? "MOVE INTERIOR OBJECTS" : "MOVE THINGS") : null);
   refreshToolbar();
   if (!editing) selected = null;
   refreshSel();
