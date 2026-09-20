@@ -314,6 +314,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent="loading game assets";})();
 </script>
+<script src="assets/decoder.js"></script>
 <script src="assets/game-assets.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='ASSET LOAD ERROR'"></script>
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBER_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
