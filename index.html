@@ -311,8 +311,14 @@ window.addEventListener("unhandledrejection", function (e) {
   window.__boot = (window.__boot || "") + "\nPROMISE: " + (e && e.reason);
 });
 </script>
-<script src="assets/game-assets.js"></script>
-<script src="js/game.js"></script>
+<script>
+(function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent="loading game assets";})();
+</script>
+<script src="assets/game-assets.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='ASSET LOAD ERROR'"></script>
+<script>
+(function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBERFELL_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
+</script>
+<script src="js/game.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME SCRIPT LOAD ERROR'"></script>
 
 <!-- EMBERFELL_HOME_TOWN_BGM -->
 <audio id="emberfellHomeTownBgm" loop preload="auto" style="display:none" aria-hidden="true">
