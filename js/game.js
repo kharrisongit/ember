@@ -1267,6 +1267,7 @@ function applyWorld(text) {
       }
     }
   }
+  exposeHouseFurniture();
   installKnightEncounter();
   installFishingVillager();
   installMarketCounters();
@@ -1477,7 +1478,26 @@ function interiorMoveMode(){ return MAPID !== "world"; }
 function editorProtectedActor(o){
   return !!(o && (o.sceneReserved || o.stairTo || o.royalDoor || o.editableWall));
 }
+function exposeHouseFurniture(){
+  for(const [id,m] of Object.entries(W.maps)){
+    if(!/^house\d\d(?:_bedroom)?$/.test(id) || !m.roomArt)continue;
+    m.roomActors ||= [];
+    if(m.roomActors.some(a=>a.movableRoomCrop))continue;
+    const blocks=m.roomBlocks||[];
+    let n=0;
+    for(const b of blocks){
+      const [l,t,r,bt]=b,w=r-l,h=bt-t;
+      // Ignore structural wall-sized collision rectangles and door thresholds.
+      if(w<=0||h<=0||w>110||h>70||w<8||h<5)continue;
+      const pad=4, x=Math.max(0,l-pad), y=Math.max(0,t-pad);
+      const cw=Math.min(m.w*TS-x,w+pad*2), ch=Math.min(m.h*TS-y,h+pad*2);
+      m.roomActors.push({roomCrop:[x,y,cw,ch],x:x+cw/2,y:y+ch,sy:bt,
+        movableRoomCrop:true,editKey:'furniture:'+n++,schoolArt:false});
+    }
+  }
+}
 function editorSprite(o) {
+  if(o.movableRoomCrop && o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
   if(o.body)return SPR[o.body+'_idle_d'];
@@ -3456,7 +3476,11 @@ function drawWorld(t, dt) {
     }
     if(o.roomCrop){
       const [x,y,w,h]=o.roomCrop,s=SPR[MD.roomArt];
-      if(s)drawGameImage(ctx,atlasImg,s[0]+x,s[1]+y,w,h,x,y,w,h);
+      if(s){
+        const dx=o.movableRoomCrop?Math.round(o.x-w/2):x;
+        const dy=o.movableRoomCrop?Math.round(o.y-h):y;
+        drawGameImage(ctx,atlasImg,s[0]+x,s[1]+y,w,h,dx,dy,w,h);
+      }
       continue;
     }
     if (o.throneRoomAsset) {
