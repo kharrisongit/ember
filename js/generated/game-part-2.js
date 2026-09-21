@@ -1420,6 +1420,24 @@ function buildHouseFurnitureLayers(){
       house03:[['bookshelf_left',22,49,32,31]],
       house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',116,36,25,41],['bed',17,60,49,23],['crate',135,144,19,31]]
     };
+    /* Source-art recut pass. Unlike the old collision crop, this searches for the actual
+       shelf/wardrobe artwork and then copies those exact source pixels into a dedicated
+       canvas actor. It does not alter working tables/chairs/plants/etc. */
+    if(!EXACT_FURNITURE[id]){
+      const recutNames=names.filter(n=>/(?:bookcase|bookshelf|shelf|wardrobe|closet|cabinet|cupboard|dresser)/i.test(n));
+      const cuts=[];
+      for(const n of recutNames){
+        const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
+        let best=null;
+        for(let y=0;y<=rh-sp[3];y++)for(let x=0;x<=rw-sp[2];x++){
+          const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
+          if(sc>=.985&&(!best||sc>best.sc))best={x,y,sc};
+        }
+        if(best&&!cuts.some(e=>best.x<e[1]+e[3]&&best.x+sp[2]>e[1]&&best.y<e[2]+e[4]&&best.y+sp[3]>e[2]))
+          cuts.push([n,best.x,best.y,sp[2],sp[3]]);
+      }
+      if(cuts.length)EXACT_FURNITURE[id]=cuts;
+    }
     /* These hand-cut objects are authoritative. Remove any older/static actor whose
        bounds overlap the same source furniture, otherwise MOVE can grab the visible
        legacy copy while the extracted actor sits underneath it. */
