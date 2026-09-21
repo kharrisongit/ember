@@ -1343,6 +1343,25 @@ async function inflateAtlas() {
 
 
 /* === Native household furniture layering (editor) === */
+function cropForegroundMask(data,w,h){
+  /* Segment background by connectivity from the crop's top/side border. Unlike global
+     color-keying, matching colors enclosed inside a bookshelf stay part of the object. */
+  const bg=new Uint8Array(w*h),stack=[];
+  const seed=(x,y)=>{const k=y*w+x;if(!bg[k]){bg[k]=1;stack.push(k);}};
+  for(let x=0;x<w;x++)seed(x,0);
+  for(let y=0;y<h-2;y++){seed(0,y);seed(w-1,y);}
+  const delta=(a,b)=>Math.abs(data[a]-data[b])+Math.abs(data[a+1]-data[b+1])+Math.abs(data[a+2]-data[b+2]);
+  while(stack.length){
+    const k=stack.pop(),x=k%w,y=(k/w)|0,pi=k*4;
+    for(const [nx,ny] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){
+      if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;
+      const ni=nk*4;
+      if(delta(pi,ni)<=58){bg[nk]=1;stack.push(nk);}
+    }
+  }
+  const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
+  return fg;
+}
 function buildHouseFurnitureLayers(){
   /* Household props are not consistently named i*.  Build the candidate list from
      every static atlas sprite whose name describes freestanding interior scenery. */
@@ -1436,13 +1455,10 @@ function buildHouseFurnitureLayers(){
       }
     }
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
-        /* A crop contains background too. Build a foreground mask by comparing each pixel
-           with colors sampled from the crop border; only erase pixels unlike that local
-           wall/floor background. */
-        const mask=new Uint8ClampedArray(f.w*f.h*4),src=clean.data,bg=[];
-        for(let xx=0;xx<f.w;xx+=Math.max(1,Math.floor(f.w/8)))for(const yy of [0,f.h-1]){const i=((f.y+yy)*rw+f.x+xx)*4;bg.push([src[i],src[i+1],src[i+2]]);}
-        for(let yy=0;yy<f.h;yy+=Math.max(1,Math.floor(f.h/8)))for(const xx of [0,f.w-1]){const i=((f.y+yy)*rw+f.x+xx)*4;bg.push([src[i],src[i+1],src[i+2]]);}
-        for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const i=((f.y+yy)*rw+f.x+xx)*4,mi=(yy*f.w+xx)*4;let d=1e9;for(const p of bg)d=Math.min(d,Math.abs(src[i]-p[0])+Math.abs(src[i+1]-p[1])+Math.abs(src[i+2]-p[2]));if(d>34)mask[mi+3]=255;}
+        const raw=new Uint8ClampedArray(f.w*f.h*4);
+        for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
+        const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
+        for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
       }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
@@ -3556,12 +3572,7 @@ function drawWorld(t, dt) {
       if(s){
         /* Keep only the connected foreground component that touches the furniture's
            collision/base zone. This prevents wallpaper/floor islands travelling with it. */
-        o._cropCanvas ||= (()=>{const q=document.createElement('canvas');q.width=w;q.height=h;const cg=q.getContext('2d',{willReadFrequently:true});drawGameImage(cg,atlasImg,s[0]+x,s[1]+y,w,h,0,0,w,h);const im=cg.getImageData(0,0,w,h),d=im.data,bg=[];
-          for(let xx=0;xx<w;xx+=Math.max(1,Math.floor(w/8)))for(const yy of [0,h-1]){const i=(yy*w+xx)*4;bg.push([d[i],d[i+1],d[i+2]]);}
-          const fg=new Uint8Array(w*h);for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){const i=(yy*w+xx)*4;let md=1e9;for(const p of bg)md=Math.min(md,Math.abs(d[i]-p[0])+Math.abs(d[i+1]-p[1])+Math.abs(d[i+2]-p[2]));if(md>38)fg[yy*w+xx]=1;}
-          const keep=new Uint8Array(w*h),stack=[];for(let yy=Math.max(0,h-10);yy<h;yy++)for(let xx=1;xx<w-1;xx++)if(fg[yy*w+xx]){keep[yy*w+xx]=1;stack.push([xx,yy]);}
-          while(stack.length){const [xx,yy]=stack.pop();for(const [nx,ny]of[[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]])if(nx>=0&&ny>=0&&nx<w&&ny<h&&fg[ny*w+nx]&&!keep[ny*w+nx]){keep[ny*w+nx]=1;stack.push([nx,ny]);}}
-          for(let i=0;i<w*h;i++)if(!keep[i])d[i*4+3]=0;cg.putImageData(im,0,0);return q;})();
+        o._cropCanvas ||= (()=>{const q=document.createElement('canvas');q.width=w;q.height=h;const cg=q.getContext('2d',{willReadFrequently:true});drawGameImage(cg,atlasImg,s[0]+x,s[1]+y,w,h,0,0,w,h);const im=cg.getImageData(0,0,w,h),fg=cropForegroundMask(im.data,w,h);for(let i=0;i<fg.length;i++)if(!fg[i])im.data[i*4+3]=0;cg.putImageData(im,0,0);return q;})();
         ctx.drawImage(o._cropCanvas,o.x-w/2,o.y-h);
       }
       continue;
