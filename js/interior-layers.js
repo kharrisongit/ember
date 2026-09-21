@@ -78,5 +78,36 @@ try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k 
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
 const remove=()=>{if(!selected||!selected.interiorFurniture)return false;const info=editorActorInfo(selected);if(!info)return false;selected.editorDeleted=true;(actorLayouts[MAPID]||={})[info.key]={x:selected.x,y:selected.y,deleted:true};selected=null;dragObj=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return true};
 for(const id of ["nDel","xdel"]){const e=document.getElementById(id);if(e)for(const ev of ["click","touchstart"])e.addEventListener(ev,x=>{if((id!=="xdel"||editing)&&remove()){x.preventDefault();x.stopImmediatePropagation()}},true)}
+/* Furniture is scenery, not a story actor: allow DELETE and remove its owned collision. */
+const _deleteSelected=deleteSelected;
+deleteSelected=function(){
+ if(selected&&selected.interiorFurniture){
+  const o=selected,info=editorActorInfo(o);if(!info)return;
+  o.editorDeleted=true;
+  for(const i of o.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b)b._editorFurnitureDeleted=true}
+  (actorLayouts[MAPID]||={})[info.key]={x:o.x,y:o.y,deleted:true};
+  selected=null;dragObj=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
+ }
+ return _deleteSelected();
+};
+/* Native applyActorLayout only restores deletion for editableWall. Restore furniture too. */
+const _applyActorLayout=applyActorLayout;
+applyActorLayout=function(m,id){
+ _applyActorLayout(m,id);
+ const saved=actorLayouts[id]||{};
+ for(const o of m.roomActors||[]){
+  if(!o.interiorFurniture)continue;
+  const key=o.editKey||'actor:'+(m.roomActors||[]).indexOf(o)+':'+o.spr,v=saved[key];
+  o.editorDeleted=!!v?.deleted;
+ }
+};
+/* rebuildSolid consumes roomBlocks; hide blocks owned by deleted furniture without splicing
+   the array, so moveBlocks indices stay stable for every other furnishing. */
+const _rebuildSolid=rebuildSolid;
+rebuildSolid=function(){
+ const hidden=[];
+ for(const b of MD?.roomBlocks||[])if(b&&b._editorFurnitureDeleted){hidden.push(b);b._savedCoords=b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999}
+ try{return _rebuildSolid()}finally{for(const b of hidden){const q=b._savedCoords;for(let i=0;i<4;i++)b[i]=q[i];delete b._savedCoords}}
+};
 const reset=document.getElementById("bReset");if(reset)for(const ev of ["click","touchstart"])reset.addEventListener(ev,()=>{if(typeof resetArmed!=="undefined"&&resetArmed)delete actorLayouts[MAPID]},true);
 })();
