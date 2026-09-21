@@ -1390,7 +1390,19 @@ function buildHouseFurnitureLayers(){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
     const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors||=[];
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.66&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);}
+    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.66&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
+      else if(!best){
+        /* Some baked wardrobes/bookcases/crates have no standalone atlas sprite. Treat
+           the painted region above their collision footprint as a native crop actor. */
+        const padX=Math.max(4,Math.min(12,Math.round(bw*.2))),padTop=Math.max(12,Math.min(48,Math.round(Math.max(bh*2,bw*.9))));
+        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-padTop));
+        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+3)-y);
+        if(w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
+          const key='furniture:crop:'+id+':'+bi;
+          m.roomActors.push({roomCrop:[x,y,w,h],editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]});
+          found.push({crop:true,x,y,w,h});occupied.push([x,y,x+w,y+h]);total++;
+        }
+      }}
     for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
     /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
        the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
@@ -1417,7 +1429,7 @@ function buildHouseFurnitureLayers(){
         }
       }
     }
-    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
+    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){const mask=new Uint8ClampedArray(f.w*f.h*4);for(let i=3;i<mask.length;i+=4)mask[i]=255;heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);}else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
@@ -1548,6 +1560,7 @@ function editorActorInfo(o) {
   return null;
 }
 function editorSprite(o) {
+  if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
   if(o.body)return SPR[o.body+'_idle_d'];
@@ -3525,7 +3538,7 @@ function drawWorld(t, dt) {
     }
     if(o.roomCrop){
       const [x,y,w,h]=o.roomCrop,s=SPR[MD.roomArt];
-      if(s)drawGameImage(ctx,atlasImg,s[0]+x,s[1]+y,w,h,x,y,w,h);
+      if(s)drawGameImage(ctx,atlasImg,s[0]+x,s[1]+y,w,h,o.x-w/2,o.y-h,w,h);
       continue;
     }
     if (o.throneRoomAsset) {
