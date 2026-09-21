@@ -72,7 +72,11 @@ jobs:
             err=' onerror="(document.getElementById(\'bootMsg\')||document.getElementById(\'bootmsg\')).textContent=\'GAME PART '+str(i)+' LOAD ERROR\'"'
             tags.append(f'<script src="js/generated/game-part-{i}.js"{err}></script>')
           index,n=old.subn('\n'.join(tags),index,count=1)
-          if n!=1: raise SystemExit('game.js script tag not found')
+          if n!=1:
+            # Repo may already use generated split tags. Replace that block in-place.
+            generated=re.compile(r'(?:<script src="js/generated/(?:media|game-part)-[^"]+\.js"[^>]*></script>\s*)+')
+            index,n=generated.subn('\n'.join(tags)+'\n',index,count=1)
+          if n!=1: raise SystemExit('neither game.js nor generated loader block found')
           Path('index.html').write_text(index)
           print('media files',mi-1,'game parts',len(parts),'sizes',[len(x) for x in parts])
           PY
