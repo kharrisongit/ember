@@ -1390,6 +1390,7 @@ function buildHouseFurnitureLayers(){
   }
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
+  console.log("HOUSE FURNITURE",total,window.__houseFurnitureByMap);
 }
 /* === end household furniture layering === */
 
@@ -1564,6 +1565,11 @@ function moveEditorActor(o,x,y,save=false) {
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
+  if(/^house\d/.test(MAPID||"")&&!window.__furnReported){
+    window.__furnReported=true;
+    const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
+    toast("Furniture objects in "+MAPID+": "+n+" (total "+(window.__houseFurnitureCount??"?")+")");
+  }
   const hits=[];
   for(const o of [...(MD.roomActors||[]),...npcs]){
     if(o.editorDeleted)continue;
