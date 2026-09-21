@@ -15522,10 +15522,8 @@ atlasImg.onload = () => {
     step("atlas loaded " + atlasImg.width + "x" + atlasImg.height);
     try { BOOT.step(45, "laying out the world"); } catch (e) {}
     try { buildSkinTones(); step("skin tones built"); }
-    try { buildHouseFurnitureLayers(); step("furniture layers " + (window.__houseFurnitureCount||0)); } catch(e) { step("furniture layers failed: " + e); }
     catch (e) { step("skin tones failed: " + e); }
     step("world inflated, " + W.names.length + " names");
-    try { buildHouseFurnitureLayers(); step("furniture layers " + (window.__houseFurnitureCount||0)); } catch(e) { step("furniture layers failed: " + e); }
     resize();            step("resize ok, canvas " + cv.width + "x" + cv.height);
     if (!cv.width || !cv.height) {
       let tries = 0;
