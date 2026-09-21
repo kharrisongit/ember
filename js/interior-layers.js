@@ -49,6 +49,30 @@ pickEditorActor=function(wx,wy){
  }
  return best;
 };
+/* game.js renders roomCrop at its ORIGINAL source x/y, which makes MOVE appear to do nothing.
+   Keep the source rectangle fixed, but draw it at the actor's current editor position. */
+function drawMovedRoomCrop(g,o){
+ if(!o||!o.roomCrop||!MD?.roomArt)return false;
+ const [sx,sy,w,h]=o.roomCrop,s=SPR[MD.roomArt];if(!s)return false;
+ const dx=Math.round(o.x-w/2),dy=Math.round(o.y-h);
+ drawGameImage(g,atlasImg,s[0]+sx,s[1]+sy,w,h,dx,dy,w,h);return true;
+}
+/* Patch the main room-actor draw loop at the lowest shared primitive: when game.js asks
+   for the roomArt crop at its baked source destination, redirect only that exact crop draw. */
+const _drawGameImage=drawGameImage;
+drawGameImage=function(g,img,sx,sy,sw,sh,dx,dy,dw,dh,...rest){
+ if(MD?.roomArt&&img===atlasImg){
+  const rs=SPR[MD.roomArt];
+  if(rs)for(const o of MD.roomActors||[]){
+   if(!o.roomCrop||o.editorDeleted)continue;
+   const q=o.roomCrop;
+   if(sx===rs[0]+q[0]&&sy===rs[1]+q[1]&&sw===q[2]&&sh===q[3]&&dx===q[0]&&dy===q[1]){
+    dx=Math.round(o.x-q[2]/2);dy=Math.round(o.y-q[3]);break;
+   }
+  }
+ }
+ return _drawGameImage(g,img,sx,sy,sw,sh,dx,dy,dw,dh,...rest);
+};
 const rc=renderChunk;renderChunk=function(cx,cy){if((MAPID==="witchmoor"||MD.roomArt)&&MD._roomBaseCanvas){const c=document.createElement("canvas");c.width=CHUNK;c.height=CHUNK;const g=c.getContext("2d");g.imageSmoothingEnabled=false;g.fillStyle=MD.bg;g.fillRect(0,0,CHUNK,CHUNK);g.drawImage(MD._roomBaseCanvas,-cx*CHUNK,-cy*CHUNK);return c}return rc(cx,cy)};
 try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k of Object.keys(actorLayouts))delete actorLayouts[k];
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
