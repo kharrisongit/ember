@@ -1417,8 +1417,11 @@ function buildHouseFurnitureLayers(){
     /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
        not collision guesses. Add more maps here as we verify their captured art. */
     const EXACT_FURNITURE={
-      house03:[['bookshelf_left',22,49,32,31]],
-      house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',116,36,25,41],['bed',17,60,49,23],['crate',135,144,19,31]]
+      house03:[['bookshelf_left',20,47,36,35]],
+      /* Starting-house bedroom: use slightly padded cuts so anti-aliased/dark outline
+         pixels leave with the furniture instead of remaining baked into the floor/wall.
+         The chair beside the table is also a baked prop, so cut it explicitly. */
+      house03_bedroom:[['wardrobe',76,31,35,49],['bookshelf',113,33,31,47],['bed',14,57,55,29],['crate',132,141,25,36],['table_chair',48,111,24,35]]
     };
     /* Source-art recut pass. Unlike the old collision crop, this searches for the actual
        shelf/wardrobe artwork and then copies those exact source pixels into a dedicated
