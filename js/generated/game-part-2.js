@@ -1460,28 +1460,7 @@ function buildHouseFurnitureLayers(){
     if(EXACT_FURNITURE[id]?.length)m._exactFurnitureExpected=EXACT_FURNITURE[id].map(e=>'furniture:exact:'+id+':'+e[0]);
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
-      else if(!best){
-        /* Global fallback for baked furniture: roomBlocks already identify solid props.
-           Turn compact interior blocks into exact room-art actors in EVERY house instead
-           of requiring a per-house hard-coded table. Architecture-sized blocks are excluded. */
-        const padX=Math.max(2,Math.min(6,Math.round(bw*.12)));
-        const tall=bw>=18&&bh<=34;
-        const above=tall?Math.min(72,Math.max(28,Math.round(bw*1.25))):Math.max(8,Math.min(30,Math.round(Math.max(bh,bw*.55))));
-        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-above));
-        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+2)-y);
-        const architectural=bw>96||bh>64||w>110||h>100;
-        if(!architectural&&w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
-          const label='auto_'+bi,key='furniture:auto:'+id+':'+bi;
-          const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-          drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-          const im=qg.getImageData(0,0,w,h),fg=cropForegroundMask(im.data,w,h);
-          for(let pi=0;pi<fg.length;pi++)if(!fg[pi])im.data[pi*4+3]=0;
-          qg.putImageData(im,0,0);
-          const sprName='exact_'+id+'_'+label;SPR[sprName]=[0,0,w,h,1];
-          m.roomActors.push({spr:sprName,extractedCanvas:q,extractedFurniture:true,exactFurniture:true,autoExtractedFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]});
-          found.push({crop:true,x,y,w,h});occupied.push([x,y,x+w,y+h]);total++;
-        }
-      }}
+}
     for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
     /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
        the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
