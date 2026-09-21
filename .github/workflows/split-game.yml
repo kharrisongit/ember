@@ -27,16 +27,63 @@ jobs:
             ('faintDragonImg.src','faintDragonSrc'),
             ('throneRoomImg.src','throneRoomSrc'),
           ]
+          matches=[]
           for lhs,key in specs:
-            pat=re.compile(r'^'+re.escape(lhs)+r'\s*=\s*(.+);\s*$',re.M)
+            pat=re.compile(r'^'+re.escape(lhs)+r'\s*=\s*(.+);\s*
+          # Split media strings into <= ~500 KB scripts.
+          out=Path('js/generated');out.mkdir(parents=True,exist_ok=True)
+          for p in out.glob('game-part-*.js'): p.unlink()
+          for p in out.glob('media-*.js'): p.unlink()
+          mi=1
+          for key,value in media:
+            chunks=[value[i:i+480000] for i in range(0,len(value),480000)]
+            for j,ch in enumerate(chunks):
+              lines=['window.EMBER_MEDIA=window.EMBER_MEDIA||{};']
+              if j==0: lines.append('window.__EM_'+key+'='+repr(ch)+';')
+              else: lines.append('window.__EM_'+key+'+='+repr(ch)+';')
+              if j==len(chunks)-1:
+                lines.append('window.EMBER_MEDIA.'+key+'=window.__EM_'+key+';delete window.__EM_'+key+';')
+              (out/f'media-{mi}.js').write_text('\n'.join(lines)+'\n')
+              mi+=1
+          # Keep executable source in one classic script. Splitting lexical declarations
+          # across script tags changes JS semantics (hoisting/TDZ/global lexical scope).
+          # Media payloads are already extracted above, so the executable file remains manageable.
+          parts=[src]
+          for i,part in enumerate(parts,1):(out/f'game-part-{i}.js').write_text(part)
+          # Rewrite index loader, keeping old game.js in repo as rollback.
+          index=Path('index.html').read_text()
+          old=re.compile(r'<script src="js/game\.js"\s*\n\s*onload="[^"]*"\s*\n\s*onerror="[^"]*"></script>')
+          tags=[]
+          for i in range(1,mi): tags.append(f'<script src="js/generated/media-{i}.js"></script>')
+          for i in range(1,len(parts)+1):
+            err=' onerror="(document.getElementById(\'bootMsg\')||document.getElementById(\'bootmsg\')).textContent=\'GAME PART '+str(i)+' LOAD ERROR\'"'
+            tags.append(f'<script src="js/generated/game-part-{i}.js"{err}></script>')
+          index,n=old.subn('\n'.join(tags),index,count=1)
+          if n!=1:
+            # Repo may already use generated split tags. Replace that block in-place.
+            generated=re.compile(r'(?:<script src="js/generated/(?:media|game-part)-[^"]+\.js"[^>]*></script>\s*)+')
+            index,n=generated.subn('\n'.join(tags)+'\n',index,count=1)
+          if n!=1: raise SystemExit('neither game.js nor generated loader block found')
+          Path('index.html').write_text(index)
+          print('media files',mi-1,'game parts',len(parts),'sizes',[len(x) for x in parts])
+          PY
+          for f in js/generated/*.js; do node --check "$f"; done
+      - name: Commit split
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html js/generated
+          git commit -m "Split oversized game source into manageable scripts"
+          git push
+,re.M)
             m=pat.search(src)
             if not m: raise SystemExit('missing media assignment '+lhs)
-            expr=m.group(1)
-            # The media expressions are string literals, sometimes joined with +.
-            pieces=re.findall(r'"([^"]*)"',expr)
-            value=''.join(pieces)
-            media.append((key,value))
-            src=src[:m.start()]+lhs+' = window.EMBER_MEDIA.'+key+';'+src[m.end():]
+            pieces=re.findall(r'"([^"]*)"',m.group(1))
+            media.append((key,''.join(pieces)))
+            matches.append((m.start(),m.end(),lhs+' = window.EMBER_MEDIA.'+key+';'))
+          # Replace from the end so removing a huge data URI never invalidates later offsets.
+          for a,b,replacement in sorted(matches,reverse=True):
+            src=src[:a]+replacement+src[b:]
           # Split media strings into <= ~500 KB scripts.
           out=Path('js/generated');out.mkdir(parents=True,exist_ok=True)
           for p in out.glob('game-part-*.js'): p.unlink()
