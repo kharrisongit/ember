@@ -3418,7 +3418,7 @@ function notePainted(i) {
   else painted.set(i, terr[i]);
 }
 
-function undoStroke() {
+window.__emberUndoStroke = function undoStroke() {
   const st = undoStack.pop();
   if (!st) { toast("nothing to undo"); return; }
   for (const [i, was] of st) { terr[i] = was; notePainted(i); }
