@@ -1429,9 +1429,10 @@ function buildHouseFurnitureLayers(){
           const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
           drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
           /* Exact pixels from the existing room art; no redrawing. */
-          const qim=qg.getImageData(0,0,w,h),fg=cropForegroundMask(qim.data,w,h);
-          for(let qi=0;qi<fg.length;qi++)if(!fg[qi])qim.data[qi*4+3]=0;
-          qg.putImageData(qim,0,0);
+          const qim=qg.getImageData(0,0,w,h);
+          /* Dedicated extracted sprite: preserve the source pixels verbatim. Background
+             removal is handled separately; never carve holes through the furniture. */
+          const fg=new Uint8Array(w*h);fg.fill(1);
           SPR[sprName]=[0,0,w,h,1]; /* dimensions for editor hit-testing */
           const actor={spr:sprName,extractedCanvas:q,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]};
           m.roomActors.push(actor);
@@ -1467,7 +1468,7 @@ function buildHouseFurnitureLayers(){
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
         const raw=new Uint8ClampedArray(f.w*f.h*4);
         for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
-        const fg=f.mask||cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
+        const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
         for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
       }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
