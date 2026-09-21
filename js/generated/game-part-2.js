@@ -1420,6 +1420,19 @@ function buildHouseFurnitureLayers(){
       house03:[['bookshelf_left',22,49,32,31]],
       house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',116,36,25,41],['bed',17,60,49,23],['crate',135,144,19,31]]
     };
+    /* These hand-cut objects are authoritative. Remove any older/static actor whose
+       bounds overlap the same source furniture, otherwise MOVE can grab the visible
+       legacy copy while the extracted actor sits underneath it. */
+    for(const e of EXACT_FURNITURE[id]||[]){
+      const [,x,y,w,h]=e,cx=x+w/2,cy=y+h/2;
+      m.roomActors=m.roomActors.filter(a=>{
+        if(a.interiorFurniture||a.sceneReserved)return true;
+        const sp=a.extractedCanvas?[0,0,a.extractedCanvas.width,a.extractedCanvas.height]:SPR[a.spr];
+        if(!sp||!Number.isFinite(a.x)||!Number.isFinite(a.y))return true;
+        const l=a.x-sp[2]/2,t=a.y-sp[3],r=l+sp[2],b=a.y;
+        return !(cx>=l&&cx<=r&&cy>=t&&cy<=b);
+      });
+    }
     const addExactFurnitureCrop=(label,x,y,w,h)=>{
       const key='furniture:exact:'+id+':'+label;if(m.roomActors.some(a=>a.editKey===key))return;
       const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
@@ -4723,7 +4736,18 @@ function mapTouchStart(t) {
   }
   if (editing) {
     const w = screenToWorld(t.clientX, t.clientY);
-    const hit = pickObject(w.x, w.y);
+    let hit = pickObject(w.x, w.y);
+    /* Mobile forgiveness for small/tall furniture: if the exact pixel under the finger
+       misses, search a small world-space radius and prefer dedicated furniture. */
+    if(!hit&&/^house\d/.test(MAPID||'')){
+      let best=null;
+      for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&!o.editorDeleted){
+        const sp=editorSprite(o);if(!sp)continue;
+        const l=o.x-sp[2]/2,t=o.y-sp[3],rx=Math.max(l,Math.min(w.x,l+sp[2])),ry=Math.max(t,Math.min(w.y,o.y));
+        const d=Math.hypot(w.x-rx,w.y-ry);if(d<=14&&(!best||d<best.d))best={o,d};
+      }
+      if(best)hit=best.o;
+    }
     if (hit) {
       dragObj = hit;
       selected = hit; refreshSel();
