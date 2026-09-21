@@ -15521,8 +15521,7 @@ atlasImg.onload = () => {
   try {
     step("atlas loaded " + atlasImg.width + "x" + atlasImg.height);
     try { BOOT.step(45, "laying out the world"); } catch (e) {}
-    try { buildSkinTones(); step("skin tones built"); }
-    catch (e) { step("skin tones failed: " + e); }
+    try { buildSkinTones(); step("skin tones built"); } catch (e) { step("skin tones failed: " + e); }
     step("world inflated, " + W.names.length + " names");
     resize();            step("resize ok, canvas " + cv.width + "x" + cv.height);
     if (!cv.width || !cv.height) {
