@@ -1485,23 +1485,21 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Starting-bedroom wardrobe background: rebuild the hidden patch from native
-       tile-sized samples, preserving the 16px phase in BOTH axes. Never scale a strip. */
+    /* Starting-bedroom wardrobe background: the previous patch was written into g,
+       then discarded because the final clean canvas is rebuilt later. Store an explicit
+       pristine patch and stamp it onto the FINAL room base after all generic healing. */
+    let wardrobeBackgroundPatch=null;
     if(id==='house03_bedroom'){
       const x0=79,x1=108,y0=34,y1=77;
-      const src=g.getImageData(0,0,rw,rh),out=g.getImageData(0,0,rw,rh);
-      const copyPixel=(x,y,sx,sy)=>{const si=(sy*rw+sx)*4,di=(y*rw+x)*4;
-        out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];};
+      const original=g.getImageData(0,0,rw,rh);
+      const patch=document.createElement('canvas');patch.width=x1-x0;patch.height=y1-y0;
+      const pg=patch.getContext('2d'),im=pg.createImageData(patch.width,patch.height);
       for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){
-        /* Copy from the same 16px phase, choosing an intact tile three columns left.
-           This preserves vertical grout/trim boundaries as well as horizontal rows. */
-        let sx=x-48,sy=y;
-        if(sx<0)sx=x+48;
-        copyPixel(x,y,sx,sy);
+        const sx=x-48,si=(y*rw+sx)*4,di=((y-y0)*patch.width+(x-x0))*4;
+        im.data[di]=original.data[si];im.data[di+1]=original.data[si+1];
+        im.data[di+2]=original.data[si+2];im.data[di+3]=original.data[si+3];
       }
-      g.putImageData(out,0,0);room.data.set(out.data);
-      /* The generic heal pass below must not overwrite this exact repair. */
-      m._exactBackgroundRepairs=[{x:x0,y:y0,w:x1-x0,h:y1-y0}];
+      pg.putImageData(im,0,0);wardrobeBackgroundPatch={x:x0,y:y0,canvas:patch};
     }
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
@@ -1566,7 +1564,9 @@ function buildHouseFurnitureLayers(){
         const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
         for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
-      }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
+      }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);
+      if(wardrobeBackgroundPatch)g.drawImage(wardrobeBackgroundPatch.canvas,wardrobeBackgroundPatch.x,wardrobeBackgroundPatch.y);
+      m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
   /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
      furniture can be cut once at explicit source rectangles instead of guessed forever. */
