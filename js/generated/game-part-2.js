@@ -1562,16 +1562,23 @@ function moveEditorActor(o,x,y,save=false) {
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
-  let best=null,area=Infinity;
+  const hits=[];
   for(const o of [...(MD.roomActors||[]),...npcs]){
     if(o.editorDeleted)continue;
     if(npcs.includes(o)&&!npcHere(o))continue;
     const sp=editorSprite(o);if(!sp)continue;
-    const w=sp[2],h=sp[3];
-    if(wx<o.x-w/2||wx>o.x+w/2||wy<o.y-h||wy>o.y)continue;
-    if(w*h<area){best=o;area=w*h;}
+    const w=sp[2],h=sp[3],left=o.x-w/2,top=o.y-h;
+    if(wx<left||wx>left+w||wy<top||wy>o.y)continue;
+    /* Prefer the visible prop nearest the finger.  This makes a lamp/crate sitting on a
+       table selectable instead of the table's larger rectangle always swallowing it.
+       Rugs deliberately lose to furniture above them unless the rug itself is the only hit. */
+    const rug=o.interiorFurniture&&/^(?:irug|.*(?:rug|carpet))/i.test(o.spr||'');
+    const dx=(wx-o.x)/Math.max(1,w),dy=(wy-(top+h/2))/Math.max(1,h);
+    hits.push({o,rug,area:w*h,dist:dx*dx+dy*dy,depth:o.sy??o.y});
   }
-  return best;
+  if(!hits.length)return null;
+  hits.sort((a,b)=>(a.rug-b.rug)||(a.area-b.area)||(a.dist-b.dist)||(b.depth-a.depth));
+  return hits[0].o;
 }
 function storyTeleport(id) {
   return id.startsWith("royal_") || /^(mine\d*|passage\d*|tp\d|sn\d|ds\d)$/.test(id)||
