@@ -322,9 +322,16 @@ window.addEventListener("unhandledrejection", function (e) {
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBER_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
 </script>
-<script src="js/game.js"
- onload="setTimeout(function(){var m=document.getElementById('bootMsg');if(m&&m.textContent==='starting game code')m.textContent='GAME FILE LOADED — CODE DID NOT START';},1500)"
- onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME SCRIPT LOAD ERROR'"></script>
+<script src="js/generated/media-1.js"></script>
+<script src="js/generated/media-2.js"></script>
+<script src="js/generated/media-3.js"></script>
+<script src="js/generated/media-4.js"></script>
+<script src="js/generated/media-5.js"></script>
+<script src="js/generated/media-6.js"></script>
+<script src="js/generated/media-7.js"></script>
+<script src="js/generated/game-part-1.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
