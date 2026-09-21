@@ -1452,21 +1452,6 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Wall furniture (bookcases/wardrobes/cabinets) is frequently painted into roomArt
-       without a useful collision block. Detect those standalone atlas sprites globally,
-       with a denser pass along the wall band, and promote exact matches to actors. */
-    const wallNames=names.filter(n=>/(?:book|shelf|case|wardrobe|closet|cabinet|cupboard|dresser)/i.test(n));
-    for(const n of wallNames){
-      const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
-      let best=null;
-      const yMax=Math.min(rh-sp[3],Math.max(40,Math.floor(rh*.48)));
-      for(let y=0;y<=yMax;y+=1)for(let x=0;x<=rw-sp[2];x+=1){
-        if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;
-        const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-        if(sc>.94&&(!best||sc>best.sc))best={x,y,sc};
-      }
-      if(best)add(n,best.x,best.y,null);
-    }
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
        of furniture support. */
