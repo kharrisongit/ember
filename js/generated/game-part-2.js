@@ -4607,7 +4607,13 @@ let finePlace = false;
 let pinchMx = null, pinchMy = null;
 
 function screenToWorld(cx, cy) {
-  return { x: cam.x + cx / cam.z, y: cam.y + cy / cam.z };
+  /* Touch coordinates are viewport-relative, but the game canvas may not begin at
+     the viewport origin (mobile dev/editor chrome can shift it). Convert through
+     the canvas rect so MOVE hit-testing lines up with what is actually under the finger. */
+  const r=cv.getBoundingClientRect();
+  const sx=(cx-r.left)*(VW/Math.max(1,r.width));
+  const sy=(cy-r.top)*(VH/Math.max(1,r.height));
+  return { x: cam.x + sx / cam.z, y: cam.y + sy / cam.z };
 }
 const FABRIC = /^(ifloor|iwall_|vc_c|sw_wall3|gw_trim|dg_floor)/;
 
