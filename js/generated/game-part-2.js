@@ -1485,21 +1485,23 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Exact wardrobe repair for the starting bedroom. Do not stretch a neighboring
-       strip. Copy intact tile-width source columns so the stone blocks, trim and lower
-       wall keep the same pixel cadence as the rest of the room. */
+    /* Starting-bedroom wardrobe background: rebuild the hidden patch from native
+       tile-sized samples, preserving the 16px phase in BOTH axes. Never scale a strip. */
     if(id==='house03_bedroom'){
-      const x0=79,x1=108,y0=34,y1=77,tile=16;
+      const x0=79,x1=108,y0=34,y1=77;
       const src=g.getImageData(0,0,rw,rh),out=g.getImageData(0,0,rw,rh);
+      const copyPixel=(x,y,sx,sy)=>{const si=(sy*rw+sx)*4,di=(y*rw+x)*4;
+        out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];};
       for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){
-        /* Repeat the intact pattern from two tile columns to the left. 32 px preserves
-           the room's 16 px tile phase instead of scaling or smearing pixels. */
-        const sx=x-32;
-        const si=(y*rw+sx)*4,di=(y*rw+x)*4;
-        out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];
+        /* Copy from the same 16px phase, choosing an intact tile three columns left.
+           This preserves vertical grout/trim boundaries as well as horizontal rows. */
+        let sx=x-48,sy=y;
+        if(sx<0)sx=x+48;
+        copyPixel(x,y,sx,sy);
       }
-      g.putImageData(out,0,0);
-      room.data.set(out.data);
+      g.putImageData(out,0,0);room.data.set(out.data);
+      /* The generic heal pass below must not overwrite this exact repair. */
+      m._exactBackgroundRepairs=[{x:x0,y:y0,w:x1-x0,h:y1-y0}];
     }
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
@@ -1558,6 +1560,7 @@ function buildHouseFurnitureLayers(){
       }
     }
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
+        if((m._exactBackgroundRepairs||[]).some(r=>f.x===r.x&&f.y===r.y&&f.w===r.w&&f.h===r.h))continue;
         const raw=new Uint8ClampedArray(f.w*f.h*4);
         for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
         const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
