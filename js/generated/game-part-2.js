@@ -1452,6 +1452,9 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
+    /* Every house must expose every detected standalone furniture match as a real actor.
+       Exact hand-cuts above are only overrides for stubborn baked props, never the scope
+       of furniture support. */
     /* Diagnostic marker shown in the MOVE panel so we can verify the live Pages build
        actually contains these actors instead of guessing from source commits. */
     if(EXACT_FURNITURE[id]?.length)m._exactFurnitureExpected=EXACT_FURNITURE[id].map(e=>'furniture:exact:'+id+':'+e[0]);
@@ -4739,20 +4742,7 @@ function mapTouchStart(t) {
   }
   if (editing) {
     const w = screenToWorld(t.clientX, t.clientY);
-    /* For the two hand-extracted problem props, use their known room-art rectangles
-       directly. This bypasses every generic picker/legacy actor path. */
-    let hit=null;
-    if(MAPID==='house03'){
-      const o=(MD.roomActors||[]).find(a=>a.editKey==='furniture:exact:house03:bookshelf_left'&&!a.editorDeleted);
-      if(o&&w.x>=16&&w.x<=60&&w.y>=43&&w.y<=88)hit=o;
-    }else if(MAPID==='house03_bedroom'){
-      const zones=[
-        ['furniture:exact:house03_bedroom:wardrobe',70,25,118,102],
-        ['furniture:exact:house03_bedroom:bookshelf',108,28,150,96]
-      ];
-      for(const [key,x0,y0,x1,y1] of zones){if(w.x>=x0&&w.x<=x1&&w.y>=y0&&w.y<=y1){hit=(MD.roomActors||[]).find(a=>a.editKey===key&&!a.editorDeleted)||null;if(hit)break;}}
-    }
-    if(!hit)hit = pickObject(w.x, w.y);
+    let hit = pickObject(w.x, w.y);
     /* Mobile forgiveness for small/tall furniture: if the exact pixel under the finger
        misses, search a small world-space radius and prefer dedicated furniture. */
     if(!hit&&/^house\d/.test(MAPID||'')){
