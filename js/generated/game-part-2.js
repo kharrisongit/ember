@@ -1363,6 +1363,12 @@ function cropForegroundMask(data,w,h){
   return fg;
 }
 function buildHouseFurnitureLayers(){
+  /* Rebuilding can be triggered more than once during boot. Remove previously generated
+     furniture actors first so an earlier partial pass cannot leave invisible/duplicate hit targets. */
+  for(const m of Object.values(W.maps||{}))if(/^house\d/.test(Object.keys(W.maps).find(k=>W.maps[k]===m)||'')){
+    if(m.roomActors)m.roomActors=m.roomActors.filter(a=>!a.interiorFurniture);
+    m._layeredFurniture=false;m._roomBaseCanvas=null;
+  }
   /* Household props are not consistently named i*.  Build the candidate list from
      every static atlas sprite whose name describes freestanding interior scenery. */
   const furniture=/(?:^|_)(?:bed|chair|stool|bench|table|desk|wardrobe|closet|cabinet|cupboard|dresser|shelf|bookcase|bookshelf|crate|crates|barrel|chest|rug|carpet|plant|pot|lamp|candle|fireplace|hearth|stove|oven|counter|sack|basket)(?:_|\d|$)/i;
@@ -1671,6 +1677,14 @@ function moveEditorActor(o,x,y,save=false) {
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
+  /* Exact extracted furniture gets first refusal. Its dedicated canvas is the visual
+     object the user is touching, so do not let legacy room props intercept the drag. */
+  const exactHits=[];
+  for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&o.extractedCanvas&&!o.editorDeleted){
+    const w=o.extractedCanvas.width,h=o.extractedCanvas.height,left=o.x-w/2,top=o.y-h;
+    if(wx>=left&&wx<=left+w&&wy>=top&&wy<=o.y)exactHits.push({o,area:w*h,dist:(wx-o.x)*(wx-o.x)+(wy-(top+h/2))*(wy-(top+h/2))});
+  }
+  if(exactHits.length){exactHits.sort((a,b)=>a.area-b.area||a.dist-b.dist);return exactHits[0].o;}
   if(/^house\d/.test(MAPID||"")&&!window.__furnReported){
     window.__furnReported=true;
     const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
