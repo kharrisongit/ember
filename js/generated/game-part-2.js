@@ -1424,8 +1424,17 @@ function buildHouseFurnitureLayers(){
         const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+1)-y);
         if(w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
           const key='furniture:crop:'+id+':'+bi;
-          m.roomActors.push({roomCrop:[x,y,w,h],editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]});
-          found.push({crop:true,x,y,w,h});occupied.push([x,y,x+w,y+h]);total++;
+          const sprName='extracted_'+id+'_'+bi;
+          const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
+          drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
+          /* Exact pixels from the existing room art; no redrawing. */
+          const qim=qg.getImageData(0,0,w,h),fg=cropForegroundMask(qim.data,w,h);
+          for(let qi=0;qi<fg.length;qi++)if(!fg[qi])qim.data[qi*4+3]=0;
+          qg.putImageData(qim,0,0);
+          SPR[sprName]=[0,0,w,h,1]; /* dimensions for editor hit-testing */
+          const actor={spr:sprName,extractedCanvas:q,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]};
+          m.roomActors.push(actor);
+          found.push({crop:true,x,y,w,h,mask:fg});occupied.push([x,y,x+w,y+h]);total++;
         }
       }}
     for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
@@ -1457,7 +1466,7 @@ function buildHouseFurnitureLayers(){
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
         const raw=new Uint8ClampedArray(f.w*f.h*4);
         for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
-        const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
+        const fg=f.mask||cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
         for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
       }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
@@ -3562,6 +3571,7 @@ function drawWorld(t, dt) {
     }
     if (o.portalLayer) { drawRise(); drawSaintBuff(); continue; }
     if (o.school) continue; // Native school animation patches draw these seated characters.
+    if(o.extractedCanvas){ctx.drawImage(o.extractedCanvas,o.x-o.extractedCanvas.width/2,o.y-o.extractedCanvas.height);continue;}
     if(o.roomBackgroundPatch){
       const {spr,rect:[sx,sy,w,h]}=o.roomBackgroundPatch,s=SPR[spr];
       if(s)drawGameImage(ctx,atlasImg,s[0]+sx,s[1]+sy,w,h,o.x,o.y,w,h);
