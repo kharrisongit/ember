@@ -32,7 +32,8 @@ function ensureInteriorLayers(){
    then prepare exactly once. */
 (function waitForInteriorWorld(){
  if(_interiorPrepared)return;
- if(globalThis.W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"){
+ if(globalThis.W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"&&
+    globalThis.atlasImg&&atlasImg.complete&&atlasImg.naturalWidth>0){
   ensureInteriorLayers();return;
  }
  setTimeout(waitForInteriorWorld,50);
