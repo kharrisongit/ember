@@ -1406,7 +1406,18 @@ function buildHouseFurnitureLayers(){
       if(!opaque)for(let yy=Math.max(0,y-1);yy<=Math.min(sh-1,y+1)&&!opaque;yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(sw-1,x+1);xx++)if(sd[(yy*sw+xx)*4+3]>=80){opaque=true;break}
       if(!opaque)continue;
       const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;
-      const p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
+      /* Do not synthesize wall/floor pixels by sampling around the furniture.
+         That produced patchwork panels after an object moved. Use the nearest pixel
+         on the same scanline outside the extracted object; for wall-mounted furniture
+         this preserves the room's horizontal wall pattern instead of inventing texture. */
+      let p=null;
+      for(let d=1;d<=Math.max(sw,sh)+8&&!p;d++){
+        for(const xx of [x0-1-d,x0+sw+d]){
+          if(xx<0||xx>=rw)continue;
+          const i=(ry*rw+xx)*4;p=[src[i],src[i+1],src[i+2],src[i+3]];break;
+        }
+      }
+      if(!p)p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
       out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
     }
   };
