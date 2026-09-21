@@ -1458,9 +1458,9 @@ function buildHouseFurnitureLayers(){
     const EXACT_FURNITURE={
       /* Starting house only. These are literal source-art cuts; each becomes its own
          editor actor. No other house is touched until this one is verified. */
-      house03:[
-        ['bookshelf_left',20,47,36,35]
-      ],
+      /* Main room stays baked for now. Its small bookcase was not safely isolated,
+         so do NOT cut or rebuild anything in this room until we have an exact mask. */
+      house03:[],
       house03_bedroom:[
         ['wardrobe',79,34,29,43],
         ['bookshelf',113,33,31,47],
