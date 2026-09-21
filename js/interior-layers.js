@@ -56,6 +56,13 @@ editorSprite=function(o){
  if(o&&o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1,0];
  return _editorSprite(o);
 };
+function updateInteriorBadge(){
+ let el=document.getElementById("interiorDiagBadge");
+ if(!el){el=document.createElement("div");el.id="interiorDiagBadge";el.style.cssText="position:fixed;left:8px;bottom:8px;z-index:99999;background:#111;color:#fff;padding:6px 8px;font:12px monospace;border:1px solid #fff;pointer-events:none";document.body.appendChild(el)}
+ const here=(globalThis.MD?.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length,d=globalThis.__interiorLayerDiag||{};
+ el.textContent="FURN "+here+" / "+(d.actors??"?")+" prep:"+(d.prepared===false?"ERR":d.prepared?"YES":"WAIT")+(d.error?" "+d.error.slice(0,70):"");
+}
+setInterval(updateInteriorBadge,500);
 /* Visible diagnostic: when MOVE is enabled inside a house, report generated layer count once.
    This tells us whether failure is generation or hit-testing, instead of guessing. */
 let _diagMap="";
