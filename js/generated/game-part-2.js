@@ -10666,7 +10666,7 @@ for (const id of PAINTS) {
     }
   });
 }
-tap(document.getElementById("pUndo"), undoStroke);
+tap(document.getElementById("pUndo"), (...args) => window.__emberUndoStroke(...args));
 tap(document.getElementById("pSize"), () => {
   brush = brush === 1 ? 2 : brush === 2 ? 4 : brush === 4 ? 6 : 1;
   document.getElementById("pSize").textContent = "BRUSH " + brush;
