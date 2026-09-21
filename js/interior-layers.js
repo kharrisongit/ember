@@ -97,5 +97,35 @@ try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k 
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
 const remove=()=>{if(!selected||!selected.interiorFurniture)return false;const info=editorActorInfo(selected);if(!info)return false;selected.editorDeleted=true;(actorLayouts[MAPID]||={})[info.key]={x:selected.x,y:selected.y,deleted:true};selected=null;dragObj=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return true};
 for(const id of ["nDel","xdel"]){const e=document.getElementById(id);if(e)for(const ev of ["click","touchstart"])e.addEventListener(ev,x=>{if((id!=="xdel"||editing)&&remove()){x.preventDefault();x.stopImmediatePropagation()}},true)}
+/* Export bridge for generated furniture layers.  Keep edits transient until COPY. */
+function interiorLayerExport(){
+ const out={version:1,map:MAPID,furniture:[]};
+ for(const a of (MD.roomActors||[])){
+  if(!a.interiorFurniture)continue;
+  const info=editorActorInfo(a);if(!info)continue;
+  const base=a.roomCrop?{roomCrop:a.roomCrop.slice()}:{spr:a.spr};
+  out.furniture.push(Object.assign(base,{key:info.key,x:Math.round(a.x),y:Math.round(a.y),deleted:!!a.editorDeleted,moveBlocks:(a.moveBlocks||[]).slice()}));
+ }
+ return out;
+}
+function appendInteriorExport(raw){
+ let data;try{data=JSON.parse(raw)}catch(e){return raw}
+ if(!data||typeof data!=="object")return raw;
+ data.interiorLayers=interiorLayerExport();return JSON.stringify(data,null,2);
+}
+for(const id of ["bCopy","copy","xcopy","nCopy"]){
+ const e=document.getElementById(id);if(!e)continue;
+ e.addEventListener("click",async ev=>{
+  if(!editing||!(MD.roomActors||[]).some(a=>a.interiorFurniture))return;
+  /* Let the native exporter run first, then augment its text/clipboard on the next task. */
+  setTimeout(async()=>{
+   try{
+    const ta=document.querySelector("textarea");
+    if(ta&&ta.value&&ta.value.trim().startsWith("{"))ta.value=appendInteriorExport(ta.value);
+    if(navigator.clipboard&&ta&&ta.value)await navigator.clipboard.writeText(ta.value);
+   }catch(err){console.warn("interior export bridge",err)}
+  },0);
+ },false);
+}
 const reset=document.getElementById("bReset");if(reset)for(const ev of ["click","touchstart"])reset.addEventListener(ev,()=>{if(typeof resetArmed!=="undefined"&&resetArmed)delete actorLayouts[MAPID]},true);
 })();
