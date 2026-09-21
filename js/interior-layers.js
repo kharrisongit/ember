@@ -21,8 +21,9 @@ function prep(){
    const [l,t,r,bot]=b, bw=r-l,bh=bot-t;
    /* structural perimeter / doorway strips stay structural */
    if(bw>=rw*.72||bh>=rh*.72||l<=2||r>=rw-2||t<=2||bot>=rh-2)continue;
-   /* If an explicit actor already owns this block, don't duplicate it. */
-   if(actors.some(a=>a.spr&&!a.editorDeleted&&Math.abs(a.x-(l+r)/2)<=Math.max(10,bw/2)&&Math.abs((a.y||0)-bot)<=Math.max(12,bh)))continue;
+   /* Do not suppress painted furniture merely because an NPC/actor is standing near it.
+      Only a furniture layer already tied to this exact block counts as owned. */
+   if(actors.some(a=>a.interiorFurniture&&!a.editorDeleted&&(a.sourceBlock===i||(a.moveBlocks||[]).includes(i))))continue;
    const padX=Math.max(3,Math.min(14,Math.round(bw*.18))), padTop=Math.max(8,Math.min(30,Math.round(bh*.9)));
    const x0=Math.max(0,Math.floor(l-padX)), y0=Math.max(0,Math.floor(t-padTop));
    const x1=Math.min(rw,Math.ceil(r+padX)), y1=Math.min(rh,Math.ceil(bot+3));
@@ -33,18 +34,18 @@ function prep(){
      Runs once at atlas load, on a coarse grid, and skips areas already owned by actors. */
   const owned=()=>actors.filter(a=>a.roomCrop&&!a.editorDeleted).map(a=>[a.roomCrop[0],a.roomCrop[1],a.roomCrop[0]+a.roomCrop[2],a.roomCrop[1]+a.roomCrop[3]]);
   const occ=owned();
-  const candidates=furnitureNames(rw,rh).filter(n=>{const s=SPR[n];return s&&s[2]<=64&&s[3]<=64});
+  const candidates=furnitureNames(rw,rh).filter(n=>{const s=SPR[n];return s&&s[2]<=96&&s[3]<=96});
   const roomData=rg.getImageData(0,0,rw,rh).data;
   let budget=0;
   for(const n of candidates){
-   if(budget>180000)break;
+   if(budget>320000)break;
    const s=SPR[n], sw=s[2],sh=s[3],cc=fc(n);if(!cc)continue;
    const sd=cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,sw,sh).data;
-   const step=Math.max(2,Math.floor(Math.min(sw,sh)/5));
+   const step=Math.max(1,Math.floor(Math.min(sw,sh)/7));
    for(let y=4;y<=rh-sh-4;y+=step)for(let x=4;x<=rw-sw-4;x+=step){
     budget++;if(occ.some(r=>x<r[2]&&x+sw>r[0]&&y<r[3]&&y+sh>r[1]))continue;
     const sc=match(roomData,rw,rh,sd,sw,sh,x,y);
-    if(sc>.965){
+    if(sc>.93){
      const key="furniture:decor:"+n+":"+x+":"+y;
      actors.push({spr:n,editKey:key,x:x+sw/2,y:y+sh,sy:y+sh,schoolArt:true,interiorFurniture:true,moveBlocks:[]});
      occ.push([x,y,x+sw,y+sh]);x+=Math.max(step,sw-step);
