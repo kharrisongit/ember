@@ -5021,7 +5021,9 @@ function glassShieldDeflectFoe(f) {
   f.glassParryQueued = false;
   glassShieldPulse = .42;
   glassGifStart = tAcc;
-  /* Successful Glass Shield block stops the hit in place. No retreat/bounce at all. */
+  /* Lock the blocker briefly at its exact impact position. This prevents the normal
+     AI spacing/orbit code from reading the cancelled swing as a cue to sprint away. */
+  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .22;
   f.retreat = 0;
   f.retreatX = undefined;
   f.retreatY = undefined;
@@ -9208,6 +9210,11 @@ function stepFoes(dt) {
       }
       if (f.emerge !== undefined && f.emerge < 1) f.emerge = 1;
       f.cool = (f.cool || 0) - dt;
+      if(f.glassBlockHold>0){
+        f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);
+        f.x=f.glassBlockAnchorX;f.y=f.glassBlockAnchorY;f.retreat=0;f.st="idle";
+        continue;
+      }
       if (f.swordGuard > 0) f.swordGuard = Math.max(0, f.swordGuard - dt);
       if (f.kind === "kdragon" && f.chaseDelay > 0) {
         f.chaseDelay = Math.max(0, f.chaseDelay - dt); f.st = "idle";
@@ -9305,6 +9312,11 @@ function stepFoes(dt) {
     if (lastFight && MAPID === "cinderhold" &&
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
+    if(f.glassBlockHold>0){
+      f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);
+      f.x=f.glassBlockAnchorX;f.y=f.glassBlockAnchorY;f.retreat=0;f.st="idle";
+      continue;
+    }
     if(f.reverseRise>0){f.reverseRise=Math.max(0,f.reverseRise-dt);f.emerge=1;continue;}
     if (f.hold > 0) {
       f.hold -= dt;
