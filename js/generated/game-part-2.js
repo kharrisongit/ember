@@ -1450,15 +1450,6 @@ function buildHouseFurnitureLayers(){
     };
     for(const e of EXACT_FURNITURE[id]||[])addExact(...e);
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    const addExact=cut=>{const [x,y,w,h]=cut.rect,key='furniture:exact:'+id+':'+cut.name;if(m.roomActors.some(a=>a.editKey===key))return;
-      const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-      drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-      const im=qg.getImageData(0,0,w,h),fg=cropForegroundMask(im.data,w,h);
-      for(let i=0;i<fg.length;i++)if(!fg[i])im.data[i*4+3]=0;qg.putImageData(im,0,0);
-      const sprName='exact_'+id+'_'+cut.name;SPR[sprName]=[0,0,w,h,1];
-      m.roomActors.push({spr:sprName,extractedCanvas:q,exactFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:cut.block==null?[]:[cut.block]});
-      found.push({crop:true,x,y,w,h,mask:fg});occupied.push([x,y,x+w,y+h]);total++;
-    };
     installExactHouseFurniture(m,id,room,cv,g,found,occupied,addExact);
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
       /* Unmatched baked furniture is intentionally left alone here. It will be
