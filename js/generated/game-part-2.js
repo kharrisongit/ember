@@ -1449,7 +1449,9 @@ function buildHouseFurnitureLayers(){
   };
   let total=0;
   for(const [id,m] of Object.entries(W.maps||{})){
-    if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
+    /* House-by-house conversion. For now ONLY the starting house and its bedroom are
+       converted; every other house keeps its original baked room art untouched. */
+    if(!m.roomArt||!/^house03(?:_bedroom)?$/.test(id))continue;
     const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors ||= [];
     /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
        not collision guesses. Add more maps here as we verify their captured art. */
