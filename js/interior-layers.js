@@ -99,6 +99,7 @@ applyActorLayout=function(m,id){
   if(!o.interiorFurniture)continue;
   const key=o.editKey||'actor:'+(m.roomActors||[]).indexOf(o)+':'+o.spr,v=saved[key];
   o.editorDeleted=!!v?.deleted;
+  if(o.editorDeleted)for(const i of o.moveBlocks||[]){const b=m.roomBlocks?.[i];if(b)b._editorFurnitureDeleted=true}
  }
 };
 /* rebuildSolid consumes roomBlocks; hide blocks owned by deleted furniture without splicing
@@ -108,6 +109,14 @@ rebuildSolid=function(){
  const hidden=[];
  for(const b of MD?.roomBlocks||[])if(b&&b._editorFurnitureDeleted){hidden.push(b);b._savedCoords=b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999}
  try{return _rebuildSolid()}finally{for(const b of hidden){const q=b._savedCoords;for(let i=0;i<4;i++)b[i]=q[i];delete b._savedCoords}}
+};
+/* Generated furniture is added after applyWorld, but loadMap immediately calls
+   applyActorLayout. Reapply saved layouts after generation so exported ACTOR edits
+   also work after refresh/map re-entry. */
+const _ensureInteriorLayers=ensureInteriorLayers;
+ensureInteriorLayers=function(){
+ const was=_interiorPrepared;_ensureInteriorLayers();
+ if(!was&&_interiorPrepared)for(const [id,m] of Object.entries(W.maps||{}))if(m._layeredFurniture)applyActorLayout(m,id);
 };
 /* RESET must truly discard actor edits before native loadMap() reapplies actorLayouts.
    Do this only on the confirmed second RESET tap. */
