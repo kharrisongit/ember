@@ -6,16 +6,30 @@ function fc(n){const s=SPR[n];if(!s)return null;const c=document.createElement("
 function match(rd,rw,rh,sd,sw,sh,x0,y0){if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let h=0,g=0,st=Math.max(1,Math.floor(Math.min(sw,sh)/7));for(let y=0;y<sh;y+=st)for(let x=0;x<sw;x+=st){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<28)g++}if(h<3||g/h<.72)return 0;h=g=0;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<36)g++}return h>8?g/h:0}
 function erase(base,rw,rh,sd,sw,sh,x0,y0){const src=new Uint8ClampedArray(base.data),out=base.data;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;let rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;let b=-1;for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const xx of [rx-d,rx+d])if(xx>=0&&xx<rw){let lx=xx-x0,ly=ry-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(ry*rw+xx)*4;break}}if(b<0)for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const yy of [ry-d,ry+d])if(yy>=0&&yy<rh){let lx=rx-x0,ly=yy-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(yy*rw+rx)*4;break}}if(b>=0){let oi=(ry*rw+rx)*4;out[oi]=src[b];out[oi+1]=src[b+1];out[oi+2]=src[b+2];out[oi+3]=src[b+3]}}}
 function prep(){
- let names=[],ss=new Map();
-  for(const [id,m] of Object.entries(W.maps||{})){
-  if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
-  const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3];names=furnitureNames(rw,rh);ss=new Map();for(const n of names){const cc=fc(n);if(cc)ss.set(n,cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,cc.width,cc.height))}const room=document.createElement("canvas");room.width=rw;room.height=rh;
-  const rg=room.getContext("2d",{willReadFrequently:true});rg.imageSmoothingEnabled=false;drawGameImage(rg,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);
-  const rd=rg.getImageData(0,0,rw,rh),found=[],occ=[];
-  const add=(n,x,y,sc)=>{const s=SPR[n],key="furniture:"+n+":"+x+":"+y;if((m.roomActors||[]).some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+s[2]/2,y:y+s[3],sy:y+s[3],schoolArt:true,interiorFurniture:true,moveBlocks:[]};(m.roomBlocks||[]).forEach((b,i)=>{let cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;if(cx>=x&&cx<=x+s[2]&&cy>=y&&cy<=y+s[3])a.moveBlocks.push(i)});(m.roomActors||=[]).push(a);found.push({n,x,y,sc});occ.push([x,y,x+s[2],y+s[3]])};
-  for(const b of m.roomBlocks||[]){let cx=(b[0]+b[2])/2,bot=b[3],best=null;for(const n of names){if(/^irug/.test(n))continue;let s=SPR[n],d=ss.get(n)?.data;if(!d)continue;for(let ox=-4;ox<=4;ox++)for(let oy=-5;oy<=5;oy++){let x=Math.round(cx-s[2]/2)+ox,y=Math.round(bot-s[3])+oy,sc=match(rd.data,rw,rh,d,s[2],s[3],x,y);if(sc>.72&&(!best||sc>best.sc))best={n,x,y,sc}}}if(best&&!occ.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,best.sc)}
-  for(const n of names.filter(n=>/^irug/.test(n))){let s=SPR[n],d=ss.get(n)?.data;if(!d)continue;for(let y=40;y<=rh-s[3]-8;y+=2)for(let x=16;x<=rw-s[2]-16;x+=2){if(occ.some(r=>x<r[2]&&x+s[2]>r[0]&&y<r[3]&&y+s[3]>r[1]))continue;let sc=match(rd.data,rw,rh,d,s[2],s[3],x,y);if(sc>.96){add(n,x,y,sc);x+=s[2]-2}}}
-  if(found.length){const clean=rg.getImageData(0,0,rw,rh);found.sort((a,b)=>SPR[b.n][2]*SPR[b.n][3]-SPR[a.n][2]*SPR[a.n][3]);for(const f of found){let s=SPR[f.n],d=ss.get(f.n).data;erase(clean,rw,rh,d,s[2],s[3],f.x,f.y)}rg.putImageData(clean,0,0);m._roomBaseCanvas=room;m._layeredFurniture=true}
+ /* Convert every collision-backed painted furnishing in houses into one independent crop actor.
+    This is exhaustive with respect to roomBlocks and does not need to know the prop's sprite name. */
+ for(const [id,m] of Object.entries(W.maps||{})){
+  if(!m.roomArt||!/^house\\d+(?:_bedroom\\d*)?$/.test(id))continue;
+  const rs=SPR[m.roomArt];if(!rs)continue;
+  const rw=rs[2],rh=rs[3],room=document.createElement("canvas");room.width=rw;room.height=rh;
+  const rg=room.getContext("2d",{willReadFrequently:true});rg.imageSmoothingEnabled=false;
+  drawGameImage(rg,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);
+  m.roomActors||=[];m.roomBlocks||=[];
+  const actors=m.roomActors, blocks=m.roomBlocks;
+  for(let i=0;i<blocks.length;i++){
+   const b=blocks[i]; if(!b||b.length<4)continue;
+   const [l,t,r,bot]=b, bw=r-l,bh=bot-t;
+   /* structural perimeter / doorway strips stay structural */
+   if(bw>=rw*.72||bh>=rh*.72||l<=2||r>=rw-2||t<=2||bot>=rh-2)continue;
+   /* If an explicit actor already owns this block, don't duplicate it. */
+   if(actors.some(a=>a.spr&&!a.editorDeleted&&Math.abs(a.x-(l+r)/2)<=Math.max(10,bw/2)&&Math.abs((a.y||0)-bot)<=Math.max(12,bh)))continue;
+   const padX=Math.max(3,Math.min(14,Math.round(bw*.18))), padTop=Math.max(8,Math.min(30,Math.round(bh*.9)));
+   const x0=Math.max(0,Math.floor(l-padX)), y0=Math.max(0,Math.floor(t-padTop));
+   const x1=Math.min(rw,Math.ceil(r+padX)), y1=Math.min(rh,Math.ceil(bot+3));
+   const key="furniture:block:"+i+":"+x0+":"+y0+":"+x1+":"+y1;
+   actors.push({roomCrop:[x0,y0,x1-x0,y1-y0],editKey:key,x:(x0+x1)/2,y:y1,sy:y1,schoolArt:true,interiorFurniture:true,moveBlocks:[i],sourceBlock:i});
+  }
+  m._layeredFurniture=true;
  }
 }
 const ready=atlasImg.onload;atlasImg.onload=()=>{try{prep()}catch(e){console.error("interior layer prep failed",e)}if(typeof ready==="function")ready.call(atlasImg)};
