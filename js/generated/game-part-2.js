@@ -5022,10 +5022,10 @@ function glassShieldDeflectFoe(f) {
   glassShieldPulse = .42;
   glassGifStart = tAcc;
   /* Successful Glass Shield block: short recoil, not a huge launch backward. */
-  f.retreat = Math.max(f.retreat || 0, .85);
+  f.retreat = Math.max(f.retreat || 0, .42);
   f.retreatX = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
   f.retreatY = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
-  f.glassRetreatBoost = 2.35;
+  f.glassRetreatBoost = 1.25;
   f.cool = Math.max(f.cool || 0, 1.05);
   // The block resolves on the attack's contact frame. Switch straight into
   // retreat movement here so recoil starts NOW instead of waiting for the
