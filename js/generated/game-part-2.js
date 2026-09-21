@@ -1461,35 +1461,9 @@ function buildHouseFurnitureLayers(){
     };
     installExactHouseFurniture(m,id,room,cv,g,found,occupied,addExact);
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
-      else {
-        /* Some baked wardrobes/bookcases/crates have no standalone atlas sprite. Treat
-           the painted region above their collision footprint as a native crop actor. */
-        /* Collision usually covers only the furniture base. Keep fallback crops tight:
-           enough artwork above the base for tall wardrobes, but never a broad wall patch. */
-        const padX=Math.max(3,Math.min(8,Math.round(bw*.12)));
-        /* roomBlocks mark the FOOTPRINT, not the visual bounds. Tall wall furniture can
-           extend far above it. Extract the complete existing object while keeping width
-           anchored to its footprint so neighboring wall art is excluded. */
-        const tall=bw>=28&&bh<=28;
-        const above=tall?Math.min(92,Math.max(48,Math.round(bw*1.45))):Math.max(12,Math.min(38,Math.round(Math.max(bh*1.4,bw*.65))));
-        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-above));
-        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+2)-y);
-        if(w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
-          const key='furniture:crop:'+id+':'+bi;
-          const sprName='extracted_'+id+'_'+bi;
-          const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-          drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-          /* Exact pixels from the existing room art; no redrawing. */
-          const qim=qg.getImageData(0,0,w,h);
-          /* Dedicated extracted sprite: preserve the source pixels verbatim. Background
-             removal is handled separately; never carve holes through the furniture. */
-          const fg=new Uint8Array(w*h);fg.fill(1);
-          SPR[sprName]=[0,0,w,h,1]; /* dimensions for editor hit-testing */
-          const actor={spr:sprName,extractedCanvas:q,extractedFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]};
-          m.roomActors.push(actor);
-          found.push({crop:true,x,y,w,h,mask:fg});occupied.push([x,y,x+w,y+h]);total++;
-        }
-      }}
+      /* Unmatched baked furniture is intentionally left alone here. It will be
+         replaced by explicit, pixel-exact extracted assets rather than heuristic crops. */
+      }
     for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
     /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
        the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
