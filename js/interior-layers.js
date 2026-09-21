@@ -1,132 +1,28 @@
 /* Household furniture layers: recover original i* sprites from baked room paintings. */
 (()=>{
-const STRUCT=/^(?:house|room|floor|wall|roof|door|stair|window|ground|terrain|water|shore|cliff|path|road|bridge|fence|swall|white|pale|sett|rail|mtn|npc|pc_|player|corin|dr\d|ride_|sm_|fm_|sd_|kg_|br_|lg_|it_|temple|first_temple|scientist|dragon7|wall7|wall8|flame7|royal_|school|school2|library_|witchmoor)/;
-function furnitureNames(rw,rh){return Object.keys(SPR).filter(n=>{const s=SPR[n];if(!s||!Array.isArray(s)||s.length<4||STRUCT.test(n))return false;const w=s[2],h=s[3],frames=s[4]||1;if(frames!==1||w<4||h<4||w>rw*.75||h>rh*.75)return false;return true})}
+const F=/^(?:ibed|ichair|ifire|ilamp|iplant|irug|ishelf|istove|itable)\d+$/;
 function fc(n){const s=SPR[n];if(!s)return null;const c=document.createElement("canvas");c.width=s[2];c.height=s[3];const g=c.getContext("2d",{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,s[0],s[1],s[2],s[3],0,0,s[2],s[3]);return c}
 function match(rd,rw,rh,sd,sw,sh,x0,y0){if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let h=0,g=0,st=Math.max(1,Math.floor(Math.min(sw,sh)/7));for(let y=0;y<sh;y+=st)for(let x=0;x<sw;x+=st){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<28)g++}if(h<3||g/h<.72)return 0;h=g=0;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<36)g++}return h>8?g/h:0}
 function erase(base,rw,rh,sd,sw,sh,x0,y0){const src=new Uint8ClampedArray(base.data),out=base.data;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;let rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;let b=-1;for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const xx of [rx-d,rx+d])if(xx>=0&&xx<rw){let lx=xx-x0,ly=ry-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(ry*rw+xx)*4;break}}if(b<0)for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const yy of [ry-d,ry+d])if(yy>=0&&yy<rh){let lx=rx-x0,ly=yy-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(yy*rw+rx)*4;break}}if(b>=0){let oi=(ry*rw+rx)*4;out[oi]=src[b];out[oi+1]=src[b+1];out[oi+2]=src[b+2];out[oi+3]=src[b+3]}}}
 function prep(){
- /* Convert every collision-backed painted furnishing in houses into one independent crop actor.
-    This is exhaustive with respect to roomBlocks and does not need to know the prop's sprite name. */
+ const names=Object.keys(SPR).filter(n=>F.test(n)),ss=new Map();
+ for(const n of names){const c=fc(n);if(c)ss.set(n,c.getContext("2d",{willReadFrequently:true}).getImageData(0,0,c.width,c.height))}
  for(const [id,m] of Object.entries(W.maps||{})){
-  if(!m.roomArt||!/^house\\d+(?:_bedroom\\d*)?$/.test(id))continue;
-  const rs=SPR[m.roomArt];if(!rs)continue;
-  const rw=rs[2],rh=rs[3],room=document.createElement("canvas");room.width=rw;room.height=rh;
-  const rg=room.getContext("2d",{willReadFrequently:true});rg.imageSmoothingEnabled=false;
-  drawGameImage(rg,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);
-  m.roomActors||=[];m.roomBlocks||=[];
-  const actors=m.roomActors, blocks=m.roomBlocks;
-  for(let i=0;i<blocks.length;i++){
-   const b=blocks[i]; if(!b||b.length<4)continue;
-   const [l,t,r,bot]=b, bw=r-l,bh=bot-t;
-   /* structural perimeter / doorway strips stay structural */
-   if(bw>=rw*.72||bh>=rh*.72||l<=2||r>=rw-2||t<=2||bot>=rh-2)continue;
-   /* Do not suppress painted furniture merely because an NPC/actor is standing near it.
-      Only a furniture layer already tied to this exact block counts as owned. */
-   if(actors.some(a=>a.interiorFurniture&&!a.editorDeleted&&(a.sourceBlock===i||(a.moveBlocks||[]).includes(i))))continue;
-   const padX=Math.max(3,Math.min(14,Math.round(bw*.18))), padTop=Math.max(8,Math.min(30,Math.round(bh*.9)));
-   const x0=Math.max(0,Math.floor(l-padX)), y0=Math.max(0,Math.floor(t-padTop));
-   const x1=Math.min(rw,Math.ceil(r+padX)), y1=Math.min(rh,Math.ceil(bot+3));
-   const key="furniture:block:"+i+":"+x0+":"+y0+":"+x1+":"+y1;
-   actors.push({roomCrop:[x0,y0,x1-x0,y1-y0],editKey:key,x:(x0+x1)/2,y:y1,sy:y1,schoolArt:true,interiorFurniture:true,moveBlocks:[i],sourceBlock:i});
-  }
-  /* Non-collision decor pass: find exact atlas props only in the room's painted art.
-     Runs once at atlas load, on a coarse grid, and skips areas already owned by actors. */
-  const owned=()=>actors.filter(a=>a.roomCrop&&!a.editorDeleted).map(a=>[a.roomCrop[0],a.roomCrop[1],a.roomCrop[0]+a.roomCrop[2],a.roomCrop[1]+a.roomCrop[3]]);
-  const occ=owned();
-  const candidates=furnitureNames(rw,rh).filter(n=>{const s=SPR[n];return s&&s[2]<=96&&s[3]<=96});
-  const roomData=rg.getImageData(0,0,rw,rh).data;
-  let budget=0;
-  for(const n of candidates){
-   if(budget>320000)break;
-   const s=SPR[n], sw=s[2],sh=s[3],cc=fc(n);if(!cc)continue;
-   const sd=cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,sw,sh).data;
-   const step=Math.max(1,Math.floor(Math.min(sw,sh)/7));
-   for(let y=4;y<=rh-sh-4;y+=step)for(let x=4;x<=rw-sw-4;x+=step){
-    budget++;if(occ.some(r=>x<r[2]&&x+sw>r[0]&&y<r[3]&&y+sh>r[1]))continue;
-    const sc=match(roomData,rw,rh,sd,sw,sh,x,y);
-    if(sc>.93){
-     const key="furniture:decor:"+n+":"+x+":"+y;
-     actors.push({spr:n,editKey:key,x:x+sw/2,y:y+sh,sy:y+sh,schoolArt:true,interiorFurniture:true,moveBlocks:[]});
-     occ.push([x,y,x+sw,y+sh]);x+=Math.max(step,sw-step);
-    }
-   }
-  }
-  /* Build the permanent structural-only room background once all movable layers are known.
-     Each object's original pixels are healed from nearby floor/wall pixels, so dragging/deleting
-     reveals clean room art instead of a baked duplicate. */
-  if(actors.some(a=>a.interiorFurniture&&!a.editorDeleted)){
-   const clean=rg.getImageData(0,0,rw,rh);
-   for(const a of actors){
-    if(!a.interiorFurniture||a.editorDeleted)continue;
-    let x0,y0,sw,sh,sd=null;
-    if(a.roomCrop){[x0,y0,sw,sh]=a.roomCrop;const tmp=rg.getImageData(x0,y0,sw,sh);sd=tmp.data}
-    else if(a.spr&&SPR[a.spr]){
-     const s=SPR[a.spr];sw=s[2];sh=s[3];x0=Math.round(a.x-sw/2);y0=Math.round(a.y-sh);
-     const cc=fc(a.spr);if(cc)sd=cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,sw,sh).data;
-    }
-    if(!sd||sw<1||sh<1)continue;
-    erase(clean,rw,rh,sd,sw,sh,x0,y0);
-   }
-   rg.putImageData(clean,0,0);m._roomBaseCanvas=room;
-  }
-  m._layeredFurniture=true;
+  if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
+  const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],room=document.createElement("canvas");room.width=rw;room.height=rh;
+  const rg=room.getContext("2d",{willReadFrequently:true});rg.imageSmoothingEnabled=false;drawGameImage(rg,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);
+  const rd=rg.getImageData(0,0,rw,rh),found=[],occ=[];
+  const add=(n,x,y,sc)=>{const s=SPR[n],key="furniture:"+n+":"+x+":"+y;if((m.roomActors||[]).some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+s[2]/2,y:y+s[3],sy:y+s[3],schoolArt:true,interiorFurniture:true,moveBlocks:[]};(m.roomBlocks||[]).forEach((b,i)=>{let cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;if(cx>=x&&cx<=x+s[2]&&cy>=y&&cy<=y+s[3])a.moveBlocks.push(i)});(m.roomActors||=[]).push(a);found.push({n,x,y,sc});occ.push([x,y,x+s[2],y+s[3]])};
+  for(const b of m.roomBlocks||[]){let cx=(b[0]+b[2])/2,bot=b[3],best=null;for(const n of names){if(/^irug/.test(n))continue;let s=SPR[n],d=ss.get(n)?.data;if(!d)continue;for(let ox=-4;ox<=4;ox++)for(let oy=-5;oy<=5;oy++){let x=Math.round(cx-s[2]/2)+ox,y=Math.round(bot-s[3])+oy,sc=match(rd.data,rw,rh,d,s[2],s[3],x,y);if(sc>.72&&(!best||sc>best.sc))best={n,x,y,sc}}}if(best&&!occ.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,best.sc)}
+  for(const n of names.filter(n=>/^irug/.test(n))){let s=SPR[n],d=ss.get(n)?.data;if(!d)continue;for(let y=40;y<=rh-s[3]-8;y+=2)for(let x=16;x<=rw-s[2]-16;x+=2){if(occ.some(r=>x<r[2]&&x+s[2]>r[0]&&y<r[3]&&y+s[3]>r[1]))continue;let sc=match(rd.data,rw,rh,d,s[2],s[3],x,y);if(sc>.96){add(n,x,y,sc);x+=s[2]-2}}}
+  if(found.length){const clean=rg.getImageData(0,0,rw,rh);found.sort((a,b)=>SPR[b.n][2]*SPR[b.n][3]-SPR[a.n][2]*SPR[a.n][3]);for(const f of found){let s=SPR[f.n],d=ss.get(f.n).data;erase(clean,rw,rh,d,s[2],s[3],f.x,f.y)}rg.putImageData(clean,0,0);m._roomBaseCanvas=room;m._layeredFurniture=true}
  }
 }
 const ready=atlasImg.onload;atlasImg.onload=()=>{try{prep()}catch(e){console.error("interior layer prep failed",e)}if(typeof ready==="function")ready.call(atlasImg)};
-/* Render crop-backed furniture as first-class actors without requiring a SPR entry. */
-const _drawActor=typeof drawActor==="function"?drawActor:null;
-if(_drawActor)drawActor=function(g,o,...rest){
- if(o&&o.editorDeleted)return;
- if(o&&o.roomCrop&&MD&&MD.roomArt){
-  const rs=SPR[MD.roomArt];if(rs){
-   const q=o.roomCrop, dx=Math.round(o.x-q[2]/2),dy=Math.round(o.y-q[3]);
-   drawGameImage(g,atlasImg,rs[0]+q[0],rs[1]+q[1],q[2],q[3],dx,dy,q[2],q[3]);return;
-  }
- }
- return _drawActor.call(this,g,o,...rest);
-};
-/* Give crop actors real editor bounds so hit-testing selects the whole visible object. */
-const _editorActorInfo=editorActorInfo;
-editorActorInfo=function(o){
- const z=_editorActorInfo(o);if(!z||!o)return z;
- if(o.roomCrop){const q=o.roomCrop;z.w=q[2];z.h=q[3];z.left=o.x-q[2]/2;z.top=o.y-q[3];z.right=z.left+q[2];z.bottom=o.y}
- return z;
-};
 const rc=renderChunk;renderChunk=function(cx,cy){if((MAPID==="witchmoor"||MD.roomArt)&&MD._roomBaseCanvas){const c=document.createElement("canvas");c.width=CHUNK;c.height=CHUNK;const g=c.getContext("2d");g.imageSmoothingEnabled=false;g.fillStyle=MD.bg;g.fillRect(0,0,CHUNK,CHUNK);g.drawImage(MD._roomBaseCanvas,-cx*CHUNK,-cy*CHUNK);return c}return rc(cx,cy)};
 try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k of Object.keys(actorLayouts))delete actorLayouts[k];
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
 const remove=()=>{if(!selected||!selected.interiorFurniture)return false;const info=editorActorInfo(selected);if(!info)return false;selected.editorDeleted=true;(actorLayouts[MAPID]||={})[info.key]={x:selected.x,y:selected.y,deleted:true};selected=null;dragObj=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return true};
 for(const id of ["nDel","xdel"]){const e=document.getElementById(id);if(e)for(const ev of ["click","touchstart"])e.addEventListener(ev,x=>{if((id!=="xdel"||editing)&&remove()){x.preventDefault();x.stopImmediatePropagation()}},true)}
-/* Export bridge for generated furniture layers.  Keep edits transient until COPY. */
-function interiorLayerExport(){
- const out={version:1,map:MAPID,furniture:[]};
- for(const a of (MD.roomActors||[])){
-  if(!a.interiorFurniture)continue;
-  const info=editorActorInfo(a);if(!info)continue;
-  const base=a.roomCrop?{roomCrop:a.roomCrop.slice()}:{spr:a.spr};
-  out.furniture.push(Object.assign(base,{key:info.key,x:Math.round(a.x),y:Math.round(a.y),deleted:!!a.editorDeleted,moveBlocks:(a.moveBlocks||[]).slice()}));
- }
- return out;
-}
-function appendInteriorExport(raw){
- let data;try{data=JSON.parse(raw)}catch(e){return raw}
- if(!data||typeof data!=="object")return raw;
- data.interiorLayers=interiorLayerExport();return JSON.stringify(data,null,2);
-}
-for(const id of ["bCopy","copy","xcopy","nCopy"]){
- const e=document.getElementById(id);if(!e)continue;
- e.addEventListener("click",async ev=>{
-  if(!editing||!(MD.roomActors||[]).some(a=>a.interiorFurniture))return;
-  /* Let the native exporter run first, then augment its text/clipboard on the next task. */
-  setTimeout(async()=>{
-   try{
-    const ta=document.querySelector("textarea");
-    if(ta&&ta.value&&ta.value.trim().startsWith("{"))ta.value=appendInteriorExport(ta.value);
-    if(navigator.clipboard&&ta&&ta.value)await navigator.clipboard.writeText(ta.value);
-   }catch(err){console.warn("interior export bridge",err)}
-  },0);
- },false);
-}
 const reset=document.getElementById("bReset");if(reset)for(const ev of ["click","touchstart"])reset.addEventListener(ev,()=>{if(typeof resetArmed!=="undefined"&&resetArmed)delete actorLayouts[MAPID]},true);
 })();
