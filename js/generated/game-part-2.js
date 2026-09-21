@@ -1485,22 +1485,21 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* The starting-bedroom wardrobe covers a repeating wall/floor background. Rebuild
-       that vacated rectangle from clean neighboring strips, rather than the generic
-       furniture-heal pass (which can leave visible seams/patchwork). */
+    /* Exact wardrobe repair for the starting bedroom. Do not stretch a neighboring
+       strip. Copy intact tile-width source columns so the stone blocks, trim and lower
+       wall keep the same pixel cadence as the rest of the room. */
     if(id==='house03_bedroom'){
-      const paintStrip=(x,y,w,h,srcX)=>{
-        const im=g.getImageData(srcX,y,w,h);
-        g.putImageData(im,x,y);
-      };
-      /* wardrobe source rect 79,34..108,77: repeat intact pixels immediately to its
-         left across the hidden area. Small strips preserve the room's pixel cadence. */
-      for(let x=79;x<108;x+=4){
-        const w=Math.min(4,108-x),srcX=Math.max(67,79-w);
-        paintStrip(x,34,w,43,srcX);
+      const x0=79,x1=108,y0=34,y1=77,tile=16;
+      const src=g.getImageData(0,0,rw,rh),out=g.getImageData(0,0,rw,rh);
+      for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){
+        /* Repeat the intact pattern from two tile columns to the left. 32 px preserves
+           the room's 16 px tile phase instead of scaling or smearing pixels. */
+        const sx=x-32;
+        const si=(y*rw+sx)*4,di=(y*rw+x)*4;
+        out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];
       }
-      const refreshed=g.getImageData(0,0,rw,rh);
-      room.data.set(refreshed.data);
+      g.putImageData(out,0,0);
+      room.data.set(out.data);
     }
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
