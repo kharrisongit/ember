@@ -1537,7 +1537,9 @@ function kingDragonSprite(f) {
   return 'kdnew_' + st + '_' + d;
 }
 // Layout edits use stable map-local identities and absolute saved positions.
-const actorLayouts = (() => { try { return JSON.parse(localStorage.getItem('emberfell.actor-layout.v1')||'{}'); } catch(e) { return {}; } })();
+/* Editor layout is session-only. COPY exports it; reload intentionally discards it. */
+try{localStorage.removeItem('emberfell.actor-layout.v1')}catch(e){}
+const actorLayouts = {};
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
   if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
@@ -1591,8 +1593,7 @@ function moveEditorActor(o,x,y,save=false) {
   }else shiftActorData(MD,o,x,y,true);
   if(save){
     (actorLayouts[MAPID] ||= {})[info.key]={x,y};
-    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}
-    catch(e){toast('Layout moved, but device storage is full. Use COPY to keep the changes.');}
+    /* Deliberately do not persist test moves. COPY is the commit boundary. */
   }
   rebuildSolid();mapDirty=true;return true;
 }
@@ -10900,14 +10901,14 @@ function deleteSelected() {
   if(selected.interiorFurniture){
     const info=editorActorInfo(selected);if(!info)return;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[info.key]={x:selected.x,y:selected.y,deleted:true};
-    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}catch(e){toast('Use COPY to keep this furniture deletion.');}
+    /* session-only until COPY */
     for(const i of selected.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(selected.editableWall){
     const key=editorActorInfo(selected).key;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[key]={x:selected.x,y:selected.y,deleted:true};
-    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}catch(e){toast('Use COPY to keep this wall deletion.');}
+    /* session-only until COPY */
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(editorActorInfo(selected)){toast("This actor can be moved. Keep its story identity intact.");return;}
