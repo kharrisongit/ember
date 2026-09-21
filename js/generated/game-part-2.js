@@ -1352,12 +1352,36 @@ function buildHouseFurnitureLayers(){
   /* The original house set uses compact i* names that do not always contain an
      English furniture word. Keep every static interior i-prop as a candidate,
      excluding architecture/fabric explicitly. */
-  for(const n of Object.keys(SPR)){const sp=SPR[n];if(/^i[a-z0-9_]+$/i.test(n)&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
+  for(const n of Object.keys(SPR)){const sp=SPR[n];if((/^i[a-z0-9_]+$/i.test(n)||/(?:shelf|book|case|wardrobe|cabinet)/i.test(n))&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
   const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n)||/^irug/i.test(n);
   const spriteData=new Map();
   const grab=n=>{if(spriteData.has(n))return spriteData.get(n);const sp=SPR[n];if(!sp)return null;const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,sp[0],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);const d=g.getImageData(0,0,c.width,c.height);spriteData.set(n,d);return d;};
   const score=(rd,rw,rh,sd,sw,sh,x0,y0)=>{if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let hit=0,ok=0,step=Math.max(1,Math.floor(Math.min(sw,sh)/6));for(let y=0;y<sh;y+=step)for(let x=0;x<sw;x+=step){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;hit++;const ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<42)ok++;}return hit>=3?ok/hit:0;};
-  const heal=(im,rw,rh,sd,sw,sh,x0,y0)=>{const src=new Uint8ClampedArray(im.data),out=im.data;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;let bi=-1;for(let d=1;d<=Math.max(sw,sh)+5&&bi<0;d++){for(const xx of [rx-d,rx+d])if(xx>=0&&xx<rw){const lx=xx-x0,ly=ry-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){bi=(ry*rw+xx)*4;break}}}if(bi>=0){const oi=(ry*rw+rx)*4;out[oi]=src[bi];out[oi+1]=src[bi+1];out[oi+2]=src[bi+2];out[oi+3]=src[bi+3];}}};
+  /* Remove only opaque prop pixels. Reconstruct underneath from several surrounding
+     samples instead of smearing the nearest edge across walls/floors. */
+  const heal=(im,rw,rh,sd,sw,sh,x0,y0)=>{
+    const src=new Uint8ClampedArray(im.data),out=im.data;
+    const sample=(rx,ry)=>{
+      const pts=[];
+      for(let d=2;d<=Math.max(sw,sh)+8&&pts.length<8;d+=2){
+        for(const [xx,yy] of [[rx-d,ry],[rx+d,ry],[rx,ry-d],[rx,ry+d]]){
+          if(xx<0||yy<0||xx>=rw||yy>=rh)continue;
+          const lx=xx-x0,ly=yy-y0;
+          if(lx>=0&&ly>=0&&lx<sw&&ly<sh&&sd[(ly*sw+lx)*4+3]>=80)continue;
+          const i=(yy*rw+xx)*4;pts.push([src[i],src[i+1],src[i+2],src[i+3]]);
+        }
+      }
+      if(!pts.length)return null;
+      pts.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));
+      return pts[Math.floor(pts.length/2)];
+    };
+    for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
+      const si=(y*sw+x)*4;if(sd[si+3]<80)continue;
+      const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;
+      const p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
+      out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
+    }
+  };
   let total=0;
   for(const [id,m] of Object.entries(W.maps||{})){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
