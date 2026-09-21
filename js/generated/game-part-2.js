@@ -1473,6 +1473,9 @@ function buildHouseFurnitureLayers(){
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
       }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
+  /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
+     furniture can be cut once at explicit source rectangles instead of guessed forever. */
+  window.__interiorExtractionSurvey=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
   console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
