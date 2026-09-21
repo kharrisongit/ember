@@ -1421,6 +1421,32 @@ function buildHouseFurnitureLayers(){
       out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
     }
   };
+  /* Rebuild a furniture-free room base from native 16px room tiles. This is a real
+     re-lay, not pixel healing: each covered tile is copied 1:1 from an intact tile of
+     the same wall/floor band and phase. */
+  const relayNativeTiles=(g,rw,rh,cuts)=>{
+    if(!cuts?.length)return;
+    const src=g.getImageData(0,0,rw,rh),out=g.getImageData(0,0,rw,rh),T=16;
+    const covered=(x,y)=>cuts.some(([,cx,cy,cw,ch])=>x>=cx&&x<cx+cw&&y>=cy&&y<cy+ch);
+    for(const [,cx,cy,cw,ch] of cuts){
+      const tx0=Math.floor(cx/T)*T,ty0=Math.floor(cy/T)*T,tx1=Math.ceil((cx+cw)/T)*T,ty1=Math.ceil((cy+ch)/T)*T;
+      for(let ty=ty0;ty<ty1;ty+=T)for(let tx=tx0;tx<tx1;tx+=T){
+        let sx=-1;
+        /* Find an intact tile in the SAME horizontal band. Prefer nearest left/right. */
+        for(let d=T;d<rw&&sx<0;d+=T)for(const q of [tx-d,tx+d]){
+          if(q<0||q+T>rw)continue;
+          let bad=false;for(let yy=ty;yy<Math.min(ty+T,rh)&&!bad;yy++)for(let xx=q;xx<q+T;xx++)if(covered(xx,yy)){bad=true;break}
+          if(!bad){sx=q;break}
+        }
+        if(sx<0)continue;
+        for(let yy=0;yy<T&&ty+yy<rh;yy++)for(let xx=0;xx<T&&tx+xx<rw;xx++){
+          const si=((ty+yy)*rw+sx+xx)*4,di=((ty+yy)*rw+tx+xx)*4;
+          out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];
+        }
+      }
+    }
+    g.putImageData(out,0,0);
+  };
   let total=0;
   for(const [id,m] of Object.entries(W.maps||{})){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
@@ -1485,22 +1511,9 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Starting-bedroom wardrobe background: the previous patch was written into g,
-       then discarded because the final clean canvas is rebuilt later. Store an explicit
-       pristine patch and stamp it onto the FINAL room base after all generic healing. */
-    let wardrobeBackgroundPatch=null;
-    if(id==='house03_bedroom'){
-      const x0=79,x1=108,y0=34,y1=77;
-      const original=g.getImageData(0,0,rw,rh);
-      const patch=document.createElement('canvas');patch.width=x1-x0;patch.height=y1-y0;
-      const pg=patch.getContext('2d'),im=pg.createImageData(patch.width,patch.height);
-      for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){
-        const sx=x-48,si=(y*rw+sx)*4,di=((y-y0)*patch.width+(x-x0))*4;
-        im.data[di]=original.data[si];im.data[di+1]=original.data[si+1];
-        im.data[di+2]=original.data[si+2];im.data[di+3]=original.data[si+3];
-      }
-      pg.putImageData(im,0,0);wardrobeBackgroundPatch={x:x0,y:y0,canvas:patch};
-    }
+    /* Re-lay the room art underneath every explicitly recut object BEFORE the final
+       base canvas is captured. The object canvases above retain the original furniture. */
+    if(EXACT_FURNITURE[id]?.length)relayNativeTiles(g,rw,rh,EXACT_FURNITURE[id]);
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
        of furniture support. */
@@ -1565,7 +1578,6 @@ function buildHouseFurnitureLayers(){
         for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
         heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
       }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);
-      if(wardrobeBackgroundPatch)g.drawImage(wardrobeBackgroundPatch.canvas,wardrobeBackgroundPatch.x,wardrobeBackgroundPatch.y);
       m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
   /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
