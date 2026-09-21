@@ -10583,7 +10583,7 @@ tap(document.getElementById("tSouth"), () => expand(0, EXPAND_STEP));
 
 tap(document.getElementById("aSmall"), () => resizeArea(-4));
 tap(document.getElementById("aBig"), () => resizeArea(4));
-tap(document.getElementById("aFit"), fitArea);
+tap(document.getElementById("aFit"), (...args) => fitArea(...args));
 
 tap(document.getElementById("tUndo"), () => {
   const act = buildUndo.pop();
