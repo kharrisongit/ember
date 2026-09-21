@@ -1352,7 +1352,7 @@ function buildHouseFurnitureLayers(){
   /* The original house set uses compact i* names that do not always contain an
      English furniture word. Keep every static interior i-prop as a candidate,
      excluding architecture/fabric explicitly. */
-  for(const n of Object.keys(SPR)){const sp=SPR[n];if((/^i[a-z0-9_]+$/i.test(n)||/(?:shelf|book|case|wardrobe|cabinet)/i.test(n))&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
+  for(const n of Object.keys(SPR)){const sp=SPR[n];if((/^(?:i|hb_|gw_|nan_|lodge_)[a-z0-9_]+$/i.test(n)||/(?:shelf|book|case|wardrobe|cabinet|crate|table|chair)/i.test(n))&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
   const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n)||/^irug/i.test(n);
   const spriteData=new Map();
   const grab=n=>{if(spriteData.has(n))return spriteData.get(n);const sp=SPR[n];if(!sp)return null;const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,sp[0],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);const d=g.getImageData(0,0,c.width,c.height);spriteData.set(n,d);return d;};
@@ -1376,7 +1376,10 @@ function buildHouseFurnitureLayers(){
       return pts[Math.floor(pts.length/2)];
     };
     for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
-      const si=(y*sw+x)*4;if(sd[si+3]<80)continue;
+      const si=(y*sw+x)*4;
+      let opaque=sd[si+3]>=40;
+      if(!opaque)for(let yy=Math.max(0,y-1);yy<=Math.min(sh-1,y+1)&&!opaque;yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(sw-1,x+1);xx++)if(sd[(yy*sw+xx)*4+3]>=80){opaque=true;break}
+      if(!opaque)continue;
       const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;
       const p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
       out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
@@ -1387,7 +1390,7 @@ function buildHouseFurnitureLayers(){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
     const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors||=[];
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.74&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);}
+    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.66&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);}
     for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
     /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
        the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
@@ -1402,14 +1405,14 @@ function buildHouseFurnitureLayers(){
         decorBudget++;
         if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;
         let sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-        if(sc<.86)continue;
+        if(sc<.78)continue;
         let best={x,y,sc};
         for(let yy=Math.max(0,y-step+1);yy<=Math.min(rh-sp[3],y+step-1);yy++)
           for(let xx=Math.max(0,x-step+1);xx<=Math.min(rw-sp[2],x+step-1);xx++){
             const fine=score(room.data,rw,rh,sd,sp[2],sp[3],xx,yy);
             if(fine>best.sc)best={x:xx,y:yy,sc:fine};
           }
-        if(best.sc>.94&&!occupied.some(r=>best.x<r[2]&&best.x+sp[2]>r[0]&&best.y<r[3]&&best.y+sp[3]>r[1])){
+        if(best.sc>.88&&!occupied.some(r=>best.x<r[2]&&best.x+sp[2]>r[0]&&best.y<r[3]&&best.y+sp[3]>r[1])){
           add(n,best.x,best.y,null);x+=Math.max(step,sp[2]-step);
         }
       }
