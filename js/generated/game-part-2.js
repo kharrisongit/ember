@@ -1362,22 +1362,6 @@ function cropForegroundMask(data,w,h){
   const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
   return fg;
 }
-function installExactHouseFurniture(m,id,room,cv,g,found,occupied,addExact){
-  /* Hand-cut from the captured original room art. Coordinates are source pixels. */
-  const cuts={
-    house03:[
-      {name:'bookshelf',rect:[20,49,34,33],block:0}
-    ],
-    house03_bedroom:[
-      {name:'wardrobe',rect:[76,31,34,64],block:3},
-      {name:'bookshelf',rect:[113,32,31,58],block:1},
-      {name:'crate',rect:[133,140,21,33],block:2},
-      {name:'bed',rect:[16,58,51,28],block:0}
-    ]
-  }[id];
-  if(!cuts)return;
-  for(const cut of cuts)addExact(cut);
-}
 function buildHouseFurnitureLayers(){
   /* Household props are not consistently named i*.  Build the candidate list from
      every static atlas sprite whose name describes freestanding interior scenery. */
@@ -1450,7 +1434,6 @@ function buildHouseFurnitureLayers(){
     };
     for(const e of EXACT_FURNITURE[id]||[])addExact(...e);
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    installExactHouseFurniture(m,id,room,cv,g,found,occupied,addExact);
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
       /* Unmatched baked furniture is intentionally left alone here. It will be
          replaced by explicit, pixel-exact extracted assets rather than heuristic crops. */
