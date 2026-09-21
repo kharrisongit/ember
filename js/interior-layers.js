@@ -18,7 +18,17 @@ function prep(){
   if(found.length){const clean=rg.getImageData(0,0,rw,rh);found.sort((a,b)=>SPR[b.n][2]*SPR[b.n][3]-SPR[a.n][2]*SPR[a.n][3]);for(const f of found){let s=SPR[f.n],d=ss.get(f.n).data;erase(clean,rw,rh,d,s[2],s[3],f.x,f.y)}rg.putImageData(clean,0,0);m._roomBaseCanvas=room;m._layeredFurniture=true}
  }
 }
-const ready=atlasImg.onload;atlasImg.onload=()=>{try{prep()}catch(e){console.error("interior layer prep failed",e)}if(typeof ready==="function")ready.call(atlasImg)};
+/* applyWorld deliberately strips roomCrop actors after using them for seated-NPC clipping.
+   Run furniture extraction after that world patching is complete, not during atlas.onload. */
+let _interiorPrepared=false;
+function ensureInteriorLayers(){
+ if(_interiorPrepared||!globalThis.W||!W.maps)return;
+ _interiorPrepared=true;
+ try{prep()}catch(e){_interiorPrepared=false;console.error("interior layer prep failed",e)}
+}
+const _applyWorld=typeof applyWorld==="function"?applyWorld:null;
+if(_applyWorld)applyWorld=function(...args){const v=_applyWorld.apply(this,args);ensureInteriorLayers();return v};
+else setTimeout(ensureInteriorLayers,0);
 const rc=renderChunk;renderChunk=function(cx,cy){if((MAPID==="witchmoor"||MD.roomArt)&&MD._roomBaseCanvas){const c=document.createElement("canvas");c.width=CHUNK;c.height=CHUNK;const g=c.getContext("2d");g.imageSmoothingEnabled=false;g.fillStyle=MD.bg;g.fillRect(0,0,CHUNK,CHUNK);g.drawImage(MD._roomBaseCanvas,-cx*CHUNK,-cy*CHUNK);return c}return rc(cx,cy)};
 try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k of Object.keys(actorLayouts))delete actorLayouts[k];
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
