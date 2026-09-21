@@ -1480,6 +1480,17 @@ function buildHouseFurnitureLayers(){
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
   console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
   window.__houseFurnitureCandidateCount=names.length;
+  /* Manual extraction helper for stubborn baked props. DEV: tap MOVE, then COPY after
+     positioning. Bounds are exact source rectangles and can be promoted into this table. */
+  window.__extractFurnitureRect=(mapId,x,y,w,h,block=null)=>{
+    const m=W.maps[mapId],rs=m&&SPR[m.roomArt];if(!m||!rs)return false;
+    const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d');
+    drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
+    const spr='manual_'+mapId+'_'+x+'_'+y,actor={spr,extractedCanvas:q,extractedFurniture:true,editKey:'manual:'+mapId+':'+x+':'+y,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};
+    SPR[spr]=[0,0,w,h,1];(m.roomActors||=[]).push(actor);return actor;
+  };
+  window.__houseRoomInfo=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
+
 }
 /* === end household furniture layering === */
 
