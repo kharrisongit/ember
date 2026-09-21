@@ -1421,7 +1421,7 @@ function buildHouseFurnitureLayers(){
       /* Starting-house bedroom: use slightly padded cuts so anti-aliased/dark outline
          pixels leave with the furniture instead of remaining baked into the floor/wall.
          The chair beside the table is also a baked prop, so cut it explicitly. */
-      house03_bedroom:[['wardrobe',76,31,35,49],['bookshelf',113,33,31,47],['bed',14,57,55,29],['crate',132,141,25,36],['table_chair',48,111,24,35]]
+      house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',113,33,31,47],['bed',14,57,55,29],['crate',132,141,25,36],['table_chair',48,111,24,35]]
     };
     /* Source-art recut pass. Unlike the old collision crop, this searches for the actual
        shelf/wardrobe artwork and then copies those exact source pixels into a dedicated
