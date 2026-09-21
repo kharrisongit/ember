@@ -11189,3 +11189,5 @@ function lavaPatch(x, y) {
   const b = v(gx, gy + 1) + (v(gx + 1, gy + 1) - v(gx, gy + 1)) * sx;
   return a + (b - a) * sy;
 }
+
+/* wardrobe crop fix redeploy b8f3a79 */
