@@ -1452,6 +1452,9 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
+    /* Diagnostic marker shown in the MOVE panel so we can verify the live Pages build
+       actually contains these actors instead of guessing from source commits. */
+    if(EXACT_FURNITURE[id]?.length)m._exactFurnitureExpected=EXACT_FURNITURE[id].map(e=>'furniture:exact:'+id+':'+e[0]);
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
       /* Unmatched baked furniture is intentionally left alone here. It will be
@@ -11005,9 +11008,10 @@ function deleteGrabbed() {
 }
 
 function refreshSel() {
+  const exact=(MD?.roomActors||[]).filter(a=>a.exactFurniture&&!a.editorDeleted);
   selEl.textContent = selected
     ? (selected.n || selected.spr || NAMES[selected.s]) + " #" + (selected.id || "actor") + " @ " + Math.round(selected.x) + "," + Math.round(selected.y)
-    : "drag anything to move it, then DONE";
+    : (editing&&MD?("drag anything to move it, then DONE · exact furniture: "+exact.length+(MD._exactFurnitureExpected?" / "+MD._exactFurnitureExpected.length:"")):"drag anything to move it, then DONE");
   refreshHandle();
 }
 function countChanges() {
