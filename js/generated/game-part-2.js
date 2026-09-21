@@ -1437,6 +1437,7 @@ function buildHouseFurnitureLayers(){
           cuts.push([n,best.x,best.y,sp[2],sp[3]]);
       }
       if(cuts.length)EXACT_FURNITURE[id]=cuts;
+      m._recutCandidates=recutNames.length;m._recutCuts=cuts.length;
     }
     /* These hand-cut objects are authoritative. Remove any older/static actor whose
        bounds overlap the same source furniture, otherwise MOVE can grab the visible
@@ -11017,7 +11018,7 @@ function refreshSel() {
   const exact=(MD?.roomActors||[]).filter(a=>a.exactFurniture&&!a.editorDeleted);
   selEl.textContent = selected
     ? (selected.n || selected.spr || NAMES[selected.s]) + " #" + (selected.id || "actor") + " @ " + Math.round(selected.x) + "," + Math.round(selected.y)
-    : (editing&&MD?("drag anything to move it, then DONE · exact furniture: "+exact.length+(MD._exactFurnitureExpected?" / "+MD._exactFurnitureExpected.length:"")):"drag anything to move it, then DONE");
+    : (editing&&MD?("drag anything to move it, then DONE · exact furniture: "+exact.length+(MD._exactFurnitureExpected?" / "+MD._exactFurnitureExpected.length:"")+(Number.isFinite(MD._recutCuts)?" · recut "+MD._recutCuts+"/"+MD._recutCandidates:"")):"drag anything to move it, then DONE");
   refreshHandle();
 }
 function countChanges() {
