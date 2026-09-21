@@ -1539,7 +1539,8 @@ function applyActorLayout(m, id) {
   for(let i=0;i<(m.roomActors||[]).length;i++){
     const o=m.roomActors[i],key=o.editKey||'actor:'+i+':'+o.spr,v=saved[key];
     if(o.sceneReserved)continue;
-    if(o.editableWall)o.editorDeleted=!!v?.deleted;
+    if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!v?.deleted;
+    if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
   }
   for(const o of m.npcs||[]){if(o.seated||o.seatSpr||o.sceneReserved)continue;const v=saved['npc:'+o.n];if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
@@ -10852,6 +10853,7 @@ function deleteSelected() {
   if(selected.interiorFurniture){
     const info=editorActorInfo(selected);if(!info)return;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[info.key]={x:selected.x,y:selected.y,deleted:true};
+    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}catch(e){toast('Use COPY to keep this furniture deletion.');}
     for(const i of selected.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
