@@ -1360,6 +1360,31 @@ function buildHouseFurnitureLayers(){
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
     for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(/^irug/.test(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.74&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);}
     for(const n of names.filter(n=>/^irug/.test(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
+    /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
+       the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
+       stays predictable even across every house. */
+    let decorBudget=0;
+    const decorNames=names.filter(n=>!/^irug/.test(n));
+    for(const n of decorNames){
+      if(decorBudget>140000)break;
+      const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
+      const step=Math.max(3,Math.floor(Math.min(sp[2],sp[3])/4));
+      for(let y=8;y<=rh-sp[3]-4;y+=step)for(let x=4;x<=rw-sp[2]-4;x+=step){
+        decorBudget++;
+        if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;
+        let sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
+        if(sc<.86)continue;
+        let best={x,y,sc};
+        for(let yy=Math.max(0,y-step+1);yy<=Math.min(rh-sp[3],y+step-1);yy++)
+          for(let xx=Math.max(0,x-step+1);xx<=Math.min(rw-sp[2],x+step-1);xx++){
+            const fine=score(room.data,rw,rh,sd,sp[2],sp[3],xx,yy);
+            if(fine>best.sc)best={x:xx,y:yy,sc:fine};
+          }
+        if(best.sc>.94&&!occupied.some(r=>best.x<r[2]&&best.x+sp[2]>r[0]&&best.y<r[3]&&best.y+sp[3]>r[1])){
+          add(n,best.x,best.y,null);x+=Math.max(step,sp[2]-step);
+        }
+      }
+    }
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
   window.__houseFurnitureCount=total;
