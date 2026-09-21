@@ -29,6 +29,28 @@ function prep(){
    const key="furniture:block:"+i+":"+x0+":"+y0+":"+x1+":"+y1;
    actors.push({roomCrop:[x0,y0,x1-x0,y1-y0],editKey:key,x:(x0+x1)/2,y:y1,sy:y1,schoolArt:true,interiorFurniture:true,moveBlocks:[i],sourceBlock:i});
   }
+  /* Non-collision decor pass: find exact atlas props only in the room's painted art.
+     Runs once at atlas load, on a coarse grid, and skips areas already owned by actors. */
+  const owned=()=>actors.filter(a=>a.roomCrop&&!a.editorDeleted).map(a=>[a.roomCrop[0],a.roomCrop[1],a.roomCrop[0]+a.roomCrop[2],a.roomCrop[1]+a.roomCrop[3]]);
+  const occ=owned();
+  const candidates=furnitureNames(rw,rh).filter(n=>{const s=SPR[n];return s&&s[2]<=64&&s[3]<=64});
+  const roomData=rg.getImageData(0,0,rw,rh).data;
+  let budget=0;
+  for(const n of candidates){
+   if(budget>180000)break;
+   const s=SPR[n], sw=s[2],sh=s[3],cc=fc(n);if(!cc)continue;
+   const sd=cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,sw,sh).data;
+   const step=Math.max(2,Math.floor(Math.min(sw,sh)/5));
+   for(let y=4;y<=rh-sh-4;y+=step)for(let x=4;x<=rw-sw-4;x+=step){
+    budget++;if(occ.some(r=>x<r[2]&&x+sw>r[0]&&y<r[3]&&y+sh>r[1]))continue;
+    const sc=match(roomData,rw,rh,sd,sw,sh,x,y);
+    if(sc>.965){
+     const key="furniture:decor:"+n+":"+x+":"+y;
+     actors.push({spr:n,editKey:key,x:x+sw/2,y:y+sh,sy:y+sh,schoolArt:true,interiorFurniture:true,moveBlocks:[]});
+     occ.push([x,y,x+sw,y+sh]);x+=Math.max(step,sw-step);
+    }
+   }
+  }
   m._layeredFurniture=true;
  }
 }
