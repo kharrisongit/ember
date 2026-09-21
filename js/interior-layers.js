@@ -28,7 +28,7 @@ function ensureInteriorLayers(){
   prep();
   let maps=0,actors=0;
   for(const m of Object.values(W.maps||{})){const n=(m.roomActors||[]).filter(a=>a.interiorFurniture).length;if(n){maps++;actors+=n}}
-  globalThis.__interiorLayerDiag={prepared:true,maps,actors,atlas:[atlasImg.naturalWidth,atlasImg.naturalHeight]};
+  globalThis.__interiorLayerDiag={prepared:true,maps,actors,atlas:[atlasImg.width,atlasImg.height]};
   console.log("INTERIOR LAYERS",globalThis.__interiorLayerDiag);
  }catch(e){
   _interiorPrepared=false;
@@ -51,7 +51,7 @@ function ensureInteriorLayers(){
  catch(e){state.push("ATERR:"+e.name)}
  globalThis.__interiorWaitState=state.join(" ");
  if(typeof W!=="undefined"&&W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"&&
-    typeof atlasImg!=="undefined"&&atlasImg&&((atlasImg.naturalWidth>0)||(atlasImg.width>0&&typeof atlasImg.complete==="undefined"))){
+    typeof atlasImg!=="undefined"&&atlasImg&&Number(atlasImg.width)>0){
   ensureInteriorLayers();return;
  }
  setTimeout(waitForInteriorWorld,250);
