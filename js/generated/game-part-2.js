@@ -1456,31 +1456,20 @@ function buildHouseFurnitureLayers(){
     /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
        not collision guesses. Add more maps here as we verify their captured art. */
     const EXACT_FURNITURE={
-      house03:[['bookshelf_left',20,47,36,35]],
-      /* Starting-house bedroom: use slightly padded cuts so anti-aliased/dark outline
-         pixels leave with the furniture instead of remaining baked into the floor/wall.
-         The chair beside the table is also a baked prop, so cut it explicitly. */
-      house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',113,33,31,47],['bed',14,57,55,29],['crate',132,141,25,36],['table_chair',48,111,24,35]]
+      /* Starting house only. These are literal source-art cuts; each becomes its own
+         editor actor. No other house is touched until this one is verified. */
+      house03:[
+        ['bookshelf_left',20,47,36,35]
+      ],
+      house03_bedroom:[
+        ['wardrobe',79,34,29,43],
+        ['bookshelf',113,33,31,47],
+        ['bed',14,57,55,29],
+        ['crate',132,141,25,36],
+        ['table_chair',48,111,24,35]
+      ]
     };
-    /* Source-art recut pass. Unlike the old collision crop, this searches for the actual
-       shelf/wardrobe artwork and then copies those exact source pixels into a dedicated
-       canvas actor. It does not alter working tables/chairs/plants/etc. */
-    if(!EXACT_FURNITURE[id]){
-      const recutNames=names.filter(n=>/(?:bookcase|bookshelf|shelf|wardrobe|closet|cabinet|cupboard|dresser)/i.test(n));
-      const cuts=[];
-      for(const n of recutNames){
-        const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
-        let best=null;
-        for(let y=0;y<=rh-sp[3];y++)for(let x=0;x<=rw-sp[2];x++){
-          const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-          if(sc>=.985&&(!best||sc>best.sc))best={x,y,sc};
-        }
-        if(best&&!cuts.some(e=>best.x<e[1]+e[3]&&best.x+sp[2]>e[1]&&best.y<e[2]+e[4]&&best.y+sp[3]>e[2]))
-          cuts.push([n,best.x,best.y,sp[2],sp[3]]);
-      }
-      if(cuts.length)EXACT_FURNITURE[id]=cuts;
-      m._recutCandidates=recutNames.length;m._recutCuts=cuts.length;
-    }
+    /* Starting house is manual-only: do not guess additional cuts. */
     /* These hand-cut objects are authoritative. Remove any older/static actor whose
        bounds overlap the same source furniture, otherwise MOVE can grab the visible
        legacy copy while the extracted actor sits underneath it. */
@@ -1516,62 +1505,8 @@ function buildHouseFurnitureLayers(){
     /* Re-lay the room art underneath every explicitly recut object BEFORE the final
        base canvas is captured. The object canvases above retain the original furniture. */
     if(EXACT_FURNITURE[id]?.length)relayNativeTiles(g,rw,rh,EXACT_FURNITURE[id]);
-    /* Every house must expose every detected standalone furniture match as a real actor.
-       Exact hand-cuts above are only overrides for stubborn baked props, never the scope
-       of furniture support. */
-    /* Diagnostic marker shown in the MOVE panel so we can verify the live Pages build
-       actually contains these actors instead of guessing from source commits. */
-    if(EXACT_FURNITURE[id]?.length)m._exactFurnitureExpected=EXACT_FURNITURE[id].map(e=>'furniture:exact:'+id+':'+e[0]);
-    const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
-      else if(!best){
-        /* Collision-backed fallback: house roomBlocks identify solid furniture even when
-           its baked artwork has no matching named atlas sprite. Convert those compact
-           blocks into movable extracted actors in every house/bedroom. */
-        const padX=Math.max(2,Math.min(5,Math.round(bw*.10)));
-        const wallProp=bw>=18&&bh<=34;
-        const above=wallProp?Math.min(68,Math.max(26,Math.round(bw*1.18))):Math.max(8,Math.min(28,Math.round(Math.max(bh,bw*.5))));
-        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-above));
-        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+2)-y);
-        const architectural=bw>92||bh>60||w>106||h>94;
-        if(!architectural&&w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
-          const label='auto_'+bi,key='furniture:auto:'+id+':'+bi;
-          const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-          drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-          const im=qg.getImageData(0,0,w,h),fg=cropForegroundMask(im.data,w,h);
-          for(let pi=0;pi<fg.length;pi++)if(!fg[pi])im.data[pi*4+3]=0;
-          qg.putImageData(im,0,0);
-          const sprName='exact_'+id+'_'+label;SPR[sprName]=[0,0,w,h,1];
-          m.roomActors.push({spr:sprName,extractedCanvas:q,extractedFurniture:true,exactFurniture:true,autoExtractedFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]});
-          found.push({crop:true,x,y,w,h});occupied.push([x,y,x+w,y+h]);total++;
-        }
-      }}
-    for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
-    /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
-       the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
-       stays predictable even across every house. */
-    let decorBudget=0;
-    const decorNames=names.filter(n=>!rugName(n));
-    for(const n of decorNames){
-      if(decorBudget>140000)break;
-      const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
-      const step=Math.max(3,Math.floor(Math.min(sp[2],sp[3])/4));
-      for(let y=8;y<=rh-sp[3]-4;y+=step)for(let x=4;x<=rw-sp[2]-4;x+=step){
-        decorBudget++;
-        if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;
-        let sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-        if(sc<.78)continue;
-        let best={x,y,sc};
-        for(let yy=Math.max(0,y-step+1);yy<=Math.min(rh-sp[3],y+step-1);yy++)
-          for(let xx=Math.max(0,x-step+1);xx<=Math.min(rw-sp[2],x+step-1);xx++){
-            const fine=score(room.data,rw,rh,sd,sp[2],sp[3],xx,yy);
-            if(fine>best.sc)best={x:xx,y:yy,sc:fine};
-          }
-        if(best.sc>.88&&!occupied.some(r=>best.x<r[2]&&best.x+sp[2]>r[0]&&best.y<r[3]&&best.y+sp[3]>r[1])){
-          add(n,best.x,best.y,null);x+=Math.max(step,sp[2]-step);
-        }
-      }
-    }
+    /* Manual starting-house pass: exact cuts above are the complete movable set for
+       this verification step. More cuts will be added only from the actual room art. */
     if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
         if((m._exactBackgroundRepairs||[]).some(r=>f.x===r.x&&f.y===r.y&&f.w===r.w&&f.h===r.h))continue;
         const raw=new Uint8ClampedArray(f.w*f.h*4);
