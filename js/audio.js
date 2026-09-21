@@ -168,6 +168,3 @@
   window.addEventListener('touchstart',startMusic,{passive:true});
   window.addEventListener('focus',()=>{ if(!document.hidden) startMusic(); });
 })();
-
-/* Parser-blocking companion patch: must run before atlas page loading resolves. */
-document.write('<script src="js/interior-layers.js"><\/script>');
