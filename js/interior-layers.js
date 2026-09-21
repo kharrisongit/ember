@@ -42,11 +42,19 @@ function ensureInteriorLayers(){
    then prepare exactly once. */
 (function waitForInteriorWorld(){
  if(_interiorPrepared)return;
+ let state=[];
+ try{state.push("W:"+(typeof W),typeof W!=="undefined"&&W?"maps:"+!!W.maps:"")}
+ catch(e){state.push("WERR:"+e.name)}
+ try{state.push("EA:"+(typeof editorActorInfo),"ME:"+(typeof moveEditorActor))}
+ catch(e){state.push("EDERR:"+e.name)}
+ try{state.push("AT:"+(typeof atlasImg),typeof atlasImg!=="undefined"&&atlasImg?("c:"+atlasImg.complete+",w:"+atlasImg.naturalWidth):"")}
+ catch(e){state.push("ATERR:"+e.name)}
+ globalThis.__interiorWaitState=state.join(" ");
  if(typeof W!=="undefined"&&W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"&&
     typeof atlasImg!=="undefined"&&atlasImg&&atlasImg.complete&&atlasImg.naturalWidth>0){
   ensureInteriorLayers();return;
  }
- setTimeout(waitForInteriorWorld,50);
+ setTimeout(waitForInteriorWorld,250);
 })();
 /* Native editor integration for crop-backed furnishings.
    game.js pickEditorActor only accepts actors with editorSprite(), so teach that path
@@ -60,7 +68,7 @@ function updateInteriorBadge(){
  let el=document.getElementById("interiorDiagBadge");
  if(!el){el=document.createElement("div");el.id="interiorDiagBadge";el.style.cssText="position:fixed;left:8px;bottom:8px;z-index:99999;background:#111;color:#fff;padding:6px 8px;font:12px monospace;border:1px solid #fff;pointer-events:none";document.body.appendChild(el)}
  const here=(globalThis.MD?.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length,d=globalThis.__interiorLayerDiag||{};
- el.textContent="FURN "+here+" / "+(d.actors??"?")+" prep:"+(d.prepared===false?"ERR":d.prepared?"YES":"WAIT")+(d.error?" "+d.error.slice(0,70):"");
+ el.textContent="FURN "+here+" / "+(d.actors??"?")+" prep:"+(d.prepared===false?"ERR":d.prepared?"YES":"WAIT")+" "+(globalThis.__interiorWaitState||"")+(d.error?" "+d.error.slice(0,70):"");
 }
 setInterval(updateInteriorBadge,500);
 /* Visible diagnostic: when MOVE is enabled inside a house, report generated layer count once.
