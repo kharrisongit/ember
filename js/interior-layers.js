@@ -26,12 +26,17 @@ function ensureInteriorLayers(){
  _interiorPrepared=true;
  try{prep()}catch(e){_interiorPrepared=false;console.error("interior layer prep failed",e)}
 }
-/* applyWorld has already executed before this companion script is loaded.
-   Wrapping it here is too late. Prepare immediately when W is already populated,
-   while retaining the wrapper only for any later rebuild. */
-const _applyWorld=typeof applyWorld==="function"?applyWorld:null;
-if(_applyWorld)applyWorld=function(...args){const v=_applyWorld.apply(this,args);ensureInteriorLayers();return v};
-if(globalThis.W&&W.maps)ensureInteriorLayers();else setTimeout(ensureInteriorLayers,0);
+/* This companion is injected from audio.js while game.js is still executing.
+   At that moment applyWorld may not exist yet, so neither wrapping it nor a zero-delay
+   callback is reliable. Poll cheaply until BOTH the world and the editor functions exist,
+   then prepare exactly once. */
+(function waitForInteriorWorld(){
+ if(_interiorPrepared)return;
+ if(globalThis.W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"){
+  ensureInteriorLayers();return;
+ }
+ setTimeout(waitForInteriorWorld,50);
+})();
 /* Native editor integration for crop-backed furnishings.
    game.js pickEditorActor only accepts actors with editorSprite(), so teach that path
    about roomCrop dimensions instead of replacing the renderer/editor wholesale. */
