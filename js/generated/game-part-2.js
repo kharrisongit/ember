@@ -5021,16 +5021,13 @@ function glassShieldDeflectFoe(f) {
   f.glassParryQueued = false;
   glassShieldPulse = .42;
   glassGifStart = tAcc;
-  /* Successful Glass Shield block: short recoil, not a huge launch backward. */
-  /* Block recoil should be a tiny readable hop, not a retreat across the arena. */
-  f.retreat = Math.max(f.retreat || 0, .18);
-  f.retreatX = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
-  f.retreatY = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
+  /* Successful Glass Shield block stops the hit in place. No retreat/bounce at all. */
+  f.retreat = 0;
+  f.retreatX = undefined;
+  f.retreatY = undefined;
   f.glassRetreatBoost = 0;
   f.cool = Math.max(f.cool || 0, 1.05);
-  // The block resolves on the attack's contact frame. Switch straight into
-  // retreat movement here so recoil starts NOW instead of waiting for the
-  // remainder of the swing state to finish. Damage has already been suppressed.
+  // Damage is suppressed and the enemy returns to walk without any forced displacement.
   f.st = "walk";
   f.t = 0;
   f.hit = 1;
