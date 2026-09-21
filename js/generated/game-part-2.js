@@ -5026,7 +5026,7 @@ function glassShieldDeflectFoe(f) {
   f.retreat = Math.max(f.retreat || 0, .18);
   f.retreatX = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
   f.retreatY = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
-  f.glassRetreatBoost = .45;
+  f.glassRetreatBoost = 0;
   f.cool = Math.max(f.cool || 0, 1.05);
   // The block resolves on the attack's contact frame. Switch straight into
   // retreat movement here so recoil starts NOW instead of waiting for the
