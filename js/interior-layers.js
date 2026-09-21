@@ -24,7 +24,17 @@ let _interiorPrepared=false;
 function ensureInteriorLayers(){
  if(_interiorPrepared||!globalThis.W||!W.maps)return;
  _interiorPrepared=true;
- try{prep()}catch(e){_interiorPrepared=false;console.error("interior layer prep failed",e)}
+ try{
+  prep();
+  let maps=0,actors=0;
+  for(const m of Object.values(W.maps||{})){const n=(m.roomActors||[]).filter(a=>a.interiorFurniture).length;if(n){maps++;actors+=n}}
+  globalThis.__interiorLayerDiag={prepared:true,maps,actors,atlas:[atlasImg.naturalWidth,atlasImg.naturalHeight]};
+  console.log("INTERIOR LAYERS",globalThis.__interiorLayerDiag);
+ }catch(e){
+  _interiorPrepared=false;
+  globalThis.__interiorLayerDiag={prepared:false,error:String(e&&e.stack||e)};
+  console.error("interior layer prep failed",e);
+ }
 }
 /* This companion is injected from audio.js while game.js is still executing.
    At that moment applyWorld may not exist yet, so neither wrapping it nor a zero-delay
@@ -46,8 +56,19 @@ editorSprite=function(o){
  if(o&&o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1,0];
  return _editorSprite(o);
 };
+/* Visible diagnostic: when MOVE is enabled inside a house, report generated layer count once.
+   This tells us whether failure is generation or hit-testing, instead of guessing. */
+let _diagMap="";
+function reportInteriorDiag(){
+ if(!globalThis.MAPID||MAPID===_diagMap||!/^house\d/.test(MAPID))return;
+ _diagMap=MAPID;
+ const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
+ const d=globalThis.__interiorLayerDiag||{};
+ toast("Furniture layers: "+n+" here / "+(d.actors??"?")+" total");
+}
 const _pickEditorActor=pickEditorActor;
 pickEditorActor=function(wx,wy){
+ reportInteriorDiag();
  let best=_pickEditorActor(wx,wy),area=Infinity;
  if(best){const s=editorSprite(best);if(s)area=s[2]*s[3]}
  for(const o of MD.roomActors||[]){
