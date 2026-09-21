@@ -1424,6 +1424,31 @@ function buildHouseFurnitureLayers(){
   for(const [id,m] of Object.entries(W.maps||{})){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
     const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors||=[];
+    /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
+       not collision guesses. Add more maps here as we verify their captured art. */
+    const EXACT_FURNITURE={
+      house03:[['bookshelf_left',22,49,32,31]],
+      house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',116,36,25,41],['bed',17,60,49,23],['crate',135,144,19,31]]
+    };
+    const addExact=(label,x,y,w,h)=>{
+      const key='furniture:exact:'+id+':'+label;if(m.roomActors.some(a=>a.editKey===key))return;
+      const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
+      drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
+      /* Only clear background connected to the four crop corners; the furniture pixels
+         themselves are copied unchanged from the original room art. */
+      const im=qg.getImageData(0,0,w,h),d=im.data,bg=new Uint8Array(w*h),stack=[];
+      const seed=(xx,yy)=>{const k=yy*w+xx;if(!bg[k]){bg[k]=1;stack.push(k);}};
+      seed(0,0);seed(w-1,0);seed(0,h-1);seed(w-1,h-1);
+      const diff=(a,b)=>Math.abs(d[a]-d[b])+Math.abs(d[a+1]-d[b+1])+Math.abs(d[a+2]-d[b+2]);
+      while(stack.length){const k=stack.pop(),xx=k%w,yy=(k/w)|0,pi=k*4;for(const [nx,ny]of[[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]]){if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;if(diff(pi,nk*4)<=18){bg[nk]=1;stack.push(nk);}}}
+      for(let i=0;i<bg.length;i++)if(bg[i])d[i*4+3]=0;qg.putImageData(im,0,0);
+      const sprName='exact_'+id+'_'+label;SPR[sprName]=[0,0,w,h,1];
+      let bi=-1,best=1e9;for(let j=0;j<(m.roomBlocks||[]).length;j++){const b=m.roomBlocks[j],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,dd=Math.hypot(cx-(x+w/2),cy-(y+h));if(dd<best){best=dd;bi=j;}}
+      m.roomActors.push({spr:sprName,extractedCanvas:q,extractedFurniture:true,exactFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:bi>=0&&best<45?[bi]:[]});
+      const mask=new Uint8Array(w*h);for(let i=0;i<mask.length;i++)mask[i]=bg[i]?0:1;
+      found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
+    };
+    for(const e of EXACT_FURNITURE[id]||[])addExact(...e);
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
     const addExact=cut=>{const [x,y,w,h]=cut.rect,key='furniture:exact:'+id+':'+cut.name;if(m.roomActors.some(a=>a.editKey===key))return;
       const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
