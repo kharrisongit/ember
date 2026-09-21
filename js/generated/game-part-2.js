@@ -1485,6 +1485,23 @@ function buildHouseFurnitureLayers(){
       found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
     };
     for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
+    /* The starting-bedroom wardrobe covers a repeating wall/floor background. Rebuild
+       that vacated rectangle from clean neighboring strips, rather than the generic
+       furniture-heal pass (which can leave visible seams/patchwork). */
+    if(id==='house03_bedroom'){
+      const paintStrip=(x,y,w,h,srcX)=>{
+        const im=g.getImageData(srcX,y,w,h);
+        g.putImageData(im,x,y);
+      };
+      /* wardrobe source rect 79,34..108,77: repeat intact pixels immediately to its
+         left across the hidden area. Small strips preserve the room's pixel cadence. */
+      for(let x=79;x<108;x+=4){
+        const w=Math.min(4,108-x),srcX=Math.max(67,79-w);
+        paintStrip(x,34,w,43,srcX);
+      }
+      const refreshed=g.getImageData(0,0,rw,rh);
+      room.data.set(refreshed.data);
+    }
     /* Every house must expose every detected standalone furniture match as a real actor.
        Exact hand-cuts above are only overrides for stubborn baked props, never the scope
        of furniture support. */
