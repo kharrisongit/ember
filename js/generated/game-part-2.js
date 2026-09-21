@@ -281,7 +281,12 @@ function restoreTempleEntrances(){
  const m=W.maps.world;
  for(const [to,spr] of [['tp1','rt_ext2'],['sn1','rt_snow'],['ds1','rt_desert']]){
   const d=m.doors.find(d=>d.to===to);if(!d)continue;
-  const x=d.x*16+8,y=d.y*16;
+  /* tp1 has an explicit world position. Do not derive it from the old door coordinates:
+     that derivation was the source of the temple snapping back to its legacy location. */
+  const x=to==='tp1'?15336:d.x*16+8, y=to==='tp1'?4448:d.y*16;
+  if(to==='tp1'){
+    d.x=(x-8)/16;d.y=y/16;d.triggerRect={x:x-8,y:y-62,w:18,h:22};
+  }
   if(to==='sn1'&&m.scatter.some((v,i)=>i%3===0&&W.names[v]===spr&&Math.abs(m.scatter[i+1]-x)<128&&Math.abs(m.scatter[i+2]-y)<128))continue;
   // Keep these landmark buildings out of procedural decoration hiding and saved object deletions.
   (m.roomActors ||= []).push({spr,x,y,sy:y-32,schoolArt:true,stillFrame:0,sceneReserved:true,templeEntrance:to});
@@ -1285,27 +1290,6 @@ function applyWorld(text) {
   installCastleCellar();
   restoreTempleEntrances();
 
-  /* FINAL first-temple placement. restoreTempleEntrances() creates the visible rt_ext2
-     from the tp1 door, so actor:24 is not a stable target. Move the actual generated
-     templeEntrance actor, its tp1 door trigger, and its collision blocks together here,
-     AFTER restoration so nothing can overwrite the placement. */
-  {
-    const m=W.maps.world, temple=(m.roomActors||[]).find(a=>a.templeEntrance==='tp1');
-    const d=(m.doors||[]).find(d=>d.to==='tp1');
-    const x=15336, y=4448; // deliberately farther south than the attempted patch
-    if(temple){temple.x=x;temple.y=y;temple.sy=y-32;temple.sceneReserved=true;}
-    if(d){
-      d.x=(x-8)/16;d.y=y/16;
-      d.triggerRect={x:x-8,y:y-62,w:18,h:22};
-    }
-    /* Replace the three collision blocks restoreTempleEntrances just appended for tp1. */
-    if(temple&&m.roomBlocks?.length>=3){
-      const n=m.roomBlocks.length;
-      m.roomBlocks[n-3]=[x-74,y-76,x-18,y-32];
-      m.roomBlocks[n-2]=[x+18,y-76,x+74,y-32];
-      m.roomBlocks[n-1]=[x-60,y-102,x+60,y-76];
-    }
-  }
   // Per-record map names from the supplied collision patch.
   for(const [id,cells] of Object.entries({"house26":{"18,22":false,"18,23":false,"18,24":false,"14,19":false,"14,20":false,"14,21":false,"15,19":false,"15,20":false,"16,18":false,"16,19":false,"16,20":false,"16,21":false,"11,19":false,"11,20":false,"11,21":false,"12,19":false,"12,20":false,"10,19":false,"10,20":false,"9,19":false,"9,20":false,"9,21":false},"royal_banquet":{"5,19":false,"6,19":false,"7,19":false,"8,19":false,"9,19":false,"10,19":false,"11,19":false,"12,19":false,"13,19":false,"14,19":false,"15,19":false,"16,19":false,"17,19":false,"18,19":false,"19,19":false,"20,19":false,"21,19":false,"22,19":false,"23,19":false,"4,18":false,"5,18":false,"6,18":false,"7,18":true,"8,18":true,"9,18":true,"10,18":true,"11,18":true,"12,18":true,"13,18":true,"14,18":true,"15,18":true,"16,18":true,"17,18":true,"18,18":true,"19,18":false,"20,18":false,"21,18":false,"22,18":false,"23,18":false,"20,16":false,"20,17":false,"21,16":false,"21,17":false,"22,16":false,"22,17":false,"5,15":false,"5,16":false,"5,17":false,"6,14":true,"7,14":true,"8,14":true,"9,14":true,"10,14":true,"11,14":true,"12,14":true,"13,14":true,"14,14":true,"15,14":true,"16,14":true,"17,14":true,"18,14":true,"19,14":true,"6,13":true,"7,13":true,"8,13":true,"9,13":true,"10,13":true,"11,13":true,"12,13":true,"13,13":true,"14,13":true,"15,13":true,"16,13":true,"17,13":true,"18,13":true,"7,12":true,"8,12":true,"9,12":true,"10,12":true,"11,12":true,"12,12":true,"13,12":true,"14,12":true,"15,12":true,"16,12":true,"17,12":true,"18,12":true,"6,12":false,"22,15":false}}))Object.assign(W.maps[id].collisionOverrides ||= {},cells);
 
