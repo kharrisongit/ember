@@ -1343,199 +1343,23 @@ async function inflateAtlas() {
 
 
 /* === Native household furniture layering (editor) === */
-function cropForegroundMask(data,w,h){
-  /* Segment background by connectivity from the crop's top/side border. Unlike global
-     color-keying, matching colors enclosed inside a bookshelf stay part of the object. */
-  const bg=new Uint8Array(w*h),stack=[];
-  const seed=(x,y)=>{const k=y*w+x;if(!bg[k]){bg[k]=1;stack.push(k);}};
-  for(let x=0;x<w;x++)seed(x,0);
-  for(let y=0;y<h-2;y++){seed(0,y);seed(w-1,y);}
-  const delta=(a,b)=>Math.abs(data[a]-data[b])+Math.abs(data[a+1]-data[b+1])+Math.abs(data[a+2]-data[b+2]);
-  while(stack.length){
-    const k=stack.pop(),x=k%w,y=(k/w)|0,pi=k*4;
-    for(const [nx,ny] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){
-      if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;
-      const ni=nk*4;
-      if(delta(pi,ni)<=20){bg[nk]=1;stack.push(nk);}
-    }
-  }
-  const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
-  return fg;
-}
 function buildHouseFurnitureLayers(){
-  /* Rebuilding can be triggered more than once during boot. Remove previously generated
-     furniture actors first so an earlier partial pass cannot leave invisible/duplicate hit targets. */
-  for(const m of Object.values(W.maps||{}))if(/^house\d/.test(Object.keys(W.maps).find(k=>W.maps[k]===m)||'')){
-    if(m.roomActors)m.roomActors=m.roomActors.filter(a=>!a.interiorFurniture);
-    m._layeredFurniture=false;m._roomBaseCanvas=null;
-  }
-  /* Household props are not consistently named i*.  Build the candidate list from
-     every static atlas sprite whose name describes freestanding interior scenery. */
-  const furniture=/(?:^|_)(?:bed|chair|stool|bench|table|desk|wardrobe|closet|cabinet|cupboard|dresser|shelf|bookcase|bookshelf|crate|crates|barrel|chest|rug|carpet|plant|pot|lamp|candle|fireplace|hearth|stove|oven|counter|sack|basket)(?:_|\d|$)/i;
-  const structural=/(?:wall|floor|roof|door|window|stairs?|ground|terrain|bridge|fence|gate|pillar|column|trim|temple|dragon|npc|player|corin|portrait|anim|walk|idle|attack|damage|death|shadow)/i;
-  let names=Object.keys(SPR).filter(n=>{const sp=SPR[n];return furniture.test(n)&&!structural.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1;});
-  /* The original house set uses compact i* names that do not always contain an
-     English furniture word. Keep every static interior i-prop as a candidate,
-     excluding architecture/fabric explicitly. */
-  for(const n of Object.keys(SPR)){const sp=SPR[n];if((/^(?:i|hb_|gw_|nan_|lodge_)[a-z0-9_]+$/i.test(n)||/(?:shelf|book|case|wardrobe|cabinet|crate|table|chair)/i.test(n))&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
-  const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n)||/^irug/i.test(n);
+  const furniture=/^(?:ibed|ichair|ifire|ilamp|iplant|irug|ishelf|istove|itable)\d+$/;
+  const names=Object.keys(SPR).filter(n=>furniture.test(n));
   const spriteData=new Map();
   const grab=n=>{if(spriteData.has(n))return spriteData.get(n);const sp=SPR[n];if(!sp)return null;const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,sp[0],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);const d=g.getImageData(0,0,c.width,c.height);spriteData.set(n,d);return d;};
   const score=(rd,rw,rh,sd,sw,sh,x0,y0)=>{if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let hit=0,ok=0,step=Math.max(1,Math.floor(Math.min(sw,sh)/6));for(let y=0;y<sh;y+=step)for(let x=0;x<sw;x+=step){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;hit++;const ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<42)ok++;}return hit>=3?ok/hit:0;};
-  /* Remove only opaque prop pixels. Reconstruct underneath from several surrounding
-     samples instead of smearing the nearest edge across walls/floors. */
-  const heal=(im,rw,rh,sd,sw,sh,x0,y0)=>{
-    const src=new Uint8ClampedArray(im.data),out=im.data;
-    const sample=(rx,ry)=>{
-      const pts=[];
-      for(let d=2;d<=Math.max(sw,sh)+8&&pts.length<8;d+=2){
-        for(const [xx,yy] of [[rx-d,ry],[rx+d,ry],[rx,ry-d],[rx,ry+d]]){
-          if(xx<0||yy<0||xx>=rw||yy>=rh)continue;
-          const lx=xx-x0,ly=yy-y0;
-          if(lx>=0&&ly>=0&&lx<sw&&ly<sh&&sd[(ly*sw+lx)*4+3]>=80)continue;
-          const i=(yy*rw+xx)*4;pts.push([src[i],src[i+1],src[i+2],src[i+3]]);
-        }
-      }
-      if(!pts.length)return null;
-      pts.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));
-      return pts[Math.floor(pts.length/2)];
-    };
-    for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
-      const si=(y*sw+x)*4;
-      let opaque=sd[si+3]>=40;
-      if(!opaque)for(let yy=Math.max(0,y-1);yy<=Math.min(sh-1,y+1)&&!opaque;yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(sw-1,x+1);xx++)if(sd[(yy*sw+xx)*4+3]>=80){opaque=true;break}
-      if(!opaque)continue;
-      const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;
-      const p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
-      out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
-    }
-  };
+  const heal=(im,rw,rh,sd,sw,sh,x0,y0)=>{const src=new Uint8ClampedArray(im.data),out=im.data;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;let bi=-1;for(let d=1;d<=Math.max(sw,sh)+5&&bi<0;d++){for(const xx of [rx-d,rx+d])if(xx>=0&&xx<rw){const lx=xx-x0,ly=ry-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){bi=(ry*rw+xx)*4;break}}}if(bi>=0){const oi=(ry*rw+rx)*4;out[oi]=src[bi];out[oi+1]=src[bi+1];out[oi+2]=src[bi+2];out[oi+3]=src[bi+3];}}};
   let total=0;
   for(const [id,m] of Object.entries(W.maps||{})){
     if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
-    const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors ||= [];
-    /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
-       not collision guesses. Add more maps here as we verify their captured art. */
-    const EXACT_FURNITURE={
-      house03:[['bookshelf_left',22,49,32,31]],
-      house03_bedroom:[['wardrobe',79,34,29,43],['bookshelf',116,36,25,41],['bed',17,60,49,23],['crate',135,144,19,31]]
-    };
-    /* Source-art recut pass. Unlike the old collision crop, this searches for the actual
-       shelf/wardrobe artwork and then copies those exact source pixels into a dedicated
-       canvas actor. It does not alter working tables/chairs/plants/etc. */
-    if(!EXACT_FURNITURE[id]){
-      const recutNames=names.filter(n=>/(?:bookcase|bookshelf|shelf|wardrobe|closet|cabinet|cupboard|dresser)/i.test(n));
-      const cuts=[];
-      for(const n of recutNames){
-        const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
-        let best=null;
-        for(let y=0;y<=rh-sp[3];y++)for(let x=0;x<=rw-sp[2];x++){
-          const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-          if(sc>=.985&&(!best||sc>best.sc))best={x,y,sc};
-        }
-        if(best&&!cuts.some(e=>best.x<e[1]+e[3]&&best.x+sp[2]>e[1]&&best.y<e[2]+e[4]&&best.y+sp[3]>e[2]))
-          cuts.push([n,best.x,best.y,sp[2],sp[3]]);
-      }
-      if(cuts.length)EXACT_FURNITURE[id]=cuts;
-      m._recutCandidates=recutNames.length;m._recutCuts=cuts.length;
-    }
-    /* These hand-cut objects are authoritative. Remove any older/static actor whose
-       bounds overlap the same source furniture, otherwise MOVE can grab the visible
-       legacy copy while the extracted actor sits underneath it. */
-    for(const e of EXACT_FURNITURE[id]||[]){
-      const [,x,y,w,h]=e,cx=x+w/2,cy=y+h/2;
-      m.roomActors=m.roomActors.filter(a=>{
-        if(a.interiorFurniture||a.sceneReserved)return true;
-        const sp=a.extractedCanvas?[0,0,a.extractedCanvas.width,a.extractedCanvas.height]:SPR[a.spr];
-        if(!sp||!Number.isFinite(a.x)||!Number.isFinite(a.y))return true;
-        const l=a.x-sp[2]/2,t=a.y-sp[3],r=l+sp[2],b=a.y;
-        return !(cx>=l&&cx<=r&&cy>=t&&cy<=b);
-      });
-    }
-    const addExactFurnitureCrop=(label,x,y,w,h)=>{
-      const key='furniture:exact:'+id+':'+label;if(m.roomActors.some(a=>a.editKey===key))return;
-      const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-      drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-      /* Only clear background connected to the four crop corners; the furniture pixels
-         themselves are copied unchanged from the original room art. */
-      const im=qg.getImageData(0,0,w,h),d=im.data,bg=new Uint8Array(w*h),stack=[];
-      const seed=(xx,yy)=>{const k=yy*w+xx;if(!bg[k]){bg[k]=1;stack.push(k);}};
-      seed(0,0);seed(w-1,0);seed(0,h-1);seed(w-1,h-1);
-      const diff=(a,b)=>Math.abs(d[a]-d[b])+Math.abs(d[a+1]-d[b+1])+Math.abs(d[a+2]-d[b+2]);
-      while(stack.length){const k=stack.pop(),xx=k%w,yy=(k/w)|0,pi=k*4;for(const [nx,ny]of[[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]]){if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;if(diff(pi,nk*4)<=18){bg[nk]=1;stack.push(nk);}}}
-      for(let i=0;i<bg.length;i++)if(bg[i])d[i*4+3]=0;qg.putImageData(im,0,0);
-      const sprName='exact_'+id+'_'+label;SPR[sprName]=[0,0,w,h,1];
-      let bi=-1,best=1e9;for(let j=0;j<(m.roomBlocks||[]).length;j++){const b=m.roomBlocks[j],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,dd=Math.hypot(cx-(x+w/2),cy-(y+h));if(dd<best){best=dd;bi=j;}}
-      m.roomActors.push({spr:sprName,extractedCanvas:q,extractedFurniture:true,exactFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:bi>=0&&best<45?[bi]:[]});
-      const mask=new Uint8Array(w*h);for(let i=0;i<mask.length;i++)mask[i]=bg[i]?0:1;
-      found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
-    };
-    for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Every house must expose every detected standalone furniture match as a real actor.
-       Exact hand-cuts above are only overrides for stubborn baked props, never the scope
-       of furniture support. */
-    /* Diagnostic marker shown in the MOVE panel so we can verify the live Pages build
-       actually contains these actors instead of guessing from source commits. */
-    if(EXACT_FURNITURE[id]?.length)m._exactFurnitureExpected=EXACT_FURNITURE[id].map(e=>'furniture:exact:'+id+':'+e[0]);
+    const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors||=[];
     const add=(n,x,y,block)=>{const sp=SPR[n],key='furniture:'+n+':'+x+':'+y;if(m.roomActors.some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+sp[2]/2,y:y+sp[3],sy:y+sp[3],schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};m.roomActors.push(a);found.push({n,x,y});occupied.push([x,y,x+sp[2],y+sp[3]]);total++;};
-    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(rugName(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.90&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);
-}
-    for(const n of names.filter(n=>rugName(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
-    /* Decorative furniture often has no roomBlock at all. Search uncovered room art for
-       the remaining prop candidates, but use a bounded coarse-to-fine pass so startup
-       stays predictable even across every house. */
-    let decorBudget=0;
-    const decorNames=names.filter(n=>!rugName(n));
-    for(const n of decorNames){
-      if(decorBudget>140000)break;
-      const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;
-      const step=Math.max(3,Math.floor(Math.min(sp[2],sp[3])/4));
-      for(let y=8;y<=rh-sp[3]-4;y+=step)for(let x=4;x<=rw-sp[2]-4;x+=step){
-        decorBudget++;
-        if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;
-        let sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);
-        if(sc<.78)continue;
-        let best={x,y,sc};
-        for(let yy=Math.max(0,y-step+1);yy<=Math.min(rh-sp[3],y+step-1);yy++)
-          for(let xx=Math.max(0,x-step+1);xx<=Math.min(rw-sp[2],x+step-1);xx++){
-            const fine=score(room.data,rw,rh,sd,sp[2],sp[3],xx,yy);
-            if(fine>best.sc)best={x:xx,y:yy,sc:fine};
-          }
-        if(best.sc>.88&&!occupied.some(r=>best.x<r[2]&&best.x+sp[2]>r[0]&&best.y<r[3]&&best.y+sp[3]>r[1])){
-          add(n,best.x,best.y,null);x+=Math.max(step,sp[2]-step);
-        }
-      }
-    }
-    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
-        const raw=new Uint8ClampedArray(f.w*f.h*4);
-        for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
-        const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
-        for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
-        heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
-      }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
+    for(let bi=0;bi<(m.roomBlocks||[]).length;bi++){const b=m.roomBlocks[bi],bw=b[2]-b[0],bh=b[3]-b[1];if(bw>=rw*.7||bh>=rh*.7||b[0]<=2||b[2]>=rw-2)continue;let best=null,cx=(b[0]+b[2])/2,bot=b[3];for(const n of names){if(/^irug/.test(n))continue;const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let ox=-5;ox<=5;ox++)for(let oy=-7;oy<=7;oy++){const x=Math.round(cx-sp[2]/2)+ox,y=Math.round(bot-sp[3])+oy,sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.74&&(!best||sc>best.sc))best={n,x,y,sc};}}if(best&&!occupied.some(r=>best.x<r[2]&&best.x+SPR[best.n][2]>r[0]&&best.y<r[3]&&best.y+SPR[best.n][3]>r[1]))add(best.n,best.x,best.y,bi);}
+    for(const n of names.filter(n=>/^irug/.test(n))){const sp=SPR[n],sd=grab(n)?.data;if(!sd)continue;for(let y=32;y<=rh-sp[3]-4;y+=2)for(let x=8;x<=rw-sp[2]-8;x+=2){if(occupied.some(r=>x<r[2]&&x+sp[2]>r[0]&&y<r[3]&&y+sp[3]>r[1]))continue;const sc=score(room.data,rw,rh,sd,sp[2],sp[3],x,y);if(sc>.97){add(n,x,y,null);x+=sp[2]-2;}}}
+    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
-  /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
-     furniture can be cut once at explicit source rectangles instead of guessed forever. */
-  window.__interiorExtractionSurvey=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
-  /* Expose exact room-art/collision geometry for one-time manual extraction.
-     This does not alter rendering; it lets us cut stubborn baked furniture by explicit
-     source rectangles instead of guessing from sprite names or collision dimensions. */
-  window.__furnitureExtractionMaps=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:(SPR[m.roomArt]||[]).slice(2,4),blocks:(m.roomBlocks||[]).map(b=>b.slice(0,4))}]));
   window.__houseFurnitureCount=total;
-  window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
-  console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
-  window.__houseFurnitureCandidateCount=names.length;
-  /* Manual extraction helper for stubborn baked props. DEV: tap MOVE, then COPY after
-     positioning. Bounds are exact source rectangles and can be promoted into this table. */
-  window.__extractFurnitureRect=(mapId,x,y,w,h,block=null)=>{
-    const m=W.maps[mapId],rs=m&&SPR[m.roomArt];if(!m||!rs)return false;
-    const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d');
-    drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-    const spr='manual_'+mapId+'_'+x+'_'+y,actor={spr,extractedCanvas:q,extractedFurniture:true,editKey:'manual:'+mapId+':'+x+':'+y,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};
-    SPR[spr]=[0,0,w,h,1];(m.roomActors||=[]).push(actor);return actor;
-  };
-  window.__houseRoomInfo=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
-
 }
 /* === end household furniture layering === */
 
@@ -1650,9 +1474,7 @@ function kingDragonSprite(f) {
   return 'kdnew_' + st + '_' + d;
 }
 // Layout edits use stable map-local identities and absolute saved positions.
-/* Editor layout is session-only. COPY exports it; reload intentionally discards it. */
-try{localStorage.removeItem('emberfell.actor-layout.v1')}catch(e){}
-const actorLayouts = {};
+const actorLayouts = (() => { try { return JSON.parse(localStorage.getItem('emberfell.actor-layout.v1')||'{}'); } catch(e) { return {}; } })();
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
   if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
@@ -1661,8 +1483,6 @@ function editorActorInfo(o) {
   return null;
 }
 function editorSprite(o) {
-  if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
-  if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
   if(o.body)return SPR[o.body+'_idle_d'];
@@ -1691,8 +1511,7 @@ function applyActorLayout(m, id) {
   for(let i=0;i<(m.roomActors||[]).length;i++){
     const o=m.roomActors[i],key=o.editKey||'actor:'+i+':'+o.spr,v=saved[key];
     if(o.sceneReserved)continue;
-    if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!v?.deleted;
-    if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
+    if(o.editableWall)o.editorDeleted=!!v?.deleted;
     if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
   }
   for(const o of m.npcs||[]){if(o.seated||o.seatSpr||o.sceneReserved)continue;const v=saved['npc:'+o.n];if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
@@ -1708,41 +1527,22 @@ function moveEditorActor(o,x,y,save=false) {
   }else shiftActorData(MD,o,x,y,true);
   if(save){
     (actorLayouts[MAPID] ||= {})[info.key]={x,y};
-    /* Deliberately do not persist test moves. COPY is the commit boundary. */
+    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}
+    catch(e){toast('Layout moved, but device storage is full. Use COPY to keep the changes.');}
   }
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
-  /* Exact extracted furniture gets first refusal. Its dedicated canvas is the visual
-     object the user is touching, so do not let legacy room props intercept the drag. */
-  const exactHits=[];
-  for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&o.extractedCanvas&&!o.editorDeleted){
-    const w=o.extractedCanvas.width,h=o.extractedCanvas.height,left=o.x-w/2,top=o.y-h;
-    if(wx>=left&&wx<=left+w&&wy>=top&&wy<=o.y)exactHits.push({o,area:w*h,dist:(wx-o.x)*(wx-o.x)+(wy-(top+h/2))*(wy-(top+h/2))});
-  }
-  if(exactHits.length){exactHits.sort((a,b)=>a.area-b.area||a.dist-b.dist);return exactHits[0].o;}
-  if(/^house\d/.test(MAPID||"")&&!window.__furnReported){
-    window.__furnReported=true;
-    const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
-    toast("Furniture objects in "+MAPID+": "+n+" (total "+(window.__houseFurnitureCount??"?")+", candidates "+(window.__houseFurnitureCandidateCount??"?")+")");
-  }
-  const hits=[];
+  let best=null,area=Infinity;
   for(const o of [...(MD.roomActors||[]),...npcs]){
     if(o.editorDeleted)continue;
     if(npcs.includes(o)&&!npcHere(o))continue;
     const sp=editorSprite(o);if(!sp)continue;
-    const w=sp[2],h=sp[3],left=o.x-w/2,top=o.y-h;
-    if(wx<left||wx>left+w||wy<top||wy>o.y)continue;
-    /* Prefer the visible prop nearest the finger.  This makes a lamp/crate sitting on a
-       table selectable instead of the table's larger rectangle always swallowing it.
-       Rugs deliberately lose to furniture above them unless the rug itself is the only hit. */
-    const rug=o.interiorFurniture&&/^(?:irug|.*(?:rug|carpet))/i.test(o.spr||'');
-    const dx=(wx-o.x)/Math.max(1,w),dy=(wy-(top+h/2))/Math.max(1,h);
-    hits.push({o,rug,area:w*h,dist:dx*dx+dy*dy,depth:o.sy??o.y});
+    const w=sp[2],h=sp[3];
+    if(wx<o.x-w/2||wx>o.x+w/2||wy<o.y-h||wy>o.y)continue;
+    if(w*h<area){best=o;area=w*h;}
   }
-  if(!hits.length)return null;
-  hits.sort((a,b)=>(a.rug-b.rug)||(a.area-b.area)||(a.dist-b.dist)||(b.depth-a.depth));
-  return hits[0].o;
+  return best;
 }
 function storyTeleport(id) {
   return id.startsWith("royal_") || /^(mine\d*|passage\d*|tp\d|sn\d|ds\d)$/.test(id)||
@@ -3641,7 +3441,6 @@ function drawWorld(t, dt) {
     }
     if (o.portalLayer) { drawRise(); drawSaintBuff(); continue; }
     if (o.school) continue; // Native school animation patches draw these seated characters.
-    if(o.extractedCanvas){ctx.drawImage(o.extractedCanvas,o.x-o.extractedCanvas.width/2,o.y-o.extractedCanvas.height);continue;}
     if(o.roomBackgroundPatch){
       const {spr,rect:[sx,sy,w,h]}=o.roomBackgroundPatch,s=SPR[spr];
       if(s)drawGameImage(ctx,atlasImg,s[0]+sx,s[1]+sy,w,h,o.x,o.y,w,h);
@@ -3649,12 +3448,7 @@ function drawWorld(t, dt) {
     }
     if(o.roomCrop){
       const [x,y,w,h]=o.roomCrop,s=SPR[MD.roomArt];
-      if(s){
-        /* Keep only the connected foreground component that touches the furniture's
-           collision/base zone. This prevents wallpaper/floor islands travelling with it. */
-        o._cropCanvas ||= (()=>{const q=document.createElement('canvas');q.width=w;q.height=h;const cg=q.getContext('2d',{willReadFrequently:true});drawGameImage(cg,atlasImg,s[0]+x,s[1]+y,w,h,0,0,w,h);const im=cg.getImageData(0,0,w,h),fg=cropForegroundMask(im.data,w,h);for(let i=0;i<fg.length;i++)if(!fg[i])im.data[i*4+3]=0;cg.putImageData(im,0,0);return q;})();
-        ctx.drawImage(o._cropCanvas,o.x-w/2,o.y-h);
-      }
+      if(s)drawGameImage(ctx,atlasImg,s[0]+x,s[1]+y,w,h,x,y,w,h);
       continue;
     }
     if (o.throneRoomAsset) {
@@ -4657,13 +4451,7 @@ let finePlace = false;
 let pinchMx = null, pinchMy = null;
 
 function screenToWorld(cx, cy) {
-  /* Touch coordinates are viewport-relative, but the game canvas may not begin at
-     the viewport origin (mobile dev/editor chrome can shift it). Convert through
-     the canvas rect so MOVE hit-testing lines up with what is actually under the finger. */
-  const r=cv.getBoundingClientRect();
-  const sx=(cx-r.left)*(VW/Math.max(1,r.width));
-  const sy=(cy-r.top)*(VH/Math.max(1,r.height));
-  return { x: cam.x + sx / cam.z, y: cam.y + sy / cam.z };
+  return { x: cam.x + cx / cam.z, y: cam.y + cy / cam.z };
 }
 const FABRIC = /^(ifloor|iwall_|vc_c|sw_wall3|gw_trim|dg_floor)/;
 
@@ -4759,18 +4547,7 @@ function mapTouchStart(t) {
   }
   if (editing) {
     const w = screenToWorld(t.clientX, t.clientY);
-    let hit = pickObject(w.x, w.y);
-    /* Mobile forgiveness for small/tall furniture: if the exact pixel under the finger
-       misses, search a small world-space radius and prefer dedicated furniture. */
-    if(!hit&&/^house\d/.test(MAPID||'')){
-      let best=null;
-      for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&!o.editorDeleted){
-        const sp=editorSprite(o);if(!sp)continue;
-        const l=o.x-sp[2]/2,t=o.y-sp[3],rx=Math.max(l,Math.min(w.x,l+sp[2])),ry=Math.max(t,Math.min(w.y,o.y));
-        const d=Math.hypot(w.x-rx,w.y-ry);if(d<=14&&(!best||d<best.d))best={o,d};
-      }
-      if(best)hit=best.o;
-    }
+    const hit = pickObject(w.x, w.y);
     if (hit) {
       dragObj = hit;
       selected = hit; refreshSel();
@@ -4835,12 +4612,6 @@ function mapTouchMove(t) {
     return;
   }
   if (dragObj) {
-    /* Drag furniture by absolute finger/world position. This avoids touch-delta scaling
-       errors and makes the selected object's movement unambiguous on mobile. */
-    if(dragObj.interiorFurniture){
-      const w=screenToWorld(t.clientX,t.clientY);
-      if(moveEditorActor(dragObj,w.x,w.y))return;
-    }
     if(moveEditorActor(dragObj,dragObj.x+dx/cam.z,dragObj.y+dy/cam.z))return;
     if (dragObj.feat) {
       const tx = Math.floor(dragObj.x / TS), ty = Math.floor((dragObj.y - 1) / TS);
@@ -10638,7 +10409,7 @@ function recentreOnCorin() {
 tap(document.getElementById("devclose"), () => setDev(false));
 tap(document.getElementById("tbUndo"), () => {
   if (building) document.getElementById("tUndo").click();
-  else if (painting) window.__emberUndoStroke();
+  else if (painting) undoStroke();
   else toast("nothing to undo here");
 });
 tap(document.getElementById("tbTools"), () => setDev(true));
@@ -10812,7 +10583,7 @@ tap(document.getElementById("tSouth"), () => expand(0, EXPAND_STEP));
 
 tap(document.getElementById("aSmall"), () => resizeArea(-4));
 tap(document.getElementById("aBig"), () => resizeArea(4));
-tap(document.getElementById("aFit"), (...args) => fitArea(...args));
+tap(document.getElementById("aFit"), fitArea);
 
 tap(document.getElementById("tUndo"), () => {
   const act = buildUndo.pop();
@@ -10895,7 +10666,7 @@ for (const id of PAINTS) {
     }
   });
 }
-tap(document.getElementById("pUndo"), (...args) => window.__emberUndoStroke(...args));
+tap(document.getElementById("pUndo"), undoStroke);
 tap(document.getElementById("pSize"), () => {
   brush = brush === 1 ? 2 : brush === 2 ? 4 : brush === 4 ? 6 : 1;
   document.getElementById("pSize").textContent = "BRUSH " + brush;
@@ -11015,10 +10786,9 @@ function deleteGrabbed() {
 }
 
 function refreshSel() {
-  const exact=(MD?.roomActors||[]).filter(a=>a.exactFurniture&&!a.editorDeleted);
   selEl.textContent = selected
     ? (selected.n || selected.spr || NAMES[selected.s]) + " #" + (selected.id || "actor") + " @ " + Math.round(selected.x) + "," + Math.round(selected.y)
-    : (editing&&MD?("drag anything to move it, then DONE · exact furniture: "+exact.length+(MD._exactFurnitureExpected?" / "+MD._exactFurnitureExpected.length:"")+(Number.isFinite(MD._recutCuts)?" · recut "+MD._recutCuts+"/"+MD._recutCandidates:"")):"drag anything to move it, then DONE");
+    : "drag anything to move it, then DONE";
   refreshHandle();
 }
 function countChanges() {
@@ -11054,14 +10824,13 @@ function deleteSelected() {
   if(selected.interiorFurniture){
     const info=editorActorInfo(selected);if(!info)return;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[info.key]={x:selected.x,y:selected.y,deleted:true};
-    /* session-only until COPY */
     for(const i of selected.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(selected.editableWall){
     const key=editorActorInfo(selected).key;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[key]={x:selected.x,y:selected.y,deleted:true};
-    /* session-only until COPY */
+    try{localStorage.setItem('emberfell.actor-layout.v1',JSON.stringify(actorLayouts));}catch(e){toast('Use COPY to keep this wall deletion.');}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(editorActorInfo(selected)){toast("This actor can be moved. Keep its story identity intact.");return;}
@@ -11234,7 +11003,7 @@ function sows(style) { return !!style && style !== "volcano" && !!STYLE_TREE[sty
 const TREE_STEP = 2;
 const ROUTE_W = 5, ROUTE_BAND = 20, TOWN_BAND = 6, TOWN_MIN = 24;
 
-var building = false, buildTool = "route", buildStyle = "spruce";
+let building = false, buildTool = "route", buildStyle = "spruce";
 let drawArmed = false;
 const KINDS = ["Town", "Graveyard", "Temple", "Camp", "Ruin", "Farmstead"];
 let areaKind = 0;
@@ -11317,5 +11086,3 @@ function lavaPatch(x, y) {
   const b = v(gx, gy + 1) + (v(gx + 1, gy + 1) - v(gx, gy + 1)) * sx;
   return a + (b - a) * sy;
 }
-
-/* wardrobe crop fix redeploy b8f3a79 */
