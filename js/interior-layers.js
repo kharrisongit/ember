@@ -109,5 +109,14 @@ rebuildSolid=function(){
  for(const b of MD?.roomBlocks||[])if(b&&b._editorFurnitureDeleted){hidden.push(b);b._savedCoords=b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999}
  try{return _rebuildSolid()}finally{for(const b of hidden){const q=b._savedCoords;for(let i=0;i<4;i++)b[i]=q[i];delete b._savedCoords}}
 };
-const reset=document.getElementById("bReset");if(reset)for(const ev of ["click","touchstart"])reset.addEventListener(ev,()=>{if(typeof resetArmed!=="undefined"&&resetArmed)delete actorLayouts[MAPID]},true);
+/* RESET must truly discard actor edits before native loadMap() reapplies actorLayouts.
+   Do this only on the confirmed second RESET tap. */
+const reset=document.getElementById("bReset");
+if(reset)reset.addEventListener("click",()=>{
+ if(typeof resetArmed!=="undefined"&&resetArmed){
+  delete actorLayouts[MAPID];
+  try{localStorage.setItem("emberfell.actor-layout.v1",JSON.stringify(actorLayouts))}catch(e){}
+  for(const o of MD.roomActors||[])if(o.interiorFurniture){o.editorDeleted=false;for(const i of o.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b)delete b._editorFurnitureDeleted}}
+ }
+},true);
 })();
