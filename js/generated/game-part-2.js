@@ -1394,9 +1394,12 @@ function buildHouseFurnitureLayers(){
       else if(!best){
         /* Some baked wardrobes/bookcases/crates have no standalone atlas sprite. Treat
            the painted region above their collision footprint as a native crop actor. */
-        const padX=Math.max(4,Math.min(12,Math.round(bw*.2))),padTop=Math.max(12,Math.min(48,Math.round(Math.max(bh*2,bw*.9))));
-        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-padTop));
-        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+3)-y);
+        /* Collision usually covers only the furniture base. Keep fallback crops tight:
+           enough artwork above the base for tall wardrobes, but never a broad wall patch. */
+        const padX=Math.max(2,Math.min(5,Math.round(bw*.08)));
+        const above=Math.max(10,Math.min(36,Math.round(bw*.72)));
+        const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-above));
+        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+2)-y);
         if(w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
           const key='furniture:crop:'+id+':'+bi;
           m.roomActors.push({roomCrop:[x,y,w,h],editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:[bi]});
@@ -1429,7 +1432,16 @@ function buildHouseFurnitureLayers(){
         }
       }
     }
-    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){const mask=new Uint8ClampedArray(f.w*f.h*4);for(let i=3;i<mask.length;i+=4)mask[i]=255;heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);}else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
+    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
+        /* A crop contains background too. Build a foreground mask by comparing each pixel
+           with colors sampled from the crop border; only erase pixels unlike that local
+           wall/floor background. */
+        const mask=new Uint8ClampedArray(f.w*f.h*4),src=clean.data,bg=[];
+        for(let xx=0;xx<f.w;xx+=Math.max(1,Math.floor(f.w/8)))for(const yy of [0,f.h-1]){const i=((f.y+yy)*rw+f.x+xx)*4;bg.push([src[i],src[i+1],src[i+2]]);}
+        for(let yy=0;yy<f.h;yy+=Math.max(1,Math.floor(f.h/8)))for(const xx of [0,f.w-1]){const i=((f.y+yy)*rw+f.x+xx)*4;bg.push([src[i],src[i+1],src[i+2]]);}
+        for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const i=((f.y+yy)*rw+f.x+xx)*4,mi=(yy*f.w+xx)*4;let d=1e9;for(const p of bg)d=Math.min(d,Math.abs(src[i]-p[0])+Math.abs(src[i+1]-p[1])+Math.abs(src[i+2]-p[2]));if(d>34)mask[mi+3]=255;}
+        heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
+      }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);m._roomBaseCanvas=cv;m._layeredFurniture=true;}
   }
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
