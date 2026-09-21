@@ -1,15 +1,15 @@
 /* Household furniture layers: recover original i* sprites from baked room paintings. */
 (()=>{
-const F=/^(?:(?:ibed|ichair|ifire|ilamp|iplant|irug|ishelf|istove|itable)\d+|crate|barrel\d*|barrel_big|chest|lodge_chest|gw_crates|gw_shelf_[abc]|hb_(?:barrel|barrel_crate|barrel_sack|crate_a|crate_wood|crates_sacks|icebar_crate|icebarrel|icecrate)|nan_table_front)$/;
+const STRUCT=/^(?:house|room|floor|wall|roof|door|stair|window|ground|terrain|water|shore|cliff|path|road|bridge|fence|swall|white|pale|sett|rail|mtn|npc|pc_|player|corin|dr\d|ride_|sm_|fm_|sd_|kg_|br_|lg_|it_|temple|first_temple|scientist|dragon7|wall7|wall8|flame7|royal_|school|school2|library_|witchmoor)/;
+function furnitureNames(rw,rh){return Object.keys(SPR).filter(n=>{const s=SPR[n];if(!s||!Array.isArray(s)||s.length<4||STRUCT.test(n))return false;const w=s[2],h=s[3],frames=s[4]||1;if(frames!==1||w<4||h<4||w>rw*.75||h>rh*.75)return false;return true})}
 function fc(n){const s=SPR[n];if(!s)return null;const c=document.createElement("canvas");c.width=s[2];c.height=s[3];const g=c.getContext("2d",{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,s[0],s[1],s[2],s[3],0,0,s[2],s[3]);return c}
 function match(rd,rw,rh,sd,sw,sh,x0,y0){if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let h=0,g=0,st=Math.max(1,Math.floor(Math.min(sw,sh)/7));for(let y=0;y<sh;y+=st)for(let x=0;x<sw;x+=st){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<28)g++}if(h<3||g/h<.72)return 0;h=g=0;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;h++;let ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<36)g++}return h>8?g/h:0}
 function erase(base,rw,rh,sd,sw,sh,x0,y0){const src=new Uint8ClampedArray(base.data),out=base.data;for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){let si=(y*sw+x)*4;if(sd[si+3]<80)continue;let rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;let b=-1;for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const xx of [rx-d,rx+d])if(xx>=0&&xx<rw){let lx=xx-x0,ly=ry-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(ry*rw+xx)*4;break}}if(b<0)for(let d=1;d<=Math.max(sw,sh)+4&&b<0;d++)for(const yy of [ry-d,ry+d])if(yy>=0&&yy<rh){let lx=rx-x0,ly=yy-y0;if(lx<0||ly<0||lx>=sw||ly>=sh||sd[(ly*sw+lx)*4+3]<80){b=(yy*rw+rx)*4;break}}if(b>=0){let oi=(ry*rw+rx)*4;out[oi]=src[b];out[oi+1]=src[b+1];out[oi+2]=src[b+2];out[oi+3]=src[b+3]}}}
 function prep(){
- const names=Object.keys(SPR).filter(n=>F.test(n)),ss=new Map();
- for(const n of names){const c=fc(n);if(c)ss.set(n,c.getContext("2d",{willReadFrequently:true}).getImageData(0,0,c.width,c.height))}
- for(const [id,m] of Object.entries(W.maps||{})){
+ let names=[],ss=new Map();
+  for(const [id,m] of Object.entries(W.maps||{})){
   if(!m.roomArt||!/^house\d+(?:_bedroom\d*)?$/.test(id))continue;
-  const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],room=document.createElement("canvas");room.width=rw;room.height=rh;
+  const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3];names=furnitureNames(rw,rh);ss=new Map();for(const n of names){const cc=fc(n);if(cc)ss.set(n,cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,cc.width,cc.height))}const room=document.createElement("canvas");room.width=rw;room.height=rh;
   const rg=room.getContext("2d",{willReadFrequently:true});rg.imageSmoothingEnabled=false;drawGameImage(rg,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);
   const rd=rg.getImageData(0,0,rw,rh),found=[],occ=[];
   const add=(n,x,y,sc)=>{const s=SPR[n],key="furniture:"+n+":"+x+":"+y;if((m.roomActors||[]).some(a=>a.editKey===key))return;const a={spr:n,editKey:key,x:x+s[2]/2,y:y+s[3],sy:y+s[3],schoolArt:true,interiorFurniture:true,moveBlocks:[]};(m.roomBlocks||[]).forEach((b,i)=>{let cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;if(cx>=x&&cx<=x+s[2]&&cy>=y&&cy<=y+s[3])a.moveBlocks.push(i)});(m.roomActors||=[]).push(a);found.push({n,x,y,sc});occ.push([x,y,x+s[2],y+s[3]])};
