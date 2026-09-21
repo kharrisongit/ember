@@ -29,6 +29,26 @@ function ensureInteriorLayers(){
 const _applyWorld=typeof applyWorld==="function"?applyWorld:null;
 if(_applyWorld)applyWorld=function(...args){const v=_applyWorld.apply(this,args);ensureInteriorLayers();return v};
 else setTimeout(ensureInteriorLayers,0);
+/* Native editor integration for crop-backed furnishings.
+   game.js pickEditorActor only accepts actors with editorSprite(), so teach that path
+   about roomCrop dimensions instead of replacing the renderer/editor wholesale. */
+const _editorSprite=editorSprite;
+editorSprite=function(o){
+ if(o&&o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1,0];
+ return _editorSprite(o);
+};
+const _pickEditorActor=pickEditorActor;
+pickEditorActor=function(wx,wy){
+ let best=_pickEditorActor(wx,wy),area=Infinity;
+ if(best){const s=editorSprite(best);if(s)area=s[2]*s[3]}
+ for(const o of MD.roomActors||[]){
+  if(o.editorDeleted||!o.roomCrop)continue;
+  const q=o.roomCrop,w=q[2],h=q[3];
+  if(wx<o.x-w/2||wx>o.x+w/2||wy<o.y-h||wy>o.y)continue;
+  if(w*h<area){best=o;area=w*h}
+ }
+ return best;
+};
 const rc=renderChunk;renderChunk=function(cx,cy){if((MAPID==="witchmoor"||MD.roomArt)&&MD._roomBaseCanvas){const c=document.createElement("canvas");c.width=CHUNK;c.height=CHUNK;const g=c.getContext("2d");g.imageSmoothingEnabled=false;g.fillStyle=MD.bg;g.fillRect(0,0,CHUNK,CHUNK);g.drawImage(MD._roomBaseCanvas,-cx*CHUNK,-cy*CHUNK);return c}return rc(cx,cy)};
 try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k of Object.keys(actorLayouts))delete actorLayouts[k];
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
