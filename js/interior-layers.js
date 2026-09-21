@@ -51,6 +51,24 @@ function prep(){
     }
    }
   }
+  /* Build the permanent structural-only room background once all movable layers are known.
+     Each object's original pixels are healed from nearby floor/wall pixels, so dragging/deleting
+     reveals clean room art instead of a baked duplicate. */
+  if(actors.some(a=>a.interiorFurniture&&!a.editorDeleted)){
+   const clean=rg.getImageData(0,0,rw,rh);
+   for(const a of actors){
+    if(!a.interiorFurniture||a.editorDeleted)continue;
+    let x0,y0,sw,sh,sd=null;
+    if(a.roomCrop){[x0,y0,sw,sh]=a.roomCrop;const tmp=rg.getImageData(x0,y0,sw,sh);sd=tmp.data}
+    else if(a.spr&&SPR[a.spr]){
+     const s=SPR[a.spr];sw=s[2];sh=s[3];x0=Math.round(a.x-sw/2);y0=Math.round(a.y-sh);
+     const cc=fc(a.spr);if(cc)sd=cc.getContext("2d",{willReadFrequently:true}).getImageData(0,0,sw,sh).data;
+    }
+    if(!sd||sw<1||sh<1)continue;
+    erase(clean,rw,rh,sd,sw,sh,x0,y0);
+   }
+   rg.putImageData(clean,0,0);m._roomBaseCanvas=room;
+  }
   m._layeredFurniture=true;
  }
 }
