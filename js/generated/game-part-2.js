@@ -1300,13 +1300,9 @@ function applyWorld(text) {
   // User EMBERFELL PATCH v3 — world, September 21.
   {
     const m=W.maps.world;
-    const d=m.doors?.[56];
-    if(d){
-      d.triggerRect={x:15320,y:4327,w:18,h:22};
-      d.x=15320/16; d.y=4327/16;
-    }
-    const a=(m.roomActors||[])[24];
-    if(a&&a.spr==='rt_ext2'){a.x=15336;a.y=4320;if(Number.isFinite(a.sy))a.sy=4320;}
+    /* Door 56 / actor:24 were legacy editor indices. The actual first-temple entrance
+       is created later by restoreTempleEntrances(), so do not write the old position
+       back here. The canonical tp1 placement lives in restoreTempleEntrances(). */
     const terrainEdits=[[959,267],[959,268],[957,269],[959,269],[957,270],[957,271],[957,272],[957,273],[957,274],[957,275],[957,276],[957,277],[957,278],[957,279],[957,280],[957,281],[957,282],[957,283],[957,284],[957,285],[957,286],[957,287],[957,288],[957,289],[957,290]];
     /* T d x y 1: persist dirt directly into the world's terrain RLE. */
     const raw=decodeRLE(m.terr,m.w*m.h);
