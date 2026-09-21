@@ -168,3 +168,7 @@
   window.addEventListener('touchstart',startMusic,{passive:true});
   window.addEventListener('focus',()=>{ if(!document.hidden) startMusic(); });
 })();
+
+
+/* House/bedroom furniture editor layers. Kept separate from specialty interiors. */
+(()=>{const s=document.createElement("script");s.src="js/interior-layers.js";s.onerror=()=>console.error("INTERIOR LAYERS LOAD ERROR");document.body.appendChild(s)})();
