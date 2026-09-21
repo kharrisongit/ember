@@ -1476,6 +1476,10 @@ function buildHouseFurnitureLayers(){
   /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
      furniture can be cut once at explicit source rectangles instead of guessed forever. */
   window.__interiorExtractionSurvey=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
+  /* Expose exact room-art/collision geometry for one-time manual extraction.
+     This does not alter rendering; it lets us cut stubborn baked furniture by explicit
+     source rectangles instead of guessing from sprite names or collision dimensions. */
+  window.__furnitureExtractionMaps=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:(SPR[m.roomArt]||[]).slice(2,4),blocks:(m.roomBlocks||[]).map(b=>b.slice(0,4))}]));
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
   console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
