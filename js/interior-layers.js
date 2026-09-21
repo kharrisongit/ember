@@ -47,11 +47,11 @@ function ensureInteriorLayers(){
  catch(e){state.push("WERR:"+e.name)}
  try{state.push("EA:"+(typeof editorActorInfo),"ME:"+(typeof moveEditorActor))}
  catch(e){state.push("EDERR:"+e.name)}
- try{state.push("AT:"+(typeof atlasImg),typeof atlasImg!=="undefined"&&atlasImg?("c:"+atlasImg.complete+",w:"+atlasImg.naturalWidth):"")}
+ try{state.push("AT:"+(typeof atlasImg),typeof atlasImg!=="undefined"&&atlasImg?("c:"+atlasImg.complete+",nw:"+atlasImg.naturalWidth+",w:"+atlasImg.width):"")}
  catch(e){state.push("ATERR:"+e.name)}
  globalThis.__interiorWaitState=state.join(" ");
  if(typeof W!=="undefined"&&W&&W.maps&&typeof editorActorInfo==="function"&&typeof moveEditorActor==="function"&&
-    typeof atlasImg!=="undefined"&&atlasImg&&atlasImg.complete&&atlasImg.naturalWidth>0){
+    typeof atlasImg!=="undefined"&&atlasImg&&((atlasImg.naturalWidth>0)||(atlasImg.width>0&&typeof atlasImg.complete==="undefined"))){
   ensureInteriorLayers();return;
  }
  setTimeout(waitForInteriorWorld,250);
