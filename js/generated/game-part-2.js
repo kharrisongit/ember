@@ -1620,6 +1620,7 @@ function editorActorInfo(o) {
 }
 function editorSprite(o) {
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
+  if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
   if(o.body)return SPR[o.body+'_idle_d'];
