@@ -10409,7 +10409,7 @@ function recentreOnCorin() {
 tap(document.getElementById("devclose"), () => setDev(false));
 tap(document.getElementById("tbUndo"), () => {
   if (building) document.getElementById("tUndo").click();
-  else if (painting) undoStroke();
+  else if (painting) window.__emberUndoStroke();
   else toast("nothing to undo here");
 });
 tap(document.getElementById("tbTools"), () => setDev(true));
@@ -11003,7 +11003,7 @@ function sows(style) { return !!style && style !== "volcano" && !!STYLE_TREE[sty
 const TREE_STEP = 2;
 const ROUTE_W = 5, ROUTE_BAND = 20, TOWN_BAND = 6, TOWN_MIN = 24;
 
-let building = false, buildTool = "route", buildStyle = "spruce";
+var building = false, buildTool = "route", buildStyle = "spruce";
 let drawArmed = false;
 const KINDS = ["Town", "Graveyard", "Temple", "Camp", "Ruin", "Farmstead"];
 let areaKind = 0;
