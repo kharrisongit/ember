@@ -3554,7 +3554,14 @@ function drawWorld(t, dt) {
     if(o.roomCrop){
       const [x,y,w,h]=o.roomCrop,s=SPR[MD.roomArt];
       if(s){
-        o._cropCanvas ||= (()=>{const q=document.createElement('canvas');q.width=w;q.height=h;const cg=q.getContext('2d',{willReadFrequently:true});drawGameImage(cg,atlasImg,s[0]+x,s[1]+y,w,h,0,0,w,h);const im=cg.getImageData(0,0,w,h),d=im.data,bg=[];for(let xx=0;xx<w;xx+=Math.max(1,Math.floor(w/8)))for(const yy of [0,h-1]){const i=(yy*w+xx)*4;bg.push([d[i],d[i+1],d[i+2]]);}for(let yy=0;yy<h;yy+=Math.max(1,Math.floor(h/8)))for(const xx of [0,w-1]){const i=(yy*w+xx)*4;bg.push([d[i],d[i+1],d[i+2]]);}for(let i=0;i<d.length;i+=4){let md=1e9;for(const p of bg)md=Math.min(md,Math.abs(d[i]-p[0])+Math.abs(d[i+1]-p[1])+Math.abs(d[i+2]-p[2]));if(md<28)d[i+3]=0;}cg.putImageData(im,0,0);return q;})();
+        /* Keep only the connected foreground component that touches the furniture's
+           collision/base zone. This prevents wallpaper/floor islands travelling with it. */
+        o._cropCanvas ||= (()=>{const q=document.createElement('canvas');q.width=w;q.height=h;const cg=q.getContext('2d',{willReadFrequently:true});drawGameImage(cg,atlasImg,s[0]+x,s[1]+y,w,h,0,0,w,h);const im=cg.getImageData(0,0,w,h),d=im.data,bg=[];
+          for(let xx=0;xx<w;xx+=Math.max(1,Math.floor(w/8)))for(const yy of [0,h-1]){const i=(yy*w+xx)*4;bg.push([d[i],d[i+1],d[i+2]]);}
+          const fg=new Uint8Array(w*h);for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){const i=(yy*w+xx)*4;let md=1e9;for(const p of bg)md=Math.min(md,Math.abs(d[i]-p[0])+Math.abs(d[i+1]-p[1])+Math.abs(d[i+2]-p[2]));if(md>38)fg[yy*w+xx]=1;}
+          const keep=new Uint8Array(w*h),stack=[];for(let yy=Math.max(0,h-10);yy<h;yy++)for(let xx=1;xx<w-1;xx++)if(fg[yy*w+xx]){keep[yy*w+xx]=1;stack.push([xx,yy]);}
+          while(stack.length){const [xx,yy]=stack.pop();for(const [nx,ny]of[[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]])if(nx>=0&&ny>=0&&nx<w&&ny<h&&fg[ny*w+nx]&&!keep[ny*w+nx]){keep[ny*w+nx]=1;stack.push([nx,ny]);}}
+          for(let i=0;i<w*h;i++)if(!keep[i])d[i*4+3]=0;cg.putImageData(im,0,0);return q;})();
         ctx.drawImage(o._cropCanvas,o.x-w/2,o.y-h);
       }
       continue;
