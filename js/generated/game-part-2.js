@@ -1348,8 +1348,12 @@ function buildHouseFurnitureLayers(){
      every static atlas sprite whose name describes freestanding interior scenery. */
   const furniture=/(?:^|_)(?:bed|chair|stool|bench|table|desk|wardrobe|closet|cabinet|cupboard|dresser|shelf|bookcase|bookshelf|crate|crates|barrel|chest|rug|carpet|plant|pot|lamp|candle|fireplace|hearth|stove|oven|counter|sack|basket)(?:_|\d|$)/i;
   const structural=/(?:wall|floor|roof|door|window|stairs?|ground|terrain|bridge|fence|gate|pillar|column|trim|temple|dragon|npc|player|corin|portrait|anim|walk|idle|attack|damage|death|shadow)/i;
-  const names=Object.keys(SPR).filter(n=>{const sp=SPR[n];return furniture.test(n)&&!structural.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1;});
-  const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n);
+  let names=Object.keys(SPR).filter(n=>{const sp=SPR[n];return furniture.test(n)&&!structural.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1;});
+  /* The original house set uses compact i* names that do not always contain an
+     English furniture word. Keep every static interior i-prop as a candidate,
+     excluding architecture/fabric explicitly. */
+  for(const n of Object.keys(SPR)){const sp=SPR[n];if(/^i[a-z0-9_]+$/i.test(n)&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
+  const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n)||/^irug/i.test(n);
   const spriteData=new Map();
   const grab=n=>{if(spriteData.has(n))return spriteData.get(n);const sp=SPR[n];if(!sp)return null;const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,sp[0],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);const d=g.getImageData(0,0,c.width,c.height);spriteData.set(n,d);return d;};
   const score=(rd,rw,rh,sd,sw,sh,x0,y0)=>{if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let hit=0,ok=0,step=Math.max(1,Math.floor(Math.min(sw,sh)/6));for(let y=0;y<sh;y+=step)for(let x=0;x<sw;x+=step){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;hit++;const ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<42)ok++;}return hit>=3?ok/hit:0;};
@@ -1390,7 +1394,8 @@ function buildHouseFurnitureLayers(){
   }
   window.__houseFurnitureCount=total;
   window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
-  console.log("HOUSE FURNITURE",total,window.__houseFurnitureByMap);
+  console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
+  window.__houseFurnitureCandidateCount=names.length;
 }
 /* === end household furniture layering === */
 
@@ -1568,7 +1573,7 @@ function pickEditorActor(wx,wy) {
   if(/^house\d/.test(MAPID||"")&&!window.__furnReported){
     window.__furnReported=true;
     const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
-    toast("Furniture objects in "+MAPID+": "+n+" (total "+(window.__houseFurnitureCount??"?")+")");
+    toast("Furniture objects in "+MAPID+": "+n+" (total "+(window.__houseFurnitureCount??"?")+", candidates "+(window.__houseFurnitureCandidateCount??"?")+")");
   }
   const hits=[];
   for(const o of [...(MD.roomActors||[]),...npcs]){
