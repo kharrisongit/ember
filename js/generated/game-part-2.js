@@ -1356,7 +1356,7 @@ function cropForegroundMask(data,w,h){
     for(const [nx,ny] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){
       if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;
       const ni=nk*4;
-      if(delta(pi,ni)<=58){bg[nk]=1;stack.push(nk);}
+      if(delta(pi,ni)<=20){bg[nk]=1;stack.push(nk);}
     }
   }
   const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
@@ -1415,13 +1415,14 @@ function buildHouseFurnitureLayers(){
            the painted region above their collision footprint as a native crop actor. */
         /* Collision usually covers only the furniture base. Keep fallback crops tight:
            enough artwork above the base for tall wardrobes, but never a broad wall patch. */
-        const padX=2;
-        /* Tall wall-backed furniture extends above its collision base, but the previous
-           crop was intentionally too generous and carried wallpaper. Use the collision
-           width only as a conservative height hint. */
-        const above=Math.max(8,Math.min(28,Math.round(bw*.52)));
+        const padX=Math.max(3,Math.min(8,Math.round(bw*.12)));
+        /* roomBlocks mark the FOOTPRINT, not the visual bounds. Tall wall furniture can
+           extend far above it. Extract the complete existing object while keeping width
+           anchored to its footprint so neighboring wall art is excluded. */
+        const tall=bw>=28&&bh<=28;
+        const above=tall?Math.min(92,Math.max(48,Math.round(bw*1.45))):Math.max(12,Math.min(38,Math.round(Math.max(bh*1.4,bw*.65))));
         const x=Math.max(0,Math.floor(b[0]-padX)),y=Math.max(0,Math.floor(b[1]-above));
-        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+1)-y);
+        const w=Math.min(rw-x,Math.ceil(b[2]+padX)-x),h=Math.min(rh-y,Math.ceil(b[3]+2)-y);
         if(w>=8&&h>=8&&!occupied.some(r=>x<r[2]&&x+w>r[0]&&y<r[3]&&y+h>r[1])){
           const key='furniture:crop:'+id+':'+bi;
           const sprName='extracted_'+id+'_'+bi;
