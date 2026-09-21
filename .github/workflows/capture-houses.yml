@@ -1,0 +1,43 @@
+name: Capture house room art
+on:
+  push:
+    paths: ['.github/workflows/capture-houses.yml']
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install playwright
+      - run: npx playwright install chromium
+      - name: Capture
+        run: |
+          python3 -m http.server 8080 >/tmp/http.log 2>&1 &
+          node <<'NODE'
+          const {chromium}=require('playwright'),fs=require('fs');
+          (async()=>{const b=await chromium.launch({headless:true}),p=await b.newPage({viewport:{width:900,height:700}});
+          await p.goto('http://127.0.0.1:8080/',{waitUntil:'domcontentloaded',timeout:120000});
+          await p.waitForFunction(()=>typeof W!=='undefined'&&W&&typeof SPR!=='undefined'&&typeof drawGameImage==='function'&&typeof atlasImg!=='undefined',{timeout:120000});
+          await p.waitForTimeout(4000);
+          const shots=await p.evaluate(()=>{
+            const out={};
+            for(const [id,m] of Object.entries(W.maps||{})){
+              if(!/^house\d/.test(id)||!m.roomArt)continue;
+              const s=SPR[m.roomArt];if(!s)continue;
+              const c=document.createElement('canvas');c.width=s[2];c.height=s[3];const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+              drawGameImage(g,atlasImg,s[0],s[1],s[2],s[3],0,0,s[2],s[3]);
+              out[id]={roomArt:m.roomArt,w:s[2],h:s[3],blocks:m.roomBlocks||[],png:c.toDataURL('image/png').split(',')[1]};
+            } return out;
+          });
+          fs.mkdirSync('house-captures',{recursive:true});
+          const meta={};
+          for(const [id,v] of Object.entries(shots)){fs.writeFileSync('house-captures/'+id+'.png',Buffer.from(v.png,'base64'));delete v.png;meta[id]=v;}
+          fs.writeFileSync('house-captures/meta.json',JSON.stringify(meta,null,2));await b.close();})();
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: house-captures
+          path: house-captures
