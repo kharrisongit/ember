@@ -283,7 +283,7 @@ function restoreTempleEntrances(){
   const d=m.doors.find(d=>d.to===to);if(!d)continue;
   /* tp1 has an explicit world position. Do not derive it from the old door coordinates:
      that derivation was the source of the temple snapping back to its legacy location. */
-  const x=to==='tp1'?15336:d.x*16+8, y=to==='tp1'?4448:d.y*16;
+  const x=to==='tp1'?15336:d.x*16+8, y=to==='tp1'?4704:d.y*16;
   if(to==='tp1'){
     d.x=(x-8)/16;d.y=y/16;d.triggerRect={x:x-8,y:y-62,w:18,h:22};
   }
@@ -1282,8 +1282,9 @@ function applyWorld(text) {
   finishTempleLayouts77();
   refineTemples78();
   finishTempleLayouts82();
-  for(const [index,x,y]of [[56,15330,4099],[57,45024,1313],[58,29552,5051]]){
-   const d=W.maps.world.doors[index];if(d)d.triggerRect={x,y,w:16,h:16};
+  /* Temple door triggers: identify by destination, never by unstable array index. */
+  for(const [to,x,y]of [['tp1',15328,4386],['sn1',45024,1313],['ds1',29552,5051]]){
+   const d=W.maps.world.doors.find(d=>d.to===to);if(d)d.triggerRect={x,y,w:to==='tp1'?18:16,h:to==='tp1'?22:16};
   }
   const snowExit=W.maps.sn1.doors.find(d=>d.to==='world');if(snowExit){snowExit.tx=2814;snowExit.ty=84;}
 
