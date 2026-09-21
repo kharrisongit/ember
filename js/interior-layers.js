@@ -73,6 +73,25 @@ function prep(){
  }
 }
 const ready=atlasImg.onload;atlasImg.onload=()=>{try{prep()}catch(e){console.error("interior layer prep failed",e)}if(typeof ready==="function")ready.call(atlasImg)};
+/* Render crop-backed furniture as first-class actors without requiring a SPR entry. */
+const _drawActor=typeof drawActor==="function"?drawActor:null;
+if(_drawActor)drawActor=function(g,o,...rest){
+ if(o&&o.editorDeleted)return;
+ if(o&&o.roomCrop&&MD&&MD.roomArt){
+  const rs=SPR[MD.roomArt];if(rs){
+   const q=o.roomCrop, dx=Math.round(o.x-q[2]/2),dy=Math.round(o.y-q[3]);
+   drawGameImage(g,atlasImg,rs[0]+q[0],rs[1]+q[1],q[2],q[3],dx,dy,q[2],q[3]);return;
+  }
+ }
+ return _drawActor.call(this,g,o,...rest);
+};
+/* Give crop actors real editor bounds so hit-testing selects the whole visible object. */
+const _editorActorInfo=editorActorInfo;
+editorActorInfo=function(o){
+ const z=_editorActorInfo(o);if(!z||!o)return z;
+ if(o.roomCrop){const q=o.roomCrop;z.w=q[2];z.h=q[3];z.left=o.x-q[2]/2;z.top=o.y-q[3];z.right=z.left+q[2];z.bottom=o.y}
+ return z;
+};
 const rc=renderChunk;renderChunk=function(cx,cy){if((MAPID==="witchmoor"||MD.roomArt)&&MD._roomBaseCanvas){const c=document.createElement("canvas");c.width=CHUNK;c.height=CHUNK;const g=c.getContext("2d");g.imageSmoothingEnabled=false;g.fillStyle=MD.bg;g.fillRect(0,0,CHUNK,CHUNK);g.drawImage(MD._roomBaseCanvas,-cx*CHUNK,-cy*CHUNK);return c}return rc(cx,cy)};
 try{localStorage.removeItem("emberfell.actor-layout.v1")}catch(e){};for(const k of Object.keys(actorLayouts))delete actorLayouts[k];
 moveEditorActor=function(o,x,y,save=false){const info=editorActorInfo(o);if(!info)return false;x=Math.max(0,Math.min(PXW,x));y=Math.max(0,Math.min(PXH,y));if(info.kind==="npc"){shiftActorData(MD,info.source,x,y,false);o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;for(const k of ["talkX","talkY","patrol","sy"])o[k]=info.source[k]}else shiftActorData(MD,o,x,y,true);if(save)(actorLayouts[MAPID]||={})[info.key]={x,y};rebuildSolid();mapDirty=true;return true};
