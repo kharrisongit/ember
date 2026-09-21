@@ -52,19 +52,10 @@ jobs:
                 lines.append('window.EMBER_MEDIA.'+key+'=window.__EM_'+key+';delete window.__EM_'+key+';')
               (out/f'media-{mi}.js').write_text('\n'.join(lines)+'\n')
               mi+=1
-          # Split executable source only at top-level function declarations.
-          # Split only at explicit stable section markers. Function declarations are hoisted
-          # only within one classic script; splitting callers from later declarations breaks boot.
-          marker='/* === SPLIT_SAFE_BOUNDARY === */'
-          starts=[m.start() for m in re.finditer(re.escape(marker),src)]
-          cuts=[0];target=650000;pos=0
-          while len(src)-pos>850000:
-            choices=[x for x in starts if pos+350000<=x<=pos+850000]
-            if not choices: raise SystemExit('no safe split boundary near '+str(pos))
-            cut=min(choices,key=lambda x:abs(x-(pos+target)))
-            cuts.append(cut);pos=cut
-          cuts.append(len(src))
-          parts=[src[cuts[i]:cuts[i+1]] for i in range(len(cuts)-1)]
+          # Keep executable source in one classic script. Splitting lexical declarations
+          # across script tags changes JS semantics (hoisting/TDZ/global lexical scope).
+          # Media payloads are already extracted above, so the executable file remains manageable.
+          parts=[src]
           for i,part in enumerate(parts,1):(out/f'game-part-{i}.js').write_text(part)
           # Rewrite index loader, keeping old game.js in repo as rollback.
           index=Path('index.html').read_text()
