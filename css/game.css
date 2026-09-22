@@ -497,3 +497,22 @@
 .deckHpTrack>i{display:block;height:100%;width:100%;background:linear-gradient(#d65b50,#9e332e);transition:width .12s linear}
 #deckDragonHp{background:linear-gradient(#d17a45,#9e4c2e)}
 @media(min-width:700px) and (min-height:700px){#deckHealth{width:min(38vw,300px)}.deckHpRow{font-size:9px}.deckHpTrack{height:12px}}
+
+/* Use the free upper deck space: larger hearts and larger action controls. */
+#playface{padding-top:82px!important}
+#deckHealth{width:min(46vw,196px)!important;gap:7px!important;transform:translateY(-10px)}
+.deckHpRow{font-size:9px!important;gap:7px!important}
+.deckHpRow>span{width:46px!important}
+.deckHearts{display:flex;align-items:center;gap:3px;flex:1;height:20px}
+.deckHeart{position:relative;width:18px;height:17px;display:block;flex:0 0 18px;opacity:.28}
+.deckHeart::before,.deckHeart::after,.deckHeart>i::before,.deckHeart>i::after{content:"";position:absolute;width:9px;height:14px;border-radius:9px 9px 2px 2px;top:1px}
+.deckHeart::before{left:2px;background:#75504d;transform:rotate(-45deg);transform-origin:0 100%}
+.deckHeart::after{left:7px;background:#75504d;transform:rotate(45deg);transform-origin:100% 100%}
+.deckHeart>i{position:absolute;inset:0;overflow:hidden;display:block}
+.deckHeart>i::before{left:2px;background:#e35d55;transform:rotate(-45deg);transform-origin:0 100%}
+.deckHeart>i::after{left:7px;background:#e35d55;transform:rotate(45deg);transform-origin:100% 100%}
+.deckHeart:has(i[style^="width:1"]),.deckHeart:has(i[style^="width:2"]),.deckHeart:has(i[style^="width:3"]),.deckHeart:has(i[style^="width:4"]),.deckHeart:has(i[style^="width:5"]),.deckHeart:has(i[style^="width:6"]),.deckHeart:has(i[style^="width:7"]),.deckHeart:has(i[style^="width:8"]),.deckHeart:has(i[style^="width:9"]){opacity:1}
+.deckHeart.dragon>i::before,.deckHeart.dragon>i::after{background:#e27b45}
+#actionStack{bottom:calc(100% + 14px)!important;grid-template-columns:repeat(2,minmax(82px,1fr))!important;gap:7px!important;max-width:210px!important}
+#actionStack .trig{min-width:82px!important;padding:10px 11px!important;font-size:11px!important;border-radius:10px!important}
+@media(max-width:430px){#deckHealth{width:min(47vw,190px)!important}.deckHeart{width:16px;height:16px;flex-basis:16px}.deckHearts{gap:2px}#actionStack{grid-template-columns:repeat(2,minmax(78px,1fr))!important}#actionStack .trig{min-width:78px!important;padding:9px 8px!important;font-size:10px!important}}
