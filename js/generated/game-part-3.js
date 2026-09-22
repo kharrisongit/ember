@@ -3965,11 +3965,19 @@ function updateDeckHealth(){
   const cur=(typeof pHp!=="undefined"&&Number.isFinite(pHp))?pHp:0;
   const max=(typeof pMax!=="undefined"&&pMax)?pMax:1;
   paint(corin,cur,max,"corin");
-  const portrait=(cv,sp,img)=>{
+  const portrait=(cv,sp,img,faceZoom)=>{
     if(!cv||!sp||!img)return; const x=cv.getContext("2d"); x.clearRect(0,0,cv.width,cv.height); x.imageSmoothingEnabled=false;
-    try{ const crop=Math.min(sp[2],sp[3]), sx=sp[0]+Math.max(0,(sp[2]-crop)/2), sy=sp[1]+Math.max(0,(sp[3]-crop)/2); drawGameImage(x,img,sx,sy,crop,crop,0,0,cv.width,cv.height); }catch(e){}
+    try{
+      let crop=Math.min(sp[2],sp[3]), sx=sp[0]+Math.max(0,(sp[2]-crop)/2), sy=sp[1]+Math.max(0,(sp[3]-crop)/2);
+      if(faceZoom){
+        crop=Math.max(10,Math.floor(crop*.56));
+        sx=sp[0]+Math.floor((sp[2]-crop)/2);
+        sy=sp[1]+Math.max(0,Math.floor(sp[3]*.16));
+      }
+      drawGameImage(x,img,sx,sy,crop,crop,0,0,cv.width,cv.height);
+    }catch(e){}
   };
-  if(typeof SPR!=="undefined"){const cs=SPR[corinKit()+"idle_d"];portrait(cp,cs,atlasImg);}
+  if(typeof SPR!=="undefined"){const cs=SPR[corinKit()+"idle_d"];portrait(cp,cs,atlasImg,true);}
 
   const hatched=(typeof hasDragon==="function"&&hasDragon());
   if(typeof dragon!=="undefined"&&hatched)paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
