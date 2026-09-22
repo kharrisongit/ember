@@ -387,3 +387,5 @@
 #itemm .row .dot{display:none}
 #itemm .itemQuickIcon{width:30px;height:30px;image-rendering:pixelated;display:block}
 #itemm .foot{display:none}
+
+#itemm .rows{overflow-y:scroll!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain;touch-action:none!important;align-content:start}#itemm .row{flex:none}#itemm .itemQuickIcon{width:32px;height:32px;image-rendering:pixelated;flex:0 0 auto}
