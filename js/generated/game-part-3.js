@@ -3994,7 +3994,7 @@ function frameCore(ms) {
   drawHearts();
   drawBanner(dt);
   drawFade();
-  drawBossBlack();
+  drawBossBlack(); if (typeof drawArenaNumberOverlay === "function") drawArenaNumberOverlay();
   refreshHandle();      /* the delete button rides with the camera */
 }
 
@@ -4277,8 +4277,9 @@ atlasImg.onload = () => {
     (document.body || document.documentElement).appendChild(d);
   }, 20000);
 };
-atlasImg.onerror = () => { document.body.innerHTML = "<p style='color:#fff;padding:20px'>atlas failed to load</p>"; };
-loadAtlasPages().then(() => atlasImg.onload()).catch(() => atlasImg.onerror());
+atlasImg.onerror = (err) => { document.body.innerHTML = "<p style='color:#fff;padding:20px'>atlas failed to load<br><span style='font-size:12px;color:#aaa;'>" + (err && err.message || "Unknown error details") + "</span></p>"; };
+atlasImg.onerror.debug = true;
+loadAtlasPages().then(() => atlasImg.onload()).catch((err) => atlasImg.onerror(err));
 
 window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_GZ, applyWorld, W, SPR, DEFS, NAMES, P, loadMap, buildPatch, fitZoom, overviewZoom,
                get NAMES2(){return NAMES;}, get W2(){return W;}, movePlayer, canStand,

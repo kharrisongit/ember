@@ -157,7 +157,7 @@
   <div class="btn" id="bFine"><span class="ico">✥</span>FINE</div>
   <div class="btn" id="bPaint"><span class="ico">🖌</span>PAINT</div>
   <div class="btn" id="bBuild"><span class="ico">✎</span>BUILD</div>
-  <div class="btn" id="bTravel"><span class="ico">&#9992;</span>TRAVEL</div>
+  <div class="btn" id="bTravel"><span class="ico">&#9992;</span>TRAVEL</div><div class="btn" id="bArenas"><span class="ico">🏟</span>ARENAS</div>
   <div class="btn" id="bReset"><span class="ico">↺</span>RESET</div>
   <div class="btn" id="bSkip"><span class="ico">»</span>SKIP</div>
   <div class="btn" id="bKingDone"><span class="ico">♛</span>KING COMPLETE</div>
@@ -170,7 +170,7 @@
   <div class="btn" id="bCopy"><span class="ico">⎘</span>COPY</div>
 </div>
     <div id="toolbody">
-<div class="pane" id="travel">
+<div class="pane" id="arenasPane" style="display:none; max-height:260px; overflow-y:auto; padding:6px 8px;"><div style="font-weight:bold; margin-bottom:6px; font-size:12px; color:#ffcc00; display:flex; justify-content:space-between; align-items:center;"><span>ARENA OVERVIEW &amp; MAP ZOOM</span><span id="arenaCountBadge" style="background:#443311; color:#ffdd66; border:1px solid #aa8822; padding:1px 6px; border-radius:10px; font-size:11px;">63 Arenas</span></div><div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;"><div class="mini on" id="btnArenaZoomFull" style="cursor:pointer; padding:3px 8px;">🔍 FULL MAP (0.05x)</div><div class="mini" id="btnArenaZoomWide" style="cursor:pointer; padding:3px 8px;">🔍 WIDE VIEW (0.12x)</div><div class="mini" id="btnArenaZoomMedium" style="cursor:pointer; padding:3px 8px;">🔍 REGION (0.35x)</div><div class="mini" id="btnArenaZoomReset" style="cursor:pointer; padding:3px 8px;">🎯 NORMAL (1.0x)</div></div><div style="font-size:11px; color:#aaa; margin-bottom:6px;">Tap any Arena to focus camera &amp; jump:</div><div id="arenaListGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:4px; max-height:160px; overflow-y:auto; padding-right:4px;"></div></div><div class="pane" id="travel">
   <div>tap a place to jump there</div>
   <div class="row" id="tvList"></div>
 </div>
@@ -317,21 +317,21 @@ window.addEventListener("unhandledrejection", function (e) {
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent="loading game assets";})();
 </script>
-<script src="assets/decoder.js"></script>
-<script src="assets/game-assets.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='ASSET LOAD ERROR'"></script>
+<script src="assets/decoder.js?v=1790049472"></script>
+<script src="assets/game-assets.js?v=1790049472" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='ASSET LOAD ERROR'"></script>
 <script>
 (function(){var m=document.getElementById("bootMsg")||document.getElementById("bootmsg");if(m)m.textContent=(typeof EMBER_ASSETS!=="undefined"?"starting game code":"ASSET INIT ERROR");})();
 </script>
-<script src="js/generated/media-1.js"></script>
-<script src="js/generated/media-2.js"></script>
-<script src="js/generated/media-3.js"></script>
-<script src="js/generated/media-4.js"></script>
-<script src="js/generated/media-5.js"></script>
-<script src="js/generated/media-6.js"></script>
-<script src="js/generated/media-7.js"></script>
-<script src="js/generated/game-part-1.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
-<script src="js/generated/game-part-3.js" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/media-1.js?v=1790049472"></script>
+<script src="js/generated/media-2.js?v=1790049472"></script>
+<script src="js/generated/media-3.js?v=1790049472"></script>
+<script src="js/generated/media-4.js?v=1790049472"></script>
+<script src="js/generated/media-5.js?v=1790049472"></script>
+<script src="js/generated/media-6.js?v=1790049472"></script>
+<script src="js/generated/media-7.js?v=1790049472"></script>
+<script src="js/generated/game-part-1.js?v=1790049472" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=1790049472" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=1790049472" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the

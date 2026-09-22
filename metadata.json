@@ -1,0 +1,6 @@
+{
+  "name": "Emberfell",
+  "description": "A self-contained retro fantasy pixel-art RPG game running in the browser.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

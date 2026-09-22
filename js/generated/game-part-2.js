@@ -7,7 +7,14 @@ async function loadDockOriginalAssets(){
   registerDockOriginalSprites();
   for(const [i,a]of DOCK_ORIGINAL_ASSETS.entries()){
     const img=new Image();
-    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=a.src;});
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=(e)=>{
+        console.error("FAILED TO LOAD DOCK ORIGINAL ASSET " + i + " (" + a.name + ")", a.src.substring(0, 100));
+        reject(new Error("Dock Asset " + i + " (" + a.name + ") failed"));
+      };
+      img.src=a.src;
+    });
     let sheet=img;
     if(a.cellW){
       sheet=document.createElement('canvas');sheet.width=a.w*a.frames;sheet.height=a.h;
@@ -29,12 +36,26 @@ function registerDesertNpcSprites() {
 async function loadDesertNpcAssets() {
   for(let i=0;i<DESERT_IDLE_ASSETS.length;i++){
     const img=new Image();
-    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=DESERT_IDLE_ASSETS[i];});
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=(e)=>{
+        console.error("FAILED TO LOAD DESERT IDLE ASSET " + i, DESERT_IDLE_ASSETS[i].substring(0, 100));
+        reject(new Error("Desert Idle Asset " + i + " failed"));
+      };
+      img.src=DESERT_IDLE_ASSETS[i];
+    });
     registerAtlasPage({img,x:0,y:1030144+i*1024,w:96,h:63});
   }
   for(let i=0;i<DESERT_NPC_ASSETS.length;i++) {
     const img=new Image();
-    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=DESERT_NPC_ASSETS[i];});
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=(e)=>{
+        console.error("FAILED TO LOAD DESERT NPC ASSET " + i, DESERT_NPC_ASSETS[i].substring(0, 100));
+        reject(new Error("Desert NPC Asset " + i + " failed"));
+      };
+      img.src=DESERT_NPC_ASSETS[i];
+    });
     const c=document.createElement("canvas");c.width=192;c.height=i===0?144:24;
     const g=c.getContext("2d");
     for(let row=0;row<(i===0?6:1);row++)g.drawImage(img,0,row*32,192,24,0,row*24,192,24);
@@ -100,7 +121,17 @@ const ROYAL_DATA = window.EMBER_ASSETS.ROYAL_DATA;
 const royalDefeated = {};
 function registerRoyalSprites(){Object.assign(SPR, ROYAL_DATA.sprites);}
 async function loadRoyalAssets(){
- for(const [x,y,w,h,src] of ROYAL_DATA.pages){const img=new Image();img.src=src;await img.decode();registerAtlasPage({img,x,y,w,h});}
+ for(const [x,y,w,h,src] of ROYAL_DATA.pages){
+   const img=new Image();
+   img.src=src;
+   try {
+     await img.decode();
+   } catch(e) {
+     console.error("FAILED TO DECODE ROYAL ASSET at y=" + y, src.substring(0, 100));
+     throw new Error("Royal Asset y=" + y + " failed");
+   }
+   registerAtlasPage({img,x,y,w,h});
+ }
 }
 function installRoyalCastle(){
  for(const [id,m] of Object.entries(ROYAL_DATA.maps))W.maps[id]=JSON.parse(JSON.stringify(m));
@@ -249,7 +280,7 @@ function installMarketCounters(){
   }
 }
 function installFirstTemple(){
- const m=W.maps.tp1,outside={...m.doors.find(d=>d.to==='world')},alderic=W.maps.tp4.npcs.find(n=>n.n==='Alderic');
+ const m=W.maps.tp1,tp1Pos=(typeof actorLayouts!=='undefined'&&actorLayouts["world"]&&actorLayouts["world"]["actor:24:rt_ext2"])||{x:15330,y:4328},outside={tx:Math.round((tp1Pos.x-8)/16),ty:Math.round((tp1Pos.y+24)/16)},alderic=W.maps.tp4.npcs.find(n=>n.n==='Alderic');
  Object.assign(m,{w:20,h:120,firstTemple:true,templeContinuous:true,title:'Forgewick Temple',roomArt:'first_temple_continuous',bg:'#19171c',floorbg:'#615b50',spawn:[160,1888]});
  m.terr=terrRLE(Array(2400).fill(DIRT));m.base_terr=m.terr;m.objs=[];m.scatter=[];m.sanim=[];m.fsanim=[];m.fobjs=[];m.features=[];m.hidden=[];m.npcs=[];
  m.roomActors=[];m.roomBlocks=[];m.collisionOverrides={};m.templeActive={};
@@ -277,15 +308,12 @@ function installFirstTemple(){
  for(const id of ['tp2','tp3','tp4']){W.maps[id].travel=false;W.maps[id].templeLegacy=true;}
  const entry=W.maps.world.doors.find(d=>d.to==='tp1');if(entry){entry.tx=9.5;entry.ty=117;}
 }
-function restoreTempleEntrances(){
- const m=W.maps.world;
- for(const [to,spr] of [['tp1','rt_ext2'],['sn1','rt_snow'],['ds1','rt_desert']]){
-  const d=m.doors.find(d=>d.to===to);if(!d)continue;
-  /* tp1 has an explicit world position. Do not derive it from the old door coordinates:
-     that derivation was the source of the temple snapping back to its legacy location. */
-  const x=to==='tp1'?15336:d.x*16+8, y=to==='tp1'?4704:d.y*16;
+function restoreTempleEntrances(){ const m=W.maps.world; const tp1Pos = (actorLayouts["world"] && actorLayouts["world"]["actor:24:rt_ext2"]) || { x: 15330, y: 4328 }; for(const [to,spr] of [['tp1','rt_ext2'],['sn1','rt_snow'],['ds1','rt_desert']]){  const d=m.doors.find(d=>d.to===to);if(!d)continue;  const x=to==='tp1'?tp1Pos.x:d.x*16+8, y=to==='tp1'?tp1Pos.y:d.y*16;
   if(to==='tp1'){
     d.x=(x-8)/16;d.y=y/16;d.triggerRect={x:x-8,y:y-62,w:18,h:22};
+    if(W.maps.tp1&&W.maps.tp1.doors){
+      for(const ed of W.maps.tp1.doors)if(ed.to==='world'){ed.tx=Math.round((x-8)/16);ed.ty=Math.round((y+24)/16);}
+    }
   }
   if(to==='sn1'&&m.scatter.some((v,i)=>i%3===0&&W.names[v]===spr&&Math.abs(m.scatter[i+1]-x)<128&&Math.abs(m.scatter[i+2]-y)<128))continue;
   // Keep these landmark buildings out of procedural decoration hiding and saved object deletions.
@@ -514,7 +542,7 @@ function drawDragonTempleTraps(){
   if(a.type==='flame'&&a.frame===0)continue;
   const sp=SPR['dragon75_'+(a.type==='saw'?'saw':'flame_'+(a.dir>0?'r':'l'))];
   const x=a.type==='saw'?a.x:(a.dir>0?156:196);
-  drawGameImage(ctx,atlasImg,sp[0]+a.frame*sp[2],sp[1],sp[2],sp[3],Math.round(x-sp[2]/2),a.y-16,sp[2],sp[3]);
+  drawGameImage(ctx,sheetOf(sp),sp[0]+a.frame*sp[2],sp[1],sp[2],sp[3],Math.round(x-sp[2]/2),a.y-16,sp[2],sp[3]);
  }
 }
 function installCastleCellar(){
@@ -553,7 +581,7 @@ function stepTempleMachines(dt){
  const live=[];
  for(const shot of MD.templeShots){
   if(bossGone[MAPID+':traps:'+shot.hall])continue;
-  const prev=shot.x;shot.x+=shot.dir*(shot.type==='arrow'?110:76)*dt;shot.age+=dt;
+  const prev=shot.x;shot.x+=shot.dir*(shot.type==='arrow'?180:140)*dt;shot.age+=dt;
   if(Math.abs(P.y-shot.y)<(shot.type==='arrow'?8:10)&&P.x>=Math.min(prev,shot.x)-7&&P.x<=Math.max(prev,shot.x)+7){hurtPlayer(1);continue;}
   if(shot.x>112&&shot.x<208&&shot.age<2)live.push(shot);
  }
@@ -561,7 +589,7 @@ function stepTempleMachines(dt){
 }
 function drawTempleShots(){
  if(!MD?.templeScience)return;
- for(const shot of MD.templeShots){const sp=SPR['scientist_'+(shot.type==='arrow'?'arrow_'+(shot.dir>0?'r':'l'):'ball')];drawGameImage(ctx,atlasImg,sp[0],sp[1],sp[2],sp[3],Math.round(shot.x-sp[2]/2),Math.round(shot.y-sp[3]/2),sp[2],sp[3]);}
+ for(const shot of MD.templeShots){const sp=SPR['scientist_'+(shot.type==='arrow'?'arrow_'+(shot.dir>0?'l':'r'):'ball')];drawGameImage(ctx,sheetOf(sp),sp[0],sp[1],sp[2],sp[3],Math.round(shot.x-sp[2]/2),Math.round(shot.y-sp[3]/2),sp[2],sp[3]);}
 }
 function templeRoomOf(f){return f.idx<4?'ghost':'golem';}
 function templeRoomCleared(room){return !!bossGone[MAPID+':room:'+room]||!foes.some(f=>templeRoomOf(f)===room&&f.st!=='dead'&&!f.ally);}
@@ -1259,7 +1287,7 @@ function applyWorld(text) {
       }
     }
   }
-  installKnightEncounter();
+  installKnightEncounter(); numberAllArenas();
   installFishingVillager();
   installMarketCounters();
   // Working craftspeople keep their original animated workshop scenes.
@@ -1294,7 +1322,8 @@ function applyWorld(text) {
   // Per-record map names from the supplied collision patch.
   for(const [id,cells] of Object.entries({"house26":{"18,22":false,"18,23":false,"18,24":false,"14,19":false,"14,20":false,"14,21":false,"15,19":false,"15,20":false,"16,18":false,"16,19":false,"16,20":false,"16,21":false,"11,19":false,"11,20":false,"11,21":false,"12,19":false,"12,20":false,"10,19":false,"10,20":false,"9,19":false,"9,20":false,"9,21":false},"royal_banquet":{"5,19":false,"6,19":false,"7,19":false,"8,19":false,"9,19":false,"10,19":false,"11,19":false,"12,19":false,"13,19":false,"14,19":false,"15,19":false,"16,19":false,"17,19":false,"18,19":false,"19,19":false,"20,19":false,"21,19":false,"22,19":false,"23,19":false,"4,18":false,"5,18":false,"6,18":false,"7,18":true,"8,18":true,"9,18":true,"10,18":true,"11,18":true,"12,18":true,"13,18":true,"14,18":true,"15,18":true,"16,18":true,"17,18":true,"18,18":true,"19,18":false,"20,18":false,"21,18":false,"22,18":false,"23,18":false,"20,16":false,"20,17":false,"21,16":false,"21,17":false,"22,16":false,"22,17":false,"5,15":false,"5,16":false,"5,17":false,"6,14":true,"7,14":true,"8,14":true,"9,14":true,"10,14":true,"11,14":true,"12,14":true,"13,14":true,"14,14":true,"15,14":true,"16,14":true,"17,14":true,"18,14":true,"19,14":true,"6,13":true,"7,13":true,"8,13":true,"9,13":true,"10,13":true,"11,13":true,"12,13":true,"13,13":true,"14,13":true,"15,13":true,"16,13":true,"17,13":true,"18,13":true,"7,12":true,"8,12":true,"9,12":true,"10,12":true,"11,12":true,"12,12":true,"13,12":true,"14,12":true,"15,12":true,"16,12":true,"17,12":true,"18,12":true,"6,12":false,"22,15":false}}))Object.assign(W.maps[id].collisionOverrides ||= {},cells);
 
-  // User world collision and winter arena patch.
+  Object.assign(W.maps.world.collisionOverrides ||= {}, {"1913,536": false, "1912,536": false, "1911,536": false, "1910,536": false, "1909,536": true, "1910,535": false, "1910,534": false, "1909,534": false, "1908,534": false, "1907,534": false, "1911,535": false, "1912,535": false, "1913,535": false, "1911,534": false, "1911,533": false, "1910,533": false, "1909,533": false, "1909,532": false, "1910,532": false, "1911,532": false, "1909,535": false, "1907,533": false, "1908,533": false, "1905,535": false, "1905,536": false, "1905,537": false, "1905,538": false, "1904,535": true, "1904,536": true, "1904,537": true, "1904,538": true, "1903,538": true, "1902,538": true, "1902,539": true, "1901,539": true, "1901,540": true, "1901,541": true, "1901,542": true, "1901,543": true, "1901,544": true, "1901,545": true, "1901,546": true, "1902,546": true, "1903,546": true, "1904,546": true, "1905,546": true, "1905,545": true, "1906,545": true, "1907,545": true, "1907,546": true, "1907,547": true, "1906,548": true, "1906,549": true, "1906,550": true, "1906,551": true, "1906,552": true, "1906,553": true, "1906,554": true, "1906,555": true, "1906,556": true, "1906,557": true, "1906,558": true, "1906,559": true, "1906,560": true, "1906,561": true, "1906,562": true, "1906,563": true, "1906,564": true, "1906,565": true, "1906,566": true, "1906,567": true, "1906,568": true, "1906,569": true, "1906,570": true, "1906,571": true, "1904,534": true, "1904,533": true, "1904,532": true, "1904,531": true, "1904,530": true, "1905,530": true, "1906,530": true, "1907,530": true, "1908,530": true, "1909,530": true, "1910,530": true, "1918,536": false, "1919,536": false, "1920,536": false, "1921,536": false, "1922,536": false, "1922,535": false, "1923,535": false, "1918,535": false, "1919,535": false, "1920,535": false, "1921,535": false, "1921,534": false, "1922,534": false, "1923,534": false, "1924,534": false, "1923,533": false, "1923,532": false, "1928,531": true, "1928,532": true, "1928,533": true, "1928,534": true, "1928,535": true, "1928,536": true, "1928,537": true, "1928,538": true, "1928,539": true, "1928,540": true, "1928,541": true, "1928,542": true, "1928,543": true, "1927,543": true, "1926,543": true, "1926,544": true, "1926,545": true, "1926,546": true, "1926,547": true, "1926,548": true, "1926,549": true, "1926,550": true, "1926,551": true, "1926,552": true, "1926,553": true, "1926,554": true, "1926,555": true, "1926,556": true, "1926,557": true, "1926,558": true, "1926,559": true, "1926,560": true, "1926,561": true, "1926,562": true, "1926,563": true, "1926,564": true, "1926,565": true, "1926,566": true, "1926,567": true, "1926,568": true, "1926,569": true, "1925,569": true, "1925,570": true, "1924,571": true, "1924,572": true, "1923,572": true, "1908,538": true, "1909,538": true, "1910,538": true, "1911,538": true, "1912,538": true, "1920,538": true, "1921,538": true, "1922,538": true, "1923,538": true, "1924,537": true, "1924,538": true, "1908,537": true, "1927,531": true, "1927,532": true, "1927,533": true, "1927,534": false, "1927,535": false, "1925,531": true, "1926,531": true, "1924,533": false, "1907,535": false, "1907,536": false, "1924,535": true, "1924,536": true, "1908,539": true, "1909,539": true, "1910,539": true, "1911,539": true, "1912,539": true, "1920,539": true, "1921,539": true, "1922,539": true, "1923,539": true, "1924,539": true, "3697,635": false, "3698,635": false, "3699,635": false, "3700,635": false, "3701,635": false, "3702,635": false, "3703,635": false, "3697,634": false, "3698,634": false, "3699,634": false, "3700,634": false, "3701,634": false, "3702,634": false, "3703,634": false, "3697,633": false, "3698,633": false, "3699,633": false, "3700,633": false, "3701,633": false, "3702,633": false, "3703,633": false, "3703,632": false, "3703,631": false, "3703,630": false, "3686,635": false, "3687,635": false, "3688,635": false, "3689,635": false, "3690,635": false, "3691,635": false, "3692,635": false, "3686,634": false, "3687,634": false, "3688,634": false, "3689,634": false, "3690,634": false, "3691,634": false, "3692,634": false, "3686,633": false, "3687,633": false, "3688,633": false, "3689,633": false, "3690,633": false, "3691,633": false, "3692,633": false, "3686,632": false, "3686,631": false, "3686,630": false, "3689,638": true, "3689,639": false, "3689,640": false, "3689,641": false, "3689,642": false, "3688,638": true, "3688,639": false, "3688,640": false, "3688,641": false, "3700,638": true, "3700,639": false, "3700,640": false, "3700,641": false, "3700,642": false, "3701,638": true, "3701,639": false, "3701,640": false, "3701,641": false, "3689,646": false, "3689,647": false, "3689,648": false, "3689,649": false, "3689,650": false, "3688,645": false, "3688,646": false, "3688,647": false, "3688,648": false, "3688,649": false, "3700,646": false, "3700,647": false, "3700,648": false, "3700,649": false, "3700,650": false, "3701,646": false, "3701,647": false, "3701,648": false, "3701,649": false, "3691,650": false, "3698,650": false, "3691,649": false, "3691,648": false, "3691,647": false, "3698,649": false, "3691,646": false, "3698,648": false, "3691,645": false, "3698,647": false, "3697,647": false, "3692,645": false, "3696,649": false, "3696,648": false, "3696,647": false, "3696,646": false, "3696,645": false, "3696,644": false, "3700,651": false, "3700,652": false, "3700,653": false, "3700,654": false, "3700,655": false, "3700,656": false, "3700,657": false, "3701,652": false, "3701,653": false, "3701,654": false, "3701,655": false, "3701,656": false, "3689,652": false, "3689,653": false, "3689,654": false, "3689,655": false, "3689,656": false, "3689,657": false, "3689,658": false, "3688,652": false, "3688,653": false, "3688,654": false, "3688,655": false, "3688,656": false, "3702,641": true, "3702,642": true, "3702,643": true, "3702,644": true, "3702,645": true, "3703,645": true, "3687,641": true, "3687,642": true, "3687,643": true, "3687,644": true, "3687,645": true, "3687,646": true, "3686,646": true, "3688,636": true, "3689,637": true, "3690,637": true, "3691,637": true, "3688,637": true, "3690,638": true, "3691,638": true, "3698,638": true, "3699,638": true, "3698,637": true, "3699,637": true, "3700,637": true, "3701,637": true, "3700,636": true, "3701,636": true, "3702,632": false, "3702,631": false, "3702,630": false, "3687,632": false, "3687,631": false, "3687,630": false, "3687,629": false, "3687,628": true, "3687,627": false, "3683,628": true, "3683,629": true, "3683,630": true, "3683,631": true, "3683,632": true, "3682,632": true, "3682,633": true, "3682,634": true, "3683,634": true, "3684,634": true, "3706,629": true, "3706,630": true, "3706,631": true, "3706,632": true, "3706,633": true, "3705,634": true, "3706,634": true, "3700,628": true, "3701,628": true, "3702,628": true, "3703,628": true, "3704,628": true, "3705,628": true, "3706,628": true, "3684,628": true, "3685,628": true, "3686,628": true, "3688,628": true, "3688,632": false, "3688,631": false, "3688,630": false, "3689,632": false, "3690,632": false, "3691,632": false, "3701,632": false, "3701,631": false, "3701,630": false, "3700,632": false});
+// User world collision and winter arena patch.
   Object.assign(W.maps.world.collisionOverrides ||= {},{"89,870":false,"90,870":false,"91,870":false,"92,870":false,"93,870":false,"94,870":false,"95,870":false,"96,870":false,"97,870":false,"98,870":false,"99,870":false,"100,870":false,"89,865":false,"90,865":false,"91,865":false,"92,865":false,"93,865":false,"94,865":false,"95,865":false,"96,865":false,"97,865":false,"98,865":false,"99,865":false,"100,865":false,"106,873":false,"106,874":false,"106,875":false,"106,857":false,"106,858":false,"106,859":false,"106,860":false,"107,874":false,"107,875":false,"107,876":false,"107,858":false,"107,859":false,"105,873":false,"105,876":false,"64,818":false,"64,819":false,"64,820":false,"65,818":false,"65,819":false,"65,820":false,"57,818":false,"57,819":false,"57,820":false,"56,818":false,"56,819":false,"56,820":false,"22,837":false,"22,838":false,"22,839":false,"22,840":false,"23,838":false,"23,839":false,"23,840":false,"24,840":false,"35,838":false,"35,839":false,"32,852":false,"32,853":false,"32,854":false,"32,855":false,"32,856":false,"32,857":false,"32,858":false,"32,859":false,"32,860":false,"31,852":false,"31,853":false,"31,854":false,"31,855":false,"31,856":false,"31,857":false,"31,858":false,"31,859":false,"31,860":false,"40,852":false,"40,853":false,"40,854":false,"40,855":false,"40,856":false,"41,851":false,"41,852":false,"41,853":false,"41,854":false,"41,855":false,"41,856":false,"41,857":false,"41,858":false,"41,859":false,"42,852":false,"42,853":false,"42,854":false,"42,855":false,"42,856":false,"42,857":false,"42,858":false,"42,859":false,"66,879":false,"66,880":false,"66,881":false,"66,882":false,"66,883":false,"66,884":false,"71,879":false,"71,880":false,"71,881":false,"71,882":false,"71,883":false,"71,884":false,"24,838":true,"24,839":true,"67,883":false,"68,883":false,"69,883":false,"70,883":false,"497,132":false,"498,132":false,"499,132":false,"500,132":false,"501,132":false,"486,124":false,"486,125":false,"487,124":false,"487,125":false,"488,124":false,"488,125":false,"489,124":false,"489,125":false,"490,124":false,"490,125":false,"491,124":false,"491,125":false,"492,124":false,"492,125":false,"493,124":false,"493,125":false,"493,126":false,"544,120":false,"544,121":false,"544,122":false,"544,123":false,"544,124":false,"544,125":false,"545,120":false,"545,121":false,"545,122":false,"545,123":false,"545,124":false,"545,125":false,"545,126":false,"543,124":false,"543,125":false,"542,124":false,"542,125":false,"542,126":false,"541,124":false,"541,125":false,"541,126":false,"528,119":false,"528,120":false,"528,121":false,"528,122":false,"528,123":false,"528,124":false,"528,125":false,"529,119":false,"529,120":false,"529,121":false,"529,122":false,"529,123":false,"529,124":false,"529,125":false,"530,124":false,"530,125":false,"530,126":false,"531,124":false,"531,125":false,"531,126":false,"532,124":false,"532,125":false,"532,126":false,"573,124":false,"574,123":false,"574,124":false,"574,125":false,"575,123":false,"575,124":false,"575,125":false,"576,123":false,"576,124":false,"576,125":false,"577,123":false,"577,124":false,"577,125":false,"577,126":false,"578,123":false,"578,124":false,"578,125":false,"578,126":false,"579,123":false,"579,124":false,"579,125":false,"580,123":false,"580,125":false,"581,125":false,"587,124":false,"588,124":false,"588,125":false,"588,126":false,"589,123":false,"589,124":false,"589,125":false,"590,123":false,"590,124":false,"590,125":false,"591,123":false,"591,124":false,"591,125":false,"592,123":false,"592,124":false,"592,125":false,"593,123":false,"593,124":false,"593,125":false,"594,123":false,"594,124":false,"594,125":false,"595,123":false,"595,124":false,"595,125":false,"596,123":false,"596,124":false,"596,125":false,"597,123":false,"597,124":false,"597,125":false,"598,123":false,"598,124":false,"598,125":false,"599,123":false,"599,124":false,"599,125":false,"628,210":false,"628,211":false,"628,212":false,"628,213":false,"628,214":false,"628,215":false,"628,216":false,"628,217":false,"628,218":false,"628,219":false,"628,220":false,"628,221":false,"628,222":false,"628,223":false,"628,224":false,"628,225":false,"628,227":false,"628,228":false,"628,229":false,"628,230":false,"628,231":false,"628,232":false,"628,233":false,"628,234":false,"628,235":false,"628,236":false,"628,237":false,"628,238":false,"628,240":false,"628,241":false,"628,242":false,"628,243":false,"628,245":false,"628,247":false,"628,248":false,"628,249":false,"628,250":false,"628,251":false,"628,252":false,"628,254":false,"628,256":false,"628,257":false,"628,258":false,"628,259":false,"628,261":false,"628,262":false,"628,264":false,"628,265":false,"628,266":false,"628,270":false,"628,271":false,"628,272":false,"628,273":false,"628,274":false,"628,279":false,"628,280":false,"628,281":false,"628,282":false,"628,283":false,"627,222":false,"627,223":false,"627,231":false,"627,232":false,"627,239":false,"627,255":false,"627,259":false,"627,263":false,"627,264":false,"627,267":false,"627,272":false,"627,283":false,"629,211":false,"629,212":false,"629,213":false,"629,214":false,"629,216":false,"629,217":false,"629,218":false,"629,220":false,"629,221":false,"629,222":false,"629,223":false,"629,224":false,"629,225":false,"629,226":false,"629,227":false,"629,228":false,"629,229":false,"629,230":false,"629,232":false,"629,233":false,"629,234":false,"629,235":false,"629,236":false,"629,237":false,"629,239":false,"629,240":false,"629,241":false,"629,242":false,"629,243":false,"629,244":false,"629,247":false,"629,248":false,"629,249":false,"629,250":false,"629,255":false,"629,256":false,"629,257":false,"629,258":false,"629,263":false,"629,264":false,"629,265":false,"629,266":false,"629,272":false,"629,273":false,"629,274":false,"629,278":false,"629,279":false,"629,280":false,"629,281":false,"629,282":false,"629,283":false,"630,248":false,"630,249":false,"630,250":false,"630,280":false,"630,281":false,"630,282":false,"452,215":false,"452,216":false,"452,217":false,"452,218":false,"452,219":false,"452,208":false,"452,209":false,"452,210":false,"452,211":false,"452,199":false,"452,200":false,"452,201":false,"452,202":false,"452,203":false,"452,191":false,"452,192":false,"452,193":false,"452,194":false,"452,195":false,"452,183":false,"452,184":false,"452,185":false,"452,186":false,"452,187":false,"452,174":false,"452,175":false,"452,176":false,"452,177":false,"452,178":false,"452,179":false,"452,168":false,"452,169":false,"452,170":false,"452,171":false,"452,159":false,"452,160":false,"452,161":false,"452,162":false,"452,163":false,"452,164":false,"452,150":false,"452,151":false,"452,152":false,"452,153":false,"452,154":false,"452,155":false,"452,143":false,"452,144":false,"452,145":false,"452,146":false,"452,135":false,"452,136":false,"452,137":false,"452,138":false,"452,127":false,"452,128":false,"452,129":false,"452,130":false,"452,131":false,"452,120":false,"452,121":false,"452,122":false,"452,123":false,"452,124":false,"452,111":false,"452,104":false,"452,105":false,"452,106":false,"452,107":false,"452,109":false,"453,216":false,"453,217":false,"453,218":false,"453,219":false,"453,220":false,"453,206":false,"453,208":false,"453,209":false,"453,210":false,"453,211":false,"453,212":false,"453,200":false,"453,201":false,"453,202":false,"453,203":false,"453,204":false,"453,192":false,"453,193":false,"453,194":false,"453,195":false,"453,196":false,"453,182":false,"453,183":false,"453,184":false,"453,185":false,"453,186":false,"453,187":false,"453,175":false,"453,176":false,"453,177":false,"453,178":false,"453,179":false,"453,168":false,"453,169":false,"453,170":false,"453,171":false,"453,160":false,"453,161":false,"453,162":false,"453,163":false,"453,164":false,"453,151":false,"453,152":false,"453,153":false,"453,154":false,"453,155":false,"453,156":false,"453,144":false,"453,145":false,"453,146":false,"453,147":false,"453,148":false,"453,136":false,"453,137":false,"453,138":false,"453,139":false,"453,140":false,"453,128":false,"453,129":false,"453,130":false,"453,131":false,"453,132":false,"453,120":false,"453,121":false,"453,122":false,"453,123":false,"453,112":false,"453,113":false,"453,114":false,"453,115":false,"453,116":false,"453,104":false,"453,105":false,"453,106":false,"453,107":false,"453,108":false,"451,216":false,"451,212":false,"451,168":false,"451,152":false,"451,135":false,"451,127":false,"451,111":false,"451,112":false,"451,113":false,"451,114":false,"451,104":false,"451,105":false,"451,106":false,"451,107":false,"454,176":false,"454,160":false,"454,161":false,"454,162":false,"826,656":true,"827,656":true,"828,656":true,"829,656":true,"830,656":true,"831,656":true,"832,656":true,"833,656":true,"834,656":true,"835,656":true,"836,656":true,"837,656":true,"838,656":true,"839,656":true,"840,656":true,"841,656":true,"826,664":true,"827,664":true,"828,664":true,"829,664":true,"830,664":true,"831,664":true,"832,664":true,"833,664":true,"834,664":true,"835,664":true,"836,664":true,"837,664":true,"838,664":true,"839,664":true,"840,664":true,"841,664":true,"842,664":true,"1616,283":false,"1616,284":false,"1616,285":false,"1616,286":false,"1617,283":false,"1617,284":false,"1617,285":false,"1617,286":false,"1617,287":false,"1612,283":false,"1612,284":false,"1612,285":false,"1612,286":false,"1600,258":false,"1600,259":false,"1600,260":false,"1601,258":false,"1601,259":false,"1604,257":false,"1604,258":false,"1604,259":false,"1605,258":false,"1605,259":false,"1605,260":false,"1622,264":false,"1622,265":false,"1622,266":false,"1622,267":false,"1623,264":false,"1623,265":false,"1623,266":false,"1624,264":false,"1624,265":false,"1624,266":false,"1624,267":false,"1624,268":false,"1625,264":false,"1625,265":false,"1625,266":false,"1625,267":false,"1625,268":false,"1630,271":false,"1630,272":false,"1630,273":false,"1630,274":false,"1407,422":false,"1408,422":false,"1408,423":false,"1408,424":false,"1408,425":false,"1408,426":false,"1408,427":false,"1408,428":false,"1408,429":false,"1408,430":false,"1420,422":false,"1420,423":false,"1420,424":false,"1420,425":false,"1420,426":false,"1420,427":false,"1420,428":false,"1420,429":false,"1420,430":false,"1421,422":false,"1421,423":false,"1421,424":false,"1421,425":false,"1421,426":false,"1421,427":false,"1421,428":false,"1421,429":false,"1421,430":false,"1389,408":false,"1389,409":false,"1389,410":false,"1389,424":false,"1389,425":false,"1390,408":false,"1390,424":false,"1390,425":false,"1388,408":false,"1388,409":false,"1388,410":false,"1388,424":false,"1388,425":false,"1391,424":false,"1391,425":false,"1392,425":false,"2586,508":false,"2586,509":false,"2586,510":false,"2586,511":false,"2588,507":false,"2588,508":false,"2588,509":false,"2587,508":false,"2587,509":false,"2587,510":false,"2587,511":false,"2560,507":false,"2560,508":false,"2560,509":false,"2561,507":false,"2561,508":false,"2561,509":false,"2562,509":false,"2562,496":false,"2562,497":false,"2562,498":false,"2562,499":false,"2562,500":false,"2562,501":false,"2563,509":false,"2563,501":false,"2563,496":false,"2564,508":false,"2564,509":false,"2564,501":false,"2564,502":false,"2564,503":false,"2564,493":false,"2564,494":false,"2564,495":false,"2564,496":false,"2565,503":false,"2565,504":false,"2565,505":false,"2565,506":false,"2565,507":false,"2565,508":false,"2565,509":false,"2565,494":false,"2566,503":false,"2566,492":false,"2566,493":false,"2566,494":false,"2567,503":false,"2567,492":false,"2567,488":false,"2568,503":false,"2568,488":false,"2568,489":false,"2568,490":false,"2568,491":false,"2568,492":false,"2569,503":false,"2569,488":false,"2569,489":false,"2570,503":false,"2570,488":false,"2570,489":false,"2571,503":false,"2571,488":false,"2572,503":false,"2572,488":false,"2573,503":false,"2573,488":false,"2573,489":false,"2573,490":false,"2574,503":false,"2574,490":false,"2575,503":false,"2575,490":false,"2576,503":false,"2576,490":false,"2577,503":false,"2577,490":false,"2577,491":false,"2577,492":false,"2577,493":false,"2577,494":false,"2577,495":false,"2578,496":false,"2578,502":false,"2578,503":false,"2579,496":false,"2579,501":false,"2579,502":false,"2579,503":false,"2580,496":false,"2580,501":false,"2581,496":false,"2581,499":false,"2581,500":false,"2581,501":false,"2582,496":false,"2582,499":false,"2583,496":false,"2583,497":false,"2583,498":false,"2583,499":false,"2556,489":false,"2556,490":false,"2556,491":false,"2556,492":false,"2557,489":false,"2557,490":false,"2557,491":false,"2558,489":false,"2558,490":false,"2558,491":false,"2559,491":false,"2560,489":false,"2560,490":false,"2560,491":false,"2561,489":false,"2561,490":false,"2561,491":false,"2561,492":false,"2562,489":false,"2562,490":false,"2578,483":false,"2578,484":false,"2578,485":false,"2579,483":false,"2579,484":false,"2579,485":false,"2579,486":false,"2577,485":false,"2580,485":false,"2581,485":false,"2581,486":false,"2581,516":false,"2581,517":false,"2582,483":false,"2582,484":false,"2582,485":false,"2582,487":false,"2582,488":false,"2582,489":false,"2583,483":false,"2583,484":false,"2583,485":false,"2583,489":false,"2584,483":false,"2584,484":false,"2584,485":false,"2584,489":false,"2585,489":false,"2586,489":false,"2587,486":false,"2587,487":false,"2587,488":false,"2587,489":false,"2587,490":false,"2588,489":false,"2582,516":false,"2582,517":false,"2583,516":false,"2583,517":false,"2565,516":false,"2566,516":false,"2566,517":false,"2567,516":false,"2567,517":false,"2568,516":false,"2568,517":false,"5400,407":false,"5401,407":false,"5402,407":false,"5403,407":false,"5404,407":false,"5405,407":false,"5406,407":false,"5399,406":false,"5400,406":false,"5401,406":false,"5402,406":false,"5403,406":false,"5404,406":false,"5405,406":false,"5406,406":false,"5407,406":false,"5379,406":false,"5380,406":false,"5381,406":false,"5382,406":false,"5383,406":false,"5384,406":false,"5385,406":false,"5386,406":false,"5387,406":false,"5388,406":false,"5389,406":false,"5379,407":false,"5380,407":false,"5381,407":false,"5382,407":false,"5383,407":false,"5384,407":false,"5385,407":false,"5386,407":false,"5387,407":false,"5388,407":false,"5389,407":false,"5390,407":false,"5434,388":false,"5451,388":false,"5452,388":false,"5453,388":false,"5454,388":false,"5434,389":false,"5435,389":false,"5436,389":false,"5437,389":false,"5438,389":false,"5439,389":false,"5440,389":false,"5441,389":false,"5442,389":false,"5443,389":false,"5444,389":false,"5445,389":false,"5446,389":false,"5447,389":false,"5448,389":false,"5449,389":false,"5450,389":false,"5451,389":false,"5452,389":false,"5453,389":false,"5454,389":false,"5455,389":false,"5433,390":false,"5434,390":false,"5435,390":false,"5436,390":false,"5437,390":false,"5438,390":false,"5439,390":false,"5440,390":false,"5441,390":false,"5442,390":false,"5443,390":false,"5444,390":false,"5445,390":false,"5446,390":false,"5447,390":false,"5448,390":false,"5432,422":false,"5433,422":false,"5434,422":false,"5435,422":false,"5436,422":false,"5437,422":false,"5438,422":false,"5439,422":false,"5440,422":false,"5441,422":false,"5432,423":false,"5433,423":false,"5434,423":false,"5435,423":false,"5436,423":false,"5437,423":false,"5438,423":false,"5439,423":false,"5440,423":false,"5441,423":false,"5432,438":false,"5433,438":false,"5434,438":false,"5435,438":false,"5436,438":false,"5437,438":false,"5438,438":false,"5439,438":false,"5440,438":false,"5431,439":false,"5432,439":false,"5433,439":false,"5434,439":false,"5435,439":false,"5436,439":false,"5437,439":false,"5438,439":false,"5439,439":false,"5440,439":false,"5429,440":false,"5430,440":false,"5432,440":false,"5433,440":false,"5434,440":false,"5435,440":false,"5436,440":false,"5437,440":false,"5417,434":false,"5417,435":false,"5417,436":false,"5417,437":false,"5418,434":false,"5418,435":false,"5418,436":false,"5418,437":false,"5419,434":false,"5419,435":false,"5419,436":false,"5419,437":false,"5420,435":false,"5441,425":false,"5442,425":false,"5443,425":false,"5444,425":false,"5445,425":false,"5440,424":false,"5441,424":false,"5442,424":false,"5443,424":false,"5444,424":false,"5441,432":false,"5442,432":false,"5443,432":false,"5444,432":false,"5441,434":false,"5443,434":false,"5444,434":false,"5445,434":false,"5442,433":false,"5443,433":false,"5444,433":false,"5399,427":false,"5399,428":false,"5399,429":false,"5399,430":false,"5399,431":false,"5399,432":false,"5393,428":false,"5393,432":false,"5394,428":false,"5394,429":false,"5394,430":false,"5394,431":false,"5394,432":false,"5622,186":false,"5622,187":false,"5622,188":false,"5623,186":false,"5623,187":false,"5623,188":false,"5628,185":false,"5628,186":false,"5628,187":false,"5629,186":false,"5629,187":false,"5272,308":false,"5272,309":false,"5272,310":false,"5272,311":false,"5272,312":false,"5272,313":false,"5272,314":false,"5272,315":false,"5272,316":false,"5272,317":false,"5272,318":false,"5272,319":false,"5272,320":false,"5272,321":false,"5272,322":false,"5273,308":false,"5273,309":false,"5273,310":false,"5273,311":false,"5273,312":false,"5273,313":false,"5273,314":false,"5273,315":false,"5273,316":false,"5273,317":false,"5273,318":false,"5273,319":false,"5273,320":false,"5273,321":false,"5256,308":false,"5257,310":false,"5257,311":false,"5257,312":false,"5257,313":false,"5257,314":false,"5257,315":false,"5257,316":false,"5257,317":false,"5257,318":false,"5257,319":false,"5257,320":false});
   {const arena=W.maps.world.features.find(f=>f.kind==='arena'&&f.id===207);if(arena)Object.assign(arena,{x:2634,y:152,r:9.45,style:'winter'});}
 
@@ -1320,7 +1349,7 @@ function applyWorld(text) {
     for(let i=0;i<m.roomActors.length;i++){const o=m.roomActors[i],p=positions[o.editKey||'actor:'+i+':'+o.spr];if(p)shiftActorData(m,o,p[0],p[1],true);}
     const rashida=m.npcs.find(n=>n.n==='Rashida');if(rashida)shiftActorData(m,rashida,24504,1472,false);
     m.objs[6010*3+1]=24488;m.objs[6010*3+2]=1632;
-    m.hidden=[...new Set([...(m.hidden||[]),6040,6041,6046,6047,6048,6049,6054,6055])];
+    m.hidden=[...new Set([...(m.hidden||[]),6040,6041,6046,6047,6048,6049,6050,6053,6054,6055,6151,6152])];
   }
 
   // Chairs added over baked room backgrounds must stop at the tabletop edge.
@@ -1385,182 +1414,12 @@ function cropForegroundMask(data,w,h){
   return fg;
 }
 function buildHouseFurnitureLayers(){
-  /* Rebuilding can be triggered more than once during boot. Remove previously generated
-     furniture actors first so an earlier partial pass cannot leave invisible/duplicate hit targets. */
-  for(const m of Object.values(W.maps||{}))if(/^house\d/.test(Object.keys(W.maps).find(k=>W.maps[k]===m)||'')){
-    if(m.roomActors)m.roomActors=m.roomActors.filter(a=>!a.interiorFurniture);
-    m._layeredFurniture=false;m._roomBaseCanvas=null;
+  /* Clean slate on reload */
+  for(const m of Object.values(W.maps||{})){
+    if(m.roomActors) m.roomActors = m.roomActors.filter(a=>!a.interiorFurniture);
+    m._layeredFurniture = false;
+    m._roomBaseCanvas = null;
   }
-  /* Household props are not consistently named i*.  Build the candidate list from
-     every static atlas sprite whose name describes freestanding interior scenery. */
-  const furniture=/(?:^|_)(?:bed|chair|stool|bench|table|desk|wardrobe|closet|cabinet|cupboard|dresser|shelf|bookcase|bookshelf|crate|crates|barrel|chest|rug|carpet|plant|pot|lamp|candle|fireplace|hearth|stove|oven|counter|sack|basket)(?:_|\d|$)/i;
-  const structural=/(?:wall|floor|roof|door|window|stairs?|ground|terrain|bridge|fence|gate|pillar|column|trim|temple|dragon|npc|player|corin|portrait|anim|walk|idle|attack|damage|death|shadow)/i;
-  let names=Object.keys(SPR).filter(n=>{const sp=SPR[n];return furniture.test(n)&&!structural.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1;});
-  /* The original house set uses compact i* names that do not always contain an
-     English furniture word. Keep every static interior i-prop as a candidate,
-     excluding architecture/fabric explicitly. */
-  for(const n of Object.keys(SPR)){const sp=SPR[n];if((/^(?:i|hb_|gw_|nan_|lodge_)[a-z0-9_]+$/i.test(n)||/(?:shelf|book|case|wardrobe|cabinet|crate|table|chair)/i.test(n))&&!/^i(?:floor|wall|door|window|roof|trim|arch|pillar|stairs?)/i.test(n)&&sp&&sp[2]>=4&&sp[3]>=4&&sp[2]<=128&&sp[3]<=128&&(sp[4]||1)===1&&!names.includes(n))names.push(n);}
-  const rugName=n=>/(?:^|_)(?:rug|carpet)(?:_|\d|$)/i.test(n)||/^irug/i.test(n);
-  const spriteData=new Map();
-  const grab=n=>{if(spriteData.has(n))return spriteData.get(n);const sp=SPR[n];if(!sp)return null;const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,sp[0],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);const d=g.getImageData(0,0,c.width,c.height);spriteData.set(n,d);return d;};
-  const score=(rd,rw,rh,sd,sw,sh,x0,y0)=>{if(x0<0||y0<0||x0+sw>rw||y0+sh>rh)return 0;let hit=0,ok=0,step=Math.max(1,Math.floor(Math.min(sw,sh)/6));for(let y=0;y<sh;y+=step)for(let x=0;x<sw;x+=step){const si=(y*sw+x)*4;if(sd[si+3]<80)continue;hit++;const ri=((y0+y)*rw+x0+x)*4,d=Math.abs(rd[ri]-sd[si])+Math.abs(rd[ri+1]-sd[si+1])+Math.abs(rd[ri+2]-sd[si+2]);if(d<42)ok++;}return hit>=3?ok/hit:0;};
-  /* Remove only opaque prop pixels. Reconstruct underneath from several surrounding
-     samples instead of smearing the nearest edge across walls/floors. */
-  const heal=(im,rw,rh,sd,sw,sh,x0,y0)=>{
-    const src=new Uint8ClampedArray(im.data),out=im.data;
-    const sample=(rx,ry)=>{
-      const pts=[];
-      for(let d=2;d<=Math.max(sw,sh)+8&&pts.length<8;d+=2){
-        for(const [xx,yy] of [[rx-d,ry],[rx+d,ry],[rx,ry-d],[rx,ry+d]]){
-          if(xx<0||yy<0||xx>=rw||yy>=rh)continue;
-          const lx=xx-x0,ly=yy-y0;
-          if(lx>=0&&ly>=0&&lx<sw&&ly<sh&&sd[(ly*sw+lx)*4+3]>=80)continue;
-          const i=(yy*rw+xx)*4;pts.push([src[i],src[i+1],src[i+2],src[i+3]]);
-        }
-      }
-      if(!pts.length)return null;
-      pts.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));
-      return pts[Math.floor(pts.length/2)];
-    };
-    for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
-      const si=(y*sw+x)*4;
-      let opaque=sd[si+3]>=40;
-      if(!opaque)for(let yy=Math.max(0,y-1);yy<=Math.min(sh-1,y+1)&&!opaque;yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(sw-1,x+1);xx++)if(sd[(yy*sw+xx)*4+3]>=80){opaque=true;break}
-      if(!opaque)continue;
-      const rx=x0+x,ry=y0+y;if(rx<1||ry<1||rx>=rw-1||ry>=rh-1)continue;
-      /* Do not synthesize wall/floor pixels by sampling around the furniture.
-         That produced patchwork panels after an object moved. Use the nearest pixel
-         on the same scanline outside the extracted object; for wall-mounted furniture
-         this preserves the room's horizontal wall pattern instead of inventing texture. */
-      let p=null;
-      for(let d=1;d<=Math.max(sw,sh)+8&&!p;d++){
-        for(const xx of [x0-1-d,x0+sw+d]){
-          if(xx<0||xx>=rw)continue;
-          const i=(ry*rw+xx)*4;p=[src[i],src[i+1],src[i+2],src[i+3]];break;
-        }
-      }
-      if(!p)p=sample(rx,ry);if(!p)continue;const oi=(ry*rw+rx)*4;
-      out[oi]=p[0];out[oi+1]=p[1];out[oi+2]=p[2];out[oi+3]=p[3];
-    }
-  };
-  /* Rebuild a furniture-free room base from native 16px room tiles. This is a real
-     re-lay, not pixel healing: each covered tile is copied 1:1 from an intact tile of
-     the same wall/floor band and phase. */
-  const relayNativeTiles=(g,rw,rh,cuts)=>{
-    if(!cuts?.length)return;
-    const src=g.getImageData(0,0,rw,rh),out=g.getImageData(0,0,rw,rh),T=16;
-    const covered=(x,y)=>cuts.some(([,cx,cy,cw,ch])=>x>=cx&&x<cx+cw&&y>=cy&&y<cy+ch);
-    for(const [,cx,cy,cw,ch] of cuts){
-      const tx0=Math.floor(cx/T)*T,ty0=Math.floor(cy/T)*T,tx1=Math.ceil((cx+cw)/T)*T,ty1=Math.ceil((cy+ch)/T)*T;
-      for(let ty=ty0;ty<ty1;ty+=T)for(let tx=tx0;tx<tx1;tx+=T){
-        let sx=-1;
-        /* Find an intact tile in the SAME horizontal band. Prefer nearest left/right. */
-        for(let d=T;d<rw&&sx<0;d+=T)for(const q of [tx-d,tx+d]){
-          if(q<0||q+T>rw)continue;
-          let bad=false;for(let yy=ty;yy<Math.min(ty+T,rh)&&!bad;yy++)for(let xx=q;xx<q+T;xx++)if(covered(xx,yy)){bad=true;break}
-          if(!bad){sx=q;break}
-        }
-        if(sx<0)continue;
-        for(let yy=0;yy<T&&ty+yy<rh;yy++)for(let xx=0;xx<T&&tx+xx<rw;xx++){
-          const si=((ty+yy)*rw+sx+xx)*4,di=((ty+yy)*rw+tx+xx)*4;
-          out.data[di]=src.data[si];out.data[di+1]=src.data[si+1];out.data[di+2]=src.data[si+2];out.data[di+3]=src.data[si+3];
-        }
-      }
-    }
-    g.putImageData(out,0,0);
-  };
-  let total=0;
-  for(const [id,m] of Object.entries(W.maps||{})){
-    /* House-by-house conversion. For now ONLY the starting house and its bedroom are
-       converted; every other house keeps its original baked room art untouched. */
-    if(!m.roomArt||!/^house03(?:_bedroom)?$/.test(id))continue;
-    const rs=SPR[m.roomArt];if(!rs)continue;const rw=rs[2],rh=rs[3],cv=document.createElement('canvas');cv.width=rw;cv.height=rh;const g=cv.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;drawGameImage(g,atlasImg,rs[0],rs[1],rw,rh,0,0,rw,rh);const room=g.getImageData(0,0,rw,rh),found=[],occupied=[];m.roomActors ||= [];
-    /* Hand-cut from the captured ORIGINAL room art. These are exact source rectangles,
-       not collision guesses. Add more maps here as we verify their captured art. */
-    const EXACT_FURNITURE={
-      /* Starting house only. These are literal source-art cuts; each becomes its own
-         editor actor. No other house is touched until this one is verified. */
-      /* Main room stays baked for now. Its small bookcase was not safely isolated,
-         so do NOT cut or rebuild anything in this room until we have an exact mask. */
-      house03:[],
-      house03_bedroom:[
-        ['wardrobe',79,34,29,43],
-        ['bookshelf',113,33,31,47],
-        ['bed',14,57,55,29],
-        ['crate',132,141,25,36],
-        ['table_chair',48,111,24,35]
-      ]
-    };
-    /* Starting house is manual-only: do not guess additional cuts. */
-    /* These hand-cut objects are authoritative. Remove any older/static actor whose
-       bounds overlap the same source furniture, otherwise MOVE can grab the visible
-       legacy copy while the extracted actor sits underneath it. */
-    for(const e of EXACT_FURNITURE[id]||[]){
-      const [,x,y,w,h]=e,cx=x+w/2,cy=y+h/2;
-      m.roomActors=m.roomActors.filter(a=>{
-        if(a.interiorFurniture||a.sceneReserved)return true;
-        const sp=a.extractedCanvas?[0,0,a.extractedCanvas.width,a.extractedCanvas.height]:SPR[a.spr];
-        if(!sp||!Number.isFinite(a.x)||!Number.isFinite(a.y))return true;
-        const l=a.x-sp[2]/2,t=a.y-sp[3],r=l+sp[2],b=a.y;
-        return !(cx>=l&&cx<=r&&cy>=t&&cy<=b);
-      });
-    }
-    const addExactFurnitureCrop=(label,x,y,w,h)=>{
-      const key='furniture:exact:'+id+':'+label;if(m.roomActors.some(a=>a.editKey===key))return;
-      const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d',{willReadFrequently:true});
-      drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-      /* Only clear background connected to the four crop corners; the furniture pixels
-         themselves are copied unchanged from the original room art. */
-      const im=qg.getImageData(0,0,w,h),d=im.data,bg=new Uint8Array(w*h),stack=[];
-      const seed=(xx,yy)=>{const k=yy*w+xx;if(!bg[k]){bg[k]=1;stack.push(k);}};
-      seed(0,0);seed(w-1,0);seed(0,h-1);seed(w-1,h-1);
-      const diff=(a,b)=>Math.abs(d[a]-d[b])+Math.abs(d[a+1]-d[b+1])+Math.abs(d[a+2]-d[b+2]);
-      while(stack.length){const k=stack.pop(),xx=k%w,yy=(k/w)|0,pi=k*4;for(const [nx,ny]of[[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]]){if(nx<0||ny<0||nx>=w||ny>=h)continue;const nk=ny*w+nx;if(bg[nk])continue;if(diff(pi,nk*4)<=18){bg[nk]=1;stack.push(nk);}}}
-      for(let i=0;i<bg.length;i++)if(bg[i])d[i*4+3]=0;qg.putImageData(im,0,0);
-      const sprName='exact_'+id+'_'+label;SPR[sprName]=[0,0,w,h,1];
-      let bi=-1,best=1e9;for(let j=0;j<(m.roomBlocks||[]).length;j++){const b=m.roomBlocks[j],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2,dd=Math.hypot(cx-(x+w/2),cy-(y+h));if(dd<best){best=dd;bi=j;}}
-      m.roomActors.push({spr:sprName,extractedCanvas:q,extractedFurniture:true,exactFurniture:true,editKey:key,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:bi>=0&&best<45?[bi]:[]});
-      const mask=new Uint8Array(w*h);for(let i=0;i<mask.length;i++)mask[i]=bg[i]?0:1;
-      found.push({crop:true,x,y,w,h,mask});occupied.push([x,y,x+w,y+h]);total++;
-    };
-    for(const e of EXACT_FURNITURE[id]||[])addExactFurnitureCrop(...e);
-    /* Re-lay the room art underneath every explicitly recut object BEFORE the final
-       base canvas is captured. The object canvases above retain the original furniture. */
-    if(EXACT_FURNITURE[id]?.length)relayNativeTiles(g,rw,rh,EXACT_FURNITURE[id]);
-    /* Manual starting-house pass: exact cuts above are the complete movable set for
-       this verification step. More cuts will be added only from the actual room art. */
-    if(found.length){const clean=g.getImageData(0,0,rw,rh);for(const f of found){if(f.crop){
-        if((m._exactBackgroundRepairs||[]).some(r=>f.x===r.x&&f.y===r.y&&f.w===r.w&&f.h===r.h))continue;
-        const raw=new Uint8ClampedArray(f.w*f.h*4);
-        for(let yy=0;yy<f.h;yy++)for(let xx=0;xx<f.w;xx++){const si=((f.y+yy)*rw+f.x+xx)*4,di=(yy*f.w+xx)*4;raw[di]=clean.data[si];raw[di+1]=clean.data[si+1];raw[di+2]=clean.data[si+2];raw[di+3]=clean.data[si+3];}
-        const fg=cropForegroundMask(raw,f.w,f.h),mask=new Uint8ClampedArray(f.w*f.h*4);
-        for(let i=0;i<fg.length;i++)if(fg[i])mask[i*4+3]=255;
-        heal(clean,rw,rh,mask,f.w,f.h,f.x,f.y);
-      }else{const sp=SPR[f.n],sd=grab(f.n).data;heal(clean,rw,rh,sd,sp[2],sp[3],f.x,f.y);}}g.putImageData(clean,0,0);
-      m._roomBaseCanvas=cv;m._layeredFurniture=true;}
-  }
-  /* DEV extraction survey: expose exact room-art/collision geometry so stubborn
-     furniture can be cut once at explicit source rectangles instead of guessed forever. */
-  window.__interiorExtractionSurvey=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
-  /* Expose exact room-art/collision geometry for one-time manual extraction.
-     This does not alter rendering; it lets us cut stubborn baked furniture by explicit
-     source rectangles instead of guessing from sprite names or collision dimensions. */
-  window.__furnitureExtractionMaps=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:(SPR[m.roomArt]||[]).slice(2,4),blocks:(m.roomBlocks||[]).map(b=>b.slice(0,4))}]));
-  window.__houseFurnitureCount=total;
-  window.__houseFurnitureByMap=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)).map(([id,m])=>[id,(m.roomActors||[]).filter(a=>a.interiorFurniture).length]));
-  console.log("HOUSE FURNITURE",total,"candidates",names.length,window.__houseFurnitureByMap);
-  window.__houseFurnitureCandidateCount=names.length;
-  /* Manual extraction helper for stubborn baked props. DEV: tap MOVE, then COPY after
-     positioning. Bounds are exact source rectangles and can be promoted into this table. */
-  window.__extractFurnitureRect=(mapId,x,y,w,h,block=null)=>{
-    const m=W.maps[mapId],rs=m&&SPR[m.roomArt];if(!m||!rs)return false;
-    const q=document.createElement('canvas');q.width=w;q.height=h;const qg=q.getContext('2d');
-    drawGameImage(qg,atlasImg,rs[0]+x,rs[1]+y,w,h,0,0,w,h);
-    const spr='manual_'+mapId+'_'+x+'_'+y,actor={spr,extractedCanvas:q,extractedFurniture:true,editKey:'manual:'+mapId+':'+x+':'+y,x:x+w/2,y:y+h,sy:y+h,schoolArt:true,interiorFurniture:true,moveBlocks:block==null?[]:[block]};
-    SPR[spr]=[0,0,w,h,1];(m.roomActors||=[]).push(actor);return actor;
-  };
-  window.__houseRoomInfo=Object.fromEntries(Object.entries(W.maps||{}).filter(([id,m])=>/^house\d/.test(id)&&m.roomArt).map(([id,m])=>[id,{roomArt:m.roomArt,size:SPR[m.roomArt]?[SPR[m.roomArt][2],SPR[m.roomArt][3]]:null,blocks:(m.roomBlocks||[]).map((b,i)=>[i,...b])}]));
-
 }
 /* === end household furniture layering === */
 
@@ -1678,6 +1537,7 @@ function kingDragonSprite(f) {
 /* Editor layout is session-only. COPY exports it; reload intentionally discards it. */
 try{localStorage.removeItem('emberfell.actor-layout.v1')}catch(e){}
 const actorLayouts = {};
+actorLayouts["world"] = Object.assign(actorLayouts["world"] || {}, { "actor:24:rt_ext2": { x: 15330, y: 4328 } });
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
   if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
@@ -2440,10 +2300,16 @@ async function loadAtlasPages() {
   let next = 0;
   async function worker() {
     while (next < ATLAS_PAGES.length) {
-      const [x, y, w, h, src] = ATLAS_PAGES[next++];
+      const idx = next++;
+      const [x, y, w, h, src] = ATLAS_PAGES[idx];
       const img = new Image();
       await new Promise((resolve, reject) => {
-        img.onload = resolve; img.onerror = reject; img.src = src;
+        img.onload = resolve;
+        img.onerror = (e) => {
+          console.error("FAILED TO LOAD ATLAS PAGE " + idx, src.substring(0, 100));
+          reject(new Error("Atlas Page " + idx + " failed"));
+        };
+        img.src = src;
       });
       registerAtlasPage({ img: MOUNTED_KEY_Y.has(y) ? decodeMountedMatte(img, w, h) : img, x, y, w, h });
     }
@@ -2451,10 +2317,16 @@ async function loadAtlasPages() {
   await Promise.all([worker(), worker(), worker()]);
   if (knightStoryImg.decode) await knightStoryImg.decode();
   /* Register patches deterministically after every original page. */
-  for (const [x, y, w, h, src] of ATLAS_PATCHES) {
+  for (let i = 0; i < ATLAS_PATCHES.length; i++) {
+    const [x, y, w, h, src] = ATLAS_PATCHES[i];
     const img = new Image();
     await new Promise((resolve, reject) => {
-      img.onload = resolve; img.onerror = reject; img.src = src;
+      img.onload = resolve;
+      img.onerror = (e) => {
+        console.error("FAILED TO LOAD ATLAS PATCH " + i, src.substring(0, 100));
+        reject(new Error("Atlas Patch " + i + " failed"));
+      };
+      img.src = src;
     });
     registerAtlasPage({ img, x, y, w, h });
   }
@@ -3650,7 +3522,8 @@ function drawWorld(t, dt) {
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
   const groundLayer = o => o.roomBackgroundPatch || underfoot(o) ? 0 : o.portalLayer ? 1 : 2;
-  draw.sort((a, b) => (groundLayer(a) - groundLayer(b)) || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
+  draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
+                   || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
                    || (sortY(a) - sortY(b))
                    || ((underfoot(a) ? 0 : 1) - (underfoot(b) ? 0 : 1))
                    || (topOf(a) - topOf(b)));
@@ -3712,9 +3585,10 @@ function drawWorld(t, dt) {
       if(Number.isInteger(o.templeGate))fr=Math.min(sp[4]-1,Math.floor(MD.templeGates[o.templeGate].open*sp[4]));
       if(o.templePassDoor){const near=Math.abs(P.x-o.x)<40&&Math.abs(P.y-o.y)<85;o.openT=Math.max(0,Math.min(.3,(o.openT||0)+(near?dt:-dt)));fr=Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));}
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
-      if(o.statueTint){drawGameImage(ctx,tintFoe(sp,fr,o.statueTint,.65),o.x-sp[2]/2,o.y-sp[3],sp[2],sp[3]);continue;}
-      if(visibleH>0)drawGameImage(ctx, atlasImg, sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
-        o.x - sp[2] / 2, o.y - sp[3], sp[2], visibleH);
+      let drawX = o.x - sp[2] / 2;
+      if(o.statueTint){drawGameImage(ctx,tintFoe(sp,fr,o.statueTint,.65),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
+      if(visibleH>0)drawGameImage(ctx, sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
+        drawX, o.y - sp[3], sp[2], visibleH);
       continue;
     }
     if (o.witchDemon) {
@@ -5006,31 +4880,51 @@ function beginEnemyWindup(f) {
   f.unblockableAttack = ((f.attackSeq % 4) === 0 && ((FOE[f.kind]||{}).dmg >= 2));
 }
 function queueGlassShieldBlock(f) {
-  if (!f || f.st !== "wind" || f.st === "dead" || glassAttackUnblockable(f)) return false;
+  if (!f || (f.st !== "wind" && f.st !== "swing") || f.st === "dead" || glassAttackUnblockable(f)) return false;
   f.glassParryQueued = true;
   f.glassParryPlayerX = P.x; f.glassParryPlayerY = P.y;
-  // Do not play the effect yet. B only arms the block during the orange tell.
-  // The GIF begins at the exact attack-impact frame below.
+  // B arms the block during windup or early swing.
   return true;
 }
 function glassShieldDeflectFoe(f) {
-  // A correctly timed B press reserves the block during wind-up. At the exact
-  // frame the attack would deal damage, suppress damage, play the shield GIF,
-  // and immediately start the enemy's bounce away from Corin.
-  if (!f || !f.glassParryQueued || glassAttackUnblockable(f)) return false;
+  // A timed B press or raised shield suppresses damage, plays the shield GIF,
+  // and staggers the enemy with a large recoil step (~168px, tripled).
+  if (!f || (!f.glassParryQueued && !glassShieldActive()) || glassAttackUnblockable(f)) return false;
   f.glassParryQueued = false;
   glassShieldPulse = .42;
   glassGifStart = tAcc;
-  /* Lock the blocker briefly at its exact impact position. This prevents the normal
-     AI spacing/orbit code from reading the cancelled swing as a cue to sprint away. */
-  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .22;
+
+  // Recoil hop (~42px, about 2.5 tiles) away from Corin
+  const px = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
+  const py = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
+  const rx = f.x - px, ry = f.y - py;
+  const rd = Math.hypot(rx, ry) || 1;
+  const hop = (typeof window !== "undefined" && window.GLASS_BLOCK_RECOIL !== undefined) ? window.GLASS_BLOCK_RECOIL : 42;
+  const steps = 3;
+  const stepX = (rx / rd) * (hop / steps);
+  const stepY = (ry / rd) * (hop / steps);
+  for (let s = 0; s < steps; s++) {
+    const nx = f.x + stepX, ny = f.y + stepY;
+    if (f.kind === "kdragon") {
+      const clear = (x, y) => !isSolid(x, y) && !isSolid(x - 30, y) && !isSolid(x + 30, y) && !isSolid(x, y - 34);
+      if (clear(nx, f.y)) f.x = nx;
+      if (clear(f.x, ny)) f.y = ny;
+    } else {
+      if (!isSolid(nx, f.y)) f.x = nx;
+      if (!isSolid(f.x, ny)) f.y = ny;
+    }
+  }
+
+  // Anchor in place during the brief stagger duration
+  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .35;
+  f.hurt = 0.25;
   f.retreat = 0;
   f.retreatX = undefined;
   f.retreatY = undefined;
   f.glassRetreatBoost = 0;
-  f.cool = Math.max(f.cool || 0, 1.05);
-  // Damage is suppressed and the enemy returns to walk without any forced displacement.
-  f.st = "walk";
+  f.cool = Math.max(f.cool || 0, .65);
+  f.blockStaggerUntil = tAcc + 1.2;
+  f.st = "idle";
   f.t = 0;
   f.hit = 1;
   f.hitDone = 1;
@@ -5047,9 +4941,8 @@ function finishGlassShieldParry(f) {
 function tryGlassShieldParry() {
   if (!glassShield || !inFight() || mounted || dying()) return false;
   let caught = false;
-  // B during the orange telegraph reserves the block. The enemy is allowed to finish its attack animation.
   for (const f of foes) {
-    if (!f || f.st !== "wind" || glassAttackUnblockable(f)) continue;
+    if (!f || (f.st !== "wind" && f.st !== "swing") || glassAttackUnblockable(f)) continue;
     const k = FOE[f.kind] || {};
     const d = Math.hypot(P.x - f.x, P.y - f.y);
     const range = Math.max(72, (k.reach || 30) + 54);
@@ -9389,7 +9282,7 @@ function stepFoes(dt) {
     if (Math.abs(faceX) > Math.abs(faceY)) { f.dir = "s"; f.flip = faceX < 0; }
     else f.dir = faceY > 0 ? "d" : "u";
     const myTurn = (f === turnHolder);
-    const want = k.standoff ? k.standoff : (myTurn ? k.reach - 4 : k.ring);
+    const want = k.standoff ? k.standoff : (myTurn ? k.reach - 4 : (tAcc < (f.blockStaggerUntil || 0) ? Math.min(k.ring, (k.reach || 26) + 24) : k.ring));
     f.slot = (f.slot === undefined) ? foes.indexOf(f) : f.slot;
     const nLive = live.length || 1;
     const ang = (f.slot / nLive) * 6.2832 + f.t * 0.2;
@@ -10608,7 +10501,7 @@ function closeOthers(keep) {
   switching = true;
   if (keep !== "build") setBuild(false);
   if (keep !== "paint") setPaint(false);
-  if (keep !== "travel") setTravel(false);
+  if (keep !== "travel") setTravel(false); if (keep !== "arenas") setArenas(false);
   if (keep !== "edit" && editing) {
     editing = false; bEdit.classList.remove("on"); editEl.style.display = "none";
   }
@@ -10628,7 +10521,7 @@ function setDev(on) {
 
 function exitTools() {
   doorEdit=false;collideView=false;geometryEnd();document.getElementById("geometryBar").style.display="none";
-  setBuild(false); setPaint(false); setTravel(false);
+  setBuild(false); setPaint(false); setTravel(false); setArenas(false);
   editing = false; bEdit.classList.remove("on"); editEl.style.display = "none";
   setDev(false);
 }
@@ -10724,6 +10617,230 @@ function setTravel(on) {
   }
 }
 tap(bTravel, () => { if (!devOpen) setDev(true); setTravel(!travelling); });
+
+let arenasShowing = false;
+let arenaZoomLevel = 0.05;
+
+function installRoute2Arenas() {
+  if (!W || !W.maps || !W.maps.world || !W.maps.world.features) return;
+  const feats = W.maps.world.features;
+  if (!W.maps.world.foes) W.maps.world.foes = [];
+  const foes = W.maps.world.foes;
+
+  if (!feats.some(f => f.id === 9001)) {
+    feats.push({ id: 9001, kind: "arena", x: 177, y: 268, r: 6.3, style: "birch", road2: 1, enemyFamily: "plant", enemyStage: 3 });
+    if (!foes.some(f => f.x === 175 && f.y === 266)) {
+      foes.push({ k: "plant1", x: 175, y: 266 }, { k: "plant1", x: 179, y: 266 }, { k: "plant2", x: 177, y: 270 });
+    }
+  }
+  if (!feats.some(f => f.id === 9002)) {
+    feats.push({ id: 9002, kind: "arena", x: 387, y: 212, r: 6.3, style: "birch", road2: 1, enemyFamily: "plant", enemyStage: 4 });
+    if (!foes.some(f => f.x === 385 && f.y === 210)) {
+      foes.push({ k: "plant2", x: 385, y: 210 }, { k: "plant2", x: 389, y: 210 }, { k: "plant3", x: 387, y: 214 });
+    }
+  }
+  if (!feats.some(f => f.id === 9147)) {
+    feats.push({ id: 9147, kind: "arena", x: 210, y: 180, r: 6.3, style: "spruce", road2: 1, enemyFamily: "plant", enemyStage: 3 });
+    if (!foes.some(f => f.x === 208 && f.y === 178)) {
+      foes.push({ k: "plant1", x: 208, y: 178 }, { k: "plant2", x: 212, y: 178 }, { k: "plant2", x: 210, y: 182 });
+    }
+  }
+}
+
+function numberAllArenas() {
+  installRoute2Arenas();
+  if (!W || !W.maps) return;
+  const worldMap = W.maps.world;
+  if (worldMap && worldMap.features) {
+    const a7 = worldMap.features.find(f => f.id === 176 || (f.kind === "arena" && f.x === 372 && f.y === 313));
+    if (a7) a7.style = "oak";
+    const worldArenas = worldMap.features.filter(f => f.kind === "arena");
+    worldArenas.sort((a, b) => (a.x - b.x) || (a.y - b.y));
+    worldArenas.forEach((a, idx) => {
+      a.arenaNum = idx + 1;
+      a.mapId = "world";
+    });
+  }
+  let nextNum = (worldMap?.features?.filter(f => f.kind === "arena")?.length || 0) + 1;
+  for (const [mid, mdata] of Object.entries(W.maps)) {
+    if (mid === "world") continue;
+    if (mdata && mdata.features) {
+      const dArenas = mdata.features.filter(f => f.kind === "arena");
+      dArenas.forEach(a => {
+        a.arenaNum = nextNum++;
+        a.mapId = mid;
+      });
+    }
+  }
+}
+
+function setArenas(on) {
+  if (on) closeOthers("arenas");
+  arenasShowing = on;
+  const bArenas = document.getElementById("bArenas");
+  const arenasPane = document.getElementById("arenasPane");
+  if (bArenas) bArenas.classList.toggle("on", on);
+  if (arenasPane) arenasPane.style.display = on ? "block" : "none";
+  if (on) {
+    setPaint(false); setBuild(false); setTravel(false);
+    editing = false;
+    const bEdit = document.getElementById("bEdit");
+    const editEl = document.getElementById("edit");
+    if (bEdit) bEdit.classList.remove("on");
+    if (editEl) editEl.style.display = "none";
+    buildArenaList();
+    setDevTitle("ARENA MAP & NUMBERS");
+    applyArenaZoom(arenaZoomLevel);
+  } else {
+    camFree = false;
+    cam.z = typeof playZoom === "function" ? playZoom() : 2.5;
+    if (devOpen && !building && !painting && !travelling && !editing) setDevTitle(null);
+  }
+}
+
+function applyArenaZoom(lvl) {
+  arenaZoomLevel = lvl;
+  camFree = true;
+  cam.z = lvl;
+  if (lvl <= 0.15) {
+    cam.x = (PXW / 2) - (VW / cam.z / 2);
+    cam.y = (PXH / 2) - (VH / cam.z / 2);
+  }
+  const bFull = document.getElementById("btnArenaZoomFull");
+  const bWide = document.getElementById("btnArenaZoomWide");
+  const bMed = document.getElementById("btnArenaZoomMedium");
+  const bReset = document.getElementById("btnArenaZoomReset");
+  if (bFull) bFull.classList.toggle("on", lvl === 0.05);
+  if (bWide) bWide.classList.toggle("on", lvl === 0.12);
+  if (bMed) bMed.classList.toggle("on", lvl === 0.35);
+  if (bReset) bReset.classList.toggle("on", lvl >= 1.0);
+  toast("Arena Zoom: " + (lvl < 1 ? lvl.toFixed(2) + "x" : "Normal"));
+}
+
+function buildArenaList() {
+  const grid = document.getElementById("arenaListGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  const list = [];
+  if (W && W.maps) {
+    for (const [mid, mdata] of Object.entries(W.maps)) {
+      for (const f of (mdata.features || [])) {
+        if (f.kind === "arena") list.push(f);
+      }
+    }
+  }
+  list.sort((a, b) => (a.arenaNum || 0) - (b.arenaNum || 0));
+  for (const a of list) {
+    const btn = document.createElement("button");
+    btn.className = "mini";
+    btn.style.cssText = "padding:5px 6px; text-align:left; background:#221828; border:1px solid #7744aa; color:#eeddff; cursor:pointer; font-size:11px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;";
+    const numSpan = document.createElement("span");
+    numSpan.style.cssText = "background:#ffb703; color:#000; font-weight:bold; padding:1px 5px; border-radius:3px; font-size:11px;";
+    numSpan.textContent = "#" + (a.arenaNum || "?");
+    const infoSpan = document.createElement("span");
+    infoSpan.style.cssText = "overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:4px;";
+    infoSpan.textContent = (a.style || a.mapId || "arena").toUpperCase();
+    btn.appendChild(numSpan);
+    btn.appendChild(infoSpan);
+    btn.onclick = () => jumpToArena(a);
+    grid.appendChild(btn);
+  }
+  const badge = document.getElementById("arenaCountBadge");
+  if (badge) badge.textContent = list.length + " Arenas";
+}
+
+function jumpToArena(a) {
+  if (!a) return;
+  const targetMap = a.mapId || "world";
+  const doJump = () => {
+    camFree = true;
+    cam.z = 1.2;
+    const px = (a.x || 0) * TS + TS / 2;
+    const py = (a.y || 0) * TS + TS / 2;
+    cam.x = px - VW / cam.z / 2;
+    cam.y = py - VH / cam.z / 2;
+    if (typeof P !== "undefined" && P) { P.x = px; P.y = py; }
+    toast("Jumped to Arena #" + (a.arenaNum || "?") + " (" + (a.style || "arena") + ") at (" + a.x + ", " + a.y + ")");
+  };
+  if (typeof MAPID !== "undefined" && MAPID !== targetMap && typeof loadMap === "function") {
+    loadMap(targetMap);
+    setTimeout(doJump, 100);
+  } else {
+    doJump();
+  }
+}
+
+function drawArenaNumberOverlay() {
+  if (!arenasShowing) return;
+  if (!MD || !MD.features) return;
+  const z = cam.z;
+  ctx.save();
+  ctx.scale(z, z);
+  ctx.translate(-cam.x, -cam.y);
+  for (const f of MD.features) {
+    if (f.kind !== "arena") continue;
+    const num = f.arenaNum || f.id || "?";
+    const wx = f.x * TS + TS / 2;
+    const wy = f.y * TS + TS / 2;
+    const r = (f.r || 6) * TS;
+    const vw = VW / z, vh = VH / z;
+    if (wx + r < cam.x - 100 || wx - r > cam.x + vw + 100 || wy + r < cam.y - 100 || wy - r > cam.y + vh + 100) continue;
+    ctx.beginPath();
+    ctx.arc(wx, wy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = arenasShowing ? "rgba(255, 204, 0, 0.9)" : "rgba(255, 204, 0, 0.45)";
+    ctx.lineWidth = arenasShowing ? Math.max(3, 3 / z) : Math.max(2, 2 / z);
+    ctx.stroke();
+    if (arenasShowing) {
+      ctx.fillStyle = "rgba(255, 204, 0, 0.15)";
+      ctx.fill();
+    }
+    ctx.save();
+    ctx.translate(wx, wy);
+    const badgeScale = arenasShowing ? Math.max(1, 1 / (z * 1.5)) : 1;
+    const bRadius = 14 * badgeScale;
+    ctx.beginPath();
+    ctx.arc(0, 0, bRadius + 2, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(0, 0, bRadius, 0, Math.PI * 2);
+    ctx.fillStyle = arenasShowing ? "#d90429" : "#ffb703";
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2 * badgeScale;
+    ctx.stroke();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold " + Math.round(13 * badgeScale) + "px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("#" + num, 0, 1);
+    if (arenasShowing && z >= 0.08) {
+      const styleLabel = (f.style || "arena").toUpperCase() + " (" + f.x + "," + f.y + ")";
+      ctx.font = "bold " + Math.round(10 * badgeScale) + "px sans-serif";
+      ctx.fillStyle = "#ffea00";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 3 * badgeScale;
+      ctx.strokeText(styleLabel, 0, bRadius + 12 * badgeScale);
+      ctx.fillText(styleLabel, 0, bRadius + 12 * badgeScale);
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+window.addEventListener("load", () => {
+  const bArenas = document.getElementById("bArenas");
+  if (bArenas) tap(bArenas, () => { if (!devOpen) setDev(true); setArenas(!arenasShowing); });
+  const bFull = document.getElementById("btnArenaZoomFull");
+  if (bFull) tap(bFull, () => applyArenaZoom(0.05));
+  const bWide = document.getElementById("btnArenaZoomWide");
+  if (bWide) tap(bWide, () => applyArenaZoom(0.12));
+  const bMed = document.getElementById("btnArenaZoomMedium");
+  if (bMed) tap(bMed, () => applyArenaZoom(0.35));
+  const bReset = document.getElementById("btnArenaZoomReset");
+  if (bReset) tap(bReset, () => applyArenaZoom(1.0));
+});
+
 
 tap(document.getElementById("bReset"), () => {
   const n = countChanges();

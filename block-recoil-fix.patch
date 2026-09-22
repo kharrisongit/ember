@@ -1,0 +1,87 @@
+--- remote-part2.js	2026-09-22 01:20:32.400633211 +0000
++++ js/generated/game-part-2.js	2026-09-22 01:20:20.020539588 +0000
+@@ -5006,31 +5006,51 @@
+   f.unblockableAttack = ((f.attackSeq % 4) === 0 && ((FOE[f.kind]||{}).dmg >= 2));
+ }
+ function queueGlassShieldBlock(f) {
+-  if (!f || f.st !== "wind" || f.st === "dead" || glassAttackUnblockable(f)) return false;
++  if (!f || (f.st !== "wind" && f.st !== "swing") || f.st === "dead" || glassAttackUnblockable(f)) return false;
+   f.glassParryQueued = true;
+   f.glassParryPlayerX = P.x; f.glassParryPlayerY = P.y;
+-  // Do not play the effect yet. B only arms the block during the orange tell.
+-  // The GIF begins at the exact attack-impact frame below.
++  // B arms the block during windup or early swing.
+   return true;
+ }
+ function glassShieldDeflectFoe(f) {
+-  // A correctly timed B press reserves the block during wind-up. At the exact
+-  // frame the attack would deal damage, suppress damage, play the shield GIF,
+-  // and immediately start the enemy's bounce away from Corin.
+-  if (!f || !f.glassParryQueued || glassAttackUnblockable(f)) return false;
++  // A timed B press or raised shield suppresses damage, plays the shield GIF,
++  // and staggers the enemy with a large recoil step (~168px, tripled).
++  if (!f || (!f.glassParryQueued && !glassShieldActive()) || glassAttackUnblockable(f)) return false;
+   f.glassParryQueued = false;
+   glassShieldPulse = .42;
+   glassGifStart = tAcc;
+-  /* Lock the blocker briefly at its exact impact position. This prevents the normal
+-     AI spacing/orbit code from reading the cancelled swing as a cue to sprint away. */
+-  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .22;
++
++  // Recoil hop (~42px, about 2.5 tiles) away from Corin
++  const px = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
++  const py = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
++  const rx = f.x - px, ry = f.y - py;
++  const rd = Math.hypot(rx, ry) || 1;
++  const hop = (typeof window !== "undefined" && window.GLASS_BLOCK_RECOIL !== undefined) ? window.GLASS_BLOCK_RECOIL : 42;
++  const steps = 3;
++  const stepX = (rx / rd) * (hop / steps);
++  const stepY = (ry / rd) * (hop / steps);
++  for (let s = 0; s < steps; s++) {
++    const nx = f.x + stepX, ny = f.y + stepY;
++    if (f.kind === "kdragon") {
++      const clear = (x, y) => !isSolid(x, y) && !isSolid(x - 30, y) && !isSolid(x + 30, y) && !isSolid(x, y - 34);
++      if (clear(nx, f.y)) f.x = nx;
++      if (clear(f.x, ny)) f.y = ny;
++    } else {
++      if (!isSolid(nx, f.y)) f.x = nx;
++      if (!isSolid(f.x, ny)) f.y = ny;
++    }
++  }
++
++  // Anchor in place during the brief stagger duration
++  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .35;
++  f.hurt = 0.25;
+   f.retreat = 0;
+   f.retreatX = undefined;
+   f.retreatY = undefined;
+   f.glassRetreatBoost = 0;
+-  f.cool = Math.max(f.cool || 0, 1.05);
+-  // Damage is suppressed and the enemy returns to walk without any forced displacement.
+-  f.st = "walk";
++  f.cool = Math.max(f.cool || 0, .65);
++  f.blockStaggerUntil = tAcc + 1.2;
++  f.st = "idle";
+   f.t = 0;
+   f.hit = 1;
+   f.hitDone = 1;
+@@ -5047,9 +5067,8 @@
+ function tryGlassShieldParry() {
+   if (!glassShield || !inFight() || mounted || dying()) return false;
+   let caught = false;
+-  // B during the orange telegraph reserves the block. The enemy is allowed to finish its attack animation.
+   for (const f of foes) {
+-    if (!f || f.st !== "wind" || glassAttackUnblockable(f)) continue;
++    if (!f || (f.st !== "wind" && f.st !== "swing") || glassAttackUnblockable(f)) continue;
+     const k = FOE[f.kind] || {};
+     const d = Math.hypot(P.x - f.x, P.y - f.y);
+     const range = Math.max(72, (k.reach || 30) + 54);
+@@ -9389,7 +9408,7 @@
+     if (Math.abs(faceX) > Math.abs(faceY)) { f.dir = "s"; f.flip = faceX < 0; }
+     else f.dir = faceY > 0 ? "d" : "u";
+     const myTurn = (f === turnHolder);
+-    const want = k.standoff ? k.standoff : (myTurn ? k.reach - 4 : k.ring);
++    const want = k.standoff ? k.standoff : (myTurn ? k.reach - 4 : (tAcc < (f.blockStaggerUntil || 0) ? Math.min(k.ring, (k.reach || 26) + 24) : k.ring));
+     f.slot = (f.slot === undefined) ? foes.indexOf(f) : f.slot;
+     const nLive = live.length || 1;
+     const ang = (f.slot / nLive) * 6.2832 + f.t * 0.2;

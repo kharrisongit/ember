@@ -5006,20 +5006,38 @@ function queueGlassShieldBlock(f) {
 function glassShieldDeflectFoe(f) {
   // A correctly timed B press reserves the block during wind-up. At the exact
   // frame the attack would deal damage, suppress damage, play the shield GIF,
-  // and immediately start the enemy's bounce away from Corin.
+  // and stagger the enemy with a short, readable recoil step (~14px).
   if (!f || !f.glassParryQueued || glassAttackUnblockable(f)) return false;
   f.glassParryQueued = false;
   glassShieldPulse = .42;
   glassGifStart = tAcc;
-  f.retreat = Math.max(f.retreat || 0, 1.55);
-  f.retreatX = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
-  f.retreatY = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
-  f.glassRetreatBoost = 4.25;
-  f.cool = Math.max(f.cool || 0, 1.05);
-  // The block resolves on the attack's contact frame. Switch straight into
-  // retreat movement here so recoil starts NOW instead of waiting for the
-  // remainder of the swing state to finish. Damage has already been suppressed.
-  f.st = "walk";
+
+  // Short recoil hop (14px) away from Corin so enemy remains within sword reach
+  const px = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
+  const py = f.glassParryPlayerY === undefined ? P.y : f.glassParryPlayerY;
+  const rx = f.x - px, ry = f.y - py;
+  const rd = Math.hypot(rx, ry) || 1;
+  const hop = 14;
+  const nx = f.x + (rx / rd) * hop, ny = f.y + (ry / rd) * hop;
+  if (f.kind === "kdragon") {
+    const clear = (x, y) => !isSolid(x, y) && !isSolid(x - 30, y) && !isSolid(x + 30, y) && !isSolid(x, y - 34);
+    if (clear(nx, f.y)) f.x = nx;
+    if (clear(f.x, ny)) f.y = ny;
+  } else {
+    if (!isSolid(nx, f.y)) f.x = nx;
+    if (!isSolid(f.x, ny)) f.y = ny;
+  }
+
+  // Anchor in place during the brief stagger duration
+  f.glassBlockAnchorX = f.x; f.glassBlockAnchorY = f.y; f.glassBlockHold = .32;
+  f.hurt = 0.25;
+  f.retreat = 0;
+  f.retreatX = undefined;
+  f.retreatY = undefined;
+  f.glassRetreatBoost = 0;
+  f.cool = Math.max(f.cool || 0, .45);
+  f.blockStaggerUntil = tAcc + .80;
+  f.st = "idle";
   f.t = 0;
   f.hit = 1;
   f.hitDone = 1;
