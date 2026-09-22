@@ -375,3 +375,15 @@
 #utilityBtns{gap:6px;width:auto;align-self:center;margin-top:1px}
 #utilityBtns .trig{flex:0 0 auto;min-width:0;width:44px;padding:5px 4px;border-radius:7px;font-size:8px;line-height:1;letter-spacing:.03em}
 #utilityBtns #btnStart{width:52px;padding:5px 4px;border-radius:9px;font-size:8px}
+
+/* ITEMS quick-use tray replaces the A/B side of the controller, not the D-pad. */
+#itemm{position:fixed;left:auto;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);width:min(48vw,220px);height:calc(var(--deck) - 78px - env(safe-area-inset-bottom,0px));aspect-ratio:auto;background:#211b15;border:1px solid #4a3c2e;border-radius:13px;padding:7px;pointer-events:auto;z-index:31;box-shadow:0 6px 18px rgba(0,0,0,.5);overflow:hidden}
+#itemm>b{display:block;position:static;transform:none;width:auto;height:auto;text-align:center;font-size:9px;letter-spacing:.12em;color:#d9cfbd;margin:0 0 5px;text-shadow:none}
+#itemm>b::after{content:"";font-size:0}
+#itemm .rows{position:static;width:100%;height:auto;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;pointer-events:auto;overflow-y:auto;max-height:calc(100% - 18px);touch-action:pan-y}
+#itemm .rows::before{display:none}
+#itemm .row{position:relative;left:auto!important;top:auto!important;width:auto;height:auto;min-width:0;aspect-ratio:1;margin:0;padding:4px 2px;border-radius:8px;border:1px solid #756348;background:repeating-linear-gradient(45deg,#342b20 0 6px,#30271d 6px 12px);color:#eee5d5;font:700 7px/1.05 ui-monospace,monospace;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:none;transform:none}
+#itemm .row.on{transform:none;border-color:#e8c274;background:#4b3d29;box-shadow:0 0 0 2px rgba(232,194,116,.28)}
+#itemm .row .dot{display:none}
+#itemm .itemQuickIcon{width:30px;height:30px;image-rendering:pixelated;display:block}
+#itemm .foot{display:none}
