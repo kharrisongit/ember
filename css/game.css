@@ -516,3 +516,21 @@
 #actionStack{bottom:calc(100% + 14px)!important;grid-template-columns:repeat(2,minmax(82px,1fr))!important;gap:7px!important;max-width:210px!important}
 #actionStack .trig{min-width:82px!important;padding:10px 11px!important;font-size:11px!important;border-radius:10px!important}
 @media(max-width:430px){#deckHealth{width:min(47vw,190px)!important}.deckHeart{width:16px;height:16px;flex-basis:16px}.deckHearts{gap:2px}#actionStack{grid-template-columns:repeat(2,minmax(78px,1fr))!important}#actionStack .trig{min-width:78px!important;padding:9px 8px!important;font-size:10px!important}}
+
+/* Refine controller proportions and use clean CSS heart silhouettes. */
+#playface{padding-top:58px!important}
+#deckHealth{transform:translateY(-24px)!important;width:min(49vw,210px)!important}
+.deckHpRow{font-size:10px!important}
+.deckHpRow>span{width:50px!important}
+.deckHearts{gap:5px!important;height:24px!important}
+.deckHeart{position:relative!important;width:20px!important;height:18px!important;flex:0 0 20px!important;opacity:1!important;overflow:hidden!important;transform:none!important}
+.deckHeart::before{content:"♥"!important;position:absolute!important;inset:0!important;width:auto!important;height:auto!important;top:-3px!important;left:0!important;border-radius:0!important;background:none!important;transform:none!important;transform-origin:center!important;color:#62413f!important;font:700 24px/20px Arial,sans-serif!important}
+.deckHeart::after{display:none!important}
+.deckHeart>i{position:absolute!important;left:0!important;top:0!important;height:100%!important;overflow:hidden!important;display:block!important;z-index:2!important}
+.deckHeart>i::before{content:"♥"!important;position:absolute!important;left:0!important;top:-3px!important;width:20px!important;height:18px!important;border-radius:0!important;background:none!important;transform:none!important;transform-origin:center!important;color:#e35d55!important;font:700 24px/20px Arial,sans-serif!important}
+.deckHeart>i::after{display:none!important}
+.deckHeart.dragon::before{color:#654438!important}
+.deckHeart.dragon>i::before{color:#e27b45!important}
+#actionStack{bottom:calc(100% + 28px)!important;grid-template-columns:repeat(2,minmax(88px,1fr))!important;gap:8px!important;max-width:224px!important}
+#actionStack .trig{min-width:88px!important;padding:12px 12px!important;font-size:12px!important;border-radius:11px!important}
+@media(max-width:430px){#playface{padding-top:54px!important}#deckHealth{transform:translateY(-22px)!important;width:min(50vw,205px)!important}.deckHearts{gap:3px!important}.deckHeart{width:19px!important;flex-basis:19px!important}.deckHeart>i::before{width:19px!important}#actionStack{bottom:calc(100% + 25px)!important;grid-template-columns:repeat(2,minmax(84px,1fr))!important}#actionStack .trig{min-width:84px!important;padding:11px 9px!important;font-size:11px!important}}
