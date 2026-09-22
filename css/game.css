@@ -655,3 +655,60 @@
 .pixelHearts .deckHeart>i{height:18px!important}
 .pixelHearts .deckHeart>i::before{width:19px!important;height:18px!important}
 .pixelHearts .deckHeart>i::after{left:3px!important;top:3px!important;width:4px!important;height:4px!important}
+
+/* Right-side action menu: larger RPG tile buttons using the open upper deck. */
+#actionStack{
+  bottom:calc(100% + 20px)!important;
+  grid-template-columns:repeat(2,96px)!important;
+  grid-auto-rows:58px!important;
+  gap:9px!important;
+  max-width:none!important;
+  width:201px!important;
+}
+#actionStack .trig{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  width:96px!important;
+  height:58px!important;
+  padding:8px 5px!important;
+  border:2px solid #786247!important;
+  border-radius:10px!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.07),transparent 30%),
+    linear-gradient(145deg,#3a3025,#241d17)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(224,192,145,.09),
+    inset 0 -5px 0 rgba(0,0,0,.16),
+    0 4px 0 #120f0c,
+    0 6px 10px rgba(0,0,0,.28)!important;
+  color:#eee2ce!important;
+  font-size:11px!important;
+  line-height:1!important;
+  letter-spacing:.08em!important;
+  text-shadow:0 2px 0 #17110d!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+}
+#actionStack .trig::before{
+  content:""!important;
+  position:absolute!important;
+  left:7px!important;right:7px!important;top:6px!important;
+  height:2px!important;
+  border-radius:2px!important;
+  background:rgba(240,203,148,.22)!important;
+}
+#actionStack .trig:active,#actionStack .trig.on{
+  transform:translateY(2px)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,221,166,.16),inset 0 -2px 0 rgba(0,0,0,.14),0 2px 0 #120f0c!important;
+  background:linear-gradient(145deg,#4a3a28,#2b2118)!important;
+}
+#btnL{border-color:#9a5941!important}
+#btnR{border-color:#76629a!important}
+#btnItems{border-color:#81754b!important}
+#btnMapQuick{border-color:#4f7f78!important}
+@media(max-width:430px){
+  #actionStack{grid-template-columns:repeat(2,92px)!important;grid-auto-rows:56px!important;width:193px!important;gap:9px!important;bottom:calc(100% + 19px)!important}
+  #actionStack .trig{width:92px!important;height:56px!important;font-size:11px!important}
+}
