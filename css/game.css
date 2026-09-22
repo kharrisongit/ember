@@ -605,3 +605,9 @@
     margin:0!important;
   }
 }
+
+/* Fill the party HUD width better with larger hearts. */
+.deckVital .deckHearts{height:21px!important;gap:3px!important}
+.deckVital .deckHeart{width:19px!important;height:19px!important;flex:0 0 19px!important}
+.deckVital .deckHeart::before{font-size:24px!important;line-height:20px!important;top:-2px!important}
+.deckVital .deckHeart>i::before{width:19px!important;height:19px!important;font-size:24px!important;line-height:20px!important;top:-2px!important}
