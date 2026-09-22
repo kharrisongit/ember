@@ -5363,8 +5363,10 @@ bindHold("btnR", () => {
 bindHold("btnItems", () => {
                          setOvl(ovl === "itemm" ? null : "itemm");
                          if (ovl === "itemm") setTimeout(() => wireBagDrag("itemRows"), 0); }, null);
-tap(document.getElementById("itemCloseBtn"), () => setOvl(null));
-tap(document.getElementById("itemFullBtn"), () => { setOvl(null); setBag(true); });
+const itemCloseBtn = document.getElementById("itemCloseBtn");
+const itemFullBtn = document.getElementById("itemFullBtn");
+if (itemCloseBtn) itemCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); });
+if (itemFullBtn) itemFullBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); setBag(true); });
 
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
