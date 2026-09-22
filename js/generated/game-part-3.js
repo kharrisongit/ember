@@ -5310,15 +5310,8 @@ function refreshOvl() {
       ic.width = 32; ic.height = 32; ic.className = "itemQuickIcon";
       const ig = ic.getContext("2d"); ig.imageSmoothingEnabled = false;
       try {
-        const src = typeof sheetOf === "function" ? sheetOf(sp) : atlasImg;
-        if (src && (src.complete === undefined || src.complete || src.width)) {
-          ig.drawImage(src, sp[0], sp[1], sp[2], sp[3], 0, 0, 32, 32);
-        }
-      } catch (e) {
-        /* Some inventory sprites live on generated atlas pages that are not
-           drawable through the quick-menu DOM canvas. Keep the item usable;
-           its text label is the fallback instead of crashing the game. */
-      }
+        drawBagIcon(ic, it.icon, Math.floor(performance.now() / (1000 / BAG_FPS)));
+      } catch (e) { /* text remains as a safe fallback */ }
       d.appendChild(ic);
     }
     if (it.el && EL_COLOUR[it.el]) {
@@ -5342,6 +5335,10 @@ function refreshOvl() {
     rows.appendChild(d);
   });
   desc.textContent = typeof items[M.pick].tell === "function" ? items[M.pick].tell() : items[M.pick].tell || "";
+  if (ovl === "itemm") {
+    const on = rows.querySelector(".row.on");
+    if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
+  }
 }
 function ovlStep(d) {
   if (!ovl) return;
@@ -5365,7 +5362,8 @@ bindHold("btnR", () => {
                          if (hasDragon()) setOvl(ovl === "airm" ? null : "airm"); },
                  () => { trigHold("r", false); });
 bindHold("btnItems", () => {
-                         setOvl(ovl === "itemm" ? null : "itemm"); }, null);
+                         setOvl(ovl === "itemm" ? null : "itemm");
+                         if (ovl === "itemm") setTimeout(() => wireBagDrag("itemRows"), 0); }, null);
 
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
