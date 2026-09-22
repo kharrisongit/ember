@@ -488,3 +488,12 @@
 #actionStack .trig{padding:7px 8px;font-size:9px;text-align:center;min-width:68px;white-space:nowrap}
 #ab{align-self:flex-end}
 @media(min-width:700px) and (min-height:700px){:root{--deck:clamp(280px,32vh,380px)}#playface{padding-top:78px}}
+
+#leftControls{display:flex;flex-direction:column;align-items:center;align-self:flex-end;gap:7px;min-width:92px}
+#deckHealth{width:min(42vw,176px);display:flex;flex-direction:column;gap:5px}
+.deckHpRow{display:flex;align-items:center;gap:6px;font:700 8px/1 ui-monospace,monospace;color:#bfb3a0;letter-spacing:.04em}
+.deckHpRow>span{width:43px;text-align:right;flex:0 0 auto}
+.deckHpTrack{height:10px;flex:1;background:#100e0c;border:1px solid #594b3c;border-radius:5px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.7)}
+.deckHpTrack>i{display:block;height:100%;width:100%;background:linear-gradient(#d65b50,#9e332e);transition:width .12s linear}
+#deckDragonHp{background:linear-gradient(#d17a45,#9e4c2e)}
+@media(min-width:700px) and (min-height:700px){#deckHealth{width:min(38vw,300px)}.deckHpRow{font-size:9px}.deckHpTrack{height:12px}}
