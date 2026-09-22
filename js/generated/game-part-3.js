@@ -3949,8 +3949,15 @@ function frame(ms) {
   catch (error) { showRuntimeFrameError(error); }
   finally { requestAnimationFrame(frame); }
 }
+function updateDeckHealth(){
+  const ph=document.getElementById("deckCorinHp"), dh=document.getElementById("deckDragonHp"), dr=document.getElementById("deckDragonRow");
+  if(ph) ph.style.width=(Math.max(0,Math.min(1,pMax?hp/pMax:0))*100)+"%";
+  if(dh) dh.style.width=(Math.max(0,Math.min(1,dragon.maxHp?dragon.hp/dragon.maxHp:0))*100)+"%";
+  if(dr) dr.style.display=hasDragon()?"flex":"none";
+}
 function frameCore(ms) {
   window.__firstFrame = true;
+  updateDeckHealth();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
   if(atlasOpen)return;
   if(fishing){
