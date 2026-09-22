@@ -546,3 +546,21 @@
 .deckVital .deckHeart{width:16px!important;height:15px!important;flex-basis:16px!important}
 .deckVital .deckHeart::before{font-size:20px!important;line-height:17px!important;top:-2px!important}
 .deckVital .deckHeart>i::before{width:16px!important;height:15px!important;font-size:20px!important;line-height:17px!important;top:-2px!important}
+
+/* Party HUD visibility/clearance correction. */
+#deckHealth{
+  transform:translateY(-10px)!important;
+  background:#0b0e15!important;
+  border:2px solid #65758c!important;
+  outline:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.035)!important;
+  padding:7px 9px!important;
+  border-radius:9px!important;
+}
+#deckHealth:not(.solo){transform:translateY(-4px)!important}
+#playface{padding-top:66px!important}
+@media(max-width:430px){
+  #deckHealth{transform:translateY(-8px)!important}
+  #deckHealth:not(.solo){transform:translateY(-2px)!important}
+  #playface{padding-top:68px!important}
+}
