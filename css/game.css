@@ -789,3 +789,22 @@
 /* Raise only the right action tile block to the party HUD top edge. */
 #actionStack{transform:translateY(-18px)!important}
 @media(max-width:430px){#actionStack{transform:translateY(-18px)!important}}
+
+/* Anchor action tiles directly to the same playface top coordinate as HUD.
+   This avoids the rightControls/A-B height affecting vertical placement. */
+#actionStack{
+  position:fixed!important;
+  top:calc(100% - var(--deck) + 24px)!important;
+  bottom:auto!important;
+  right:12px!important;
+  transform:none!important;
+}
+@media(max-width:430px){
+  #actionStack{
+    position:fixed!important;
+    top:calc(100% - var(--deck) + 24px)!important;
+    bottom:auto!important;
+    right:12px!important;
+    transform:none!important;
+  }
+}
