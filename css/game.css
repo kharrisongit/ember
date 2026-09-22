@@ -611,3 +611,15 @@
 .deckVital .deckHeart{width:19px!important;height:19px!important;flex:0 0 19px!important}
 .deckVital .deckHeart::before{font-size:24px!important;line-height:20px!important;top:-2px!important}
 .deckVital .deckHeart>i::before{width:19px!important;height:19px!important;font-size:24px!important;line-height:20px!important;top:-2px!important}
+
+/* Pixel-RPG party HUD polish: chunky hearts inspired by the approved mockup. */
+.deckVital .deckHearts{height:22px!important;gap:4px!important}
+.deckVital .deckHeart{position:relative!important;width:20px!important;height:19px!important;flex:0 0 20px!important;overflow:visible!important}
+.deckVital .deckHeart::before{content:"♥"!important;position:absolute!important;left:0!important;top:-2px!important;width:20px!important;height:20px!important;color:#583735!important;font:900 25px/20px Arial,sans-serif!important;text-shadow:1px 1px 0 #281817,-1px 0 0 #7b4d49!important}
+.deckVital .deckHeart>i{position:absolute!important;left:0!important;top:0!important;height:20px!important;overflow:hidden!important;z-index:2!important}
+.deckVital .deckHeart>i::before{content:"♥"!important;position:absolute!important;left:0!important;top:-2px!important;width:20px!important;height:20px!important;font:900 25px/20px Arial,sans-serif!important;text-shadow:1px 1px 0 rgba(70,15,12,.8),-1px -1px 0 rgba(255,220,190,.3)!important}
+.deckVital .deckHeart.corin>i::before{color:#f0524c!important}
+.deckVital .deckHeart.dragon>i::before{color:#ff843b!important}
+.deckVital .deckHeart>i::after{content:""!important;display:block!important;position:absolute!important;left:5px!important;top:2px!important;width:5px!important;height:3px!important;border-radius:2px!important;background:rgba(255,235,215,.65)!important;transform:none!important}
+#deckHealth{background:linear-gradient(#0d121b,#080b11)!important;border-color:#71829a!important;box-shadow:0 4px 12px rgba(0,0,0,.58),inset 0 0 0 1px rgba(190,210,235,.12)!important}
+.deckPortrait{border:2px solid #8290a6!important;background:#0b1018!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)!important}
