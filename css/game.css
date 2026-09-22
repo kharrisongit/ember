@@ -647,3 +647,11 @@
 .pixelHearts .deckHeart.dragon>i::before{background:linear-gradient(145deg,#ffd05c 0 18%,#ff8a35 19% 57%,#ef5b27 58% 78%,#ad321f 79% 100%)!important}
 .pixelHearts .deckHeart>i::after{content:""!important;position:absolute!important;left:4px!important;top:3px!important;width:5px!important;height:5px!important;background:#fff8e9!important;clip-path:polygon(0 0,100% 0,100% 45%,45% 45%,45% 100%,0 100%)!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important}
 .pixelHearts{gap:3px!important;height:21px!important}
+
+/* Fit pixel hearts cleanly inside the fixed party HUD. */
+.pixelHearts{gap:2px!important;height:19px!important;min-width:0!important}
+.pixelHearts .deckHeart{width:19px!important;height:18px!important;flex:0 0 19px!important}
+.pixelHearts .deckHeart::before{width:19px!important;height:18px!important}
+.pixelHearts .deckHeart>i{height:18px!important}
+.pixelHearts .deckHeart>i::before{width:19px!important;height:18px!important}
+.pixelHearts .deckHeart>i::after{left:3px!important;top:3px!important;width:4px!important;height:4px!important}
