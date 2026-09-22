@@ -785,3 +785,7 @@
 }
 /* Boot-safe default: JS reveals this only once mode === play. */
 #deckHealth{visibility:hidden}
+
+/* Raise only the right action tile block to the party HUD top edge. */
+#actionStack{transform:translateY(-18px)!important}
+@media(max-width:430px){#actionStack{transform:translateY(-18px)!important}}
