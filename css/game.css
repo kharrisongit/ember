@@ -477,3 +477,14 @@
 #bagBook i{font-size:9px;letter-spacing:0!important}
 #bagClose{display:flex!important;align-items:center;justify-content:center;flex:0 0 36px!important;width:36px!important;height:36px!important;padding:0!important;border-radius:9px!important;background:#d8c9a4!important;border:1px solid #a89468!important;color:#33302a!important;font-size:24px!important;line-height:1!important}
 @media(max-width:430px){#bagHead .chip.gold{padding:2px 4px!important}#bagGold i{font-size:9px}#bagMap{padding:4px 6px!important}#bagBook{padding:2px 4px!important}}
+
+/* Taller controller deck: party health belongs above the D-pad; actions above A/B. */
+:root{--deck:clamp(220px,36vh,310px)}
+#trigs{display:none!important}
+#playface{align-items:flex-end!important;padding-top:68px;position:relative}
+#dpad{align-self:flex-end}
+#rightControls{align-self:flex-end!important;position:relative;gap:7px!important}
+#actionStack{position:absolute;right:0;bottom:calc(100% + 8px);display:grid;grid-template-columns:repeat(2,minmax(68px,1fr));gap:5px;width:max-content;max-width:180px}
+#actionStack .trig{padding:7px 8px;font-size:9px;text-align:center;min-width:68px;white-space:nowrap}
+#ab{align-self:flex-end}
+@media(min-width:700px) and (min-height:700px){:root{--deck:clamp(280px,32vh,380px)}#playface{padding-top:78px}}
