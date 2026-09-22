@@ -712,3 +712,32 @@
   #actionStack{grid-template-columns:repeat(2,92px)!important;grid-auto-rows:56px!important;width:193px!important;gap:9px!important;bottom:calc(100% + 19px)!important}
   #actionStack .trig{width:92px!important;height:56px!important;font-size:11px!important}
 }
+
+/* Keep action tiles clear of the party HUD on phone widths. */
+#actionStack{
+  grid-template-columns:repeat(2,84px)!important;
+  grid-auto-rows:50px!important;
+  width:177px!important;
+  gap:9px!important;
+  right:0!important;
+}
+#actionStack .trig{
+  width:84px!important;
+  height:50px!important;
+  font-size:10px!important;
+  padding:7px 4px!important;
+}
+@media(max-width:430px){
+  #actionStack{
+    grid-template-columns:repeat(2,80px)!important;
+    grid-auto-rows:48px!important;
+    width:169px!important;
+    gap:9px!important;
+    right:0!important;
+  }
+  #actionStack .trig{
+    width:80px!important;
+    height:48px!important;
+    font-size:10px!important;
+  }
+}
