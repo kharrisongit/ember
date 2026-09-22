@@ -564,3 +564,11 @@
   #deckHealth:not(.solo){transform:translateY(-2px)!important}
   #playface{padding-top:68px!important}
 }
+
+/* Lower only the party HUD; D-pad position stays unchanged. */
+#deckHealth{transform:translateY(4px)!important}
+#deckHealth:not(.solo){transform:translateY(10px)!important}
+@media(max-width:430px){
+  #deckHealth{transform:translateY(5px)!important}
+  #deckHealth:not(.solo){transform:translateY(11px)!important}
+}
