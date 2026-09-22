@@ -5211,6 +5211,13 @@ const MENUS = {
     { name: "Back", tell: "Return to the main menu.", go: () => setOvl("menu") }
   ] },
   atkm: { rows: "atkRows", desc: "atkDesc", pick: 0, items: () => ATTACKS.filter(a=>breathHas[EL_BREATH[a.el]]) },
+  itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
+    name: () => typeof it.name === "function" ? it.name() : it.name,
+    el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
+    tell: it.tell || "Use this item.",
+    dim: () => { try { return !it.has(); } catch(e) { return true; } },
+    go: () => doUse(it)
+  })) },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
     { name: mounted ? "Dismount" : "Mount", el: "ride",
       tell: mounted ? "Slide down off its back."
@@ -5268,7 +5275,7 @@ const EL_COLOUR = { claw: "#d8d2c4", fire: "#ff8a2b", ice: "#4fb4ff",
                     wing: "#79d18a", ride: "#e0a35c",
                     wake: "#8fd8ff",      /* the risen: cold blue */
                     potion: "#e05a4a",    /* the flask: red */
-                    elixir: "#f0c250" }; /* the elixir: gold */
+                    elixir: "#f0c250", item: "#c6a97a" }; /* general usable item */
 let ovl = null;
 function setOvl(which) {
   if(which&&fishing)return;
@@ -5294,7 +5301,7 @@ function refreshOvl() {
   items.forEach((it, k) => {
     const d = document.createElement("div");
     d.className = "row" + (k === M.pick ? " on" : "");
-    if (ovl === "atkm" || ovl === "airm") {
+    if (ovl === "atkm" || ovl === "airm" || ovl === "itemm") {
       const n = items.length;
       const angle = (-Math.PI / 2) + (Math.PI * 2 * k / n);
       const radius = n >= 5 ? 62 : 56;
@@ -5345,6 +5352,8 @@ bindHold("btnR", () => {
                          trigHold("r", true);
                          if (hasDragon()) setOvl(ovl === "airm" ? null : "airm"); },
                  () => { trigHold("r", false); });
+bindHold("btnItems", () => {
+                         setOvl(ovl === "itemm" ? null : "itemm"); }, null);
 
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
