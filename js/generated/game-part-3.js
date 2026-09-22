@@ -3971,9 +3971,11 @@ function updateDeckHealth(){
       let crop=Math.min(sp[2],sp[3]), sx=sp[0]+Math.max(0,(sp[2]-crop)/2), sy=sp[1]+Math.max(0,(sp[3]-crop)/2);
       if(faceZoom){
         /* Corin HUD portrait: extreme close-up on the eye band. */
-        crop=Math.max(6,Math.floor(Math.min(sp[2],sp[3])*.28));
+        crop=Math.max(7,Math.floor(Math.min(sp[2],sp[3])*.34));
         sx=sp[0]+Math.floor((sp[2]-crop)/2);
-        sy=sp[1]+Math.max(0,Math.floor(sp[3]*.19));
+        /* Shift the source crop farther down the sprite so the eye band,
+           not the crown of the hair, fills the circular portrait. */
+        sy=sp[1]+Math.max(0,Math.floor(sp[3]*.30));
       }
       drawGameImage(x,img,sx,sy,crop,crop,0,0,cv.width,cv.height);
     }catch(e){}
