@@ -450,3 +450,11 @@
   #itemm .row{min-height:68px!important;font-size:8px!important}
   #itemm .itemQuickIcon{width:34px!important;height:34px!important}
 }
+
+/* Dedicated controls for the full-width battle item tray. */
+#itemm>#itemQuickHead{height:30px;display:flex;align-items:center;gap:8px;margin:0 0 7px;padding:0 1px}
+#itemm>#itemQuickHead>b{font-size:10px;letter-spacing:.14em;color:#d9cfbd;margin-right:auto}
+#itemFullBtn,#itemCloseBtn{font:700 9px/1 ui-monospace,monospace;color:#eee5d5;background:#342b20;border:1px solid #756348;border-radius:7px;padding:7px 9px;touch-action:manipulation}
+#itemFullBtn{letter-spacing:.04em}
+#itemCloseBtn{width:30px;height:30px;padding:0;border-radius:50%;font-size:20px;line-height:26px;color:#f3e7d3}
+#itemm .rows{height:calc(100% - 37px)!important}
