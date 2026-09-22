@@ -5210,18 +5210,14 @@ const MENUS = {
     { name: "Back", tell: "Return to the main menu.", go: () => setOvl("menu") }
   ] },
   atkm: { rows: "atkRows", desc: "atkDesc", pick: 0, items: () => ATTACKS.filter(a=>breathHas[EL_BREATH[a.el]]) },
-  itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => [
-    { name: "FULL INVENTORY", el: "item", tell: "Open Corin's full inventory.", go: () => { setOvl(null); setBag(true); } },
-    ...bagUsable().map(it => ({
-      name: () => typeof it.name === "function" ? it.name() : it.name,
-      el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
-      icon: it.icon ? it.icon() : null,
-      tell: it.tell || "Use this item.",
-      dim: () => { try { return !it.has(); } catch(e) { return true; } },
-      go: () => doUse(it)
-    })),
-    { name: "CLOSE", el: "item", tell: "Return to battle without using an item.", go: () => setOvl(null) }
-  ] },
+  itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
+    name: () => typeof it.name === "function" ? it.name() : it.name,
+    el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
+    icon: it.icon ? it.icon() : null,
+    tell: it.tell || "Use this item.",
+    dim: () => { try { return !it.has(); } catch(e) { return true; } },
+    go: () => doUse(it)
+  })) },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
     { name: mounted ? "Dismount" : "Mount", el: "ride",
       tell: mounted ? "Slide down off its back."
@@ -5367,6 +5363,8 @@ bindHold("btnR", () => {
 bindHold("btnItems", () => {
                          setOvl(ovl === "itemm" ? null : "itemm");
                          if (ovl === "itemm") setTimeout(() => wireBagDrag("itemRows"), 0); }, null);
+tap(document.getElementById("itemCloseBtn"), () => setOvl(null));
+tap(document.getElementById("itemFullBtn"), () => { setOvl(null); setBag(true); });
 
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
