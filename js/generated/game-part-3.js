@@ -5309,8 +5309,16 @@ function refreshOvl() {
       const sp = SPR[it.icon], ic = document.createElement("canvas");
       ic.width = 32; ic.height = 32; ic.className = "itemQuickIcon";
       const ig = ic.getContext("2d"); ig.imageSmoothingEnabled = false;
-      const src = typeof sheetOf === "function" ? sheetOf(sp) : atlasImg;
-      ig.drawImage(src, sp[0], sp[1], sp[2], sp[3], 0, 0, 32, 32);
+      try {
+        const src = typeof sheetOf === "function" ? sheetOf(sp) : atlasImg;
+        if (src && (src.complete === undefined || src.complete || src.width)) {
+          ig.drawImage(src, sp[0], sp[1], sp[2], sp[3], 0, 0, 32, 32);
+        }
+      } catch (e) {
+        /* Some inventory sprites live on generated atlas pages that are not
+           drawable through the quick-menu DOM canvas. Keep the item usable;
+           its text label is the fallback instead of crashing the game. */
+      }
       d.appendChild(ic);
     }
     if (it.el && EL_COLOUR[it.el]) {
