@@ -465,3 +465,15 @@
 #itemFullBtn{height:42px!important;min-width:132px!important;padding:0 14px!important;font-size:11px!important;border-radius:10px!important;pointer-events:auto!important;position:relative;z-index:6}
 #itemCloseBtn{width:44px!important;height:44px!important;min-width:44px!important;font-size:28px!important;line-height:40px!important;border-radius:12px!important;pointer-events:auto!important;position:relative;z-index:6}
 #itemm .rows{height:calc(100% - 56px)!important}
+
+/* Inventory header must fit on narrow phones without clipping Bestiary/Close. */
+#bagHead{min-width:0;gap:6px!important}
+#bagHead>b{flex:0 1 auto;font-size:clamp(12px,3.4vw,17px)!important;letter-spacing:clamp(2px,.9vw,5px)!important;white-space:nowrap}
+#bagHead .chips{min-width:0;gap:4px!important;flex:0 1 auto;justify-content:flex-end}
+#bagHead .chip{padding:3px 6px!important;font-size:10px!important}
+#bagHead .chip.gold canvas{width:26px!important;height:26px!important}
+#bagHead .chip.book canvas{width:24px!important;height:24px!important}
+#bagBook{min-width:0}
+#bagBook i{font-size:9px;letter-spacing:0!important}
+#bagClose{display:flex!important;align-items:center;justify-content:center;flex:0 0 36px!important;width:36px!important;height:36px!important;padding:0!important;border-radius:9px!important;background:#d8c9a4!important;border:1px solid #a89468!important;color:#33302a!important;font-size:24px!important;line-height:1!important}
+@media(max-width:430px){#bagHead .chip.gold{padding:2px 4px!important}#bagGold i{font-size:9px}#bagMap{padding:4px 6px!important}#bagBook{padding:2px 4px!important}}
