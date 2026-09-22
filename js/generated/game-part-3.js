@@ -3950,10 +3950,22 @@ function frame(ms) {
   finally { requestAnimationFrame(frame); }
 }
 function updateDeckHealth(){
-  const ph=document.getElementById("deckCorinHp"), dh=document.getElementById("deckDragonHp"), dr=document.getElementById("deckDragonRow");
-  if(ph){ const cur=(typeof P!=="undefined"&&Number.isFinite(P.hp))?P.hp:(typeof hp!=="undefined"?hp:0); const max=(typeof pMax!=="undefined"&&pMax)?pMax:1; ph.style.width=(Math.max(0,Math.min(1,cur/max))*100)+"%"; }
-  if(dh){ const max=(typeof dragon!=="undefined"&&dragon.maxHp)?dragon.maxHp:1; const cur=(typeof dragon!=="undefined"&&Number.isFinite(dragon.hp))?dragon.hp:max; dh.style.width=(Math.max(0,Math.min(1,cur/max))*100)+"%"; }
-  if(dr) dr.style.display=(typeof hasDragon==="function"&&hasDragon())?"flex":"none";
+  const corin=document.getElementById("deckCorinHearts"), dg=document.getElementById("deckDragonHearts"), dr=document.getElementById("deckDragonRow");
+  const paint=(el,cur,max,kind)=>{
+    if(!el)return;
+    const slots=6, ratio=Math.max(0,Math.min(1,max?cur/max:0)), filled=ratio*slots;
+    let html="";
+    for(let i=0;i<slots;i++){
+      const f=Math.max(0,Math.min(1,filled-i));
+      html+='<span class="deckHeart '+kind+'"><i style="width:'+(f*100).toFixed(0)+'%"></i></span>';
+    }
+    if(el._hpMarkup!==html){el.innerHTML=html;el._hpMarkup=html;}
+  };
+  const cur=(typeof pHp!=="undefined"&&Number.isFinite(pHp))?pHp:0;
+  const max=(typeof pMax!=="undefined"&&pMax)?pMax:1;
+  paint(corin,cur,max,"corin");
+  if(typeof dragon!=="undefined")paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
+  if(dr)dr.style.display=(typeof hasDragon==="function"&&hasDragon())?"flex":"none";
 }
 function frameCore(ms) {
   window.__firstFrame = true;
