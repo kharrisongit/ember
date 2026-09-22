@@ -9789,6 +9789,10 @@ function drawHudHeart(x, y, px, color, alpha) {
   ctx.restore();
 }
 function drawHearts() {
+  /* Party health is now rendered in the controller deck DOM, not over the world. */
+  return;
+}
+function drawHeartsCanvasLegacy() {
   syncDragonVitality(false);
   const x = 8, y = hudTopInset(), step = 18;
   const w = Math.min(156, VW - 16), h = hasDragon() ? 54 : 28;
