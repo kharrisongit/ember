@@ -3951,9 +3951,9 @@ function frame(ms) {
 }
 function updateDeckHealth(){
   const ph=document.getElementById("deckCorinHp"), dh=document.getElementById("deckDragonHp"), dr=document.getElementById("deckDragonRow");
-  if(ph) ph.style.width=(Math.max(0,Math.min(1,pMax?hp/pMax:0))*100)+"%";
-  if(dh) dh.style.width=(Math.max(0,Math.min(1,dragon.maxHp?dragon.hp/dragon.maxHp:0))*100)+"%";
-  if(dr) dr.style.display=hasDragon()?"flex":"none";
+  if(ph){ const cur=(typeof P!=="undefined"&&Number.isFinite(P.hp))?P.hp:(typeof hp!=="undefined"?hp:0); const max=(typeof pMax!=="undefined"&&pMax)?pMax:1; ph.style.width=(Math.max(0,Math.min(1,cur/max))*100)+"%"; }
+  if(dh){ const max=(typeof dragon!=="undefined"&&dragon.maxHp)?dragon.maxHp:1; const cur=(typeof dragon!=="undefined"&&Number.isFinite(dragon.hp))?dragon.hp:max; dh.style.width=(Math.max(0,Math.min(1,cur/max))*100)+"%"; }
+  if(dr) dr.style.display=(typeof hasDragon==="function"&&hasDragon())?"flex":"none";
 }
 function frameCore(ms) {
   window.__firstFrame = true;
