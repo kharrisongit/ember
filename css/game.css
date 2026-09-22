@@ -458,3 +458,10 @@
 #itemFullBtn{letter-spacing:.04em}
 #itemCloseBtn{width:30px;height:30px;padding:0;border-radius:50%;font-size:20px;line-height:26px;color:#f3e7d3}
 #itemm .rows{height:calc(100% - 37px)!important}
+
+/* Final Items header sizing/touch target overrides. */
+#itemm>#itemQuickHead{height:48px!important;min-height:48px!important;gap:10px!important;margin-bottom:8px!important;position:relative;z-index:5;pointer-events:auto!important}
+#itemm>#itemQuickHead>b{font-size:13px!important;letter-spacing:.16em!important}
+#itemFullBtn{height:42px!important;min-width:132px!important;padding:0 14px!important;font-size:11px!important;border-radius:10px!important;pointer-events:auto!important;position:relative;z-index:6}
+#itemCloseBtn{width:44px!important;height:44px!important;min-width:44px!important;font-size:28px!important;line-height:40px!important;border-radius:12px!important;pointer-events:auto!important;position:relative;z-index:6}
+#itemm .rows{height:calc(100% - 56px)!important}
