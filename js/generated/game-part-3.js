@@ -5214,6 +5214,7 @@ const MENUS = {
   itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
     name: () => typeof it.name === "function" ? it.name() : it.name,
     el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
+    icon: it.icon ? it.icon() : null,
     tell: it.tell || "Use this item.",
     dim: () => { try { return !it.has(); } catch(e) { return true; } },
     go: () => doUse(it)
@@ -5236,12 +5237,7 @@ const MENUS = {
                 : wakeCool > 0 ? "The dead are not ready. " + Math.ceil(wakeCool) + "s."
                 : "Wake two of the Hollybeck dead to walk with you.",
       go: () => { if (wakeTheDead()) setOvl(null); } },
-    { name: "Use item", el: "potion",
-      dim: () => !bagUsable().length,
-      tell: () => { const n = bagUsable().length;
-                    return n ? n + " thing" + (n === 1 ? "" : "s") + " he can use."
-                             : "Nothing in the pack to use."; },
-      go: () => { setOvl(null); useAsk(); } },
+
   ] },
 };
 const EL_BREATH = { claw: "slash", fire: "fire", ice: "ice", bolt: "lightning", shadow: "shadow" };
@@ -5301,13 +5297,21 @@ function refreshOvl() {
   items.forEach((it, k) => {
     const d = document.createElement("div");
     d.className = "row" + (k === M.pick ? " on" : "");
-    if (ovl === "atkm" || ovl === "airm" || ovl === "itemm") {
+    if (ovl === "atkm" || ovl === "airm") {
       const n = items.length;
       const angle = (-Math.PI / 2) + (Math.PI * 2 * k / n);
       const radius = n >= 5 ? 62 : 56;
       d.style.setProperty("--rx", (Math.cos(angle) * radius).toFixed(2) + "px");
       d.style.setProperty("--ry", (Math.sin(angle) * radius).toFixed(2) + "px");
       d.setAttribute("aria-label", (typeof it.name === "function") ? it.name() : it.name);
+    }
+    if (ovl === "itemm" && it.icon && SPR[it.icon]) {
+      const sp = SPR[it.icon], ic = document.createElement("canvas");
+      ic.width = 32; ic.height = 32; ic.className = "itemQuickIcon";
+      const ig = ic.getContext("2d"); ig.imageSmoothingEnabled = false;
+      const src = typeof sheetOf === "function" ? sheetOf(sp) : atlasImg;
+      ig.drawImage(src, sp[0], sp[1], sp[2], sp[3], 0, 0, 32, 32);
+      d.appendChild(ic);
     }
     if (it.el && EL_COLOUR[it.el]) {
       d.style.setProperty("--el", EL_COLOUR[it.el]);
