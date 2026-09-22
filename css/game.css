@@ -741,3 +741,33 @@
     font-size:10px!important;
   }
 }
+
+/* Align the 2x2 action tile block exactly with the party HUD vertically. */
+#actionStack{
+  bottom:calc(100% + 8px)!important;
+  grid-template-columns:repeat(2,80px)!important;
+  grid-template-rows:repeat(2,42px)!important;
+  grid-auto-rows:42px!important;
+  width:169px!important;
+  height:93px!important;
+  gap:9px!important;
+  align-content:stretch!important;
+}
+#actionStack .trig{
+  width:80px!important;
+  height:42px!important;
+  min-height:42px!important;
+  padding:5px 4px!important;
+  font-size:10px!important;
+}
+@media(max-width:430px){
+  #actionStack{
+    bottom:calc(100% + 8px)!important;
+    grid-template-columns:repeat(2,80px)!important;
+    grid-template-rows:repeat(2,42px)!important;
+    grid-auto-rows:42px!important;
+    width:169px!important;
+    height:93px!important;
+  }
+  #actionStack .trig{width:80px!important;height:42px!important;min-height:42px!important}
+}
