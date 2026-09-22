@@ -5085,6 +5085,9 @@ function setBag(on) {
   if (on) { bagPick = 0; refreshBag(); wireBagDrag(); if (!bagRAF) bagRAF = requestAnimationFrame(bagTick); }
   else if (bagRAF) { cancelAnimationFrame(bagRAF); bagRAF = 0; bagAnim = []; }
 }
+const bagCloseBtn = document.getElementById("bagClose");
+if (bagCloseBtn) bagCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setBag(false); });
+
 
 const WM_ABOUT = {
   "Millwood":            "The mill village where Corin began. Waterwheel, a few roofs, and the road east.",
