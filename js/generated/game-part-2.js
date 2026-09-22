@@ -9921,7 +9921,11 @@ function whoSays(npc, line) {
 }
 
 let ride = null;
-function ferryOf() { return MD.ferry || null; }
+function ferryOf() {
+  /* During boot / map transitions MD can briefly be null. Ferry interaction
+     is optional, so treat that state as "no ferry" instead of crashing A. */
+  return (typeof MD !== "undefined" && MD && MD.ferry) ? MD.ferry : null;
+}
 function ferryBoatObj() {
   const f = ferryOf(); if (!f) return null;
   const nm = NAME2I[f.boat];
