@@ -5178,7 +5178,6 @@ function bootBind() {
 const MENUS = {
   menu: { rows: "menuRows", desc: "menuDesc", pick: 0, items: () => [
     { name: "Map", tell: "Explore Emberfell. Use the D-pad to select a location.", go: () => openAtlas("menu") },
-    { name: "Inventory",   tell: "What Corin has on him.",        go: () => { setOvl(null); setBag(true); } },
     { name: "Save",        tell: "Save to a new slot or overwrite an existing save.", go: () => setOvl("savePrompt") },
     { name: "Load",        tell: "Choose which save to load.", go: () => setOvl("loadSlots") },
     { name: "Manage saves", tell: "Review or delete existing save slots.", go: () => setOvl("manageSaves") },
@@ -5211,14 +5210,18 @@ const MENUS = {
     { name: "Back", tell: "Return to the main menu.", go: () => setOvl("menu") }
   ] },
   atkm: { rows: "atkRows", desc: "atkDesc", pick: 0, items: () => ATTACKS.filter(a=>breathHas[EL_BREATH[a.el]]) },
-  itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
-    name: () => typeof it.name === "function" ? it.name() : it.name,
-    el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
-    icon: it.icon ? it.icon() : null,
-    tell: it.tell || "Use this item.",
-    dim: () => { try { return !it.has(); } catch(e) { return true; } },
-    go: () => doUse(it)
-  })) },
+  itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => [
+    { name: "FULL INVENTORY", el: "item", tell: "Open Corin's full inventory.", go: () => { setOvl(null); setBag(true); } },
+    ...bagUsable().map(it => ({
+      name: () => typeof it.name === "function" ? it.name() : it.name,
+      el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
+      icon: it.icon ? it.icon() : null,
+      tell: it.tell || "Use this item.",
+      dim: () => { try { return !it.has(); } catch(e) { return true; } },
+      go: () => doUse(it)
+    })),
+    { name: "CLOSE", el: "item", tell: "Return to battle without using an item.", go: () => setOvl(null) }
+  ] },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
     { name: mounted ? "Dismount" : "Mount", el: "ride",
       tell: mounted ? "Slide down off its back."
