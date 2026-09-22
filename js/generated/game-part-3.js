@@ -3986,7 +3986,14 @@ function updateDeckHealth(){
   if(typeof dragon!=="undefined"&&hatched)paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
   if(dr)dr.style.display=hatched?"flex":"none";
   if(hatched&&typeof SPR!=="undefined"){const ds=SPR.dr5_pose_south||SPR.dr5_idle_s;portrait(dp,ds,ds?sheetOf(ds):dragonImg);}
-  if(box)box.classList.toggle("solo",!hatched);
+  if(box){
+    box.classList.toggle("solo",!hatched);
+    /* Never show party vitals on the boot/start screen. They become visible
+       only after gameplay has actually begun. */
+    const playing=(typeof mode!=="undefined"&&mode==="play");
+    box.style.visibility=playing?"visible":"hidden";
+    box.style.pointerEvents=playing?"auto":"none";
+  }
 }
 function frameCore(ms) {
   window.__firstFrame = true;
