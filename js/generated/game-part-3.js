@@ -5294,6 +5294,14 @@ function refreshOvl() {
   items.forEach((it, k) => {
     const d = document.createElement("div");
     d.className = "row" + (k === M.pick ? " on" : "");
+    if (ovl === "atkm" || ovl === "airm") {
+      const n = items.length;
+      const angle = (-Math.PI / 2) + (Math.PI * 2 * k / n);
+      const radius = n >= 5 ? 104 : 92;
+      d.style.setProperty("--rx", (Math.cos(angle) * radius).toFixed(2) + "px");
+      d.style.setProperty("--ry", (Math.sin(angle) * radius).toFixed(2) + "px");
+      d.setAttribute("aria-label", (typeof it.name === "function") ? it.name() : it.name);
+    }
     if (it.el && EL_COLOUR[it.el]) {
       d.style.setProperty("--el", EL_COLOUR[it.el]);
       const dot = document.createElement("span");
