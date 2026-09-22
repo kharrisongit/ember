@@ -3951,6 +3951,7 @@ function frame(ms) {
 }
 function updateDeckHealth(){
   const corin=document.getElementById("deckCorinHearts"), dg=document.getElementById("deckDragonHearts"), dr=document.getElementById("deckDragonRow");
+  const box=document.getElementById("deckHealth"), cp=document.getElementById("deckCorinPortrait"), dp=document.getElementById("deckDragonPortrait");
   const paint=(el,cur,max,kind)=>{
     if(!el)return;
     const slots=6, ratio=Math.max(0,Math.min(1,max?cur/max:0)), filled=ratio*slots;
@@ -3964,8 +3965,17 @@ function updateDeckHealth(){
   const cur=(typeof pHp!=="undefined"&&Number.isFinite(pHp))?pHp:0;
   const max=(typeof pMax!=="undefined"&&pMax)?pMax:1;
   paint(corin,cur,max,"corin");
-  if(typeof dragon!=="undefined")paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
-  if(dr)dr.style.display=(typeof hasDragon==="function"&&hasDragon())?"flex":"none";
+  const portrait=(cv,sp,img)=>{
+    if(!cv||!sp||!img)return; const x=cv.getContext("2d"); x.clearRect(0,0,cv.width,cv.height); x.imageSmoothingEnabled=false;
+    try{ const crop=Math.min(sp[2],sp[3]), sx=sp[0]+Math.max(0,(sp[2]-crop)/2), sy=sp[1]+Math.max(0,(sp[3]-crop)/2); drawGameImage(x,img,sx,sy,crop,crop,0,0,cv.width,cv.height); }catch(e){}
+  };
+  if(typeof SPR!=="undefined"){const cs=SPR[corinKit()+"idle_d"];portrait(cp,cs,atlasImg);}
+
+  const hatched=(typeof hasDragon==="function"&&hasDragon());
+  if(typeof dragon!=="undefined"&&hatched)paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
+  if(dr)dr.style.display=hatched?"flex":"none";
+  if(hatched&&typeof SPR!=="undefined"){const ds=SPR.dr5_pose_south||SPR.dr5_idle_s;portrait(dp,ds,ds?sheetOf(ds):dragonImg);}
+  if(box)box.classList.toggle("solo",!hatched);
 }
 function frameCore(ms) {
   window.__firstFrame = true;
