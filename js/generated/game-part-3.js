@@ -5297,7 +5297,7 @@ function refreshOvl() {
     if (ovl === "atkm" || ovl === "airm") {
       const n = items.length;
       const angle = (-Math.PI / 2) + (Math.PI * 2 * k / n);
-      const radius = n >= 5 ? 104 : 92;
+      const radius = n >= 5 ? 62 : 56;
       d.style.setProperty("--rx", (Math.cos(angle) * radius).toFixed(2) + "px");
       d.style.setProperty("--ry", (Math.sin(angle) * radius).toFixed(2) + "px");
       d.setAttribute("aria-label", (typeof it.name === "function") ? it.name() : it.name);
@@ -5317,8 +5317,8 @@ function refreshOvl() {
     }
     d.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (M.pick === k) { if (it.go && !(it.dim && it.dim())) it.go(); }
-      else { M.pick = k; refreshOvl(); }
+      M.pick = k;
+      if (it.go && !(it.dim && it.dim())) it.go();
     });
     rows.appendChild(d);
   });
