@@ -771,3 +771,17 @@
   }
   #actionStack .trig{width:80px!important;height:42px!important;min-height:42px!important}
 }
+
+/* Match action-tile top edge to the fixed party HUD top edge. */
+#actionStack{
+  bottom:calc(100% + 8px)!important;
+  transform:translateY(-8px)!important;
+}
+@media(max-width:430px){
+  #actionStack{
+    bottom:calc(100% + 8px)!important;
+    transform:translateY(-8px)!important;
+  }
+}
+/* Boot-safe default: JS reveals this only once mode === play. */
+#deckHealth{visibility:hidden}
