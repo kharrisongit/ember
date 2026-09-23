@@ -1335,3 +1335,28 @@
 }
 #atkm .row.breathRefill .breathSecs{z-index:9!important;pointer-events:none!important}
 #atkm .row .dot,#atkm .row>span{pointer-events:none!important}
+
+/* === DRAGON ATTACK SINGLE RING + LABEL FIT 2026-09-22 === */
+/* Screenshot polish: one visible perimeter ring, labels fit comfortably,
+   and cooldown attacks remain readable instead of heavily dimming. */
+#atkm .row{
+  border:1px solid color-mix(in srgb,var(--el,#c7b69b) 58%,#6b5844)!important;
+  box-shadow:inset 0 0 12px rgba(0,0,0,.28),0 3px 8px rgba(0,0,0,.42),0 0 10px color-mix(in srgb,var(--el,#c7b69b) 24%,transparent)!important;
+}
+#atkm .row.breathRefill{
+  border-color:transparent!important;
+}
+#atkm .row.breathRefill .breathFill{
+  inset:1px!important;
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px))!important;
+  mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px))!important;
+}
+#atkm .row>span:not(.dot):not(.breathFill):not(.breathSecs){
+  font-size:8px!important;
+  line-height:1!important;
+  max-width:90%!important;
+  white-space:nowrap!important;
+}
+#atkm .row.breathRefill[style*="opacity"]{
+  opacity:.76!important;
+}
