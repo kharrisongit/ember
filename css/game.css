@@ -991,3 +991,24 @@
   #atkm .row:nth-child(4){left:calc(37% - 37px)!important;top:126px!important}
   #atkm .row:nth-child(5){left:calc(63% - 37px)!important;top:126px!important}
 }
+
+/* Keep the elemental breath constellation centered inside the actual deck.
+   Use percentages for both axes so browser chrome / deck height cannot push
+   the orbs off-screen. */
+#atkm .rows{position:relative!important;width:100%!important;height:calc(100% - 30px)!important;overflow:hidden!important}
+#atkm .row{position:absolute!important;width:70px!important;height:70px!important;margin:0!important}
+#atkm .row:nth-child(1){left:50%!important;top:7%!important;transform:translate(-50%,0)!important}
+#atkm .row:nth-child(2){left:24%!important;top:35%!important;transform:translate(-50%,0)!important}
+#atkm .row:nth-child(3){left:76%!important;top:35%!important;transform:translate(-50%,0)!important}
+#atkm .row:nth-child(4){left:38%!important;top:66%!important;transform:translate(-50%,0)!important}
+#atkm .row:nth-child(5){left:62%!important;top:66%!important;transform:translate(-50%,0)!important}
+#atkm .row.on:nth-child(1),#atkm .row.on:nth-child(2),#atkm .row.on:nth-child(3),#atkm .row.on:nth-child(4),#atkm .row.on:nth-child(5){transform:translate(-50%,0) scale(1.07)!important}
+@media(max-width:430px){
+ #atkm .row{width:66px!important;height:66px!important}
+ #atkm .row:nth-child(1){left:50%!important;top:5%!important;transform:translate(-50%,0)!important}
+ #atkm .row:nth-child(2){left:24%!important;top:34%!important;transform:translate(-50%,0)!important}
+ #atkm .row:nth-child(3){left:76%!important;top:34%!important;transform:translate(-50%,0)!important}
+ #atkm .row:nth-child(4){left:38%!important;top:64%!important;transform:translate(-50%,0)!important}
+ #atkm .row:nth-child(5){left:62%!important;top:64%!important;transform:translate(-50%,0)!important}
+ #atkm .row.on:nth-child(1),#atkm .row.on:nth-child(2),#atkm .row.on:nth-child(3),#atkm .row.on:nth-child(4),#atkm .row.on:nth-child(5){transform:translate(-50%,0) scale(1.07)!important}
+}
