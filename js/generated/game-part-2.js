@@ -3256,7 +3256,7 @@ function playZoom() {
   if (!VW || !VH) return 2.5;
   const interior = MAPID !== "world";
   const z = Math.min(VW / ((interior ? 13 : PLAY_ACROSS) * TS), VH / ((interior ? 9 : PLAY_DOWN) * TS));
-  return Math.max(interior ? 2.15 : PLAY_MIN, Math.min(PLAY_MAX, z)) * (interior ? 1.03 * 0.99 : 0.9 * 1.02 * 1.02);
+  return Math.max(interior ? 2.15 : PLAY_MIN, Math.min(PLAY_MAX, z)) * (interior ? 1.03 * 0.99 : 0.9 * 1.02 * 1.02 * 0.90);
 }
 let cam = { x: 0, y: 0, z: 2.5 };
 let mode = "play";
