@@ -5499,31 +5499,37 @@ function syncSoundDial(){
 })();
 
 /* External music account hub.
-   Spotify needs a registered Spotify application/client ID before OAuth can be
-   activated. Keep the UI account-based and fail clearly until configured. */
-const EMBER_SPOTIFY_CLIENT_ID="";
-const EMBER_SPOTIFY_REDIRECT=location.origin+location.pathname;
-function spotifyStatus(msg){const e=document.getElementById("spotifyStatus");if(e)e.textContent=msg;}
+   Apple Music playback is supported by MusicKit on the Web, but Emberfell
+   needs its Apple Music developer token before authorization can be enabled.
+   Google's public YouTube APIs can authorize account data, but do not expose
+   a supported YouTube Music subscription playback SDK. */
+const EMBER_APPLE_MUSIC_DEVELOPER_TOKEN="";
+function musicHubStatus(id,msg){const e=document.getElementById(id);if(e)e.textContent=msg;}
 function externalMusicShow(tab){
-  const game=document.getElementById("gameMusicPane"),sp=document.getElementById("spotifyMusicPane");
-  const gt=document.getElementById("musicGameTab"),st=document.getElementById("musicSpotifyTab");
-  if(game)game.style.display=tab==="game"?"block":"none";
-  if(sp)sp.style.display=tab==="spotify"?"block":"none";
-  gt?.classList.toggle("on",tab==="game");st?.classList.toggle("on",tab==="spotify");
+  const ids={game:"gameMusicPane",apple:"appleMusicPane",youtube:"youtubeMusicPane"};
+  for(const [k,id] of Object.entries(ids)){const e=document.getElementById(id);if(e)e.style.display=k===tab?"block":"none";}
+  document.getElementById("musicGameTab")?.classList.toggle("on",tab==="game");
+  document.getElementById("musicAppleTab")?.classList.toggle("on",tab==="apple");
+  document.getElementById("musicYouTubeTab")?.classList.toggle("on",tab==="youtube");
 }
 (function wireExternalMusic(){
-  const gt=document.getElementById("musicGameTab"),st=document.getElementById("musicSpotifyTab");
-  const connect=document.getElementById("spotifyConnect"),done=document.getElementById("spotifyDone");
-  gt?.addEventListener("pointerup",e=>{e.preventDefault();externalMusicShow("game");});
-  st?.addEventListener("pointerup",e=>{e.preventDefault();externalMusicShow("spotify");});
-  connect?.addEventListener("pointerup",e=>{
+  const done=()=>setOvl(null);
+  document.getElementById("musicGameTab")?.addEventListener("pointerup",e=>{e.preventDefault();externalMusicShow("game");});
+  document.getElementById("musicAppleTab")?.addEventListener("pointerup",e=>{e.preventDefault();externalMusicShow("apple");});
+  document.getElementById("musicYouTubeTab")?.addEventListener("pointerup",e=>{e.preventDefault();externalMusicShow("youtube");});
+  document.getElementById("appleMusicConnect")?.addEventListener("pointerup",e=>{
     e.preventDefault();
-    if(!EMBER_SPOTIFY_CLIENT_ID){
-      spotifyStatus("Spotify setup needs Emberfell's Spotify Client ID before account sign-in can be enabled.");
+    if(!EMBER_APPLE_MUSIC_DEVELOPER_TOKEN){
+      musicHubStatus("appleMusicStatus","Apple Music setup needs Emberfell's MusicKit developer token before account sign-in can be enabled.");
       return;
     }
   });
-  done?.addEventListener("pointerup",e=>{e.preventDefault();setOvl(null);});
+  document.getElementById("youtubeMusicConnect")?.addEventListener("pointerup",e=>{
+    e.preventDefault();
+    musicHubStatus("youtubeMusicStatus","Google supports YouTube account authorization, but does not provide a public YouTube Music streaming SDK for third-party web players.");
+  });
+  document.getElementById("appleMusicDone")?.addEventListener("pointerup",e=>{e.preventDefault();done();});
+  document.getElementById("youtubeMusicDone")?.addEventListener("pointerup",e=>{e.preventDefault();done();});
   externalMusicShow("game");
 })();
 const SAVE_SLOT_COUNT = 3;
