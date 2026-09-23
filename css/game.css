@@ -1514,3 +1514,26 @@
  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M17 53V25C17 14 23 7 32 7s15 7 15 18v28h7v6H10v-6zm12-32v7h-7v6h7v12h6V34h7v-6h-7v-7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M17 53V25C17 14 23 7 32 7s15 7 15 18v28h7v6H10v-6zm12-32v7h-7v6h7v12h6V34h7v-6h-7v-7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
 }
+
+/* === COMMAND ICON REDESIGN V2 2026-09-22 === */
+/* More illustrative silhouettes with negative-space detail, still pure CSS/SVG
+   so they stay crisp on Retina without adding image assets. */
+#airm .row::before{
+ content:""!important;width:42px!important;height:42px!important;flex:0 0 42px!important;
+ background:#f8f0df!important;filter:drop-shadow(0 1px 0 #27302e) drop-shadow(0 0 5px var(--el))!important;
+}
+/* Dragon head: long snout, brow, twin swept horns, neck scales. */
+#airm .row:nth-child(1)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M13 61c8-7 11-16 10-28l-9-10 14 2 3-17 9 15 15-11-4 17 15 3-12 9 12 12-19 1-7 15-9-13-9 10zM28 33l13-7 14 7-9 5 12 5-17 4-13-7z'/%3E%3Cpath fill='black' d='M23 26L8 14l20 5M49 27L63 10l-3 22' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='43' cy='32' r='2.6' fill='white'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M13 61c8-7 11-16 10-28l-9-10 14 2 3-17 9 15 15-11-4 17 15 3-12 9 12 12-19 1-7 15-9-13-9 10zM28 33l13-7 14 7-9 5 12 5-17 4-13-7z'/%3E%3Cpath fill='black' d='M23 26L8 14l20 5M49 27L63 10l-3 22' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='43' cy='32' r='2.6' fill='white'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+/* Wings: two articulated membranes with visible finger spars and central chest. */
+#airm .row:nth-child(2)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' fill-rule='evenodd' d='M38 31C29 16 17 9 3 9c8 9 10 19 8 31l10-8 5 14 12-9v19h4V37l12 9 5-14 10 8c-2-12 0-22 8-31-14 0-26 7-35 22h-4zM11 17c8 2 15 8 22 18l-6 4-6-14-7 7c0-6-1-11-3-15zm58 0c-8 2-15 8-22 18l6 4 6-14 7 7c0-6 1-11 3-15z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' fill-rule='evenodd' d='M38 31C29 16 17 9 3 9c8 9 10 19 8 31l10-8 5 14 12-9v19h4V37l12 9 5-14 10 8c-2-12 0-22 8-31-14 0-26 7-35 22h-4zM11 17c8 2 15 8 22 18l-6 4-6-14-7 7c0-6-1-11-3-15zm58 0c-8 2-15 8-22 18l6 4 6-14 7 7c0-6 1-11 3-15z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+/* Gravestone: old arched marker, cracked top, stepped plinth and dragon rune. */
+#airm .row:nth-child(3)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' fill-rule='evenodd' d='M20 64V31C20 16 28 8 40 8s20 8 20 23v33h9v7H11v-7zm7-32v32h26V32c0-10-5-16-13-16s-13 6-13 16zm7 2c4-7 11-8 16-3-5 0-8 2-9 6 4-2 8-1 11 2-5 0-8 2-10 6-1-4-4-6-9-7 3-1 5-2 7-4-2-2-4-2-6 0z'/%3E%3Cpath fill='black' d='M18 64h44v5H18zM25 23l7-5 4 5 5-7 5 7'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' fill-rule='evenodd' d='M20 64V31C20 16 28 8 40 8s20 8 20 23v33h9v7H11v-7zm7-32v32h26V32c0-10-5-16-13-16s-13 6-13 16zm7 2c4-7 11-8 16-3-5 0-8 2-9 6 4-2 8-1 11 2-5 0-8 2-10 6-1-4-4-6-9-7 3-1 5-2 7-4-2-2-4-2-6 0z'/%3E%3Cpath fill='black' d='M18 64h44v5H18zM25 23l7-5 4 5 5-7 5 7'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
