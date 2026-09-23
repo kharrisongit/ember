@@ -5504,7 +5504,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  templeLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:'))),
+  templeLayoutVersion:2, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:'))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5564,7 +5564,7 @@ function loadGame(slot=activeSaveSlot) {
     for(const [id,m] of Object.entries(W.maps))if(m.templeExpanded)m.templeGateOpen=0;
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
-    if(s.map==='tp1'&&s.templeLayoutVersion!==1){s.x=448;s.y=688;}
+    if(W.maps[s.map]?.templeExpanded&&s.templeLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);
     if(MD.royal&&(retiredRoyalRoom||!canStand(P.x,P.y))){P.x=MD.spawn[0];P.y=MD.spawn[1];}

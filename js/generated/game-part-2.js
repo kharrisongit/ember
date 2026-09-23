@@ -6829,7 +6829,7 @@ function stepChest(dt) {
 function drawChest() {
   const c = chestHere();
   if (!c) return;
-  const sp = SPR.chest;
+  const sp = SPR.chest; // Large chest is reserved for heartstones.
   if (!sp) return;
   const px = c.x * TS + TS / 2 - sp[2] / 2, py = c.y * TS + TS - sp[3];
   let f = 0;
@@ -7592,7 +7592,7 @@ function tryTreasuryChest(){
 }
 function drawTreasuryChests(){
  if(MAPID!=='royal_treasury')return;
- const sp=SPR.chest;
+ const sp=SPR.temple71_chest;
  for(const c of TREASURY_CHESTS){
   const f=lootChestFrame('treasury:'+c.id,treasuryTaken.has(c.id),sp[4]);
   drawGameImage(ctx,atlasImg,sp[0]+f*sp[2],sp[1],sp[2],sp[3],c.x-sp[2]/2,c.y-sp[3],sp[2],sp[3]);
