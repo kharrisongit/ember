@@ -5135,11 +5135,18 @@ function setBag(on) {
 }
 const bagCloseBtn = document.getElementById("bagClose");
 const bagSaveBtn = document.getElementById("bagSave");
+const bagMusicBtn = document.getElementById("bagMusic");
 if (bagCloseBtn) bagCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setBag(false); });
 if (bagSaveBtn) bagSaveBtn.addEventListener("pointerup", e => {
   e.preventDefault(); e.stopPropagation();
   setBag(false);
   setOvl("savePrompt");
+});
+if (bagMusicBtn) bagMusicBtn.addEventListener("pointerup", e => {
+  e.preventDefault(); e.stopPropagation();
+  setBag(false);
+  setOvl("sound");
+  setTimeout(syncSoundDial,0);
 });
 
 
@@ -5468,6 +5475,28 @@ const itemCloseBtn = document.getElementById("itemCloseBtn");
 const itemFullBtn = document.getElementById("itemFullBtn");
 if (itemCloseBtn) itemCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); });
 if (itemFullBtn) itemFullBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); setBag(true); });
+
+function soundPercent(){ return (window.EmberAudio && window.EmberAudio.percent) ? window.EmberAudio.percent() : 35; }
+function syncSoundDial(){
+  const v=Math.max(0,Math.min(100,soundPercent()));
+  const knob=document.getElementById("soundKnob"), pct=document.getElementById("soundPct");
+  const fill=document.querySelector("#soundTrack>i"), mute=document.getElementById("soundMute");
+  if(knob){knob.style.setProperty("--vol",v);knob.setAttribute("aria-valuenow",v);}
+  if(pct)pct.textContent=Math.round(v)+"%";
+  if(fill)fill.style.width=v+"%";
+  if(mute)mute.textContent=v===0?"UNMUTE":"MUTE";
+}
+(function wireSoundDial(){
+  const knob=document.getElementById("soundKnob"),track=document.getElementById("soundTrack");
+  const mute=document.getElementById("soundMute"),close=document.getElementById("soundClose");
+  let lastNonZero=35,drag=false;
+  const setV=v=>{v=Math.max(0,Math.min(100,Math.round(v)));if(v>0)lastNonZero=v;if(window.EmberAudio)window.EmberAudio.set(v);syncSoundDial();};
+  const fromPointer=e=>{const r=track.getBoundingClientRect();setV((e.clientX-r.left)/Math.max(1,r.width)*100);};
+  if(track){track.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track.setPointerCapture?.(e.pointerId);fromPointer(e);});track.addEventListener("pointermove",e=>{if(drag)fromPointer(e);});track.addEventListener("pointerup",e=>{drag=false;track.releasePointerCapture?.(e.pointerId);});}
+  if(knob){knob.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track?.setPointerCapture?.(e.pointerId);});}
+  if(mute)mute.addEventListener("pointerup",e=>{e.preventDefault();const v=soundPercent();setV(v===0?(lastNonZero||35):0);});
+  if(close)close.addEventListener("pointerup",e=>{e.preventDefault();setOvl(null);});
+})();
 
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
