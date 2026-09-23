@@ -1,0 +1,856 @@
+[
+  {
+    "id": "house00:chest",
+    "map": "house00",
+    "x": 208,
+    "y": 120,
+    "gold": 5
+  },
+  {
+    "id": "house00_bedroom:chest",
+    "map": "house00_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 12,
+    "item": "potion"
+  },
+  {
+    "id": "house01:chest",
+    "map": "house01",
+    "x": 224,
+    "y": 120,
+    "gold": 15
+  },
+  {
+    "id": "house01_bedroom:chest",
+    "map": "house01_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 11,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house02:chest",
+    "map": "house02",
+    "x": 240,
+    "y": 120,
+    "gold": 14
+  },
+  {
+    "id": "house02_bedroom:chest",
+    "map": "house02_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 10,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house02_bedroom2:chest",
+    "map": "house02_bedroom2",
+    "x": 160,
+    "y": 88,
+    "gold": 6
+  },
+  {
+    "id": "house03:chest",
+    "map": "house03",
+    "x": 208,
+    "y": 120,
+    "gold": 13
+  },
+  {
+    "id": "house03_bedroom:chest",
+    "map": "house03_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 9,
+    "item": "potion"
+  },
+  {
+    "id": "house04:chest",
+    "map": "house04",
+    "x": 224,
+    "y": 120,
+    "gold": 12
+  },
+  {
+    "id": "house04_bedroom:chest",
+    "map": "house04_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 8,
+    "item": "potion"
+  },
+  {
+    "id": "house05:chest",
+    "map": "house05",
+    "x": 240,
+    "y": 120,
+    "gold": 11
+  },
+  {
+    "id": "house05_bedroom:chest",
+    "map": "house05_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 7,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house06:chest",
+    "map": "house06",
+    "x": 208,
+    "y": 120,
+    "gold": 10
+  },
+  {
+    "id": "house06_bedroom:chest",
+    "map": "house06_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 6,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house07:chest",
+    "map": "house07",
+    "x": 224,
+    "y": 120,
+    "gold": 9
+  },
+  {
+    "id": "house07_bedroom:chest",
+    "map": "house07_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 5,
+    "item": "potion"
+  },
+  {
+    "id": "house08:chest",
+    "map": "house08",
+    "x": 96,
+    "y": 88,
+    "gold": 8
+  },
+  {
+    "id": "house08_bedroom:chest",
+    "map": "house08_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 15,
+    "item": "potion"
+  },
+  {
+    "id": "house09:chest",
+    "map": "house09",
+    "x": 240,
+    "y": 120,
+    "gold": 7
+  },
+  {
+    "id": "house09_bedroom:chest",
+    "map": "house09_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 14,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house09_bedroom2:chest",
+    "map": "house09_bedroom2",
+    "x": 160,
+    "y": 104,
+    "gold": 10
+  },
+  {
+    "id": "house10:chest",
+    "map": "house10",
+    "x": 208,
+    "y": 120,
+    "gold": 6
+  },
+  {
+    "id": "house10_bedroom:chest",
+    "map": "house10_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 13,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house11:chest",
+    "map": "house11",
+    "x": 224,
+    "y": 120,
+    "gold": 5
+  },
+  {
+    "id": "house11_bedroom:chest",
+    "map": "house11_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 12,
+    "item": "potion"
+  },
+  {
+    "id": "house12:chest",
+    "map": "house12",
+    "x": 240,
+    "y": 120,
+    "gold": 15
+  },
+  {
+    "id": "house12_bedroom:chest",
+    "map": "house12_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 11,
+    "item": "potion"
+  },
+  {
+    "id": "house13:chest",
+    "map": "house13",
+    "x": 208,
+    "y": 120,
+    "gold": 14
+  },
+  {
+    "id": "house13_bedroom:chest",
+    "map": "house13_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 10,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house14:chest",
+    "map": "house14",
+    "x": 224,
+    "y": 120,
+    "gold": 13
+  },
+  {
+    "id": "house14_bedroom:chest",
+    "map": "house14_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 9,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house15:chest",
+    "map": "house15",
+    "x": 36,
+    "y": 184,
+    "gold": 12
+  },
+  {
+    "id": "house15_bedroom:chest",
+    "map": "house15_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 8,
+    "item": "potion"
+  },
+  {
+    "id": "house16:chest",
+    "map": "house16",
+    "x": 36,
+    "y": 192,
+    "gold": 11
+  },
+  {
+    "id": "house16_bedroom:chest",
+    "map": "house16_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 7,
+    "item": "potion"
+  },
+  {
+    "id": "house17:chest",
+    "map": "house17",
+    "x": 36,
+    "y": 188,
+    "gold": 10
+  },
+  {
+    "id": "house17_bedroom:chest",
+    "map": "house17_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 6,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house17_bedroom2:chest",
+    "map": "house17_bedroom2",
+    "x": 160,
+    "y": 104,
+    "gold": 13
+  },
+  {
+    "id": "house18:chest",
+    "map": "house18",
+    "x": 36,
+    "y": 184,
+    "gold": 9
+  },
+  {
+    "id": "house18_bedroom:chest",
+    "map": "house18_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 5,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house19:chest",
+    "map": "house19",
+    "x": 36,
+    "y": 192,
+    "gold": 8
+  },
+  {
+    "id": "house19_bedroom:chest",
+    "map": "house19_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 15,
+    "item": "potion"
+  },
+  {
+    "id": "house20:chest",
+    "map": "house20",
+    "x": 36,
+    "y": 188,
+    "gold": 7
+  },
+  {
+    "id": "house20_bedroom:chest",
+    "map": "house20_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 14,
+    "item": "potion"
+  },
+  {
+    "id": "house21:chest",
+    "map": "house21",
+    "x": 36,
+    "y": 184,
+    "gold": 6
+  },
+  {
+    "id": "house21_bedroom:chest",
+    "map": "house21_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 13,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house21_bedroom2:chest",
+    "map": "house21_bedroom2",
+    "x": 160,
+    "y": 104,
+    "gold": 9
+  },
+  {
+    "id": "house22:chest",
+    "map": "house22",
+    "x": 184,
+    "y": 120,
+    "gold": 5
+  },
+  {
+    "id": "house22_bedroom:chest",
+    "map": "house22_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 12,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house23:chest",
+    "map": "house23",
+    "x": 36,
+    "y": 112,
+    "gold": 15
+  },
+  {
+    "id": "house23_bedroom:chest",
+    "map": "house23_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 11,
+    "item": "potion"
+  },
+  {
+    "id": "house24:chest",
+    "map": "house24",
+    "x": 208,
+    "y": 120,
+    "gold": 14
+  },
+  {
+    "id": "house24_bedroom:chest",
+    "map": "house24_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 10,
+    "item": "potion"
+  },
+  {
+    "id": "house25:chest",
+    "map": "house25",
+    "x": 240,
+    "y": 120,
+    "gold": 13
+  },
+  {
+    "id": "house25_bedroom:chest",
+    "map": "house25_bedroom",
+    "x": 176,
+    "y": 88,
+    "gold": 9,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house25_bedroom2:chest",
+    "map": "house25_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 5
+  },
+  {
+    "id": "house26:chest",
+    "map": "house26",
+    "x": 192,
+    "y": 120,
+    "gold": 12
+  },
+  {
+    "id": "house26_bedroom:chest",
+    "map": "house26_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 8,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house27:chest",
+    "map": "house27",
+    "x": 224,
+    "y": 120,
+    "gold": 11
+  },
+  {
+    "id": "house27_bedroom:chest",
+    "map": "house27_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 7,
+    "item": "potion"
+  },
+  {
+    "id": "house27_bedroom2:chest",
+    "map": "house27_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 14
+  },
+  {
+    "id": "house28:chest",
+    "map": "house28",
+    "x": 208,
+    "y": 88,
+    "gold": 10
+  },
+  {
+    "id": "house29:chest",
+    "map": "house29",
+    "x": 272,
+    "y": 144,
+    "gold": 9
+  },
+  {
+    "id": "house30:chest",
+    "map": "house30",
+    "x": 208,
+    "y": 120,
+    "gold": 8
+  },
+  {
+    "id": "house30_bedroom:chest",
+    "map": "house30_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 15,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house31:chest",
+    "map": "house31",
+    "x": 36,
+    "y": 112,
+    "gold": 7
+  },
+  {
+    "id": "house31_bedroom:chest",
+    "map": "house31_bedroom",
+    "x": 160,
+    "y": 88,
+    "gold": 14,
+    "item": "potion"
+  },
+  {
+    "id": "house31_bedroom2:chest",
+    "map": "house31_bedroom2",
+    "x": 160,
+    "y": 88,
+    "gold": 10
+  },
+  {
+    "id": "house32:chest",
+    "map": "house32",
+    "x": 36,
+    "y": 188,
+    "gold": 6
+  },
+  {
+    "id": "house32_bedroom:chest",
+    "map": "house32_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 13,
+    "item": "potion"
+  },
+  {
+    "id": "house32_bedroom2:chest",
+    "map": "house32_bedroom2",
+    "x": 160,
+    "y": 104,
+    "gold": 9
+  },
+  {
+    "id": "house33:chest",
+    "map": "house33",
+    "x": 224,
+    "y": 120,
+    "gold": 5
+  },
+  {
+    "id": "house33_bedroom:chest",
+    "map": "house33_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 12,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house34:chest",
+    "map": "house34",
+    "x": 208,
+    "y": 120,
+    "gold": 15
+  },
+  {
+    "id": "house34_bedroom:chest",
+    "map": "house34_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 11,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house35:chest",
+    "map": "house35",
+    "x": 240,
+    "y": 120,
+    "gold": 14
+  },
+  {
+    "id": "house35_bedroom:chest",
+    "map": "house35_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 10,
+    "item": "potion"
+  },
+  {
+    "id": "house35_bedroom2:chest",
+    "map": "house35_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 6
+  },
+  {
+    "id": "house36:chest",
+    "map": "house36",
+    "x": 224,
+    "y": 120,
+    "gold": 13
+  },
+  {
+    "id": "house36_bedroom:chest",
+    "map": "house36_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 9,
+    "item": "potion"
+  },
+  {
+    "id": "house37:chest",
+    "map": "house37",
+    "x": 208,
+    "y": 120,
+    "gold": 12
+  },
+  {
+    "id": "house37_bedroom:chest",
+    "map": "house37_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 8,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house38:chest",
+    "map": "house38",
+    "x": 240,
+    "y": 120,
+    "gold": 11
+  },
+  {
+    "id": "house38_bedroom:chest",
+    "map": "house38_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 7,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house39:chest",
+    "map": "house39",
+    "x": 224,
+    "y": 120,
+    "gold": 10
+  },
+  {
+    "id": "house39_bedroom:chest",
+    "map": "house39_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 6,
+    "item": "potion"
+  },
+  {
+    "id": "house40:chest",
+    "map": "house40",
+    "x": 208,
+    "y": 120,
+    "gold": 9
+  },
+  {
+    "id": "house40_bedroom:chest",
+    "map": "house40_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 5,
+    "item": "potion"
+  },
+  {
+    "id": "house41:chest",
+    "map": "house41",
+    "x": 36,
+    "y": 108,
+    "gold": 8
+  },
+  {
+    "id": "house41_bedroom:chest",
+    "map": "house41_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 15,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house41_bedroom2:chest",
+    "map": "house41_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 11
+  },
+  {
+    "id": "house42:chest",
+    "map": "house42",
+    "x": 96,
+    "y": 88,
+    "gold": 7
+  },
+  {
+    "id": "house42_bedroom:chest",
+    "map": "house42_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 14,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house43:chest",
+    "map": "house43",
+    "x": 184,
+    "y": 120,
+    "gold": 6
+  },
+  {
+    "id": "house43_bedroom:chest",
+    "map": "house43_bedroom",
+    "x": 36,
+    "y": 128,
+    "gold": 13,
+    "item": "potion"
+  },
+  {
+    "id": "house43_bedroom2:chest",
+    "map": "house43_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 9
+  },
+  {
+    "id": "house44:chest",
+    "map": "house44",
+    "x": 152,
+    "y": 120,
+    "gold": 5
+  },
+  {
+    "id": "house44_bedroom:chest",
+    "map": "house44_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 12,
+    "item": "potion"
+  },
+  {
+    "id": "house45:chest",
+    "map": "house45",
+    "x": 96,
+    "y": 88,
+    "gold": 15
+  },
+  {
+    "id": "house45_bedroom:chest",
+    "map": "house45_bedroom",
+    "x": 160,
+    "y": 112,
+    "gold": 11,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house45_bedroom2:chest",
+    "map": "house45_bedroom2",
+    "x": 160,
+    "y": 112,
+    "gold": 7
+  },
+  {
+    "id": "house46:chest",
+    "map": "house46",
+    "x": 224,
+    "y": 120,
+    "gold": 14
+  },
+  {
+    "id": "house46_bedroom:chest",
+    "map": "house46_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 10,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house47:chest",
+    "map": "house47",
+    "x": 208,
+    "y": 120,
+    "gold": 13
+  },
+  {
+    "id": "house47_bedroom:chest",
+    "map": "house47_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 9,
+    "item": "potion"
+  },
+  {
+    "id": "house48:chest",
+    "map": "house48",
+    "x": 240,
+    "y": 120,
+    "gold": 12
+  },
+  {
+    "id": "house48_bedroom:chest",
+    "map": "house48_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 8,
+    "item": "potion"
+  },
+  {
+    "id": "house48_bedroom2:chest",
+    "map": "house48_bedroom2",
+    "x": 160,
+    "y": 104,
+    "gold": 15
+  },
+  {
+    "id": "house49:chest",
+    "map": "house49",
+    "x": 224,
+    "y": 120,
+    "gold": 11
+  },
+  {
+    "id": "house49_bedroom:chest",
+    "map": "house49_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 7,
+    "item": "boarMeat"
+  },
+  {
+    "id": "house50:chest",
+    "map": "house50",
+    "x": 208,
+    "y": 120,
+    "gold": 10
+  },
+  {
+    "id": "house50_bedroom:chest",
+    "map": "house50_bedroom",
+    "x": 160,
+    "y": 104,
+    "gold": 6,
+    "item": "dragonFish"
+  },
+  {
+    "id": "house51:chest",
+    "map": "house51",
+    "x": 240,
+    "y": 128,
+    "gold": 9
+  },
+  {
+    "id": "house52:chest",
+    "map": "house52",
+    "x": 52,
+    "y": 112,
+    "gold": 8
+  }
+]

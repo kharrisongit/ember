@@ -1426,6 +1426,7 @@ function cropForegroundMask(data,w,h){
 }
 async function buildHouseFurnitureLayers(){
   await prepareMillwoodInteriors();
+  await prepareHouseLoot();
 }
 /* === end household furniture layering === */
 
@@ -3616,6 +3617,7 @@ function drawWorld(t, dt) {
         }
       }
       if(Number.isInteger(o.templeMachine))fr=MD.templeMachines[o.templeMachine].type==='cannon'?MD.templeMachines[o.templeMachine].frame:Math.min(2,MD.templeMachines[o.templeMachine].frame);
+      if(o.houseLoot)fr=houseLootFrame(o);
       if(o.spr==='scientist_skull')fr=Math.floor(t*5)%sp[4];
       if(o.templeSpike)fr=templeSpikeFrame(o.templeSpike,o.trapRow);
       if(o.templeLever){const h=MD.templeTraps.find(h=>h.id===o.templeLever);fr=Math.min(4,Math.floor((h.leverOpen||0)*5));}
@@ -10389,6 +10391,7 @@ function interact() {
   }
   if (!sayNpc && interactTrialPedestal()) return;
   if (ferryTry()) return;
+  if (!sayNpc && tryHouseLootChest()) return;
   if (tryTreasuryChest()) return;
   if (tryTempleLever()) return;
   if (tryCellarSupplies()) return;
