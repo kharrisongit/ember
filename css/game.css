@@ -838,3 +838,12 @@
     transform:none!important;
   }
 }
+
+/* Compact party HUD slightly and nudge only it down 1px. */
+#deckHealth{
+  top:calc(100% - var(--deck) + 17px)!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+  gap:3px!important;
+}
+.deckHpRow{gap:6px!important}
