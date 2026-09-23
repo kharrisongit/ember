@@ -4226,7 +4226,7 @@ function stepPlayer(dt) {
   }
 }
 
-atlasImg.onload = () => {
+atlasImg.onload = async () => {
   if (!W) {
     try { BOOT.step(12, "unpacking the world"); } catch (e) {}
     inflateWorld().then(() => atlasImg.onload())
@@ -4240,7 +4240,7 @@ atlasImg.onload = () => {
     try { buildSkinTones(); step("skin tones built"); }
     catch (e) { step("skin tones failed: " + e); }
     step("world inflated, " + W.names.length + " names");
-    try { buildHouseFurnitureLayers(); step("furniture layers " + (window.__houseFurnitureCount||0)); } catch(e) { step("furniture layers failed: " + e); }
+    try { await buildHouseFurnitureLayers(); step("furniture layers " + (window.__houseFurnitureCount||0)); } catch(e) { step("furniture layers failed: " + e); }
     resize();            step("resize ok, canvas " + cv.width + "x" + cv.height);
     if (!cv.width || !cv.height) {
       let tries = 0;

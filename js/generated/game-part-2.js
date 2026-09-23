@@ -1413,13 +1413,8 @@ function cropForegroundMask(data,w,h){
   const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
   return fg;
 }
-function buildHouseFurnitureLayers(){
-  /* Clean slate on reload */
-  for(const m of Object.values(W.maps||{})){
-    if(m.roomActors) m.roomActors = m.roomActors.filter(a=>!a.interiorFurniture);
-    m._layeredFurniture = false;
-    m._roomBaseCanvas = null;
-  }
+async function buildHouseFurnitureLayers(){
+  await prepareMillwoodInteriors();
 }
 /* === end household furniture layering === */
 
