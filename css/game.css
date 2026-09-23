@@ -808,3 +808,33 @@
     transform:none!important;
   }
 }
+
+/* Exact shared top anchor for party HUD and right action tiles. */
+#deckHealth{
+  position:fixed!important;
+  top:calc(100% - var(--deck) + 16px)!important;
+  bottom:auto!important;
+  left:8px!important;
+  transform:none!important;
+}
+#actionStack{
+  position:fixed!important;
+  top:calc(100% - var(--deck) + 16px)!important;
+  bottom:auto!important;
+  right:12px!important;
+  transform:none!important;
+}
+@media(max-width:430px){
+  #deckHealth{
+    top:calc(100% - var(--deck) + 16px)!important;
+    bottom:auto!important;
+    left:8px!important;
+    transform:none!important;
+  }
+  #actionStack{
+    top:calc(100% - var(--deck) + 16px)!important;
+    bottom:auto!important;
+    right:12px!important;
+    transform:none!important;
+  }
+}
