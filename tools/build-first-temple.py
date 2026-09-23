@@ -56,12 +56,20 @@ for id,m in layout.items():
   if (x+16,y) not in floor:stamp_wall(im,east,(x+16,y),floor_edge=True)
  for x,y,tile in pillars:
   # A cap belongs only on the upper edge of a wall. At stepped junctions
-  # another face already rises above this endpoint: continue the column.
+  # another face already rises above this endpoint: omit the extra column.
   joins_higher_face=any(l-16<=x<r+16 and bottom-46<y<=bottom+2 for l,r,bottom in wall_ends)
-  if joins_higher_face:
-   side=west if tile is left_pillar else east
-   tile=Image.new('RGBA',(16,48))
-   for yy in range(0,48,16):tile.alpha_composite(side,(0,yy))
+  if joins_higher_face:continue
+  # End columns only cover the exposed silhouette. At an inside junction the
+  # adjoining face supplies the masonry; a column here would leave stray stubs.
+  tile=tile.copy()
+  for py in range(48):
+   for px in range(16):
+    # On an end column this apron faces stone, not floor. Continue the
+    # adjoining face into it so no black slit separates column from wall.
+    if tile.getpixel((px,py)) in APRON and py<46:
+     tile.putpixel((px,py),north.getpixel((px,py)))
+    if any(l<=x+px<r and bottom-46<=y+py<bottom for l,r,bottom in wall_ends):
+     tile.putpixel((px,py),(0,0,0,0))
   stamp_wall(im,tile,(x,y))
  # The source's last two rows are floor padding, not stone. End the side
  # columns on that same baseline. Continue masonry where another wall joins.
@@ -71,12 +79,17 @@ for id,m in layout.items():
     if not (0<=px<w and 0<=py<h):continue
     if (px//16*16,(bottom+2)//16*16) in floor:
      im.putpixel((px,py),(102,94,85,255))
-    elif any(ol-16<=px<orr+16 and ob-46<=py<ob for ol,orr,ob in wall_ends if ob!=bottom):
+    elif any(ol<=px<orr and ob-46<=py<ob for ol,orr,ob in wall_ends if ob!=bottom):
      im.putpixel((px,py),north.getpixel((px%16,30+py-bottom)))
     elif (px//16*16,py//16*16) not in floor:
      # Do not cut a side wall that continues along an adjacent walkable tile.
-     adjacent=any((px//16*16+dx,(bottom+2)//16*16) in floor for dx in [-16,16]) or any(ol-16<=px<orr+16 and ob-46<=bottom+2<ob for ol,orr,ob in wall_ends if ob!=bottom)
+     adjacent=any((px//16*16+dx,(bottom+2)//16*16) in floor for dx in [-16,16]) or any(ol<=px<orr and ob-46<=bottom+2<ob for ol,orr,ob in wall_ends if ob!=bottom)
      if not adjacent:im.putpixel((px,py),(25,23,28,255))
+     else:
+      cx,cy=px//16*16,(bottom+2)//16*16
+      side=west if (cx+16,cy) in floor else east if (cx-16,cy) in floor else north
+      p=side.getpixel((px%16,14+py-bottom if side is not north else 30+py-bottom))
+      if p not in VOID:im.putpixel((px,py),p)
  # A single floor mask prevents doubled seams or walls crossing a junction.
  for x,y in floor:im.paste((102,94,85,255),(x,y,x+16,y+16))
  # Keep floor-colored crop padding only where it actually borders floor.
@@ -96,8 +109,7 @@ for id,m in layout.items():
   for x in [l-4,r]:
    im.alpha_composite(north.crop((0,0,4,46)),(x,b-48))
  for x,y in sorted(floor):
-  hazard=m.get('hazard')
-  if hazard and min(hazard['columns'])-24<=x<=max(hazard['columns'])+24 and hazard['top']-16<=y<=hazard['bottom']:continue
+  if any(min(h['lines'])-24<=(x if h['axis']=='x' else y)<=max(h['lines'])+24 and h['cross'][0]-16<=(y if h['axis']=='x' else x)<=h['cross'][1] for h in m.get('hazards',[])):continue
   treasures=[c[:2] for c in m['chests']]+([m['heartstone']] if 'heartstone' in m else [])
   if any(abs(x-cx)<32 and abs(y-cy)<32 for cx,cy in treasures):continue
   if (x*13+y*7)%704==0 and all((x+dx,y+dy) in floor for dx,dy in [(16,0),(0,16),(-16,0)]):

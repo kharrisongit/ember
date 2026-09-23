@@ -42,7 +42,6 @@ function tryHouseLootChest(){
     .sort((a,b)=>Math.hypot(P.x-a.x,P.y-a.y)-Math.hypot(P.x-b.x,P.y-b.y))[0];
   if(!actor)return false;
   const loot=actor.houseLoot;
-  if(loot.templeReward&&foes.some(f=>f.st!=='dead'&&!f.ally&&Math.hypot(f.x-actor.x,f.y-actor.y)<220)){toast('Defeat the nearby guardians to claim this treasure.');return true;}
   if(houseLootTaken.has(loot.id)){toast('This chest is empty.');return true;}
   // Claim and grant together before saving, so repeat input cannot duplicate loot.
   houseLootTaken.add(loot.id);

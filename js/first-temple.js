@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple6-ornaments');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple7-traps');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple6-ornaments';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple7-traps';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -29,7 +29,7 @@ async function prepareExpandedFirstTemple(){
     for(const [l,t,r,b] of plan.chambers){
       if(plan.entranceDecor && t===plan.entranceDecor.wallY)continue;
       for(const x of [l+32,r-32])m.roomActors.push({spr:'first_temple_torch',x,y:t+4,schoolArt:true});
-      if(!plan.floors.some(([fl,ft,fr,fb])=>(l+r)/2>=fl&&(l+r)/2<fr&&t-16>=ft&&t-16<fb)&&!plan.doors.some(d=>d.dir==='u'&&d.y===t&&Math.abs(d.x-(l+r)/2)<48))m.roomActors.push({spr:'first_temple_dragon_head',x:(l+r)/2,y:t-8,schoolArt:true,stillFrame:0});
+      if(!(plan.statue&&plan.statue[1]>=t&&plan.statue[1]<b)&&!plan.floors.some(([fl,ft,fr,fb])=>(l+r)/2+16>fl&&(l+r)/2-16<fr&&t-16>=ft&&t-16<fb)&&!plan.doors.some(d=>d.dir==='u'&&d.y===t&&Math.abs(d.x-(l+r)/2)<48))m.roomActors.push({spr:'first_temple_dragon_head',x:(l+r)/2,y:t-8,schoolArt:true,stillFrame:0});
     }
     for(const [i,[x,y,gold]] of plan.chests.entries()){
       const block=m.roomBlocks.push([x-14,y-10,x+14,y])-1;
@@ -55,12 +55,22 @@ async function prepareExpandedFirstTemple(){
     }
   }
   const chest=CHESTS.find(c=>c.gift==='lightning');Object.assign(chest,{map:'tp1_sanctum',x:(sp.heartstone[0]-8)/16,y:(sp.heartstone[1]-16)/16});
+  const [sx,sy]=sp.statue;
+  sanctum.roomActors.push({spr:'temple73_fire_statue',x:sx,y:sy,schoolArt:true,
+    moveBlocks:[sanctum.roomBlocks.push([sx-16,sy-18,sx+16,sy])-1]});
   if(chestOpen.tp1||chestOpen.tp4||breathHas.lightning)chestOpen.tp1_sanctum=true;
-  // A short horizontal spike crossing preserves the original temple's timing challenge.
-  const halls=W.maps.tp1_halls;
-  const hazard=halls.templePlan.hazard;
-  for(const x of hazard.columns)for(let y=hazard.top+8;y<hazard.bottom;y+=16)halls.roomActors.push({spr:'temple71_spikes',x,y,sy:-100,schoolArt:true,expandedSpike:x});
-  halls.roomActors.push({spr:'temple71_lever',x:hazard.lever[0],y:hazard.lever[1],schoolArt:true,expandedLever:true});
+  for(const id of Object.keys(layout)){
+    const map=W.maps[id];
+    for(const h of map.templePlan.hazards||[]){
+      h.lines.forEach((line,i)=>{
+        for(let cross=h.cross[0]+8;cross<h.cross[1];cross+=16){
+          const [x,y]=h.axis==='x'?[line,cross]:[cross,line];
+          map.roomActors.push({spr:'temple71_spikes',x,y,sy:-100,schoolArt:true,expandedSpike:{id:h.id,phase:i*.55}});
+        }
+      });
+      map.roomActors.push({spr:'temple71_lever',x:h.lever[0],y:h.lever[1],schoolArt:true,expandedLever:h.id});
+    }
+  }
 }
 function expandedSanctumCleared(){
   return foesHeld||breathHas.lightning||W.maps.tp1_sanctum.foes.every((_,i)=>bossGone['tp1_sanctum:'+i]);
@@ -71,9 +81,10 @@ function expandedTempleSolid(x,y){
   const gate=MD.templePlan.gate;
   return !!gate&&MD.templeGateOpen<.99&&x>=gate[0]&&x<gate[2]&&y>=gate[1]&&y<gate[3];
 }
-function expandedSpikeFrame(x){
-  if(foesHeld||bossGone['tp1_halls:spikes'])return 0;
-  const phase=(tAcc+x/160)%4.8;
+function expandedTrapDisabled(id){return foesHeld||bossGone[MAPID+':spikes:'+id]||(MAPID==='tp1_halls'&&bossGone['tp1_halls:spikes']);}
+function expandedSpikeFrame(trap){
+  if(expandedTrapDisabled(trap.id))return 0;
+  const phase=(tAcc+trap.phase)%4.8;
   return phase<2?0:phase<2.45?1:phase<2.65?2:phase<3.85?3:phase<4.1?4:5;
 }
 function stepExpandedTemple(dt){
@@ -84,12 +95,14 @@ function stepExpandedTemple(dt){
     const [l,t,r,b]=f.expandedRoom;
     f.x=Math.max(l+24,Math.min(r-24,f.x));f.y=Math.max(t+36,Math.min(b-24,f.y));
   }
-  const h=MD.templePlan.hazard;
-  if(h&&!sceneHold()&&!fadeDir)for(const x of h.columns)
-    if(expandedSpikeFrame(x)===3&&Math.abs(P.x-x)<10&&P.y>h.top&&P.y<h.bottom)hurtPlayer(1);
+  if(!sceneHold()&&!fadeDir)for(const h of MD.templePlan.hazards||[])
+    h.lines.forEach((line,i)=>{
+      const along=h.axis==='x'?P.x:P.y,cross=h.axis==='x'?P.y:P.x;
+      if(expandedSpikeFrame({id:h.id,phase:i*.55})===3&&Math.abs(along-line)<10&&cross>h.cross[0]&&cross<h.cross[1])hurtPlayer(1);
+    });
 }
 function tryExpandedTempleLever(){
-  const h=MD?.templePlan?.hazard;
-  if(!h||Math.hypot(P.x-h.lever[0],P.y-h.lever[1])>28)return false;
-  bossGone['tp1_halls:spikes']=true;saveGame();toast('The gallery spikes settle into the floor.');return true;
+  const h=MD?.templePlan?.hazards?.find(h=>Math.hypot(P.x-h.lever[0],P.y-h.lever[1])<=28);
+  if(!h)return false;
+  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast('The hall spikes settle into the floor.');return true;
 }

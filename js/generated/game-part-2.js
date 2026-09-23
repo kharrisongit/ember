@@ -3622,7 +3622,7 @@ function drawWorld(t, dt) {
       if(o.houseLoot)fr=houseLootFrame(o);
       if(o.expandedGate)fr=Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
       if(o.expandedSpike)fr=expandedSpikeFrame(o.expandedSpike);
-      if(o.expandedLever)fr=bossGone['tp1_halls:spikes']?sp[4]-1:0;
+      if(o.expandedLever)fr=expandedTrapDisabled(o.expandedLever)?sp[4]-1:0;
       if(o.spr==='scientist_skull')fr=Math.floor(t*5)%sp[4];
       if(o.templeSpike)fr=templeSpikeFrame(o.templeSpike,o.trapRow);
       if(o.templeLever){const h=MD.templeTraps.find(h=>h.id===o.templeLever);fr=Math.min(4,Math.floor((h.leverOpen||0)*5));}

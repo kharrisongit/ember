@@ -51,3 +51,27 @@ c.MD=W.maps.tp1_crypt;c.MAPID='tp1_crypt';run('spawnFoes()');assert.equal(c.foes
 assert(c.foes.every(f=>f.expandedRoom));run('markBossGone(foes[0]);spawnFoes()');assert.equal(c.foes.length,2);
 assert(c.foes.every(f=>f.idx!==0));
 console.log('PASS: actual encounter spawn/death hooks preserve cleared ghosts between room visits.');
+// Only the final guardian chamber contains golems; the restored statue animates.
+for(const [id,m] of Object.entries(plan))if(id!=='tp1_sanctum')assert(m.enemies.every(f=>!f[0].startsWith('golem')));
+const effigy=sanctum.roomActors.find(a=>a.spr==='temple73_fire_statue');assert(effigy);assert.equal(effigy.stillFrame,undefined);
+assert.equal(effigy.x,plan.tp1_sanctum.heartstone[0]);assert.equal(plan.tp1_sanctum.heartstone[1]-effigy.y,16);
+const asset=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"temple73_fire_statue"[^\n]*?\}/)[0]);assert.equal(asset.frames,6);
+let halls=0,hits=0;c.hurtPlayer=()=>hits++;c.foes=[];c.foesHeld=false;
+for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards||[]){
+ halls++;c.MD=m;c.MAPID=id;c.tAcc=2.8;
+ assert(h.lines.at(-1)-h.lines[0]>=320,'long trap crossing');
+ for(const a of m.roomActors.filter(a=>a.expandedSpike?.id===h.id))assert(inside(m,a.x,a.y),'trap within hall');
+ c.P=h.axis==='x'?{x:h.lines[0],y:(h.cross[0]+h.cross[1])/2}:{x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};
+ const before=hits;run('stepExpandedTemple(0)');assert.equal(hits,before+1,'active spikes hurt in both orientations');
+ const pos=c.P;c.P={x:h.lever[0],y:h.lever[1]};assert(run('tryExpandedTempleLever()'));
+ c.P=pos;run('stepExpandedTemple(0)');assert.equal(hits,before+1,'lever disables its hall');
+ assert(c.bossGone[id+':spikes:'+h.id]);
+}
+assert.equal(halls,4);
+// A living enemy beside a treasure chest must not prevent claiming or duplicate rewards.
+Object.assign(c,{performance:{now:()=>0},gold:0,potions:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){}});
+vm.runInContext(read('js/house-loot.js'),c);c.MD=W.maps.tp1;c.MAPID='tp1';
+const loot=c.MD.roomActors.find(a=>a.houseLoot);c.P={x:loot.x,y:loot.y+24};c.foes=[{x:loot.x,y:loot.y,st:'idle',ally:false}];
+assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
+assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
+console.log('PASS: golems only at the heartstone entrance, animated statue and foot chest, four long trap halls with independent levers, and loot accessible beside living enemies.');
