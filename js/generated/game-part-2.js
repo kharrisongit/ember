@@ -10324,51 +10324,6 @@ function fishingRegion(){
   const tier=[700,1300,1900,2500,3100].filter(edge=>x>=edge).length;
   return {tier:tier+1,reward:tier+1,speed:2.4+tier*.36,halfWidth:.40-tier*.035};
 }
-function startFishing(){
-  if(!fishingPole||!waterInReach()||!fishingSafe()){endFishing();return;}
-  endFishing();
-  fishing={phase:'spin',angle:-Math.PI/2,target:Math.random()*FISH_TAU,...fishingRegion(),
-    elapsed:0,resultAge:0,caught:false};
-}
-function stepFishing(dt){
-  if(!fishing)return;
-  if(fishing.phase==='spin'){
-    fishing.elapsed+=dt;fishing.angle=(fishing.angle+dt*fishing.speed)%FISH_TAU;
-  }else if(fishing.phase==='result')fishing.resultAge+=dt;
-}
-function fishingAction(){
-  const f=fishing;if(!f)return;
-  if(f.phase==='spin'){
-    if(f.elapsed<0.3)return; // Ignore the cast's trailing touch/mouse event.
-    const gap=Math.abs(Math.atan2(Math.sin(f.angle-f.target),Math.cos(f.angle-f.target)));
-    f.caught=gap<=f.halfWidth;f.phase='result';f.resultAge=0;
-    if(f.caught)dragonFish+=f.reward;
-  }else if(f.phase==='result'&&f.resultAge>=0.45)startFishing();
-}
-function drawFishing(){
-  const f=fishing;if(!f||f.phase==='prompt')return;
-  const w=Math.min(VW-24,340),h=Math.min(VH-24,340),x=(VW-w)/2,y=Math.max(12,(VH-h)/2-20);
-  const cx=x+w/2,cy=y+h*0.48,r=Math.min(w*0.26,h*0.25);
-  ctx.save();ctx.fillStyle='rgba(8,19,24,.66)';ctx.fillRect(0,0,VW,VH);
-  ctx.fillStyle='#102f36';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#d6bf82';ctx.lineWidth=2;ctx.strokeRect(x+1,y+1,w-2,h-2);
-  ctx.textAlign='center';ctx.fillStyle='#f5e7c5';ctx.font='bold 19px Georgia';ctx.fillText('CAST A LINE',cx,y+30);
-  ctx.font='12px sans-serif';ctx.fillStyle='#c4ddd6';ctx.fillText('Stop the marker inside the green arc',cx,y+52);
-  ctx.lineWidth=14;ctx.strokeStyle='#36555c';ctx.beginPath();ctx.arc(cx,cy,r,0,FISH_TAU);ctx.stroke();
-  ctx.strokeStyle='#8dde91';ctx.beginPath();ctx.arc(cx,cy,r,f.target-f.halfWidth,f.target+f.halfWidth);ctx.stroke();
-  // Gold end marks make the target readable without relying on color alone.
-  ctx.strokeStyle='#fff2ad';ctx.lineWidth=2;
-  for(const a of [f.target-f.halfWidth,f.target+f.halfWidth]){ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*(r-11),cy+Math.sin(a)*(r-11));ctx.lineTo(cx+Math.cos(a)*(r+11),cy+Math.sin(a)*(r+11));ctx.stroke();}
-  const ax=Math.cos(f.angle),ay=Math.sin(f.angle);
-  ctx.strokeStyle='#fff6dc';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+ax*r,cy+ay*r);ctx.stroke();
-  ctx.fillStyle='#fff6dc';ctx.beginPath();ctx.arc(cx+ax*r,cy+ay*r,6,0,FISH_TAU);ctx.fill();
-  ctx.beginPath();ctx.arc(cx,cy,5,0,FISH_TAU);ctx.fill();
-  ctx.font='bold 16px sans-serif';ctx.fillStyle=f.phase==='result'&&f.caught?'#a2edac':'#fff0cb';
-  ctx.fillText(f.phase==='spin'?'A  ·  REEL IN':f.caught?'FISH CAUGHT!  +'+f.reward:'It slipped away!',cx,y+h-66);
-  ctx.font='12px sans-serif';ctx.fillStyle='#c4ddd6';
-  ctx.fillText(f.phase==='result'?(f.caught?'Each fish restores '+DRAGON_FISH_HEAL+' dragon HP.':'Try stopping the marker between the gold marks.'):'Difficulty '+f.tier+'  ·  Catch '+f.reward+' fish',cx,y+h-44);
-  ctx.fillText(f.phase==='result'?'A / Space: cast again  ·  B / Esc: leave':'B / Esc: cancel  ·  Space also reels in',cx,y+h-23);
-  ctx.restore();
-}
 function interact() {
   if(fishing){if(fishing.phase==='prompt')askTake();else fishingAction();return;}
   if (!sayNpc && glassHatchNear(P.x,P.y)) {
