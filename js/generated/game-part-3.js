@@ -5242,27 +5242,10 @@ function bootBind() {
 }
 
 const MENUS = {
-  menu: { rows: "menuRows", desc: "menuDesc", pick: 0, items: () => [
-    { name: "Map", tell: "Explore Emberfell. Use the D-pad to select a location.", go: () => openAtlas("menu") },
-    { name: "Save",        tell: "Save to a new slot or overwrite an existing save.", go: () => setOvl("savePrompt") },
-    { name: "Load",        tell: "Choose which save to load.", go: () => setOvl("loadSlots") },
-    { name: "Manage saves", tell: "Review or delete existing save slots.", go: () => setOvl("manageSaves") },
-    { name: () => "Music: " + ((window.EmberAudio && window.EmberAudio.percent()) ?? 35) + "%",
-      tell: "Turn the background music off or choose its volume.", go: () => setOvl("sound") },
-  ].concat(trial ? [
-    { name: "End trial", tell: "Abandon this run. You can start again at the entrance.", go: () => { setOvl(null); stopTrial(); } }
-  ] : []).concat(devUnlocked ? [
-    { name: "Back to Corin", tell: "Recentre the view on the character.",
-      go: () => { recentreOnCorin(); setOvl(null);
-                  devUnlocked = false; } },
-    { name: "Dev tools",   tell: "Map and cast editing.",         go: () => { setOvl(null); setDev(!devOpen); } },
-  ] : []).concat([
-    { name: "Full screen", tell: "Fill the screen.", go: () => { setOvl(null); toggleBig(); } },
-  ]) },
   savePrompt: { rows: "savePromptRows", desc: "savePromptDesc", pick: 0, items: () => [
     { name: "Overwrite existing save", tell: "Choose an existing save slot to overwrite.", go: () => setOvl("saveSlots") },
-    { name: "Create new save", tell: "Use the first empty save slot.", go: () => { const slot=firstEmptySaveSlot(); if(!slot){toast("all save slots are full — overwrite one instead");setOvl("saveSlots");return;} saveToSlot(slot); setOvl("menu"); } },
-    { name: "Back", tell: "Return without saving.", go: () => setOvl("menu") }
+    { name: "Create new save", tell: "Use the first empty save slot.", go: () => { const slot=firstEmptySaveSlot(); if(!slot){toast("all save slots are full — overwrite one instead");setOvl("saveSlots");return;} saveToSlot(slot); setOvl(null); } },
+    { name: "Back", tell: "Close the save menu.", go: () => setOvl(null) }
   ] },
   saveSlots: { rows: "saveSlotRows", desc: "saveSlotDesc", pick: 0, items: () => saveSlotItems("overwrite") },
   loadSlots: { rows: "loadSlotRows", desc: "loadSlotDesc", pick: 0, items: () => saveSlotItems("load") },
@@ -5273,7 +5256,7 @@ const MENUS = {
       tell: v === 0 ? "Mute the background music." : "Set background music volume to " + v + "%.",
       go: () => { if (window.EmberAudio) window.EmberAudio.set(v); refreshOvl(); }
     })),
-    { name: "Back", tell: "Return to the main menu.", go: () => setOvl("menu") }
+    { name: "Back", tell: "Close sound settings.", go: () => setOvl(null) }
   ] },
   atkm: { rows: "atkRows", desc: "atkDesc", pick: 0, items: () => ATTACKS.filter(a=>breathHas[EL_BREATH[a.el]]) },
   itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
@@ -5454,7 +5437,6 @@ function ovlTake() {
   const M = MENUS[ovl], items = M.items();
   if (items[M.pick] && items[M.pick].go) items[M.pick].go();
 }
-bindHold("btnStart", () => {if(atlasOpen)closeAtlas();else setOvl(ovl === "menu" ? null : "menu");}, null);
 const atkCloseBtn=document.getElementById("atkCloseBtn");
 if(atkCloseBtn)atkCloseBtn.addEventListener("pointerup",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
 const airCloseBtn=document.getElementById("airCloseBtn");
@@ -5546,7 +5528,7 @@ function saveSlotItems(mode){
   for(let slot=1;slot<=SAVE_SLOT_COUNT;slot++){
     const data=readSaveSlot(slot), label=saveSummary(slot);
     if(mode==="overwrite"){
-      if(data)items.push({name:label,tell:"Overwrite this save with Corin's current progress.",go:()=>{saveToSlot(slot);setOvl("menu");}});
+      if(data)items.push({name:label,tell:"Overwrite this save with Corin's current progress.",go:()=>{saveToSlot(slot);setOvl(null);}});
     }else if(mode==="load"){
       items.push({name:label,tell:data?"Load this save.":"This slot is empty.",dim:()=>!readSaveSlot(slot),go:()=>{if(loadGame(slot))setOvl(null);}});
     }else{
@@ -5554,7 +5536,7 @@ function saveSlotItems(mode){
     }
   }
   if(mode==="overwrite"&&!items.length)items.push({name:"No saves to overwrite",tell:"Create a new save first.",dim:()=>true});
-  items.push({name:"Back",tell:"Return to the main menu.",go:()=>setOvl(mode==="overwrite"?"savePrompt":"menu")});
+  items.push({name:"Back",tell:mode==="overwrite"?"Return to save options.":"Close this menu.",go:()=>setOvl(mode==="overwrite"?"savePrompt":null)});
   return items;
 }
 function loadGame(slot=activeSaveSlot) {
@@ -5694,7 +5676,7 @@ setInterval(() => {
   if (t - bothHeldSince >= 3000) {
     devUnlocked = true; bothHeldSince = -1;
     toast("dev unlocked -- map panning and zoom are live");
-    if (ovl === "menu") refreshOvl();
+    
   }
 }, 120);
 
