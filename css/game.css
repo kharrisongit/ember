@@ -1012,3 +1012,52 @@
  #atkm .row:nth-child(5){left:62%!important;top:64%!important;transform:translate(-50%,0)!important}
  #atkm .row.on:nth-child(1),#atkm .row.on:nth-child(2),#atkm .row.on:nth-child(3),#atkm .row.on:nth-child(4),#atkm .row.on:nth-child(5){transform:translate(-50%,0) scale(1.07)!important}
 }
+
+/* Breath layout hard reset: center a fixed 3x2 orb grid in the full deck.
+   This overrides all earlier radial/absolute positioning rules. */
+#atkm .rows{
+  position:absolute!important;
+  left:50%!important;
+  top:52px!important;
+  transform:translateX(-50%)!important;
+  width:min(92vw,390px)!important;
+  height:calc(100% - 62px)!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,72px)!important;
+  grid-template-rows:repeat(2,72px)!important;
+  justify-content:center!important;
+  align-content:center!important;
+  column-gap:34px!important;
+  row-gap:22px!important;
+  overflow:hidden!important;
+  padding:0!important;
+}
+#atkm .row,
+#atkm .row:nth-child(1),
+#atkm .row:nth-child(2),
+#atkm .row:nth-child(3),
+#atkm .row:nth-child(4),
+#atkm .row:nth-child(5){
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  width:72px!important;
+  height:72px!important;
+  margin:0!important;
+  transform:none!important;
+}
+#atkm .row.on,
+#atkm .row.on:nth-child(1),
+#atkm .row.on:nth-child(2),
+#atkm .row.on:nth-child(3),
+#atkm .row.on:nth-child(4),
+#atkm .row.on:nth-child(5){transform:scale(1.07)!important}
+#atkm .row:nth-child(4){grid-column:1 / 2!important;margin-left:53px!important}
+#atkm .row:nth-child(5){grid-column:3 / 4!important;margin-left:-53px!important}
+@media(max-width:430px){
+ #atkm .rows{width:94vw!important;grid-template-columns:repeat(3,66px)!important;grid-template-rows:repeat(2,66px)!important;column-gap:25px!important;row-gap:18px!important}
+ #atkm .row,#atkm .row:nth-child(1),#atkm .row:nth-child(2),#atkm .row:nth-child(3),#atkm .row:nth-child(4),#atkm .row:nth-child(5){width:66px!important;height:66px!important;left:auto!important;top:auto!important;transform:none!important}
+ #atkm .row.on,#atkm .row.on:nth-child(1),#atkm .row.on:nth-child(2),#atkm .row.on:nth-child(3),#atkm .row.on:nth-child(4),#atkm .row.on:nth-child(5){transform:scale(1.07)!important}
+ #atkm .row:nth-child(4){margin-left:45px!important}
+ #atkm .row:nth-child(5){margin-left:-45px!important}
+}
