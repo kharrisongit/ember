@@ -861,3 +861,9 @@
 /* Raise right action tiles only; keep health HUD and main controls fixed. */
 #actionStack{top:calc(100% - var(--deck) + 7px)!important}
 @media(max-width:430px){#actionStack{top:calc(100% - var(--deck) + 7px)!important}}
+
+/* Trim unused space below Dragon hearts without changing content sizes. */
+#deckHealth{
+  padding-bottom:2px!important;
+  gap:2px!important;
+}
