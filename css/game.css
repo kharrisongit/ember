@@ -880,3 +880,7 @@
   #deckHealth{top:calc(100% - var(--deck) + 27px)!important}
   #actionStack{top:calc(100% - var(--deck) + 27px)!important}
 }
+
+/* Screenshot alignment: raise only the 2x2 action tiles to health-box top. */
+#actionStack{top:calc(100% - var(--deck) + 17px)!important}
+@media(max-width:430px){#actionStack{top:calc(100% - var(--deck) + 17px)!important}}
