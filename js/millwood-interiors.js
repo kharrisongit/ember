@@ -1,11 +1,11 @@
 /* Authored source crops, never inferred from collision rectangles at runtime. */
 async function prepareMillwoodInteriors() {
   const root = 'assets/interiors/millwood/';
-  const response = await fetch(root + 'layouts.json?v=20260923-millwood1');
+  const response = await fetch(root + 'layouts.json?v=20260923-millwood2');
   if (!response.ok) throw new Error('Millwood layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-millwood1';
+  sheet.src = root + 'layers.png?v=20260923-millwood2';
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
@@ -27,7 +27,7 @@ async function prepareMillwoodInteriors() {
       n:o.name.replace(/^pack_/, 'Furniture ').replaceAll('-', ' '),
       editKey:'millwood:'+id+':'+index,
       x:o.x+o.w/2, y:o.y+o.h,
-      sy:o.flat?-1000:o.y+o.h,
+      sy:o.flat?-1000:(o.sortY??o.y+o.h),
       extractedCanvas:cut(o.rect), interiorFurniture:true, exactFurniture:true,
       moveBlocks:[], flatFurniture:o.flat, sourceRect:[o.x,o.y,o.w,o.h]
     }));
