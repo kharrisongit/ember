@@ -63,7 +63,8 @@ print('PASS: heartstone south wall has no projecting floor; gate jambs meet both
 entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
 cap=entry.crop((84,20,92,28)).tobytes()
 assert entry.getpixel((88,24)) not in void|{(102,94,85,255)},'cap reference contains masonry'
-passages=0
+face=entry.crop((96,16,112,62)).tobytes()
+passages=0;hall_joins=0
 for id,m in plans.items():
  im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA')
  for p in m.get('passages',[]):
@@ -72,5 +73,13 @@ for id,m in plans.items():
    for py in range(b-48,b-2):
     assert im.getpixel((px,py)) not in void|{(102,94,85,255)},(id,'doorway jamb gap',px,py)
   for px in [x-32,x+16]:
+   assert im.crop((px,b-48,px+16,b-2)).tobytes()==face,(id,'unwanted vertical strip beside door',px,b)
    assert im.crop((px+4,b+4,px+12,b+12)).tobytes()!=cap,(id,'extra lower pillar cap',px,b)
+  if any(cb==b-48 and cl<x<cr for cl,ct,cr,cb in m['chambers']):
+   hall=next(rect for rect in m['floors'] if rect[1]==b and rect[0]<x<rect[2] and rect[3]>b)
+   hall_joins+=1
+   for px in [hall[0]-8,hall[2]+8]:
+    for py in range(b-48,b):
+     assert im.getpixel((px,py))==im.getpixel((px,b+py%16)),(id,'hall side wall stops below room south wall',px,py)
 print(f'PASS: {passages} connected doorways fit their jambs with no extra lower pillar caps.')
+print(f'PASS: {hall_joins} hall side-wall pairs extend through the full south wall; all {passages} doorways have plain masonry beside their arches.')

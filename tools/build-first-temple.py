@@ -50,6 +50,9 @@ for id,m in layout.items():
     pillars.extend([(l-16,top,left_pillar),(r,top,right_pillar)])
     wall_ends.append((l,r,top+46))
  for x,y in sorted(floor):
+  # Door openings cut through a horizontal face. The arch already supplies
+  # its own jambs, so keep ordinary face masonry beside the narrow opening.
+  if any(p['x']-16<=x<p['x']+16 and p['y']-48<=y<p['y'] for p in m.get('passages',[])):continue
   # Floor-facing aprons trim the horizontal face to the actual stone outline.
   # Preserving the face here would leave a thin strip beyond the side wall.
   if (x-16,y) not in floor:stamp_wall(im,west,(x-16,y),floor_edge=True)
@@ -102,9 +105,20 @@ for id,m in layout.items():
    side=((cx+16,cy) in floor and west.getpixel((px%16,py%16)) in APRON) or ((cx-16,cy) in floor and east.getpixel((px%16,py%16)) in APRON)
    below=any((cx,(py+dy)//16*16) in floor for dy in [1,2])
    if not side and not below:im.putpixel((px,py),(25,23,28,255))
- # The 32px gate sits inside the passage's side-stone outlines. Fill the
- # four-pixel floor aprons beside it with matching jamb masonry.
- for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else [])+[(p['x']-16,p['x']+16,p['y']) for p in m.get('passages',[])]:
+ # A hall's side columns continue up the full south face of the room above.
+ # Anchor them to the wide hall, not the narrower doorway. Mask the source
+ # crop's exterior and floor padding so these columns cannot cut wall gaps.
+ for p in m.get('passages',[]):
+  if not any(cb==p['y']-48 and cl<p['x']<cr for cl,ct,cr,cb in m['chambers']):continue
+  l,t,r,b=next(rect for rect in m['floors'] if rect[1]==p['y'] and rect[0]<p['x']<rect[2] and rect[3]>p['y'])
+  for x,tile in [(l-16,west),(r,east)]:
+   stone=tile.copy()
+   for py in range(16):
+    for px in range(16):
+     if stone.getpixel((px,py)) in VOID|APRON:stone.putpixel((px,py),(0,0,0,0))
+   for y in range(t-48,t,16):im.alpha_composite(stone,(x,y))
+ # The separate guardian gate needs a fitted jamb inside its continuous hall.
+ for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else []):
   for x in [l-4,r]:
    im.alpha_composite(north.crop((0,0,4,46)),(x,b-48))
  for x,y in sorted(floor):
@@ -112,6 +126,9 @@ for id,m in layout.items():
   treasures=[c[:2] for c in m['chests']]+([m['heartstone']] if 'heartstone' in m else [])
   if any(abs(x-cx)<32 and abs(y-cy)<32 for cx,cy in treasures):continue
   if (x*13+y*7)%704==0 and all((x+dx,y+dy) in floor for dx,dy in [(16,0),(0,16),(-16,0)]):
-   detail=asset('floor78_'+str((x//16+y//16)%9));im.alpha_composite(detail,(x,y))
+   detail=asset('floor78_'+str((x//16+y//16)%9))
+   # Some floor decorations exceed one tile; keep their full footprint off walls.
+   if all((fx,fy) in floor for fx in range(x,x+detail.width,16) for fy in range(y,y+detail.height,16)):
+    im.alpha_composite(detail,(x,y))
  im.save(ROOT/f'assets/interiors/first-temple/{id}.png')
 print('Built five compact temple interiors with original 48-pixel walls and joined corner pillars.')
