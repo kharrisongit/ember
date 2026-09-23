@@ -1,5 +1,5 @@
 """Recompose authored crops and compare every pixel with the original atlas rooms."""
-import base64, gzip, io, json, re
+import base64, gzip, io, json, re, sys
 from pathlib import Path
 from PIL import Image
 root = Path(__file__).resolve().parents[1]
@@ -7,7 +7,7 @@ source = (root / 'js/generated/game-part-1.js').read_text()
 sprites = json.loads(gzip.decompress(base64.b64decode(re.search(r'const ATLAS_GZ = "([^"]+)', source)[1])))['sprites']
 source = (root / 'assets/game-assets.js').read_text()
 pages = json.loads(re.search(r'window.EMBER_ASSETS.ATLAS_PAGES = (.*);', source)[1])
-folder = root / 'assets/interiors/millwood'
+folder = root / 'assets/interiors' / (sys.argv[1] if len(sys.argv)>1 else 'millwood')
 layouts = json.loads((folder / 'layouts.json').read_text())
 sheet = Image.open(folder / 'layers.png')
 def cut(rect):

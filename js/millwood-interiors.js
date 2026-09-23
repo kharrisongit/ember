@@ -1,11 +1,21 @@
 /* Authored source crops, never inferred from collision rectangles at runtime. */
+let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
-  const root = 'assets/interiors/millwood/';
-  const response = await fetch(root + 'layouts.json?v=20260923-millwood2');
+  if(!houseSeatedSheet){
+    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-thornwell1';
+    await image.decode();houseSeatedSheet=image;
+  }
+  await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
+  await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
+  window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+async function prepareTownHouseInteriors(town, houseIds) {
+  const root = 'assets/interiors/'+town+'/';
+  const response = await fetch(root + 'layouts.json?v=20260923-thornwell1');
   if (!response.ok) throw new Error('Millwood layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-millwood2';
+  sheet.src = root + 'layers.png?v=20260923-thornwell1';
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
@@ -16,7 +26,7 @@ async function prepareMillwoodInteriors() {
   let count=0;
   for (const [id,layout] of Object.entries(layouts)) {
     const map=W.maps[id];
-    if (!map || !/^house2[2-7](?:_bedroom2?)?$/.test(id)) continue;
+    if (!map || !houseIds.test(id)) continue;
     if (map._millwoodLayers) continue;
     map._roomBaseCanvas=cut(layout.baseRect);
     // Remove the old baked-table foreground duplicates; keep independently placed props.
@@ -25,7 +35,7 @@ async function prepareMillwoodInteriors() {
     const originalBlocks=(map.roomBlocks||[]).map(b=>b.slice());
     const furniture=layout.objects.map((o,index)=>({
       n:o.name.replace(/^pack_/, 'Furniture ').replaceAll('-', ' '),
-      editKey:'millwood:'+id+':'+index,
+      editKey:town+':'+id+':'+index,
       x:o.x+o.w/2, y:o.y+o.h,
       sy:o.flat?-1000:(o.sortY??o.y+o.h),
       extractedCanvas:cut(o.rect), interiorFurniture:true, exactFurniture:true,

@@ -693,6 +693,7 @@ function npcTalkDistance(n){
   return Math.min(Math.hypot(n.x-P.x,n.y-P.y),Math.hypot((n.talkX??n.x)-P.x,(n.talkY??n.y)-P.y));
 }
 function arrangeNpcCast(){
+  const outsideLooks=new Map(W.maps.world.npcs.map(n=>[n.n,{...n}]));
   const seatIds=[1,2,6,8,11,12,13];
   for(const i of seatIds){const s=SPR['pack_pupil_'+i];SPR['seated_body_'+i]=[s[0],s[1],s[2],s[3]-9,s[4]];}
   for(const [name,source]of [['king_seated','kg_idle_d'],['maddock_seated','maddock_smith107_idle_d']]){
@@ -779,7 +780,7 @@ function arrangeNpcCast(){
   }
   const exceptions=new Set(['world','house26','tavern','school','school2','inn','witchmoor']);
   for(const [id,m]of Object.entries(W.maps)){
-    if(exceptions.has(id))continue;
+    if(exceptions.has(id)||(!/^house\d/.test(id)&&id!=='cinderhold'))continue;
     // Remove the free-standing stools that belonged to the old character placements.
     m.roomActors=(m.roomActors||[]).filter(a=>a.spr!=='stump_stool');
     for(const [i,n]of (m.npcs||[]).entries()){
@@ -854,6 +855,17 @@ function arrangeNpcCast(){
   reserveMillwoodCast();
   finishTownCast();
   repairSeating();
+  // Generated table portraits belong indoors; keep outdoor residents standing.
+  for(const n of W.maps.world.npcs){
+    if(!n.seated&&!/^(?:seated_body_|pack_pupil_|villager_seated_)/.test(n.packSpr||''))continue;
+    const original=outsideLooks.get(n.n);
+    const originalPack=original?.packSpr;
+    const standingPack=originalPack&&!/^(?:seated_body_|pack_pupil_|villager_seated_|tavern_anim_)/.test(originalPack)?originalPack:undefined;
+    Object.assign(n,{packSpr:standingPack,packDirections:standingPack?!!original.packDirections:false,
+      packWalk:standingPack?!!original.packWalk:false,sk:standingPack?undefined:(original?.sk||'villager'),
+      body:undefined,seated:false,seatSpr:undefined,seatClipY:undefined,school:false,stationary:true,
+      patrol:undefined,goto:undefined,sy:undefined});
+  }
 }
 // Four authored poses: resting, breathing in, half blink and closed blink.
 // Long open-eye holds and a brief blink follow the native seated characters.
@@ -882,7 +894,13 @@ function finishTownCast(){
     return id;
   };
   const regionalCast = {"common":[{"key":"villager_seated_common_a6_0","sex":"female","species":"human"},{"key":"villager_seated_common_a6_1","sex":"female","species":"human"},{"key":"villager_seated_common_a6_2","sex":"female","species":"human"},{"key":"villager_seated_common_a6_3","sex":"male","species":"human"},{"key":"villager_seated_common_a6_4","sex":"male","species":"human"},{"key":"villager_seated_common_a6_5","sex":"male","species":"human"},{"key":"villager_seated_common_b6_0","sex":"female","species":"human"},{"key":"villager_seated_common_b6_1","sex":"female","species":"human"},{"key":"villager_seated_common_b6_2","sex":"female","species":"human"},{"key":"villager_seated_common_b6_3","sex":"male","species":"human"},{"key":"villager_seated_common_b6_4","sex":"male","species":"human"},{"key":"villager_seated_common_b6_5","sex":"male","species":"human"},{"key":"villager_seated_common_c6_0","sex":"female","species":"human"},{"key":"villager_seated_common_c6_1","sex":"female","species":"human"},{"key":"villager_seated_common_c6_2","sex":"male","species":"human"},{"key":"villager_seated_common_c6_3","sex":"male","species":"human"},{"key":"villager_seated_common_c6_4","sex":"male","species":"human"},{"key":"villager_seated_common_c6_5","sex":"male","species":"human"},{"key":"villager_seated_common_d6_0","sex":"female","species":"human"},{"key":"villager_seated_common_d6_1","sex":"male","species":"human"},{"key":"villager_seated_common_d6_2","sex":"male","species":"human"},{"key":"villager_seated_common_d6_3","sex":"male","species":"human"},{"key":"villager_seated_common_d6_4","sex":"male","species":"goblin"},{"key":"villager_seated_common_d6_5","sex":"male","species":"orc"}],"desert":[{"key":"villager_seated_desert_a5_0","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_1","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_2","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_3","sex":"male","species":"human"},{"key":"villager_seated_desert_a5_4","sex":"male","species":"human"},{"key":"villager_seated_desert_b4_0","sex":"female","species":"lizard"},{"key":"villager_seated_desert_b4_1","sex":"female","species":"human"},{"key":"villager_seated_desert_b4_2","sex":"male","species":"lizard"},{"key":"villager_seated_desert_b4_3","sex":"male","species":"human"}],"coast":[{"key":"villager_seated_coast_a4_0","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_1","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_2","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_3","sex":"male","species":"human"},{"key":"villager_seated_coast_b3_0","sex":"female","species":"human"},{"key":"villager_seated_coast_b3_1","sex":"female","species":"human"},{"key":"villager_seated_coast_b3_2","sex":"male","species":"human"}],"snow":[{"key":"villager_seated_snow5_0","sex":"female","species":"human"},{"key":"villager_seated_snow5_1","sex":"female","species":"human"},{"key":"villager_seated_snow5_2","sex":"female","species":"human"},{"key":"villager_seated_snow5_3","sex":"male","species":"human"},{"key":"villager_seated_snow5_4","sex":"male","species":"human"}]};
-  const counts=new Map();
+  // Keep the house residents' established portraits after removing the outdoor seats.
+  const counts=new Map([
+    ['Thornwell',new Set(['villager_seated_common_a6_0','villager_seated_common_a6_3','villager_seated_common_b6_1'])],
+    ['Forgewick',new Set(['villager_seated_common_a6_0','villager_seated_common_d6_3'])],
+    ['Coralmere',new Set(['villager_seated_coast_a4_0','villager_seated_coast_a4_3'])],
+    ['Hollybeck',new Set(['villager_seated_snow5_0'])]
+  ]);
   const women=new Set(['Ada','Della','Fara','Hester','Junia','Lysa','Dagna','Gwyneth','Petra','Suri','Una','Vela','Rania','Yara','Coral','Edda','Ilsa','Elin','Maren','Sela','Celia','Zella','Iris','Asta','Tessa','Astrid','Nerissa','Greta']);
   function seatedLook(n,id){
     const town=townOf(id,n),used=counts.get(town)||new Set();counts.set(town,used);
@@ -897,7 +915,7 @@ function finishTownCast(){
       seated:true,seatSpr:undefined,stationary:true,patrol:undefined,goto:undefined,f:'d',flip:false,sceneReserved:true});
   }
   for(const [id,m]of Object.entries(W.maps)){
-    if(['tavern','school','school2'].includes(id))continue;
+    if(!/^house\d/.test(id))continue;
     for(const n of m.npcs||[]){
       if(townOf(id,n)==='Millwood')continue;
       if(n.seated||/^pack_pupil_/.test(n.packSpr||'')||id==='inn')seatedLook(n,id);
@@ -923,21 +941,10 @@ function finishTownCast(){
     m.roomActors.push({spr:'itable0',x,y:y+30,sy:y+30,schoolArt:true,castSeat:true,sceneReserved:true});
     (m.roomBlocks ||= []).push([x-23,y+1,x+23,y+28]);
   };
-  for(const n of world.npcs){
-    if(!n.seated||n.counter)continue;
-    if(n.n==='Merrin'||n.n==='Asta'){
-      const i=n.n==='Merrin'?0:1,rect=i?[216,212,32,28]:[104,183,32,27],src=SPR.ifloor_tavern_patio;
-      const spr='patio_table_front_'+i;SPR[spr]=[src[0]+rect[0],src[1]+rect[1],rect[2],rect[3],1];
-      n.x=3728+rect[0]+16;n.y=848+rect[1]+3;n.talkX=n.x+(i?34:-34);n.talkY=n.y+14;n.sceneReserved=true;
-      world.roomActors.push({spr:'ichair1',x:n.x,y:n.y+5,sy:n.y-1,schoolArt:true,castSeat:true,sceneReserved:true});
-      world.roomActors.push({spr,x:n.x,y:848+rect[1]+rect[3],schoolArt:true,castSeat:true,sceneReserved:true});
-      (world.roomBlocks ||= []).push([n.x-16,n.y,n.x+16,848+rect[1]+rect[3]]);
-    }else tableSeat(world,n,n.x,n.y);
-  }
   // Every cropped indoor torso sits at a table's north edge. Reuse the
   // room's furniture artwork so the tabletop correctly masks the cut.
   for(const [id,m]of Object.entries(W.maps)){
-    if(['world','tavern','school','school2','house26','cinderhold','witchmoor'].includes(id))continue;
+    if(!/^house\d/.test(id)||id==='house26')continue;
     const residents=(m.npcs||[]).filter(n=>n.seated||n.seatSpr);if(!residents.length)continue;
     m.roomActors=(m.roomActors||[]).filter(a=>!a.castSeat);
     if(id==='glasshouse'||id==='inn'){
@@ -1110,6 +1117,11 @@ function repairSeating(){
   }
 }
 function drawNpcFrame(o,s,frame,img){
+  // The authored seated cast lives beyond the legacy atlas extent. Decode it as
+  // its own sheet so old atlas bounds/page caches cannot silently hide residents.
+  if(/^villager_seated_/.test(o.packSpr||'')&&houseSeatedSheet){
+    s=s.slice();s[1]-=1100000;img=houseSeatedSheet;
+  }
   // Sella's native hooded sheet has one pose per direction; breathe at fixed feet.
   if(o.n==='Sella'&&o.stationary&&s[4]===1){
     const h=s[3]-(Math.sin(performance.now()/1000*1.8)>0.65?1:0);
