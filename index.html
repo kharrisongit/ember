@@ -31,7 +31,7 @@
 <title>Emberfell</title>
 <meta name="description" content="Emberfell, a top-down pixel-art RPG.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23171310'/%3E%3Cpath d='M16 3c2 6 8 8 8 16a8 8 0 1 1-16 0c0-4 2-7 5-10 0 4 1 6 3 7-1-5 0-9 0-13Z' fill='%23e0913f'/%3E%3Cpath d='M16 15c3 3 4 5 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8Z' fill='%23f0e6d2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/game.css?v=20260923-0455">
+<link rel="stylesheet" href="css/game.css?v=20260923-0508">
 </head>
 <body>
 <div id="stage">
@@ -63,7 +63,7 @@
 <div id="menu" class="ovl"><div class="plate">
   <b>MENU</b><div class="rows" id="menuRows"></div>
   <div class="foot" id="menuDesc"></div></div></div>
-<div id="sound" class="ovl"><div id="soundPanel"><b>MUSIC</b><div id="musicTabs"><button id="musicGameTab" class="on" type="button">GAME</button><button id="musicAppleTab" type="button">APPLE MUSIC</button><button id="musicYouTubeTab" type="button">YOUTUBE MUSIC</button></div><div id="gameMusicPane"><div id="soundKnobWrap"><div id="soundKnob" role="slider" aria-label="Music volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"><i></i></div><div id="soundPct">35%</div></div><div id="soundTrack"><i></i></div><div id="soundActions"><button id="soundMute" type="button">MUTE</button><button id="soundClose" type="button">DONE</button></div><div class="foot" id="soundDesc">Drag the knob to adjust game music.</div></div><div id="appleMusicPane"><div class="musicServiceBrand">APPLE MUSIC</div><div class="musicServiceStatus" id="appleMusicStatus">Connect your Apple Music account to play your library in Emberfell.</div><button id="appleMusicConnect" class="musicConnect" type="button">CONNECT APPLE MUSIC</button><div class="serviceNow"><b id="appleTrack">Nothing playing</b><span id="appleArtist"></span></div><div class="serviceControls"><button id="applePrev" type="button">◀</button><button id="applePlay" type="button">PLAY</button><button id="appleNext" type="button">▶</button></div><button id="appleDone" class="serviceDone" type="button">DONE</button></div><div id="youtubeMusicPane"><div class="musicServiceBrand">YOUTUBE MUSIC</div><div class="musicServiceStatus" id="youtubeMusicStatus">YouTube Music account access requires a Google/YouTube authorization app. Emberfell will not ask for pasted links.</div><button id="youtubeMusicConnect" class="musicConnect" type="button">CONNECT YOUTUBE</button><div class="serviceNow"><b>Account player</b><span>Sign-in setup required</span></div><button id="youtubeMusicDone" class="serviceDone" type="button">DONE</button></div></div></div><div class="rows" id="soundRows"></div></div>
+<div id="sound" class="ovl"><div id="soundPanel"><b>SOUND</b><div id="soundKnobWrap"><div id="soundKnob" role="slider" aria-label="Music volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"><i></i></div><div id="soundPct">35%</div></div><div id="soundTrack"><i></i></div><div id="soundActions"><button id="soundMute" type="button">MUTE</button><button id="soundClose" type="button">DONE</button></div><div class="foot" id="soundDesc">Drag the knob to adjust music volume.</div></div><div class="rows" id="soundRows"></div></div>
 <div id="savePrompt" class="ovl"><b>SAVE GAME</b><div class="rows" id="savePromptRows"></div><div class="foot" id="savePromptDesc"></div></div>
 <div id="saveSlots" class="ovl"><b>OVERWRITE SAVE</b><div class="rows" id="saveSlotRows"></div><div class="foot" id="saveSlotDesc"></div></div>
 <div id="loadSlots" class="ovl"><b>LOAD GAME</b><div class="rows" id="loadSlotRows"></div><div class="foot" id="loadSlotDesc"></div></div>
@@ -333,7 +333,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/generated/media-7.js?v=1790049472"></script>
 <script src="js/generated/game-part-1.js?v=20260922-2012" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/generated/game-part-2.js?v=20260923-0215" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
-<script src="js/generated/game-part-3.js?v=20260923-0455" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260923-0508" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
