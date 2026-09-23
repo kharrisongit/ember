@@ -1879,3 +1879,21 @@ body.pseudoFullscreen{
   #savePrompt .rows,#saveSlots .rows,#loadSlots .rows,#manageSaves .rows{max-height:220px}
   #savePrompt .foot,#saveSlots .foot,#loadSlots .foot,#manageSaves .foot{bottom:14px}
 }
+
+
+/* === INVENTORY SOUND DIAL 2026-09-23 === */
+#sound{background:rgba(7,9,14,.95)!important;padding:0!important}
+#sound>.rows{display:none!important}
+#soundPanel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(84vw,330px);padding:18px 20px 16px;box-sizing:border-box;border:1px solid #62533d;border-radius:16px;background:radial-gradient(circle at 50% 28%,#302a21,#18191d 65%);box-shadow:0 18px 44px rgba(0,0,0,.68),inset 0 0 0 1px rgba(255,255,255,.035);text-align:center}
+#soundPanel>b{display:block;color:#f0d39a;font:700 13px/1 ui-monospace,monospace;letter-spacing:.25em;margin-bottom:17px}
+#soundKnobWrap{display:flex;flex-direction:column;align-items:center;gap:7px}
+#soundKnob{--vol:35;width:82px;height:82px;border-radius:50%;position:relative;background:radial-gradient(circle at 38% 34%,#56514a 0 8%,#36332f 30%,#1d1d1f 68%,#111 70%);border:2px solid #75664e;box-shadow:0 6px 14px rgba(0,0,0,.6),inset 0 0 0 5px #242426}
+#soundKnob::before{content:"";position:absolute;left:50%;top:9px;width:3px;height:25px;border-radius:3px;background:#e3b866;transform-origin:50% 32px;transform:translateX(-50%) rotate(calc(-135deg + (var(--vol) * 2.7deg)));box-shadow:0 0 5px rgba(227,184,102,.45)}
+#soundKnob i{position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(255,255,255,.06)}
+#soundPct{color:#e9dfcb;font:700 12px/1 ui-monospace,monospace}
+#soundTrack{height:12px;margin:18px 2px 16px;border-radius:7px;background:#0e0f12;border:1px solid #4a4439;overflow:hidden;touch-action:none}
+#soundTrack>i{display:block;width:35%;height:100%;background:linear-gradient(90deg,#8d6739,#e1b568);border-radius:6px}
+#soundActions{display:flex;gap:9px}
+#soundActions button{flex:1;padding:10px;border-radius:9px;border:1px solid #665741;background:linear-gradient(#35312a,#25231f);color:#e8ddca;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em}
+#soundActions button:active{transform:translateY(1px);background:#493b29}
+#soundPanel .foot{position:static!important;width:auto!important;transform:none!important;border:0!important;padding:12px 0 0!important;font-size:9px!important;color:#9d978c!important;opacity:1!important}
