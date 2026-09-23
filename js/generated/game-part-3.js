@@ -5366,7 +5366,7 @@ function refreshOvl() {
     }
     if (ovl === "atkm" && it.el !== "claw" && it.cd) {
       const wait = breathWait(it.el), ready = Math.max(0, Math.min(1, 1 - wait / it.cd));
-      d.style.setProperty("--refill", (ready * 100).toFixed(1) + "%");
+      d.style.setProperty("--refill", (ready * 100).toFixed(1) + "%"); d.style.setProperty("--ring", (ready * 100).toFixed(1) + "%");
       d.classList.add("breathRefill");
       const fill = document.createElement("span");
       fill.className = "breathFill";
@@ -5411,7 +5411,7 @@ function updateBreathRefills(){
   items.forEach((it,k)=>{
     if(it.el==="claw"||!it.cd||!nodes[k])return;
     const d=nodes[k],wait=breathWait(it.el),ready=Math.max(0,Math.min(1,1-wait/it.cd));
-    d.style.setProperty("--refill",(ready*100).toFixed(1)+"%");
+    d.style.setProperty("--refill",(ready*100).toFixed(1)+"%");d.style.setProperty("--ring",(ready*100).toFixed(1)+"%");
     d.style.opacity=(it.dim&&it.dim())?".42":"";
     let sec=d.querySelector(".breathSecs");
     if(wait>0){
