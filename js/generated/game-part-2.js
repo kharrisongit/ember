@@ -141,9 +141,9 @@ function installRoyalCastle(){
  const treasury=W.maps.royal_treasury,seal=W.maps.royal_seal;
  treasury.doors=treasury.doors.filter(d=>d.to!=='royal_seal');
  treasury.roomActors=treasury.roomActors.filter(a=>!(a.royalDoor&&a.x===112));
- Object.assign(seal.doors[0],{to:'cinderhold',tx:19,ty:5.5});
- throne.doors.push({x:18.5,y:3,to:'royal_seal',tx:6.5,ty:10,dir:'u',explicitDir:true,triggerRect:{x:296,y:48,w:32,h:16}});
- (throne.roomActors ||= []).push({spr:'royal_door',x:312,y:64,sy:96,schoolArt:true,royalDoor:true});
+ Object.assign(seal.doors[0],{to:'cinderhold',tx:18.75,ty:5.5});
+ throne.doors.push({x:17.75,y:3,to:'royal_seal',tx:6.5,ty:10,dir:'u',explicitDir:true,triggerRect:{x:284,y:48,w:32,h:16}});
+ (throne.roomActors ||= []).push({spr:'royal_door',x:300,y:64,sy:96,schoolArt:true,royalDoor:true});
  throne.title='Cinderhold — Throne Room';throne.travel=true;throne.travel_kind='Castle';
  // Royal water statues flank the throne against its north wall.
  throne.roomActors=(throne.roomActors||[]).filter(a=>!a.royalStatue);
@@ -546,7 +546,7 @@ function drawDragonTempleTraps(){
  }
 }
 function installCastleCellar(){
- const m=W.maps.royal_cellar={w:20,h:18,title:'Cinderhold — Dragon Larder',royal:true,roomArt:'dragon75_cellar',bg:'#19171c',floorbg:'#615b50',spawn:[160,256],objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],npcs:[],foes:[],roomActors:[],roomBlocks:[[0,0,320,48],[0,48,16,288],[304,48,320,288],[16,272,144,288],[176,272,304,288]],collisionOverrides:{},doors:[{x:9.5,y:17,to:'royal_westhall',tx:17,ty:4.5,dir:'d',explicitDir:true,triggerRect:{x:144,y:272,w:32,h:16}}],cellarCaches:[]};
+ const m=W.maps.royal_cellar={w:20,h:18,title:'Cinderhold — Dragon Larder',royal:true,roomArt:'dragon75_cellar',bg:'#19171c',floorbg:'#615b50',spawn:[160,256],objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],npcs:[],foes:[],roomActors:[],roomBlocks:[[0,0,320,48],[0,48,16,288],[304,48,320,288],[16,272,144,288],[176,272,304,288]],collisionOverrides:{},doors:[{x:9.5,y:17,to:'royal_westhall',tx:15,ty:4.5,dir:'d',explicitDir:true,triggerRect:{x:144,y:272,w:32,h:16}}],cellarCaches:[]};
  m.terr=terrRLE(Array(360).fill(DIRT));m.base_terr=m.terr;
  for(const y of [112,208])for(let i=0;i<4;i++){
   const x=64+i*64,id=m.cellarCaches.length;m.cellarCaches.push({id,x,y,kind:id%2?'fish':'meat',amount:10});
@@ -555,12 +555,15 @@ function installCastleCellar(){
  for(const x of [32,288]){m.roomActors.push({spr:'dragon75_barrels',x,y:260,schoolArt:true});m.roomBlocks.push([x-14,245,x+14,260]);}
  for(const x of [32,160,288])m.roomActors.push({spr:'first_temple_torch',x,y:48,schoolArt:true});
  const hall=W.maps.royal_westhall;
- hall.doors.push({x:16.5,y:3,to:'royal_cellar',tx:9.5,ty:15,dir:'u',explicitDir:true,triggerRect:{x:264,y:48,w:32,h:16}});
+ hall.doors.push({x:14.5,y:3,to:'royal_cellar',tx:9.5,ty:15,dir:'u',explicitDir:true,triggerRect:{x:232,y:48,w:32,h:16}});
  hall.collisionOverrides ||= {};
- hall.roomActors.push({spr:'royal_door',x:280,y:64,schoolArt:true,royalDoor:true});
- for(let y=6;y<=10;y++)for(let x=33;x<37;x++)hall.collisionOverrides[x+','+y]=false;
+ hall.roomActors.push({spr:'royal_door',x:248,y:64,schoolArt:true,royalDoor:true});
+ for(let y=6;y<=10;y++)for(let x=29;x<33;x++)hall.collisionOverrides[x+','+y]=false;
  const armory=W.maps.royal_armory;
- for(const [spr,x,y]of [['rack1',64,65],['rack2',160,65],['rack3',112,153]]){armory.roomActors.push({spr:'dragon75_'+spr,x,y,schoolArt:true});armory.roomBlocks.push([x-20,y-12,x+20,y]);}
+ // The native armory already has weapon displays along the north wall.
+ // Retain them without stacking two additional dungeon racks over the wall.
+ armory.roomActors.push({spr:'dragon75_rack3',x:112,y:153,schoolArt:true});
+ armory.roomBlocks.push([92,141,132,153]);
 }
 function tryCellarSupplies(){
  if(!MD.cellarCaches)return false;
@@ -785,11 +788,10 @@ function arrangeNpcCast(){
     m.roomActors=(m.roomActors||[]).filter(a=>a.spr!=='stump_stool');
     for(const [i,n]of (m.npcs||[]).entries()){
       if(n.n==='King Halvard'){
-        n.seatSpr='king_seated';
-        // The old wooden chair was only a placeholder. Use the approved throne,
-        // centered on Halvard's seat and backed against the north end of the hall.
+        // Halvard stands in front of the smaller throne, fully visible.
+        n.seatSpr=undefined;n.y=124;n.sy=124;n.talkX=n.x;n.talkY=142;
         m.roomActors=(m.roomActors||[]).filter(a=>!(a.castSeat&&/^ichair/.test(a.spr||'')&&Math.abs(a.x-n.x)<10));
-        m.roomActors.push({throneRoomAsset:true,x:n.x,y:n.y+9,sy:n.y-2,sceneReserved:true});continue;
+        m.roomActors.push({throneRoomAsset:true,x:n.x,y:100,sy:101,sceneReserved:true});continue;
       }
       if(n.n==='Elder Maddock'){
         // Maddock stands only when his scripted movement needs his walking sheet.
@@ -1550,7 +1552,7 @@ function editorActorInfo(o) {
   return null;
 }
 function editorSprite(o) {
-  if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(54*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):72;return [0,0,54,h,1];}
+  if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(42*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):66;return [0,0,42,h,1];}
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
   if(o.spr)return SPR[o.spr];
@@ -3594,7 +3596,7 @@ function drawWorld(t, dt) {
       // Compact RPG-scale throne. Keep the feet/base at actor y so it sorts
       // naturally behind Halvard and against the north wall.
       if (throneRoomImg.complete && throneRoomImg.naturalWidth) {
-        const dw=54, dh=Math.round(dw*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth);
+        const dw=42, dh=Math.round(dw*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth);
         ctx.imageSmoothingEnabled=false;
         ctx.drawImage(throneRoomImg,Math.round(o.x-dw/2),Math.round(o.y-dh),dw,dh);
       }

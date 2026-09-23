@@ -27,7 +27,7 @@ vm.runInContext('moveEditorActor(subject,96,136,true)',ctx);
 assert.deepEqual([cellar.cellarCaches[0].x,cellar.cellarCaches[0].y],[96,136]);
 assert.deepEqual(cellar.roomBlocks[0],[76,116,116,136]);
 assert.equal(cellar.cellarCaches[0].amount,10);
-assert.deepEqual(Array.from(vm.runInContext('editorSprite({throneRoomAsset:true})',ctx)),[0,0,54,86,1]);
+assert.deepEqual(Array.from(vm.runInContext('editorSprite({throneRoomAsset:true})',ctx)),[0,0,42,67,1]);
 console.log('PASS: workshop effects, native NPC dialogue, live NPC position, collisions, saved scene props, cellar supplies and throne selection.');
 const hatch={x:68,y:120,glassHatch:true};ctx.W.maps.glasshouse={roomActors:[hatch]};ctx.MAPID='glasshouse';ctx.glassHatchFrame=()=>0;
 vm.runInContext(game.slice(game.indexOf('function glassHatchPosition('),game.indexOf('function drawHettieCallout(')),ctx);

@@ -13,7 +13,7 @@ assert.deepEqual(door,{royalDoor:true,x:312,y:64,sy:96});
 const patch=W.maps.cinderhold.roomActors[1],painting=W.maps.royal_seal.roomActors[0];
 assert(patch.editorLocked&&patch.sy>64&&patch.sy<door.sy);assert(painting.editorMovable);
 assert.deepEqual(draws[0].slice(2),[280,12187,26,31,0,0,26,31]);
-assert.deepEqual(draws[1].slice(2),[321,12187,1,31,0,0,26,31]);
+assert.deepEqual(draws[1].slice(2),[315,12187,1,31,0,0,28,31]);
 const raw=execFileSync('python',['-c',"from PIL import Image;import sys;sys.stdout.buffer.write(Image.open(sys.argv[1]).convert('RGBA').tobytes())",new URL('assets/interiors/house-seated.png',root).pathname]);
 ctx.source=new Uint32Array(raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength));
 const result=vm.runInContext('seatedPixels2x(source,96,1080)',ctx);

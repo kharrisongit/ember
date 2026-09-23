@@ -11,12 +11,14 @@ world.maps.royal_cellar={royal:true,roomActors:Array.from({length:8},(_,i)=>({sp
 const sprites=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const ATLAS_GZ = "([^"]+)/)[1],'base64'))).sprites;Object.assign(sprites,royal.sprites);
 const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...JSON.parse(read('assets/interiors/thornwell/layouts.json')),...JSON.parse(read('assets/interiors/forgewick/layouts.json')),...JSON.parse(read('assets/interiors/sandspire/layouts.json')),...JSON.parse(read('assets/interiors/hollybeck/layouts.json')),...JSON.parse(read('assets/interiors/remaining/layouts.json'))};
 const outside=JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold')));
-const ctx=vm.createContext({W:world,window:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},document:{createElement:()=>({getContext:()=>({drawImage(){}})})},npcs:[],actorLayouts:{},SPR:sprites,NAMES:[],throneRoomImg:{},atlasImg:{},drawGameImage(){},TS:16,rebuildSolid(){},mapDirty:false});
+const canvasCalls=[];
+const ctx=vm.createContext({W:world,window:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},document:{createElement:()=>({getContext:()=>({drawImage(){},fillRect:(...a)=>canvasCalls.push(a)})})},npcs:[],actorLayouts:{},SPR:sprites,NAMES:[],throneRoomImg:{},atlasImg:{},drawGameImage(){},TS:16,rebuildSolid(){},mapDirty:false});
 vm.runInContext(read('js/millwood-interiors.js'),ctx);
 vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>image',ctx);
 const game=read('js/generated/game-part-2.js');
 for(const [start,end] of [['function editorActorInfo(', 'function shiftActorData('],['function shiftActorData(', 'function pickEditorActor(']])vm.runInContext(game.slice(game.indexOf(start),game.indexOf(end)),ctx);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
+assert.deepEqual(canvasCalls,[[0,224,16,8],[208,224,16,8]]);
 assert.match(world.maps.royal_cellar._roomBaseCanvas.src,/royal-cellar\.png/);
 assert.equal(world.maps.royal_cellar.roomActors.filter(o=>/^dragon75_food/.test(o.spr)).length,8);
 assert.equal(world.maps.royal_cellar.cellarCaches.length,8);

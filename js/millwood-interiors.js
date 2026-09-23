@@ -50,12 +50,12 @@ function refineSeatedPixels(image){
 function prepareThroneGallery(){
   const throne=W.maps.cinderhold,seal=W.maps.royal_seal,sp=SPR.throne_wall;
   if(!throne||!seal||!sp||throne._galleryReady)return;
-  const make=()=>{const c=document.createElement('canvas');c.width=26;c.height=31;return c;};
-  const painting=make(),wall=make();
+  const make=(w=26)=>{const c=document.createElement('canvas');c.width=w;c.height=31;return c;};
+  const painting=make(),wall=make(28);
   drawGameImage(painting.getContext('2d'),atlasImg,sp[0]+280,sp[1]+10,26,31,0,0,26,31);
   // Sample an undecorated strip of the same wall, preserving its horizontal bands.
-  drawGameImage(wall.getContext('2d'),atlasImg,sp[0]+321,sp[1]+10,1,31,0,0,26,31);
-  (throne.roomActors ||= []).push({x:305,y:54,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
+  drawGameImage(wall.getContext('2d'),atlasImg,sp[0]+315,sp[1]+10,1,31,0,0,28,31);
+  (throne.roomActors ||= []).push({x:306,y:54,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
   (seal.roomActors ||= []).push({n:'Royal painting',x:112,y:52,sy:52,extractedCanvas:painting,editKey:'royal:relocated-painting',editorMovable:true});
   throne._galleryReady=true;
 }
@@ -79,6 +79,13 @@ async function prepareTownHouseInteriors(town, houseIds) {
     if (!map || !houseIds.test(id)) continue;
     if (map._millwoodLayers) continue;
     map._roomBaseCanvas=cut(layout.baseRect);
+    if(id==='royal_banquet'){
+      // Its bottom sill should end at the inner side walls, not extend into
+      // the black surround on either side of the southern doorway.
+      const g=map._roomBaseCanvas.getContext('2d');
+      g.fillStyle='#2b2528';
+      g.fillRect(0,224,16,8);g.fillRect(208,224,16,8);
+    }
     if(town==='remaining')map._remainingInterior=true;
     // Remove the old baked-table foreground duplicates; keep independently placed props.
     map.roomActors=(map.roomActors||[]).filter(a=>!a.interiorFurniture &&
