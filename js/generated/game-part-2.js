@@ -142,8 +142,8 @@ function installRoyalCastle(){
  treasury.doors=treasury.doors.filter(d=>d.to!=='royal_seal');
  treasury.roomActors=treasury.roomActors.filter(a=>!(a.royalDoor&&a.x===112));
  Object.assign(seal.doors[0],{to:'cinderhold',tx:18.75,ty:5.5});
- throne.doors.push({x:17.75,y:3,to:'royal_seal',tx:6.5,ty:10,dir:'u',explicitDir:true,triggerRect:{x:284,y:48,w:32,h:16}});
- (throne.roomActors ||= []).push({spr:'royal_door',x:300,y:64,sy:96,schoolArt:true,royalDoor:true});
+ throne.doors.push({x:18.25,y:3,to:'royal_seal',tx:6.5,ty:10,dir:'u',explicitDir:true,triggerRect:{x:292,y:48,w:32,h:16}});
+ (throne.roomActors ||= []).push({spr:'royal_door',x:308,y:64,sy:96,schoolArt:true,royalDoor:true});
  throne.title='Cinderhold — Throne Room';throne.travel=true;throne.travel_kind='Castle';
  // Royal water statues flank the throne against its north wall.
  throne.roomActors=(throne.roomActors||[]).filter(a=>!a.royalStatue);
@@ -1552,7 +1552,7 @@ function editorActorInfo(o) {
   return null;
 }
 function editorSprite(o) {
-  if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(42*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):66;return [0,0,42,h,1];}
+  if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(36*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):57;return [0,0,36,h,1];}
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
   if(o.spr)return SPR[o.spr];
@@ -3596,7 +3596,7 @@ function drawWorld(t, dt) {
       // Compact RPG-scale throne. Keep the feet/base at actor y so it sorts
       // naturally behind Halvard and against the north wall.
       if (throneRoomImg.complete && throneRoomImg.naturalWidth) {
-        const dw=42, dh=Math.round(dw*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth);
+        const dw=36, dh=Math.round(dw*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth);
         ctx.imageSmoothingEnabled=false;
         ctx.drawImage(throneRoomImg,Math.round(o.x-dw/2),Math.round(o.y-dh),dw,dh);
       }
@@ -3623,8 +3623,8 @@ function drawWorld(t, dt) {
       if(o.templePassDoor){const near=Math.abs(P.x-o.x)<40&&Math.abs(P.y-o.y)<85;o.openT=Math.max(0,Math.min(.3,(o.openT||0)+(near?dt:-dt)));fr=Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));}
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
-      if(o.statueTint){drawGameImage(ctx,tintFoe(sp,fr,o.statueTint,.65),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
-      if(visibleH>0)drawGameImage(ctx, sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
+      if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
+      if(visibleH>0)drawGameImage(ctx, o.doorImage || sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
         drawX, o.y - sp[3], sp[2], visibleH);
       continue;
     }

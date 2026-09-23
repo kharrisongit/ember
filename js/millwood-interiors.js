@@ -13,11 +13,12 @@ async function prepareMillwoodInteriors() {
   await prepareTownHouseInteriors('remaining', /./);
   if(W.maps.royal_cellar){
     const backdrop=new Image();
-    backdrop.src='assets/interiors/royal-cellar.png?v=20260923-castle-larder1';
+    backdrop.src='assets/interiors/royal-cellar.png?v=20260923-castle-audit2';
     await backdrop.decode();
     W.maps.royal_cellar._roomBaseCanvas=backdrop;
   }
   prepareThroneGallery();
+  await prepareCastleArchitecture();
   prepareRemainingInteriorActors();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
@@ -51,13 +52,65 @@ function prepareThroneGallery(){
   const throne=W.maps.cinderhold,seal=W.maps.royal_seal,sp=SPR.throne_wall;
   if(!throne||!seal||!sp||throne._galleryReady)return;
   const make=(w=26)=>{const c=document.createElement('canvas');c.width=w;c.height=31;return c;};
-  const painting=make(),wall=make(28);
+  const painting=make();
   drawGameImage(painting.getContext('2d'),atlasImg,sp[0]+280,sp[1]+10,26,31,0,0,26,31);
-  // Sample an undecorated strip of the same wall, preserving its horizontal bands.
-  drawGameImage(wall.getContext('2d'),atlasImg,sp[0]+315,sp[1]+10,1,31,0,0,28,31);
-  (throne.roomActors ||= []).push({x:306,y:54,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
   (seal.roomActors ||= []).push({n:'Royal painting',x:112,y:52,sy:52,extractedCanvas:painting,editKey:'royal:relocated-painting',editorMovable:true});
   throne._galleryReady=true;
+}
+
+async function prepareCastleArchitecture(){
+  const hall=W.maps.royal_westhall,throne=W.maps.cinderhold;
+  if(!hall?._roomBaseCanvas||!throne||throne._architectureReady)return;
+  const load=async name=>{const im=new Image();im.src='assets/interiors/'+name+'.png?v=20260923-castle-audit2';await im.decode();return im;};
+  const wall=await load('throne-door-wall'),doors=await load('throne-door-frames');
+  SPR.royal_throne_door=[0,0,32,51,6];
+  throne.roomActors ||= [];
+  const throneDoor=throne.roomActors.find(a=>a.royalDoor);
+  if(throneDoor){throneDoor.spr='royal_throne_door';throneDoor.doorImage=doors;}
+  throne.roomActors.push({x:308,y:64,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
+  // The larder entrance occupies the old picture's wall bay. Preserve the
+  // picture on the larder's clear north wall instead of drawing it under a door.
+  const picture=hall.roomActors.find(a=>a.exactFurniture&&a.n==='painting'&&a.sourceRect?.[0]===224);
+  if(picture&&W.maps.royal_cellar){
+    hall.roomActors=hall.roomActors.filter(a=>a!==picture);
+    Object.assign(picture,{x:124,y:56,sy:56,moveBlocks:[],editKey:'castle:larder-painting'});
+    W.maps.royal_cellar.roomActors.push(picture);
+  }
+  const clean=document.createElement('canvas');clean.width=32;clean.height=48;
+  clean.getContext('2d').drawImage(hall._roomBaseCanvas,228,16,1,48,0,0,32,48);
+  for(const [id,map] of Object.entries(W.maps)){
+    if(!map.royal||!map._roomBaseCanvas||id==='royal_cellar')continue;
+    const g=map._roomBaseCanvas.getContext('2d');
+    // Close obsolete painted doors, including the former treasury-to-seal door.
+    for(const old of (typeof ROYAL_DATA!=='undefined'?ROYAL_DATA.maps[id]?.roomActors:[])||[]){
+      if(old.royalDoor&&!map.roomActors.some(a=>a.royalDoor&&a.x===old.x))g.drawImage(clean,old.x-16,16);
+    }
+    for(const door of map.roomActors.filter(a=>a.royalDoor)){
+      // Remove the baked closed leaves and carry the floor under the transparent
+      // sill. Animated open frames now reveal an actual dark doorway.
+      g.fillStyle='#19121b';g.fillRect(door.x-8,28,16,28);
+      const floor=document.createElement('canvas');floor.width=16;floor.height=8;
+      floor.getContext('2d').drawImage(map._roomBaseCanvas,door.x-8,64,16,8,0,0,16,8);
+      g.drawImage(floor,door.x-8,56);
+    }
+  }
+  throne._architectureReady=true;
+}
+
+function castleStoneFrame(o,sp,frame){
+  o._stoneFrames ||= [];
+  if(o._stoneFrames[frame])return o._stoneFrames[frame];
+  const c=document.createElement('canvas');c.width=sp[2];c.height=sp[3];
+  const g=c.getContext('2d',{willReadFrequently:true});
+  drawGameImage(g,sheetOf(sp),sp[0]+frame*sp[2],sp[1],sp[2],sp[3],0,0,sp[2],sp[3]);
+  const pixels=g.getImageData(0,0,c.width,c.height),d=pixels.data;
+  for(let i=0;i<d.length;i+=4){
+    if(!d[i+3])continue;
+    if(o.spr==='royal_fountain'&&d[i+2]>d[i]*1.2&&d[i+1]>d[i]*1.15&&d[i+1]>110)continue;
+    const gray=Math.round((d[i]*.299+d[i+1]*.587+d[i+2]*.114)*.72);
+    d[i]=gray;d[i+1]=gray;d[i+2]=gray;
+  }
+  g.putImageData(pixels,0,0);return o._stoneFrames[frame]=c;
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';

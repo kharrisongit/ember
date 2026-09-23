@@ -18,10 +18,12 @@ vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>imag
 const game=read('js/generated/game-part-2.js');
 for(const [start,end] of [['function editorActorInfo(', 'function shiftActorData('],['function shiftActorData(', 'function pickEditorActor(']])vm.runInContext(game.slice(game.indexOf(start),game.indexOf(end)),ctx);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
-assert.deepEqual(canvasCalls,[[0,224,16,8],[208,224,16,8]]);
+assert.deepEqual(canvasCalls.slice(0,2),[[0,224,16,8],[208,224,16,8]]);
 assert.match(world.maps.royal_cellar._roomBaseCanvas.src,/royal-cellar\.png/);
 assert.equal(world.maps.royal_cellar.roomActors.filter(o=>/^dragon75_food/.test(o.spr)).length,8);
 assert.equal(world.maps.royal_cellar.cellarCaches.length,8);
+assert(world.maps.royal_cellar.roomActors.some(a=>a.editKey==='castle:larder-painting'));
+assert(!world.maps.royal_westhall.roomActors.some(a=>a.n==='painting'&&a.sourceRect?.[0]===224));
 for(const [id,name] of [['house47','Fennel'],['house50','Bjorn']]){
  const map=world.maps[id],npc=map.npcs.find(n=>n.n===name);
  const chair=map.roomActors.find(o=>o.exactFurniture&&o.n==='north chair');
@@ -31,7 +33,7 @@ for(const [id,name] of [['house47','Fennel'],['house50','Bjorn']]){
 let count=0;
 for(const [id,layout] of Object.entries(layouts)){
  const map=world.maps[id];Object.assign(ctx,{MD:map,MAPID:id,PXW:map.w*16,PXH:map.h*16});
- const actors=map.roomActors.filter(o=>o.exactFurniture);assert.equal(actors.length,layout.objects.length);
+ const actors=map.roomActors.filter(o=>o.exactFurniture);assert.equal(actors.length,layout.objects.length-(id==='royal_westhall'?1:0));
  const assigned=actors.flatMap(o=>o.moveBlocks);assert.equal(new Set(assigned).size,assigned.length);
  for(const o of actors){
   const {x,y}=o;const before=o.moveBlocks.map(i=>map.roomBlocks[i].slice());
@@ -45,5 +47,5 @@ for(const [id,layout] of Object.entries(layouts)){
 }
 assert.equal(JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold'))),outside);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
-for(const [id,layout] of Object.entries(layouts))assert.equal(world.maps[id].roomActors.filter(o=>o.exactFurniture).length,layout.objects.length);
+for(const [id,layout] of Object.entries(layouts))assert.equal(world.maps[id].roomActors.filter(o=>o.exactFurniture).length,layout.objects.length-(id==='royal_westhall'?1:0));
 console.log(`PASS: ${count} furniture objects across ${Object.keys(layouts).length} rooms; movement, collision, saved layouts, idempotence and excluded maps.`);

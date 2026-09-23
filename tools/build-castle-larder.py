@@ -13,14 +13,16 @@ def room(name):
 
 gallery = room('royal_westhall')
 guardroom = room('royal_guardroom')
-out = Image.new('RGBA', (320, 288))
+out = Image.new('RGBA', (320, 288), '#2b2528')
 
 # Reuse Cinderhold's red wall, ivory columns and cornice. Fill in the gallery's
 # central doorway because the storeroom has only its existing southern exit.
-wall = gallery.crop((0, 0, 352, 64))
-wall.paste(gallery.crop((64, 0, 128, 64)), (144, 0))
-out.paste(wall.crop((0, 0, 224, 64)), (0, 0))
-out.paste(wall.crop((256, 0, 352, 64)), (224, 0))
+# Assemble whole columns over a continuous wall, never cut through a column.
+out.paste(gallery.crop((100, 0, 101, 64)).resize((320, 64), Image.Resampling.NEAREST), (0, 0))
+for center in (16, 88, 160, 232, 304):
+    out.paste(gallery.crop((64, 0, 96, 64)), (center-16, 0))
+out.paste(gallery.crop((0, 0, 8, 64)), (0, 0))
+out.paste(gallery.crop((344, 0, 352, 64)), (312, 0))
 
 floor_tile = guardroom.crop((16, 64, 48, 96))
 for y in range(64, 288, 32):
@@ -34,6 +36,9 @@ for y in range(64, 272, 32):
     out.paste(guardroom.crop((208, 64, 224, 96)), (304, y))
 for x in range(0, 320, 32):
     out.paste(guardroom.crop((32, 192, 64, 208)), (x, 272))
+# Full end caps stop the sill at the same outer edges as the side walls.
+out.paste(guardroom.crop((0, 192, 16, 208)), (0, 272))
+out.paste(guardroom.crop((208, 192, 224, 208)), (304, 272))
 out.paste(floor_tile.crop((0, 0, 32, 16)), (144, 272))
 
 target = root / 'assets/interiors/royal-cellar.png'
