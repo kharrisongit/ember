@@ -1697,3 +1697,45 @@
   #deckHealth{top:5px!important;left:-4px!important}
   #actionStack{top:5px!important;right:0!important}
 }
+
+
+/* === CHROME/SAFARI MOBILE CONTROLLER ANCHOR FIX 2026-09-23 ===
+   deckHealth/actionStack are children of leftControls/rightControls. The prior
+   mobile rule made those parent wrappers only 172px tall at the bottom, so
+   top:5px was relative to the bottom lane and Chrome drew the top controls on
+   top of the D-pad/A-B controls. Make each wrapper span the full playface;
+   explicitly pin only the actual bottom controls to the bottom. */
+@media(max-width:699px){
+  #leftControls,
+  #rightControls{
+    top:0!important;
+    bottom:0!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  #dpad{
+    position:absolute!important;
+    left:0!important;
+    bottom:0!important;
+  }
+  #ab{
+    position:absolute!important;
+    right:0!important;
+    bottom:31px!important;
+  }
+  #utilityBtns{
+    position:absolute!important;
+    right:0!important;
+    bottom:0!important;
+  }
+  #deckHealth{
+    top:5px!important;
+    left:-4px!important;
+    bottom:auto!important;
+  }
+  #actionStack{
+    top:5px!important;
+    right:0!important;
+    bottom:auto!important;
+  }
+}
