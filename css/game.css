@@ -1915,3 +1915,18 @@ body.pseudoFullscreen{
 #ytPlay{color:#f0d39a!important;border-color:#8a7048!important}
 #ytStatus{min-height:28px;margin-top:8px;color:#99958d;font:9px/1.4 ui-monospace,monospace;text-align:center}
 @media(max-height:700px){#soundPanel{top:48%;padding-top:13px;padding-bottom:12px}#ytPlayerShell,#ytPlayer,#ytPlayer iframe{min-height:120px}#ytPlayerShell{aspect-ratio:2/1}}
+
+
+/* === ACCOUNT MUSIC HUB 2026-09-23 === */
+#musicTabs{grid-template-columns:1fr 1fr!important}
+#spotifyMusicPane{display:none;text-align:center}
+#spotifyBrand{margin:10px 0 8px;color:#e8e8e8;font:800 19px/1 ui-monospace,monospace;letter-spacing:.12em}
+#spotifyStatus{min-height:44px;padding:8px;color:#aaa59b;font:9px/1.45 ui-monospace,monospace}
+#spotifyConnect,#spotifyDisconnect,#spotifyDone{width:100%;margin-top:8px;padding:10px;border:1px solid #665741;border-radius:9px;background:linear-gradient(#35312a,#25231f);color:#e8ddca;font:700 9px/1 ui-monospace,monospace;letter-spacing:.08em}
+#spotifyConnect{border-color:#658266}
+#spotifyNow{margin:12px 0 8px;padding:10px;border:1px solid #403e39;border-radius:9px;background:#111216}
+#spotifyTrack{color:#eee6d8;font:700 11px/1.3 ui-monospace,monospace}
+#spotifyArtist{margin-top:4px;color:#8f8b83;font:9px/1.2 ui-monospace,monospace}
+#spotifyControls{display:grid;grid-template-columns:48px 1fr 48px;gap:7px}
+#spotifyControls button{height:38px;border:1px solid #514a40;border-radius:9px;background:#232329;color:#e8ddca;font:700 10px/1 ui-monospace,monospace}
+#spotifyDisconnect{opacity:.65}
