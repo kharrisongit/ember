@@ -2196,3 +2196,78 @@ body.pseudoFullscreen{
     height:56px!important;min-height:56px!important;max-height:56px!important;
   }
 }
+
+
+/* === INVENTORY 3-COLUMN + BESTIARY FEATURE TILE 2026-09-23 === */
+/* Bestiary joins the top-right feature area beside the square gold tile,
+   leaving SAVE / MUSIC / MAP / CLOSE in the utility row. */
+#bagHead .chip.book{
+  position:fixed!important;
+  top:calc(env(safe-area-inset-top,0px) + 12px)!important;
+  right:calc(env(safe-area-inset-right,0px) + 78px)!important;
+  width:112px!important;
+  min-width:112px!important;
+  max-width:112px!important;
+  height:58px!important;
+  min-height:58px!important;
+  max-height:58px!important;
+  padding:5px 8px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  border-radius:11px!important;
+  z-index:104!important;
+  overflow:hidden!important;
+}
+#bagHead .chip.book canvas{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  max-width:38px!important;
+  flex:0 0 38px!important;
+  margin:0!important;
+}
+#bagHead .chip.book i{
+  display:block!important;
+  font-size:9px!important;
+  line-height:1.15!important;
+  letter-spacing:.04em!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+/* Four in-flow controls now: SAVE, MUSIC, MAP, CLOSE. */
+#bagHead .chips{
+  grid-template-columns:repeat(3,minmax(0,1fr)) 38px!important;
+}
+/* Larger inventory art: three item slots per row. */
+#bagRows{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+#bag.book #bagRows{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+#bag .slot canvas{
+  width:min(72%,64px)!important;
+  height:min(72%,64px)!important;
+}
+@media(max-width:430px){
+  #bagHead .chip.book{
+    top:calc(env(safe-area-inset-top,0px) + 10px)!important;
+    right:calc(env(safe-area-inset-right,0px) + 72px)!important;
+    width:104px!important;
+    min-width:104px!important;
+    max-width:104px!important;
+    height:56px!important;
+    min-height:56px!important;
+    max-height:56px!important;
+  }
+  #bagHead .chip.book canvas{
+    width:36px!important;height:36px!important;min-width:36px!important;max-width:36px!important;flex-basis:36px!important;
+  }
+  #bagHead .chips{grid-template-columns:repeat(3,minmax(0,1fr)) 36px!important}
+  #bagRows,#bag.book #bagRows{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+}
