@@ -16,6 +16,12 @@ vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>imag
 const game=read('js/generated/game-part-2.js');
 for(const [start,end] of [['function editorActorInfo(', 'function shiftActorData('],['function shiftActorData(', 'function pickEditorActor(']])vm.runInContext(game.slice(game.indexOf(start),game.indexOf(end)),ctx);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
+for(const [id,name] of [['house47','Fennel'],['house50','Bjorn']]){
+ const map=world.maps[id],npc=map.npcs.find(n=>n.n===name);
+ const chair=map.roomActors.find(o=>o.exactFurniture&&o.n==='north chair');
+ const table=map.roomActors.find(o=>o.exactFurniture&&o.n==='dining table');
+ assert(chair.sy<(npc.sy??npc.y)&&table.sy>(npc.sy??npc.y),`${name}'s face should draw above the chair, with the table in front`);
+}
 let count=0;
 for(const [id,layout] of Object.entries(layouts)){
  const map=world.maps[id];Object.assign(ctx,{MD:map,MAPID:id,PXW:map.w*16,PXH:map.h*16});

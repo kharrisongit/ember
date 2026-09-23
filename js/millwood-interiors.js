@@ -86,6 +86,13 @@ async function prepareTownHouseInteriors(town, houseIds) {
       extractedCanvas:cut(o.rect), interiorFurniture:true, exactFurniture:true,
       moveBlocks:[], flatFurniture:o.flat, sourceRect:[o.x,o.y,o.w,o.h]
     }));
+    // The north chair overlaps these two portraits. Draw its back first so
+    // their faces remain visible, while the dining table still covers their laps.
+    if(id==='house47'||id==='house50'){
+      const resident=map.npcs?.find(n=>n.n===(id==='house47'?'Fennel':'Bjorn'));
+      const chair=furniture.find(o=>o.n==='north chair');
+      if(resident&&chair)chair.sy=(resident.sy??resident.y)-1;
+    }
     // Each collision belongs to exactly one furnishing; dragging never leaves it behind.
     map.roomBlocks=originalBlocks;
     for (let i=0;town!=='remaining' && i<originalBlocks.length;i++) {
