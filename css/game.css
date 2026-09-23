@@ -1395,3 +1395,76 @@
   touch-action:manipulation!important;
 }
 #atkm .row::before,#atkm .row::after,#atkm .row *{pointer-events:none!important}
+
+/* === COMMAND FULL DECK REVAMP 2026-09-22 === */
+/* COMMAND now owns the full controller deck, matching Dragon Attack's scale
+   while keeping its own cool teal/steel identity. */
+#airm{
+  position:fixed!important;
+  left:0!important;right:0!important;bottom:0!important;
+  width:100%!important;height:var(--deck)!important;
+  max-width:none!important;aspect-ratio:auto!important;
+  box-sizing:border-box!important;
+  border:0!important;border-top:1px solid #405b59!important;border-radius:0!important;
+  padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px)!important;
+  background:
+    radial-gradient(circle at 50% 58%,rgba(71,128,122,.15),transparent 35%),
+    linear-gradient(135deg,transparent 49.7%,rgba(104,160,151,.08) 50%,transparent 50.3%),
+    linear-gradient(45deg,transparent 49.7%,rgba(104,160,151,.06) 50%,transparent 50.3%),
+    radial-gradient(ellipse at 50% 62%,#182321 0,#111917 58%,#090d0c 100%)!important;
+  box-shadow:0 -8px 24px rgba(0,0,0,.5)!important;
+  overflow:hidden!important;pointer-events:auto!important;z-index:40!important;
+}
+#airm>b{
+  display:block!important;position:static!important;transform:none!important;
+  width:100%!important;height:26px!important;margin:0!important;
+  text-align:center!important;font-size:0!important;color:#e7e2d7!important;
+  text-shadow:0 2px 4px #000!important;
+}
+#airm>b::after{content:"DRAGON COMMAND"!important;font:700 16px/1.15 Georgia,serif!important;letter-spacing:.1em!important}
+#airm .rows{
+  position:absolute!important;left:50%!important;top:38px!important;
+  transform:translateX(-50%)!important;width:min(96vw,420px)!important;
+  height:calc(100% - 48px)!important;margin:0!important;padding:0!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:24px!important;overflow:visible!important;pointer-events:auto!important;
+}
+#airm .rows::before{display:none!important}
+#airm .row{
+  position:relative!important;left:auto!important;top:auto!important;
+  transform:none!important;margin:0!important;
+  width:88px!important;height:88px!important;min-width:88px!important;
+  box-sizing:border-box!important;border-radius:50%!important;
+  padding:7px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;
+  --el:#72bdb5;
+  border:2px solid var(--el)!important;
+  background:radial-gradient(circle at 38% 28%,rgba(255,255,255,.24),rgba(67,105,100,.28) 28%,#17201f 68%,#090d0c 100%)!important;
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.32),0 4px 10px rgba(0,0,0,.55),0 0 15px rgba(114,189,181,.3)!important;
+  color:#f6f2e9!important;text-shadow:0 1px 2px #000!important;
+  pointer-events:auto!important;touch-action:manipulation!important;
+}
+#airm .row::before{
+  display:block!important;font:700 29px/1 Georgia,serif!important;color:#f5eee1!important;
+  filter:drop-shadow(0 0 5px var(--el))!important;pointer-events:none!important;
+}
+#airm .row:nth-child(1)::before{content:"♞"!important} /* mount / dismount */
+#airm .row:nth-child(2)::before{content:"↟"!important;font-size:32px!important} /* flight */
+#airm .row:nth-child(3)::before{
+  content:""!important;width:32px!important;height:32px!important;
+  background:#f5eee1!important;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M27 5h10v9h8v8h5v31h7v6H7v-6h7V22h5v-8h8V5zm-5 25v23h20V30H22zm6 7h8v16h-8V37z'/%3E%3Cpath fill='black' d='M19 18h26v7H19z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M27 5h10v9h8v8h5v31h7v6H7v-6h7V22h5v-8h8V5zm-5 25v23h20V30H22zm6 7h8v16h-8V37z'/%3E%3Cpath fill='black' d='M19 18h26v7H19z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+  filter:drop-shadow(0 0 5px #8fd8ff)!important;
+}
+#airm .row .dot{display:none!important}
+#airm .row>span:not(.dot){font:700 9px/1 Georgia,serif!important;pointer-events:none!important}
+#airm .row.on{transform:scale(1.06)!important;box-shadow:inset 0 0 0 3px rgba(0,0,0,.28),0 0 0 3px rgba(235,255,251,.55),0 5px 12px rgba(0,0,0,.55),0 0 20px #72bdb5!important}
+#airm .row[style*="opacity"]{opacity:.7!important}
+#airm .foot{display:none!important}
+#airm .row *{pointer-events:none!important}
+@media(max-width:430px){
+ #airm .rows{gap:16px!important;width:98vw!important}
+ #airm .row{width:82px!important;height:82px!important;min-width:82px!important}
+ #airm>b::after{font-size:15px!important}
+}
