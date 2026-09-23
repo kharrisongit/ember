@@ -5433,6 +5433,8 @@ function ovlTake() {
   if (items[M.pick] && items[M.pick].go) items[M.pick].go();
 }
 bindHold("btnStart", () => {if(atlasOpen)closeAtlas();else setOvl(ovl === "menu" ? null : "menu");}, null);
+const atkCloseBtn=document.getElementById("atkCloseBtn");
+if(atkCloseBtn)atkCloseBtn.addEventListener("pointerup",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
 bindHold("btnL", () => {
                          trigHold("l", true);
                          if (hasDragon()) setOvl(ovl === "atkm" ? null : "atkm"); },
