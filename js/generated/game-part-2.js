@@ -1544,6 +1544,7 @@ function editorActorInfo(o) {
   return null;
 }
 function editorSprite(o) {
+  if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(54*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):72;return [0,0,54,h,1];}
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
   if(o.spr)return SPR[o.spr];
@@ -1558,6 +1559,13 @@ function shiftActorData(m, o, x, y, actor) {
   if(Number.isFinite(o.sy))o.sy=o.editableWall?-50:o.sy+dy;
   if(Number.isFinite(o.talkX))o.talkX+=dx;
   if(Number.isFinite(o.talkY))o.talkY+=dy;
+  if(Number.isFinite(o.seatClipY))o.seatClipY+=dy;
+  if(actor&&(dx||dy)){
+    for(const index of o.interiorChildren||[]){const child=m.roomActors?.[index];if(child&&child!==o)shiftActorData(m,child,child.x+dx,child.y+dy,true);}
+    if(o.interiorNpc){const n=m.npcs?.find(n=>n.n===o.interiorNpc);if(n)shiftActorData(m,n,n.x+dx,n.y+dy,false);
+      if(typeof MD!=='undefined'&&MD===m&&typeof npcs!=='undefined'){const live=npcs.find(n=>n.n===o.interiorNpc);if(live&&live!==n){shiftActorData(m,live,live.x+dx,live.y+dy,false);live.px=live.x;live.py=live.y;}}}
+    if(o.cellarCacheId!==undefined){const c=m.cellarCaches?.find(c=>c.id===o.cellarCacheId);if(c){c.x+=dx;c.y+=dy;}}
+  }
   if(o.patrol)o.patrol=o.patrol.map((v,i)=>v+(i%2?dy:dx)/TS);
   if(o.goto)o.goto=[o.goto[0]+dx,o.goto[1]+dy];
   if(actor&&o.stairTo&&(dx||dy)){
@@ -1573,7 +1581,7 @@ function applyActorLayout(m, id) {
   const saved=actorLayouts[id]||{};
   for(let i=0;i<(m.roomActors||[]).length;i++){
     const o=m.roomActors[i],key=o.editKey||'actor:'+i+':'+o.spr,v=saved[key];
-    if(o.sceneReserved)continue;
+    if(o.sceneReserved&&!o.editorMovable)continue;
     if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!v?.deleted;
     if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
@@ -1603,7 +1611,7 @@ function pickEditorActor(wx,wy) {
     const w=o.extractedCanvas.width,h=o.extractedCanvas.height,left=o.x-w/2,top=o.y-h;
     if(wx>=left&&wx<=left+w&&wy>=top&&wy<=o.y)exactHits.push({o,area:w*h,dist:(wx-o.x)*(wx-o.x)+(wy-(top+h/2))*(wy-(top+h/2))});
   }
-  if(exactHits.length){exactHits.sort((a,b)=>a.area-b.area||a.dist-b.dist);return exactHits[0].o;}
+  if(exactHits.length&&!MD._remainingInterior){exactHits.sort((a,b)=>a.area-b.area||a.dist-b.dist);return exactHits[0].o;}
   if(/^house\d/.test(MAPID||"")&&!window.__furnReported){
     window.__furnReported=true;
     const n=(MD.roomActors||[]).filter(a=>a.interiorFurniture&&!a.editorDeleted).length;
@@ -1619,7 +1627,7 @@ function pickEditorActor(wx,wy) {
     /* Prefer the visible prop nearest the finger.  This makes a lamp/crate sitting on a
        table selectable instead of the table's larger rectangle always swallowing it.
        Rugs deliberately lose to furniture above them unless the rug itself is the only hit. */
-    const rug=o.interiorFurniture&&/^(?:irug|.*(?:rug|carpet))/i.test(o.spr||'');
+    const rug=!!o.flatFurniture || !!(o.interiorFurniture&&/^(?:irug|.*(?:rug|carpet))/i.test(o.spr||''));
     const dx=(wx-o.x)/Math.max(1,w),dy=(wy-(top+h/2))/Math.max(1,h);
     hits.push({o,rug,area:w*h,dist:dx*dx+dy*dy,depth:o.sy??o.y});
   }
@@ -2109,7 +2117,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false) => {
   if (blockedByTrialPedestal(px, py)) return true;
   if (solid[y * MW + x] === 1) return true;
   if (blockedByNpcBody(px, py)) return true;
-  if (MAPID === "glasshouse" && glassHatchFrame() < 3 && px >= 48 && px < 88 && py >= 104 && py < 118) return true;
+  if (glassHatchBlocked(px,py)) return true;
   if (MD.roomBlocks && MD.roomBlocks.some(r => px >= r[0] && px < r[2] && py >= r[1] && py < r[3])) return true;
   if (!ignoreNpcBuffer && blockedByNpcBuffer(px, py)) return true;
   if (!arenaPass && arenaLock && arenaT > 0.25 &&
@@ -9526,7 +9534,7 @@ function blockReason(px, py) {
   const override=collisionOverride(px,py);if(override!==undefined)return override?"custom":null;
   if(blockedByNpcBody(px,py)||blockedByNpcBuffer(px,py))return "npc";
   if(MD.roomBlocks?.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3]))return "furniture";
-  if(MAPID==="glasshouse"&&glassHatchFrame()<3&&px>=48&&px<88&&py>=104&&py<118)return "counter";
+  if(glassHatchBlocked(px,py))return "counter";
   if(MAPID==="witchmoor"&&wonAll&&px>=184&&px<213&&py>=282&&py<311)return "story";
   if(blockedByTrialPedestal(px,py))return "story";
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
@@ -10111,6 +10119,9 @@ function finishSmithUpgrade() {
 }
 let glassHatchStarted = -1;
 function glassHatchFrame() { return glassHatchStarted < 0 ? 0 : Math.min(3, Math.floor((performance.now() / 1000 - glassHatchStarted) / 0.15)); }
+function glassHatchPosition(){return W.maps.glasshouse?.roomActors?.find(a=>a.glassHatch)||{x:68,y:120};}
+function glassHatchBlocked(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&glassHatchFrame()<3&&x>=h.x-20&&x<h.x+20&&y>=h.y-16&&y<h.y-2;}
+function glassHatchNear(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&Math.abs(x-h.x)<29&&Math.abs(y-(h.y-4))<28;}
 function drawHettieCallout(n,sp) {
   const bob=Math.sin(tAcc*4)*1.5, x=Math.round(n.x-18),y=Math.round(n.y-sp[3]-21+bob);
   ctx.save();ctx.fillStyle="#493529";ctx.fillRect(x+2,y+2,36,17);
@@ -10344,7 +10355,7 @@ function drawFishing(){
 }
 function interact() {
   if(fishing){if(fishing.phase==='prompt')askTake();else fishingAction();return;}
-  if (MAPID === "glasshouse" && !sayNpc && Math.abs(P.x - 68) < 29 && Math.abs(P.y - 116) < 28) {
+  if (!sayNpc && glassHatchNear(P.x,P.y)) {
     if (glassHatchStarted < 0) glassHatchStarted = performance.now() / 1000;
     return;
   }

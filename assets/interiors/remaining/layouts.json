@@ -1,0 +1,5388 @@
+{
+  "house08": {
+    "source": "house08_room",
+    "objects": [
+      {
+        "name": "rug",
+        "x": 74,
+        "y": 114,
+        "w": 97,
+        "h": 84,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          242,
+          0,
+          97,
+          84
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 24,
+        "y": 34,
+        "w": 52,
+        "h": 50,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          341,
+          0,
+          52,
+          50
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 72,
+        "y": 128,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          395,
+          0,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "dock-supplies",
+        "x": 174,
+        "y": 124,
+        "w": 42,
+        "h": 44,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          447,
+          0,
+          42,
+          44
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 91,
+        "y": 158,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          491,
+          0,
+          12,
+          23
+        ]
+      },
+      {
+        "name": "iplant4",
+        "x": 200,
+        "y": 163,
+        "w": 16,
+        "h": 31,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          505,
+          0,
+          16,
+          31
+        ]
+      },
+      {
+        "name": "plant-or-produce",
+        "x": 26,
+        "y": 140,
+        "w": 32,
+        "h": 56,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          523,
+          0,
+          32,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      0,
+      240,
+      224
+    ]
+  },
+  "house42": {
+    "source": "house42_room",
+    "objects": [
+      {
+        "name": "rug",
+        "x": 74,
+        "y": 114,
+        "w": 97,
+        "h": 84,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          815,
+          0,
+          97,
+          84
+        ]
+      },
+      {
+        "name": "hanging-herbs",
+        "x": 118,
+        "y": 16,
+        "w": 12,
+        "h": 32,
+        "flat": false,
+        "sortY": 48,
+        "rect": [
+          914,
+          0,
+          12,
+          32
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 24,
+        "y": 34,
+        "w": 52,
+        "h": 50,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          928,
+          0,
+          52,
+          50
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 72,
+        "y": 128,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          982,
+          0,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "dock-supplies",
+        "x": 190,
+        "y": 124,
+        "w": 42,
+        "h": 44,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          1034,
+          0,
+          42,
+          44
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 91,
+        "y": 158,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          1078,
+          0,
+          12,
+          23
+        ]
+      },
+      {
+        "name": "iplant0",
+        "x": 219,
+        "y": 165,
+        "w": 13,
+        "h": 29,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          1092,
+          0,
+          13,
+          29
+        ]
+      },
+      {
+        "name": "plant-or-produce",
+        "x": 26,
+        "y": 140,
+        "w": 32,
+        "h": 56,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          1107,
+          0,
+          32,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      557,
+      0,
+      256,
+      224
+    ]
+  },
+  "house43": {
+    "source": "house43_room",
+    "objects": [
+      {
+        "name": "rug",
+        "x": 74,
+        "y": 114,
+        "w": 97,
+        "h": 84,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1415,
+          0,
+          97,
+          84
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 24,
+        "y": 34,
+        "w": 52,
+        "h": 50,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          1514,
+          0,
+          52,
+          50
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 72,
+        "y": 128,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          1568,
+          0,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "dock-supplies",
+        "x": 206,
+        "y": 124,
+        "w": 42,
+        "h": 44,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          1620,
+          0,
+          42,
+          44
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 91,
+        "y": 158,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          1664,
+          0,
+          12,
+          23
+        ]
+      },
+      {
+        "name": "iplant0",
+        "x": 235,
+        "y": 165,
+        "w": 13,
+        "h": 29,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          1678,
+          0,
+          13,
+          29
+        ]
+      },
+      {
+        "name": "plant-or-produce",
+        "x": 26,
+        "y": 140,
+        "w": 32,
+        "h": 56,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          1693,
+          0,
+          32,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      1141,
+      0,
+      272,
+      224
+    ]
+  },
+  "house44": {
+    "source": "house44_room",
+    "objects": [
+      {
+        "name": "rug",
+        "x": 74,
+        "y": 114,
+        "w": 97,
+        "h": 84,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          0,
+          226,
+          97,
+          84
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 24,
+        "y": 34,
+        "w": 52,
+        "h": 50,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          99,
+          226,
+          52,
+          50
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 72,
+        "y": 128,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          153,
+          226,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "dock-supplies",
+        "x": 174,
+        "y": 124,
+        "w": 42,
+        "h": 44,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          205,
+          226,
+          42,
+          44
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 91,
+        "y": 158,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          249,
+          226,
+          12,
+          23
+        ]
+      },
+      {
+        "name": "iplant2",
+        "x": 24,
+        "y": 164,
+        "w": 16,
+        "h": 30,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          263,
+          226,
+          16,
+          30
+        ]
+      },
+      {
+        "name": "iplant1",
+        "x": 203,
+        "y": 165,
+        "w": 13,
+        "h": 29,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          281,
+          226,
+          13,
+          29
+        ]
+      },
+      {
+        "name": "plant-or-produce",
+        "x": 26,
+        "y": 140,
+        "w": 32,
+        "h": 56,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          296,
+          226,
+          32,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      1727,
+      0,
+      240,
+      224
+    ]
+  },
+  "house45": {
+    "source": "house45_room",
+    "objects": [
+      {
+        "name": "rug",
+        "x": 74,
+        "y": 114,
+        "w": 97,
+        "h": 84,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          588,
+          226,
+          97,
+          84
+        ]
+      },
+      {
+        "name": "hanging-herbs",
+        "x": 118,
+        "y": 16,
+        "w": 12,
+        "h": 32,
+        "flat": false,
+        "sortY": 48,
+        "rect": [
+          687,
+          226,
+          12,
+          32
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 24,
+        "y": 34,
+        "w": 52,
+        "h": 50,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          701,
+          226,
+          52,
+          50
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 72,
+        "y": 128,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          755,
+          226,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "dock-supplies",
+        "x": 190,
+        "y": 124,
+        "w": 42,
+        "h": 44,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          807,
+          226,
+          42,
+          44
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 91,
+        "y": 158,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          851,
+          226,
+          12,
+          23
+        ]
+      },
+      {
+        "name": "iplant2",
+        "x": 24,
+        "y": 164,
+        "w": 16,
+        "h": 30,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          865,
+          226,
+          16,
+          30
+        ]
+      },
+      {
+        "name": "iplant0",
+        "x": 219,
+        "y": 165,
+        "w": 13,
+        "h": 29,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          883,
+          226,
+          13,
+          29
+        ]
+      },
+      {
+        "name": "plant-or-produce",
+        "x": 26,
+        "y": 140,
+        "w": 32,
+        "h": 56,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          898,
+          226,
+          32,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      330,
+      226,
+      256,
+      224
+    ]
+  },
+  "millwood_barn": {
+    "source": "millwood_barn_room",
+    "objects": [
+      {
+        "name": "pack_157_2",
+        "x": 155,
+        "y": 67,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 91,
+        "rect": [
+          1222,
+          226,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 125,
+        "y": 67,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 91,
+        "rect": [
+          1240,
+          226,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 76,
+        "y": 72,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 99,
+        "rect": [
+          1258,
+          226,
+          19,
+          27
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 34,
+        "y": 72,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 99,
+        "rect": [
+          1279,
+          226,
+          19,
+          27
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 34,
+        "y": 132,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 159,
+        "rect": [
+          1300,
+          226,
+          19,
+          27
+        ]
+      },
+      {
+        "name": "supply-shelf",
+        "x": 117,
+        "y": 117,
+        "w": 52,
+        "h": 61,
+        "flat": false,
+        "sortY": 178,
+        "rect": [
+          1321,
+          226,
+          52,
+          61
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 238,
+        "y": 152,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 179,
+        "rect": [
+          1375,
+          226,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      932,
+      226,
+      288,
+      240
+    ]
+  },
+  "millwood_barn_loft": {
+    "source": "millwood_barn_loft_room",
+    "objects": [
+      {
+        "name": "pack_51_0",
+        "x": 27,
+        "y": 68,
+        "w": 23,
+        "h": 39,
+        "flat": false,
+        "sortY": 107,
+        "rect": [
+          1606,
+          226,
+          23,
+          39
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 81,
+        "y": 142,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 166,
+        "rect": [
+          1631,
+          226,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 30,
+        "y": 142,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 169,
+        "rect": [
+          1649,
+          226,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      1396,
+      226,
+      208,
+      208
+    ]
+  },
+  "millwood_shed": {
+    "source": "millwood_shed_room",
+    "objects": [
+      {
+        "name": "pack_146_136",
+        "x": 122,
+        "y": 70,
+        "w": 34,
+        "h": 32,
+        "flat": false,
+        "sortY": 102,
+        "rect": [
+          1880,
+          226,
+          34,
+          32
+        ]
+      },
+      {
+        "name": "supply-shelf",
+        "x": 38,
+        "y": 32,
+        "w": 58,
+        "h": 74,
+        "flat": false,
+        "sortY": 106,
+        "rect": [
+          1916,
+          226,
+          58,
+          74
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 149,
+        "y": 122,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 146,
+        "rect": [
+          1976,
+          226,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 34,
+        "y": 120,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 147,
+        "rect": [
+          1994,
+          226,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      1670,
+      226,
+      208,
+      192
+    ]
+  },
+  "millwood_fisher": {
+    "source": "millwood_fisher_room",
+    "objects": [
+      {
+        "name": "supply-shelf",
+        "x": 30,
+        "y": 32,
+        "w": 60,
+        "h": 74,
+        "flat": false,
+        "sortY": 106,
+        "rect": [
+          226,
+          468,
+          60,
+          74
+        ]
+      },
+      {
+        "name": "pack_51_0",
+        "x": 147,
+        "y": 72,
+        "w": 23,
+        "h": 39,
+        "flat": false,
+        "sortY": 111,
+        "rect": [
+          288,
+          468,
+          23,
+          39
+        ]
+      },
+      {
+        "name": "itable3",
+        "x": 72,
+        "y": 115,
+        "w": 34,
+        "h": 33,
+        "flat": false,
+        "sortY": 148,
+        "rect": [
+          313,
+          468,
+          34,
+          33
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 29,
+        "y": 137,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 161,
+        "rect": [
+          349,
+          468,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 162,
+        "y": 147,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          367,
+          468,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      468,
+      224,
+      208
+    ]
+  },
+  "millwood_mill": {
+    "source": "millwood_mill_room",
+    "objects": [
+      {
+        "name": "supply-shelf",
+        "x": 30,
+        "y": 32,
+        "w": 59,
+        "h": 76,
+        "flat": false,
+        "sortY": 108,
+        "rect": [
+          614,
+          468,
+          59,
+          76
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 34,
+        "y": 122,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 149,
+        "rect": [
+          675,
+          468,
+          19,
+          27
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 69,
+        "y": 126,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 150,
+        "rect": [
+          696,
+          468,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_146_136",
+        "x": 114,
+        "y": 132,
+        "w": 34,
+        "h": 32,
+        "flat": false,
+        "sortY": 164,
+        "rect": [
+          714,
+          468,
+          34,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      388,
+      468,
+      224,
+      224
+    ]
+  },
+  "millwood_mill_loft": {
+    "source": "millwood_mill_loft_room",
+    "objects": [
+      {
+        "name": "pack_51_0",
+        "x": 27,
+        "y": 68,
+        "w": 23,
+        "h": 39,
+        "flat": false,
+        "sortY": 107,
+        "rect": [
+          960,
+          468,
+          23,
+          39
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 81,
+        "y": 142,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 166,
+        "rect": [
+          985,
+          468,
+          16,
+          24
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 30,
+        "y": 142,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 169,
+        "rect": [
+          1003,
+          468,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      750,
+      468,
+      208,
+      208
+    ]
+  },
+  "house08_bedroom": {
+    "source": "house08_bedroom_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          1218,
+          468,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1246,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1276,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "ibed1",
+        "x": 32,
+        "y": 64,
+        "w": 14,
+        "h": 31,
+        "flat": false,
+        "sortY": 95,
+        "rect": [
+          1306,
+          468,
+          14,
+          31
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 134,
+        "y": 144,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          1322,
+          468,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      1024,
+      468,
+      192,
+      208
+    ]
+  },
+  "house42_bedroom": {
+    "source": "house42_bedroom_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          1537,
+          468,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1565,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1595,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "ibed1",
+        "x": 32,
+        "y": 64,
+        "w": 14,
+        "h": 31,
+        "flat": false,
+        "sortY": 95,
+        "rect": [
+          1625,
+          468,
+          14,
+          31
+        ]
+      },
+      {
+        "name": "itable2",
+        "x": 28,
+        "y": 120,
+        "w": 50,
+        "h": 33,
+        "flat": false,
+        "sortY": 153,
+        "rect": [
+          1641,
+          468,
+          50,
+          33
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 134,
+        "y": 144,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          1693,
+          468,
+          19,
+          27
+        ]
+      },
+      {
+        "name": "ichair1",
+        "x": 47,
+        "y": 154,
+        "w": 12,
+        "h": 23,
+        "flat": false,
+        "sortY": 177,
+        "rect": [
+          1714,
+          468,
+          12,
+          23
+        ]
+      }
+    ],
+    "baseRect": [
+      1343,
+      468,
+      192,
+      208
+    ]
+  },
+  "house43_bedroom": {
+    "source": "house43_bedroom_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          1922,
+          468,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1950,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1980,
+          468,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "ibed0",
+        "x": 32,
+        "y": 64,
+        "w": 25,
+        "h": 31,
+        "flat": false,
+        "sortY": 95,
+        "rect": [
+          2010,
+          468,
+          25,
+          31
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 134,
+        "y": 144,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          0,
+          694,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      1728,
+      468,
+      192,
+      208
+    ]
+  },
+  "house43_bedroom2": {
+    "source": "house43_bedroom2_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          215,
+          694,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          243,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          273,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "pack_51_0",
+        "x": 35,
+        "y": 64,
+        "w": 23,
+        "h": 39,
+        "flat": false,
+        "sortY": 103,
+        "rect": [
+          303,
+          694,
+          23,
+          39
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 141,
+        "y": 147,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          328,
+          694,
+          16,
+          24
+        ]
+      }
+    ],
+    "baseRect": [
+      21,
+      694,
+      192,
+      208
+    ]
+  },
+  "house44_bedroom": {
+    "source": "house44_bedroom_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          540,
+          694,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          568,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          598,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "ibed1",
+        "x": 32,
+        "y": 64,
+        "w": 14,
+        "h": 31,
+        "flat": false,
+        "sortY": 95,
+        "rect": [
+          628,
+          694,
+          14,
+          31
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 134,
+        "y": 144,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          644,
+          694,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      346,
+      694,
+      192,
+      208
+    ]
+  },
+  "house45_bedroom": {
+    "source": "house45_bedroom_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          859,
+          694,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          887,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          917,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "ibed2",
+        "x": 32,
+        "y": 64,
+        "w": 25,
+        "h": 20,
+        "flat": false,
+        "sortY": 84,
+        "rect": [
+          947,
+          694,
+          25,
+          20
+        ]
+      },
+      {
+        "name": "pack_86_2",
+        "x": 134,
+        "y": 144,
+        "w": 19,
+        "h": 27,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          974,
+          694,
+          19,
+          27
+        ]
+      }
+    ],
+    "baseRect": [
+      665,
+      694,
+      192,
+      208
+    ]
+  },
+  "house45_bedroom2": {
+    "source": "house45_bedroom2_room",
+    "objects": [
+      {
+        "name": "pack_163_81",
+        "x": 115,
+        "y": 33,
+        "w": 26,
+        "h": 44,
+        "flat": false,
+        "sortY": 77,
+        "rect": [
+          1189,
+          694,
+          26,
+          44
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 78,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1217,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 114,
+        "y": 34,
+        "w": 28,
+        "h": 44,
+        "flat": false,
+        "sortY": 78,
+        "rect": [
+          1247,
+          694,
+          28,
+          44
+        ]
+      },
+      {
+        "name": "pack_51_0",
+        "x": 35,
+        "y": 64,
+        "w": 23,
+        "h": 39,
+        "flat": false,
+        "sortY": 103,
+        "rect": [
+          1277,
+          694,
+          23,
+          39
+        ]
+      },
+      {
+        "name": "pack_157_2",
+        "x": 141,
+        "y": 147,
+        "w": 16,
+        "h": 24,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          1302,
+          694,
+          16,
+          24
+        ]
+      }
+    ],
+    "baseRect": [
+      995,
+      694,
+      192,
+      208
+    ]
+  },
+  "royal_vestibule": {
+    "source": "royal_room_vestibule",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 76,
+        "y": 84,
+        "w": 200,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1674,
+          694,
+          200,
+          54
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 32,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1876,
+          694,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 288,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1910,
+          694,
+          32,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      1320,
+      694,
+      352,
+      176
+    ]
+  },
+  "royal_westhall": {
+    "source": "royal_room_westhall",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 76,
+        "y": 84,
+        "w": 200,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          354,
+          904,
+          200,
+          54
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 32,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          556,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 96,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          590,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 224,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          624,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 288,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          658,
+          904,
+          32,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      904,
+      352,
+      176
+    ]
+  },
+  "royal_easthall": {
+    "source": "royal_room_easthall",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 76,
+        "y": 84,
+        "w": 200,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1046,
+          904,
+          200,
+          54
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 32,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1248,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 96,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1282,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 224,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1316,
+          904,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 288,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1350,
+          904,
+          32,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      692,
+      904,
+      352,
+      176
+    ]
+  },
+  "royal_banquet": {
+    "source": "royal_room_banquet",
+    "objects": [
+      {
+        "name": "banquet-table",
+        "x": 39,
+        "y": 96,
+        "w": 123,
+        "h": 54,
+        "flat": false,
+        "sortY": 150,
+        "rect": [
+          1610,
+          904,
+          123,
+          54
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 48,
+        "y": 78,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1735,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 48,
+        "y": 129,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1755,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 70,
+        "y": 78,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1775,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 70,
+        "y": 129,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1795,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 92,
+        "y": 78,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1815,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 92,
+        "y": 129,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1835,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 114,
+        "y": 78,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1855,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 114,
+        "y": 129,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1875,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 136,
+        "y": 78,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1895,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 136,
+        "y": 129,
+        "w": 18,
+        "h": 25,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1915,
+          904,
+          18,
+          25
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 164,
+        "y": 102,
+        "w": 18,
+        "h": 31,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          1935,
+          904,
+          18,
+          31
+        ]
+      }
+    ],
+    "baseRect": [
+      1384,
+      904,
+      224,
+      240
+    ]
+  },
+  "royal_armory": {
+    "source": "royal_room_armory",
+    "objects": [
+      {
+        "name": "weapon-rack",
+        "x": 20,
+        "y": 45,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 85,
+        "rect": [
+          226,
+          1146,
+          40,
+          40
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 160,
+        "y": 45,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 85,
+        "rect": [
+          268,
+          1146,
+          40,
+          40
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 20,
+        "y": 85,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 125,
+        "rect": [
+          310,
+          1146,
+          40,
+          40
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 160,
+        "y": 85,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 125,
+        "rect": [
+          352,
+          1146,
+          40,
+          40
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 20,
+        "y": 133,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 173,
+        "rect": [
+          394,
+          1146,
+          40,
+          40
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 160,
+        "y": 133,
+        "w": 40,
+        "h": 40,
+        "flat": false,
+        "sortY": 173,
+        "rect": [
+          436,
+          1146,
+          40,
+          40
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      1146,
+      224,
+      208
+    ]
+  },
+  "royal_guardroom": {
+    "source": "royal_room_guardroom",
+    "objects": [],
+    "baseRect": [
+      478,
+      1146,
+      224,
+      208
+    ]
+  },
+  "royal_upperhall": {
+    "source": "royal_room_upperhall",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 76,
+        "y": 84,
+        "w": 200,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1058,
+          1146,
+          200,
+          54
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 32,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1260,
+          1146,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 96,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1294,
+          1146,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 224,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1328,
+          1146,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 288,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1362,
+          1146,
+          32,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      704,
+      1146,
+      352,
+      176
+    ]
+  },
+  "royal_bedroom": {
+    "source": "royal_room_bedroom",
+    "objects": [
+      {
+        "name": "bedroom-rug",
+        "x": 46,
+        "y": 78,
+        "w": 78,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1574,
+          1146,
+          78,
+          54
+        ]
+      },
+      {
+        "name": "bedside-table",
+        "x": 31,
+        "y": 62,
+        "w": 27,
+        "h": 29,
+        "flat": false,
+        "sortY": 91,
+        "rect": [
+          1654,
+          1146,
+          27,
+          29
+        ]
+      },
+      {
+        "name": "bedside-table",
+        "x": 124,
+        "y": 60,
+        "w": 21,
+        "h": 32,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          1683,
+          1146,
+          21,
+          32
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 60,
+        "y": 38,
+        "w": 48,
+        "h": 56,
+        "flat": false,
+        "sortY": 94,
+        "rect": [
+          1706,
+          1146,
+          48,
+          56
+        ]
+      }
+    ],
+    "baseRect": [
+      1396,
+      1146,
+      176,
+      144
+    ]
+  },
+  "royal_salon": {
+    "source": "royal_room_salon",
+    "objects": [
+      {
+        "name": "armchair",
+        "x": 20,
+        "y": 88,
+        "w": 48,
+        "h": 46,
+        "flat": false,
+        "sortY": 134,
+        "rect": [
+          1982,
+          1146,
+          48,
+          46
+        ]
+      },
+      {
+        "name": "armchair",
+        "x": 86,
+        "y": 88,
+        "w": 49,
+        "h": 46,
+        "flat": false,
+        "sortY": 134,
+        "rect": [
+          0,
+          1356,
+          49,
+          46
+        ]
+      },
+      {
+        "name": "tea-table",
+        "x": 65,
+        "y": 118,
+        "w": 25,
+        "h": 32,
+        "flat": false,
+        "sortY": 150,
+        "rect": [
+          51,
+          1356,
+          25,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      1756,
+      1146,
+      224,
+      208
+    ]
+  },
+  "royal_study": {
+    "source": "royal_room_study",
+    "objects": [
+      {
+        "name": "bookcase",
+        "x": 23,
+        "y": 32,
+        "w": 55,
+        "h": 60,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          304,
+          1356,
+          55,
+          60
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 100,
+        "y": 32,
+        "w": 55,
+        "h": 60,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          361,
+          1356,
+          55,
+          60
+        ]
+      },
+      {
+        "name": "writing-desk",
+        "x": 115,
+        "y": 117,
+        "w": 64,
+        "h": 41,
+        "flat": false,
+        "sortY": 158,
+        "rect": [
+          418,
+          1356,
+          64,
+          41
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 23,
+        "y": 116,
+        "w": 55,
+        "h": 60,
+        "flat": false,
+        "sortY": 176,
+        "rect": [
+          484,
+          1356,
+          55,
+          60
+        ]
+      }
+    ],
+    "baseRect": [
+      78,
+      1356,
+      224,
+      208
+    ]
+  },
+  "royal_treasury": {
+    "source": "royal_room_treasury",
+    "objects": [],
+    "baseRect": [
+      541,
+      1356,
+      224,
+      208
+    ]
+  },
+  "royal_northhall": {
+    "source": "royal_room_northhall",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 76,
+        "y": 84,
+        "w": 200,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1121,
+          1356,
+          200,
+          54
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 32,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1323,
+          1356,
+          32,
+          32
+        ]
+      },
+      {
+        "name": "painting",
+        "x": 288,
+        "y": 24,
+        "w": 32,
+        "h": 32,
+        "flat": false,
+        "sortY": 56,
+        "rect": [
+          1357,
+          1356,
+          32,
+          32
+        ]
+      }
+    ],
+    "baseRect": [
+      767,
+      1356,
+      352,
+      176
+    ]
+  },
+  "royal_seal": {
+    "source": "royal_room_seal",
+    "objects": [
+      {
+        "name": "carpet",
+        "x": 16,
+        "y": 125,
+        "w": 194,
+        "h": 52,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1617,
+          1356,
+          194,
+          52
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 25,
+        "y": 48,
+        "w": 25,
+        "h": 42,
+        "flat": false,
+        "sortY": 90,
+        "rect": [
+          1813,
+          1356,
+          25,
+          42
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 180,
+        "y": 48,
+        "w": 25,
+        "h": 42,
+        "flat": false,
+        "sortY": 90,
+        "rect": [
+          1840,
+          1356,
+          25,
+          42
+        ]
+      }
+    ],
+    "baseRect": [
+      1391,
+      1356,
+      224,
+      208
+    ]
+  },
+  "tavern": {
+    "source": "tavern_room",
+    "objects": [
+      {
+        "name": "stage-rug",
+        "x": 53,
+        "y": 275,
+        "w": 93,
+        "h": 54,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          498,
+          1566,
+          93,
+          54
+        ]
+      },
+      {
+        "name": "stage-rug",
+        "x": 352,
+        "y": 272,
+        "w": 92,
+        "h": 57,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          593,
+          1566,
+          92,
+          57
+        ]
+      },
+      {
+        "name": "bar-counter",
+        "x": 162,
+        "y": 84,
+        "w": 159,
+        "h": 64,
+        "flat": false,
+        "sortY": 142,
+        "rect": [
+          687,
+          1566,
+          159,
+          64
+        ]
+      },
+      {
+        "name": "barrel",
+        "x": 177,
+        "y": 62,
+        "w": 30,
+        "h": 45,
+        "flat": false,
+        "sortY": 143,
+        "rect": [
+          848,
+          1566,
+          30,
+          45
+        ]
+      },
+      {
+        "name": "barrel",
+        "x": 209,
+        "y": 78,
+        "w": 19,
+        "h": 29,
+        "flat": false,
+        "sortY": 143,
+        "rect": [
+          880,
+          1566,
+          19,
+          29
+        ]
+      },
+      {
+        "name": "bottle-cabinet",
+        "x": 230,
+        "y": 63,
+        "w": 46,
+        "h": 44,
+        "flat": false,
+        "sortY": 143,
+        "rect": [
+          901,
+          1566,
+          46,
+          44
+        ]
+      },
+      {
+        "name": "barrel",
+        "x": 277,
+        "y": 69,
+        "w": 26,
+        "h": 38,
+        "flat": false,
+        "sortY": 143,
+        "rect": [
+          949,
+          1566,
+          26,
+          38
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 156,
+        "y": 164,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          977,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 174,
+        "y": 164,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          990,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 192,
+        "y": 164,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1003,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 276,
+        "y": 164,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1016,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 294,
+        "y": 158,
+        "w": 15,
+        "h": 16,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1029,
+          1566,
+          15,
+          16
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 310,
+        "y": 164,
+        "w": 13,
+        "h": 10,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1046,
+          1566,
+          13,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 81,
+        "y": 159,
+        "w": 10,
+        "h": 15,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1061,
+          1566,
+          10,
+          15
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 120,
+        "y": 159,
+        "w": 16,
+        "h": 15,
+        "flat": false,
+        "sortY": 174,
+        "rect": [
+          1073,
+          1566,
+          16,
+          15
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 369,
+        "y": 161,
+        "w": 11,
+        "h": 19,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          1091,
+          1566,
+          11,
+          19
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 409,
+        "y": 161,
+        "w": 15,
+        "h": 19,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          1104,
+          1566,
+          15,
+          19
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 91,
+        "y": 144,
+        "w": 29,
+        "h": 37,
+        "flat": false,
+        "sortY": 181,
+        "rect": [
+          1121,
+          1566,
+          29,
+          37
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 379,
+        "y": 150,
+        "w": 34,
+        "h": 37,
+        "flat": false,
+        "sortY": 187,
+        "rect": [
+          1152,
+          1566,
+          34,
+          37
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 150,
+        "y": 171,
+        "w": 55,
+        "h": 23,
+        "flat": false,
+        "sortY": 193,
+        "rect": [
+          1188,
+          1566,
+          55,
+          23
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 274,
+        "y": 174,
+        "w": 54,
+        "h": 21,
+        "flat": false,
+        "sortY": 193,
+        "rect": [
+          1245,
+          1566,
+          54,
+          21
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 156,
+        "y": 193,
+        "w": 11,
+        "h": 12,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1301,
+          1566,
+          11,
+          12
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 174,
+        "y": 193,
+        "w": 13,
+        "h": 12,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1314,
+          1566,
+          13,
+          12
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 192,
+        "y": 193,
+        "w": 12,
+        "h": 12,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1329,
+          1566,
+          12,
+          12
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 274,
+        "y": 193,
+        "w": 13,
+        "h": 11,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1343,
+          1566,
+          13,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 294,
+        "y": 193,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1358,
+          1566,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 311,
+        "y": 193,
+        "w": 15,
+        "h": 11,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1371,
+          1566,
+          15,
+          11
+        ]
+      },
+      {
+        "name": "musician-supplies",
+        "x": 146,
+        "y": 180,
+        "w": 29,
+        "h": 27,
+        "flat": false,
+        "sortY": 204,
+        "rect": [
+          1388,
+          1566,
+          29,
+          27
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 55,
+        "y": 219,
+        "w": 12,
+        "h": 21,
+        "flat": false,
+        "sortY": 240,
+        "rect": [
+          1419,
+          1566,
+          12,
+          21
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 96,
+        "y": 219,
+        "w": 10,
+        "h": 21,
+        "flat": false,
+        "sortY": 240,
+        "rect": [
+          1433,
+          1566,
+          10,
+          21
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 391,
+        "y": 225,
+        "w": 13,
+        "h": 20,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          1445,
+          1566,
+          13,
+          20
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 433,
+        "y": 225,
+        "w": 11,
+        "h": 25,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          1460,
+          1566,
+          11,
+          25
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 61,
+        "y": 206,
+        "w": 41,
+        "h": 41,
+        "flat": false,
+        "sortY": 247,
+        "rect": [
+          1473,
+          1566,
+          41,
+          41
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 152,
+        "y": 235,
+        "w": 16,
+        "h": 15,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1516,
+          1566,
+          16,
+          15
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 174,
+        "y": 240,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1534,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 192,
+        "y": 238,
+        "w": 14,
+        "h": 12,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1547,
+          1566,
+          14,
+          12
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 276,
+        "y": 240,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1563,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 294,
+        "y": 240,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1576,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 312,
+        "y": 240,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1589,
+          1566,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 399,
+        "y": 211,
+        "w": 34,
+        "h": 41,
+        "flat": false,
+        "sortY": 252,
+        "rect": [
+          1602,
+          1566,
+          34,
+          41
+        ]
+      },
+      {
+        "name": "instrument",
+        "x": 68,
+        "y": 242,
+        "w": 16,
+        "h": 19,
+        "flat": false,
+        "sortY": 258,
+        "rect": [
+          1638,
+          1566,
+          16,
+          19
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 151,
+        "y": 246,
+        "w": 54,
+        "h": 25,
+        "flat": false,
+        "sortY": 269,
+        "rect": [
+          1656,
+          1566,
+          54,
+          25
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 274,
+        "y": 250,
+        "w": 56,
+        "h": 21,
+        "flat": false,
+        "sortY": 269,
+        "rect": [
+          1712,
+          1566,
+          56,
+          21
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 78,
+        "y": 257,
+        "w": 13,
+        "h": 19,
+        "flat": false,
+        "sortY": 276,
+        "rect": [
+          1770,
+          1566,
+          13,
+          19
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 120,
+        "y": 257,
+        "w": 16,
+        "h": 19,
+        "flat": false,
+        "sortY": 276,
+        "rect": [
+          1785,
+          1566,
+          16,
+          19
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 369,
+        "y": 257,
+        "w": 11,
+        "h": 19,
+        "flat": false,
+        "sortY": 276,
+        "rect": [
+          1803,
+          1566,
+          11,
+          19
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 409,
+        "y": 257,
+        "w": 10,
+        "h": 19,
+        "flat": false,
+        "sortY": 276,
+        "rect": [
+          1816,
+          1566,
+          10,
+          19
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 155,
+        "y": 269,
+        "w": 12,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1828,
+          1566,
+          12,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 173,
+        "y": 269,
+        "w": 12,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1842,
+          1566,
+          12,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 189,
+        "y": 269,
+        "w": 15,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1856,
+          1566,
+          15,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 274,
+        "y": 269,
+        "w": 13,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1873,
+          1566,
+          13,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 294,
+        "y": 269,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1888,
+          1566,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 312,
+        "y": 269,
+        "w": 14,
+        "h": 11,
+        "flat": false,
+        "sortY": 280,
+        "rect": [
+          1901,
+          1566,
+          14,
+          11
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 91,
+        "y": 244,
+        "w": 35,
+        "h": 39,
+        "flat": false,
+        "sortY": 283,
+        "rect": [
+          1917,
+          1566,
+          35,
+          39
+        ]
+      },
+      {
+        "name": "round-table",
+        "x": 374,
+        "y": 246,
+        "w": 39,
+        "h": 37,
+        "flat": false,
+        "sortY": 283,
+        "rect": [
+          1954,
+          1566,
+          39,
+          37
+        ]
+      },
+      {
+        "name": "piano",
+        "x": 73,
+        "y": 297,
+        "w": 41,
+        "h": 25,
+        "flat": false,
+        "sortY": 322,
+        "rect": [
+          1995,
+          1566,
+          41,
+          25
+        ]
+      },
+      {
+        "name": "piano",
+        "x": 374,
+        "y": 297,
+        "w": 41,
+        "h": 25,
+        "flat": false,
+        "sortY": 322,
+        "rect": [
+          0,
+          1952,
+          41,
+          25
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      1566,
+      496,
+      384
+    ]
+  },
+  "inn": {
+    "source": "inn_room",
+    "objects": [
+      {
+        "name": "reception-counter",
+        "x": 156,
+        "y": 85,
+        "w": 84,
+        "h": 55,
+        "flat": false,
+        "sortY": 138,
+        "rect": [
+          493,
+          1952,
+          84,
+          55
+        ]
+      },
+      {
+        "name": "potted-plant",
+        "x": 381,
+        "y": 122,
+        "w": 17,
+        "h": 25,
+        "flat": false,
+        "sortY": 147,
+        "rect": [
+          579,
+          1952,
+          17,
+          25
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 84,
+        "y": 142,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          598,
+          1952,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 102,
+        "y": 142,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          611,
+          1952,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 120,
+        "y": 142,
+        "w": 11,
+        "h": 10,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          624,
+          1952,
+          11,
+          10
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 82,
+        "y": 152,
+        "w": 57,
+        "h": 20,
+        "flat": false,
+        "sortY": 171,
+        "rect": [
+          637,
+          1952,
+          57,
+          20
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 83,
+        "y": 171,
+        "w": 12,
+        "h": 12,
+        "flat": false,
+        "sortY": 182,
+        "rect": [
+          696,
+          1952,
+          12,
+          12
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 102,
+        "y": 171,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 182,
+        "rect": [
+          710,
+          1952,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 119,
+        "y": 171,
+        "w": 13,
+        "h": 11,
+        "flat": false,
+        "sortY": 182,
+        "rect": [
+          723,
+          1952,
+          13,
+          11
+        ]
+      }
+    ],
+    "baseRect": [
+      43,
+      1952,
+      448,
+      304
+    ]
+  },
+  "innrooms": {
+    "source": "innrooms_room",
+    "objects": [],
+    "baseRect": [
+      738,
+      1952,
+      416,
+      176
+    ]
+  },
+  "inn_guest1": {
+    "source": "inn_guest1_room",
+    "objects": [
+      {
+        "name": "bedroom-rug",
+        "x": 39,
+        "y": 76,
+        "w": 61,
+        "h": 56,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1302,
+          1952,
+          61,
+          56
+        ]
+      },
+      {
+        "name": "bedside-cabinet",
+        "x": 48,
+        "y": 68,
+        "w": 15,
+        "h": 24,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          1365,
+          1952,
+          15,
+          24
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 67,
+        "y": 62,
+        "w": 24,
+        "h": 55,
+        "flat": false,
+        "sortY": 117,
+        "rect": [
+          1382,
+          1952,
+          24,
+          55
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 53,
+        "y": 112,
+        "w": 14,
+        "h": 14,
+        "flat": false,
+        "sortY": 126,
+        "rect": [
+          1408,
+          1952,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 35,
+        "y": 97,
+        "w": 24,
+        "h": 46,
+        "flat": false,
+        "sortY": 140,
+        "rect": [
+          1424,
+          1952,
+          24,
+          46
+        ]
+      }
+    ],
+    "baseRect": [
+      1156,
+      1952,
+      144,
+      208
+    ]
+  },
+  "inn_guest2": {
+    "source": "inn_guest2_room",
+    "objects": [
+      {
+        "name": "bedroom-rug",
+        "x": 40,
+        "y": 76,
+        "w": 60,
+        "h": 56,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1596,
+          1952,
+          60,
+          56
+        ]
+      },
+      {
+        "name": "glass-lamp",
+        "x": 36,
+        "y": 48,
+        "w": 13,
+        "h": 31,
+        "flat": false,
+        "sortY": 79,
+        "rect": [
+          1658,
+          1952,
+          13,
+          31
+        ]
+      },
+      {
+        "name": "bedside-cabinet",
+        "x": 48,
+        "y": 68,
+        "w": 15,
+        "h": 24,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          1673,
+          1952,
+          15,
+          24
+        ]
+      },
+      {
+        "name": "floor-vase",
+        "x": 37,
+        "y": 81,
+        "w": 15,
+        "h": 31,
+        "flat": false,
+        "sortY": 112,
+        "rect": [
+          1690,
+          1952,
+          15,
+          31
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 67,
+        "y": 62,
+        "w": 24,
+        "h": 55,
+        "flat": false,
+        "sortY": 117,
+        "rect": [
+          1707,
+          1952,
+          24,
+          55
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 53,
+        "y": 112,
+        "w": 14,
+        "h": 14,
+        "flat": false,
+        "sortY": 126,
+        "rect": [
+          1733,
+          1952,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 35,
+        "y": 97,
+        "w": 24,
+        "h": 46,
+        "flat": false,
+        "sortY": 140,
+        "rect": [
+          1749,
+          1952,
+          24,
+          46
+        ]
+      }
+    ],
+    "baseRect": [
+      1450,
+      1952,
+      144,
+      208
+    ]
+  },
+  "inn_guest3": {
+    "source": "inn_guest3_room",
+    "objects": [
+      {
+        "name": "bedroom-rug",
+        "x": 40,
+        "y": 76,
+        "w": 60,
+        "h": 56,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1921,
+          1952,
+          60,
+          56
+        ]
+      },
+      {
+        "name": "candelabra",
+        "x": 53,
+        "y": 62,
+        "w": 12,
+        "h": 21,
+        "flat": false,
+        "sortY": 83,
+        "rect": [
+          1983,
+          1952,
+          12,
+          21
+        ]
+      },
+      {
+        "name": "bedside-cabinet",
+        "x": 48,
+        "y": 68,
+        "w": 15,
+        "h": 24,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          1997,
+          1952,
+          15,
+          24
+        ]
+      },
+      {
+        "name": "desk-supplies",
+        "x": 37,
+        "y": 80,
+        "w": 24,
+        "h": 44,
+        "flat": false,
+        "sortY": 124,
+        "rect": [
+          2014,
+          1952,
+          24,
+          44
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 53,
+        "y": 112,
+        "w": 14,
+        "h": 14,
+        "flat": false,
+        "sortY": 126,
+        "rect": [
+          0,
+          2258,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 35,
+        "y": 97,
+        "w": 24,
+        "h": 46,
+        "flat": false,
+        "sortY": 140,
+        "rect": [
+          16,
+          2258,
+          24,
+          46
+        ]
+      }
+    ],
+    "baseRect": [
+      1775,
+      1952,
+      144,
+      208
+    ]
+  },
+  "inn_guest4": {
+    "source": "inn_guest4_room",
+    "objects": [
+      {
+        "name": "bedroom-rug",
+        "x": 40,
+        "y": 76,
+        "w": 72,
+        "h": 56,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          204,
+          2258,
+          72,
+          56
+        ]
+      },
+      {
+        "name": "bedside-cabinet",
+        "x": 48,
+        "y": 68,
+        "w": 15,
+        "h": 24,
+        "flat": false,
+        "sortY": 92,
+        "rect": [
+          278,
+          2258,
+          15,
+          24
+        ]
+      },
+      {
+        "name": "weapon-display",
+        "x": 35,
+        "y": 46,
+        "w": 31,
+        "h": 53,
+        "flat": false,
+        "sortY": 99,
+        "rect": [
+          295,
+          2258,
+          31,
+          53
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 65,
+        "y": 62,
+        "w": 43,
+        "h": 55,
+        "flat": false,
+        "sortY": 117,
+        "rect": [
+          328,
+          2258,
+          43,
+          55
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 53,
+        "y": 112,
+        "w": 14,
+        "h": 14,
+        "flat": false,
+        "sortY": 126,
+        "rect": [
+          373,
+          2258,
+          14,
+          14
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 35,
+        "y": 97,
+        "w": 24,
+        "h": 46,
+        "flat": false,
+        "sortY": 140,
+        "rect": [
+          389,
+          2258,
+          24,
+          46
+        ]
+      }
+    ],
+    "baseRect": [
+      42,
+      2258,
+      160,
+      208
+    ]
+  },
+  "glasshouse": {
+    "source": "glasshouse_room",
+    "objects": [
+      {
+        "name": "shop-rug",
+        "x": 74,
+        "y": 116,
+        "w": 69,
+        "h": 34,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          625,
+          2258,
+          69,
+          34
+        ]
+      },
+      {
+        "name": "display-cabinet",
+        "x": 35,
+        "y": 12,
+        "w": 39,
+        "h": 54,
+        "flat": false,
+        "sortY": 66,
+        "rect": [
+          696,
+          2258,
+          39,
+          54
+        ]
+      },
+      {
+        "name": "display-cabinet",
+        "x": 136,
+        "y": 12,
+        "w": 37,
+        "h": 54,
+        "flat": false,
+        "sortY": 66,
+        "rect": [
+          737,
+          2258,
+          37,
+          54
+        ]
+      },
+      {
+        "name": "glass-counter",
+        "x": 88,
+        "y": 89,
+        "w": 75,
+        "h": 33,
+        "flat": false,
+        "sortY": 120,
+        "rect": [
+          776,
+          2258,
+          75,
+          33
+        ]
+      },
+      {
+        "name": "left-display",
+        "x": 12,
+        "y": 94,
+        "w": 36,
+        "h": 54,
+        "flat": false,
+        "sortY": 142,
+        "rect": [
+          853,
+          2258,
+          36,
+          54
+        ]
+      },
+      {
+        "name": "right-display",
+        "x": 162,
+        "y": 92,
+        "w": 34,
+        "h": 56,
+        "flat": false,
+        "sortY": 142,
+        "rect": [
+          891,
+          2258,
+          34,
+          56
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 65,
+        "y": 125,
+        "w": 22,
+        "h": 33,
+        "flat": false,
+        "sortY": 157,
+        "rect": [
+          927,
+          2258,
+          22,
+          33
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 122,
+        "y": 125,
+        "w": 22,
+        "h": 33,
+        "flat": false,
+        "sortY": 157,
+        "rect": [
+          951,
+          2258,
+          22,
+          33
+        ]
+      }
+    ],
+    "baseRect": [
+      415,
+      2258,
+      208,
+      192
+    ]
+  },
+  "glasswork": {
+    "source": "glasswork_room",
+    "objects": [
+      {
+        "name": "glass-vase",
+        "x": 123,
+        "y": 35,
+        "w": 26,
+        "h": 34,
+        "flat": false,
+        "sortY": 69,
+        "rect": [
+          1185,
+          2258,
+          26,
+          34
+        ]
+      },
+      {
+        "name": "coal-bin",
+        "x": 44,
+        "y": 40,
+        "w": 24,
+        "h": 31,
+        "flat": false,
+        "sortY": 71,
+        "rect": [
+          1213,
+          2258,
+          24,
+          31
+        ]
+      },
+      {
+        "name": "glass-supplies",
+        "x": 66,
+        "y": 52,
+        "w": 21,
+        "h": 32,
+        "flat": false,
+        "sortY": 83,
+        "rect": [
+          1239,
+          2258,
+          21,
+          32
+        ]
+      },
+      {
+        "name": "glass-cart",
+        "x": 28,
+        "y": 64,
+        "w": 38,
+        "h": 29,
+        "flat": false,
+        "sortY": 93,
+        "rect": [
+          1262,
+          2258,
+          38,
+          29
+        ]
+      },
+      {
+        "name": "stained-glass",
+        "x": 137,
+        "y": 35,
+        "w": 48,
+        "h": 64,
+        "flat": false,
+        "sortY": 99,
+        "rect": [
+          1302,
+          2258,
+          48,
+          64
+        ]
+      },
+      {
+        "name": "glass-bundle",
+        "x": 16,
+        "y": 85,
+        "w": 25,
+        "h": 29,
+        "flat": false,
+        "sortY": 111,
+        "rect": [
+          1352,
+          2258,
+          25,
+          29
+        ]
+      },
+      {
+        "name": "left-crate",
+        "x": 32,
+        "y": 100,
+        "w": 18,
+        "h": 23,
+        "flat": false,
+        "sortY": 117,
+        "rect": [
+          1379,
+          2258,
+          18,
+          23
+        ]
+      },
+      {
+        "name": "left-crate",
+        "x": 12,
+        "y": 102,
+        "w": 20,
+        "h": 28,
+        "flat": false,
+        "sortY": 124,
+        "rect": [
+          1399,
+          2258,
+          20,
+          28
+        ]
+      },
+      {
+        "name": "right-crate",
+        "x": 144,
+        "y": 110,
+        "w": 18,
+        "h": 20,
+        "flat": false,
+        "sortY": 124,
+        "rect": [
+          1421,
+          2258,
+          18,
+          20
+        ]
+      },
+      {
+        "name": "right-crate",
+        "x": 186,
+        "y": 109,
+        "w": 12,
+        "h": 20,
+        "flat": false,
+        "sortY": 124,
+        "rect": [
+          1441,
+          2258,
+          12,
+          20
+        ]
+      },
+      {
+        "name": "glass-bundle",
+        "x": 151,
+        "y": 94,
+        "w": 44,
+        "h": 37,
+        "flat": false,
+        "sortY": 125,
+        "rect": [
+          1455,
+          2258,
+          44,
+          37
+        ]
+      }
+    ],
+    "baseRect": [
+      975,
+      2258,
+      208,
+      192
+    ]
+  },
+  "school": {
+    "source": "school_room",
+    "objects": [
+      {
+        "name": "runner",
+        "x": 196,
+        "y": 169,
+        "w": 45,
+        "h": 111,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1935,
+          2258,
+          45,
+          111
+        ]
+      },
+      {
+        "name": "library-bookcase",
+        "x": 131,
+        "y": 43,
+        "w": 170,
+        "h": 53,
+        "flat": false,
+        "sortY": 96,
+        "rect": [
+          0,
+          2564,
+          170,
+          53
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 100,
+        "y": 66,
+        "w": 20,
+        "h": 35,
+        "flat": false,
+        "sortY": 101,
+        "rect": [
+          172,
+          2564,
+          20,
+          35
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 312,
+        "y": 64,
+        "w": 22,
+        "h": 37,
+        "flat": false,
+        "sortY": 101,
+        "rect": [
+          194,
+          2564,
+          22,
+          37
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 142,
+        "y": 144,
+        "w": 54,
+        "h": 38,
+        "flat": false,
+        "sortY": 182,
+        "rect": [
+          218,
+          2564,
+          54,
+          38
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 239,
+        "y": 144,
+        "w": 53,
+        "h": 38,
+        "flat": false,
+        "sortY": 182,
+        "rect": [
+          274,
+          2564,
+          53,
+          38
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 78,
+        "y": 158,
+        "w": 34,
+        "h": 46,
+        "flat": false,
+        "sortY": 198,
+        "rect": [
+          329,
+          2564,
+          34,
+          46
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 320,
+        "y": 158,
+        "w": 33,
+        "h": 46,
+        "flat": false,
+        "sortY": 198,
+        "rect": [
+          365,
+          2564,
+          33,
+          46
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 148,
+        "y": 174,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 205,
+        "rect": [
+          400,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 174,
+        "y": 174,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 205,
+        "rect": [
+          417,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 244,
+        "y": 174,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 205,
+        "rect": [
+          434,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 270,
+        "y": 174,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 205,
+        "rect": [
+          451,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 142,
+        "y": 184,
+        "w": 53,
+        "h": 24,
+        "flat": false,
+        "sortY": 206,
+        "rect": [
+          468,
+          2564,
+          53,
+          24
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 240,
+        "y": 183,
+        "w": 51,
+        "h": 25,
+        "flat": false,
+        "sortY": 206,
+        "rect": [
+          523,
+          2564,
+          51,
+          25
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 148,
+        "y": 214,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          576,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 174,
+        "y": 214,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          593,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 244,
+        "y": 214,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          610,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 270,
+        "y": 214,
+        "w": 15,
+        "h": 37,
+        "flat": false,
+        "sortY": 245,
+        "rect": [
+          627,
+          2564,
+          15,
+          37
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 142,
+        "y": 224,
+        "w": 53,
+        "h": 24,
+        "flat": false,
+        "sortY": 246,
+        "rect": [
+          644,
+          2564,
+          53,
+          24
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 240,
+        "y": 224,
+        "w": 51,
+        "h": 24,
+        "flat": false,
+        "sortY": 246,
+        "rect": [
+          699,
+          2564,
+          51,
+          24
+        ]
+      }
+    ],
+    "baseRect": [
+      1501,
+      2258,
+      432,
+      304
+    ]
+  },
+  "school2": {
+    "source": "school2_room",
+    "objects": [
+      {
+        "name": "runner",
+        "x": 88,
+        "y": 120,
+        "w": 184,
+        "h": 44,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1090,
+          2564,
+          184,
+          44
+        ]
+      },
+      {
+        "name": "library-bookcase",
+        "x": 100,
+        "y": 52,
+        "w": 161,
+        "h": 52,
+        "flat": false,
+        "sortY": 104,
+        "rect": [
+          1276,
+          2564,
+          161,
+          52
+        ]
+      },
+      {
+        "name": "lectern",
+        "x": 51,
+        "y": 85,
+        "w": 35,
+        "h": 31,
+        "flat": false,
+        "sortY": 116,
+        "rect": [
+          1439,
+          2564,
+          35,
+          31
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 67,
+        "y": 152,
+        "w": 15,
+        "h": 35,
+        "flat": false,
+        "sortY": 183,
+        "rect": [
+          1476,
+          2564,
+          15,
+          35
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 93,
+        "y": 152,
+        "w": 15,
+        "h": 35,
+        "flat": false,
+        "sortY": 183,
+        "rect": [
+          1493,
+          2564,
+          15,
+          35
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 219,
+        "y": 152,
+        "w": 15,
+        "h": 35,
+        "flat": false,
+        "sortY": 183,
+        "rect": [
+          1510,
+          2564,
+          15,
+          35
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 245,
+        "y": 152,
+        "w": 15,
+        "h": 35,
+        "flat": false,
+        "sortY": 183,
+        "rect": [
+          1527,
+          2564,
+          15,
+          35
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 62,
+        "y": 161,
+        "w": 53,
+        "h": 23,
+        "flat": false,
+        "sortY": 184,
+        "rect": [
+          1544,
+          2564,
+          53,
+          23
+        ]
+      },
+      {
+        "name": "reading-table",
+        "x": 214,
+        "y": 162,
+        "w": 52,
+        "h": 22,
+        "flat": false,
+        "sortY": 184,
+        "rect": [
+          1599,
+          2564,
+          52,
+          22
+        ]
+      }
+    ],
+    "baseRect": [
+      752,
+      2564,
+      336,
+      240
+    ]
+  },
+  "smithy": {
+    "source": "smithy_room",
+    "objects": [
+      {
+        "name": "wall-weapons",
+        "x": 108,
+        "y": 67,
+        "w": 44,
+        "h": 27,
+        "flat": false,
+        "sortY": 94,
+        "rect": [
+          402,
+          2806,
+          44,
+          27
+        ]
+      },
+      {
+        "name": "wall-weapons",
+        "x": 251,
+        "y": 69,
+        "w": 38,
+        "h": 27,
+        "flat": false,
+        "sortY": 96,
+        "rect": [
+          448,
+          2806,
+          38,
+          27
+        ]
+      },
+      {
+        "name": "forge",
+        "x": 172,
+        "y": 32,
+        "w": 56,
+        "h": 86,
+        "flat": false,
+        "sortY": 112,
+        "rect": [
+          488,
+          2806,
+          56,
+          86
+        ]
+      },
+      {
+        "name": "barrel",
+        "x": 102,
+        "y": 96,
+        "w": 17,
+        "h": 26,
+        "flat": false,
+        "sortY": 122,
+        "rect": [
+          546,
+          2806,
+          17,
+          26
+        ]
+      },
+      {
+        "name": "crate-stack",
+        "x": 281,
+        "y": 91,
+        "w": 20,
+        "h": 35,
+        "flat": false,
+        "sortY": 126,
+        "rect": [
+          565,
+          2806,
+          20,
+          35
+        ]
+      },
+      {
+        "name": "tool-rack",
+        "x": 70,
+        "y": 100,
+        "w": 32,
+        "h": 44,
+        "flat": false,
+        "sortY": 138,
+        "rect": [
+          587,
+          2806,
+          32,
+          44
+        ]
+      },
+      {
+        "name": "bellows",
+        "x": 230,
+        "y": 80,
+        "w": 51,
+        "h": 60,
+        "flat": false,
+        "sortY": 140,
+        "rect": [
+          621,
+          2806,
+          51,
+          60
+        ]
+      },
+      {
+        "name": "wall-tools",
+        "x": 298,
+        "y": 102,
+        "w": 30,
+        "h": 43,
+        "flat": false,
+        "sortY": 144,
+        "rect": [
+          674,
+          2806,
+          30,
+          43
+        ]
+      },
+      {
+        "name": "coal-pile",
+        "x": 118,
+        "y": 104,
+        "w": 58,
+        "h": 41,
+        "flat": false,
+        "sortY": 145,
+        "rect": [
+          706,
+          2806,
+          58,
+          41
+        ]
+      },
+      {
+        "name": "hanging-tools",
+        "x": 332,
+        "y": 131,
+        "w": 27,
+        "h": 20,
+        "flat": false,
+        "sortY": 151,
+        "rect": [
+          766,
+          2806,
+          27,
+          20
+        ]
+      },
+      {
+        "name": "water-bucket",
+        "x": 305,
+        "y": 134,
+        "w": 19,
+        "h": 21,
+        "flat": false,
+        "sortY": 155,
+        "rect": [
+          795,
+          2806,
+          19,
+          21
+        ]
+      },
+      {
+        "name": "wall-cabinet",
+        "x": 344,
+        "y": 116,
+        "w": 19,
+        "h": 53,
+        "flat": false,
+        "sortY": 169,
+        "rect": [
+          816,
+          2806,
+          19,
+          53
+        ]
+      },
+      {
+        "name": "stool",
+        "x": 281,
+        "y": 154,
+        "w": 13,
+        "h": 18,
+        "flat": false,
+        "sortY": 172,
+        "rect": [
+          837,
+          2806,
+          13,
+          18
+        ]
+      },
+      {
+        "name": "grinder",
+        "x": 292,
+        "y": 140,
+        "w": 27,
+        "h": 36,
+        "flat": false,
+        "sortY": 176,
+        "rect": [
+          852,
+          2806,
+          27,
+          36
+        ]
+      },
+      {
+        "name": "supply-cabinet",
+        "x": 36,
+        "y": 107,
+        "w": 41,
+        "h": 78,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          881,
+          2806,
+          41,
+          78
+        ]
+      },
+      {
+        "name": "hanging-barrel",
+        "x": 339,
+        "y": 164,
+        "w": 19,
+        "h": 21,
+        "flat": false,
+        "sortY": 185,
+        "rect": [
+          924,
+          2806,
+          19,
+          21
+        ]
+      },
+      {
+        "name": "workbench",
+        "x": 182,
+        "y": 185,
+        "w": 39,
+        "h": 27,
+        "flat": false,
+        "sortY": 212,
+        "rect": [
+          945,
+          2806,
+          39,
+          27
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 253,
+        "y": 172,
+        "w": 24,
+        "h": 42,
+        "flat": false,
+        "sortY": 212,
+        "rect": [
+          986,
+          2806,
+          24,
+          42
+        ]
+      },
+      {
+        "name": "tool-rack",
+        "x": 320,
+        "y": 180,
+        "w": 35,
+        "h": 38,
+        "flat": false,
+        "sortY": 218,
+        "rect": [
+          1012,
+          2806,
+          35,
+          38
+        ]
+      },
+      {
+        "name": "anvil",
+        "x": 44,
+        "y": 156,
+        "w": 55,
+        "h": 65,
+        "flat": false,
+        "sortY": 221,
+        "rect": [
+          1049,
+          2806,
+          55,
+          65
+        ]
+      },
+      {
+        "name": "tool-cart",
+        "x": 148,
+        "y": 201,
+        "w": 37,
+        "h": 45,
+        "flat": false,
+        "sortY": 246,
+        "rect": [
+          1106,
+          2806,
+          37,
+          45
+        ]
+      },
+      {
+        "name": "supply-crates",
+        "x": 105,
+        "y": 201,
+        "w": 34,
+        "h": 49,
+        "flat": false,
+        "sortY": 250,
+        "rect": [
+          1145,
+          2806,
+          34,
+          49
+        ]
+      },
+      {
+        "name": "chair",
+        "x": 36,
+        "y": 224,
+        "w": 29,
+        "h": 47,
+        "flat": false,
+        "sortY": 269,
+        "rect": [
+          1181,
+          2806,
+          29,
+          47
+        ]
+      },
+      {
+        "name": "weapon-rack",
+        "x": 255,
+        "y": 225,
+        "w": 69,
+        "h": 46,
+        "flat": false,
+        "sortY": 270,
+        "rect": [
+          1212,
+          2806,
+          69,
+          46
+        ]
+      },
+      {
+        "name": "wood-pile",
+        "x": 326,
+        "y": 239,
+        "w": 38,
+        "h": 31,
+        "flat": false,
+        "sortY": 270,
+        "rect": [
+          1283,
+          2806,
+          38,
+          31
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      2806,
+      400,
+      352
+    ]
+  },
+  "witchmoor": {
+    "source": "witch_room",
+    "objects": [
+      {
+        "name": "ritual-circle",
+        "x": 155,
+        "y": 269,
+        "w": 79,
+        "h": 61,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          1645,
+          2806,
+          79,
+          61
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 76,
+        "y": 210,
+        "w": 36,
+        "h": 52,
+        "flat": false,
+        "sortY": 262,
+        "rect": [
+          1726,
+          2806,
+          36,
+          52
+        ]
+      },
+      {
+        "name": "bookcase",
+        "x": 208,
+        "y": 210,
+        "w": 37,
+        "h": 52,
+        "flat": false,
+        "sortY": 262,
+        "rect": [
+          1764,
+          2806,
+          37,
+          52
+        ]
+      },
+      {
+        "name": "writing-table",
+        "x": 65,
+        "y": 272,
+        "w": 44,
+        "h": 31,
+        "flat": false,
+        "sortY": 303,
+        "rect": [
+          1803,
+          2806,
+          44,
+          31
+        ]
+      },
+      {
+        "name": "moon-altar",
+        "x": 232,
+        "y": 294,
+        "w": 31,
+        "h": 36,
+        "flat": false,
+        "sortY": 330,
+        "rect": [
+          1849,
+          2806,
+          31,
+          36
+        ]
+      },
+      {
+        "name": "crystal-altar",
+        "x": 65,
+        "y": 314,
+        "w": 27,
+        "h": 40,
+        "flat": false,
+        "sortY": 354,
+        "rect": [
+          1882,
+          2806,
+          27,
+          40
+        ]
+      },
+      {
+        "name": "gold-altar",
+        "x": 99,
+        "y": 318,
+        "w": 25,
+        "h": 38,
+        "flat": false,
+        "sortY": 356,
+        "rect": [
+          1911,
+          2806,
+          25,
+          38
+        ]
+      },
+      {
+        "name": "crystal-ball",
+        "x": 178,
+        "y": 329,
+        "w": 28,
+        "h": 35,
+        "flat": false,
+        "sortY": 364,
+        "rect": [
+          1938,
+          2806,
+          28,
+          35
+        ]
+      },
+      {
+        "name": "book-altar",
+        "x": 211,
+        "y": 330,
+        "w": 27,
+        "h": 37,
+        "flat": false,
+        "sortY": 367,
+        "rect": [
+          1968,
+          2806,
+          27,
+          37
+        ]
+      }
+    ],
+    "baseRect": [
+      1323,
+      2806,
+      320,
+      400
+    ]
+  }
+}

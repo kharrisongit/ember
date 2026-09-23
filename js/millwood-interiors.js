@@ -2,7 +2,7 @@
 let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
   if(!houseSeatedSheet){
-    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-hollybeck1';
+    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-all-interiors1';
     await image.decode();houseSeatedSheet=image;
   }
   await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
@@ -10,16 +10,18 @@ async function prepareMillwoodInteriors() {
   await prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
+  await prepareTownHouseInteriors('remaining', /./);
+  prepareRemainingInteriorActors();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';
-  const response = await fetch(root + 'layouts.json?v=20260923-hollybeck1');
+  const response = await fetch(root + 'layouts.json?v=20260923-all-interiors1');
   if (!response.ok) throw new Error(town + ' layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-hollybeck1';
+  sheet.src = root + 'layers.png?v=20260923-all-interiors1';
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
@@ -33,6 +35,7 @@ async function prepareTownHouseInteriors(town, houseIds) {
     if (!map || !houseIds.test(id)) continue;
     if (map._millwoodLayers) continue;
     map._roomBaseCanvas=cut(layout.baseRect);
+    if(town==='remaining')map._remainingInterior=true;
     // Remove the old baked-table foreground duplicates; keep independently placed props.
     map.roomActors=(map.roomActors||[]).filter(a=>!a.interiorFurniture &&
       !(a.castSeat && a.roomCrop) && a.spr!=='nan_table_front');
@@ -47,7 +50,7 @@ async function prepareTownHouseInteriors(town, houseIds) {
     }));
     // Each collision belongs to exactly one furnishing; dragging never leaves it behind.
     map.roomBlocks=originalBlocks;
-    for (let i=0;i<originalBlocks.length;i++) {
+    for (let i=0;town!=='remaining' && i<originalBlocks.length;i++) {
       const b=originalBlocks[i],cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;
       const hits=furniture.filter(o=>!o.flatFurniture).map(o=>{
         const [x,y,w,h]=o.sourceRect;
@@ -58,6 +61,7 @@ async function prepareTownHouseInteriors(town, houseIds) {
       if(hits.length) hits[0].o.moveBlocks.push(i);
     }
     for(const o of furniture) {
+      if(town==='remaining')continue;
       if(o.flatFurniture || o.moveBlocks.length || /hanging herbs/.test(o.n)) continue;
       const [x,y,w,h]=o.sourceRect;
       o.moveBlocks.push(map.roomBlocks.length);
@@ -76,9 +80,59 @@ async function prepareTownHouseInteriors(town, houseIds) {
   window.__houseFurnitureCount=count;
 }
 
+// Native animation sheets remain independent actors. Only their registered effects,
+// dialogue proxies and existing collision rectangles follow an editor move.
+function prepareRemainingInteriorActors() {
+  for(const [id,map] of Object.entries(W.maps)) {
+    if(map._interiorActorsReady || !(map._remainingInterior || map.royal || map.templeContinuous || id==='cinderhold' || id==='royal_cellar'))continue;
+    const actors=map.roomActors||[];
+    const props=actors.filter(a=>!a.flatFurniture && !a.editableWall && !a.stairTo && !a.royalDoor &&
+      !a.templeEntrance && a.templeGate===undefined && a.templeMachine===undefined && !a.templeSpike && !a.templeLever &&
+      !/door|light|torch|rail|bones|skull$/.test(a.spr||''));
+    const reserved=new Set(actors.flatMap(a=>a.moveBlocks||[]));
+    for(let i=0;i<(map.roomBlocks||[]).length;i++) {
+      if(reserved.has(i))continue;
+      const b=map.roomBlocks[i],bw=b[2]-b[0],bh=b[3]-b[1];
+      if(bw<=0||bh<=0||bw>180||bh>100)continue;
+      const hits=props.map(a=>{
+        const sp=editorSprite(a);if(!sp)return null;
+        const [w,h]=sp.slice(2,4),x=a.x-w/2,y=a.y-h;
+        const overlap=Math.max(0,Math.min(b[2],x+w)-Math.max(b[0],x))*Math.max(0,Math.min(b[3],y+h)-Math.max(b[1],y));
+        return {a,overlap,d:Math.hypot((b[0]+b[2])/2-a.x,b[3]-a.y)};
+      }).filter(v=>v&&v.overlap>=bw*bh*.75).sort((a,b)=>b.overlap-a.overlap||a.d-b.d);
+      if(hits.length)(hits[0].a.moveBlocks ||= []).push(i);
+    }
+    for(const a of actors) {
+      if(a.throneRoomAsset || (a.schoolArt && !/door/i.test(a.spr||'') && !a.castSeat))a.editorMovable=true;
+      const person=a.spr&&(map.npcs||[]).find(n=>n.school&&n.lookId===a.spr);
+      if(person)a.interiorNpc=person.n;
+      const cache=(map.cellarCaches||[]).find(c=>c.x===a.x&&c.y===a.y);
+      if(cache)a.cellarCacheId=cache.id;
+    }
+    const link=(parent,children)=>{if(parent)parent.interiorChildren=children.filter(a=>a&&a!==parent).map(a=>actors.indexOf(a));};
+    if(id==='smithy') {
+      const forge=actors.find(a=>a.exactFurniture&&a.n==='forge');
+      link(forge,[0,4,8].map(i=>actors.find(a=>a.spr==='smithy_anim_'+i)));
+      const smith=actors.find(a=>a.spr==='smithy_anim_8');
+      if(smith&&map.npcs?.length)smith.interiorNpc=map.npcs[0].n;
+    }
+    if(id==='glasswork') {
+      link(actors.find(a=>a.spr==='glassnew_anim_3'),[actors.find(a=>a.spr==='glassnew_anim_0')]);
+      const master=actors.find(a=>a.spr==='glassnew_anim_4');
+      if(master&&map.npcs?.length)master.interiorNpc=map.npcs[0].n;
+    }
+    if(id==='glasshouse') {
+      const customer=actors.find(a=>a.spr==='glassnew_anim_6');
+      const person=map.npcs?.find(n=>n.school);
+      if(customer&&person)customer.interiorNpc=person.n;
+    }
+    map._interiorActorsReady=true;
+  }
+}
+
 // Contact points are measured from opaque source pixels, including all idle frames.
 async function alignHouseTableSeats() {
-  const response=await fetch('assets/interiors/seat-contacts.json?v=20260923-hollybeck1');
+  const response=await fetch('assets/interiors/seat-contacts.json?v=20260923-all-interiors1');
   if(!response.ok)throw new Error('House seat contacts: '+response.status);
   const contacts=await response.json();
   for(const [id,map] of Object.entries(W.maps)) {

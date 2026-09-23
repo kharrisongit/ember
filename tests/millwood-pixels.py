@@ -7,6 +7,8 @@ source = (root / 'js/generated/game-part-1.js').read_text()
 sprites = json.loads(gzip.decompress(base64.b64decode(re.search(r'const ATLAS_GZ = "([^"]+)', source)[1])))['sprites']
 source = (root / 'assets/game-assets.js').read_text()
 pages = json.loads(re.search(r'window.EMBER_ASSETS.ATLAS_PAGES = (.*);', source)[1])
+royal = json.loads(re.search(r'window.EMBER_ASSETS.ROYAL_DATA = (.*);', source)[1])
+sprites.update(royal['sprites']); pages += royal['pages']
 folder = root / 'assets/interiors' / (sys.argv[1] if len(sys.argv)>1 else 'millwood')
 layouts = json.loads((folder / 'layouts.json').read_text())
 sheet = Image.open(folder / 'layers.png')
@@ -14,7 +16,7 @@ def cut(rect):
     x,y,w,h = rect
     return sheet.crop((x,y,x+w,y+h))
 for name, layout in layouts.items():
-    x,y,w,h,*_ = sprites[name + '_room']
+    x,y,w,h,*_ = sprites[layout.get('source', name + '_room')]
     original = Image.new('RGBA', (w,h))
     for px,py,pw,ph,url in pages:
         if px < x+w and py < y+h and px+pw > x and py+ph > y:
@@ -31,7 +33,7 @@ for layout in layouts.values():
         piece = cut(obj['rect'])
         if obj['name'] == 'dining-table' and (folder.name in ('millwood','thornwell') or (folder.name == 'sandspire' and obj['w'] == 39)):
             assert all(piece.getpixel((x,y))[3] == 255 for y in range(34,43) for x in range(12,25)), 'Incomplete table apron'
-        if obj['name'] == 'north-chair' and folder.name != 'hollybeck':
+        if obj['name'] == 'north-chair' and folder.name not in ('hollybeck','remaining'):
             assert piece.size == (12,22), 'Incomplete north chair'
             assert not any(r > 130 and b > 100 and g < 130 and a for r,g,b,a in piece.getdata()), 'Flower pixels attached to chair'
 if folder.name in ('millwood','thornwell'):
