@@ -5391,11 +5391,18 @@ function refreshOvl() {
       const label = (typeof it.name === "function") ? it.name() : it.name;
       d.textContent = (k === M.pick ? "\u25B8 " : "  ") + label;
     }
-    d.addEventListener("click", (e) => {
-      e.stopPropagation();
+    const takeMenuRow = (e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
       M.pick = k;
       if (it.go && !(it.dim && it.dim())) it.go();
-    });
+    };
+    /* Fullscreen requests must run directly inside the user's pointer gesture.
+       On iOS/Chrome a synthetic/delayed click can lose transient activation. */
+    if (ovl === "menu" && ((typeof it.name === "function" ? it.name() : it.name) === "Full screen")) {
+      d.addEventListener("pointerup", takeMenuRow, { passive:false });
+    } else {
+      d.addEventListener("click", takeMenuRow);
+    }
     rows.appendChild(d);
   });
   desc.textContent = typeof items[M.pick].tell === "function" ? items[M.pick].tell() : items[M.pick].tell || "";
