@@ -5134,7 +5134,13 @@ function setBag(on) {
   else if (bagRAF) { cancelAnimationFrame(bagRAF); bagRAF = 0; bagAnim = []; }
 }
 const bagCloseBtn = document.getElementById("bagClose");
+const bagSaveBtn = document.getElementById("bagSave");
 if (bagCloseBtn) bagCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setBag(false); });
+if (bagSaveBtn) bagSaveBtn.addEventListener("pointerup", e => {
+  e.preventDefault(); e.stopPropagation();
+  setBag(false);
+  setOvl("savePrompt");
+});
 
 
 const WM_ABOUT = {
