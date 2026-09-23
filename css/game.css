@@ -1298,3 +1298,50 @@
 
 /* Generated artwork background asset */
 #atkm{background-image:linear-gradient(rgba(8,6,5,.16),rgba(8,6,5,.22)),url("../assets/ui/dragon-attack-bg.webp")!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+
+/* === DRAGON ATTACK EXACT ART ASSETS 2026-09-22 === */
+/* Approved generated artwork is now in /assets. The background/title is the
+   actual mockup crop; live hit targets sit over it and use the matching art. */
+#atkm{
+  background:#090807 url("../assets/dragon-attack-background-title.png") center top/100% 100% no-repeat!important;
+}
+#atkm>b{visibility:hidden!important}
+#atkm::before,#atkm::after,#atkm .attackSigil{display:none!important}
+#atkm .rows{
+  top:0!important;left:50%!important;width:100%!important;height:100%!important;
+  transform:translateX(-50%)!important;z-index:6!important;
+}
+#atkm .row{
+  border:0!important;background-color:transparent!important;background-repeat:no-repeat!important;
+  background-position:center!important;background-size:contain!important;
+  box-shadow:none!important;overflow:visible!important;
+}
+#atkm .row::before{display:none!important}
+#atkm .row>span:not(.breathFill):not(.breathSecs):not(.dot){display:none!important}
+#atkm .row:nth-child(1){background-image:url("../assets/dragon-icon-slash.png")!important;left:50%!important;top:52%!important;width:62px!important;height:62px!important}
+#atkm .row:nth-child(2){background-image:url("../assets/dragon-icon-fire.png")!important;left:50%!important;top:23%!important;width:88px!important;height:88px!important}
+#atkm .row:nth-child(3){background-image:url("../assets/dragon-icon-lightning.png")!important;left:78%!important;top:52%!important;width:88px!important;height:88px!important}
+#atkm .row:nth-child(4){background-image:url("../assets/dragon-icon-shadow.png")!important;left:50%!important;top:80%!important;width:92px!important;height:92px!important}
+#atkm .row:nth-child(5){background-image:url("../assets/dragon-icon-ice.png")!important;left:22%!important;top:52%!important;width:88px!important;height:88px!important}
+#atkm .row.on{filter:brightness(1.16) drop-shadow(0 0 7px var(--el))!important}
+#atkm .row.breathRefill .breathFill{
+  display:block!important;position:absolute!important;inset:-5px!important;width:auto!important;height:auto!important;
+  border-radius:50%!important;z-index:10!important;opacity:1!important;
+  background:conic-gradient(from -90deg,var(--el) 0 var(--ring,100%),rgba(255,255,255,.10) var(--ring,100%) 100%)!important;
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))!important;
+  mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))!important;
+  pointer-events:none!important;
+}
+#atkm .row.breathRefill .breathSecs{
+  display:block!important;position:absolute!important;left:50%!important;bottom:-1px!important;
+  transform:translateX(-50%)!important;z-index:12!important;color:#fff!important;
+  background:rgba(6,5,5,.82)!important;border-radius:7px!important;padding:2px 5px!important;
+  font:700 9px/1 ui-monospace,monospace!important;text-shadow:0 1px 2px #000!important;
+}
+#atkm .foot{display:none!important}
+#atkCloseBtn{right:12px!important;bottom:8px!important;z-index:20!important}
+@media(max-width:430px){
+ #atkm .row:nth-child(1){width:58px!important;height:58px!important}
+ #atkm .row:nth-child(2),#atkm .row:nth-child(3),#atkm .row:nth-child(5){width:82px!important;height:82px!important}
+ #atkm .row:nth-child(4){width:86px!important;height:86px!important}
+}
