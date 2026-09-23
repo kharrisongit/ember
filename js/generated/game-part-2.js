@@ -861,8 +861,13 @@ function arrangeNpcCast(){
     const original=outsideLooks.get(n.n);
     const originalPack=original?.packSpr;
     const standingPack=originalPack&&!/^(?:seated_body_|pack_pupil_|villager_seated_|tavern_anim_)/.test(originalPack)?originalPack:undefined;
+    // Some old cast records reference retired skins (katy, villager). Restore
+    // an available standing skin instead of feeding a missing sheet to drawWorld.
+    const originalSkin=original?.sk;
+    const standingSkin=originalSkin&&SPR['npc_'+originalSkin+'_d']?originalSkin:
+      ({Nerissa:'villf',Merrin:'gwil',Asta:'villf'}[n.n]||'gwil');
     Object.assign(n,{packSpr:standingPack,packDirections:standingPack?!!original.packDirections:false,
-      packWalk:standingPack?!!original.packWalk:false,sk:standingPack?undefined:(original?.sk||'villager'),
+      packWalk:standingPack?!!original.packWalk:false,sk:standingPack?undefined:standingSkin,
       body:undefined,seated:false,seatSpr:undefined,seatClipY:undefined,school:false,stationary:true,
       patrol:undefined,goto:undefined,sy:undefined});
   }
@@ -4035,7 +4040,9 @@ function drawWorld(t, dt) {
       const isuf = o.f === "s" ? "_sidle" : o.f === "u" ? "_uidle" : "_idle";
       const idle = still ? (SPR["npc_" + o.sk + isuf] ||
                             SPR["npc_" + o.sk + "_idle"]) : null;
-      const s = idle || SPR["npc_" + o.sk + "_" + o.f];
+      const s = idle || SPR["npc_" + o.sk + "_" + o.f]
+              || SPR["npc_" + o.sk + "_d"] || SPR.npc_gwil_d;
+      if(!s)continue;
       const nm = idle ? "npc_" + o.sk + isuf : "npc_" + o.sk + "_" + o.f;
       const f = still && !idle && o.idleFrame!==undefined ? Math.min(o.idleFrame,s[4]-1)
               : idle ? Math.floor(t * 3.2 + o.t) % s[4]
