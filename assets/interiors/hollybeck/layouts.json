@@ -1,0 +1,1312 @@
+{
+  "house46": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 47,
+        "y": 127,
+        "w": 69,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          258,
+          0,
+          69,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 112,
+        "y": 20,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 53,
+        "rect": [
+          329,
+          0,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "herbal-shelf",
+        "x": 30,
+        "y": 25,
+        "w": 70,
+        "h": 57,
+        "flat": false,
+        "sortY": 82,
+        "rect": [
+          373,
+          0,
+          70,
+          57
+        ]
+      },
+      {
+        "name": "small-chest",
+        "x": 28,
+        "y": 103,
+        "w": 20,
+        "h": 17,
+        "flat": false,
+        "sortY": 120,
+        "rect": [
+          445,
+          0,
+          20,
+          17
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 76,
+        "y": 120,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 129,
+        "rect": [
+          467,
+          0,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "west-chair",
+        "x": 50,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          480,
+          0,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 104,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          492,
+          0,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 61,
+        "y": 114,
+        "w": 43,
+        "h": 44,
+        "flat": false,
+        "sortY": 158,
+        "rect": [
+          504,
+          0,
+          43,
+          44
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 76,
+        "y": 157,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          549,
+          0,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 200,
+        "y": 168,
+        "w": 27,
+        "h": 28,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          562,
+          0,
+          27,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      0,
+      256,
+      224
+    ]
+  },
+  "house47": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 47,
+        "y": 127,
+        "w": 69,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          833,
+          0,
+          69,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 112,
+        "y": 20,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 53,
+        "rect": [
+          904,
+          0,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "herbal-shelf",
+        "x": 30,
+        "y": 25,
+        "w": 70,
+        "h": 57,
+        "flat": false,
+        "sortY": 82,
+        "rect": [
+          948,
+          0,
+          70,
+          57
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 77,
+        "y": 121,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 130,
+        "rect": [
+          0,
+          226,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 28,
+        "y": 101,
+        "w": 18,
+        "h": 33,
+        "flat": false,
+        "sortY": 134,
+        "rect": [
+          13,
+          226,
+          18,
+          33
+        ]
+      },
+      {
+        "name": "west-chair",
+        "x": 51,
+        "y": 139,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 153,
+        "rect": [
+          33,
+          226,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 105,
+        "y": 139,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 153,
+        "rect": [
+          45,
+          226,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 62,
+        "y": 130,
+        "w": 43,
+        "h": 29,
+        "flat": false,
+        "sortY": 159,
+        "rect": [
+          57,
+          226,
+          43,
+          29
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 77,
+        "y": 158,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 169,
+        "rect": [
+          102,
+          226,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 181,
+        "y": 166,
+        "w": 32,
+        "h": 28,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          115,
+          226,
+          32,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      591,
+      0,
+      240,
+      224
+    ]
+  },
+  "house48": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 47,
+        "y": 127,
+        "w": 69,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          423,
+          226,
+          69,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 112,
+        "y": 20,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 53,
+        "rect": [
+          494,
+          226,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "herbal-shelf",
+        "x": 30,
+        "y": 25,
+        "w": 70,
+        "h": 57,
+        "flat": false,
+        "sortY": 82,
+        "rect": [
+          538,
+          226,
+          70,
+          57
+        ]
+      },
+      {
+        "name": "small-chest",
+        "x": 28,
+        "y": 103,
+        "w": 20,
+        "h": 17,
+        "flat": false,
+        "sortY": 120,
+        "rect": [
+          610,
+          226,
+          20,
+          17
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 76,
+        "y": 120,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 129,
+        "rect": [
+          632,
+          226,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "west-chair",
+        "x": 50,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          645,
+          226,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 104,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          657,
+          226,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 61,
+        "y": 114,
+        "w": 43,
+        "h": 44,
+        "flat": false,
+        "sortY": 158,
+        "rect": [
+          669,
+          226,
+          43,
+          44
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 76,
+        "y": 157,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          714,
+          226,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 216,
+        "y": 168,
+        "w": 27,
+        "h": 28,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          727,
+          226,
+          27,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      149,
+      226,
+      272,
+      224
+    ]
+  },
+  "house49": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 47,
+        "y": 127,
+        "w": 69,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          0,
+          452,
+          69,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 112,
+        "y": 20,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 53,
+        "rect": [
+          71,
+          452,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "herbal-shelf",
+        "x": 30,
+        "y": 25,
+        "w": 70,
+        "h": 57,
+        "flat": false,
+        "sortY": 82,
+        "rect": [
+          115,
+          452,
+          70,
+          57
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 77,
+        "y": 121,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 130,
+        "rect": [
+          187,
+          452,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "flower-vase",
+        "x": 28,
+        "y": 101,
+        "w": 18,
+        "h": 33,
+        "flat": false,
+        "sortY": 134,
+        "rect": [
+          200,
+          452,
+          18,
+          33
+        ]
+      },
+      {
+        "name": "west-chair",
+        "x": 51,
+        "y": 139,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 153,
+        "rect": [
+          220,
+          452,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 105,
+        "y": 139,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 153,
+        "rect": [
+          232,
+          452,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 62,
+        "y": 130,
+        "w": 43,
+        "h": 29,
+        "flat": false,
+        "sortY": 159,
+        "rect": [
+          244,
+          452,
+          43,
+          29
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 77,
+        "y": 158,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 169,
+        "rect": [
+          289,
+          452,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 197,
+        "y": 166,
+        "w": 32,
+        "h": 28,
+        "flat": false,
+        "sortY": 194,
+        "rect": [
+          302,
+          452,
+          32,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      756,
+      226,
+      256,
+      224
+    ]
+  },
+  "house50": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 47,
+        "y": 127,
+        "w": 69,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          578,
+          452,
+          69,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 112,
+        "y": 20,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 53,
+        "rect": [
+          649,
+          452,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "herbal-shelf",
+        "x": 30,
+        "y": 25,
+        "w": 70,
+        "h": 57,
+        "flat": false,
+        "sortY": 82,
+        "rect": [
+          693,
+          452,
+          70,
+          57
+        ]
+      },
+      {
+        "name": "small-chest",
+        "x": 28,
+        "y": 103,
+        "w": 20,
+        "h": 17,
+        "flat": false,
+        "sortY": 120,
+        "rect": [
+          765,
+          452,
+          20,
+          17
+        ]
+      },
+      {
+        "name": "north-chair",
+        "x": 76,
+        "y": 120,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 129,
+        "rect": [
+          787,
+          452,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "west-chair",
+        "x": 50,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          800,
+          452,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "east-chair",
+        "x": 104,
+        "y": 138,
+        "w": 10,
+        "h": 14,
+        "flat": false,
+        "sortY": 152,
+        "rect": [
+          812,
+          452,
+          10,
+          14
+        ]
+      },
+      {
+        "name": "dining-table",
+        "x": 61,
+        "y": 114,
+        "w": 43,
+        "h": 44,
+        "flat": false,
+        "sortY": 158,
+        "rect": [
+          824,
+          452,
+          43,
+          44
+        ]
+      },
+      {
+        "name": "south-chair",
+        "x": 76,
+        "y": 157,
+        "w": 11,
+        "h": 11,
+        "flat": false,
+        "sortY": 168,
+        "rect": [
+          869,
+          452,
+          11,
+          11
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 184,
+        "y": 168,
+        "w": 27,
+        "h": 28,
+        "flat": false,
+        "sortY": 196,
+        "rect": [
+          882,
+          452,
+          27,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      336,
+      452,
+      240,
+      224
+    ]
+  },
+  "house46_bedroom": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          194,
+          678,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          226,
+          678,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          270,
+          678,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          298,
+          678,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          323,
+          678,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      0,
+      678,
+      192,
+      208
+    ]
+  },
+  "house47_bedroom": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          548,
+          678,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          580,
+          678,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          624,
+          678,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          652,
+          678,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          677,
+          678,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      354,
+      678,
+      192,
+      208
+    ]
+  },
+  "house48_bedroom": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          902,
+          678,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          934,
+          678,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          978,
+          678,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          0,
+          888,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          25,
+          888,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      708,
+      678,
+      192,
+      208
+    ]
+  },
+  "house48_bedroom2": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          250,
+          888,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          282,
+          888,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          326,
+          888,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          354,
+          888,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          379,
+          888,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      56,
+      888,
+      192,
+      208
+    ]
+  },
+  "house49_bedroom": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          604,
+          888,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          636,
+          888,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          680,
+          888,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          708,
+          888,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          733,
+          888,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      410,
+      888,
+      192,
+      208
+    ]
+  },
+  "house50_bedroom": {
+    "objects": [
+      {
+        "name": "rug",
+        "x": 81,
+        "y": 117,
+        "w": 30,
+        "h": 37,
+        "flat": true,
+        "sortY": -1000,
+        "rect": [
+          958,
+          888,
+          30,
+          37
+        ]
+      },
+      {
+        "name": "herbs",
+        "x": 74,
+        "y": 22,
+        "w": 42,
+        "h": 33,
+        "flat": false,
+        "sortY": 55,
+        "rect": [
+          0,
+          1098,
+          42,
+          33
+        ]
+      },
+      {
+        "name": "wardrobe",
+        "x": 139,
+        "y": 30,
+        "w": 26,
+        "h": 42,
+        "flat": false,
+        "sortY": 72,
+        "rect": [
+          44,
+          1098,
+          26,
+          42
+        ]
+      },
+      {
+        "name": "bed",
+        "x": 33,
+        "y": 71,
+        "w": 23,
+        "h": 38,
+        "flat": false,
+        "sortY": 109,
+        "rect": [
+          72,
+          1098,
+          23,
+          38
+        ]
+      },
+      {
+        "name": "produce-crate",
+        "x": 33,
+        "y": 152,
+        "w": 29,
+        "h": 28,
+        "flat": false,
+        "sortY": 180,
+        "rect": [
+          97,
+          1098,
+          29,
+          28
+        ]
+      }
+    ],
+    "baseRect": [
+      764,
+      888,
+      192,
+      208
+    ]
+  }
+}

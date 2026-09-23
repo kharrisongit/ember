@@ -1,0 +1,810 @@
+{
+  "poses": {
+    "pack_boy": {
+      "height": 25,
+      "width": 22,
+      "bottom": 25,
+      "center": 0.0
+    },
+    "villager_seated_common_a6_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_a6_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_a6_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_a6_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_a6_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_a6_5": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_b6_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_b6_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_b6_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_b6_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_b6_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_b6_5": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_c6_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_c6_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_c6_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_c6_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_c6_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_c6_5": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_d6_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_d6_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_d6_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_d6_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_common_d6_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_common_d6_5": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_desert_a5_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_desert_a5_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_desert_a5_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_desert_a5_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_desert_a5_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_desert_b4_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_desert_b4_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_desert_b4_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_desert_b4_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_coast_a4_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_coast_a4_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_coast_a4_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_coast_a4_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_coast_b3_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_coast_b3_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_coast_b3_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_snow5_0": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_snow5_1": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_snow5_2": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "villager_seated_snow5_3": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "villager_seated_snow5_4": {
+      "height": 24,
+      "width": 24,
+      "bottom": 24,
+      "center": -0.5
+    },
+    "royal_guest_woman": {
+      "height": 24,
+      "width": 19,
+      "bottom": 24,
+      "center": 0.0
+    },
+    "royal_guest_man": {
+      "height": 24,
+      "width": 19,
+      "bottom": 21,
+      "center": 3.0
+    },
+    "royal_reader": {
+      "height": 23,
+      "width": 27,
+      "bottom": 23,
+      "center": 0.0
+    },
+    "seated_body_1": {
+      "height": 20,
+      "width": 27,
+      "bottom": 20,
+      "center": 0.0
+    },
+    "seated_body_2": {
+      "height": 19,
+      "width": 23,
+      "bottom": 19,
+      "center": 0.5
+    },
+    "seated_body_6": {
+      "height": 21,
+      "width": 27,
+      "bottom": 21,
+      "center": 0.0
+    },
+    "seated_body_8": {
+      "height": 23,
+      "width": 26,
+      "bottom": 23,
+      "center": 0.0
+    },
+    "seated_body_11": {
+      "height": 18,
+      "width": 23,
+      "bottom": 18,
+      "center": -0.5
+    },
+    "seated_body_12": {
+      "height": 19,
+      "width": 27,
+      "bottom": 19,
+      "center": 0.0
+    },
+    "seated_body_13": {
+      "height": 21,
+      "width": 27,
+      "bottom": 21,
+      "center": 0.0
+    },
+    "maddock_seated": {
+      "height": 20,
+      "width": 19,
+      "bottom": 20,
+      "center": 0.0
+    }
+  },
+  "tables": {
+    "house23": [
+      {
+        "x": 104.5,
+        "y": 128,
+        "w": 39
+      }
+    ],
+    "house23_bedroom": [
+      {
+        "x": 73.0,
+        "y": 128,
+        "w": 50
+      }
+    ],
+    "house24": [
+      {
+        "x": 104.5,
+        "y": 128,
+        "w": 39
+      }
+    ],
+    "house24_bedroom": [
+      {
+        "x": 73.0,
+        "y": 128,
+        "w": 50
+      }
+    ],
+    "house25": [
+      {
+        "x": 104.5,
+        "y": 128,
+        "w": 39
+      }
+    ],
+    "house25_bedroom": [
+      {
+        "x": 65.0,
+        "y": 128,
+        "w": 34
+      }
+    ],
+    "house26": [
+      {
+        "x": 104.5,
+        "y": 128,
+        "w": 39
+      }
+    ],
+    "house26_bedroom": [
+      {
+        "x": 65.0,
+        "y": 128,
+        "w": 34
+      }
+    ],
+    "house27": [
+      {
+        "x": 104.5,
+        "y": 128,
+        "w": 39
+      }
+    ],
+    "house27_bedroom": [
+      {
+        "x": 72,
+        "y": 128,
+        "w": 44
+      }
+    ],
+    "house25_bedroom2": [
+      {
+        "x": 57.0,
+        "y": 128,
+        "w": 50
+      }
+    ],
+    "house27_bedroom2": [
+      {
+        "x": 57.0,
+        "y": 128,
+        "w": 50
+      }
+    ],
+    "house22": [
+      {
+        "x": 73.0,
+        "y": 132,
+        "w": 50
+      }
+    ],
+    "house00": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house01": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house01_bedroom": [
+      {
+        "x": 53.0,
+        "y": 120,
+        "w": 50
+      }
+    ],
+    "house02": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house03": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house04": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house05": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house05_bedroom": [
+      {
+        "x": 45.0,
+        "y": 120,
+        "w": 34
+      }
+    ],
+    "house30": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house31": [
+      {
+        "x": 88.5,
+        "y": 131,
+        "w": 39
+      }
+    ],
+    "house06": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house07": [
+      {
+        "x": 71.5,
+        "y": 134,
+        "w": 47
+      }
+    ],
+    "house09": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house10": [
+      {
+        "x": 71.5,
+        "y": 134,
+        "w": 47
+      }
+    ],
+    "house11": [
+      {
+        "x": 68.5,
+        "y": 132,
+        "w": 47
+      }
+    ],
+    "house12": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house12_bedroom": [
+      {
+        "x": 49.0,
+        "y": 138,
+        "w": 48
+      }
+    ],
+    "house13": [
+      {
+        "x": 71.5,
+        "y": 134,
+        "w": 47
+      }
+    ],
+    "house14": [
+      {
+        "x": 68.5,
+        "y": 132,
+        "w": 47
+      }
+    ],
+    "house15": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house16": [
+      {
+        "x": 71.5,
+        "y": 134,
+        "w": 47
+      }
+    ],
+    "house16_bedroom": [
+      {
+        "x": 49.0,
+        "y": 138,
+        "w": 48
+      }
+    ],
+    "house17": [
+      {
+        "x": 68.5,
+        "y": 132,
+        "w": 47
+      }
+    ],
+    "house18": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house19": [
+      {
+        "x": 71.5,
+        "y": 134,
+        "w": 47
+      }
+    ],
+    "house20": [
+      {
+        "x": 68.5,
+        "y": 132,
+        "w": 47
+      }
+    ],
+    "house20_bedroom": [
+      {
+        "x": 49.0,
+        "y": 138,
+        "w": 48
+      }
+    ],
+    "house21": [
+      {
+        "x": 71.5,
+        "y": 129,
+        "w": 47
+      }
+    ],
+    "house32": [
+      {
+        "x": 68.5,
+        "y": 132,
+        "w": 47
+      }
+    ],
+    "house32_bedroom": [
+      {
+        "x": 49.0,
+        "y": 138,
+        "w": 48
+      }
+    ],
+    "house32_bedroom2": [
+      {
+        "x": 49.0,
+        "y": 138,
+        "w": 48
+      }
+    ],
+    "house33": [
+      {
+        "x": 88.0,
+        "y": 110,
+        "w": 50
+      }
+    ],
+    "house34": [
+      {
+        "x": 80.0,
+        "y": 137,
+        "w": 50
+      }
+    ],
+    "house35": [
+      {
+        "x": 88.5,
+        "y": 138,
+        "w": 39
+      }
+    ],
+    "house36": [
+      {
+        "x": 88.0,
+        "y": 110,
+        "w": 50
+      }
+    ],
+    "house37": [
+      {
+        "x": 80.0,
+        "y": 137,
+        "w": 50
+      }
+    ],
+    "house38": [
+      {
+        "x": 88.5,
+        "y": 138,
+        "w": 39
+      }
+    ],
+    "house39": [
+      {
+        "x": 88.0,
+        "y": 110,
+        "w": 50
+      }
+    ],
+    "house40": [
+      {
+        "x": 80.0,
+        "y": 137,
+        "w": 50
+      }
+    ],
+    "house41": [
+      {
+        "x": 88.5,
+        "y": 138,
+        "w": 39
+      }
+    ],
+    "house34_bedroom": [
+      {
+        "x": 52.0,
+        "y": 133,
+        "w": 48
+      }
+    ],
+    "house38_bedroom": [
+      {
+        "x": 52.0,
+        "y": 133,
+        "w": 48
+      }
+    ],
+    "house46": [
+      {
+        "x": 82.5,
+        "y": 128,
+        "w": 43
+      }
+    ],
+    "house47": [
+      {
+        "x": 83.5,
+        "y": 130,
+        "w": 43
+      }
+    ],
+    "house48": [
+      {
+        "x": 82.5,
+        "y": 128,
+        "w": 43
+      }
+    ],
+    "house49": [
+      {
+        "x": 83.5,
+        "y": 130,
+        "w": 43
+      }
+    ],
+    "house50": [
+      {
+        "x": 82.5,
+        "y": 128,
+        "w": 43
+      }
+    ],
+    "house08": [
+      {
+        "x": 96,
+        "y": 129,
+        "w": 50
+      }
+    ],
+    "house42": [
+      {
+        "x": 96,
+        "y": 129,
+        "w": 50
+      }
+    ],
+    "house43": [
+      {
+        "x": 96,
+        "y": 129,
+        "w": 50
+      }
+    ],
+    "house44": [
+      {
+        "x": 96,
+        "y": 129,
+        "w": 50
+      }
+    ],
+    "house45": [
+      {
+        "x": 96,
+        "y": 129,
+        "w": 50
+      }
+    ]
+  },
+  "generated": {
+    "itable0": {
+      "w": 50,
+      "h": 33,
+      "top": 0
+    }
+  }
+}

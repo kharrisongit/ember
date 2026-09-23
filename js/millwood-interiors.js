@@ -2,22 +2,24 @@
 let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
   if(!houseSeatedSheet){
-    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-sandspire1';
+    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-hollybeck1';
     await image.decode();houseSeatedSheet=image;
   }
   await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
+  await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
+  await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';
-  const response = await fetch(root + 'layouts.json?v=20260923-sandspire1');
+  const response = await fetch(root + 'layouts.json?v=20260923-hollybeck1');
   if (!response.ok) throw new Error(town + ' layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-sandspire1';
+  sheet.src = root + 'layers.png?v=20260923-hollybeck1';
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
@@ -72,4 +74,38 @@ async function prepareTownHouseInteriors(town, houseIds) {
     count+=furniture.length;
   }
   window.__houseFurnitureCount=count;
+}
+
+// Contact points are measured from opaque source pixels, including all idle frames.
+async function alignHouseTableSeats() {
+  const response=await fetch('assets/interiors/seat-contacts.json?v=20260923-hollybeck1');
+  if(!response.ok)throw new Error('House seat contacts: '+response.status);
+  const contacts=await response.json();
+  for(const [id,map] of Object.entries(W.maps)) {
+    if(!/^house\d/.test(id)||map._seatsAligned)continue;
+    const residents=(map.npcs||[]).filter(n=>(n.seated||n.seatSpr||n.seatClipY!==undefined)&&contacts.poses[n.seatSpr||n.packSpr]);
+    const tables=[...(contacts.tables[id]||[])];
+    for(const actor of map.roomActors||[]) {
+      const source=actor.castSeat&&contacts.generated[actor.spr];
+      if(source)tables.push({x:actor.x,y:actor.y-source.h+source.top,w:source.w});
+    }
+    const groups=new Map();
+    for(const n of residents) {
+      const table=tables.slice().sort((a,b)=>Math.hypot(a.x-n.x,a.y-n.y)-Math.hypot(b.x-n.x,b.y-n.y))[0];
+      if(!table)continue;
+      if(!groups.has(table))groups.set(table,[]);groups.get(table).push(n);
+    }
+    for(const [table,people] of groups)for(const [i,n] of people.entries()) {
+      const pose=contacts.poses[n.seatSpr||n.packSpr],oldX=n.x,oldY=n.y;
+      const chair=(map.roomActors||[]).find(a=>a.castSeat&&/^ichair/.test(a.spr||'')&&Math.abs(a.x-oldX)<2&&Math.abs(a.y-oldY-5)<5);
+      const spacing=Math.min(22,(table.w-12)/Math.max(1,people.length-1));
+      n.x=table.x+(i-(people.length-1)/2)*spacing-pose.center;
+      n.y=table.y+pose.height-pose.bottom+2;
+      n.seatClipY=table.y;n.sy=table.y+1;
+      n.talkX=i?table.x+table.w/2+12:table.x-table.w/2-12;n.talkY=table.y+12;
+      if(chair){chair.x+=n.x-oldX;chair.y+=n.y-oldY;chair.sy=n.sy-1;}
+      n._seatContact={edge:table.y,bottom:pose.bottom,height:pose.height};
+    }
+    map._seatsAligned=true;
+  }
 }

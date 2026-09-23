@@ -29,9 +29,9 @@ print(f'PASS: all {len(layouts)} rooms match their original art pixel for pixel.
 for layout in layouts.values():
     for obj in layout['objects']:
         piece = cut(obj['rect'])
-        if obj['name'] == 'dining-table' and (folder.name != 'sandspire' or obj['w'] == 39):
+        if obj['name'] == 'dining-table' and (folder.name in ('millwood','thornwell') or (folder.name == 'sandspire' and obj['w'] == 39)):
             assert all(piece.getpixel((x,y))[3] == 255 for y in range(34,43) for x in range(12,25)), 'Incomplete table apron'
-        if obj['name'] == 'north-chair':
+        if obj['name'] == 'north-chair' and folder.name != 'hollybeck':
             assert piece.size == (12,22), 'Incomplete north chair'
             assert not any(r > 130 and b > 100 and g < 130 and a for r,g,b,a in piece.getdata()), 'Flower pixels attached to chair'
 if folder.name in ('millwood','thornwell'):

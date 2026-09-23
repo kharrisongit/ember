@@ -1105,16 +1105,7 @@ function repairSeating(){
   for(const[id,name]of [['house27','Joss'],['house27_bedroom','Tam']]){
     const n=W.maps[id].npcs.find(n=>n.n===name);if(n)n.y-=1;
   }
-  // Rania and Latif share the straight north edge of a Sandspire square table.
-  const m=W.maps.house41;
-  m.roomActors=m.roomActors.filter(a=>!a.castSeat);
-  m.roomActors.push({roomBackgroundPatch:{spr:'house33_room',rect:[32,104,120,96]},x:32,y:104,sy:-100,sceneReserved:true});
-  m.roomBlocks=m.roomBlocks.filter(b=>!(b[0]===59&&b[1]===150));
-  m.roomBlocks.push([65,116,111,172],[46,143,59,162],[117,143,130,162]);
-  for(const[i,n]of m.npcs.entries()){
-    n.x=77+i*22;n.y=113;n.seatClipY=110;n.talkX=i?143:33;n.talkY=126;n.sceneReserved=true;
-    m.roomActors.push({spr:'ichair1',x:n.x,y:n.y+5,sy:n.y-1,schoolArt:true,sceneReserved:true});
-  }
+
 }
 function drawNpcFrame(o,s,frame,img){
   // The authored seated cast lives beyond the legacy atlas extent. Decode it as
@@ -1491,12 +1482,12 @@ function drawDoorTriggers(){if(!doorEdit)return;ctx.save();ctx.scale(cam.z,cam.z
 function geometryPatch(){const out=[];for(const [map,m]of Object.entries(geometryEdits)){for(const [index,r]of Object.entries(m.doors||{}))out.push('DOOR '+JSON.stringify({map,index:Number(index),...r}));for(const [cell,blocked]of Object.entries(m.collision||{}))out.push('COLLISION '+JSON.stringify({map,cell:cell.split(',').map(Number),size:8,blocked}))}return out}
 // Illustrated atlas: directional focus moves among labelled destinations.
 const ATLAS_LOCATIONS=[["Millwood", 72.79, 279.87, "Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."], ["Elder’s Home", 81.66, 250.44, "Maddock’s house, north of Millwood."], ["Northern Woods", 75.06, 222.63, "Woodland north of Millwood, leading toward the mushroom country."], ["Sporewood", 74.85, 122.73, "The western mushroom woodland."], ["Sporehollow", 99.19, 90.33, "A settlement among the giant mushrooms."], ["Northern Shroom Field", 72.38, 60.09, "Mushroom fields at the northern edge of the woods."], ["Shroom Pass", 74.85, 176.73, "The path between the northern woods and the mushroom country."], ["Route 1", 133.01, 205.89, "The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."], ["Thornwell", 171.38, 101.13, "A woodland town on the journey east."], ["Forgefalls", 232.01, 225.87, "The falls southeast of Thornwell."], ["Route 2", 282.75, 176.19, "The woodland road to Forgewick."], ["Forgewick", 423.0, 158.91, "A town of craftspeople. Find the blacksmith, glassblower and market."], ["Forgewick Temple", 455.18, 194.55, "The temple southeast of Forgewick, reached by the winding southern trail."], ["Route 3", 544.28, 156.75, "The road from Forgewick into the desert."], ["The Oasis", 590.89, 182.4, "A green refuge southwest of Sandspire, beside the desert road."], ["Sandspire", 686.18, 100.05, "The desert city between Forgewick and Coralmere."], ["Sandspire Temple", 821.89, 221.55, "The temple south-east of Sandspire."], ["Route 4", 812.4, 62.79, "The desert route to the coast."], ["Coralmere", 898.2, 329.28, "A coastal town with fishing docks and homes by the water."], ["Route 5", 990.6, 291.21, "The route through the wetlands toward Hollybeck."], ["Witchmoor", 1068.15, 236.67, "Maelis’s home in the marsh. The ferry begins at the mainland dock."], ["Dreadmarsh", 1101.98, 318.75, "The deep marshes south of the road."], ["Hollybeck Graveyard", 1146.53, 130.83, "The graveyard northwest of Hollybeck."], ["Hollybeck", 1175.4, 159.99, "A town at the edge of the snowy highlands."], ["Hollybeck Temple", 1220.78, 93.03, "The temple northeast of Hollybeck. Follow the winding trail east and north."], ["Route 6", 1235.21, 191.31, "The mountain road north to Frostcrag."], ["Frostcrag", 1236.04, 67.65, "A stronghold in the snowy mountains."], ["Ashcrag", 1267.39, 64.95, "East of Frostcrag, beyond the mountain passage, before the volcanic road."], ["Route 7", 1373.81, 178.35, "The final road through the volcanic country."], ["Cinderhold Castle", 1451.78, 211.83, "The king’s fortress at the eastern end of Emberfell."]];
-let atlasOpen=false,atlasPick=0,atlasReturn='menu',atlasTimer=0;
+let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
 function renderAtlas(){const p=ATLAS_LOCATIONS[atlasPick],view=document.getElementById('atlasViewport'),canvas=document.getElementById('atlasSurface');const scale=Math.max(1.35,Math.min(2.6,view.clientHeight/275));canvas.style.transform='translate('+(view.clientWidth/2-p[1]*scale)+'px,'+(view.clientHeight/2-p[2]*scale)+'px) scale('+scale+')';const cursor=document.getElementById('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';const panel=document.getElementById('atlasDetails');panel.classList.remove('settled');clearTimeout(renderAtlas.timer);renderAtlas.timer=setTimeout(()=>{document.getElementById('atlasName').textContent=p[0];document.getElementById('atlasText').textContent=p[3];panel.classList.add('settled')},360)}
-function openAtlas(from='menu'){atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';requestAnimationFrame(renderAtlas)}
-function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl('menu')}
+function openAtlas(from='game'){atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';requestAnimationFrame(renderAtlas)}
+function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
  tap(document.getElementById('bDoors'),()=>setGeometryTool(doorEdit?null:'door'));
