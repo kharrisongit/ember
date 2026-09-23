@@ -10298,7 +10298,7 @@ function fishingSafe(){
     !foes.some(f=>f.hp>0&&Math.hypot(f.x-P.x,f.y-P.y)<180);
 }
 function endFishing(){
-  fishing=null;running=false;P.moving=false;
+  fishing=null;fishingBackdrop=null;running=false;P.moving=false;
   clearPadInputs();padDx=padDy=0;
   for(const k in keys)keys[k]=0;
 }

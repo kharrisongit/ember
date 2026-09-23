@@ -3,7 +3,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 let saves=0;
-const ctx=vm.createContext({Math,fishingPole:true,fishing:null,FISH_TAU:Math.PI*2,dragonFish:0,DRAGON_FISH_HEAL:35,
+const ctx=vm.createContext({cv:{width:780,height:880},document:{createElement:()=>({getContext:()=>({drawImage(){}})})},Math,fishingPole:true,fishing:null,FISH_TAU:Math.PI*2,dragonFish:0,DRAGON_FISH_HEAL:35,
  P:{x:0,y:0},TS:16,MAPID:'world',W:{maps:{}},waterInReach:()=>true,fishingSafe:()=>true,
  running:false,clearPadInputs(){},padDx:0,padDy:0,keys:{},saveGame(){saves++;}});
 const game=read('js/generated/game-part-2.js');

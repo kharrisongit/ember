@@ -1,7 +1,24 @@
+// Hold the last completed world frame while fishing. Re-running the world
+// renderer with dt=0 bypasses its normal update path and can leak camera state.
+let fishingBackdrop=null;
+function captureFishingBackdrop(){
+  if(fishingBackdrop)return fishingBackdrop;
+  const image=document.createElement('canvas');image.width=cv.width;image.height=cv.height;
+  image.getContext('2d').drawImage(cv,0,0);
+  return fishingBackdrop=image;
+}
+function drawFishingBackdrop(){
+  const image=captureFishingBackdrop();
+  // Use CSS-pixel coordinates at the device pixel ratio, even after a resize.
+  ctx.setTransform(DPR,0,0,DPR,0,0);ctx.globalAlpha=1;
+  ctx.globalCompositeOperation='source-over';ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(image,0,0,image.width,image.height,0,0,VW,VH);
+}
 /* Fishing uses the existing A/Space and B/Esc bindings on keyboard and touch. */
 function startFishing(){
   if(!fishingPole||!waterInReach()||!fishingSafe()){endFishing();return;}
-  endFishing();
+  const backdrop=captureFishingBackdrop();
+  endFishing();fishingBackdrop=backdrop;
   fishing={...fishingRegion(),phase:'cast',age:0,elapsed:0,angle:-Math.PI/2,
     target:.4+Math.random()*5,roundAge:0,lock:0,pulls:0,tension:0,perfect:0,
     resultAge:0,caught:false,feedback:'',flash:0,particles:[]};

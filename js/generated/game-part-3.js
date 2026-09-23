@@ -4003,7 +4003,7 @@ function frameCore(ms) {
   if(atlasOpen)return;
   if(fishing){
     stepFishing(dt);
-    drawWorld(tAcc,0);drawDark();drawHearts();drawFishing();
+    drawFishingBackdrop();drawHearts();drawFishing();
     return;
   }
   tAcc += dt;
