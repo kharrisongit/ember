@@ -1816,3 +1816,66 @@ body.pseudoFullscreen{
 @supports(height:100svh){
   body.pseudoFullscreen{height:100dvh!important;min-height:100dvh!important}
 }
+
+
+/* === SAVE SYSTEM REVAMP 2026-09-23 === */
+#savePrompt,#saveSlots,#loadSlots,#manageSaves{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(119,84,45,.18),transparent 34%),
+    rgba(7,9,14,.96)!important;
+  padding:0!important;
+  align-items:center;
+  justify-content:center;
+}
+#savePrompt[style*="display: block"],#saveSlots[style*="display: block"],
+#loadSlots[style*="display: block"],#manageSaves[style*="display: block"]{
+  display:flex!important;
+}
+#savePrompt>b,#saveSlots>b,#loadSlots>b,#manageSaves>b{
+  position:absolute;top:calc(50% - 150px);left:50%;transform:translateX(-50%);
+  width:min(88vw,390px);box-sizing:border-box;
+  padding:14px 18px 12px;text-align:center;
+  border:1px solid #5d513f;border-bottom:0;border-radius:14px 14px 0 0;
+  background:linear-gradient(#29251f,#1b1917);
+  color:#f0d39a;font-size:13px;letter-spacing:.22em;
+  text-shadow:0 2px 4px #000;
+}
+#savePrompt .rows,#saveSlots .rows,#loadSlots .rows,#manageSaves .rows{
+  width:min(88vw,390px);max-height:245px;overflow-y:auto;
+  margin:0!important;padding:8px!important;box-sizing:border-box;
+  border:1px solid #5d513f;border-radius:0 0 14px 14px;
+  background:linear-gradient(180deg,rgba(31,31,35,.98),rgba(18,19,24,.98));
+  box-shadow:0 14px 38px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,255,255,.025);
+}
+#savePrompt .row,#saveSlots .row,#loadSlots .row,#manageSaves .row{
+  position:relative;margin:5px 0!important;padding:13px 14px 13px 42px!important;
+  min-height:45px;display:flex;align-items:center;box-sizing:border-box;
+  border:1px solid #393b43;border-radius:9px!important;
+  background:linear-gradient(#272a31,#202229);
+  color:#c9c9c5;font:600 12px/1.35 ui-monospace,monospace!important;
+  letter-spacing:.025em;box-shadow:inset 0 1px rgba(255,255,255,.035);
+}
+#savePrompt .row::before,#saveSlots .row::before,#loadSlots .row::before,#manageSaves .row::before{
+  content:"";position:absolute;left:13px;width:17px;height:17px;border:1px solid #76654a;
+  border-radius:3px;background:linear-gradient(135deg,#b18a4d 0 22%,#4d4030 23% 42%,#17191d 43%);
+  box-shadow:0 1px 3px rgba(0,0,0,.5);
+}
+#savePrompt .row.on,#saveSlots .row.on,#loadSlots .row.on,#manageSaves .row.on{
+  color:#fff4dc!important;border-color:#b18a4d!important;
+  background:linear-gradient(90deg,rgba(177,138,77,.25),rgba(42,39,34,.96))!important;
+  box-shadow:inset 3px 0 #e0b76f,0 0 12px rgba(177,138,77,.12)!important;
+}
+#savePrompt .row.on::after,#saveSlots .row.on::after,#loadSlots .row.on::after,#manageSaves .row.on::after{
+  content:"›";position:absolute;right:13px;color:#e8c274;font-size:22px;line-height:1;
+}
+#savePrompt .foot,#saveSlots .foot,#loadSlots .foot,#manageSaves .foot{
+  left:50%!important;right:auto!important;bottom:calc(50% - 185px)!important;
+  width:min(84vw,360px);transform:translateX(-50%);
+  padding:8px 4px 0!important;border-top:0!important;
+  text-align:center;color:#a9a49a;font-size:10px;line-height:1.35;opacity:.9!important;
+}
+@media(max-height:620px){
+  #savePrompt>b,#saveSlots>b,#loadSlots>b,#manageSaves>b{top:18px}
+  #savePrompt .rows,#saveSlots .rows,#loadSlots .rows,#manageSaves .rows{max-height:220px}
+  #savePrompt .foot,#saveSlots .foot,#loadSlots .foot,#manageSaves .foot{bottom:14px}
+}
