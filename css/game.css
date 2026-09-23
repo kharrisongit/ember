@@ -1699,43 +1699,75 @@
 }
 
 
-/* === CHROME/SAFARI MOBILE CONTROLLER ANCHOR FIX 2026-09-23 ===
-   deckHealth/actionStack are children of leftControls/rightControls. The prior
-   mobile rule made those parent wrappers only 172px tall at the bottom, so
-   top:5px was relative to the bottom lane and Chrome drew the top controls on
-   top of the D-pad/A-B controls. Make each wrapper span the full playface;
-   explicitly pin only the actual bottom controls to the bottom. */
+
+/* === MOBILE CONTROLLER TWO-LANE FIX 2026-09-23 ===
+   Keep all positioning in one coordinate system: #playface. The HUD/action
+   groups are lifted out of their wrappers for layout purposes with
+   display:contents, then every visible control is anchored directly to the
+   playface. This avoids Chrome/Safari disagreeing about positioned children. */
 @media(max-width:699px){
-  #leftControls,
-  #rightControls{
-    top:0!important;
-    bottom:0!important;
-    height:auto!important;
+  :root{--deck:258px!important;--deckfree:194px!important}
+  #deck{
+    height:258px!important;
+    flex:0 0 258px!important;
+    min-height:258px!important;
+    max-height:258px!important;
+    padding:12px!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+  }
+  #playface{
+    position:relative!important;
+    display:block!important;
+    height:100%!important;
     min-height:0!important;
+    padding:0!important;
+  }
+  #leftControls,#rightControls{
+    display:contents!important;
+  }
+  #deckHealth{
+    position:absolute!important;
+    top:0!important;
+    left:0!important;
+    bottom:auto!important;
+    transform:none!important;
+    margin:0!important;
+    z-index:3!important;
+  }
+  #actionStack{
+    position:absolute!important;
+    top:0!important;
+    right:0!important;
+    bottom:auto!important;
+    margin:0!important;
+    z-index:3!important;
   }
   #dpad{
     position:absolute!important;
     left:0!important;
     bottom:0!important;
+    width:164px!important;
+    height:164px!important;
+    max-height:164px!important;
+    transform:none!important;
+    margin:0!important;
+    z-index:2!important;
   }
   #ab{
     position:absolute!important;
     right:0!important;
     bottom:31px!important;
+    margin:0!important;
+    z-index:2!important;
   }
   #utilityBtns{
     position:absolute!important;
     right:0!important;
     bottom:0!important;
+    margin:0!important;
+    z-index:2!important;
   }
-  #deckHealth{
-    top:5px!important;
-    left:-4px!important;
-    bottom:auto!important;
-  }
-  #actionStack{
-    top:5px!important;
-    right:0!important;
-    bottom:auto!important;
-  }
+}
+@media(max-width:430px){
+  :root{--deck:258px!important;--deckfree:194px!important}
 }
