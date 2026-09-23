@@ -1125,7 +1125,8 @@ function drawNpcFrame(o,s,frame,img){
   }
   const clip=o.seatClipY!==undefined&&!o.goto&&!(o.seatSpr&&(scene||bossScene||hatchExit));
   if(clip){ctx.save();ctx.beginPath();ctx.rect(o.x-s[2]/2-1,o.y-s[3]-2,s[2]+2,Math.max(0,o.seatClipY-(o.y-s[3])+2));ctx.clip();}
-  drawGameImage(ctx,img,s[0]+frame*s[2],s[1],s[2],s[3],Math.round(o.x-s[2]/2),Math.round(o.y-s[3]),s[2],s[3]);
+  const scale=img?.spriteScale||1;
+  drawGameImage(ctx,img,(s[0]+frame*s[2])*scale,s[1]*scale,s[2]*scale,s[3]*scale,Math.round(o.x-s[2]/2),Math.round(o.y-s[3]),s[2],s[3]);
   if(clip)ctx.restore();
 }
 
@@ -1624,7 +1625,7 @@ function pickEditorActor(wx,wy) {
   }
   const hits=[];
   for(const o of [...(MD.roomActors||[]),...npcs]){
-    if(o.editorDeleted)continue;
+    if(o.editorDeleted||o.editorLocked)continue;
     if(npcs.includes(o)&&!npcHere(o))continue;
     const sp=editorSprite(o);if(!sp)continue;
     const w=sp[2],h=sp[3],left=o.x-w/2,top=o.y-h;
@@ -3767,7 +3768,8 @@ function drawWorld(t, dt) {
         : f.st === "dead"
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
         : Math.floor(f.t * (f.st === "swing" ? 3.3 : 6)) % s2[4];
-      const dx = Math.round(f.x - s2[2] / 2), dy = Math.round(f.y - s2[3] + ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 20 : 0));
+      const anchor=ENT_ATTACK_OFFSETS[o.nm]||[0,0];
+      const dx = Math.round(f.x - s2[2] / 2 + anchor[0]), dy = Math.round(f.y - s2[3] + anchor[1] + ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 20 : 0));
       if (f.hurt > 0 && !SPR[(FOE_ART[f.kind] || "sk") + "_hurt_d"])
         ctx.globalAlpha = 0.45;
       if (false) {
@@ -7331,6 +7333,9 @@ function facing(f, tgt) {
   return dy > -6;
 }
 // Full enemy sequences retain the existing combat and movement timing.
+// Match the trunk/feet in attack frame zero to the corresponding idle pose.
+// The south-facing vine occupies 48 extra pixels below the body in its cell.
+const ENT_ATTACK_OFFSETS={ent1_atk_d:[0,48],ent1_atk_u:[0,0],ent1_atk_e:[0,2],ent1_atk_w:[-5,2],ent2_atk_d:[0,48],ent2_atk_u:[1,0],ent2_atk_e:[5,2],ent2_atk_w:[-2,2],ent3_atk_d:[0,48],ent3_atk_u:[0,0],ent3_atk_e:[0,2],ent3_atk_w:[0,2]};
 function golemFrame(f, sp, name, stats, impactFrame = 5) {
   const n = sp[4];
   if (f.st === "dead") return Math.min(n - 1, Math.floor(f.t / 0.5 * n));

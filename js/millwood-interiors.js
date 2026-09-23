@@ -3,7 +3,7 @@ let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
   if(!houseSeatedSheet){
     const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-all-interiors1';
-    await image.decode();houseSeatedSheet=image;
+    await image.decode();houseSeatedSheet=refineSeatedPixels(image);
   }
   await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
@@ -11,9 +11,47 @@ async function prepareMillwoodInteriors() {
   await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('remaining', /./);
+  prepareThroneGallery();
   prepareRemainingInteriorActors();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+
+// Double the sampling grid using neighbouring pixel colours, without blurring
+// faces or inventing intermediate colours. Each animation cell is isolated.
+function seatedPixels2x(source,width,height,cell=24){
+  const output=new Uint32Array(width*height*4),stride=width*2;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const e=source[y*width+x],left=x-x%cell,top=y-y%cell;
+    const b=source[Math.max(top,y-1)*width+x],h=source[Math.min(top+cell-1,y+1)*width+x];
+    const d=source[y*width+Math.max(left,x-1)],f=source[y*width+Math.min(left+cell-1,x+1)];
+    const i=y*2*stride+x*2,edge=b!==h&&d!==f;
+    output[i]=edge&&d===b?d:e;output[i+1]=edge&&b===f?f:e;
+    output[i+stride]=edge&&d===h?d:e;output[i+stride+1]=edge&&h===f?f:e;
+  }
+  return output;
+}
+function refineSeatedPixels(image){
+  const input=document.createElement('canvas');input.width=image.naturalWidth;input.height=image.naturalHeight;
+  const g=input.getContext('2d',{willReadFrequently:true});g.drawImage(image,0,0);
+  const rgba=g.getImageData(0,0,input.width,input.height);
+  const pixels=seatedPixels2x(new Uint32Array(rgba.data.buffer),input.width,input.height);
+  const output=document.createElement('canvas');output.width=input.width*2;output.height=input.height*2;
+  const out=output.getContext('2d'),data=out.createImageData(output.width,output.height);
+  data.data.set(new Uint8ClampedArray(pixels.buffer));out.putImageData(data,0,0);output.spriteScale=2;
+  return output;
+}
+function prepareThroneGallery(){
+  const throne=W.maps.cinderhold,seal=W.maps.royal_seal,sp=SPR.throne_wall;
+  if(!throne||!seal||!sp||throne._galleryReady)return;
+  const make=()=>{const c=document.createElement('canvas');c.width=26;c.height=31;return c;};
+  const painting=make(),wall=make();
+  drawGameImage(painting.getContext('2d'),atlasImg,sp[0]+280,sp[1]+10,26,31,0,0,26,31);
+  // Sample an undecorated strip of the same wall, preserving its horizontal bands.
+  drawGameImage(wall.getContext('2d'),atlasImg,sp[0]+321,sp[1]+10,1,31,0,0,26,31);
+  (throne.roomActors ||= []).push({x:305,y:54,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
+  (seal.roomActors ||= []).push({n:'Royal painting',x:112,y:52,sy:52,extractedCanvas:painting,editKey:'royal:relocated-painting',editorMovable:true});
+  throne._galleryReady=true;
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';
@@ -86,7 +124,7 @@ function prepareRemainingInteriorActors() {
   for(const [id,map] of Object.entries(W.maps)) {
     if(map._interiorActorsReady || !(map._remainingInterior || map.royal || map.templeContinuous || id==='cinderhold' || id==='royal_cellar'))continue;
     const actors=map.roomActors||[];
-    const props=actors.filter(a=>!a.flatFurniture && !a.editableWall && !a.stairTo && !a.royalDoor &&
+    const props=actors.filter(a=>!a.editorLocked && !a.flatFurniture && !a.editableWall && !a.stairTo && !a.royalDoor &&
       !a.templeEntrance && a.templeGate===undefined && a.templeMachine===undefined && !a.templeSpike && !a.templeLever &&
       !/door|light|torch|rail|bones|skull$/.test(a.spr||''));
     const reserved=new Set(actors.flatMap(a=>a.moveBlocks||[]));
