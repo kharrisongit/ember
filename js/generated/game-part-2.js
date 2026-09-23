@@ -3919,6 +3919,7 @@ function drawWorld(t, dt) {
                      - RIDEDROP;
           const dx = Math.round(P.x - dw / 2), dy = Math.round(P.y - dh - lift);
           const sm0 = ctx.imageSmoothingEnabled;
+          const sq0 = ctx.imageSmoothingQuality;
           ctx.imageSmoothingEnabled = false;
           if (flip) {
             ctx.save();
@@ -3932,6 +3933,11 @@ function drawWorld(t, dt) {
                           dx, dy, dw, dh);
           }
           ctx.imageSmoothingEnabled = sm0;
+          /* Safari can throw on an unsupported/undefined quality assignment.
+             Only restore the previous quality when it is a valid canvas value. */
+          if (sq0 === "low" || sq0 === "medium" || sq0 === "high") {
+            try { ctx.imageSmoothingQuality = sq0; } catch (_) {}
+          }
           continue;
         }
       }
