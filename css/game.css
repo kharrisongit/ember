@@ -1061,3 +1061,129 @@
  #atkm .row:nth-child(4){margin-left:45px!important}
  #atkm .row:nth-child(5){margin-left:-45px!important}
 }
+
+/* === DRAGON ATTACK MOCKUP IMPLEMENTATION 2026-09-22 === */
+/* Full-deck dragon attack constellation: Fire north, Ice west, Lightning east,
+   Shadow south, Slash in the centre. This deliberately overrides the older
+   experimental breath layouts above. */
+#atkm{
+  position:fixed!important;
+  left:0!important;right:0!important;bottom:0!important;
+  width:100%!important;height:var(--deck)!important;
+  max-width:none!important;aspect-ratio:auto!important;
+  box-sizing:border-box!important;
+  padding:10px 10px calc(env(safe-area-inset-bottom,0px) + 8px)!important;
+  border:0!important;border-top:1px solid #604b34!important;border-radius:0!important;
+  overflow:hidden!important;pointer-events:auto!important;z-index:40!important;
+  background:
+    radial-gradient(circle at 50% 53%,rgba(114,72,36,.24) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 50% 58%,#211811 0,#15100d 55%,#0a0908 100%)!important;
+  box-shadow:0 -10px 28px rgba(0,0,0,.58)!important;
+}
+#atkm::before,#atkm::after{
+  content:"";position:absolute;left:50%;top:55%;pointer-events:none;
+  transform:translate(-50%,-50%);border-radius:50%;
+}
+#atkm::before{
+  width:min(82vw,340px);aspect-ratio:1;
+  border:1px solid rgba(174,123,67,.26);
+  box-shadow:0 0 0 10px rgba(133,88,45,.035),0 0 30px rgba(111,67,31,.13) inset;
+}
+#atkm::after{
+  width:min(62vw,250px);aspect-ratio:1;
+  border:1px solid rgba(174,123,67,.18);
+}
+#atkm>b{
+  display:block!important;position:relative!important;left:auto!important;top:auto!important;
+  transform:none!important;width:100%!important;height:auto!important;margin:0!important;
+  text-align:center!important;font:700 0/1 Georgia,serif!important;color:#f1e4ce!important;
+  letter-spacing:.06em!important;text-shadow:0 2px 4px #000!important;z-index:8!important;
+}
+#atkm>b::after{
+  content:"DRAGON ATTACK"!important;font:700 18px/1.1 Georgia,serif!important;
+  letter-spacing:.08em!important;
+}
+#atkm .attackSigil{
+  display:block;position:absolute;inset:38px 8% 30px;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(30deg,transparent 49.7%,rgba(153,103,53,.16) 50%,transparent 50.3%),
+    linear-gradient(-30deg,transparent 49.7%,rgba(153,103,53,.16) 50%,transparent 50.3%);
+}
+#atkm .attackSigil::before,#atkm .attackSigil::after{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);
+  border:1px solid rgba(167,112,57,.18);
+}
+#atkm .attackSigil::before{width:72%;aspect-ratio:1}
+#atkm .attackSigil::after{width:46%;aspect-ratio:1}
+#atkm .attackSigil i{display:none}
+#atkm .rows{
+  position:absolute!important;left:50%!important;top:42px!important;
+  transform:translateX(-50%)!important;width:min(94vw,410px)!important;
+  height:calc(100% - 70px)!important;margin:0!important;padding:0!important;
+  display:block!important;overflow:visible!important;pointer-events:auto!important;z-index:5!important;
+}
+#atkm .rows::before{display:none!important}
+#atkm .row,
+#atkm .row:nth-child(1),#atkm .row:nth-child(2),#atkm .row:nth-child(3),
+#atkm .row:nth-child(4),#atkm .row:nth-child(5){
+  position:absolute!important;width:78px!important;height:78px!important;min-height:0!important;
+  margin:0!important;padding:5px!important;box-sizing:border-box!important;border-radius:50%!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:1px!important;border:2px solid var(--el,#c7b69b)!important;
+  background:radial-gradient(circle at 38% 28%,color-mix(in srgb,var(--el) 24%,#fff) 0%,color-mix(in srgb,var(--el) 18%,#251b14) 25%,#17120e 68%,#090807 100%)!important;
+  box-shadow:inset 0 0 0 4px rgba(0,0,0,.36),inset 0 0 18px color-mix(in srgb,var(--el) 28%,transparent),0 0 0 2px rgba(206,174,132,.16),0 4px 10px rgba(0,0,0,.55),0 0 14px color-mix(in srgb,var(--el) 34%,transparent)!important;
+  color:#fff8ec!important;text-shadow:0 2px 2px #000!important;
+  transform:translate(-50%,-50%)!important;overflow:hidden!important;touch-action:manipulation!important;
+}
+#atkm .row::before{
+  display:block;font:700 25px/1 Georgia,serif;color:#fff8e9;
+  filter:drop-shadow(0 0 5px var(--el));z-index:4;pointer-events:none;
+}
+#atkm .row:nth-child(1)::before{content:"⚔";font-size:25px}
+#atkm .row:nth-child(2)::before{content:"♨";font-size:28px}
+#atkm .row:nth-child(3)::before{content:"ϟ";font-size:31px}
+#atkm .row:nth-child(4)::before{content:"◉";font-size:25px}
+#atkm .row:nth-child(5)::before{content:"❄";font-size:27px}
+#atkm .row .dot{display:none!important}
+#atkm .row>span:not(.breathFill):not(.breathSecs):not(.dot){
+  position:relative!important;z-index:5!important;font:700 10px/1.05 Georgia,serif!important;
+}
+#atkm .row:nth-child(1){left:50%!important;top:50%!important} /* Slash */
+#atkm .row:nth-child(2){left:50%!important;top:15%!important} /* Fire */
+#atkm .row:nth-child(3){left:79%!important;top:50%!important} /* Lightning */
+#atkm .row:nth-child(4){left:50%!important;top:85%!important} /* Shadow */
+#atkm .row:nth-child(5){left:21%!important;top:50%!important} /* Ice */
+#atkm .row.on,
+#atkm .row.on:nth-child(1),#atkm .row.on:nth-child(2),#atkm .row.on:nth-child(3),
+#atkm .row.on:nth-child(4),#atkm .row.on:nth-child(5){
+  transform:translate(-50%,-50%) scale(1.06)!important;
+  box-shadow:inset 0 0 0 4px rgba(0,0,0,.28),0 0 0 3px rgba(255,242,217,.68),0 5px 12px rgba(0,0,0,.55),0 0 22px var(--el)!important;
+}
+#atkm .row.breathRefill .breathFill{
+  left:0!important;right:0!important;bottom:0!important;height:var(--refill,100%)!important;
+  z-index:1!important;opacity:.55!important;background:color-mix(in srgb,var(--el) 72%,transparent)!important;
+}
+#atkm .row.breathRefill .breathSecs{
+  left:50%!important;bottom:4px!important;z-index:7!important;padding:1px 4px!important;
+  font:700 9px/1 ui-monospace,monospace!important;background:rgba(5,5,5,.78)!important;
+}
+#atkm .foot{
+  display:block!important;position:absolute!important;left:50%!important;right:auto!important;bottom:8px!important;
+  transform:translateX(-50%)!important;width:auto!important;min-width:190px!important;padding:0!important;border:0!important;
+  text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  opacity:.72!important;color:#e6cda8!important;font:600 9px/1.2 Georgia,serif!important;z-index:8!important;
+}
+#atkCloseBtn{
+  display:block!important;position:absolute!important;right:12px!important;bottom:7px!important;z-index:10!important;
+  min-width:66px!important;height:28px!important;padding:0 13px!important;border-radius:18px!important;
+  border:1px solid #8d806f!important;background:linear-gradient(#2a2723,#171513)!important;color:#f1dfc4!important;
+  font:700 9px/1 Georgia,serif!important;letter-spacing:.06em!important;box-shadow:inset 0 1px rgba(255,255,255,.08),0 2px 5px rgba(0,0,0,.4)!important;
+}
+@media(max-width:430px){
+ #atkm>b::after{font-size:17px!important}
+ #atkm .rows{width:96vw!important;top:40px!important;height:calc(100% - 68px)!important}
+ #atkm .row,#atkm .row:nth-child(1),#atkm .row:nth-child(2),#atkm .row:nth-child(3),#atkm .row:nth-child(4),#atkm .row:nth-child(5){width:72px!important;height:72px!important}
+ #atkm .row:nth-child(3){left:78%!important}
+ #atkm .row:nth-child(5){left:22%!important}
+ #atkm .foot{font-size:8px!important;max-width:55%!important;min-width:0!important}
+}
