@@ -847,3 +847,13 @@
   gap:3px!important;
 }
 .deckHpRow{gap:6px!important}
+
+/* Match right action tiles to the health HUD's final 1px-lowered top edge. */
+#actionStack{
+  top:calc(100% - var(--deck) + 17px)!important;
+}
+@media(max-width:430px){
+  #actionStack{
+    top:calc(100% - var(--deck) + 17px)!important;
+  }
+}
