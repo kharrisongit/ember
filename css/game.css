@@ -1295,3 +1295,6 @@
 #atkm .row.breathRefill .breathSecs{
   bottom:3px!important;z-index:12!important;background:rgba(5,5,5,.82)!important;
 }
+
+/* Generated artwork background asset */
+#atkm{background-image:linear-gradient(rgba(8,6,5,.16),rgba(8,6,5,.22)),url("../assets/ui/dragon-attack-bg.webp")!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
