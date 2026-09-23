@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple5-fit');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple6-ornaments');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple5-fit';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple6-ornaments';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -27,6 +27,7 @@ async function prepareExpandedFirstTemple(){
     for(const [kind,x,y,room] of plan.enemies)m.foes.push({k:kind,x:(x-8)/16,y:(y-16)/16,expandedRoom:room});
     // Wall torches and small stone ornaments preserve the first temple's visual identity.
     for(const [l,t,r,b] of plan.chambers){
+      if(plan.entranceDecor && t===plan.entranceDecor.wallY)continue;
       for(const x of [l+32,r-32])m.roomActors.push({spr:'first_temple_torch',x,y:t+4,schoolArt:true});
       if(!plan.floors.some(([fl,ft,fr,fb])=>(l+r)/2>=fl&&(l+r)/2<fr&&t-16>=ft&&t-16<fb)&&!plan.doors.some(d=>d.dir==='u'&&d.y===t&&Math.abs(d.x-(l+r)/2)<48))m.roomActors.push({spr:'first_temple_dragon_head',x:(l+r)/2,y:t-8,schoolArt:true,stillFrame:0});
     }
@@ -45,7 +46,14 @@ async function prepareExpandedFirstTemple(){
   const sanctum=W.maps.tp1_sanctum,sp=sanctum.templePlan;
   if(alderic){Object.assign(alderic,{x:sp.elder[0],y:sp.elder[1]});sanctum.npcs.push(alderic);}
   sanctum.roomActors.push({spr:'first_temple_bars',x:(sp.gate[0]+sp.gate[2])/2,y:sp.gate[3],schoolArt:true,expandedGate:true});
-  for(const [x,y] of sp.sentinels)sanctum.roomActors.push({spr:'temple67_sentinel',x,y,schoolArt:true});
+  for(const side of sp.entranceDecor.sides){
+    for(const [spr,key] of [['first_temple_torch','torch'],['first_temple_dragon_head','head'],['temple67_sentinel','statue']]){
+      const [x,y]=side[key],actor={spr,x,y,schoolArt:true,entranceOrnament:true};
+      if(key==='head')actor.stillFrame=0;
+      if(key==='statue')actor.moveBlocks=[sanctum.roomBlocks.push([x-8,y-10,x+8,y])-1];
+      sanctum.roomActors.push(actor);
+    }
+  }
   const chest=CHESTS.find(c=>c.gift==='lightning');Object.assign(chest,{map:'tp1_sanctum',x:(sp.heartstone[0]-8)/16,y:(sp.heartstone[1]-16)/16});
   if(chestOpen.tp1||chestOpen.tp4||breathHas.lightning)chestOpen.tp1_sanctum=true;
   // A short horizontal spike crossing preserves the original temple's timing challenge.

@@ -54,7 +54,15 @@ for id,m in layout.items():
   # Preserving the face here would leave a thin strip beyond the side wall.
   if (x-16,y) not in floor:stamp_wall(im,west,(x-16,y),floor_edge=True)
   if (x+16,y) not in floor:stamp_wall(im,east,(x+16,y),floor_edge=True)
- for x,y,tile in pillars:stamp_wall(im,tile,(x,y))
+ for x,y,tile in pillars:
+  # A cap belongs only on the upper edge of a wall. At stepped junctions
+  # another face already rises above this endpoint: continue the column.
+  joins_higher_face=any(l-16<=x<r+16 and bottom-46<y<=bottom+2 for l,r,bottom in wall_ends)
+  if joins_higher_face:
+   side=west if tile is left_pillar else east
+   tile=Image.new('RGBA',(16,48))
+   for yy in range(0,48,16):tile.alpha_composite(side,(0,yy))
+  stamp_wall(im,tile,(x,y))
  # The source's last two rows are floor padding, not stone. End the side
  # columns on that same baseline. Continue masonry where another wall joins.
  for l,r,bottom in wall_ends:

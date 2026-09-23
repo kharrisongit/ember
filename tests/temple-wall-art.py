@@ -59,3 +59,8 @@ for x in [l-3,r+2]:
  for y in range(b-48,b-2):
   assert im.getpixel((x,y)) not in void|{(102,94,85,255)},('gate jamb gap',x,y)
 print('PASS: heartstone south wall has no projecting floor; gate jambs meet both passage walls.')
+galleries=Image.open(ROOT/'assets/interiors/first-temple/tp1_halls.png').convert('RGBA')
+cap=galleries.crop((52,68,60,76)).tobytes()
+for x,y in [(208,96),(448,96),(176,368),(448,368)]:
+ assert galleries.crop((x+4,y+4,x+12,y+12)).tobytes()!=cap,('misplaced cap at lower wall junction',x,y)
+print('PASS: stepped north-wall junctions continue as stone columns without lower pillar caps.')
