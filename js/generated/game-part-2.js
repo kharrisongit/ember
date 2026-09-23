@@ -2372,59 +2372,50 @@ function toggleBig() {
   const nativeOn = document.fullscreenElement || document.webkitFullscreenElement;
   const pseudoOn = document.body.classList.contains("pseudoFullscreen");
 
-  function syncFullscreenLayout() {
-    const on = !!(document.fullscreenElement || document.webkitFullscreenElement ||
-                  document.body.classList.contains("pseudoFullscreen"));
-    document.body.classList.toggle("emberFullscreen", on);
-    /* iOS browser chrome changes the visual viewport asynchronously. */
+  function settle() {
     requestAnimationFrame(() => resize());
-    setTimeout(resize, 120);
-    setTimeout(resize, 450);
+    setTimeout(resize, 100);
+    setTimeout(resize, 350);
   }
+  function pseudo(on) {
+    document.body.classList.toggle("pseudoFullscreen", !!on);
+    document.body.classList.toggle("emberFullscreen", !!on);
+    settle();
+  }
+
+  if (nativeOn) {
+    try {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+    } catch (_) {}
+    return;
+  }
+  if (pseudoOn) { pseudo(false); return; }
+
+  /* Fullscreen API is not universally available on mobile browsers. Use it
+     only when the browser explicitly says it is enabled; otherwise switch
+     immediately to Emberfell's viewport-filling mode. */
+  const request = root.requestFullscreen || root.webkitRequestFullscreen;
+  const enabled = document.fullscreenEnabled !== false &&
+                  document.webkitFullscreenEnabled !== false;
+  if (!request || !enabled) { pseudo(true); return; }
 
   try {
-    if (nativeOn) {
-      const exit = document.exitFullscreen || document.webkitExitFullscreen;
-      if (exit) {
-        const p = exit.call(document);
-        if (p && p.finally) p.finally(syncFullscreenLayout);
-      }
-      return;
-    }
-    if (pseudoOn) {
-      document.body.classList.remove("pseudoFullscreen");
-      syncFullscreenLayout();
-      return;
-    }
-
-    /* Chromium/desktop Safari: use the native Fullscreen API. iPhone Safari
-       does not expose element fullscreen for normal HTML pages, so fall back
-       to a viewport-filling mode that uses the visual viewport and safe areas. */
-    const request = root.requestFullscreen || root.webkitRequestFullscreen;
-    if (request) {
-      let p;
-      try { p = request.call(root, { navigationUI: "hide" }); }
-      catch (_) { p = request.call(root); }
-      if (p && p.then) {
-        p.then(syncFullscreenLayout).catch(() => {
-          document.body.classList.add("pseudoFullscreen");
-          syncFullscreenLayout();
-        });
-      } else {
-        setTimeout(() => {
-          if (!(document.fullscreenElement || document.webkitFullscreenElement))
-            document.body.classList.add("pseudoFullscreen");
-          syncFullscreenLayout();
-        }, 250);
-      }
+    const p = request.call(root);
+    if (p && p.then) {
+      p.then(() => {
+        document.body.classList.add("emberFullscreen");
+        settle();
+      }).catch(() => pseudo(true));
     } else {
-      document.body.classList.add("pseudoFullscreen");
-      syncFullscreenLayout();
+      setTimeout(() => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          document.body.classList.add("emberFullscreen");
+          settle();
+        } else pseudo(true);
+      }, 150);
     }
-  } catch (e) {
-    document.body.classList.add("pseudoFullscreen");
-    syncFullscreenLayout();
-  }
+  } catch (_) { pseudo(true); }
 }
 document.addEventListener("fullscreenchange", () => setTimeout(resize, 120));
 document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 120));
