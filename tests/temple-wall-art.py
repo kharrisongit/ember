@@ -1,14 +1,15 @@
 """Check full-height original-style wall faces around every new floor boundary."""
-import json
+import json,sys
 from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
-plans=json.loads((ROOT/'assets/interiors/first-temple/layout.json').read_text())
+folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
+plans=json.loads((ROOT/f'assets/interiors/{folder}/layout.json').read_text())
 checks=0
 seam_pixels=0
 void={(25,23,28,255),(25,23,30,255)}
 for id,m in plans.items():
- im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA');floor=set()
+ im=Image.open(ROOT/f'assets/interiors/{folder}/{id}.png').convert('RGBA');floor=set()
  exits=[(d['x'],d['y']) for d in m['doors'] if d['dir']=='d']
  if 'exit' in m:exits.append(m['exit'])
  for l,t,r,b in m['floors']+[[x-16,y,x+16,y+48] for x,y in exits]:
@@ -47,9 +48,10 @@ for id,m in plans.items():
      seam_pixels+=1
    assert im.getpixel((x-8 if direction==-1 else x+24,y+8))!=(25,23,28,255),(id,'missing side edge',x,y)
    checks+=1
-print(f'PASS: {checks} wall-face and side-edge samples, 46-pixel stone faces in 48-pixel tiles on all five maps.')
+print(f'PASS: {checks} wall-face and side-edge samples, 46-pixel stone faces in 48-pixel tiles on all {len(plans)} maps.')
 print(f'PASS: {seam_pixels} masonry pixels checked across all wall faces and perpendicular joins; floor trim confined to native side outlines.')
-sanctum=plans['tp1_sanctum'];im=Image.open(ROOT/'assets/interiors/first-temple/tp1_sanctum.png').convert('RGBA')
+sanctum_id='ds_sanctum' if folder=='sandspire-temple' else 'tp1_sanctum'
+sanctum=plans[sanctum_id];im=Image.open(ROOT/f'assets/interiors/{folder}/{sanctum_id}.png').convert('RGBA')
 l,t,r,b=sanctum['chambers'][1]
 for y in [b+46,b+47]:
  for x in list(range(l+16,sanctum['floors'][2][0]-16))+list(range(sanctum['floors'][2][2]+16,r-16)):
@@ -66,7 +68,7 @@ assert entry.getpixel((88,24)) not in void|{(102,94,85,255)},'cap reference cont
 face=entry.crop((96,16,112,62)).tobytes()
 passages=0;hall_joins=0;horizontal_caps=0
 for id,m in plans.items():
- im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA')
+ im=Image.open(ROOT/f'assets/interiors/{folder}/{id}.png').convert('RGBA')
  for p in m.get('passages',[]):
   x,b=p['x'],p['y'];passages+=1
   for px in [x-19,x+18]:
@@ -91,10 +93,10 @@ print(f'PASS: {passages} connected doorways fit their jambs with no extra lower 
 print(f'PASS: {hall_joins} hall side-wall pairs meet south walls with pillar tops; {horizontal_caps} horizontal-link ends have matching caps.')
 # The rebuilt floor keeps the original temple's cracked-tile texture throughout.
 for id,m in plans.items():
- im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA');textured=walkable=0
+ im=Image.open(ROOT/f'assets/interiors/{folder}/{id}.png').convert('RGBA');textured=walkable=0
  for l,t,r,b in m['floors']:
   for y in range(t,b):
    for x in range(l,r):
     walkable+=1;textured+=im.getpixel((x,y))!=(102,94,85,255)
  assert textured>walkable*.035,(id,'too few floor texture pixels',textured,walkable)
-print('PASS: original cracked-floor texture is distributed through all five temple maps.')
+print(f'PASS: original cracked-floor texture is distributed through all {len(plans)} temple maps.')

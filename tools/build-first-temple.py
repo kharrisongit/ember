@@ -1,5 +1,5 @@
 """Build expanded temple backdrops from the existing temple's native pixel tiles."""
-import re,json,base64,io
+import re,json,base64,io,sys
 from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
@@ -24,7 +24,8 @@ for sy in range(96,1888,16):
     if tile.getpixel((px,py))==(102,94,85,255):tile.putpixel((px,py),(0,0,0,0))
     else:marked=True
   if marked and sum(1 for py in range(16) for px in range(16) if tile.getpixel((px,py))[3])<=42:floor_marks.append(tile)
-layout=json.loads((ROOT/'assets/interiors/first-temple/layout.json').read_text())
+folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
+layout=json.loads((ROOT/f'assets/interiors/{folder}/layout.json').read_text())
 VOID={(25,23,28,255),(25,23,30,255)}
 APRON={(102,94,85,255),(75,70,67,255)}
 def stamp_wall(im,tile,xy,floor_edge=False):
@@ -149,5 +150,5 @@ for id,m in layout.items():
    # Some floor decorations exceed one tile; keep their full footprint off walls.
    if all((fx,fy) in floor for fx in range(x,x+detail.width,16) for fy in range(y,y+detail.height,16)):
     im.alpha_composite(detail,(x,y))
- im.save(ROOT/f'assets/interiors/first-temple/{id}.png')
-print('Built five compact temple interiors with original 48-pixel walls and joined corner pillars.')
+ im.save(ROOT/f'assets/interiors/{folder}/{id}.png')
+print(f'Built {len(layout)} compact {folder} interiors with original 48-pixel walls and joined corner pillars.')

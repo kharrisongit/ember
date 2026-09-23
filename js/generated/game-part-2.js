@@ -1429,6 +1429,7 @@ async function buildHouseFurnitureLayers(){
   await prepareMillwoodInteriors();
   await prepareHouseLoot();
   await prepareExpandedFirstTemple();
+  await prepareExpandedSandspireTemple();
 }
 /* === end household furniture layering === */
 
@@ -3620,6 +3621,7 @@ function drawWorld(t, dt) {
       }
       if(Number.isInteger(o.templeMachine))fr=MD.templeMachines[o.templeMachine].type==='cannon'?MD.templeMachines[o.templeMachine].frame:Math.min(2,MD.templeMachines[o.templeMachine].frame);
       if(o.houseLoot)fr=houseLootFrame(o);
+      if(o.sandspireExit){o.openT=Math.max(0,Math.min(1,(o.openT||0)+(sandspireDoorLocked(o.sandspireExit)?-dt:dt)*3));fr=Math.min(sp[4]-1,Math.floor(o.openT*sp[4]));}
       if(o.expandedGate)fr=Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
       if(o.expandedSpike)fr=expandedSpikeFrame(o.expandedSpike);
       if(o.expandedLever)fr=expandedTrapDisabled(o.expandedLever)?sp[4]-1:0;
@@ -3778,7 +3780,8 @@ function drawWorld(t, dt) {
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
         : Math.floor(f.t * (f.st === "swing" ? 3.3 : 6)) % s2[4];
       const anchor=ENT_ATTACK_OFFSETS[o.nm]||[0,0];
-      const dx = Math.round(f.x - s2[2] / 2 + anchor[0]), dy = Math.round(f.y - s2[3] + anchor[1] + ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 20 : 0));
+      const emerge=Math.min(1,f.emerge??1),drawX=f.ambushFrom?f.ambushFrom.x+(f.x-f.ambushFrom.x)*emerge:f.x,drawY=f.ambushFrom?f.ambushFrom.y+(f.y-f.ambushFrom.y)*emerge:f.y;
+      const dx = Math.round(drawX - s2[2] / 2 + anchor[0]), dy = Math.round(drawY - s2[3] + anchor[1] + ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 20 : 0));
       if (f.hurt > 0 && !SPR[(FOE_ART[f.kind] || "sk") + "_hurt_d"])
         ctx.globalAlpha = 0.45;
       if (false) {
@@ -3796,9 +3799,9 @@ function drawWorld(t, dt) {
           ctx.save();
           ctx.globalAlpha = (ctx.globalAlpha || 1) * Math.min(1, 0.35 + e * 0.9);
           if (src) drawGameImage(ctx, src, 0, 0, s2[2], sh,
-                                 dx, f.y - sh, s2[2], sh);
-          else drawGameImage(ctx, atlasImg, s2[0] + fr * s2[2], s2[1],
-                             s2[2], sh, dx, f.y - sh, s2[2], sh);
+                                 dx, drawY - sh, s2[2], sh);
+          else drawGameImage(ctx, sheetOf(s2), s2[0] + fr * s2[2], s2[1],
+                             s2[2], sh, dx, drawY - sh, s2[2], sh);
           ctx.restore();
         }
       } else if (f.kind === "kdragon") {
@@ -7278,7 +7281,7 @@ function enemyMaxHp(kind, x, mapId = MAPID) {
   const base = (FOE[kind] || FOE.skeleton).hp;
   const late = mapId === "world"
     ? x >= ROUTE_2_HP_START_X
-    : POST_ROUTE_2_COMBAT_MAPS.has(mapId);
+    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_");
   return base * (late || mapId.startsWith("royal_") ? 2 : 1);
 }
 const FOE_ART = { treasuryknight:"kn3", royalguard:"kn", knight: "kn", devil1: "dv1", devil3: "dv3", skeleton1: "bs1", skeleton3: "bs3", mage1: "lc1", mage2: "lc2", shroomBrown: "ms1", eye2: "bh2", ent1: "ent1", ent2: "ent2", gnoll1: "gn1", gnoll3: "gn3", plant3: "pl3", reptile2: "rp2", reptile3: "rp3", reptile: "rp1", kdragon: "kd92", shroomRed: "ms2", shroomPurple: "ms3",
@@ -7367,6 +7370,7 @@ function foeDir(dir, flip) {
 function spawnFoes() {
   foes = []; turnHolder = null; turnT = 0; foeCool = 0;
   (MD.foes || []).forEach((f, idx) => {
+    if(f.chestAmbush&&(!houseLootTaken.has(f.chestAmbush)||lootChestAnimations.has(f.chestAmbush)))return;
     const kind = FOE[f.k] ? f.k : "skeleton";
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;
     if(kind==="royalguard" && (wonAll || royalDefeated[MAPID+":"+idx]))return;
@@ -7375,7 +7379,7 @@ function spawnFoes() {
     const k = FOE[kind];
     if(MD.templeContinuous&&(bossGone[MAPID+':room:'+(idx<4?'ghost':'golem')]||(idx>=4&&bossGone[(MD.templeOldGolem||'tp3')+':'+(idx-4)])))return;
     const x = f.x * TS + 8, y = f.y * TS + 16;
-    foes.push({ kind, x, y, hx: x, hy: y, expandedRoom:f.expandedRoom,
+    foes.push({ kind, x, y, hx: x, hy: y, expandedRoom:f.expandedRoom, chestAmbush:f.chestAmbush,
                 hp: enemyMaxHp(kind, x), st: "idle", t: 0, dir: "d", flip: false, hurt: 0, idx,
                 storyKnight: kind === "knight", storyPassive: kind === "knight" });
   });
@@ -8478,6 +8482,7 @@ const BOSS_KIND = /^(golem1|golem2|golem3|devil|lich|ghost|ghost3|knight|treasur
 const NO_RESPAWN = /^(golem1|golem2|golem3|devil|lich|knight)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
+  if(f.chestAmbush){f.hold=0;f.emerge=1;}
   if(f.kind==="treasuryknight"){royalDefeated.treasuryCaptain=true;recoverStrandedDragon();toast("Treasury Captain defeated — the treasure is yours!");}
   if(f.kind==="royalguard" && f.idx!==undefined){royalDefeated[MAPID+":"+f.idx]=true;if(!foes.some(q=>q!==f&&q.kind==="royalguard"&&q.st!=="dead"))recoverStrandedDragon();}
   if (!f.ally && !f.storyKnight && f.idx !== undefined && (MD.templeExpanded || NO_RESPAWN.test(f.kind)))

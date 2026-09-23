@@ -4116,6 +4116,7 @@ function useDoors(dt) {
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
+  if(MD.sandspire&&sandspireDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
@@ -5504,7 +5505,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  templeLayoutVersion:2, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:'))),
+  templeLayoutVersion:2, sandspireLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:')||id.startsWith('ds_')||id.startsWith('ds1:'))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5550,6 +5551,7 @@ function loadGame(slot=activeSaveSlot) {
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     if (s.breathHas) for (const k in breathHas) if (s.breathHas[k] !== undefined) breathHas[k] = !!s.breathHas[k];
     chestOpen.tp1_sanctum=!!breathHas.lightning;
+    chestOpen.ds_sanctum=!!breathHas.ice;
     syncDragonVitality(false);
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
@@ -5559,11 +5561,15 @@ function loadGame(slot=activeSaveSlot) {
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
     houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
     potions=Math.max(0,s.potions|0);
-    for(const id of Object.keys(bossGone))if(id.startsWith('tp1_')||id.startsWith('tp1:'))delete bossGone[id];
+    for(const id of Object.keys(bossGone))if(id.startsWith('tp1_')||id.startsWith('tp1:')||id.startsWith('ds_')||id.startsWith('ds1:'))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
-    for(const [id,m] of Object.entries(W.maps))if(m.templeExpanded)m.templeGateOpen=0;
+    for(const m of Object.values(W.maps))if(m.templeExpanded){
+      m.templeGateOpen=0;
+      if(m.sandspire){m.templeClock=0;m.templeShots=[];for(const a of m.templeMachines){a.lastCycle=-1;a.frame=0;}for(const a of m.roomActors)if(a.sandspireExit)a.openT=0;}
+    }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
+    if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.templeExpanded&&s.templeLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);

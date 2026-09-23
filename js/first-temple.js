@@ -120,13 +120,14 @@ function expandedSpikeFrame(trap){
 }
 function stepExpandedTemple(dt){
   if(!MD?.templeExpanded)return;
+  if(MD.sandspire)stepSandspireTemple(dt);
   if(MAPID==='tp1_sanctum')MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(expandedSanctumCleared()?dt*3:0));
   for(const f of foes){
     if(!f.expandedRoom||f.st==='dead')continue;
     const [l,t,r,b]=f.expandedRoom;
     f.x=Math.max(l+24,Math.min(r-24,f.x));f.y=Math.max(t+36,Math.min(b-24,f.y));
   }
-  if(!sceneHold()&&!fadeDir)for(const h of MD.templePlan.hazards||[])
+  if(!sceneHold()&&!fadeDir)for(const h of (MD.templePlan.hazards||[]).filter(h=>!h.type||h.type==='spikes'))
     h.lines.forEach((line,i)=>{
       const along=h.axis==='x'?P.x:P.y,cross=h.axis==='x'?P.y:P.x;
       if(expandedSpikeFrame({id:h.id,phase:i*.55})===3&&Math.abs(along-line)<10&&cross>h.cross[0]&&cross<h.cross[1])hurtPlayer(1);
@@ -135,5 +136,5 @@ function stepExpandedTemple(dt){
 function tryExpandedTempleLever(){
   const h=MD?.templePlan?.hazards?.find(h=>Math.hypot(P.x-h.lever[0],P.y-h.lever[1])<=28);
   if(!h)return false;
-  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast('The hall spikes settle into the floor.');return true;
+  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
 }
