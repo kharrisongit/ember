@@ -5498,6 +5498,85 @@ function syncSoundDial(){
   if(close)close.addEventListener("pointerup",e=>{e.preventDefault();setOvl(null);});
 })();
 
+/* YouTube music hub. The official IFrame Player API is loaded only after the
+   player opens the YouTube tab, so normal Emberfell startup stays unchanged. */
+let emberYTPlayer=null, emberYTReady=false, emberYTLoading=false, emberYTGameVolume=null;
+function emberYTApi(){
+  if(window.YT&&window.YT.Player)return Promise.resolve();
+  if(window.__emberYTPromise)return window.__emberYTPromise;
+  window.__emberYTPromise=new Promise((resolve,reject)=>{
+    const prior=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=()=>{try{if(prior)prior();}catch(_){}resolve();};
+    const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";s.async=true;
+    s.onerror=()=>reject(new Error("YouTube player could not load"));
+    document.head.appendChild(s);
+  });
+  return window.__emberYTPromise;
+}
+function emberYTParse(raw){
+  raw=(raw||"").trim();if(!raw)return null;
+  try{
+    const u=new URL(raw,location.href),host=u.hostname.replace(/^www\./,"");
+    let list=u.searchParams.get("list"),video=u.searchParams.get("v");
+    if(host==="youtu.be")video=u.pathname.split("/").filter(Boolean)[0]||video;
+    if(host.endsWith("youtube.com")){
+      const m=u.pathname.match(/^\/(?:shorts|embed|live)\/([^/?]+)/);if(m)video=m[1];
+    }
+    if(list)return{type:"playlist",list,video:video||""};
+    if(video)return{type:"video",video};
+  }catch(_){}
+  if(/^[A-Za-z0-9_-]{11}$/.test(raw))return{type:"video",video:raw};
+  return null;
+}
+function emberYTStatus(msg){const e=document.getElementById("ytStatus");if(e)e.textContent=msg;}
+function emberYTSetGameMuted(muted){
+  if(!window.EmberAudio)return;
+  if(muted){
+    if(emberYTGameVolume===null)emberYTGameVolume=window.EmberAudio.percent();
+    window.EmberAudio.set(0);
+  }else if(emberYTGameVolume!==null){
+    window.EmberAudio.set(emberYTGameVolume);emberYTGameVolume=null;syncSoundDial();
+  }
+}
+function emberYTState(e){
+  const playing=window.YT&&e.data===YT.PlayerState.PLAYING;
+  const paused=window.YT&&(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED);
+  if(playing){emberYTSetGameMuted(true);emberYTStatus("YouTube is playing — Emberfell music muted.");}
+  if(paused)emberYTSetGameMuted(false);
+  const b=document.getElementById("ytPlay");if(b)b.textContent=playing?"PAUSE":"PLAY";
+}
+async function emberYTEnsure(){
+  await emberYTApi();
+  if(emberYTPlayer)return emberYTPlayer;
+  emberYTPlayer=new YT.Player("ytPlayer",{width:"100%",height:"100%",playerVars:{playsinline:1,controls:1,origin:location.origin},events:{
+    onReady:()=>{emberYTReady=true;emberYTStatus("Paste a YouTube video or playlist link.");},
+    onStateChange:emberYTState,
+    onError:()=>emberYTStatus("That YouTube item could not be played here."),
+    onAutoplayBlocked:()=>emberYTStatus("Tap PLAY to start YouTube audio.")
+  }});
+  return emberYTPlayer;
+}
+function emberYTShow(tab){
+  const game=document.getElementById("gameMusicPane"),yt=document.getElementById("youtubeMusicPane");
+  const gt=document.getElementById("musicGameTab"),ytb=document.getElementById("musicYouTubeTab");
+  if(game)game.style.display=tab==="game"?"block":"none";if(yt)yt.style.display=tab==="youtube"?"block":"none";
+  gt?.classList.toggle("on",tab==="game");ytb?.classList.toggle("on",tab==="youtube");
+  if(tab==="youtube")emberYTEnsure().catch(()=>emberYTStatus("YouTube player could not load."));
+}
+(function wireYouTubeMusic(){
+  const gt=document.getElementById("musicGameTab"),ytb=document.getElementById("musicYouTubeTab");
+  const load=document.getElementById("ytLoad"),input=document.getElementById("ytUrl");
+  const play=document.getElementById("ytPlay"),prev=document.getElementById("ytPrev"),next=document.getElementById("ytNext"),done=document.getElementById("ytDone");
+  gt?.addEventListener("pointerup",e=>{e.preventDefault();emberYTShow("game");});
+  ytb?.addEventListener("pointerup",e=>{e.preventDefault();emberYTShow("youtube");});
+  load?.addEventListener("pointerup",async e=>{e.preventDefault();const q=emberYTParse(input?.value);if(!q){emberYTStatus("Paste a valid YouTube video or playlist link.");return;}try{const p=await emberYTEnsure();if(q.type==="playlist")p.loadPlaylist({list:q.list,listType:"playlist",index:0,startSeconds:0});else p.loadVideoById(q.video);document.getElementById("ytEmpty")?.remove();emberYTStatus("Loading YouTube…");}catch(_){emberYTStatus("YouTube player could not load.");}});
+  play?.addEventListener("pointerup",e=>{e.preventDefault();if(!emberYTPlayer)return;const s=emberYTPlayer.getPlayerState();if(window.YT&&s===YT.PlayerState.PLAYING)emberYTPlayer.pauseVideo();else emberYTPlayer.playVideo();});
+  prev?.addEventListener("pointerup",e=>{e.preventDefault();emberYTPlayer?.previousVideo?.();});
+  next?.addEventListener("pointerup",e=>{e.preventDefault();emberYTPlayer?.nextVideo?.();});
+  done?.addEventListener("pointerup",e=>{e.preventDefault();setOvl(null);});
+  emberYTShow("game");
+})();
+
 const SAVE_SLOT_COUNT = 3;
 let activeSaveSlot = 1;
 function saveKey(slot){ return "emberfell.save." + slot; }
