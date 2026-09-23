@@ -1633,3 +1633,67 @@
   #deckHealth{top:calc(100% - var(--deck) + 29px)!important}
   #actionStack{top:calc(100% - var(--deck) + 19px)!important}
 }
+
+/* === CONTENT-AWARE MOBILE CONTROLLER 2026-09-23 === */
+/* Stop sizing the phone controller from browser vh. Safari and Chrome expose
+   different visual viewport heights as their address/tool bars expand/collapse.
+   Give the controls the physical space they require; the flexing #stage gets
+   everything left over. */
+@media(max-width:699px){
+  :root{
+    --deck:258px!important;
+    --deckfree:194px!important;
+  }
+  #deck{
+    height:258px!important;
+    flex:0 0 258px!important;
+    min-height:258px!important;
+    max-height:258px!important;
+    padding-top:12px!important;
+    padding-bottom:calc(env(safe-area-inset-bottom,0px) + 12px)!important;
+  }
+  #stage{flex:1 1 0!important;min-height:0!important}
+  #playface{position:relative!important;height:100%!important;min-height:0!important;padding-top:0!important}
+  /* Top HUD row gets a fixed deck-local anchor, not a viewport calculation. */
+  #deckHealth{
+    position:absolute!important;
+    top:5px!important;
+    left:-4px!important;
+    bottom:auto!important;
+  }
+  #actionStack{
+    position:absolute!important;
+    top:5px!important;
+    right:0!important;
+    bottom:auto!important;
+  }
+  /* Bottom controls own their lane and cannot rise into the HUD. */
+  #leftControls{
+    position:absolute!important;
+    left:0!important;
+    bottom:0!important;
+    height:172px!important;
+    justify-content:flex-end!important;
+  }
+  #dpad{
+    width:164px!important;
+    height:164px!important;
+    max-height:164px!important;
+    transform:none!important;
+  }
+  #rightControls{
+    position:absolute!important;
+    right:0!important;
+    bottom:0!important;
+    height:172px!important;
+    justify-content:flex-end!important;
+  }
+}
+/* Narrow iPhones need the same vertical geometry; only horizontal control
+   dimensions remain governed by the existing responsive rules. */
+@media(max-width:430px){
+  :root{--deck:258px!important;--deckfree:194px!important}
+  #deck{height:258px!important;flex-basis:258px!important;min-height:258px!important;max-height:258px!important}
+  #deckHealth{top:5px!important;left:-4px!important}
+  #actionStack{top:5px!important;right:0!important}
+}
