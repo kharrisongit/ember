@@ -66,7 +66,8 @@ console.log('PASS: actual encounter spawn/death hooks preserve cleared ghosts be
 // Only the final guardian chamber contains golems; the restored statue animates.
 for(const [id,m] of Object.entries(plan))if(id!=='tp1_sanctum')assert(m.enemies.every(f=>!f[0].startsWith('golem')));
 const effigy=sanctum.roomActors.find(a=>a.spr==='temple73_fire_statue');assert(effigy);assert.equal(effigy.stillFrame,undefined);
-assert.equal(effigy.x,plan.tp1_sanctum.heartstone[0]);assert.equal(plan.tp1_sanctum.heartstone[1]-effigy.y,16);
+assert.equal(plan.tp1_sanctum.heartstone[0]-effigy.x,40);assert.equal(plan.tp1_sanctum.heartstone[1]-effigy.y,16);
+assert.equal(sanctum.roomActors.filter(a=>a.spr==='first_temple_torch'&&a.y<160).length,0,'statue room uses only the statue flames');
 assert(sanctum.roomBlocks.some(([l,t,r,b])=>l<plan.tp1_sanctum.heartstone[0]&&r>plan.tp1_sanctum.heartstone[0]&&t<plan.tp1_sanctum.heartstone[1]&&b>plan.tp1_sanctum.heartstone[1]),'heartstone chest blocks movement');
 const asset=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"temple73_fire_statue"[^\n]*?\}/)[0]);assert.equal(asset.frames,6);
 let halls=0,hits=0;c.hurtPlayer=()=>hits++;c.foes=[];c.foesHeld=false;
@@ -88,4 +89,4 @@ vm.runInContext(read('js/house-loot.js'),c);c.MD=W.maps.tp1;c.MAPID='tp1';
 const loot=c.MD.roomActors.find(a=>a.houseLoot);c.P={x:loot.x,y:loot.y+24};c.foes=[{x:loot.x,y:loot.y,st:'idle',ally:false}];
 assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
 assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
-console.log('PASS: golems only at the heartstone entrance, animated statue and foot chest, four long trap halls with independent levers, and loot accessible beside living enemies.');
+console.log('PASS: golems only at the heartstone entrance, animated statue and adjacent chest, four long trap halls with independent levers, and loot accessible beside living enemies.');

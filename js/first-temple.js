@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple10-pillars');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple11-caps');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple10-pillars';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple11-caps';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -32,7 +32,8 @@ async function prepareExpandedFirstTemple(){
     // Wall torches and small stone ornaments preserve the first temple's visual identity.
     for(const [l,t,r,b] of plan.chambers){
       if(plan.entranceDecor && t===plan.entranceDecor.wallY)continue;
-      for(const x of [l+32,r-32])m.roomActors.push({spr:'first_temple_torch',x,y:t+4,schoolArt:true});
+      const holdsStatue=plan.statue&&plan.statue[0]>=l&&plan.statue[0]<r&&plan.statue[1]>=t&&plan.statue[1]<b;
+      if(!holdsStatue)for(const x of [l+32,r-32])m.roomActors.push({spr:'first_temple_torch',x,y:t+4,schoolArt:true});
       if(!(plan.statue&&plan.statue[1]>=t&&plan.statue[1]<b)&&!plan.floors.some(([fl,ft,fr,fb])=>(l+r)/2+16>fl&&(l+r)/2-16<fr&&t-16>=ft&&t-16<fb)&&!plan.doors.some(d=>d.dir==='u'&&d.y===t&&Math.abs(d.x-(l+r)/2)<48))m.roomActors.push({spr:'first_temple_dragon_head',x:(l+r)/2,y:t-8,schoolArt:true,stillFrame:0});
     }
     for(const [i,[x,y,gold]] of plan.chests.entries()){

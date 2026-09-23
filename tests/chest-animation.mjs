@@ -5,10 +5,12 @@ const c=vm.createContext({performance:{now:()=>clock},MAPID:'royal_treasury',tre
 vm.runInContext(read('js/house-loot.js'),c);const game=read('js/generated/game-part-2.js');
 vm.runInContext(game.slice(game.indexOf('function tryTreasuryChest(){'),game.indexOf('\nlet loot =')),c);
 vm.runInContext(game.slice(game.indexOf('function drawChest() {'),game.indexOf('let breathT =')),c);
+vm.runInContext(game.slice(game.indexOf('function tryChest() {'),game.indexOf('function checkGravePrize()')),c);
 const run=s=>vm.runInContext(s,c);
 run('tryTreasuryChest()');assert.equal(c.gold,600);assert.equal(reveals,0);
 for(let frame=0;frame<6;frame++){clock=frame*120;run('drawTreasuryChests()');assert.equal(lastFrame,frame);}
 clock=800;run('stepLootChestOpening()');assert.equal(reveals,1);run('tryTreasuryChest()');assert.equal(c.gold,600);
 for(let frame=0;frame<6;frame++){c.chestAnim={phase:'lid',t:(frame+.1)*.9/6};run('drawChest()');assert.equal(lastFrame,frame);}
 c.chestAnim=null;c.breathHas.lightning=true;run('drawChest()');assert.equal(lastFrame,5);
+c.breathHas.lightning=false;c.chestOpen={};c.P={x:88,y:128};assert(run('tryChest()'));assert.equal(c.chestAnim.phase,'lid');
 console.log('PASS: treasury and temple heartstone render all six opening frames; treasury popup waits, repeat rewards blocked, acquired heartstone stays open.');

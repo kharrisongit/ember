@@ -6618,7 +6618,7 @@ function chestHere() {
 function tryChest() {
   const c = chestHere();
   if (!c || chestOpen[c.map] || chestAnim) return false;
-  if (Math.hypot(P.x / TS - c.x, (P.y - 1) / TS - c.y) > 2.2) return false;
+  if (Math.hypot(P.x-(c.x*TS+TS/2),P.y-(c.y*TS+TS)) > 44) return false;
   chestAnim = { c, t: 0, phase: "lid" };
   return true;
 }

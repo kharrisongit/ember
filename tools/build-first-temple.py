@@ -12,6 +12,7 @@ for map,x,y,sx,sy,*_ in json.loads(re.search(r'const WALL78_PIECES=(.*);',s)[1])
 north=original.crop((112,32,128,80))
 west=original.crop((64,96,80,112));east=original.crop((240,96,256,112))
 left_pillar=original.crop((64,32,80,80));right_pillar=original.crop((240,32,256,80))
+left_cap=left_pillar.crop((0,0,16,16));right_cap=right_pillar.crop((0,0,16,16))
 # Reuse the original temple's cracked floor pixels. Each overlay keeps only
 # marks that differ from the base floor, so it can be scattered safely.
 floor_marks=[]
@@ -127,7 +128,7 @@ for id,m in layout.items():
  for l,t,r,b in m['floors']:
   if b-t>32 or r-l<=64:continue
   for y in [t-48,b]:
-   stamp_wall(im,left_pillar,(l-16,y));stamp_wall(im,right_pillar,(r,y))
+   stamp_wall(im,left_cap,(l-16,y));stamp_wall(im,right_cap,(r,y))
  # The separate guardian gate needs a fitted jamb inside its continuous hall.
  for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else []):
   for x in [l-4,r]:
