@@ -66,7 +66,7 @@ console.log('PASS: actual encounter spawn/death hooks preserve cleared ghosts be
 // Only the final guardian chamber contains golems; the restored statue animates.
 for(const [id,m] of Object.entries(plan))if(id!=='tp1_sanctum')assert(m.enemies.every(f=>!f[0].startsWith('golem')));
 const effigy=sanctum.roomActors.find(a=>a.spr==='temple73_fire_statue');assert(effigy);assert.equal(effigy.stillFrame,undefined);
-assert.equal(plan.tp1_sanctum.heartstone[0]-effigy.x,40);assert.equal(plan.tp1_sanctum.heartstone[1]-effigy.y,16);
+assert(plan.tp1_sanctum.heartstone[0]-effigy.x>=40,'chest remains clear of the statue');
 assert.equal(sanctum.roomActors.filter(a=>a.spr==='first_temple_torch'&&a.y<160).length,0,'statue room uses only the statue flames');
 assert(sanctum.roomBlocks.some(([l,t,r,b])=>l<plan.tp1_sanctum.heartstone[0]&&r>plan.tp1_sanctum.heartstone[0]&&t<plan.tp1_sanctum.heartstone[1]&&b>plan.tp1_sanctum.heartstone[1]),'heartstone chest blocks movement');
 const asset=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"temple73_fire_statue"[^\n]*?\}/)[0]);assert.equal(asset.frames,6);
@@ -90,3 +90,30 @@ const loot=c.MD.roomActors.find(a=>a.houseLoot);c.P={x:loot.x,y:loot.y+24};c.foe
 assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
 assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
 console.log('PASS: golems only at the heartstone entrance, animated statue and adjacent chest, four long trap halls with independent levers, and loot accessible beside living enemies.');
+
+// Temple treasure belongs in the upper corners, with some genuinely empty chests.
+let emptyCount=0;
+for(const [id,m]of Object.entries(W.maps))if(m.templeExpanded){
+ for(const a of m.roomActors.filter(a=>a.houseLoot)){
+  const room=m.templePlan.chambers.find(([l,t,r,b])=>a.x>l&&a.x<r&&a.y>t&&a.y<b);assert(room);
+  assert(a.y-room[1]<=24&&Math.min(a.x-room[0],room[2]-a.x)<=24,id+' chest in upper corner');
+  if(a.houseLoot.gold===0){emptyCount++;assert(!a.houseLoot.item);}
+ }
+}
+assert.equal(emptyCount,2);
+assert.equal(plan.tp1_sanctum.heartstone[1]-plan.tp1_sanctum.chambers[1][1],24);
+assert.equal(plan.tp1_sanctum.chambers[1][2]-plan.tp1_sanctum.heartstone[0],24);
+run('lootChestAnimations.clear()');
+let clock=0,popups=[],coins=0;c.performance={now:()=>clock};c.showReveal=(icon,caption)=>popups.push({icon,caption});c.flyGold=()=>coins++;
+c.MD=W.maps.tp1;c.MAPID='tp1';const empty=c.MD.roomActors.find(a=>a.houseLoot&&a.houseLoot.gold===0);
+c.P={x:empty.x,y:empty.y+24};const before=[c.gold,c.potions,c.boarMeat,c.dragonFish];
+assert(run('tryHouseLootChest()'));assert.deepEqual([c.gold,c.potions,c.boarMeat,c.dragonFish],before);assert.equal(coins,0);
+assert.equal(run('houseLootFrame(MD.roomActors.find(a=>a.houseLoot&&a.houseLoot.gold===0))'),0);
+clock=800;run('stepLootChestOpening()');assert.equal(popups.length,1);assert.equal(popups[0].caption,'This chest is empty.');assert.equal(popups[0].icon,'temple71_chest');
+assert(run('tryHouseLootChest()'));assert.deepEqual([c.gold,c.potions,c.boarMeat,c.dragonFish],before);assert.equal(popups.length,1);
+// Exercise the actual teleport-list builder so the interior cannot silently disappear again.
+vm.runInContext(game.slice(game.indexOf('function storyTeleport(id) {'),game.indexOf('const KING_DRAGON_SPR')),c);
+const part3=read('js/generated/game-part-3.js');vm.runInContext(part3.slice(part3.indexOf('function placesOf() {'),part3.indexOf('function buildTravel() {')),c);
+Object.assign(c,{features:[],MAPID:'world',isArea:()=>false});
+const entry=run('placesOf()').find(p=>p.map==='tp1');assert(entry,'Forgewick interior appears in teleport list');assert.equal(entry.kind,'Temple');assert(clear(W.maps.tp1,entry.x*16+8,entry.y*16+16));
+console.log('PASS: all temple loot and Heartstone positions occupy upper corners; two empty chests animate without rewards; Forgewick interior teleport is present and lands safely.');

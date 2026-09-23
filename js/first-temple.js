@@ -1,18 +1,18 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple11-caps');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple12-corners');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple11-caps';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple12-corners';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
   for(const [id,plan] of Object.entries(layout)){
     const [width,height]=plan.size;
     const m={w:width/16,h:height/16,ts:16,title:plan.title,spawn:plan.spawn,firstTemple:true,
-      templeExpanded:true,templeFloors:plan.floors,templePlan:plan,templeGateOpen:0,roomArt:'first_temple_continuous',
+      templeExpanded:true,travel:id==='tp1',travel_kind:'Temple',templeFloors:plan.floors,templePlan:plan,templeGateOpen:0,roomArt:'first_temple_continuous',
       _roomBaseCanvas:images[id],bg:'#19171c',floorbg:'#615b50',terr:terrRLE(Array(width*height/256).fill(DIRT)),
       objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],
       roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{}};
@@ -39,10 +39,11 @@ async function prepareExpandedFirstTemple(){
     for(const [i,[x,y,gold]] of plan.chests.entries()){
       const block=m.roomBlocks.push([x-14,y-12,x+14,y+10])-1;
       m.roomActors.push({n:'Temple treasure',spr:'temple71_chest',schoolArt:true,x,y,editKey:id+':loot:'+i,
-        moveBlocks:[block],houseLoot:{id:id+':loot:'+i,gold,item:i%2?'potion':'dragonFish',templeReward:true}});
+        moveBlocks:[block],houseLoot:{id:id+':loot:'+i,gold,item:gold>0?(i%2?'potion':'dragonFish'):null,templeReward:true}});
     }
     W.maps[id]=m;
   }
+  placeOtherTempleHeartstones();
   const entry=W.maps.tp1;
   const [ex,ey]=entry.templePlan.exit;
   entry.templeFloors.push([ex-16,ey,ex+16,ey+48]);
@@ -75,6 +76,30 @@ async function prepareExpandedFirstTemple(){
         }
       });
       map.roomActors.push({spr:'temple71_lever',x:h.lever[0],y:h.lever[1],schoolArt:true,expandedLever:h.id});
+    }
+  }
+}
+function placeOtherTempleHeartstones(){
+  for(const id of ['ds1','sn1']){
+    const m=W.maps[id],chest=CHESTS.find(c=>c.map===id);
+    if(!m?.templeContinuous||!chest)continue;
+    const oldX=chest.x*16+8,oldY=chest.y*16+16;
+    const room=m.templeFloors.find(([l,t,r,b])=>oldX>=l&&oldX<r&&oldY>=t&&oldY<b);
+    if(!room)continue;
+    const x=room[2]-16,y=room[1]+24;
+    const block=m.roomBlocks.findIndex(([l,t,r,b])=>Math.abs((l+r)/2-oldX)<3&&Math.abs(b-oldY)<2&&r-l<32);
+    if(block>=0)m.roomBlocks[block]=[x-10,y-8,x+10,y];
+    else m.roomBlocks.push([x-10,y-8,x+10,y]);
+    chest.x=(x-8)/16;chest.y=(y-16)/16;
+    // Leave a clear approach beside the desert chamber's specimen pod.
+    if(id==='ds1')for(const actor of m.roomActors){
+      if(actor.y>=room[3])continue;
+      if(actor.spr==='scientist_web'&&actor.x>192)actor.x-=24;
+      if(actor.spr==='scientist_pod_mid'&&actor.x===208){
+        const box=m.roomBlocks.find(([l,t,r,b])=>actor.x>=l&&actor.x<=r&&Math.abs(b-actor.y)<=1);
+        if(box){box[0]-=16;box[2]-=16;}
+        actor.x-=16;
+      }
     }
   }
 }

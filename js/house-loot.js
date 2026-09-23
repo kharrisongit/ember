@@ -1,7 +1,7 @@
 /* Permanent household exploration rewards. IDs stay stable when actors are moved. */
 const houseLootTaken=new Set();
 const lootChestAnimations=new Map();
-function beginLootChestOpening(id,caption){lootChestAnimations.set(id,{start:performance.now(),caption,map:MAPID});}
+function beginLootChestOpening(id,caption,icon='it_coin'){lootChestAnimations.set(id,{start:performance.now(),caption,icon,map:MAPID});}
 function lootChestFrame(id,opened,frames=6){
   if(!opened)return 0;
   const a=lootChestAnimations.get(id);
@@ -10,7 +10,7 @@ function lootChestFrame(id,opened,frames=6){
 function stepLootChestOpening(){
   for(const [id,a] of lootChestAnimations)if(performance.now()-a.start>=750){
     lootChestAnimations.delete(id);
-    if(a.map===MAPID)showReveal('it_coin',a.caption,3,true);
+    if(a.map===MAPID)showReveal(a.icon,a.caption,3,true);
   }
 }
 async function prepareHouseLoot(){
@@ -50,8 +50,9 @@ function tryHouseLootChest(){
   if(loot.item==='potion')potions++;
   if(loot.item==='boarMeat')boarMeat++;
   if(loot.item==='dragonFish')dragonFish++;
-  flyGold(actor.x,actor.y,loot.gold);
-  beginLootChestOpening(loot.id,'Corin found '+loot.gold+' gold'+(loot.item?' and '+labels[loot.item]:'')+'!');
+  if(loot.gold>0)flyGold(actor.x,actor.y,loot.gold);
+  const empty=loot.gold===0&&!loot.item;
+  beginLootChestOpening(loot.id,empty?'This chest is empty.':'Corin found '+loot.gold+' gold'+(loot.item?' and '+labels[loot.item]:'')+'!',empty?'temple71_chest':'it_coin');
   saveGame();
   return true;
 }

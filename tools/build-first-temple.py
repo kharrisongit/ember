@@ -124,11 +124,12 @@ for id,m in layout.items():
   if not any(cb==p['y']-48 and cl<p['x']<cr for cl,ct,cr,cb in m['chambers']):continue
   l,t,r,b=next(rect for rect in m['floors'] if rect[1]==p['y'] and rect[0]<p['x']<rect[2] and rect[3]>p['y'])
   for x,tile in [(l-16,left_pillar),(r,right_pillar)]:stamp_wall(im,tile,(x,t-48))
- # Horizontal links get matching pillar tops at both room junctions.
+ # Horizontal-link caps sit on the end tiles of their own wall faces.
+ # Placing them beyond those tiles leaves them floating on the room floor.
  for l,t,r,b in m['floors']:
   if b-t>32 or r-l<=64:continue
   for y in [t-48,b]:
-   stamp_wall(im,left_cap,(l-16,y));stamp_wall(im,right_cap,(r,y))
+   stamp_wall(im,left_cap,(l,y));stamp_wall(im,right_cap,(r-16,y))
  # The separate guardian gate needs a fitted jamb inside its continuous hall.
  for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else []):
   for x in [l-4,r]:

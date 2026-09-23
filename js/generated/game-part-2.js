@@ -6822,14 +6822,14 @@ function stepChest(dt) {
     chestAnim = null;
     const giftName = a.c.gift[0].toUpperCase() + a.c.gift.slice(1);
     const giftIcon = HS_ICON[a.c.gift];
-    showReveal(SPR[giftIcon] ? giftIcon : "chest",
+    showReveal(SPR[giftIcon] ? giftIcon : "heartstone_chest",
                "Corin obtained a Heartstone! The " + giftName + " breath is unlocked.", 3);
   }
 }
 function drawChest() {
   const c = chestHere();
   if (!c) return;
-  const sp = SPR.chest; // Large chest is reserved for heartstones.
+  const sp = SPR.heartstone_chest; // Uploaded chest is reserved for Heartstones.
   if (!sp) return;
   const px = c.x * TS + TS / 2 - sp[2] / 2, py = c.y * TS + TS - sp[3];
   let f = 0;
@@ -10403,7 +10403,7 @@ function interact() {
         unlockDragonBreath(giver.gift);
         const giftName = giver.gift[0].toUpperCase() + giver.gift.slice(1);
         const giftIcon = HS_ICON[giver.gift];
-        showReveal(SPR[giftIcon] ? giftIcon : "chest",
+        showReveal(SPR[giftIcon] ? giftIcon : "heartstone_chest",
                    "Corin obtained a Heartstone! The " + giftName + " breath is unlocked.", 3);
       }
     }

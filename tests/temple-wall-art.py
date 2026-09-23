@@ -82,9 +82,11 @@ for id,m in plans.items():
     assert im.crop((px,b-44,px+8,b-36)).tobytes()==cap,(id,'missing pillar top at south-wall hall join',px,b)
  for l,t,r,b in m['floors']:
   if b-t>32 or r-l<=64:continue
-  for px,py in [(l-12,t-44),(r+4,t-44),(l-12,b+4),(r+4,b+4)]:
+  for px,py in [(l+4,t-44),(r-12,t-44),(l+4,b+4),(r-12,b+4)]:
    assert im.crop((px,py,px+8,py+8)).tobytes()==cap,(id,'missing pillar top at horizontal room join',px,py)
    horizontal_caps+=1
+  for px,py in [(l-12,t-44),(r+4,t-44),(l-12,b+4),(r+4,b+4)]:
+   assert im.crop((px,py,px+8,py+8)).tobytes()!=cap,(id,'floating cap beyond wall end',px,py)
 print(f'PASS: {passages} connected doorways fit their jambs with no extra lower pillar caps.')
 print(f'PASS: {hall_joins} hall side-wall pairs meet south walls with pillar tops; {horizontal_caps} horizontal-link ends have matching caps.')
 # The rebuilt floor keeps the original temple's cracked-tile texture throughout.
