@@ -59,7 +59,7 @@ async function prepareTownHouseInteriors(town, houseIds) {
   if (!response.ok) throw new Error(town + ' layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-all-interiors1';
+  sheet.src = root + 'layers.png?v=' + (town==='thornwell'?'20260923-alder-square-table1':'20260923-all-interiors1');
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
