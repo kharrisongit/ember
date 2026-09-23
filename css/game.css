@@ -1360,3 +1360,28 @@
 #atkm .row.breathRefill[style*="opacity"]{
   opacity:.76!important;
 }
+
+/* === DRAGON ATTACK FULL ORB HITBOX 2026-09-22 === */
+/* Mobile: make every visible orb itself the hit target, with a generous halo.
+   Pseudo-elements never capture the event; the parent .row receives it. */
+#atkm .row{
+  pointer-events:auto!important;
+  touch-action:none!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+#atkm .row::before,
+#atkm .row::after,
+#atkm .row *,
+#atkm .row.breathRefill .breathFill,
+#atkm .row.breathRefill .breathSecs{
+  pointer-events:none!important;
+}
+#atkm .row::after{
+  content:""!important;
+  position:absolute!important;
+  inset:-16px!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  z-index:20!important;
+  pointer-events:none!important;
+}
