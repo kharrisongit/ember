@@ -867,3 +867,16 @@
   padding-bottom:2px!important;
   gap:2px!important;
 }
+
+/* Simpler compact four-way D-pad. */
+#dpad{transform:scale(.91)!important;transform-origin:center bottom!important}
+#dpad .corner{background:transparent!important;border:0!important;box-shadow:none!important;pointer-events:none!important;opacity:0!important}
+
+/* With the smaller pad, lower the upper HUD/control row into the freed space. */
+#deckHealth{top:calc(100% - var(--deck) + 27px)!important}
+#actionStack{top:calc(100% - var(--deck) + 27px)!important}
+@media(max-width:430px){
+  #dpad{transform:scale(.91)!important;transform-origin:center bottom!important}
+  #deckHealth{top:calc(100% - var(--deck) + 27px)!important}
+  #actionStack{top:calc(100% - var(--deck) + 27px)!important}
+}
