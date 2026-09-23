@@ -14,7 +14,7 @@ for(const [id,m] of Object.entries(W.maps)){
  if(!m.templeExpanded)continue;
  if(id!=='tp1_sanctum')assert(m.templePlan.chambers.every(([l,t,r,b])=>r-l<=128&&b-t<=96),'compact chamber footprint');assert(clear(m,...m.spawn));
  const reached=flood(m);
- for(const a of m.roomActors.filter(a=>a.houseLoot)){chests++;assert.equal(a.spr,'temple71_chest','loot uses standard chest');assert(reached.has([a.x,a.y+24].join(',')),id+' chest reachable');}
+ for(const a of m.roomActors.filter(a=>a.houseLoot)){chests++;assert.equal(a.spr,'temple71_chest','loot uses standard chest');assert(reached.has([a.x,a.y+24].join(',')),id+' chest reachable');assert(!clear(m,a.x,a.y+8),id+' chest blocks movement');}
  for(const d of m.doors){doors++;const r=d.triggerRect;
   assert(reached.has([r.x+16,d.dir==='u'?r.y+r.h+16:r.y-16].join(',')),id+' door approach');
   if(d.to==='world')continue;
@@ -67,6 +67,7 @@ console.log('PASS: actual encounter spawn/death hooks preserve cleared ghosts be
 for(const [id,m] of Object.entries(plan))if(id!=='tp1_sanctum')assert(m.enemies.every(f=>!f[0].startsWith('golem')));
 const effigy=sanctum.roomActors.find(a=>a.spr==='temple73_fire_statue');assert(effigy);assert.equal(effigy.stillFrame,undefined);
 assert.equal(effigy.x,plan.tp1_sanctum.heartstone[0]);assert.equal(plan.tp1_sanctum.heartstone[1]-effigy.y,16);
+assert(sanctum.roomBlocks.some(([l,t,r,b])=>l<plan.tp1_sanctum.heartstone[0]&&r>plan.tp1_sanctum.heartstone[0]&&t<plan.tp1_sanctum.heartstone[1]&&b>plan.tp1_sanctum.heartstone[1]),'heartstone chest blocks movement');
 const asset=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"temple73_fire_statue"[^\n]*?\}/)[0]);assert.equal(asset.frames,6);
 let halls=0,hits=0;c.hurtPlayer=()=>hits++;c.foes=[];c.foesHeld=false;
 for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards||[]){

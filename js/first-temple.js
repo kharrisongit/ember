@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple9-joins');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple10-pillars');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple9-joins';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple10-pillars';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -36,7 +36,7 @@ async function prepareExpandedFirstTemple(){
       if(!(plan.statue&&plan.statue[1]>=t&&plan.statue[1]<b)&&!plan.floors.some(([fl,ft,fr,fb])=>(l+r)/2+16>fl&&(l+r)/2-16<fr&&t-16>=ft&&t-16<fb)&&!plan.doors.some(d=>d.dir==='u'&&d.y===t&&Math.abs(d.x-(l+r)/2)<48))m.roomActors.push({spr:'first_temple_dragon_head',x:(l+r)/2,y:t-8,schoolArt:true,stillFrame:0});
     }
     for(const [i,[x,y,gold]] of plan.chests.entries()){
-      const block=m.roomBlocks.push([x-14,y-10,x+14,y])-1;
+      const block=m.roomBlocks.push([x-14,y-12,x+14,y+10])-1;
       m.roomActors.push({n:'Temple treasure',spr:'temple71_chest',schoolArt:true,x,y,editKey:id+':loot:'+i,
         moveBlocks:[block],houseLoot:{id:id+':loot:'+i,gold,item:i%2?'potion':'dragonFish',templeReward:true}});
     }
@@ -59,6 +59,7 @@ async function prepareExpandedFirstTemple(){
     }
   }
   const chest=CHESTS.find(c=>c.gift==='lightning');Object.assign(chest,{map:'tp1_sanctum',x:(sp.heartstone[0]-8)/16,y:(sp.heartstone[1]-16)/16});
+  sanctum.roomBlocks.push([sp.heartstone[0]-14,sp.heartstone[1]-12,sp.heartstone[0]+14,sp.heartstone[1]+10]);
   const [sx,sy]=sp.statue;
   sanctum.roomActors.push({spr:'temple73_fire_statue',x:sx,y:sy,schoolArt:true,
     moveBlocks:[sanctum.roomBlocks.push([sx-16,sy-18,sx+16,sy])-1]});

@@ -64,7 +64,7 @@ entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
 cap=entry.crop((84,20,92,28)).tobytes()
 assert entry.getpixel((88,24)) not in void|{(102,94,85,255)},'cap reference contains masonry'
 face=entry.crop((96,16,112,62)).tobytes()
-passages=0;hall_joins=0
+passages=0;hall_joins=0;horizontal_caps=0
 for id,m in plans.items():
  im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA')
  for p in m.get('passages',[]):
@@ -78,8 +78,21 @@ for id,m in plans.items():
   if any(cb==b-48 and cl<x<cr for cl,ct,cr,cb in m['chambers']):
    hall=next(rect for rect in m['floors'] if rect[1]==b and rect[0]<x<rect[2] and rect[3]>b)
    hall_joins+=1
-   for px in [hall[0]-8,hall[2]+8]:
-    for py in range(b-48,b):
-     assert im.getpixel((px,py))==im.getpixel((px,b+py%16)),(id,'hall side wall stops below room south wall',px,py)
+   for px in [hall[0]-12,hall[2]+4]:
+    assert im.crop((px,b-44,px+8,b-36)).tobytes()==cap,(id,'missing pillar top at south-wall hall join',px,b)
+ for l,t,r,b in m['floors']:
+  if b-t>32 or r-l<=64:continue
+  for px,py in [(l-12,t-44),(r+4,t-44),(l-12,b+4),(r+4,b+4)]:
+   assert im.crop((px,py,px+8,py+8)).tobytes()==cap,(id,'missing pillar top at horizontal room join',px,py)
+   horizontal_caps+=1
 print(f'PASS: {passages} connected doorways fit their jambs with no extra lower pillar caps.')
-print(f'PASS: {hall_joins} hall side-wall pairs extend through the full south wall; all {passages} doorways have plain masonry beside their arches.')
+print(f'PASS: {hall_joins} hall side-wall pairs meet south walls with pillar tops; {horizontal_caps} horizontal-link ends have matching caps.')
+# The rebuilt floor keeps the original temple's cracked-tile texture throughout.
+for id,m in plans.items():
+ im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA');textured=walkable=0
+ for l,t,r,b in m['floors']:
+  for y in range(t,b):
+   for x in range(l,r):
+    walkable+=1;textured+=im.getpixel((x,y))!=(102,94,85,255)
+ assert textured>walkable*.035,(id,'too few floor texture pixels',textured,walkable)
+print('PASS: original cracked-floor texture is distributed through all five temple maps.')

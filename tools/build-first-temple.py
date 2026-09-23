@@ -12,6 +12,17 @@ for map,x,y,sx,sy,*_ in json.loads(re.search(r'const WALL78_PIECES=(.*);',s)[1])
 north=original.crop((112,32,128,80))
 west=original.crop((64,96,80,112));east=original.crop((240,96,256,112))
 left_pillar=original.crop((64,32,80,80));right_pillar=original.crop((240,32,256,80))
+# Reuse the original temple's cracked floor pixels. Each overlay keeps only
+# marks that differ from the base floor, so it can be scattered safely.
+floor_marks=[]
+for sy in range(96,1888,16):
+ for sx in range(112,208,16):
+  tile=original.crop((sx,sy,sx+16,sy+16)).copy();marked=False
+  for py in range(16):
+   for px in range(16):
+    if tile.getpixel((px,py))==(102,94,85,255):tile.putpixel((px,py),(0,0,0,0))
+    else:marked=True
+  if marked and sum(1 for py in range(16) for px in range(16) if tile.getpixel((px,py))[3])<=42:floor_marks.append(tile)
 layout=json.loads((ROOT/'assets/interiors/first-temple/layout.json').read_text())
 VOID={(25,23,28,255),(25,23,30,255)}
 APRON={(102,94,85,255),(75,70,67,255)}
@@ -105,23 +116,29 @@ for id,m in layout.items():
    side=((cx+16,cy) in floor and west.getpixel((px%16,py%16)) in APRON) or ((cx-16,cy) in floor and east.getpixel((px%16,py%16)) in APRON)
    below=any((cx,(py+dy)//16*16) in floor for dy in [1,2])
    if not side and not below:im.putpixel((px,py),(25,23,28,255))
- # A hall's side columns continue up the full south face of the room above.
- # Anchor them to the wide hall, not the narrower doorway. Mask the source
- # crop's exterior and floor padding so these columns cannot cut wall gaps.
+ # A hall's side columns continue through the south face of the room above.
+ # Use the native pillar pieces so their round tops make the intended gap
+ # where each side wall crosses the horizontal room wall.
  for p in m.get('passages',[]):
   if not any(cb==p['y']-48 and cl<p['x']<cr for cl,ct,cr,cb in m['chambers']):continue
   l,t,r,b=next(rect for rect in m['floors'] if rect[1]==p['y'] and rect[0]<p['x']<rect[2] and rect[3]>p['y'])
-  for x,tile in [(l-16,west),(r,east)]:
-   stone=tile.copy()
-   for py in range(16):
-    for px in range(16):
-     if stone.getpixel((px,py)) in VOID|APRON:stone.putpixel((px,py),(0,0,0,0))
-   for y in range(t-48,t,16):im.alpha_composite(stone,(x,y))
+  for x,tile in [(l-16,left_pillar),(r,right_pillar)]:stamp_wall(im,tile,(x,t-48))
+ # Horizontal links get matching pillar tops at both room junctions.
+ for l,t,r,b in m['floors']:
+  if b-t>32 or r-l<=64:continue
+  for y in [t-48,b]:
+   stamp_wall(im,left_pillar,(l-16,y));stamp_wall(im,right_pillar,(r,y))
  # The separate guardian gate needs a fitted jamb inside its continuous hall.
  for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else []):
   for x in [l-4,r]:
    im.alpha_composite(north.crop((0,0,4,46)),(x,b-48))
  for x,y in sorted(floor):
+  if floor_marks and (x*13+y*7)%64<18:
+   mark=floor_marks[(x//16*5+y//16*3)%len(floor_marks)].copy()
+   for py in range(mark.height):
+    for px in range(mark.width):
+     if im.getpixel((x+px,y+py))!=(102,94,85,255):mark.putpixel((px,py),(0,0,0,0))
+   im.alpha_composite(mark,(x,y))
   if any(min(h['lines'])-24<=(x if h['axis']=='x' else y)<=max(h['lines'])+24 and h['cross'][0]-16<=(y if h['axis']=='x' else x)<=h['cross'][1] for h in m.get('hazards',[])):continue
   treasures=[c[:2] for c in m['chests']]+([m['heartstone']] if 'heartstone' in m else [])
   if any(abs(x-cx)<32 and abs(y-cy)<32 for cx,cy in treasures):continue
