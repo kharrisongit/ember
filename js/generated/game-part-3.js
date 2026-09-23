@@ -3998,6 +3998,12 @@ function updateDeckHealth(){
 function frameCore(ms) {
   window.__firstFrame = true;
   updateDeckHealth();
+  if (ovl === "atkm") {
+    const now = performance.now();
+    if (!window.__breathMenuRefresh || now - window.__breathMenuRefresh > 100) {
+      window.__breathMenuRefresh = now; refreshOvl();
+    }
+  }
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
   if(atlasOpen)return;
   if(fishing){
@@ -5297,13 +5303,13 @@ function breathMenuTell(el, text) {
 const ATTACKS = [
   { name: "Slash",     el: "claw",
     tell: "A swipe of the claws. Close range." },
-  { name: "Fire",      el: "fire",
+  { name: "Fire",      el: "fire", cd: 12,
     tell: () => breathMenuTell("fire", "A heavy blast. 8 damage; 12 second cooldown.") },
-  { name: "Lightning", el: "bolt",
+  { name: "Lightning", el: "bolt", cd: 18,
     tell: () => breathMenuTell("bolt", "A crackling orb. 12 damage; 18 second cooldown.") },
-  { name: "Shadow",    el: "shadow",
+  { name: "Shadow",    el: "shadow", cd: 24,
     tell: () => breathMenuTell("shadow", "A crushing violet orb. 16 damage; 24 second cooldown.") },
-  { name: "Ice",       el: "ice",
+  { name: "Ice",       el: "ice", cd: 30,
     tell: () => breathMenuTell("ice", "The strongest breath. 20 damage; 30 second cooldown.") },
 ].map(a => Object.assign(a, {
   dim: () => !breathHas[EL_BREATH[a.el]] || (a.el !== "claw" && (dragon.down || breathWait(a.el) > 0)),
@@ -5362,6 +5368,20 @@ function refreshOvl() {
         drawBagIcon(ic, it.icon, Math.floor(performance.now() / (1000 / BAG_FPS)));
       } catch (e) { /* text remains as a safe fallback */ }
       d.appendChild(ic);
+    }
+    if (ovl === "atkm" && it.el !== "claw" && it.cd) {
+      const wait = breathWait(it.el), ready = Math.max(0, Math.min(1, 1 - wait / it.cd));
+      d.style.setProperty("--refill", (ready * 100).toFixed(1) + "%");
+      d.classList.add("breathRefill");
+      const fill = document.createElement("span");
+      fill.className = "breathFill";
+      d.appendChild(fill);
+      if (wait > 0) {
+        const sec = document.createElement("span");
+        sec.className = "breathSecs";
+        sec.textContent = Math.ceil(wait);
+        d.appendChild(sec);
+      }
     }
     if (it.el && EL_COLOUR[it.el]) {
       d.style.setProperty("--el", EL_COLOUR[it.el]);
