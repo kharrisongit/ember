@@ -1281,3 +1281,17 @@
  #atkm .row:nth-child(3){left:78%!important}
  #atkm .row:nth-child(5){left:22%!important}
 }
+
+/* === DRAGON ATTACK RING COOLDOWNS 2026-09-22 === */
+/* Cooldowns now drain/rebuild as a perimeter ring instead of filling the orb. */
+#atkm .row.breathRefill .breathFill{
+  position:absolute!important;inset:-3px!important;width:auto!important;height:auto!important;
+  border-radius:50%!important;z-index:8!important;opacity:1!important;
+  background:conic-gradient(from -90deg,var(--el) 0 var(--ring,100%),rgba(255,255,255,.10) var(--ring,100%) 100%)!important;
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px))!important;
+  mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px))!important;
+  pointer-events:none!important;transition:none!important;
+}
+#atkm .row.breathRefill .breathSecs{
+  bottom:3px!important;z-index:12!important;background:rgba(5,5,5,.82)!important;
+}
