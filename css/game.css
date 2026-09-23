@@ -1228,3 +1228,56 @@
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M29 3h6v12l7-7 4 4-11 11v6h6l11-11 4 4-7 7h12v6H49l7 7-4 4-11-11h-6v6l11 11-4 4-7-7v12h-6V49l-7 7-4-4 11-11v-6h-6L12 46l-4-4 7-7H3v-6h12l-7-7 4-4 11 11h6v-6L18 12l4-4 7 7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M29 3h6v12l7-7 4 4-11 11v6h6l11-11 4 4-7 7h12v6H49l7 7-4 4-11-11h-6v6l11 11-4 4-7-7v12h-6V49l-7 7-4-4 11-11v-6h-6L12 46l-4-4 7-7H3v-6h12l-7-7 4-4 11 11h6v-6L18 12l4-4 7 7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
 }
+
+/* === DRAGON ATTACK GENERATED-MOCKUP MATCH 2026-09-22 === */
+/* Match the approved mockup: larger outer elemental orbs, compact Slash core,
+   no descriptive footer, and a spectral ghost for Shadow. */
+#atkm .foot{display:none!important}
+#atkm .rows{
+  top:38px!important;
+  height:calc(100% - 48px)!important;
+  width:min(98vw,430px)!important;
+}
+#atkm .row,
+#atkm .row:nth-child(2),#atkm .row:nth-child(3),#atkm .row:nth-child(4),#atkm .row:nth-child(5){
+  width:84px!important;height:84px!important;
+  border-width:3px!important;
+  box-shadow:
+    inset 0 0 0 4px rgba(0,0,0,.4),
+    inset 0 0 22px color-mix(in srgb,var(--el) 32%,transparent),
+    0 0 0 2px color-mix(in srgb,var(--el) 35%,#8b6c48),
+    0 5px 12px rgba(0,0,0,.62),
+    0 0 17px color-mix(in srgb,var(--el) 48%,transparent)!important;
+}
+/* Slash is intentionally the small hub of the constellation. */
+#atkm .row:nth-child(1){
+  width:62px!important;height:62px!important;
+  border-width:2px!important;
+  left:50%!important;top:50%!important;
+}
+#atkm .row:nth-child(1)::before{width:27px!important;height:27px!important;flex-basis:27px!important}
+#atkm .row:nth-child(1)>span:not(.dot):not(.breathFill):not(.breathSecs){font-size:9px!important}
+#atkm .row:nth-child(2){left:50%!important;top:14%!important}
+#atkm .row:nth-child(3){left:79%!important;top:50%!important}
+#atkm .row:nth-child(4){left:50%!important;top:86%!important}
+#atkm .row:nth-child(5){left:21%!important;top:50%!important}
+/* Spectral Shadow icon — hooded head, glowing eye holes, tapering ghost body. */
+#atkm .row:nth-child(4)::before{
+  width:34px!important;height:34px!important;flex-basis:34px!important;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' fill-rule='evenodd' d='M32 4C19 4 12 14 13 27c1 8 5 13 7 18 2 5-1 10-4 15 7-1 12-4 16-9 3 5 8 8 15 9-3-5-6-10-4-15 2-5 6-10 7-18C52 14 45 4 32 4zm-9 23a5 5 0 1 1 10 0 5 5 0 0 1-10 0zm13 0a5 5 0 1 1 10 0 5 5 0 0 1-10 0z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' fill-rule='evenodd' d='M32 4C19 4 12 14 13 27c1 8 5 13 7 18 2 5-1 10-4 15 7-1 12-4 16-9 3 5 8 8 15 9-3-5-6-10-4-15 2-5 6-10 7-18C52 14 45 4 32 4zm-9 23a5 5 0 1 1 10 0 5 5 0 0 1-10 0zm13 0a5 5 0 1 1 10 0 5 5 0 0 1-10 0z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+/* More ornate concentric rings, closer to the approved artwork. */
+#atkm::before{
+  width:min(88vw,365px)!important;
+  border:1px solid rgba(181,125,65,.34)!important;
+  box-shadow:0 0 0 8px rgba(151,95,45,.045),0 0 0 22px rgba(151,95,45,.025),0 0 32px rgba(118,70,30,.18) inset!important;
+}
+#atkm::after{width:min(66vw,270px)!important;border-color:rgba(181,125,65,.25)!important}
+#atkCloseBtn{right:12px!important;bottom:7px!important}
+@media(max-width:430px){
+ #atkm .row,#atkm .row:nth-child(2),#atkm .row:nth-child(3),#atkm .row:nth-child(4),#atkm .row:nth-child(5){width:78px!important;height:78px!important}
+ #atkm .row:nth-child(1){width:58px!important;height:58px!important}
+ #atkm .row:nth-child(3){left:78%!important}
+ #atkm .row:nth-child(5){left:22%!important}
+}
