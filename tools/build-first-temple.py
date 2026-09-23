@@ -15,14 +15,14 @@ left_pillar=original.crop((64,32,80,80));right_pillar=original.crop((240,32,256,
 layout=json.loads((ROOT/'assets/interiors/first-temple/layout.json').read_text())
 VOID={(25,23,28,255),(25,23,30,255)}
 APRON={(102,94,85,255),(75,70,67,255)}
-def stamp_wall(im,tile,xy):
+def stamp_wall(im,tile,xy,floor_edge=False):
  # Source crops include opaque exterior padding and a floor/shadow apron.
  # Neither may erase masonry already drawn at a perpendicular junction.
  tile=tile.copy();ox,oy=xy
  for y in range(tile.height):
   for x in range(tile.width):
    p=tile.getpixel((x,y));dx,dy=ox+x,oy+y
-   if p in VOID or (p in APRON and 0<=dx<im.width and 0<=dy<im.height and im.getpixel((dx,dy)) not in VOID|APRON):
+   if p in VOID or (not floor_edge and p in APRON and 0<=dx<im.width and 0<=dy<im.height and im.getpixel((dx,dy)) not in VOID|APRON):
     tile.putpixel((x,y),(0,0,0,0))
  im.alpha_composite(tile,xy)
 def runs(values):
@@ -49,8 +49,10 @@ for id,m in layout.items():
     for x in range(l,r,16):stamp_wall(im,north,(x,top))
     pillars.extend([(l-16,top,left_pillar),(r,top,right_pillar)])
  for x,y in sorted(floor):
-  if (x-16,y) not in floor:stamp_wall(im,west,(x-16,y))
-  if (x+16,y) not in floor:stamp_wall(im,east,(x+16,y))
+  # Floor-facing aprons trim the horizontal face to the actual stone outline.
+  # Preserving the face here would leave a thin strip beyond the side wall.
+  if (x-16,y) not in floor:stamp_wall(im,west,(x-16,y),floor_edge=True)
+  if (x+16,y) not in floor:stamp_wall(im,east,(x+16,y),floor_edge=True)
  for x,y,tile in pillars:stamp_wall(im,tile,(x,y))
  # A single floor mask prevents doubled seams or walls crossing a junction.
  for x,y in floor:im.paste((102,94,85,255),(x,y,x+16,y+16))

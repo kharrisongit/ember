@@ -13,6 +13,12 @@ for id,m in plans.items():
  if 'exit' in m:exits.append(m['exit'])
  for l,t,r,b in m['floors']+[[x-16,y,x+16,y+48] for x,y in exits]:
   floor.update((x,y) for x in range(l,r,16) for y in range(t,b,16))
+ # Native side stones have a narrow, irregular floor-facing silhouette.
+ # Horizontal masonry must stop there, rather than fill the crop's apron.
+ trim=set()
+ for x,y in floor:
+  if (x-16,y) not in floor:trim.update((px,py) for px in range(x-4,x) for py in range(y,y+16))
+  if (x+16,y) not in floor:trim.update((px,py) for px in range(x+16,x+20) for py in range(y,y+16))
  for x,y in floor:
   for direction in [-1,1]:
    if (x,y+direction*16) in floor:continue
@@ -23,7 +29,8 @@ for id,m in plans.items():
    for py in range(top,top+46):
     for px in range(x,x+16):
      if (px//16*16,py//16*16) in floor:continue
-     assert im.getpixel((px,py)) not in void|{(102,94,85,255),(75,70,67,255)},(id,'wall seam gap',px,py)
+     forbidden=void if (px,py) in trim else void|{(102,94,85,255),(75,70,67,255)}
+     assert im.getpixel((px,py)) not in forbidden,(id,'wall seam gap',px,py)
      seam_pixels+=1
    for offset in [8,24,40]:
     py=top+offset;tile=(x,(py//16)*16)
@@ -40,4 +47,8 @@ for id,m in plans.items():
    assert im.getpixel((x-8 if direction==-1 else x+24,y+8))!=(25,23,28,255),(id,'missing side edge',x,y)
    checks+=1
 print(f'PASS: {checks} wall-face and side-edge samples, full 48-pixel faces on all five maps.')
-print(f'PASS: {seam_pixels} masonry pixels checked across all wall faces and perpendicular joins; no void or floor strips.')
+print(f'PASS: {seam_pixels} masonry pixels checked across all wall faces and perpendicular joins; floor trim confined to native side outlines.')
+entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
+for p in [(400,624),(351,416)]:
+ assert entry.getpixel(p)==(102,94,85,255),('horizontal face protrudes beyond vertical edge',p)
+print('PASS: east- and west-facing overlap regressions end at the side-stone silhouette.')
