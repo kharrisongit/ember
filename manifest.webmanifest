@@ -1,0 +1,13 @@
+{
+  "name": "Emberfell",
+  "short_name": "Emberfell",
+  "description": "A top-down pixel-art RPG.",
+  "id": "/ember/",
+  "start_url": "/ember/",
+  "scope": "/ember/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#14100d",
+  "theme_color": "#14100d"
+}
