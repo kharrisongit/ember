@@ -2369,30 +2369,62 @@ if (window.ResizeObserver) new ResizeObserver(() => resize()).observe(stageEl);
 
 function toggleBig() {
   const root = document.documentElement;
-  const on = document.fullscreenElement || document.webkitFullscreenElement;
-  const pseudo = document.body.classList.contains("pseudoFullscreen");
+  const nativeOn = document.fullscreenElement || document.webkitFullscreenElement;
+  const pseudoOn = document.body.classList.contains("pseudoFullscreen");
+
+  function syncFullscreenLayout() {
+    const on = !!(document.fullscreenElement || document.webkitFullscreenElement ||
+                  document.body.classList.contains("pseudoFullscreen"));
+    document.body.classList.toggle("emberFullscreen", on);
+    /* iOS browser chrome changes the visual viewport asynchronously. */
+    requestAnimationFrame(() => resize());
+    setTimeout(resize, 120);
+    setTimeout(resize, 450);
+  }
+
   try {
-    if (on) {
-      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-    } else if (pseudo) {
+    if (nativeOn) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) {
+        const p = exit.call(document);
+        if (p && p.finally) p.finally(syncFullscreenLayout);
+      }
+      return;
+    }
+    if (pseudoOn) {
       document.body.classList.remove("pseudoFullscreen");
-    } else {
-      /* Try the real browser fullscreen route on iPhone too. The old iOS
-         shortcut skipped it entirely, so it could only appear to do nothing.
-         The viewport mode is retained solely as a rejected-API fallback. */
-      const r = root.requestFullscreen || root.webkitRequestFullscreen;
-      if (!r) document.body.classList.add("pseudoFullscreen");
-      else {
-        const p = r.call(root);
-        if (p && p.catch) p.catch(() => document.body.classList.add("pseudoFullscreen"));
+      syncFullscreenLayout();
+      return;
+    }
+
+    /* Chromium/desktop Safari: use the native Fullscreen API. iPhone Safari
+       does not expose element fullscreen for normal HTML pages, so fall back
+       to a viewport-filling mode that uses the visual viewport and safe areas. */
+    const request = root.requestFullscreen || root.webkitRequestFullscreen;
+    if (request) {
+      let p;
+      try { p = request.call(root, { navigationUI: "hide" }); }
+      catch (_) { p = request.call(root); }
+      if (p && p.then) {
+        p.then(syncFullscreenLayout).catch(() => {
+          document.body.classList.add("pseudoFullscreen");
+          syncFullscreenLayout();
+        });
+      } else {
         setTimeout(() => {
           if (!(document.fullscreenElement || document.webkitFullscreenElement))
             document.body.classList.add("pseudoFullscreen");
-        }, 650);
+          syncFullscreenLayout();
+        }, 250);
       }
+    } else {
+      document.body.classList.add("pseudoFullscreen");
+      syncFullscreenLayout();
     }
-  } catch (e) { document.body.classList.add("pseudoFullscreen"); }
-  setTimeout(resize, 120);
+  } catch (e) {
+    document.body.classList.add("pseudoFullscreen");
+    syncFullscreenLayout();
+  }
 }
 document.addEventListener("fullscreenchange", () => setTimeout(resize, 120));
 document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 120));
