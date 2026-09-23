@@ -911,3 +911,47 @@
   text-shadow:0 1px 1px #000!important;
   pointer-events:none!important;
 }
+
+/* DRAGON breath picker now owns the entire controller deck, like ITEMS. */
+#atkm{
+  position:fixed!important;
+  left:0!important;right:0!important;bottom:0!important;
+  width:100%!important;height:var(--deck)!important;
+  max-width:none!important;aspect-ratio:auto!important;
+  border-radius:0!important;border:0!important;border-top:2px solid var(--edge)!important;
+  background:#1c1712!important;
+  padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px)!important;
+  z-index:40!important;
+  box-shadow:0 -8px 24px rgba(0,0,0,.45)!important;
+  overflow:hidden!important;
+  pointer-events:auto!important;
+}
+#atkm>b{
+  display:block!important;position:static!important;transform:none!important;
+  width:auto!important;height:22px!important;margin:0 0 8px!important;
+  text-align:left!important;font-size:0!important;color:#d9cfbd!important;
+}
+#atkm>b::after{content:"DRAGON BREATH"!important;font-size:11px!important;letter-spacing:.14em!important}
+#atkm .rows{
+  position:static!important;width:100%!important;height:calc(100% - 30px)!important;
+  margin:0!important;padding:4px!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(76px,1fr)!important;gap:9px!important;
+  align-content:start!important;overflow-y:auto!important;overflow-x:hidden!important;
+  pointer-events:auto!important;touch-action:pan-y!important;
+}
+#atkm .rows::before{display:none!important}
+#atkm .row{
+  position:relative!important;left:auto!important;top:auto!important;
+  width:100%!important;height:auto!important;min-height:76px!important;
+  margin:0!important;padding:8px 5px!important;border-radius:12px!important;
+  transform:none!important;font-size:10px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+}
+#atkm .row.on{transform:none!important}
+#atkm .row .dot{width:15px!important;height:15px!important}
+#atkm .foot{display:none!important}
+@media(max-width:430px){
+  #atkm .rows{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-rows:minmax(72px,1fr)!important;gap:7px!important}
+  #atkm .row{min-height:72px!important;font-size:9px!important}
+}
