@@ -857,3 +857,7 @@
     top:calc(100% - var(--deck) + 17px)!important;
   }
 }
+
+/* Raise right action tiles only; keep health HUD and main controls fixed. */
+#actionStack{top:calc(100% - var(--deck) + 7px)!important}
+@media(max-width:430px){#actionStack{top:calc(100% - var(--deck) + 7px)!important}}
