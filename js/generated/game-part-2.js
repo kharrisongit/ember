@@ -3908,15 +3908,18 @@ function drawWorld(t, dt) {
             : dragon.tr
             ? Math.min(rs[4] - 1, Math.floor(dragon.tr.t / dragon.tr.n * rs[4]))
             : Math.floor(P.t * fps * rs[4] / 3) % rs[4];
-          const RS = 0.448;
+          /* Mounted sheets are pixel art. The previous 0.448 resample plus
+             browser smoothing softened them every frame. Use a nearby clean
+             pixel scale and nearest-neighbour rendering so the original detail
+             stays crisp while preserving essentially the same on-screen size. */
+          const RS = 0.45;
           const dw = Math.round(rs[2] * RS), dh = Math.round(rs[3] * RS);
           const RIDEDROP = 14;
           const lift = (dragon.air ? Math.round(Math.sin(P.t * 2.0) * 3) : 0)
                      - RIDEDROP;
           const dx = Math.round(P.x - dw / 2), dy = Math.round(P.y - dh - lift);
           const sm0 = ctx.imageSmoothingEnabled;
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = "high";
+          ctx.imageSmoothingEnabled = false;
           if (flip) {
             ctx.save();
             ctx.translate(dx + dw, dy);
