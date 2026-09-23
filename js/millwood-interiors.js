@@ -11,6 +11,12 @@ async function prepareMillwoodInteriors() {
   await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('remaining', /./);
+  if(W.maps.royal_cellar){
+    const backdrop=new Image();
+    backdrop.src='assets/interiors/royal-cellar.png?v=20260923-castle-larder1';
+    await backdrop.decode();
+    W.maps.royal_cellar._roomBaseCanvas=backdrop;
+  }
   prepareThroneGallery();
   prepareRemainingInteriorActors();
   await alignHouseTableSeats();

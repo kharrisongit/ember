@@ -7,6 +7,7 @@ const read=p=>fs.readFileSync(new URL(p,root),'utf8');
 const world=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const W_GZ = "([^"]+)/)[1],'base64')));
 const royal=JSON.parse(read('assets/game-assets.js').match(/window.EMBER_ASSETS.ROYAL_DATA = (.*);/)[1]);
 Object.assign(world.maps,royal.maps);
+world.maps.royal_cellar={royal:true,roomActors:Array.from({length:8},(_,i)=>({spr:'dragon75_food'+(i%4+1)})),cellarCaches:Array.from({length:8},(_,id)=>({id})),roomBlocks:[]};
 const sprites=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const ATLAS_GZ = "([^"]+)/)[1],'base64'))).sprites;Object.assign(sprites,royal.sprites);
 const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...JSON.parse(read('assets/interiors/thornwell/layouts.json')),...JSON.parse(read('assets/interiors/forgewick/layouts.json')),...JSON.parse(read('assets/interiors/sandspire/layouts.json')),...JSON.parse(read('assets/interiors/hollybeck/layouts.json')),...JSON.parse(read('assets/interiors/remaining/layouts.json'))};
 const outside=JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold')));
@@ -16,6 +17,9 @@ vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>imag
 const game=read('js/generated/game-part-2.js');
 for(const [start,end] of [['function editorActorInfo(', 'function shiftActorData('],['function shiftActorData(', 'function pickEditorActor(']])vm.runInContext(game.slice(game.indexOf(start),game.indexOf(end)),ctx);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
+assert.match(world.maps.royal_cellar._roomBaseCanvas.src,/royal-cellar\.png/);
+assert.equal(world.maps.royal_cellar.roomActors.filter(o=>/^dragon75_food/.test(o.spr)).length,8);
+assert.equal(world.maps.royal_cellar.cellarCaches.length,8);
 for(const [id,name] of [['house47','Fennel'],['house50','Bjorn']]){
  const map=world.maps[id],npc=map.npcs.find(n=>n.n===name);
  const chair=map.roomActors.find(o=>o.exactFurniture&&o.n==='north chair');
