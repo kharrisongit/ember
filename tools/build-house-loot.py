@@ -19,6 +19,9 @@ def objects(m):
 result=[]
 for id,m in sorted(w['maps'].items()):
  if not re.fullmatch(r'house\d+(?:_bedroom2?)?',id):continue
+ n=int(re.search(r'\d+',id)[0])
+ bedrooms=[k for k in w['maps'] if k.startswith(id+'_bedroom')] if '_bedroom' not in id else []
+ if bedrooms and not (len(bedrooms)==1 and n%4==0 or len(bedrooms)==2 and n%5==0):continue
  width,height=m['w']*16,m['h']*16
  boxes=list(m.get('roomBlocks',[]));art=[]
  if id in layouts:
@@ -36,20 +39,21 @@ for id,m in sorted(w['maps'].items()):
  for y in range(88,height-24,4):
   for x in range(36,width-28,4):
    # Include the standing space in front, not just the chest artwork.
-   rect=[x-15,y-28,x+15,y+22]
-   if any(overlap(rect,b,4) for b in clear):continue
+   rect=[x-16,y-32,x+16,y+20]
+   if any(overlap(rect,b,2) for b in clear):continue
    candidates.append((min(x-24,width-24-x)*2+(y-88)*.1,x,y))
  if not candidates:raise RuntimeError('No safe chest site: '+id)
- _,x,y=min(candidates)
- # Flood the room with player-sized clearance and ensure chest front is reachable.
- solid=boxes+[[x-12,y-10,x+12,y]]
- def free(p):return 20<=p[0]<=width-20 and 60<=p[1]<=height-16 and not any(overlap([p[0]-6,p[1]-5,p[0]+6,p[1]+5],b) for b in solid)
- target=(x,y+20);seen={target};q=deque([target])
- while q:
-  px,py=q.popleft()
-  for p in [(px-4,py),(px+4,py),(px,py-4),(px,py+4)]:
-   if p not in seen and free(p):seen.add(p);q.append(p)
- assert any(abs(px-spawn[0])<=8 and abs(py-min(spawn[1],height-20))<=8 for px,py in seen),id
+ for _,x,y in sorted(candidates):
+  # Reject any placement without a player-sized route from the entrance.
+  solid=boxes+[[x-14,y-10,x+14,y]]
+  def free(p):return 20<=p[0]<=width-20 and 60<=p[1]<=height-16 and not any(overlap([p[0]-6,p[1]-5,p[0]+6,p[1]+5],b) for b in solid)
+  target=(x,y+20);seen={target};q=deque([target])
+  while q:
+   px,py=q.popleft()
+   for p in [(px-4,py),(px+4,py),(px,py-4),(px,py+4)]:
+    if p not in seen and free(p):seen.add(p);q.append(p)
+  if any(abs(px-spawn[0])<=8 and abs(py-min(spawn[1],height-20))<=8 for px,py in seen):break
+ else:raise RuntimeError('No reachable chest site: '+id)
  n=int(re.search(r'\d+',id)[0]);room=2 if id.endswith('bedroom2') else 1 if '_bedroom' in id else 0
  seed=n*3+room
  item=['potion','boarMeat','dragonFish','potion'][seed//3%4] if seed%3==1 else None

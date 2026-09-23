@@ -597,6 +597,7 @@ function drawTempleShots(){
 function templeRoomOf(f){return f.idx<4?'ghost':'golem';}
 function templeRoomCleared(room){return !!bossGone[MAPID+':room:'+room]||!foes.some(f=>templeRoomOf(f)===room&&f.st!=='dead'&&!f.ally);}
 function stepTempleGates(dt){
+ stepExpandedTemple(dt);
  if(!MD?.templeContinuous)return;
  for(const [room,top,bottom] of (MD.templeRooms||[['ghost',1216,1336],['golem',416,536]])){
   if(P.y>top&&P.y<bottom)MD.templeActive[room]=true;
@@ -624,7 +625,7 @@ function tryTempleLever(){
  return true;
 }
 function recoverTempleArrival(force=false){
- if(!MD?.templeContinuous)return;
+ if(!MD?.templeContinuous&&!MD?.templeExpanded)return;
  if(force||!Number.isFinite(P.x)||!Number.isFinite(P.y)||!canStand(P.x,P.y)){
   [P.x,P.y]=MD.spawn;P.dir='u';P.dir8='n';chunks.clear();
  }
@@ -1427,6 +1428,7 @@ function cropForegroundMask(data,w,h){
 async function buildHouseFurnitureLayers(){
   await prepareMillwoodInteriors();
   await prepareHouseLoot();
+  await prepareExpandedFirstTemple();
 }
 /* === end household furniture layering === */
 
@@ -2122,7 +2124,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false) => {
   if (MAPID === "witchmoor" && wonAll && px >= 184 && px < 213 && py >= 282 && py < 311) return true;
   const wallEdit=editedTempleWallCollision(px,py);if(wallEdit===true)return true;
   if(wallEdit!==false&&MD?.templeContinuous&&(!MD.templeFloors.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3])||MD.templeWalls.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3])))return true;
-  if (blockedByTempleGate(px,py)) return true;
+  if (expandedTempleSolid(px,py) || blockedByTempleGate(px,py)) return true;
   if (blockedByTrialPedestal(px, py)) return true;
   if (solid[y * MW + x] === 1) return true;
   if (blockedByNpcBody(px, py)) return true;
@@ -3618,6 +3620,9 @@ function drawWorld(t, dt) {
       }
       if(Number.isInteger(o.templeMachine))fr=MD.templeMachines[o.templeMachine].type==='cannon'?MD.templeMachines[o.templeMachine].frame:Math.min(2,MD.templeMachines[o.templeMachine].frame);
       if(o.houseLoot)fr=houseLootFrame(o);
+      if(o.expandedGate)fr=Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
+      if(o.expandedSpike)fr=expandedSpikeFrame(o.expandedSpike);
+      if(o.expandedLever)fr=bossGone['tp1_halls:spikes']?sp[4]-1:0;
       if(o.spr==='scientist_skull')fr=Math.floor(t*5)%sp[4];
       if(o.templeSpike)fr=templeSpikeFrame(o.templeSpike,o.trapRow);
       if(o.templeLever){const h=MD.templeTraps.find(h=>h.id===o.templeLever);fr=Math.min(4,Math.floor((h.leverOpen||0)*5));}
@@ -6769,7 +6774,7 @@ function chestHere() {
 }
 function tryChest() {
   const c = chestHere();
-  if (!c || chestOpen[c.map] || chestAnim) return false;
+  if (!c || chestOpen[c.map] || breathHas[c.gift] || chestAnim) return false;
   if (Math.hypot(P.x / TS - c.x, (P.y - 1) / TS - c.y) > 2.2) return false;
   chestAnim = { c, t: 0, phase: "lid" };
   return true;
@@ -6804,6 +6809,7 @@ function stepDark(dt) {
   });
 }
 function stepChest(dt) {
+  stepLootChestOpening();
   stepDark(dt);
   checkDeepPrize();
   if (!chestAnim) return;
@@ -6823,11 +6829,11 @@ function stepChest(dt) {
 function drawChest() {
   const c = chestHere();
   if (!c) return;
-  const sp = MD?.templeContinuous ? SPR.temple71_chest : SPR.chest;
+  const sp = SPR.chest;
   if (!sp) return;
   const px = c.x * TS + TS / 2 - sp[2] / 2, py = c.y * TS + TS - sp[3];
   let f = 0;
-  if (chestOpen[c.map]) f = sp[4] - 1;
+  if (chestOpen[c.map] || breathHas[c.gift]) f = sp[4] - 1;
   else if (chestAnim && chestAnim.phase !== "lid") f = sp[4] - 1;
   else if (chestAnim) f = Math.min(sp[4] - 1, Math.floor(chestAnim.t / 0.9 * sp[4]));
   drawGameImage(ctx, atlasImg, sp[0] + f * sp[2], sp[1], sp[2], sp[3],
@@ -7263,7 +7269,7 @@ Object.assign(FOE, {
 const ROUTE_2_HP_START_X = 320 * TS;
 const POST_ROUTE_2_COMBAT_MAPS = new Set([
   "mine2", "mine3", "mine4", "mine5",
-  "tp1", "tp2", "tp3", "tp4",
+  "tp1", "tp2", "tp3", "tp4", "tp1_halls", "tp1_reliquary", "tp1_crypt", "tp1_sanctum",
   "ds1", "ds2", "ds3", "ds4",
   "sn1", "sn2", "sn3", "sn4",
   "passage", "passage2", "passage3", "cinderhold"
@@ -7365,11 +7371,11 @@ function spawnFoes() {
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;
     if(kind==="royalguard" && (wonAll || royalDefeated[MAPID+":"+idx]))return;
     if (kind === "knight" && knightEncounterDone) return;
-    if (NO_RESPAWN.test(kind) && bossGone[MAPID + ":" + idx]) return;
+    if ((MD.templeExpanded || NO_RESPAWN.test(kind)) && bossGone[MAPID + ":" + idx]) return;
     const k = FOE[kind];
     if(MD.templeContinuous&&(bossGone[MAPID+':room:'+(idx<4?'ghost':'golem')]||(idx>=4&&bossGone[(MD.templeOldGolem||'tp3')+':'+(idx-4)])))return;
     const x = f.x * TS + 8, y = f.y * TS + 16;
-    foes.push({ kind, x, y, hx: x, hy: y,
+    foes.push({ kind, x, y, hx: x, hy: y, expandedRoom:f.expandedRoom,
                 hp: enemyMaxHp(kind, x), st: "idle", t: 0, dir: "d", flip: false, hurt: 0, idx,
                 storyKnight: kind === "knight", storyPassive: kind === "knight" });
   });
@@ -7581,14 +7587,14 @@ function tryTreasuryChest(){
  if(!c)return false;
  if(treasuryGuarding()){toast("Defeat the Treasury Captain to claim the treasure.");return true;}
  treasuryTaken.add(c.id);gold+=c.n;flyGold(c.x,c.y,c.n);
- showReveal('it_coin','Corin found '+c.n+' gold!',3,true);
+ beginLootChestOpening('treasury:'+c.id,'Corin found '+c.n+' gold!');saveGame();
  return true;
 }
 function drawTreasuryChests(){
  if(MAPID!=='royal_treasury')return;
  const sp=SPR.chest;
  for(const c of TREASURY_CHESTS){
-  const f=treasuryTaken.has(c.id)?sp[4]-1:0;
+  const f=lootChestFrame('treasury:'+c.id,treasuryTaken.has(c.id),sp[4]);
   drawGameImage(ctx,atlasImg,sp[0]+f*sp[2],sp[1],sp[2],sp[3],c.x-sp[2]/2,c.y-sp[3],sp[2],sp[3]);
  }
 }
@@ -8474,8 +8480,9 @@ const bossGone = {};                /* mapid+":"+idx -> true once one falls for 
 function markBossGone(f) {
   if(f.kind==="treasuryknight"){royalDefeated.treasuryCaptain=true;recoverStrandedDragon();toast("Treasury Captain defeated — the treasure is yours!");}
   if(f.kind==="royalguard" && f.idx!==undefined){royalDefeated[MAPID+":"+f.idx]=true;if(!foes.some(q=>q!==f&&q.kind==="royalguard"&&q.st!=="dead"))recoverStrandedDragon();}
-  if (!f.ally && !f.storyKnight && f.idx !== undefined && NO_RESPAWN.test(f.kind))
+  if (!f.ally && !f.storyKnight && f.idx !== undefined && (MD.templeExpanded || NO_RESPAWN.test(f.kind)))
     bossGone[MAPID + ":" + f.idx] = true;   /* stays down for good, however it died */
+  if(MD.templeExpanded&&!f.ally&&f.idx!==undefined)saveGame();
 }
 function bossRing(a) {
   if (!a) return false;
@@ -9098,6 +9105,7 @@ function wakeTheDead() {
 let foeClock = 0;     /* seconds, for anything that need not look every frame */
 const FOE_THINK = 640;
 const thinks = (f) => {
+  if(MD?.templeExpanded&&f.expandedRoom){const [l,t,r,b]=f.expandedRoom;if(P.x<l||P.x>r||P.y<t||P.y>b)return false;}
   if(MD?.templeContinuous&&!MD.templeActive[templeRoomOf(f)])return false;
   if (f.storyPassive) return false;
   if (f.trial || f.ally || f.mad > 0 || BOSS_KIND.test(f.kind || "") || f.kind === "kdragon") return true;
@@ -10348,7 +10356,7 @@ function interact() {
   if (ferryTry()) return;
   if (!sayNpc && tryHouseLootChest()) return;
   if (tryTreasuryChest()) return;
-  if (tryTempleLever()) return;
+  if (tryExpandedTempleLever() || tryTempleLever()) return;
   if (tryCellarSupplies()) return;
   if (tryChest()) return;              /* the temple chest, if he is at one */
   {

@@ -5504,6 +5504,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  templeLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:'))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5548,6 +5549,7 @@ function loadGame(slot=activeSaveSlot) {
     if (trial) stopTrial("");
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     if (s.breathHas) for (const k in breathHas) if (s.breathHas[k] !== undefined) breathHas[k] = !!s.breathHas[k];
+    chestOpen.tp1_sanctum=!!breathHas.lightning;
     syncDragonVitality(false);
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
@@ -5555,10 +5557,14 @@ function loadGame(slot=activeSaveSlot) {
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
-    houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);houseLootOpening=null;
+    houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
     potions=Math.max(0,s.potions|0);
+    for(const id of Object.keys(bossGone))if(id.startsWith('tp1_')||id.startsWith('tp1:'))delete bossGone[id];
+    Object.assign(bossGone,s.templeDefeated||{});
+    for(const [id,m] of Object.entries(W.maps))if(m.templeExpanded)m.templeGateOpen=0;
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
+    if(s.map==='tp1'&&s.templeLayoutVersion!==1){s.x=448;s.y=688;}
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);
     if(MD.royal&&(retiredRoyalRoom||!canStand(P.x,P.y))){P.x=MD.spawn[0];P.y=MD.spawn[1];}
