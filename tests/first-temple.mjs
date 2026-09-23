@@ -12,7 +12,7 @@ function flood(m,gate=false){const start=m.spawn.map(n=>Math.round(n/8)*8),seen=
 let chests=0,doors=0;
 for(const [id,m] of Object.entries(W.maps)){
  if(!m.templeExpanded)continue;
- assert(m.w>=24,`${id} preserves connected paths`);assert(m.templePlan.chambers.every(([l,t,r,b])=>r-l<=(id==='tp1_sanctum'&&t===m.templePlan.entranceDecor.wallY?192:160)&&b-t<=112),'smaller chamber footprint');assert(clear(m,...m.spawn));
+ if(id!=='tp1_sanctum')assert(m.templePlan.chambers.every(([l,t,r,b])=>r-l<=128&&b-t<=96),'compact chamber footprint');assert(clear(m,...m.spawn));
  const reached=flood(m);
  for(const a of m.roomActors.filter(a=>a.houseLoot)){chests++;assert.equal(a.spr,'temple71_chest','loot uses standard chest');assert(reached.has([a.x,a.y+24].join(',')),id+' chest reachable');}
  for(const d of m.doors){doors++;const r=d.triggerRect;
@@ -21,8 +21,20 @@ for(const [id,m] of Object.entries(W.maps)){
   const dest=W.maps[d.to];assert(dest.doors.some(back=>back.to===id));assert(clear(dest,d.tx*16+8,d.ty*16+16),id+' safe arrival');
  }
  for(const f of m.foes)assert(clear(m,f.x*16+8,f.y*16+16),id+' enemy spawn');
+ for(const p of m.templePlan.passages||[]){
+  const actor=m.roomActors.find(a=>a.inlineTempleDoor&&a.x===p.x&&a.y===p.y);assert(actor,'connected archway exists');
+  assert(p.mode==='open'?actor.stillFrame===3:actor.templePassDoor,'open arches and approaching-player doors');
+  for(let y=p.y-48;y<=p.y+16;y+=8)assert(reached.has([p.x,y].join(',')),id+' doorway connects both sides');
+  assert(!m.doors.some(d=>d.triggerRect.x<=p.x&&p.x<d.triggerRect.x+d.triggerRect.w&&Math.abs(d.triggerRect.y-p.y)<64),'inline doorway does not change maps');
+ }
 }
 assert.equal(chests,8);assert.equal(doors,9);
+const corridors=Object.values(plan).flatMap(m=>m.floors.filter(([l,t,r,b])=>r-l<=64||b-t<=32));
+const northLength=corridors.filter(([l,t,r,b])=>b-t>r-l).reduce((n,[l,t,r,b])=>n+b-t,0);
+const sideways=corridors.filter(([l,t,r,b])=>r-l>b-t);
+assert.equal(sideways.length,3,'occasional horizontal links between northern wings');
+assert(northLength>4*sideways.reduce((n,[l,t,r,b])=>n+r-l,0),'north-running halls dominate the layout');
+assert.deepEqual(plan.tp1_sanctum.chambers,[[80,288,272,400],[112,64,256,160]],'guardian and heartstone room sizes preserved');
 const sanctum=W.maps.tp1_sanctum;
 assert.deepEqual([...new Set(Object.values(plan).flatMap(m=>m.enemies.map(f=>f[0])).filter(k=>k.startsWith('golem')))],['golem2'],'Forgewick uses only its Iron Golem');
 const ornaments=sanctum.roomActors.filter(a=>a.entranceOrnament);
@@ -59,10 +71,11 @@ const asset=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"temp
 let halls=0,hits=0;c.hurtPlayer=()=>hits++;c.foes=[];c.foesHeld=false;
 for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards||[]){
  halls++;c.MD=m;c.MAPID=id;c.tAcc=2.8;
+ assert.equal(h.axis,'y','spike artwork is reserved for north-running halls');
  assert(h.lines.at(-1)-h.lines[0]>=320,'long trap crossing');
  for(const a of m.roomActors.filter(a=>a.expandedSpike?.id===h.id))assert(inside(m,a.x,a.y),'trap within hall');
  c.P=h.axis==='x'?{x:h.lines[0],y:(h.cross[0]+h.cross[1])/2}:{x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};
- const before=hits;run('stepExpandedTemple(0)');assert.equal(hits,before+1,'active spikes hurt in both orientations');
+ const before=hits;run('stepExpandedTemple(0)');assert.equal(hits,before+1,'active spikes hurt along the north hall');
  const pos=c.P;c.P={x:h.lever[0],y:h.lever[1]};assert(run('tryExpandedTempleLever()'));
  c.P=pos;run('stepExpandedTemple(0)');assert.equal(hits,before+1,'lever disables its hall');
  assert(c.bossGone[id+':spikes:'+h.id]);

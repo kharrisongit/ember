@@ -59,8 +59,18 @@ for x in [l-3,r+2]:
  for y in range(b-48,b-2):
   assert im.getpixel((x,y)) not in void|{(102,94,85,255)},('gate jamb gap',x,y)
 print('PASS: heartstone south wall has no projecting floor; gate jambs meet both passage walls.')
-galleries=Image.open(ROOT/'assets/interiors/first-temple/tp1_halls.png').convert('RGBA')
-cap=galleries.crop((36,660,44,668)).tobytes()
-for x,y in [(160,688),(688,688),(160,96),(688,96)]:
- assert galleries.crop((x+4,y+4,x+12,y+12)).tobytes()!=cap,('misplaced cap at lower wall junction',x,y)
-print('PASS: stepped north-wall junctions have no lower pillar caps.')
+# Compare lower passage junctions with a real, intentionally retained upper cap.
+entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
+cap=entry.crop((84,20,92,28)).tobytes()
+assert entry.getpixel((88,24)) not in void|{(102,94,85,255)},'cap reference contains masonry'
+passages=0
+for id,m in plans.items():
+ im=Image.open(ROOT/f'assets/interiors/first-temple/{id}.png').convert('RGBA')
+ for p in m.get('passages',[]):
+  x,b=p['x'],p['y'];passages+=1
+  for px in [x-19,x+18]:
+   for py in range(b-48,b-2):
+    assert im.getpixel((px,py)) not in void|{(102,94,85,255)},(id,'doorway jamb gap',px,py)
+  for px in [x-32,x+16]:
+   assert im.crop((px+4,b+4,px+12,b+12)).tobytes()!=cap,(id,'extra lower pillar cap',px,b)
+print(f'PASS: {passages} connected doorways fit their jambs with no extra lower pillar caps.')

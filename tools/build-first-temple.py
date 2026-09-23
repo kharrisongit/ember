@@ -104,8 +104,7 @@ for id,m in layout.items():
    if not side and not below:im.putpixel((px,py),(25,23,28,255))
  # The 32px gate sits inside the passage's side-stone outlines. Fill the
  # four-pixel floor aprons beside it with matching jamb masonry.
- if 'gate' in m:
-  l,_,r,b=m['gate']
+ for l,r,b in ([(m['gate'][0],m['gate'][2],m['gate'][3])] if 'gate' in m else [])+[(p['x']-16,p['x']+16,p['y']) for p in m.get('passages',[])]:
   for x in [l-4,r]:
    im.alpha_composite(north.crop((0,0,4,46)),(x,b-48))
  for x,y in sorted(floor):

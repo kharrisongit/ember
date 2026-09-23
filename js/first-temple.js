@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple7-traps');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple8-north');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple7-traps';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple8-north';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -25,6 +25,10 @@ async function prepareExpandedFirstTemple(){
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
     for(const [kind,x,y,room] of plan.enemies)m.foes.push({k:kind,x:(x-8)/16,y:(y-16)/16,expandedRoom:room});
+    // Passage doors stay in this map. Open arches remain open; intact doors
+    // animate as Corin approaches and lead straight into the connected hall.
+    for(const p of plan.passages||[])m.roomActors.push({spr:'first_temple_door',x:p.x,y:p.y,
+      schoolArt:true,inlineTempleDoor:true,...(p.mode==='open'?{stillFrame:3}:{templePassDoor:true})});
     // Wall torches and small stone ornaments preserve the first temple's visual identity.
     for(const [l,t,r,b] of plan.chambers){
       if(plan.entranceDecor && t===plan.entranceDecor.wallY)continue;
