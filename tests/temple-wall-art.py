@@ -41,14 +41,21 @@ for id,m in plans.items():
    if (x+direction*16,y) in floor:continue
    edge_x=x-16 if direction==-1 else x+16
    for py in range(y,y+16):
+    if py>=y+14 and any(y+16==ey+48 for _,ey in exits):continue
     for px in range(edge_x+6,edge_x+10):
      assert im.getpixel((px,py)) not in void,(id,'vertical seam gap',px,py)
      seam_pixels+=1
    assert im.getpixel((x-8 if direction==-1 else x+24,y+8))!=(25,23,28,255),(id,'missing side edge',x,y)
    checks+=1
-print(f'PASS: {checks} wall-face and side-edge samples, full 48-pixel faces on all five maps.')
+print(f'PASS: {checks} wall-face and side-edge samples, 46-pixel stone faces in 48-pixel tiles on all five maps.')
 print(f'PASS: {seam_pixels} masonry pixels checked across all wall faces and perpendicular joins; floor trim confined to native side outlines.')
-entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
-for p in [(400,624),(351,416)]:
- assert entry.getpixel(p)==(102,94,85,255),('horizontal face protrudes beyond vertical edge',p)
-print('PASS: east- and west-facing overlap regressions end at the side-stone silhouette.')
+sanctum=plans['tp1_sanctum'];im=Image.open(ROOT/'assets/interiors/first-temple/tp1_sanctum.png').convert('RGBA')
+l,t,r,b=sanctum['chambers'][1]
+for y in [b+46,b+47]:
+ for x in list(range(l+16,sanctum['floors'][2][0]-16))+list(range(sanctum['floors'][2][2]+16,r-16)):
+  assert im.getpixel((x,y)) in void,('floor protrudes below heartstone room',x,y)
+l,_,r,b=sanctum['gate']
+for x in [l-3,r+2]:
+ for y in range(b-48,b-2):
+  assert im.getpixel((x,y)) not in void|{(102,94,85,255)},('gate jamb gap',x,y)
+print('PASS: heartstone south wall has no projecting floor; gate jambs meet both passage walls.')

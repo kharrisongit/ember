@@ -38,7 +38,7 @@ for id,m in layout.items():
  if 'exit' in m:exits.append(m['exit'])
  for l,t,r,b in m['floors']+[[x-16,y,x+16,y+48] for x,y in exits]:
   floor.update((x,y) for x in range(l,r,16) for y in range(t,b,16))
- im=Image.new('RGBA',(w,h),'#19171c');pillars=[]
+ im=Image.new('RGBA',(w,h),'#19171c');pillars=[];wall_ends=[]
  # Draw complete, original 48-pixel stone faces on both north and south
  # boundaries. Continuous runs share end pillars; adjoining floors clip walls.
  for y in sorted({y for x,y in floor}):
@@ -48,14 +48,45 @@ for id,m in layout.items():
     top=y-48 if direction<0 else y+16
     for x in range(l,r,16):stamp_wall(im,north,(x,top))
     pillars.extend([(l-16,top,left_pillar),(r,top,right_pillar)])
+    wall_ends.append((l,r,top+46))
  for x,y in sorted(floor):
   # Floor-facing aprons trim the horizontal face to the actual stone outline.
   # Preserving the face here would leave a thin strip beyond the side wall.
   if (x-16,y) not in floor:stamp_wall(im,west,(x-16,y),floor_edge=True)
   if (x+16,y) not in floor:stamp_wall(im,east,(x+16,y),floor_edge=True)
  for x,y,tile in pillars:stamp_wall(im,tile,(x,y))
+ # The source's last two rows are floor padding, not stone. End the side
+ # columns on that same baseline. Continue masonry where another wall joins.
+ for l,r,bottom in wall_ends:
+  for px in range(l-16,r+16):
+   for py in range(bottom,bottom+2):
+    if not (0<=px<w and 0<=py<h):continue
+    if (px//16*16,(bottom+2)//16*16) in floor:
+     im.putpixel((px,py),(102,94,85,255))
+    elif any(ol-16<=px<orr+16 and ob-46<=py<ob for ol,orr,ob in wall_ends if ob!=bottom):
+     im.putpixel((px,py),north.getpixel((px%16,30+py-bottom)))
+    elif (px//16*16,py//16*16) not in floor:
+     # Do not cut a side wall that continues along an adjacent walkable tile.
+     adjacent=any((px//16*16+dx,(bottom+2)//16*16) in floor for dx in [-16,16]) or any(ol-16<=px<orr+16 and ob-46<=bottom+2<ob for ol,orr,ob in wall_ends if ob!=bottom)
+     if not adjacent:im.putpixel((px,py),(25,23,28,255))
  # A single floor mask prevents doubled seams or walls crossing a junction.
  for x,y in floor:im.paste((102,94,85,255),(x,y,x+16,y+16))
+ # Keep floor-colored crop padding only where it actually borders floor.
+ # This removes the projecting sliver beneath south walls and corner feet.
+ for py in range(h):
+  for px in range(w):
+   if im.getpixel((px,py)) not in APRON:continue
+   cx,cy=px//16*16,py//16*16
+   if (cx,cy) in floor:continue
+   side=((cx+16,cy) in floor and west.getpixel((px%16,py%16)) in APRON) or ((cx-16,cy) in floor and east.getpixel((px%16,py%16)) in APRON)
+   below=any((cx,(py+dy)//16*16) in floor for dy in [1,2])
+   if not side and not below:im.putpixel((px,py),(25,23,28,255))
+ # The 32px gate sits inside the passage's side-stone outlines. Fill the
+ # four-pixel floor aprons beside it with matching jamb masonry.
+ if 'gate' in m:
+  l,_,r,b=m['gate']
+  for x in [l-4,r]:
+   im.alpha_composite(north.crop((0,0,4,46)),(x,b-48))
  for x,y in sorted(floor):
   hazard=m.get('hazard')
   if hazard and min(hazard['columns'])-24<=x<=max(hazard['columns'])+24 and hazard['top']-16<=y<=hazard['bottom']:continue

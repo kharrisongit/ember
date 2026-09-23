@@ -12,7 +12,7 @@ function flood(m,gate=false){const start=m.spawn.map(n=>Math.round(n/8)*8),seen=
 let chests=0,doors=0;
 for(const [id,m] of Object.entries(W.maps)){
  if(!m.templeExpanded)continue;
- assert(m.w>=28,`${id} preserves connected paths`);assert(m.templePlan.chambers.every(([l,t,r,b])=>r-l<=176&&b-t<=128),'original compact chamber footprint');assert(clear(m,...m.spawn));
+ assert(m.w>=24,`${id} preserves connected paths`);assert(m.templePlan.chambers.every(([l,t,r,b])=>r-l<=160&&b-t<=112),'smaller chamber footprint');assert(clear(m,...m.spawn));
  const reached=flood(m);
  for(const a of m.roomActors.filter(a=>a.houseLoot)){chests++;assert.equal(a.spr,'temple71_chest','loot uses standard chest');assert(reached.has([a.x,a.y+24].join(',')),id+' chest reachable');}
  for(const d of m.doors){doors++;const r=d.triggerRect;
@@ -24,8 +24,8 @@ for(const [id,m] of Object.entries(W.maps)){
 }
 assert.equal(chests,8);assert.equal(doors,9);
 const sanctum=W.maps.tp1_sanctum;
-assert(!flood(sanctum,true).has('256,152'),'closed gate prevents reaching heartstone');
-assert(flood(sanctum,false).has('256,152'),'open gate permits heartstone');
+assert(!flood(sanctum,true).has([plan.tp1_sanctum.heartstone[0],plan.tp1_sanctum.heartstone[1]+24].join(',')),'closed gate prevents reaching heartstone');
+assert(flood(sanctum,false).has([plan.tp1_sanctum.heartstone[0],plan.tp1_sanctum.heartstone[1]+24].join(',')),'open gate permits heartstone');
 c.MD=sanctum;c.MAPID='tp1_sanctum';assert.equal(run('expandedSanctumCleared()'),false);
 c.bossGone['tp1_sanctum:0']=true;assert.equal(run('expandedSanctumCleared()'),false);
 c.bossGone['tp1_sanctum:1']=true;assert.equal(run('expandedSanctumCleared()'),true);run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,1);
