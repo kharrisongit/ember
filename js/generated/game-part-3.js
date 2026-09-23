@@ -5663,9 +5663,12 @@ setInterval(() => {
 }, 120);
 
 setInterval(() => {
-  const on = hasDragon();
+  const started = !!gameplayStarted;
+  const on = started && hasDragon();
   const dragonBtn = document.getElementById("btnL");
   const commandBtn = document.getElementById("btnR");
+  const itemsBtn = document.getElementById("btnItems");
+  const mapBtn = document.getElementById("btnMapQuick");
   if (dragonBtn) {
     dragonBtn.textContent = on ? "DRAGON" : "";
     dragonBtn.style.opacity = on ? "" : "0.38";
@@ -5674,6 +5677,8 @@ setInterval(() => {
     commandBtn.textContent = on ? "COMMAND" : "";
     commandBtn.style.opacity = on ? "" : "0.38";
   }
+  if (itemsBtn) itemsBtn.textContent = started ? "ITEMS" : "";
+  if (mapBtn) mapBtn.textContent = started ? "MAP" : "";
   if (ovl === "atkm") refreshOvl();
 }, 400);
 
