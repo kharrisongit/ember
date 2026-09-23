@@ -3998,12 +3998,7 @@ function updateDeckHealth(){
 function frameCore(ms) {
   window.__firstFrame = true;
   updateDeckHealth();
-  if (ovl === "atkm") {
-    const now = performance.now();
-    if (!window.__breathMenuRefresh || now - window.__breathMenuRefresh > 100) {
-      window.__breathMenuRefresh = now; refreshOvl();
-    }
-  }
+  if (ovl === "atkm") updateBreathRefills();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
   if(atlasOpen)return;
   if(fishing){
@@ -5408,6 +5403,22 @@ function refreshOvl() {
     const on = rows.querySelector(".row.on");
     if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
   }
+}
+function updateBreathRefills(){
+  const M=MENUS.atkm, rows=document.getElementById(M.rows);
+  if(!rows)return;
+  const items=M.items(), nodes=rows.querySelectorAll(".row");
+  items.forEach((it,k)=>{
+    if(it.el==="claw"||!it.cd||!nodes[k])return;
+    const d=nodes[k],wait=breathWait(it.el),ready=Math.max(0,Math.min(1,1-wait/it.cd));
+    d.style.setProperty("--refill",(ready*100).toFixed(1)+"%");
+    d.style.opacity=(it.dim&&it.dim())?".42":"";
+    let sec=d.querySelector(".breathSecs");
+    if(wait>0){
+      if(!sec){sec=document.createElement("span");sec.className="breathSecs";d.appendChild(sec);}
+      sec.textContent=Math.ceil(wait);
+    }else if(sec)sec.remove();
+  });
 }
 function ovlStep(d) {
   if (!ovl) return;
