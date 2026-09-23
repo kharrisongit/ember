@@ -2141,3 +2141,58 @@ body.pseudoFullscreen{
   #bagHead .chip:not(.gold){font-size:8px!important;padding:3px 4px!important}
   #bagSave::before,#bagMusic::before,#bagMap::before{margin-right:3px;font-size:12px}
 }
+
+
+/* === GOLD TILE DOM-ORDER FIX 2026-09-23 ===
+   bagGold lives inside .chips. Previous .chips > .chip sizing rules still win
+   on parts of iOS layout, making it occupy a grid column before its absolute
+   positioning paints over MAP. Remove it from the utility grid entirely and
+   anchor it to the inventory itself. */
+#bagHead .chips>#bagGold,
+#bagGold{
+  position:fixed!important;
+  left:auto!important;
+  bottom:auto!important;
+  top:calc(env(safe-area-inset-top,0px) + 12px)!important;
+  right:calc(env(safe-area-inset-right,0px) + 12px)!important;
+  width:58px!important;
+  min-width:58px!important;
+  max-width:58px!important;
+  height:58px!important;
+  min-height:58px!important;
+  max-height:58px!important;
+  flex:none!important;
+  padding:3px!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  overflow:hidden!important;
+  border-radius:11px!important;
+  z-index:105!important;
+}
+#bagHead .chips>#bagGold canvas,
+#bagGold canvas{
+  width:31px!important;height:31px!important;
+  min-width:31px!important;max-width:31px!important;
+  flex:0 0 31px!important;margin:-2px 0 0!important;
+}
+#bagHead .chips>#bagGold i,#bagGold i{
+  display:block!important;font-size:12px!important;line-height:12px!important;
+  width:auto!important;white-space:nowrap!important;
+}
+/* The gold node is absolutely/fixed positioned, so define only the five
+   in-flow controls: SAVE, MUSIC, MAP, BESTIARY, CLOSE. */
+#bagHead .chips{
+  grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.18fr) 38px!important;
+}
+@media(max-width:430px){
+  #bagHead .chips>#bagGold,#bagGold{
+    top:calc(env(safe-area-inset-top,0px) + 10px)!important;
+    right:calc(env(safe-area-inset-right,0px) + 10px)!important;
+    width:56px!important;min-width:56px!important;max-width:56px!important;
+    height:56px!important;min-height:56px!important;max-height:56px!important;
+  }
+}
