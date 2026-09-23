@@ -1385,3 +1385,13 @@
   z-index:20!important;
   pointer-events:none!important;
 }
+
+/* === DRAGON ATTACK ORB EXACT HIT AREA 2026-09-22 === */
+/* The DOM .row itself fills the complete visual circle. No child or overlay
+   can become the event target; every point inside the orb resolves to .row. */
+#atkm .row{
+  box-sizing:border-box!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+#atkm .row::before,#atkm .row::after,#atkm .row *{pointer-events:none!important}
