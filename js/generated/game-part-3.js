@@ -5662,9 +5662,15 @@ setInterval(() => {
 
 setInterval(() => {
   const on = hasDragon();
-  for (const id of ["btnL", "btnR"]) {
-    const el = document.getElementById(id);
-    if (el) el.style.opacity = on ? "" : "0.38";
+  const dragonBtn = document.getElementById("btnL");
+  const commandBtn = document.getElementById("btnR");
+  if (dragonBtn) {
+    dragonBtn.textContent = on ? "DRAGON" : "";
+    dragonBtn.style.opacity = on ? "" : "0.38";
+  }
+  if (commandBtn) {
+    commandBtn.textContent = on ? "COMMAND" : "";
+    commandBtn.style.opacity = on ? "" : "0.38";
   }
   if (ovl === "atkm") refreshOvl();
 }, 400);
