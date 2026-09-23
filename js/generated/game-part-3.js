@@ -3990,7 +3990,7 @@ function updateDeckHealth(){
     box.classList.toggle("solo",!hatched);
     /* Never show party vitals on the boot/start screen. They become visible
        only after gameplay has actually begun. */
-    const playing=(typeof mode!=="undefined"&&mode==="play");
+    const playing=gameplayStarted && (typeof mode!=="undefined"&&mode==="play");
     box.style.visibility=playing?"visible":"hidden";
     box.style.pointerEvents=playing?"auto":"none";
   }
@@ -5160,6 +5160,7 @@ const WM_ABOUT = {
   "Ashcrag":             "Volcanic mountain, the far mouth of the pass. Lava road beyond.",
   "Cinderhold":          "Dark keep on an island in the lava, at the end of the last road.",
 };
+let gameplayStarted = false;
 const BOOT = {
   at: 0, timer: 0,
   paint() {
@@ -5205,6 +5206,7 @@ const BOOT = {
     if (l) { l.style.opacity = has ? "1" : ".35"; l.dataset.on = has ? "1" : ""; }
   },
   close() {
+    gameplayStarted = true;
     BOOT.waiting = false;
     const el = document.getElementById("boot");
     if (el) el.style.display = "none";
