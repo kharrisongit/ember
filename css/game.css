@@ -1930,3 +1930,19 @@ body.pseudoFullscreen{
 #spotifyControls{display:grid;grid-template-columns:48px 1fr 48px;gap:7px}
 #spotifyControls button{height:38px;border:1px solid #514a40;border-radius:9px;background:#232329;color:#e8ddca;font:700 10px/1 ui-monospace,monospace}
 #spotifyDisconnect{opacity:.65}
+
+
+/* === APPLE / YOUTUBE MUSIC ACCOUNT TABS 2026-09-23 === */
+#musicTabs{grid-template-columns:.72fr 1.14fr 1.14fr!important}
+#musicTabs button{font-size:8px!important;padding:8px 3px!important}
+#appleMusicPane,#youtubeMusicPane{display:none;text-align:center}
+.musicServiceBrand{margin:13px 0 8px;color:#f0ebe4;font:800 16px/1 ui-monospace,monospace;letter-spacing:.1em}
+.musicServiceStatus{min-height:48px;padding:8px;color:#aaa59b;font:9px/1.45 ui-monospace,monospace}
+.musicConnect,.serviceDone{width:100%;margin-top:8px;padding:10px;border:1px solid #665741;border-radius:9px;background:linear-gradient(#35312a,#25231f);color:#e8ddca;font:700 9px/1 ui-monospace,monospace;letter-spacing:.07em}
+#appleMusicConnect{border-color:#9b6871}
+#youtubeMusicConnect{border-color:#8b625c}
+.serviceNow{display:flex;flex-direction:column;gap:4px;margin:12px 0 8px;padding:11px;border:1px solid #403e39;border-radius:9px;background:#111216}
+.serviceNow b{color:#eee6d8;font:700 11px/1.3 ui-monospace,monospace}
+.serviceNow span{color:#8f8b83;font:9px/1.2 ui-monospace,monospace}
+.serviceControls{display:grid;grid-template-columns:48px 1fr 48px;gap:7px}
+.serviceControls button{height:38px;border:1px solid #514a40;border-radius:9px;background:#232329;color:#e8ddca;font:700 10px/1 ui-monospace,monospace}
