@@ -1492,3 +1492,25 @@
  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M25 5h14v9h7v8h5v31h7v6H6v-6h7V22h5v-8h7zm-4 24v24h22V29zm7 7h8v17h-8zM18 17h28v7H18z'/%3E%3C/svg%3E") center/contain no-repeat!important;
  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M25 5h14v9h7v8h5v31h7v6H6v-6h7V22h5v-8h7zm-4 24v24h22V29zm7 7h8v17h-8zM18 17h28v7H18z'/%3E%3C/svg%3E") center/contain no-repeat!important;
 }
+
+/* === COMMAND ICON REDESIGN 2026-09-22 === */
+/* Cleaner, purpose-built silhouettes for the three Command actions. */
+#airm .row::before{
+ content:""!important;width:38px!important;height:38px!important;flex:0 0 38px!important;
+ background:#f5eee1!important;filter:drop-shadow(0 0 5px var(--el))!important;
+}
+/* Mount/Dismount: unmistakable horned dragon head in profile. */
+#airm .row:nth-child(1)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M10 50c8-5 10-12 9-21l-8-9 12 2 3-13 7 11 11-8-2 13 10 4-8 7 8 9-15 1-5 10-8-8zm18-19 7-4 8 4-7 3 8 4-12 2-7-5z'/%3E%3Ccircle cx='35' cy='29' r='2'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M10 50c8-5 10-12 9-21l-8-9 12 2 3-13 7 11 11-8-2 13 10 4-8 7 8 9-15 1-5 10-8-8zm18-19 7-4 8 4-7 3 8 4-12 2-7-5z'/%3E%3Ccircle cx='35' cy='29' r='2'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+/* Take Off/Land: broad paired dragon wings, readable at tiny HUD scale. */
+#airm .row:nth-child(2)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M31 22C22 11 12 8 3 10c8 6 10 13 9 22l8-5 4 12 7-9zm2 0C42 11 52 8 61 10c-8 6-10 13-9 22l-8-5-4 12-7-9zM29 20h6v28h-6z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M31 22C22 11 12 8 3 10c8 6 10 13 9 22l8-5 4 12 7-9zm2 0C42 11 52 8 61 10c-8 6-10 13-9 22l-8-5-4 12-7-9zM29 20h6v28h-6z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+/* Summon: shaped headstone with rounded shoulders, base and carved cross. */
+#airm .row:nth-child(3)::before{
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M17 53V25C17 14 23 7 32 7s15 7 15 18v28h7v6H10v-6zm12-32v7h-7v6h7v12h6V34h7v-6h-7v-7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M17 53V25C17 14 23 7 32 7s15 7 15 18v28h7v6H10v-6zm12-32v7h-7v6h7v12h6V34h7v-6h-7v-7z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
