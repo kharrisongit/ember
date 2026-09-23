@@ -2,20 +2,21 @@
 let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
   if(!houseSeatedSheet){
-    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-thornwell1';
+    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260923-forgewick1';
     await image.decode();houseSeatedSheet=image;
   }
   await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
+  await prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/);
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';
-  const response = await fetch(root + 'layouts.json?v=20260923-thornwell1');
-  if (!response.ok) throw new Error('Millwood layouts: ' + response.status);
+  const response = await fetch(root + 'layouts.json?v=20260923-forgewick1');
+  if (!response.ok) throw new Error(town + ' layouts: ' + response.status);
   const layouts = await response.json();
   const sheet = new Image();
-  sheet.src = root + 'layers.png?v=20260923-thornwell1';
+  sheet.src = root + 'layers.png?v=20260923-forgewick1';
   await sheet.decode();
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');

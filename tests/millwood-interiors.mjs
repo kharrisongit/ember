@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 const root=new URL('../',import.meta.url);
 const read=p=>fs.readFileSync(new URL(p,root),'utf8');
 const world=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const W_GZ = "([^"]+)/)[1],'base64')));
-const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...JSON.parse(read('assets/interiors/thornwell/layouts.json'))};
+const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...JSON.parse(read('assets/interiors/thornwell/layouts.json')),...JSON.parse(read('assets/interiors/forgewick/layouts.json'))};
 const outside=JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id])));
 const ctx=vm.createContext({W:world,window:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},document:{createElement:()=>({getContext:()=>({drawImage(){}})})},npcs:[],actorLayouts:{},SPR:{},NAMES:[],TS:16,rebuildSolid(){},mapDirty:false});
 vm.runInContext(read('js/millwood-interiors.js'),ctx);

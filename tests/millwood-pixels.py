@@ -34,4 +34,18 @@ for layout in layouts.values():
         if obj['name'] == 'north-chair':
             assert piece.size == (12,22), 'Incomplete north chair'
             assert not any(r > 130 and b > 100 and g < 130 and a for r,g,b,a in piece.getdata()), 'Flower pixels attached to chair'
-print('PASS: separated dining tables have complete aprons; back chairs are complete and contain no flower pixels.')
+if folder.name != 'forgewick':
+    print('PASS: separated dining tables have complete aprons; back chairs are complete and contain no flower pixels.')
+else:
+    for layout in layouts.values():
+        objects = {o['name']: o for o in layout['objects']}
+        if 'table' in objects:
+            assert cut(objects['table']['rect']).size in ((47,23),(47,25))
+            assert cut(objects['chair']['rect']).size == (12,22)
+        rug = cut(objects['rug']['rect'])
+        # Neither table feet nor chair pixels may remain attached to the rug.
+        sample = next(v for k,v in layouts.items() if k == 'house06_bedroom')
+        reference = cut(next(o['rect'] for o in sample['objects'] if o['name'] == 'rug'))
+        allowed = set(reference.convert('RGB').getdata())
+        assert all((r,g,b) in allowed for r,g,b,a in rug.getdata() if a), 'Furniture pixels left on rug'
+    print('PASS: Forgewick tables and chairs are complete; rugs contain no furniture pixels.')
