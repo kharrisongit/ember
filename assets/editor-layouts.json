@@ -9494,6 +9494,24 @@
         "y": 142,
         "originX": 120,
         "originY": 153
+      },
+      "actor:sn_sanctum:original:17": {
+        "kind": "actor",
+        "key": "sn_sanctum:original:17",
+        "identity": "dragon75_statue",
+        "x": 225,
+        "y": 119,
+        "originX": 220,
+        "originY": 245
+      },
+      "actor:sn_sanctum:original:16": {
+        "kind": "actor",
+        "key": "sn_sanctum:original:16",
+        "identity": "dragon75_statue",
+        "x": 95,
+        "y": 119,
+        "originX": 100,
+        "originY": 245
       }
     },
     "ds_sanctum": {
@@ -9572,7 +9590,8 @@
     "2372059f-7bd2-48e6-8feb-8146655dd490",
     "54088f85-6af4-470d-9977-5d7e79654b7f",
     "98b04fb9-09bf-4226-84cc-979d2491c5eb",
-    "ddba20d2-78fc-4718-8b41-9273438ad106"
+    "ddba20d2-78fc-4718-8b41-9273438ad106",
+    "d692fa6c-7c99-44c3-b66e-dfa96c0bee0e"
   ],
   "sessions": {
     "world": {
@@ -17270,11 +17289,11 @@
     },
     "sn_sanctum": {
       "id": "bbb4a522-2db7-4438-8ecc-3819a16745cf",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "5465b825-5971e3-2",
       "baseFingerprint": "6f0147df-ce1380b9-3032",
       "base": {},
-      "resultHash": "ad40e905-708718f1-311"
+      "resultHash": "f18ffe35-c249fc89-614"
     },
     "ds_sanctum": {
       "id": "3e7872b8-59a1-473a-9b28-32d0358e80b9",
