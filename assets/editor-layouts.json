@@ -8950,6 +8950,18 @@
         "y": 368,
         "originX": 624,
         "originY": 304
+      },
+      "feature-delete:26,28": {
+        "kind": "feature-delete",
+        "key": "26,28",
+        "tx": 26,
+        "ty": 28
+      },
+      "feature-delete:34,28": {
+        "kind": "feature-delete",
+        "key": "34,28",
+        "tx": 34,
+        "ty": 28
       }
     },
     "witchmoor": {
@@ -9718,12 +9730,13 @@
     "ddba20d2-78fc-4718-8b41-9273438ad106",
     "d692fa6c-7c99-44c3-b66e-dfa96c0bee0e",
     "ef242b28-7834-45e8-9b56-c54296cd993d",
-    "fa6be385-ac59-4562-b91d-57ba19a6d720"
+    "fa6be385-ac59-4562-b91d-57ba19a6d720",
+    "4285c209-8754-4d11-9f0b-741fe5d2547b"
   ],
   "sessions": {
     "world": {
       "id": "0ed71ff1-2f40-44fa-a8e0-5c2bda6520d8",
-      "sequence": 2,
+      "sequence": 3,
       "baseHash": "22210a00-de08422-127180",
       "baseFingerprint": "516ab7b9-5e99839-675120",
       "base": {
@@ -18441,7 +18454,7 @@
           "blocked": true
         }
       },
-      "resultHash": "61f35b8e-c48ae53a-129495"
+      "resultHash": "5e0e3c73-f9b54fb9-129653"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
