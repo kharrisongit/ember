@@ -8944,6 +8944,7 @@
         "kind": "actor",
         "key": "npc:lineup:skin:maddock",
         "identity": "NPC sample: maddock",
+        "deleted": true,
         "x": 392,
         "y": 352,
         "originX": 424,
@@ -9796,12 +9797,13 @@
     "ef242b28-7834-45e8-9b56-c54296cd993d",
     "fa6be385-ac59-4562-b91d-57ba19a6d720",
     "4285c209-8754-4d11-9f0b-741fe5d2547b",
-    "32ee9240-a8a0-47e4-a442-0dbdfe10e968"
+    "32ee9240-a8a0-47e4-a442-0dbdfe10e968",
+    "2b7942ff-3f27-4b3f-98e2-19bb72fcdbbc"
   ],
   "sessions": {
     "world": {
       "id": "0ed71ff1-2f40-44fa-a8e0-5c2bda6520d8",
-      "sequence": 4,
+      "sequence": 5,
       "baseHash": "22210a00-de08422-127180",
       "baseFingerprint": "516ab7b9-5e99839-675120",
       "base": {
@@ -18519,7 +18521,7 @@
           "blocked": true
         }
       },
-      "resultHash": "2a265ad6-19d9f8f0-130539"
+      "resultHash": "59eb045f-a0a43d6d-130554"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
