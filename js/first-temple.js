@@ -41,6 +41,7 @@ async function prepareExpandedFirstTemple(){
       m.roomActors.push({n:'Temple treasure',spr:'temple71_chest',schoolArt:true,x,y,editKey:id+':loot:'+i,
         moveBlocks:[block],houseLoot:{id:id+':loot:'+i,gold,item:gold>0?(i%2?'potion':'dragonFish'):null,templeReward:true}});
     }
+    if(!plan.heartstone)addSandspireCobwebs(m);
     W.maps[id]=m;
   }
   placeOtherTempleHeartstones();

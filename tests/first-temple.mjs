@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const plan=JSON.parse(read('assets/interiors/first-temple/layout.json'));
 const W={maps:{tp1:{doors:[{to:'world',tx:958,ty:272}],npcs:[{n:'Alderic'}]},world:{doors:[{to:'tp1'}]},sn1:{unchanged:true},ds1:{unchanged:true}}};
 const c=vm.createContext({W,fetch:async()=>({ok:true,json:async()=>structuredClone(plan)}),Image:class{async decode(){}},terrRLE:a=>'0.'+a.length,DIRT:0,CHESTS:[{map:'tp1',gift:'lightning'}],chestOpen:{},breathHas:{lightning:false},bossGone:{},foesHeld:false,foes:[],P:{},tAcc:0,sceneHold:()=>false,fadeDir:0,hurtPlayer(){},saveGame(){},toast(){}});
-vm.runInContext(read('js/first-temple.js'),c);const run=s=>vm.runInContext(s,c);await run('prepareExpandedFirstTemple()');
+vm.runInContext(read('js/first-temple.js'),c);vm.runInContext(read('js/sandspire-temple.js'),c);const run=s=>vm.runInContext(s,c);await run('prepareExpandedFirstTemple()');
 assert.equal(Object.keys(W.maps).filter(k=>W.maps[k].templeExpanded).length,5);
 assert.deepEqual(W.maps.sn1,{unchanged:true});assert.deepEqual(W.maps.ds1,{unchanged:true});
 const inside=(m,x,y)=>m.templeFloors.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b);

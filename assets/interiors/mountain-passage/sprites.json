@@ -4,48 +4,48 @@
     "w": 32,
     "h": 48,
     "frames": 6,
-    "src": "assets/interiors/mountain-passage/passage-torch.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-torch.png?v=20260924-passage3"
   },
   {
     "name": "passage_door",
     "w": 32,
     "h": 48,
     "frames": 4,
-    "src": "assets/interiors/mountain-passage/passage-door.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-door.png?v=20260924-passage3"
   },
   {
     "name": "passage_bars",
     "w": 32,
     "h": 48,
     "frames": 4,
-    "src": "assets/interiors/mountain-passage/passage-bars.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-bars.png?v=20260924-passage3"
   },
   {
     "name": "passage_vent",
     "w": 16,
     "h": 16,
     "frames": 1,
-    "src": "assets/interiors/mountain-passage/passage-vent.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-vent.png?v=20260924-passage3"
   },
   {
     "name": "passage_flame_r",
     "w": 112,
     "h": 32,
     "frames": 9,
-    "src": "assets/interiors/mountain-passage/passage-flame_r.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-flame_r.png?v=20260924-passage3"
   },
   {
     "name": "passage_saw",
     "w": 32,
     "h": 32,
     "frames": 6,
-    "src": "assets/interiors/mountain-passage/passage-saw.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-saw.png?v=20260924-passage3"
   },
   {
     "name": "passage_rail",
     "w": 92,
     "h": 3,
     "frames": 1,
-    "src": "assets/interiors/mountain-passage/passage-rail.png?v=20260924-passage2"
+    "src": "assets/interiors/mountain-passage/passage-rail.png?v=20260924-passage3"
   }
 ]

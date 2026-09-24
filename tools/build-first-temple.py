@@ -170,7 +170,7 @@ for id,m in layout.items():
     # Native floor padding extends a few pixels outside the walkable mask.
     # Give that apron the floor tint too, so no solid outline surrounds walls.
     elif (r,g,b,a) in APRON or (px//16*16,py//16*16) in floor:color=(round(light*.48+7),round(light*.52+8),round(light*.44+8),a)
-    else:color=(min(255,round(light*.88+16)),min(255,round(light*.72+12)),min(255,round(light*.48+8)),a)
+    else:shade=min(255,round(light*.82+12));color=(shade,shade,shade,a)
     pixels.append(color)
   im.putdata(pixels)
  im.save(temporary)

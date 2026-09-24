@@ -104,13 +104,13 @@ def tint(image,flame=False):
   light=(r*54+g*183+b*19)/256
   if flame:rgb=(round(light*.64+14),round(light*.95+15),round(light*.54+16))
   elif (r,g,b)==(83,93,111):rgb=(round(light*.48+7),round(light*.52+8),round(light*.44+8))
-  else:rgb=(round(light*.88+16),round(light*.72+12),round(light*.48+8))
+  else:rgb=(round(light*.82+12),)*3
   data.append(tuple(min(255,max(0,v)) for v in rgb)+(a,))
  out.putdata(data);return out
 specs=[]
 for name,source,flame in [('torch','torch77_sn1',True),('door','dragon77_door',False),('bars','dragon77_bars',False),
                          ('vent','flame78_vent',False),('flame_r','dragon75_flame_r',True),('saw','dragon75_saw',False),('rail','dragon75_rail',False)]:
  a,im=asset(source);file='passage-'+name+'.png';tint(im,flame).save(OUT/file)
- specs.append(dict(name='passage_'+name,w=a['w'],h=a['h'],frames=a['frames'],src='assets/interiors/mountain-passage/'+file+'?v=20260924-passage2'))
+ specs.append(dict(name='passage_'+name,w=a['w'],h=a['h'],frames=a['frames'],src='assets/interiors/mountain-passage/'+file+'?v=20260924-passage3'))
 (OUT/'sprites.json').write_text(json.dumps(specs,indent=2)+'\n')
 print(f'{len(plans)} sections, 89 rooms, {area(plans)} floor tiles (exactly Hollybeck), {count} chests, one original Ashfiend.')
