@@ -2927,6 +2927,114 @@
         "originX": 29560,
         "originY": 5120
       },
+      "door:34": {
+        "kind": "door",
+        "key": "34",
+        "index": 34,
+        "to": "house33",
+        "rect": {
+          "x": 24142,
+          "y": 1245,
+          "w": 24,
+          "h": 17
+        }
+      },
+      "door:35": {
+        "kind": "door",
+        "key": "35",
+        "index": 35,
+        "to": "house34",
+        "rect": {
+          "x": 24141,
+          "y": 1641,
+          "w": 19,
+          "h": 20
+        }
+      },
+      "door:36": {
+        "kind": "door",
+        "key": "36",
+        "index": 36,
+        "to": "house35",
+        "rect": {
+          "x": 24206,
+          "y": 1240,
+          "w": 21,
+          "h": 21
+        }
+      },
+      "door:37": {
+        "kind": "door",
+        "key": "37",
+        "index": 37,
+        "to": "house36",
+        "rect": {
+          "x": 24250,
+          "y": 1368,
+          "w": 16,
+          "h": 20
+        }
+      },
+      "door:38": {
+        "kind": "door",
+        "key": "38",
+        "index": 38,
+        "to": "house37",
+        "rect": {
+          "x": 24334,
+          "y": 1326,
+          "w": 25,
+          "h": 17
+        }
+      },
+      "door:39": {
+        "kind": "door",
+        "key": "39",
+        "index": 39,
+        "to": "house38",
+        "rect": {
+          "x": 24334,
+          "y": 1644,
+          "w": 23,
+          "h": 16
+        }
+      },
+      "door:40": {
+        "kind": "door",
+        "key": "40",
+        "index": 40,
+        "to": "house39",
+        "rect": {
+          "x": 24419,
+          "y": 1777,
+          "w": 17,
+          "h": 22
+        }
+      },
+      "door:41": {
+        "kind": "door",
+        "key": "41",
+        "index": 41,
+        "to": "house40",
+        "rect": {
+          "x": 24502,
+          "y": 1617,
+          "w": 23,
+          "h": 12
+        }
+      },
+      "door:42": {
+        "kind": "door",
+        "key": "42",
+        "index": 42,
+        "to": "house41",
+        "rect": {
+          "x": 24465,
+          "y": 1365,
+          "w": 18,
+          "h": 16
+        }
+      },
       "collision:1507,354": {
         "kind": "collision",
         "key": "1507,354",
@@ -6301,12 +6409,13 @@
     "f7911f92-a2ec-444a-ba38-3502798f95ac",
     "fe5504a9-4524-43fe-b427-db4d77c0aba1",
     "c3a7352f-e81f-404a-8352-9ee1e4771e84",
-    "37c8e61f-a639-4698-b171-74061938a65a"
+    "37c8e61f-a639-4698-b171-74061938a65a",
+    "8a7466a5-c8d6-4bb8-90d8-f4fc9f014023"
   ],
   "sessions": {
     "world": {
       "id": "3e348ee1-d7db-4267-8bcf-4417f85f5a4e",
-      "sequence": 4,
+      "sequence": 5,
       "baseHash": "ba00a515-f59348d1-41717",
       "baseFingerprint": "ae0643db-5e094b87-652331",
       "base": {
@@ -9098,7 +9207,7 @@
           "blocked": false
         }
       },
-      "resultHash": "c78bc84-11fc93a4-92330"
+      "resultHash": "6d77186c-bad214c-93275"
     }
   }
 }
