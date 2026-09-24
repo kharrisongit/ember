@@ -180,8 +180,8 @@
         "kind": "actor",
         "key": "actor:18:market_drinks_stall",
         "identity": "market_drinks_stall",
-        "x": 12573,
-        "y": 3261,
+        "x": 12584,
+        "y": 3232,
         "originX": 12516,
         "originY": 3395
       },
@@ -9330,12 +9330,13 @@
     "63ed0e88-220d-41c8-836f-4255f7ccac57",
     "b0a8f066-e200-4f35-ab14-e364269db1f2",
     "69efc8c0-5a5b-4be3-9887-c33f4528ae20",
-    "4415a4b7-fd36-4106-b885-a09d5cfd4d61"
+    "4415a4b7-fd36-4106-b885-a09d5cfd4d61",
+    "18c114e5-6aa1-4cdc-b1f9-1612934b4145"
   ],
   "sessions": {
     "world": {
       "id": "175919a2-d170-43f5-8052-d0eb3e6173b4",
-      "sequence": 4,
+      "sequence": 5,
       "baseHash": "17c1f3f9-cfbc07b3-113215",
       "baseFingerprint": "efa8ab13-276af4a3-653468",
       "base": {
@@ -16984,7 +16985,7 @@
           "blocked": true
         }
       },
-      "resultHash": "543b64a0-8a1ea9cc-124942"
+      "resultHash": "8a25d75a-541217c2-124942"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
