@@ -7757,6 +7757,163 @@
         "key": "5435,378",
         "blocked": true
       },
+      "object:4921": {
+        "kind": "object",
+        "key": "4921",
+        "sprite": 1168,
+        "x": 12360,
+        "y": 3072,
+        "originX": 12360,
+        "originY": 2992
+      },
+      "object:4922": {
+        "kind": "object",
+        "key": "4922",
+        "sprite": 1168,
+        "x": 12360,
+        "y": 2720,
+        "originX": 12376,
+        "originY": 2720
+      },
+      "object:4934": {
+        "kind": "object",
+        "key": "4934",
+        "sprite": 1168,
+        "x": 12568,
+        "y": 2720,
+        "originX": 12552,
+        "originY": 2720
+      },
+      "object:4904": {
+        "kind": "object",
+        "key": "4904",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12104,
+        "y": 2944,
+        "originX": 12104,
+        "originY": 2944
+      },
+      "object:4895": {
+        "kind": "object",
+        "key": "4895",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11880,
+        "y": 2944,
+        "originX": 11880,
+        "originY": 2944
+      },
+      "object:4877": {
+        "kind": "object",
+        "key": "4877",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11608,
+        "y": 3024,
+        "originX": 11608,
+        "originY": 3024
+      },
+      "object:4874": {
+        "kind": "object",
+        "key": "4874",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11608,
+        "y": 2736,
+        "originX": 11608,
+        "originY": 2736
+      },
+      "object:4864": {
+        "kind": "object",
+        "key": "4864",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11544,
+        "y": 2368,
+        "originX": 11544,
+        "originY": 2368
+      },
+      "object:4907": {
+        "kind": "object",
+        "key": "4907",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12184,
+        "y": 3024,
+        "originX": 12184,
+        "originY": 3024
+      },
+      "object:4880": {
+        "kind": "object",
+        "key": "4880",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11688,
+        "y": 3264,
+        "originX": 11688,
+        "originY": 3264
+      },
+      "object:4859": {
+        "kind": "object",
+        "key": "4859",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 11320,
+        "y": 3344,
+        "originX": 11320,
+        "originY": 3344
+      },
+      "object:4915": {
+        "kind": "object",
+        "key": "4915",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12280,
+        "y": 3392,
+        "originX": 12280,
+        "originY": 3392
+      },
+      "object:4927": {
+        "kind": "object",
+        "key": "4927",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12408,
+        "y": 2720,
+        "originX": 12408,
+        "originY": 2720
+      },
+      "object:4918": {
+        "kind": "object",
+        "key": "4918",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12360,
+        "y": 2640,
+        "originX": 12360,
+        "originY": 2640
+      },
+      "object:4938": {
+        "kind": "object",
+        "key": "4938",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12696,
+        "y": 2384,
+        "originX": 12696,
+        "originY": 2384
+      },
+      "object:4939": {
+        "kind": "object",
+        "key": "4939",
+        "sprite": 1168,
+        "deleted": true,
+        "x": 12712,
+        "y": 3088,
+        "originX": 12712,
+        "originY": 3088
+      },
       "collision:1506,385": {
         "kind": "collision",
         "key": "1506,385",
@@ -8468,12 +8625,13 @@
     "f037b458-cc13-4bdc-ba62-1a293044eef5",
     "ce60555d-11ec-40af-9bbc-5d30b36159d5",
     "75286d81-6bf9-4d1e-8eb3-00a98d78691c",
-    "63ed0e88-220d-41c8-836f-4255f7ccac57"
+    "63ed0e88-220d-41c8-836f-4255f7ccac57",
+    "b0a8f066-e200-4f35-ab14-e364269db1f2"
   ],
   "sessions": {
     "world": {
       "id": "175919a2-d170-43f5-8052-d0eb3e6173b4",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "17c1f3f9-cfbc07b3-113215",
       "baseFingerprint": "efa8ab13-276af4a3-653468",
       "base": {
@@ -16122,7 +16280,7 @@
           "blocked": true
         }
       },
-      "resultHash": "64eca84b-f0f20153-114111"
+      "resultHash": "dd8d4d08-97daf326-116050"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
