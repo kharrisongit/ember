@@ -9495,6 +9495,53 @@
         "originX": 120,
         "originY": 153
       }
+    },
+    "ds_sanctum": {
+      "actor:ds_sanctum:specimen:208": {
+        "kind": "actor",
+        "key": "ds_sanctum:specimen:208",
+        "identity": "scientist_flask",
+        "x": 228,
+        "y": 154,
+        "originX": 208,
+        "originY": 152
+      },
+      "actor:actor:8:first_temple_dragon_head": {
+        "kind": "actor",
+        "key": "actor:8:first_temple_dragon_head",
+        "identity": "first_temple_dragon_head",
+        "x": 230,
+        "y": 283,
+        "originX": 216,
+        "originY": 280
+      },
+      "actor:actor:9:temple67_sentinel": {
+        "kind": "actor",
+        "key": "actor:9:temple67_sentinel",
+        "identity": "temple67_sentinel",
+        "x": 211,
+        "y": 306,
+        "originX": 216,
+        "originY": 328
+      },
+      "actor:actor:5:first_temple_dragon_head": {
+        "kind": "actor",
+        "key": "actor:5:first_temple_dragon_head",
+        "identity": "first_temple_dragon_head",
+        "x": 120,
+        "y": 286,
+        "originX": 136,
+        "originY": 280
+      },
+      "actor:actor:6:temple67_sentinel": {
+        "kind": "actor",
+        "key": "actor:6:temple67_sentinel",
+        "identity": "temple67_sentinel",
+        "x": 141,
+        "y": 304,
+        "originX": 136,
+        "originY": 328
+      }
     }
   },
   "applied": [
@@ -9524,7 +9571,8 @@
     "18c114e5-6aa1-4cdc-b1f9-1612934b4145",
     "2372059f-7bd2-48e6-8feb-8146655dd490",
     "54088f85-6af4-470d-9977-5d7e79654b7f",
-    "98b04fb9-09bf-4226-84cc-979d2491c5eb"
+    "98b04fb9-09bf-4226-84cc-979d2491c5eb",
+    "ddba20d2-78fc-4718-8b41-9273438ad106"
   ],
   "sessions": {
     "world": {
@@ -17227,6 +17275,14 @@
       "baseFingerprint": "6f0147df-ce1380b9-3032",
       "base": {},
       "resultHash": "ad40e905-708718f1-311"
+    },
+    "ds_sanctum": {
+      "id": "3e7872b8-59a1-473a-9b28-32d0358e80b9",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "fee849a5-be83ef59-1913",
+      "base": {},
+      "resultHash": "bdb616f7-bb9bbaf5-837"
     }
   }
 }
