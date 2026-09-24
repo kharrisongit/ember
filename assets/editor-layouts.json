@@ -9455,6 +9455,26 @@
         "key": "21,47",
         "blocked": false
       }
+    },
+    "tp1_sanctum": {
+      "actor:actor:5:first_temple_dragon_head": {
+        "kind": "actor",
+        "key": "actor:5:first_temple_dragon_head",
+        "identity": "first_temple_dragon_head",
+        "x": 233,
+        "y": 284,
+        "originX": 216,
+        "originY": 280
+      },
+      "actor:actor:2:first_temple_dragon_head": {
+        "kind": "actor",
+        "key": "actor:2:first_temple_dragon_head",
+        "identity": "first_temple_dragon_head",
+        "x": 119,
+        "y": 283,
+        "originX": 136,
+        "originY": 280
+      }
     }
   },
   "applied": [
@@ -9482,7 +9502,8 @@
     "69efc8c0-5a5b-4be3-9887-c33f4528ae20",
     "4415a4b7-fd36-4106-b885-a09d5cfd4d61",
     "18c114e5-6aa1-4cdc-b1f9-1612934b4145",
-    "2372059f-7bd2-48e6-8feb-8146655dd490"
+    "2372059f-7bd2-48e6-8feb-8146655dd490",
+    "54088f85-6af4-470d-9977-5d7e79654b7f"
   ],
   "sessions": {
     "world": {
@@ -17169,6 +17190,14 @@
       "baseFingerprint": "b1dce6ba-aac1515c-93951",
       "base": {},
       "resultHash": "7743f131-f9711689-964"
+    },
+    "tp1_sanctum": {
+      "id": "be7256f8-97f0-461c-b3b7-cd78e67d5b45",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "f83d02ce-b29cbb74-2333",
+      "base": {},
+      "resultHash": "50bf1752-7fdab542-363"
     }
   }
 }
