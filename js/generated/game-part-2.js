@@ -185,7 +185,7 @@ function installRoyalCastle(){
    shiftActorData(m,a,east?width-34:34,height-14,true);
    const d=m.doors.find(d=>d.stairDown&&d.to===a.stairTo);
    if(d){
-    d.triggerRect={x:east?width-55:47,y:height-43,w:8,h:26};
+    d.triggerRect={x:east?width-39:31,y:height-43,w:8,h:26};
     d.x=d.triggerRect.x/TS;d.y=d.triggerRect.y/TS;
     d.dir=east?'r':'l';d.explicitDir=true;
    }
@@ -537,6 +537,7 @@ function stepDragonTempleTraps(dt){
  }
 }
 function drawDragonTempleTraps(){
+ if(MD?.hollybeck){drawHollybeckTraps();return;}
  if(!MD?.templeDragon)return;
  for(const a of MD.templeHazards){
   if(a.type==='flame'&&a.frame===0)continue;
@@ -1430,6 +1431,7 @@ async function buildHouseFurnitureLayers(){
   await prepareHouseLoot();
   await prepareExpandedFirstTemple();
   await prepareExpandedSandspireTemple();
+  await prepareExpandedHollybeckTemple();
 }
 /* === end household furniture layering === */
 
@@ -3622,7 +3624,7 @@ function drawWorld(t, dt) {
       }
       if(Number.isInteger(o.templeMachine))fr=MD.templeMachines[o.templeMachine].type==='cannon'?MD.templeMachines[o.templeMachine].frame:Math.min(2,MD.templeMachines[o.templeMachine].frame);
       if(o.houseLoot)fr=houseLootFrame(o);
-      if(o.sandspireExit){o.openT=Math.max(0,Math.min(1,(o.openT||0)+(sandspireDoorLocked(o.sandspireExit)?-dt:dt)*3));fr=Math.min(sp[4]-1,Math.floor(o.openT*sp[4]));}
+      if(o.sandspireExit||o.templeExitDoor){o.openT=Math.max(0,Math.min(1,(o.openT||0)+(expandedTempleDoorLocked(o.templeExitDoor||o.sandspireExit)?-dt:dt)*3));fr=Math.min(sp[4]-1,Math.floor(o.openT*sp[4]));}
       if(o.expandedGate)fr=Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
       if(o.expandedSpike)fr=expandedSpikeFrame(o.expandedSpike);
       if(o.expandedLever)fr=expandedTrapDisabled(o.expandedLever)?sp[4]-1:0;
@@ -7298,7 +7300,7 @@ function enemyMaxHp(kind, x, mapId = MAPID) {
   const base = (FOE[kind] || FOE.skeleton).hp;
   const late = mapId === "world"
     ? x >= ROUTE_2_HP_START_X
-    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_");
+    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_") || mapId.startsWith("sn_");
   return base * (late || mapId.startsWith("royal_") ? 2 : 1);
 }
 const FOE_ART = { treasuryknight:"kn3", royalguard:"kn", knight: "kn", devil1: "dv1", devil3: "dv3", skeleton1: "bs1", skeleton3: "bs3", mage1: "lc1", mage2: "lc2", shroomBrown: "ms1", eye2: "bh2", ent1: "ent1", ent2: "ent2", gnoll1: "gn1", gnoll3: "gn3", plant3: "pl3", reptile2: "rp2", reptile3: "rp3", reptile: "rp1", kdragon: "kd92", shroomRed: "ms2", shroomPurple: "ms3",

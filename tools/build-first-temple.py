@@ -6,28 +6,30 @@ ROOT=Path(__file__).resolve().parents[1]
 s=(ROOT/'js/generated/game-part-1.js').read_text()
 def asset(name):
  a=json.loads(re.search(r'\{"name":"'+name+r'"[^\n]*?\}',s)[0]);return Image.open(io.BytesIO(base64.b64decode(a['src'].split(',')[1]))).convert('RGBA')
-original=asset('first_temple_continuous');sheet=asset('wall78_sheet')
+folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
+snow=folder=='hollybeck-temple'
+FLOOR=(83,93,111,255) if snow else (102,94,85,255)
+original=asset('dragon75_interior' if snow else 'first_temple_continuous');sheet=asset('wall78_sheet')
 for map,x,y,sx,sy,*_ in json.loads(re.search(r'const WALL78_PIECES=(.*);',s)[1]):
- if map=='tp1':original.alpha_composite(sheet.crop((sx,sy,sx+16,sy+16)),(x,y))
-north=original.crop((112,32,128,80))
-west=original.crop((64,96,80,112));east=original.crop((240,96,256,112))
-left_pillar=original.crop((64,32,80,80));right_pillar=original.crop((240,32,256,80))
+ if map==('sn1' if snow else 'tp1'):original.alpha_composite(sheet.crop((sx,sy,sx+16,sy+16)),(x,y))
+north=original.crop((144,272,160,320) if snow else (112,32,128,80))
+west=original.crop((64,384,80,400) if snow else (64,96,80,112));east=original.crop((240,384,256,400) if snow else (240,96,256,112))
+left_pillar=original.crop((112,272,128,320) if snow else (64,32,80,80));right_pillar=original.crop((192,272,208,320) if snow else (240,32,256,80))
 left_cap=left_pillar.crop((0,0,16,16));right_cap=right_pillar.crop((0,0,16,16))
 # Reuse the original temple's cracked floor pixels. Each overlay keeps only
 # marks that differ from the base floor, so it can be scattered safely.
 floor_marks=[]
-for sy in range(96,1888,16):
+for sy in range(384 if snow else 96,1888,16):
  for sx in range(112,208,16):
   tile=original.crop((sx,sy,sx+16,sy+16)).copy();marked=False
   for py in range(16):
    for px in range(16):
-    if tile.getpixel((px,py))==(102,94,85,255):tile.putpixel((px,py),(0,0,0,0))
+    if tile.getpixel((px,py))==FLOOR:tile.putpixel((px,py),(0,0,0,0))
     else:marked=True
   if marked and sum(1 for py in range(16) for px in range(16) if tile.getpixel((px,py))[3])<=42:floor_marks.append(tile)
-folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
 layout=json.loads((ROOT/f'assets/interiors/{folder}/layout.json').read_text())
-VOID={(25,23,28,255),(25,23,30,255)}
-APRON={(102,94,85,255),(75,70,67,255)}
+VOID={(25,23,28,255),(25,23,30,255)}|({(24,23,28,255)} if snow else set())
+APRON={FLOOR} if snow else {FLOOR,(75,70,67,255)}
 def stamp_wall(im,tile,xy,floor_edge=False):
  # Source crops include opaque exterior padding and a floor/shadow apron.
  # Neither may erase masonry already drawn at a perpendicular junction.
@@ -94,7 +96,7 @@ for id,m in layout.items():
    for py in range(bottom,bottom+2):
     if not (0<=px<w and 0<=py<h):continue
     if (px//16*16,(bottom+2)//16*16) in floor:
-     im.putpixel((px,py),(102,94,85,255))
+     im.putpixel((px,py),FLOOR)
     elif any(ol<=px<orr and ob-46<=py<ob for ol,orr,ob in wall_ends if ob!=bottom):
      im.putpixel((px,py),north.getpixel((px%16,30+py-bottom)))
     elif (px//16*16,py//16*16) not in floor:
@@ -107,7 +109,7 @@ for id,m in layout.items():
       p=side.getpixel((px%16,14+py-bottom if side is not north else 30+py-bottom))
       if p not in VOID:im.putpixel((px,py),p)
  # A single floor mask prevents doubled seams or walls crossing a junction.
- for x,y in floor:im.paste((102,94,85,255),(x,y,x+16,y+16))
+ for x,y in floor:im.paste(FLOOR,(x,y,x+16,y+16))
  # Keep floor-colored crop padding only where it actually borders floor.
  # This removes the projecting sliver beneath south walls and corner feet.
  for py in range(h):
@@ -140,8 +142,9 @@ for id,m in layout.items():
    mark=floor_marks[(x//16*5+y//16*3)%len(floor_marks)].copy()
    for py in range(mark.height):
     for px in range(mark.width):
-     if im.getpixel((x+px,y+py))!=(102,94,85,255):mark.putpixel((px,py),(0,0,0,0))
+     if im.getpixel((x+px,y+py))!=FLOOR:mark.putpixel((px,py),(0,0,0,0))
    im.alpha_composite(mark,(x,y))
+  if 'preserveChamberOffset' in m and y<m['chambers'][1][3]:continue
   if any(min(h['lines'])-24<=(x if h['axis']=='x' else y)<=max(h['lines'])+24 and h['cross'][0]-16<=(y if h['axis']=='x' else x)<=h['cross'][1] for h in m.get('hazards',[])):continue
   treasures=[c[:2] for c in m['chests']]+([m['heartstone']] if 'heartstone' in m else [])
   if any(abs(x-cx)<32 and abs(y-cy)<32 for cx,cy in treasures):continue
@@ -150,5 +153,8 @@ for id,m in layout.items():
    # Some floor decorations exceed one tile; keep their full footprint off walls.
    if all((fx,fy) in floor for fx in range(x,x+detail.width,16) for fy in range(y,y+detail.height,16)):
     im.alpha_composite(detail,(x,y))
- im.save(ROOT/f'assets/interiors/{folder}/{id}.png')
+ target=ROOT/f'assets/interiors/{folder}/{id}.png'
+ temporary=target.with_suffix('.tmp.png')
+ im.save(temporary)
+ temporary.replace(target)
 print(f'Built {len(layout)} compact {folder} interiors with original 48-pixel walls and joined corner pillars.')

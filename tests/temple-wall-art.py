@@ -4,10 +4,13 @@ from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
+snow=folder=='hollybeck-temple'
+floor_color=(83,93,111,255) if snow else (102,94,85,255)
+apron={floor_color} if snow else {floor_color,(75,70,67,255)}
 plans=json.loads((ROOT/f'assets/interiors/{folder}/layout.json').read_text())
 checks=0
 seam_pixels=0
-void={(25,23,28,255),(25,23,30,255)}
+void={(25,23,28,255),(25,23,30,255)}|({(24,23,28,255)} if snow else set())
 for id,m in plans.items():
  im=Image.open(ROOT/f'assets/interiors/{folder}/{id}.png').convert('RGBA');floor=set()
  exits=[(d['x'],d['y']) for d in m['doors'] if d['dir']=='d']
@@ -30,7 +33,7 @@ for id,m in plans.items():
    for py in range(top,top+46):
     for px in range(x,x+16):
      if (px//16*16,py//16*16) in floor:continue
-     forbidden=void if (px,py) in trim else void|{(102,94,85,255),(75,70,67,255)}
+     forbidden=void if (px,py) in trim else void|apron
      assert im.getpixel((px,py)) not in forbidden,(id,'wall seam gap',px,py)
      seam_pixels+=1
    for offset in [8,24,40]:
@@ -50,35 +53,41 @@ for id,m in plans.items():
    checks+=1
 print(f'PASS: {checks} wall-face and side-edge samples, 46-pixel stone faces in 48-pixel tiles on all {len(plans)} maps.')
 print(f'PASS: {seam_pixels} masonry pixels checked across all wall faces and perpendicular joins; floor trim confined to native side outlines.')
-sanctum_id='ds_sanctum' if folder=='sandspire-temple' else 'tp1_sanctum'
+sanctum_id='sn_sanctum' if snow else 'ds_sanctum' if folder=='sandspire-temple' else 'tp1_sanctum'
 sanctum=plans[sanctum_id];im=Image.open(ROOT/f'assets/interiors/{folder}/{sanctum_id}.png').convert('RGBA')
 l,t,r,b=sanctum['chambers'][1]
+hall=next(f for f in sanctum['floors'] if f[1]==b and f[0]<=(sanctum['gate'][0]+sanctum['gate'][2])/2<f[2])
 for y in [b+46,b+47]:
- for x in list(range(l+16,sanctum['floors'][2][0]-16))+list(range(sanctum['floors'][2][2]+16,r-16)):
+ for x in list(range(l+16,hall[0]-16))+list(range(hall[2]+16,r-16)):
   assert im.getpixel((x,y)) in void,('floor protrudes below heartstone room',x,y)
 l,_,r,b=sanctum['gate']
 for x in [l-3,r+2]:
  for y in range(b-48,b-2):
-  assert im.getpixel((x,y)) not in void|{(102,94,85,255)},('gate jamb gap',x,y)
+  assert im.getpixel((x,y)) not in void|{floor_color},('gate jamb gap',x,y)
 print('PASS: heartstone south wall has no projecting floor; gate jambs meet both passage walls.')
 # Compare lower passage junctions with a real, intentionally retained upper cap.
-entry=Image.open(ROOT/'assets/interiors/first-temple/tp1.png').convert('RGBA')
-cap=entry.crop((84,20,92,28)).tobytes()
-assert entry.getpixel((88,24)) not in void|{(102,94,85,255)},'cap reference contains masonry'
-face=entry.crop((96,16,112,62)).tobytes()
+entry=Image.open(ROOT/('assets/interiors/hollybeck-temple/sn1.png' if snow else 'assets/interiors/first-temple/tp1.png')).convert('RGBA')
+offset=48 if snow else 0
+cap=entry.crop((84,20+offset,92,28+offset)).tobytes()
+assert entry.getpixel((88,24+offset)) not in void|{floor_color},'cap reference contains masonry'
+face=entry.crop((96,16+offset,112,62+offset)).tobytes()
 passages=0;hall_joins=0;horizontal_caps=0
 for id,m in plans.items():
  im=Image.open(ROOT/f'assets/interiors/{folder}/{id}.png').convert('RGBA')
  for p in m.get('passages',[]):
   x,b=p['x'],p['y'];passages+=1
+  joins_room=any(cb==b-48 and cl<x<cr for cl,ct,cr,cb in m['chambers'])
+  hall=next((rect for rect in m['floors'] if rect[1]==b and rect[0]<x<rect[2] and rect[3]>b),None) if joins_room else None
   for px in [x-19,x+18]:
    for py in range(b-48,b-2):
-    assert im.getpixel((px,py)) not in void|{(102,94,85,255)},(id,'doorway jamb gap',px,py)
+    assert im.getpixel((px,py)) not in void|{floor_color},(id,'doorway jamb gap',px,py)
   for px in [x-32,x+16]:
-   assert im.crop((px,b-48,px+16,b-2)).tobytes()==face,(id,'unwanted vertical strip beside door',px,b)
+   # A 32-pixel hall fits its end pillars directly beside the opening;
+   # wider halls retain ordinary masonry here and put pillars farther out.
+   if not hall or px not in [hall[0]-16,hall[2]]:
+    assert im.crop((px,b-48,px+16,b-2)).tobytes()==face,(id,'unwanted vertical strip beside door',px,b)
    assert im.crop((px+4,b+4,px+12,b+12)).tobytes()!=cap,(id,'extra lower pillar cap',px,b)
-  if any(cb==b-48 and cl<x<cr for cl,ct,cr,cb in m['chambers']):
-   hall=next(rect for rect in m['floors'] if rect[1]==b and rect[0]<x<rect[2] and rect[3]>b)
+  if joins_room:
    hall_joins+=1
    for px in [hall[0]-12,hall[2]+4]:
     assert im.crop((px,b-44,px+8,b-36)).tobytes()==cap,(id,'missing pillar top at south-wall hall join',px,b)
@@ -97,6 +106,6 @@ for id,m in plans.items():
  for l,t,r,b in m['floors']:
   for y in range(t,b):
    for x in range(l,r):
-    walkable+=1;textured+=im.getpixel((x,y))!=(102,94,85,255)
+    walkable+=1;textured+=im.getpixel((x,y))!=floor_color
  assert textured>walkable*.035,(id,'too few floor texture pixels',textured,walkable)
 print(f'PASS: original cracked-floor texture is distributed through all {len(plans)} temple maps.')

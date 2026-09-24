@@ -15,8 +15,8 @@ const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('const foeVisibleTopCache82')));
 run('installFirstTemple();installSecondTemple();installThirdTemple();refineSecondTemple();finishTempleLayouts77();refineTemples78();finishTempleLayouts82();');
-run(read('js/first-temple.js'));run(read('js/sandspire-temple.js'));
-await run('prepareExpandedFirstTemple()');await run('prepareExpandedSandspireTemple()');
+run(read('js/first-temple.js'));run(read('js/sandspire-temple.js'));run(read('js/hollybeck-temple.js'));
+await run('prepareExpandedFirstTemple()');await run('prepareExpandedSandspireTemple()');await run('prepareExpandedHollybeckTemple()');
 c.canStand=(x,y)=>[[x-6,y-12],[x+6,y-12],[x-6,y-1],[x+6,y-1]].every(([px,py])=>
  c.MD.templeFloors.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&
  !c.MD.roomBlocks.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&

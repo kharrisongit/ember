@@ -11,7 +11,7 @@ async function prepareExpandedFirstTemple(){
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
   for(const [id,plan] of Object.entries(layout)){
     const [width,height]=plan.size;
-    const m={w:width/16,h:height/16,ts:16,title:plan.title,spawn:plan.spawn,firstTemple:true,
+    const m={w:width/16,h:height/16,ts:16,title:'Forgewick Temple',spawn:plan.spawn,firstTemple:true,
       templeExpanded:true,travel:id==='tp1',travel_kind:'Temple',templeFloors:plan.floors,templePlan:plan,templeGateOpen:0,roomArt:'first_temple_continuous',
       _roomBaseCanvas:images[id],bg:'#19171c',floorbg:'#615b50',terr:terrRLE(Array(width*height/256).fill(DIRT)),
       objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],
@@ -68,6 +68,7 @@ async function prepareExpandedFirstTemple(){
   if(chestOpen.tp1||chestOpen.tp4||breathHas.lightning)chestOpen.tp1_sanctum=true;
   for(const id of Object.keys(layout)){
     const map=W.maps[id];
+    insetTempleSouthExits(map);
     for(const h of map.templePlan.hazards||[]){
       h.lines.forEach((line,i)=>{
         for(let cross=h.cross[0]+8;cross<h.cross[1];cross+=16){
@@ -77,6 +78,11 @@ async function prepareExpandedFirstTemple(){
       });
       map.roomActors.push({spr:'temple71_lever',x:h.lever[0],y:h.lever[1],schoolArt:true,expandedLever:h.id});
     }
+  }
+}
+function insetTempleSouthExits(map){
+  for(const door of map.doors)if(door.dir==='d'&&door.triggerRect&&!door.templeRecess){
+    door.triggerRect.y+=24;door.templeRecess=true;
   }
 }
 function placeOtherTempleHeartstones(){
@@ -106,6 +112,9 @@ function placeOtherTempleHeartstones(){
 function expandedSanctumCleared(){
   return foesHeld||breathHas.lightning||W.maps.tp1_sanctum.foes.every((_,i)=>bossGone['tp1_sanctum:'+i]);
 }
+function expandedTempleDoorLocked(door){
+  return !foesHeld&&!!(door.templeGuards||door.sandspireGuards)?.some(i=>!bossGone[MAPID+':'+i]);
+}
 function expandedTempleSolid(x,y){
   if(!MD?.templeExpanded)return false;
   if(!MD.templeFloors.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b))return true;
@@ -121,6 +130,7 @@ function expandedSpikeFrame(trap){
 function stepExpandedTemple(dt){
   if(!MD?.templeExpanded)return;
   if(MD.sandspire)stepSandspireTemple(dt);
+  if(MD.hollybeck)stepHollybeckTemple(dt);
   if(MAPID==='tp1_sanctum')MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(expandedSanctumCleared()?dt*3:0));
   for(const f of foes){
     if(!f.expandedRoom||f.st==='dead')continue;
@@ -136,5 +146,5 @@ function stepExpandedTemple(dt){
 function tryExpandedTempleLever(){
   const h=MD?.templePlan?.hazards?.find(h=>Math.hypot(P.x-h.lever[0],P.y-h.lever[1])<=28);
   if(!h)return false;
-  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
+  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire||MD.hollybeck?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
 }

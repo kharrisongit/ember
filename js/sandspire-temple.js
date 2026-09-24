@@ -10,7 +10,7 @@ async function prepareExpandedSandspireTemple(){
   }));
   for(const [id,image] of images){
     const plan=plans[id],[width,height]=plan.size;
-    const m=W.maps[id]={w:width/16,h:height/16,ts:16,title:plan.title,spawn:plan.spawn,
+    const m=W.maps[id]={w:width/16,h:height/16,ts:16,title:'Sandspire Temple',spawn:plan.spawn,
       sandspire:true,templeExpanded:true,templePlan:plan,templeFloors:plan.floors.map(r=>r.slice()),templeGateOpen:0,
       travel:id==='ds1',travel_kind:'Temple',roomArt:'scientist_interior',_roomBaseCanvas:image,
       bg:'#19171c',floorbg:'#615b50',terr:terrRLE(Array(width*height/256).fill(DIRT)),
@@ -98,6 +98,7 @@ async function prepareExpandedSandspireTemple(){
   Object.assign(chest,{map:'ds_sanctum',x:(sp.heartstone[0]-8)/16,y:(sp.heartstone[1]-16)/16});
   sanctum.roomBlocks.push([sp.heartstone[0]-14,sp.heartstone[1]-12,sp.heartstone[0]+14,sp.heartstone[1]+10]);
   if(chestOpen.ds1||chestOpen.ds4||breathHas.ice)chestOpen.ds_sanctum=true;
+  for(const id of Object.keys(plans))insetTempleSouthExits(W.maps[id]);
 }
 function addSandspireCobwebs(map){
   const plan=map.templePlan,treasures=plan.chests.map(c=>c.slice(0,2));
@@ -116,7 +117,7 @@ function addSandspireCobwebs(map){
   }
 }
 function sandspireDoorLocked(door){
-  return !foesHeld&&!!door.sandspireGuards?.some(i=>!bossGone[MAPID+':'+i]);
+  return expandedTempleDoorLocked(door);
 }
 function stepSandspireTemple(dt){
   if(MD.templePlan.gate){

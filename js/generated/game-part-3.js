@@ -4100,7 +4100,9 @@ function useDoors(dt) {
           bolts.length = 0;               /* nothing in flight follows you out */
       arrivedDoor = cameFrom;
       const nm = W.maps[d.to].title;
-      if (nm) { bannerName = nm; bannerT = 0; }
+      const insideTemple = MD.templeExpanded && W.maps[cameFrom]?.templeExpanded;
+      if (insideTemple) { bannerName = null; lastArea = nm; }
+      else if (nm) { bannerName = nm; bannerT = 0; }
       fadeDir = -1;
     } else if (fadeDir < 0 && fade <= 0) { fade = 0; fadeDir = 0; }
     return;
@@ -4121,12 +4123,13 @@ function useDoors(dt) {
     const half=(horizontal?r.h:r.w)/2+4;
     if(Math.abs(lateral-center)>half)continue;
     const gap=want==='u'?P.y-7-(y0+r.h):want==='d'?y0-(P.y-1):want==='l'?P.x-5.5-(x0+r.w):x0-(P.x+5.5);
-    if(gap>TS/2||gap<-(horizontal?r.w:r.h)-7)continue;
+    // Castle stairs begin at their inner tread, without the usual doorway reach.
+    if(gap>(candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
     const score = Math.abs(gap) + Math.abs(lateral - center) * 0.1;
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
-  if(MD.sandspire&&sandspireDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
+  if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
@@ -5515,7 +5518,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  templeLayoutVersion:2, sandspireLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>id.startsWith('tp1_')||id.startsWith('tp1:')||id.startsWith('ds_')||id.startsWith('ds1:'))),
+  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5572,15 +5575,17 @@ function loadGame(slot=activeSaveSlot) {
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
     houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
     potions=Math.max(0,s.potions|0);
-    for(const id of Object.keys(bossGone))if(id.startsWith('tp1_')||id.startsWith('tp1:')||id.startsWith('ds_')||id.startsWith('ds1:'))delete bossGone[id];
+    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:)/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     for(const m of Object.values(W.maps))if(m.templeExpanded){
       m.templeGateOpen=0;
       if(m.sandspire){m.templeClock=0;m.templeShots=[];for(const a of m.templeMachines){a.lastCycle=-1;a.frame=0;}for(const a of m.roomActors)if(a.sandspireExit)a.openT=0;}
+      if(m.hollybeck){m.templeClock=0;for(const a of m.templeHazards){a.frame=0;a.active=false;a.x=a.minX+12;}for(const a of m.roomActors)if(a.templeExitDoor)a.openT=0;}
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
+    if(W.maps[s.map]?.hollybeck&&s.hollybeckLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.templeExpanded&&s.templeLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);

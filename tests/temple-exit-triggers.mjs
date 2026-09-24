@@ -1,0 +1,65 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js'),assets=read('js/generated/game-part-1.js');
+const W={maps:{world:{npcs:[],doors:['tp1','ds1','sn1'].map(to=>({to}))}}};
+for(const prefix of ['tp','ds','sn'])for(let i=1;i<=4;i++)W.maps[prefix+i]={doors:[{to:'world',tx:1,ty:1}],npcs:[],travel:i===1};
+W.maps.tp4.npcs.push({n:'Alderic'});
+const buttons=[],list={innerHTML:'',appendChild:b=>buttons.push(b)};
+let travelClosed=false;
+const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
+ fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
+ breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
+ isArea:()=>false,playZoom:()=>1,clampCam(){},checkArea(){},setDevTitle(){},toast(){},setTravel:on=>{travelClosed=!on;},
+ document:{getElementById:()=>list,createElement:()=>({handlers:{},addEventListener(type,fn){this.handlers[type]=fn;}})}});
+const run=s=>vm.runInContext(s,c);
+run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
+run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('const foeVisibleTopCache82')));
+run('installFirstTemple();installSecondTemple();installThirdTemple();refineSecondTemple();finishTempleLayouts77();refineTemples78();finishTempleLayouts82();');
+run(read('js/first-temple.js'));run(read('js/sandspire-temple.js'));run(read('js/hollybeck-temple.js'));
+await run('prepareExpandedFirstTemple()');await run('prepareExpandedSandspireTemple()');await run('prepareExpandedHollybeckTemple()');
+
+Object.assign(c,{bossScene:null,foesHeld:true,foes:[],bossGone:{},doorMotion:null,fadeDir:0,fade:0,FADE_T:.22,pendingActorStage:null,pendingDoor:null,arriveT:0,
+ geometryEdits:{},actorLayouts:{},quest:2,Q:{ABED:0,ERRAND:1},bolts:[],bannerName:null,bannerT:0,lastArea:null,arrivedDoor:null,recoverTempleArrival(){}});
+c.loadMap=id=>{c.MAPID=id;c.MD=W.maps[id];c.features=c.MD.features||[];};
+run(game.slice(game.indexOf('function doorRect('),game.indexOf('function collisionOverride(')));
+run(part3.slice(part3.indexOf('function useDoors('),part3.indexOf('function drawArena(')));
+run(part3.slice(part3.indexOf('function areaUnder('),part3.indexOf('let arenaLock =')));
+run(part3.slice(part3.indexOf('let lastAreaTile ='),part3.indexOf('function drawBanner(')));
+const reset=(id,x,y,dir,flip=false)=>{c.loadMap(id);Object.assign(c,{doorMotion:null,fadeDir:0,fade:0,pendingDoor:null,arriveT:0});Object.assign(c.P,{x,y,dir,flip,moving:true});};
+const triggered=()=>c.doorMotion?.d||c.pendingDoor;
+const clear=(m,x,y)=>[[x-6,y-12],[x+6,y-12],[x-6,y-1],[x+6,y-1]].every(([px,py])=>
+ m.templeFloors.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&!m.roomBlocks.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b));
+let south=0,joins=0;
+for(const [id,m] of Object.entries(W.maps).filter(([id,m])=>m.templeExpanded)){
+ assert.equal(m.title,id.startsWith('tp')?'Forgewick Temple':id.startsWith('ds')?'Sandspire Temple':'Hollybeck Temple');
+ for(const d of m.doors){
+  if(d.dir==='d'){
+   south++;const r=d.triggerRect,x=r.x+r.w/2,mouth=r.y-24;
+   for(const depth of [-4,0,8,16]){reset(id,x,mouth+depth,'d');run('useDoors(0)');assert(!triggered(),id+' south exit too early at '+depth);}
+   for(const depth of [17,24,32]){assert(clear(m,x,mouth+depth),id+' deeper trigger reachable');reset(id,x,mouth+depth,'d');run('useDoors(0)');assert.equal(triggered(),d,id+' south exit works inside recess');}
+  }
+  if(!W.maps[d.to].templeExpanded)continue;
+  joins++;reset(id,0,0,'u');c.bannerName='Old room sign';c.pendingDoor=d;c.fadeDir=1;c.fade=1;
+  run('useDoors(0)');assert.equal(c.MAPID,d.to);assert.equal(c.bannerName,null,'no sign on temple room transition');
+  run('checkArea()');assert.equal(c.bannerName,null,'area check does not restore room sign');
+  c.fadeDir=0;c.fade=0;c.doorMotion=null;c.P.moving=true;run('useDoors(0)');assert(!triggered(),'arrival cooldown prevents bounce');
+ }
+}
+for(const id of ['tp1','ds1','sn1']){
+ reset('world',0,0,'u');c.pendingDoor=W.maps.world.doors.find(d=>d.to===id);c.fadeDir=1;c.fade=1;c.bannerName=null;
+ run('useDoors(0)');assert.equal(c.bannerName,W.maps[id].title,'temple entrance retains its sign');
+}
+const royal=JSON.parse(read('assets/game-assets.js').match(/window.EMBER_ASSETS.ROYAL_DATA = (.*);/)[1]);
+c.ROYAL_DATA=royal;W.maps.cinderhold={doors:[{to:'world'}],roomActors:[],roomBlocks:[]};W.maps.inn={npcs:[],roomActors:[]};
+run(game.slice(game.indexOf('function shiftActorData('),game.indexOf('function moveEditorActor(')));
+run(game.slice(game.indexOf('function installRoyalCastle('),game.indexOf('const KNIGHT_ARENA_ID')));run('installRoyalCastle()');
+let stairs=0;
+for(const [id,m] of Object.entries(W.maps).filter(([id,m])=>m.royal))for(const a of m.roomActors.filter(a=>a.stairTo)){
+ const d=m.doors.find(d=>d.stairDown&&d.to===a.stairTo),east=d.dir==='r',r=d.triggerRect,y=r.y+r.h/2+4,edge=east?r.x-5.5:r.x+r.w+5.5;
+ for(const distance of [24,16,8,1]){reset(id,edge+(east?-distance:distance),y,'s',!east);run('useDoors(0)');assert(!triggered(),id+' stair triggers before inner tread');}
+ reset(id,edge,y,'s',!east);run('useDoors(0)');assert.equal(triggered(),d,id+' stair inner tread triggers');assert.equal(c.doorMotion.duration,.65);
+ assert(Math.abs(edge-a.x)<12,'trigger inside staircase sprite');
+ reset(id,edge,y,'s',east);run('useDoors(0)');assert(!triggered(),'walking away does not descend');
+ const back=W.maps[d.to].doors.find(b=>b.to===id);reset(id,back.tx*16+8,back.ty*16+16,'s',!east);run('useDoors(0)');assert(!triggered(),'stair arrival safely outside trigger');stairs++;
+}
+assert(stairs>=8);console.log(`PASS: ${south} south exits trigger inside reachable recesses; ${stairs} castle stairs trigger at their inner tread; ${joins} temple transitions show no room signs.`);
