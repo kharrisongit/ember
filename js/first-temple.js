@@ -66,7 +66,7 @@ async function prepareExpandedFirstTemple(){
   sanctum.roomBlocks.push([sp.heartstone[0]-14,sp.heartstone[1]-12,sp.heartstone[0]+14,sp.heartstone[1]+10]);
   const [sx,sy]=sp.statue;
   sanctum.roomActors.push({spr:'temple73_fire_statue',x:sx,y:sy,schoolArt:true,
-    moveBlocks:[sanctum.roomBlocks.push([sx-16,sy-18,sx+16,sy])-1]});
+    moveBlocks:[sanctum.roomBlocks.push([sx-13,sy-14,sx+13,sy])-1]});
   if(chestOpen.tp1||chestOpen.tp4||breathHas.lightning)chestOpen.tp1_sanctum=true;
   for(const id of Object.keys(layout)){
     const map=W.maps[id];

@@ -151,6 +151,6 @@ function releaseChestGhost(id){
   const source=MD.foes[idx],x=source.x*TS+8,y=source.y*TS+16;
   foes.push({kind:source.k,x,y,hx:x,hy:y,hp:enemyMaxHp(source.k,x),st:'idle',t:0,dir:'d',flip:false,hurt:0,idx,
     expandedRoom:source.expandedRoom,chestAmbush:id,ambushFrom:source.ambushFrom,hold:1.4,holdMax:1.4,emerge:0});
-  showRise(source.ambushFrom.x,source.ambushFrom.y);
+  showRise(source.ambushFrom.x,source.ambushFrom.y,undefined,.8);
   rebuildBuckets();toast('A ghost bursts out of the chest!');
 }

@@ -3831,6 +3831,12 @@ function drawWorld(t, dt) {
         fr=foesHeld?sp[4]-1:Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));
       }
       if(foesHeld&&(MD.templeExpanded||MD.templeContinuous)&&(o.templeExit||o.templeExitDoor||o.sandspireExit||o.royalDoor))fr=sp[4]-1;
+      if(o.spr==='temple73_fire_statue'){
+        const height=sp[3]-TS,width=Math.round(sp[2]*height/sp[3]);
+        drawGameImage(ctx,sheetOf(sp),sp[0]+fr*sp[2],sp[1],sp[2],sp[3],
+          o.x-width/2,o.y-height,width,height);
+        continue;
+      }
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
       if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
@@ -7069,9 +7075,9 @@ function drawChest() {
   if (opening && opening.phase === "ghost" && SPR.ghost_rise) {
     const g = SPR.ghost_rise;
     const gf = Math.min(g[4] - 1, Math.floor(opening.t / CHEST_GHOST_FRAME_TIME));
-    // Preserve the old 3/4 artwork scale. The sheet already rises and dissolves;
-    // keep its shared source baseline (y=113) at the chest opening throughout.
-    const scale = 0.75;
+    // A smaller rise fits the temple camera. Keep the sheet's shared baseline
+    // (y=113) at the chest opening throughout the full animation.
+    const scale = 0.6;
     drawGameImage(ctx, atlasImg, g[0] + gf * g[2], g[1], g[2], g[3],
                   Math.round(c.x * TS + TS / 2 - g[2] * scale / 2),
                   Math.round(c.y * TS - 113 * scale), g[2] * scale, g[3] * scale);
@@ -8914,8 +8920,8 @@ function drawBlooms() {
                   sp[2], h);
   }
 }
-function showRise(x, y, col) {
-  risings.push({ x, y, t: 0, life: 2.6, col: col || [168, 92, 232] });
+function showRise(x, y, col, scale = 1) {
+  risings.push({ x, y, t: 0, life: 2.6, col: col || [168, 92, 232], scale });
 }
 function stepRise(dt) {
   if (!risings.length) return;
@@ -8931,6 +8937,7 @@ function drawRise() {
     const open = Math.min(1, p / 0.45);        /* the seam pulls apart */
     const fade = p < 0.70 ? 1 : 1 - (p - 0.70) / 0.30;
     ctx.save();
+    if(r.scale!==undefined&&r.scale!==1){ctx.translate(r.x,r.y);ctx.scale(r.scale,r.scale);ctx.translate(-r.x,-r.y);}
     const C = r.col.join(",");
     const Cm = r.col.map(v => Math.round(v * 0.42)).join(",");
     const spin = r.t * 2.4;

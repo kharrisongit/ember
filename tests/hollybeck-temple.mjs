@@ -17,6 +17,7 @@ run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('cons
 run('installFirstTemple();installSecondTemple();installThirdTemple();refineSecondTemple();finishTempleLayouts77();refineTemples78();finishTempleLayouts82();');
 run(read('js/first-temple.js'));run(read('js/sandspire-temple.js'));run(read('js/hollybeck-temple.js'));
 await run('prepareExpandedFirstTemple()');await run('prepareExpandedSandspireTemple()');const originalChamber=JSON.parse(JSON.stringify({actors:W.maps.sn1.roomActors.filter(a=>!a.editableWall&&a.y<512),blocks:W.maps.sn1.roomBlocks.filter(b=>b[1]<512)}));
+const originalChest=JSON.parse(JSON.stringify(run('CHESTS.find(c=>c.gift==="shadow")')));
 await run('prepareExpandedHollybeckTemple()');await run('prepareExpandedHollybeckTemple()');
 const plan=JSON.parse(read('assets/interiors/hollybeck-temple/layout.json')),sand=JSON.parse(read('assets/interiors/sandspire-temple/layout.json'));
 const maps=Object.entries(W.maps).filter(([id,m])=>m.hollybeck);
@@ -65,15 +66,23 @@ for(let i=0;i<route.length-1;i++){const id=route[i],m=W.maps[id],d=m.doors.find(
  const rooms=m.templePlan.chambers;assert((rooms[1][0]-rooms[0][0])*(rooms[3][0]-rooms[2][0])<0,'every main wing turns east AND west');}
 assert(routeLength>20000);
 const sanctum=W.maps.sn_sanctum,preserved=sanctum.roomActors.filter(a=>a.preservedHeartstoneProp);
-assert.equal(preserved.length,18);assert.equal(preserved.length,originalChamber.actors.length);
-for(const [i,a]of preserved.entries()){const b=originalChamber.actors[i];assert.equal(a.spr,b.spr);assert.equal(a.x,b.x);assert.equal(a.y,b.y-256);}
-for(const [l,t,r,b]of originalChamber.blocks)assert(sanctum.roomBlocks.some(box=>box.join(',')===[l,t-256,r,b-256].join(',')));
+assert.equal(preserved.length,12);assert(!preserved.some(a=>a.spr==='scientist_gold'));
+for(const [i,b]of originalChamber.actors.entries()){
+ if(b.spr==='scientist_gold')continue;
+ const a=preserved.find(a=>a.editKey==='sn_sanctum:original:'+i);assert(a);assert.equal(a.spr,b.spr);
+ assert.equal(a.x,b.x+(b.spr==='dragon75_banner_red'?(b.x<160?14:-14):0));assert.equal(a.y,b.y-256);
+}
+for(const [l,t,r,b]of originalChamber.blocks){
+ const isChest=Math.abs((l+r)/2-(originalChest.x*16+8))<3&&Math.abs(b-(originalChest.y*16+16))<2&&r-l<32;
+ const expected=isChest?[150,128,170,136]:[l,t-256,r,b-256];
+ assert(sanctum.roomBlocks.some(box=>box.join(',')===expected.join(',')));
+}
 const heart=plan.sn_sanctum.heartstone;assert(!flood(sanctum,true).has([heart[0],heart[1]+32].join(',')));assert(flood(sanctum).has([heart[0],heart[1]+32].join(',')));
 c.MD=sanctum;c.MAPID='sn_sanctum';run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,0);
 c.bossGone['sn_sanctum:0']=true;run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,0);
 c.bossGone['sn_sanctum:1']=true;run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,1);
 assert(sanctum.foes.every(f=>f.k==='golem2'));assert.equal(run('CHESTS.find(c=>c.gift==="shadow").map'),'sn_sanctum');
-console.log(`PASS: ${maps.length} sections / 89 compact rooms, ${(area(plan)/area(sand)).toFixed(2)}× Sandspire, ${routeLength}px main route, 39 horizontal links, 9 side branches; all doors, chests, enemies and levers reachable; all 18 original chamber props preserved.`);
+console.log(`PASS: ${maps.length} sections / 89 compact rooms, ${(area(plan)/area(sand)).toFixed(2)}× Sandspire, ${routeLength}px main route, 39 horizontal links, 9 side branches; all doors, chests, enemies and levers reachable; gold removed, banners inset and chest collision moved with the chest.`);
 for(const [id,m] of maps)for(const a of m.roomActors.filter(a=>a.houseLoot)){
  c.MD=m;c.MAPID=id;run('spawnFoes()');c.P={x:a.x,y:a.y+24};const before=c.foes.length,noticeCount=notices,riseCount=rises,oldGold=c.gold;
  assert(run('tryHouseLootChest()'));assert(run('tryHouseLootChest()'));assert.equal(c.gold,oldGold+a.houseLoot.gold);assert.equal(c.foes.length,before);

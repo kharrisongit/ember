@@ -1,7 +1,7 @@
 /* Hollybeck: twenty sections with east/west switchbacks and the original skull chamber. */
 async function prepareExpandedHollybeckTemple(){
   if(W.maps.sn1.hollybeck)return;
-  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260924-golems1');
+  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260924-sanctum2');
   if(!response.ok)throw Error('Hollybeck temple layout could not load');
   const plans=await response.json(),old=W.maps.sn1,outside=old.doors.find(d=>d.to==='world');
   const chamberProps=old.roomActors.filter(o=>!o.editableWall&&o.y<512).map(o=>({...o}));
@@ -71,14 +71,22 @@ async function prepareExpandedHollybeckTemple(){
   if(worldDoor){worldDoor.tx=(entry.spawn[0]-8)/16;worldDoor.ty=(entry.spawn[1]-16)/16;}
   const sanctum=W.maps.sn_sanctum,plan=sanctum.templePlan,[dx,dy]=plan.preserveChamberOffset;
   sanctum.roomActors.push({spr:'dragon77_bars',x:160,y:plan.gate[3],schoolArt:true,expandedGate:true,editKey:'sn_sanctum:gate'});
+  const chest=CHESTS.find(c=>c.gift==='shadow'),oldChestX=chest.x*16+8,oldChestY=chest.y*16+16;
   const blockStart=sanctum.roomBlocks.length;
-  sanctum.roomBlocks.push(...chamberBlocks.map(([l,t,r,b])=>[l+dx,t+dy,r+dx,b+dy]));
+  sanctum.roomBlocks.push(...chamberBlocks.map(([l,t,r,b])=>{
+    if(Math.abs((l+r)/2-oldChestX)<3&&Math.abs(b-oldChestY)<2&&r-l<32){
+      const [x,y]=plan.heartstone;return [x-10,y-8,x+10,y];
+    }
+    return [l+dx,t+dy,r+dx,b+dy];
+  }));
   for(const [i,actor] of chamberProps.entries()){
+    // Keep the original keys for the remaining props when removing the gold.
+    if(actor.spr==='scientist_gold')continue;
     const blocks=chamberBlocks.flatMap(([l,t,r,b],j)=>actor.x>=l&&actor.x<=r&&Math.abs(b-actor.y)<4?[blockStart+j]:[]);
-    sanctum.roomActors.push({...actor,x:actor.x+dx,y:actor.y+dy,sy:actor.sy>=0?actor.sy+dy:actor.sy,
+    const x=actor.x+dx+(actor.spr==='dragon75_banner_red'?(actor.x<160?14:-14):0);
+    sanctum.roomActors.push({...actor,x,y:actor.y+dy,sy:actor.sy>=0?actor.sy+dy:actor.sy,
       preservedHeartstoneProp:true,editKey:'sn_sanctum:original:'+i,moveBlocks:blocks});
   }
-  const chest=CHESTS.find(c=>c.gift==='shadow');
   Object.assign(chest,{map:'sn_sanctum',x:(plan.heartstone[0]-8)/16,y:(plan.heartstone[1]-16)/16});
   if(chestOpen.sn1||chestOpen.sn4||breathHas.shadow)chestOpen.sn_sanctum=true;
   for(const id of Object.keys(plans))insetTempleSouthExits(W.maps[id]);
