@@ -106,15 +106,18 @@ function stepHollybeckTemple(dt){
 }
 function drawHollybeckTraps(){
   for(const a of MD.templeHazards){
-    ctx.save();ctx.beginPath();ctx.rect(a.minX,a.y-24,a.maxX-a.minX,32);ctx.clip();
+    ctx.save();ctx.beginPath();ctx.rect(a.minX,a.y-16,a.maxX-a.minX,32);ctx.clip();
     if(a.type==='saw'){
-      const rail=SPR.dragon75_rail;
+      const rail=SPR.dragon75_rail,sp=SPR.dragon75_saw;
       drawGameImage(ctx,sheetOf(rail),rail[0],rail[1],rail[2],rail[3],(a.minX+a.maxX-rail[2])/2,a.y-1,rail[2],rail[3]);
-    }
-    if(a.type==='saw'||a.frame>0){
-      const sp=SPR['dragon75_'+(a.type==='saw'?'saw':'flame_'+(a.dir>0?'r':'l'))];
-      const x=a.type==='saw'?a.x:(a.dir>0?a.minX+sp[2]/2-12:a.maxX-sp[2]/2+12);
-      drawGameImage(ctx,sheetOf(sp),sp[0]+a.frame*sp[2],sp[1],sp[2],sp[3],Math.round(x-sp[2]/2),a.y-16,sp[2],sp[3]);
+      drawGameImage(ctx,sheetOf(sp),sp[0]+a.frame*sp[2],sp[1],sp[2],sp[3],Math.round(a.x-sp[2]/2),a.y-16,sp[2],sp[3]);
+    }else if(a.frame>0){
+      // The left sheet has different transparent padding. Mirror the right
+      // sheet at the wall instead, and omit its baked-in nozzle (pixels 0–15).
+      // The separate wall vent supplies the nozzle for both directions.
+      const sp=SPR.dragon75_flame_r,nozzle=16;
+      ctx.translate(a.dir>0?a.minX:a.maxX,a.y-sp[3]/2);ctx.scale(a.dir,1);
+      drawGameImage(ctx,sheetOf(sp),sp[0]+a.frame*sp[2]+nozzle,sp[1],sp[2]-nozzle,sp[3],0,0,sp[2]-nozzle,sp[3]);
     }
     ctx.restore();
   }
