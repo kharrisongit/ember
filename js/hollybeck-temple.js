@@ -1,7 +1,7 @@
 /* Hollybeck: twenty sections with east/west switchbacks and the original skull chamber. */
 async function prepareExpandedHollybeckTemple(){
   if(W.maps.sn1.hollybeck)return;
-  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260924-hollybeck1');
+  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260924-golems1');
   if(!response.ok)throw Error('Hollybeck temple layout could not load');
   const plans=await response.json(),old=W.maps.sn1,outside=old.doors.find(d=>d.to==='world');
   const chamberProps=old.roomActors.filter(o=>!o.editableWall&&o.y<512).map(o=>({...o}));
@@ -30,7 +30,7 @@ async function prepareExpandedHollybeckTemple(){
         ...(d.sealed?{templeExitDoor:door}:{royalDoor:true})});
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
-    for(const p of plan.passages)m.roomActors.push({spr:'dragon77_door',x:p.x,y:p.y,schoolArt:true,
+    for(const p of plan.passages.filter(p=>!plan.doors.some(d=>d.dir==='u'&&d.x===p.x&&d.y===p.y)))m.roomActors.push({spr:'dragon77_door',x:p.x,y:p.y,schoolArt:true,
       inlineTempleDoor:true,...(p.mode==='open'?{stillFrame:3}:{templePassDoor:true})});
     for(const [i,[x,y,gold,kind,enemy]] of plan.chests.entries()){
       const room=plan.chambers.find(([l,t,r,b])=>x>l&&x<r&&y>t&&y<b),lootId=id+':loot:'+i;

@@ -66,7 +66,7 @@ for(const [id,m] of maps){
   for(let y=t+8;y<b;y+=16)for(const x of [l,r])if(floor(x===l?x-1:x,y))
    assert(bases.some(([bx,by])=>bx===x&&Math.abs(by-y)<=8),id+' side hall sealed visually');
   for(let x=l+8;x<r;x+=16)for(const y of [t,b])if(floor(x,y===t?y-1:y))
-   assert(bases.some(([bx,by])=>bx===x&&by===y),id+' vertical hall sealed visually');
+   assert(bases.some(([bx,by])=>bx===x&&by===(y===b?y+32:y)),id+' vertical hall sealed visually');
   const hallPoints=[];
   for(let y=t+8;y<b;y+=16)for(const x of [l-1,r])if(floor(x,y))hallPoints.push([x,y]);
   for(let x=l+8;x<r;x+=16)for(const y of [t-1,b])if(floor(x,y))hallPoints.push([x,y]);

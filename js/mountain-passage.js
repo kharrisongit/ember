@@ -34,7 +34,7 @@ async function prepareExpandedMountainPassage(){
         ...(d.sealed?{templeExitDoor:door}:{royalDoor:true})});
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
-    for(const p of plan.passages)m.roomActors.push({spr:'passage_door',x:p.x,y:p.y,schoolArt:true,
+    for(const p of plan.passages.filter(p=>!plan.doors.some(d=>d.dir==='u'&&d.x===p.x&&d.y===p.y)))m.roomActors.push({spr:'passage_door',x:p.x,y:p.y,schoolArt:true,
       inlineTempleDoor:true,...(p.mode==='open'?{stillFrame:3}:{templePassDoor:true})});
     for(const [i,[x,y,gold,kind,enemy]] of plan.chests.entries()){
       const room=plan.chambers.find(([l,t,r,b])=>x>l&&x<r&&y>t&&y<b),lootId=id+':loot:'+i;
@@ -82,7 +82,7 @@ async function prepareExpandedMountainPassage(){
   finale.doors.push({x:(ax-8)/16,y:(ay-16)/16,to:'world',tx:ashExit.tx,ty:ashExit.ty,dir:'u',explicitDir:true,
     triggerRect:{x:ax-16,y:ay-16,w:32,h:16}});
   finale.roomActors.push({spr:'passage_bars',x:160,y:plan.gate[3],schoolArt:true,expandedGate:true,editKey:'passage3:mountain1:gate'},
-    {spr:'passage_door',x:ax,y:ay,schoolArt:true,templeExit:true,royalDoor:true,editKey:'passage3:mountain1:exit'});
+    {spr:'wf_cave_big',x:ax,y:ay,schoolArt:true,stillFrame:0,editKey:'passage3:mountain1:exit'});
   for(const d of W.maps.world.doors){
     const arrival=d.to==='passage'?entry.spawn:d.to==='passage3'?plan.ashcragArrival:null;
     if(arrival){d.tx=(arrival[0]-8)/16;d.ty=(arrival[1]-16)/16;}

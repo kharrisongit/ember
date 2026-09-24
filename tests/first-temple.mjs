@@ -36,7 +36,7 @@ assert.equal(sideways.length,3,'occasional horizontal links between northern win
 assert(northLength>4*sideways.reduce((n,[l,t,r,b])=>n+r-l,0),'north-running halls dominate the layout');
 assert.deepEqual(plan.tp1_sanctum.chambers,[[80,288,272,400],[112,64,256,160]],'guardian and heartstone room sizes preserved');
 const sanctum=W.maps.tp1_sanctum;
-assert.deepEqual([...new Set(Object.values(plan).flatMap(m=>m.enemies.map(f=>f[0])).filter(k=>k.startsWith('golem')))],['golem2'],'Forgewick uses only its Iron Golem');
+assert.deepEqual([...new Set(Object.values(plan).flatMap(m=>m.enemies.map(f=>f[0])).filter(k=>k.startsWith('golem')))],['golem4'],'Forgewick uses only its gray Granite Golem');
 const ornaments=sanctum.roomActors.filter(a=>a.entranceOrnament);
 for(const spr of ['first_temple_torch','first_temple_dragon_head','temple67_sentinel']){
  const pair=ornaments.filter(a=>a.spr===spr);assert.equal(pair.length,2);
@@ -56,7 +56,7 @@ assert.equal(edges.size,4);assert.equal(W.maps.tp1_reliquary.doors.length,1);ass
 console.log('PASS: five compact branching maps, all door approaches and arrivals, eight reachable chests, valid enemy spawns, guardian gate, single progression route, optional dead ends and untouched other temples.');
 // Exercise the real spawn/death hooks: cleared encounters stay cleared on return.
 const game=read('js/generated/game-part-2.js');
-Object.assign(c,{FOE:{ghost:{},golem1:{},golem2:{}},enemyMaxHp:()=>10,TS:16,NO_RESPAWN:/golem/,royalDefeated:{},knightEncounterDone:false,saveGame(){}});
+Object.assign(c,{FOE:{ghost:{},golem1:{},golem4:{}},enemyMaxHp:()=>10,TS:16,NO_RESPAWN:/golem/,royalDefeated:{},knightEncounterDone:false,saveGame(){}});
 vm.runInContext(game.slice(game.indexOf('function spawnFoes() {'),game.indexOf('function swordOverlaps(')),c);
 vm.runInContext(game.slice(game.indexOf('function markBossGone(f) {'),game.indexOf('function bossRing(')),c);
 c.MD=W.maps.tp1_crypt;c.MAPID='tp1_crypt';run('spawnFoes()');assert.equal(c.foes.length,3);

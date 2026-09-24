@@ -28,7 +28,7 @@ const clear=(m,x,y,gate=false)=>[[x-6,y-12],[x+6,y-12],[x-6,y-1],[x+6,y-1]].ever
 function flood(m,gate=false){const start=m.spawn.map(n=>Math.round(n/8)*8),dist=new Map([[start.join(','),0]]),q=[start];for(let i=0;i<q.length;i++){
  const [x,y]=q[i];for(const n of [[x-8,y],[x+8,y],[x,y-8],[x,y+8]]){const k=n.join(',');if(!dist.has(k)&&clear(m,...n,gate)){dist.set(k,dist.get(q[i].join(','))+8);q.push(n);}}}return dist;}
 let clock=0,notices=0,rises=0,hits=0,saved=null;
-Object.assign(c,{performance:{now:()=>clock},FOE:{ghost3:{hp:6},wraith:{hp:8},golem3:{hp:16}},NO_RESPAWN:/golem/,
+Object.assign(c,{performance:{now:()=>clock},FOE:{ghost3:{hp:6},wraith:{hp:8},golem2:{hp:16}},NO_RESPAWN:/golem/,
  bossGone:{},royalDefeated:{},knightEncounterDone:false,foesHeld:false,foes:[],gold:0,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,tAcc:0,
  sceneHold:()=>false,fadeDir:0,flyGold(){},showReveal(){assert.fail("Loot must not open a full-screen reveal");},toast(){notices++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){}});
 run(read('js/house-loot.js'));
@@ -72,7 +72,7 @@ const heart=plan.sn_sanctum.heartstone;assert(!flood(sanctum,true).has([heart[0]
 c.MD=sanctum;c.MAPID='sn_sanctum';run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,0);
 c.bossGone['sn_sanctum:0']=true;run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,0);
 c.bossGone['sn_sanctum:1']=true;run('stepExpandedTemple(1)');assert.equal(sanctum.templeGateOpen,1);
-assert(sanctum.foes.every(f=>f.k==='golem3'));assert.equal(run('CHESTS.find(c=>c.gift==="shadow").map'),'sn_sanctum');
+assert(sanctum.foes.every(f=>f.k==='golem2'));assert.equal(run('CHESTS.find(c=>c.gift==="shadow").map'),'sn_sanctum');
 console.log(`PASS: ${maps.length} sections / 89 compact rooms, ${(area(plan)/area(sand)).toFixed(2)}× Sandspire, ${routeLength}px main route, 39 horizontal links, 9 side branches; all doors, chests, enemies and levers reachable; all 18 original chamber props preserved.`);
 for(const [id,m] of maps)for(const a of m.roomActors.filter(a=>a.houseLoot)){
  c.MD=m;c.MAPID=id;run('spawnFoes()');c.P={x:a.x,y:a.y+24};const before=c.foes.length,noticeCount=notices,riseCount=rises,oldGold=c.gold;

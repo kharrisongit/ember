@@ -42,7 +42,7 @@ for i,(id,title) in enumerate(branches):
 # Preserve the original stepped skull chamber, translated upward by 256 px.
 plans['sn_sanctum']=dict(title='Hollybeck Temple — Shadow Heart Sanctum',size=[320,688],spawn=[160,592],
  chambers=[[64,512,256,624],[80,112,240,256]],floors=[[64,512,256,624],[80,112,240,256],[128,64,192,112],[144,256,176,304],[144,304,176,512]],
- chests=[],enemies=[['golem3',112,552,[64,512,256,624]],['golem3',208,576,[64,512,256,624]]],
+ chests=[],enemies=[['golem2',112,552,[64,512,256,624]],['golem2',208,576,[64,512,256,624]]],
  doors=[],passages=[dict(x=160,y=304,mode='open')],hazards=[],gate=[144,400,176,416],heartstone=[224,136],preserveChamberOffset=[0,-256],mainRoute=True)
 def connect(a,roomIndex,b,sealed=False):
  room=plans[a]['chambers'][roomIndex];x=(room[0]+room[2])//2;y=room[1]

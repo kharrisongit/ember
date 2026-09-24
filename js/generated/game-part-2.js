@@ -27,6 +27,33 @@ async function loadDockOriginalAssets(){
     registerAtlasPage({img:sheet,x:0,y:a.atlasY,w:a.w*a.frames,h:a.h});
   }
 }
+// Gray stone is derived from every original Sandspire frame at load time.
+// Geometry, timing and alpha stay identical to the brown source sheets.
+function registerStoneGolemSprites(){
+  let y=1228800;
+  for(const [name,sp] of Object.entries(SPR).filter(([name])=>name.startsWith('gm1_'))){
+    const image=document.createElement('canvas');image.width=sp[2]*sp[4];image.height=sp[3];
+    const g=image.getContext('2d');g.imageSmoothingEnabled=false;
+    drawGameImage(g,sheetOf(sp),sp[0],sp[1],image.width,image.height,0,0,image.width,image.height);
+    const pixels=g.getImageData(0,0,image.width,image.height),data=pixels.data;
+    for(let i=0;i<data.length;i+=4){
+      if(!data[i+3])continue;
+      const shade=Math.min(255,Math.round((data[i]*.299+data[i+1]*.587+data[i+2]*.114)*.95+12));
+      data[i]=data[i+1]=data[i+2]=shade;
+    }
+    g.putImageData(pixels,0,0);
+    registerAtlasPage({img:image,x:0,y,w:image.width,h:image.height});
+    SPR[name.replace('gm1_','gm4_')]=[0,y,sp[2],sp[3],sp[4]];
+    y+=Math.ceil(image.height/1024)*1024;
+  }
+}
+function installLavaGolem(){
+  const m=W.maps.world;
+  const arena=m.features.filter(a=>a.kind==='arena'&&a.style==='volcano').sort((a,b)=>(a._at||a.x)-(b._at||b.x)).at(-1);
+  if(!arena||m.foes.some(f=>f.lavaGolem))return;
+  // Append to preserve the saved defeat IDs of every existing overworld enemy.
+  m.foes.push({k:'golem3',x:arena.x,y:arena.y,lavaGolem:true});
+}
 function registerDesertNpcSprites() {
   for(let i=1;i<=4;i++)for(const [row,suffix]of ['idle','sidle','uidle'].entries())
     SPR['npc_desert'+i+'_'+suffix]=[0,1030144+(i-1)*1024+row*21,16,21,6];
@@ -254,6 +281,48 @@ function installFishingVillager() {
     dv:['Even the falls sound gentler without Halvard casting a shadow over the valley.'],
     dv2:['You have earned a quiet afternoon here, Corin. Cast a line and let the world wait.']
   });
+}
+function installFerrySigns(){
+  const m=W.maps.world,f=m.ferry;if(!f)return;
+  m.roomActors||=[];m.roomBlocks||=[];
+  for(const [i,land] of [f.land_a,f.land_b].entries()){
+    const x=(land[0]+1)*16+8,y=land[1]*16+16,key='swamp:ferry-sign:'+i;
+    if(m.roomActors.some(a=>a.editKey===key))continue;
+    m.roomActors.push({spr:'signpost',x,y,schoolArt:true,stillFrame:0,ferrySign:true,editKey:key,
+      moveBlocks:[m.roomBlocks.push([x-5,y-6,x+5,y])-1]});
+  }
+}
+function villageStandSize(){return {scale:1.25,headroom:12};}
+function prepareVillageStands(){
+  for(const [id,m] of Object.entries(W.maps)){
+    m.marketStands=[];
+    for(let i=0;i<(m.objs||[]).length;i+=3){
+      const spr=W.names[m.objs[i]],x=m.objs[i+1],y=m.objs[i+2];
+      if(!/^stall[123]$/.test(spr)||(id==='world'&&x>=700*16&&x<=900*16))continue;
+      const n=(m.npcs||[]).find(n=>n.counter&&Math.hypot(n.counter.x-x,n.counter.y-y)<4);
+      const stand={objectId:i/3,spr,x,y};m.marketStands.push(stand);
+      const def=W.defs[m.objs[i]];
+      if(def?.c)def.c=[56,22];
+      if(!n)continue;
+      const sp=SPR[n.packSpr+'_idle_d']||SPR[n.packSpr]||SPR['npc_'+n.sk+'_d'];
+      const edge=y-18;
+      // Put the face in the expanded opening and mask the body below the counter.
+      Object.assign(n,{x,y:edge+(sp?.[3]||32)-22,sy:y-1,seatClipY:edge,
+        stationary:true,patrol:undefined,goto:undefined,f:'d',seated:false,
+        talkX:x,talkY:y+14,counter:{x,y}});
+    }
+  }
+}
+function drawVillageStand(o,front=false){
+  const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
+  const x=Math.round(o.x-s[2]*scale/2),bottom=o.y,h=Math.round(s[3]*scale)+headroom;
+  if(front){
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],s[3]-24,x,bottom-18,Math.round(s[2]*scale),18);
+  }else{
+    // Extend just the posts through the new headroom; keep the native canopy.
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],8,x,bottom-h+20,Math.round(s[2]*scale),h-38);
+    drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
+  }
 }
 function installMarketCounters(){
   const world=W.maps.world;
@@ -1312,7 +1381,7 @@ function applyWorld(text) {
       }
     }
   }
-  installKnightEncounter(); numberAllArenas();
+  installKnightEncounter(); numberAllArenas(); installLavaGolem();
   installFishingVillager();
   installMarketCounters();
   // Working craftspeople keep their original animated workshop scenes.
@@ -1388,6 +1457,8 @@ function applyWorld(text) {
       if(Number.isFinite(seated.seatClipY))chair.chairClipY=seated.seatClipY;
     }
   }
+  prepareVillageStands();
+  installFerrySigns();
   NAMES = W.names; TS = W.ts; MAPID = W.start;
   NAMES.forEach((n, i) => { NAME2I[n] = i; });
   for (const k in W.defs) DEFS[k | 0] = W.defs[k];
@@ -1407,6 +1478,7 @@ async function inflateAtlas() {
   registerRoyalSprites();
   registerDesertNpcSprites();
   registerDockOriginalSprites();
+  registerStoneGolemSprites();
   TERRT = ATLAS.terrain;
   GROUND_SETS = ATLAS.ground_sets || {};
   GROUND_FRINGE = ATLAS.ground_fringe || {};
@@ -2228,7 +2300,7 @@ function movePlayer(dx, dy, dt) {
   }
 
   if (dx && canStand(nx, P.y)) P.x = nx;
-  if (dy && canStand(P.x, ny)) P.y = ny;
+  if (dy && !touchExpandedTempleDoor(P.x,ny,dy) && canStand(P.x, ny)) P.y = ny;
   P.x = Math.max(8, Math.min(PXW - 8, P.x));
   P.y = Math.max(16, Math.min(PXH - 2, P.y));
 }
@@ -2298,14 +2370,40 @@ function registerAtlasPage(page) {
       atlasPages.set(ty * 4 + tx, page);
 }
 
+function drawPixelImage(g,img,sx,sy,sw,sh,dx,dy,dw,dh){
+  // Nearest-neighbour sampling still blends the boundary of a draw whose edges
+  // fall between device pixels. Snap both ends, so adjacent tiles/pages share
+  // exactly the same edge at fractional zoom and camera positions (also at DPR 2).
+  // Smoothed portraits/dragon art and rotated effects retain their own sampling.
+  if(g.imageSmoothingEnabled===false&&dw>0&&dh>0&&g.getTransform){
+    const m=g.getTransform();
+    if(!m.b&&!m.c&&m.a&&m.d){
+      const left=Math.round(dx*m.a+m.e),right=Math.round((dx+dw)*m.a+m.e);
+      const top=Math.round(dy*m.d+m.f),bottom=Math.round((dy+dh)*m.d+m.f);
+      const width=Math.abs(right-left),height=Math.abs(bottom-top);
+      if(!width||!height)return;
+      if(left!==dx*m.a+m.e||right!==(dx+dw)*m.a+m.e||top!==dy*m.d+m.f||bottom!==(dy+dh)*m.d+m.f){
+        // Draw directly in device pixels. Converting back into large world
+        // coordinates loses precision again near the eastern end of the map.
+        g.setTransform(Math.sign(m.a),0,0,Math.sign(m.d),left,top);
+        try{g.drawImage(img,sx,sy,sw,sh,0,0,width,height);}
+        finally{g.setTransform(m);}
+        return;
+      }
+    }
+  }
+  g.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);
+}
 function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
   if (img !== atlasImg) {
     /* A missing or not-yet-decoded auxiliary sheet must never take down the
        render loop. */
     if (!img || img.complete === false || img.naturalWidth === 0 || img.naturalHeight === 0) return;
-    if (sw === undefined) g.drawImage(img, sx, sy);
-    else if (dx === undefined) g.drawImage(img, sx, sy, sw, sh);
-    else g.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+    if(dx===undefined){
+      dx=sx;dy=sy;dw=sw??(img.naturalWidth||img.width);dh=sh??(img.naturalHeight||img.height);
+      sx=sy=0;sw=img.naturalWidth||img.width;sh=img.naturalHeight||img.height;
+    }
+    drawPixelImage(g,img,sx,sy,sw,sh,dx,dy,dw,dh);
     return;
   }
   if (dx === undefined) {
@@ -2323,7 +2421,7 @@ function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
     const right = Math.min(sx + sw, page.x + page.w, (tx + 1) * 1024);
     const bottom = Math.min(sy + sh, page.y + page.h, (ty + 1) * 1024);
     if (right <= x || bottom <= y) continue;
-    g.drawImage(page.img, x - page.x, y - page.y, right - x, bottom - y,
+    drawPixelImage(g,page.img, x - page.x, y - page.y, right - x, bottom - y,
       dx + (x - sx) * dw / sw, dy + (y - sy) * dh / sh,
       (right - x) * dw / sw, (bottom - y) * dh / sh);
   }
@@ -3425,6 +3523,7 @@ function drawWorld(t, dt) {
   drawGraves();
 
   const draw = [];
+  const marketIds=new Set((MD.marketStands||[]).map(s=>s.objectId));
   for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted)draw.push(actor);
   if (trialDemonHere()) draw.push({witchDemon:true,...(MAPID==="witchmoor"?{x:196,y:304}:THRONE_DEMON)});
   if (trialPedestalHere()) draw.push({ trialPedestal: true, x: TRIAL_PEDESTAL.x,
@@ -3438,8 +3537,10 @@ function drawWorld(t, dt) {
       const s = SPR[NAMES[o.s]];
       if (!s) continue;
       const oxw = o.wx || 0, oyw = o.wy || 0;
-      if (o.x + oxw + s[2] / 2 < cam.x || o.x + oxw - s[2] / 2 > cam.x + vw) continue;
-      if (o.y + oyw < cam.y || o.y + oyw - s[3] > cam.y + vh) continue;
+      const market=marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'');
+      const artW=market?Math.round(s[2]*1.25):s[2],artH=market?60:s[3];
+      if (o.x + oxw + artW / 2 < cam.x || o.x + oxw - artW / 2 > cam.x + vw) continue;
+      if (o.y + oyw < cam.y || o.y + oyw - artH > cam.y + vh) continue;
       const wd = DEFS[o.s];
       if (wd && wd.wd && !editing) wanderStep(o, wd, dt);
       draw.push(o);
@@ -3481,13 +3582,14 @@ function drawWorld(t, dt) {
                 : f.hurt > 0 ? "hurt" : ""])
             || FOE_ART[f.kind] || "sk";
     const D_ = foeDir(f.dir, f.flip);
-    const recovering = /^(?:(gm|gn|pl|lc|rp|dv|ent|bh|ms|gh|bs)[123]|bg|kn|kn3)$/.test(P_) &&
+    const recovering = /^(?:(gm|gn|pl|lc|rp|dv|ent|bh|ms|gh|bs)[1234]|bg|kn|kn3)$/.test(P_) &&
       f.st === "swing" && f.t >= FOE[f.kind].swingT;
-    const drawKey = P_ + "|" + f.st + "|" + D_ + "|" + (f.hurt > 0 ? 1 : 0) + "|" + (recovering ? 1 : 0);
+    const flinch=f.hurt>0&&!(heavyFoe(f)&&(f.st==='wind'||f.st==='swing'));
+    const drawKey = P_ + "|" + f.st + "|" + D_ + "|" + (flinch ? 1 : 0) + "|" + (recovering ? 1 : 0);
     let nm = f._drawKey === drawKey ? f._drawNm : null;
     if (!nm) {
       const pick = (...c) => c.find(n => SPR[n]) || c[c.length - 1];
-      nm = f.hurt > 0 && f.st !== "dead"
+      nm = flinch && f.st !== "dead"
                                ? pick(P_ + "_hurt_" + D_, P_ + "_idle_" + D_, P_ + "_idle")
              : (f.st === "dead" || f.st === "down" || f.st === "rise") ? pick(P_ + "_die_" + D_,  P_ + "_die",  P_ + "_idle_d", P_ + "_idle")
              : f.st === "escape" ? pick(P_ + "_run_" + D_, P_ + "_walk_" + D_, P_ + "_idle_d")
@@ -3574,6 +3676,10 @@ function drawWorld(t, dt) {
       draw.push({ anim: a, nm, x: a.x, y: a.y });
   }
   if (glassShieldActive() || glassShieldPulse > 0) draw.push({ glassShieldFx:true, x:P.x, y:P.y, sy:P.y+80 });
+  for(const o of draw.slice())if(marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'')){
+    o.marketStand=true;o.sy=o.y-60;
+    draw.push({marketFront:o,x:o.x,y:o.y,sy:o.y});
+  }
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
@@ -3585,6 +3691,8 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(o.marketFront){drawVillageStand(o.marketFront,true);continue;}
+    if(o.marketStand){drawVillageStand(o);continue;}
     if(o.mooring){
       const [x1,y1,x2,y2]=o.mooring;ctx.save();ctx.beginPath();ctx.moveTo(x1,y1);
       ctx.quadraticCurveTo((x1+x2)/2,(y1+y2)/2+5,x2,y2);
@@ -3644,7 +3752,11 @@ function drawWorld(t, dt) {
       if(o.templeSpike)fr=templeSpikeFrame(o.templeSpike,o.trapRow);
       if(o.templeLever){const h=MD.templeTraps.find(h=>h.id===o.templeLever);fr=Math.min(4,Math.floor((h.leverOpen||0)*5));}
       if(Number.isInteger(o.templeGate))fr=Math.min(sp[4]-1,Math.floor(MD.templeGates[o.templeGate].open*sp[4]));
-      if(o.templePassDoor){const near=Math.abs(P.x-o.x)<40&&Math.abs(P.y-o.y)<85;o.openT=Math.max(0,Math.min(.3,(o.openT||0)+(near?dt:-dt)));fr=Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));}
+      if(o.templePassDoor){
+        if(Math.abs(P.x-o.x)>40||P.y<o.y-64||P.y>o.y+32)o.entered=false;
+        o.openT=Math.max(0,Math.min(.3,(o.openT||0)+(o.entered?dt:-dt)));
+        fr=Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));
+      }
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
       if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
@@ -3798,7 +3910,7 @@ function drawWorld(t, dt) {
         : f.storyKnight && f.st === "escape" ? Math.floor((f.storyT || f.t) * 10) % s2[4]
         : /^(?:(pl|lc|rp|dv|ent|bh|ms|gh|bs)[123]|bg|kn|kn3)_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
         : /^gn[123]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
-        : /^gm[123]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k)
+        : /^gm[1234]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k)
         : f.st === "dead"
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
         : Math.floor(f.t * (f.st === "swing" ? 3.3 : 6)) % s2[4];
@@ -3873,7 +3985,7 @@ function drawWorld(t, dt) {
       const fMaxHp = enemyMaxHp(f.kind, Number.isFinite(f.hx) ? f.hx : f.x);
       if (f.st !== "dead" && f.kind !== "kdragon" && !(f.storyKnight && f.storyPassive)) {
         const bw = f.kind === "treasuryknight" ? 32 : 18, bh = 3;
-        const bx = Math.round(f.x - bw / 2), by = dy + (/^golem[123]$/.test(f.kind) ? foeVisibleTop82(s2,fr)-6 : ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 12 : -5));
+        const bx = Math.round(f.x - bw / 2), by = dy + (/^golem[1234]$/.test(f.kind) ? foeVisibleTop82(s2,fr)-6 : ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 12 : -5));
         ctx.fillStyle = "#1a1416";
         ctx.fillRect(bx - 1, by - 1, bw + 2, bh + 2);
         ctx.fillStyle = "#4a2b2b";
@@ -5327,6 +5439,7 @@ function stepDragon(dt) {
     if (!(hunt && hunt.kingBreath)) dragon.dir=playerFacing4();
     dragon.moving=P.moving; stepTransition(dt); return;
   }
+  if(ride){followDragonFerry(dt);return;}
   stepTransition(dt);
   if (dragon.tr) return;
   if (breath) { dragon.moving = false; return; }
@@ -7252,9 +7365,9 @@ const FOE = {
              swingT: 1.0, hitAt: 0.55, rest: 0.9, groupRest: 1.5, wind: 0.4 },
   skeleton: { hp: 3, speed: 26, sight: 110, reach: 20, ring: 52, dmg: 1,
           swingT: 1.2, hitAt: 0.6, rest: 2.0, groupRest: 4.8, wind: 0.7 },
-  golem2:   { hp: 6, speed: 18, sight: 130, reach: 26, ring: 60, dmg: 2,
+  golem2:   { hp: 22, speed: 18, sight: 130, reach: 26, ring: 60, dmg: 2,
           swingT: 1.6, hitAt: 0.9, rest: 1.69, groupRest: 3.35, wind: 0.78 },
-  golem3:   { hp: 8, speed: 20, sight: 140, reach: 28, ring: 64, dmg: 2,
+  golem3:   { hp: 26, speed: 20, sight: 140, reach: 28, ring: 64, dmg: 2,
           swingT: 1.5, hitAt: 0.85, rest: 1.56, groupRest: 3.1, wind: 0.74 },
   ent:      { hp: 7, speed: 16, sight: 120, reach: 30, ring: 62, dmg: 2,
           swingT: 1.7, hitAt: 0.95, rest: 1.82, groupRest: 3.47, wind: 0.86 },
@@ -7270,12 +7383,12 @@ const FOE = {
           swingT: 1.2, hitAt: 0.6, rest: 2.0, groupRest: 3.8, wind: 0.7 },
   gnoll2:   { hp: 6, speed: 28, sight: 140, reach: 24, ring: 52, dmg: 2,
           swingT: 1.1, hitAt: 0.55, rest: 1.17, groupRest: 2.23, wind: 0.51 },
-  golem1:   { hp: 7, speed: 20, sight: 130, reach: 26, ring: 56, dmg: 2,
+  golem1:   { hp: 18, speed: 20, sight: 130, reach: 26, ring: 56, dmg: 2,
           swingT: 1.3, hitAt: 0.7, rest: 1.43, groupRest: 2.73, wind: 0.7 },
   kdragon:  { hp: 34, speed: 46, sight:999, reach: 175, ring: 64, dmg: 4,
               swingT: 1.9, hitAt: 1.0, rest: 2.6, groupRest: 3.2, wind: 1.08,
               cast: "lcfire", boltSp: 220 },
-  devil:    { hp: 20, speed: 24, sight: 170, reach: 38, ring: 78, dmg: 3,
+  devil:    { hp: 32, speed: 24, sight: 170, reach: 38, ring: 78, dmg: 3,
           swingT: 1.5, hitAt: 0.8, rest: 1.43, groupRest: 2.73, wind: 0.86 },
   lich:     { hp: 16, speed: 18, sight: 190, reach: 150, ring: 110, dmg: 3,
           swingT: 1.6, hitAt: 0.85, rest: 1.56, groupRest: 2.98, wind: 0.94,
@@ -7292,6 +7405,7 @@ const FOE = {
           swingT: 1.1, hitAt: 0.6, rest: 1.04, groupRest: 1.98, wind: 0.55 },
 };
 Object.assign(FOE, {
+  golem4: { ...FOE.golem1 },
   devil1: { ...FOE.devil, hp: 18, speed: 30 },
   devil3: { ...FOE.devil, hp: 24, dmg: 4 },
   skeleton1: { ...FOE.skeleton, hp: 5 },
@@ -7321,7 +7435,7 @@ function enemyMaxHp(kind, x, mapId = MAPID) {
   return base * (late || mapId.startsWith("royal_") ? 2 : 1);
 }
 const FOE_ART = { treasuryknight:"kn3", royalguard:"kn", knight: "kn", devil1: "dv1", devil3: "dv3", skeleton1: "bs1", skeleton3: "bs3", mage1: "lc1", mage2: "lc2", shroomBrown: "ms1", eye2: "bh2", ent1: "ent1", ent2: "ent2", gnoll1: "gn1", gnoll3: "gn3", plant3: "pl3", reptile2: "rp2", reptile3: "rp3", reptile: "rp1", kdragon: "kd92", shroomRed: "ms2", shroomPurple: "ms3",
-                  golem2: "gm2", golem3: "gm3", ent: "ent3",
+                  golem4: "gm4", golem2: "gm2", golem3: "gm3", ent: "ent3",
                   plant1: "pl1", plant2: "pl2", gnoll2: "gn2",
                   eyeRed: "bh1", eyePurple: "bh3", golem1: "gm1", lich: "lc3", devil: "dv2",
                   ghost: "gh1", ghost3: "gh3", wraith: "gh2", boneguard: "bg" };
@@ -7368,8 +7482,9 @@ const BESTIARY = [
   {"k": "ghost", "n": "Gravewake Spirit", "w": "Hollybeck graveyard and the temple undercrofts", "t": "Hollybeck's oldest graves face the road so the dead may see their families return. Few families make that journey now. The restless rise to meet footsteps at the gate; beneath the temples, other spirits wait with the same terrible patience."},
   {"k": "wraith", "n": "Bound Wraith", "w": "the summons of the Book of the Dead", "t": "The Book of the Dead records obligations rather than names. Read a debt aloud and something hooded arrives to discharge it. It will fight beside the bearer without complaint. The missing pages may explain what the bearer owes in return."},
   {"k": "golem1", "n": "Stone Golem", "w": "the desert temple depths and the mine", "t": "The chisel marks beneath its feet belong to the masons who built the old rider halls. Stone Golems hauled the blocks, then stood watch when the work was done. Their makers carved the command to wake. No surviving wall records the command to rest."},
-  {"k": "golem2", "n": "Iron Golem", "w": "the Forgewick temple depths", "t": "Forgewick smiths once repaired these wardens a plate at a time, stamping each replacement with a family mark. Several generations can be read across one body. The last stamps date to Wingfall. The wardens have kept their posts without a smith ever since."},
-  {"k": "golem3", "n": "Ember Golem", "w": "the Hollybeck temple depths", "t": "An ember carried from a rider's hearth was sealed inside each of these guardians to keep the high halls warm. The hearths went cold after Wingfall; the embers did not. Beneath Hollybeck's snow, they still tend a household of empty rooms."},
+  {"k":"golem4","n":"Granite Golem","w":"the Forgewick temple depths","t":"Carved from gray mountain stone, these wardens share the old masons' design with Sandspire's brown guardians. They have stood beneath Forgewick since the rider halls fell silent, waking only when footsteps disturb their watch."},
+  {"k":"golem2","n":"Crystal Golem","w":"the Hollybeck temple depths","t":"White stone shelters a heart of violet crystal. The old riders set these guardians beneath Hollybeck to keep watch through the long winters. Their crystals still shine in halls that have forgotten daylight."},
+  {"k": "golem3", "n": "Ember Golem", "w": "the final lava-route arena near Cinderhold", "t": "An ember carried from a rider's hearth was sealed inside each of these guardians to keep the high halls warm. The hearths went cold after Wingfall; the embers did not. On the road to Cinderhold, their embers still burn beneath the armored stone."},
   {"k": "lich", "n": "Lich", "w": "the final battle at Cinderhold", "t": "The old rider rites joined one life to another through trust. A lich makes a cruel imitation: it binds what should have been released, then calls that binding survival. Its bones endure, but every command to the dead is another confession that it fears joining them."},
   {"k": "devil", "n": "Ashfiend", "w": "the passage beneath Ashcrag", "t": "The first miners to break into the hot caverns found claw marks on their side of the rock. Whatever made them had been trying to get deeper. The Ashfiend now guards the passage above those workings. Even it seems unwilling to return to whatever lies below."}
 ];
@@ -7521,11 +7636,13 @@ function kingDeflect(f, attacker) {
     toast(f.kind === "lich" ? "the lich's ward throws them back" : "the king dragon turns them aside");
   }
 }
+function heavyFoe(f){return !f.ally&&!f.trial&&/^(golem[1234]|devil[13]?|lich|knight|treasuryknight)$/.test(f.kind);}
 function regularFoe(f) { return !f.ally && !f.trial && !BOSS_KIND.test(f.kind || "") && f.kind !== "kdragon"; }
 function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
   if (f.ally || f.trial) return;
   const boss = BOSS_KIND.test(f.kind || "") || f.kind === "kdragon";
   if (boss) {
+    if(f.st === "wind" || f.st === "swing")return;
     /* Bosses stand their ground initially, then step away if Corin keeps
        locking them in a sword loop. */
     f.pressureHits = (!f.pressureAt || tAcc - f.pressureAt > 1.25)
@@ -7533,6 +7650,9 @@ function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
     f.pressureAt = tAcc;
     if (f.pressureHits < 3) return;
     f.pressureHits = 0;
+    if(/^(golem[1234]|devil[13]?|knight|treasuryknight)$/.test(f.kind)){
+      f.retreat=0;f.st="wind";f.t=0;f.hit=0;beginEnemyWindup(f);return;
+    }
     seconds = f.kind === "kdragon" ? .85 : .50;
     if (f.kind === "kdragon" || f.kind === "lich") {
       /* Breaking a three-hit sword string begins a retaliation, not another
@@ -7649,7 +7769,7 @@ const WORTH = {
   plant1: 3, plant2: 4, shroomBrown: 4, shroomRed: 5, shroomPurple: 6,
   gnoll1: 7, gnoll2: 7, gnoll3: 7, plant3: 4, reptile2: 8, reptile3: 8, reptile: 8, boneguard: 8, eyeRed: 8, eye2: 8, eyePurple: 11,
   royalguard: 18, knight: 0, ghost: 9, ghost3: 9, ent1: 12, ent2: 12, ent: 12, wraith: 0,
-  golem1: 26, golem2: 34, golem3: 38, lich: 44, devil: 50,
+  golem4: 26, golem1: 26, golem2: 34, golem3: 38, lich: 44, devil: 50,
 };
 const GOLD_DROP_MULTIPLIER = 1.8;
 function dropGold(x, y, kind) {
@@ -7952,7 +8072,7 @@ let trialSealPlaced = false;
 const THRONE_DEMON={x:176,y:136};
 function trialDemonHere(){return wonAll&&((MAPID==="witchmoor"&&!trialSealPlaced)||(MAPID==="cinderhold"&&trialSealPlaced));}
 let cinderSeal = false, trialWins = 0, trial = null;
-const TRIAL_STRONG = new Set(["golem1", "golem2", "golem3", "devil", "devil1", "devil3",
+const TRIAL_STRONG = new Set(["golem1", "golem2", "golem3", "golem4", "devil", "devil1", "devil3",
   "lich", "kdragon", "boneguard", "gnoll3", "plant3", "reptile3", "ent", "eyePurple",
   "shroomPurple", "ghost3", "skeleton3", "mage2"]);
 function trialRoster() {
@@ -8538,10 +8658,10 @@ function useDust() {
   toast("the dust goes up -- they cannot tell one another from him");
   return true;
 }
-const BOSS_KIND = /^(golem1|golem2|golem3|devil|lich|ghost|ghost3|knight|treasuryknight)$/;
+const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|treasuryknight)$/;
 /* golems, the Ashfiend and the Lich stay dead once felled outside an arena;
    arena foes are meant to refill (see refillRing), these are not */
-const NO_RESPAWN = /^(golem1|golem2|golem3|devil|lich|knight)$/;
+const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
   if(f.chestAmbush){f.hold=0;f.emerge=1;}
@@ -9425,7 +9545,7 @@ function stepFoes(dt) {
     } else if (f.st === "walk") {
       if (!f.ally && !(f.mad > 0) && !tgt.toBell && d > k.sight * 1.5) { f.st = "idle"; f.t = 0; }
       else if (!tgt.retreat && !f.going && !tgt.toBell && d < k.reach &&
-               (!P.act || (regularFoe(f) && P.act.kind === "swing")) &&
+               (!P.act || P.act.kind === "swing") &&
                ((f.ally || f.mad > 0) ? !tgt.follow : (myTurn && foeCool <= 0)) &&
                facing(f, tgt)) {
         f.st = "wind"; f.t = 0; beginEnemyWindup(f);
@@ -9443,6 +9563,7 @@ function stepFoes(dt) {
         }
         if (rd > stop) {
           let sp = k.speed * ((myTurn || (f.ally && tgt.foe) || (f.mad > 0 && tgt.foe)) ? 1 : 0.90);
+          if (heavyFoe(f) && !tgt.retreat) sp *= 1.25;
           if (tgt.retreat) sp *= (regularFoe(f) ? 1.1 : 1.65) * (f.glassRetreatBoost || 1);
           if (f.ally) sp = Math.max(sp, 150 + Math.min(120, rd * 1.2));
           const nx = f.x + (rx / rd) * sp * dt, ny = f.y + (ry / rd) * sp * dt;
@@ -9509,7 +9630,7 @@ function stepFoes(dt) {
     } else if (f.st === "swing") {
       if (!f.hit && f.t > k.hitAt) {
         f.hit = 1;
-        foeCool = k.groupRest * .72;
+        foeCool = k.groupRest * (heavyFoe(f) ? .50 : .72);
         if (!facing(f, tgt)) { /* the moment is lost */ }
         else if (k.cast) {
           const ax = tgt.x - f.x, ay = (tgt.y - 6) - (f.y - 22);
@@ -9527,7 +9648,7 @@ function stepFoes(dt) {
           if (tgt.foe.hp <= 0) { tgt.foe.st = "dead"; tgt.foe.t = 0; markBossGone(tgt.foe); }
         }
       }
-      if (f.t > k.swingT + (f.mad > 0 ? k.rest * 0.25 : k.rest * .80)) {
+      if (f.t > k.swingT + (f.mad > 0 ? k.rest * 0.25 : k.rest * (heavyFoe(f) ? .55 : .80))) {
         finishGlassShieldParry(f);
         f.st = "walk"; f.t = 0; f.unblockableAttack = false;
         if (myTurn) turnT = 0;
@@ -10069,6 +10190,25 @@ function ferryBoatObj() {
   }
   return best;
 }
+function followDragonFerry(dt){
+  hunt=null;breath=null;claw=null;linger=0;dragon.tr=null;
+  if(!dragon.air){dragon.air=true;refreshWingBtn();}
+  dragon.placed=MAPID;
+  const dx=P.x+48-dragon.x,dy=P.y-28-dragon.y,d=Math.hypot(dx,dy);
+  dragon.moving=d>2;
+  if(d>2){
+    dragon.dir=direction4(dx,dy,dragon.dir);
+    const step=Math.min(d,Math.max(100,Math.min(210,d*3))*dt);
+    dragonStep(dx/d*step,dy/d*step);
+  }
+}
+const FERRY_SIGN_TEXT="Press A on the boat to take a ride! Sorry, no dragons allowed in the boat!";
+function tryFerrySign(){
+  if(!ferryOf()||ride)return false;
+  const sign=(MD.roomActors||[]).find(o=>o.ferrySign&&!o.editorDeleted&&Math.abs(P.x-o.x)<=24&&P.y>=o.y-4&&P.y<=o.y+34&&playerFacing4()==='n');
+  if(!sign)return false;
+  playScene([FERRY_SIGN_TEXT]);return true;
+}
 const FERRY_HOP = 0.45;
 function ferryTry() {
   const f = ferryOf(); if (!f || ride) return false;
@@ -10079,10 +10219,11 @@ function ferryTry() {
   let from = null;
   if (near(f.land_a)) from = "a"; else if (near(f.land_b)) from = "b";
   if (!from) return false;
+  if(mounted){toast("Dismount, then press A on the boat to take a ride.");return true;}
   const pts = f.pts.map(p => [p[0] * TS + TS / 2, p[1] * TS + TS]);
   const route = from === "a" ? pts : pts.slice().reverse();
   const d0 = Math.atan2(route[1][1] - route[0][1], route[1][0] - route[0][0]) + Math.PI / 2;
-  ride = { pts: route, i: 0, t: 0,
+  ride = { pts: route, i: 0, t: 0, x:route[0][0], y:route[0][1],
            to: from === "a" ? f.land_b : f.land_a, flip: false,
            ang: 0, ang0: 0, angT: d0, turn: 0, turnFor: 0,
            board: FERRY_HOP, land: 0, from: [P.x, P.y] };
@@ -10109,6 +10250,7 @@ function stepFerry(dt) {
   P.moving = false;
   P.flip = false;
   P.dir = (ride.pts[ride.pts.length - 1][1] < ride.pts[0][1]) ? "u" : "d";
+  P.dir8=P.dir=== "u" ? "n" : "s";
   if (ride.turn > 0) {                    /* she comes about first, while you watch */
     ride.turn -= dt;
     const k = ride.turnFor ? 1 - Math.max(0, ride.turn) / ride.turnFor : 1;
@@ -10421,6 +10563,7 @@ function interact() {
     talkTrialDemon(); return;
   }
   if (!sayNpc && interactTrialPedestal()) return;
+  if (!sayNpc && tryFerrySign()) return;
   if (ferryTry()) return;
   if (!sayNpc && tryHouseLootChest()) return;
   if (tryTreasuryChest()) return;

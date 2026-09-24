@@ -1,7 +1,7 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260923-temple12-corners');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260924-golems1');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
@@ -26,8 +26,8 @@ async function prepareExpandedFirstTemple(){
     }
     for(const [kind,x,y,room] of plan.enemies)m.foes.push({k:kind,x:(x-8)/16,y:(y-16)/16,expandedRoom:room});
     // Passage doors stay in this map. Open arches remain open; intact doors
-    // animate as Corin approaches and lead straight into the connected hall.
-    for(const p of plan.passages||[])m.roomActors.push({spr:'first_temple_door',x:p.x,y:p.y,
+    // animate on contact and lead straight into the connected hall.
+    for(const p of (plan.passages||[]).filter(p=>!plan.doors.some(d=>d.dir==='u'&&d.x===p.x&&d.y===p.y)))m.roomActors.push({spr:'first_temple_door',x:p.x,y:p.y,
       schoolArt:true,inlineTempleDoor:true,...(p.mode==='open'?{stillFrame:3}:{templePassDoor:true})});
     // Wall torches and small stone ornaments preserve the first temple's visual identity.
     for(const [l,t,r,b] of plan.chambers){
@@ -81,6 +81,19 @@ async function prepareExpandedFirstTemple(){
     }
   }
 }
+function touchExpandedTempleDoor(x,y,dy){
+  if(!MD.templeExpanded)return false;
+  for(const o of MD.roomActors){
+    if(!o.templePassDoor||o.editorDeleted||Math.abs(x-o.x)>15)continue;
+    const north=dy<0&&P.y>=o.y&&y-PC_H<=o.y;
+    const south=dy>0&&P.y-1<=o.y-32&&y-1>=o.y-32;
+    if(!north&&!south)continue;
+    o.entered=true;
+    // Hold at the leaf while it swings, then let the same movement continue.
+    if((o.openT||0)<.3)return true;
+  }
+  return false;
+}
 function insetTempleSouthExits(map){
   for(const door of map.doors)if(door.dir==='d'&&door.triggerRect&&!door.templeRecess){
     door.triggerRect.y+=32;door.templeRecess=true;
@@ -92,7 +105,7 @@ function expandedTempleArenas(){
     if(!occupants.length)return [];
     const [l,t,r,b]=room;
     return [{id:'temple-room:'+i,kind:'arena',templeRoom:room,templeMap:MAPID,
-      templeBoss:occupants.some(f=>/^(golem[123]|devil|lich|knight)$/.test(f.k)),
+      templeBoss:occupants.some(f=>/^(golem[1234]|devil|lich|knight)$/.test(f.k)),
       x:(l+r)/32,y:(t+b)/32,r:Math.max(r-l,b-t)/32}];
   });
 }
@@ -118,7 +131,7 @@ function expandedTempleArenaRim(ring){
   // only across the walkable openings and the doors that change maps.
   for(let x=l;x<r;x+=16){
     if(floor(x+8,t-1)||door(x+8,t,'u'))out.push([x/16,t/16-1]);
-    if(floor(x+8,b)||door(x+8,b,'d'))out.push([x/16,b/16-1]);
+    if(floor(x+8,b)||door(x+8,b,'d'))out.push([x/16,b/16+1]);
   }
   for(let y=t;y<b;y+=16){
     if(floor(l-1,y+8))out.push([l/16-.5,y/16]);

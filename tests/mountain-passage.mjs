@@ -63,7 +63,7 @@ for(const [i,id] of ['passage','passage3'].entries()){
 }
 const finale=W.maps.passage3;assert.equal(finale.foes.length,1);assert.equal(finale.foes[0].k,'devil');
 const exit=finale.templePlan.chambers[1],exitActors=finale.roomActors.filter(a=>a.x>=exit[0]&&a.x<exit[2]&&a.y>=exit[1]&&a.y<exit[3]);
-assert.equal(exitActors.length,1);assert(exitActors[0].templeExit,'final chamber contains only exit');
+assert.equal(exitActors.length,1);assert.equal(exitActors[0].spr,'wf_cave_big','final chamber restores the original cave mouth');
 assert(!flood(finale,true).has('160,208'));assert(flood(finale).has('160,208'));
 c.MD=finale;c.MAPID='passage3';c.P={x:160,y:768};c.foes=[];run('stepExpandedTemple(1)');assert.equal(finale.templeGateOpen,0,'Heartstone ownership never bypasses the Ashfiend');
 c.P.y=208;run('stepExpandedTemple(1)');assert.equal(finale.templeGateOpen,1,'Ashcrag reverse entrance can reach boss');

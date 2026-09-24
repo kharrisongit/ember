@@ -107,3 +107,27 @@ for(const dir of ['u','d','l','r']){
 }
 assert(royalSouth>=8);assert(transitions>200);
 console.log(`PASS: ${royalSouth} deeper castle exits; correct arrival facing through ${transitions} installed doors and all four one-way directions.`);
+
+// Every doorway has one moving door, and ordinary doors only respond to contact.
+c.PC_H=7;
+let contactDoors=0,northExits=0;
+for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
+ const seen=new Set();
+ for(const o of m.roomActors.filter(o=>o.templeExit||o.inlineTempleDoor)){
+  const key=o.x+','+o.y;assert(!seen.has(key),id+' duplicate closed door behind animated door');seen.add(key);
+  if(!o.templePassDoor)continue;
+  contactDoors++;c.o=o;
+  reset(id,o.x,o.y+40,'u');assert(!run('touchExpandedTempleDoor(P.x,P.y-2,-1)'));assert(!o.entered,'proximity alone must not open');
+  reset(id,o.x,o.y+8,'u');assert(run('touchExpandedTempleDoor(P.x,P.y-2,-1)'));assert(o.entered,'contact starts northward opening');
+  o.openT=.3;assert(!run('touchExpandedTempleDoor(P.x,P.y-2,-1)'),'fully opened leaf permits movement');
+  o.openT=0;o.entered=false;reset(id,o.x,o.y-32,'d');assert(run('touchExpandedTempleDoor(P.x,P.y+2,1)'));assert(o.entered,'southward contact also opens');
+  o.openT=0;o.entered=false;reset(id,o.x+32,o.y+8,'u');assert(!run('touchExpandedTempleDoor(P.x,P.y-2,-1)'));assert(!o.entered,'walking alongside door does not open it');
+ }
+ for(const d of m.doors.filter(d=>d.dir==='u')){
+  northExits++;const r=d.triggerRect,x=r.x+r.w/2,y=r.y+r.h;
+  reset(id,x,y+8,'u');run('useDoors(0)');assert(!triggered(),id+' north exit must not open before contact');
+  reset(id,x,y+7,'u');run('useDoors(0)');
+  if(!d.templeGuards?.length)assert.equal(triggered(),d,id+' north threshold opens on contact');
+ }
+}
+console.log(`PASS: ${contactDoors} contact-only passage doors, no duplicate door layers, ${northExits} north exits require contact.`);

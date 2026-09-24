@@ -30,7 +30,7 @@ async function prepareExpandedSandspireTemple(){
         ...(d.sealed?{sandspireExit:door}:{royalDoor:true})});
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
-    for(const p of plan.passages||[])m.roomActors.push({spr:'first_temple_door',x:p.x,y:p.y,schoolArt:true,
+    for(const p of (plan.passages||[]).filter(p=>!plan.doors.some(d=>d.dir==='u'&&d.x===p.x&&d.y===p.y)))m.roomActors.push({spr:'first_temple_door',x:p.x,y:p.y,schoolArt:true,
       inlineTempleDoor:true,...(p.mode==='open'?{stillFrame:3}:{templePassDoor:true})});
     for(const [i,[x,y,gold,kind]] of plan.chests.entries()){
       const room=plan.chambers.find(([l,t,r,b])=>x>l&&x<r&&y>t&&y<b),lootId=id+':loot:'+i;

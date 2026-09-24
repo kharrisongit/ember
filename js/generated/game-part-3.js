@@ -4144,8 +4144,8 @@ function useDoors(dt) {
     if(Math.abs(lateral-center)>half)continue;
     const gap=want==='u'?P.y-7-(y0+r.h):want==='d'?y0-(P.y-1):want==='l'?P.x-5.5-(x0+r.w):x0-(P.x+5.5);
     // Recessed south exits and castle stairs require crossing the actual threshold.
-    const deepSouth=want==='d'&&(MD.templeExpanded||MD.royal||MAPID==='cinderhold');
-    if(gap>(deepSouth||candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
+    const contactOnly=MD.templeExpanded||(want==='d'&&(MD.royal||MAPID==='cinderhold'));
+    if(gap>(contactOnly||candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
     const score = Math.abs(gap) + Math.abs(lateral - center) * 0.1;
     if (score < best) { best = score; d = candidate; }
   }
