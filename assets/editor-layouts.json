@@ -29,10 +29,56 @@
         "y": 201,
         "originX": 152,
         "originY": 197
+      },
+      "actor:millwood:house26:11": {
+        "kind": "actor",
+        "key": "millwood:house26:11",
+        "identity": "Furniture 61_159",
+        "x": 143,
+        "y": 155,
+        "originX": 130.5,
+        "originY": 150
+      },
+      "actor:millwood:house26:9": {
+        "kind": "actor",
+        "key": "millwood:house26:9",
+        "identity": "dining table",
+        "x": 113,
+        "y": 169,
+        "originX": 104.5,
+        "originY": 167
+      },
+      "actor:millwood:house26:8": {
+        "kind": "actor",
+        "key": "millwood:house26:8",
+        "identity": "south chair",
+        "x": 114,
+        "y": 173,
+        "originX": 104,
+        "originY": 167
+      },
+      "actor:millwood:house26:10": {
+        "kind": "actor",
+        "key": "millwood:house26:10",
+        "identity": "Furniture 9_159",
+        "x": 84,
+        "y": 155,
+        "originX": 78.5,
+        "originY": 150
+      },
+      "actor:millwood:house26:7": {
+        "kind": "actor",
+        "key": "millwood:house26:7",
+        "identity": "north chair",
+        "x": 111,
+        "y": 129,
+        "originX": 104,
+        "originY": 134
       }
     }
   },
   "applied": [
-    "1e407f31-a0f8-4b65-b617-ddb52322a261"
+    "1e407f31-a0f8-4b65-b617-ddb52322a261",
+    "66d2d812-b332-4b6f-84b8-e88968049d58"
   ]
 }
