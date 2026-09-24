@@ -243,7 +243,7 @@ function inClearing(x, y) {
 let lineTiles = new Set();
 
 function realizeFeatures() {
-  if (MD.bg) { rebuildSolid(); rebuildBuckets(); return; }
+  if (MD.bg) { if(!editorMapLoading)applyEditorPaint(); rebuildSolid(); rebuildBuckets(); return; }
 
   const townBoxes = features.filter(f => isArea(f) && !f.wild);
   const inTownArea = (x, y) => townBoxes.some(
@@ -270,6 +270,7 @@ function realizeFeatures() {
   const rockSet = new Set();
   const _sc = MD.scatter || [];
   for (let i = 0; i < _sc.length; i += 3) {
+    if(decorGone.has('s'+i))continue;
     const nm = NAMES[_sc[i]], sp = SPR[nm];
     if (!sp || !/^(mtn_|mts_|mtv_|vmt_|vtower|cliff_|shc_|shcap_|waterfall)/.test(nm)) continue;
     for (let ty = Math.floor((_sc[i + 2] - sp[3]) / TS); ty <= Math.floor((_sc[i + 2] - 1) / TS); ty++)
@@ -301,6 +302,7 @@ function realizeFeatures() {
                           markBlock(NAMES[o.s], o.x, o.y); }
   for (const arr of [scat, sanm])
     for (let i = 0; i < arr.length; i += 3) {
+      if(decorGone.has((arr===scat?'s':'a')+i))continue;
       markRock(NAMES[arr[i]], arr[i + 1], arr[i + 2]);
       markBlock(NAMES[arr[i]], arr[i + 1], arr[i + 2]);
     }
@@ -2424,6 +2426,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
     }
   }
 
+  if(!editorMapLoading)applyEditorPaint();
   repairArenaTreeEdges();
   clearForgefallsCliffTrees();
   chunks.clear();
@@ -3455,6 +3458,7 @@ function finishPaint() {
   refreshToolbar();
   invalidateTiles(touched);
   reindex();
+  scheduleEditorDraft();
   if (fixed) toast("tidied " + fixed + " tile" + (fixed === 1 ? "" : "s") +
                    " the tileset cannot draw");
 }

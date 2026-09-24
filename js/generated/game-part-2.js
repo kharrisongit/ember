@@ -1681,7 +1681,7 @@ function applyActorLayout(m, id) {
   for(let i=0;i<(m.roomActors||[]).length;i++){
     const o=m.roomActors[i],key=o.editKey||'actor:'+i+':'+o.spr,v=saved[key];
     if(o.sceneReserved&&!o.editorMovable)continue;
-    if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!v?.deleted;
+    if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!(v?.deleted||o.publishedDeleted);
     if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
   }
@@ -1898,7 +1898,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
   if(!W.maps[id])throw new Error('no such map: '+id);
   if(typeof saveEditorDraft==='function')saveEditorDraft();
-  editorDraftReady=false;
+  editorDraftReady=false;editorMapLoading=true;
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
   chestAnim = null;
@@ -1952,9 +1952,9 @@ function loadMap(id, fresh, discardDraft=false) {
     objs = prev.objs; added = prev.added; deleted = prev.deleted; nextId = prev.nextId;
     painted = prev.painted || new Map();
     undoStack = prev.undoStack || [];
-    for (const [ti, tv] of painted) terr[ti] = tv;
+    // Paint is restored after feature generation.
   } else {
-    objs = ORIG.map((o, k) => ({ id: k, s: o.s, x: o.x, y: o.y }));
+    objs = ORIG.map((o, k) => ({ id: k, s: o.s, x: o.x, y: o.y })).filter(o=>!(MD.editorDeletedObjects||[]).includes(o.id));
     added = []; deleted = new Set(); nextId = ORIG.length;
     painted = new Map();
     undoStack = [];
@@ -1991,7 +1991,7 @@ function loadMap(id, fresh, discardDraft=false) {
   features = (MD.features || []).map(f => ({ ...f }));
   featOrig = new Map((MD.features || []).map(f => [f.id, JSON.stringify(f)]));
   buildUndo = []; regionMoves = []; grabRect = null; grabDrag = null;
-  decorGone = new Set(); decorDel = []; decorMoved = new Map();
+  decorGone = new Set(MD.editorDeletedDecor||[]); decorDel = []; decorMoved = new Map();
   deckWet = null;                       /* rebuilt for the map being loaded */
   felled = new Set(MD.felled || []);
   for (const run of String(MD.felled_rle || "").split("|")) {
@@ -2041,6 +2041,9 @@ function loadMap(id, fresh, discardDraft=false) {
     for (const k of SCENE_WALL) terr[k] = WALL;
     rebuildSolid();          /* the collision map was built before these landed */
   }
+  applyEditorPaint(true);
+  if(painted.size||(MD.editorPublishedPaint||[]).length)rebuildSolid();
+  editorMapLoading=false;
   if (id === "world" && quest >= Q.KING) {
     const her = npcs.find(n => n.n === "Hettie");
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
@@ -11279,8 +11282,9 @@ function setFoesEnabled(enabled) {
 tap(document.getElementById("bFoes"), () => setFoesEnabled(foesHeld));
 tap(document.getElementById("pDone"), () => {
   if (groundDirty) { groundDirty = false; finishPaint(); }
+  saveEditorDraft();
   setPaint(false);
-  toast(painted.size ? "painted " + painted.size + " tiles -- tap COPY to send them"
+  toast(painted.size ? "painted " + painted.size + " tiles -- tap SEND CHANGES to publish"
                      : "no terrain changes");
 });
 const PAINTS = ["pGrass", "pDirt", "pWater", "pPool", "pPave2",

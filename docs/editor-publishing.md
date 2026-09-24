@@ -7,9 +7,9 @@ validates structured coordinates, runs the game checks, commits only
 does not trigger the normal push deployment, so this explicit deployment matters.
 Experiments are never uploaded automatically. COPY remains a recovery option.
 
-Automatic publishing currently accepts moves of existing actors/NPCs, ordinary
-objects and scenery. Build, paint, additions, deletion and geometry exports still
-use COPY. RESET discards the current map's local draft, restoring published data.
+Automatic publishing accepts Move, Delete and Paint, including furniture/walls,
+ordinary objects, scenery, generated trees and terrain. Build, duplicates and
+door/collision geometry exports still use COPY. RESET discards the current map's local draft, restoring published data.
 
 ## Sender and one-time connection
 

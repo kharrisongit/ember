@@ -29,16 +29,17 @@
     const packet=btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(draft))));
     const popup = root.open(INBOX + '/?transfer=' + nonce + '#draft=' + encodeURIComponent(packet), 'emberfell-edit-inbox', 'popup,width=520,height=660');
     if (!popup) { result(false, 'Allow the send window, then tap SEND CHANGES again. Your draft is safe.'); return; }
-    let sent = false;
+    let sent = false, finished = false;
     const finish = (ok, message) => {
-      root.removeEventListener('message', receive); clearInterval(timer); transfer = null; result(ok, message);
+      if(finished)return;finished=true;
+      root.removeEventListener('message', receive); clearInterval(timer); clearInterval(publishPoll); transfer = null; result(ok, message);
     };
     const receive = e => {
       if (e.origin !== INBOX || e.source !== popup || e.data?.nonce !== nonce) return;
       if (e.data.type === 'emberfell-ready' && !sent) {
         sent = true; popup.postMessage({type:'emberfell-draft', nonce, draft}, INBOX);
       } else if (e.data.type === 'emberfell-received' && e.data.id === draft.id) {
-        finish(true, 'Sent ' + draft.map + '. GitHub is checking and publishing your moves.');
+        finish(true, 'Sent ' + draft.map + '. GitHub is checking and publishing your edits.');
       } else if (e.data.type === 'emberfell-send-error') finish(false, e.data.error || 'Send failed. Your local draft is safe.');
     };
     root.addEventListener('message', receive);
@@ -51,9 +52,9 @@
     // can still recognize the completed deployment through its own public data.
     const publishPoll=setInterval(async()=>{
       if(!transfer){clearInterval(publishPoll);return;}
-      try{const r=await root.fetch('assets/editor-layouts.json?submission='+draft.id+'&t='+Date.now());if(r.ok&&(await r.json()).applied?.includes(draft.id)){clearInterval(publishPoll);finish(true,'Moves published. Refresh the game when you are ready.');}}catch(_){}
+      try{const r=await root.fetch('assets/editor-layouts.json?submission='+draft.id+'&t='+Date.now());if(r.ok&&(await r.json()).applied?.includes(draft.id)){clearInterval(publishPoll);finish(true,'Changes published. Refresh the game when you are ready.');}}catch(_){}
     },10000);
     transfer = { popup };
   }
-  root.EmberEditDrafts = { clone, fingerprint, createStore, store, send, version:'20260924-manual-edits-1', sourceRevision:'__EDITOR_SOURCE_REVISION__', inbox:INBOX };
+  root.EmberEditDrafts = { clone, fingerprint, createStore, store, send, version:'20260924-manual-edits-2', sourceRevision:'__EDITOR_SOURCE_REVISION__', inbox:INBOX };
 })(globalThis);
