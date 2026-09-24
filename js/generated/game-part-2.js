@@ -1911,10 +1911,49 @@ function decodeRLE(rle, n) {
   return out;
 }
 
+// Keep one prepared overworld while visiting interiors. The arrays and bounded
+// ground-chunk cache are detached, not copied; NPCs/enemies still reset on entry.
+let overworldReturn = null;
+function rememberOverworld(draft) {
+  if (MAPID !== 'world' || !MD || !editorDraftReady) return;
+  overworldReturn = {map:MD,width:MW,height:MH,
+    draftKey:EmberEditDrafts.fingerprint(draft?.state || null),
+    data:{
+    terr,terrOrig,baseTerr,solid,SCENE_WALL,ORIG,objs,added,
+    deleted,nextId,painted,undoStack,features,featOrig,featSeq,regionMoves,
+    clearedBoxes,felled,felledNew,decorGone,decorDel,decorMoved,fobjs,fsanim,
+    hidden,scat,sanm,decks,deckFix,deckWet,deckPlank,deckCover,
+    blockTiles,lineTiles,rockTiles,soilAreas,arenaRings,blossomBand,townBoxList,lavaNear,
+    CW,CH,buckets,sbuckets,fenceAt,scatterChunks,chunks,chunkClock
+    }};
+  // buildGround clears this Map; give the interior its own cache first.
+  chunks = new Map();
+}
+function restoreOverworld(state, fresh) {
+  if (MAPID!=='world') return false;
+  const saved=overworldReturn;
+  overworldReturn=null; // A rejected snapshot must not retain a second world.
+  if (fresh || !saved || saved.map!==MD ||
+      saved.width!==MW || saved.height!==MH ||
+      saved.draftKey!==EmberEditDrafts.fingerprint(state || null)) return false;
+  ({
+    terr,terrOrig,baseTerr,solid,SCENE_WALL,ORIG,objs,added,
+    deleted,nextId,painted,undoStack,features,featOrig,featSeq,regionMoves,
+    clearedBoxes,felled,felledNew,decorGone,decorDel,decorMoved,fobjs,fsanim,
+    hidden,scat,sanm,decks,deckFix,deckWet,deckPlank,deckCover,
+    blockTiles,lineTiles,rockTiles,soilAreas,arenaRings,blossomBand,townBoxList,lavaNear,
+    CW,CH,buckets,sbuckets,fenceAt,scatterChunks,chunks,chunkClock
+  }=saved.data);
+  // Active world state now owns these references until the next departure.
+  resetChunkWarm();mapDirty=true;editorDraftReady=true;
+  return true;
+}
+
 function loadMap(id, fresh, discardDraft=false) {
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
   if(!W.maps[id])throw new Error('no such map: '+id);
-  if(typeof saveEditorDraft==='function')saveEditorDraft();
+  const leavingDraft=typeof saveEditorDraft==='function'?saveEditorDraft():null;
+  rememberOverworld(leavingDraft);
   editorDraftReady=false;editorMapLoading=true;
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
@@ -1937,44 +1976,47 @@ function loadMap(id, fresh, discardDraft=false) {
   MW = MD.w; MH = MD.h; PXW = MW * TS; PXH = MH * TS;
   if (!camFree && mode === "play") cam.z = playZoom();
 
-  terr = new Uint8Array(MW * MH);
-  let i = 0;
-  for (const part of MD.terr.split("|")) {
-    const sp = part.split("."), v = +sp[0], n = +sp[1];
-    for (let k = 0; k < n; k++) terr[i++] = v;
-  }
-  if (i !== MW * MH) throw new Error("terrain RLE length " + i + " != " + MW * MH);
-  SCENE_WALL = null;
-  if (MD.scenes) {
-    SCENE_WALL = new Set();
-    for (const sc of MD.scenes)
-      for (let r = 0; r < sc.col.length; r++)
-        for (let c = 0; c < sc.col[r].length; c++)
-          if (sc.col[r][c] === "#") {
-            const sx2 = sc.x0 + c, sy2 = sc.y0 + r;
-            if (sx2 >= 0 && sy2 >= 0 && sx2 < MW && sy2 < MH) {
-              SCENE_WALL.add(sy2 * MW + sx2);
-              terr[sy2 * MW + sx2] = WALL;
+  const warmReturn=restoreOverworld(savedEditorState,fresh||discardDraft);
+  if(!warmReturn){
+    terr = new Uint8Array(MW * MH);
+    let i = 0;
+    for (const part of MD.terr.split("|")) {
+      const sp = part.split("."), v = +sp[0], n = +sp[1];
+      for (let k = 0; k < n; k++) terr[i++] = v;
+    }
+    if (i !== MW * MH) throw new Error("terrain RLE length " + i + " != " + MW * MH);
+    SCENE_WALL = null;
+    if (MD.scenes) {
+      SCENE_WALL = new Set();
+      for (const sc of MD.scenes)
+        for (let r = 0; r < sc.col.length; r++)
+          for (let c = 0; c < sc.col[r].length; c++)
+            if (sc.col[r][c] === "#") {
+              const sx2 = sc.x0 + c, sy2 = sc.y0 + r;
+              if (sx2 >= 0 && sy2 >= 0 && sx2 < MW && sy2 < MH) {
+                SCENE_WALL.add(sy2 * MW + sx2);
+                terr[sy2 * MW + sx2] = WALL;
+              }
             }
-          }
-  }
-  terrOrig = terr.slice();
+    }
+    terrOrig = terr.slice();
 
-  ORIG = [];
-  for (let k = 0; k < MD.objs.length; k += 3)
-    ORIG.push({ s: MD.objs[k], x: MD.objs[k + 1], y: MD.objs[k + 2] });
+    ORIG = [];
+    for (let k = 0; k < MD.objs.length; k += 3)
+      ORIG.push({ s: MD.objs[k], x: MD.objs[k + 1], y: MD.objs[k + 2] });
 
-  const prev = edits[id];
-  if (prev) {
-    objs = prev.objs; added = prev.added; deleted = prev.deleted; nextId = prev.nextId;
-    painted = prev.painted || new Map();
-    undoStack = prev.undoStack || [];
-    // Paint is restored after feature generation.
-  } else {
-    objs = ORIG.map((o, k) => ({ id: k, s: o.s, x: o.x, y: o.y })).filter(o=>!(MD.editorDeletedObjects||[]).includes(o.id));
-    added = []; deleted = new Set(); nextId = ORIG.length;
-    painted = new Map();
-    undoStack = [];
+    const prev = edits[id];
+    if (prev) {
+      objs = prev.objs; added = prev.added; deleted = prev.deleted; nextId = prev.nextId;
+      painted = prev.painted || new Map();
+      undoStack = prev.undoStack || [];
+      // Paint is restored after feature generation.
+    } else {
+      objs = ORIG.map((o, k) => ({ id: k, s: o.s, x: o.x, y: o.y })).filter(o=>!(MD.editorDeletedObjects||[]).includes(o.id));
+      added = []; deleted = new Set(); nextId = ORIG.length;
+      painted = new Map();
+      undoStack = [];
+    }
   }
   stroke = null;
 
@@ -2001,65 +2043,68 @@ function loadMap(id, fresh, discardDraft=false) {
   if (wonAll && id === "cinderhold")
     npcs = npcs.filter(n => !/Halvard/.test(n.n || ""));
   setPaint(false);
-  solid = new Uint8Array(MW * MH);
   selected = null;
+  buildUndo=[];grabRect=null;grabDrag=null;
+  if(!warmReturn){
+    solid = new Uint8Array(MW * MH);
 
-  baseTerr = Uint8Array.from(MD.base_terr ? decodeRLE(MD.base_terr, MW * MH) : terr);
-  features = (MD.features || []).map(f => ({ ...f }));
-  featOrig = new Map((MD.features || []).map(f => [f.id, JSON.stringify(f)]));
-  buildUndo = []; regionMoves = []; grabRect = null; grabDrag = null;
-  decorGone = new Set(MD.editorDeletedDecor||[]); decorDel = []; decorMoved = new Map();
-  deckWet = null;                       /* rebuilt for the map being loaded */
-  felled = new Set((MD.felled || []).map(f=>Array.isArray(f)?f.join(','):f));
-  for (const run of String(MD.felled_rle || "").split("|")) {
-    if (!run) continue;
-    const [yy, xs] = run.split(":");
-    if (xs.includes("-")) {
-      const [a, b] = xs.split("-").map(Number);
-      for (let xx = a; xx <= b; xx++) felled.add(xx + "," + yy);
-    } else felled.add(xs + "," + yy);
-  }
-  felledNew = [];
-  clearedBoxes = [];
-  featSeq = features.reduce((n, f) => Math.max(n, f.id || 0), 0) + 1;
-  fobjs = [];
-  fsanim = (MD.fsanim || []).slice();
-  hidden = new Set(MD.hidden || []);
-  scat = (MD.scatter || []).slice();
-  sanm = (MD.sanim || []).slice();
-  decks = (MD.decks || []).map(d => ({ ...d }));
-  deckFix = new Map();
-  for (const [fx, fy, kind] of (MD.deckfix || []))
-    deckFix.set(fy * MW + fx, kind);
-
-  editorRestoreMap(savedEditorState);
-  buildGround();
-  if (features.length) {
-    const cached = realizedCache.get(MAPID);
-    if (cached && cached.stamp === editStamp) {
-      terr.set(cached.terr);
-      fobjs = cached.fobjs.map(o => ({ ...o }));
-      fsanim = cached.fsanim.slice();
-      blockTiles = (cached.blockTiles || []).slice();
-      lineTiles = cached.lineTiles;
-      rockTiles = cached.rockTiles;
-      hidden = new Set(cached.hidden);
-      reindex();
-    } else {
-      realizeFeatures();
-      realizedCache.set(MAPID, {
-        stamp: editStamp, terr: terr.slice(),
-        fobjs: fobjs.map(o => ({ ...o })), fsanim: fsanim.slice(),
-        blockTiles: blockTiles.slice(), lineTiles, rockTiles, hidden: new Set(hidden)
-      });
+    baseTerr = Uint8Array.from(MD.base_terr ? decodeRLE(MD.base_terr, MW * MH) : terr);
+    features = (MD.features || []).map(f => ({ ...f }));
+    featOrig = new Map((MD.features || []).map(f => [f.id, JSON.stringify(f)]));
+    regionMoves = [];
+    decorGone = new Set(MD.editorDeletedDecor||[]); decorDel = []; decorMoved = new Map();
+    deckWet = null;                       /* rebuilt for the map being loaded */
+    felled = new Set((MD.felled || []).map(f=>Array.isArray(f)?f.join(','):f));
+    for (const run of String(MD.felled_rle || "").split("|")) {
+      if (!run) continue;
+      const [yy, xs] = run.split(":");
+      if (xs.includes("-")) {
+        const [a, b] = xs.split("-").map(Number);
+        for (let xx = a; xx <= b; xx++) felled.add(xx + "," + yy);
+      } else felled.add(xs + "," + yy);
     }
-  } else reindex();
-  if (SCENE_WALL) {
-    for (const k of SCENE_WALL) terr[k] = WALL;
-    rebuildSolid();          /* the collision map was built before these landed */
-  }
-  applyEditorPaint(true);
-  if(painted.size||(MD.editorPublishedPaint||[]).length)rebuildSolid();
+    felledNew = [];
+    clearedBoxes = [];
+    featSeq = features.reduce((n, f) => Math.max(n, f.id || 0), 0) + 1;
+    fobjs = [];
+    fsanim = (MD.fsanim || []).slice();
+    hidden = new Set(MD.hidden || []);
+    scat = (MD.scatter || []).slice();
+    sanm = (MD.sanim || []).slice();
+    decks = (MD.decks || []).map(d => ({ ...d }));
+    deckFix = new Map();
+    for (const [fx, fy, kind] of (MD.deckfix || []))
+      deckFix.set(fy * MW + fx, kind);
+
+    editorRestoreMap(savedEditorState);
+    buildGround();
+    if (features.length) {
+      const cached = realizedCache.get(MAPID);
+      if (cached && cached.stamp === editStamp) {
+        terr.set(cached.terr);
+        fobjs = cached.fobjs.map(o => ({ ...o }));
+        fsanim = cached.fsanim.slice();
+        blockTiles = (cached.blockTiles || []).slice();
+        lineTiles = cached.lineTiles;
+        rockTiles = cached.rockTiles;
+        hidden = new Set(cached.hidden);
+        reindex();
+      } else {
+        realizeFeatures();
+        realizedCache.set(MAPID, {
+          stamp: editStamp, terr: terr.slice(),
+          fobjs: fobjs.map(o => ({ ...o })), fsanim: fsanim.slice(),
+          blockTiles: blockTiles.slice(), lineTiles, rockTiles, hidden: new Set(hidden)
+        });
+      }
+    } else reindex();
+    if (SCENE_WALL) {
+      for (const k of SCENE_WALL) terr[k] = WALL;
+      rebuildSolid();          /* the collision map was built before these landed */
+    }
+    applyEditorPaint(true);
+    if(painted.size||(MD.editorPublishedPaint||[]).length)rebuildSolid();
+  }else placeBirds();
   editorMapLoading=false;
   if (id === "world" && quest >= Q.KING) {
     const her = npcs.find(n => n.n === "Hettie");

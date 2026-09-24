@@ -37,6 +37,7 @@ jobs:
         run: |
           node tools/check-game-scripts.mjs
           node tests/editor-moves.mjs
+          node tests/overworld-return.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs
