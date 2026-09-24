@@ -8826,6 +8826,51 @@
         "key": "3056,170",
         "blocked": true
       },
+      "object:1937": {
+        "kind": "object",
+        "key": "1937",
+        "sprite": 119,
+        "x": 376,
+        "y": 144,
+        "originX": 376,
+        "originY": 160
+      },
+      "object:1997": {
+        "kind": "object",
+        "key": "1997",
+        "sprite": 120,
+        "x": 616,
+        "y": 144,
+        "originX": 601,
+        "originY": 159
+      },
+      "object:2003": {
+        "kind": "object",
+        "key": "2003",
+        "sprite": 120,
+        "x": 664,
+        "y": 144,
+        "originX": 663,
+        "originY": 160
+      },
+      "object:2726": {
+        "kind": "object",
+        "key": "2726",
+        "sprite": 136,
+        "x": 696,
+        "y": 160,
+        "originX": 663,
+        "originY": 174
+      },
+      "object:2786": {
+        "kind": "object",
+        "key": "2786",
+        "sprite": 137,
+        "x": 600,
+        "y": 128,
+        "originX": 600,
+        "originY": 144
+      },
       "actor:npc:lineup:pack:maddock_smith107": {
         "kind": "actor",
         "key": "npc:lineup:pack:maddock_smith107",
@@ -8950,6 +8995,25 @@
         "y": 368,
         "originX": 624,
         "originY": 304
+      },
+      "actor:npc:lineup:pack:pack_smith": {
+        "kind": "actor",
+        "key": "npc:lineup:pack:pack_smith",
+        "identity": "NPC sample: pack_smith",
+        "deleted": true,
+        "x": 552,
+        "y": 304,
+        "originX": 544,
+        "originY": 304
+      },
+      "actor:npc:lineup:pack:guild_fighter_sword": {
+        "kind": "actor",
+        "key": "npc:lineup:pack:guild_fighter_sword",
+        "identity": "NPC sample: guild_fighter_sword",
+        "x": 536,
+        "y": 208,
+        "originX": 544,
+        "originY": 208
       },
       "feature-delete:26,28": {
         "kind": "feature-delete",
@@ -9731,12 +9795,13 @@
     "d692fa6c-7c99-44c3-b66e-dfa96c0bee0e",
     "ef242b28-7834-45e8-9b56-c54296cd993d",
     "fa6be385-ac59-4562-b91d-57ba19a6d720",
-    "4285c209-8754-4d11-9f0b-741fe5d2547b"
+    "4285c209-8754-4d11-9f0b-741fe5d2547b",
+    "32ee9240-a8a0-47e4-a442-0dbdfe10e968"
   ],
   "sessions": {
     "world": {
       "id": "0ed71ff1-2f40-44fa-a8e0-5c2bda6520d8",
-      "sequence": 3,
+      "sequence": 4,
       "baseHash": "22210a00-de08422-127180",
       "baseFingerprint": "516ab7b9-5e99839-675120",
       "base": {
@@ -18454,7 +18519,7 @@
           "blocked": true
         }
       },
-      "resultHash": "5e0e3c73-f9b54fb9-129653"
+      "resultHash": "2a265ad6-19d9f8f0-130539"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
