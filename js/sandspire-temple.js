@@ -51,8 +51,8 @@ async function prepareExpandedSandspireTemple(){
         const x=(l+r)/2,block=m.roomBlocks.push([x-15,t+6,x+15,t+16])-1;
         m.roomActors.push({spr:i%2?'scientist_shelf_plant':'scientist_shelf',x,y:t+16,schoolArt:true,moveBlocks:[block]});
       }
-      if(i%3===1)m.roomActors.push({spr:'scientist_web',x:l+12,y:t+12,schoolArt:true});
     }
+    addSandspireCobwebs(m);
     for(const h of plan.hazards||[]){
       m.roomActors.push({spr:'temple71_lever',x:h.lever[0],y:h.lever[1],schoolArt:true,expandedLever:h.id});
       if(h.type==='spikes'){
@@ -87,11 +87,33 @@ async function prepareExpandedSandspireTemple(){
     sanctum.roomActors.push(actor);
   }
   sanctum.roomActors.push({spr:'scientist_skull',x:184,y:96,schoolArt:true,moveBlocks:[sanctum.roomBlocks.push([168,80,200,96])-1]});
-  sanctum.roomActors.push({spr:'scientist_roots_small',x:124,y:120,schoolArt:true});
+  // Restore both animated specimens at native size. Their bases flank the
+  // entrance lane and leave the upper-right Heartstone approach clear.
+  for(const x of [136,208]){
+    const y=152,block=sanctum.roomBlocks.push([x-12,y-14,x+12,y])-1;
+    sanctum.roomActors.push({n:'Floating specimen jar',spr:'scientist_flask',x,y,schoolArt:true,
+      editKey:'ds_sanctum:specimen:'+x,moveBlocks:[block]});
+  }
   const chest=CHESTS.find(c=>c.gift==='ice');
   Object.assign(chest,{map:'ds_sanctum',x:(sp.heartstone[0]-8)/16,y:(sp.heartstone[1]-16)/16});
   sanctum.roomBlocks.push([sp.heartstone[0]-14,sp.heartstone[1]-12,sp.heartstone[0]+14,sp.heartstone[1]+10]);
   if(chestOpen.ds1||chestOpen.ds4||breathHas.ice)chestOpen.ds_sanctum=true;
+}
+function addSandspireCobwebs(map){
+  const plan=map.templePlan,treasures=plan.chests.map(c=>c.slice(0,2));
+  if(plan.heartstone)treasures.push(plan.heartstone);
+  const web=(x,y,flip)=>map.roomActors.push({spr:'scientist_web',x,y,sy:y-64,
+    schoolArt:true,stillFrame:0,templeWebFlip:flip,editKey:'web:'+x+':'+y});
+  for(const [l,t,r,b] of plan.chambers){
+    for(const [x,flip] of [[l+16,false],[r-16,true]]){
+      if(treasures.some(([cx,cy])=>Math.abs(cx-x)<48&&Math.abs(cy-t)<48))continue;
+      web(x,t+16,flip);
+    }
+  }
+  // Catch the upper wall corners at both ends of the east/west passages.
+  for(const [l,t,r,b] of plan.floors)if(b-t===32&&r-l>=160){
+    web(l+32,t+8,false);web(r-32,t+8,true);
+  }
 }
 function sandspireDoorLocked(door){
   return !foesHeld&&!!door.sandspireGuards?.some(i=>!bossGone[MAPID+':'+i]);

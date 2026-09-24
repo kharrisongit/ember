@@ -12,7 +12,7 @@ const run=s=>vm.runInContext(s,c);
 run('tryTreasuryChest()');assert.equal(c.gold,600);assert.equal(reveals,0);
 for(let frame=0;frame<6;frame++){clock=frame*120;run('drawTreasuryChests()');assert.equal(lastFrame,frame);}
 clock=800;run('stepLootChestOpening()');assert.equal(reveals,1);run('tryTreasuryChest()');assert.equal(c.gold,600);
-for(let frame=0;frame<5;frame++){c.chestAnim={phase:'lid',t:(frame+.1)*.9/5};run('drawChest()');assert.equal(lastFrame,frame);}
+for(let frame=0;frame<5;frame++){c.chestAnim={c:c.chestHere(),phase:'lid',t:(frame+.1)*.9/5};run('drawChest()');assert.equal(lastFrame,frame);}
 c.chestAnim=null;c.breathHas.lightning=true;run('drawChest()');assert.equal(lastFrame,4);
 c.breathHas.lightning=false;c.chestOpen={};c.P={x:88,y:128};assert(run('tryChest()'));assert.equal(c.chestAnim.phase,'lid');
 console.log('PASS: treasury keeps six frames and uploaded Heartstone chest renders all five opening frames; treasury popup waits, repeat rewards blocked, acquired heartstone stays open.');

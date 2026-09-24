@@ -1809,6 +1809,7 @@ function decodeRLE(rle, n) {
 
 function loadMap(id, fresh) {
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
+  chestAnim = null;
   fishing = null;
   pendingActorStage = null;
   brambleMap="";
@@ -3633,8 +3634,13 @@ function drawWorld(t, dt) {
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
       if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
-      if(visibleH>0)drawGameImage(ctx, o.doorImage || sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
-        drawX, o.y - sp[3], sp[2], visibleH);
+      if(visibleH>0){
+        if(o.templeWebFlip){
+          ctx.save();ctx.translate(drawX+sp[2],o.y-sp[3]);ctx.scale(-1,1);
+          drawGameImage(ctx,sheetOf(sp),sp[0]+fr*sp[2],sp[1],sp[2],visibleH,0,0,sp[2],visibleH);ctx.restore();
+        }else drawGameImage(ctx, o.doorImage || sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], visibleH,
+          drawX, o.y - sp[3], sp[2], visibleH);
+      }
       continue;
     }
     if (o.witchDemon) {
@@ -6776,9 +6782,14 @@ function chestHere() {
   return CHESTS.find(c => c.map === MAPID);
 }
 function tryChest() {
+  if(chestAnim&&chestAnim.c.map!==MAPID)chestAnim=null;
   const c = chestHere();
-  if (!c || chestOpen[c.map] || breathHas[c.gift] || chestAnim) return false;
-  if (Math.hypot(P.x-(c.x*TS+TS/2),P.y-(c.y*TS+TS)) > 44) return false;
+  if (!c || Math.hypot(P.x-(c.x*TS+TS/2),P.y-(c.y*TS+TS)) > 44) return false;
+  if(chestAnim)return true;
+  if(chestOpen[c.map]||breathHas[c.gift]){
+    chestOpen[c.map]=true;toast('This Heartstone has already been claimed.');return true;
+  }
+  P.act=null;
   chestAnim = { c, t: 0, phase: "lid" };
   return true;
 }
@@ -6816,6 +6827,7 @@ function stepChest(dt) {
   stepDark(dt);
   checkDeepPrize();
   if (!chestAnim) return;
+  if(chestAnim.c.map!==MAPID){chestAnim=null;return;}
   chestAnim.t += dt;
   const a = chestAnim;
   if (a.phase === "lid" && a.t > 0.9) { a.phase = "ghost"; a.t = 0; }
@@ -6823,6 +6835,7 @@ function stepChest(dt) {
     chestOpen[a.c.map] = true;
     unlockDragonBreath(a.c.gift);
     chestAnim = null;
+    saveGame();
     const giftName = a.c.gift[0].toUpperCase() + a.c.gift.slice(1);
     const giftIcon = HS_ICON[a.c.gift];
     showReveal(SPR[giftIcon] ? giftIcon : "heartstone_chest",
@@ -6835,13 +6848,14 @@ function drawChest() {
   const sp = SPR.heartstone_chest; // Uploaded chest is reserved for Heartstones.
   if (!sp) return;
   const px = c.x * TS + TS / 2 - sp[2] / 2, py = c.y * TS + TS - sp[3];
+  const opening=chestAnim?.c.map===c.map?chestAnim:null;
   let f = 0;
   if (chestOpen[c.map] || breathHas[c.gift]) f = sp[4] - 1;
-  else if (chestAnim && chestAnim.phase !== "lid") f = sp[4] - 1;
-  else if (chestAnim) f = Math.min(sp[4] - 1, Math.floor(chestAnim.t / 0.9 * sp[4]));
+  else if (opening && opening.phase !== "lid") f = sp[4] - 1;
+  else if (opening) f = Math.min(sp[4] - 1, Math.floor(opening.t / 0.9 * sp[4]));
   drawGameImage(ctx, atlasImg, sp[0] + f * sp[2], sp[1], sp[2], sp[3],
                 Math.round(px), Math.round(py), sp[2], sp[3]);
-  if (chestAnim && chestAnim.phase === "ghost" && SPR.ghost_rise) {
+  if (opening && opening.phase === "ghost" && SPR.ghost_rise) {
     const g = SPR.ghost_rise;
     const gf = Math.min(g[4] - 1, Math.floor(chestAnim.t / 1.2 * g[4]));
     const rise = chestAnim.t / 1.2 * 22;

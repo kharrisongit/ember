@@ -58,6 +58,11 @@ assert(!flood(c.MD,true).has([heart[0],heart[1]+24].join(',')));assert(flood(c.M
 run('stepExpandedTemple(1)');assert.equal(c.MD.templeGateOpen,0);c.bossGone['ds_sanctum:0']=true;run('stepExpandedTemple(1)');assert.equal(c.MD.templeGateOpen,0);
 c.bossGone['ds_sanctum:1']=true;run('stepExpandedTemple(1)');assert.equal(c.MD.templeGateOpen,1);assert.equal(c.CHESTS[0].map,'ds_sanctum');
 assert(c.MD.foes.every(f=>f.k==='golem1'));assert.equal(c.MD.roomActors.filter(a=>a.spr==='first_temple_torch'&&a.y<160).length,0);
+const jars=c.MD.roomActors.filter(a=>a.spr==='scientist_flask');assert.equal(jars.length,2,'original floating creature jars restored');
+assert(jars.every(a=>a.stillFrame===undefined&&a.moveBlocks?.length),'jars animate and retain their own collision');
+const jarArt=JSON.parse(read('js/generated/game-part-1.js').match(/\{"name":"scientist_flask"[^\n]*?\}/)[0]);assert.equal(jarArt.frames,6);
+const webs=Object.values(W.maps).flatMap(m=>(m.roomActors||[]).filter(a=>a.spr==='scientist_web'));
+assert(webs.length>=60&&webs.some(a=>a.templeWebFlip),'cobwebs occupy both left and right wall corners throughout Sandspire');
 // Each ghost waits for its lid, is hostile, spawns once, and survives a map reload until killed.
 for(const [id,m] of Object.entries(W.maps))for(const a of m.roomActors?.filter(a=>a.houseLoot?.ghost)||[]){
  c.MD=m;c.MAPID=id;run('spawnFoes()');c.P={x:a.x,y:a.y+24};const before=c.foes.length,revealCount=reveals,riseCount=rises;
@@ -91,8 +96,11 @@ c.MAPID='ds_west';c.MD=W.maps.ds_west;c.P={x:544,y:1536};saved=JSON.parse(JSON.s
 assert.equal(saved.sandspireLayoutVersion,1);assert(Object.keys(saved.templeDefeated).some(k=>k.startsWith('ds_')));assert.equal(saved.houseLootTaken.length,3);
 for(const k of Object.keys(c.bossGone))delete c.bossGone[k];run('houseLootTaken.clear()');assert(run('loadGame(1)'));
 assert.deepEqual(c.bossGone,saved.templeDefeated);assert.equal(run('houseLootTaken.size'),3);
+// A different slot must discard an unfinished opening and another slot's claimed Heartstone.
+c.breathHas.ice=true;c.breathHas.shadow=true;c.chestOpen.ds_sanctum=true;c.chestOpen.sn1=true;c.chestAnim={c:{map:'ds_sanctum'},t:0,phase:'lid'};
 saved={map:'ds1',x:160,y:1000,gold:0,quest:1,templeLayoutVersion:2,breathHas:{ice:false,lightning:false}};
 assert(run('loadGame(2)'));assert.deepEqual([c.P.x,c.P.y],plan.ds1.spawn);assert.equal(run('houseLootTaken.size'),0);assert.equal(Object.keys(c.bossGone).length,0);
+assert.equal(c.chestAnim,null);assert.equal(c.chestOpen.ds_sanctum,false);assert(!c.chestOpen.sn1);assert.equal(c.breathHas.ice,false);assert.equal(c.breathHas.shadow,false);
 console.log('PASS: chamber seals, two Stone Golems guarding Ice Heartstone, three delayed one-time ghost ambushes, projectile bounds, all trap levers, actual save/load, old-save relocation and slot isolation.');
 // Retain the actual interior teleport entry and safe destination.
 run(game.slice(game.indexOf('function storyTeleport(id) {'),game.indexOf('const KING_DRAGON_SPR')));

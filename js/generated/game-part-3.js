@@ -3758,9 +3758,10 @@ function stepKnightEncounter(dt) {
   }
 }
 function stepArena(dt) {
+  // Chests and exploration rewards keep running when combat is disabled.
+  stepChest(dt);
   if (foesHeld) { arenaLock=null;arenaT=0;arenaGoing=false;falling=null;return; }
   if (trial) { stepTrial(dt); return; }
-  stepChest(dt);
   const mapArenas = currentArenaFeatures();
   if (!MD || !mapArenas.length) {
     if (MAPID !== "world") { arenaLock = null; arenaT = 0; return; }
@@ -5549,9 +5550,10 @@ function loadGame(slot=activeSaveSlot) {
     activeSaveSlot=slot;
     if (trial) stopTrial("");
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
-    if (s.breathHas) for (const k in breathHas) if (s.breathHas[k] !== undefined) breathHas[k] = !!s.breathHas[k];
-    chestOpen.tp1_sanctum=!!breathHas.lightning;
-    chestOpen.ds_sanctum=!!breathHas.ice;
+    chestAnim=null;
+    for(const k in breathHas)breathHas[k]=k==='fire'||k==='slash'||!!s.breathHas?.[k];
+    for(const map of Object.keys(chestOpen))delete chestOpen[map];
+    for(const c of CHESTS)chestOpen[c.map]=!!breathHas[c.gift];
     syncDragonVitality(false);
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;

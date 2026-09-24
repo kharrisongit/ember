@@ -13,7 +13,7 @@ assert.equal(placements.filter(c=>c.map.includes('_bedroom')).length,62);
 let clock=0,saved=null,saves=0,reveals=0;
 const ctx=vm.createContext({W,fetch:async()=>({ok:true,json:async()=>placements}),performance:{now:()=>clock},
  gold:50,potions:0,boarMeat:0,dragonFish:0,P:{},toast(){},flyGold(){},showReveal(){reveals++;},saveGame(){saves++;},
- quest:0,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,knightEncounterDone:false,royalDefeated:{},bossGone:{},chestOpen:{},treasuryTaken:new Set(),breathHas:{},dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,MAPID:'house00',activeSaveSlot:1,
+ quest:0,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,knightEncounterDone:false,royalDefeated:{},bossGone:{},chestOpen:{},CHESTS:[],treasuryTaken:new Set(),breathHas:{},dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,MAPID:'house00',activeSaveSlot:1,
  migrateLegacySave(){},readSaveSlot:()=>saved,syncDragonVitality(){},hasSword:()=>true,loadMap(id){ctx.MAPID=id;ctx.MD=W.maps[id];},recoverTempleArrival(){},cam:{},clampCam(){},chunks:{clear(){}}});
 vm.runInContext(read('js/house-loot.js'),ctx);
 await vm.runInContext('prepareHouseLoot()',ctx);
