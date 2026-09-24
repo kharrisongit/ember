@@ -1,5 +1,38 @@
 {
   "schema": 1,
-  "maps": {},
-  "applied": []
+  "maps": {
+    "house26": {
+      "actor:millwood:house26:5": {
+        "kind": "actor",
+        "key": "millwood:house26:5",
+        "identity": "iplant0",
+        "deleted": true,
+        "x": 176,
+        "y": 171,
+        "originX": 166.5,
+        "originY": 195
+      },
+      "actor:millwood:house26:2": {
+        "kind": "actor",
+        "key": "millwood:house26:2",
+        "identity": "iplant4",
+        "x": 86,
+        "y": 201,
+        "originX": 32,
+        "originY": 197
+      },
+      "actor:millwood:house26:3": {
+        "kind": "actor",
+        "key": "millwood:house26:3",
+        "identity": "iplant4",
+        "x": 152,
+        "y": 201,
+        "originX": 152,
+        "originY": 197
+      }
+    }
+  },
+  "applied": [
+    "1e407f31-a0f8-4b65-b617-ddb52322a261"
+  ]
 }
