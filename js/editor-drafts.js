@@ -76,7 +76,7 @@
       if(run.status==='completed'){
         root.localStorage.removeItem(ACTIVE);
         if(run.conclusion!=='success')throw Error('GitHub could not publish these edits. Your draft is saved. Open the check for details, then retry.');
-        result(true,'Changes published. Refresh the game when you are ready.',record);return;
+        result(true,'Changes published. You can keep editing and send again.',record);return;
       }
       await pause();
     }
@@ -137,5 +137,5 @@
   }
   root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,encodeDraft,
     disconnect(){root.localStorage.removeItem(TOKEN);root.sessionStorage.removeItem(PAIR);},
-    version:'20260924-all-edits',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
+    version:'20260924-repeat-send',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
 })(globalThis);

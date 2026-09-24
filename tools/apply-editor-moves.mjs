@@ -13,15 +13,37 @@ export function applyMoves(current,draft,revision) {
   assert.equal(current.schema,1);
   if(current.applied.includes(draft.id))return current;
   assert.equal(draft.sourceRevision,revision,'Game code has changed. Refresh before making more moves; the old draft remains saved.');
-  assert(Array.isArray(draft.operations)&&draft.operations.length>0&&draft.operations.length<=200000,'Invalid number of editor operations');
+  assert(Array.isArray(draft.operations)&&(draft.operations.length>0||draft.session)&&draft.operations.length<=200000,'Invalid number of editor operations');
   const next=structuredClone(current),seen=new Set();let map=next.maps[draft.map]||{};
+  let receipt=null;
+  if(draft.session){
+    const session=draft.session,prior=current.sessions?.[draft.map];
+    assert(typeof session.id==='string'&&/^[a-f0-9-]{36}$/.test(session.id),'Invalid editor session');
+    assert(Number.isSafeInteger(session.sequence)&&session.sequence>0,'Invalid session sequence');
+    assert(typeof session.baseHash==='string'&&session.baseHash.length<100,'Invalid session baseline');
+    assert(typeof draft.baseFingerprint==='string'&&draft.baseFingerprint.length<120,'Invalid map baseline');
+    if(prior?.id===session.id){
+      assert.equal(session.baseHash,prior.baseHash,'Editor session baseline changed');
+      assert.equal(draft.baseFingerprint,prior.baseFingerprint,'Editor map baseline changed');
+      assert.equal(prior.resultHash,Build.hash(map),'Another editing session changed this area. Refresh before sending.');
+      assert(session.sequence>prior.sequence,'An earlier edit cannot replace your newer changes.');
+      receipt={...prior,sequence:session.sequence};
+      // Every send is the complete draft relative to this session's starting
+      // map. Reapply it there so repeated moves, paint and undo stay cumulative.
+      map=structuredClone(prior.base);
+    }else{
+      assert.equal(session.baseHash,Build.hash(map),'This area changed in another editing session. Refresh before sending.');
+      receipt={...session,baseFingerprint:draft.baseFingerprint,base:structuredClone(map)};
+    }
+  }
+
   for(const op of draft.operations){
     if(op.kind==='build'){
       assert(!seen.size,'Build data must precede other edits');
       assert.equal(op.layout,Build.hash(map),'This area was published since your Build changes. Refresh before sending.');
       assert(typeof op.before==='string'&&typeof op.after==='string'&&op.before.length<100&&op.after.length<100,'Invalid Build baseline');
       Build.validate(op.changes);
-      map={build:{kind:'build',previous:map,before:op.before,after:op.after,changes:op.changes}};seen.add('build');continue;
+      map={build:{kind:'build',previous:map,before:op.before,after:op.after,changes:structuredClone(op.changes)}};seen.add('build');continue;
     }
     if(op.kind==='door'){
       assert(Number.isInteger(op.index)&&op.index>=0&&op.index<10000&&op.key===String(op.index),'Invalid door index');
@@ -29,7 +51,7 @@ export function applyMoves(current,draft,revision) {
       for(const r of [op.before,op.rect])for(const k of ['x','y','w','h'])assert(Number.isFinite(r?.[k])&&r[k]>=0&&r[k]<=100000&&(!['w','h'].includes(k)||r[k]>=1),'Invalid door rectangle');
       const key='door:'+op.key;assert(!seen.has(key),'Duplicate door edit');seen.add(key);
       const old=map[key];if(old){assert.equal(old.to,op.to,'Door destination changed');assert(Build.hash(old.rect)===Build.hash(op.before)||Build.hash(old.rect)===Build.hash(op.rect),'Door was edited in a newer submission');}
-      map[key]={kind:'door',key:op.key,index:op.index,to:op.to,rect:op.rect};continue;
+      map[key]={kind:'door',key:op.key,index:op.index,to:op.to,rect:{...op.rect}};continue;
     }
     if(op.kind==='collision'){
       assert(/^\d+,\d+$/.test(op.key)&&op.key.split(',').every(v=>Number(v)<10000),'Invalid collision cell');
@@ -83,6 +105,8 @@ export function applyMoves(current,draft,revision) {
       ...(op.kind==='decor'?{tag:op.tag,index:op.index}:{}),...(op.deleted===true?{deleted:true}:{}),x:op.x,y:op.y,originX:old?.originX??op.fromX,originY:old?.originY??op.fromY};
   }
   next.maps[draft.map]=map;next.applied.push(draft.id);
+  if(receipt)(next.sessions||={})[draft.map]={...receipt,resultHash:Build.hash(map)};
+  else if(next.sessions)delete next.sessions[draft.map];
   return next;
 }
 export function decodeDraft(input){

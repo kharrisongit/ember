@@ -268,3 +268,45 @@ const worldLayout=applyMoves(empty,{...first,map:'world',operations:worldDraft.o
 g.c.worldFresh=structuredClone(market);g.c.worldLayout=worldLayout;g.run(`publishedEditorLayouts=worldLayout;applyPublishedEditorLayout(worldFresh,'world');`);
 assert.equal(g.run('worldFresh.features.at(-1).id'),99999);
 console.log('PASS: an actual full-world Build edit fits the transport and applies to a clean world baseline.');
+
+// Each send from one browser is a cumulative draft, including adjustments to
+// things that were already published earlier in that same session.
+disk.clear();g=gameContext();g.run(`visit('a');EmberEditDrafts.sourceRevision='${revision}';EmberEditDrafts.connected=()=>true;
+ var sentDrafts=[];EmberEditDrafts.send=d=>sentDrafts.push(EmberEditDrafts.clone(d));
+ moveEditorActor(MD.roomActors[0],110,170,true);objs[0].x=56;painted.set(26,4);sendEditorChanges();`);
+const submission=()=>JSON.parse(g.run('JSON.stringify(sentDrafts.at(-1))'));
+const one=submission();let series=applyMoves(empty,one,revision);
+g.run(`moveEditorActor(MD.roomActors[0],120,172,true);objs[0].x=64;painted.set(26,1);sendEditorChanges();`);
+const two=submission();assert.equal(two.session.id,one.session.id);assert.equal(two.session.sequence,2);
+series=applyMoves(series,two,revision);
+assert.equal(series.maps.a['actor:statue'].x,120);assert.equal(series.maps.a['object:0'].x,64);assert.equal(series.maps.a['paint:26'].value,1);
+assert.equal(series.maps.a['actor:statue'].originX,100,'runtime still anchors to the original authored position');
+g.run('sendEditorChanges();');assert.equal(submission().id,two.id);assert.equal(applyMoves(series,submission(),revision),series);
+g.run(`visit('b');objs[0].x=36;sendEditorChanges();`);series=applyMoves(series,submission(),revision);
+g.run(`visit('a');added.push({id:nextId++,s:2,x:90,y:100});objs.push(added.at(-1));sendEditorChanges();`);
+series=applyMoves(series,submission(),revision);const addedKey=Object.keys(series.maps.a).find(k=>k.startsWith('object-add:'));
+g.run(`added[0].x=98;deleted.add(0);objs=objs.filter(o=>o.id!==0);sendEditorChanges();`);series=applyMoves(series,submission(),revision);
+assert.equal(series.maps.a[addedKey].x,98);assert.equal(Object.keys(series.maps.a).filter(k=>k.startsWith('object-add:')).length,1);assert(series.maps.a['object:0'].deleted);
+// Returning every edited value to the original is a valid empty replacement.
+g.run(`added=[];objs=ORIG.map((o,id)=>({...o,id}));deleted.clear();painted.clear();actorLayouts.a={};sendEditorChanges();`);
+const undone=submission();assert.equal(undone.operations.length,0);series=applyMoves(series,undone,revision);
+assert.deepEqual(series.maps.a,{});assert.equal(series.maps.b['object:0'].x,36,'another area remains unchanged');
+assert.throws(()=>applyMoves(series,{...two,id:webcrypto.randomUUID()},revision),/earlier edit/);
+assert.throws(()=>applyMoves(series,{...two,id:webcrypto.randomUUID(),session:{...two.session,id:webcrypto.randomUUID(),baseHash:'stale'}},revision),/another editing session/);
+let foreign=applyMoves(series,{...first,map:'a',id:webcrypto.randomUUID(),operations:[{kind:'object',key:'0',sprite:1,fromX:40,fromY:40,x:70,y:40}]},revision);
+assert.throws(()=>applyMoves(foreign,{...two,id:webcrypto.randomUUID(),session:{...two.session,sequence:100}},revision),/another editing session/);
+assert.throws(()=>applyMoves(series,{...two,id:webcrypto.randomUUID(),session:{...two.session,sequence:100},baseFingerprint:'changed'},revision),/map baseline/);
+console.log('PASS: actual repeated SEND preserves session identity across areas, adjusts published actors/objects/paint/additions/deletions, publishes undo, retries once, and rejects other-session conflicts and old sequences.');
+
+// Build, Doors and Collision participate in the same cumulative replacement.
+const session={id:webcrypto.randomUUID(),sequence:1,baseHash:B.hash({})};
+const buildStart=B.snapshot(authored),buildNext=structuredClone(buildStart);buildNext.features.push({id:45,kind:'arena',x:12,y:12,r:6});
+const makeBuild=after=>({kind:'build',layout:session.baseHash,before:B.hash(buildStart),after:B.hash(after),changes:B.diff(buildStart,after)});
+const door={kind:'door',key:'0',index:0,to:'b',before:{x:32,y:48,w:16,h:16},rect:{x:40,y:48,w:16,h:16}};
+const cell={kind:'collision',key:'2,3',before:null,blocked:true};
+let family=applyMoves(empty,{...first,map:'a',baseFingerprint:'fixture',session,operations:[makeBuild(buildNext),door,cell]},revision);
+buildNext.features.at(-1).r=8;
+family=applyMoves(family,{...next,map:'a',baseFingerprint:'fixture',session:{...session,sequence:2},operations:[makeBuild(buildNext),{...door,rect:{...door.rect,x:56}},{...cell,blocked:false}]},revision);
+assert.deepEqual(B.snapshot(publishedMap(family,{...authored,doors:[{x:2,y:3,to:'b'}]})),buildNext);
+assert.equal(family.maps.a['door:0'].rect.x,56);assert.equal(family.maps.a['collision:2,3'].blocked,false);
+console.log('PASS: repeated Build, Doors and Collision sends replace their earlier result against the saved session baseline.');

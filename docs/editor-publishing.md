@@ -48,12 +48,20 @@ Disconnect GitHub control. Refreshing the game resumes status checks only;
 normal saves and editor actions do not start network writes. The token is
 never included in draft exports. An expired token prompts a new connection.
 
+Each map draft keeps a stable editing-session ID and increasing send sequence.
+The workflow remembers that session's original published layout. Later sends
+replace the same session's cumulative draft against that baseline, so moving an
+NPC again, repainting, changing a duplicate or undoing an edit does not conflict
+with the owner's earlier send. An older sequence or a different session's
+changes cannot overwrite the latest result. The metadata lives in the layout
+file's `sessions` object; it is not part of the rendered map overrides.
+
 Each submission has a stable retry ID. The game checks published IDs and existing
 workflow run titles before dispatching, and holds another area's send while an
 editor workflow is active. The workflow also checks applied IDs, source versions,
-and conflicting positions before changing layout data. A failed non-fast-forward
+and conflicting sessions/positions before changing layout data. A failed non-fast-forward
 push stops instead of overwriting another commit. Local drafts remain available
-on errors. GitHub workflow runs track direct submissions; the private inbox still
+on errors. Rejected data-only payloads are also retained in the workflow log for recovery. GitHub workflow runs track direct submissions; the private inbox still
 retains historical submissions and supports the older popup game clients.
 
 ## Maintaining game code

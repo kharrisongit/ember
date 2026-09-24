@@ -85,7 +85,7 @@ function saveEditorDraft() {
   const api=EmberEditDrafts, patch=buildPatch(true), old=api.store.get(MAPID);
   const base=editorDraftBases.get(MAPID).map;
   const buildChanged=editorBuildActive.has(MAPID)||regionMoves.length>0||features.length!==(base.features||[]).length||features.some(f=>featOrig.get(f.id)!==JSON.stringify(f))||MW!==base.w||MH!==base.h;
-  if (!buildChanged&&patch.includes('\n(no changes on this map)')) {
+  if (!buildChanged&&!old?.session&&patch.includes('\n(no changes on this map)')) {
     if(old)try{api.store.remove(MAPID);}catch(_){}
     return;
   }
@@ -144,7 +144,7 @@ function saveEditorDraft() {
     }else operations.push({kind:'collision',key:g.cell.join(','),before:MD.collisionOverrides?.[g.cell.join(',')]??null,blocked:g.blocked});
   }
   const sameSubmission=old?.submission?.sourceRevision===api.sourceRevision&&JSON.stringify(old.submission.operations)===JSON.stringify(operations);
-  const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,
+  const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,session:old?.session||null,
     updatedAt:new Date().toISOString(),submission:sameSubmission?old.submission:null,
     sentAt:sameSubmission?old.sentAt:null};
   try { api.store.put(MAPID,draft); }
@@ -177,9 +177,11 @@ function sendEditorChanges() {
   if(editorDraftStale.has(MAPID)){toast('This area changed since the draft. Use COPY to keep the old draft, then RESET before making new moves.');return;}
   const draft=editorDraftStale.has(MAPID)?api.store.get(MAPID):saveEditorDraft();
   if (!draft) { toast('No changes in this area to send.'); return; }
-  if(!draft.operations?.length){toast('No changes in this area to send.');return;}
+  if(!draft.operations?.length&&!draft.session){toast('No changes in this area to send.');return;}
   if (!draft.submission) {
-    draft.submission={schema:1,id:crypto.randomUUID(),map:MAPID,baseFingerprint:draft.baseFingerprint,
+    draft.session ||= {id:crypto.randomUUID(),sequence:0,baseHash:EmberBuildData.hash(publishedEditorLayouts.maps[MAPID]||{})};
+    draft.session.sequence++;
+    draft.submission={schema:1,id:crypto.randomUUID(),map:MAPID,baseFingerprint:draft.baseFingerprint,session:{...draft.session},
       gameVersion:api.version,sourceRevision:draft.sourceRevision,patch:draft.patch,changeCount:draft.operations.reduce((n,o)=>n+(o.kind==='paint'?o.values.length:1),0),operations:draft.operations};
     try { api.store.put(MAPID,draft); } catch (_) { /* Sending is still available when local storage is full. */ }
   }
