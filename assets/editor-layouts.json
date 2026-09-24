@@ -7914,6 +7914,258 @@
         "originX": 12712,
         "originY": 3088
       },
+      "paint:524188": {
+        "kind": "paint",
+        "key": "524188",
+        "index": 524188,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:524189": {
+        "kind": "paint",
+        "key": "524189",
+        "index": 524189,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:524190": {
+        "kind": "paint",
+        "key": "524190",
+        "index": 524190,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:527773": {
+        "kind": "paint",
+        "key": "527773",
+        "index": 527773,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:527774": {
+        "kind": "paint",
+        "key": "527774",
+        "index": 527774,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:527775": {
+        "kind": "paint",
+        "key": "527775",
+        "index": 527775,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:531358": {
+        "kind": "paint",
+        "key": "531358",
+        "index": 531358,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:531359": {
+        "kind": "paint",
+        "key": "531359",
+        "index": 531359,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:531360": {
+        "kind": "paint",
+        "key": "531360",
+        "index": 531360,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:534943": {
+        "kind": "paint",
+        "key": "534943",
+        "index": 534943,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:534944": {
+        "kind": "paint",
+        "key": "534944",
+        "index": 534944,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:534945": {
+        "kind": "paint",
+        "key": "534945",
+        "index": 534945,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:599472": {
+        "kind": "paint",
+        "key": "599472",
+        "index": 599472,
+        "value": 8,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:603056": {
+        "kind": "paint",
+        "key": "603056",
+        "index": 603056,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:603057": {
+        "kind": "paint",
+        "key": "603057",
+        "index": 603057,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:603058": {
+        "kind": "paint",
+        "key": "603058",
+        "index": 603058,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:606641": {
+        "kind": "paint",
+        "key": "606641",
+        "index": 606641,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:606642": {
+        "kind": "paint",
+        "key": "606642",
+        "index": 606642,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:606643": {
+        "kind": "paint",
+        "key": "606643",
+        "index": 606643,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:610226": {
+        "kind": "paint",
+        "key": "610226",
+        "index": 610226,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:610227": {
+        "kind": "paint",
+        "key": "610227",
+        "index": 610227,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:610228": {
+        "kind": "paint",
+        "key": "610228",
+        "index": 610228,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:613811": {
+        "kind": "paint",
+        "key": "613811",
+        "index": 613811,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:613812": {
+        "kind": "paint",
+        "key": "613812",
+        "index": 613812,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:613813": {
+        "kind": "paint",
+        "key": "613813",
+        "index": 613813,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:617396": {
+        "kind": "paint",
+        "key": "617396",
+        "index": 617396,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:617397": {
+        "kind": "paint",
+        "key": "617397",
+        "index": 617397,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:617398": {
+        "kind": "paint",
+        "key": "617398",
+        "index": 617398,
+        "value": 8,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
       "paint:642430": {
         "kind": "paint",
         "key": "642430",
@@ -9077,12 +9329,13 @@
     "75286d81-6bf9-4d1e-8eb3-00a98d78691c",
     "63ed0e88-220d-41c8-836f-4255f7ccac57",
     "b0a8f066-e200-4f35-ab14-e364269db1f2",
-    "69efc8c0-5a5b-4be3-9887-c33f4528ae20"
+    "69efc8c0-5a5b-4be3-9887-c33f4528ae20",
+    "4415a4b7-fd36-4106-b885-a09d5cfd4d61"
   ],
   "sessions": {
     "world": {
       "id": "175919a2-d170-43f5-8052-d0eb3e6173b4",
-      "sequence": 3,
+      "sequence": 4,
       "baseHash": "17c1f3f9-cfbc07b3-113215",
       "baseFingerprint": "efa8ab13-276af4a3-653468",
       "base": {
@@ -16731,7 +16984,7 @@
           "blocked": true
         }
       },
-      "resultHash": "f34ced60-c0d4f404-121750"
+      "resultHash": "543b64a0-8a1ea9cc-124942"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
