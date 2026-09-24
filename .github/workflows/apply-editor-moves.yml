@@ -1,4 +1,4 @@
-name: Apply editor moves
+name: Apply editor changes
 run-name: Editor moves ${{ inputs.submission_id }}
 on:
   workflow_dispatch:
@@ -31,9 +31,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate and apply the submitted moves
+      - name: Validate and apply the submitted edits
         run: node tools/apply-editor-moves.mjs
-      - name: Check game and move behavior
+      - name: Check game and editor behavior
         run: |
           node tools/check-game-scripts.mjs
           node tests/editor-moves.mjs
@@ -42,11 +42,11 @@ jobs:
           node tests/temple-compass.mjs
       - name: Commit the validated layout
         run: |
-          git config user.name 'Emberfell Move Tool'
+          git config user.name 'Emberfell Editor'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add assets/editor-layouts.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Apply moves submitted from the game'
+            git commit -m 'Apply edits submitted from the game'
             git push origin HEAD:main
           fi
       # GITHUB_TOKEN pushes do not trigger the normal Pages push workflow.

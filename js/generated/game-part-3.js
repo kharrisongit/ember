@@ -1865,7 +1865,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   }
 
   if (MD.felled && MD.felled.length) {
-    const gone = new Set(MD.felled.map(f => f[0] + "," + f[1]));
+    const gone = new Set(MD.felled.map(f => Array.isArray(f)?f.join(","):f));
     fobjs = fobjs.filter(o =>
       !gone.has(Math.floor(o.x / TS) + "," + Math.floor((o.y - 1) / TS)));
   }
@@ -2530,6 +2530,12 @@ function growWorld(needW, needH) {
     nt.set(terr.subarray(y * MW, y * MW + MW), y * nw);
     nb.set(baseTerr.subarray(y * MW, y * MW + MW), y * nw);
   }
+  const oldWidth=MW;
+  painted=new Map([...painted].map(([i,v])=>[(Math.floor(i/oldWidth)*nw+i%oldWidth),v]));
+  for(const p of MD.editorPublishedPaint||[]){p.index=Math.floor(p.index/oldWidth)*nw+p.index%oldWidth;p.key=String(p.index);p.width=nw;p.height=nh;}
+  const origin=new Uint8Array(nw*nh).fill(GRASS);
+  if(terrOrig)for(let y=0;y<MH;y++)origin.set(terrOrig.subarray(y*oldWidth,(y+1)*oldWidth),y*nw);
+  terrOrig=origin;
   terr = nt; baseTerr = nb;
   for (const [ox, oy] of opened) felled.add(ox + "," + oy);
   MW = nw; MH = nh; PXW = MW * TS; PXH = MH * TS;
@@ -2762,10 +2768,9 @@ function scaleAreaContents(oldB, newB, inset) {
   for (const p of npcs) {
     if (!inside(p.x, p.y)) continue;
     const ox = ((p.x % TS) + TS) % TS, oy = ((p.y % TS) + TS) % TS;
-    p.x = X(p.x - ox) + ox;
-    p.y = Y(p.y - oy) + oy;
+    moveEditorActor(p,X(p.x-ox)+ox,Y(p.y-oy)+oy,true);
   }
-  MD.npcs = npcs.map(p => ({ ...p }));
+  // NPC source records are updated through moveEditorActor; keep dialogue intact.
 
   for (const [live, mdKey] of [[scat, "scatter"], [sanm, "sanim"]]) {
     const out = [], grp = new Map();
@@ -2963,7 +2968,7 @@ function moveArea(f, dx, dy, silent) {
       if (o.id < ORIG.length) { ORIG[o.id].x += px; ORIG[o.id].y += py; }
     }
   for (const n of npcs)
-    if (within(n.x, n.y)) { n.x += px; n.y += py; carried++; }
+    if (within(n.x, n.y)) { moveEditorActor(n,n.x+px,n.y+py,true); carried++; }
   for (const arr of [scat, sanm])
     for (let i = 0; i < arr.length; i += 3)
       if (within(arr[i + 1], arr[i + 2])) {
@@ -3106,7 +3111,7 @@ function moveRegion(r, dx, dy, silent) {
       o.x += px; o.y += py; n++;
       if (o.id < ORIG.length) { ORIG[o.id].x += px; ORIG[o.id].y += py; }
     }
-  for (const p of npcs) if (inside(p.x, p.y)) { p.x += px; p.y += py; n++; }
+  for (const p of npcs) if (inside(p.x, p.y)) { moveEditorActor(p,p.x+px,p.y+py,true); n++; }
   for (const arr of [scat, sanm])
     for (let k = 0; k < arr.length; k += 3)
       if (inside(arr[k + 1], arr[k + 2])) { arr[k + 1] += px; arr[k + 2] += py; n++; }

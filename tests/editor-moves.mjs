@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {webcrypto} from 'node:crypto';
 import zlib from 'node:zlib';
-import {applyMoves} from '../tools/apply-editor-moves.mjs';
+import {applyMoves,decodeDraft} from '../tools/apply-editor-moves.mjs';
 const empty={schema:1,maps:{},applied:[]},revision='a'.repeat(64);
 const first={schema:1,id:'11111111-1111-4111-8111-111111111111',map:'tp1_sanctum',sourceRevision:revision,
   operations:[{kind:'actor',key:'statue:left',identity:'sentinel',fromX:100,fromY:200,x:100,y:170}]};
@@ -31,16 +31,16 @@ console.log('PASS: manual storage, reload, map isolation, published collision, r
 // Exercise the actual game hooks, including absolute actor/collision restoration.
 const disk=new Map(),read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 function gameContext(){
-  const c=vm.createContext({console,crypto:webcrypto,setTimeout:()=>0,clearTimeout(){},
+  const c=vm.createContext({console,CompressionStream,Blob,Response,TextEncoder,btoa:s=>Buffer.from(s,'binary').toString('base64'),crypto:webcrypto,setTimeout:()=>0,clearTimeout(){},
     localStorage:{getItem:k=>disk.get(k)||null,setItem:(k,v)=>disk.set(k,v)},
     document:{getElementById:()=>({}),addEventListener(){}},window:{addEventListener(){}},
     tap(){},toast(){},rebuildSolid(){},worldChanged(){},saveGeometry(){},
     fetch(){throw Error('Draft hooks sent data without a button press');}});
   const run=code=>vm.runInContext(code,c);
-  run(read('js/editor-drafts.js'));
+  run(read('js/editor-build-data.js'));run(read('js/editor-drafts.js'));
   run(`var actorLayouts={},geometryEdits={},MD=null,MAPID='',TS=16,PXW=400,PXH=400,mapDirty=false;
     var editing=true,building=false,painting=false,doorEdit=false,collideView=false;
-    var MW=25,MH=25,terrOrig=new Uint8Array(625),npcs=[],objs=[],ORIG=[],added=[],deleted=new Set(),nextId=0,painted=new Map(),features=[],featOrig=new Map(),regionMoves=[],clearedBoxes=[],felledNew=[],decorGone=new Set(),decorDel=[],decorMoved=new Map(),scat=[],sanm=[],terr=[],felled=new Set();
+    var MW=25,MH=25,terrOrig=new Uint8Array(625),npcs=[],objs=[],ORIG=[],added=[],deleted=new Set(),nextId=0,painted=new Map(),baseTerr=new Uint8Array(625),decks=[],features=[],featOrig=new Map(),regionMoves=[],clearedBoxes=[],felledNew=[],decorGone=new Set(),decorDel=[],decorMoved=new Map(),scat=[],sanm=[],terr=[],felled=new Set();
     class CanvasStandIn{};
     var W={maps:{a:{w:25,h:25,objs:[1,40,40],npcs:[],doors:[],roomActors:[{editKey:'statue',spr:'sentinel',x:100,y:200,interiorFurniture:true,moveBlocks:[0],extractedCanvas:new CanvasStandIn()}],roomBlocks:[[90,180,110,200]],scatter:[2,60,60],sanim:[],features:[],terr:'0.625'},b:{w:25,h:25,objs:[1,20,20],npcs:[],roomActors:[],roomBlocks:[],doors:[],scatter:[],sanim:[],features:[],terr:'0.625'}}};
     var NAMES=['unused','prop','tree'];var TCHAR={0:'g',1:'d',4:'w'};`);
@@ -48,9 +48,10 @@ function gameContext(){
   run(game.slice(game.indexOf('function geometryPatch('),game.indexOf('// Illustrated atlas:')));
   run(game.slice(game.indexOf('function editorActorInfo('),game.indexOf('function pickEditorActor(')));
   run(game.slice(game.indexOf('function buildPatch('),game.indexOf('const dumpEl =')));
+  const part3=read('js/generated/game-part-3.js');run(part3.slice(part3.indexOf('function terrRLE('),part3.indexOf('const RUN_SPR =')));
   run(read('js/published-editor-layouts.js'));run(read('js/editor-draft-integration.js'));
-  run(`function visit(id,fresh=false){saveEditorDraft();editorDraftReady=false;MAPID=id;MD=W.maps[id];terr=new Uint8Array(625);const s=editorPrepareMap(id,fresh);applyActorLayout(MD,id);
-    ORIG=[];for(let i=0;i<MD.objs.length;i+=3)ORIG.push({s:MD.objs[i],x:MD.objs[i+1],y:MD.objs[i+2]});objs=ORIG.map((o,id)=>({...o,id}));added=[];deleted=new Set();nextId=ORIG.length;painted=new Map();features=[];featOrig=new Map();decorGone=new Set();decorDel=[];decorMoved=new Map();scat=MD.scatter.slice();sanm=[];editorRestoreMap(s);applyEditorPaint(true);}`);
+  run(`function visit(id,fresh=false){saveEditorDraft();editorDraftReady=false;MAPID=id;MD=W.maps[id];const s=editorPrepareMap(id,fresh);MW=MD.w;MH=MD.h;const decode=s=>Uint8Array.from(s.split('|').flatMap(p=>{const [v,n]=p.split('.').map(Number);return Array(n).fill(v)}));terr=decode(MD.terr);baseTerr=decode(MD.base_terr||MD.terr);decks=MD.decks||[];applyActorLayout(MD,id);
+    ORIG=[];for(let i=0;i<MD.objs.length;i+=3)ORIG.push({s:MD.objs[i],x:MD.objs[i+1],y:MD.objs[i+2]});objs=ORIG.map((o,id)=>({...o,id}));added=[];deleted=new Set();nextId=ORIG.length;painted=new Map();features=EmberEditDrafts.clone(MD.features||[]);featOrig=new Map(features.map(f=>[f.id,JSON.stringify(f)]));decorGone=new Set();decorDel=[];decorMoved=new Map();scat=MD.scatter.slice();sanm=(MD.sanim||[]).slice();felled=new Set((MD.felled||[]).map(f=>Array.isArray(f)?f.join(','):f));for(const run of (MD.felled_rle||'').split('|').filter(Boolean)){const [y,xs]=run.split(':'),[a,b=a]=xs.split('-').map(Number);for(let x=a;x<=b;x++)felled.add(x+','+y)}editorRestoreMap(s);applyEditorPaint(true);}`);
   return {c,run};
 }
 let g=gameContext();
@@ -111,7 +112,6 @@ console.log('PASS: unsent Delete and Paint survive map switches and reloads, kee
 // Tree moves were encoded as K + A, so the old gate wrongly called them Build.
 g=gameContext();g.run(`visit('a',true);felledNew=['3,4'];added=[{id:1,s:2,x:80,y:96}];objs.push(added[0]);nextId=1;saveEditorDraft();`);
 const treeDraft=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
-assert.equal(g.run("editorUnsupportedEdits(buildPatch(true))"),'');
 assert(treeDraft.operations.some(o=>o.kind==='object-add'));assert(treeDraft.operations.some(o=>o.kind==='feature-delete'));
 const treeKey=treeDraft.operations.find(o=>o.kind==='object-add').key;
 g.run('saveEditorDraft();');assert.equal(g.run("EmberEditDrafts.store.get('a').operations.find(o=>o.kind==='object-add').key"),treeKey);
@@ -130,18 +130,13 @@ assert.throws(()=>applyMoves(empty,{...first,operations:[{kind:'object-add',key:
 assert.throws(()=>applyMoves(empty,{...first,operations:[{kind:'object-add',key:'__proto__',sprite:2,x:10,y:12}]},revision),/identity/);
 // Box deletion already expands into structured deletions and paint operations.
 g.run(`clearedBoxes=[[2,2,4,4]];deleted.add(0);objs=objs.filter(o=>o.id!==0);saveEditorDraft();`);
-assert.equal(g.run('editorUnsupportedEdits(buildPatch(true))'),'');
 assert(g.run("EmberEditDrafts.store.get('a').operations.some(o=>o.kind==='object'&&o.deleted)"));
 console.log('PASS: generated-tree moves/additions survive reload, publish both ends, retry once, remain movable after publication, and support box deletions.');
 
 // An old device override already merged into the authored map is not a new edit.
 g=gameContext();g.run(`visit('b',true);MD.doors=[{x:2,y:3}];MD.collisionOverrides={'1,2':false};geometryEdits.b={doors:{0:{x:32,y:48,w:16,h:16}},collision:{'1,2':false}};objs[0].x=28;`);
 assert.equal(g.run("geometryPatch('b').length"),0);
-assert.equal(g.run('editorUnsupportedEdits(buildPatch(true))'),'');
-g.run("geometryEdits.b.doors[0].x=40;");assert.equal(g.run('editorUnsupportedEdits(buildPatch(true))'),'1 door edit');
-g.run("geometryEdits.b.collision['1,2']=true;");assert.equal(g.run('editorUnsupportedEdits(buildPatch(true))'),'1 door edit, 1 collision edit');
-assert.equal(g.run("editorUnsupportedEdits('EMBERFELL PATCH v3\\nMAP b\\nR 1 2 3 4 5 6\\nF arena 1 2 3 4 5')"),'2 Build/area edits');
-console.log('PASS: already-published geometry does not block moves; genuinely unsent door/collision/area edits are identified precisely.');
+console.log('PASS: already-published geometry is omitted from the next submission.');
 
 // Exercise real Forgewick market actors and NPCs through the draft/apply path.
 const worldSource=read('js/generated/game-part-1.js'),worldData=JSON.parse(zlib.gunzipSync(Buffer.from(worldSource.match(/const W_GZ = "([^"]+)"/)[1],'base64')));
@@ -155,7 +150,6 @@ g=gameContext();g.run(`W.maps.world=JSON.parse(${JSON.stringify(JSON.stringify(m
  for(const n of marketPeople)moveEditorActor(n,Math.round(n.x+8),Math.round(n.y+12),true);
  saveEditorDraft();`);
 assert.equal(g.run('marketActors.length'),5);assert(g.run('marketPeople.length')>=5);
-assert.equal(g.run('editorUnsupportedEdits(buildPatch(true))'),'','market actors and NPCs must not trigger unsupported-edit warning');
 const marketDraft=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
 assert.equal(marketDraft.operations.length,g.run('marketActors.length+marketPeople.length'));
 const marketPublished=applyMoves(empty,{...first,map:'world',operations:marketDraft.operations},revision);
@@ -165,3 +159,112 @@ for(const op of marketDraft.operations){
   assert.equal(g.run(`JSON.stringify((()=>{const o=${JSON.stringify(op.key)}.startsWith('npc:')?marketFresh.npcs.find(n=>'npc:'+n.n===${JSON.stringify(op.key)}):marketFresh.roomActors.find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===${JSON.stringify(op.key)});return {x:o.x,y:o.y};})())`),expected);
 }
 console.log('PASS: all five Forgewick market stalls and nearby NPC moves export and publish through the actual editor hooks.');
+
+// Saved geometry joins ordinary moves in the actual SEND CHANGES submission.
+disk.clear();g=gameContext();
+g.run(`W.maps.a.doors=[{x:2,y:3,to:'b'}];visit('a');
+ geometryEdits.a={doors:{0:{x:40,y:48,w:24,h:16}},collision:{'6,7':false}};
+ objs[0].x=64;visit('b');visit('a');
+ EmberEditDrafts.connected=()=>true;EmberEditDrafts.send=d=>{globalThis.sent=d};sendEditorChanges();`);
+const geometryDraft=JSON.parse(g.run('JSON.stringify(sent)'));
+assert.deepEqual(geometryDraft.operations.map(o=>o.kind),['object','door','collision']);
+const geometryPublished=applyMoves(empty,{...geometryDraft,sourceRevision:revision},revision);
+g.c.geometryPublished=geometryPublished;
+g.run(`var doorMap=EmberEditDrafts.clone(editorDraftBases.get('a').map);publishedEditorLayouts=geometryPublished;applyPublishedEditorLayout(doorMap,'a');`);
+assert.equal(g.run('doorMap.objs[1]'),64);assert.equal(g.run('doorMap.doors[0].triggerRect.x'),40);
+assert.equal(g.run("doorMap.collisionOverrides['6,7']"),false);
+assert.equal(applyMoves(geometryPublished,{...geometryDraft,sourceRevision:revision},revision),geometryPublished);
+assert.throws(()=>applyMoves(geometryPublished,{...next,map:'a',operations:[{...geometryDraft.operations[1],before:{x:1,y:2,w:16,h:16},rect:{x:50,y:60,w:16,h:16}}]},revision),/newer submission/);
+g.run(`geometryEdits.a.collision['6,7']=true;editorPrepareMap('a');`);
+assert.equal(g.run('geometryEdits.a.doors[0]'),undefined,'successful publication clears the matching local door override');
+assert.equal(g.run("geometryEdits.a.collision['6,7']"),true,'newer unsent collision experiments survive publication');
+console.log('PASS: Send Changes includes saved Doors, Collision and moves together across map switches, validates conflicts, and clears only published geometry.');
+
+function installBuildHooks(g){
+ const s=read('js/generated/game-part-3.js');
+ g.run(`var GRASS=0,WALL=2,RIM=1,MAX_SIDE=4000,MAX_AREA=4000000,solid,chunks=new Map(),buildUndo=[];
+ function indexScatter(){}function indexDecks(){}function sealRim(){}function openTo(){return 0}
+ function realizeFeatures(){}function isArea(f){return f.kind==='area'}`);
+ for(const [start,end]of [['function growWorld(','function contentExtent('],['function moveArea(','function sowDesertRoute('],['function moveRegion(','function unfell('],['function scaleAreaContents(','function relayNorthRidge(']])g.run(s.slice(s.indexOf(start),s.indexOf(end)));
+ g.run(`var RUN_SPR=/^never-match$/;`);
+}
+function buildFixture(g){g.run(`W.maps.a.features=[{id:1,kind:'area',x0:2,y0:2,x1:5,y1:5,carve:false}];W.maps.a.npcs=[{n:'Seller',x:40,y:48,d:'Keep my dialogue'}];W.maps.a.decks=[{x0:3,y0:3,x1:4,y1:4}];`);}
+function draftOf(g){return JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));}
+function publishedMap(layout,base){
+ const g=gameContext();g.c.layout=layout;g.c.base=structuredClone(base);
+ g.run("publishedEditorLayouts=layout;applyPublishedEditorLayout(base,'a');");return JSON.parse(g.run('JSON.stringify(base)'));
+}
+disk.clear();g=gameContext();installBuildHooks(g);buildFixture(g);
+const authored=JSON.parse(g.run('JSON.stringify(W.maps.a)'));
+g.run(`visit('a');npcs=MD.npcs.map(n=>({...n}));baseTerr[3*MW+3]=1;
+ moveArea(features[0],2,2,false);painted.set(7*MW+7,4);terr[7*MW+7]=4;saveEditorDraft();`);
+const builtDraft=draftOf(g),buildOp=builtDraft.operations[0];
+assert.equal(buildOp.kind,'build');assert.equal(builtDraft.operations[1].kind,'actor');
+assert.equal(g.run('objs[0].x'),72);assert.equal(g.run('npcs[0].x'),72);
+assert.equal(g.run('scat[1]'),92);assert.equal(g.run('decks[0].x0'),5);
+g.run(`visit('b');visit('a');`);
+assert.equal(g.run('objs[0].x'),72);assert.equal(g.run('features[0].x0'),4);
+assert.equal(g.run('baseTerr[5*MW+5]'),1);assert.equal(g.run('terr[7*MW+7]'),4);
+g=gameContext();buildFixture(g);g.run(`visit('a');saveEditorDraft();`);
+assert.equal(g.run('objs[0].x'),72,'Build object moves survive browser reload');
+assert.equal(g.run('MD.npcs[0].x'),72);assert.equal(g.run('MD.npcs[0].d'),'Keep my dialogue');
+assert.equal(draftOf(g).operations[0].after,buildOp.after,'Build restore/resave is stable');
+const builtLayout=applyMoves(empty,{...first,map:'a',operations:builtDraft.operations},revision);
+const builtMap=publishedMap(builtLayout,authored);
+assert.deepEqual(builtMap.objs,[1,72,72]);assert.equal(builtMap.features[0].x0,4);assert.equal(builtMap.decks[0].x0,5);
+assert.equal(builtMap.npcs[0].x,72);assert.equal(builtMap.editorPublishedPaint[0].value,4);
+g.run(`visit('a',true);`);assert.equal(g.run('objs[0].x'),40);assert.equal(g.run('features[0].x0'),2);
+console.log('PASS: actual area moves carry props, NPCs, scenery, decks, terrain and paint through local map changes, reload, publishing and reset.');
+
+// Later ordinary edits and subsequent Build submissions compose with earlier ones.
+const B=globalThis.EmberBuildData;
+const ordinaryLayout=applyMoves(builtLayout,{...next,map:'a',operations:[{kind:'object',key:'0',sprite:1,fromX:72,fromY:72,x:80,y:72}]},revision);
+const ordinaryMap=publishedMap(ordinaryLayout,authored);assert.equal(ordinaryMap.objs[1],80);
+const before=B.snapshot(ordinaryMap),after=structuredClone(before);after.features.push({id:2,kind:'route',x0:4,y0:6,x1:12,y1:6,w:4,band:2,pts:[[4,6],[12,6]]});after.features.push({id:3,kind:'arena',x:12,y:6,r:6});
+const secondBuild={kind:'build',layout:B.hash(ordinaryLayout.maps.a),before:B.hash(before),after:B.hash(after),changes:B.diff(before,after)};
+const secondLayout=applyMoves(ordinaryLayout,{...edits,map:'a',operations:[secondBuild]},revision);
+const secondMap=publishedMap(secondLayout,authored);
+assert.deepEqual(B.snapshot(secondMap),after);
+assert.throws(()=>applyMoves(builtLayout,{...edits,map:'a',operations:[secondBuild]},revision),/published since/);
+assert.throws(()=>B.validate([{path:['features','__proto__','polluted'],value:true}]),/Invalid Build/);
+assert.throws(()=>B.validate([{path:['script'],value:'arbitrary code'}]),/Invalid Build/);
+assert.throws(()=>B.apply(before,{before:B.hash(before),after:'bad',changes:[{path:['terr'],value:'0.3'}]}),/Terrain size/);
+console.log('PASS: routes/arenas and repeated Build submissions preserve prior edits, and stale layouts or unsafe data are rejected.');
+
+// Growth previously had no COPY row, so submission identity must use operations.
+disk.clear();g=gameContext();installBuildHooks(g);g.run(`visit('a');growWorld(28,25);saveEditorDraft();
+ EmberEditDrafts.connected=()=>true;EmberEditDrafts.send=d=>{globalThis.sent=d};sendEditorChanges();`);
+const growFirst=draftOf(g);g.run(`growWorld(30,25);saveEditorDraft();`);const growSecond=draftOf(g);
+assert.equal(growFirst.patch,growSecond.patch);assert.equal(growSecond.submission,null,'changed Build data must not reuse an old send ID');
+g.run(`painted.set(31,4);terr[31]=4;growWorld(32,25);saveEditorDraft();visit('b');visit('a');`);
+assert.equal(g.run('MW'),32);assert.equal(g.run('terr[33]'),4,'growing a map keeps paint at the same cell');
+const grown=draftOf(g);const growthLayout=applyMoves(empty,{...first,map:'a',operations:grown.operations},revision);
+const growthMap=publishedMap(growthLayout,{...authored,features:[],npcs:[],decks:[]});assert.equal(growthMap.w,32);
+console.log('PASS: map expansion, paint indexing, saved dimensions and changed-submission identity round trip correctly.');
+
+// The workflow decodes the same compressed payload the browser sends.
+const large={...first,patch:'test'.repeat(20000),operations:secondLayout.maps.a.build.changes};g.c.large=large;
+const encoded=await g.run('EmberEditDrafts.encodeDraft(large)');assert(encoded.startsWith('gzip:'));assert.deepEqual(decodeDraft(encoded),large);
+assert.throws(()=>decodeDraft('x'.repeat(65001)),/submission size/);
+console.log('PASS: large edit batches compress and decode exactly within GitHub input limits.');
+
+for(const action of ['resize','region']){
+ disk.clear();g=gameContext();installBuildHooks(g);buildFixture(g);g.run(`visit('a');npcs=MD.npcs.map(n=>({...n}));`);
+ if(action==='resize')g.run(`scaleAreaContents({x0:32,y0:32,x1:96,y1:96},{x0:32,y0:32,x1:128,y1:128},0);features[0].x1=7;features[0].y1=7;`);
+ else g.run(`moveRegion({x0:2,y0:2,x1:5,y1:5},2,2,false);`);
+ g.run('saveEditorDraft();');const draft=draftOf(g),expected=JSON.parse(g.run('JSON.stringify({x:objs[0].x,y:objs[0].y,nx:npcs[0].x,ny:npcs[0].y})'));
+ const layout=applyMoves(empty,{...first,map:'a',operations:draft.operations},revision),map=publishedMap(layout,authored);
+ assert.equal(map.objs[1],expected.x);assert.equal(map.objs[2],expected.y);assert.equal(map.npcs[0].x,expected.nx);assert.equal(map.npcs[0].y,expected.ny);
+ assert.equal(map.npcs[0].d,'Keep my dialogue');g.run(`visit('b');visit('a');saveEditorDraft();`);assert.equal(draftOf(g).operations[0].after,draft.operations[0].after);
+}
+console.log('PASS: actual area resize and box moves preserve their terrain, object/scenery arrangement and NPC dialogue.');
+
+// Real world data catches large-map costs and RLE/baseline differences.
+disk.clear();g=gameContext();g.c.world=structuredClone(market);g.run(`W.maps.world=world;visit('world');features.push({id:99999,kind:'arena',x:400,y:160,r:6,style:'forest'});saveEditorDraft();`);
+const worldDraft=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
+const worldBuild=worldDraft.operations[0];assert.equal(worldBuild.kind,'build');assert.equal(B.encodeFelled(new Set([[2,3],'3,3','5,4'])),'3:2-3|4:5');
+const worldEncoded=await g.run("EmberEditDrafts.encodeDraft(EmberEditDrafts.store.get('world'))");assert(Buffer.byteLength(worldEncoded)<65000);
+const worldLayout=applyMoves(empty,{...first,map:'world',operations:worldDraft.operations},revision);
+g.c.worldFresh=structuredClone(market);g.c.worldLayout=worldLayout;g.run(`publishedEditorLayouts=worldLayout;applyPublishedEditorLayout(worldFresh,'world');`);
+assert.equal(g.run('worldFresh.features.at(-1).id'),99999);
+console.log('PASS: an actual full-world Build edit fits the transport and applies to a clean world baseline.');

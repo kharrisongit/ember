@@ -2,6 +2,7 @@
 const editorDraftBases = new Map();
 const editorDraftStale = new Set();
 const editorBuiltLayouts = EmberEditDrafts.clone(actorLayouts);
+const editorBuildActive = new Set();
 let editorDraftReady = false, editorDraftTimer = null;
 
 function editorBaseFields(m) {
@@ -14,10 +15,17 @@ function editorPrepareMap(id, fresh) {
   const api = EmberEditDrafts;
   const held=api.store.get(id);
   if(held?.submission && publishedEditorLayouts.applied.includes(held.submission.id)) {
+    for(const op of held.submission.operations||[]){
+      const geom=geometryEdits[id];if(!geom)continue;
+      if(op.kind==='door'&&EmberBuildData.hash(geom.doors?.[op.index]??null)===EmberBuildData.hash(op.rect))delete geom.doors[op.index];
+      if(op.kind==='collision'&&geom.collision?.[op.key]===op.blocked)delete geom.collision[op.key];
+    }
+    saveGeometry();editorBuildActive.delete(id);
     try{api.store.remove(id);}catch(_){}
     delete actorLayouts[id];
   }
   if (fresh) {
+    editorBuildActive.delete(id);
     if (editorDraftBases.has(id)) {
       const base = editorDraftBases.get(id).map;
       for(let i=0;i<(base.roomActors||[]).length;i++){
@@ -27,6 +35,7 @@ function editorPrepareMap(id, fresh) {
       for (const key of Object.keys(editorBaseFields(W.maps[id]))) {
         if (key in base) W.maps[id][key] = api.clone(base[key]); else delete W.maps[id][key];
       }
+      Object.assign(W.maps[id],EmberEditDrafts.clone(editorDraftBases.get(id).build));
     }
     actorLayouts[id] = api.clone(editorBuiltLayouts[id] || {});
     delete geometryEdits[id]; saveGeometry();
@@ -35,7 +44,7 @@ function editorPrepareMap(id, fresh) {
   }
   if (!editorDraftBases.has(id)) {
     const map = api.clone(editorBaseFields(W.maps[id]));
-    editorDraftBases.set(id, {map, fingerprint:api.fingerprint(map)});
+    editorDraftBases.set(id, {map, fingerprint:api.fingerprint(map),build:api.clone(EmberBuildData.snapshot(W.maps[id]))});
   }
   const draft = api.store.get(id);
   if (!draft) return null;
@@ -45,6 +54,10 @@ function editorPrepareMap(id, fresh) {
     return null;
   }
   actorLayouts[id] = api.clone(draft.state.actors || editorBuiltLayouts[id] || {});
+  if(draft.state.build){
+    Object.assign(W.maps[id],EmberBuildData.apply(editorDraftBases.get(id).build,draft.state.build));
+    editorBuildActive.add(id);
+  }
   return draft.state;
 }
 function editorRestoreMap(s) {
@@ -70,7 +83,9 @@ function saveEditorDraft() {
   clearTimeout(editorDraftTimer);
   if (!editorDraftReady || !MD || !editorDraftBases.has(MAPID) || editorDraftStale.has(MAPID)) return;
   const api=EmberEditDrafts, patch=buildPatch(true), old=api.store.get(MAPID);
-  if (patch.includes('\n(no changes on this map)')) {
+  const base=editorDraftBases.get(MAPID).map;
+  const buildChanged=editorBuildActive.has(MAPID)||regionMoves.length>0||features.length!==(base.features||[]).length||features.some(f=>featOrig.get(f.id)!==JSON.stringify(f))||MW!==base.w||MH!==base.h;
+  if (!buildChanged&&patch.includes('\n(no changes on this map)')) {
     if(old)try{api.store.remove(MAPID);}catch(_){}
     return;
   }
@@ -79,7 +94,7 @@ function saveEditorDraft() {
     features:features.some(f=>featOrig.get(f.id)!==JSON.stringify(f))?features:null,
     regionMoves,clearedBoxes,felledNew,decorGone:[...decorGone],decorDel,
     decorMoved:[...decorMoved].map(([k,d])=>{const a=d.tag==='s'?scat:sanm;return[k,{...d,x:a[d.di+1],y:a[d.di+2]}]})};
-  const base=editorDraftBases.get(MAPID).map,operations=[];
+  const operations=[];
   // Moving a generated tree creates an ordinary object at its new position.
   // Keep a stable identity across saves/retries, including older saved drafts.
   for(const o of added)if(!deleted.has(o.id)){
@@ -104,9 +119,34 @@ function saveEditorDraft() {
     if(!paintRun||i!==paintRun.start+paintRun.values.length){paintRun={kind:'paint',start:i,width:MW,height:MH,values:[],before:[]};operations.push(paintRun);}
     paintRun.values.push(v);paintRun.before.push(terrOrig[i]);
   }
+  if(buildChanged){
+    editorBuildActive.add(MAPID);
+    const B=EmberBuildData,before=editorDraftBases.get(MAPID).build;
+    const terrain=terrRLE(baseTerr);
+    const paint=new Map((MD.editorPublishedPaint||[]).map(p=>[p.index,p]));
+    for(const [index,value]of painted)paint.set(index,{kind:'paint',key:String(index),index,value,originValue:terrOrig[index]??value,width:MW,height:MH,override:true});
+    const after=B.snapshot({...MD,w:MW,h:MH,terr:terrain,base_terr:terrain,
+      objs:objs.filter(o=>!deleted.has(o.id)).flatMap(o=>[o.s,Math.round(o.x),Math.round(o.y)]),
+      scatter:scat.filter((_,i)=>!decorGone.has('s'+(i-i%3))),sanim:sanm.filter((_,i)=>!decorGone.has('a'+(i-i%3))),
+      features,decks,felled:[],felled_rle:B.encodeFelled(felled),editorDeletedObjects:[],editorDeletedDecor:[],editorPublishedPaint:[...paint.values()]});
+    const build={kind:'build',layout:B.hash(publishedEditorLayouts.maps[MAPID]||{}),before:B.hash(before),after:B.hash(after),changes:B.diff(before,after)};
+    B.apply(before,build);
+    const actorOps=operations.filter(o=>o.kind==='actor');operations.splice(0,operations.length,build,...actorOps);
+    Object.assign(state,{build,moves:[],added:[],deleted:[],nextId:after.objs.length/3,painted:[],features:null,
+      regionMoves:[],clearedBoxes:[],felledNew:[],decorGone:[],decorDel:[],decorMoved:[]});
+  }
+  for(const line of geometryPatch(MAPID)){
+    const split=line.indexOf(' '),g=JSON.parse(line.slice(split+1));
+    if(line.startsWith('DOOR ')){
+      const d=base.doors[g.index];if(!d)continue;
+      const before=d.triggerRect||{x:d.x*TS+(d.ox||0)-(d.wide?TS:0),y:d.y*TS+(d.oy||0),w:TS+(d.wide?TS*2:0),h:TS};
+      operations.push({kind:'door',key:String(g.index),index:g.index,to:d.to,before,rect:{x:g.x,y:g.y,w:g.w,h:g.h}});
+    }else operations.push({kind:'collision',key:g.cell.join(','),before:MD.collisionOverrides?.[g.cell.join(',')]??null,blocked:g.blocked});
+  }
+  const sameSubmission=old?.submission?.sourceRevision===api.sourceRevision&&JSON.stringify(old.submission.operations)===JSON.stringify(operations);
   const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,
-    updatedAt:new Date().toISOString(),submission:old?.patch===patch&&old.submission?.sourceRevision===api.sourceRevision?old.submission:null,
-    sentAt:old?.patch===patch&&old.submission?.sourceRevision===api.sourceRevision?old.sentAt:null};
+    updatedAt:new Date().toISOString(),submission:sameSubmission?old.submission:null,
+    sentAt:sameSubmission?old.sentAt:null};
   try { api.store.put(MAPID,draft); }
   catch (_) { toast('Device storage is full or unavailable. Use SEND CHANGES or COPY before leaving.'); }
   return draft;
@@ -132,24 +172,11 @@ function editorSendStatus(ok,message,record) {
   if(record?.runId){link.href='https://github.com/kharrisongit/ember/actions/runs/'+record.runId;link.style.display='inline';}else{link.removeAttribute('href');link.style.display='none';}
   panel.children[3].hidden=!EmberEditDrafts.connected();
 }
-function editorUnsupportedEdits(patch) {
-  const counts=new Map();
-  for(const line of patch.split('\n').slice(2).map(s=>s.trim()).filter(Boolean)){
-    if(/^(ACTOR |M |S |D |X |K |T |A |C )/.test(line))continue;
-    const kind=line.startsWith('DOOR ')?'door edit':line.startsWith('COLLISION ')?'collision edit':/^(F |R )/.test(line)?'Build/area edit':'unsupported edit';
-    counts.set(kind,(counts.get(kind)||0)+1);
-  }
-  return [...counts].map(([kind,count])=>count+' '+kind+(count===1?'':'s')).join(', ');
-}
 function sendEditorChanges() {
   const api=EmberEditDrafts;
   if(editorDraftStale.has(MAPID)){toast('This area changed since the draft. Use COPY to keep the old draft, then RESET before making new moves.');return;}
   const draft=editorDraftStale.has(MAPID)?api.store.get(MAPID):saveEditorDraft();
   if (!draft) { toast('No changes in this area to send.'); return; }
-  const unsupported=editorUnsupportedEdits(draft.patch);
-  if(unsupported){
-    editorSendStatus(false,'Not sent: this area includes '+unsupported+'. These still need COPY. Nothing was published; your draft is saved.');return;
-  }
   if(!draft.operations?.length){toast('No changes in this area to send.');return;}
   if (!draft.submission) {
     draft.submission={schema:1,id:crypto.randomUUID(),map:MAPID,baseFingerprint:draft.baseFingerprint,
@@ -157,7 +184,6 @@ function sendEditorChanges() {
     try { api.store.put(MAPID,draft); } catch (_) { /* Sending is still available when local storage is full. */ }
   }
   const map=MAPID, submission=draft.submission;
-  if(JSON.stringify(submission).length>48000){toast('Too many edits for one send. Use COPY to preserve this batch.');return;}
   if(!api.connected())saveGame();
   api.send(submission,(ok,message,record)=>{
     if(ok){const latest=api.store.get(map);if(latest?.submission?.id===submission.id){latest.sentAt=new Date().toISOString();try{api.store.put(map,latest);}catch(_){}}}

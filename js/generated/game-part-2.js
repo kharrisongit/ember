@@ -2010,7 +2010,7 @@ function loadMap(id, fresh, discardDraft=false) {
   buildUndo = []; regionMoves = []; grabRect = null; grabDrag = null;
   decorGone = new Set(MD.editorDeletedDecor||[]); decorDel = []; decorMoved = new Map();
   deckWet = null;                       /* rebuilt for the map being loaded */
-  felled = new Set(MD.felled || []);
+  felled = new Set((MD.felled || []).map(f=>Array.isArray(f)?f.join(','):f));
   for (const run of String(MD.felled_rle || "").split("|")) {
     if (!run) continue;
     const [yy, xs] = run.split(":");
@@ -11272,7 +11272,7 @@ tap(document.getElementById("tUndo"), () => {
 });
 tap(document.getElementById("tDone"), () => {
   setBuild(false);
-  toast(buildUndo.length ? buildUndo.length + " change(s) -- tap COPY to send them"
+  toast(buildUndo.length ? buildUndo.length + " change(s) -- tap SEND CHANGES to publish"
                          : "nothing drawn");
 });
 let devHeldArena = null;

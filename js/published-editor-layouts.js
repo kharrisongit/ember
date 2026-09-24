@@ -12,14 +12,23 @@ function applyPublishedEditorLayout(m,id) {
   publishedEditorMaps.add(m);
   // Preserve the pre-existing authored placement of the world room exterior.
   if(id==='world'&&m.roomActors?.[24]?.spr==='rt_ext2')shiftActorData(m,m.roomActors[24],15330,4328,true);
-  const all=Object.values(publishedEditorLayouts.maps[id]||{});
+  m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];
+  applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
+}
+function applyPublishedEditorEntries(m,id,layout) {
+  if(layout.build){
+    applyPublishedEditorEntries(m,id,layout.build.previous);
+    Object.assign(m,EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build));
+  }
+  const all=Object.values(layout).filter(op=>op.kind!=='build');
   // Append in publication order and retain these slots even after deletion.
   // Future moves/deletions use their stable ordinary-object indices.
   m.objs ||= [];
   for(const op of all)if(op.kind==='object-add')m.objs.push(op.sprite,op.x,op.y);
-  m.editorPublishedPaint=all.filter(op=>op.kind==='paint');
+  const paint=new Map((m.editorPublishedPaint||[]).map(op=>[op.index,op]));
+  for(const op of all)if(op.kind==='paint')paint.set(op.index,op);
+  m.editorPublishedPaint=[...paint.values()];
   m.felled=[...new Set([...(m.felled||[]),...all.filter(op=>op.kind==='feature-delete').map(op=>op.key)])];
-  m.editorDeletedObjects=[];m.editorDeletedDecor=[];
   const entries=all.filter(op=>['actor','object','decor'].includes(op.kind));
   const resolve = op => op.kind==='actor' ?
     (op.key.startsWith('npc:')?(m.npcs||[]).find(n=>'npc:'+n.n===op.key):(m.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key)) : null;
@@ -48,13 +57,17 @@ function applyPublishedEditorLayout(m,id) {
     }else {const arr=op.kind==='object'?m.objs:op.tag==='s'?m.scatter:m.sanim;const i=op.kind==='object'?Number(op.key)*3:op.index;arr[i+1]=op.x;arr[i+2]=op.y;}
   }
   if(valid.length!==entries.length)console.warn('Some saved moves have changed anchors in '+id+' and were left unapplied.');
+  for(const op of all){
+    if(op.kind==='door'){const d=m.doors?.[op.index];if(d&&d.to===op.to)d.triggerRect={...op.rect};}
+    if(op.kind==='collision')(m.collisionOverrides||={})[op.key]=op.blocked;
+  }
 }
 let editorMapLoading=false;
 function applyEditorPaint(captureBaseline=false){
   if(captureBaseline)terrOrig=terr.slice();
   for(const op of MD.editorPublishedPaint||[]){
     if(op.width!==MW||op.height!==MH||op.index>=terr.length)continue;
-    if(terr[op.index]===op.originValue||terr[op.index]===op.value){terr[op.index]=op.value;if(captureBaseline)terrOrig[op.index]=op.value;}
+    if(op.override||terr[op.index]===op.originValue||terr[op.index]===op.value){terr[op.index]=op.value;if(captureBaseline)terrOrig[op.index]=op.value;}
   }
   for(const [i,v]of painted)if(i>=0&&i<terr.length)terr[i]=v;
 }

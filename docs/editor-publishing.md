@@ -1,18 +1,25 @@
 # Publishing edits from the game
 
-Move, Delete and Paint edits are saved on the current device. **Send Changes** submits only the
+All map editor changes are saved on the current device. **Send Changes** submits only the
 current map, then runs `.github/workflows/apply-editor-moves.yml`. The workflow
 validates structured coordinates, runs the game checks, commits only
 `assets/editor-layouts.json`, and deploys Pages itself. GitHub's workflow token
 does not trigger the normal push deployment, so this explicit deployment matters.
 Experiments are never uploaded automatically. COPY remains a recovery option.
 
-Automatic publishing accepts Move, Delete and Paint, including furniture/walls,
-ordinary objects, scenery, generated trees and terrain. Moving a generated tree
-publishes both removal of the original and placement at the new location.
-Duplicated objects and box deletions are also supported. Build/area changes and
-door/collision geometry exports still use COPY; the in-game message lists which
-unsupported edit types are present before sending anything. RESET discards the current map's local draft, restoring published data.
+Send Changes includes Move, Delete, Paint, duplicates, box clears, Doors,
+Collision, and Build edits (areas, routes, arenas, resizing, moving regions and
+expanding the map). Moving a generated tree publishes both removal of the
+original and placement at the new location. Existing saved geometry overrides
+join the current map's submission. RESET discards only that map's local draft.
+
+Build changes capture the resulting terrain, features, objects, scenery and
+decks as a validated data diff. Actor moves keep their stable identities and
+linked collision behavior. Published Build history applies after earlier
+submissions, allowing later moves and Build changes to compose. Larger batches
+are compressed for GitHub's dispatch input limit; if a batch exceeds that limit,
+the game keeps the draft and explains the size error. Submission IDs are reused
+only when all structured operations are unchanged.
 
 ## Sender and one-time connection
 
@@ -38,7 +45,7 @@ Subsequent Send Changes calls dispatch the existing workflow directly via the
 GitHub REST API. No sender window or second publish button is involved. A small
 in-game status panel shows progress, completion or failure, and includes a
 Disconnect GitHub control. Refreshing the game resumes status checks only;
-normal saves, Move, Delete and Paint do not start network writes. The token is
+normal saves and editor actions do not start network writes. The token is
 never included in draft exports. An expired token prompts a new connection.
 
 Each submission has a stable retry ID. The game checks published IDs and existing

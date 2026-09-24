@@ -56,6 +56,15 @@
     return r.ok&&(await r.json()).applied?.includes(id);
   }
   const pause=()=>new Promise(resolve=>root.setTimeout(resolve,5000));
+  async function encodeDraft(draft){
+    const text=JSON.stringify(draft);
+    if(new TextEncoder().encode(text).length<=48000)return text;
+    if(!root.CompressionStream)throw Error('This browser needs an update to send large Build changes. Your draft is saved.');
+    const stream=new Blob([text]).stream().pipeThrough(new root.CompressionStream('gzip'));
+    const bytes=new Uint8Array(await new Response(stream).arrayBuffer());
+    if(bytes.length>44000)throw Error('This batch is larger than GitHub can receive in one send. Reduce its size before sending; your draft is saved.');
+    return 'gzip:'+b64(bytes);
+  }
   async function monitor(record,result){
     const started=Date.now();let misses=0;
     while(Date.now()-started<15*60*1000){
@@ -93,7 +102,7 @@
       if(runs.some(run=>run.status!=='completed'&&run.id!==existing?.id))throw Error('GitHub is publishing an earlier area. Wait for it to finish, then send this area. Your draft is saved.');
       let runId=existing?.status!=='completed'?existing?.id:null;
       if(!runId){
-        const dispatched=await request(WORKFLOW+'/dispatches',{ref:'main',inputs:{submission_id:draft.id,draft:JSON.stringify(draft)}});
+        const dispatched=await request(WORKFLOW+'/dispatches',{ref:'main',inputs:{submission_id:draft.id,draft:await encodeDraft(draft)}});
         runId=dispatched.workflow_run_id;
       }
       if(!Number.isSafeInteger(runId)||runId<1)throw Error('Sent, but GitHub did not return its check number. Press SEND CHANGES to check again; your draft is saved.');
@@ -126,7 +135,7 @@
       catch(e){result(false,e.message,record);}finally{busy=false;}
     }
   }
-  root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,
+  root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,encodeDraft,
     disconnect(){root.localStorage.removeItem(TOKEN);root.sessionStorage.removeItem(PAIR);},
-    version:'20260924-direct-send',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
+    version:'20260924-all-edits',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
 })(globalThis);

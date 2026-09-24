@@ -2,6 +2,9 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {sourceRevision} from './editor-source-version.mjs';
+import {gunzipSync} from 'node:zlib';
+import '../js/editor-build-data.js';
+const Build=globalThis.EmberBuildData;
 const keyOK=k=>typeof k==='string'&&k.length>0&&k.length<200&&!['__proto__','prototype','constructor'].includes(k);
 export function applyMoves(current,draft,revision) {
   assert.equal(draft.schema,1,'Unsupported edit format');
@@ -10,9 +13,31 @@ export function applyMoves(current,draft,revision) {
   assert.equal(current.schema,1);
   if(current.applied.includes(draft.id))return current;
   assert.equal(draft.sourceRevision,revision,'Game code has changed. Refresh before making more moves; the old draft remains saved.');
-  assert(Array.isArray(draft.operations)&&draft.operations.length>0&&draft.operations.length<=2000,'Send 1–2000 edit operations at a time');
-  const next=structuredClone(current),map=next.maps[draft.map]||{},seen=new Set();
+  assert(Array.isArray(draft.operations)&&draft.operations.length>0&&draft.operations.length<=200000,'Invalid number of editor operations');
+  const next=structuredClone(current),seen=new Set();let map=next.maps[draft.map]||{};
   for(const op of draft.operations){
+    if(op.kind==='build'){
+      assert(!seen.size,'Build data must precede other edits');
+      assert.equal(op.layout,Build.hash(map),'This area was published since your Build changes. Refresh before sending.');
+      assert(typeof op.before==='string'&&typeof op.after==='string'&&op.before.length<100&&op.after.length<100,'Invalid Build baseline');
+      Build.validate(op.changes);
+      map={build:{kind:'build',previous:map,before:op.before,after:op.after,changes:op.changes}};seen.add('build');continue;
+    }
+    if(op.kind==='door'){
+      assert(Number.isInteger(op.index)&&op.index>=0&&op.index<10000&&op.key===String(op.index),'Invalid door index');
+      assert(keyOK(op.to),'Invalid door destination');
+      for(const r of [op.before,op.rect])for(const k of ['x','y','w','h'])assert(Number.isFinite(r?.[k])&&r[k]>=0&&r[k]<=100000&&(!['w','h'].includes(k)||r[k]>=1),'Invalid door rectangle');
+      const key='door:'+op.key;assert(!seen.has(key),'Duplicate door edit');seen.add(key);
+      const old=map[key];if(old){assert.equal(old.to,op.to,'Door destination changed');assert(Build.hash(old.rect)===Build.hash(op.before)||Build.hash(old.rect)===Build.hash(op.rect),'Door was edited in a newer submission');}
+      map[key]={kind:'door',key:op.key,index:op.index,to:op.to,rect:op.rect};continue;
+    }
+    if(op.kind==='collision'){
+      assert(/^\d+,\d+$/.test(op.key)&&op.key.split(',').every(v=>Number(v)<10000),'Invalid collision cell');
+      assert(typeof op.blocked==='boolean'&&(op.before===null||typeof op.before==='boolean'),'Invalid collision edit');
+      const key='collision:'+op.key;assert(!seen.has(key),'Duplicate collision edit');seen.add(key);
+      const old=map[key];if(old)assert(old.blocked===op.before||old.blocked===op.blocked,'Collision was edited in a newer submission');
+      map[key]={kind:'collision',key:op.key,blocked:op.blocked};continue;
+    }
     if(op.kind==='object-add'){
       assert(typeof op.key==='string'&&/^[a-f0-9-]{36}$/.test(op.key),'Invalid added-object identity');
       assert(Number.isInteger(op.sprite)&&op.sprite>=0&&op.sprite<100000,'Invalid added-object sprite');
@@ -24,7 +49,7 @@ export function applyMoves(current,draft,revision) {
     }
     if(op.kind==='paint'){
       assert(Number.isInteger(op.start)&&op.start>=0&&Number.isInteger(op.width)&&op.width>0&&op.width<10000&&Number.isInteger(op.height)&&op.height>0&&op.height<10000,'Invalid paint dimensions');
-      assert(Array.isArray(op.values)&&Array.isArray(op.before)&&op.values.length===op.before.length&&op.values.length>0&&op.values.length<=20000&&op.start+op.values.length<=op.width*op.height,'Invalid paint run');
+      assert(Array.isArray(op.values)&&Array.isArray(op.before)&&op.values.length===op.before.length&&op.values.length>0&&op.values.length<=4000000&&op.start+op.values.length<=op.width*op.height,'Invalid paint run');
       for(let j=0;j<op.values.length;j++){
         const value=op.values[j],before=op.before[j],index=op.start+j,key='paint:'+index;
         assert(Number.isInteger(value)&&value>=0&&value<=19&&Number.isInteger(before)&&before>=0&&before<=19,'Invalid terrain type');
@@ -60,11 +85,16 @@ export function applyMoves(current,draft,revision) {
   next.maps[draft.map]=map;next.applied.push(draft.id);
   return next;
 }
+export function decodeDraft(input){
+  assert(typeof input==='string'&&Buffer.byteLength(input)<=65000,'Invalid submission size');
+  return JSON.parse(input.startsWith('gzip:')?gunzipSync(Buffer.from(input.slice(5),'base64'),{maxOutputLength:16000000}).toString('utf8'):input);
+}
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const event=JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8'));
-  const draft=JSON.parse(event.inputs.draft);
+  const input=event.inputs.draft;
+  const draft=decodeDraft(input);
   const path='assets/editor-layouts.json',current=JSON.parse(fs.readFileSync(path,'utf8'));
   const next=applyMoves(current,draft,sourceRevision());
   fs.writeFileSync(path,JSON.stringify(next,null,2)+'\n');
-  console.log('Validated '+draft.operations.length+' moves for '+draft.map);
+  console.log('Validated '+draft.operations.length+' edits for '+draft.map);
 }
