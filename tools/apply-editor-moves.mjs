@@ -94,7 +94,14 @@ if(process.argv[1]===fileURLToPath(import.meta.url)){
   const input=event.inputs.draft;
   const draft=decodeDraft(input);
   const path='assets/editor-layouts.json',current=JSON.parse(fs.readFileSync(path,'utf8'));
-  const next=applyMoves(current,draft,sourceRevision());
+  let next;
+  try{next=applyMoves(current,draft,sourceRevision());}
+  catch(error){
+    // Data-only editor payloads contain no credentials. Keep rejected edits
+    // recoverable from the run so the owner never has to copy them out again.
+    console.error('EDITOR_DRAFT_RECOVERY '+JSON.stringify({schema:draft.schema,id:draft.id,map:draft.map,sourceRevision:draft.sourceRevision,baseFingerprint:draft.baseFingerprint,session:draft.session,operations:draft.operations}));
+    throw error;
+  }
   fs.writeFileSync(path,JSON.stringify(next,null,2)+'\n');
   console.log('Validated '+draft.operations.length+' edits for '+draft.map);
 }
