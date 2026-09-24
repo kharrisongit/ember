@@ -3556,7 +3556,8 @@ function drawWorld(t, dt) {
     draw.push({mooring:r,x:r[0],y:r[1],sy:Math.max(r[1],r[3])-4});
   }
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
-  if(MD.templeContinuous)drawChest();
+  // Chests are low props: Corin must remain visible while walking around them.
+  drawChest();
   drawTempleShots();
   drawDragonTempleTraps();
   draw.push(P);
@@ -3683,7 +3684,8 @@ function drawWorld(t, dt) {
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
-  const groundLayer = o => o.roomBackgroundPatch || underfoot(o) ? 0 : o.portalLayer ? 1 : 2;
+  const groundLayer = o => o.roomBackgroundPatch || underfoot(o) ? 0
+    : o.portalLayer || (MD.templeExpanded && o.houseLoot) ? 1 : 2;
   draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
                    || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
                    || (sortY(a) - sortY(b))
@@ -7312,7 +7314,6 @@ function drawBreath() {
   drawHeal();
   drawSpell();
   drawKingDragon();
-  if(!MD?.templeContinuous)drawChest();
 }
 function drawDragonProjectile() {
   if (!breath || breath.t < 0.15) return;

@@ -10,7 +10,7 @@ const c=vm.createContext({TS:16,MAPID:'tp1_sanctum',MD:{},P:{},breathHas:{lightn
  showReveal:(icon,caption)=>rewards.push({icon,caption}),saveGame:()=>saves++,toast:s=>notices.push(s),
  atlasOpen:false,fishing:null,BOOT:{waiting:false},deadShown:false,ovl:null,ask:null,bagOpen:false,grabGold:()=>false,
  sayNpc:null,glassHatchNear:()=>false,doorMotion:null,sceneHold:()=>false,ride:null,trialDemonHere:()=>false,trial:null,
- interactTrialPedestal:()=>false,ferryTry:()=>false,tryHouseLootChest:()=>false,tryTreasuryChest:()=>false,tryExpandedTempleLever:()=>false,
+ interactTrialPedestal:()=>false,tryFerrySign:()=>false,ferryTry:()=>false,tryHouseLootChest:()=>false,tryTreasuryChest:()=>false,tryExpandedTempleLever:()=>false,
  tryTempleLever:()=>false,tryCellarSupplies:()=>false,itemAt:()=>null,questTalk:()=>false,npcs:[],tryFishing:()=>false,
  mounted:false,hasSword:()=>true,startAct:()=>swings++,currentArenaFeatures:()=>[],foesHeld:true,
  arenaLock:null,arenaT:0,arenaGoing:false,falling:null});

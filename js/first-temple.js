@@ -1,7 +1,7 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260924-golems1');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260924-chests-statues1');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
@@ -57,7 +57,8 @@ async function prepareExpandedFirstTemple(){
     for(const [spr,key] of [['first_temple_torch','torch'],['first_temple_dragon_head','head'],['temple67_sentinel','statue']]){
       const [x,y]=side[key],actor={spr,x,y,schoolArt:true,entranceOrnament:true};
       if(key==='head')actor.stillFrame=0;
-      if(key==='statue')actor.moveBlocks=[sanctum.roomBlocks.push([x-8,y-10,x+8,y])-1];
+      // The sentinel sheet has eleven transparent rows below its stone base.
+      if(key==='statue')actor.moveBlocks=[sanctum.roomBlocks.push([x-8,y-19,x+8,y-11])-1];
       sanctum.roomActors.push(actor);
     }
   }
