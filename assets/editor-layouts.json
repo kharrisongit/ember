@@ -74,11 +74,39 @@
         "y": 129,
         "originX": 104,
         "originY": 134
+      },
+      "actor:millwood:house26:6": {
+        "kind": "actor",
+        "key": "millwood:house26:6",
+        "identity": "Furniture 163_81",
+        "x": 128,
+        "y": 69,
+        "originX": 128,
+        "originY": 77
+      },
+      "actor:millwood:house26:1": {
+        "kind": "actor",
+        "key": "millwood:house26:1",
+        "identity": "ifire0",
+        "x": 91,
+        "y": 75,
+        "originX": 88,
+        "originY": 80
+      },
+      "actor:millwood:house26:4": {
+        "kind": "actor",
+        "key": "millwood:house26:4",
+        "identity": "ishelf4",
+        "x": 40,
+        "y": 70,
+        "originX": 31,
+        "originY": 80
       }
     }
   },
   "applied": [
     "1e407f31-a0f8-4b65-b617-ddb52322a261",
-    "66d2d812-b332-4b6f-84b8-e88968049d58"
+    "66d2d812-b332-4b6f-84b8-e88968049d58",
+    "519b74ab-69b2-4b30-ba95-056178e2a62a"
   ]
 }
