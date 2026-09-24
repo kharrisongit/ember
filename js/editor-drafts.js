@@ -2,6 +2,15 @@
 (function (root) {
   'use strict';
   const KEY = 'emberfell.editor-drafts.v1';
+  // One-time fresh start requested by the owner. Run before geometry/drafts load.
+  const RESET='emberfell.editor-clean-start.20260924';
+  try{
+    if(!root.localStorage.getItem(RESET)){
+      for(const key of [KEY,'emberfell.geometry.v1','emberfell.actor-layout.v1','emberfell.editor-send.v1'])root.localStorage.removeItem(key);
+      root.sessionStorage?.removeItem('emberfell.editor-pair.v1');
+      root.localStorage.setItem(RESET,'done');
+    }
+  }catch(_){}
   const INBOX = 'https://emberfell-edit-inbox.kurtislemaster.chatgpt.site';
   const clone = value => Array.isArray(value) ? value.map(clone) : value && Object.getPrototypeOf(value) === Object.prototype ? Object.fromEntries(Object.entries(value).map(([k,v])=>[k,clone(v)])) : value;
   function fingerprint(value) {
@@ -76,7 +85,7 @@
       if(run.status==='completed'){
         root.localStorage.removeItem(ACTIVE);
         if(run.conclusion!=='success')throw Error('GitHub could not publish these edits. Your draft is saved. Open the check for details, then retry.');
-        result(true,'Changes published. You can keep editing and send again.',record);return;
+        result(true,'Changes published. You can keep editing and send again.',{...record,published:true});return;
       }
       await pause();
     }
@@ -91,22 +100,26 @@
         await connect(draft);return;
       }
       result(false,'Sending '+draft.map+'…');
-      if(await published(draft.id)){result(true,'These changes are already published. Refresh when you are ready.');return;}
+      record={id:draft.id,map:draft.map,patch:draft.patch};
+      if(await published(draft.id)){result(true,'These changes are already published. Refresh when you are ready.',{...record,published:true});return;}
       const data=await request(WORKFLOW+'/runs?event=workflow_dispatch&per_page=100');
       const runs=data.workflow_runs||[];
       // Reuse the same workflow on retries, including after a reload or lost response.
       const existing=runs.find(run=>run.display_title==='Editor moves '+draft.id);
       if(existing?.status==='completed'&&existing.conclusion==='success'){
-        result(true,'These changes are already published. Refresh when you are ready.');return;
+        result(true,'These changes are already published. Refresh when you are ready.',{...record,published:true});return;
       }
       if(runs.some(run=>run.status!=='completed'&&run.id!==existing?.id))throw Error('GitHub is publishing an earlier area. Wait for it to finish, then send this area. Your draft is saved.');
       let runId=existing?.status!=='completed'?existing?.id:null;
       if(!runId){
-        const dispatched=await request(WORKFLOW+'/dispatches',{ref:'main',inputs:{submission_id:draft.id,draft:await encodeDraft(draft)}});
+        // COPY text duplicates the structured operations and can contain very
+        // large terrain/scenery listings. GitHub only needs the operations.
+        const {patch,...payload}=draft;
+        const dispatched=await request(WORKFLOW+'/dispatches',{ref:'main',inputs:{submission_id:draft.id,draft:await encodeDraft(payload)}});
         runId=dispatched.workflow_run_id;
       }
       if(!Number.isSafeInteger(runId)||runId<1)throw Error('Sent, but GitHub did not return its check number. Press SEND CHANGES to check again; your draft is saved.');
-      record={id:draft.id,map:draft.map,runId,runUrl:'https://github.com/kharrisongit/ember/actions/runs/'+runId};
+      record={...record,runId,runUrl:'https://github.com/kharrisongit/ember/actions/runs/'+runId};
       try{root.localStorage.setItem(ACTIVE,JSON.stringify(record));}catch(_){}
       result(true,'Sent '+draft.map+'. GitHub is checking and publishing your edits. You can keep playing.',record);
       await monitor(record,result);
@@ -137,5 +150,5 @@
   }
   root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,encodeDraft,
     disconnect(){root.localStorage.removeItem(TOKEN);root.sessionStorage.removeItem(PAIR);},
-    version:'20260924-repeat-send',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
+    version:'20260924-fresh-build',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
 })(globalThis);

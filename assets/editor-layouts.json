@@ -144,10 +144,10 @@
         "kind": "actor",
         "key": "npc:Prue",
         "identity": "Prue",
-        "x": 12538,
-        "y": 3311,
-        "originX": 12504,
-        "originY": 3224
+        "x": 12542,
+        "y": 3349,
+        "originX": 12547,
+        "originY": 3275
       },
       "actor:npc:Tessa": {
         "kind": "actor",
@@ -171,10 +171,10 @@
         "kind": "actor",
         "key": "npc:Ovid",
         "identity": "Ovid",
-        "x": 12494,
-        "y": 3377,
-        "originX": 12440,
-        "originY": 3280
+        "x": 12407,
+        "y": 3346,
+        "originX": 12395,
+        "originY": 3349
       },
       "actor:actor:18:market_drinks_stall": {
         "kind": "actor",
@@ -198,10 +198,10 @@
         "kind": "actor",
         "key": "npc:Toft",
         "identity": "Toft",
-        "x": 12319,
-        "y": 3304,
-        "originX": 12344,
-        "originY": 3250
+        "x": 12405,
+        "y": 3244,
+        "originX": 12408,
+        "originY": 3246
       },
       "door:56": {
         "kind": "door",

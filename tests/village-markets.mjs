@@ -20,3 +20,40 @@ for(const stand of stands){
 }
 console.log('PASS: four larger village stands; all merchants in visible south-facing openings with counter occlusion; Forgewick untouched.');
 if(process.env.EMBER_PREVIEW_DATA)fs.writeFileSync(process.env.EMBER_PREVIEW_DATA,JSON.stringify({W,SPR}));
+
+// User-selected legacy looks belong to market vendors only.
+run('var TS=16,MD=null,npcs=[],actorLayouts={};');
+run(code.slice(code.indexOf('function editorActorInfo('),code.indexOf('function pickEditorActor(')));
+const authoredStart=code.indexOf('    const positions={"actor:14:market_weapons_stall"');
+run('{const m=W.maps.world;'+code.slice(authoredStart,code.indexOf('    const rashida=',authoredStart))+'}');
+
+run(read('js/market-npcs.js'));
+const story=new Map(Object.entries(W.maps).flatMap(([id,m])=>(m.npcs||[]).map(n=>[id+':'+n.n,JSON.stringify([n.d,n.sells])])));
+run("for(const [id,m] of Object.entries(W.maps))prepareMarketNpcCast(m,id)");
+const vendorOrigins=Object.fromEntries(W.maps.world.npcs.filter(n=>n.marketVendor).map(n=>[n.n,{x:n.x,y:n.y}]));
+if(process.env.EMBER_VENDOR_ORIGINS)fs.writeFileSync(process.env.EMBER_VENDOR_ORIGINS,JSON.stringify(vendorOrigins));
+for(const [id,m] of Object.entries(W.maps))for(const n of m.npcs||[]){
+ assert.equal(JSON.stringify([n.d,n.sells]),story.get(id+':'+n.n),'dialogue and inventory preserved for '+n.n);
+ if(n.marketVendor){
+  assert.match(n.packSpr,/^npc_(lumberjack_jack|chef_chloe|farmer_buba|miner_mike)_d$/);
+  assert(n.stationary&&!n.patrol&&!n.patrolPoints&&!n.goto&&n.counter,'vendor stays at its counter');
+ }else assert(!['lumberjack_jack','chef_chloe','farmer_buba','miner_mike'].includes(n.sk),'market appearance outside a stand: '+n.n);
+}
+assert.equal(W.maps.world.npcs.filter(n=>n.marketVendor).length,9);
+for(const stand of stands){const n=W.maps.world.npcs.find(n=>n.counter?.x===stand.x&&n.counter?.y===stand.y);assert(n.y>n.seatClipY,'small legacy sprite feet stay behind counter');assert(n.y-SPR[n.packSpr][3]>=stand.y-40);}
+run(read('js/editor-build-data.js'));run(read('js/published-editor-layouts.js'));
+c.layout=JSON.parse(read('assets/editor-layouts.json'));
+for(const name of ['Toft','Prue','Ovid']){
+ const op=c.layout.maps.world['actor:npc:'+name],n=W.maps.world.npcs.find(n=>n.n===name);
+ assert.deepEqual([op.originX,op.originY],[n.x,n.y],'published vendor anchor matches new role: '+name);
+}
+run('publishedEditorLayouts=layout;applyPublishedEditorLayout(W.maps.world,"world")');
+for(const a of W.maps.world.roomActors.filter(a=>a.interiorNpc)){
+ const n=W.maps.world.npcs.find(n=>n.n===a.interiorNpc);if(!n?.marketVendor)continue;
+ assert.deepEqual([n.x,n.y],[a.x,a.y+14],n.n+' follows the published stall placement');
+ c.a=a;run('MD=W.maps.world;npcs=MD.npcs.map(n=>({...n}));shiftActorData(W.maps.world,a,a.x+16,a.y+8,true)');
+ assert.deepEqual([n.x,n.y],[a.x,a.y+14],'dragging a stall carries its vendor');
+ assert.deepEqual([n.talkX,n.talkY],[a.x,a.y+28]);assert.deepEqual([n.counter.x,n.counter.y],[a.x,a.y+8]);
+ const live=c.npcs.find(v=>v.n===n.n);assert.deepEqual([live.counter.x,live.counter.y],[n.counter.x,n.counter.y],'live counter shifts once');
+}
+console.log('PASS: the four chosen appearances serve all nine market stands, with published placements, linked movement, working counters and no use elsewhere in the cast.');

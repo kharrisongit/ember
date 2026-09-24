@@ -25,11 +25,24 @@ function browser({local=storage(),session=storage(),hash='',run,fetcher}={}){
   return {api:context.EmberEditDrafts,local,session,calls,navigation,reports,report:(...args)=>reports.push(args)};
 }
 const linked=()=>{const local=storage();local.setItem(TOKEN,'github_pat_test');return local;};
+// Upgrade discards the owner's old editor work once, before any draft loads.
+const oldLocal=linked(),oldSession=storage();
+const resetKeys=['emberfell.editor-drafts.v1','emberfell.geometry.v1','emberfell.actor-layout.v1','emberfell.editor-send.v1'];
+for(const key of resetKeys)oldLocal.setItem(key,JSON.stringify({old:true}));
+oldLocal.setItem('emberfell.save','game progress');oldSession.setItem(PAIR,'old connection draft');
+const clean=browser({local:oldLocal,session:oldSession});
+for(const key of resetKeys)assert.equal(oldLocal.getItem(key),null);
+assert.equal(oldSession.getItem(PAIR),null);assert.equal(oldLocal.getItem('emberfell.save'),'game progress');assert(clean.api.connected());
+clean.api.store.put('world',{patch:'new route'});oldLocal.setItem('emberfell.geometry.v1','new geometry');
+const freshReload=browser({local:oldLocal,session:oldSession});
+assert.equal(freshReload.api.store.get('world').patch,'new route');assert.equal(oldLocal.getItem('emberfell.geometry.v1'),'new geometry');
 let b=browser({local:linked()});assert.equal(b.calls.length,0,'loading and local editing never auto-submit');
-await b.api.send(draft,b.report);
+await b.api.send({...draft,patch:'Previous COPY history '.repeat(50000)},b.report);
 const posts=b.calls.filter(c=>c.options?.method==='POST');assert.equal(posts.length,1);
 assert.deepEqual(JSON.parse(posts[0].options.body),{ref:'main',inputs:{submission_id:draft.id,draft:JSON.stringify(draft)}});
 assert.equal(b.navigation.length,0);assert.match(b.reports.at(-1)[1],/Changes published/);
+assert.equal(b.reports.at(-1)[2].published,true);assert(b.reports.at(-1)[2].patch.startsWith('Previous COPY history'));
+assert(!b.reports.find(r=>r[1].startsWith('Sent '))[2].published,'dispatch alone must not clear COPY');
 assert.equal(b.local.getItem('emberfell.editor-send.v1'),null);
 const existing={id:42,display_title:'Editor moves '+draft.id,status:'in_progress'};
 b=browser({local:linked(),run:existing});await b.api.send(draft,b.report);

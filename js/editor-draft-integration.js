@@ -125,8 +125,11 @@ function saveEditorDraft() {
     const terrain=terrRLE(baseTerr);
     const paint=new Map((MD.editorPublishedPaint||[]).map(p=>[p.index,p]));
     for(const [index,value]of painted)paint.set(index,{kind:'paint',key:String(index),index,value,originValue:terrOrig[index]??value,width:MW,height:MH,override:true});
-    const after=B.snapshot({...MD,w:MW,h:MH,terr:terrain,base_terr:terrain,
-      objs:objs.filter(o=>!deleted.has(o.id)).flatMap(o=>[o.s,Math.round(o.x),Math.round(o.y)]),
+    // Feature edits regenerate their ground on load. Do not resend the whole
+    // overworld terrain when only a route or arena changed.
+    const sameGround=MW===before.w&&MH===before.h&&terrain===before.base_terr;
+    const after=B.snapshot({...MD,w:MW,h:MH,terr:sameGround?before.terr:terrain,base_terr:terrain,
+      objs:objs.filter(o=>!deleted.has(o.id)).flatMap(o=>[o.s,o.x,o.y]),
       scatter:scat.filter((_,i)=>!decorGone.has('s'+(i-i%3))),sanim:sanm.filter((_,i)=>!decorGone.has('a'+(i-i%3))),
       features,decks,felled:[],felled_rle:B.encodeFelled(felled),editorDeletedObjects:[],editorDeletedDecor:[],editorPublishedPaint:[...paint.values()]});
     const build={kind:'build',layout:B.hash(publishedEditorLayouts.maps[MAPID]||{}),before:B.hash(before),after:B.hash(after),changes:B.diff(before,after)};
@@ -144,7 +147,7 @@ function saveEditorDraft() {
     }else operations.push({kind:'collision',key:g.cell.join(','),before:MD.collisionOverrides?.[g.cell.join(',')]??null,blocked:g.blocked});
   }
   const sameSubmission=old?.submission?.sourceRevision===api.sourceRevision&&JSON.stringify(old.submission.operations)===JSON.stringify(operations);
-  const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,session:old?.session||null,
+  const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,session:old?.session||null,publishedPatch:old?.publishedPatch||null,
     updatedAt:new Date().toISOString(),submission:sameSubmission?old.submission:null,
     sentAt:sameSubmission?old.sentAt:null};
   try { api.store.put(MAPID,draft); }
@@ -156,7 +159,11 @@ function scheduleEditorDraft() {
   clearTimeout(editorDraftTimer); editorDraftTimer=setTimeout(saveEditorDraft,200);
 }
 function editorSendStatus(ok,message,record) {
-  if(ok&&record){const draft=EmberEditDrafts.store.get(record.map);if(draft?.submission?.id===record.id){draft.sentAt=new Date().toISOString();try{EmberEditDrafts.store.put(record.map,draft);}catch(_){}}}
+  if(ok&&record){const draft=EmberEditDrafts.store.get(record.map);if(draft){
+    if(draft.submission?.id===record.id)draft.sentAt=new Date().toISOString();
+    if(record.published&&record.patch)draft.publishedPatch=record.patch;
+    try{EmberEditDrafts.store.put(record.map,draft);}catch(_){}
+  }}
   let panel=document.getElementById('editorSendStatus');
   if(!panel){
     panel=document.createElement('div');panel.id='editorSendStatus';

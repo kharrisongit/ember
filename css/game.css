@@ -2273,3 +2273,10 @@ body.pseudoFullscreen{
   #bagHead .chips{grid-template-columns:repeat(3,minmax(0,1fr)) 36px!important}
   #bagRows,#bag.book #bagRows{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
 }
+
+/* Remains available while selecting, moving and deleting NPC samples. */
+#npcLineupControls{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:18;display:flex;align-items:center;gap:5px;max-width:calc(100% - 12px);padding:5px;background:#211b15ed;border:1px solid #9d8052;border-radius:8px;color:#f4e4bb;font:12px/1.2 sans-serif;box-sizing:border-box}
+#npcLineupControls[hidden]{display:none}
+#npcLineupControls button{font:inherit;font-weight:bold;min-width:32px;min-height:36px;padding:6px;border:1px solid #9d8052;border-radius:5px;background:#3d2f21;color:#f4e4bb;cursor:pointer;touch-action:manipulation}
+#npcLineupControls button:disabled{opacity:.35;cursor:default}
+#npcLineupStatus{white-space:nowrap;text-align:center;min-width:80px}

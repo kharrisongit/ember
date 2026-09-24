@@ -5696,6 +5696,10 @@ function markKingCompleteForTest() {
 }
 tap(document.getElementById("bKingDone"), markKingCompleteForTest);
 tap(document.getElementById("bNpcLineup"), showNpcLineup);
+tap(document.getElementById('bNpcType'),()=>changeNpcLineup(1));
+tap(document.getElementById('bNpcPrev'),()=>changeNpcLineup(0,-1));
+tap(document.getElementById('bNpcNext'),()=>changeNpcLineup(0,1));
+tap(document.getElementById('bNpcClose'),closeNpcLineup);
 tap(document.getElementById("bSkip"), () => {
   skipBrambleForTest();
   devItemTest = true;

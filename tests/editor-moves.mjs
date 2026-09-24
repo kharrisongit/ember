@@ -231,6 +231,32 @@ assert.throws(()=>B.validate([{path:['script'],value:'arbitrary code'}]),/Invali
 assert.throws(()=>B.apply(before,{before:B.hash(before),after:'bad',changes:[{path:['terr'],value:'0.3'}]}),/Terrain size/);
 console.log('PASS: routes/arenas and repeated Build submissions preserve prior edits, and stale layouts or unsafe data are rejected.');
 
+// Different authored/rendered ground and fractional scenery must not turn a
+// small feature edit into a replacement of the entire map.
+disk.clear();g=gameContext();g.run(`W.maps.a.base_terr='0.625';W.maps.a.terr='1.625';W.maps.a.objs[1]=40.25;visit('a');
+ features.push({id:901,kind:'route',x0:4,y0:6,x1:12,y1:6,w:4,band:2,style:'forest',pts:[[4,6],[8,8],[12,6]]});
+ features.push({id:902,kind:'arena',x:12,y:6,r:6,style:'forest'});saveEditorDraft();`);
+const featureDraft=draftOf(g),featureBuild=featureDraft.operations[0];
+assert(!featureBuild.changes.some(c=>['terr','base_terr','objs'].includes(c.path[0])));
+const featureBase=JSON.parse(g.run("JSON.stringify(editorDraftBases.get('a').map)"));
+const featureMap=publishedMap(applyMoves(empty,{...first,map:'a',operations:featureDraft.operations},revision),featureBase);
+assert.deepEqual(featureMap.features.map(f=>f.kind),['route','arena']);assert.equal(featureMap.objs[1],40.25);
+assert.deepEqual(featureMap.features[0].pts,[[4,6],[8,8],[12,6]]);
+g.run(`EmberEditDrafts.connected=()=>true;EmberEditDrafts.send=d=>{globalThis.sent=d};sendEditorChanges();`);
+assert(Buffer.byteLength(await g.run('EmberEditDrafts.encodeDraft(sent)'))<3000,'route and arena stay a small submission');
+// COPY reflects the current area and forgets only the confirmed send, including
+// when another edit is made while GitHub is still finishing that send.
+g.run(`globalThis.confirmed={id:sent.id,map:'a',patch:sent.patch,published:true};
+ features.push({id:903,kind:'arena',x:4,y:10,r:3,style:'forest'});saveEditorDraft();
+ var statusPanel={children:[{},{style:{},removeAttribute(){}},{},{}]};document.getElementById=()=>statusPanel;
+ editorSendStatus(true,'Published',confirmed);`);
+assert(!g.run('editorCopyPatch()').includes('F route 901'));assert(g.run('editorCopyPatch()').includes('F arena 903'));
+g.run(`saveEditorDraft();geometryEdits.b={collision:{'1,2':true}};`);
+assert(!g.run('editorCopyPatch()').includes('COLLISION'));assert(!g.run('editorCopyPatch()').includes('F arena 902'));
+g.run(`editorSendStatus(true,'Published',{...confirmed,patch:buildPatch(true)});`);
+assert(g.run('editorCopyPatch()').endsWith('(no changes on this map)'));
+console.log('PASS: bent routes and arenas publish compactly without rewriting terrain/scenery; COPY excludes confirmed edits and other maps.');
+
 // Growth previously had no COPY row, so submission identity must use operations.
 disk.clear();g=gameContext();installBuildHooks(g);g.run(`visit('a');growWorld(28,25);saveEditorDraft();
  EmberEditDrafts.connected=()=>true;EmberEditDrafts.send=d=>{globalThis.sent=d};sendEditorChanges();`);
@@ -405,8 +431,31 @@ console.log('PASS: repeated Build, Doors and Collision sends replace their earli
  e.run(game.slice(game.indexOf('function sheetOf('),game.indexOf('function blit(')));
  const packStart=game.indexOf('    if (o.packSpr) {',game.indexOf('function drawWorld('));
  const packEnd=game.indexOf('    if (o.body && SPR[',packStart);
- e.run('for(const o of npcs.filter(n=>n.packSpr)){'+game.slice(packStart,packEnd)+'}');
+ e.run('for(const o of npcs.filter(n=>n.packSpr&&npcLineupVisible(n))){'+game.slice(packStart,packEnd)+'}');
  assert(e.run("sampleDraws.every(d=>d.s===SPR[npcs.find(n=>n.editKey===d.key).packSpr+'_idle_d'])"));
  assert(e.run("sampleDraws.find(d=>d.key==='npc:lineup:pack:guild_fighter_sword').img===knightStoryImg"),'knight appearance uses its dedicated sheet');
+
+ // Browse every category/page without reviving deleted samples or stacking pages.
+ for(const category of ['walking','standing','seated','scenes'])assert(catalog.some(n=>n.category===category));
+ for(const key of ['sprite:pack_grandmother','sprite:villager_seated_common_a6_0','sprite:pack_pupil_1_chair','sprite:tavern_src_Dancer','sprite:school_src_Reader6','skin:villf'])assert(catalog.some(n=>n.key===key),key+' missing from catalog');
+ e.run('changeNpcLineup(1)');assert.equal(e.run('devNpcLineupCategory'),'standing');
+ assert(e.run("npcs.filter(n=>n.devLineup&&npcHere(n)).every(n=>n.devLineupCategory==='standing')"));
+ e.run('changeNpcLineup(1);selected=npcs.find(n=>n.devLineup&&npcHere(n));globalThis.removedSeat=selected.editKey;deleteSelected();saveEditorDraft();changeNpcLineup(0,1)');
+ assert(e.run("npcs.filter(n=>n.devLineup&&npcHere(n)).every(n=>n.devLineupCategory==='seated'&&n.devLineupPage===1)"));
+ e.run('changeNpcLineup(0,-1)');assert(!e.run('npcHere(npcs.find(n=>n.editKey===removedSeat))'));
+ e.run("visitEntities('b');visitEntities('world')");assert(e.run('npcs.find(n=>n.editKey===removedSeat).editorDeleted'),'seated deletion survives travel');
+ const expandedDraft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
+ assert(expandedDraft.operations.some(n=>n.key===e.run('removedSeat')&&n.deleted));
+ e.run('changeNpcLineup(1)');assert.equal(e.run('devNpcLineupCategory'),'scenes');
+ assert(e.run('npcs.filter(n=>n.devLineup&&npcHere(n)).every(n=>editorSprite(n)[2]<=40&&editorSprite(n)[3]<=52)'),'large scene art fits its selectable preview slot');
+ e.run('closeNpcLineup()');assert(e.run('npcs.filter(n=>n.devLineup).every(n=>!npcHere(n))'));
+ // Existing published walking edits still resolve to exactly the same samples.
+ e.run('devNpcLineupActive=true;devNpcLineupCategory="walking";devNpcLineupPage=0');
+ const walking=JSON.parse(e.run('JSON.stringify(walkingNpcLineupCatalog())'));
+ const authored=JSON.parse(e.run('JSON.stringify(clean.npcs)'));
+ for(const [i,n] of walking.entries()){
+  const sample=authored.find(a=>a.editKey==='npc:lineup:'+n.key);
+  assert.deepEqual([sample.x,sample.y],[344+(i%8)*40,208+Math.floor(i/8)*48]);
+ }
  console.log(`PASS: chest movement, haunted effects and NPC deletion survive save/reload/reset/publication; ${catalog.length} idle NPC appearances fit the egg field with stable deletions.`);
 }

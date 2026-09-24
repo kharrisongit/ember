@@ -1196,6 +1196,10 @@ function repairSeating(){
 
 }
 function drawNpcFrame(o,s,frame,img){
+  if(o.devLineupScale&&o.devLineupScale<1){
+    ctx.save();ctx.translate(o.x,o.y);ctx.scale(o.devLineupScale,o.devLineupScale);ctx.translate(-o.x,-o.y);
+    drawNpcFrame({...o,devLineupScale:1},s,frame,img);ctx.restore();return;
+  }
   // The authored seated cast lives beyond the legacy atlas extent. Decode it as
   // its own sheet so old atlas bounds/page caches cannot silently hide residents.
   if(/^villager_seated_/.test(o.packSpr||'')&&houseSeatedSheet){
@@ -1607,7 +1611,7 @@ function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').styl
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
  tap(document.getElementById('bDoors'),()=>setGeometryTool(doorEdit?null:'door'));
- tap(document.getElementById('geometryDone'),()=>setGeometryTool(null));tap(document.getElementById('geometryCopy'),()=>copyText(buildPatch(),ok=>ok?toast('Changes copied'):showDump(buildPatch())));
+ tap(document.getElementById('geometryDone'),()=>setGeometryTool(null));tap(document.getElementById('geometryCopy'),()=>copyText(editorCopyPatch(),ok=>ok?toast('Changes copied'):showDump(editorCopyPatch())));
  document.querySelectorAll('[data-collision]').forEach(b=>tap(b,()=>{collisionPaint=b.dataset.collision;document.querySelectorAll('[data-collision]').forEach(e=>e.classList.toggle('on',e===b))}));
  tap(document.getElementById('bagMap'),()=>openAtlas('bag'));
 
@@ -1661,6 +1665,7 @@ function editorActorInfo(o) {
 }
 function editorNpcKey(n) { return n.editKey||'npc:'+n.n; }
 function editorSprite(o) {
+  if(o.devLineupScale&&o.devLineupScale<1){const sp=editorSprite({...o,devLineupScale:1});if(!sp)return sp;const scaled=sp.slice();scaled[2]*=o.devLineupScale;scaled[3]*=o.devLineupScale;return scaled;}
   if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(36*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):57;return [0,0,36,h,1];}
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
   if(o.extractedCanvas)return [0,0,o.extractedCanvas.width,o.extractedCanvas.height,1];
@@ -1676,6 +1681,7 @@ function shiftActorData(m, o, x, y, actor) {
   if(Number.isFinite(o.sy))o.sy=o.editableWall?-50:o.sy+dy;
   if(Number.isFinite(o.talkX))o.talkX+=dx;
   if(Number.isFinite(o.talkY))o.talkY+=dy;
+  if(o.counter)o.counter={...o.counter,x:o.counter.x+dx,y:o.counter.y+dy};
   if(Number.isFinite(o.seatClipY))o.seatClipY+=dy;
   if(actor&&(dx||dy)){
     for(const index of o.interiorChildren||[]){const child=m.roomActors?.[index];if(child&&child!==o)shiftActorData(m,child,child.x+dx,child.y+dy,true);}
@@ -1716,7 +1722,7 @@ function moveEditorActor(o,x,y,save=false) {
   if(info.kind==='npc'){
     shiftActorData(MD,info.source,x,y,false);
     o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;
-    for(const k of ['talkX','talkY','patrol','patrolPoints','sy'])o[k]=info.source[k];
+    for(const k of ['talkX','talkY','patrol','patrolPoints','sy','counter'])o[k]=info.source[k];
   }else shiftActorData(MD,o,x,y,true);
   if(save){
     (actorLayouts[MAPID] ||= {})[info.key]={x,y};
@@ -1961,6 +1967,7 @@ function loadMap(id, fresh, discardDraft=false) {
   rememberOverworld(leavingDraft);
   editorDraftReady=false;editorMapLoading=true;
   if(typeof prepareEditorEntities==='function')prepareEditorEntities(W.maps[id],id);
+  if(typeof prepareMarketNpcCast==='function')prepareMarketNpcCast(W.maps[id],id);
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
   chestAnim = null;
@@ -2030,7 +2037,7 @@ function loadMap(id, fresh, discardDraft=false) {
   seedTreasuryGold();
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
   npcs = MD.npcs.map((n, k) => ({
-    editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,
+    editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,devLineupCategory:n.devLineupCategory,devLineupPage:n.devLineupPage,devLineupScale:n.devLineupScale,
     id: "npc" + k, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
     crown: n.crown, body: n.body, kf: "d", dd: n.dd, dm: n.dm, rod: n.rod,
     charm: n.charm,                 /* what this one hands over, if anything */
@@ -6226,7 +6233,7 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
-  if(m.editorDeleted||(m.devLineup&&(typeof devNpcLineupActive==='undefined'||!devNpcLineupActive)))return false;
+  if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
   if (wonAll && /King Halvard/.test(m.n || "")) return false;
   if (m.away) return false;
   if (m.when !== undefined && quest < m.when) return false;
@@ -10871,6 +10878,7 @@ function activeTool() {
 }
 
 function refreshToolbar() {
+  if(typeof refreshNpcLineupControls==='function')refreshNpcLineupControls();
   const bar = document.getElementById("toolbar");
   const what = activeTool();
   const show = !!what && !devOpen;
@@ -11505,6 +11513,7 @@ function deleteGrabbed() {
 }
 
 function refreshSel() {
+  if(typeof refreshNpcLineupControls==='function')refreshNpcLineupControls();
   const exact=(MD?.roomActors||[]).filter(a=>a.exactFurniture&&!a.editorDeleted);
   selEl.textContent = selected
     ? (selected.n || selected.spr || NAMES[selected.s]) + " #" + (selected.id || "actor") + " @ " + Math.round(selected.x) + "," + Math.round(selected.y)
@@ -11671,6 +11680,13 @@ function buildPatch(currentAreaOnly=false) {
   if (L.length === 2) L.push("(no changes on this map)");
   return L.join("\n");
 }
+function editorCopyPatch() {
+  const patch=buildPatch(true),published=EmberEditDrafts.store.get(MAPID)?.publishedPatch;
+  if(!published)return patch;
+  const sent=new Set(published.split('\n').slice(2)),lines=patch.split('\n');
+  const pending=lines.slice(2).filter(line=>line!=='(no changes on this map)'&&!sent.has(line));
+  return [...lines.slice(0,2),...(pending.length?pending:['(no changes on this map)'])].join('\n');
+}
 const dumpEl = document.getElementById("dump"), dumpText = document.getElementById("dumpText");
 const toastEl = document.getElementById("toast");
 function toast(msg) {
@@ -11704,8 +11720,8 @@ function copyText(txt, done) {
 }
 
 tap(document.getElementById("bCopy"), () => {
-  const txt = buildPatch();
-  const n = txt.split("\n").length - 1;
+  const txt = editorCopyPatch();
+  const n = txt.includes('\n(no changes on this map)')?0:txt.split("\n").length - 2;
   copyText(txt, ok => {
     if (ok) toast("copied " + n + " change" + (n === 1 ? "" : "s"));
     else showDump(txt);

@@ -1,5 +1,6 @@
 /* Stable editor identities for rewards and the optional NPC audition field. */
-let devNpcLineupActive=false;
+let devNpcLineupActive=false,devNpcLineupCategory='walking',devNpcLineupPage=0;
+const NPC_LINEUP_TYPES=[['walking','Walking'],['standing','Standing'],['seated','Seated'],['scenes','At work']];
 
 function prepareEditorEntities(m,id) {
   m.roomActors ||= [];
@@ -47,7 +48,7 @@ function syncEditorNpcArt(m) {
   }
 }
 
-function npcLineupCatalog() {
+function walkingNpcLineupCatalog() {
   const entries=[];
   const directions=['d','u','e','w'];
   const complete=base=>directions.every(d=>SPR[base+'_walk_'+d]?.[4]>1&&SPR[base+'_idle_'+d]);
@@ -69,17 +70,100 @@ function npcLineupCatalog() {
   return entries.sort((a,b)=>a.key.localeCompare(b.key));
 }
 
+function npcLineupCatalog() {
+  // Keep the original walking roster and its ordering intact: published edits
+  // already refer to these names and positions.
+  const walking=walkingNpcLineupCatalog().map(n=>({...n,category:'walking'}));
+  const extras=new Map(),seen=new Set(walking.map(n=>n.key));
+  const add=(key,look,category)=>{if(!seen.has(key)){seen.add(key);extras.set(key,{key,...look,category});}};
+  const seated=k=>/^(?:villager_seated_|seated_body_|pack_pupil_)|_seated$/.test(k);
+  const scene=k=>/^(?:tavern_(?:src_|anim_)|school(?:2)?_|library_reader_|smithy_anim_8$|smithout_anim_7$|glassnew_anim_[46]$)/.test(k);
+  const direct=(spr,category)=>{if(SPR[spr])add('sprite:'+spr,{packSpr:spr,packDirections:false,packWalk:false},category);};
+  for(const spr of Object.keys(SPR).sort()){
+    if(/^(?:pack_|guild_)/.test(spr)&&!/_((?:idle|walk|run|atk|hurt|die|death))_[a-z]$/.test(spr))direct(spr,seated(spr)?'seated':'standing');
+    if(/^(?:guild_|pack_).*_idle_d$/.test(spr)){
+      const base=spr.slice(0,-7);
+      if(!seen.has('pack:'+base))add('pack:'+base,{packSpr:base,packDirections:true,packWalk:false},'standing');
+    }
+    if(/^npc_.+_d$/.test(spr)){
+      const sk=spr.slice(4,-2);add('skin:'+sk,{sk,idleFrame:0},'standing');
+    }
+    if(/^(?:villager_seated_|seated_body_)|^(?:king|maddock)_seated$/.test(spr))direct(spr,'seated');
+    if(/^(?:desert_trader\d+|royal_intro_guard_(?:white|black)|market_(?:weapon|drinks|bread|lute|flute))$/.test(spr))direct(spr,'standing');
+    if(/^(?:fisher|hb_(?:boy_red|boy_grn|fisher|oldman|kobold)|herbalist_front)$/.test(spr))direct(spr,'standing');
+    if(/^royal_(?:guest_woman|guest_man|reader)$/.test(spr))direct(spr,'seated');
+    // Named scene characters only: exclude room backgrounds, doors and clocks.
+    if(/^tavern_src_(?!Windows_doors$)/.test(spr)||/^school_src_(?:Reader\d+|Visitor|Librarian_|Globe_character_)/.test(spr)||
+       /^school2_anim_[3-7]$|^school_anim_[5-6]$|^library_reader_red$|^smithy_anim_8$|^smithout_anim_7$|^glassnew_anim_[46]$/.test(spr))direct(spr,'scenes');
+  }
+  // Include any additional friendly appearance assigned by the authored cast.
+  for(const m of Object.values(W.maps))for(const n of m.npcs||[]){
+    if(n.devLineup)continue;
+    if(n.packSpr){
+      const base=n.packSpr;
+      if(/^npc_.+_d$/.test(base)&&seen.has('skin:'+base.slice(4,-2)))continue;
+      if(seen.has('pack:'+base)||seen.has('sprite:'+base))continue;
+      if(SPR[base])direct(base,seated(base)?'seated':scene(base)?'scenes':'standing');
+      else if(SPR[base+'_idle_d'])add('pack:'+base,{packSpr:base,packDirections:true,packWalk:false},'standing');
+    }
+    if(n.seatSpr)direct(n.seatSpr,'seated');
+    if(n.school&&n.lookId)direct(n.lookId,'scenes');
+    if(n.body&&SPR[n.body+'_idle_d']&&!seen.has('pack:'+n.body))add('body:'+n.body,{body:n.body},'standing');
+  }
+  return walking.concat([...extras.values()].sort((a,b)=>a.key.localeCompare(b.key)));
+}
+
 function prepareNpcLineup(m) {
   m.npcs ||= [];
-  npcLineupCatalog().forEach((entry,i)=>{
-    const {key,...look}=entry,editKey='npc:lineup:'+key;
-    if(m.npcs.some(n=>n.editKey===editKey))return;
-    // North Shroom Pass Field: inside the mushroom border, with the short final
-    // row left of the two trees at (424,464) and (552,464).
-    m.npcs.push({...look,editKey,devLineup:true,n:'NPC sample: '+key.split(':')[1],
-      x:21.5*TS+(i%8)*40,y:13*TS+Math.floor(i/8)*48,
-      stationary:true,noTalk:true,f:'d',idleFps:5,d:[]});
+  const counts={};
+  npcLineupCatalog().forEach(entry=>{
+    const {key,category,...look}=entry,editKey='npc:lineup:'+key;
+    const i=counts[category]||0;counts[category]=i+1;
+    const capacity=category==='walking'?48:24,page=Math.floor(i/capacity),slot=i%capacity;
+    const existing=m.npcs.find(n=>n.editKey===editKey);
+    if(existing){existing.devLineupCategory=category;existing.devLineupPage=page;return;}
+    // Walking slots retain their original coordinates. Other pages use a wider
+    // grid north of the field's two trees, with room for seated/scene artwork.
+    const x=category==='walking'?21.5*TS+(slot%8)*40:22*TS+(slot%6)*48;
+    const y=category==='walking'?13*TS+Math.floor(slot/8)*48:13*TS+Math.floor(slot/6)*60;
+    const sp=SPR[look.packSpr]||SPR[look.packSpr+'_idle_d']||SPR['npc_'+look.sk+'_d']||SPR[look.body+'_idle_d'];
+    const scale=category==='walking'||!sp?1:Math.min(1,40/sp[2],52/sp[3]);
+    m.npcs.push({...look,editKey,devLineup:true,devLineupCategory:category,devLineupPage:page,
+      devLineupScale:scale,
+      n:'NPC sample: '+key.split(':')[1],x,y,stationary:true,noTalk:true,f:'d',idleFps:5,d:[]});
   });
+}
+
+function npcLineupVisible(n) {
+  return devNpcLineupActive&&(n.devLineupCategory||'walking')===devNpcLineupCategory&&(n.devLineupPage||0)===devNpcLineupPage;
+}
+function refreshNpcLineupControls() {
+  const panel=document.getElementById('npcLineupControls');if(!panel)return;
+  panel.hidden=!(devNpcLineupActive&&MAPID==='world'&&editing);
+  const type=NPC_LINEUP_TYPES.find(t=>t[0]===devNpcLineupCategory);
+  const rows=(typeof npcs==='undefined'?[]:npcs).filter(n=>n.devLineup&&(n.devLineupCategory||'walking')===devNpcLineupCategory);
+  const pages=Math.max(1,...rows.map(n=>(n.devLineupPage||0)+1));
+  const shown=rows.filter(n=>(n.devLineupPage||0)===devNpcLineupPage&&!n.editorDeleted).length;
+  document.getElementById('bNpcType').textContent=type[1]+' ▸';
+  document.getElementById('npcLineupStatus').textContent=(devNpcLineupPage+1)+' / '+pages+' · '+shown+' shown';
+  document.getElementById('bNpcPrev').disabled=document.getElementById('bNpcNext').disabled=pages===1;
+}
+function changeNpcLineup(typeStep=0,pageStep=0) {
+  if(!devNpcLineupActive||MAPID!=='world')return;
+  saveEditorDraft();
+  if(typeStep){
+    const index=NPC_LINEUP_TYPES.findIndex(t=>t[0]===devNpcLineupCategory);
+    devNpcLineupCategory=NPC_LINEUP_TYPES[(index+typeStep+NPC_LINEUP_TYPES.length)%NPC_LINEUP_TYPES.length][0];devNpcLineupPage=0;
+  }else{
+    const rows=npcs.filter(n=>n.devLineup&&(n.devLineupCategory||'walking')===devNpcLineupCategory);
+    const pages=Math.max(1,...rows.map(n=>(n.devLineupPage||0)+1));
+    devNpcLineupPage=(devNpcLineupPage+pageStep+pages)%pages;
+  }
+  selected=null;dragObj=null;refreshSel();rebuildSolid();mapDirty=true;refreshNpcLineupControls();
+}
+function closeNpcLineup() {
+  saveEditorDraft();devNpcLineupActive=false;selected=null;dragObj=null;
+  rebuildSolid();mapDirty=true;refreshSel();refreshNpcLineupControls();
 }
 
 function showNpcLineup() {
@@ -96,7 +180,7 @@ function showNpcLineup() {
   // Fit the whole field initially; the existing pan and pinch controls still work.
   camFree=true;cam.z=Math.min(playZoom(),VW/400,VH/440);
   cam.x=30*TS-VW/cam.z/2;cam.y=21*TS-VH/cam.z/2;clampCam();
-  refreshToolbar();refreshSel();rebuildSolid();mapDirty=true;
-  const count=npcs.filter(n=>n.devLineup&&!n.editorDeleted).length;
-  toast(count+' idle NPC samples. Tap or drag to select, DELETE to remove; SEND CHANGES to publish.');
+  refreshToolbar();refreshSel();rebuildSolid();mapDirty=true;refreshNpcLineupControls();
+  const count=npcs.filter(n=>n.devLineup&&!n.editorDeleted&&npcLineupVisible(n)).length;
+  toast(count+' NPC samples on this page. Cycle types and pages; DELETE removes a sample, SEND CHANGES publishes.');
 }
