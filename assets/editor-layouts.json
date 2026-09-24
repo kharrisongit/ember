@@ -211,8 +211,8 @@
         "rect": {
           "x": 15320,
           "y": 4263,
-          "w": 18,
-          "h": 22
+          "w": 23,
+          "h": 21
         }
       },
       "collision:1562,409": {
@@ -2927,6 +2927,69 @@
         "originX": 29560,
         "originY": 5120
       },
+      "paint:303959": {
+        "kind": "paint",
+        "key": "303959",
+        "index": 303959,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303960": {
+        "kind": "paint",
+        "key": "303960",
+        "index": 303960,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303961": {
+        "kind": "paint",
+        "key": "303961",
+        "index": 303961,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303962": {
+        "kind": "paint",
+        "key": "303962",
+        "index": 303962,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303963": {
+        "kind": "paint",
+        "key": "303963",
+        "index": 303963,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303964": {
+        "kind": "paint",
+        "key": "303964",
+        "index": 303964,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:303965": {
+        "kind": "paint",
+        "key": "303965",
+        "index": 303965,
+        "value": 0,
+        "originValue": 1,
+        "width": 3585,
+        "height": 600
+      },
       "door:34": {
         "kind": "door",
         "key": "34",
@@ -3033,6 +3096,30 @@
           "y": 1365,
           "w": 18,
           "h": 16
+        }
+      },
+      "door:57": {
+        "kind": "door",
+        "key": "57",
+        "index": 57,
+        "to": "sn1",
+        "rect": {
+          "x": 45024,
+          "y": 1313,
+          "w": 18,
+          "h": 17
+        }
+      },
+      "door:58": {
+        "kind": "door",
+        "key": "58",
+        "index": 58,
+        "to": "ds1",
+        "rect": {
+          "x": 29552,
+          "y": 5051,
+          "w": 20,
+          "h": 17
         }
       },
       "collision:1507,354": {
@@ -6394,6 +6481,856 @@
         "kind": "collision",
         "key": "4102,1042",
         "blocked": false
+      },
+      "collision:5618,170": {
+        "kind": "collision",
+        "key": "5618,170",
+        "blocked": false
+      },
+      "collision:5618,169": {
+        "kind": "collision",
+        "key": "5618,169",
+        "blocked": false
+      },
+      "collision:5617,169": {
+        "kind": "collision",
+        "key": "5617,169",
+        "blocked": false
+      },
+      "collision:5617,168": {
+        "kind": "collision",
+        "key": "5617,168",
+        "blocked": true
+      },
+      "collision:5617,167": {
+        "kind": "collision",
+        "key": "5617,167",
+        "blocked": true
+      },
+      "collision:5617,166": {
+        "kind": "collision",
+        "key": "5617,166",
+        "blocked": true
+      },
+      "collision:5617,165": {
+        "kind": "collision",
+        "key": "5617,165",
+        "blocked": true
+      },
+      "collision:5617,164": {
+        "kind": "collision",
+        "key": "5617,164",
+        "blocked": true
+      },
+      "collision:5617,163": {
+        "kind": "collision",
+        "key": "5617,163",
+        "blocked": true
+      },
+      "collision:5617,162": {
+        "kind": "collision",
+        "key": "5617,162",
+        "blocked": true
+      },
+      "collision:5617,161": {
+        "kind": "collision",
+        "key": "5617,161",
+        "blocked": true
+      },
+      "collision:5617,160": {
+        "kind": "collision",
+        "key": "5617,160",
+        "blocked": true
+      },
+      "collision:5618,160": {
+        "kind": "collision",
+        "key": "5618,160",
+        "blocked": true
+      },
+      "collision:5618,161": {
+        "kind": "collision",
+        "key": "5618,161",
+        "blocked": true
+      },
+      "collision:5619,161": {
+        "kind": "collision",
+        "key": "5619,161",
+        "blocked": true
+      },
+      "collision:5620,161": {
+        "kind": "collision",
+        "key": "5620,161",
+        "blocked": true
+      },
+      "collision:5621,161": {
+        "kind": "collision",
+        "key": "5621,161",
+        "blocked": true
+      },
+      "collision:5622,161": {
+        "kind": "collision",
+        "key": "5622,161",
+        "blocked": true
+      },
+      "collision:5623,161": {
+        "kind": "collision",
+        "key": "5623,161",
+        "blocked": true
+      },
+      "collision:5624,161": {
+        "kind": "collision",
+        "key": "5624,161",
+        "blocked": true
+      },
+      "collision:5625,161": {
+        "kind": "collision",
+        "key": "5625,161",
+        "blocked": true
+      },
+      "collision:5626,161": {
+        "kind": "collision",
+        "key": "5626,161",
+        "blocked": true
+      },
+      "collision:5627,161": {
+        "kind": "collision",
+        "key": "5627,161",
+        "blocked": true
+      },
+      "collision:5628,161": {
+        "kind": "collision",
+        "key": "5628,161",
+        "blocked": true
+      },
+      "collision:5629,161": {
+        "kind": "collision",
+        "key": "5629,161",
+        "blocked": true
+      },
+      "collision:5630,161": {
+        "kind": "collision",
+        "key": "5630,161",
+        "blocked": true
+      },
+      "collision:5631,161": {
+        "kind": "collision",
+        "key": "5631,161",
+        "blocked": true
+      },
+      "collision:5632,161": {
+        "kind": "collision",
+        "key": "5632,161",
+        "blocked": true
+      },
+      "collision:5633,161": {
+        "kind": "collision",
+        "key": "5633,161",
+        "blocked": true
+      },
+      "collision:5634,161": {
+        "kind": "collision",
+        "key": "5634,161",
+        "blocked": true
+      },
+      "collision:5635,161": {
+        "kind": "collision",
+        "key": "5635,161",
+        "blocked": true
+      },
+      "collision:5636,161": {
+        "kind": "collision",
+        "key": "5636,161",
+        "blocked": true
+      },
+      "collision:5636,162": {
+        "kind": "collision",
+        "key": "5636,162",
+        "blocked": true
+      },
+      "collision:5637,162": {
+        "kind": "collision",
+        "key": "5637,162",
+        "blocked": true
+      },
+      "collision:5638,162": {
+        "kind": "collision",
+        "key": "5638,162",
+        "blocked": true
+      },
+      "collision:5639,162": {
+        "kind": "collision",
+        "key": "5639,162",
+        "blocked": true
+      },
+      "collision:5640,162": {
+        "kind": "collision",
+        "key": "5640,162",
+        "blocked": true
+      },
+      "collision:5641,162": {
+        "kind": "collision",
+        "key": "5641,162",
+        "blocked": true
+      },
+      "collision:5642,162": {
+        "kind": "collision",
+        "key": "5642,162",
+        "blocked": true
+      },
+      "collision:5641,163": {
+        "kind": "collision",
+        "key": "5641,163",
+        "blocked": true
+      },
+      "collision:5641,164": {
+        "kind": "collision",
+        "key": "5641,164",
+        "blocked": true
+      },
+      "collision:5641,165": {
+        "kind": "collision",
+        "key": "5641,165",
+        "blocked": true
+      },
+      "collision:5641,166": {
+        "kind": "collision",
+        "key": "5641,166",
+        "blocked": true
+      },
+      "collision:5641,167": {
+        "kind": "collision",
+        "key": "5641,167",
+        "blocked": true
+      },
+      "collision:5641,168": {
+        "kind": "collision",
+        "key": "5641,168",
+        "blocked": true
+      },
+      "collision:5641,169": {
+        "kind": "collision",
+        "key": "5641,169",
+        "blocked": true
+      },
+      "collision:5640,169": {
+        "kind": "collision",
+        "key": "5640,169",
+        "blocked": false
+      },
+      "collision:5639,169": {
+        "kind": "collision",
+        "key": "5639,169",
+        "blocked": false
+      },
+      "collision:5639,170": {
+        "kind": "collision",
+        "key": "5639,170",
+        "blocked": false
+      },
+      "collision:5639,171": {
+        "kind": "collision",
+        "key": "5639,171",
+        "blocked": false
+      },
+      "collision:5639,172": {
+        "kind": "collision",
+        "key": "5639,172",
+        "blocked": false
+      },
+      "collision:5639,173": {
+        "kind": "collision",
+        "key": "5639,173",
+        "blocked": false
+      },
+      "collision:5640,173": {
+        "kind": "collision",
+        "key": "5640,173",
+        "blocked": false
+      },
+      "collision:5640,174": {
+        "kind": "collision",
+        "key": "5640,174",
+        "blocked": false
+      },
+      "collision:5640,175": {
+        "kind": "collision",
+        "key": "5640,175",
+        "blocked": false
+      },
+      "collision:5634,170": {
+        "kind": "collision",
+        "key": "5634,170",
+        "blocked": true
+      },
+      "collision:5634,171": {
+        "kind": "collision",
+        "key": "5634,171",
+        "blocked": false
+      },
+      "collision:5634,172": {
+        "kind": "collision",
+        "key": "5634,172",
+        "blocked": false
+      },
+      "collision:5634,173": {
+        "kind": "collision",
+        "key": "5634,173",
+        "blocked": false
+      },
+      "collision:5635,170": {
+        "kind": "collision",
+        "key": "5635,170",
+        "blocked": true
+      },
+      "collision:5635,171": {
+        "kind": "collision",
+        "key": "5635,171",
+        "blocked": false
+      },
+      "collision:5635,172": {
+        "kind": "collision",
+        "key": "5635,172",
+        "blocked": false
+      },
+      "collision:5635,173": {
+        "kind": "collision",
+        "key": "5635,173",
+        "blocked": false
+      },
+      "collision:5635,174": {
+        "kind": "collision",
+        "key": "5635,174",
+        "blocked": false
+      },
+      "collision:5634,174": {
+        "kind": "collision",
+        "key": "5634,174",
+        "blocked": false
+      },
+      "collision:5634,175": {
+        "kind": "collision",
+        "key": "5634,175",
+        "blocked": false
+      },
+      "collision:5634,176": {
+        "kind": "collision",
+        "key": "5634,176",
+        "blocked": false
+      },
+      "collision:5635,175": {
+        "kind": "collision",
+        "key": "5635,175",
+        "blocked": false
+      },
+      "collision:5635,176": {
+        "kind": "collision",
+        "key": "5635,176",
+        "blocked": false
+      },
+      "collision:5635,177": {
+        "kind": "collision",
+        "key": "5635,177",
+        "blocked": false
+      },
+      "collision:5633,177": {
+        "kind": "collision",
+        "key": "5633,177",
+        "blocked": false
+      },
+      "collision:5639,175": {
+        "kind": "collision",
+        "key": "5639,175",
+        "blocked": false
+      },
+      "collision:5639,176": {
+        "kind": "collision",
+        "key": "5639,176",
+        "blocked": false
+      },
+      "collision:5638,177": {
+        "kind": "collision",
+        "key": "5638,177",
+        "blocked": false
+      },
+      "collision:5638,178": {
+        "kind": "collision",
+        "key": "5638,178",
+        "blocked": true
+      },
+      "collision:5637,178": {
+        "kind": "collision",
+        "key": "5637,178",
+        "blocked": true
+      },
+      "collision:5636,178": {
+        "kind": "collision",
+        "key": "5636,178",
+        "blocked": true
+      },
+      "collision:5635,178": {
+        "kind": "collision",
+        "key": "5635,178",
+        "blocked": true
+      },
+      "collision:5634,178": {
+        "kind": "collision",
+        "key": "5634,178",
+        "blocked": true
+      },
+      "collision:5634,177": {
+        "kind": "collision",
+        "key": "5634,177",
+        "blocked": true
+      },
+      "collision:5639,174": {
+        "kind": "collision",
+        "key": "5639,174",
+        "blocked": false
+      },
+      "collision:5641,174": {
+        "kind": "collision",
+        "key": "5641,174",
+        "blocked": true
+      },
+      "collision:5640,176": {
+        "kind": "collision",
+        "key": "5640,176",
+        "blocked": false
+      },
+      "collision:5638,175": {
+        "kind": "collision",
+        "key": "5638,175",
+        "blocked": false
+      },
+      "collision:5638,176": {
+        "kind": "collision",
+        "key": "5638,176",
+        "blocked": false
+      },
+      "collision:5642,170": {
+        "kind": "collision",
+        "key": "5642,170",
+        "blocked": true
+      },
+      "collision:5642,171": {
+        "kind": "collision",
+        "key": "5642,171",
+        "blocked": true
+      },
+      "collision:5642,172": {
+        "kind": "collision",
+        "key": "5642,172",
+        "blocked": true
+      },
+      "collision:5641,172": {
+        "kind": "collision",
+        "key": "5641,172",
+        "blocked": true
+      },
+      "collision:5641,173": {
+        "kind": "collision",
+        "key": "5641,173",
+        "blocked": true
+      },
+      "collision:5641,175": {
+        "kind": "collision",
+        "key": "5641,175",
+        "blocked": true
+      },
+      "collision:5641,176": {
+        "kind": "collision",
+        "key": "5641,176",
+        "blocked": true
+      },
+      "collision:5641,177": {
+        "kind": "collision",
+        "key": "5641,177",
+        "blocked": true
+      },
+      "collision:5641,178": {
+        "kind": "collision",
+        "key": "5641,178",
+        "blocked": true
+      },
+      "collision:5640,178": {
+        "kind": "collision",
+        "key": "5640,178",
+        "blocked": true
+      },
+      "collision:5639,178": {
+        "kind": "collision",
+        "key": "5639,178",
+        "blocked": true
+      },
+      "collision:5619,169": {
+        "kind": "collision",
+        "key": "5619,169",
+        "blocked": false
+      },
+      "collision:5619,170": {
+        "kind": "collision",
+        "key": "5619,170",
+        "blocked": false
+      },
+      "collision:5619,171": {
+        "kind": "collision",
+        "key": "5619,171",
+        "blocked": false
+      },
+      "collision:5619,172": {
+        "kind": "collision",
+        "key": "5619,172",
+        "blocked": false
+      },
+      "collision:5619,173": {
+        "kind": "collision",
+        "key": "5619,173",
+        "blocked": false
+      },
+      "collision:5619,174": {
+        "kind": "collision",
+        "key": "5619,174",
+        "blocked": false
+      },
+      "collision:5619,175": {
+        "kind": "collision",
+        "key": "5619,175",
+        "blocked": false
+      },
+      "collision:5619,176": {
+        "kind": "collision",
+        "key": "5619,176",
+        "blocked": false
+      },
+      "collision:5619,177": {
+        "kind": "collision",
+        "key": "5619,177",
+        "blocked": false
+      },
+      "collision:5618,171": {
+        "kind": "collision",
+        "key": "5618,171",
+        "blocked": false
+      },
+      "collision:5618,172": {
+        "kind": "collision",
+        "key": "5618,172",
+        "blocked": false
+      },
+      "collision:5618,173": {
+        "kind": "collision",
+        "key": "5618,173",
+        "blocked": false
+      },
+      "collision:5618,174": {
+        "kind": "collision",
+        "key": "5618,174",
+        "blocked": false
+      },
+      "collision:5618,175": {
+        "kind": "collision",
+        "key": "5618,175",
+        "blocked": false
+      },
+      "collision:5618,176": {
+        "kind": "collision",
+        "key": "5618,176",
+        "blocked": false
+      },
+      "collision:5618,177": {
+        "kind": "collision",
+        "key": "5618,177",
+        "blocked": false
+      },
+      "collision:5617,170": {
+        "kind": "collision",
+        "key": "5617,170",
+        "blocked": false
+      },
+      "collision:5616,168": {
+        "kind": "collision",
+        "key": "5616,168",
+        "blocked": true
+      },
+      "collision:5615,168": {
+        "kind": "collision",
+        "key": "5615,168",
+        "blocked": true
+      },
+      "collision:5615,169": {
+        "kind": "collision",
+        "key": "5615,169",
+        "blocked": true
+      },
+      "collision:5615,170": {
+        "kind": "collision",
+        "key": "5615,170",
+        "blocked": true
+      },
+      "collision:5615,171": {
+        "kind": "collision",
+        "key": "5615,171",
+        "blocked": true
+      },
+      "collision:5615,172": {
+        "kind": "collision",
+        "key": "5615,172",
+        "blocked": true
+      },
+      "collision:5615,173": {
+        "kind": "collision",
+        "key": "5615,173",
+        "blocked": true
+      },
+      "collision:5616,173": {
+        "kind": "collision",
+        "key": "5616,173",
+        "blocked": true
+      },
+      "collision:5616,174": {
+        "kind": "collision",
+        "key": "5616,174",
+        "blocked": true
+      },
+      "collision:5616,175": {
+        "kind": "collision",
+        "key": "5616,175",
+        "blocked": true
+      },
+      "collision:5616,176": {
+        "kind": "collision",
+        "key": "5616,176",
+        "blocked": true
+      },
+      "collision:5616,177": {
+        "kind": "collision",
+        "key": "5616,177",
+        "blocked": true
+      },
+      "collision:5617,177": {
+        "kind": "collision",
+        "key": "5617,177",
+        "blocked": true
+      },
+      "collision:5617,178": {
+        "kind": "collision",
+        "key": "5617,178",
+        "blocked": true
+      },
+      "collision:5617,179": {
+        "kind": "collision",
+        "key": "5617,179",
+        "blocked": true
+      },
+      "collision:5618,179": {
+        "kind": "collision",
+        "key": "5618,179",
+        "blocked": true
+      },
+      "collision:5621,169": {
+        "kind": "collision",
+        "key": "5621,169",
+        "blocked": true
+      },
+      "collision:5622,169": {
+        "kind": "collision",
+        "key": "5622,169",
+        "blocked": true
+      },
+      "collision:5623,169": {
+        "kind": "collision",
+        "key": "5623,169",
+        "blocked": true
+      },
+      "collision:5623,170": {
+        "kind": "collision",
+        "key": "5623,170",
+        "blocked": true
+      },
+      "collision:5624,170": {
+        "kind": "collision",
+        "key": "5624,170",
+        "blocked": true
+      },
+      "collision:5625,170": {
+        "kind": "collision",
+        "key": "5625,170",
+        "blocked": true
+      },
+      "collision:5625,169": {
+        "kind": "collision",
+        "key": "5625,169",
+        "blocked": true
+      },
+      "collision:5621,170": {
+        "kind": "collision",
+        "key": "5621,170",
+        "blocked": true
+      },
+      "collision:5622,170": {
+        "kind": "collision",
+        "key": "5622,170",
+        "blocked": true
+      },
+      "collision:5633,169": {
+        "kind": "collision",
+        "key": "5633,169",
+        "blocked": true
+      },
+      "collision:5634,169": {
+        "kind": "collision",
+        "key": "5634,169",
+        "blocked": true
+      },
+      "collision:5635,169": {
+        "kind": "collision",
+        "key": "5635,169",
+        "blocked": true
+      },
+      "collision:5632,170": {
+        "kind": "collision",
+        "key": "5632,170",
+        "blocked": true
+      },
+      "collision:5633,170": {
+        "kind": "collision",
+        "key": "5633,170",
+        "blocked": true
+      },
+      "collision:5636,170": {
+        "kind": "collision",
+        "key": "5636,170",
+        "blocked": true
+      },
+      "collision:5636,169": {
+        "kind": "collision",
+        "key": "5636,169",
+        "blocked": false
+      },
+      "collision:5637,169": {
+        "kind": "collision",
+        "key": "5637,169",
+        "blocked": false
+      },
+      "collision:5638,169": {
+        "kind": "collision",
+        "key": "5638,169",
+        "blocked": false
+      },
+      "collision:5635,167": {
+        "kind": "collision",
+        "key": "5635,167",
+        "blocked": true
+      },
+      "collision:5621,168": {
+        "kind": "collision",
+        "key": "5621,168",
+        "blocked": true
+      },
+      "collision:5622,167": {
+        "kind": "collision",
+        "key": "5622,167",
+        "blocked": true
+      },
+      "collision:5625,162": {
+        "kind": "collision",
+        "key": "5625,162",
+        "blocked": true
+      },
+      "collision:5625,163": {
+        "kind": "collision",
+        "key": "5625,163",
+        "blocked": true
+      },
+      "collision:5625,164": {
+        "kind": "collision",
+        "key": "5625,164",
+        "blocked": true
+      },
+      "collision:5626,162": {
+        "kind": "collision",
+        "key": "5626,162",
+        "blocked": true
+      },
+      "collision:5626,163": {
+        "kind": "collision",
+        "key": "5626,163",
+        "blocked": true
+      },
+      "collision:5626,164": {
+        "kind": "collision",
+        "key": "5626,164",
+        "blocked": true
+      },
+      "collision:5627,162": {
+        "kind": "collision",
+        "key": "5627,162",
+        "blocked": true
+      },
+      "collision:5627,163": {
+        "kind": "collision",
+        "key": "5627,163",
+        "blocked": true
+      },
+      "collision:5627,164": {
+        "kind": "collision",
+        "key": "5627,164",
+        "blocked": true
+      },
+      "collision:5630,162": {
+        "kind": "collision",
+        "key": "5630,162",
+        "blocked": true
+      },
+      "collision:5630,163": {
+        "kind": "collision",
+        "key": "5630,163",
+        "blocked": true
+      },
+      "collision:5630,164": {
+        "kind": "collision",
+        "key": "5630,164",
+        "blocked": true
+      },
+      "collision:5631,164": {
+        "kind": "collision",
+        "key": "5631,164",
+        "blocked": true
+      },
+      "collision:5631,165": {
+        "kind": "collision",
+        "key": "5631,165",
+        "blocked": true
+      },
+      "collision:5631,162": {
+        "kind": "collision",
+        "key": "5631,162",
+        "blocked": true
+      },
+      "collision:5631,163": {
+        "kind": "collision",
+        "key": "5631,163",
+        "blocked": true
+      },
+      "collision:5632,162": {
+        "kind": "collision",
+        "key": "5632,162",
+        "blocked": true
+      },
+      "collision:5632,163": {
+        "kind": "collision",
+        "key": "5632,163",
+        "blocked": true
+      },
+      "collision:5632,164": {
+        "kind": "collision",
+        "key": "5632,164",
+        "blocked": true
+      },
+      "collision:5632,165": {
+        "kind": "collision",
+        "key": "5632,165",
+        "blocked": true
       }
     }
   },
@@ -6410,12 +7347,13 @@
     "fe5504a9-4524-43fe-b427-db4d77c0aba1",
     "c3a7352f-e81f-404a-8352-9ee1e4771e84",
     "37c8e61f-a639-4698-b171-74061938a65a",
-    "8a7466a5-c8d6-4bb8-90d8-f4fc9f014023"
+    "8a7466a5-c8d6-4bb8-90d8-f4fc9f014023",
+    "055fc82d-444a-49e3-8bde-9da69a27a2e9"
   ],
   "sessions": {
     "world": {
       "id": "3e348ee1-d7db-4267-8bcf-4417f85f5a4e",
-      "sequence": 5,
+      "sequence": 6,
       "baseHash": "ba00a515-f59348d1-41717",
       "baseFingerprint": "ae0643db-5e094b87-652331",
       "base": {
@@ -9207,7 +10145,7 @@
           "blocked": false
         }
       },
-      "resultHash": "6d77186c-bad214c-93275"
+      "resultHash": "12aee0b-260ed6c9-106908"
     }
   }
 }
