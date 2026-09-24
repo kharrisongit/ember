@@ -8885,6 +8885,71 @@
         "y": 400,
         "originX": 504,
         "originY": 400
+      },
+      "actor:npc:lineup:skin:lumberjack_jack": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:lumberjack_jack",
+        "identity": "NPC sample: lumberjack_jack",
+        "x": 424,
+        "y": 352,
+        "originX": 384,
+        "originY": 400
+      },
+      "actor:npc:lineup:skin:maddock": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:maddock",
+        "identity": "NPC sample: maddock",
+        "x": 392,
+        "y": 352,
+        "originX": 424,
+        "originY": 400
+      },
+      "actor:npc:lineup:skin:farmer_buba": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:farmer_buba",
+        "identity": "NPC sample: farmer_buba",
+        "x": 424,
+        "y": 384,
+        "originX": 544,
+        "originY": 352
+      },
+      "actor:npc:lineup:skin:farmer_bob": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:farmer_bob",
+        "identity": "NPC sample: farmer_bob",
+        "deleted": true,
+        "x": 504,
+        "y": 352,
+        "originX": 504,
+        "originY": 352
+      },
+      "actor:npc:lineup:skin:miner_mike": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:miner_mike",
+        "identity": "NPC sample: miner_mike",
+        "x": 456,
+        "y": 384,
+        "originX": 464,
+        "originY": 400
+      },
+      "actor:npc:lineup:skin:bartender_bruno": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:bartender_bruno",
+        "identity": "NPC sample: bartender_bruno",
+        "deleted": true,
+        "x": 488,
+        "y": 368,
+        "originX": 584,
+        "originY": 304
+      },
+      "actor:npc:lineup:skin:chef_chloe": {
+        "kind": "actor",
+        "key": "npc:lineup:skin:chef_chloe",
+        "identity": "NPC sample: chef_chloe",
+        "x": 440,
+        "y": 368,
+        "originX": 624,
+        "originY": 304
       }
     },
     "witchmoor": {
@@ -9652,12 +9717,13 @@
     "98b04fb9-09bf-4226-84cc-979d2491c5eb",
     "ddba20d2-78fc-4718-8b41-9273438ad106",
     "d692fa6c-7c99-44c3-b66e-dfa96c0bee0e",
-    "ef242b28-7834-45e8-9b56-c54296cd993d"
+    "ef242b28-7834-45e8-9b56-c54296cd993d",
+    "fa6be385-ac59-4562-b91d-57ba19a6d720"
   ],
   "sessions": {
     "world": {
       "id": "0ed71ff1-2f40-44fa-a8e0-5c2bda6520d8",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "22210a00-de08422-127180",
       "baseFingerprint": "516ab7b9-5e99839-675120",
       "base": {
@@ -18375,7 +18441,7 @@
           "blocked": true
         }
       },
-      "resultHash": "8f3a2666-a15dc054-128272"
+      "resultHash": "61f35b8e-c48ae53a-129495"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
