@@ -13,6 +13,15 @@ export function applyMoves(current,draft,revision) {
   assert(Array.isArray(draft.operations)&&draft.operations.length>0&&draft.operations.length<=2000,'Send 1–2000 edit operations at a time');
   const next=structuredClone(current),map=next.maps[draft.map]||{},seen=new Set();
   for(const op of draft.operations){
+    if(op.kind==='object-add'){
+      assert(typeof op.key==='string'&&/^[a-f0-9-]{36}$/.test(op.key),'Invalid added-object identity');
+      assert(Number.isInteger(op.sprite)&&op.sprite>=0&&op.sprite<100000,'Invalid added-object sprite');
+      for(const field of ['x','y'])assert(Number.isInteger(op[field])&&op[field]>=0&&op[field]<=100000,'Invalid added-object coordinates');
+      const key='object-add:'+op.key;assert(!seen.has(key),'Duplicate added object');seen.add(key);
+      const old=map[key];
+      if(old)assert(old.sprite===op.sprite&&old.x===op.x&&old.y===op.y,'This object was already published. Refresh before moving it again.');
+      map[key]={kind:op.kind,key:op.key,sprite:op.sprite,x:op.x,y:op.y};continue;
+    }
     if(op.kind==='paint'){
       assert(Number.isInteger(op.start)&&op.start>=0&&Number.isInteger(op.width)&&op.width>0&&op.width<10000&&Number.isInteger(op.height)&&op.height>0&&op.height<10000,'Invalid paint dimensions');
       assert(Array.isArray(op.values)&&Array.isArray(op.before)&&op.values.length===op.before.length&&op.values.length>0&&op.values.length<=20000&&op.start+op.values.length<=op.width*op.height,'Invalid paint run');

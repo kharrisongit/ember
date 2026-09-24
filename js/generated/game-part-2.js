@@ -1578,7 +1578,24 @@ function geometryEnd(){if(geometryDrag){geometryDrag=null;saveGeometry()} }
 function refreshGeometryLabel(){const el=document.getElementById('geometryLabel');if(!el)return;const r=selectedDoor>=0&&doorRect(MD.doors[selectedDoor],selectedDoor);el.textContent=r?'Door '+selectedDoor+' → '+MD.doors[selectedDoor].to+' · '+r.x+','+r.y+' · '+r.w+'×'+r.h+' px':doorEdit?'Drag a door to move it; drag its bottom-right handle to resize.':geometryPan?'PAN · drag / pinch to zoom':'COLLIDE'}
 function setGeometryTool(kind){exitTools();geometryPan=false;document.getElementById('geometryPan').classList.remove('on');setBag(false);setOvl(null);askShut();doorEdit=kind==='door';collideView=kind==='collision';selectedDoor=-1;document.getElementById('geometryBar').style.display=kind?'flex':'none';document.getElementById('collisionBrushes').style.display=collideView?'flex':'none';refreshGeometryLabel()}
 function drawDoorTriggers(){if(!doorEdit)return;ctx.save();ctx.scale(cam.z,cam.z);ctx.translate(-cam.x,-cam.y);(MD.doors||[]).forEach((d,i)=>{const r=doorRect(d,i);ctx.fillStyle=i===selectedDoor?'#ffe08066':'#36cfff44';ctx.strokeStyle=i===selectedDoor?'#ffe080':'#36cfff';ctx.lineWidth=2/cam.z;ctx.fillRect(r.x,r.y,r.w,r.h);ctx.strokeRect(r.x,r.y,r.w,r.h);const hs=10/cam.z;ctx.fillRect(r.x+r.w-hs/2,r.y+r.h-hs/2,hs,hs);ctx.font=(12/cam.z)+'px monospace';ctx.fillStyle='#fff';ctx.fillText(i+' → '+d.to,r.x,r.y-4/cam.z)});ctx.restore()}
-function geometryPatch(onlyMap=null){const out=[];for(const [map,m]of Object.entries(geometryEdits)){if(onlyMap&&map!==onlyMap)continue;for(const [index,r]of Object.entries(m.doors||{}))out.push('DOOR '+JSON.stringify({map,index:Number(index),...r}));for(const [cell,blocked]of Object.entries(m.collision||{}))out.push('COLLISION '+JSON.stringify({map,cell:cell.split(',').map(Number),size:8,blocked}))}return out}
+function geometryPatch(onlyMap=null){
+ const out=[];
+ for(const [map,m]of Object.entries(geometryEdits)){
+  if(onlyMap&&map!==onlyMap)continue;
+  const source=W.maps[map];
+  for(const [index,r]of Object.entries(m.doors||{})){
+   const d=source?.doors?.[Number(index)];
+   const base=d&&(d.triggerRect||{x:d.x*TS+(d.ox||0)-(d.wide?TS:0),y:d.y*TS+(d.oy||0),w:TS+(d.wide?TS*2:0),h:TS});
+   if(base&&['x','y','w','h'].every(k=>base[k]===r[k]))continue;
+   out.push('DOOR '+JSON.stringify({map,index:Number(index),...r}));
+  }
+  for(const [cell,blocked]of Object.entries(m.collision||{})){
+   if(source?.collisionOverrides?.[cell]===blocked)continue;
+   out.push('COLLISION '+JSON.stringify({map,cell:cell.split(',').map(Number),size:8,blocked}));
+  }
+ }
+ return out;
+}
 // Illustrated atlas: directional focus moves among labelled destinations.
 const ATLAS_LOCATIONS=[["Millwood", 72.79, 279.87, "Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."], ["Elder’s Home", 81.66, 250.44, "Maddock’s house, north of Millwood."], ["Northern Woods", 75.06, 222.63, "Woodland north of Millwood, leading toward the mushroom country."], ["Sporewood", 74.85, 122.73, "The western mushroom woodland."], ["Sporehollow", 99.19, 90.33, "A settlement among the giant mushrooms."], ["Northern Shroom Field", 72.38, 60.09, "Mushroom fields at the northern edge of the woods."], ["Shroom Pass", 74.85, 176.73, "The path between the northern woods and the mushroom country."], ["Route 1", 133.01, 205.89, "The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."], ["Thornwell", 171.38, 101.13, "A woodland town on the journey east."], ["Forgefalls", 232.01, 225.87, "The falls southeast of Thornwell."], ["Route 2", 282.75, 176.19, "The woodland road to Forgewick."], ["Forgewick", 423.0, 158.91, "A town of craftspeople. Find the blacksmith, glassblower and market."], ["Forgewick Temple", 455.18, 194.55, "The temple southeast of Forgewick, reached by the winding southern trail."], ["Route 3", 544.28, 156.75, "The road from Forgewick into the desert."], ["The Oasis", 590.89, 182.4, "A green refuge southwest of Sandspire, beside the desert road."], ["Sandspire", 686.18, 100.05, "The desert city between Forgewick and Coralmere."], ["Sandspire Temple", 821.89, 221.55, "The temple south-east of Sandspire."], ["Route 4", 812.4, 62.79, "The desert route to the coast."], ["Coralmere", 898.2, 329.28, "A coastal town with fishing docks and homes by the water."], ["Route 5", 990.6, 291.21, "The route through the wetlands toward Hollybeck."], ["Witchmoor", 1068.15, 236.67, "Maelis’s home in the marsh. The ferry begins at the mainland dock."], ["Dreadmarsh", 1101.98, 318.75, "The deep marshes south of the road."], ["Hollybeck Graveyard", 1146.53, 130.83, "The graveyard northwest of Hollybeck."], ["Hollybeck", 1175.4, 159.99, "A town at the edge of the snowy highlands."], ["Hollybeck Temple", 1220.78, 93.03, "The temple northeast of Hollybeck. Follow the winding trail east and north."], ["Route 6", 1235.21, 191.31, "The mountain road north to Frostcrag."], ["Frostcrag", 1236.04, 67.65, "A stronghold in the snowy mountains."], ["Ashcrag", 1267.39, 64.95, "East of Frostcrag, beyond the mountain passage, before the volcanic road."], ["Route 7", 1373.81, 178.35, "The final road through the volcanic country."], ["Cinderhold Castle", 1451.78, 211.83, "The king’s fortress at the eastern end of Emberfell."]];
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
@@ -4951,7 +4968,7 @@ function mapTouchMove(t) {
       const tx = Math.floor(dragObj.x / TS), ty = Math.floor((dragObj.y - 1) / TS);
       const key = tx + "," + ty;
       if (!felled.has(key)) { felled.add(key); felledNew.push(key); }
-      const copy = { id: ORIG.length + added.length, s: dragObj.s,
+      const copy = { id: nextId++, s: dragObj.s,
                      x: dragObj.x, y: dragObj.y };
       objs.push(copy);
       added.push(copy);

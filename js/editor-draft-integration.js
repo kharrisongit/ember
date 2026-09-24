@@ -53,7 +53,7 @@ function editorRestoreMap(s) {
   const moved = new Map(s.moves.map(v=>[v.id,v]));
   objs = ORIG.map((o,id)=>({...o,id,...moved.get(id)})).filter(o=>!removed.has(o.id)&&!(MD.editorDeletedObjects||[]).includes(o.id));
   added = EmberEditDrafts.clone(s.added); objs.push(...added.filter(o=>!removed.has(o.id)));
-  deleted = removed; nextId = s.nextId;
+  deleted = removed; nextId = Math.max(s.nextId||0,ORIG.length,...added.map(o=>o.id+1));
   painted = new Map(s.painted);
   if (s.features) features = EmberEditDrafts.clone(s.features);
   regionMoves = s.regionMoves || []; clearedBoxes = s.clearedBoxes || [];
@@ -80,6 +80,12 @@ function saveEditorDraft() {
     regionMoves,clearedBoxes,felledNew,decorGone:[...decorGone],decorDel,
     decorMoved:[...decorMoved].map(([k,d])=>{const a=d.tag==='s'?scat:sanm;return[k,{...d,x:a[d.di+1],y:a[d.di+2]}]})};
   const base=editorDraftBases.get(MAPID).map,operations=[];
+  // Moving a generated tree creates an ordinary object at its new position.
+  // Keep a stable identity across saves/retries, including older saved drafts.
+  for(const o of added)if(!deleted.has(o.id)){
+    o.editorKey ||= crypto.randomUUID();
+    operations.push({kind:'object-add',key:o.editorKey,sprite:o.s,x:Math.round(o.x),y:Math.round(o.y)});
+  }
   for(const move of moves)operations.push({kind:'object',key:String(move.id),sprite:base.objs[move.id*3],fromX:base.objs[move.id*3+1],fromY:base.objs[move.id*3+2],x:move.x,y:move.y});
   for(const [key,v]of Object.entries(state.actors)){
     const a=key.startsWith('npc:')?(base.npcs||[]).find(n=>'npc:'+n.n===key):(base.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===key);
@@ -126,15 +132,25 @@ function editorSendStatus(ok,message,record) {
   if(record?.runId){link.href='https://github.com/kharrisongit/ember/actions/runs/'+record.runId;link.style.display='inline';}else{link.removeAttribute('href');link.style.display='none';}
   panel.children[3].hidden=!EmberEditDrafts.connected();
 }
+function editorUnsupportedEdits(patch) {
+  const counts=new Map();
+  for(const line of patch.split('\n').slice(2).map(s=>s.trim()).filter(Boolean)){
+    if(/^(ACTOR |M |S |D |X |K |T |A |C )/.test(line))continue;
+    const kind=line.startsWith('DOOR ')?'door edit':line.startsWith('COLLISION ')?'collision edit':/^(F |R )/.test(line)?'Build/area edit':'unsupported edit';
+    counts.set(kind,(counts.get(kind)||0)+1);
+  }
+  return [...counts].map(([kind,count])=>count+' '+kind+(count===1?'':'s')).join(', ');
+}
 function sendEditorChanges() {
   const api=EmberEditDrafts;
   if(editorDraftStale.has(MAPID)){toast('This area changed since the draft. Use COPY to keep the old draft, then RESET before making new moves.');return;}
   const draft=editorDraftStale.has(MAPID)?api.store.get(MAPID):saveEditorDraft();
   if (!draft) { toast('No changes in this area to send.'); return; }
-  if(!draft.operations?.length){toast('No changes in this area to send.');return;}
-  if(draft.patch.split('\n').slice(2).some(line=>! /^(ACTOR |M |S |D |X |K |T )/.test(line))){
-    toast('Move, Delete and Paint publish automatically. Use COPY for Build, duplicates or door/collision edits in this draft.');return;
+  const unsupported=editorUnsupportedEdits(draft.patch);
+  if(unsupported){
+    editorSendStatus(false,'Not sent: this area includes '+unsupported+'. These still need COPY. Nothing was published; your draft is saved.');return;
   }
+  if(!draft.operations?.length){toast('No changes in this area to send.');return;}
   if (!draft.submission) {
     draft.submission={schema:1,id:crypto.randomUUID(),map:MAPID,baseFingerprint:draft.baseFingerprint,
       gameVersion:api.version,sourceRevision:draft.sourceRevision,patch:draft.patch,changeCount:draft.operations.reduce((n,o)=>n+(o.kind==='paint'?o.values.length:1),0),operations:draft.operations};

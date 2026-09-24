@@ -13,6 +13,10 @@ function applyPublishedEditorLayout(m,id) {
   // Preserve the pre-existing authored placement of the world room exterior.
   if(id==='world'&&m.roomActors?.[24]?.spr==='rt_ext2')shiftActorData(m,m.roomActors[24],15330,4328,true);
   const all=Object.values(publishedEditorLayouts.maps[id]||{});
+  // Append in publication order and retain these slots even after deletion.
+  // Future moves/deletions use their stable ordinary-object indices.
+  m.objs ||= [];
+  for(const op of all)if(op.kind==='object-add')m.objs.push(op.sprite,op.x,op.y);
   m.editorPublishedPaint=all.filter(op=>op.kind==='paint');
   m.felled=[...new Set([...(m.felled||[]),...all.filter(op=>op.kind==='feature-delete').map(op=>op.key)])];
   m.editorDeletedObjects=[];m.editorDeletedDecor=[];

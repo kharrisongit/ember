@@ -8,8 +8,11 @@ does not trigger the normal push deployment, so this explicit deployment matters
 Experiments are never uploaded automatically. COPY remains a recovery option.
 
 Automatic publishing accepts Move, Delete and Paint, including furniture/walls,
-ordinary objects, scenery, generated trees and terrain. Build, duplicates and
-door/collision geometry exports still use COPY. RESET discards the current map's local draft, restoring published data.
+ordinary objects, scenery, generated trees and terrain. Moving a generated tree
+publishes both removal of the original and placement at the new location.
+Duplicated objects and box deletions are also supported. Build/area changes and
+door/collision geometry exports still use COPY; the in-game message lists which
+unsupported edit types are present before sending anything. RESET discards the current map's local draft, restoring published data.
 
 ## Sender and one-time connection
 
