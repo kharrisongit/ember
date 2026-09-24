@@ -97,7 +97,7 @@ function stepMountainPassage(dt){
     if(P.y<gate[1]-16)MD.passageReverseEntry=true;
     if(P.y>gate[3]+48)MD.passageReverseEntry=false;
     const clear=foesHeld||bossGone['passage3:0']||MD.passageReverseEntry;
-    MD.templeGateOpen=Math.max(0,Math.min(1,MD.templeGateOpen+(clear?dt*3:-dt*3)));
+    if(!foesHeld)MD.templeGateOpen=Math.max(0,Math.min(1,MD.templeGateOpen+(clear?dt*3:-dt*3)));
   }
   if(sceneHold()||fadeDir)return;
   MD.templeClock+=dt;

@@ -167,6 +167,7 @@
   <div class="btn" id="bDragonPassive"><span class="ico">&#9825;</span>DRAGON PASSIVE</div>
   <div class="btn" id="bDoors">DOORS</div>
   <div class="btn" id="bTrace"><span class="ico">▦</span>COLLIDE</div>
+  <div class="btn" id="bSendChanges"><span class="ico">↑</span>SEND CHANGES</div>
   <div class="btn" id="bCopy"><span class="ico">⎘</span>COPY</div>
 </div>
     <div id="toolbody">
@@ -177,6 +178,7 @@
 <div class="pane" id="edit">
   <div id="sel">drag anything to move it, then DONE</div>
   <div class="row">
+    <div class="mini" id="nSendChanges">SEND CHANGES</div>
     <div class="mini" id="nDone">DONE</div>
     <div class="mini" id="nDel">DELETE</div>
     <div class="mini" id="nDup">COPY IT</div>
@@ -329,17 +331,20 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/generated/media-5.js?v=1790049472"></script>
 <script src="js/generated/media-6.js?v=1790049472"></script>
 <script src="js/generated/media-7.js?v=1790049472"></script>
-<script src="js/first-temple.js?v=20260924-chests-statues1"></script>
-<script src="js/sandspire-temple.js?v=20260924-temple-ferry-golems2"></script>
-<script src="js/mountain-passage.js?v=20260924-temple-ferry-golems2"></script>
-<script src="js/hollybeck-temple.js?v=20260924-temple-ferry-golems2"></script>
+<script src="js/first-temple.js?v=20260924-send-foes1"></script>
+<script src="js/sandspire-temple.js?v=20260924-send-foes1"></script>
+<script src="js/mountain-passage.js?v=20260924-send-foes1"></script>
+<script src="js/hollybeck-temple.js?v=20260924-send-foes1"></script>
 <script src="js/fishing.js?v=20260923-fishing-render3"></script>
 <script src="js/house-loot.js?v=20260924-doors-loot-arenas1"></script>
+<script src="js/editor-drafts.js?v=20260924-send1"></script>
+<script src="js/published-editor-layouts.js?v=20260924-send1"></script>
 <script src="js/temple-compass.js?v=20260924-compass1"></script>
 <script src="js/millwood-interiors.js?v=20260923-castle-audit2"></script>
 <script src="js/generated/game-part-1.js?v=20260924-chests-statues1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260924-chests-statues1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
-<script src="js/generated/game-part-3.js?v=20260924-compass1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260924-send1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/editor-draft-integration.js?v=20260924-send1"></script>
+<script src="js/generated/game-part-3.js?v=20260924-send1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the

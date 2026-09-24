@@ -83,7 +83,7 @@ async function prepareExpandedFirstTemple(){
   }
 }
 function touchExpandedTempleDoor(x,y,dy){
-  if(!MD.templeExpanded)return false;
+  if(!MD.templeExpanded||foesHeld)return false;
   for(const o of MD.roomActors){
     if(!o.templePassDoor||o.editorDeleted||Math.abs(x-o.x)>15)continue;
     const north=dy<0&&P.y>=o.y&&y-PC_H<=o.y;
@@ -118,7 +118,7 @@ function expandedTempleArenaContains(ring,x,y,pad=0){
   return x>=l+pad&&x<r-pad&&y>=t+pad&&y<b-pad;
 }
 function arenaFenceBlocks(px,py){
-  if(arenaPass||!arenaLock||arenaT<=(arenaLock.templeRoom?0:.25))return false;
+  if(foesHeld||arenaPass||!arenaLock||arenaT<=(arenaLock.templeRoom?0:.25))return false;
   if(arenaLock.templeRoom)return arenaLock.templeMap===MAPID&&!expandedTempleArenaContains(arenaLock,px,py);
   return Math.hypot(Math.floor(px/TS)-arenaLock.x,Math.floor(py/TS)-arenaLock.y)>arenaLock.r+.5;
 }
@@ -191,7 +191,7 @@ function expandedTempleSolid(x,y){
   if(!MD?.templeExpanded)return false;
   if(!MD.templeFloors.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b))return true;
   const gate=MD.templePlan.gate;
-  return !!gate&&MD.templeGateOpen<.99&&x>=gate[0]&&x<gate[2]&&y>=gate[1]&&y<gate[3];
+  return !foesHeld&&!!gate&&MD.templeGateOpen<.99&&x>=gate[0]&&x<gate[2]&&y>=gate[1]&&y<gate[3];
 }
 function expandedTrapDisabled(id){return foesHeld||bossGone[MAPID+':spikes:'+id]||(MAPID==='tp1_halls'&&bossGone['tp1_halls:spikes']);}
 function expandedSpikeFrame(trap){
@@ -204,7 +204,7 @@ function stepExpandedTemple(dt){
   if(MD.sandspire)stepSandspireTemple(dt);
   if(MD.hollybeck)stepHollybeckTemple(dt);
   if(MD.mountainPassage)stepMountainPassage(dt);
-  if(MAPID==='tp1_sanctum')MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(expandedSanctumCleared()?dt*3:0));
+  if(MAPID==='tp1_sanctum'&&!foesHeld)MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(expandedSanctumCleared()?dt*3:0));
   for(const f of foes){
     if(!f.expandedRoom||f.st==='dead')continue;
     const [l,t,r,b]=f.expandedRoom;

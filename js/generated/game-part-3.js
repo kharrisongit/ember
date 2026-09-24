@@ -4293,6 +4293,7 @@ atlasImg.onload = async () => {
       };
       setTimeout(again, 100);
     }
+    await loadPublishedEditorLayouts();
     loadMap(W.start);    step("loadMap ok, " + MW + "x" + MH + " tiles");
     P.x = MD.spawn[0]; P.y = MD.spawn[1];
     step("spawn " + P.x + "," + P.y);

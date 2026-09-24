@@ -710,7 +710,7 @@ function recoverTempleArrival(force=false){
   [P.x,P.y]=MD.spawn;P.dir='u';P.dir8='n';chunks.clear();
  }
 }
-function blockedByTempleGate(x,y){return !!MD?.templeContinuous&&MD.templeGates.some(g=>g.open<.99&&x>=144&&x<176&&y>=g.y-16&&y<g.y);}
+function blockedByTempleGate(x,y){return !foesHeld&&!!MD?.templeContinuous&&MD.templeGates.some(g=>g.open<.99&&x>=144&&x<176&&y>=g.y-16&&y<g.y);}
 
 function repairCoralmere(){
   const m=W.maps.world;
@@ -1578,7 +1578,7 @@ function geometryEnd(){if(geometryDrag){geometryDrag=null;saveGeometry()} }
 function refreshGeometryLabel(){const el=document.getElementById('geometryLabel');if(!el)return;const r=selectedDoor>=0&&doorRect(MD.doors[selectedDoor],selectedDoor);el.textContent=r?'Door '+selectedDoor+' → '+MD.doors[selectedDoor].to+' · '+r.x+','+r.y+' · '+r.w+'×'+r.h+' px':doorEdit?'Drag a door to move it; drag its bottom-right handle to resize.':geometryPan?'PAN · drag / pinch to zoom':'COLLIDE'}
 function setGeometryTool(kind){exitTools();geometryPan=false;document.getElementById('geometryPan').classList.remove('on');setBag(false);setOvl(null);askShut();doorEdit=kind==='door';collideView=kind==='collision';selectedDoor=-1;document.getElementById('geometryBar').style.display=kind?'flex':'none';document.getElementById('collisionBrushes').style.display=collideView?'flex':'none';refreshGeometryLabel()}
 function drawDoorTriggers(){if(!doorEdit)return;ctx.save();ctx.scale(cam.z,cam.z);ctx.translate(-cam.x,-cam.y);(MD.doors||[]).forEach((d,i)=>{const r=doorRect(d,i);ctx.fillStyle=i===selectedDoor?'#ffe08066':'#36cfff44';ctx.strokeStyle=i===selectedDoor?'#ffe080':'#36cfff';ctx.lineWidth=2/cam.z;ctx.fillRect(r.x,r.y,r.w,r.h);ctx.strokeRect(r.x,r.y,r.w,r.h);const hs=10/cam.z;ctx.fillRect(r.x+r.w-hs/2,r.y+r.h-hs/2,hs,hs);ctx.font=(12/cam.z)+'px monospace';ctx.fillStyle='#fff';ctx.fillText(i+' → '+d.to,r.x,r.y-4/cam.z)});ctx.restore()}
-function geometryPatch(){const out=[];for(const [map,m]of Object.entries(geometryEdits)){for(const [index,r]of Object.entries(m.doors||{}))out.push('DOOR '+JSON.stringify({map,index:Number(index),...r}));for(const [cell,blocked]of Object.entries(m.collision||{}))out.push('COLLISION '+JSON.stringify({map,cell:cell.split(',').map(Number),size:8,blocked}))}return out}
+function geometryPatch(onlyMap=null){const out=[];for(const [map,m]of Object.entries(geometryEdits)){if(onlyMap&&map!==onlyMap)continue;for(const [index,r]of Object.entries(m.doors||{}))out.push('DOOR '+JSON.stringify({map,index:Number(index),...r}));for(const [cell,blocked]of Object.entries(m.collision||{}))out.push('COLLISION '+JSON.stringify({map,cell:cell.split(',').map(Number),size:8,blocked}))}return out}
 // Illustrated atlas: directional focus moves among labelled destinations.
 const ATLAS_LOCATIONS=[["Millwood", 72.79, 279.87, "Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."], ["Elder’s Home", 81.66, 250.44, "Maddock’s house, north of Millwood."], ["Northern Woods", 75.06, 222.63, "Woodland north of Millwood, leading toward the mushroom country."], ["Sporewood", 74.85, 122.73, "The western mushroom woodland."], ["Sporehollow", 99.19, 90.33, "A settlement among the giant mushrooms."], ["Northern Shroom Field", 72.38, 60.09, "Mushroom fields at the northern edge of the woods."], ["Shroom Pass", 74.85, 176.73, "The path between the northern woods and the mushroom country."], ["Route 1", 133.01, 205.89, "The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."], ["Thornwell", 171.38, 101.13, "A woodland town on the journey east."], ["Forgefalls", 232.01, 225.87, "The falls southeast of Thornwell."], ["Route 2", 282.75, 176.19, "The woodland road to Forgewick."], ["Forgewick", 423.0, 158.91, "A town of craftspeople. Find the blacksmith, glassblower and market."], ["Forgewick Temple", 455.18, 194.55, "The temple southeast of Forgewick, reached by the winding southern trail."], ["Route 3", 544.28, 156.75, "The road from Forgewick into the desert."], ["The Oasis", 590.89, 182.4, "A green refuge southwest of Sandspire, beside the desert road."], ["Sandspire", 686.18, 100.05, "The desert city between Forgewick and Coralmere."], ["Sandspire Temple", 821.89, 221.55, "The temple south-east of Sandspire."], ["Route 4", 812.4, 62.79, "The desert route to the coast."], ["Coralmere", 898.2, 329.28, "A coastal town with fishing docks and homes by the water."], ["Route 5", 990.6, 291.21, "The route through the wetlands toward Hollybeck."], ["Witchmoor", 1068.15, 236.67, "Maelis’s home in the marsh. The ferry begins at the mainland dock."], ["Dreadmarsh", 1101.98, 318.75, "The deep marshes south of the road."], ["Hollybeck Graveyard", 1146.53, 130.83, "The graveyard northwest of Hollybeck."], ["Hollybeck", 1175.4, 159.99, "A town at the edge of the snowy highlands."], ["Hollybeck Temple", 1220.78, 93.03, "The temple northeast of Hollybeck. Follow the winding trail east and north."], ["Route 6", 1235.21, 191.31, "The mountain road north to Frostcrag."], ["Frostcrag", 1236.04, 67.65, "A stronghold in the snowy mountains."], ["Ashcrag", 1267.39, 64.95, "East of Frostcrag, beyond the mountain passage, before the volcanic road."], ["Route 7", 1373.81, 178.35, "The final road through the volcanic country."], ["Cinderhold Castle", 1451.78, 211.83, "The king’s fortress at the eastern end of Emberfell."]];
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
@@ -1631,10 +1631,10 @@ function kingDragonSprite(f) {
   return 'kdnew_' + st + '_' + d;
 }
 // Layout edits use stable map-local identities and absolute saved positions.
-/* Editor layout is session-only. COPY exports it; reload intentionally discards it. */
+/* Local drafts are saved separately; only SEND CHANGES publishes moves. */
 try{localStorage.removeItem('emberfell.actor-layout.v1')}catch(e){}
 const actorLayouts = {};
-actorLayouts["world"] = Object.assign(actorLayouts["world"] || {}, { "actor:24:rt_ext2": { x: 15330, y: 4328 } });
+
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
   if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
@@ -1698,7 +1698,7 @@ function moveEditorActor(o,x,y,save=false) {
   }else shiftActorData(MD,o,x,y,true);
   if(save){
     (actorLayouts[MAPID] ||= {})[info.key]={x,y};
-    /* Deliberately do not persist test moves. COPY is the commit boundary. */
+    scheduleEditorDraft();
   }
   rebuildSolid();mapDirty=true;return true;
 }
@@ -1894,8 +1894,13 @@ function decodeRLE(rle, n) {
   return out;
 }
 
-function loadMap(id, fresh) {
+function loadMap(id, fresh, discardDraft=false) {
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
+  if(!W.maps[id])throw new Error('no such map: '+id);
+  if(typeof saveEditorDraft==='function')saveEditorDraft();
+  editorDraftReady=false;
+  applyPublishedEditorLayout(W.maps[id],id);
+  const savedEditorState=editorPrepareMap(id,discardDraft);
   chestAnim = null;
   fishing = null;
   pendingActorStage = null;
@@ -2010,6 +2015,7 @@ function loadMap(id, fresh) {
   for (const [fx, fy, kind] of (MD.deckfix || []))
     deckFix.set(fy * MW + fx, kind);
 
+  editorRestoreMap(savedEditorState);
   buildGround();
   if (features.length) {
     const cached = realizedCache.get(MAPID);
@@ -3747,18 +3753,19 @@ function drawWorld(t, dt) {
       if(Number.isInteger(o.templeMachine))fr=MD.templeMachines[o.templeMachine].type==='cannon'?MD.templeMachines[o.templeMachine].frame:Math.min(2,MD.templeMachines[o.templeMachine].frame);
       if(o.houseLoot)fr=houseLootFrame(o);
       if(o.sandspireExit||o.templeExitDoor){o.openT=Math.max(0,Math.min(1,(o.openT||0)+(expandedTempleDoorLocked(o.templeExitDoor||o.sandspireExit)?-dt:dt)*3));fr=Math.min(sp[4]-1,Math.floor(o.openT*sp[4]));}
-      if(o.expandedGate)fr=Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
+      if(o.expandedGate)fr=foesHeld?sp[4]-1:Math.min(sp[4]-1,Math.floor(MD.templeGateOpen*sp[4]));
       if(o.expandedSpike)fr=expandedSpikeFrame(o.expandedSpike);
       if(o.expandedLever)fr=expandedTrapDisabled(o.expandedLever)?sp[4]-1:0;
       if(o.spr==='scientist_skull')fr=Math.floor(t*5)%sp[4];
       if(o.templeSpike)fr=templeSpikeFrame(o.templeSpike,o.trapRow);
       if(o.templeLever){const h=MD.templeTraps.find(h=>h.id===o.templeLever);fr=Math.min(4,Math.floor((h.leverOpen||0)*5));}
-      if(Number.isInteger(o.templeGate))fr=Math.min(sp[4]-1,Math.floor(MD.templeGates[o.templeGate].open*sp[4]));
+      if(Number.isInteger(o.templeGate))fr=foesHeld?sp[4]-1:Math.min(sp[4]-1,Math.floor(MD.templeGates[o.templeGate].open*sp[4]));
       if(o.templePassDoor){
         if(Math.abs(P.x-o.x)>40||P.y<o.y-64||P.y>o.y+32)o.entered=false;
         o.openT=Math.max(0,Math.min(.3,(o.openT||0)+(o.entered?dt:-dt)));
-        fr=Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));
+        fr=foesHeld?sp[4]-1:Math.min(sp[4]-1,Math.floor(o.openT/.3*sp[4]));
       }
+      if(foesHeld&&(MD.templeExpanded||MD.templeContinuous)&&(o.templeExit||o.templeExitDoor||o.sandspireExit||o.royalDoor))fr=sp[4]-1;
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
       if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
@@ -5011,7 +5018,8 @@ function mapTouchEnd(t) {
       dragObj.x = Math.round(dragObj.x);
       dragObj.y = Math.round(dragObj.y);
     }
-    reindex(); refreshSel(); dragObj = null; return;
+    if(dragObj.decor){const a=dragObj.decor==='s'?scat:sanm,md=dragObj.decor==='s'?MD.scatter:MD.sanim;a[dragObj.di+1]=dragObj.x;a[dragObj.di+2]=dragObj.y;if(md){md[dragObj.di+1]=dragObj.x;md[dragObj.di+2]=dragObj.y;}}
+    reindex(); refreshSel(); dragObj = null; scheduleEditorDraft(); return;
   }
 }
 function fitZoom() { return Math.min(VW / PXW, VH / PXH); }
@@ -11095,7 +11103,7 @@ tap(document.getElementById("bReset"), () => {
   resetArmed = false;
   setBuild(false); setPaint(false);
   editing = false; bEdit.classList.remove("on"); editEl.style.display = "none";
-  loadMap(MAPID, true);
+  loadMap(MAPID, true, true);
   P.x = MD.spawn[0]; P.y = MD.spawn[1];
   cam.z = playZoom(); camFree = false;
   toast("reset -- back to the world as built");
@@ -11434,12 +11442,13 @@ function countChanges() {
 }
 
 function doneEditing() {
+  saveEditorDraft();
   const n = countChanges();
   editing = false; selected = null; dragObj = null;
   bEdit.classList.remove("on");
   editEl.style.display = "none";
   reindex(); refreshSel();
-  toast(n ? "saved -- " + n + " change" + (n === 1 ? "" : "s") + ", tap COPY to send them"
+  toast(n ? "saved -- " + n + " change" + (n === 1 ? "" : "s") + ", tap SEND CHANGES to publish"
           : "no changes made");
 }
 tap(document.getElementById("nDone"), doneEditing);
@@ -11448,14 +11457,14 @@ function deleteSelected() {
   if(selected.interiorFurniture){
     const info=editorActorInfo(selected);if(!info)return;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[info.key]={x:selected.x,y:selected.y,deleted:true};
-    /* session-only until COPY */
+    scheduleEditorDraft();
     for(const i of selected.moveBlocks||[]){const b=MD.roomBlocks?.[i];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(selected.editableWall){
     const key=editorActorInfo(selected).key;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[key]={x:selected.x,y:selected.y,deleted:true};
-    /* session-only until COPY */
+    scheduleEditorDraft();
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
   if(editorActorInfo(selected)){toast("This actor can be moved. Keep its story identity intact.");return;}
@@ -11487,8 +11496,9 @@ tap(document.getElementById("nDup"), () => {
   objs.push(o); added.push(o); selected = o; reindex(); refreshSel();
 });
 
-function buildPatch() {
-  const L = ["EMBERFELL PATCH v3", "MAP " + MAPID, ...geometryPatch()];
+function buildPatch(currentAreaOnly=false) {
+  if(typeof editorDraftStale!=='undefined'&&editorDraftStale.has(MAPID))return EmberEditDrafts.store.get(MAPID)?.patch||'No saved draft';
+  const L = ["EMBERFELL PATCH v3", "MAP " + MAPID, ...geometryPatch(currentAreaOnly?MAPID:null)];
   for(const [key,v] of Object.entries(actorLayouts[MAPID]||{}))L.push("ACTOR "+JSON.stringify({key,...v}));
   for (const r of regionMoves)
     L.push("R " + r.x0 + " " + r.y0 + " " + r.x1 + " " + r.y1 + " " + r.dx + " " + r.dy);

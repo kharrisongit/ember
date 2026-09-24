@@ -122,7 +122,7 @@ function sandspireDoorLocked(door){
 function stepSandspireTemple(dt){
   if(MD.templePlan.gate){
     const clear=foesHeld||breathHas.ice||MD.foes.every((_,i)=>bossGone[MAPID+':'+i]);
-    MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(clear?dt*3:0));
+    if(!foesHeld)MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(clear?dt*3:0));
   }
   if(sceneHold()||fadeDir)return;
   MD.templeClock+=dt;

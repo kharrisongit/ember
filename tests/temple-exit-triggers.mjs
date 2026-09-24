@@ -110,6 +110,7 @@ console.log(`PASS: ${royalSouth} deeper castle exits; correct arrival facing thr
 
 // Every doorway has one moving door, and ordinary doors only respond to contact.
 c.PC_H=7;
+c.foesHeld=false;
 let contactDoors=0,northExits=0;
 for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
  const seen=new Set();
@@ -127,7 +128,29 @@ for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
   northExits++;const r=d.triggerRect,x=r.x+r.w/2,y=r.y+r.h;
   reset(id,x,y+8,'u');run('useDoors(0)');assert(!triggered(),id+' north exit must not open before contact');
   reset(id,x,y+7,'u');run('useDoors(0)');
-  if(!d.templeGuards?.length)assert.equal(triggered(),d,id+' north threshold opens on contact');
+  if(!(d.templeGuards||d.sandspireGuards)?.length)assert.equal(triggered(),d,id+' north threshold opens on contact');
  }
 }
 console.log(`PASS: ${contactDoors} contact-only passage doors, no duplicate door layers, ${northExits} north exits require contact.`);
+
+// The dev bypass applies immediately, without waiting for a draw or gate tick.
+run(game.slice(game.indexOf('function blockedByTempleGate('),game.indexOf('function repairCoralmere(')));
+c.foesHeld=true;
+let bypassDoors=0,bypassGates=0;
+for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
+  c.MD=m;c.MAPID=id;m.templeGateOpen=0;
+  for(const o of m.roomActors.filter(o=>o.templePassDoor)){
+    o.openT=0;o.entered=false;c.P={x:o.x,y:o.y+8};
+    assert(!run('touchExpandedTempleDoor(P.x,P.y-2,-1)'),id+' paused foes bypass north leaf');
+    c.P.y=o.y-32;assert(!run('touchExpandedTempleDoor(P.x,P.y+2,1)'),id+' paused foes bypass south leaf');
+    assert.equal(o.entered,false,'dev bypass does not mark a door used');bypassDoors++;
+  }
+  for(const d of m.doors){c.d=d;assert(!run('expandedTempleDoorLocked(d)'),id+' guard lock bypass');}
+  if(m.templePlan.gate){const [l,t,r,b]=m.templePlan.gate;c.point=[(l+r)/2,(t+b)/2];
+    assert(!run('expandedTempleSolid(...point)'),id+' bars immediately traversable');
+    c.foesHeld=false;assert(run('expandedTempleSolid(...point)'),id+' bars restore with foes enabled');c.foesHeld=true;bypassGates++;
+  }
+}
+c.MD={templeContinuous:true,templeGates:[{y:100,open:0}]};
+assert(!run('blockedByTempleGate(160,92)'));c.foesHeld=false;assert(run('blockedByTempleGate(160,92)'));
+console.log(`PASS: FOES bypasses ${bypassDoors} passage leaves in both directions, all guard locks, ${bypassGates} boss gates and legacy gates; normal locks restore.`);
