@@ -84,7 +84,7 @@ for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards|
 }
 assert.equal(halls,4);
 // A living enemy beside a treasure chest must not prevent claiming or duplicate rewards.
-Object.assign(c,{performance:{now:()=>0},gold:0,potions:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){}});
+Object.assign(c,{performance:{now:()=>0},gold:0,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){}});
 vm.runInContext(read('js/house-loot.js'),c);c.MD=W.maps.tp1;c.MAPID='tp1';
 const loot=c.MD.roomActors.find(a=>a.houseLoot);c.P={x:loot.x,y:loot.y+24};c.foes=[{x:loot.x,y:loot.y,st:'idle',ally:false}];
 assert(run('tryHouseLootChest()'));assert.equal(c.gold,loot.houseLoot.gold);
@@ -104,13 +104,13 @@ assert.equal(emptyCount,2);
 assert.equal(plan.tp1_sanctum.heartstone[1]-plan.tp1_sanctum.chambers[1][1],24);
 assert.equal(plan.tp1_sanctum.chambers[1][2]-plan.tp1_sanctum.heartstone[0],24);
 run('lootChestAnimations.clear()');
-let clock=0,popups=[],coins=0;c.performance={now:()=>clock};c.showReveal=(icon,caption)=>popups.push({icon,caption});c.flyGold=()=>coins++;
+let clock=0,popups=[],coins=0;c.performance={now:()=>clock};c.toast=caption=>popups.push({caption});c.showReveal=()=>assert.fail("Loot must not open a full-screen reveal");c.flyGold=()=>coins++;
 c.MD=W.maps.tp1;c.MAPID='tp1';const empty=c.MD.roomActors.find(a=>a.houseLoot&&a.houseLoot.gold===0);
 c.P={x:empty.x,y:empty.y+24};const before=[c.gold,c.potions,c.boarMeat,c.dragonFish];
 assert(run('tryHouseLootChest()'));assert.deepEqual([c.gold,c.potions,c.boarMeat,c.dragonFish],before);assert.equal(coins,0);
 assert.equal(run('houseLootFrame(MD.roomActors.find(a=>a.houseLoot&&a.houseLoot.gold===0))'),0);
-clock=800;run('stepLootChestOpening()');assert.equal(popups.length,1);assert.equal(popups[0].caption,'This chest is empty.');assert.equal(popups[0].icon,'temple71_chest');
-assert(run('tryHouseLootChest()'));assert.deepEqual([c.gold,c.potions,c.boarMeat,c.dragonFish],before);assert.equal(popups.length,1);
+clock=800;run('stepLootChestOpening()');assert.equal(popups.length,1);assert.equal(popups[0].caption,'This chest is empty.');
+assert(run('tryHouseLootChest()'));assert.deepEqual([c.gold,c.potions,c.boarMeat,c.dragonFish],before);assert.equal(popups.length,2);
 // Exercise the actual teleport-list builder so the interior cannot silently disappear again.
 vm.runInContext(game.slice(game.indexOf('function storyTeleport(id) {'),game.indexOf('const KING_DRAGON_SPR')),c);
 const part3=read('js/generated/game-part-3.js');vm.runInContext(part3.slice(part3.indexOf('function placesOf() {'),part3.indexOf('function buildTravel() {')),c);

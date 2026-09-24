@@ -1,6 +1,28 @@
 /* Permanent household exploration rewards. IDs stay stable when actors are moved. */
 const houseLootTaken=new Set();
 const lootChestAnimations=new Map();
+const CHEST_CONSUMABLES={
+  potion:['Potion',()=>potions++],elixir:['Elixir',()=>elixirs++],
+  boarMeat:['Boar Meat',()=>boarMeat++],dragonFish:['Fresh Fish',()=>dragonFish++],
+  bomb:["Maelis’s Curse",()=>bombs++],dust:['Madness Dust',()=>dust++],
+  bell:['Bell Stake',()=>bells++],mark:['Grave Marker',()=>marks++],
+  saint:["Saint’s Breath",()=>breaths++],stone:['Resurrection Stone',()=>stones++],
+  salt:['Consecration',()=>salts++]
+};
+function chestConsumable(loot){
+  // Keep empty and haunted chests intact, and preserve the early-town rewards.
+  if(loot.ghost||(!loot.gold&&!loot.item))return null;
+  const home=W.maps[MAPID.split('_')[0]];
+  const late=MD.templeExpanded||MD.royal||MAPID==='cinderhold'||
+    /Forgewick|Sandspire|Coralmere|Hollybeck|Frostcrag|Ashcrag/.test(home?.title||MD.title||'');
+  if(!late)return loot.item;
+  // A stable chest ID gives the same reward after reloading an unopened chest.
+  let seed=2166136261;
+  for(const c of loot.id)seed=Math.imul(seed^c.charCodeAt(0),16777619);
+  seed=Math.imul(seed^(seed>>>16),0x7feb352d);seed^=seed>>>15;
+  const items=Object.keys(CHEST_CONSUMABLES);
+  return items[(seed>>>0)%items.length];
+}
 function beginLootChestOpening(id,caption,icon='it_coin',ghost=false){lootChestAnimations.set(id,{start:performance.now(),caption,icon,ghost,map:MAPID});}
 function lootChestFrame(id,opened,frames=6){
   if(!opened)return 0;
@@ -10,7 +32,7 @@ function lootChestFrame(id,opened,frames=6){
 function stepLootChestOpening(){
   for(const [id,a] of lootChestAnimations)if(performance.now()-a.start>=750){
     lootChestAnimations.delete(id);
-    if(a.map===MAPID){if(a.ghost)releaseChestGhost(id);else showReveal(a.icon,a.caption,3,true);}
+    if(a.map===MAPID){if(a.ghost)releaseChestGhost(id);else toast(a.caption);}
   }
 }
 async function prepareHouseLoot(){
@@ -46,13 +68,13 @@ function tryHouseLootChest(){
   // Claim and grant together before saving, so repeat input cannot duplicate loot.
   houseLootTaken.add(loot.id);
   gold+=loot.gold;
-  const labels={potion:'a potion',boarMeat:'boar meat',dragonFish:'a fish'};
-  if(loot.item==='potion')potions++;
-  if(loot.item==='boarMeat')boarMeat++;
-  if(loot.item==='dragonFish')dragonFish++;
+  const item=CHEST_CONSUMABLES[chestConsumable(loot)];
+  if(item)item[1]();
   if(loot.gold>0)flyGold(actor.x,actor.y,loot.gold);
-  const empty=loot.gold===0&&!loot.item;
-  beginLootChestOpening(loot.id,empty?'This chest is empty.':'Corin found '+loot.gold+' gold'+(loot.item?' and '+labels[loot.item]:'')+'!',empty?'temple71_chest':'it_coin',!!loot.ghost);
+  const rewards=[];
+  if(loot.gold>0)rewards.push('+'+loot.gold+' gold');
+  if(item)rewards.push('+1 '+item[0]);
+  beginLootChestOpening(loot.id,rewards.join(' · ')||'This chest is empty.','it_coin',!!loot.ghost);
   saveGame();
   return true;
 }

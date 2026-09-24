@@ -27,10 +27,10 @@ const clear=(m,x,y,gate=false)=>[[x-6,y-12],[x+6,y-12],[x-6,y-1],[x+6,y-1]].ever
  !(gate&&m.templePlan.gate&&px>=m.templePlan.gate[0]&&px<m.templePlan.gate[2]&&py>=m.templePlan.gate[1]&&py<m.templePlan.gate[3]));
 function flood(m,gate=false){const start=m.spawn.map(n=>Math.round(n/8)*8),dist=new Map([[start.join(','),0]]),q=[start];for(let i=0;i<q.length;i++){
  const [x,y]=q[i];for(const n of [[x-8,y],[x+8,y],[x,y-8],[x,y+8]]){const k=n.join(',');if(!dist.has(k)&&clear(m,...n,gate)){dist.set(k,dist.get(q[i].join(','))+8);q.push(n);}}}return dist;}
-let clock=0,reveals=0,rises=0,hits=0,saved=null;
+let clock=0,notices=0,rises=0,hits=0,saved=null;
 Object.assign(c,{performance:{now:()=>clock},FOE:{ghost3:{hp:6},wraith:{hp:8},golem3:{hp:16}},NO_RESPAWN:/golem/,
- bossGone:{},royalDefeated:{},knightEncounterDone:false,foesHeld:false,foes:[],gold:0,potions:0,boarMeat:0,dragonFish:0,tAcc:0,
- sceneHold:()=>false,fadeDir:0,flyGold(){},showReveal(){reveals++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){}});
+ bossGone:{},royalDefeated:{},knightEncounterDone:false,foesHeld:false,foes:[],gold:0,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,tAcc:0,
+ sceneHold:()=>false,fadeDir:0,flyGold(){},showReveal(){assert.fail("Loot must not open a full-screen reveal");},toast(){notices++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){}});
 run(read('js/house-loot.js'));
 run(game.slice(game.indexOf('const ROUTE_2_HP_START_X'),game.indexOf('const FOE_ART')));
 run(game.slice(game.indexOf('function spawnFoes() {'),game.indexOf('function swordOverlaps(')));
@@ -75,15 +75,15 @@ c.bossGone['sn_sanctum:1']=true;run('stepExpandedTemple(1)');assert.equal(sanctu
 assert(sanctum.foes.every(f=>f.k==='golem3'));assert.equal(run('CHESTS.find(c=>c.gift==="shadow").map'),'sn_sanctum');
 console.log(`PASS: ${maps.length} sections / 89 compact rooms, ${(area(plan)/area(sand)).toFixed(2)}× Sandspire, ${routeLength}px main route, 39 horizontal links, 9 side branches; all doors, chests, enemies and levers reachable; all 18 original chamber props preserved.`);
 for(const [id,m] of maps)for(const a of m.roomActors.filter(a=>a.houseLoot)){
- c.MD=m;c.MAPID=id;run('spawnFoes()');c.P={x:a.x,y:a.y+24};const before=c.foes.length,revealCount=reveals,riseCount=rises,oldGold=c.gold;
+ c.MD=m;c.MAPID=id;run('spawnFoes()');c.P={x:a.x,y:a.y+24};const before=c.foes.length,noticeCount=notices,riseCount=rises,oldGold=c.gold;
  assert(run('tryHouseLootChest()'));assert(run('tryHouseLootChest()'));assert.equal(c.gold,oldGold+a.houseLoot.gold);assert.equal(c.foes.length,before);
  clock+=740;run('stepLootChestOpening()');assert.equal(c.foes.length,before);clock+=20;run('stepLootChestOpening()');
  if(a.houseLoot.ghost){
-  assert.equal(c.foes.length,before+1);assert.equal(rises,riseCount+1);assert.equal(reveals,revealCount);
+  assert.equal(c.foes.length,before+1);assert.equal(rises,riseCount+1);assert.equal(notices,noticeCount+2);
   let f=c.foes.find(f=>f.chestAmbush===a.houseLoot.id);assert(f&&!f.ally&&f.hold>0);assert(clear(m,f.x,f.y));
   run('spawnFoes()');f=c.foes.find(f=>f.chestAmbush===a.houseLoot.id);assert(f,'unbeaten ambush returns after reload');
   c.f=f;run('markBossGone(f);spawnFoes()');assert(!c.foes.some(f=>f.chestAmbush===a.houseLoot.id));
- }else assert.equal(reveals,revealCount+1);
+ }else assert.equal(notices,noticeCount+2);
 }
 for(const [id,m] of maps)for(const h of m.templePlan.hazards){
  c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};m.templeClock=2;

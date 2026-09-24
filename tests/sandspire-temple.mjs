@@ -6,7 +6,7 @@ const W={maps:{ds1:{doors:[{to:'world',tx:1846,ty:317}]},world:{doors:[{to:'ds1'
 let clock=0,reveals=0,rises=0,hits=0,saved=null;
 const c=vm.createContext({W,fetch:async()=>({ok:true,json:async()=>structuredClone(plan)}),Image:class{async decode(){}},terrRLE:a=>'0.'+a.length,DIRT:0,
  CHESTS:[{map:'ds1',gift:'ice'}],chestOpen:{},breathHas:{ice:false,lightning:false},bossGone:{},foesHeld:false,foes:[],P:{},tAcc:0,sceneHold:()=>false,fadeDir:0,
- performance:{now:()=>clock},gold:0,potions:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){reveals++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){},toast(){},
+ performance:{now:()=>clock},gold:0,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){reveals++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){},toast(){},
  FOE:{ghost:{hp:6},wraith:{hp:8},golem1:{hp:12}},TS:16,NO_RESPAWN:/golem/,royalDefeated:{},knightEncounterDone:false,MAPID:'world'});
 const run=s=>vm.runInContext(s,c),game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 run(read('js/first-temple.js'));run(read('js/house-loot.js'));run(read('js/sandspire-temple.js'));

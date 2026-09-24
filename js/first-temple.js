@@ -83,7 +83,64 @@ async function prepareExpandedFirstTemple(){
 }
 function insetTempleSouthExits(map){
   for(const door of map.doors)if(door.dir==='d'&&door.triggerRect&&!door.templeRecess){
-    door.triggerRect.y+=24;door.templeRecess=true;
+    door.triggerRect.y+=32;door.templeRecess=true;
+  }
+}
+function expandedTempleArenas(){
+  return MD.templeRoomArenas ||= MD.templePlan.chambers.flatMap((room,i)=>{
+    const occupants=MD.foes.filter(f=>f.expandedRoom?.every((v,j)=>v===room[j]));
+    if(!occupants.length)return [];
+    const [l,t,r,b]=room;
+    return [{id:'temple-room:'+i,kind:'arena',templeRoom:room,templeMap:MAPID,
+      templeBoss:occupants.some(f=>/^(golem[123]|devil|lich|knight)$/.test(f.k)),
+      x:(l+r)/32,y:(t+b)/32,r:Math.max(r-l,b-t)/32}];
+  });
+}
+function expandedTempleFoeInArena(ring,foe){
+  return ring.templeMap===MAPID&&!!foe.expandedRoom?.every((v,i)=>v===ring.templeRoom[i]);
+}
+function expandedTempleArenaContains(ring,x,y,pad=0){
+  const [l,t,r,b]=ring.templeRoom;
+  return x>=l+pad&&x<r-pad&&y>=t+pad&&y<b-pad;
+}
+function arenaFenceBlocks(px,py){
+  if(arenaPass||!arenaLock||arenaT<=(arenaLock.templeRoom?0:.25))return false;
+  if(arenaLock.templeRoom)return arenaLock.templeMap===MAPID&&!expandedTempleArenaContains(arenaLock,px,py);
+  return Math.hypot(Math.floor(px/TS)-arenaLock.x,Math.floor(py/TS)-arenaLock.y)>arenaLock.r+.5;
+}
+function expandedTempleArenaRim(ring){
+  if(ring.templeMap!==MAPID)return [];
+  if(ring._templeRim)return ring._templeRim;
+  const [l,t,r,b]=ring.templeRoom,out=[];
+  const floor=(x,y)=>MD.templeFloors.some(([fl,ft,fr,fb])=>x>=fl&&x<fr&&y>=ft&&y<fb);
+  const door=(x,y,dir)=>MD.templePlan.doors.some(d=>d.dir===dir&&d.y===y&&Math.abs(d.x-x)<16);
+  // Existing masonry already seals the room. Raise the standard arena posts
+  // only across the walkable openings and the doors that change maps.
+  for(let x=l;x<r;x+=16){
+    if(floor(x+8,t-1)||door(x+8,t,'u'))out.push([x/16,t/16-1]);
+    if(floor(x+8,b)||door(x+8,b,'d'))out.push([x/16,b/16-1]);
+  }
+  for(let y=t;y<b;y+=16){
+    if(floor(l-1,y+8))out.push([l/16-.5,y/16]);
+    if(floor(r,y+8))out.push([r/16-.5,y/16]);
+  }
+  return ring._templeRim=out;
+}
+function stepExpandedTempleArena(dt){
+  if(sceneHold()||fadeDir||doorMotion)return;
+  if(arenaLock&&arenaLock.templeMap!==MAPID){arenaLock=null;arenaT=0;arenaGoing=false;}
+  if(!arenaLock){
+    // Wait until Corin's full footprint is inside, including when entering
+    // from a side hall or returning through the boss room from the far exit.
+    const ring=expandedTempleArenas().find(a=>expandedTempleArenaContains(a,P.x,P.y-6,12)&&arenaFoesLeft(a));
+    if(!ring)return;
+    arenaLock=ring;arenaT=0;arenaGoing=false;
+  }
+  arenaGoing=!arenaFoesLeft(arenaLock);
+  arenaT=Math.min(1,arenaT+dt*(arenaGoing?-2.2:3));
+  if(arenaGoing&&arenaT<=0){
+    releaseArena();twinSpent=false;twinKills=0;
+    for(const f of foes)if(f.raised){f.ally=0;f.raised=0;f.st='dead';f.t=0;}
   }
 }
 function placeOtherTempleHeartstones(){

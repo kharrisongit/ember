@@ -229,7 +229,9 @@
   #toast { left:50%; transform:translateX(-50%);
            top:calc(env(safe-area-inset-top,0px) + 62px);
            background:var(--panel); border:2px solid var(--edge); border-radius:10px;
-           padding:9px 14px; font-size:12px; display:none; }
+           padding:9px 14px; font-size:12px; display:none;
+           width:max-content; max-width:calc(100vw - 32px); box-sizing:border-box;
+           text-align:center; pointer-events:none; }
   #xdel { position:fixed; z-index:19; display:none; width:30px; height:30px;
           margin:-15px 0 0 -15px; border-radius:15px; border:2px solid #f0d9c0;
           background:#a8342b; color:#fff; font:700 17px/26px system-ui,sans-serif;

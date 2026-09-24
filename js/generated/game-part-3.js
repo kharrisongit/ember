@@ -3550,7 +3550,7 @@ const ARENA_REST = 300;                  /* seconds before it fills again */
 const cooling = new Map(), holy = new Set();
 function ringKey(a) { return MAPID + ":" + (a ? a.id : "?"); }
 function refillRing(a) {
-  if (!a || cooling.has(ringKey(a)) || holy.has(ringKey(a))) return;
+  if (!a || a.templeRoom || cooling.has(ringKey(a)) || holy.has(ringKey(a))) return;
   let n = 0;
   for (const spec of (MD.foes || [])) {
     if (Math.hypot(spec.x - a.x, spec.y - a.y) > (a.r || 6) + 2) continue;
@@ -3628,6 +3628,8 @@ function drawFall() {
   }
 }
 function arenaFoesLeft(a) {
+  if(a.templeRoom)return foes.some(f=>f.st!=="dead"&&!f.ally&&expandedTempleFoeInArena(a,f))||
+    MD.foes.some(f=>f.chestAmbush&&lootChestAnimations.has(f.chestAmbush)&&expandedTempleFoeInArena(a,f));
   for (const f of foes) {
     if (f.storyKnight && !f.storyEscaped && Math.hypot(f.x / TS - a.x, f.y / TS - a.y) <= a.r + 8) return true;
     if (f.st === "dead" || f.ally) continue;
@@ -3769,6 +3771,7 @@ function stepArena(dt) {
   stepChest(dt);
   if (foesHeld) { arenaLock=null;arenaT=0;arenaGoing=false;falling=null;return; }
   if (trial) { stepTrial(dt); return; }
+  if (MD?.templeExpanded) { stepExpandedTempleArena(dt); return; }
   const mapArenas = currentArenaFeatures();
   if (!MD || !mapArenas.length) {
     if (MAPID !== "world") { arenaLock = null; arenaT = 0; return; }
@@ -3818,6 +3821,7 @@ function stepArena(dt) {
   }
 }
 function arenaRim(a) {
+  if(a.templeRoom)return expandedTempleArenaRim(a);
   const cacheKey = MAPID + ":" + a.x + "," + a.y + "," + a.r + ":" + ((MD.doors || []).length);
   if (a._rimCacheKey === cacheKey && a._rimCache) return a._rimCache;
   if (MAPID !== "world") {
@@ -4066,6 +4070,22 @@ let doorMotion = null; // A short opening or stair descent, then the normal room
 let collideView = false, badTiles = {};
 const FADE_T = 0.22;
 
+function doorExitDirection(d,mapId=MAPID){
+  return d.explicitDir?d.dir:mapId==='world'?(d.dir||'u'):'d';
+}
+function faceDoorArrival(cameFrom,sourceDoor){
+  // Multiple connections (including the two passage entrances) use the return
+  // doorway nearest the arrival point. Face away from that threshold into the room.
+  let back=null,best=Infinity;
+  for(const d of MD.doors||[])if(d.to===cameFrom){
+    const r=doorRect(d),distance=Math.hypot(P.x-r.x-r.w/2,P.y-4-r.y-r.h/2);
+    if(distance<best){back=d;best=distance;}
+  }
+  const direction=back?({u:'d',d:'u',l:'r',r:'l'}[doorExitDirection(back)]):doorExitDirection(sourceDoor,cameFrom);
+  P.dir=direction==='l'||direction==='r'?'s':direction;
+  P.dir8={u:'n',d:'s',l:'w',r:'e'}[direction];
+  P.flip=direction==='l';
+}
 function useDoors(dt) {
   if (bossScene && !foesHeld) return;
   if (doorMotion && !doorMotion.started) {
@@ -4092,7 +4112,7 @@ function useDoors(dt) {
       P.x = d.tx * TS + TS / 2;
       P.y = d.ty * TS + TS;
       recoverTempleArrival(!!MD.templeContinuous);
-      P.dir = "d"; P.dir8="s"; P.flip = false;
+      faceDoorArrival(cameFrom,d);
       arriveT = 0.33;
       cam.x = P.x - (VW / cam.z) / 2;
       cam.y = P.y - (VH / cam.z) / 2;
@@ -4115,7 +4135,7 @@ function useDoors(dt) {
   let d = null, best = Infinity;
   for (const candidate of (MD.doors || [])) {
     if (!W.maps[candidate.to]) continue;
-    const want = candidate.explicitDir ? candidate.dir : MAPID === "world" ? (candidate.dir || "u") : "d";
+    const want = doorExitDirection(candidate);
     if (movingDir !== want) continue;
     const r=doorRect(candidate),x0=r.x,y0=r.y;
     const horizontal=want==='l'||want==='r';
@@ -4123,12 +4143,14 @@ function useDoors(dt) {
     const half=(horizontal?r.h:r.w)/2+4;
     if(Math.abs(lateral-center)>half)continue;
     const gap=want==='u'?P.y-7-(y0+r.h):want==='d'?y0-(P.y-1):want==='l'?P.x-5.5-(x0+r.w):x0-(P.x+5.5);
-    // Castle stairs begin at their inner tread, without the usual doorway reach.
-    if(gap>(candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
+    // Recessed south exits and castle stairs require crossing the actual threshold.
+    const deepSouth=want==='d'&&(MD.templeExpanded||MD.royal||MAPID==='cinderhold');
+    if(gap>(deepSouth||candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
     const score = Math.abs(gap) + Math.abs(lateral - center) * 0.1;
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
+  if(!foesHeld&&arenaLock?.templeRoom&&arenaLock.templeMap===MAPID&&arenaT>0)return;
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
@@ -5520,6 +5542,7 @@ function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
+  elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
 function saveToSlot(slot,quiet=false){
@@ -5575,6 +5598,9 @@ function loadGame(slot=activeSaveSlot) {
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
     houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
     potions=Math.max(0,s.potions|0);
+    elixirs=Math.max(0,s.elixirs|0);bombs=Math.max(0,s.bombs|0);dust=Math.max(0,s.dust|0);
+    bells=Math.max(0,s.bells|0);marks=Math.max(0,s.marks|0);breaths=Math.max(0,s.breaths|0);
+    stones=Math.max(0,s.stones|0);salts=Math.max(0,s.salts|0);
     for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     for(const m of Object.values(W.maps))if(m.templeExpanded){

@@ -201,6 +201,13 @@ function installRoyalCastle(){
  }
  // Apply saved stair placements before any connected doorway can be used.
  for(const [id,map] of Object.entries(W.maps))if(map.royal)applyActorLayout(map,id);
+ // South exits activate in the back half of their recessed floor tile.
+ for(const [id,map] of Object.entries(W.maps))if(map.royal||id==='cinderhold'){
+  for(const d of map.doors||[])if(d.dir==='d'&&!d.stairDown&&!d.royalRecess){
+   const r=d.triggerRect||{x:d.x*TS+(d.ox||0)-(d.wide?TS:0),y:d.y*TS+(d.oy||0),w:TS+(d.wide?TS*2:0),h:TS};
+   d.triggerRect={...r,y:r.y+8,h:Math.max(1,r.h-8)};d.royalRecess=true;
+  }
+ }
  // Preserve each villager's identity, furniture, dialogue, and existing table lip.
  for(const [mapId,name,spr] of [['house03','Della','royal_guest_woman'],['house07','Garrick','royal_guest_man'],['house04','Ewan','royal_reader']]){
   const n=W.maps[mapId]?.npcs.find(n=>n.n===name);if(!n)continue;
@@ -550,7 +557,7 @@ function drawDragonTempleTraps(){
  }
 }
 function installCastleCellar(){
- const m=W.maps.royal_cellar={w:20,h:18,title:'Cinderhold — Dragon Larder',royal:true,roomArt:'dragon75_cellar',bg:'#19171c',floorbg:'#615b50',spawn:[160,256],objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],npcs:[],foes:[],roomActors:[],roomBlocks:[[0,0,320,48],[0,48,16,288],[304,48,320,288],[16,272,144,288],[176,272,304,288]],collisionOverrides:{},doors:[{x:9.5,y:17,to:'royal_westhall',tx:15,ty:4.5,dir:'d',explicitDir:true,triggerRect:{x:144,y:272,w:32,h:16}}],cellarCaches:[]};
+ const m=W.maps.royal_cellar={w:20,h:18,title:'Cinderhold — Dragon Larder',royal:true,roomArt:'dragon75_cellar',bg:'#19171c',floorbg:'#615b50',spawn:[160,256],objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],npcs:[],foes:[],roomActors:[],roomBlocks:[[0,0,320,48],[0,48,16,288],[304,48,320,288],[16,272,144,288],[176,272,304,288]],collisionOverrides:{},doors:[{x:9.5,y:17,to:'royal_westhall',tx:15,ty:4.5,dir:'d',explicitDir:true,royalRecess:true,triggerRect:{x:144,y:280,w:32,h:8}}],cellarCaches:[]};
  m.terr=terrRLE(Array(360).fill(DIRT));m.base_terr=m.terr;
  for(const y of [112,208])for(let i=0;i<4;i++){
   const x=64+i*64,id=m.cellarCaches.length;m.cellarCaches.push({id,x,y,kind:id%2?'fish':'meat',amount:10});
@@ -880,17 +887,17 @@ function arrangeNpcCast(){
   }
 }
 // Four authored poses: resting, breathing in, half blink and closed blink.
-// Long open-eye holds and a brief blink follow the native seated characters.
+// A brisk breath and readable blink keep the authored residents visibly alive.
 function villagerIdleFrame(o,t,frames){
   if(o.idleSeed===undefined){
     let seed=2166136261;
     for(const c of (o.n||'')+'|'+o.packSpr)seed=Math.imul(seed^c.charCodeAt(0),16777619);
     o.idleSeed=seed>>>0;
   }
-  const cycle=4.8+((o.idleSeed>>>8)%9)*0.1;
+  const cycle=2.0+((o.idleSeed>>>8)%9)*0.05;
   const phase=(o.idleSeed%997)/997*cycle;
   const p=((t+phase)%cycle)/cycle;
-  const frame=p<0.20?0:p<0.46?1:p<0.88?0:p<0.895?2:p<0.92?3:p<0.935?2:0;
+  const frame=p<0.16?0:p<0.48?1:p<0.78?0:p<0.82?2:p<0.89?3:p<0.93?2:0;
   return frame%frames;
 }
 function finishTownCast(){
@@ -1133,7 +1140,9 @@ function drawNpcFrame(o,s,frame,img){
   const clip=o.seatClipY!==undefined&&!o.goto&&!(o.seatSpr&&(scene||bossScene||hatchExit));
   if(clip){ctx.save();ctx.beginPath();ctx.rect(o.x-s[2]/2-1,o.y-s[3]-2,s[2]+2,Math.max(0,o.seatClipY-(o.y-s[3])+2));ctx.clip();}
   const scale=img?.spriteScale||1;
-  drawGameImage(ctx,img,(s[0]+frame*s[2])*scale,s[1]*scale,s[2]*scale,s[3]*scale,Math.round(o.x-s[2]/2),Math.round(o.y-s[3]),s[2],s[3]);
+  // Lift the shoulders two pixels on the inhale, with the feet/table edge fixed.
+  const height=s[3]+(/^villager_seated_/.test(o.packSpr||'')&&frame===1?2:0);
+  drawGameImage(ctx,img,(s[0]+frame*s[2])*scale,s[1]*scale,s[2]*scale,s[3]*scale,Math.round(o.x-s[2]/2),Math.round(o.y-height),s[2],height);
   if(clip)ctx.restore();
 }
 
@@ -1821,6 +1830,7 @@ function loadMap(id, fresh) {
   brambleMap="";
   doorMotion = null;
   if (!W.maps[id]) throw new Error("no such map: " + id);
+  if(arenaLock?.templeRoom){arenaLock=null;arenaT=0;arenaGoing=false;}
   if (trial) stopTrial("");
   if (wonAll) lastFight = 0;
   if (MD && !fresh) {
@@ -2108,8 +2118,7 @@ const whyBlocked = (px, py) => {
   if (solid[y * MW + x] === 1) return "solid[]";
   if (blockedByTrialPedestal(px, py)) return "trial pedestal";
   if (blockedByNpcBuffer(px, py)) return "npc half-tile buffer";
-  if (!arenaPass && arenaLock && arenaT > 0.25 &&
-      Math.hypot(x - arenaLock.x, y - arenaLock.y) > arenaLock.r + 0.5) return "arena fence";
+  if (arenaFenceBlocks(px,py)) return "arena fence";
   if (x <= 80) {
     if (northShut() && MAPID === "world" && y <= gateRow && y >= gateRow - 5)
       return "north gate";
@@ -2139,8 +2148,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false) => {
   if (glassHatchBlocked(px,py)) return true;
   if (MD.roomBlocks && MD.roomBlocks.some(r => px >= r[0] && px < r[2] && py >= r[1] && py < r[3])) return true;
   if (!ignoreNpcBuffer && blockedByNpcBuffer(px, py)) return true;
-  if (!arenaPass && arenaLock && arenaT > 0.25 &&
-      Math.hypot(x - arenaLock.x, y - arenaLock.y) > arenaLock.r + 0.5) return true;
+  if (arenaFenceBlocks(px,py)) return true;
   const inMillwood = x <= 80;
   if (inMillwood) {
     if (northShut() && MAPID === "world" && y <= gateRow && y >= gateRow - 5)
@@ -5123,7 +5131,10 @@ function dragonStep(dx, dy) {
 function dragonHover() { return dragonAirborne() ? 26 : 0; }
 function dragonBob() { return dragonAirborne() ? Math.sin(dragon.t * 2.2) * 3 : 0; }
 function dragonGround(x, y) {
-  if (arenaLock && arenaT > 0.25) {
+  if(arenaLock?.templeRoom&&arenaT>0){
+    const [l,t,r,b]=arenaLock.templeRoom;
+    x=Math.max(l+12,Math.min(r-12,x));y=Math.max(t+16,Math.min(b-12,y));
+  }else if (arenaLock && arenaT > 0.25) {
     const cx = arenaLock.x * TS + TS / 2, cy = arenaLock.y * TS + TS / 2;
     const lim = (arenaLock.r - 1) * TS;
     const ox = x - cx, oy = y - cy, od = Math.hypot(ox, oy);
@@ -5134,7 +5145,9 @@ function dragonGround(x, y) {
     for (let a = 0; a < 12; a++) {
       const t = a * Math.PI / 6;
       const nx = x + Math.cos(t) * r, ny = y + Math.sin(t) * r;
-      if (arenaLock && arenaT > 0.25) {
+      if(arenaLock?.templeRoom&&arenaT>0){
+        if(!expandedTempleArenaContains(arenaLock,nx,ny,8))continue;
+      }else if (arenaLock && arenaT > 0.25) {
         const cx = arenaLock.x * TS + TS / 2, cy = arenaLock.y * TS + TS / 2;
         if (Math.hypot(nx - cx, ny - cy) > (arenaLock.r - 1) * TS) continue;
       }
@@ -7617,7 +7630,9 @@ function tryTreasuryChest(){
  if(!c)return false;
  if(treasuryGuarding()){toast("Defeat the Treasury Captain to claim the treasure.");return true;}
  treasuryTaken.add(c.id);gold+=c.n;flyGold(c.x,c.y,c.n);
- beginLootChestOpening('treasury:'+c.id,'Corin found '+c.n+' gold!');saveGame();
+ const id='treasury:'+c.id,item=CHEST_CONSUMABLES[chestConsumable({id,gold:c.n})];
+ if(item)item[1]();
+ beginLootChestOpening(id,'+'+c.n+' gold'+(item?' · +1 '+item[0]:''));saveGame();
  return true;
 }
 function drawTreasuryChests(){
@@ -8538,6 +8553,7 @@ function markBossGone(f) {
 }
 function bossRing(a) {
   if (!a) return false;
+  if(a.templeRoom)return a.templeBoss;
   if (MAPID === "cinderhold") return true;           /* the King's own floor */
   return foes.some(f => f.st !== "dead" && !f.ally && BOSS_KIND.test(f.kind) &&
                         Math.hypot(f.x / TS - a.x, f.y / TS - a.y) <= (a.r || 6) + 5);
@@ -8900,8 +8916,9 @@ function useBomb() {
     let n = 0;
     for (const f of foes) {
       if (f.ally || f.st === "dead") continue;
-      if (Math.hypot(f.x / TS - ring.x, f.y / TS - ring.y) > (ring.r || 6) + 5) continue;
+      if (ring.templeRoom ? !expandedTempleFoeInArena(ring,f) : Math.hypot(f.x / TS - ring.x, f.y / TS - ring.y) > (ring.r || 6) + 5) continue;
       f.st = "dead"; f.t = 0; f.hp = 0; f.mad = 0;
+      if(ring.templeRoom)markBossGone(f);
       n++;
     }
     ring._wave = 99;
@@ -9620,8 +9637,7 @@ function blockReason(px, py) {
     if (typeof baseTerr !== "undefined" && baseTerr && baseTerr[y * MW + x] === WALL) return "base";
     return "solid";     /* set by rebuildSolid from something else */
   }
-  if (!arenaPass && arenaLock && arenaT > 0.25 &&
-      Math.hypot(x - arenaLock.x, y - arenaLock.y) > arenaLock.r + 0.5) return "arena";
+  if (arenaFenceBlocks(px,py)) return "arena";
   if (x <= 80) {
     if (northShut() && MAPID === "world" && y <= gateRow && y >= gateRow - 5) return "gate";
     if (eggGate >= 0 && quest === Q.CARRY && MAPID === "world" &&
