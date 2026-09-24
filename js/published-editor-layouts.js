@@ -31,7 +31,7 @@ function applyPublishedEditorEntries(m,id,layout) {
   m.felled=[...new Set([...(m.felled||[]),...all.filter(op=>op.kind==='feature-delete').map(op=>op.key)])];
   const entries=all.filter(op=>['actor','object','decor'].includes(op.kind));
   const resolve = op => op.kind==='actor' ?
-    (op.key.startsWith('npc:')?(m.npcs||[]).find(n=>'npc:'+n.n===op.key):(m.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key)) : null;
+    (op.key.startsWith('npc:')?(m.npcs||[]).find(n=>(n.editKey||'npc:'+n.n)===op.key):(m.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key)) : null;
   // Check anchors together before parent moves shift children or linked collision.
   const valid=entries.filter(op=>{
     if(op.kind==='actor'){const a=resolve(op);return a&&(a.spr||a.n)===op.identity&&a.x===op.originX&&a.y===op.originY;}
@@ -48,7 +48,7 @@ function applyPublishedEditorEntries(m,id,layout) {
   for(const op of valid){
     if(op.kind==='actor'){
       const a=resolve(op);shiftActorData(m,a,op.x,op.y,!op.key.startsWith('npc:'));
-      if(op.deleted&&(a.editableWall||a.interiorFurniture)){
+      if(op.deleted&&(op.key.startsWith('npc:')||a.editableWall||a.interiorFurniture)){
         a.publishedDeleted=a.editorDeleted=true;
         for(const i of a.moveBlocks||[]){const b=m.roomBlocks?.[i];if(b)b[0]=b[1]=b[2]=b[3]=-99999;}
       }

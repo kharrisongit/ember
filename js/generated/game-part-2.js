@@ -1654,11 +1654,12 @@ const actorLayouts = {};
 
 function editorActorInfo(o) {
   const ni=npcs.indexOf(o);
-  if(ni>=0)return {kind:'npc', index:ni, key:'npc:'+o.n, source:MD.npcs[ni]};
+  if(ni>=0){const key=editorNpcKey(o),source=MD.npcs.find(n=>editorNpcKey(n)===key);return source?{kind:'npc',index:ni,key,source}:null;}
   const ai=(MD.roomActors||[]).indexOf(o);
   if(ai>=0)return {kind:'actor', index:ai, key:o.editKey||'actor:'+ai+':'+o.spr, source:o};
   return null;
 }
+function editorNpcKey(n) { return n.editKey||'npc:'+n.n; }
 function editorSprite(o) {
   if(o.throneRoomAsset){const h=throneRoomImg.naturalWidth?Math.round(36*throneRoomImg.naturalHeight/throneRoomImg.naturalWidth):57;return [0,0,36,h,1];}
   if(o.roomCrop)return [0,0,o.roomCrop[2],o.roomCrop[3],1];
@@ -1666,7 +1667,7 @@ function editorSprite(o) {
   if(o.spr)return SPR[o.spr];
   if(o.packSpr)return SPR[o.packSpr]||SPR[o.packSpr+'_idle_d'];
   if(o.body)return SPR[o.body+'_idle_d'];
-  if(o.sk)return SPR[o.sk+'_idle_d'];
+  if(o.sk)return SPR['npc_'+o.sk+'_idle']||SPR['npc_'+o.sk+'_d'];
   return SPR[NAMES[o.s]];
 }
 function shiftActorData(m, o, x, y, actor) {
@@ -1682,7 +1683,8 @@ function shiftActorData(m, o, x, y, actor) {
       if(typeof MD!=='undefined'&&MD===m&&typeof npcs!=='undefined'){const live=npcs.find(n=>n.n===o.interiorNpc);if(live&&live!==n){shiftActorData(m,live,live.x+dx,live.y+dy,false);live.px=live.x;live.py=live.y;}}}
     if(o.cellarCacheId!==undefined){const c=m.cellarCaches?.find(c=>c.id===o.cellarCacheId);if(c){c.x+=dx;c.y+=dy;}}
   }
-  if(o.patrol)o.patrol=o.patrol.map((v,i)=>v+(i%2?dy:dx)/TS);
+  if(Array.isArray(o.patrol))o.patrol=o.patrol.map((v,i)=>v+(i%2?dy:dx)/TS);
+  if(o.patrolPoints)o.patrolPoints=o.patrolPoints.map(([px,py])=>[px+dx,py+dy]);
   if(o.goto)o.goto=[o.goto[0]+dx,o.goto[1]+dy];
   if(actor&&o.stairTo&&(dx||dy)){
     const door=m.doors.find(d=>d.stairDown&&d.to===o.stairTo);
@@ -1692,6 +1694,7 @@ function shiftActorData(m, o, x, y, actor) {
     if(back){back.tx+=dx/TS;back.ty+=dy/TS;}
   }
   if(actor)for(const i of o.moveBlocks||[]){const b=m.roomBlocks?.[i];if(b){b[0]+=dx;b[2]+=dx;b[1]+=dy;b[3]+=dy;}}
+  if(actor&&typeof syncEditorChest==='function')syncEditorChest(m,o,dx,dy);
 }
 function applyActorLayout(m, id) {
   const saved=actorLayouts[id]||{};
@@ -1701,8 +1704,10 @@ function applyActorLayout(m, id) {
     if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!(v?.deleted||o.publishedDeleted);
     if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
     if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
+    else if(o.editorChestKind&&typeof syncEditorChest==='function')syncEditorChest(m,o,0,0);
   }
-  for(const o of m.npcs||[]){if(o.seated||o.seatSpr||o.sceneReserved)continue;const v=saved['npc:'+o.n];if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
+  for(const o of m.npcs||[]){const v=saved[editorNpcKey(o)];o.editorDeleted=!!(v?.deleted||o.publishedDeleted);if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
+  if(typeof syncEditorNpcArt==='function')syncEditorNpcArt(m);
 }
 function moveEditorActor(o,x,y,save=false) {
   const info=editorActorInfo(o);if(!info)return false;
@@ -1711,7 +1716,7 @@ function moveEditorActor(o,x,y,save=false) {
   if(info.kind==='npc'){
     shiftActorData(MD,info.source,x,y,false);
     o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;
-    for(const k of ['talkX','talkY','patrol','sy'])o[k]=info.source[k];
+    for(const k of ['talkX','talkY','patrol','patrolPoints','sy'])o[k]=info.source[k];
   }else shiftActorData(MD,o,x,y,true);
   if(save){
     (actorLayouts[MAPID] ||= {})[info.key]={x,y};
@@ -1955,6 +1960,7 @@ function loadMap(id, fresh, discardDraft=false) {
   const leavingDraft=typeof saveEditorDraft==='function'?saveEditorDraft():null;
   rememberOverworld(leavingDraft);
   editorDraftReady=false;editorMapLoading=true;
+  if(typeof prepareEditorEntities==='function')prepareEditorEntities(W.maps[id],id);
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
   chestAnim = null;
@@ -2024,6 +2030,7 @@ function loadMap(id, fresh, discardDraft=false) {
   seedTreasuryGold();
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
   npcs = MD.npcs.map((n, k) => ({
+    editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,
     id: "npc" + k, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
     crown: n.crown, body: n.body, kf: "d", dd: n.dd, dm: n.dm, rod: n.rod,
     charm: n.charm,                 /* what this one hands over, if anything */
@@ -3595,7 +3602,7 @@ function drawWorld(t, dt) {
 
   const draw = [];
   const marketIds=new Set((MD.marketStands||[]).map(s=>s.objectId));
-  for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted)draw.push(actor);
+  for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted&&!actor.editorProxy)draw.push(actor);
   if (trialDemonHere()) draw.push({witchDemon:true,...(MAPID==="witchmoor"?{x:196,y:304}:THRONE_DEMON)});
   if (trialPedestalHere()) draw.push({ trialPedestal: true, x: TRIAL_PEDESTAL.x,
                                       y: TRIAL_PEDESTAL.y, sy: TRIAL_PEDESTAL.y });
@@ -4248,7 +4255,7 @@ function drawWorld(t, dt) {
           const age=reactionAge<2?reactionAge:t%5;
           fr=age<2?Math.min(sp[4]-1,Math.floor(age*6)):0;
         }
-        drawNpcFrame(o,sp,fr,atlasImg);
+        drawNpcFrame(o,sp,fr,sheetOf(sp));
         if(o.pettable) drawPetHeart(o,t,sp);
         if(waveHettie && quest < Q.EGGS && !scene && !sayNpc) drawHettieCallout(o,sp);
         continue;
@@ -6219,6 +6226,7 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
+  if(m.editorDeleted||(m.devLineup&&(typeof devNpcLineupActive==='undefined'||!devNpcLineupActive)))return false;
   if (wonAll && /King Halvard/.test(m.n || "")) return false;
   if (m.away) return false;
   if (m.when !== undefined && quest < m.when) return false;
@@ -6249,6 +6257,7 @@ function stepWalkers(dt) {
   stepHettie();
   stepThornwellWelcome(dt);
   for (const m of npcs) {
+    if(!npcHere(m))continue;
     if (m.stationary) {
       if (m.goto) {
         const visible = m.x > cam.x - 32 && m.x < cam.x + VW / cam.z + 32 &&
@@ -11533,6 +11542,15 @@ function doneEditing() {
 tap(document.getElementById("nDone"), doneEditing);
 function deleteSelected() {
   if (!selected) return;
+  const npcInfo=editorActorInfo(selected);
+  const npcSource=npcInfo?.kind==='npc'?npcInfo.source:MD.npcs.find(n=>editorNpcKey(n)===selected.editorNpcKey);
+  if(npcSource){
+    const key=editorNpcKey(npcSource);npcSource.editorDeleted=true;
+    for(const n of npcs)if(editorNpcKey(n)===key){n.editorDeleted=true;n.goto=null;}
+    (actorLayouts[MAPID] ||= {})[key]={x:npcSource.x,y:npcSource.y,deleted:true};
+    if(typeof syncEditorNpcArt==='function')syncEditorNpcArt(MD);
+    scheduleEditorDraft();selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
+  }
   if(selected.interiorFurniture){
     const info=editorActorInfo(selected);if(!info)return;selected.editorDeleted=true;
     (actorLayouts[MAPID] ||= {})[info.key]={x:selected.x,y:selected.y,deleted:true};
@@ -11546,7 +11564,7 @@ function deleteSelected() {
     scheduleEditorDraft();
     selected=null;rebuildSolid();mapDirty=true;refreshSel();refreshHandle();return;
   }
-  if(editorActorInfo(selected)){toast("This actor can be moved. Keep its story identity intact.");return;}
+  if(editorActorInfo(selected)){toast("This object can be moved with MOVE.");return;}
   if (selected.feat) {
     const tx = Math.floor(selected.x / TS), ty = Math.floor((selected.y - 1) / TS);
     const key = tx + "," + ty;

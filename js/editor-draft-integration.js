@@ -6,7 +6,7 @@ const editorBuildActive = new Set();
 let editorDraftReady = false, editorDraftTimer = null;
 
 function editorBaseFields(m) {
-  return {w:m.w,h:m.h,objs:m.objs,roomActors:m.roomActors,npcs:m.npcs,
+  return {w:m.w,h:m.h,objs:m.objs,roomActors:m.roomActors,npcs:m.npcs,foes:m.foes,
     roomBlocks:m.roomBlocks,doors:m.doors,scatter:m.scatter,sanim:m.sanim,features:m.features,
     terr:m.terr,base_terr:m.base_terr,felled:m.felled,felled_rle:m.felled_rle,cellarCaches:m.cellarCaches,
     editorDeletedObjects:m.editorDeletedObjects,editorDeletedDecor:m.editorDeletedDecor,editorPublishedPaint:m.editorPublishedPaint};
@@ -103,7 +103,7 @@ function saveEditorDraft() {
   }
   for(const move of moves)operations.push({kind:'object',key:String(move.id),sprite:base.objs[move.id*3],fromX:base.objs[move.id*3+1],fromY:base.objs[move.id*3+2],x:move.x,y:move.y});
   for(const [key,v]of Object.entries(state.actors)){
-    const a=key.startsWith('npc:')?(base.npcs||[]).find(n=>'npc:'+n.n===key):(base.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===key);
+    const a=key.startsWith('npc:')?(base.npcs||[]).find(n=>(n.editKey||'npc:'+n.n)===key):(base.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===key);
     if(a&&(v.deleted||a.x!==v.x||a.y!==v.y))operations.push({kind:'actor',key,identity:a.spr||a.n,fromX:a.x,fromY:a.y,x:v.x,y:v.y,...(v.deleted?{deleted:true}:{})});
   }
   for(const [key,d]of state.decorMoved)if(!decorGone.has(key)&&(d.x!==d.x0||d.y!==d.y0))operations.push({kind:'decor',key,tag:d.tag,index:d.di,sprite:d.s,fromX:d.x0,fromY:d.y0,x:d.x,y:d.y});

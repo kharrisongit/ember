@@ -310,3 +310,103 @@ family=applyMoves(family,{...next,map:'a',baseFingerprint:'fixture',session:{...
 assert.deepEqual(B.snapshot(publishedMap(family,{...authored,doors:[{x:2,y:3,to:'b'}]})),buildNext);
 assert.equal(family.maps.a['door:0'].rect.x,56);assert.equal(family.maps.a['collision:2,3'].blocked,false);
 console.log('PASS: repeated Build, Doors and Collision sends replace their earlier result against the saved session baseline.');
+
+// Special rewards and removable NPCs use the same draft/publication lifecycle.
+{
+ const game=read('js/generated/game-part-2.js');
+ const packed=read('js/generated/game-part-1.js');
+ const sprites=JSON.parse(zlib.gunzipSync(Buffer.from(packed.match(/const ATLAS_GZ = "([^"]+)/)[1],'base64'))).sprites;
+ Object.assign(sprites,JSON.parse(game.match(/const SM_SPR = (.*);/)[1]));
+ const rewardSprite=JSON.parse(packed.match(/DOCK_ORIGINAL_ASSETS.push\((\{"name":"heartstone_chest".*?\})\);/)[1]);
+ sprites[rewardSprite.name]=[0,0,rewardSprite.w,rewardSprite.h,rewardSprite.frames];
+ function entities(){
+  const g=gameContext();g.c.SPR=sprites;
+  g.run(game.slice(game.indexOf('function registerKnightStorySprites('),game.indexOf('const SPR_HANDLER')));g.run('registerKnightStorySprites()');
+  g.run(read('js/editor-entities.js'));
+  g.run(game.slice(game.indexOf('function npcHere('),game.indexOf('function beginHettieWalk(')));
+  g.run(game.slice(game.indexOf('function pickEditorActor('),game.indexOf('function storyTeleport(')));
+  g.run(game.slice(game.indexOf('function deleteSelected('),game.indexOf('tap(document.getElementById("nDel")')));
+  g.run(`var selected=null,wonAll=false,quest=99;
+   function refreshSel(){}function refreshHandle(){}
+   var CHESTS=[{map:'a',gift:'shadow',x:9.5,y:7.5}];var TREASURY_CHESTS=[{id:'chest0',x:184,y:88}];
+   Object.assign(W.maps.a.roomActors[0].extractedCanvas,{width:20,height:30});
+   W.maps.a.npcs=[{n:'Removed King',x:10,y:20},{n:'Resident',sk:'farmer_bob',x:48,y:64,seated:true,sceneReserved:true}];
+   W.maps.a.roomBlocks.push([150,128,170,136]);prepareEditorEntities(W.maps.a,'a');
+   function visitEntities(id,fresh=false){visit(id,fresh);npcs=MD.npcs.map(n=>({...n}));}
+  `);
+  return g;
+ }
+ disk.clear();let e=entities();e.run(`visitEntities('a');npcs.shift();selected=npcs[0];deleteSelected();saveEditorDraft();visitEntities('b');visitEntities('a');`);
+ assert(e.run('MD.npcs[1].editorDeleted'),'seated/story NPC deletion survives map re-entry');
+ assert(!e.run('MD.npcs[0].editorDeleted'),'filtered live indices do not delete a different NPC');
+ assert(!e.run('npcHere(npcs[1])'),'deleted NPC cannot render, collide or interact');
+ let draft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
+ assert.equal(draft.operations[0].key,'npc:Resident');assert(draft.operations[0].deleted);
+ const published=applyMoves(empty,{...first,map:'a',operations:draft.operations},revision);
+ e=entities();e.run("visitEntities('a')");assert(e.run('npcs[1].editorDeleted'),'NPC deletion survives a browser reload');
+ e.run("visitEntities('a',true)");assert(!e.run('npcs[1].editorDeleted'),'RESET restores an unpublished NPC');
+ e.c.layouts=published;e.run("publishedEditorLayouts=layouts;applyPublishedEditorLayout(W.maps.a,'a');applyActorLayout(W.maps.a,'a')");
+ assert(e.run('MD.npcs[1].publishedDeleted&&MD.npcs[1].editorDeleted'),'published deletion applies on a fresh device');
+ disk.clear();e=entities();e.run(`visitEntities('a');const chest=MD.roomActors.find(a=>a.editorChestKind);
+  if(pickEditorActor(chest.x,chest.y-8)!==chest)throw Error('Heartstone chest is not selectable '+JSON.stringify({chest,pick:pickEditorActor(chest.x,chest.y-8),sprite:editorSprite(chest)}));
+  moveEditorActor(chest,208,184,true);saveEditorDraft();visitEntities('b');visitEntities('a');`);
+ assert.equal(e.run('CHESTS[0].x*16+8'),208);assert.equal(e.run('CHESTS[0].y*16+16'),184);
+ assert.equal(e.run('MD.roomBlocks[1].join()'),'198,176,218,184','chest footprint moves exactly once');
+ draft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
+ assert.equal(draft.operations[0].key,'chest:heartstone:shadow');
+ const chestLayout=applyMoves(empty,{...first,map:'a',operations:draft.operations},revision);
+ e=entities();e.run("visitEntities('a')");assert.equal(e.run('CHESTS[0].y*16+16'),184,'reward position survives reload');
+ e.run("visitEntities('a',true)");assert.equal(e.run('CHESTS[0].y*16+16'),136,'RESET restores reward globals as well as the proxy');
+ assert.equal(e.run('MD.roomBlocks[1].join()'),'150,128,170,136');
+ e.c.layouts=chestLayout;e.run("publishedEditorLayouts=layouts;applyPublishedEditorLayout(W.maps.a,'a')");
+ assert.equal(e.run('CHESTS[0].x*16+8'),208,'published chest movement reaches reward logic');
+ // A haunted chest carries its dormant ghost spawn and emerging smoke with it.
+ disk.clear();e=entities();e.run(`W.maps.a.roomActors.push({n:'chest',spr:'temple71_chest',editKey:'loot:haunted',x:80,y:96,moveBlocks:[2],houseLoot:{id:'haunted',ghost:true,gold:0}});
+  W.maps.a.roomBlocks.push([66,86,94,96]);W.maps.a.foes=[{chestAmbush:'haunted',x:5,y:6,ambushFrom:{x:80,y:96}}];
+  visitEntities('a');moveEditorActor(MD.roomActors.at(-1),112,128,true);saveEditorDraft();visitEntities('b');visitEntities('a');`);
+ assert.equal(e.run('JSON.stringify(MD.foes[0])'),JSON.stringify({chestAmbush:'haunted',x:7,y:8,ambushFrom:{x:112,y:128}}));
+ e.run("visitEntities('a',true)");assert.equal(e.run('MD.foes[0].ambushFrom.x'),80,'RESET restores haunted chest effects');
+ // Separate scene artwork disappears along with its dialogue actor.
+ e.run(`MD.npcs.push({n:'Reader',school:true,lookId:'reader_art',x:70,y:80});MD.roomActors.push({spr:'reader_art',x:75,y:80});
+  prepareEditorEntities(MD,'a');npcs=MD.npcs.map(n=>({...n}));selected=MD.roomActors.at(-1);deleteSelected();`);
+ assert(e.run('MD.roomActors.at(-1).editorDeleted&&MD.npcs.at(-1).editorDeleted'));
+ // Catalog samples stay idle and hidden until enabled, with repeat-safe IDs.
+ disk.clear();e=entities();e.run(`W.maps.world={...W.maps.a,npcs:[],roomActors:[],roomBlocks:[]};prepareEditorEntities(W.maps.world,'world');`);
+ const catalog=JSON.parse(e.run('JSON.stringify(npcLineupCatalog())'));
+ assert(catalog.length>=40,'available four-direction appearances are included');
+ for(const name of ['pack:market_citizen5','pack:maddock_smith113','body:br','skin:farmer_bob','skin:king'])assert(catalog.some(n=>n.key===name),name);
+ assert(!catalog.some(n=>/corin|kd92|golem/.test(n.key)),'player/monster sheets excluded');
+ assert(e.run('W.maps.world.npcs.every(n=>n.stationary&&n.noTalk&&!n.patrol&&!n.goto&&!npcHere(n))'));
+ assert(e.run('W.maps.world.npcs.every(n=>n.x>=18*TS+16&&n.x<=42*TS-16&&n.y>=9*TS+48&&n.y<=33*TS-16)'),'lineup fits the egg field');
+ e.run(`devNpcLineupActive=true;prepareEditorEntities(W.maps.world,'world');visitEntities('world');selected=npcs[0];deleteSelected();saveEditorDraft();`);
+ assert.equal(e.run('MD.npcs.length'),catalog.length,'repeated lineup creates no duplicates');
+ draft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));assert(draft.operations.some(o=>o.deleted&&o.key.startsWith('npc:lineup:')),'sample deletion exports');
+ const samples=applyMoves(empty,{...first,map:'world',operations:draft.operations},revision);
+ e.c.samples=samples;e.run(`const clean={npcs:[],roomActors:[],roomBlocks:[]};prepareEditorEntities(clean,'world');publishedEditorLayouts=samples;applyPublishedEditorLayout(clean,'world');applyActorLayout(clean,'world');prepareEditorEntities(clean,'world');`);
+ assert(e.run('clean.npcs[0].editorDeleted'),'published lineup deletion survives repopulation');
+ // Invoke the actual tool action: locked before Skip, then opens Move at the field.
+ e.run(`var devItemTest=false,scene=null,bossScene=null,fadeDir=0,doorMotion=null,P={},dragon={},mounted=true,
+  cam={},VW=400,VH=600,camFree=false;
+  var bEdit={classList:{add(){}}},editEl={style:{}};
+  document.getElementById=()=>({style:{}});
+  function loadMap(id){visitEntities(id)}function geometryEnd(){}function setPaint(){}function setBuild(){}
+  function setTravel(){}function setArenas(){}function soloTool(){}function setDev(){}
+  function playZoom(){return 2}function clampCam(){}function refreshToolbar(){}
+  showNpcLineup();`);
+ assert.equal(e.run('mounted'),true,'tool has no effect before Skip');
+ e.run('devItemTest=true;showNpcLineup();showNpcLineup()');
+ assert(e.run("MAPID==='world'&&editing&&camFree&&!mounted&&npcs[0].editorDeleted"));
+ assert.equal(e.run('npcs.length'),catalog.length,'opening the tool twice preserves the catalog and deletions');
+ // Every pack sample uses the correct image sheet while playing its idle frames.
+ e.run(`var atlasImg={},knightStoryImg={},kingDragonDeathImg={},kingDragonImg={},smImg={},dragonImg={},
+  sayNpc=null,t=1,sampleDraws=[];
+  function drawNpcFrame(o,s,fr,img){sampleDraws.push({key:o.editKey,s,fr,img})}
+ `);
+ e.run(game.slice(game.indexOf('function sheetOf('),game.indexOf('function blit(')));
+ const packStart=game.indexOf('    if (o.packSpr) {',game.indexOf('function drawWorld('));
+ const packEnd=game.indexOf('    if (o.body && SPR[',packStart);
+ e.run('for(const o of npcs.filter(n=>n.packSpr)){'+game.slice(packStart,packEnd)+'}');
+ assert(e.run("sampleDraws.every(d=>d.s===SPR[npcs.find(n=>n.editKey===d.key).packSpr+'_idle_d'])"));
+ assert(e.run("sampleDraws.find(d=>d.key==='npc:lineup:pack:guild_fighter_sword').img===knightStoryImg"),'knight appearance uses its dedicated sheet');
+ console.log(`PASS: chest movement, haunted effects and NPC deletion survive save/reload/reset/publication; ${catalog.length} idle NPC appearances fit the egg field with stable deletions.`);
+}

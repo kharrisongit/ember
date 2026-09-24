@@ -5695,9 +5695,11 @@ function markKingCompleteForTest() {
   toast("King marked complete. Visit the witch and talk to the demon for the seal.");
 }
 tap(document.getElementById("bKingDone"), markKingCompleteForTest);
+tap(document.getElementById("bNpcLineup"), showNpcLineup);
 tap(document.getElementById("bSkip"), () => {
   skipBrambleForTest();
   devItemTest = true;
+  document.getElementById('bNpcLineup').style.display='';
   leavingNow = false;
   kingWalk = 0;
   guardsAside = false;

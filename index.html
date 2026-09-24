@@ -160,6 +160,7 @@
   <div class="btn" id="bCompass" role="button" aria-pressed="false"><span class="ico">&#10148;</span>COMPASS</div>
   <div class="btn" id="bReset"><span class="ico">↺</span>RESET</div>
   <div class="btn" id="bSkip"><span class="ico">»</span>SKIP</div>
+  <div class="btn" id="bNpcLineup" style="display:none"><span class="ico">♟</span>NPC LINEUP</div>
   <div class="btn" id="bKingDone"><span class="ico">♛</span>KING COMPLETE</div>
   <div class="btn" id="bFoes" role="button" aria-pressed="false">FOES: ON</div>
   <div class="btn" id="bSafe"><span class="ico">&#10023;</span>SAFE</div>
@@ -340,13 +341,14 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/house-loot.js?v=20260924-doors-loot-arenas1"></script>
 <script src="js/editor-build-data.js?v=20260924-all-edits"></script>
 <script src="js/editor-drafts.js?v=20260924-repeat-send"></script>
-<script src="js/published-editor-layouts.js?v=20260924-all-edits"></script>
+<script src="js/published-editor-layouts.js?v=20260924-npc-chest-editor1"></script>
 <script src="js/temple-compass.js?v=20260924-compass1"></script>
 <script src="js/millwood-interiors.js?v=20260923-castle-audit2"></script>
 <script src="js/generated/game-part-1.js?v=20260924-chests-statues1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260924-hollybeck-chest-layer1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
-<script src="js/editor-draft-integration.js?v=20260924-repeat-send"></script>
-<script src="js/generated/game-part-3.js?v=20260924-forgefalls-corner1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260924-npc-chest-editor1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/editor-entities.js?v=20260924-npc-chest-editor1"></script>
+<script src="js/editor-draft-integration.js?v=20260924-npc-chest-editor1"></script>
+<script src="js/generated/game-part-3.js?v=20260924-npc-chest-editor1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
