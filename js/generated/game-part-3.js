@@ -2380,14 +2380,21 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   const standing = new Set(objs.concat(fobjs).map(
     o => Math.floor(o.x / TS) + "," + Math.floor((o.y - 1) / TS)));
   const SWAMP_VERGE_SAFE = ["sw_tree2_3", "sw_tree3_3", "sw_tree4_3"];
+  const forgefalls = MAPID === "world" && features.find(f =>
+    f.kind === "landmark" && f.label === "Forgefalls");
+  const atForgefallsBend = p => forgefalls && p[0] > forgefalls.x &&
+    p[0] <= forgefalls.x + 64 && Math.abs(p[1] - forgefalls.y) <= 4;
   for (const f of features) {
     if (f.kind !== "route" || !sows(f.style)) continue;
     const off = (f.w >> 1) + 2;
     const sp0 = f.style === "swamp" ? SWAMP_VERGE_SAFE : STYLE_TREE[f.style];
     for (const [pa, pb] of routeLegs(f)) {
       const vert = pa[0] === pb[0];
-      const lo = Math.min(vert ? pa[1] : pa[0], vert ? pb[1] : pb[0]);
-      const hi = Math.max(vert ? pa[1] : pa[0], vert ? pb[1] : pb[0]);
+      const [start, end] = (vert ? pa[1] <= pb[1] : pa[0] <= pb[0]) ? [pa, pb] : [pb, pa];
+      // The cliff cleanup removes the original corner trees. Restore the
+      // outside bend too, where the two verges meet beyond the road endpoint.
+      const lo = (vert ? start[1] : start[0]) - (atForgefallsBend(start) ? off : 0);
+      const hi = (vert ? end[1] : end[0]) + (atForgefallsBend(end) ? off : 0);
       const axis = vert ? pa[0] : pa[1];
       for (const sgn of [-1, 1])
         for (let v = lo; v <= hi; v++) {
