@@ -3628,7 +3628,11 @@ function drawWorld(t, dt) {
   }
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
   // Chests are low props: Corin must remain visible while walking around them.
-  drawChest();
+  // Hollybeck's lid also needs to draw in front of its skull pedestal.
+  const hollybeckChest = MD.hollybeck && chestHere();
+  if (hollybeckChest) draw.push({heartstoneChest:true,
+    x:hollybeckChest.x*TS+TS/2,y:hollybeckChest.y*TS+TS});
+  else drawChest();
   drawTempleShots();
   drawDragonTempleTraps();
   draw.push(P);
@@ -3756,7 +3760,8 @@ function drawWorld(t, dt) {
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
   const groundLayer = o => o.roomBackgroundPatch || underfoot(o) ? 0
-    : o.portalLayer || (MD.templeExpanded && o.houseLoot) ? 1 : 2;
+    : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
+      (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
                    || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
                    || (sortY(a) - sortY(b))
@@ -3774,6 +3779,7 @@ function drawWorld(t, dt) {
       // Original pack knot and hanging rope, aligned over the mooring post.
       blit(ctx,'hb_mooring_knot',0,x1-5,y1-5);continue;
     }
+    if (o.heartstoneChest) { drawChest(); continue; }
     if (o.portalLayer) { drawRise(); drawSaintBuff(); continue; }
     if (o.school) continue; // Native school animation patches draw these seated characters.
     if(o.extractedCanvas){ctx.drawImage(o.extractedCanvas,o.x-o.extractedCanvas.width/2,o.y-o.extractedCanvas.height);continue;}
