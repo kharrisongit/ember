@@ -8038,6 +8038,26 @@
         "key": "9,29",
         "blocked": true
       }
+    },
+    "glasshouse": {
+      "actor:remaining:glasshouse:7": {
+        "kind": "actor",
+        "key": "remaining:glasshouse:7",
+        "identity": "flower vase",
+        "x": 135,
+        "y": 176,
+        "originX": 133,
+        "originY": 158
+      },
+      "actor:remaining:glasshouse:6": {
+        "kind": "actor",
+        "key": "remaining:glasshouse:6",
+        "identity": "flower vase",
+        "x": 77,
+        "y": 176,
+        "originX": 76,
+        "originY": 158
+      }
     }
   },
   "applied": [
@@ -8056,7 +8076,8 @@
     "8a7466a5-c8d6-4bb8-90d8-f4fc9f014023",
     "055fc82d-444a-49e3-8bde-9da69a27a2e9",
     "ff5bf365-048b-49bf-848b-5c89138847b0",
-    "14ec4af0-569e-40c4-a94d-93ed7868cbfa"
+    "14ec4af0-569e-40c4-a94d-93ed7868cbfa",
+    "f037b458-cc13-4bdc-ba62-1a293044eef5"
   ],
   "sessions": {
     "world": {
@@ -10862,6 +10883,14 @@
       "baseFingerprint": "f3aa948f-c56e9613-3391",
       "base": {},
       "resultHash": "66e574fa-d43d6fe4-3817"
+    },
+    "glasshouse": {
+      "id": "994f32dc-53f6-4aaa-a333-1368f0b6d47c",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "9ac016e0-5a4a28b0-4437",
+      "base": {},
+      "resultHash": "c9b5ecec-95a15a88-295"
     }
   }
 }
