@@ -1,15 +1,15 @@
-window.EMBER_ASSETS.DOCK_ORIGINAL_ASSETS.push(...[{"name":"passage_torch","w":32,"h":48,"frames":6,"src":"assets/interiors/mountain-passage/passage-torch.png?v=20260924-passage1"},{"name":"passage_door","w":32,"h":48,"frames":4,"src":"assets/interiors/mountain-passage/passage-door.png?v=20260924-passage1"},{"name":"passage_bars","w":32,"h":48,"frames":4,"src":"assets/interiors/mountain-passage/passage-bars.png?v=20260924-passage1"},{"name":"passage_vent","w":16,"h":16,"frames":1,"src":"assets/interiors/mountain-passage/passage-vent.png?v=20260924-passage1"},{"name":"passage_flame_r","w":112,"h":32,"frames":9,"src":"assets/interiors/mountain-passage/passage-flame_r.png?v=20260924-passage1"},{"name":"passage_saw","w":32,"h":32,"frames":6,"src":"assets/interiors/mountain-passage/passage-saw.png?v=20260924-passage1"},{"name":"passage_rail","w":92,"h":3,"frames":1,"src":"assets/interiors/mountain-passage/passage-rail.png?v=20260924-passage1"}]);
+window.EMBER_ASSETS.DOCK_ORIGINAL_ASSETS.push(...[{"name":"passage_torch","w":32,"h":48,"frames":6,"src":"assets/interiors/mountain-passage/passage-torch.png?v=20260924-passage2"},{"name":"passage_door","w":32,"h":48,"frames":4,"src":"assets/interiors/mountain-passage/passage-door.png?v=20260924-passage2"},{"name":"passage_bars","w":32,"h":48,"frames":4,"src":"assets/interiors/mountain-passage/passage-bars.png?v=20260924-passage2"},{"name":"passage_vent","w":16,"h":16,"frames":1,"src":"assets/interiors/mountain-passage/passage-vent.png?v=20260924-passage2"},{"name":"passage_flame_r","w":112,"h":32,"frames":9,"src":"assets/interiors/mountain-passage/passage-flame_r.png?v=20260924-passage2"},{"name":"passage_saw","w":32,"h":32,"frames":6,"src":"assets/interiors/mountain-passage/passage-saw.png?v=20260924-passage2"},{"name":"passage_rail","w":92,"h":3,"frames":1,"src":"assets/interiors/mountain-passage/passage-rail.png?v=20260924-passage2"}]);
 /* Mountain Passage: one through-route, nine optional branches and the original Ashfiend. */
 async function prepareExpandedMountainPassage(){
   if(W.maps.passage.mountainPassage)return;
-  const response=await fetch('assets/interiors/mountain-passage/layout.json?v=20260924-passage1');
+  const response=await fetch('assets/interiors/mountain-passage/layout.json?v=20260924-passage2');
   if(!response.ok)throw Error('Mountain passage layout could not load');
   const plans=await response.json();
   const frostExit=W.maps.passage.doors.find(d=>d.to==='world');
   const ashExit=W.maps.passage3.doors.find(d=>d.to==='world');
   const bossKind=W.maps.passage3.foes[0].k;
   const images=await Promise.all(Object.keys(plans).map(async id=>{
-    const image=new Image();image.src='assets/interiors/mountain-passage/'+id+'.png?v=20260924-passage1';
+    const image=new Image();image.src='assets/interiors/mountain-passage/'+id+'.png?v=20260924-passage2';
     await image.decode();return [id,image];
   }));
   for(const [id,image] of images){
@@ -18,7 +18,7 @@ async function prepareExpandedMountainPassage(){
       mountainPassage:true,templeExpanded:true,templeDragon:true,templeScience:true,
       templePlan:plan,templeFloors:plan.floors.map(r=>r.slice()),templeGateOpen:0,
       travel:id==='passage',travel_kind:'Cave',roomArt:'dragon75_interior',_roomBaseCanvas:image,
-      bg:'#19171c',floorbg:'#343933',terr:terrRLE(Array(width*height/256).fill(DIRT)),
+      bg:'#19171c',floorbg:'#333831',terr:terrRLE(Array(width*height/256).fill(DIRT)),
       objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],
       roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{},templeClock:0,
       templeHazards:[],templeMachines:[],templeShots:[]};
