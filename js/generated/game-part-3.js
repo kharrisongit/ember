@@ -4054,6 +4054,7 @@ function frameCore(ms) {
   drawCollide();
   drawDoorTriggers();
   drawHearts();
+  drawTempleCompass();
   drawBanner(dt);
   drawFade();
   drawBossBlack(); if (typeof drawArenaNumberOverlay === "function") drawArenaNumberOverlay();
@@ -5637,6 +5638,7 @@ function setMounted(on, quiet = false) {
 }
 
 tap(document.getElementById("deadBtn"), () => { getUp(); });
+tap(document.getElementById("bCompass"), toggleTempleCompass);
 tap(document.getElementById("bSafe"), () => {
   devSafe = !devSafe;
   const b = document.getElementById("bSafe");

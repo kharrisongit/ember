@@ -36,6 +36,7 @@ jobs:
         run: |
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
+          node tests/temple-compass.mjs
           node tests/mountain-passage.mjs
           node tests/boss-pressure.mjs
           node tests/ferry-companion.mjs
