@@ -131,6 +131,7 @@ function stepExpandedTemple(dt){
   if(!MD?.templeExpanded)return;
   if(MD.sandspire)stepSandspireTemple(dt);
   if(MD.hollybeck)stepHollybeckTemple(dt);
+  if(MD.mountainPassage)stepMountainPassage(dt);
   if(MAPID==='tp1_sanctum')MD.templeGateOpen=Math.min(1,MD.templeGateOpen+(expandedSanctumCleared()?dt*3:0));
   for(const f of foes){
     if(!f.expandedRoom||f.st==='dead')continue;
@@ -146,5 +147,5 @@ function stepExpandedTemple(dt){
 function tryExpandedTempleLever(){
   const h=MD?.templePlan?.hazards?.find(h=>Math.hypot(P.x-h.lever[0],P.y-h.lever[1])<=28);
   if(!h)return false;
-  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire||MD.hollybeck?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
+  bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire||MD.hollybeck||MD.mountainPassage?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
 }

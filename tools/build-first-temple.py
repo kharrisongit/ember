@@ -7,7 +7,8 @@ s=(ROOT/'js/generated/game-part-1.js').read_text()
 def asset(name):
  a=json.loads(re.search(r'\{"name":"'+name+r'"[^\n]*?\}',s)[0]);return Image.open(io.BytesIO(base64.b64decode(a['src'].split(',')[1]))).convert('RGBA')
 folder=sys.argv[1] if len(sys.argv)>1 else 'first-temple'
-snow=folder=='hollybeck-temple'
+mountain=folder=='mountain-passage'
+snow=folder in ['hollybeck-temple','mountain-passage']
 FLOOR=(83,93,111,255) if snow else (102,94,85,255)
 original=asset('dragon75_interior' if snow else 'first_temple_continuous');sheet=asset('wall78_sheet')
 for map,x,y,sx,sy,*_ in json.loads(re.search(r'const WALL78_PIECES=(.*);',s)[1]):
@@ -146,6 +147,9 @@ for id,m in layout.items():
    im.alpha_composite(mark,(x,y))
   if 'preserveChamberOffset' in m and y<m['chambers'][1][3]:continue
   if any(min(h['lines'])-24<=(x if h['axis']=='x' else y)<=max(h['lines'])+24 and h['cross'][0]-16<=(y if h['axis']=='x' else x)<=h['cross'][1] for h in m.get('hazards',[])):continue
+  if mountain and 'exitChamber' in m:
+   el,et,er,eb=m['chambers'][m['exitChamber']]
+   if el<=x<er and et<=y<eb:continue
   treasures=[c[:2] for c in m['chests']]+([m['heartstone']] if 'heartstone' in m else [])
   if any(abs(x-cx)<32 and abs(y-cy)<32 for cx,cy in treasures):continue
   if (x*13+y*7)%704==0 and all((x+dx,y+dy) in floor for dx,dy in [(16,0),(0,16),(-16,0)]):
@@ -155,6 +159,18 @@ for id,m in layout.items():
     im.alpha_composite(detail,(x,y))
  target=ROOT/f'assets/interiors/{folder}/{id}.png'
  temporary=target.with_suffix('.tmp.png')
+ if mountain:
+  # Tint only the completed backdrop. Construction comparisons above still
+  # use native tile colors, retaining the carefully fitted seams and aprons.
+  pixels=[]
+  for py in range(h):
+   for px in range(w):
+    r,g,b,a=im.getpixel((px,py));light=(r*54+g*183+b*19)/256
+    if (r,g,b,a) in VOID:color=(25,23,28,a)
+    elif (px//16*16,py//16*16) in floor:color=(round(light*.48+7),round(light*.52+8),round(light*.44+8),a)
+    else:color=(min(255,round(light*.9+18)),min(255,round(light*.62+9)),min(255,round(light*.88+13)),a)
+    pixels.append(color)
+  im.putdata(pixels)
  im.save(temporary)
  temporary.replace(target)
 print(f'Built {len(layout)} compact {folder} interiors with original 48-pixel walls and joined corner pillars.')

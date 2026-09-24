@@ -540,7 +540,7 @@ function stepDragonTempleTraps(dt){
  }
 }
 function drawDragonTempleTraps(){
- if(MD?.hollybeck){drawHollybeckTraps();return;}
+ if(MD?.hollybeck||MD?.mountainPassage){drawHollybeckTraps();return;}
  if(!MD?.templeDragon)return;
  for(const a of MD.templeHazards){
   if(a.type==='flame'&&a.frame===0)continue;
@@ -1435,6 +1435,7 @@ async function buildHouseFurnitureLayers(){
   await prepareExpandedFirstTemple();
   await prepareExpandedSandspireTemple();
   await prepareExpandedHollybeckTemple();
+  await prepareExpandedMountainPassage();
 }
 /* === end household furniture layering === */
 
@@ -7303,7 +7304,7 @@ function enemyMaxHp(kind, x, mapId = MAPID) {
   const base = (FOE[kind] || FOE.skeleton).hp;
   const late = mapId === "world"
     ? x >= ROUTE_2_HP_START_X
-    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_") || mapId.startsWith("sn_");
+    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_") || mapId.startsWith("sn_") || mapId.startsWith("passage_");
   return base * (late || mapId.startsWith("royal_") ? 2 : 1);
 }
 const FOE_ART = { treasuryknight:"kn3", royalguard:"kn", knight: "kn", devil1: "dv1", devil3: "dv3", skeleton1: "bs1", skeleton3: "bs3", mage1: "lc1", mage2: "lc2", shroomBrown: "ms1", eye2: "bh2", ent1: "ent1", ent2: "ent2", gnoll1: "gn1", gnoll3: "gn3", plant3: "pl3", reptile2: "rp2", reptile3: "rp3", reptile: "rp1", kdragon: "kd92", shroomRed: "ms2", shroomPurple: "ms3",

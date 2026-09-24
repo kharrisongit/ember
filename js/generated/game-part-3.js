@@ -5518,7 +5518,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:)/.test(id))),
+  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5575,16 +5575,18 @@ function loadGame(slot=activeSaveSlot) {
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
     houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
     potions=Math.max(0,s.potions|0);
-    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:)/.test(id))delete bossGone[id];
+    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     for(const m of Object.values(W.maps))if(m.templeExpanded){
       m.templeGateOpen=0;
-      if(m.sandspire){m.templeClock=0;m.templeShots=[];for(const a of m.templeMachines){a.lastCycle=-1;a.frame=0;}for(const a of m.roomActors)if(a.sandspireExit)a.openT=0;}
-      if(m.hollybeck){m.templeClock=0;for(const a of m.templeHazards){a.frame=0;a.active=false;a.x=a.minX+12;}for(const a of m.roomActors)if(a.templeExitDoor)a.openT=0;}
+      if(m.sandspire||m.mountainPassage){m.templeClock=0;m.templeShots=[];for(const a of m.templeMachines){a.lastCycle=-1;a.frame=0;}for(const a of m.roomActors)if(a.sandspireExit)a.openT=0;}
+      if(m.mountainPassage)m.passageReverseEntry=false;
+      if(m.hollybeck||m.mountainPassage){m.templeClock=0;for(const a of m.templeHazards){a.frame=0;a.active=false;a.x=a.minX+12;}for(const a of m.roomActors)if(a.templeExitDoor)a.openT=0;}
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
+    if(W.maps[s.map]?.mountainPassage&&s.passageLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.hollybeck&&s.hollybeckLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.templeExpanded&&s.templeLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;

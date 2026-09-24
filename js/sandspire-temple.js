@@ -126,6 +126,9 @@ function stepSandspireTemple(dt){
   }
   if(sceneHold()||fadeDir)return;
   MD.templeClock+=dt;
+  stepExpandedTempleMachines(dt);
+}
+function stepExpandedTempleMachines(dt){
   if(foesHeld){MD.templeShots=[];return;}
   for(const a of MD.templeMachines){
     const disabled=expandedTrapDisabled(a.hall),time=MD.templeClock+a.offset,cycle=Math.floor(time/a.period),phase=time%a.period;
