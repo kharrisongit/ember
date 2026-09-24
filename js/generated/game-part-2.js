@@ -18,8 +18,11 @@ async function loadDockOriginalAssets(){
     let sheet=img;
     if(a.cellW){
       sheet=document.createElement('canvas');sheet.width=a.w*a.frames;sheet.height=a.h;
-      const g=sheet.getContext('2d');
-      for(let f=0;f<a.frames;f++)g.drawImage(img,f*a.cellW+a.cropX,a.cropY,a.w,a.h,f*a.w,0,a.w,a.h);
+      const g=sheet.getContext('2d'),cols=a.cols||a.frames;
+      g.imageSmoothingEnabled=false;
+      for(let f=0;f<a.frames;f++)g.drawImage(img,
+        (f%cols)*a.cellW+(a.cropX||0),Math.floor(f/cols)*(a.cellH||a.h)+(a.cropY||0),
+        a.w,a.h,f*a.w,0,a.w,a.h);
     }
     registerAtlasPage({img:sheet,x:0,y:a.atlasY,w:a.w*a.frames,h:a.h});
   }
@@ -6781,6 +6784,7 @@ const CHESTS = [
   { map: "sn1", x: 9.5, y: 25, gift: "shadow" },
   { map: "ds1", x: 9.5, y: 20.5, gift: "ice" },
 ];
+const CHEST_GHOST_FRAME_TIME = 1 / 12;
 const chestOpen = {};              /* map id -> true once taken */
 let chestAnim = null;              /* { map, t, phase } while it plays */
 function chestHere() {
@@ -6836,7 +6840,7 @@ function stepChest(dt) {
   chestAnim.t += dt;
   const a = chestAnim;
   if (a.phase === "lid" && a.t > 0.9) { a.phase = "ghost"; a.t = 0; }
-  else if (a.phase === "ghost" && a.t > 1.2) {
+  else if (a.phase === "ghost" && a.t >= (SPR.ghost_rise?.[4] || 18) * CHEST_GHOST_FRAME_TIME) {
     chestOpen[a.c.map] = true;
     unlockDragonBreath(a.c.gift);
     chestAnim = null;
@@ -6862,14 +6866,13 @@ function drawChest() {
                 Math.round(px), Math.round(py), sp[2], sp[3]);
   if (opening && opening.phase === "ghost" && SPR.ghost_rise) {
     const g = SPR.ghost_rise;
-    const gf = Math.min(g[4] - 1, Math.floor(chestAnim.t / 1.2 * g[4]));
-    const rise = chestAnim.t / 1.2 * 22;
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, 1 - chestAnim.t / 1.2 * 0.5);
+    const gf = Math.min(g[4] - 1, Math.floor(opening.t / CHEST_GHOST_FRAME_TIME));
+    // Preserve the old 3/4 artwork scale. The sheet already rises and dissolves;
+    // keep its shared source baseline (y=113) at the chest opening throughout.
+    const scale = 0.75;
     drawGameImage(ctx, atlasImg, g[0] + gf * g[2], g[1], g[2], g[3],
-                  Math.round(c.x * TS + TS / 2 - g[2] / 2),
-                  Math.round(c.y * TS - g[3] - rise), g[2], g[3]);
-    ctx.restore();
+                  Math.round(c.x * TS + TS / 2 - g[2] * scale / 2),
+                  Math.round(c.y * TS - 113 * scale), g[2] * scale, g[3] * scale);
   }
 }
 let breathT = 0, breath = null;
