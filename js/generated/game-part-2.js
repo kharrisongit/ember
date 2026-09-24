@@ -3794,7 +3794,7 @@ function drawWorld(t, dt) {
         : f.st === "dead"
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
         : Math.floor(f.t * (f.st === "swing" ? 3.3 : 6)) % s2[4];
-      const anchor=ENT_ATTACK_OFFSETS[o.nm]||[0,0];
+      const anchor=FOE_ATTACK_OFFSETS[o.nm]||[0,0];
       const emerge=Math.min(1,f.emerge??1),drawX=f.ambushFrom?f.ambushFrom.x+(f.x-f.ambushFrom.x)*emerge:f.x,drawY=f.ambushFrom?f.ambushFrom.y+(f.y-f.ambushFrom.y)*emerge:f.y;
       const dx = Math.round(drawX - s2[2] / 2 + anchor[0]), dy = Math.round(drawY - s2[3] + anchor[1] + ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 20 : 0));
       if (f.hurt > 0 && !SPR[(FOE_ART[f.kind] || "sk") + "_hurt_d"])
@@ -7371,7 +7371,10 @@ function facing(f, tgt) {
 // Full enemy sequences retain the existing combat and movement timing.
 // Match the trunk/feet in attack frame zero to the corresponding idle pose.
 // The south-facing vine occupies 48 extra pixels below the body in its cell.
-const ENT_ATTACK_OFFSETS={ent1_atk_d:[0,48],ent1_atk_u:[0,0],ent1_atk_e:[0,2],ent1_atk_w:[-5,2],ent2_atk_d:[0,48],ent2_atk_u:[1,0],ent2_atk_e:[5,2],ent2_atk_w:[-2,2],ent3_atk_d:[0,48],ent3_atk_u:[0,0],ent3_atk_e:[0,2],ent3_atk_w:[0,2]};
+// Ashfiend attack cells also reserve space for the trident's flame trail.
+// Half-pixel X offsets reconcile its odd-width idle and even-width attack
+// cells before rounding, keeping the body steady at fractional world positions.
+const FOE_ATTACK_OFFSETS={ent1_atk_d:[0,48],ent1_atk_u:[0,0],ent1_atk_e:[0,2],ent1_atk_w:[-5,2],ent2_atk_d:[0,48],ent2_atk_u:[1,0],ent2_atk_e:[5,2],ent2_atk_w:[-2,2],ent3_atk_d:[0,48],ent3_atk_u:[0,0],ent3_atk_e:[0,2],ent3_atk_w:[0,2],dv2_atk_d:[-.5,33],dv2_atk_u:[-.5,9],dv2_atk_e:[-.5,15],dv2_atk_w:[-.5,15]};
 function golemFrame(f, sp, name, stats, impactFrame = 5) {
   const n = sp[4];
   if (f.st === "dead") return Math.min(n - 1, Math.floor(f.t / 0.5 * n));
