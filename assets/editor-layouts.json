@@ -8321,6 +8321,71 @@
         "key": "27,13",
         "blocked": false
       }
+    },
+    "sn1": {
+      "actor:actor:45:dragon75_skull_round": {
+        "kind": "actor",
+        "key": "actor:45:dragon75_skull_round",
+        "identity": "dragon75_skull_round",
+        "x": 200,
+        "y": 400,
+        "originX": 200,
+        "originY": 409
+      },
+      "actor:actor:43:dragon75_skull_small": {
+        "kind": "actor",
+        "key": "actor:43:dragon75_skull_small",
+        "identity": "dragon75_skull_small",
+        "x": 120,
+        "y": 401,
+        "originX": 120,
+        "originY": 409
+      },
+      "collision:24,51": {
+        "kind": "collision",
+        "key": "24,51",
+        "blocked": false
+      },
+      "collision:25,51": {
+        "kind": "collision",
+        "key": "25,51",
+        "blocked": false
+      },
+      "collision:26,51": {
+        "kind": "collision",
+        "key": "26,51",
+        "blocked": false
+      },
+      "collision:14,51": {
+        "kind": "collision",
+        "key": "14,51",
+        "blocked": false
+      },
+      "collision:15,51": {
+        "kind": "collision",
+        "key": "15,51",
+        "blocked": false
+      },
+      "collision:16,51": {
+        "kind": "collision",
+        "key": "16,51",
+        "blocked": false
+      },
+      "collision:19,47": {
+        "kind": "collision",
+        "key": "19,47",
+        "blocked": false
+      },
+      "collision:20,47": {
+        "kind": "collision",
+        "key": "20,47",
+        "blocked": false
+      },
+      "collision:21,47": {
+        "kind": "collision",
+        "key": "21,47",
+        "blocked": false
+      }
     }
   },
   "applied": [
@@ -8341,7 +8406,8 @@
     "ff5bf365-048b-49bf-848b-5c89138847b0",
     "14ec4af0-569e-40c4-a94d-93ed7868cbfa",
     "f037b458-cc13-4bdc-ba62-1a293044eef5",
-    "ce60555d-11ec-40af-9bbc-5d30b36159d5"
+    "ce60555d-11ec-40af-9bbc-5d30b36159d5",
+    "75286d81-6bf9-4d1e-8eb3-00a98d78691c"
   ],
   "sessions": {
     "world": {
@@ -11163,6 +11229,14 @@
       "baseFingerprint": "cd61ead2-bf6460bc-10570",
       "base": {},
       "resultHash": "cd9ca1c8-96162f08-3701"
+    },
+    "sn1": {
+      "id": "e6a5ec58-502f-42b3-9e5f-8de95f8ae985",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "b1dce6ba-aac1515c-93951",
+      "base": {},
+      "resultHash": "7743f131-f9711689-964"
     }
   }
 }
