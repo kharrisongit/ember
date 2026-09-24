@@ -9475,6 +9475,26 @@
         "originX": 136,
         "originY": 280
       }
+    },
+    "sn_sanctum": {
+      "actor:sn_sanctum:original:9": {
+        "kind": "actor",
+        "key": "sn_sanctum:original:9",
+        "identity": "dragon75_skull_round",
+        "x": 200,
+        "y": 141,
+        "originX": 200,
+        "originY": 153
+      },
+      "actor:sn_sanctum:original:7": {
+        "kind": "actor",
+        "key": "sn_sanctum:original:7",
+        "identity": "dragon75_skull_small",
+        "x": 120,
+        "y": 142,
+        "originX": 120,
+        "originY": 153
+      }
     }
   },
   "applied": [
@@ -9503,7 +9523,8 @@
     "4415a4b7-fd36-4106-b885-a09d5cfd4d61",
     "18c114e5-6aa1-4cdc-b1f9-1612934b4145",
     "2372059f-7bd2-48e6-8feb-8146655dd490",
-    "54088f85-6af4-470d-9977-5d7e79654b7f"
+    "54088f85-6af4-470d-9977-5d7e79654b7f",
+    "98b04fb9-09bf-4226-84cc-979d2491c5eb"
   ],
   "sessions": {
     "world": {
@@ -17198,6 +17219,14 @@
       "baseFingerprint": "f83d02ce-b29cbb74-2333",
       "base": {},
       "resultHash": "50bf1752-7fdab542-363"
+    },
+    "sn_sanctum": {
+      "id": "bbb4a522-2db7-4438-8ecc-3819a16745cf",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "6f0147df-ce1380b9-3032",
+      "base": {},
+      "resultHash": "ad40e905-708718f1-311"
     }
   }
 }
