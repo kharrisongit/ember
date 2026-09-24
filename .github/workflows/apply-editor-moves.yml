@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       draft:
-        description: Validated move data from the private sender
+        description: Structured editor data from the game or private sender
         required: true
         type: string
 permissions:

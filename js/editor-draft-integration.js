@@ -99,8 +99,8 @@ function saveEditorDraft() {
     paintRun.values.push(v);paintRun.before.push(terrOrig[i]);
   }
   const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,
-    updatedAt:new Date().toISOString(),submission:old?.patch===patch?old.submission:null,
-    sentAt:old?.patch===patch?old.sentAt:null};
+    updatedAt:new Date().toISOString(),submission:old?.patch===patch&&old.submission?.sourceRevision===api.sourceRevision?old.submission:null,
+    sentAt:old?.patch===patch&&old.submission?.sourceRevision===api.sourceRevision?old.sentAt:null};
   try { api.store.put(MAPID,draft); }
   catch (_) { toast('Device storage is full or unavailable. Use SEND CHANGES or COPY before leaving.'); }
   return draft;
@@ -108,6 +108,23 @@ function saveEditorDraft() {
 function scheduleEditorDraft() {
   if (!editorDraftReady || !(editing||building||painting||doorEdit||collideView)) return;
   clearTimeout(editorDraftTimer); editorDraftTimer=setTimeout(saveEditorDraft,200);
+}
+function editorSendStatus(ok,message,record) {
+  if(ok&&record){const draft=EmberEditDrafts.store.get(record.map);if(draft?.submission?.id===record.id){draft.sentAt=new Date().toISOString();try{EmberEditDrafts.store.put(record.map,draft);}catch(_){}}}
+  let panel=document.getElementById('editorSendStatus');
+  if(!panel){
+    panel=document.createElement('div');panel.id='editorSendStatus';
+    panel.style.cssText='position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:10000;width:min(420px,88vw);padding:12px;background:#171f24;color:#fff;border:1px solid #ac9c63;border-radius:8px;font:14px/1.4 sans-serif;box-shadow:0 3px 14px #0008;';
+    const text=document.createElement('div');text.setAttribute('role','status');panel.append(text);
+    const link=document.createElement('a');link.textContent='View GitHub check';link.target='_blank';link.rel='noreferrer';link.style.cssText='display:none;color:#ead18a;margin-right:14px;';panel.append(link);
+    const close=document.createElement('button');close.textContent='Dismiss';close.style.cssText='margin:8px 10px 0 0;';close.onclick=()=>panel.hidden=true;panel.append(close);
+    const disconnect=document.createElement('button');disconnect.textContent='Disconnect GitHub';disconnect.onclick=()=>{EmberEditDrafts.disconnect();editorSendStatus(false,'GitHub disconnected on this device. Your drafts are saved.');};panel.append(disconnect);
+    document.body.append(panel);
+  }
+  panel.hidden=false;panel.children[0].textContent=message;
+  const link=panel.children[1];
+  if(record?.runId){link.href='https://github.com/kharrisongit/ember/actions/runs/'+record.runId;link.style.display='inline';}else{link.removeAttribute('href');link.style.display='none';}
+  panel.children[3].hidden=!EmberEditDrafts.connected();
 }
 function sendEditorChanges() {
   const api=EmberEditDrafts;
@@ -125,9 +142,10 @@ function sendEditorChanges() {
   }
   const map=MAPID, submission=draft.submission;
   if(JSON.stringify(submission).length>48000){toast('Too many edits for one send. Use COPY to preserve this batch.');return;}
-  api.send(submission,(ok,message)=>{
+  if(!api.connected())saveGame();
+  api.send(submission,(ok,message,record)=>{
     if(ok){const latest=api.store.get(map);if(latest?.submission?.id===submission.id){latest.sentAt=new Date().toISOString();try{api.store.put(map,latest);}catch(_){}}}
-    toast(message);
+    editorSendStatus(ok,message,record);
   });
 }
 tap(document.getElementById('bSendChanges'),sendEditorChanges);
@@ -136,3 +154,4 @@ tap(document.getElementById('pSendChanges'),sendEditorChanges);
 for(const name of ['pointerup','touchend','mouseup','keyup'])document.addEventListener(name,scheduleEditorDraft);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveEditorDraft();});
 window.addEventListener('pagehide',saveEditorDraft);
+window.addEventListener('load',()=>EmberEditDrafts.resume(editorSendStatus),{once:true});

@@ -1,6 +1,6 @@
-# Publishing moves from the game
+# Publishing edits from the game
 
-MOVE edits are saved on the current device. **Send Changes** submits only the
+Move, Delete and Paint edits are saved on the current device. **Send Changes** submits only the
 current map, then runs `.github/workflows/apply-editor-moves.yml`. The workflow
 validates structured coordinates, runs the game checks, commits only
 `assets/editor-layouts.json`, and deploys Pages itself. GitHub's workflow token
@@ -18,22 +18,33 @@ https://emberfell-edit-inbox.kurtislemaster.chatgpt.site
 (Sites project `appgprj_6ab5443bd09c8191bd81fd0cf48c85a9`). Its source is maintained
 in that Site's source repository. It requires ChatGPT sign-in and a fine-grained
 GitHub token restricted to **kharrisongit/ember**, **Actions: Read and write**.
-The token is entered in the private sender, never in the game or a chat. It is
-encrypted with AES-GCM using the Site's secret TOKEN_KEY and bound to the owner.
-The game and this GitHub repository contain no credentials.
+The token is entered in the private sender and encrypted with AES-GCM using the
+Site's secret TOKEN_KEY, bound to the owner. No credential is committed to git.
 
-A normal send uses an origin/source/nonce checked popup message. Browsers that
-isolate the popup receive the draft in a URL fragment (not an HTTP query) and
-require an explicit **Publish these moves** confirmation. No URL fragment alone
-can cause a write. The game can detect the finished publication through its own
-public layout file. The private sender shows GitHub run status and its link.
+The first Send Changes on a device makes a one-time same-tab connection handoff.
+The game stores an ephemeral RSA private key and the requested draft in session
+storage. The private sender asks **Connect and return to game**, seals the owner's
+existing token to the game tab's public key, then returns to the fixed game URL.
+Only encrypted ciphertext travels in the URL fragment; the game immediately
+removes it, verifies its state and expiry, and decrypts it. It remembers the token
+in localStorage on that browser and sends the draft the user already requested.
+The game saves current progress before this one-time trip. Browser storage must
+be available, and the handoff must finish in the same tab within 15 minutes.
 
-Each submission has a stable retry ID. The sender admits one active publication
-at a time; another area's draft remains local until the user sends it. Workflow
-checks reject changed source versions and conflicting object positions. Invalid
-input never becomes executable code or a shell command. A failed non-fast-forward
-push stops instead of overwriting another commit. Recent submission data is also
-retained in the private database for recovery.
+Subsequent Send Changes calls dispatch the existing workflow directly via the
+GitHub REST API. No sender window or second publish button is involved. A small
+in-game status panel shows progress, completion or failure, and includes a
+Disconnect GitHub control. Refreshing the game resumes status checks only;
+normal saves, Move, Delete and Paint do not start network writes. The token is
+never included in draft exports. An expired token prompts a new connection.
+
+Each submission has a stable retry ID. The game checks published IDs and existing
+workflow run titles before dispatching, and holds another area's send while an
+editor workflow is active. The workflow also checks applied IDs, source versions,
+and conflicting positions before changing layout data. A failed non-fast-forward
+push stops instead of overwriting another commit. Local drafts remain available
+on errors. GitHub workflow runs track direct submissions; the private inbox still
+retains historical submissions and supports the older popup game clients.
 
 ## Maintaining game code
 

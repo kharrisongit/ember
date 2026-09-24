@@ -22,39 +22,111 @@
   }
   let store;
   try { store = createStore(root.localStorage); } catch (_) { store = createStore({getItem:()=>null,setItem:()=>{throw Error('Local storage unavailable');}}); }
-  let transfer = null;
-  function send(draft, result) {
-    if (transfer) { result(false, 'A send window is already open. Finish or close it first.'); return; }
-    const nonce = root.crypto.randomUUID();
-    const packet=btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(draft))));
-    const popup = root.open(INBOX + '/?transfer=' + nonce + '#draft=' + encodeURIComponent(packet), 'emberfell-edit-inbox', 'popup,width=520,height=660');
-    if (!popup) { result(false, 'Allow the send window, then tap SEND CHANGES again. Your draft is safe.'); return; }
-    let sent = false, finished = false;
-    const finish = (ok, message) => {
-      if(finished)return;finished=true;
-      root.removeEventListener('message', receive); clearInterval(timer); clearInterval(publishPoll); transfer = null; result(ok, message);
-    };
-    const receive = e => {
-      if (e.origin !== INBOX || e.source !== popup || e.data?.nonce !== nonce) return;
-      if (e.data.type === 'emberfell-ready' && !sent) {
-        sent = true; popup.postMessage({type:'emberfell-draft', nonce, draft}, INBOX);
-      } else if (e.data.type === 'emberfell-received' && e.data.id === draft.id) {
-        finish(true, 'Sent ' + draft.map + '. GitHub is checking and publishing your edits.');
-      } else if (e.data.type === 'emberfell-send-error') finish(false, e.data.error || 'Send failed. Your local draft is safe.');
-    };
-    root.addEventListener('message', receive);
-    const started = Date.now();
-    const timer = setInterval(() => {
-      if (Date.now() - started > 300000) finish(false, 'Publish was not confirmed. Reopen SEND CHANGES to check; your draft is safe.');
-    }, 750);
-    // A browser may isolate the sign-in window and remove its opener. In that
-    // case the private sender asks for one explicit confirmation, and the game
-    // can still recognize the completed deployment through its own public data.
-    const publishPoll=setInterval(async()=>{
-      if(!transfer){clearInterval(publishPoll);return;}
-      try{const r=await root.fetch('assets/editor-layouts.json?submission='+draft.id+'&t='+Date.now());if(r.ok&&(await r.json()).applied?.includes(draft.id)){clearInterval(publishPoll);finish(true,'Changes published. Refresh the game when you are ready.');}}catch(_){}
-    },10000);
-    transfer = { popup };
+  const TOKEN='emberfell.editor-github.v1', PAIR='emberfell.editor-pair.v1', ACTIVE='emberfell.editor-send.v1';
+  const API='https://api.github.com/repos/kharrisongit/ember';
+  const WORKFLOW='/actions/workflows/apply-editor-moves.yml';
+  const b64=bytes=>btoa(String.fromCharCode(...new Uint8Array(bytes)));
+  const unb64=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
+  const read=(storage,key)=>{try{return JSON.parse(storage.getItem(key)||'null');}catch(_){return null;}};
+  const connected=()=>{try{return !!root.localStorage.getItem(TOKEN);}catch(_){return false;}};
+  let busy=false, connectionReturn=null;
+  // Strip the sealed fragment before any requests or game initialization.
+  if(root.location?.hash.startsWith('#editor-connect=')){
+    try{connectionReturn=JSON.parse(decodeURIComponent(root.location.hash.slice(16)));}catch(_){}
+    root.history.replaceState(null,'',root.location.pathname+root.location.search);
   }
-  root.EmberEditDrafts = { clone, fingerprint, createStore, store, send, version:'20260924-manual-edits-2', sourceRevision:'__EDITOR_SOURCE_REVISION__', inbox:INBOX };
+  async function connect(draft){
+    const keys=await root.crypto.subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['encrypt','decrypt']);
+    const state=root.crypto.randomUUID();
+    const key=b64(await root.crypto.subtle.exportKey('spki',keys.publicKey)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const pending={state,privateKey:await root.crypto.subtle.exportKey('jwk',keys.privateKey),expires:Date.now()+15*60*1000,draft};
+    root.sessionStorage.setItem(PAIR,JSON.stringify(pending));
+    root.location.assign(INBOX+'/connect-game?'+new URLSearchParams({state,key}));
+  }
+  async function request(path,body){
+    const token=root.localStorage.getItem(TOKEN);
+    if(!token)throw Error('GitHub is disconnected. Press SEND CHANGES to reconnect.');
+    const response=await root.fetch(API+path,{method:body?'POST':'GET',credentials:'omit',cache:'no-store',headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2026-03-10',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
+    if(response.status===401){root.localStorage.removeItem(TOKEN);throw Error('GitHub connection expired. Press SEND CHANGES to reconnect. Your draft is saved.');}
+    if(!response.ok)throw Error(response.status===403?'GitHub denied this request. Check Actions: Read and write on the connection. Your draft is saved.':'GitHub could not accept the request ('+response.status+'). Your draft is saved; try SEND CHANGES again.');
+    return response.status===204?{}:response.json();
+  }
+  async function published(id){
+    const r=await root.fetch('assets/editor-layouts.json?submission='+encodeURIComponent(id)+'&t='+Date.now(),{cache:'no-store'});
+    return r.ok&&(await r.json()).applied?.includes(id);
+  }
+  const pause=()=>new Promise(resolve=>root.setTimeout(resolve,5000));
+  async function monitor(record,result){
+    const started=Date.now();let misses=0;
+    while(Date.now()-started<15*60*1000){
+      let run;
+      try{run=await request('/actions/runs/'+record.runId);misses=0;}catch(e){
+        if(!connected()||++misses>=3)throw e;
+        await pause();continue;
+      }
+      if(run.status==='completed'){
+        root.localStorage.removeItem(ACTIVE);
+        if(run.conclusion!=='success')throw Error('GitHub could not publish these edits. Your draft is saved. Open the check for details, then retry.');
+        result(true,'Changes published. Refresh the game when you are ready.',record);return;
+      }
+      await pause();
+    }
+    throw Error('GitHub is still working. Press SEND CHANGES to check again. Your draft is saved.');
+  }
+  async function send(draft,result){
+    if(busy){result(false,'A send is already being checked. Your new edits are still saved locally.');return;}
+    busy=true;let record=null;
+    try{
+      if(!connected()){
+        result(false,'Connecting this device once. Your edits are saved.');
+        await connect(draft);return;
+      }
+      result(false,'Sending '+draft.map+'…');
+      if(await published(draft.id)){result(true,'These changes are already published. Refresh when you are ready.');return;}
+      const data=await request(WORKFLOW+'/runs?event=workflow_dispatch&per_page=100');
+      const runs=data.workflow_runs||[];
+      // Reuse the same workflow on retries, including after a reload or lost response.
+      const existing=runs.find(run=>run.display_title==='Editor moves '+draft.id);
+      if(existing?.status==='completed'&&existing.conclusion==='success'){
+        result(true,'These changes are already published. Refresh when you are ready.');return;
+      }
+      if(runs.some(run=>run.status!=='completed'&&run.id!==existing?.id))throw Error('GitHub is publishing an earlier area. Wait for it to finish, then send this area. Your draft is saved.');
+      let runId=existing?.status!=='completed'?existing?.id:null;
+      if(!runId){
+        const dispatched=await request(WORKFLOW+'/dispatches',{ref:'main',inputs:{submission_id:draft.id,draft:JSON.stringify(draft)}});
+        runId=dispatched.workflow_run_id;
+      }
+      if(!Number.isSafeInteger(runId)||runId<1)throw Error('Sent, but GitHub did not return its check number. Press SEND CHANGES to check again; your draft is saved.');
+      record={id:draft.id,map:draft.map,runId,runUrl:'https://github.com/kharrisongit/ember/actions/runs/'+runId};
+      try{root.localStorage.setItem(ACTIVE,JSON.stringify(record));}catch(_){}
+      result(true,'Sent '+draft.map+'. GitHub is checking and publishing your edits. You can keep playing.',record);
+      await monitor(record,result);
+    }catch(e){result(false,e.message||'Could not send. Your local draft is safe.',record);}
+    finally{busy=false;}
+  }
+  async function resume(result){
+    if(connectionReturn){
+      const packet=connectionReturn;connectionReturn=null;
+      const pending=read(root.sessionStorage,PAIR);
+      root.sessionStorage.removeItem(PAIR);
+      try{
+        if(!pending||pending.state!==packet.state||pending.expires<Date.now())throw Error('Connection handoff expired. Press SEND CHANGES to try again.');
+        const key=await root.crypto.subtle.importKey('jwk',pending.privateKey,{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+        const token=new TextDecoder().decode(await root.crypto.subtle.decrypt({name:'RSA-OAEP',label:new TextEncoder().encode(pending.state)},key,unb64(packet.sealed)));
+        if(!/^github_pat_[A-Za-z0-9_]+$/.test(token))throw Error('Invalid GitHub connection.');
+        root.localStorage.setItem(TOKEN,token);
+        await send(pending.draft,result);
+      }catch(e){result(false,e.message||'Could not finish connecting. Your draft is saved.');}
+      return;
+    }
+    const record=read(root.localStorage,ACTIVE);
+    if(record&&Number.isSafeInteger(record.runId)&&record.runId>0&&connected()&&!busy){
+      busy=true;
+      try{result(true,'GitHub is checking your previous send…',record);await monitor(record,result);}
+      catch(e){result(false,e.message,record);}finally{busy=false;}
+    }
+  }
+  root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,
+    disconnect(){root.localStorage.removeItem(TOKEN);root.sessionStorage.removeItem(PAIR);},
+    version:'20260924-direct-send',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
 })(globalThis);

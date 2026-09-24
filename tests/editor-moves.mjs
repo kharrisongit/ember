@@ -64,22 +64,7 @@ assert(g.run('MD.roomActors[0].extractedCanvas instanceof CanvasStandIn'),'reset
 g.run(`visit('b');`);assert.equal(g.run('objs[0].y'),32,'reset does not discard another area');
 console.log('PASS: real game hooks preserve actors, props, collision and artwork across map switches, reloads and per-area reset.');
 
-// A completed send must not leave a poll that can finish a later send by mistake.
-const timers=new Map(),listeners=new Map(),sent=[];let seq=0,completed=0;
-const popup={closed:false,postMessage:(message,origin)=>sent.push({message,origin})};
-const transferContext=vm.createContext({console,btoa,TextEncoder,
-  localStorage:{getItem:()=>null,setItem(){}},crypto:{randomUUID:()=>String(++seq)},
-  open:()=>popup,addEventListener:(n,f)=>listeners.set(n,f),removeEventListener:n=>listeners.delete(n),
-  setInterval:f=>{const id=++seq;timers.set(id,f);return id;},clearInterval:id=>timers.delete(id),
-  result:()=>completed++});
-vm.runInContext(read('js/editor-drafts.js'),transferContext);
-vm.runInContext(`EmberEditDrafts.send({id:'draft',map:'a'},result);`,transferContext);
-const receive=listeners.get('message');
-receive({origin:'https://untrusted.test',source:popup,data:{type:'emberfell-ready',nonce:'1'}});assert.equal(sent.length,0);
-receive({origin:'https://emberfell-edit-inbox.kurtislemaster.chatgpt.site',source:popup,data:{type:'emberfell-ready',nonce:'1'}});assert.equal(sent.length,1);
-receive({origin:'https://emberfell-edit-inbox.kurtislemaster.chatgpt.site',source:popup,data:{type:'emberfell-received',nonce:'1',id:'draft'}});
-assert.equal(timers.size,0,'all polling stops after acknowledgment');assert.equal(completed,1);
-console.log('PASS: transfer checks origin and nonce, sends only on request, and cleans up every completion timer.');
+await import('./editor-direct-send.mjs');
 
 const edits={...first,id:'33333333-3333-4333-8333-333333333333',operations:[
   {...first.operations[0],deleted:true},
