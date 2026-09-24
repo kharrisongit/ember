@@ -16,8 +16,8 @@
         "kind": "actor",
         "key": "millwood:house26:2",
         "identity": "iplant4",
-        "x": 86,
-        "y": 201,
+        "x": 87,
+        "y": 206,
         "originX": 32,
         "originY": 197
       },
@@ -25,8 +25,8 @@
         "kind": "actor",
         "key": "millwood:house26:3",
         "identity": "iplant4",
-        "x": 152,
-        "y": 201,
+        "x": 151,
+        "y": 206,
         "originX": 152,
         "originY": 197
       },
@@ -34,8 +34,8 @@
         "kind": "actor",
         "key": "millwood:house26:11",
         "identity": "Furniture 61_159",
-        "x": 143,
-        "y": 155,
+        "x": 117,
+        "y": 126,
         "originX": 130.5,
         "originY": 150
       },
@@ -43,8 +43,8 @@
         "kind": "actor",
         "key": "millwood:house26:9",
         "identity": "dining table",
-        "x": 113,
-        "y": 169,
+        "x": 90,
+        "y": 140,
         "originX": 104.5,
         "originY": 167
       },
@@ -52,8 +52,8 @@
         "kind": "actor",
         "key": "millwood:house26:8",
         "identity": "south chair",
-        "x": 114,
-        "y": 173,
+        "x": 91,
+        "y": 144,
         "originX": 104,
         "originY": 167
       },
@@ -61,8 +61,8 @@
         "kind": "actor",
         "key": "millwood:house26:10",
         "identity": "Furniture 9_159",
-        "x": 84,
-        "y": 155,
+        "x": 61,
+        "y": 125,
         "originX": 78.5,
         "originY": 150
       },
@@ -70,8 +70,8 @@
         "kind": "actor",
         "key": "millwood:house26:7",
         "identity": "north chair",
-        "x": 111,
-        "y": 129,
+        "x": 89,
+        "y": 105,
         "originX": 104,
         "originY": 134
       },
@@ -101,12 +101,22 @@
         "y": 70,
         "originX": 31,
         "originY": 80
+      },
+      "actor:millwood:house26:0": {
+        "kind": "actor",
+        "key": "millwood:house26:0",
+        "identity": "Furniture 12_280",
+        "x": 91,
+        "y": 163,
+        "originX": 113,
+        "originY": 187
       }
     }
   },
   "applied": [
     "1e407f31-a0f8-4b65-b617-ddb52322a261",
     "66d2d812-b332-4b6f-84b8-e88968049d58",
-    "519b74ab-69b2-4b30-ba95-056178e2a62a"
+    "519b74ab-69b2-4b30-ba95-056178e2a62a",
+    "d629d9d3-e994-438a-883c-5ded8bf80bab"
   ]
 }
