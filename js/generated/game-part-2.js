@@ -3634,6 +3634,9 @@ function drawWorld(t, dt) {
       const visibleH=Number.isFinite(o.chairClipY)?Math.max(0,Math.min(sp[3],o.chairClipY-(o.y-sp[3]))):sp[3];
       let drawX = o.x - sp[2] / 2;
       if(o.royalStatue){drawGameImage(ctx,castleStoneFrame(o,sp,fr),drawX,o.y-sp[3],sp[2],sp[3]);continue;}
+      // Only exits to another interior have a dark opening. The native arch
+      // and threshold cover its edges; connected passages still show the hall.
+      if(o.templeExit){ctx.save();ctx.fillStyle='#000';ctx.fillRect(o.x-10,o.y-32,20,31);ctx.restore();}
       if(visibleH>0){
         if(o.templeWebFlip){
           ctx.save();ctx.translate(drawX+sp[2],o.y-sp[3]);ctx.scale(-1,1);
@@ -7641,6 +7644,7 @@ function takeGold() {          /* kept for anything that still calls it */
   return dropGold(P.x, P.y, null);
 }
 let flying = [];
+let goldPickupCanvas = null;
 function flyGold(x, y, n) {
   const many = Math.min(9, 3 + Math.floor(n / 6));
   for (let i = 0; i < many; i++)
@@ -7658,22 +7662,42 @@ function drawFly() {
   if (!flying.length) return;
   const sp = SPR.it_coin || SPR.gold_p1;
   if (!sp) return;
-  const tx = cam.x + 40 / cam.z, ty = cam.y + 22 / cam.z;
-  ctx.save();
+  const target=document.getElementById('deckCorinPortrait')?.getBoundingClientRect();
+  const screen=cv.getBoundingClientRect();
+  if(!target?.width||!target.height||!screen.width||!screen.height)return;
+  // The health panel lives outside the game canvas. A transparent, input-free
+  // layer lets coins cross into the controller deck, including in fullscreen.
+  if(!goldPickupCanvas){
+    goldPickupCanvas=document.createElement('canvas');goldPickupCanvas.id='goldPickupFx';
+    goldPickupCanvas.setAttribute('aria-hidden','true');
+    goldPickupCanvas.style.cssText='position:fixed;inset:0;z-index:15;pointer-events:none;image-rendering:pixelated';
+    document.body.appendChild(goldPickupCanvas);
+  }
+  const width=window.innerWidth,height=window.innerHeight,dpr=Math.min(window.devicePixelRatio||1,2);
+  if(goldPickupCanvas.width!==Math.round(width*dpr)||goldPickupCanvas.height!==Math.round(height*dpr)){
+    goldPickupCanvas.width=Math.round(width*dpr);goldPickupCanvas.height=Math.round(height*dpr);
+    goldPickupCanvas.style.width=width+'px';goldPickupCanvas.style.height=height+'px';
+  }
+  const g=goldPickupCanvas.getContext('2d');
+  g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,goldPickupCanvas.width,goldPickupCanvas.height);
+  g.setTransform(dpr,0,0,dpr,0,0);g.imageSmoothingEnabled=false;
+  goldPickupCanvas.style.display='block';
+  const tx=target.left+target.width/2,ty=target.top+target.height/2;
+  const zx=cam.z*screen.width/VW,zy=cam.z*screen.height/VH;
   for (const f of flying) {
     if (f.t < 0) continue;
     const p = Math.min(1, f.t / f.life);
     const e = p * p;                       /* slow away, fast home */
-    const x = f.sx + (tx - f.sx) * e;
-    const y = f.sy + (ty - f.sy) * e - Math.sin(p * 3.14159) * f.lift;
+    const sx=screen.left+(f.sx-cam.x)*zx,sy=screen.top+(f.sy-cam.y)*zy;
+    const x = sx + (tx - sx) * e;
+    const y = sy + (ty - sy) * e - Math.sin(p * Math.PI) * f.lift*zy;
     const k = 0.5 * (1 - p * 0.45);
-    ctx.globalAlpha = 1 - p * p * 0.5;
-    drawGameImage(ctx, atlasImg, sp[0], sp[1], sp[2], sp[3],
-                  Math.round(x - sp[2] * k / 2), Math.round(y - sp[3] * k / 2),
-                  sp[2] * k, sp[3] * k);
+    g.globalAlpha = 1 - p * p * 0.5;
+    drawGameImage(g, atlasImg, sp[0], sp[1], sp[2], sp[3],
+                  Math.round(x - sp[2] * k*zx / 2), Math.round(y - sp[3] * k*zy / 2),
+                  sp[2] * k*zx, sp[3] * k*zy);
   }
-  ctx.globalAlpha = 1;
-  ctx.restore();
+  g.globalAlpha = 1;
 }
 function grabGold() {
   let got = 0, kept = [];

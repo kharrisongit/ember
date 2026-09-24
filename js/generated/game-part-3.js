@@ -3258,6 +3258,12 @@ function placesOf() {
     out.push({ name: md.title || id, kind: md.travel_kind || "Underground",
                map: id, x: (md.spawn[0] / TS) | 0, y: ((md.spawn[1] - 1) / TS) | 0 });
   }
+  // Dev shortcuts go straight to each chest, including within the current map.
+  const heartstoneTemples={lightning:'Forgewick',ice:'Sandspire',shadow:'Hollybeck'};
+  for(const c of CHESTS)if(W.maps[c.map]&&heartstoneTemples[c.gift]){
+    out.push({name:heartstoneTemples[c.gift]+' Temple — Heartstone Chamber',kind:'Temple',
+      map:c.map,x:c.x,y:c.y+2,heartstone:true});
+  }
 
   const routes = features.filter(f => f.kind === "route");
   const parent = new Map(routes.map(f => [f.id, f.id]));
@@ -3313,7 +3319,8 @@ function buildTravel() {
       if (e) { e.preventDefault(); e.stopPropagation(); }
       if (pl.map && pl.map !== MAPID) loadMap(pl.map);
       P.x = pl.x * TS + TS / 2; P.y = pl.y * TS + TS;
-      recoverTempleArrival(!!pl.map);
+      recoverTempleArrival(!!pl.map&&!pl.heartstone);
+      if(pl.heartstone){P.dir='u';P.dir8='n';dragon.placed=null;}
       camFree = false; cam.z = playZoom();
       cam.x = P.x - VW / cam.z / 2; cam.y = P.y - VH / cam.z / 2;
       clampCam();
@@ -3998,6 +4005,8 @@ function updateDeckHealth(){
 }
 function frameCore(ms) {
   window.__firstFrame = true;
+  // Clear the pickup layer even on frames that return early for menus or fishing.
+  if(goldPickupCanvas)goldPickupCanvas.style.display='none';
   updateDeckHealth();
   if (ovl === "atkm") updateBreathRefills();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;

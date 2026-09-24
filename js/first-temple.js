@@ -21,7 +21,7 @@ async function prepareExpandedFirstTemple(){
       const [ax,ay]=d.arrival;
       m.doors.push({x:(d.x-8)/16,y:(d.y-16)/16,to:d.to,tx:(ax-8)/16,ty:(ay-16)/16,
         dir:d.dir,explicitDir:true,triggerRect:{x:d.x-16,y:d.dir==='u'?d.y-16:d.y,w:32,h:16}});
-      if(d.dir==='u')m.roomActors.push({spr:'first_temple_door',x:d.x,y:d.y,schoolArt:true,royalDoor:true});
+      if(d.dir==='u')m.roomActors.push({spr:'first_temple_door',x:d.x,y:d.y,schoolArt:true,royalDoor:true,templeExit:true});
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
     for(const [kind,x,y,room] of plan.enemies)m.foes.push({k:kind,x:(x-8)/16,y:(y-16)/16,expandedRoom:room});

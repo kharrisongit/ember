@@ -26,7 +26,7 @@ async function prepareExpandedSandspireTemple(){
         dir:d.dir,explicitDir:true,sandspireGuards:guards,
         triggerRect:{x:d.x-16,y:d.dir==='u'?d.y-16:d.y,w:32,h:16}};
       m.doors.push(door);
-      if(d.dir==='u')m.roomActors.push({spr:d.sealed?'first_temple_bars':'first_temple_door',x:d.x,y:d.y,schoolArt:true,
+      if(d.dir==='u')m.roomActors.push({spr:d.sealed?'first_temple_bars':'first_temple_door',x:d.x,y:d.y,schoolArt:true,templeExit:true,
         ...(d.sealed?{sandspireExit:door}:{royalDoor:true})});
       else m.templeFloors.push([d.x-16,d.y,d.x+16,d.y+48]);
     }
