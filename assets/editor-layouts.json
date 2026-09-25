@@ -48103,6 +48103,73 @@
         "originX": 39,
         "originY": 80
       }
+    },
+    "house27_bedroom": {
+      "actor:millwood:house27_bedroom:3": {
+        "kind": "actor",
+        "key": "millwood:house27_bedroom:3",
+        "identity": "ichair0",
+        "deleted": true,
+        "x": 86,
+        "y": 181,
+        "originX": 86,
+        "originY": 181
+      },
+      "actor:millwood:house27_bedroom:2": {
+        "kind": "actor",
+        "key": "millwood:house27_bedroom:2",
+        "identity": "ichair0",
+        "deleted": true,
+        "x": 30,
+        "y": 181,
+        "originX": 30,
+        "originY": 181
+      },
+      "actor:millwood:house27_bedroom:1": {
+        "kind": "actor",
+        "key": "millwood:house27_bedroom:1",
+        "identity": "ibed0",
+        "x": 40,
+        "y": 84,
+        "originX": 44.5,
+        "originY": 95
+      },
+      "actor:millwood:house27_bedroom:0": {
+        "kind": "actor",
+        "key": "millwood:house27_bedroom:0",
+        "identity": "itable0",
+        "x": 52,
+        "y": 144,
+        "originX": 73,
+        "originY": 161
+      },
+      "actor:actor:0:ichair1": {
+        "kind": "actor",
+        "key": "actor:0:ichair1",
+        "identity": "ichair1",
+        "x": 50,
+        "y": 115,
+        "originX": 72.5,
+        "originY": 136
+      },
+      "actor:npc:Tam": {
+        "kind": "actor",
+        "key": "npc:Tam",
+        "identity": "Tam",
+        "x": 51,
+        "y": 112,
+        "originX": 72.5,
+        "originY": 130
+      },
+      "actor:millwood:house27_bedroom:4": {
+        "kind": "actor",
+        "key": "millwood:house27_bedroom:4",
+        "identity": "Furniture 86_2",
+        "x": 150,
+        "y": 120,
+        "originX": 135.5,
+        "originY": 169
+      }
     }
   },
   "applied": [
@@ -48164,7 +48231,8 @@
     "acdcfe6b-020f-448c-9b25-61a1e2e6290f",
     "810d204d-2666-4fb4-b579-dc6d0480a703",
     "8019fba0-fd6d-404a-8c8d-486b37c0b47d",
-    "66e46868-4c3b-4b4c-955d-d4876bfbb2be"
+    "66e46868-4c3b-4b4c-955d-d4876bfbb2be",
+    "80aa3744-7437-4cb9-89cd-140cb4e85782"
   ],
   "sessions": {
     "witchmoor": {
@@ -48230,6 +48298,14 @@
       "baseFingerprint": "129a775c-ebe78184-5101",
       "base": {},
       "resultHash": "5d8486b0-57e7ef46-1260"
+    },
+    "house27_bedroom": {
+      "id": "bf361139-8c47-419b-8485-28ea76aa7bf0",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "aedf109a-9197012c-3798",
+      "base": {},
+      "resultHash": "43db2579-6084a8c7-1030"
     }
   }
 }
