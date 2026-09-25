@@ -46975,6 +46975,131 @@
         "y": 3356,
         "originX": 12522,
         "originY": 3212
+      },
+      "collision:1560,402": {
+        "kind": "collision",
+        "key": "1560,402",
+        "blocked": false
+      },
+      "collision:1561,402": {
+        "kind": "collision",
+        "key": "1561,402",
+        "blocked": false
+      },
+      "collision:1562,402": {
+        "kind": "collision",
+        "key": "1562,402",
+        "blocked": false
+      },
+      "collision:1563,402": {
+        "kind": "collision",
+        "key": "1563,402",
+        "blocked": false
+      },
+      "collision:1564,402": {
+        "kind": "collision",
+        "key": "1564,402",
+        "blocked": false
+      },
+      "collision:1565,402": {
+        "kind": "collision",
+        "key": "1565,402",
+        "blocked": false
+      },
+      "collision:1566,402": {
+        "kind": "collision",
+        "key": "1566,402",
+        "blocked": false
+      },
+      "collision:1559,401": {
+        "kind": "collision",
+        "key": "1559,401",
+        "blocked": false
+      },
+      "collision:1560,401": {
+        "kind": "collision",
+        "key": "1560,401",
+        "blocked": false
+      },
+      "collision:1561,401": {
+        "kind": "collision",
+        "key": "1561,401",
+        "blocked": false
+      },
+      "collision:1562,401": {
+        "kind": "collision",
+        "key": "1562,401",
+        "blocked": false
+      },
+      "collision:1563,401": {
+        "kind": "collision",
+        "key": "1563,401",
+        "blocked": false
+      },
+      "collision:1564,401": {
+        "kind": "collision",
+        "key": "1564,401",
+        "blocked": false
+      },
+      "collision:1565,401": {
+        "kind": "collision",
+        "key": "1565,401",
+        "blocked": false
+      },
+      "collision:1566,401": {
+        "kind": "collision",
+        "key": "1566,401",
+        "blocked": false
+      },
+      "collision:1568,402": {
+        "kind": "collision",
+        "key": "1568,402",
+        "blocked": true
+      },
+      "collision:1568,403": {
+        "kind": "collision",
+        "key": "1568,403",
+        "blocked": true
+      },
+      "collision:1569,403": {
+        "kind": "collision",
+        "key": "1569,403",
+        "blocked": true
+      },
+      "collision:1570,403": {
+        "kind": "collision",
+        "key": "1570,403",
+        "blocked": true
+      },
+      "collision:1571,403": {
+        "kind": "collision",
+        "key": "1571,403",
+        "blocked": true
+      },
+      "collision:1572,403": {
+        "kind": "collision",
+        "key": "1572,403",
+        "blocked": true
+      },
+      "collision:1573,403": {
+        "kind": "collision",
+        "key": "1573,403",
+        "blocked": true
+      },
+      "collision:1574,403": {
+        "kind": "collision",
+        "key": "1574,403",
+        "blocked": true
+      },
+      "collision:1575,403": {
+        "kind": "collision",
+        "key": "1575,403",
+        "blocked": true
+      },
+      "collision:1576,403": {
+        "kind": "collision",
+        "key": "1576,403",
+        "blocked": true
       }
     },
     "witchmoor": {
@@ -47792,7 +47917,8 @@
     "2bd74ff9-297e-449c-a26f-e0374e472e9a",
     "d07f27f4-c0f9-4b2d-9f96-1964ea5b7ee6",
     "d45232f7-0414-466e-9026-b6c8cf8dce62",
-    "49cab4bb-3392-4987-891b-a4df9d79dd4c"
+    "49cab4bb-3392-4987-891b-a4df9d79dd4c",
+    "f31c48c9-269d-4469-ae29-51d1c1c65267"
   ],
   "sessions": {
     "witchmoor": {
@@ -47853,7 +47979,7 @@
     },
     "world": {
       "id": "984e76f6-e990-4a47-9961-e7fdbc08705f",
-      "sequence": 3,
+      "sequence": 4,
       "baseHash": "3dd18ee5-f801f70f-346683",
       "baseFingerprint": "74762304-a92f5016-735253",
       "base": {
@@ -94645,7 +94771,7 @@
           "height": 600
         }
       },
-      "resultHash": "1d08ffd8-925787b0-347922"
+      "resultHash": "2410dda8-49a8922a-349787"
     },
     "smithy": {
       "id": "3b505901-24ab-44e0-b7fa-a759f54d00a5",
