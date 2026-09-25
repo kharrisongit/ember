@@ -32,6 +32,25 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
  if(id==='world'){
   // Check authored coordinates after the real Build, move and map-loading paths.
   const layout=publishedEditorLayouts.maps.world;
+  const operations=l=>[...(l?.build?operations(l.build.previous):[]),...Object.values(l||{}).filter(o=>o.kind&&o.kind!=='build')];
+  const publishedOps=operations(layout);
+  const miner=npcs.find(n=>n.n==='Toft'),formerSeller=npcs.find(n=>n.n==='Ovid');
+  assert.equal(miner.packSpr,'npc_miner_mike_d');
+  assert.equal(JSON.stringify(miner.sells),JSON.stringify(['potion','dust','saint']));
+  assert(!formerSeller.sells,'Square resident no longer opens Forgewick shop');
+  for(const uuid of Object.keys(PLACED_NPC_DIALOGUE)){
+   const key='npc:placed:'+uuid,n=npcs.find(n=>n.editKey===key);
+   assert(n&&!n.noTalk&&n.d.length>1&&n.d2.length>1,'Published NPC can talk: '+uuid);
+   const op=publishedOps.filter(o=>(o.kind==='npc-add'&&o.key===uuid)||(o.kind==='actor'&&o.key===key)).at(-1);
+   assert.equal(n.x,op.x,'Dialogue preserves placed NPC x');assert.equal(n.y,op.y,'Dialogue preserves placed NPC y');
+  }
+  for(const name of ['Sverre','Runa']){
+   const n=npcs.find(n=>n.n===name);
+   assert(n&&n.patrol&&n.packWalk&&n.packDirections&&!n.stationary,'Winter villager can walk: '+name);
+   for(const dir of ['d','u','e','w'])for(const action of ['walk','idle'])assert.equal(SPR[n.packSpr+'_'+action+'_'+dir][4],8,'Six motion frames plus closed and half-closed eyes in every direction and state');
+   assert(canNpcStand(n.x,n.y,n),'Winter villager starts on clear ground: '+name);
+   assert(patrolRoute(n).length>1,'Winter villager has a clear walking route: '+name);
+  }
   for(const patch of layout.build.changes){
    if(patch.path[0]!=='objs'||!('value' in patch))continue;
    let value=MD;for(const key of patch.path)value=value[key];
@@ -102,8 +121,9 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
     const saved=layout[op.kind+':'+op.key];assert(saved,'Recovered operation present');
     if(op.kind==='actor'){
      const a=op.key.startsWith('npc:')?npcs.find(n=>n.n===op.identity):MD.roomActors.find(a=>a.spr===op.identity);
-     assert(a,'Recovered actor exists');assert.equal(a.x,op.x);assert.equal(a.y,op.y);
-     if(op.deleted)assert(a.editorDeleted,'Recovered NPC deletion');
+     const latest=publishedOps.filter(o=>o.kind==='actor'&&o.key===op.key).at(-1)||op;
+     assert(a,'Recovered actor exists');assert.equal(a.x,latest.x);assert.equal(a.y,latest.y);
+     if(latest.deleted)assert(a.editorDeleted,'Recovered NPC deletion');
     }
     if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));assert.equal(o.x,op.x);assert.equal(o.y,op.y);}
     if(op.kind==='door')assert.equal(JSON.stringify(MD.doors[op.index].triggerRect),JSON.stringify(op.rect),'Recovered tavern doorway');

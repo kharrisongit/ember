@@ -382,18 +382,18 @@ function drawMarketActor(o,front,canopy=false){
     drawGameImage(ctx,sheetOf(sp),sp[0],sp[1]+start,sp[2],rows,o.x-w/2,o.y-h+start*scaleY,w,rows*scaleY);
   }
 }
-function drawVillageStand(o,front=false){
+function drawVillageStand(o,front=false,canopy=false){
   const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
   const x=Math.round(o.x-s[2]*scale/2),bottom=o.y,h=Math.round(s[3]*scale)+headroom;
   if(front){
     // The complete counter, including its tabletop, stays in front of merchants.
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+23,s[2],1,x,bottom-19,Math.round(s[2]*scale),1);
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],s[3]-24,x,bottom-18,Math.round(s[2]*scale),18);
+  }else if(canopy){
+    drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
   }else{
     // Extend just the posts through the new headroom; keep the native canopy.
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],7,x,bottom-h+20,Math.round(s[2]*scale),h-39);
-    drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
-
   }
 }
 function installMarketCounters(){
@@ -2069,6 +2069,9 @@ function loadMap(id, fresh, discardDraft=false) {
   MAPID = id; MD = W.maps[id];
   if(typeof prepareLocalNpcPlacements==='function')prepareLocalNpcPlacements(MD,id,savedEditorState);
   applyActorLayout(MD,id);
+  // Apply conversations after published additions and local transfers are restored.
+  if(typeof prepareMarketNpcRoles==='function')prepareMarketNpcRoles(MD,id);
+  if(typeof preparePlacedNpcDialogue==='function')preparePlacedNpcDialogue(MD);
   MW = MD.w; MH = MD.h; PXW = MW * TS; PXH = MH * TS;
   if (!camFree && mode === "play") cam.z = playZoom();
 
@@ -3859,11 +3862,12 @@ function drawWorld(t, dt) {
   for(const o of draw.slice())if(isVillageMarketStand(o)){
     o.marketStand=true;o.sy=o.y-(Math.round(SPR[NAMES[o.s]][3]*villageStandSize().scale)+villageStandSize().headroom);
     draw.push({marketFront:o,x:o.x,y:o.y,sy:o.y});
+    draw.push({villageCanopy:o,x:o.x,y:o.y,sy:o.y});
   }
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
-  const groundLayer = o => o.marketCanopy ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
+  const groundLayer = o => o.marketCanopy || o.villageCanopy ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
@@ -3874,6 +3878,7 @@ function drawWorld(t, dt) {
 
   for (const o of draw) {
     if(o.marketCanopy){drawMarketActor(o.marketCanopy,false,true);continue;}
+    if(o.villageCanopy){drawVillageStand(o.villageCanopy,false,true);continue;}
     if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
     if(o.marketFront){drawVillageStand(o.marketFront,true);continue;}
     if(o.marketStand){drawVillageStand(o);continue;}
@@ -4348,6 +4353,7 @@ function drawWorld(t, dt) {
       if (sp) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
           : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
+        if(/^hollybeck_/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){

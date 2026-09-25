@@ -3,6 +3,7 @@ let devNpcLineupActive=false,devNpcLineupCategory='walking',devNpcLineupPage=0;
 const NPC_LINEUP_TYPES=[['walking','Walking'],['standing','Standing'],['seated','Seated'],['scenes','At work']];
 
 function prepareEditorEntities(m,id) {
+  if(typeof prepareHollybeckVillagers==='function')prepareHollybeckVillagers(m,id);
   m.roomActors ||= [];
   const addChest=(kind,identity,x,y,spr)=>{
     const editKey='chest:'+kind+':'+identity;
@@ -54,7 +55,7 @@ function walkingNpcLineupCatalog() {
   const complete=base=>directions.every(d=>SPR[base+'_walk_'+d]?.[4]>1&&SPR[base+'_idle_'+d]);
   // Include unused citizen variants as well as the walking story cast. Enemy
   // sheets and Corin's player outfits are not NPC appearances.
-  const humanPack=/^(?:guild_|market_citizen|pack_smith$|custom_maddock$|maddock_smith|hettie96$|herbalist$|lodge_|hg$|kg$)/;
+  const humanPack=/^(?:guild_|market_citizen|hollybeck_|pack_smith$|custom_maddock$|maddock_smith|hettie96$|herbalist$|lodge_|hg$|kg$)/;
   for(const key of Object.keys(SPR).sort()){
     if(key.endsWith('_walk_d')){
       const base=key.slice(0,-7);
@@ -67,7 +68,8 @@ function walkingNpcLineupCatalog() {
       if(['d','s','u'].every(d=>SPR['npc_'+sk+'_'+d]?.[4]>1))entries.push({key:'skin:'+sk,sk,idleFrame:0});
     }
   }
-  return entries.sort((a,b)=>a.key.localeCompare(b.key));
+  // Append new residents after the original slots; saved lineup deletions use their anchors.
+  return entries.sort((a,b)=>Number(a.key.startsWith('pack:hollybeck_'))-Number(b.key.startsWith('pack:hollybeck_'))||a.key.localeCompare(b.key));
 }
 
 function npcLineupCatalog() {

@@ -1,5 +1,38 @@
 /* NPC additions and cross-map transfers are ordinary, reviewable editor operations. */
 const npcEditorOps={};
+// Keep placement UUIDs and editor names intact so existing GitHub moves still apply.
+const PLACED_NPC_DIALOGUE={
+  'f30b6b62-a107-47b7-95ad-7cc27ab5c605':{
+    d:['Edda: Thornwell cider. Apple, a little honey, and whatever the bees were complaining about.',
+      'Corin: Is it good?', 'Edda: Ask me when I stop making that face.'],
+    d2:['Edda: Fen swears he can taste the difference between every orchard.',
+      'Edda: I poured him the same cider twice. Apparently the second orchard gets more sun.']
+  },
+  '4448128f-6fca-4e17-88f9-389ee42251f7':{
+    d:['Fen: A toast to dry boots and a road that brings you home.',
+      'Corin: No toast to adventure?', 'Fen: That is how you get wet boots.'],
+    d2:['Fen: Edda thinks I cannot tell her cider apart.',
+      'Corin: Can you?', 'Fen: Of course. One cup was fuller.']
+  },
+  '627dc59a-0b1b-4fba-a947-39f09f5987d2':{
+    d:['Tallis: I tune the lute to the forge hammers. Saves an argument.',
+      'Corin: And when the smith changes his rhythm?', 'Tallis: A new verse. Forgewick is generous that way.'],
+    d2:['Tallis: The miners asked for something cheerful. The smiths asked for something loud.',
+      'Tallis: I am taking requests from the bread seller next. She pays in bread.']
+  },
+  '6a8e054e-f933-4e1e-9327-bcb79ae59cfb':{
+    d:['Kip: You are standing in a very promising spot for finding lost coins.',
+      'Corin: Have you found any?', 'Kip: Three buttons and a crab. Coralmere keeps its money well guarded.'],
+    d2:['Kip: I trade shells. Smooth ones for luck, striped ones for stories.',
+      'Corin: What does that broken one buy?', 'Kip: A short story. It broke.']
+  }
+};
+function preparePlacedNpcDialogue(m){
+  for(const n of m.npcs||[]){
+    const lines=PLACED_NPC_DIALOGUE[n.editKey?.replace(/^npc:placed:/,'')];
+    if(lines)Object.assign(n,lines,{noTalk:false});
+  }
+}
 // Source sheets can contain several poses inside each animation frame. Reuse
 // the already isolated scene actors, and crop the remaining source-only people.
 const NPC_SCENE_ALIASES={

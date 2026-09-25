@@ -38,6 +38,9 @@ for(const [id,m] of Object.entries(W.maps))for(const n of m.npcs||[]){
  if(id==='world'&&['Idris','Jamila'].includes(n.n)){
   assert.equal(JSON.stringify(n.d),JSON.stringify(JSON.parse(story.get(id+':'+n.n))[0]),'Sandspire dialogue preserved');
   assert.equal(n.sells,n.n==='Idris'?sandspireStock:undefined,'Sandspire shop role transferred to pharaoh');
+ }else if(id==='world'&&['Toft','Ovid'].includes(n.n)){
+  assert.equal(JSON.stringify(n.sells),n.n==='Toft'?JSON.stringify(['potion','dust','saint']):undefined,'Forgewick shop belongs to the miner');
+  assert(n.d.length&&n.d2.length,'Both residents have dialogue');
  }else assert.equal(JSON.stringify([n.d,n.sells]),story.get(id+':'+n.n),'dialogue and inventory preserved for '+n.n);
  if(n.marketVendor){
   assert.match(n.packSpr,/^(npc_(chef_chloe|farmer_buba|miner_mike)_d|npc_pharaoh_idle|market_citizen[1-5]_idle_d)$/);
@@ -114,18 +117,23 @@ console.log('PASS: independent stand movement survives publication; whole mercha
 c.NAMES=W.names;c.stand={id:7014,s:W.names.indexOf('stall1'),x:100,y:150};
 assert(run('isVillageMarketStand(stand)'));
 const calls=[];c.drawGameImage=(...args)=>calls.push(args);c.sheetOf=()=>({});
-run('drawVillageStand(stand);drawVillageStand(stand,true)');
-const canopy=calls[1],counter=calls.at(-1);
+run('drawVillageStand(stand);drawVillageStand(stand,true);drawVillageStand(stand,false,true)');
+const canopy=calls[3],counter=calls[2];
 const opening=counter[7]-(canopy[7]+canopy[9]);
 assert(opening>=22&&opening<=25,'Compact opening clears hats and upper bodies');
 assert.equal(calls[0][5],7,'Stretch posts without the black counter outline');
-assert.equal(calls[2][9],1,'Counter outline stays one pixel tall');
+assert.equal(calls[1][9],1,'Counter outline stays one pixel tall');
 console.log('PASS: reindexed village stand uses the raised canopy and separate counter.');
 
 // Forgewick roofs belong above both walking characters, independently of feet Y.
 c.underfoot=()=>false;c.P={x:0,y:99999};c.MD={};
 const layerStart=code.indexOf('  const groundLayer ='),layerEnd=code.indexOf('  draw.sort(',layerStart);
 run(code.slice(layerStart,layerEnd)+'globalThis.marketTestLayer=groundLayer;');
+for(const sprite of ['stall1','stall2','stall3']){
+ c.villageRoof={villageCanopy:{s:W.names.indexOf(sprite),x:100,y:100}};
+ assert(run('marketTestLayer(villageRoof)>marketTestLayer(P)'),'Every village canopy covers Corin');
+ assert(run('marketTestLayer(villageRoof)>marketTestLayer({dg:true,y:99999})'),'Every village canopy covers the walking dragon');
+}
 for(const actor of W.maps.world.roomActors.filter(a=>/^market_.*_stall$/.test(a.spr||''))){
  c.forgeStand=actor;calls.length=0;run('drawMarketActor(forgeStand,false);drawMarketActor(forgeStand,true);drawMarketActor(forgeStand,false,true)');
  const [back,front,roof]=calls;

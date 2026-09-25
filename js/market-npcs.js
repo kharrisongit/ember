@@ -1,8 +1,28 @@
 // Reserve the selected appearances for their requested service roles.
 const MARKET_NPC_SKINS=['lumberjack_jack','chef_chloe','farmer_buba','miner_mike'];
+function prepareMarketNpcRoles(m,id){
+  if(id!=='world')return;
+  const miner=m.npcs.find(n=>n.n==='Toft'),formerSeller=m.npcs.find(n=>n.n==='Ovid');
+  if(!miner||!formerSeller)return;
+  miner.sells=['potion','dust','saint'];
+  miner.noTalk=false;
+  miner.d=['Toft: Potions for the road, and moor dust if the road argues back.',
+    'Corin: You sell supplies now?',
+    'Toft: Mining teaches you what you wish you had brought. I keep it here.'];
+  miner.d2=['Toft: Mind the third level. It eats lamps.',
+    'Corin: Eats them?',
+    'Toft: Every flame goes out together. Buy what you need before you go down.'];
+  formerSeller.sells=undefined;
+  formerSeller.d=['Ovid: Hear that? Three hammer blows, then a pause.',
+    'Corin: Someone taking a rest?',
+    'Ovid: Someone checking an edge. Forgewick has its own way of telling the time.'];
+  formerSeller.d2=['Ovid: If you need road supplies, speak to Toft, the miner at the market stand.',
+    'Ovid: He has carried enough broken lamps home to know what is worth stocking.'];
+}
 function prepareMarketNpcCast(m,id) {
   if(m._marketNpcCastReady)return;
   m._marketNpcCastReady=true;
+  prepareMarketNpcRoles(m,id);
   const dress=(n,sprite,marketVendor=true)=>{
     Object.assign(n,{marketVendor,serviceAppearance:true,packSpr:sprite,packDirections:false,packWalk:false,
       lookId:sprite,sk:undefined,body:undefined,school:false,seatSpr:undefined,seated:false,
