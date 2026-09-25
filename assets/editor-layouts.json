@@ -47278,6 +47278,16 @@
         "originX": 32600,
         "originY": 8304
       },
+      "actor:npc:Ingrid": {
+        "kind": "actor",
+        "key": "npc:Ingrid",
+        "identity": "Ingrid",
+        "deleted": true,
+        "x": 43374,
+        "y": 3221,
+        "originX": 43416,
+        "originY": 3216
+      },
       "object:6224": {
         "kind": "object",
         "key": "6224",
@@ -48841,7 +48851,8 @@
     "9e9e2c4b-8b73-4886-b9dd-74ed9ded390f",
     "699952cd-dac8-4a58-bb47-53e23b7756eb",
     "ccfa5121-152f-4ef4-ae89-fc73e3f378cf",
-    "50e1496a-f358-4e6d-9f41-c88d27bee753"
+    "50e1496a-f358-4e6d-9f41-c88d27bee753",
+    "ec0e4a55-0e62-48f1-9df1-067ffe4ab15e"
   ],
   "sessions": {
     "witchmoor": {
@@ -48966,7 +48977,7 @@
     },
     "world": {
       "id": "491f9b2f-9b48-49e2-b75a-5f33248e7da6",
-      "sequence": 3,
+      "sequence": 4,
       "baseHash": "94b0a652-32e4d7be-351391",
       "baseFingerprint": "40e9b55-e01f0089-735395",
       "base": {
@@ -96076,7 +96087,7 @@
           "originY": 3344
         }
       },
-      "resultHash": "3e25a392-1913a180-354505"
+      "resultHash": "be38a932-63c2247c-354645"
     }
   }
 }
