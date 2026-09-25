@@ -4357,10 +4357,11 @@ function drawWorld(t, dt) {
       }
       continue;
     }
-    const nm = NAMES[o.s], s = SPR[nm], od = DEFS[o.s];
+    const rawNm = NAMES[o.s], nm = typeof farmAnimalDrawName==='function' ? farmAnimalDrawName(rawNm,o) : rawNm;
+    const s = SPR[nm], od = DEFS[o.s];
     if (!s) continue; // Old device-local edits may reference art removed by a later build.
-    const chim = ATLAS.chimneys && ATLAS.chimneys[nm];
-    let f = s[4] > 1 ? frameOf(o.s, t, o.id * 0.37) % s[4] : 0;
+    const chim = ATLAS.chimneys && ATLAS.chimneys[rawNm];
+    let f = /^farm_/.test(nm) ? (o.moving ? Math.floor(t*7+(o.id||0)*.37)%s[4] : 0) : (s[4] > 1 ? frameOf(o.s, t, o.id * 0.37) % s[4] : 0);
     if (nm === "school_building" || nm === "tavern_building") {
       f = 0;
       if (doorMotion && doorMotion.map === "world" && Math.abs(o.x - (doorMotion.d.x * TS + 8)) < 48) {
