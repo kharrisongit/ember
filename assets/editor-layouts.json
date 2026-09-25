@@ -45682,7 +45682,7 @@
           }
         },
         "before": "e89fb3ee-57430e20-588643",
-        "after": "74d0069b-ffa5e65-588622",
+        "after": "72934328-74ef4206-588622",
         "changes": [
           {
             "path": [
@@ -46012,6 +46012,46 @@
               "r"
             ],
             "value": 12
+          },
+          {
+            "path": [
+              "features",
+              113,
+              "encounter"
+            ],
+            "value": "bird"
+          },
+          {
+            "path": [
+              "features",
+              121,
+              "encounter"
+            ],
+            "value": "hare"
+          },
+          {
+            "path": [
+              "features",
+              123,
+              "encounter"
+            ],
+            "value": "hare"
+          },
+          {
+            "path": [
+              "features",
+              131,
+              "encounter"
+            ],
+            "value": "deer"
+          },
+          {
+            "path": [
+              "features",
+              133,
+              "encounter"
+            ],
+            "value": "deer"
           }
         ]
       },

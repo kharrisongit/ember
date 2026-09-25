@@ -39,6 +39,14 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert(MD.roomActors.some(a=>a.editKey==='maddock:dragon-painting'),'Dragon picture present');
  }
  if(id==='world'){
+  const huntingSpecies={9150:'bird',9152:'hare',9154:'hare',9156:'hare',9159:'boar',9161:'boar',9163:'boar',9165:'deer',9167:'deer',9169:'deer',9171:'deer',9173:'deer',9175:'deer',9177:'fox',9179:'fox',9181:'fox'};
+  assert.equal(features.filter(isHuntingArena).length,16,'All placed hunting arenas remain');
+  for(const [arenaId,species] of Object.entries(huntingSpecies)){
+   assert.equal(MD.features.find(a=>a.id===Number(arenaId)).encounter,species,'Published regional species '+arenaId);
+   const animals=foes.filter(f=>f.huntingArena?.id===Number(arenaId));
+   assert.equal(animals.length,3,'Exactly three animals in arena '+arenaId);
+   assert(animals.every(f=>f.kind===species),'Live animals match the region in arena '+arenaId);
+  }
   // Check authored coordinates after the real Build, move and map-loading paths.
   const layout=publishedEditorLayouts.maps.world;
   const operations=l=>[...(l?.build?operations(l.build.previous):[]),...Object.values(l||{}).filter(o=>o.kind&&o.kind!=='build')];
@@ -82,7 +90,8 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   }
   for(const expected of winterPatch.features){
    const actual=MD.features.find(f=>f.id===expected.id);
-   assert.equal(JSON.stringify(actual),JSON.stringify(expected),'Exact supplied feature '+expected.id);
+   const revised=expected.kind==='arena'?{...expected,encounter:huntingSpecies[expected.id]}:expected;
+   assert.equal(JSON.stringify(actual),JSON.stringify(revised),'Supplied geometry and requested species '+expected.id);
    if(expected.kind==='arena'){
     assert.equal(foes.filter(f=>f.huntingArena?.id===expected.id).length,3,'Animals in supplied arena '+expected.id);
     if(expected.style==='winter'){
@@ -121,7 +130,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert.equal(spur.pts.at(-1)[0],grave.x,'Graveyard entry is centered');
   assert.equal(features.find(f=>f.id===81).kind,'landmark','No square clearing over the circle');
   for(const name of ['Bregga','Sigrun','Torvald'])assert(!npcs.some(n=>n.n===name&&npcHere(n)),'Recovered cast removal '+name);
-  const expectedArenas=[[9150,168,67,'hare'],[9152,333,204,'hare'],[9154,453,162,'boar'],[9156,587,262,'boar'],[9159,813,281,'boar']];
+  const expectedArenas=[[9150,168,67,'bird'],[9152,333,204,'hare'],[9154,453,162,'hare'],[9156,587,262,'hare'],[9159,813,281,'boar']];
   for(const [id,x,y,encounter] of expectedArenas){
    const arena=MD.features.find(f=>f.id===id);
    assert(arena,'Missing published arena '+id);
