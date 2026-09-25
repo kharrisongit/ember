@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "id": "b654d53c-fa54-4551-8072-8ce7b08b8442",
+  "map": "world",
+  "sourceRevision": "27d60522f38572f88ae232d6aa0f70c3fbd24ac526af0bbcbed79b52611f33d7",
+  "baseFingerprint": "29413271-59b1c723-722312",
+  "session": {
+    "id": "eba6b326-d853-439e-97df-56bf87f85adb",
+    "sequence": 1,
+    "baseHash": "9e7ee171-33945067-328814"
+  },
+  "operations": [
+    {
+      "kind": "decor",
+      "key": "s189",
+      "tag": "s",
+      "index": 189,
+      "sprite": 584,
+      "fromX": 248,
+      "fromY": 6976,
+      "x": 248,
+      "y": 6976,
+      "deleted": true
+    },
+    {
+      "kind": "decor",
+      "key": "s192",
+      "tag": "s",
+      "index": 192,
+      "sprite": 584,
+      "fromX": 248,
+      "fromY": 6992,
+      "x": 248,
+      "y": 6992,
+      "deleted": true
+    },
+    {
+      "kind": "decor",
+      "key": "s195",
+      "tag": "s",
+      "index": 195,
+      "sprite": 584,
+      "fromX": 248,
+      "fromY": 7008,
+      "x": 248,
+      "y": 7008,
+      "deleted": true
+    },
+    {
+      "kind": "decor",
+      "key": "s135",
+      "tag": "s",
+      "index": 135,
+      "sprite": 584,
+      "fromX": 120,
+      "fromY": 6976,
+      "x": 120,
+      "y": 6976,
+      "deleted": true
+    },
+    {
+      "kind": "decor",
+      "key": "s138",
+      "tag": "s",
+      "index": 138,
+      "sprite": 584,
+      "fromX": 120,
+      "fromY": 6992,
+      "x": 120,
+      "y": 6992,
+      "deleted": true
+    },
+    {
+      "kind": "decor",
+      "key": "s141",
+      "tag": "s",
+      "index": 141,
+      "sprite": 584,
+      "fromX": 120,
+      "fromY": 7008,
+      "x": 120,
+      "y": 7008,
+      "deleted": true
+    }
+  ]
+}

@@ -43,6 +43,9 @@ assert.equal(W.maps.world.npcs.filter(n=>n.marketVendor).length,9);
 for(const stand of stands){const n=W.maps.world.npcs.find(n=>n.counter?.x===stand.x&&n.counter?.y===stand.y);assert(n.y>n.seatClipY,'small legacy sprite feet stay behind counter');assert(n.y-SPR[n.packSpr][3]>=stand.y-40);}
 run(read('js/editor-build-data.js'));run(read('js/published-editor-layouts.js'));
 c.layout=JSON.parse(read('assets/editor-layouts.json'));
+// This isolated fixture has no Build terrain; exercise the vendor layer here.
+// The full published Build and its vendors are covered by overworld-published-return.
+while(c.layout.maps.world.build)c.layout.maps.world=c.layout.maps.world.build.previous;
 for(const name of ['Toft','Prue','Ovid']){
  const op=c.layout.maps.world['actor:npc:'+name],n=W.maps.world.npcs.find(n=>n.n===name);
  assert.deepEqual([op.originX,op.originY],[n.x,n.y],'published vendor anchor matches new role: '+name);
