@@ -28,14 +28,20 @@ const authoredStart=code.indexOf('    const positions={"actor:14:market_weapons_
 run('{const m=W.maps.world;'+code.slice(authoredStart,code.indexOf('    const rashida=',authoredStart))+'}');
 
 run(read('js/market-npcs.js'));
+const sandspireStock=W.maps.world.npcs.find(n=>n.n==='Jamila').sells;
 const story=new Map(Object.entries(W.maps).flatMap(([id,m])=>(m.npcs||[]).map(n=>[id+':'+n.n,JSON.stringify([n.d,n.sells])])));
 run("for(const [id,m] of Object.entries(W.maps))prepareMarketNpcCast(m,id)");
 const vendorOrigins=Object.fromEntries(W.maps.world.npcs.filter(n=>n.marketVendor).map(n=>[n.n,{x:n.x,y:n.y}]));
 if(process.env.EMBER_VENDOR_ORIGINS)fs.writeFileSync(process.env.EMBER_VENDOR_ORIGINS,JSON.stringify(vendorOrigins));
 for(const [id,m] of Object.entries(W.maps))for(const n of m.npcs||[]){
- assert.equal(JSON.stringify([n.d,n.sells]),story.get(id+':'+n.n),'dialogue and inventory preserved for '+n.n);
+ if(id==='world'&&['Idris','Jamila'].includes(n.n)){
+  assert.equal(JSON.stringify(n.d),JSON.stringify(JSON.parse(story.get(id+':'+n.n))[0]),'Sandspire dialogue preserved');
+  assert.equal(n.sells,n.n==='Idris'?sandspireStock:undefined,'Sandspire shop role transferred to pharaoh');
+ }else assert.equal(JSON.stringify([n.d,n.sells]),story.get(id+':'+n.n),'dialogue and inventory preserved for '+n.n);
  if(n.marketVendor){
-  assert.match(n.packSpr,/^npc_(lumberjack_jack|chef_chloe|farmer_buba|miner_mike)_d$/);
+  assert.match(n.packSpr,/^(npc_(chef_chloe|farmer_buba|miner_mike)_d|npc_pharaoh_idle|market_citizen[1-5]_idle_d)$/);
+  assert.equal(n.idleFrame,undefined,'vendor idle animation is not frozen');
+  assert(SPR[n.packSpr][4]>1,'vendor has animated frames');
   assert(n.stationary&&!n.patrol&&!n.patrolPoints&&!n.goto&&n.counter,'vendor stays at its counter');
  }else assert(!['lumberjack_jack','chef_chloe','farmer_buba','miner_mike'].includes(n.sk),'market appearance outside a stand: '+n.n);
 }
@@ -59,4 +65,17 @@ for(const a of W.maps.world.roomActors.filter(a=>a.interiorNpc)){
  assert.deepEqual([n.talkX,n.talkY],[a.x,a.y+28]);assert.deepEqual([n.counter.x,n.counter.y],[a.x,a.y+8]);
  const live=c.npcs.find(v=>v.n===n.n);assert.deepEqual([live.counter.x,live.counter.y],[n.counter.x,n.counter.y],'live counter shifts once');
 }
-console.log('PASS: the four chosen appearances serve all nine market stands, with published placements, linked movement, working counters and no use elsewhere in the cast.');
+const wanted={Wren:'npc_farmer_buba_d',Astrid:'npc_chef_chloe_d',Toft:'npc_miner_mike_d',Idris:'npc_pharaoh_idle'};
+for(const [name,sprite]of Object.entries(wanted))assert.equal(W.maps.world.npcs.find(n=>n.n===name).packSpr,sprite,name+' requested market role');
+const keeper=W.maps.inn.npcs.find(n=>n.n==='Maren');assert.equal(keeper.packSpr,'npc_lumberjack_jack_d');assert.equal(keeper.seatClipY,112);assert.equal(keeper.y,114);assert.equal(keeper.talkY,147);
+for(const skin of ['farmer_buba','chef_chloe','miner_mike','lumberjack_jack']){
+ const users=Object.values(W.maps).flatMap(m=>m.npcs).filter(n=>!n.devLineup&&n.packSpr==='npc_'+skin+'_d');
+ assert.equal(users.length,1,skin+' is reserved for one requested role');
+}
+// Execute the renderer's actual idle-frame selection at two times.
+const frameStart=code.indexOf("        let fr = action==='idle'"),frameEnd=code.indexOf('        if(/^villager_seated_',frameStart);
+for(const n of [...W.maps.world.npcs.filter(n=>n.marketVendor),keeper]){
+ Object.assign(c,{o:n,sp:SPR[n.packSpr],action:'idle',t:0});run('{'+code.slice(frameStart,frameEnd)+'selectedFrame=fr;}');const first=c.selectedFrame;
+ c.t=.4;run('{'+code.slice(frameStart,frameEnd)+'selectedFrame=fr;}');assert.notEqual(c.selectedFrame,first,n.n+' idle frames advance');
+}
+console.log('PASS: requested market/inn appearances, pharaoh shop transfer, unique selected skins, animated idles, published placements and linked counters.');
