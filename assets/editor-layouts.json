@@ -9033,7 +9033,7 @@
           }
         },
         "before": "b005c764-42f684e8-584744",
-        "after": "1edb1e05-1619c92b-585222",
+        "after": "f4c8c51a-cb882738-585473",
         "changes": [
           {
             "path": [
@@ -44710,6 +44710,58 @@
           },
           {
             "path": [
+              "features",
+              124
+            ],
+            "value": {
+              "id": 9158,
+              "kind": "route",
+              "x0": 785,
+              "y0": 316,
+              "x1": 838,
+              "y1": 316,
+              "pts": [
+                [
+                  785,
+                  316
+                ],
+                [
+                  785,
+                  281
+                ],
+                [
+                  838,
+                  281
+                ],
+                [
+                  838,
+                  316
+                ]
+              ],
+              "w": 5,
+              "band": 20,
+              "style": "temple",
+              "a0": null,
+              "a1": null
+            }
+          },
+          {
+            "path": [
+              "features",
+              125
+            ],
+            "value": {
+              "id": 9159,
+              "kind": "arena",
+              "x": 813,
+              "y": 281,
+              "r": 6.3,
+              "style": "temple",
+              "encounter": "boar"
+            }
+          },
+          {
+            "path": [
               "felled"
             ],
             "length": 0
@@ -45502,12 +45554,13 @@
     "32ee9240-a8a0-47e4-a442-0dbdfe10e968",
     "2b7942ff-3f27-4b3f-98e2-19bb72fcdbbc",
     "e752a26f-96d4-457d-a285-82e76e7ac7f2",
-    "3c572534-0a79-4fb3-b954-47e87fa13bbb"
+    "3c572534-0a79-4fb3-b954-47e87fa13bbb",
+    "7d06f823-4de0-4bde-927f-93375264cccf"
   ],
   "sessions": {
     "world": {
       "id": "e8912e23-21c5-4e3a-a4df-ac01c593ae38",
-      "sequence": 2,
+      "sequence": 3,
       "baseHash": "cbe4a098-2eeef58a-130554",
       "baseFingerprint": "195c1ccc-f4ef79ca-722312",
       "base": {
@@ -54427,7 +54480,7 @@
           "ty": 28
         }
       },
-      "resultHash": "47b30a20-78875dd6-325098"
+      "resultHash": "ad5f39ca-249d60e0-325417"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
