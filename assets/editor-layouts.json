@@ -44789,6 +44789,48 @@
         "x": 11096,
         "y": 3264
       },
+      "object-add:9a23f359-c91b-4365-97ee-41b817b2f6d8": {
+        "kind": "object-add",
+        "key": "9a23f359-c91b-4365-97ee-41b817b2f6d8",
+        "sprite": 0,
+        "x": 5928,
+        "y": 4112
+      },
+      "object-add:9fbeac4a-7600-467b-b584-7f185c62381f": {
+        "kind": "object-add",
+        "key": "9fbeac4a-7600-467b-b584-7f185c62381f",
+        "sprite": 0,
+        "x": 5880,
+        "y": 4144
+      },
+      "object-add:14d826ac-852a-413c-aef9-b82134460278": {
+        "kind": "object-add",
+        "key": "14d826ac-852a-413c-aef9-b82134460278",
+        "sprite": 0,
+        "x": 5864,
+        "y": 4176
+      },
+      "object-add:3dcf15f2-58da-470d-8f73-8a9ec342b7e8": {
+        "kind": "object-add",
+        "key": "3dcf15f2-58da-470d-8f73-8a9ec342b7e8",
+        "sprite": 0,
+        "x": 5912,
+        "y": 4160
+      },
+      "object-add:f9b5d05e-9baa-4954-aad9-5284cb6b62a5": {
+        "kind": "object-add",
+        "key": "f9b5d05e-9baa-4954-aad9-5284cb6b62a5",
+        "sprite": 0,
+        "x": 5848,
+        "y": 4256
+      },
+      "object-add:3ab57333-9c50-442e-8ab2-64ef0052c5c1": {
+        "kind": "object-add",
+        "key": "3ab57333-9c50-442e-8ab2-64ef0052c5c1",
+        "sprite": 0,
+        "x": 5944,
+        "y": 4160
+      },
       "feature-delete:693,212": {
         "kind": "feature-delete",
         "key": "693,212",
@@ -44800,6 +44842,48 @@
         "key": "693,204",
         "tx": 693,
         "ty": 204
+      },
+      "feature-delete:369,258": {
+        "kind": "feature-delete",
+        "key": "369,258",
+        "tx": 369,
+        "ty": 258
+      },
+      "feature-delete:368,260": {
+        "kind": "feature-delete",
+        "key": "368,260",
+        "tx": 368,
+        "ty": 260
+      },
+      "feature-delete:364,264": {
+        "kind": "feature-delete",
+        "key": "364,264",
+        "tx": 364,
+        "ty": 264
+      },
+      "feature-delete:364,260": {
+        "kind": "feature-delete",
+        "key": "364,260",
+        "tx": 364,
+        "ty": 260
+      },
+      "feature-delete:366,258": {
+        "kind": "feature-delete",
+        "key": "366,258",
+        "tx": 366,
+        "ty": 258
+      },
+      "feature-delete:366,266": {
+        "kind": "feature-delete",
+        "key": "366,266",
+        "tx": 366,
+        "ty": 266
+      },
+      "feature-delete:370,255": {
+        "kind": "feature-delete",
+        "key": "370,255",
+        "tx": 370,
+        "ty": 255
       }
     },
     "witchmoor": {
@@ -45575,12 +45659,13 @@
     "e752a26f-96d4-457d-a285-82e76e7ac7f2",
     "3c572534-0a79-4fb3-b954-47e87fa13bbb",
     "7d06f823-4de0-4bde-927f-93375264cccf",
-    "f8992489-6429-4459-bbe5-8f3dc5623dbb"
+    "f8992489-6429-4459-bbe5-8f3dc5623dbb",
+    "02bf1363-eda7-4539-aded-4158a908945f"
   ],
   "sessions": {
     "world": {
       "id": "189b615c-2129-4b95-84b4-ec1b9a2d140d",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "ad5f39ca-249d60e0-325417",
       "baseFingerprint": "30b0af48-e1871c3a-723041",
       "base": {
@@ -90254,7 +90339,7 @@
           ]
         }
       },
-      "resultHash": "e4dad80a-c1709592-325737"
+      "resultHash": "a04b4325-c8ed7c63-327208"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
