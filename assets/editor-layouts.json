@@ -46107,6 +46107,393 @@
         "y": 1808,
         "originX": 4120,
         "originY": 1802
+      },
+      "paint:297851": {
+        "kind": "paint",
+        "key": "297851",
+        "index": 297851,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301375": {
+        "kind": "paint",
+        "key": "301375",
+        "index": 301375,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301376": {
+        "kind": "paint",
+        "key": "301376",
+        "index": 301376,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301377": {
+        "kind": "paint",
+        "key": "301377",
+        "index": 301377,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301394": {
+        "kind": "paint",
+        "key": "301394",
+        "index": 301394,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301395": {
+        "kind": "paint",
+        "key": "301395",
+        "index": 301395,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301396": {
+        "kind": "paint",
+        "key": "301396",
+        "index": 301396,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301416": {
+        "kind": "paint",
+        "key": "301416",
+        "index": 301416,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301417": {
+        "kind": "paint",
+        "key": "301417",
+        "index": 301417,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301418": {
+        "kind": "paint",
+        "key": "301418",
+        "index": 301418,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301435": {
+        "kind": "paint",
+        "key": "301435",
+        "index": 301435,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301436": {
+        "kind": "paint",
+        "key": "301436",
+        "index": 301436,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:301437": {
+        "kind": "paint",
+        "key": "301437",
+        "index": 301437,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:304960": {
+        "kind": "paint",
+        "key": "304960",
+        "index": 304960,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:304979": {
+        "kind": "paint",
+        "key": "304979",
+        "index": 304979,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:305001": {
+        "kind": "paint",
+        "key": "305001",
+        "index": 305001,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:305020": {
+        "kind": "paint",
+        "key": "305020",
+        "index": 305020,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:308546": {
+        "kind": "paint",
+        "key": "308546",
+        "index": 308546,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:308565": {
+        "kind": "paint",
+        "key": "308565",
+        "index": 308565,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:308587": {
+        "kind": "paint",
+        "key": "308587",
+        "index": 308587,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:308606": {
+        "kind": "paint",
+        "key": "308606",
+        "index": 308606,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:369491": {
+        "kind": "paint",
+        "key": "369491",
+        "index": 369491,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:369552": {
+        "kind": "paint",
+        "key": "369552",
+        "index": 369552,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373075": {
+        "kind": "paint",
+        "key": "373075",
+        "index": 373075,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373076": {
+        "kind": "paint",
+        "key": "373076",
+        "index": 373076,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373077": {
+        "kind": "paint",
+        "key": "373077",
+        "index": 373077,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373094": {
+        "kind": "paint",
+        "key": "373094",
+        "index": 373094,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373095": {
+        "kind": "paint",
+        "key": "373095",
+        "index": 373095,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373096": {
+        "kind": "paint",
+        "key": "373096",
+        "index": 373096,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373116": {
+        "kind": "paint",
+        "key": "373116",
+        "index": 373116,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373117": {
+        "kind": "paint",
+        "key": "373117",
+        "index": 373117,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373118": {
+        "kind": "paint",
+        "key": "373118",
+        "index": 373118,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373135": {
+        "kind": "paint",
+        "key": "373135",
+        "index": 373135,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373136": {
+        "kind": "paint",
+        "key": "373136",
+        "index": 373136,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:373137": {
+        "kind": "paint",
+        "key": "373137",
+        "index": 373137,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:376660": {
+        "kind": "paint",
+        "key": "376660",
+        "index": 376660,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:376679": {
+        "kind": "paint",
+        "key": "376679",
+        "index": 376679,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:376701": {
+        "kind": "paint",
+        "key": "376701",
+        "index": 376701,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:376720": {
+        "kind": "paint",
+        "key": "376720",
+        "index": 376720,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:380246": {
+        "kind": "paint",
+        "key": "380246",
+        "index": 380246,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:380265": {
+        "kind": "paint",
+        "key": "380265",
+        "index": 380265,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:380287": {
+        "kind": "paint",
+        "key": "380287",
+        "index": 380287,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
+      },
+      "paint:380306": {
+        "kind": "paint",
+        "key": "380306",
+        "index": 380306,
+        "value": 1,
+        "originValue": 0,
+        "width": 3585,
+        "height": 600
       }
     },
     "witchmoor": {
@@ -46889,7 +47276,8 @@
     "13acdb18-0d9f-40e7-8d31-62ca2c90a177",
     "fe742bdd-61d7-4d71-a69f-989495519b43",
     "d640cb36-eaf9-40e1-96a9-42527f170fb4",
-    "9c7ba7a3-9be4-4216-8614-379fa49459a9"
+    "9c7ba7a3-9be4-4216-8614-379fa49459a9",
+    "ca7b3013-7664-446f-8d61-dcef43731da5"
   ],
   "sessions": {
     "witchmoor": {
@@ -46950,7 +47338,7 @@
     },
     "world": {
       "id": "b43d8121-453f-487f-9531-c4e89a2d3132",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "c5c74630-241881c0-336451",
       "baseFingerprint": "222b8c7-658b52bd-726838",
       "base": {
@@ -92932,7 +93320,7 @@
           "originY": 3246
         }
       },
-      "resultHash": "34908fe4-881e7c9a-336673"
+      "resultHash": "c9400d1e-8d0c9756-341575"
     }
   }
 }
