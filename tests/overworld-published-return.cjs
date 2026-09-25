@@ -62,12 +62,21 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
     }
    }
   }
-  assert.equal(EmberBuildData.hash(MD.objs),winterPatch.objectsHash,'All existing object placements plus the three supplied moves');
+  const fixtureObjects=MD.objs.slice();
+  for(const op of Object.values(layout).filter(op=>op.kind==='object')){
+   assert.equal(MD.objs[Number(op.key)*3+1],op.x,'Latest submitted object X');
+   assert.equal(MD.objs[Number(op.key)*3+2],op.y,'Latest submitted object Y');
+   fixtureObjects[Number(op.key)*3+1]=op.originX;fixtureObjects[Number(op.key)*3+2]=op.originY;
+  }
+  assert.equal(EmberBuildData.hash(fixtureObjects),winterPatch.objectsHash,'Prior object placements preserved beneath latest moves');
   for(const moved of winterPatch.moves){
    const o=objs.find(o=>o.id===moved.id);assert(o,'Moved object exists');
    assert.equal(JSON.stringify([o.x,o.y]),JSON.stringify([moved.x,moved.y]),'Exact live object move '+moved.id);
   }
   for(const g of graveyardPatch.graves){assert.equal(MD.objs[g.id*3+1],g.x);assert.equal(MD.objs[g.id*3+2],g.y);}
+  const villageStalls=objs.filter(o=>/^stall[123]$/.test(NAMES[o.s]||''));
+  assert.equal(villageStalls.length,4);
+  for(const o of villageStalls)assert(isVillageMarketStand(o),'Published stand uses enlarged layered rendering');
   const grave=features.find(f=>f.id===207),spur=features.find(f=>f.id===80);
   assert.equal(spur.pts.at(-1)[0],grave.x,'Graveyard entry is centered');
   assert.equal(features.find(f=>f.id===81).kind,'landmark','No square clearing over the circle');
