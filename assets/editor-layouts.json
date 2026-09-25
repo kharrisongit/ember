@@ -47661,6 +47661,35 @@
         "originX": 136,
         "originY": 328
       }
+    },
+    "smithy": {
+      "actor:remaining:smithy:21": {
+        "kind": "actor",
+        "key": "remaining:smithy:21",
+        "identity": "supply crates",
+        "x": 91,
+        "y": 178,
+        "originX": 122,
+        "originY": 250
+      },
+      "actor:remaining:smithy:20": {
+        "kind": "actor",
+        "key": "remaining:smithy:20",
+        "identity": "tool cart",
+        "x": 112,
+        "y": 236,
+        "originX": 166.5,
+        "originY": 246
+      },
+      "actor:remaining:smithy:17": {
+        "kind": "actor",
+        "key": "remaining:smithy:17",
+        "identity": "chair",
+        "x": 301,
+        "y": 215,
+        "originX": 265,
+        "originY": 214
+      }
     }
   },
   "applied": [
@@ -47712,7 +47741,8 @@
     "ca7b3013-7664-446f-8d61-dcef43731da5",
     "dc006617-0ba4-46dc-a8af-e9570a903a3b",
     "2bd74ff9-297e-449c-a26f-e0374e472e9a",
-    "d07f27f4-c0f9-4b2d-9f96-1964ea5b7ee6"
+    "d07f27f4-c0f9-4b2d-9f96-1964ea5b7ee6",
+    "d45232f7-0414-466e-9026-b6c8cf8dce62"
   ],
   "sessions": {
     "witchmoor": {
@@ -94566,6 +94596,14 @@
         }
       },
       "resultHash": "9e00fd98-d50546c4-347022"
+    },
+    "smithy": {
+      "id": "3b505901-24ab-44e0-b7fa-a759f54d00a5",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "402d2038-76679210-8334",
+      "base": {},
+      "resultHash": "94880d81-404e58f7-422"
     }
   }
 }
