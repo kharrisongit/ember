@@ -292,7 +292,7 @@ function installFerrySigns(){
       moveBlocks:[m.roomBlocks.push([x-5,y-6,x+5,y])-1]});
   }
 }
-function villageStandSize(){return {scale:1.25,headroom:12};}
+function villageStandSize(){return {scale:1.4,headroom:22};}
 function prepareVillageStands(){
   for(const [id,m] of Object.entries(W.maps)){
     m.marketStands=[];
@@ -312,6 +312,21 @@ function prepareVillageStands(){
         talkX:x,talkY:y+14,counter:{x,y}});
     }
   }
+}
+function marketVendorDepth(n,draw){
+  for(const o of draw){
+    const stand=o.marketFront||o.marketActorFront;if(!stand)continue;
+    const sp=stand.spr?SPR[stand.spr]:SPR[NAMES[stand.s]];if(!sp)continue;
+    const width=sp[2]*(stand.spr?1.1:villageStandSize().scale);
+    if(Math.abs(n.x-stand.x)<width/2-4&&n.y>=stand.y-38&&n.y<=stand.y+16)return stand.y-.5;
+  }
+  return n.y;
+}
+function drawMarketActor(o,front){
+  const sp=SPR[o.spr];if(!sp)return;
+  const w=Math.round(sp[2]*1.1),h=Math.round(sp[3]*1.1)+10,foot=Math.min(42,sp[3]);
+  if(front)drawGameImage(ctx,sheetOf(sp),sp[0],sp[1]+sp[3]-foot,sp[2],foot,o.x-w/2,o.y-foot,w,foot);
+  else drawGameImage(ctx,sheetOf(sp),sp[0],sp[1],sp[2],sp[3]-foot,o.x-w/2,o.y-h,w,h-foot);
 }
 function drawVillageStand(o,front=false){
   const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
@@ -1210,7 +1225,7 @@ function drawNpcFrame(o,s,frame,img){
     const h=s[3]-(Math.sin(performance.now()/1000*1.8)>0.65?1:0);
     drawGameImage(ctx,img,s[0],s[1],s[2],s[3],Math.round(o.x-s[2]/2),Math.round(o.y-h),s[2],h);return;
   }
-  const clip=o.seatClipY!==undefined&&!o.goto&&!(o.seatSpr&&(scene||bossScene||hatchExit));
+  const clip=!o.marketVendor&&o.seatClipY!==undefined&&!o.goto&&!(o.seatSpr&&(scene||bossScene||hatchExit));
   if(clip){ctx.save();ctx.beginPath();ctx.rect(o.x-s[2]/2-1,o.y-s[3]-2,s[2]+2,Math.max(0,o.seatClipY-(o.y-s[3])+2));ctx.clip();}
   const scale=img?.spriteScale||1;
   // Lift the shoulders two pixels on the inhale, with the feet/table edge fixed.
@@ -1678,7 +1693,7 @@ function editorSprite(o) {
   if(o.sk)return SPR['npc_'+o.sk+'_idle']||SPR['npc_'+o.sk+'_d'];
   return SPR[NAMES[o.s]];
 }
-function shiftActorData(m, o, x, y, actor) {
+function shiftActorData(m, o, x, y, actor, linkNpc=true) {
   const dx=x-o.x,dy=y-o.y;
   o.x=x;o.y=y;
   if(Number.isFinite(o.sy))o.sy=o.editableWall?-50:o.sy+dy;
@@ -1688,7 +1703,7 @@ function shiftActorData(m, o, x, y, actor) {
   if(Number.isFinite(o.seatClipY))o.seatClipY+=dy;
   if(actor&&(dx||dy)){
     for(const index of o.interiorChildren||[]){const child=m.roomActors?.[index];if(child&&child!==o)shiftActorData(m,child,child.x+dx,child.y+dy,true);}
-    if(o.interiorNpc){const n=m.npcs?.find(n=>n.n===o.interiorNpc);if(n)shiftActorData(m,n,n.x+dx,n.y+dy,false);
+    if(o.interiorNpc&&linkNpc){const n=m.npcs?.find(n=>n.n===o.interiorNpc);if(n)shiftActorData(m,n,n.x+dx,n.y+dy,false);
       if(typeof MD!=='undefined'&&MD===m&&typeof npcs!=='undefined'){const live=npcs.find(n=>n.n===o.interiorNpc);if(live&&live!==n){shiftActorData(m,live,live.x+dx,live.y+dy,false);live.px=live.x;live.py=live.y;}}}
     if(o.cellarCacheId!==undefined){const c=m.cellarCaches?.find(c=>c.id===o.cellarCacheId);if(c){c.x+=dx;c.y+=dy;}}
   }
@@ -1712,7 +1727,7 @@ function applyActorLayout(m, id) {
     if(o.sceneReserved&&!o.editorMovable)continue;
     if(o.editableWall||o.interiorFurniture)o.editorDeleted=!!(v?.deleted||o.publishedDeleted);
     if(o.interiorFurniture&&o.editorDeleted)for(const bi of o.moveBlocks||[]){const b=m.roomBlocks?.[bi];if(b){b._furnitureHome ||= b.slice(0,4);b[0]=b[1]=b[2]=b[3]=-99999;}}
-    if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true);
+    if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,true,!v.independent);
     else if(o.editorChestKind&&typeof syncEditorChest==='function')syncEditorChest(m,o,0,0);
   }
   for(const o of m.npcs||[]){const v=saved[editorNpcKey(o)];o.editorDeleted=!!(v?.deleted||o.publishedDeleted);if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
@@ -1726,9 +1741,9 @@ function moveEditorActor(o,x,y,save=false) {
     shiftActorData(MD,info.source,x,y,false);
     o.x=x;o.y=y;o.px=x;o.py=y;o.goto=null;o.restUntil=Date.now()+5000;
     for(const k of ['talkX','talkY','patrol','patrolPoints','sy','counter'])o[k]=info.source[k];
-  }else shiftActorData(MD,o,x,y,true);
+  }else shiftActorData(MD,o,x,y,true,!/^market_.*_stall$/.test(o.spr||''));
   if(save){
-    (actorLayouts[MAPID] ||= {})[info.key]={x,y};
+    (actorLayouts[MAPID] ||= {})[info.key]={x,y,...(/^market_.*_stall$/.test(o.spr||'')?{independent:true}:{})};
     scheduleEditorDraft();
   }
   rebuildSolid();mapDirty=true;return true;
@@ -2046,7 +2061,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
   npcs = MD.npcs.map((n, k) => ({
     editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,devLineupCategory:n.devLineupCategory,devLineupPage:n.devLineupPage,devLineupScale:n.devLineupScale,
-    id: "npc" + k, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
+    id: "npc" + k, marketVendor:n.marketVendor, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
     crown: n.crown, body: n.body, kf: "d", dd: n.dd, dm: n.dm, rod: n.rod,
     charm: n.charm,                 /* what this one hands over, if anything */
     sells: n.sells,                 /* a potion seller */
@@ -3618,7 +3633,12 @@ function drawWorld(t, dt) {
 
   const draw = [];
   const marketIds=new Set((MD.marketStands||[]).map(s=>s.objectId));
-  for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted&&!actor.editorProxy)draw.push(actor);
+  for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted&&!actor.editorProxy){
+    if(/^market_.*_stall$/.test(actor.spr||'')){
+      draw.push({marketActor:actor,x:actor.x,y:actor.y,sy:actor.y-180});
+      draw.push({marketActorFront:actor,x:actor.x,y:actor.y,sy:actor.y});
+    }else draw.push(actor);
+  }
   if (trialDemonHere()) draw.push({witchDemon:true,...(MAPID==="witchmoor"?{x:196,y:304}:THRONE_DEMON)});
   if (trialPedestalHere()) draw.push({ trialPedestal: true, x: TRIAL_PEDESTAL.x,
                                       y: TRIAL_PEDESTAL.y, sy: TRIAL_PEDESTAL.y });
@@ -3632,7 +3652,7 @@ function drawWorld(t, dt) {
       if (!s) continue;
       const oxw = o.wx || 0, oyw = o.wy || 0;
       const market=marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'');
-      const artW=market?Math.round(s[2]*1.25):s[2],artH=market?60:s[3];
+      const artW=market?Math.round(s[2]*villageStandSize().scale):s[2],artH=market?80:s[3];
       if (o.x + oxw + artW / 2 < cam.x || o.x + oxw - artW / 2 > cam.x + vw) continue;
       if (o.y + oyw < cam.y || o.y + oyw - artH > cam.y + vh) continue;
       const wd = DEFS[o.s];
@@ -3669,7 +3689,7 @@ function drawWorld(t, dt) {
   if (bell) draw.push({ bell: true, x: bell.x, y: bell.y });
   const topOf = (o) => (o.s !== undefined && DEFS[o.s] && DEFS[o.s].t) ? 1 : 0;
   const isFab = (o) => o.s !== undefined && FABRIC.test(NAMES[o.s] || "");
-  const sortY = (o) => isFab(o) ? -1e9
+  const sortY = (o) => o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
                      : (o.sy !== undefined ? o.sy : o.y) + (o.wy || 0)
                      + ((o.s !== undefined && /^rc_sup1_/.test(NAMES[o.s])) ? 40 : 0)
                      + ((o.s !== undefined && DEFS[o.s] && DEFS[o.s].sy) ? DEFS[o.s].sy : 0);
@@ -3777,7 +3797,7 @@ function drawWorld(t, dt) {
   }
   if (glassShieldActive() || glassShieldPulse > 0) draw.push({ glassShieldFx:true, x:P.x, y:P.y, sy:P.y+80 });
   for(const o of draw.slice())if(marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'')){
-    o.marketStand=true;o.sy=o.y-60;
+    o.marketStand=true;o.sy=o.y-90;
     draw.push({marketFront:o,x:o.x,y:o.y,sy:o.y});
   }
   const mouth = (o) => o.s !== undefined &&
@@ -3793,6 +3813,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
     if(o.marketFront){drawVillageStand(o.marketFront,true);continue;}
     if(o.marketStand){drawVillageStand(o);continue;}
     if(o.mooring){
@@ -6276,6 +6297,10 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(MAPID==='house22'&&m.n==='Elder Maddock'&&!scene&&!bossScene&&!m.goto){
+      m.x=128;m.y=100;m.f='u';m.kf='u';m.flip=false;m.seatSpr=undefined;m.seatClipY=undefined;
+      continue;
+    }
     if (m.stationary) {
       if (m.goto) {
         const visible = m.x > cam.x - 32 && m.x < cam.x + VW / cam.z + 32 &&

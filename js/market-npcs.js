@@ -53,13 +53,32 @@ function prepareMarketNpcCast(m,id) {
       keeper.seatClipY=112;keeper.y=114;keeper.talkY=147;
     }
   }
-  let replacement=0;
+  // Retire duplicate service appearances; keep stable NPC slots for saved edits.
+  const appearance=n=>n.school?'':n.seatSpr||n.packSpr||(n.body?'body:'+n.body:n.sk?'npc_'+n.sk+'_d':'');
+  const canonical=s=>s.replace(/_(?:idle|walk)_[duwe]$/, '').replace(/^npc_(.+)_(?:idle|sidle|uidle|[dsuwe])$/, 'skin:$1');
+  const reserved=new Set([...MARKET_NPC_SKINS.map(s=>'skin:'+s),'skin:pharaoh',...Array.from({length:5},(_,i)=>'market_citizen'+(i+1))]);
   for(const n of m.npcs||[]){
-    if(n.devLineup||n.serviceAppearance||!MARKET_NPC_SKINS.includes(n.sk))continue;
-    if(!n.packSpr&&!n.body&&!n.school&&!n.seatSpr){
-      const pack='market_citizen'+(1+replacement++%5);
-      Object.assign(n,{packSpr:pack,packDirections:true,packWalk:true,lookId:pack,idleFrame:undefined});
-    }
-    n.sk=undefined;
+    if(n.devLineup||n.serviceAppearance)continue;
+    if(reserved.has(canonical(appearance(n))))n.editorDeleted=n.publishedDeleted=true;
+    if(MARKET_NPC_SKINS.includes(n.sk))n.sk=undefined;
+  }
+  if(id==='house22')prepareMaddockPainting(m);
+}
+
+function prepareMaddockPainting(m){
+  const n=m.npcs.find(n=>n.n==='Elder Maddock');if(!n)return;
+  Object.assign(n,{x:128,y:100,f:'u',kf:'u',stationary:false,seatSpr:undefined,seated:false,seatClipY:undefined,
+    sy:undefined,talkX:undefined,talkY:undefined,_seatContact:undefined,patrol:undefined,goto:undefined});
+  for(const a of m.roomActors||[])if(a.castSeat)a.editorDeleted=true;
+  // The furniture conversion removed the wall picture. Frame the existing
+  // dragon artwork on the north wall, above Maddock's standing position.
+  if(!m.roomActors.some(a=>a.editKey==='maddock:dragon-painting')){
+    const c=document.createElement('canvas');c.width=48;c.height=30;
+    const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+    g.fillStyle='#49301f';g.fillRect(0,0,48,30);g.fillStyle='#b38b48';g.fillRect(2,2,44,26);
+    g.fillStyle='#342e42';g.fillRect(4,4,40,22);
+    const sp=SPR.dr5_pose_south||SPR.dr5_idle_s;
+    if(sp)g.drawImage(sheetOf(sp),sp[0],sp[1],sp[2],sp[3],8,5,32,20);
+    m.roomActors.push({editKey:'maddock:dragon-painting',n:'Dragon painting',x:128,y:58,sy:58,extractedCanvas:c,editorMovable:true});
   }
 }

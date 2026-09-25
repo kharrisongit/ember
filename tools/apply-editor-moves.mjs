@@ -101,7 +101,7 @@ export function applyMoves(current,draft,revision) {
       assert(!old.deleted||op.deleted===true,'This object was deleted in a newer submission. Refresh and try again.');
       assert((old.x===op.fromX&&old.y===op.fromY)||(old.x===op.x&&old.y===op.y)||old.deleted&&op.deleted===true,'This object has already moved in a newer submission. Refresh and try again.');
     }
-    map[key]={kind:op.kind,key:op.key,...(op.kind==='actor'?{identity:op.identity}:{sprite:op.sprite}),
+    map[key]={kind:op.kind,key:op.key,...(op.kind==='actor'?{identity:op.identity,...(op.independent===true?{independent:true}:{})}:{sprite:op.sprite}),
       ...(op.kind==='decor'?{tag:op.tag,index:op.index}:{}),...(op.deleted===true?{deleted:true}:{}),x:op.x,y:op.y,originX:old?.originX??op.fromX,originY:old?.originY??op.fromY};
   }
   next.maps[draft.map]=map;next.applied.push(draft.id);

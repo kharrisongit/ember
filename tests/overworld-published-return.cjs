@@ -12,6 +12,8 @@ const run=s=>vm.runInContext(s,c);
 const paths=[...fs.readFileSync(root+'index.html','utf8').matchAll(/<script\b[^>]*\bsrc="([^"?#]+)/g)].map(m=>m[1]);
 for(const path of paths){try{vm.runInContext(fs.readFileSync(root+path,'utf8'),c,{filename:path});}catch(e){console.error('LOAD',path,e);process.exit(1)}}
 (async()=>{await run('inflateWorld()');Image.active=true;await run('buildHouseFurnitureLayers()');await run('loadPublishedEditorLayouts()');
+
+c.graveyardPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/hollybeck-cleanup.json','utf8'));
 c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
 c.recoveredDraft=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-editor-draft.json','utf8'));
 run(`mode='play';camFree=false;let profile=[];
@@ -21,6 +23,10 @@ for(const name of ['saveEditorDraft','editorPrepareMap','restoreOverworld','real
 let worldVisits=0;
 for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',false],['house22',false],['world',false]]){
  const t=performance.now();loadMap(id,fresh);
+ if(id==='house22'){
+  const mad=npcs.find(n=>n.n==='Elder Maddock');assert(!mad.seatSpr&&!mad.seatClipY);assert.equal(mad.f,'u');assert.equal(mad.x,128);assert.equal(mad.y,100);
+  assert(MD.roomActors.some(a=>a.editKey==='maddock:dragon-painting'),'Dragon picture present');
+ }
  if(id==='world'){
   // Check authored coordinates after the real Build, move and map-loading paths.
   const layout=publishedEditorLayouts.maps.world;
@@ -33,7 +39,7 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
    assert(MD.objs.some((v,i)=>i%3===0&&v===op.sprite&&MD.objs[i+1]===op.x&&MD.objs[i+2]===op.y),'Exact submitted tree placement '+op.key);
   }
   for(const patch of layout.build.changes.filter(p=>p.path[0]==='features')){
-   assert.equal(JSON.stringify(MD.features[patch.path[1]]),JSON.stringify(patch.value),'Exact submitted route/arena geometry');
+   if('value' in patch){let v=MD;for(const k of patch.path)v=v[k];assert.equal(JSON.stringify(v),JSON.stringify(patch.value),'Exact submitted route/arena geometry');}
   }
   assert(publishedEditorLayouts.applied.includes(recoveredDraft.id),'Failed draft recovery receipt');
   for(const op of recoveredDraft.operations){
@@ -61,6 +67,11 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
    const o=objs.find(o=>o.id===moved.id);assert(o,'Moved object exists');
    assert.equal(JSON.stringify([o.x,o.y]),JSON.stringify([moved.x,moved.y]),'Exact live object move '+moved.id);
   }
+  for(const g of graveyardPatch.graves){assert.equal(MD.objs[g.id*3+1],g.x);assert.equal(MD.objs[g.id*3+2],g.y);}
+  const grave=features.find(f=>f.id===207),spur=features.find(f=>f.id===80);
+  assert.equal(spur.pts.at(-1)[0],grave.x,'Graveyard entry is centered');
+  assert.equal(features.find(f=>f.id===81).kind,'landmark','No square clearing over the circle');
+  for(const name of ['Bregga','Sigrun','Torvald'])assert(!npcs.some(n=>n.n===name&&npcHere(n)),'Recovered cast removal '+name);
   const expectedArenas=[[9150,168,67,'hare'],[9152,333,204,'hare'],[9154,453,162,'boar'],[9156,587,262,'boar'],[9159,813,281,'boar']];
   for(const [id,x,y,encounter] of expectedArenas){
    const arena=MD.features.find(f=>f.id===id);
@@ -70,7 +81,7 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
   }
   for(const a of MD.roomActors.filter(a=>a.interiorNpc)){
    const n=MD.npcs.find(n=>n.n===a.interiorNpc);if(!n?.marketVendor)continue;
-   assert.equal(JSON.stringify([n.x,n.y]),JSON.stringify([a.x,a.y+14]),n.n+' follows published stall');
+   assert.equal(JSON.stringify([n.x,n.y]),JSON.stringify([a.x,a.y-30]),n.n+' follows published stall');
   }
   if(worldVisits++){
    if(!profile.some(p=>p.name==='restoreOverworld'&&p.result===true))throw Error('Published overworld was not retained');

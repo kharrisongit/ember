@@ -47,7 +47,7 @@ function applyPublishedEditorEntries(m,id,layout) {
   valid.sort((a,b)=>rank(a)-rank(b));
   for(const op of valid){
     if(op.kind==='actor'){
-      const a=resolve(op);shiftActorData(m,a,op.x,op.y,!op.key.startsWith('npc:'));
+      const a=resolve(op);shiftActorData(m,a,op.x,op.y,!op.key.startsWith('npc:'),!op.independent);
       if(op.deleted&&(op.key.startsWith('npc:')||a.editableWall||a.interiorFurniture)){
         a.publishedDeleted=a.editorDeleted=true;
         for(const i of a.moveBlocks||[]){const b=m.roomBlocks?.[i];if(b)b[0]=b[1]=b[2]=b[3]=-99999;}

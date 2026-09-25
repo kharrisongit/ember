@@ -27,6 +27,7 @@ run(code.slice(code.indexOf('function editorActorInfo('),code.indexOf('function 
 const authoredStart=code.indexOf('    const positions={"actor:14:market_weapons_stall"');
 run('{const m=W.maps.world;'+code.slice(authoredStart,code.indexOf('    const rashida=',authoredStart))+'}');
 
+c.document={createElement:()=>({getContext:()=>({fillRect(){}})})};
 run(read('js/market-npcs.js'));
 const sandspireStock=W.maps.world.npcs.find(n=>n.n==='Jamila').sells;
 const story=new Map(Object.entries(W.maps).flatMap(([id,m])=>(m.npcs||[]).map(n=>[id+':'+n.n,JSON.stringify([n.d,n.sells])])));
@@ -79,3 +80,32 @@ for(const n of [...W.maps.world.npcs.filter(n=>n.marketVendor),keeper]){
  c.t=.4;run('{'+code.slice(frameStart,frameEnd)+'selectedFrame=fr;}');assert.notEqual(c.selectedFrame,first,n.n+' idle frames advance');
 }
 console.log('PASS: requested market/inn appearances, pharaoh shop transfer, unique selected skins, animated idles, published placements and linked counters.');
+
+const reserved= /^(?:npc_(?:farmer_buba|chef_chloe|miner_mike|lumberjack_jack|pharaoh)_(?:d|idle)|market_citizen[1-5](?:_idle_d)?)$/;
+for(const m of Object.values(W.maps))for(const n of m.npcs||[]){if(n.devLineup||n.editorDeleted)continue;const visible=n.seatSpr||n.packSpr||(n.sk?'npc_'+n.sk+'_d':'');if(reserved.test(visible))assert(n.serviceAppearance,'Market appearance used outside its role: '+n.n);}
+
+// Dragging a stand must leave its merchant in place, including after publication.
+Object.assign(c,{MAPID:'world',PXW:60000,PXH:10000,scheduleEditorDraft(){},rebuildSolid(){},mapDirty:false});
+c.a=W.maps.world.roomActors.find(a=>a.spr==='market_weapons_stall');
+const merchant=W.maps.world.npcs.find(n=>n.n===c.a.interiorNpc),position=[merchant.x,merchant.y];
+run('moveEditorActor(a,a.x+120,a.y+30,true)');
+assert.deepEqual([merchant.x,merchant.y],position,'stand can move independently');
+const key=c.a.editKey||'actor:'+W.maps.world.roomActors.indexOf(c.a)+':'+c.a.spr;
+assert.equal(c.actorLayouts.world[key].independent,true);
+const {applyMoves}=await import('../tools/apply-editor-moves.mjs');
+const op={kind:'actor',key,identity:c.a.spr,fromX:c.a.x,fromY:c.a.y,x:c.a.x+80,y:c.a.y,independent:true};
+c.independentLayout=applyMoves({schema:1,applied:[],maps:{}},{schema:1,id:'bfc0c944-e791-42a0-9331-9a52eb97c5ff',map:'world',sourceRevision:'test',operations:[op]},'test');
+run('publishedEditorMaps.delete(W.maps.world);publishedEditorLayouts=independentLayout;applyPublishedEditorLayout(W.maps.world,"world")');
+assert.equal(c.a.x,op.x);assert.deepEqual([merchant.x,merchant.y],position,'published stand move preserves merchant');
+
+// Actual NPC drawing must submit the entire sprite with no permanent clipping.
+let clips=0,drawn;
+Object.assign(c,{ctx:{save(){},restore(){},beginPath(){},rect(){},clip(){clips++;}},scene:null,bossScene:null,hatchExit:false,drawGameImage(...args){drawn=args;},houseSeatedSheet:null});
+run(code.slice(code.indexOf('function drawNpcFrame('),code.indexOf('function millwoodSpriteFamily(')));
+c.vendor={...merchant,seatClipY:merchant.y-18};c.sprite=SPR[merchant.packSpr];
+run('drawNpcFrame(vendor,sprite,0,{})');
+assert.equal(clips,0);assert.equal(drawn[5],c.sprite[3],'complete source height');assert.equal(drawn[9],c.sprite[3],'complete rendered height');
+c.vendor={...merchant,x:100,y:100};c.front={marketActorFront:{spr:'market_weapons_stall',x:100,y:130}};
+assert.equal(run('marketVendorDepth(vendor,[front])'),129.5,'merchant is behind actual counter');
+c.front.marketActorFront.x=400;assert.equal(run('marketVendorDepth(vendor,[front])'),100,'moving stand away restores normal depth');
+console.log('PASS: independent stand movement survives publication; whole merchant sprites remain visible when counters move away.');
