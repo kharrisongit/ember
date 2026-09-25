@@ -12,6 +12,7 @@ const run=s=>vm.runInContext(s,c);
 const paths=[...fs.readFileSync(root+'index.html','utf8').matchAll(/<script\b[^>]*\bsrc="([^"?#]+)/g)].map(m=>m[1]);
 for(const path of paths){try{vm.runInContext(fs.readFileSync(root+path,'utf8'),c,{filename:path});}catch(e){console.error('LOAD',path,e);process.exit(1)}}
 (async()=>{await run('inflateWorld()');Image.active=true;await run('buildHouseFurnitureLayers()');await run('loadPublishedEditorLayouts()');
+c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
 c.recoveredDraft=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-editor-draft.json','utf8'));
 run(`mode='play';camFree=false;let profile=[];
 for(const name of ['saveEditorDraft','editorPrepareMap','restoreOverworld','realizeFeatures','spawnFoes','applyActorLayout','prepareEditorEntities','buildGround','rebuildSolid','placeBirds']){
@@ -38,6 +39,27 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
   for(const op of recoveredDraft.operations){
    assert.equal(JSON.stringify(MD.scatter.slice(op.index,op.index+3)),JSON.stringify([op.sprite,op.fromX,op.fromY]),'Recovered scenery identity');
    assert(MD.editorDeletedDecor.includes(op.key),'Recovered deletion '+op.key);
+  }
+  for(const expected of winterPatch.features){
+   const actual=MD.features.find(f=>f.id===expected.id);
+   assert.equal(JSON.stringify(actual),JSON.stringify(expected),'Exact supplied feature '+expected.id);
+   if(expected.kind==='arena'){
+    assert.equal(foes.filter(f=>f.huntingArena?.id===expected.id).length,3,'Animals in supplied arena '+expected.id);
+    if(expected.style==='winter'){
+     let checked=0;
+     for(let y=expected.y-6;y<=expected.y+6;y++)for(let x=expected.x-6;x<=expected.x+6;x++){
+      if(Math.hypot(x-expected.x,y-expected.y)>expected.r+.5)continue;
+      const tile=terr[y*MW+x];if(tile===WATER||tile===BRIDGE)continue;
+      assert.equal(tile,DIRT,'Winter clearing '+expected.id+' at '+x+','+y);checked++;
+     }
+     assert(checked>100,'Full winter ground circle');
+    }
+   }
+  }
+  assert.equal(EmberBuildData.hash(MD.objs),winterPatch.objectsHash,'All existing object placements plus the three supplied moves');
+  for(const moved of winterPatch.moves){
+   const o=objs.find(o=>o.id===moved.id);assert(o,'Moved object exists');
+   assert.equal(JSON.stringify([o.x,o.y]),JSON.stringify([moved.x,moved.y]),'Exact live object move '+moved.id);
   }
   const expectedArenas=[[9150,168,67,'hare'],[9152,333,204,'hare'],[9154,453,162,'boar'],[9156,587,262,'boar'],[9159,813,281,'boar']];
   for(const [id,x,y,encounter] of expectedArenas){

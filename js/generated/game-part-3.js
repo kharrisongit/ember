@@ -558,7 +558,11 @@ function realizeFeatures() {
         }
         else if (f.style === "winter" ||
                  (typeof inWinter === "function" && inWinter(f.x, f.y))) {
-          if (d > r + 1.5 && d <= r + 3.5 && cur === GRASS) put(x, y, WALL);
+          // Carve the same clearing as other forests; winter ground art
+          // supplies the snowy dirt edges. Preserve water and bridges above.
+          if (d <= r + 0.5) put(x, y, DIRT);
+          else if (d <= r + 1.5) { if (cur !== DIRT) put(x, y, GRASS); }
+          else if (d <= r + 3.5 && cur === GRASS) put(x, y, WALL);
         }
         else if (d <= r + 0.5) put(x, y, DIRT);
         else if (d <= r + 1.5) { if (cur !== DIRT) put(x, y, GRASS); }
