@@ -1,0 +1,431 @@
+{
+  "schema": 1,
+  "id": "acdcfe6b-020f-448c-9b25-61a1e2e6290f",
+  "map": "world",
+  "sourceRevision": "1f259bb897d3d57277a6d591ee1825d2cf90d6ef1fae721022042a9becfdb373",
+  "baseFingerprint": "74762304-a92f5016-735253",
+  "session": {
+    "id": "984e76f6-e990-4a47-9961-e7fdbc08705f",
+    "sequence": 6,
+    "baseHash": "3dd18ee5-f801f70f-346683"
+  },
+  "operations": [
+    {
+      "kind": "object",
+      "key": "7014",
+      "sprite": 88,
+      "fromX": 4184,
+      "fromY": 1817,
+      "x": 4182,
+      "y": 1831
+    },
+    {
+      "kind": "object",
+      "key": "7015",
+      "sprite": 90,
+      "fromX": 24296,
+      "fromY": 1616,
+      "x": 24294,
+      "y": 1620
+    },
+    {
+      "kind": "object",
+      "key": "7017",
+      "sprite": 88,
+      "fromX": 43176,
+      "fromY": 3456,
+      "x": 43214,
+      "y": 3282
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Wren",
+      "identity": "Wren",
+      "fromX": 4184,
+      "fromY": 1808,
+      "x": 4183,
+      "y": 1815
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Astrid",
+      "identity": "Astrid",
+      "fromX": 43176,
+      "fromY": 3444,
+      "x": 43215,
+      "y": 3265
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Ovid",
+      "identity": "Ovid",
+      "fromX": 12407,
+      "fromY": 3302,
+      "x": 12479,
+      "y": 3304
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Prue",
+      "identity": "Prue",
+      "fromX": 12542,
+      "fromY": 3305,
+      "x": 12484,
+      "y": 3381
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Toft",
+      "identity": "Toft",
+      "fromX": 12405,
+      "fromY": 3200,
+      "x": 12544,
+      "y": 3306
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Isolde",
+      "identity": "Isolde",
+      "fromX": 12584,
+      "fromY": 3202,
+      "x": 12468,
+      "y": 3334
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Bevan",
+      "identity": "Bevan",
+      "fromX": 12518,
+      "fromY": 3172,
+      "x": 12463,
+      "y": 3380
+    },
+    {
+      "kind": "actor",
+      "key": "actor:14:market_weapons_stall",
+      "identity": "market_weapons_stall",
+      "independent": true,
+      "fromX": 12405,
+      "fromY": 3230,
+      "x": 12548,
+      "y": 3237
+    },
+    {
+      "kind": "actor",
+      "key": "actor:15:market_produce_stall",
+      "identity": "market_produce_stall",
+      "independent": true,
+      "fromX": 12518,
+      "fromY": 3202,
+      "x": 12427,
+      "y": 3213
+    },
+    {
+      "kind": "actor",
+      "key": "actor:17:market_curios_stall",
+      "identity": "market_curios_stall",
+      "independent": true,
+      "fromX": 12407,
+      "fromY": 3332,
+      "x": 12394,
+      "y": 3351
+    },
+    {
+      "kind": "actor",
+      "key": "actor:18:market_drinks_stall",
+      "identity": "market_drinks_stall",
+      "independent": true,
+      "fromX": 12584,
+      "fromY": 3232,
+      "x": 12546,
+      "y": 3407
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Tessa",
+      "identity": "Tessa",
+      "fromX": 12522,
+      "fromY": 3212,
+      "x": 12462,
+      "y": 3356
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Asta",
+      "identity": "Asta",
+      "fromX": 3904,
+      "fromY": 1080,
+      "x": 3904,
+      "y": 1080,
+      "deleted": true
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Merrin",
+      "identity": "Merrin",
+      "fromX": 3856,
+      "fromY": 1080,
+      "x": 3856,
+      "y": 1080,
+      "deleted": true
+    },
+    {
+      "kind": "door",
+      "key": "63",
+      "index": 63,
+      "to": "tavern",
+      "before": {
+        "x": 3904,
+        "y": 992,
+        "w": 16,
+        "h": 16
+      },
+      "rect": {
+        "x": 3904,
+        "y": 992,
+        "w": 18,
+        "h": 32
+      }
+    },
+    {
+      "kind": "collision",
+      "key": "1560,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1561,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1562,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1563,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1564,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1565,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1566,402",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1559,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1560,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1561,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1562,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1563,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1564,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1565,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1566,401",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "1568,402",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1568,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1569,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1570,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1571,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1572,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1573,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1574,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1575,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "1576,403",
+      "before": null,
+      "blocked": true
+    },
+    {
+      "kind": "collision",
+      "key": "487,129",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "487,128",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "487,127",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "488,127",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "489,127",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "490,127",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "490,128",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "490,129",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "490,130",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "488,128",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "488,129",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "488,130",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "489,128",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "489,129",
+      "before": null,
+      "blocked": false
+    },
+    {
+      "kind": "collision",
+      "key": "489,130",
+      "before": null,
+      "blocked": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "810d204d-2666-4fb4-b579-dc6d0480a703",
+  "map": "world",
+  "sourceRevision": "5cb622d4184fc2d5380333a566ef94ca402c930d7928b6970eefc26ad3fed3cf",
+  "baseFingerprint": "bd5defa6-f2ec49b2-735343",
+  "session": {
+    "id": "ec01df18-c017-40ef-a5a3-b39654793d3c",
+    "sequence": 1,
+    "baseHash": "f67e6499-baff8c25-350057"
+  },
+  "operations": [
+    {
+      "kind": "actor",
+      "key": "npc:Marek",
+      "identity": "Marek",
+      "fromX": 12216,
+      "fromY": 3344,
+      "x": 12216,
+      "y": 3344,
+      "deleted": true
+    }
+  ]
+}

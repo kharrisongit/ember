@@ -13,6 +13,7 @@ const paths=[...fs.readFileSync(root+'index.html','utf8').matchAll(/<script\b[^>
 for(const path of paths){try{vm.runInContext(fs.readFileSync(root+path,'utf8'),c,{filename:path});}catch(e){console.error('LOAD',path,e);process.exit(1)}}
 (async()=>{await run('inflateWorld()');Image.active=true;await run('buildHouseFurnitureLayers()');await run('loadPublishedEditorLayouts()');
 
+c.latestRecovered=[36092284694,36093525235].map(id=>JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-'+id+'.json','utf8')));
 c.thornwellRoads=JSON.parse(fs.readFileSync(root+'tests/fixtures/thornwell-road-recovery.json','utf8'));
 c.graveyardPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/hollybeck-cleanup.json','utf8'));
 c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
@@ -78,8 +79,8 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
   assert(publishedEditorLayouts.applied.includes(thornwellRoads.id),'Recovered road submission receipt');
   for(const op of thornwellRoads.operations){
    if(op.kind==='paint')for(let j=0;j<op.values.length;j++)assert.equal(terr[op.start+j],op.values[j],'Exact recovered road tile '+(op.start+j));
-   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));assert.equal(o.x,op.x);assert.equal(o.y,op.y);}
-   if(op.kind==='actor'){const n=npcs.find(n=>n.n===op.identity);assert.equal(n.x,op.x);assert.equal(n.y,op.y);}
+   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),expected=layout['object:'+op.key]||op;assert.equal(o.x,expected.x);assert.equal(o.y,expected.y);}
+   if(op.kind==='actor'){const n=npcs.find(n=>n.n===op.identity),expected=layout['actor:'+op.key]||op;assert.equal(n.x,expected.x);assert.equal(n.y,expected.y);}
   }
   const villageStalls=objs.filter(o=>/^stall[123]$/.test(NAMES[o.s]||''));
   assert.equal(villageStalls.length,4);
@@ -95,9 +96,19 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
    assert.equal(JSON.stringify([arena.x,arena.y,arena.encounter]),JSON.stringify([x,y,encounter]));
    assert.equal(foes.filter(f=>f.huntingArena?.id===id).length,3,'Animals in arena '+id);
   }
-  for(const a of MD.roomActors.filter(a=>a.interiorNpc)){
-   const n=MD.npcs.find(n=>n.n===a.interiorNpc);if(!n?.marketVendor)continue;
-   assert.equal(JSON.stringify([n.x,n.y]),JSON.stringify([a.x,a.y-30]),n.n+' follows published stall');
+  for(const draft of latestRecovered){
+   assert(publishedEditorLayouts.applied.includes(draft.id),'Recovered submission receipt');
+   for(const op of draft.operations){
+    const saved=layout[op.kind+':'+op.key];assert(saved,'Recovered operation present');
+    if(op.kind==='actor'){
+     const a=op.key.startsWith('npc:')?npcs.find(n=>n.n===op.identity):MD.roomActors.find(a=>a.spr===op.identity);
+     assert(a,'Recovered actor exists');assert.equal(a.x,op.x);assert.equal(a.y,op.y);
+     if(op.deleted)assert(a.editorDeleted,'Recovered NPC deletion');
+    }
+    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));assert.equal(o.x,op.x);assert.equal(o.y,op.y);}
+    if(op.kind==='door')assert.equal(JSON.stringify(MD.doors[op.index].triggerRect),JSON.stringify(op.rect),'Recovered tavern doorway');
+    if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);assert.equal(collisionOverride(tx*8+4,ty*8+4),op.blocked,'Recovered collision '+op.key);}
+   }
   }
   if(worldVisits++){
    if(!profile.some(p=>p.name==='restoreOverworld'&&p.result===true))throw Error('Published overworld was not retained');
