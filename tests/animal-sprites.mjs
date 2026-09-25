@@ -18,8 +18,8 @@ const canvas=()=>({width:0,height:0,getContext(){return {drawImage(img,sx,sy,w,h
 const c=vm.createContext({SPR:{},FOE_ATTACK_OFFSETS:{},Image,document:{createElement:canvas},W:world});
 const run=s=>vm.runInContext(s,c);
 run(read('js/animal-sprites.js'));run('registerAnimalSprites()');await run('loadAnimalSprites()');
-assert.equal(files.length,22);assert.equal(files.filter(p=>p.includes('Deer')).length,5);
-assert.equal(Object.keys(c.SPR).length,120);
+assert.equal(files.length,27);assert.equal(files.filter(p=>p.includes('Deer')).length,5);
+assert.equal(Object.keys(c.SPR).length,140);
 const game=read('js/generated/game-part-2.js');run(game.slice(game.indexOf('function sheetOf('),game.indexOf('function blit(')));
 for(const [name,sp]of Object.entries(c.SPR)){
  c.sp=sp;const sheet=run('sheetOf(sp)');assert.equal(sheet.width,sp[2]*sp[4]);assert.equal(sheet.height,sp[3]);
@@ -50,21 +50,24 @@ for(const dir of ['d','u','w','e'])assert.equal(c.SPR['farm_bull_'+dir],c.SPR['f
 assert(!files.some(p=>p.includes('Bull')),'bull artwork is never loaded');
 assert.equal(run("farmAnimalDrawName('farm_bull_w',{moving:true,tx:10,ty:0,wx:0,wy:0})"),'farm_calf_walk_e');
 
-assert.equal(files.filter(p=>p.includes('Fox')).length,5);
+for(const [species,file] of [['fox','Fox'],['bird','Black_grouse']]){
+assert.equal(files.filter(p=>p.includes(file)).length,5);
 for(const [action,frames] of [['idle',4],['walk',6],['run',6],['hurt',4],['die',6]])for(const [row,dir] of ['d','u','w','e'].entries()){
- const name='fox_'+action+'_'+dir;assert.equal(c.SPR[name][4],frames);
+ const name=species+'_' +action+'_'+dir;assert.equal(c.SPR[name][4],frames);
  assert.equal(run('animalStrips.find(s=>s.name==="'+name+'").row'),row);
 }
-run("drawBagBig(big,'fox_idle_d',0)");assert.equal(c.lastBagImage,run('animalSheets.fox_idle_d'));
+run("drawBagBig(big,'"+species+"_idle_d',0)");assert.equal(c.lastBagImage,run('animalSheets.'+species+'_idle_d'));
 // Exercise the renderer's real state/direction selector for all fox sheets.
-Object.assign(c,{FOE_BORROW:{},FOE_ART:{fox:'fox'},heavyFoe:()=>false});
+Object.assign(c,{FOE_BORROW:{},FOE_ART:{[species]:species},heavyFoe:()=>false});
 run(game.slice(game.indexOf('function foeDir('),game.indexOf('function spawnFoes(')));
 const selectStart=game.indexOf('    const P_ = ((FOE_BORROW[f.kind]');
 const selector=game.slice(selectStart,game.indexOf('    if(f.reverseRise',selectStart));
 for(const [state,hurt,action] of [['idle',0,'idle'],['walk',0,'walk'],['escape',0,'run'],['walk',.2,'hurt'],['dead',0,'die']]){
  for(const [dir,flip,facing] of [['d',false,'d'],['u',false,'u'],['s',true,'w'],['s',false,'e']]){
-  c.f={kind:'fox',st:state,hurt,dir,flip};run('{'+selector+'selectedSprite=nm;}');
-  assert.equal(c.selectedSprite,'fox_'+action+'_'+facing);
+  c.f={kind:species,st:state,hurt,dir,flip};run('{'+selector+'selectedSprite=nm;}');
+  assert.equal(c.selectedSprite,species+'_' +action+'_'+facing);
  }
 }
-console.log('PASS: fox sheets, directional idle/walk/run/hurt/death selection and inventory artwork.');
+console.log('PASS: '+species+' sheets, directional idle/walk/run/hurt/death selection and inventory artwork.');
+
+}

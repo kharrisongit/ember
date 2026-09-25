@@ -36,6 +36,13 @@ function registerAnimalSprites() {
       add(name,'Fox_'+file+'.png',32,row,frames,[0,0,32,32]);
       FOE_ATTACK_OFFSETS[name]=[0,4];
     });
+  // Black grouse sheets include their own shadow, with down/up/west/east rows.
+  for(const [action,file,frames] of [['idle','Idle',4],['walk','Walk',6],['run','Flight',6],['hurt','Hurt',4],['die','Death',6]])
+    dirs.forEach((dir,row)=>{
+      const name='bird_'+action+'_'+dir;
+      add(name,'Black_grouse_'+file+'_with_shadow.png',32,row,frames,[0,0,32,32]);
+      FOE_ATTACK_OFFSETS[name]=[0,4];
+    });
 }
 async function loadAnimalSprites() {
   const files=new Map();

@@ -23,8 +23,9 @@ Object.assign(FOE,{boar:{hp:3,speed:22,sight:0,reach:0,ring:0,dmg:0,swingT:1,hit
 FOE.hare={...FOE.boar,hp:2,speed:28};
 FOE.deer={...FOE.boar,hp:4,speed:25};
 FOE.fox={...FOE.boar,hp:3,speed:30};
-FOE_ART.boar='br';FOE_ART.hare='hare';FOE_ART.deer='deer';FOE_ART.fox='fox';
-const isHuntingArena=a=>a?.kind==='arena'&&['boar','hare','deer','fox'].includes(a.encounter);
+FOE.bird={...FOE.boar,hp:2,speed:22};
+FOE_ART.boar='br';FOE_ART.hare='hare';FOE_ART.deer='deer';FOE_ART.fox='fox';FOE_ART.bird='bird';
+const isHuntingArena=a=>a?.kind==='arena'&&['boar','hare','deer','fox','bird'].includes(a.encounter);
 const huntingKey=(a,slot)=>MAPID+':hunt:'+a.id+':'+slot;
 function huntingBounds(a){return {x:a.x*TS+TS/2,y:a.y*TS+TS/2,r:Math.max(8,(a.r||6.3)*TS-26)};}
 function huntingPointClear(b,x,y){
@@ -71,19 +72,19 @@ function stepHuntingAnimal(f,dt) {
   f.hurt=Math.max(0,f.hurt-dt);f.wanderWait=(f.wanderWait||0)-dt;
   if(f.hurt>0){
     const angle=Math.atan2(f.y-P.y,f.x-P.x);
-    f.wanderTarget={x:b.x+Math.cos(angle)*b.r*.85,y:b.y+Math.sin(angle)*b.r*.85};f.wanderWait=0;
+    f.wanderTarget={x:b.x+Math.cos(angle)*b.r*.85,y:b.y+Math.sin(angle)*b.r*.85};f.wanderWait=0;if(f.kind==='bird')f.wanderFlying=true;
   }
   if(!f.wanderTarget&&f.wanderWait<=0){
     const angle=Math.random()*Math.PI*2,r=Math.sqrt(Math.random())*b.r*.9;
     const x=b.x+Math.cos(angle)*r,y=b.y+Math.sin(angle)*r;
-    if(huntingPointClear(b,x,y))f.wanderTarget={x,y};else f.wanderWait=.5;
+    if(huntingPointClear(b,x,y)){f.wanderTarget={x,y};if(f.kind==='bird')f.wanderFlying=Math.random()<.35;}else f.wanderWait=.5;
   }
   if(!f.wanderTarget){f.st='idle';return;}
   const dx=f.wanderTarget.x-f.x,dy=f.wanderTarget.y-f.y,d=Math.hypot(dx,dy);
   if(d<2){f.wanderTarget=null;f.wanderWait=1+Math.random()*3;f.st='idle';return;}
-  const step=Math.min(d,(f.hurt>0?34:FOE[f.kind].speed)*dt),x=f.x+dx/d*step,y=f.y+dy/d*step;
+  const step=Math.min(d,(f.hurt>0||f.kind==='bird'&&f.wanderFlying?34:FOE[f.kind].speed)*dt),x=f.x+dx/d*step,y=f.y+dy/d*step;
   if(!huntingPointClear(b,x,y)){f.wanderTarget=null;f.wanderWait=.5;f.st='idle';return;}
-  f.x=x;f.y=y;f.st='walk';f.dir=Math.abs(dx)>Math.abs(dy)?'s':dy>0?'d':'u';f.flip=dx<0;
+  f.x=x;f.y=y;f.st=f.kind==='bird'&&f.wanderFlying?'escape':'walk';f.dir=Math.abs(dx)>Math.abs(dy)?'s':dy>0?'d':'u';f.flip=dx<0;
 }
 function drawHuntingMeat(x,y) {
   // Small pixel drumstick, kept in code like the game's other item symbols.
