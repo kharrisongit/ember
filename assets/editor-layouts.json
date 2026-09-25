@@ -46058,8 +46058,8 @@
         "kind": "actor",
         "key": "npc:Bevan",
         "identity": "Bevan",
-        "x": 12463,
-        "y": 3380,
+        "x": 32520,
+        "y": 8336,
         "originX": 12518,
         "originY": 3216
       },
@@ -46067,8 +46067,8 @@
         "kind": "actor",
         "key": "npc:Prue",
         "identity": "Prue",
-        "x": 12484,
-        "y": 3381,
+        "x": 12306,
+        "y": 3379,
         "originX": 12542,
         "originY": 3349
       },
@@ -46076,8 +46076,8 @@
         "kind": "actor",
         "key": "npc:Ovid",
         "identity": "Ovid",
-        "x": 12479,
-        "y": 3304,
+        "x": 12514,
+        "y": 3238,
         "originX": 12407,
         "originY": 3346
       },
@@ -46085,8 +46085,8 @@
         "kind": "actor",
         "key": "npc:Isolde",
         "identity": "Isolde",
-        "x": 12468,
-        "y": 3334,
+        "x": 3775,
+        "y": 1765,
         "originX": 12584,
         "originY": 3246
       },
@@ -46971,8 +46971,8 @@
         "kind": "actor",
         "key": "npc:Tessa",
         "identity": "Tessa",
-        "x": 12462,
-        "y": 3356,
+        "x": 12461,
+        "y": 3283,
         "originX": 12522,
         "originY": 3212
       },
@@ -47234,6 +47234,22 @@
         "x": 3981,
         "y": 1079
       },
+      "npc-add:627dc59a-0b1b-4fba-a947-39f09f5987d2": {
+        "kind": "npc-add",
+        "key": "627dc59a-0b1b-4fba-a947-39f09f5987d2",
+        "look": "sprite:market_lute",
+        "name": "market lute",
+        "x": 12479,
+        "y": 3279
+      },
+      "npc-add:6a8e054e-f933-4e1e-9327-bcb79ae59cfb": {
+        "kind": "npc-add",
+        "key": "6a8e054e-f933-4e1e-9327-bcb79ae59cfb",
+        "look": "sprite:hb_kobold",
+        "name": "hb kobold",
+        "x": 32385,
+        "y": 8397
+      },
       "object:7059": {
         "kind": "object",
         "key": "7059",
@@ -47242,6 +47258,35 @@
         "y": 1103,
         "originX": 3920,
         "originY": 1104
+      },
+      "actor:npc:Garrow": {
+        "kind": "actor",
+        "key": "npc:Garrow",
+        "identity": "Garrow",
+        "deleted": true,
+        "x": 3816,
+        "y": 1744,
+        "originX": 3816,
+        "originY": 1696
+      },
+      "actor:npc:Sella": {
+        "kind": "actor",
+        "key": "npc:Sella",
+        "identity": "Sella",
+        "x": 32679,
+        "y": 8350,
+        "originX": 32600,
+        "originY": 8304
+      },
+      "object:6224": {
+        "kind": "object",
+        "key": "6224",
+        "sprite": 1331,
+        "deleted": true,
+        "x": 32499,
+        "y": 8352,
+        "originX": 32499,
+        "originY": 8352
       },
       "door:62": {
         "kind": "door",
@@ -48795,7 +48840,8 @@
     "5f9457f5-1615-4a78-83b8-75e985f8bbe9",
     "9e9e2c4b-8b73-4886-b9dd-74ed9ded390f",
     "699952cd-dac8-4a58-bb47-53e23b7756eb",
-    "ccfa5121-152f-4ef4-ae89-fc73e3f378cf"
+    "ccfa5121-152f-4ef4-ae89-fc73e3f378cf",
+    "50e1496a-f358-4e6d-9f41-c88d27bee753"
   ],
   "sessions": {
     "witchmoor": {
@@ -48920,7 +48966,7 @@
     },
     "world": {
       "id": "491f9b2f-9b48-49e2-b75a-5f33248e7da6",
-      "sequence": 2,
+      "sequence": 3,
       "baseHash": "94b0a652-32e4d7be-351391",
       "baseFingerprint": "40e9b55-e01f0089-735395",
       "base": {
@@ -96030,7 +96076,7 @@
           "originY": 3344
         }
       },
-      "resultHash": "3255c821-1d7467f9-353768"
+      "resultHash": "3e25a392-1913a180-354505"
     }
   }
 }
