@@ -292,7 +292,7 @@ function installFerrySigns(){
       moveBlocks:[m.roomBlocks.push([x-5,y-6,x+5,y])-1]});
   }
 }
-function villageStandSize(){return {scale:1.4,headroom:22};}
+function villageStandSize(){return {scale:1.4,headroom:46};}
 function prepareVillageStands(){
   for(const [id,m] of Object.entries(W.maps)){
     m.marketStands=[];
@@ -3652,7 +3652,7 @@ function drawWorld(t, dt) {
       if (!s) continue;
       const oxw = o.wx || 0, oyw = o.wy || 0;
       const market=marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'');
-      const artW=market?Math.round(s[2]*villageStandSize().scale):s[2],artH=market?80:s[3];
+      const artW=market?Math.round(s[2]*villageStandSize().scale):s[2],artH=market?Math.round(s[3]*villageStandSize().scale)+villageStandSize().headroom:s[3];
       if (o.x + oxw + artW / 2 < cam.x || o.x + oxw - artW / 2 > cam.x + vw) continue;
       if (o.y + oyw < cam.y || o.y + oyw - artH > cam.y + vh) continue;
       const wd = DEFS[o.s];
@@ -3797,7 +3797,7 @@ function drawWorld(t, dt) {
   }
   if (glassShieldActive() || glassShieldPulse > 0) draw.push({ glassShieldFx:true, x:P.x, y:P.y, sy:P.y+80 });
   for(const o of draw.slice())if(marketIds.has(o.id)&&/^stall[123]$/.test(NAMES[o.s]||'')){
-    o.marketStand=true;o.sy=o.y-90;
+    o.marketStand=true;o.sy=o.y-(Math.round(SPR[NAMES[o.s]][3]*villageStandSize().scale)+villageStandSize().headroom);
     draw.push({marketFront:o,x:o.x,y:o.y,sy:o.y});
   }
   const mouth = (o) => o.s !== undefined &&
