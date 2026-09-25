@@ -3,13 +3,13 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
-for(const species of ['hare','boar','deer']){
+for(const species of ['hare','boar','deer','fox']){
 const c=vm.createContext({console,TS:16,MAPID:'world',MD:{foes:[],features:[],felled:['130,60','900,500'],felled_rle:'60:131-133|500:901'},
  P:{x:2696,y:1080,act:null},foes:[],features:[],loot:[],FOE_ART:{},FOE:{},live:[],foeClock:0,wakeCool:0,turnT:0,turnHolder:null,foeCool:0,lastFight:0,
  isSolid:(x,y)=>x>2750&&y<1080,thinks:()=>true,targetFor(){throw Error('Hunting animals must not pursue combat targets');},
  houseLootTaken:new Set(),lootChestAnimations:new Map(),royalDefeated:{},wonAll:false,knightEncounterDone:true,bossGone:{},NO_RESPAWN:/^never$/,
  enemyMaxHp:()=>3,saveGame(){c.saved=(c.saved||0)+1},toast:s=>{c.message=s},flyGold(){},treasuryGuarding:()=>false,
- boarMeat:0,hareMeat:0,deerMeat:0,dragonFish:0,gold:50,graves:null,BOSS_KIND:/^never$/,WORTH:{},GOLD_DROP_MULTIPLIER:1.8,
+ boarMeat:0,hareMeat:0,deerMeat:0,foxMeat:0,dragonFish:0,gold:50,graves:null,BOSS_KIND:/^never$/,WORTH:{},GOLD_DROP_MULTIPLIER:1.8,
  directionVector:()=>[0,-1],playerFacing4:()=> 'n',PC_W:16,PC_H:18,seenFoe:{},seenCount:0,smithUpgrade:false,worn:{},pHp:6,pMax:6,
  makeFoeRetreat(){},devSafe:false,devItemTest:false,dragon:{hp:1,maxHp:8,down:false,x:0,y:0},BOAR_MEAT_HEAL:4,DRAGON_FISH_HEAL:4,
  hasDragon:()=>true,dragonHere:()=>true,syncDragonVitality(){},showHeal(){},
@@ -67,4 +67,4 @@ run("features.push({id:9151,kind:'arena',x:220,y:90,r:6.3,style:'birch',encounte
 assert.equal(c.foes.length,6);
 run('features.pop();spawnHuntingAnimals()');assert.equal(c.foes.length,3);
 }
-console.log('PASS: hare, boar and deer hunts: exact route patch, species art, confinement, no walls, sword kills, meat collection, healing, timed respawn and additional hunting spots.');
+console.log('PASS: hare, boar, deer and fox hunts: exact route patch, species art, confinement, no walls, sword kills, meat collection, healing, timed respawn and additional hunting spots.');

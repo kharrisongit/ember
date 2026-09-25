@@ -22,8 +22,9 @@ let huntingCheck=0;
 Object.assign(FOE,{boar:{hp:3,speed:22,sight:0,reach:0,ring:0,dmg:0,swingT:1,hitAt:.5,rest:2,wind:.5}});
 FOE.hare={...FOE.boar,hp:2,speed:28};
 FOE.deer={...FOE.boar,hp:4,speed:25};
-FOE_ART.boar='br';FOE_ART.hare='hare';FOE_ART.deer='deer';
-const isHuntingArena=a=>a?.kind==='arena'&&['boar','hare','deer'].includes(a.encounter);
+FOE.fox={...FOE.boar,hp:3,speed:30};
+FOE_ART.boar='br';FOE_ART.hare='hare';FOE_ART.deer='deer';FOE_ART.fox='fox';
+const isHuntingArena=a=>a?.kind==='arena'&&['boar','hare','deer','fox'].includes(a.encounter);
 const huntingKey=(a,slot)=>MAPID+':hunt:'+a.id+':'+slot;
 function huntingBounds(a){return {x:a.x*TS+TS/2,y:a.y*TS+TS/2,r:Math.max(8,(a.r||6.3)*TS-26)};}
 function huntingPointClear(b,x,y){

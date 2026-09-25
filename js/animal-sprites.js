@@ -29,6 +29,13 @@ function registerAnimalSprites() {
       add(name,'Deer_'+file+'.png',32,row,frames,[0,0,32,32]);
       FOE_ATTACK_OFFSETS[name]=[0,4];
     });
+  // Fox rows face down, up, west, east. The uploaded walk filename is lowercase.
+  for(const [action,file,frames] of [['idle','Idle',4],['walk','walk',6],['run','Run',6],['hurt','Hurt',4],['die','Death',6]])
+    dirs.forEach((dir,row)=>{
+      const name='fox_'+action+'_'+dir;
+      add(name,'Fox_'+file+'.png',32,row,frames,[0,0,32,32]);
+      FOE_ATTACK_OFFSETS[name]=[0,4];
+    });
 }
 async function loadAnimalSprites() {
   const files=new Map();
