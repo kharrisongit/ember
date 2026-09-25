@@ -157,7 +157,16 @@ async function prepareTownHouseInteriors(town, houseIds) {
     if(id==='house47'||id==='house50'){
       const resident=map.npcs?.find(n=>n.n===(id==='house47'?'Fennel':'Bjorn'));
       const chair=furniture.find(o=>o.n==='north chair');
-      if(resident&&chair)chair.sy=(resident.sy??resident.y)-1;
+      if(resident&&chair){
+        chair.sy=(resident.sy??resident.y)-1;
+        // The earlier cast setup also placed a fallback chair here. Its old
+        // depth can cover the aligned portrait even though the extracted chair
+        // sorts correctly. Retain its slot for saved actor IDs, but retire it.
+        for(const old of map.roomActors)if(old.castSeat&&/^ichair/.test(old.spr||'')&&
+          Math.abs(old.x-chair.x)<8&&Math.abs(old.y-chair.y)<16){
+          old.editorDeleted=old.publishedDeleted=true;
+        }
+      }
     }
     // Each collision belongs to exactly one furnishing; dragging never leaves it behind.
     map.roomBlocks=originalBlocks;

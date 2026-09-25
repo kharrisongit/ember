@@ -12,7 +12,7 @@ const sprites=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-par
 const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...JSON.parse(read('assets/interiors/thornwell/layouts.json')),...JSON.parse(read('assets/interiors/forgewick/layouts.json')),...JSON.parse(read('assets/interiors/sandspire/layouts.json')),...JSON.parse(read('assets/interiors/hollybeck/layouts.json')),...JSON.parse(read('assets/interiors/remaining/layouts.json'))};
 const outside=JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold')));
 const canvasCalls=[];
-const ctx=vm.createContext({W:world,window:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},document:{createElement:()=>({getContext:()=>({drawImage(){},fillRect:(...a)=>canvasCalls.push(a)})})},npcs:[],actorLayouts:{},SPR:sprites,NAMES:[],throneRoomImg:{},atlasImg:{},drawGameImage(){},TS:16,rebuildSolid(){},mapDirty:false});
+const ctx=vm.createContext({W:world,window:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},document:{createElement:()=>({getContext:()=>({drawImage(){},fillRect:(...a)=>canvasCalls.push(a)})})},npcs:[],actorLayouts:{},SPR:sprites,NAMES:[],throneRoomImg:{},atlasImg:{},drawGameImage(){},TS:16,rebuildSolid(){},scheduleEditorDraft(){},mapDirty:false});
 vm.runInContext(read('js/millwood-interiors.js'),ctx);
 vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>image',ctx);
 const game=read('js/generated/game-part-2.js');

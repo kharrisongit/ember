@@ -23,8 +23,17 @@ for(const name of ['saveEditorDraft','editorPrepareMap','restoreOverworld','real
  const original=eval(name);eval(name+' = function(...args){const t=performance.now();const out=original(...args);profile.push({name:"'+name+'",ms:performance.now()-t,result:typeof out==="boolean"?out:undefined});return out;}');
 }
 let worldVisits=0;
-for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',false],['house22',false],['world',false]]){
+for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['world',true],[W.start,true],['world',false],['house47',false],['house50',false],['house22',false],['world',false]]){
  const t=performance.now();loadMap(id,fresh);
+ if(id==='house47'||id==='house50'){
+  const n=npcs.find(n=>n.n===(id==='house47'?'Fennel':'Bjorn'));
+  const chair=MD.roomActors.find(a=>a.exactFurniture&&a.n==='north chair');
+  const table=MD.roomActors.find(a=>a.exactFurniture&&a.n==='dining table');
+  const old=MD.roomActors.filter(a=>a.castSeat&&/^ichair/.test(a.spr||''));
+  assert(old.length&&old.every(a=>a.editorDeleted&&a.publishedDeleted),'Fallback chair overlays stay hidden after real map loading');
+  assert(!chair.editorDeleted&&houseChairDepth(chair,npcs)<n.sy,'Movable chair is behind seated resident');
+  assert(houseChairDepth(table,npcs)>n.sy,'Table stays in front of seated resident');
+ }
  if(id==='house22'){
   const mad=npcs.find(n=>n.n==='Elder Maddock');assert(!mad.seatSpr&&!mad.seatClipY);assert.equal(mad.f,'u');assert.equal(mad.x,128);assert.equal(mad.y,100);
   assert(MD.roomActors.some(a=>a.editKey==='maddock:dragon-painting'),'Dragon picture present');
