@@ -1943,13 +1943,18 @@ function rememberOverworld(draft) {
   // buildGround clears this Map; give the interior its own cache first.
   chunks = new Map();
 }
+function canReusePreparedOverworld(id,state,fresh=false) {
+  const saved=overworldReturn,m=W.maps[id];
+  return !fresh && id==='world' && !!saved && saved.map===m &&
+    saved.width===m.w && saved.height===m.h &&
+    saved.draftKey===EmberEditDrafts.fingerprint(state || null);
+}
 function restoreOverworld(state, fresh) {
   if (MAPID!=='world') return false;
+  const reusable=canReusePreparedOverworld(MAPID,state,fresh);
   const saved=overworldReturn;
   overworldReturn=null; // A rejected snapshot must not retain a second world.
-  if (fresh || !saved || saved.map!==MD ||
-      saved.width!==MW || saved.height!==MH ||
-      saved.draftKey!==EmberEditDrafts.fingerprint(state || null)) return false;
+  if (!reusable) return false;
   ({
     terr,terrOrig,baseTerr,solid,SCENE_WALL,ORIG,objs,added,
     deleted,nextId,painted,undoStack,features,featOrig,featSeq,regionMoves,
@@ -6976,7 +6981,7 @@ function unlockDragonBreath(kind) {
   return true;
 }
 function recoverStrandedDragon() {
-  if(!hasDragon() || boarMeat>0 || hareMeat>0 || dragonFish>0 || !(dragon.down || dragon.hp<=0))return false;
+  if(!hasDragon() || boarMeat>0 || hareMeat>0 || deerMeat>0 || dragonFish>0 || !(dragon.down || dragon.hp<=0))return false;
   dragon.maxHp=dragonMaxHp();dragon.hp=dragon.maxHp;
   dragon.down=false;dragon.revive=0;dragon.knockdown=0;dragon.hurt=0;dragon.inv=1.2;
   dragon.tr=null;dragon.air=false;dragon.moving=false;
@@ -7275,6 +7280,7 @@ function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
+  if (f.kind === 'deer') return {x:f.x,y:f.y-12,r:12};
   if (f.kind === 'boar') return {x:f.x,y:f.y-11,r:12};
   if (f.kind === "kdragon") {
     const [dx,dy] = directionVector(f.dir8 || legacyDirection(f.dir,f.flip));
@@ -7833,7 +7839,7 @@ const worn  = { spore: false, ward: false, edge: false, brand: false, twin: fals
                 lamp: false, flame: false, wake: false };
 let wakeSpent = false;
 let gold = 50, potions = 0, elixirs = 0, bombs = 0, dust = 0;
-let boarMeat = 0, hareMeat = 0, dragonFish = 0;
+let boarMeat = 0, hareMeat = 0, deerMeat = 0, dragonFish = 0;
 let bells = 0, marks = 0, dropped = null;
 let breaths = 0, stones = 0, salts = 0;
 const BELL_COST = 40, MARK_COST = 20;
@@ -7884,7 +7890,7 @@ const WORTH = {
 };
 const GOLD_DROP_MULTIPLIER = 1.8;
 function dropGold(x, y, kind) {
-  if(kind==='boar'||kind==='hare')return 0;
+  if(kind==='boar'||kind==='hare'||kind==='deer')return 0;
   const base = WORTH[kind] !== undefined ? WORTH[kind]
              : BOSS_KIND.test(kind || "") ? 30 : 5;
   if (!base) return 0;                      /* his own dead pay nothing */
@@ -7956,22 +7962,22 @@ function drawFly() {
   g.globalAlpha = 1;
 }
 function grabGold() {
-  let got = 0, meat = 0, hare = 0, kept = [];
+  let got = 0, meat = 0, hare = 0, deer = 0, kept = [];
   for (const g of loot) {
     if(g.treasuryId&&treasuryGuarding()){kept.push(g);continue;}
-    if(g.kind==='boarMeat'||g.kind==='hareMeat'){
-      if(Math.hypot(g.x-P.x,g.y-P.y)<26){if(g.kind==='hareMeat')hare+=g.n;else meat+=g.n;}else kept.push(g);
+    if(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat'){
+      if(Math.hypot(g.x-P.x,g.y-P.y)<26){if(g.kind==='hareMeat')hare+=g.n;else if(g.kind==='deerMeat')deer+=g.n;else meat+=g.n;}else kept.push(g);
       continue;
     }
     if (Math.hypot(g.x - P.x, g.y - P.y) < 26) { got += g.n; if(g.treasuryId)treasuryTaken.add(g.treasuryId); flyGold(g.x, g.y, g.n); }
     else kept.push(g);
   }
-  if (!got&&!meat&&!hare) return false;
+  if (!got&&!meat&&!hare&&!deer) return false;
   loot = kept;
-  gold += got;boarMeat+=meat;hareMeat+=hare;
-  const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',got?got+' gold':''].filter(Boolean);
-  toast(meat||hare?'Collected '+cuts.join(' and ')+' — feed it to your dragon.':"Corin got " + got + " gold!");
-  if(meat||hare)saveGame();
+  gold += got;boarMeat+=meat;hareMeat+=hare;deerMeat+=deer;
+  const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',deer?deer+' deer meat':'',got?got+' gold':''].filter(Boolean);
+  toast(meat||hare||deer?'Collected '+cuts.join(' and ')+' — feed it to your dragon.':"Corin got " + got + " gold!");
+  if(meat||hare||deer)saveGame();
   return true;
 }
 function drawLoot() {
@@ -7980,7 +7986,7 @@ function drawLoot() {
   for (const g of loot) {
     if (g.x < cam.x - 32 || g.x > cam.x + vw + 32 ||
         g.y < cam.y - 32 || g.y > cam.y + vh + 32) continue;
-    if(g.kind==='boarMeat'||g.kind==='hareMeat'){drawHuntingMeat(g.x,g.y+Math.round(Math.sin(g.t*3)*1.5));continue;}
+    if(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat'){drawHuntingMeat(g.x,g.y+Math.round(Math.sin(g.t*3)*1.5));continue;}
     const sp = SPR[g.art] || SPR.gold_p2;
     if (!sp) continue;
     const b = Math.round(Math.sin(g.t * 3) * 1.5);
@@ -7991,7 +7997,7 @@ function drawLoot() {
 }
 function stepLoot(dt) {
  for(const g of loot)g.t+=dt;
- if(mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>(g.kind==='boarMeat'||g.kind==='hareMeat')&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
+ if(mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat')&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
  if(MAPID==='royal_treasury'&&mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>g.treasuryId&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
 }
 let devItemTest = false;
@@ -8008,9 +8014,9 @@ function feedDragon(kind) {
   if (!hasDragon()) { toast("Corin does not have the dragon yet"); return false; }
   // A stale recovery flag from an earlier save must never block feeding.
   if (!dragon.down) dragon.revive = 0;
-  const fish = kind === "fish", hare = kind === "hare";
-  const food=fish?"fish":hare?"hare meat":"boar meat";
-  if ((fish ? dragonFish : hare ? hareMeat : boarMeat) <= 0 && !devSafe) {
+  const fish = kind === "fish", hare = kind === "hare", deer = kind === "deer";
+  const food=fish?"fish":hare?"hare meat":deer?"deer meat":"boar meat";
+  if ((fish ? dragonFish : hare ? hareMeat : deer ? deerMeat : boarMeat) <= 0 && !devSafe) {
     toast("no "+food); return false;
   }
   syncDragonVitality(false);
@@ -8018,7 +8024,7 @@ function feedDragon(kind) {
     toast("the dragon is already full"); return false;
   }
   const wasDown = dragon.down;
-  if (fish) dragonFish--; else if(hare) hareMeat--; else boarMeat--;
+  if (fish) dragonFish--; else if(hare) hareMeat--; else if(deer) deerMeat--; else boarMeat--;
   dragon.hp = Math.min(dragon.maxHp, dragon.hp + (fish ? DRAGON_FISH_HEAL : BOAR_MEAT_HEAL));
   dragon.down = wasDown ? true : dragon.hp <= 0;
   dragon.revive = wasDown && dragon.hp > 0 ? Math.min(dragon.revive || 1.2, 1.2) : 0;
@@ -10681,6 +10687,7 @@ function interact() {
       Math.hypot(P.x - dragon.x, P.y - dragon.y) < 42) {
     if (boarMeat > 0) feedDragon("meat");
     else if (hareMeat > 0) feedDragon("hare");
+    else if (deerMeat > 0) feedDragon("deer");
     else if (dragonFish > 0) feedDragon("fish");
     else toast("the dragon needs meat or fish");
     return;
@@ -11313,7 +11320,7 @@ tap(document.getElementById("tArena"), () => {
   toast(arenaMode ? (arenaEncounter!=='combat'?"tap the path to place a "+arenaEncounter+" hunting spot":"tap the path to clear an arena") : "arena tool off");
 });
 tap(document.getElementById('tEncounter'),()=>{
-  arenaEncounter={hare:'boar',boar:'combat',combat:'hare'}[arenaEncounter];refreshBuild();
+  arenaEncounter={hare:'boar',boar:'deer',deer:'combat',combat:'hare'}[arenaEncounter];refreshBuild();
 });
 tap(document.getElementById("tAreas"), () => {
   areaMode = !areaMode;
@@ -11644,7 +11651,7 @@ function buildPatch(currentAreaOnly=false) {
                 : ""));
     else if (f.kind === "arena")
       L.push("F arena " + f.id + " " + f.x + " " + f.y + " " +
-             (f.r || 6) + " " + f.style + (['hare','boar'].includes(f.encounter)?' '+f.encounter:''));
+             (f.r || 6) + " " + f.style + (['hare','boar','deer'].includes(f.encounter)?' '+f.encounter:''));
     else
       L.push("F area " + f.id + " " + f.x0 + " " + f.y0 + " " + f.x1 + " " +
              f.y1 + " " + f.band + " " + f.style + " " +

@@ -18,8 +18,8 @@ const canvas=()=>({width:0,height:0,getContext(){return {drawImage(img,sx,sy,w,h
 const c=vm.createContext({SPR:{},FOE_ATTACK_OFFSETS:{},Image,document:{createElement:canvas},W:world});
 const run=s=>vm.runInContext(s,c);
 run(read('js/animal-sprites.js'));run('registerAnimalSprites()');await run('loadAnimalSprites()');
-assert.equal(files.length,13);assert(!files.some(p=>p.includes('Deer')),'deer remains reserved');
-assert.equal(Object.keys(c.SPR).length,52);
+assert.equal(files.length,17);assert.equal(files.filter(p=>p.includes('Deer')).length,5);
+assert.equal(Object.keys(c.SPR).length,96);
 const game=read('js/generated/game-part-2.js');run(game.slice(game.indexOf('function sheetOf('),game.indexOf('function blit(')));
 for(const [name,sp]of Object.entries(c.SPR)){
  c.sp=sp;const sheet=run('sheetOf(sp)');assert.equal(sheet.width,sp[2]*sp[4]);assert.equal(sheet.height,sp[3]);
@@ -33,15 +33,15 @@ for(let i=0;i<original.length;i+=3){
  if(/^(cow|cow2_graze|cow_graze|pig_graze|sheep|sheep2|chicken|rooster)$/.test(old)){assert(name.startsWith('farm_'));herd.push(name.split('_')[1]);}
  else assert.equal(name,old);
 }
-assert.equal(herd.length,13);assert.equal(new Set(herd).size,8,'all eight new farm animals are used');
+assert.equal(herd.length,13);assert.equal(new Set(herd).size,7,'all seven farm animals are used');
 const count=world.names.length;run('installFarmAnimals()');assert.equal(world.names.length,count,'map preparation is idempotent');
 // The opening road herd uses the same uploaded sheets as the farm objects.
 const item=game.slice(game.indexOf('    if (o.item) {'),game.indexOf('    if (o.green) {'));
-c.ctx={};c.t=0;c.o={item:{spr:'farm_bull_w',anim:true},x:400,y:7000};
+c.ctx={};c.t=0;c.o={item:{spr:'farm_calf_w',anim:true},x:400,y:7000};
 c.drawGameImage=(_g,img)=>{c.herdImage=img};run('for(let i=0;i<1;i++){'+item+'}');
-assert.equal(c.herdImage,run('animalSheets.farm_bull_w'));
+assert.equal(c.herdImage,run('animalSheets.farm_calf_w'));
 const p3=read('js/generated/game-part-3.js');c.drawGameImage=(_g,img)=>{c.lastBagImage=img};
 run(p3.slice(p3.indexOf('function drawBagBig('),p3.indexOf('function bagTick(')));
 c.big={width:260,height:260,getContext:()=>({clearRect(){}})};
 run("drawBagBig(big,'hare_idle_d',0)");assert.equal(c.lastBagImage,run('animalSheets.hare_idle_d'));
-console.log('PASS: all uploaded farm sprites and hare animation crops load, feet anchors and inventory use the correct sheets; eight farm species replace all 13 old animals, and deer remains reserved.');
+console.log('PASS: all uploaded farm sprites and hare animation crops load, feet anchors and inventory use the correct sheets; seven farm species replace all 13 old animals, and deer idle, walk, run, hurt and death load.');

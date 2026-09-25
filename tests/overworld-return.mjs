@@ -75,3 +75,10 @@ assert.equal(c.after.ground,c.before.ground,'unchanged Build draft also returns 
 assert.equal(run("EmberEditDrafts.store.get('world').operations[0].after"),c.built.operations[0].after,'cached Build state publishes the same result');
 console.log('PASS: actual overworld loader reuses terrain, collision, spatial indexes and ground images; resets NPCs/enemies; preserves Move/Paint/Build drafts and rejects stale/reset state.');
 console.log('Overworld load benchmark (terrain decode and real collision/index work; feature generator stubbed): '+c.coldMs.toFixed(1)+' ms cold, '+c.warmMs.toFixed(1)+' ms retained.');
+
+// A retained Build draft must not clone, hash and reapply the entire world
+// before restoreOverworld has a chance to accept its already prepared data.
+run(`loadMap('room');const buildApply=EmberBuildData.apply;let reapplied=0;
+ EmberBuildData.apply=(...args)=>{reapplied++;return buildApply(...args)};
+ loadMap('world');globalThis.reapplied=reapplied;EmberBuildData.apply=buildApply;`);
+assert.equal(c.reapplied,0,'unchanged retained Build draft must not reapply the whole world');

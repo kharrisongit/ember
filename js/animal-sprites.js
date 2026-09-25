@@ -20,6 +20,13 @@ function registerAnimalSprites() {
       add(name,'Hare_'+file+'.png',32,row,frames,[0,0,32,32]);
       FOE_ATTACK_OFFSETS[name]=[0,4];
     });
+  // Deer sheets are down, up, east, west, with seven death frames.
+  for(const [action,file,frames] of [['idle','Idle',4],['walk','Walk',6],['run','Run',6],['hurt','Hurt',4],['die','Death',7]])
+    ['d','u','e','w'].forEach((dir,row)=>{
+      const name='deer_'+action+'_'+dir;
+      add(name,'Deer_'+file+'.png',32,row,frames,[0,0,32,32]);
+      FOE_ATTACK_OFFSETS[name]=[0,4];
+    });
 }
 async function loadAnimalSprites() {
   const files=new Map();

@@ -54,7 +54,9 @@ function editorPrepareMap(id, fresh) {
     return null;
   }
   actorLayouts[id] = api.clone(draft.state.actors || editorBuiltLayouts[id] || {});
-  if(draft.state.build){
+  // The retained world already contains this exact draft. Reapplying Build
+  // here clones and hashes the entire map before the warm-return check.
+  if(draft.state.build && !(typeof canReusePreparedOverworld==='function' && canReusePreparedOverworld(id,draft.state,fresh))){
     Object.assign(W.maps[id],EmberBuildData.apply(editorDraftBases.get(id).build,draft.state.build));
     editorBuildActive.add(id);
   }

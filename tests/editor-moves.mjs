@@ -309,13 +309,13 @@ g.run(bootCode.slice(bootCode.indexOf('const buildEl ='),bootCode.indexOf('tap(b
 g.run('setBuild(true);saveEditorDraft()');
 assert.equal(g.run('MW'),market.w);assert.equal(g.run('MH'),market.h,'opening Build does not expand the world');
 assert.equal(g.run("EmberEditDrafts.store.get('world')"),null,'opening Build is not an edit');
-g.run(`features.push({id:9155,kind:'arena',x:168,y:67,r:6.3,style:'birch',encounter:'hare'});saveEditorDraft();`);
+g.run(`features.push({id:9155,kind:'arena',x:168,y:67,r:6.3,style:'birch',encounter:'deer'});saveEditorDraft();`);
 let pending=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
 assert(!pending.operations[0].changes.some(c=>['w','h','terr','base_terr'].includes(c.path[0])));
 const huntPublished=applyMoves(empty,{...first,map:'world',operations:pending.operations},revision);
 g.c.huntPublished=huntPublished;g.c.huntFresh=structuredClone(market);
 g.run("publishedEditorLayouts=huntPublished;applyPublishedEditorLayout(huntFresh,'world')");
-assert.equal(g.run('huntFresh.features.at(-1).encounter'),'hare','hunting type survives publication');
+assert.equal(g.run('huntFresh.features.at(-1).encounter'),'deer','hunting type survives publication');
 for(const [dx,dy]of [[0,37],[60,0]]){
  g.run(`growWorld(MW+${dx},MH+${dy});saveEditorDraft();`);
  pending=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
