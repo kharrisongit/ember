@@ -115,6 +115,6 @@ c.NAMES=W.names;c.stand={id:7014,s:W.names.indexOf('stall1'),x:100,y:150};
 assert(run('isVillageMarketStand(stand)'));
 const calls=[];c.drawGameImage=(...args)=>calls.push(args);c.sheetOf=()=>({});
 run('drawVillageStand(stand);drawVillageStand(stand,true)');
-const canopy=calls[1],counter=calls[2];
+const canopy=calls[1],counter=calls.at(-1);
 assert(counter[7]-(canopy[7]+canopy[9])>=32,'Opening clears full hats and upper bodies');
 console.log('PASS: reindexed village stand uses the raised canopy and separate counter.');

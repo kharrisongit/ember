@@ -1,0 +1,519 @@
+{
+  "schema": 1,
+  "id": "dc006617-0ba4-46dc-a8af-e9570a903a3b",
+  "map": "world",
+  "sourceRevision": "7a750a6298ae04af70ad2648365e12e5da80407982159546418faf26226e1ed4",
+  "baseFingerprint": "222b8c7-658b52bd-726838",
+  "session": {
+    "id": "b43d8121-453f-487f-9531-c4e89a2d3132",
+    "sequence": 3,
+    "baseHash": "c5c74630-241881c0-336451"
+  },
+  "operations": [
+    {
+      "kind": "object",
+      "key": "4189",
+      "sprite": 1898,
+      "fromX": 4296,
+      "fromY": 1008,
+      "x": 4296,
+      "y": 1019
+    },
+    {
+      "kind": "object",
+      "key": "7014",
+      "sprite": 88,
+      "fromX": 4120,
+      "fromY": 1816,
+      "x": 4184,
+      "y": 1817
+    },
+    {
+      "kind": "object",
+      "key": "7057",
+      "sprite": 1899,
+      "fromX": 3912,
+      "fromY": 1008,
+      "x": 3904,
+      "y": 1036
+    },
+    {
+      "kind": "object",
+      "key": "7058",
+      "sprite": 612,
+      "fromX": 4696,
+      "fromY": 1008,
+      "x": 4700,
+      "y": 1020
+    },
+    {
+      "kind": "actor",
+      "key": "npc:Wren",
+      "identity": "Wren",
+      "fromX": 4120,
+      "fromY": 1802,
+      "x": 4184,
+      "y": 1808
+    },
+    {
+      "kind": "paint",
+      "start": 244026,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 244050,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 297851,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 301375,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 301394,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 301416,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 301435,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 304960,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 304979,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 305001,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 305020,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 308546,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 308565,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 308587,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 308606,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 369491,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 369552,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 373075,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 373094,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 373116,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 373135,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "before": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 376660,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 376679,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 376701,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 376720,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 380246,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 380265,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 380287,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    },
+    {
+      "kind": "paint",
+      "start": 380306,
+      "width": 3585,
+      "height": 600,
+      "values": [
+        1
+      ],
+      "before": [
+        0
+      ]
+    }
+  ]
+}

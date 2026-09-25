@@ -13,6 +13,7 @@ const paths=[...fs.readFileSync(root+'index.html','utf8').matchAll(/<script\b[^>
 for(const path of paths){try{vm.runInContext(fs.readFileSync(root+path,'utf8'),c,{filename:path});}catch(e){console.error('LOAD',path,e);process.exit(1)}}
 (async()=>{await run('inflateWorld()');Image.active=true;await run('buildHouseFurnitureLayers()');await run('loadPublishedEditorLayouts()');
 
+c.thornwellRoads=JSON.parse(fs.readFileSync(root+'tests/fixtures/thornwell-road-recovery.json','utf8'));
 c.graveyardPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/hollybeck-cleanup.json','utf8'));
 c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
 c.recoveredDraft=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-editor-draft.json','utf8'));
@@ -74,6 +75,12 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
    assert.equal(JSON.stringify([o.x,o.y]),JSON.stringify([moved.x,moved.y]),'Exact live object move '+moved.id);
   }
   for(const g of graveyardPatch.graves){assert.equal(MD.objs[g.id*3+1],g.x);assert.equal(MD.objs[g.id*3+2],g.y);}
+  assert(publishedEditorLayouts.applied.includes(thornwellRoads.id),'Recovered road submission receipt');
+  for(const op of thornwellRoads.operations){
+   if(op.kind==='paint')for(let j=0;j<op.values.length;j++)assert.equal(terr[op.start+j],op.values[j],'Exact recovered road tile '+(op.start+j));
+   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));assert.equal(o.x,op.x);assert.equal(o.y,op.y);}
+   if(op.kind==='actor'){const n=npcs.find(n=>n.n===op.identity);assert.equal(n.x,op.x);assert.equal(n.y,op.y);}
+  }
   const villageStalls=objs.filter(o=>/^stall[123]$/.test(NAMES[o.s]||''));
   assert.equal(villageStalls.length,4);
   for(const o of villageStalls)assert(isVillageMarketStand(o),'Published stand uses enlarged layered rendering');

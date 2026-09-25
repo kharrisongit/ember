@@ -333,11 +333,13 @@ function drawVillageStand(o,front=false){
   const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
   const x=Math.round(o.x-s[2]*scale/2),bottom=o.y,h=Math.round(s[3]*scale)+headroom;
   if(front){
-    drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],s[3]-24,x,bottom-18,Math.round(s[2]*scale),18);
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+28,s[2],s[3]-28,x,bottom-12,Math.round(s[2]*scale),12);
   }else{
     // Extend just the posts through the new headroom; keep the native canopy.
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],8,x,bottom-h+20,Math.round(s[2]*scale),h-38);
     drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
+    // The rear tabletop sits behind the merchant; only the counter face occludes them.
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],4,x,bottom-18,Math.round(s[2]*scale),6);
   }
 }
 function installMarketCounters(){
