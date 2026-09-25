@@ -47428,7 +47428,7 @@
         "kind": "actor",
         "key": "actor:5:library_reader_red",
         "identity": "library_reader_red",
-        "x": 272,
+        "x": 273,
         "y": 207,
         "originX": 258,
         "originY": 192
@@ -47455,7 +47455,7 @@
         "kind": "actor",
         "key": "actor:7:school_anim_6",
         "identity": "school_anim_6",
-        "x": 255,
+        "x": 256,
         "y": 243,
         "originX": 268,
         "originY": 264
@@ -47684,6 +47684,15 @@
         "kind": "collision",
         "key": "27,13",
         "blocked": false
+      },
+      "actor:actor:6:school_anim_5": {
+        "kind": "actor",
+        "key": "actor:6:school_anim_5",
+        "identity": "school_anim_5",
+        "x": 185,
+        "y": 212,
+        "originX": 170,
+        "originY": 220
       }
     },
     "sn1": {
@@ -47884,6 +47893,35 @@
         "originX": 265,
         "originY": 214
       }
+    },
+    "school2": {
+      "actor:actor:3:school2_anim_3": {
+        "kind": "actor",
+        "key": "actor:3:school2_anim_3",
+        "identity": "school2_anim_3",
+        "x": 79,
+        "y": 175,
+        "originX": 79,
+        "originY": 175
+      },
+      "actor:actor:4:school2_anim_6": {
+        "kind": "actor",
+        "key": "actor:4:school2_anim_6",
+        "identity": "school2_anim_6",
+        "x": 96,
+        "y": 182,
+        "originX": 96,
+        "originY": 176
+      },
+      "actor:actor:5:school2_anim_4": {
+        "kind": "actor",
+        "key": "actor:5:school2_anim_4",
+        "identity": "school2_anim_4",
+        "x": 249,
+        "y": 176,
+        "originX": 249,
+        "originY": 176
+      }
     }
   },
   "applied": [
@@ -47939,7 +47977,9 @@
     "d45232f7-0414-466e-9026-b6c8cf8dce62",
     "49cab4bb-3392-4987-891b-a4df9d79dd4c",
     "f31c48c9-269d-4469-ae29-51d1c1c65267",
-    "81084665-6f2c-4cfa-ba9e-5a213a16e07d"
+    "81084665-6f2c-4cfa-ba9e-5a213a16e07d",
+    "501977b5-9194-4487-9756-4d2135e22803",
+    "501977b5-9194-4487-9756-4d2135e22804"
   ],
   "sessions": {
     "witchmoor": {
@@ -47957,14 +47997,6 @@
       "baseFingerprint": "9ac016e0-5a4a28b0-4437",
       "base": {},
       "resultHash": "c9b5ecec-95a15a88-295"
-    },
-    "school": {
-      "id": "9c81a50f-558c-4e4f-bc15-01ab3f9f5ae0",
-      "sequence": 1,
-      "baseHash": "5465b825-5971e3-2",
-      "baseFingerprint": "cd61ead2-bf6460bc-10570",
-      "base": {},
-      "resultHash": "cd9ca1c8-96162f08-3701"
     },
     "sn1": {
       "id": "e6a5ec58-502f-42b3-9e5f-8de95f8ae985",

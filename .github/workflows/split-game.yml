@@ -47,3 +47,4 @@ jobs:
           node tests/ferry-companion.mjs
           node tests/village-markets.mjs
           node tests/tavern-layering.mjs
+          node tests/library-layering.mjs

@@ -324,6 +324,14 @@ function marketVendorDepth(n,draw){
   return n.y;
 }
 // Keep tavern depth tied to the furniture currently beneath each performer.
+function libraryActorDepth(o,actors){
+  const depth=o.sy??o.y;
+  if(!/^(library_reader_red|school_anim_[56]|school2_anim_[346])$/.test(o.spr||''))return depth;
+  const table=actors.filter(a=>a.exactFurniture&&a.n==='reading table'&&!a.editorDeleted&&
+    Math.abs(o.x-a.x)<=a.extractedCanvas.width/2+6&&Math.abs(o.y-a.y)<=25)
+    .sort((a,b)=>Math.abs(o.y-a.y)-Math.abs(o.y-b.y))[0];
+  return table?Math.max(depth,(table.sy??table.y)+.5):depth;
+}
 function tavernActorDepth(o,actors){
   const depth=o.sy??o.y;
   if(o.exactFurniture){
@@ -3717,7 +3725,7 @@ function drawWorld(t, dt) {
   if (bell) draw.push({ bell: true, x: bell.x, y: bell.y });
   const topOf = (o) => (o.s !== undefined && DEFS[o.s] && DEFS[o.s].t) ? 1 : 0;
   const isFab = (o) => o.s !== undefined && FABRIC.test(NAMES[o.s] || "");
-  const sortY = (o) => MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
+  const sortY = (o) => (MAPID==='school'||MAPID==='school2') ? libraryActorDepth(o,MD.roomActors||[]) : MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
                      : (o.sy !== undefined ? o.sy : o.y) + (o.wy || 0)
                      + ((o.s !== undefined && /^rc_sup1_/.test(NAMES[o.s])) ? 40 : 0)
                      + ((o.s !== undefined && DEFS[o.s] && DEFS[o.s].sy) ? DEFS[o.s].sy : 0);
