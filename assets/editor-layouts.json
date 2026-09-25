@@ -48445,6 +48445,72 @@
         "originX": 208,
         "originY": 124
       }
+    },
+    "house23": {
+      "actor:millwood:house23:2": {
+        "kind": "actor",
+        "key": "millwood:house23:2",
+        "identity": "flower pot",
+        "x": 111,
+        "y": 205,
+        "originX": 200,
+        "originY": 169
+      },
+      "actor:millwood:house23:1": {
+        "kind": "actor",
+        "key": "millwood:house23:1",
+        "identity": "flower pot",
+        "x": 162,
+        "y": 205,
+        "originX": 200,
+        "originY": 137
+      },
+      "actor:millwood:house23:4": {
+        "kind": "actor",
+        "key": "millwood:house23:4",
+        "identity": "iplant3",
+        "deleted": true,
+        "x": 67,
+        "y": 202,
+        "originX": 66.5,
+        "originY": 202
+      },
+      "actor:millwood:house23:3": {
+        "kind": "actor",
+        "key": "millwood:house23:3",
+        "identity": "istove1",
+        "x": 92,
+        "y": 72,
+        "originX": 32,
+        "originY": 205
+      },
+      "actor:millwood:house23:5": {
+        "kind": "actor",
+        "key": "millwood:house23:5",
+        "identity": "ishelf4",
+        "x": 64,
+        "y": 74,
+        "originX": 31,
+        "originY": 80
+      },
+      "actor:millwood:house23:11": {
+        "kind": "actor",
+        "key": "millwood:house23:11",
+        "identity": "Furniture 6_85",
+        "x": 142,
+        "y": 75,
+        "originX": 175.5,
+        "originY": 92
+      },
+      "actor:millwood:house23:0": {
+        "kind": "actor",
+        "key": "millwood:house23:0",
+        "identity": "Furniture 12_280",
+        "x": 103,
+        "y": 184,
+        "originX": 113,
+        "originY": 187
+      }
     }
   },
   "applied": [
@@ -48512,7 +48578,8 @@
     "bc7d17e9-5fd1-4765-962c-435e383d1de3",
     "0f4aed21-6575-4165-944f-3b088a44392b",
     "b849291f-9525-469c-967a-7d456e16d13a",
-    "80fb4bee-f100-435f-9d06-5a5c3712d038"
+    "80fb4bee-f100-435f-9d06-5a5c3712d038",
+    "5f9457f5-1615-4a78-83b8-75e985f8bbe9"
   ],
   "sessions": {
     "witchmoor": {
@@ -48618,6 +48685,14 @@
       "baseFingerprint": "f2fba869-eaef9567-3516",
       "base": {},
       "resultHash": "dfa14bc3-47d36ff-1144"
+    },
+    "house23": {
+      "id": "fde5cbf3-a83c-42eb-a239-ec240f5b46d4",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "2efe42ea-5d609866-4444",
+      "base": {},
+      "resultHash": "200c3974-b477d64c-985"
     }
   }
 }
