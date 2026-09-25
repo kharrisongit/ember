@@ -48957,6 +48957,74 @@
           "encounter": "deer"
         },
         "encounter": "boar"
+      },
+      "object-add:a9b748f1-8adf-4433-a84b-e9bc0ab52cf5": {
+        "kind": "object-add",
+        "key": "a9b748f1-8adf-4433-a84b-e9bc0ab52cf5",
+        "sprite": 1431,
+        "x": 45128,
+        "y": 1440
+      },
+      "object-add:1ce23ff8-53e4-43cc-84ce-d102ba1f088c": {
+        "kind": "object-add",
+        "key": "1ce23ff8-53e4-43cc-84ce-d102ba1f088c",
+        "sprite": 1431,
+        "x": 45080,
+        "y": 1440
+      },
+      "object-add:a1e6e104-08d3-4a61-9625-f10b9ef111f0": {
+        "kind": "object-add",
+        "key": "a1e6e104-08d3-4a61-9625-f10b9ef111f0",
+        "sprite": 1431,
+        "x": 45149,
+        "y": 1361
+      },
+      "object-add:d261df9c-1bf9-4c49-992a-d842108e94e5": {
+        "kind": "object-add",
+        "key": "d261df9c-1bf9-4c49-992a-d842108e94e5",
+        "sprite": 1431,
+        "x": 45160,
+        "y": 1408
+      },
+      "object-add:1f779f5e-620e-47cf-afd4-401704e06e37": {
+        "kind": "object-add",
+        "key": "1f779f5e-620e-47cf-afd4-401704e06e37",
+        "sprite": 1431,
+        "x": 44952,
+        "y": 1440
+      },
+      "object-add:e9142599-5b77-4c4c-94d2-ab883b5e75f6": {
+        "kind": "object-add",
+        "key": "e9142599-5b77-4c4c-94d2-ab883b5e75f6",
+        "sprite": 1431,
+        "x": 44888,
+        "y": 1376
+      },
+      "object-add:f52f5ffd-579d-4cf9-948d-841e61736f4b": {
+        "kind": "object-add",
+        "key": "f52f5ffd-579d-4cf9-948d-841e61736f4b",
+        "sprite": 1431,
+        "x": 44904,
+        "y": 1424
+      },
+      "object-add:628e10ef-0960-43c4-b227-c81558710eac": {
+        "kind": "object-add",
+        "key": "628e10ef-0960-43c4-b227-c81558710eac",
+        "sprite": 1431,
+        "x": 44914,
+        "y": 1348
+      },
+      "feature-delete:2817,88": {
+        "kind": "feature-delete",
+        "key": "2817,88",
+        "tx": 2817,
+        "ty": 88
+      },
+      "feature-delete:2809,88": {
+        "kind": "feature-delete",
+        "key": "2809,88",
+        "tx": 2809,
+        "ty": 88
       }
     },
     "witchmoor": {
@@ -50379,7 +50447,8 @@
     "a638087a-1beb-47c6-b24e-f6b2bb5fee86",
     "5ff85ed7-f074-43ae-b9f0-2c5e95dae528",
     "0288f488-944e-46cc-83cd-a487bac1a0d8",
-    "89371e18-5b34-4996-bcb3-57d46809cb88"
+    "89371e18-5b34-4996-bcb3-57d46809cb88",
+    "50e36d41-a9ec-47b2-bf1b-f124d8ba4428"
   ],
   "sessions": {
     "witchmoor": {
@@ -50503,10 +50572,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "4725a27e-43c2-4681-87b0-086d1dc8f8eb",
+      "id": "bf4ccea9-cbd3-4ee9-b1f3-2a4fda9cda7a",
       "sequence": 1,
-      "baseHash": "58baa456-55ff3e58-376098",
-      "baseFingerprint": "f5a5d2a1-c224187f-738935",
+      "baseHash": "732e033b-ff22f0b5-376602",
+      "baseFingerprint": "2cfc9b7a-6052a94-738935",
       "base": {
         "build": {
           "kind": "build",
@@ -99307,9 +99376,54 @@
           "kind": "collision",
           "key": "5439,407",
           "blocked": true
+        },
+        "arena:9152": {
+          "kind": "arena",
+          "key": "9152",
+          "id": 9152,
+          "before": {
+            "id": 9152,
+            "kind": "arena",
+            "x": 333,
+            "y": 204,
+            "r": 6.3,
+            "style": "birch",
+            "encounter": "hare"
+          },
+          "encounter": "bird"
+        },
+        "arena:9159": {
+          "kind": "arena",
+          "key": "9159",
+          "id": 9159,
+          "before": {
+            "id": 9159,
+            "kind": "arena",
+            "x": 813,
+            "y": 281,
+            "r": 6.3,
+            "style": "temple",
+            "encounter": "boar"
+          },
+          "encounter": "hare"
+        },
+        "arena:9165": {
+          "kind": "arena",
+          "key": "9165",
+          "id": 9165,
+          "before": {
+            "id": 9165,
+            "kind": "arena",
+            "x": 1623,
+            "y": 273,
+            "r": 6.3,
+            "style": "desert",
+            "encounter": "deer"
+          },
+          "encounter": "boar"
         }
       },
-      "resultHash": "732e033b-ff22f0b5-376602"
+      "resultHash": "d8b25926-3956e2f2-377972"
     }
   }
 }
