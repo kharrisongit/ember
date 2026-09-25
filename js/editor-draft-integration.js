@@ -92,11 +92,11 @@ function saveEditorDraft() {
     return;
   }
   const moves=objs.filter(o=>o.id<ORIG.length && (Math.round(o.x)!==ORIG[o.id].x||Math.round(o.y)!==ORIG[o.id].y)).map(o=>({id:o.id,s:o.s,x:Math.round(o.x),y:Math.round(o.y)}));
-  const state={actors:actorLayouts[MAPID]||{},moves,added,deleted:[...deleted],nextId,painted:[...painted],
+  const state={npcOps:typeof npcEditorOps!=='undefined'?npcEditorOps[MAPID]||[]:[],actors:actorLayouts[MAPID]||{},moves,added,deleted:[...deleted],nextId,painted:[...painted],
     features:features.some(f=>featOrig.get(f.id)!==JSON.stringify(f))?features:null,
     regionMoves,clearedBoxes,felledNew,decorGone:[...decorGone],decorDel,
     decorMoved:[...decorMoved].map(([k,d])=>{const a=d.tag==='s'?scat:sanm;return[k,{...d,x:a[d.di+1],y:a[d.di+2]}]})};
-  const operations=[];
+  const operations=api.clone(state.npcOps);
   // Moving a generated tree creates an ordinary object at its new position.
   // Keep a stable identity across saves/retries, including older saved drafts.
   for(const o of added)if(!deleted.has(o.id)){
@@ -136,7 +136,7 @@ function saveEditorDraft() {
       features,decks,felled:[],felled_rle:B.encodeFelled(felled),editorDeletedObjects:[],editorDeletedDecor:[],editorPublishedPaint:[...paint.values()]});
     const build={kind:'build',layout:B.hash(publishedEditorLayouts.maps[MAPID]||{}),before:B.hash(before),after:B.hash(after),changes:B.diff(before,after)};
     B.apply(before,build);
-    const actorOps=operations.filter(o=>o.kind==='actor');operations.splice(0,operations.length,build,...actorOps);
+    const actorOps=operations.filter(o=>['actor','npc-add','npc-transfer'].includes(o.kind));operations.splice(0,operations.length,build,...actorOps);
     Object.assign(state,{build,moves:[],added:[],deleted:[],nextId:after.objs.length/3,painted:[],features:null,
       regionMoves:[],clearedBoxes:[],felledNew:[],decorGone:[],decorDel:[],decorMoved:[]});
   }

@@ -36,7 +36,7 @@ jobs:
       - name: Check game and editor behavior
         run: |
           node tools/check-game-scripts.mjs
-          node tests/editor-moves.mjs
+          node tests/npc-placement.mjs
           node tests/hunting-grounds.mjs
           node tests/animal-sprites.mjs
           node tests/overworld-return.mjs

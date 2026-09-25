@@ -37,7 +37,7 @@ jobs:
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs
-          node tests/editor-moves.mjs
+          node tests/npc-placement.mjs
           node tests/hunting-grounds.mjs
           node tests/animal-sprites.mjs
           node tests/overworld-return.mjs

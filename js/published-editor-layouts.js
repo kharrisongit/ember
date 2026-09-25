@@ -12,6 +12,7 @@ function applyPublishedEditorLayout(m,id) {
   publishedEditorMaps.add(m);
   // Preserve the pre-existing authored placement of the world room exterior.
   if(id==='world'&&m.roomActors?.[24]?.spr==='rt_ext2')shiftActorData(m,m.roomActors[24],15330,4328,true);
+  if(typeof preparePublishedNpcPlacements==='function')preparePublishedNpcPlacements(m,id);
   m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];
   applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
 }

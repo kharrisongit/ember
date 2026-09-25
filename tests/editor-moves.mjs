@@ -30,7 +30,7 @@ console.log('PASS: manual storage, reload, map isolation, published collision, r
 
 // Exercise the actual game hooks, including absolute actor/collision restoration.
 const disk=new Map(),read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
-function gameContext(){
+export function gameContext(){
   const c=vm.createContext({console,CompressionStream,Blob,Response,TextEncoder,btoa:s=>Buffer.from(s,'binary').toString('base64'),crypto:webcrypto,setTimeout:()=>0,clearTimeout(){},
     localStorage:{getItem:k=>disk.get(k)||null,setItem:(k,v)=>disk.set(k,v)},
     document:{getElementById:()=>({}),addEventListener(){}},window:{addEventListener(){}},
@@ -50,7 +50,7 @@ function gameContext(){
   run(game.slice(game.indexOf('function buildPatch('),game.indexOf('const dumpEl =')));
   const part3=read('js/generated/game-part-3.js');run(part3.slice(part3.indexOf('function terrRLE('),part3.indexOf('const RUN_SPR =')));
   run(read('js/published-editor-layouts.js'));run(read('js/editor-draft-integration.js'));
-  run(`function visit(id,fresh=false){saveEditorDraft();editorDraftReady=false;MAPID=id;MD=W.maps[id];const s=editorPrepareMap(id,fresh);MW=MD.w;MH=MD.h;const decode=s=>Uint8Array.from(s.split('|').flatMap(p=>{const [v,n]=p.split('.').map(Number);return Array(n).fill(v)}));terr=decode(MD.terr);baseTerr=decode(MD.base_terr||MD.terr);decks=MD.decks||[];applyActorLayout(MD,id);
+  run(`function visit(id,fresh=false){saveEditorDraft();editorDraftReady=false;MAPID=id;MD=W.maps[id];if(typeof preparePublishedNpcPlacements==='function')applyPublishedEditorLayout(MD,id);const s=editorPrepareMap(id,fresh);if(typeof prepareLocalNpcPlacements==='function')prepareLocalNpcPlacements(MD,id,s);MW=MD.w;MH=MD.h;const decode=s=>Uint8Array.from(s.split('|').flatMap(p=>{const [v,n]=p.split('.').map(Number);return Array(n).fill(v)}));terr=decode(MD.terr);baseTerr=decode(MD.base_terr||MD.terr);decks=MD.decks||[];applyActorLayout(MD,id);
     ORIG=[];for(let i=0;i<MD.objs.length;i+=3)ORIG.push({s:MD.objs[i],x:MD.objs[i+1],y:MD.objs[i+2]});objs=ORIG.map((o,id)=>({...o,id}));added=[];deleted=new Set();nextId=ORIG.length;painted=new Map();features=EmberEditDrafts.clone(MD.features||[]);featOrig=new Map(features.map(f=>[f.id,JSON.stringify(f)]));decorGone=new Set();decorDel=[];decorMoved=new Map();scat=MD.scatter.slice();sanm=(MD.sanim||[]).slice();felled=new Set((MD.felled||[]).map(f=>Array.isArray(f)?f.join(','):f));for(const run of (MD.felled_rle||'').split('|').filter(Boolean)){const [y,xs]=run.split(':'),[a,b=a]=xs.split('-').map(Number);for(let x=a;x<=b;x++)felled.add(x+','+y)}editorRestoreMap(s);applyEditorPaint(true);}`);
   return {c,run};
 }

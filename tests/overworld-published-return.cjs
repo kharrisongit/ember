@@ -118,6 +118,26 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
  }
  profile=[];
 }
+// Exercise the real Add/Transport buttons' actions through full map loading.
+const unused=npcLineupCatalog().find(e=>e.category==='walking'&&!npcLookUsed(e));
+assert(unused,'Unused animated cast is available');
+addUnusedNpc(unused);
+const addedKey=editorNpcKey(selected);assert(selected&&!selected.editorDeleted&&!selected.devLineup);
+moveEditorActor(selected,4200,1850,true);saveEditorDraft();loadMap('house22');loadMap('world');
+assert.equal(npcs.find(n=>editorNpcKey(n)===addedKey).x,4200,'New NPC position survives real area switches');
+selected=npcs.find(n=>editorNpcKey(n)===addedKey);deleteSelected();
+assert(!npcs.some(n=>editorNpcKey(n)===addedKey),'Deleting unsent addition removes it');
+loadMap('tavern');selected=MD.roomActors.find(a=>a.spr==='tavern_anim_8');
+assert.equal(npcSelection().n,'Hobb','Visible tavern actor resolves dialogue identity');
+transportSelectedNpc({name:'Thornwell',x:261,y:116});
+const transferredKey=editorNpcKey(selected);assert.equal(selected.packSpr,'tavern_anim_8');
+const destination={x:selected.x,y:selected.y};
+loadMap('tavern');assert(npcs.find(n=>n.n==='Hobb').editorDeleted,'Original dialogue NPC hidden');
+assert(MD.roomActors.find(a=>a.spr==='tavern_anim_8').editorDeleted,'Original visible actor hidden');
+loadMap('world');assert.equal(npcs.find(n=>editorNpcKey(n)===transferredKey).x,destination.x);
+assert.equal(npcs.find(n=>editorNpcKey(n)===transferredKey).y,destination.y);
+assert(EmberEditDrafts.store.get('world').operations.some(o=>o.kind==='npc-transfer'),'SEND CHANGES includes the transfer from its destination');
+console.log('PASS: actual Add, move, delete and Transport controls survive interior/world switching and preserve animation and a single visible NPC.');
 console.log('PASS: current published Build layout applies, repeated interior exits retain the complete overworld, without terrain/collision rebuilding.');
 `);
 })().catch(e=>{console.error(e);process.exit(1)});

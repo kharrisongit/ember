@@ -60,6 +60,26 @@ export function applyMoves(current,draft,revision) {
       const old=map[key];if(old)assert(old.blocked===op.before||old.blocked===op.blocked,'Collision was edited in a newer submission');
       map[key]={kind:'collision',key:op.key,blocked:op.blocked};continue;
     }
+    if(op.kind==='npc-add'||op.kind==='npc-transfer'){
+      assert(typeof op.key==='string'&&/^[a-f0-9-]{36}$/.test(op.key),'Invalid NPC placement identity');
+      for(const field of ['x','y'])assert(Number.isInteger(op[field])&&op[field]>=0&&op[field]<=100000,'Invalid NPC coordinates');
+      if(op.kind==='npc-add'){
+        assert(typeof op.look==='string'&&/^(pack|sprite|skin|body):[a-zA-Z0-9_]+$/.test(op.look)&&op.look.length<160,'Invalid NPC appearance');
+        assert(typeof op.name==='string'&&op.name.length>0&&op.name.length<160,'Invalid NPC name');
+      }else{
+        assert(keyOK(op.sourceMap)&&/^[a-zA-Z0-9_-]+$/.test(op.sourceMap)&&op.sourceMap!==draft.map,'Invalid NPC source area');
+        assert(keyOK(op.sourceKey)&&op.sourceKey.startsWith('npc:')&&keyOK(op.identity),'Invalid NPC source identity');
+        const existing=layout=>[...(layout?.build?existing(layout.build.previous):[]),...Object.values(layout||{}).filter(v=>v.kind==='npc-transfer')];
+        for(const [id,layout]of Object.entries(next.maps))for(const prior of existing(id===draft.map?map:layout))
+          if(prior.sourceMap===op.sourceMap&&prior.sourceKey===op.sourceKey)assert(prior.key===op.key&&id===draft.map,'This NPC was already transported. Refresh before moving them again.');
+        for(const prior of Object.values(map))if(prior.kind==='npc-transfer'&&prior.sourceMap===op.sourceMap&&prior.sourceKey===op.sourceKey)assert(prior.key===op.key,'Duplicate NPC transfer');
+      }
+      const key=op.kind+':'+op.key;assert(!seen.has(key),'Duplicate NPC placement');seen.add(key);
+      if(map[key])assert.deepEqual(map[key],op,'This NPC placement was already published. Refresh before moving it again.');
+      map[key]=op.kind==='npc-add'?{kind:op.kind,key:op.key,look:op.look,name:op.name,x:op.x,y:op.y}:
+        {kind:op.kind,key:op.key,sourceMap:op.sourceMap,sourceKey:op.sourceKey,identity:op.identity,x:op.x,y:op.y};
+      continue;
+    }
     if(op.kind==='object-add'){
       assert(typeof op.key==='string'&&/^[a-f0-9-]{36}$/.test(op.key),'Invalid added-object identity');
       assert(Number.isInteger(op.sprite)&&op.sprite>=0&&op.sprite<100000,'Invalid added-object sprite');

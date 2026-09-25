@@ -16,6 +16,8 @@ const dancer=room.roomActors.find(a=>a.spr==='tavern_anim_14'),table=room.roomAc
 assert(depth(dancer)>depth(table),'Dancing lizard on tabletop');
 const hobb=room.roomActors.find(a=>a.spr==='tavern_anim_8'),chair=room.roomActors.find(a=>a.n==='stool'&&a.x===161.5&&a.y===174);
 assert(depth(chair)<depth(hobb),'Chair beneath seated patron');
+assert(depth(hobb)>depth(table),'Hobb rests his arms above the tabletop');
+assert(Math.abs(hobb.x-chair.x)<5,'Hobb aligned with his seat');
 chair.y+=8;chair.sy+=8;assert(depth(chair)<depth(hobb),'Nearby moved chair stays beneath patron');
 chair.x+=1000;assert.equal(depth(chair),chair.sy,'Unoccupied chair returns to its own depth');
 table.x+=100;assert.equal(depth(dancer),dancer.y,'Moving table away releases dancer depth');

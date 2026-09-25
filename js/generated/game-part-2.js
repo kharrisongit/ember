@@ -338,6 +338,14 @@ function marketVendorDepth(n,draw){
   return n.y;
 }
 // Keep tavern depth tied to the furniture currently beneath each performer.
+function houseChairDepth(o,people){
+  const depth=o.sy??o.y;
+  if(!o.exactFurniture||!/chair|stool/.test(o.n||''))return depth;
+  const w=o.extractedCanvas?.width||24,h=o.extractedCanvas?.height||24;
+  const seated=people.filter(n=>!n.editorDeleted&&(n.seated||n.seatSpr||n.seatClipY!==undefined)&&
+    Math.abs(n.x-o.x)<w/2+8&&n.y>o.y-h-8&&n.y<o.y+24);
+  return Math.min(depth,...seated.map(n=>(n.sy??n.y)-.5));
+}
 function libraryActorDepth(o,actors){
   const depth=o.sy??o.y;
   if(!/^(library_reader_red|school_anim_[56]|school2_anim_[346])$/.test(o.spr||''))return depth;
@@ -357,7 +365,7 @@ function tavernActorDepth(o,actors){
       if(seated)return Math.min(depth,seated.y-.5);
     }
   }
-  if(o.spr==='tavern_anim_14'){
+  if(o.spr==='tavern_anim_14'||o.spr==='tavern_anim_8'){
     const tables=actors.filter(a=>a.exactFurniture&&/table/.test(a.n||'')&&!a.editorDeleted&&
       Math.abs(o.x-a.x)<=a.extractedCanvas.width/2&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+8);
     return Math.max(depth,...tables.map(a=>(a.sy??a.y)+.5));
@@ -1337,9 +1345,9 @@ function restoreTavernCast(){
       packSpr:undefined,packDirections:false,packWalk:false,sk:undefined,body:undefined,seated:false,seatSpr:undefined,patrol:undefined,goto:undefined});
     m.roomActors.push({spr,x,y,schoolArt:true,sceneReserved:true,editKey:'tavern:'+spr});
   }
-  // User's tavern PATCH v3. The requested removal supersedes Tobin's move.
+  // Keep the user's tavern arrangement; align Hobb's arms with the tabletop.
   for(const [i,x,y]of [[17,374,272],[23,407,273],[12,286,256],
-    [20,201,208],[8,162,176],[18,127,177]]){
+    [20,201,208],[8,158,182],[18,127,177]]){
     const a=m.roomActors.find(a=>a.spr==='tavern_anim_'+i);a.x=x;a.y=y;
   }
   m.roomActors.push({spr:'stump_stool',x:210,y:140,sy:143,schoolArt:true,
@@ -1780,6 +1788,7 @@ function applyActorLayout(m, id) {
     else if(o.editorChestKind&&typeof syncEditorChest==='function')syncEditorChest(m,o,0,0);
   }
   for(const o of m.npcs||[]){const v=saved[editorNpcKey(o)];o.editorDeleted=!!(v?.deleted||o.publishedDeleted);if(v&&Number.isFinite(v.x)&&Number.isFinite(v.y))shiftActorData(m,o,v.x,v.y,false);}
+  if(typeof syncNpcTransferVisibility==='function')syncNpcTransferVisibility(m,id);
   if(typeof syncEditorNpcArt==='function')syncEditorNpcArt(m);
 }
 function moveEditorActor(o,x,y,save=false) {
@@ -1792,7 +1801,8 @@ function moveEditorActor(o,x,y,save=false) {
     for(const k of ['talkX','talkY','patrol','patrolPoints','sy','counter'])o[k]=info.source[k];
   }else shiftActorData(MD,o,x,y,true,!/^market_.*_stall$/.test(o.spr||''));
   if(save){
-    (actorLayouts[MAPID] ||= {})[info.key]={x,y,...(/^market_.*_stall$/.test(o.spr||'')?{independent:true}:{})};
+    const pendingNpc=typeof npcPendingMove==='function'&&npcPendingMove(info.key,x,y);
+    if(!pendingNpc)(actorLayouts[MAPID] ||= {})[info.key]={x,y,...(/^market_.*_stall$/.test(o.spr||'')?{independent:true}:{})};
     scheduleEditorDraft();
   }
   rebuildSolid();mapDirty=true;return true;
@@ -2057,6 +2067,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if (fresh) delete edits[id];
   blockTiles = []; lineTiles = new Set(); rockTiles = new Set();
   MAPID = id; MD = W.maps[id];
+  if(typeof prepareLocalNpcPlacements==='function')prepareLocalNpcPlacements(MD,id,savedEditorState);
   applyActorLayout(MD,id);
   MW = MD.w; MH = MD.h; PXW = MW * TS; PXH = MH * TS;
   if (!camFree && mode === "play") cam.z = playZoom();
@@ -3738,7 +3749,7 @@ function drawWorld(t, dt) {
   if (bell) draw.push({ bell: true, x: bell.x, y: bell.y });
   const topOf = (o) => (o.s !== undefined && DEFS[o.s] && DEFS[o.s].t) ? 1 : 0;
   const isFab = (o) => o.s !== undefined && FABRIC.test(NAMES[o.s] || "");
-  const sortY = (o) => (MAPID==='school'||MAPID==='school2') ? libraryActorDepth(o,MD.roomActors||[]) : MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
+  const sortY = (o) => (/^house\d/.test(MAPID)&&o.exactFurniture) ? houseChairDepth(o,npcs) : (MAPID==='school'||MAPID==='school2') ? libraryActorDepth(o,MD.roomActors||[]) : MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
                      : (o.sy !== undefined ? o.sy : o.y) + (o.wy || 0)
                      + ((o.s !== undefined && /^rc_sup1_/.test(NAMES[o.s])) ? 40 : 0)
                      + ((o.s !== undefined && DEFS[o.s] && DEFS[o.s].sy) ? DEFS[o.s].sy : 0);
@@ -11623,6 +11634,7 @@ function deleteGrabbed() {
 }
 
 function refreshSel() {
+  if(typeof refreshNpcPlacementControls==='function')refreshNpcPlacementControls();
   if(typeof refreshNpcLineupControls==='function')refreshNpcLineupControls();
   const exact=(MD?.roomActors||[]).filter(a=>a.exactFurniture&&!a.editorDeleted);
   selEl.textContent = selected
@@ -11631,7 +11643,7 @@ function refreshSel() {
   refreshHandle();
 }
 function countChanges() {
-  let n = geometryPatch().length + Object.keys(actorLayouts[MAPID]||{}).length + deleted.size + added.length + painted.size + regionMoves.length
+  let n = (typeof npcEditorOps!=='undefined'?(npcEditorOps[MAPID]||[]).length:0) + geometryPatch().length + Object.keys(actorLayouts[MAPID]||{}).length + deleted.size + added.length + painted.size + regionMoves.length
           + decorDel.length + felledNew.length + clearedBoxes.length;
   for (const [k, m] of decorMoved) {
     if (decorGone.has(k)) continue;
@@ -11664,7 +11676,9 @@ function deleteSelected() {
   const npcInfo=editorActorInfo(selected);
   const npcSource=npcInfo?.kind==='npc'?npcInfo.source:MD.npcs.find(n=>editorNpcKey(n)===selected.editorNpcKey);
   if(npcSource){
-    const key=editorNpcKey(npcSource);npcSource.editorDeleted=true;
+    const key=editorNpcKey(npcSource);
+    if(typeof npcPendingMove==='function'&&npcPendingMove(key,0,0,true)){delete actorLayouts[MAPID]?.[key];selected=null;saveEditorDraft();rebuildSolid();mapDirty=true;refreshSel();return;}
+    npcSource.editorDeleted=true;
     for(const n of npcs)if(editorNpcKey(n)===key){n.editorDeleted=true;n.goto=null;}
     (actorLayouts[MAPID] ||= {})[key]={x:npcSource.x,y:npcSource.y,deleted:true};
     if(typeof syncEditorNpcArt==='function')syncEditorNpcArt(MD);
@@ -11715,6 +11729,7 @@ tap(document.getElementById("nDup"), () => {
 function buildPatch(currentAreaOnly=false) {
   if(typeof editorDraftStale!=='undefined'&&editorDraftStale.has(MAPID))return EmberEditDrafts.store.get(MAPID)?.patch||'No saved draft';
   const L = ["EMBERFELL PATCH v3", "MAP " + MAPID, ...geometryPatch(currentAreaOnly?MAPID:null)];
+  if(typeof npcEditorOps!=='undefined')for(const op of npcEditorOps[MAPID]||[])L.push("NPC "+JSON.stringify(op));
   for(const [key,v] of Object.entries(actorLayouts[MAPID]||{}))L.push("ACTOR "+JSON.stringify({key,...v}));
   for (const r of regionMoves)
     L.push("R " + r.x0 + " " + r.y0 + " " + r.x1 + " " + r.y1 + " " + r.dx + " " + r.dy);
