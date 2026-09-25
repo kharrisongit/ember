@@ -319,7 +319,9 @@ function marketVendorDepth(n,draw){
     const stand=o.marketFront||o.marketActorFront;if(!stand)continue;
     const sp=stand.spr?SPR[stand.spr]:SPR[NAMES[stand.s]];if(!sp)continue;
     const width=sp[2]*(stand.spr?1.1:villageStandSize().scale);
-    if(Math.abs(n.x-stand.x)<width/2-4&&n.y>=stand.y-38&&n.y<=stand.y+16)return stand.y-.5;
+    const height=stand.spr?Math.round(sp[3]*1.1)+10:Math.round(sp[3]*villageStandSize().scale)+villageStandSize().headroom;
+    const person=SPR[n.packSpr]||SPR[n.packSpr+'_idle_d'],nw=person?.[2]||24,nh=person?.[3]||32;
+    if(Math.abs(n.x-stand.x)<(width+nw)/2&&n.y>stand.y-height&&n.y-nh<stand.y)return stand.y-.5;
   }
   return n.y;
 }
@@ -364,15 +366,14 @@ function drawVillageStand(o,front=false){
   const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
   const x=Math.round(o.x-s[2]*scale/2),bottom=o.y,h=Math.round(s[3]*scale)+headroom;
   if(front){
-    drawGameImage(ctx,sheetOf(s),s[0],s[1]+28,s[2],s[3]-28,x,bottom-12,Math.round(s[2]*scale),12);
+    // The complete counter, including its tabletop, stays in front of merchants.
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+23,s[2],1,x,bottom-19,Math.round(s[2]*scale),1);
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],s[3]-24,x,bottom-18,Math.round(s[2]*scale),18);
   }else{
     // Extend just the posts through the new headroom; keep the native canopy.
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],7,x,bottom-h+20,Math.round(s[2]*scale),h-39);
     drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
-    // Keep the counter outline one pixel tall instead of stretching it with the posts.
-    drawGameImage(ctx,sheetOf(s),s[0],s[1]+23,s[2],1,x,bottom-19,Math.round(s[2]*scale),1);
-    // The rear tabletop sits behind the merchant; only the counter face occludes them.
-    drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],4,x,bottom-18,Math.round(s[2]*scale),6);
+
   }
 }
 function installMarketCounters(){

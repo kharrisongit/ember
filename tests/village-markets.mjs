@@ -117,7 +117,7 @@ const calls=[];c.drawGameImage=(...args)=>calls.push(args);c.sheetOf=()=>({});
 run('drawVillageStand(stand);drawVillageStand(stand,true)');
 const canopy=calls[1],counter=calls.at(-1);
 const opening=counter[7]-(canopy[7]+canopy[9]);
-assert(opening>=26&&opening<=30,'Compact opening clears hats and upper bodies');
+assert(opening>=22&&opening<=25,'Compact opening clears hats and upper bodies');
 assert.equal(calls[0][5],7,'Stretch posts without the black counter outline');
 assert.equal(calls[2][9],1,'Counter outline stays one pixel tall');
 console.log('PASS: reindexed village stand uses the raised canopy and separate counter.');
@@ -137,3 +137,9 @@ for(const actor of W.maps.world.roomActors.filter(a=>/^market_.*_stall$/.test(a.
  assert(run('marketTestLayer(roofLayer)>marketTestLayer({dg:true,x:0,y:99999})'),'walking dragon is below the roof');
 }
 console.log('PASS: all five Forgewick canopies draw above Corin and the walking dragon with continuous stand art.');
+
+// Merchant feet may be below a moved stand while the sprite still overlaps it.
+c.front.marketActorFront.x=100;c.vendor.x=100;c.vendor.y=148;
+assert.equal(run('marketVendorDepth(vendor,[front])'),129.5,'Overlapping merchant stays behind stand even beyond the old fixed foot range');
+c.vendor.y=200;assert.equal(run('marketVendorDepth(vendor,[front])'),200,'Separated merchant uses normal depth');
+assert.equal(counter[3],SPR.stall1[1]+24,'Entire tabletop is included in the foreground counter');
