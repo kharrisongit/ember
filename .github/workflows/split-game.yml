@@ -46,3 +46,4 @@ jobs:
           node tests/boss-pressure.mjs
           node tests/ferry-companion.mjs
           node tests/village-markets.mjs
+          node tests/tavern-layering.mjs

@@ -323,6 +323,25 @@ function marketVendorDepth(n,draw){
   }
   return n.y;
 }
+// Keep tavern depth tied to the furniture currently beneath each performer.
+function tavernActorDepth(o,actors){
+  const depth=o.sy??o.y;
+  if(o.exactFurniture){
+    // These back-bar props were assigned the counter's foreground depth.
+    if(/^(bottle cabinet|bottle-cabinet|barrel)$/.test(o.n||'')&&o.sourceRect?.[1]<110)return o.y;
+    if(/stool|chair/.test(o.n||'')){
+      const seated=actors.filter(a=>/^tavern_anim_/.test(a.spr||'')&&Math.abs(a.x-o.x)<14&&Math.abs(a.y-o.y)<20)
+        .sort((a,b)=>Math.hypot(a.x-o.x,a.y-o.y)-Math.hypot(b.x-o.x,b.y-o.y))[0];
+      if(seated)return Math.min(depth,seated.y-.5);
+    }
+  }
+  if(o.spr==='tavern_anim_14'){
+    const tables=actors.filter(a=>a.exactFurniture&&/table/.test(a.n||'')&&!a.editorDeleted&&
+      Math.abs(o.x-a.x)<=a.extractedCanvas.width/2&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+8);
+    return Math.max(depth,...tables.map(a=>(a.sy??a.y)+.5));
+  }
+  return depth;
+}
 function drawMarketActor(o,front,canopy=false){
   const sp=SPR[o.spr];if(!sp)return;
   const w=Math.round(sp[2]*1.1),h=Math.round(sp[3]*1.1)+10,foot=Math.min(42,sp[3]);
@@ -3698,7 +3717,7 @@ function drawWorld(t, dt) {
   if (bell) draw.push({ bell: true, x: bell.x, y: bell.y });
   const topOf = (o) => (o.s !== undefined && DEFS[o.s] && DEFS[o.s].t) ? 1 : 0;
   const isFab = (o) => o.s !== undefined && FABRIC.test(NAMES[o.s] || "");
-  const sortY = (o) => o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
+  const sortY = (o) => MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
                      : (o.sy !== undefined ? o.sy : o.y) + (o.wy || 0)
                      + ((o.s !== undefined && /^rc_sup1_/.test(NAMES[o.s])) ? 40 : 0)
                      + ((o.s !== undefined && DEFS[o.s] && DEFS[o.s].sy) ? DEFS[o.s].sy : 0);
