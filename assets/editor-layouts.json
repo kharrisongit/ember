@@ -48511,6 +48511,55 @@
         "originX": 113,
         "originY": 187
       }
+    },
+    "house26_bedroom": {
+      "actor:millwood:house26_bedroom:3": {
+        "kind": "actor",
+        "key": "millwood:house26_bedroom:3",
+        "identity": "ibed3",
+        "x": 130,
+        "y": 76,
+        "originX": 44.5,
+        "originY": 84
+      },
+      "actor:loot:house26_bedroom:chest": {
+        "kind": "actor",
+        "key": "loot:house26_bedroom:chest",
+        "identity": "temple71_chest",
+        "x": 158,
+        "y": 73,
+        "originX": 160,
+        "originY": 88
+      },
+      "actor:millwood:house26_bedroom:4": {
+        "kind": "actor",
+        "key": "millwood:house26_bedroom:4",
+        "identity": "Furniture 86_2",
+        "deleted": true,
+        "x": 61,
+        "y": 81,
+        "originX": 135.5,
+        "originY": 169
+      },
+      "actor:millwood:house26_bedroom:2": {
+        "kind": "actor",
+        "key": "millwood:house26_bedroom:2",
+        "identity": "ichair4",
+        "x": 65,
+        "y": 138,
+        "originX": 86,
+        "originY": 181
+      },
+      "actor:millwood:house26_bedroom:1": {
+        "kind": "actor",
+        "key": "millwood:house26_bedroom:1",
+        "identity": "ichair0",
+        "deleted": true,
+        "x": 30,
+        "y": 181,
+        "originX": 30,
+        "originY": 181
+      }
     }
   },
   "applied": [
@@ -48579,7 +48628,8 @@
     "0f4aed21-6575-4165-944f-3b088a44392b",
     "b849291f-9525-469c-967a-7d456e16d13a",
     "80fb4bee-f100-435f-9d06-5a5c3712d038",
-    "5f9457f5-1615-4a78-83b8-75e985f8bbe9"
+    "5f9457f5-1615-4a78-83b8-75e985f8bbe9",
+    "9e9e2c4b-8b73-4886-b9dd-74ed9ded390f"
   ],
   "sessions": {
     "witchmoor": {
@@ -48693,6 +48743,14 @@
       "baseFingerprint": "2efe42ea-5d609866-4444",
       "base": {},
       "resultHash": "200c3974-b477d64c-985"
+    },
+    "house26_bedroom": {
+      "id": "667330eb-9ae8-4933-bf31-4efbb82e7ea7",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "de8b39ee-22f60060-2097",
+      "base": {},
+      "resultHash": "780f48a5-193e5ff5-796"
     }
   }
 }
