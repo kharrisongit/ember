@@ -48313,6 +48313,62 @@
         "originX": 135.5,
         "originY": 169
       }
+    },
+    "house25_bedroom": {
+      "actor:millwood:house25_bedroom:1": {
+        "kind": "actor",
+        "key": "millwood:house25_bedroom:1",
+        "identity": "ibed4",
+        "x": 44,
+        "y": 84,
+        "originX": 44.5,
+        "originY": 95
+      },
+      "actor:loot:house25_bedroom:chest": {
+        "kind": "actor",
+        "key": "loot:house25_bedroom:chest",
+        "identity": "temple71_chest",
+        "x": 172,
+        "y": 74,
+        "originX": 176,
+        "originY": 88
+      },
+      "actor:millwood:house25_bedroom:2": {
+        "kind": "actor",
+        "key": "millwood:house25_bedroom:2",
+        "identity": "ichair4",
+        "x": 40,
+        "y": 135,
+        "originX": 86,
+        "originY": 181
+      },
+      "actor:millwood:house25_bedroom:3": {
+        "kind": "actor",
+        "key": "millwood:house25_bedroom:3",
+        "identity": "ichair5",
+        "x": 54,
+        "y": 161,
+        "originX": 30,
+        "originY": 181
+      },
+      "actor:millwood:house25_bedroom:0": {
+        "kind": "actor",
+        "key": "millwood:house25_bedroom:0",
+        "identity": "itable4",
+        "x": 41,
+        "y": 177,
+        "originX": 65,
+        "originY": 177
+      },
+      "actor:millwood:house25_bedroom:4": {
+        "kind": "actor",
+        "key": "millwood:house25_bedroom:4",
+        "identity": "Furniture 86_2",
+        "x": 130,
+        "y": 79,
+        "originX": 135.5,
+        "originY": 169
+      }
     }
   },
   "applied": [
@@ -48378,7 +48434,8 @@
     "80aa3744-7437-4cb9-89cd-140cb4e85782",
     "0f043b5c-2366-4985-ad01-ba8831ab4903",
     "bc7d17e9-5fd1-4765-962c-435e383d1de3",
-    "0f4aed21-6575-4165-944f-3b088a44392b"
+    "0f4aed21-6575-4165-944f-3b088a44392b",
+    "b849291f-9525-469c-967a-7d456e16d13a"
   ],
   "sessions": {
     "witchmoor": {
@@ -48468,6 +48525,14 @@
       "baseFingerprint": "f93fd50d-f4c0299d-2109",
       "base": {},
       "resultHash": "6732f597-3b71b687-1131"
+    },
+    "house25_bedroom": {
+      "id": "5bce09a7-2200-4821-a825-156152ca24fb",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "6d6e77c0-4b1b7284-2095",
+      "base": {},
+      "resultHash": "cebd94ee-fce6fbe8-916"
     }
   }
 }
