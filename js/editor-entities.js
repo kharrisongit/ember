@@ -78,7 +78,7 @@ function npcLineupCatalog() {
   const add=(key,look,category)=>{if(!seen.has(key)){seen.add(key);extras.set(key,{key,...look,category});}};
   const seated=k=>/^(?:villager_seated_|seated_body_|pack_pupil_)|_seated$/.test(k);
   const scene=k=>/^(?:tavern_(?:src_|anim_)|school(?:2)?_|library_reader_|smithy_anim_8$|smithout_anim_7$|glassnew_anim_[46]$)/.test(k);
-  const direct=(spr,category)=>{if(SPR[spr])add('sprite:'+spr,{packSpr:spr,packDirections:false,packWalk:false},category);};
+  const direct=(spr,category)=>{if(SPR[spr])add('sprite:'+spr,{packSpr:typeof npcSingleSprite==='function'?npcSingleSprite(spr):spr,packDirections:false,packWalk:false},category);};
   for(const spr of Object.keys(SPR).sort()){
     if(/^(?:pack_|guild_)/.test(spr)&&!/_((?:idle|walk|run|atk|hurt|die|death))_[a-z]$/.test(spr))direct(spr,seated(spr)?'seated':'standing');
     if(/^(?:guild_|pack_).*_idle_d$/.test(spr)){

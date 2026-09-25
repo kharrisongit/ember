@@ -46,3 +46,42 @@ const resident={x:80,y:92,sy:76,seated:true};
 assert(c.houseChairDepth(chair,[resident])<76);resident.y+=8;resident.sy+=8;assert(c.houseChairDepth(chair,[resident])<84);
 resident.editorDeleted=true;assert.equal(c.houseChairDepth(chair,[resident]),100);resident.editorDeleted=false;resident.x+=100;assert.equal(c.houseChairDepth(chair,[resident]),100);
 console.log('PASS: NPC additions/transfers retain animation/dialogue through reload, publishing, retry, independent movement and reset; original NPC/art hidden once; house chairs follow seated people.');
+
+// Raw scene sheets contain multiple poses per frame. Both the picker and saved
+// additions must resolve to exactly one person, with the original frame stride.
+{
+ const draws=[],sheets={},sprites={tavern_src_Drinker1:[20,100,64,80,8],tavern_src_Drinker3:[0,0,64,80,8],tavern_anim_7:[100,200,32,32,12]};
+ const doc={createElement:()=>({getContext:()=>({})})};
+ const h=vm.createContext({SPR:sprites,animalSheets:sheets,document:doc,sheetOf:()=>({}),drawGameImage:(...args)=>draws.push(args)});
+ const code=read('js/npc-placement.js');vm.runInContext(code.slice(0,code.indexOf('function npcLayoutOps(')),h);
+ assert.equal(h.npcSingleSprite('tavern_src_Drinker3'),'tavern_anim_7','Use the existing isolated actor');
+ const key=h.npcSingleSprite('tavern_src_Drinker1'),sp=sprites[key];
+ assert.deepEqual(Array.from(sp),[0,0,32,40,8,key]);assert.equal(sheets[key].width,256);assert.equal(draws.length,8);
+ for(let frame=0;frame<8;frame++)assert.deepEqual(draws[frame].slice(2),[20+frame*64,100,32,40,frame*32,0,32,40]);
+ h.npcSingleSprite('tavern_src_Drinker1');assert.equal(draws.length,8,'Reuse the prepared strip');
+ assert.equal(h.npcAppearance({packSpr:'tavern_src_Drinker3'}),h.npcAppearance({packSpr:'tavern_anim_7'}),'Aliases count as the same person');
+ assert.equal(h.npcAppearance({sk:'villf'}),'skin:villf');
+}
+console.log('PASS: scene NPCs use one isolated character in every frame; source aliases share the same appearance.');
+
+// Use the game's actual document touch handlers: the picker must be recognized
+// as a scroll container even when a swipe starts on an NPC button.
+{
+ const listeners={};
+ const doc={body:null,getElementById:()=>null,addEventListener:(name,fn)=>listeners[name]=fn};
+ doc.createElement=()=>{const e={style:{},className:'',append(...children){for(const child of children)child.parentNode=e;}};
+   e.classList={contains:name=>e.className.split(' ').includes(name)};return e;};
+ doc.body=doc.createElement();
+ const h=vm.createContext({document:doc});
+ const source=read('js/npc-placement.js');vm.runInContext(source.slice(source.indexOf('function npcOpenPanel('),source.indexOf('function npcEditingAt(')),h);
+ const game=read('js/generated/game-part-2.js');vm.runInContext(game.slice(game.indexOf('const SCROLLERS ='),game.indexOf('cv.addEventListener("touchstart", e => {',game.indexOf('const SCROLLERS ='))),h);
+ const panel=h.npcOpenPanel('Add an unused NPC'),button=doc.createElement();panel.append(button);
+ Object.assign(panel,{scrollTop:0,scrollHeight:1600,clientHeight:500});
+ assert.equal(h.scrollerFor(button),panel,'Swipe on an NPC card resolves its scroll container');
+ assert(panel.style.cssText.includes('touch-action:pan-y'),'Native vertical touch scrolling is enabled');
+ listeners.touchstart({target:button,touches:[{clientX:100,clientY:400}]});
+ let blocked=false;listeners.touchmove({target:button,touches:[{clientX:100,clientY:200}],cancelable:true,preventDefault(){blocked=true}});
+ assert(!blocked,'The game must not cancel a swipe through the NPC list');
+ listeners.touchend();
+}
+console.log('PASS: swipes starting on NPC cards pass through the real game touch handler for native scrolling.');

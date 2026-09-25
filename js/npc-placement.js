@@ -1,5 +1,36 @@
 /* NPC additions and cross-map transfers are ordinary, reviewable editor operations. */
 const npcEditorOps={};
+// Source sheets can contain several poses inside each animation frame. Reuse
+// the already isolated scene actors, and crop the remaining source-only people.
+const NPC_SCENE_ALIASES={
+  Sit_char:22,Lute_player:18,Player_dwarf:16,Drinker6:8,Think_guy:15,
+  Player_drow:23,Drinker7:20,Knight:12,Killer:21,Client:10,Sleep_guy2:11,
+  Drinker4:17,Card_player_orc:13,Watcher:19,Host:9,Drinker3:7,Dancer:14,Drinker5:6
+};
+const NPC_SCENE_CROPS={
+  tavern_src_Drinker1:[32,40],tavern_src_Drinker2:[32,40],tavern_src_Eater:[32,32],
+  school_src_Reader1:[32,40],school_src_Reader2:[32,40],school_src_Reader3:[32,24],
+  school_src_Reader4:[32,32],school_src_Reader5:[32,24],school_src_Reader6:[32,32]
+};
+function npcSingleSprite(name){
+  if(name==='school_src_Reader1'&&SPR.library_reader_red)return 'library_reader_red';
+  const actor=NPC_SCENE_ALIASES[name?.replace(/^tavern_src_/,'')];
+  if(name?.startsWith('tavern_src_')&&actor!==undefined&&SPR['tavern_anim_'+actor])return 'tavern_anim_'+actor;
+  const crop=NPC_SCENE_CROPS[name],source=SPR[name];
+  if(!crop||!source)return name;
+  const key='npc_single_'+name;
+  if(!SPR[key]){
+    const [w,h]=crop,c=document.createElement('canvas');c.width=w*source[4];c.height=h;
+    const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+    for(let f=0;f<source[4];f++)drawGameImage(g,sheetOf(source),source[0]+f*source[2],source[1],w,h,f*w,0,w,h);
+    animalSheets[key]=c;SPR[key]=[0,0,w,h,source[4],key];
+  }
+  return key;
+}
+function npcAppearance(n){
+  return (npcSingleSprite(n.packSpr||n.seatSpr||n.lookId)||(n.sk?'npc_'+n.sk+'_d':n.body||''))
+    .replace(/_(?:idle|walk)_[duwe]$/, '').replace(/^npc_(.+)_(?:idle|sidle|uidle|[dsuwe])$/, 'skin:$1');
+}
 function npcLayoutOps(layout){
   return [...(layout?.build?npcLayoutOps(layout.build.previous):[]),...Object.values(layout||{}).filter(o=>o.kind==='npc-add'||o.kind==='npc-transfer')];
 }
@@ -22,6 +53,7 @@ function npcCreatePlacement(m,op){
     n={...original};
     if(n.school&&n.lookId){n.packSpr=n.lookId;n.packDirections=false;n.packWalk=false;}
   }
+  if(n.packSpr)n.packSpr=npcSingleSprite(n.packSpr);
   // A moved person keeps their appearance/dialogue, not their old furniture,
   // patrol route, scene reservation, visibility conditions or dialogue anchor.
   for(const k of ['school','lookId','seatClipY','sy','counter','talkX','talkY','patrol','patrolPoints','goto','sceneReserved','devLineup','devLineupScale','editorDeleted','publishedDeleted','_editorTransferred','when','until','away','_seatContact'])delete n[k];
@@ -57,14 +89,20 @@ function npcSelection(){
 function npcOpenPanel(title){
   document.getElementById('npcPlacementPanel')?.remove();
   const panel=document.createElement('div');panel.id='npcPlacementPanel';
-  panel.style.cssText='position:fixed;z-index:10010;inset:10% 5% 24%;overflow:auto;background:#201c16;color:#f9eed9;border:2px solid #b99b64;border-radius:12px;padding:14px;font:15px sans-serif;';
+  panel.className='scrolls';
+  panel.style.cssText='position:fixed;z-index:10010;inset:8% 4% 12%;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#201c16;color:#f9eed9;border:2px solid #b99b64;border-radius:12px;padding:14px;font:15px sans-serif;';
   const close=document.createElement('button');close.textContent='CLOSE';close.style.cssText='float:right;padding:10px';close.onclick=()=>panel.remove();panel.append(close);
   const heading=document.createElement('h3');heading.textContent=title;panel.append(heading);document.body.append(panel);return panel;
 }
-function npcEditingAt(key,x,y){
-  setPaint(false);setBuild(false);setTravel(false);editing=true;selected=npcs.find(n=>editorNpcKey(n)===key);dragObj=null;
+function npcEditingAt(key,x,y,travel=false){
+  const view={x:cam.x,y:cam.y,z:cam.z};
+  closeOthers('edit');doorEdit=false;collideView=false;geometryEnd();document.getElementById('geometryBar').style.display='none';
+  editing=true;selected=npcs.find(n=>editorNpcKey(n)===key);dragObj=null;
   bEdit.classList.add('on');editEl.style.display='block';soloTool('MOVE THINGS');
-  P.x=x;P.y=y+48;camFree=true;cam.x=x-VW/cam.z/2;cam.y=y-VH/cam.z/2;clampCam();
+  camFree=true;
+  if(travel){P.x=x;P.y=y+48;cam.x=x-VW/cam.z/2;cam.y=y-VH/cam.z/2;}
+  else Object.assign(cam,view);
+  clampCam();setDev(false);
   rebuildSolid();mapDirty=true;refreshSel();saveEditorDraft();
 }
 function transportSelectedNpc(city){
@@ -82,7 +120,7 @@ function transportSelectedNpc(city){
     // Rebuild live NPCs through the usual map loader; it restores this saved draft.
     saveEditorDraft();loadMap('world');
   }
-  npcEditingAt(key,x,y);toast('NPC moved to '+city.name+'. Drag to position, then SEND CHANGES.');
+  npcEditingAt(key,x,y,true);toast('NPC moved to '+city.name+'. Drag to position, then SEND CHANGES.');
 }
 function openNpcTransport(){
   const n=npcSelection();if(!n)return;
@@ -92,7 +130,7 @@ function openNpcTransport(){
   for(const city of cities){const b=document.createElement('button');b.textContent=city.name;b.style.cssText='display:block;width:100%;padding:14px;margin:6px 0';b.onclick=()=>transportSelectedNpc(city);panel.append(b);}
 }
 function npcLookUsed(entry){
-  const family=n=>(n.packSpr||n.seatSpr||n.lookId||(n.sk?'npc_'+n.sk+'_d':n.body||'')).replace(/_(?:idle|walk)_[duwe]$/, '').replace(/^npc_(.+)_(?:idle|sidle|uidle|[dsuwe])$/, 'skin:$1');
+  const family=npcAppearance;
   const wanted=family(entry);
   if(/^(?:skin:(?:lumberjack_jack|chef_chloe|farmer_buba|miner_mike|pharaoh)|market_citizen[1-5])$/.test(wanted))return true;
   for(const [id,m]of Object.entries(W.maps))for(const n of m.npcs||[]){
@@ -106,8 +144,10 @@ function npcLookUsed(entry){
 }
 function addUnusedNpc(entry){
   document.getElementById('npcPlacementPanel')?.remove();
-  const op={kind:'npc-add',key:crypto.randomUUID(),look:entry.key,name:entry.key.split(':')[1].replaceAll('_',' '),x:Math.round(P.x+24),y:Math.round(P.y)};
-  op.x=Math.min(PXW-1,op.x);op.y=Math.min(PXH-1,op.y);
+  const op={kind:'npc-add',key:crypto.randomUUID(),look:entry.key,name:entry.key.split(':')[1].replaceAll('_',' '),
+    x:Math.round(cam.x+VW/cam.z/2),y:Math.round(cam.y+VH/cam.z/2)};
+  op.x=Math.max(0,Math.min(PXW-1,op.x));op.y=Math.max(0,Math.min(PXH-1,op.y));
+  camFree=true;
   (npcEditorOps[MAPID]||=[]).push(op);npcCreatePlacement(MD,op);saveEditorDraft();loadMap(MAPID);
   npcEditingAt(npcPlacementKey(op),op.x,op.y);toast('NPC added. Drag to position, then SEND CHANGES.');
 }
@@ -115,7 +155,9 @@ function openNpcAdd(){
   const panel=npcOpenPanel('Add an unused NPC');
   const search=document.createElement('input');search.placeholder='Search NPCs';search.style.cssText='width:95%;padding:12px';panel.append(search);
   const list=document.createElement('div');panel.append(list);
-  const entries=npcLineupCatalog().filter(e=>!npcLookUsed(e));
+  const seen=new Set(),entries=npcLineupCatalog().filter(e=>{
+    const key=npcAppearance(e);if(seen.has(key)||npcLookUsed(e))return false;seen.add(key);return true;
+  });
   const render=()=>{list.replaceChildren();for(const e of entries.filter(e=>e.key.toLowerCase().includes(search.value.toLowerCase()))){
     const b=document.createElement('button');b.style.cssText='display:inline-flex;vertical-align:top;align-items:center;gap:8px;width:48%;min-height:78px;margin:1%;text-align:left;';
     const canvas=document.createElement('canvas');canvas.width=64;canvas.height=64;canvas.style.cssText='width:64px;height:64px;image-rendering:pixelated';

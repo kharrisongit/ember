@@ -121,8 +121,16 @@ for(const [id,fresh] of [[W.start,false],['world',true],[W.start,true],['world',
 // Exercise the real Add/Transport buttons' actions through full map loading.
 const unused=npcLineupCatalog().find(e=>e.category==='walking'&&!npcLookUsed(e));
 assert(unused,'Unused animated cast is available');
+camFree=true;cam.x=4000;cam.y=1600;cam.z=2;setDev(true);
+const addCamera={x:cam.x,y:cam.y,z:cam.z},addPlayer={x:P.x,y:P.y};
+const addCenter={x:Math.round(cam.x+VW/cam.z/2),y:Math.round(cam.y+VH/cam.z/2)};
 addUnusedNpc(unused);
 const addedKey=editorNpcKey(selected);assert(selected&&!selected.editorDeleted&&!selected.devLineup);
+assert.equal(selected.x,addCenter.x,'Added NPC appears at the panned camera center');
+assert.equal(selected.y,addCenter.y,'Added NPC appears at the panned camera center');
+assert.equal(P.x,addPlayer.x,'Adding an NPC leaves the player in place');assert.equal(P.y,addPlayer.y);
+assert.equal(cam.x,addCamera.x);assert.equal(cam.y,addCamera.y);assert.equal(cam.z,addCamera.z);
+assert(!devOpen&&editing,'Menus close while Move stays active');
 moveEditorActor(selected,4200,1850,true);saveEditorDraft();loadMap('house22');loadMap('world');
 assert.equal(npcs.find(n=>editorNpcKey(n)===addedKey).x,4200,'New NPC position survives real area switches');
 selected=npcs.find(n=>editorNpcKey(n)===addedKey);deleteSelected();
