@@ -121,3 +121,19 @@ assert(opening>=26&&opening<=30,'Compact opening clears hats and upper bodies');
 assert.equal(calls[0][5],7,'Stretch posts without the black counter outline');
 assert.equal(calls[2][9],1,'Counter outline stays one pixel tall');
 console.log('PASS: reindexed village stand uses the raised canopy and separate counter.');
+
+// Forgewick roofs belong above both walking characters, independently of feet Y.
+c.underfoot=()=>false;c.P={x:0,y:99999};c.MD={};
+const layerStart=code.indexOf('  const groundLayer ='),layerEnd=code.indexOf('  draw.sort(',layerStart);
+run(code.slice(layerStart,layerEnd)+'globalThis.marketTestLayer=groundLayer;');
+for(const actor of W.maps.world.roomActors.filter(a=>/^market_.*_stall$/.test(a.spr||''))){
+ c.forgeStand=actor;calls.length=0;run('drawMarketActor(forgeStand,false);drawMarketActor(forgeStand,true);drawMarketActor(forgeStand,false,true)');
+ const [back,front,roof]=calls;
+ assert.equal(roof[3]+roof[5],back[3],'roof and lower art meet at the same source row');
+ assert(Math.abs(roof[7]+roof[9]-back[7])<.001,'roof and lower art meet without a gap');
+ assert.equal(back[3]+back[5],front[3],'counter source remains complete');
+ c.roofLayer={marketCanopy:actor};
+ assert(run('marketTestLayer(roofLayer)>marketTestLayer(P)'),'Corin is below the roof');
+ assert(run('marketTestLayer(roofLayer)>marketTestLayer({dg:true,x:0,y:99999})'),'walking dragon is below the roof');
+}
+console.log('PASS: all five Forgewick canopies draw above Corin and the walking dragon with continuous stand art.');

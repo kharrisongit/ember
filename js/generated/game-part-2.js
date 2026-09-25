@@ -323,11 +323,15 @@ function marketVendorDepth(n,draw){
   }
   return n.y;
 }
-function drawMarketActor(o,front){
+function drawMarketActor(o,front,canopy=false){
   const sp=SPR[o.spr];if(!sp)return;
   const w=Math.round(sp[2]*1.1),h=Math.round(sp[3]*1.1)+10,foot=Math.min(42,sp[3]);
   if(front)drawGameImage(ctx,sheetOf(sp),sp[0],sp[1]+sp[3]-foot,sp[2],foot,o.x-w/2,o.y-foot,w,foot);
-  else drawGameImage(ctx,sheetOf(sp),sp[0],sp[1],sp[2],sp[3]-foot,o.x-w/2,o.y-h,w,h-foot);
+  else {
+    const back=sp[3]-foot,roof=Math.min(88,back),scaleY=(h-foot)/back;
+    const start=canopy?0:roof,rows=canopy?roof:back-roof;
+    drawGameImage(ctx,sheetOf(sp),sp[0],sp[1]+start,sp[2],rows,o.x-w/2,o.y-h+start*scaleY,w,rows*scaleY);
+  }
 }
 function drawVillageStand(o,front=false){
   const s=SPR[NAMES[o.s]],{scale,headroom}=villageStandSize();
@@ -3641,6 +3645,7 @@ function drawWorld(t, dt) {
     if(/^market_.*_stall$/.test(actor.spr||'')){
       draw.push({marketActor:actor,x:actor.x,y:actor.y,sy:actor.y-180});
       draw.push({marketActorFront:actor,x:actor.x,y:actor.y,sy:actor.y});
+      draw.push({marketCanopy:actor,x:actor.x,y:actor.y,sy:actor.y});
     }else draw.push(actor);
   }
   if (trialDemonHere()) draw.push({witchDemon:true,...(MAPID==="witchmoor"?{x:196,y:304}:THRONE_DEMON)});
@@ -3807,7 +3812,7 @@ function drawWorld(t, dt) {
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
-  const groundLayer = o => o.roomBackgroundPatch || underfoot(o) ? 0
+  const groundLayer = o => o.marketCanopy ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
@@ -3817,6 +3822,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(o.marketCanopy){drawMarketActor(o.marketCanopy,false,true);continue;}
     if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
     if(o.marketFront){drawVillageStand(o.marketFront,true);continue;}
     if(o.marketStand){drawVillageStand(o);continue;}
