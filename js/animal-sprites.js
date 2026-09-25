@@ -46,7 +46,18 @@ function installFarmAnimals() {
     const name='farm_'+choices[n%choices.length]+'_'+(n%2?'e':'w');
     let id=W.names.indexOf(name);
     if(id<0){id=W.names.length;W.names.push(name);}
-    W.defs[id]={...W.defs[m.objs[i]],o:0};
+    W.defs[id]={...W.defs[m.objs[i]],o:0,wd:Math.max(18,W.defs[m.objs[i]]?.wd||0),ws:W.defs[m.objs[i]]?.ws||7,wp:W.defs[m.objs[i]]?.wp||2.8};
     m.objs[i]=id;
   }
+}
+
+function farmAnimalDrawName(name,o){
+  if(!/^farm_(bull|calf|chick|lamb|piglet|rooster|sheep|turkey)_[duwe]$/.test(name))return name;
+  const base=name.replace(/_[duwe]$/,'');
+  if(o&&o.moving){
+    const dx=(o.tx||0)-(o.wx||0),dy=(o.ty||0)-(o.wy||0);
+    if(Math.abs(dy)>Math.abs(dx)*0.8)return base+'_'+(dy<0?'u':'d');
+    return base+'_'+(dx<0?'w':'e');
+  }
+  return base+'_'+(o&&o.face===-1?'w':'e');
 }
