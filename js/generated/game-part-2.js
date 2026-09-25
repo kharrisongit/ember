@@ -293,7 +293,7 @@ function installFerrySigns(){
   }
 }
 function isVillageMarketStand(o){return /^stall[123]$/.test(NAMES[o.s]||'');}
-function villageStandSize(){return {scale:1.4,headroom:22};}
+function villageStandSize(){return {scale:1.4,headroom:8};}
 function prepareVillageStands(){
   for(const [id,m] of Object.entries(W.maps)){
     m.marketStands=[];
@@ -336,8 +336,10 @@ function drawVillageStand(o,front=false){
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+28,s[2],s[3]-28,x,bottom-12,Math.round(s[2]*scale),12);
   }else{
     // Extend just the posts through the new headroom; keep the native canopy.
-    drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],8,x,bottom-h+20,Math.round(s[2]*scale),h-38);
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+16,s[2],7,x,bottom-h+20,Math.round(s[2]*scale),h-39);
     drawGameImage(ctx,sheetOf(s),s[0],s[1],s[2],16,x,bottom-h,Math.round(s[2]*scale),20);
+    // Keep the counter outline one pixel tall instead of stretching it with the posts.
+    drawGameImage(ctx,sheetOf(s),s[0],s[1]+23,s[2],1,x,bottom-19,Math.round(s[2]*scale),1);
     // The rear tabletop sits behind the merchant; only the counter face occludes them.
     drawGameImage(ctx,sheetOf(s),s[0],s[1]+24,s[2],4,x,bottom-18,Math.round(s[2]*scale),6);
   }
