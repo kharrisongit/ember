@@ -20,6 +20,8 @@ function registerAnimalSprites() {
       add(name,'Hare_'+file+'.png',32,row,frames,[0,0,32,32]);
       FOE_ATTACK_OFFSETS[name]=[0,4];
     });
+  // Old published layouts retain bull sprite identities, but use calf art.
+  for(const dir of dirs)SPR['farm_bull_'+dir]=SPR['farm_calf_'+dir];
   // Deer sheets are down, up, east, west, with seven death frames.
   for(const [action,file,frames] of [['idle','Idle',4],['walk','Walk',6],['run','Run',6],['hurt','Hurt',4],['die','Death',7]])
     ['d','u','e','w'].forEach((dir,row)=>{
@@ -45,7 +47,9 @@ async function loadAnimalSprites() {
 function installFarmAnimals() {
   const m=W.maps.world;if(!m||m._newFarmAnimals)return;
   m._newFarmAnimals=true;
-  const replacements={cow_graze:['calf'],cow2_graze:['calf'],cow:['calf'],cow2:['calf'],pig_graze:['piglet'],
+  // Published Build layouts refer to these stable sprite IDs. Keep their
+  // original allocation order; legacy bull identities render calf artwork.
+  const replacements={cow_graze:['bull'],cow2_graze:['calf'],cow:['bull'],pig_graze:['piglet'],
     sheep:['sheep'],sheep2:['lamb'],chicken:['chick'],rooster:['rooster','turkey','rooster']};
   const seen={};
   for(let i=0;i<m.objs.length;i+=3){
@@ -61,6 +65,7 @@ function installFarmAnimals() {
 }
 
 function farmAnimalDrawName(name,o){
+  name=name.replace(/^farm_bull_/,'farm_calf_');
   if(!/^farm_(calf|chick|lamb|piglet|rooster|sheep|turkey)_[duwe]$/.test(name))return name;
   const base=name.replace(/_[duwe]$/,'');
   if(o&&o.moving){

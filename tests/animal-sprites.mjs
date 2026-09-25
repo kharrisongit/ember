@@ -19,7 +19,7 @@ const c=vm.createContext({SPR:{},FOE_ATTACK_OFFSETS:{},Image,document:{createEle
 const run=s=>vm.runInContext(s,c);
 run(read('js/animal-sprites.js'));run('registerAnimalSprites()');await run('loadAnimalSprites()');
 assert.equal(files.length,17);assert.equal(files.filter(p=>p.includes('Deer')).length,5);
-assert.equal(Object.keys(c.SPR).length,96);
+assert.equal(Object.keys(c.SPR).length,100);
 const game=read('js/generated/game-part-2.js');run(game.slice(game.indexOf('function sheetOf('),game.indexOf('function blit(')));
 for(const [name,sp]of Object.entries(c.SPR)){
  c.sp=sp;const sheet=run('sheetOf(sp)');assert.equal(sheet.width,sp[2]*sp[4]);assert.equal(sheet.height,sp[3]);
@@ -33,7 +33,7 @@ for(let i=0;i<original.length;i+=3){
  if(/^(cow|cow2_graze|cow_graze|pig_graze|sheep|sheep2|chicken|rooster)$/.test(old)){assert(name.startsWith('farm_'));herd.push(name.split('_')[1]);}
  else assert.equal(name,old);
 }
-assert.equal(herd.length,13);assert.equal(new Set(herd).size,7,'all seven farm animals are used');
+assert.equal(herd.length,13);assert.equal(new Set(herd).size,8,'published animal identities stay stable');
 const count=world.names.length;run('installFarmAnimals()');assert.equal(world.names.length,count,'map preparation is idempotent');
 // The opening road herd uses the same uploaded sheets as the farm objects.
 const item=game.slice(game.indexOf('    if (o.item) {'),game.indexOf('    if (o.green) {'));
@@ -45,3 +45,7 @@ run(p3.slice(p3.indexOf('function drawBagBig('),p3.indexOf('function bagTick('))
 c.big={width:260,height:260,getContext:()=>({clearRect(){}})};
 run("drawBagBig(big,'hare_idle_d',0)");assert.equal(c.lastBagImage,run('animalSheets.hare_idle_d'));
 console.log('PASS: all uploaded farm sprites and hare animation crops load, feet anchors and inventory use the correct sheets; seven farm species replace all 13 old animals, and deer idle, walk, run, hurt and death load.');
+
+for(const dir of ['d','u','w','e'])assert.equal(c.SPR['farm_bull_'+dir],c.SPR['farm_calf_'+dir],'legacy bull IDs display calves');
+assert(!files.some(p=>p.includes('Bull')),'bull artwork is never loaded');
+assert.equal(run("farmAnimalDrawName('farm_bull_w',{moving:true,tx:10,ty:0,wx:0,wy:0})"),'farm_calf_walk_e');

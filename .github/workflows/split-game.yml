@@ -41,6 +41,7 @@ jobs:
           node tests/hunting-grounds.mjs
           node tests/animal-sprites.mjs
           node tests/overworld-return.mjs
+          node tests/overworld-published-return.cjs
           node tests/mountain-passage.mjs
           node tests/boss-pressure.mjs
           node tests/ferry-companion.mjs
