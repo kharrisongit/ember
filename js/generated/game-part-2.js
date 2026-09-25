@@ -2,19 +2,31 @@ function registerDockOriginalSprites(){
   let y=1034240;DOCK_ORIGINAL_ASSETS.forEach(a=>{a.atlasY=y;SPR[a.name]=[0,y,a.w,a.h,a.frames];y+=Math.ceil(a.h/1024)*1024;});
   const wall=SPR.wall78_sheet;for(const [id,x,y,sx,sy]of WALL78_PIECES)SPR[`wall78_${id}_${x}_${y}`]=[sx,wall[1]+sy,16,16,1];
 }
+async function loadDockImage(src,index,name){
+  const external=!src.startsWith('data:');
+  for(let attempt=0;attempt<(external?3:1);attempt++){
+    try{
+      return await new Promise((resolve,reject)=>{
+        const img=new Image();
+        const timer=setTimeout(()=>finish(new Error('Image request timed out')),15000);
+        function finish(error){
+          clearTimeout(timer);img.onload=img.onerror=null;
+          if(error)reject(error);else resolve(img);
+        }
+        img.onload=()=>finish();img.onerror=()=>finish(new Error('Image request failed'));
+        // A fresh URL also avoids reusing a cached failed response on mobile Safari.
+        img.src=attempt?src+(src.includes('?')?'&':'?')+'retry='+attempt+'-'+Date.now():src;
+      });
+    }catch(error){
+      if(!external||attempt===2)throw new Error('Dock Asset '+index+' ('+name+') failed: '+error.message);
+    }
+  }
+}
 async function loadDockOriginalAssets(){
   // Startup decodes images before inflateWorld: assign virtual pages before registering them.
   registerDockOriginalSprites();
   for(const [i,a]of DOCK_ORIGINAL_ASSETS.entries()){
-    const img=new Image();
-    await new Promise((resolve,reject)=>{
-      img.onload=resolve;
-      img.onerror=(e)=>{
-        console.error("FAILED TO LOAD DOCK ORIGINAL ASSET " + i + " (" + a.name + ")", a.src.substring(0, 100));
-        reject(new Error("Dock Asset " + i + " (" + a.name + ") failed"));
-      };
-      img.src=a.src;
-    });
+    const img=await loadDockImage(a.src,i,a.name);
     let sheet=img;
     if(a.cellW){
       sheet=document.createElement('canvas');sheet.width=a.w*a.frames;sheet.height=a.h;
