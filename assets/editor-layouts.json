@@ -46058,8 +46058,8 @@
         "kind": "actor",
         "key": "npc:Bevan",
         "identity": "Bevan",
-        "x": 12530,
-        "y": 3241,
+        "x": 12463,
+        "y": 3380,
         "originX": 12518,
         "originY": 3216
       },
@@ -46067,8 +46067,8 @@
         "kind": "actor",
         "key": "npc:Prue",
         "identity": "Prue",
-        "x": 12499,
-        "y": 3245,
+        "x": 12484,
+        "y": 3381,
         "originX": 12542,
         "originY": 3349
       },
@@ -46926,6 +46926,55 @@
         "y": 3265,
         "originX": 43176,
         "originY": 3444
+      },
+      "actor:actor:14:market_weapons_stall": {
+        "kind": "actor",
+        "key": "actor:14:market_weapons_stall",
+        "identity": "market_weapons_stall",
+        "independent": true,
+        "x": 12548,
+        "y": 3237,
+        "originX": 12405,
+        "originY": 3230
+      },
+      "actor:actor:15:market_produce_stall": {
+        "kind": "actor",
+        "key": "actor:15:market_produce_stall",
+        "identity": "market_produce_stall",
+        "independent": true,
+        "x": 12427,
+        "y": 3213,
+        "originX": 12518,
+        "originY": 3202
+      },
+      "actor:actor:17:market_curios_stall": {
+        "kind": "actor",
+        "key": "actor:17:market_curios_stall",
+        "identity": "market_curios_stall",
+        "independent": true,
+        "x": 12394,
+        "y": 3351,
+        "originX": 12407,
+        "originY": 3332
+      },
+      "actor:actor:18:market_drinks_stall": {
+        "kind": "actor",
+        "key": "actor:18:market_drinks_stall",
+        "identity": "market_drinks_stall",
+        "independent": true,
+        "x": 12546,
+        "y": 3407,
+        "originX": 12584,
+        "originY": 3232
+      },
+      "actor:npc:Tessa": {
+        "kind": "actor",
+        "key": "npc:Tessa",
+        "identity": "Tessa",
+        "x": 12462,
+        "y": 3356,
+        "originX": 12522,
+        "originY": 3212
       }
     },
     "witchmoor": {
@@ -47742,7 +47791,8 @@
     "dc006617-0ba4-46dc-a8af-e9570a903a3b",
     "2bd74ff9-297e-449c-a26f-e0374e472e9a",
     "d07f27f4-c0f9-4b2d-9f96-1964ea5b7ee6",
-    "d45232f7-0414-466e-9026-b6c8cf8dce62"
+    "d45232f7-0414-466e-9026-b6c8cf8dce62",
+    "49cab4bb-3392-4987-891b-a4df9d79dd4c"
   ],
   "sessions": {
     "witchmoor": {
@@ -47803,7 +47853,7 @@
     },
     "world": {
       "id": "984e76f6-e990-4a47-9961-e7fdbc08705f",
-      "sequence": 2,
+      "sequence": 3,
       "baseHash": "3dd18ee5-f801f70f-346683",
       "baseFingerprint": "74762304-a92f5016-735253",
       "base": {
@@ -94595,7 +94645,7 @@
           "height": 600
         }
       },
-      "resultHash": "9e00fd98-d50546c4-347022"
+      "resultHash": "1d08ffd8-925787b0-347922"
     },
     "smithy": {
       "id": "3b505901-24ab-44e0-b7fa-a759f54d00a5",
