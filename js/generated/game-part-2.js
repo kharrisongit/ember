@@ -4361,7 +4361,7 @@ function drawWorld(t, dt) {
     const s = SPR[nm], od = DEFS[o.s];
     if (!s) continue; // Old device-local edits may reference art removed by a later build.
     const chim = ATLAS.chimneys && ATLAS.chimneys[rawNm];
-    let f = /^farm_/.test(nm) ? (o.moving ? Math.floor(t*7+(o.id||0)*.37)%s[4] : 0) : (s[4] > 1 ? frameOf(o.s, t, o.id * 0.37) % s[4] : 0);
+    let f = /^farm_/.test(nm) ? (Math.floor(t*(o.moving?7:3)+(o.id||0)*.37)%s[4]) : (s[4] > 1 ? frameOf(o.s, t, o.id * 0.37) % s[4] : 0);
     if (nm === "school_building" || nm === "tavern_building") {
       f = 0;
       if (doorMotion && doorMotion.map === "world" && Math.abs(o.x - (doorMotion.d.x * TS + 8)) < 48) {
@@ -4373,7 +4373,7 @@ function drawWorld(t, dt) {
     const oy = (od && od.o) ? od.o : 0;
     const ox = o.wx || 0, wy = o.wy || 0;
     const dx = Math.round(o.x + ox - s[2] / 2), dy = Math.round(o.y + wy - s[3] + oy);
-    if (o.face === -1) {
+    if (o.face === -1 && !/^farm_/.test(nm)) {
       ctx.save(); ctx.translate(dx + s[2], dy); ctx.scale(-1, 1);
       drawGameImage(ctx, sheetOf(s), s[0] + f * s[2], s[1], s[2], s[3], 0, 0, s[2], s[3]);
       ctx.restore();
@@ -6420,7 +6420,7 @@ function blockedByGuard(x, y) {
   return y === my && x <= 120;
 }
 const GATE_X0 = 26, GATE_X1 = 33;
-const HERD = [[28, "farm_bull_w"], [30, "farm_calf_w"], [32, "farm_bull_e"]];
+const HERD = [[28, "farm_calf_w"], [30, "farm_calf_w"], [32, "farm_calf_e"]];
 const herdHere = () => quest < Q.KING;
 function blockedByHerd(x, y) {
   if (x > 120) return false;

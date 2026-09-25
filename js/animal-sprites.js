@@ -1,6 +1,6 @@
 /* Uploaded farm sheets stay separate from the atlas. Pack their transparent
    frame margins at runtime so the visible feet keep the old map anchors. */
-const FARM_ANIMAL_ART = {"bull":{"file":"Bull_animation_without_shadow.png","cell":64,"crop":[10,14,44,30]},"calf":{"file":"Calf_animation_without_shadow.png","cell":64,"crop":[16,23,32,20]},"chick":{"file":"Chick_animation_without_shadow.png","cell":16,"crop":[3,3,10,10]},"lamb":{"file":"Lamb_animation_without_shadow.png","cell":32,"crop":[3,8,26,18]},"piglet":{"file":"Piglet_animation_without_shadow.png","cell":32,"crop":[6,11,20,15]},"rooster":{"file":"Rooster_animation_without_shadow.png","cell":32,"crop":[7,8,18,17]},"sheep":{"file":"Sheep_animation_without_shadow.png","cell":32,"crop":[2,4,28,22]},"turkey":{"file":"Turkey_animation_without_shadow.png","cell":32,"crop":[5,6,22,19]}};
+const FARM_ANIMAL_ART = {"calf":{"file":"Calf_animation_without_shadow.png","cell":64,"crop":[15,22,34,23]},"chick":{"file":"Chick_animation_without_shadow.png","cell":16,"crop":[3,3,10,10]},"lamb":{"file":"Lamb_animation_without_shadow.png","cell":32,"crop":[3,8,26,18]},"piglet":{"file":"Piglet_animation_without_shadow.png","cell":32,"crop":[6,11,20,15]},"rooster":{"file":"Rooster_animation_without_shadow.png","cell":32,"crop":[7,8,18,17]},"sheep":{"file":"Sheep_animation_without_shadow.png","cell":32,"crop":[2,4,28,22]},"turkey":{"file":"Turkey_animation_without_shadow.png","cell":32,"crop":[4,6,24,19]}};
 const animalSheets = Object.create(null), animalStrips = [];
 function registerAnimalSprites() {
   animalStrips.length=0;
@@ -10,8 +10,10 @@ function registerAnimalSprites() {
     animalStrips.push({name,file,cell,row,frames,crop});
   };
   const dirs=['d','u','w','e'];
-  for(const [kind,a] of Object.entries(FARM_ANIMAL_ART))dirs.forEach((dir,row)=>
-    add('farm_'+kind+'_'+dir,a.file,a.cell,row+4,4,a.crop));
+  for(const [kind,a] of Object.entries(FARM_ANIMAL_ART))dirs.forEach((dir,row)=>{
+    add('farm_'+kind+'_'+dir,a.file,a.cell,row+4,4,a.crop);
+    add('farm_'+kind+'_walk_'+dir,a.file,a.cell,row,6,a.crop);
+  });
   for(const [action,file,frames] of [['idle','Idle',4],['walk','Walk',5],['run','Run',6],['hurt','Hurt',4],['die','Death',6]])
     dirs.forEach((dir,row)=>{
       const name='hare_'+action+'_'+dir;
@@ -36,7 +38,7 @@ async function loadAnimalSprites() {
 function installFarmAnimals() {
   const m=W.maps.world;if(!m||m._newFarmAnimals)return;
   m._newFarmAnimals=true;
-  const replacements={cow_graze:['bull'],cow2_graze:['calf'],cow:['bull'],pig_graze:['piglet'],
+  const replacements={cow_graze:['calf'],cow2_graze:['calf'],cow:['calf'],cow2:['calf'],pig_graze:['piglet'],
     sheep:['sheep'],sheep2:['lamb'],chicken:['chick'],rooster:['rooster','turkey','rooster']};
   const seen={};
   for(let i=0;i<m.objs.length;i+=3){
@@ -52,12 +54,12 @@ function installFarmAnimals() {
 }
 
 function farmAnimalDrawName(name,o){
-  if(!/^farm_(bull|calf|chick|lamb|piglet|rooster|sheep|turkey)_[duwe]$/.test(name))return name;
+  if(!/^farm_(calf|chick|lamb|piglet|rooster|sheep|turkey)_[duwe]$/.test(name))return name;
   const base=name.replace(/_[duwe]$/,'');
   if(o&&o.moving){
     const dx=(o.tx||0)-(o.wx||0),dy=(o.ty||0)-(o.wy||0);
-    if(Math.abs(dy)>Math.abs(dx)*0.8)return base+'_'+(dy<0?'u':'d');
-    return base+'_'+(dx<0?'w':'e');
+    o.farmDir=Math.abs(dy)>Math.abs(dx)*0.8 ? (dy<0?'u':'d') : (dx<0?'w':'e');
+    return base+'_walk_'+o.farmDir;
   }
-  return base+'_'+(o&&o.face===-1?'w':'e');
+  return base+'_'+(o&&o.farmDir||name.slice(-1));
 }
