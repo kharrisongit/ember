@@ -5588,6 +5588,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
@@ -5632,6 +5633,7 @@ function loadGame(slot=activeSaveSlot) {
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
     if (trial) stopTrial("");
+    for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     chestAnim=null;
     for(const k in breathHas)breathHas[k]=k==='fire'||k==='slash'||!!s.breathHas?.[k];

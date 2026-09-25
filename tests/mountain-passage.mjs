@@ -5,7 +5,7 @@ const W=JSON.parse(zlib.gunzipSync(Buffer.from(part1.match(/const W_GZ = "([^"]+
 const oldEnds=['passage','passage3'].map(id=>({...W.maps[id].doors.find(d=>d.to==='world')}));
 const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
  window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
- breathHas:{shadow:true,ice:true,lightning:true},chestOpen:{},MAPID:'passage',MD:null,P:{},foes:[],foesHeld:false,bossGone:{},
+ charm:{},worn:{},breathHas:{shadow:true,ice:true,lightning:true},chestOpen:{},MAPID:'passage',MD:null,P:{},foes:[],foesHeld:false,bossGone:{},
  sceneHold:()=>false,fadeDir:0,tAcc:0,hurtPlayer(){c.hits++;},hits:0,saveGame(){},toast(){},chunks:new Map(),
  FOE:{ghost3:{hp:6},wraith:{hp:8},devil:{hp:22}},NO_RESPAWN:/devil/,royalDefeated:{},knightEncounterDone:false,
  houseLootTaken:new Set(),lootChestAnimations:new Map()});

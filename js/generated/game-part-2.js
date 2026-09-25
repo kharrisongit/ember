@@ -10836,6 +10836,7 @@ function interact() {
       if (giver.n !== "Dunstan" && giver.charm && !charm[giver.charm]) {
         const k = giver.charm;
         charm[k] = true;
+        saveGame();
         const art = (SPR[CHARM_ART[k]] && CHARM_ART[k]) || CHARM_ICON[k];
         showReveal(art, CHARM_NOTE[k]);
       }
@@ -10906,6 +10907,13 @@ function beginNpcTalk(best) {
     else if (best.n === "Dunstan" && hasSword() && !smithUpgrade) {
       sayNpc.said = [...(wonAll ? (best.dv || []) : []), "Maddock's blade has served you well. Let me fit you with something stronger.",
         "There. A stronger edge, and armor to match."];
+    }
+    else if (best.charm === "lamp" && !charm.lamp) {
+      sayNpc.said = [best.n + ": Torvald left this lantern with me before he went. Trimmed the wick himself.",
+        "Corin: The wind has not put it out?",
+        best.n + ": Nothing has. Not once. Take it, Corin. You will need a steady light in the deep workings.",
+        "Corin: I will keep it burning.",
+        best.n + ": I think it will see to that on its own."];
     }
     else sayNpc.said = npcContextDialogue(best, alt);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);

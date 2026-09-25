@@ -13,7 +13,7 @@ assert.equal(placements.filter(c=>c.map.includes('_bedroom')).length,62);
 let clock=0,saved=null,saves=0,notices=[];
 const ctx=vm.createContext({W,fetch:async()=>({ok:true,json:async()=>placements}),performance:{now:()=>clock},
  gold:50,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,P:{},toast:s=>notices.push(s),flyGold(){},showReveal(){assert.fail("Ordinary loot must not open a full-screen reveal");},saveGame(){saves++;},
- quest:0,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,knightEncounterDone:false,royalDefeated:{},bossGone:{},chestOpen:{},CHESTS:[],treasuryTaken:new Set(),breathHas:{},dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,MAPID:'house00',activeSaveSlot:1,
+ quest:0,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,knightEncounterDone:false,royalDefeated:{},bossGone:{},chestOpen:{},CHESTS:[],treasuryTaken:new Set(),hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,charm:{lamp:true,ward:true,twin:false},worn:{lamp:false,ward:true,twin:false},breathHas:{},dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,MAPID:'house00',activeSaveSlot:1,
  migrateLegacySave(){},readSaveSlot:()=>saved,syncDragonVitality(){},hasSword:()=>true,loadMap(id){ctx.MAPID=id;ctx.MD=W.maps[id];},recoverTempleArrival(){},cam:{},clampCam(){},chunks:{clear(){}}});
 vm.runInContext(read('js/house-loot.js'),ctx);
 await vm.runInContext('prepareHouseLoot()',ctx);
@@ -46,13 +46,18 @@ for(const [key,count] of Object.entries(expected))assert.equal(ctx[key],count,ke
 saved=JSON.parse(JSON.stringify(vm.runInContext('captureSave()',ctx)));
 assert.equal(saved.houseLootTaken.length,79);
 ctx.gold=0;for(const key of Object.keys(expected))ctx[key]=0;
+ctx.charm.lamp=false;ctx.charm.ward=false;ctx.worn.ward=false;
 assert.equal(vm.runInContext('loadGame(1)',ctx),true);assert.equal(ctx.gold,total);
 for(const [key,count] of Object.entries(expected))assert.equal(ctx[key],count,key+' saved and restored');
 assert.equal(vm.runInContext('houseLootTaken.size',ctx),79);
+assert.deepEqual(ctx.charm,{lamp:true,ward:true,twin:false},'Collected rewards survive reload');
+assert.deepEqual(ctx.worn,{lamp:false,ward:true,twin:false},'Equipped charms survive reload');
 // A different/legacy slot must not inherit another slot's inventory or claimed chests.
 saved={map:'house00',x:120,y:192,gold:50,quest:0};
 assert.equal(vm.runInContext('loadGame(2)',ctx),true);
 assert.equal(vm.runInContext('houseLootTaken.size',ctx),0);
+assert(Object.values(ctx.charm).every(v=>v===false),'Legacy/other slot does not inherit rewards');
+assert(Object.values(ctx.worn).every(v=>v===false),'Legacy/other slot does not inherit equipped charms');
 for(const key of Object.keys(expected))assert.equal(ctx[key],0,key+' legacy/other slot isolation');
 // Moving a chest keeps its interaction attached to its actor, not its original position.
 ctx.actor=W.maps.house00.roomActors.find(o=>o.houseLoot);ctx.actor.x+=24;ctx.P={x:ctx.actor.x,y:ctx.actor.y+20};

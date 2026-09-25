@@ -15,8 +15,11 @@ function hollybeckNpcFrame(n,t,action){
 }
 function prepareHollybeckVillagers(m,id){
   if(id!=='world')return;
+  // Torvald was removed in the published layout; keep his lantern obtainable.
+  const torvald=m.npcs.find(n=>n.n==='Torvald');
+  if(torvald?.charm==='lamp')delete torvald.charm;
   for(const person of [
-    {n:'Sverre',sprite:'sverre',x:43144,y:3280,routeSeed:0,
+    {n:'Sverre',sprite:'sverre',x:43144,y:3280,routeSeed:0,charm:'lamp',
       d:['Sverre: Keep your scarf over your mouth on the north road. The wind steals your breath before your purse.',
         'Corin: Does it ever warm up here?', 'Sverre: Of course. Sometimes we only wear one pair of gloves.'],
       d2:['Sverre: I walk this stretch to keep the snow packed down.',

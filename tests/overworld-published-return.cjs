@@ -4,7 +4,7 @@ const fs=require('fs'),vm=require('vm'),{performance}=require('perf_hooks');
 const root=require('path').resolve(__dirname,'..')+'/';
 
 const noop=()=>{}; const ctx=new Proxy({measureText:()=>({width:40}),getImageData:(x,y,w,h)=>({data:new Uint8ClampedArray(w*h*4),width:w,height:h}),createImageData:(w,h)=>({data:new Uint8ClampedArray(w*h*4),width:w,height:h})},{get:(o,k)=>k in o?o[k]:noop});
-function el(){return new Proxy({style:{},classList:{add:noop,remove:noop,toggle:noop,contains:()=>false},dataset:{},children:[],width:800,height:600,textContent:'',value:'',getContext:()=>ctx,getBoundingClientRect:()=>({width:800,height:600,left:0,top:0}),querySelectorAll:()=>[],appendChild:noop,querySelector:()=>el(),setAttribute:noop,addEventListener:noop},{get:(o,k)=>k in o?o[k]:noop});}
+function el(){return new Proxy({style:{},classList:{add:noop,remove:noop,toggle:noop,contains:()=>false},dataset:{},children:[],width:800,height:600,textContent:'',className:'',value:'',getContext:()=>ctx,getBoundingClientRect:()=>({width:800,height:600,left:0,top:0}),querySelectorAll:()=>[],appendChild:noop,querySelector:()=>el(),setAttribute:noop,addEventListener:noop},{get:(o,k)=>k in o?o[k]:noop});}
 const elements=new Map();const storage=new Map();class Image{constructor(){this.width=1024;this.height=1024;this.complete=true;}decode(){return Promise.resolve()}set src(s){this._src=s;if(Image.active&&this.onload)queueMicrotask(()=>this.onload());}get src(){return this._src}}
 const c=vm.createContext({console,performance,Image,Audio:class {play(){return Promise.resolve()}pause(){}addEventListener(){}},URL,Blob,Response,DecompressionStream,TextDecoder,TextEncoder,Uint8Array,Uint8ClampedArray,Uint16Array,Float32Array,ArrayBuffer,DataView,crypto:require('crypto').webcrypto,atob:s=>Buffer.from(s,'base64').toString('binary'),btoa:s=>Buffer.from(s,'binary').toString('base64'),setTimeout:()=>0,clearTimeout:noop,setInterval:()=>0,clearInterval:noop,requestAnimationFrame:()=>0,cancelAnimationFrame:noop,devicePixelRatio:1,innerWidth:800,innerHeight:600,navigator:{},location:{hash:'',search:'',href:'http://localhost/'},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},sessionStorage:{getItem:()=>null,setItem:noop,removeItem:noop},document:{getElementById:id=>{if(!elements.has(id))elements.set(id,el());return elements.get(id)},createElement:()=>el(),querySelectorAll:()=>[],querySelector:()=>el(),addEventListener:noop,documentElement:el(),body:el()},addEventListener:noop,fetch:async path=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(root+path.split('?')[0],'utf8'))})});c.window=c;c.self=c;
 c.assert=require('node:assert/strict');
@@ -60,6 +60,10 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
    assert(canNpcStand(n.x,n.y,n),'Winter villager starts on clear ground: '+name);
    assert(patrolRoute(n).length>1,'Winter villager has a clear walking route: '+name);
   }
+  const lanternGivers=npcs.filter(n=>n.charm==='lamp');
+  assert.equal(lanternGivers.length,1,'Lantern has exactly one giver after map loading');
+  assert.equal(lanternGivers[0].n,'Sverre');
+  assert(npcHere(lanternGivers[0])&&!lanternGivers[0].noTalk,'Lantern giver is present and can talk');
   for(const patch of layout.build.changes){
    if(patch.path[0]!=='objs'||!('value' in patch))continue;
    let value=MD;for(const key of patch.path)value=value[key];
@@ -147,6 +151,40 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
  }
  profile=[];
 }
+// The deleted giver stays deleted; the new resident uses the existing one-time reward.
+const lanternGiver=npcs.find(n=>n.n==='Sverre');
+const revealBefore=showReveal,lanternReveals=[];
+showReveal=(...args)=>lanternReveals.push(args);
+assert(!charm.lamp,'Fresh save has no lantern');
+P.x=lanternGiver.x;P.y=lanternGiver.y+20;
+beginNpcTalk(lanternGiver);
+assert(sayNpc.said.some(line=>line.includes('Torvald left this lantern')),'New giver explains the handoff');
+for(let i=0;sayNpc&&i<20;i++){typeAll();interact();}
+assert.equal(sayNpc,null,'Handoff dialogue completes');
+assert(charm.lamp,'Completing the conversation grants the lantern');
+assert.equal(lanternReveals.length,1,'Lantern is awarded once');
+assert.equal(lanternReveals[0][1],CHARM_NOTE.lamp);
+assert(readSaveSlot(activeSaveSlot).charm.lamp,'Lantern reward is immediately saved');
+loadMap('house47');saveGame();
+charm.lamp=false;
+assert(loadGame(),'Saved game loads');
+assert(charm.lamp,'Lantern ownership survives loading a saved game');
+// Legacy saves have no charm record and must not inherit another slot's items.
+localStorage.setItem(saveKey(2),JSON.stringify({map:'house47',x:P.x,y:P.y,quest:0}));
+assert(loadGame(2));
+assert(!charm.lamp,'Legacy/other slot does not inherit the lantern');
+assert(loadGame(1));
+assert(charm.lamp,'Returning to the original slot restores its lantern');
+loadMap('world');
+const returningGiver=npcs.find(n=>n.n==='Sverre');
+P.x=returningGiver.x;P.y=returningGiver.y+20;
+beginNpcTalk(returningGiver);
+assert(!sayNpc.said.some(line=>line.includes('Torvald left this lantern')),'Owned lantern does not repeat the handoff');
+for(let i=0;sayNpc&&i<20;i++){typeAll();interact();}
+assert.equal(sayNpc,null,'Follow-up conversation completes');
+assert.equal(lanternReveals.length,1,'Existing owners receive no duplicate lantern');
+showReveal=revealBefore;
+console.log("PASS: Sverre grants the deleted Torvald's lantern once; ownership survives save/load, slot switching and map reentry.");
 // Exercise the real Add/Transport buttons' actions through full map loading.
 const unused=npcLineupCatalog().find(e=>e.category==='walking'&&!npcLookUsed(e));
 assert(unused,'Unused animated cast is available');

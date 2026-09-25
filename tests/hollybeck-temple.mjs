@@ -8,7 +8,7 @@ const buttons=[],list={innerHTML:'',appendChild:b=>buttons.push(b)};
 let travelClosed=false;
 const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
  fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
- breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
+ hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,charm:{},worn:{},breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
  isArea:()=>false,playZoom:()=>1,clampCam(){},checkArea(){},setDevTitle(){},toast(){},setTravel:on=>{travelClosed=!on;},
  document:{getElementById:()=>list,createElement:()=>({handlers:{},addEventListener(type,fn){this.handlers[type]=fn;}})}});
 const run=s=>vm.runInContext(s,c);
