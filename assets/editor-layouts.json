@@ -48019,6 +48019,53 @@
         "originX": 249,
         "originY": 176
       }
+    },
+    "house27": {
+      "actor:millwood:house27:6": {
+        "kind": "actor",
+        "key": "millwood:house27:6",
+        "identity": "north chair",
+        "x": 106,
+        "y": 132,
+        "originX": 104,
+        "originY": 134
+      },
+      "actor:millwood:house27:8": {
+        "kind": "actor",
+        "key": "millwood:house27:8",
+        "identity": "dining table",
+        "x": 105,
+        "y": 169,
+        "originX": 104.5,
+        "originY": 167
+      },
+      "actor:millwood:house27:0": {
+        "kind": "actor",
+        "key": "millwood:house27:0",
+        "identity": "Furniture 12_280",
+        "x": 103,
+        "y": 183,
+        "originX": 113,
+        "originY": 187
+      },
+      "actor:millwood:house27:3": {
+        "kind": "actor",
+        "key": "millwood:house27:3",
+        "identity": "iplant4",
+        "x": 112,
+        "y": 206,
+        "originX": 152,
+        "originY": 197
+      },
+      "actor:millwood:house27:5": {
+        "kind": "actor",
+        "key": "millwood:house27:5",
+        "identity": "iplant0",
+        "x": 162,
+        "y": 205,
+        "originX": 198.5,
+        "originY": 195
+      }
     }
   },
   "applied": [
@@ -48078,7 +48125,8 @@
     "501977b5-9194-4487-9756-4d2135e22803",
     "501977b5-9194-4487-9756-4d2135e22804",
     "acdcfe6b-020f-448c-9b25-61a1e2e6290f",
-    "810d204d-2666-4fb4-b579-dc6d0480a703"
+    "810d204d-2666-4fb4-b579-dc6d0480a703",
+    "8019fba0-fd6d-404a-8c8d-486b37c0b47d"
   ],
   "sessions": {
     "witchmoor": {
@@ -48136,6 +48184,14 @@
       "baseFingerprint": "402d2038-76679210-8334",
       "base": {},
       "resultHash": "94880d81-404e58f7-422"
+    },
+    "house27": {
+      "id": "972217ac-31bb-481d-b973-5390f8a37650",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "129a775c-ebe78184-5101",
+      "base": {},
+      "resultHash": "efac7cb7-6d46a249-703"
     }
   }
 }
