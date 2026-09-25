@@ -862,7 +862,7 @@ function arrangeNpcCast(){
   };
   const useSkin=(n,sk)=>{usePack(n,undefined);n.sk=sk;n.lookId='npc_'+sk;n.stationary=false;};
   const world=W.maps.world;
-  const packs={Orin:'market_citizen4',Calder:'guild_fighter2',Weft:'market_citizen2',
+  const packs={Hettie:'guild_citizen1',Orin:'market_citizen4',Calder:'guild_fighter2',Weft:'market_citizen2',
     Torvald:'pack_smith',Sella:'guild_mage4',Sennet:'guild_elder',Ada:'pack_drinker2',
     Wren:'pack_grandmother',Berta:'pack_mage_red',Chanter:'guild_mage1',Morel:'guild_mage2'};
   const skins={Mella:'chef_chloe',Dorrick:'miner_mike',
@@ -2213,6 +2213,8 @@ function loadMap(id, fresh, discardDraft=false) {
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
+  closeArenaAnimalPicker();
+  if(arenasShowing)buildArenaList();
 }
 
 let lavaNear = null;
@@ -4339,7 +4341,7 @@ function drawWorld(t, dt) {
       /* Nan's horizontal rows are reversed; north and south are correctly labelled. */
       if (o.n === "Nan Ferrow" && action === "walk")
         direction = ({ e: "w", w: "e" })[direction] || direction;
-      const waveHettie = o.n === "Hettie" && action === "idle" &&
+      const callHettie = o.n === "Hettie" && action === "idle" &&
         quest < Q.EGGS && sayNpc !== o && !(scene && scene.who === "Hettie");
       const dockActor=o.n==='Odo'||o.n==='Liora';
       const speaking=dockActor&&(sayNpc===o||scene?.who===o.n||(o.n==='Odo'&&scene?.lines?.some(line=>line.startsWith('Odo:'))));
@@ -4347,7 +4349,7 @@ function drawWorld(t, dt) {
       o.dockSpeaking=speaking;
       const reactionAge=t-(o.dockReactionStart??-100);
       const odoGesture=o.n==='Odo'&&(speaking||t%9>=7);
-      const sp = odoGesture ? SPR.pack_oldman_gesture : waveHettie ? SPR.market_bread : o.packDirections
+      const sp = odoGesture ? SPR.pack_oldman_gesture : o.packDirections
         ? (SPR[o.packSpr + "_" + action + "_" + direction] || SPR[o.packSpr + "_idle_" + direction] || SPR[o.packSpr + "_idle_d"])
         : SPR[o.packSpr];
       if (sp) {
@@ -4362,7 +4364,7 @@ function drawWorld(t, dt) {
         }
         drawNpcFrame(o,sp,fr,sheetOf(sp));
         if(o.pettable) drawPetHeart(o,t,sp);
-        if(waveHettie && quest < Q.EGGS && !scene && !sayNpc) drawHettieCallout(o,sp);
+        if(callHettie && quest < Q.EGGS && !scene && !sayNpc) drawHettieCallout(o,sp);
         continue;
       }
     }
@@ -4928,6 +4930,7 @@ cv.addEventListener("touchmove", e => {
 }, { passive: false });
 
 function endTouch(e) {
+  if(e.type==='touchcancel')for(const p of touches.values())p.arenaMoved=true;
   for (const t of e.changedTouches) mapTouchEnd(t);
   e.preventDefault();
 }
@@ -4999,8 +5002,10 @@ function pickObject(wx, wy) {
   return best || fab;
 }
 function mapTouchStart(t) {
-  touches.set(t.identifier, { x: t.clientX, y: t.clientY, sx: t.clientX, sy: t.clientY });
+  touches.set(t.identifier, { x: t.clientX, y: t.clientY, sx: t.clientX, sy: t.clientY,
+    arenaTap:arenasShowing,arena:arenasShowing?pickArenaNumber(t.clientX,t.clientY):null });
   if (touches.size === 2) {
+    for(const p of touches.values())p.arenaMoved=true;
     if (typeof devUnlocked !== "undefined" && !devUnlocked) devUnlocked = true;
     const [a, b] = [...touches.values()];
     pinchD = Math.hypot(a.x - b.x, a.y - b.y); pinchZ = cam.z; dragObj = null;
@@ -5011,6 +5016,7 @@ function mapTouchStart(t) {
     return;
   }
   dragMoved = false;
+  if(arenasShowing)return;
   if (building && grabMode) {
     const w = screenToWorld(t.clientX, t.clientY);
     const tx = Math.floor(w.x / TS), ty = Math.floor(w.y / TS);
@@ -5073,7 +5079,7 @@ function mapTouchMove(t) {
   const p = touches.get(t.identifier); if (!p) return;
   const dx = t.clientX - p.x, dy = t.clientY - p.y;
   p.x = t.clientX; p.y = t.clientY;
-  if (Math.hypot(t.clientX - p.sx, t.clientY - p.sy) > 6) dragMoved = true;
+  if (Math.hypot(t.clientX - p.sx, t.clientY - p.sy) > 6) {dragMoved = true;p.arenaMoved=true;}
   if (touches.size === 2) {
     const [a, b] = [...touches.values()];
     const d = Math.hypot(a.x - b.x, a.y - b.y);
@@ -5173,6 +5179,10 @@ function mapTouchEnd(t) {
   const p = touches.get(t.identifier);
   touches.delete(t.identifier);
   if (touches.size < 2) { pinchD = 0; pinchMx = null; pinchMy = null; }
+  if(p?.arenaTap){
+    if(arenasShowing&&!p.arenaMoved&&p.arena&&isHuntingArena(p.arena))openArenaAnimalPicker(p.arena);
+    return;
+  }
   if (building && grabMode) {
     if (touches.size === 0 && grabDrag && grabRect) {
       moveRegion(grabRect, grabDrag.dx || 0, grabDrag.dy || 0);
@@ -11004,6 +11014,7 @@ function exitTools() {
 }
 
 function activeTool() {
+  if(arenasShowing)return 'ARENA NUMBERS';
   if (building) return arenaMode ? "ARENA" : areaMode ? "MOVE AREAS"
                 : (buildTool === "route" ? "ROUTE" : KINDS[areaKind].toUpperCase());
   if (painting) return "PAINT";
@@ -11098,6 +11109,56 @@ tap(bTravel, () => { if (!devOpen) setDev(true); setTravel(!travelling); });
 
 let arenasShowing = false;
 let arenaZoomLevel = 0.05;
+let arenaNumberEntries=[];
+const ARENA_ANIMALS=[['bird','Bird'],['hare','Hare'],['boar','Boar'],['deer','Deer'],['fox','Fox']];
+
+function closeArenaAnimalPicker(){document.getElementById('arenaAnimalPanel')?.remove();}
+function arenaBadgeScale(){return Math.max(1,1/(cam.z*1.5));}
+function pickArenaNumber(cx,cy){
+  const rect=cv.getBoundingClientRect(),scale=Math.max(VW/Math.max(1,rect.width),VH/Math.max(1,rect.height));
+  const w=screenToWorld(cx,cy),radius=Math.max(22*scale/cam.z,16*arenaBadgeScale());
+  let best=null,distance=radius;
+  for(const a of arenaNumberEntries){
+    if(a.mapId!==MAPID||!isHuntingArena(a))continue;
+    const d=Math.hypot(w.x-(a.x*TS+TS/2),w.y-(a.y*TS+TS/2));
+    if(d<=distance){best=a;distance=d;}
+  }
+  return best;
+}
+function changeArenaAnimal(id,species){
+  const a=features.find(f=>f.id===id);
+  if(!arenasShowing||!isHuntingArena(a)||!ARENA_ANIMALS.some(([key])=>key===species))return false;
+  if(a.encounter!==species){
+    a.encounter=species;
+    // A new animal choice replaces this herd immediately, including hunted slots.
+    for(let slot=0;slot<HUNT_COUNT;slot++)huntingRest.delete(huntingKey(a,slot));
+    spawnHuntingAnimals();
+    mapDirty=true;saveEditorDraft();
+  }
+  closeArenaAnimalPicker();buildArenaList();
+  toast(ARENA_ANIMALS.find(([key])=>key===species)[1]+' hunt saved. SEND CHANGES to publish.');
+  return true;
+}
+function openArenaAnimalPicker(entry){
+  if(!arenasShowing||entry.mapId!==MAPID)return;
+  const a=features.find(f=>f.id===entry.id);
+  if(!isHuntingArena(a))return;
+  closeArenaAnimalPicker();
+  const panel=document.createElement('div');panel.id='arenaAnimalPanel';panel.className='scrolls';
+  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','Choose hunting animal');
+  panel.style.cssText='position:fixed;z-index:10010;left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,88vw);max-height:80vh;overflow:auto;touch-action:pan-y;background:#201c16;color:#f9eed9;border:2px solid #b99b64;border-radius:12px;padding:16px;font:16px sans-serif;box-sizing:border-box;';
+  const title=document.createElement('h3');title.textContent='Hunting Arena #'+entry.arenaNum;title.style.margin='0 0 12px';panel.append(title);
+  const map=MAPID;
+  for(const [key,label]of ARENA_ANIMALS){
+    const button=document.createElement('button');button.type='button';button.textContent=label+(a.encounter===key?' — current':'');
+    button.setAttribute('aria-pressed',String(a.encounter===key));
+    button.style.cssText='display:block;width:100%;min-height:44px;margin:6px 0;border:1px solid #b99b64;border-radius:6px;font:inherit;background:'+(a.encounter===key?'#48643b':'#30291f')+';color:#fff;';
+    button.onclick=()=>{if(MAPID===map)changeArenaAnimal(a.id,key);else closeArenaAnimalPicker();};panel.append(button);
+  }
+  const cancel=document.createElement('button');cancel.type='button';cancel.textContent='Cancel';cancel.style.cssText='width:100%;min-height:44px;margin-top:10px;font:inherit;';cancel.onclick=closeArenaAnimalPicker;panel.append(cancel);
+  panel.onkeydown=e=>{if(e.key==='Escape'){e.stopPropagation();closeArenaAnimalPicker();}};
+  document.body.append(panel);cancel.focus();
+}
 
 function installRoute2Arenas() {
   if (!W || !W.maps || !W.maps.world || !W.maps.world.features) return;
@@ -11155,11 +11216,13 @@ function numberAllArenas() {
 function setArenas(on) {
   if (on) closeOthers("arenas");
   arenasShowing = on;
+  closeArenaAnimalPicker();
   const bArenas = document.getElementById("bArenas");
   const arenasPane = document.getElementById("arenasPane");
   if (bArenas) bArenas.classList.toggle("on", on);
   if (arenasPane) arenasPane.style.display = on ? "block" : "none";
   if (on) {
+    doorEdit=false;collideView=false;geometryEnd();document.getElementById('geometryBar').style.display='none';
     setPaint(false); setBuild(false); setTravel(false);
     editing = false;
     const bEdit = document.getElementById("bEdit");
@@ -11174,6 +11237,7 @@ function setArenas(on) {
     cam.z = typeof playZoom === "function" ? playZoom() : 2.5;
     if (devOpen && !building && !painting && !travelling && !editing) setDevTitle(null);
   }
+  refreshToolbar();
 }
 
 function applyArenaZoom(lvl) {
@@ -11201,13 +11265,16 @@ function buildArenaList() {
   grid.innerHTML = "";
   const list = [];
   if (W && W.maps) {
-    for (const [mid, mdata] of Object.entries(W.maps)) {
-      for (const f of (mdata.features || [])) {
-        if (f.kind === "arena") list.push(f);
+    const maps=Object.entries(W.maps).sort(([a],[b])=>a==='world'?-1:b==='world'?1:a.localeCompare(b));
+    for (const [mid, mdata] of maps) {
+      const arenas=(mid===MAPID?features:mdata.features||[]).filter(f=>f.kind==='arena').slice().sort((a,b)=>a.x-b.x||a.y-b.y);
+      for (const f of arenas) {
+        // Number the current published/draft arenas without changing Build data.
+        list.push({...f,mapId:mid,arenaNum:list.length+1});
       }
     }
   }
-  list.sort((a, b) => (a.arenaNum || 0) - (b.arenaNum || 0));
+  arenaNumberEntries=list;
   for (const a of list) {
     const btn = document.createElement("button");
     btn.className = "mini";
@@ -11217,14 +11284,14 @@ function buildArenaList() {
     numSpan.textContent = "#" + (a.arenaNum || "?");
     const infoSpan = document.createElement("span");
     infoSpan.style.cssText = "overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:4px;";
-    infoSpan.textContent = (a.style || a.mapId || "arena").toUpperCase();
+    infoSpan.textContent = isHuntingArena(a)?a.encounter.toUpperCase()+' HUNT':(a.style || a.mapId || "arena").toUpperCase();
     btn.appendChild(numSpan);
     btn.appendChild(infoSpan);
-    btn.onclick = () => jumpToArena(a);
+    btn.onclick = () => {jumpToArena(a);if(isHuntingArena(a))openArenaAnimalPicker(a);};
     grid.appendChild(btn);
   }
   const badge = document.getElementById("arenaCountBadge");
-  if (badge) badge.textContent = list.length + " Arenas";
+  if (badge) badge.textContent = list.length + " Arenas · "+list.filter(isHuntingArena).length+" hunts";
 }
 
 function jumpToArena(a) {
@@ -11250,13 +11317,13 @@ function jumpToArena(a) {
 
 function drawArenaNumberOverlay() {
   if (!arenasShowing) return;
-  if (!MD || !MD.features) return;
+  if (!MD) return;
   const z = cam.z;
   ctx.save();
   ctx.scale(z, z);
   ctx.translate(-cam.x, -cam.y);
-  for (const f of MD.features) {
-    if (f.kind !== "arena") continue;
+  for (const f of arenaNumberEntries) {
+    if (f.mapId !== MAPID) continue;
     const num = f.arenaNum || f.id || "?";
     const wx = f.x * TS + TS / 2;
     const wy = f.y * TS + TS / 2;
@@ -11274,7 +11341,7 @@ function drawArenaNumberOverlay() {
     }
     ctx.save();
     ctx.translate(wx, wy);
-    const badgeScale = arenasShowing ? Math.max(1, 1 / (z * 1.5)) : 1;
+    const badgeScale = arenaBadgeScale();
     const bRadius = 14 * badgeScale;
     ctx.beginPath();
     ctx.arc(0, 0, bRadius + 2, 0, Math.PI * 2);
@@ -11282,7 +11349,7 @@ function drawArenaNumberOverlay() {
     ctx.fill();
     ctx.beginPath();
     ctx.arc(0, 0, bRadius, 0, Math.PI * 2);
-    ctx.fillStyle = arenasShowing ? "#d90429" : "#ffb703";
+    ctx.fillStyle = isHuntingArena(f) ? '#386b42' : '#d90429';
     ctx.fill();
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2 * badgeScale;
@@ -11293,7 +11360,7 @@ function drawArenaNumberOverlay() {
     ctx.textBaseline = "middle";
     ctx.fillText("#" + num, 0, 1);
     if (arenasShowing && z >= 0.08) {
-      const styleLabel = (f.style || "arena").toUpperCase() + " (" + f.x + "," + f.y + ")";
+      const styleLabel = (isHuntingArena(f)?f.encounter+' hunt':f.style || "arena").toUpperCase() + " (" + f.x + "," + f.y + ")";
       ctx.font = "bold " + Math.round(10 * badgeScale) + "px sans-serif";
       ctx.fillStyle = "#ffea00";
       ctx.strokeStyle = "#000000";

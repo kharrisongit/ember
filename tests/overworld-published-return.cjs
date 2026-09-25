@@ -39,6 +39,11 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert(MD.roomActors.some(a=>a.editKey==='maddock:dragon-painting'),'Dragon picture present');
  }
  if(id==='world'){
+  const hettie=npcs.find(n=>n.n==='Hettie');
+  assert.equal(hettie.packSpr,'guild_citizen1','Hettie uses the green-dress woman');
+  assert(hettie.packDirections&&hettie.packWalk&&!hettie.stationary&&!hettie.sk,'Hettie retains story movement without the old blonde skin');
+  for(const dir of ['d','u','e','w'])for(const action of ['idle','walk'])assert(SPR[hettie.packSpr+'_'+action+'_'+dir][4]>1,'Hettie has animated '+action+' '+dir);
+  assert(npcLookUsed({packSpr:'hettie96'})&&npcLookUsed({packSpr:'market_bread'}),'Retired blonde appearances cannot be added again');
   const huntingSpecies={9150:'bird',9152:'hare',9154:'hare',9156:'hare',9159:'boar',9161:'boar',9163:'boar',9165:'deer',9167:'deer',9169:'deer',9171:'deer',9173:'deer',9175:'deer',9177:'fox',9179:'fox',9181:'fox'};
   assert.equal(features.filter(isHuntingArena).length,16,'All placed hunting arenas remain');
   for(const [arenaId,species] of Object.entries(huntingSpecies)){
@@ -222,6 +227,27 @@ loadMap('world');assert.equal(npcs.find(n=>editorNpcKey(n)===transferredKey).x,d
 assert.equal(npcs.find(n=>editorNpcKey(n)===transferredKey).y,destination.y);
 assert(EmberEditDrafts.store.get('world').operations.some(o=>o.kind==='npc-transfer'),'SEND CHANGES includes the transfer from its destination');
 console.log('PASS: actual Add, move, delete and Transport controls survive interior/world switching and preserve animation and a single visible NPC.');
+// Arena numbers use current published/local features; selecting an animal is a
+// normal saved Build edit and must keep every other arena and path unchanged.
+const beforeNumbering=JSON.stringify(features);
+setArenas(true);
+assert.equal(JSON.stringify(features),beforeNumbering,'Opening arena numbers does not edit the map');
+assert.equal(arenaNumberEntries.filter(a=>a.mapId==='world'&&isHuntingArena(a)).length,16,'Every published hunt has a number');
+const arenaBefore=JSON.parse(JSON.stringify(features.find(a=>a.id===9150)));
+assert(changeArenaAnimal(9150,'fox'));
+assert.equal(features.find(a=>a.id===9150).encounter,'fox');
+assert.equal(JSON.stringify(features.find(a=>a.id===9150)),JSON.stringify({...arenaBefore,encounter:'fox'}),'Only the animal type changes');
+assert.equal(foes.filter(f=>f.huntingArena?.id===9150&&f.kind==='fox').length,3,'New herd appears immediately');
+assert(!foes.some(f=>f.huntingArena?.id===9150&&f.kind==='bird'),'Previous animal type is removed');
+const huntBuild=EmberEditDrafts.store.get('world').operations.find(o=>o.kind==='build');
+assert(huntBuild,'SEND CHANGES contains the animal edit');
+const huntPublished=EmberBuildData.apply(editorDraftBases.get('world').build,huntBuild);
+assert.equal(huntPublished.features.find(a=>a.id===9150).encounter,'fox','Structured publishing includes the choice');
+loadMap('house47');loadMap('world');
+assert.equal(features.find(a=>a.id===9150).encounter,'fox','Animal choice survives map reentry');
+assert.equal(foes.filter(f=>f.huntingArena?.id===9150&&f.kind==='fox').length,3);
+assert(changeArenaAnimal(9150,'bird'));setArenas(false);
+console.log('PASS: all hunting arenas are numbered; choosing an animal updates the herd, saves a publishable Build edit and survives map reentry.');
 console.log('PASS: current published Build layout applies, repeated interior exits retain the complete overworld, without terrain/collision rebuilding.');
 `);
 })().catch(e=>{console.error(e);process.exit(1)});

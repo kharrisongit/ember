@@ -39,6 +39,7 @@ jobs:
           node tests/temple-compass.mjs
           node tests/npc-placement.mjs
           node tests/hunting-grounds.mjs
+          node tests/arena-number-tool.mjs
           node tests/animal-sprites.mjs
           node tests/overworld-return.mjs
           node tests/overworld-published-return.cjs

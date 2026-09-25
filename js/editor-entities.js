@@ -137,6 +137,7 @@ function prepareNpcLineup(m) {
 }
 
 function npcLineupVisible(n) {
+  if(n.packSpr==='hettie96'||n.packSpr==='market_bread')return false;
   return devNpcLineupActive&&(n.devLineupCategory||'walking')===devNpcLineupCategory&&(n.devLineupPage||0)===devNpcLineupPage;
 }
 function refreshNpcLineupControls() {

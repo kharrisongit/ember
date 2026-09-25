@@ -173,7 +173,7 @@
   <div class="btn" id="bCopy"><span class="ico">⎘</span>COPY</div>
 </div>
     <div id="toolbody">
-<div class="pane" id="arenasPane" style="display:none; max-height:260px; overflow-y:auto; padding:6px 8px;"><div style="font-weight:bold; margin-bottom:6px; font-size:12px; color:#ffcc00; display:flex; justify-content:space-between; align-items:center;"><span>ARENA OVERVIEW &amp; MAP ZOOM</span><span id="arenaCountBadge" style="background:#443311; color:#ffdd66; border:1px solid #aa8822; padding:1px 6px; border-radius:10px; font-size:11px;">63 Arenas</span></div><div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;"><div class="mini on" id="btnArenaZoomFull" style="cursor:pointer; padding:3px 8px;">🔍 FULL MAP (0.05x)</div><div class="mini" id="btnArenaZoomWide" style="cursor:pointer; padding:3px 8px;">🔍 WIDE VIEW (0.12x)</div><div class="mini" id="btnArenaZoomMedium" style="cursor:pointer; padding:3px 8px;">🔍 REGION (0.35x)</div><div class="mini" id="btnArenaZoomReset" style="cursor:pointer; padding:3px 8px;">🎯 NORMAL (1.0x)</div></div><div style="font-size:11px; color:#aaa; margin-bottom:6px;">Tap any Arena to focus camera &amp; jump:</div><div id="arenaListGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:4px; max-height:160px; overflow-y:auto; padding-right:4px;"></div></div><div class="pane" id="travel">
+<div class="pane scrolls" id="arenasPane" style="display:none; max-height:260px; overflow-y:auto; padding:6px 8px;"><div style="font-weight:bold; margin-bottom:6px; font-size:12px; color:#ffcc00; display:flex; justify-content:space-between; align-items:center;"><span>ARENA OVERVIEW &amp; MAP ZOOM</span><span id="arenaCountBadge" style="background:#443311; color:#ffdd66; border:1px solid #aa8822; padding:1px 6px; border-radius:10px; font-size:11px;">63 Arenas</span></div><div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;"><div class="mini on" id="btnArenaZoomFull" style="cursor:pointer; padding:3px 8px;">🔍 FULL MAP (0.05x)</div><div class="mini" id="btnArenaZoomWide" style="cursor:pointer; padding:3px 8px;">🔍 WIDE VIEW (0.12x)</div><div class="mini" id="btnArenaZoomMedium" style="cursor:pointer; padding:3px 8px;">🔍 REGION (0.35x)</div><div class="mini" id="btnArenaZoomReset" style="cursor:pointer; padding:3px 8px;">🎯 NORMAL (1.0x)</div></div><div style="font-size:11px; color:#aaa; margin-bottom:6px;">Green numbers are hunts. Tap a number to change its animal. Tap a list entry to visit:</div><div id="arenaListGrid" class="scrolls" style="touch-action:pan-y; overscroll-behavior:contain; display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:4px; max-height:160px; overflow-y:auto; padding-right:4px;"></div></div><div class="pane" id="travel">
   <div>tap a place to jump there</div>
   <div class="row" id="tvList"></div>
 </div>
@@ -347,13 +347,13 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/temple-compass.js?v=20260924-compass1"></script>
 <script src="js/millwood-interiors.js?v=20260925-chair-overlays1"></script>
 <script src="js/generated/game-part-1.js?v=20260924-chests-statues1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260925-lantern-handoff1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260925-arena-animal-hettie1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260925-deer-warm-return"></script>
 <script src="js/hollybeck-villagers.js?v=20260925-lantern-handoff1"></script>
 <script src="js/market-npcs.js?v=20260925-winter-market5"></script>
-<script src="js/editor-entities.js?v=20260925-winter-market5"></script>
-<script src="js/npc-placement.js?v=20260925-winter-market5"></script>
+<script src="js/editor-entities.js?v=20260925-green-hettie1"></script>
+<script src="js/npc-placement.js?v=20260925-green-hettie1"></script>
 <script src="js/editor-draft-integration.js?v=20260925-npc-placement"></script>
 <script src="js/generated/game-part-3.js?v=20260925-item-rewards1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>

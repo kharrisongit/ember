@@ -30,6 +30,7 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  let TCHAR={0:'g',1:'d',4:'w'},stats={generate:0,solid:0,lava:0,ground:0,foes:0,birds:0};
  function seedTreasuryGold(){}function stopTrial(){}function setPaint(on){painting=on}function refreshSel(){}
  function resetChunkWarm(){}function placeBirds(){stats.birds++}function openClearings(){}function beginHettieWalk(){}
+ let arenasShowing=false;function closeArenaAnimalPicker(){}
  function spawnFoes(){stats.foes++;foes=[{hp:10}]}
  function indexScatter(){scatterChunks=new Map()}function indexDecks(){deckPlank=new Map();deckCover=new Set()}
  function buildGround(){stats.ground++;rebuildLavaNear();chunks.clear();indexScatter();indexDecks()}

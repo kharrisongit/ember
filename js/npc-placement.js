@@ -165,6 +165,8 @@ function openNpcTransport(){
 function npcLookUsed(entry){
   const family=npcAppearance;
   const wanted=family(entry);
+  // Hettie's blonde sheet is retired; keep its catalog slot for saved identities.
+  if(wanted==='hettie96'||wanted==='market_bread')return true;
   if(/^(?:skin:(?:lumberjack_jack|chef_chloe|farmer_buba|miner_mike|pharaoh)|market_citizen[1-5])$/.test(wanted))return true;
   for(const [id,m]of Object.entries(W.maps))for(const n of m.npcs||[]){
     if(n.devLineup||n.editorDeleted||n.publishedDeleted)continue;

@@ -23,10 +23,16 @@ are compressed for GitHub's dispatch input limit; if a batch exceeds that limit,
 the game keeps the draft and explains the size error. Submission IDs are reused
 only when all structured operations are unchanged.
 
-The arena type button cycles HARE HUNT, BOAR HUNT and COMBAT. Hunting
+The arena type button cycles the available hunting animals and COMBAT. Hunting
 clearings keep three animals inside their boundary without battle walls. Each
 animal drops its own meat for dragon healing and returns after five minutes.
 The selected hunting type is included in both Send Changes and COPY.
+
+ARENAS also numbers existing hunting clearings. Tap a green number on the map
+or a hunting entry in the list to choose Bird, Hare, Boar, Deer or Fox. Choosing
+an animal replaces that clearing's herd immediately and saves a local Build
+edit. SEND CHANGES publishes the choice. Panning and pinching do not select a
+number; Cancel leaves the current animal unchanged.
 
 ## Sender and one-time connection
 
