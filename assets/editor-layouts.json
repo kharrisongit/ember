@@ -48065,6 +48065,43 @@
         "y": 205,
         "originX": 198.5,
         "originY": 195
+      },
+      "actor:millwood:house27:2": {
+        "kind": "actor",
+        "key": "millwood:house27:2",
+        "identity": "iplant4",
+        "deleted": true,
+        "x": 32,
+        "y": 197,
+        "originX": 32,
+        "originY": 197
+      },
+      "actor:millwood:house27:11": {
+        "kind": "actor",
+        "key": "millwood:house27:11",
+        "identity": "Furniture 6_85",
+        "x": 170,
+        "y": 74,
+        "originX": 175.5,
+        "originY": 92
+      },
+      "actor:millwood:house27:1": {
+        "kind": "actor",
+        "key": "millwood:house27:1",
+        "identity": "ifire1",
+        "x": 86,
+        "y": 75,
+        "originX": 88,
+        "originY": 80
+      },
+      "actor:millwood:house27:4": {
+        "kind": "actor",
+        "key": "millwood:house27:4",
+        "identity": "ishelf3",
+        "x": 41,
+        "y": 70,
+        "originX": 39,
+        "originY": 80
       }
     }
   },
@@ -48126,7 +48163,8 @@
     "501977b5-9194-4487-9756-4d2135e22804",
     "acdcfe6b-020f-448c-9b25-61a1e2e6290f",
     "810d204d-2666-4fb4-b579-dc6d0480a703",
-    "8019fba0-fd6d-404a-8c8d-486b37c0b47d"
+    "8019fba0-fd6d-404a-8c8d-486b37c0b47d",
+    "66e46868-4c3b-4b4c-955d-d4876bfbb2be"
   ],
   "sessions": {
     "witchmoor": {
@@ -48187,11 +48225,11 @@
     },
     "house27": {
       "id": "972217ac-31bb-481d-b973-5390f8a37650",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "5465b825-5971e3-2",
       "baseFingerprint": "129a775c-ebe78184-5101",
       "base": {},
-      "resultHash": "efac7cb7-6d46a249-703"
+      "resultHash": "5d8486b0-57e7ef46-1260"
     }
   }
 }
