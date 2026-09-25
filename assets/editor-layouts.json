@@ -44884,6 +44884,107 @@
         "key": "370,255",
         "tx": 370,
         "ty": 255
+      },
+      "object-add:91e70666-fe26-499d-bc33-6638b882dba9": {
+        "kind": "object-add",
+        "key": "91e70666-fe26-499d-bc33-6638b882dba9",
+        "sprite": 896,
+        "x": 12984,
+        "y": 3856
+      },
+      "object-add:ae2950ea-2b4e-42c5-8160-9ef1f0675441": {
+        "kind": "object-add",
+        "key": "ae2950ea-2b4e-42c5-8160-9ef1f0675441",
+        "sprite": 896,
+        "x": 13000,
+        "y": 3888
+      },
+      "object-add:c3e6167c-3056-41ec-8b8f-e8ebac6fc34d": {
+        "kind": "object-add",
+        "key": "c3e6167c-3056-41ec-8b8f-e8ebac6fc34d",
+        "sprite": 896,
+        "x": 12920,
+        "y": 3984
+      },
+      "object-add:fdf84fe6-58bb-4e11-9474-535c40157b45": {
+        "kind": "object-add",
+        "key": "fdf84fe6-58bb-4e11-9474-535c40157b45",
+        "sprite": 896,
+        "x": 12920,
+        "y": 4032
+      },
+      "object-add:117e7671-a217-4ba5-ba55-24551ad289bc": {
+        "kind": "object-add",
+        "key": "117e7671-a217-4ba5-ba55-24551ad289bc",
+        "sprite": 896,
+        "x": 12920,
+        "y": 4064
+      },
+      "object:26": {
+        "kind": "object",
+        "key": "26",
+        "sprite": 0,
+        "deleted": true,
+        "x": 13000,
+        "y": 3872,
+        "originX": 13000,
+        "originY": 3872
+      },
+      "object:23": {
+        "kind": "object",
+        "key": "23",
+        "sprite": 0,
+        "deleted": true,
+        "x": 12904,
+        "y": 4048,
+        "originX": 12904,
+        "originY": 4048
+      },
+      "object:22": {
+        "kind": "object",
+        "key": "22",
+        "sprite": 0,
+        "deleted": true,
+        "x": 12904,
+        "y": 3984,
+        "originX": 12904,
+        "originY": 3984
+      },
+      "feature-delete:808,245": {
+        "kind": "feature-delete",
+        "key": "808,245",
+        "tx": 808,
+        "ty": 245
+      },
+      "feature-delete:807,243": {
+        "kind": "feature-delete",
+        "key": "807,243",
+        "tx": 807,
+        "ty": 243
+      },
+      "feature-delete:809,240": {
+        "kind": "feature-delete",
+        "key": "809,240",
+        "tx": 809,
+        "ty": 240
+      },
+      "feature-delete:799,245": {
+        "kind": "feature-delete",
+        "key": "799,245",
+        "tx": 799,
+        "ty": 245
+      },
+      "feature-delete:798,247": {
+        "kind": "feature-delete",
+        "key": "798,247",
+        "tx": 798,
+        "ty": 247
+      },
+      "feature-delete:801,247": {
+        "kind": "feature-delete",
+        "key": "801,247",
+        "tx": 801,
+        "ty": 247
       }
     },
     "witchmoor": {
@@ -45660,14 +45761,15 @@
     "3c572534-0a79-4fb3-b954-47e87fa13bbb",
     "7d06f823-4de0-4bde-927f-93375264cccf",
     "f8992489-6429-4459-bbe5-8f3dc5623dbb",
-    "02bf1363-eda7-4539-aded-4158a908945f"
+    "02bf1363-eda7-4539-aded-4158a908945f",
+    "a0502e6c-e86c-4080-b89f-ebe12a1dcb97"
   ],
   "sessions": {
     "world": {
-      "id": "189b615c-2129-4b95-84b4-ec1b9a2d140d",
-      "sequence": 2,
-      "baseHash": "ad5f39ca-249d60e0-325417",
-      "baseFingerprint": "30b0af48-e1871c3a-723041",
+      "id": "e74ea1f1-1d58-4111-be05-b62bf380e2f9",
+      "sequence": 1,
+      "baseHash": "a04b4325-c8ed7c63-327208",
+      "baseFingerprint": "498753e6-88fa7226-723218",
       "base": {
         "build": {
           "kind": "build",
@@ -90337,9 +90439,112 @@
               "length": 0
             }
           ]
+        },
+        "object-add:fec7335e-915d-4206-9ee9-97bd67a5d9e2": {
+          "kind": "object-add",
+          "key": "fec7335e-915d-4206-9ee9-97bd67a5d9e2",
+          "sprite": 1168,
+          "x": 11096,
+          "y": 3264
+        },
+        "object-add:9a23f359-c91b-4365-97ee-41b817b2f6d8": {
+          "kind": "object-add",
+          "key": "9a23f359-c91b-4365-97ee-41b817b2f6d8",
+          "sprite": 0,
+          "x": 5928,
+          "y": 4112
+        },
+        "object-add:9fbeac4a-7600-467b-b584-7f185c62381f": {
+          "kind": "object-add",
+          "key": "9fbeac4a-7600-467b-b584-7f185c62381f",
+          "sprite": 0,
+          "x": 5880,
+          "y": 4144
+        },
+        "object-add:14d826ac-852a-413c-aef9-b82134460278": {
+          "kind": "object-add",
+          "key": "14d826ac-852a-413c-aef9-b82134460278",
+          "sprite": 0,
+          "x": 5864,
+          "y": 4176
+        },
+        "object-add:3dcf15f2-58da-470d-8f73-8a9ec342b7e8": {
+          "kind": "object-add",
+          "key": "3dcf15f2-58da-470d-8f73-8a9ec342b7e8",
+          "sprite": 0,
+          "x": 5912,
+          "y": 4160
+        },
+        "object-add:f9b5d05e-9baa-4954-aad9-5284cb6b62a5": {
+          "kind": "object-add",
+          "key": "f9b5d05e-9baa-4954-aad9-5284cb6b62a5",
+          "sprite": 0,
+          "x": 5848,
+          "y": 4256
+        },
+        "object-add:3ab57333-9c50-442e-8ab2-64ef0052c5c1": {
+          "kind": "object-add",
+          "key": "3ab57333-9c50-442e-8ab2-64ef0052c5c1",
+          "sprite": 0,
+          "x": 5944,
+          "y": 4160
+        },
+        "feature-delete:693,212": {
+          "kind": "feature-delete",
+          "key": "693,212",
+          "tx": 693,
+          "ty": 212
+        },
+        "feature-delete:693,204": {
+          "kind": "feature-delete",
+          "key": "693,204",
+          "tx": 693,
+          "ty": 204
+        },
+        "feature-delete:369,258": {
+          "kind": "feature-delete",
+          "key": "369,258",
+          "tx": 369,
+          "ty": 258
+        },
+        "feature-delete:368,260": {
+          "kind": "feature-delete",
+          "key": "368,260",
+          "tx": 368,
+          "ty": 260
+        },
+        "feature-delete:364,264": {
+          "kind": "feature-delete",
+          "key": "364,264",
+          "tx": 364,
+          "ty": 264
+        },
+        "feature-delete:364,260": {
+          "kind": "feature-delete",
+          "key": "364,260",
+          "tx": 364,
+          "ty": 260
+        },
+        "feature-delete:366,258": {
+          "kind": "feature-delete",
+          "key": "366,258",
+          "tx": 366,
+          "ty": 258
+        },
+        "feature-delete:366,266": {
+          "kind": "feature-delete",
+          "key": "366,266",
+          "tx": 366,
+          "ty": 266
+        },
+        "feature-delete:370,255": {
+          "kind": "feature-delete",
+          "key": "370,255",
+          "tx": 370,
+          "ty": 255
         }
       },
-      "resultHash": "a04b4325-c8ed7c63-327208"
+      "resultHash": "9e7ee171-33945067-328814"
     },
     "witchmoor": {
       "id": "2f4ddc03-8da8-466a-89ba-23c62634d91b",
