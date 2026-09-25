@@ -36,6 +36,13 @@ assert.equal(oldSession.getItem(PAIR),null);assert.equal(oldLocal.getItem('ember
 clean.api.store.put('world',{patch:'new route'});oldLocal.setItem('emberfell.geometry.v1','new geometry');
 const freshReload=browser({local:oldLocal,session:oldSession});
 assert.equal(freshReload.api.store.get('world').patch,'new route');assert.equal(oldLocal.getItem('emberfell.geometry.v1'),'new geometry');
+const installedPatch=['EMBERFELL PATCH v3','MAP world',
+ 'F route 9148 145 111 198 107 5 20 birch - - 145,111;145,67;198,67;198,107',
+ 'F route 9149 198 104 198 112 5 20 birch - -','F arena 9150 168 67 6.3 birch'].join('\n');
+freshReload.api.store.put('world',{patch:installedPatch});freshReload.api.store.put('house01',{patch:'different edits'});
+const installedReload=browser({local:oldLocal,session:oldSession});
+assert.equal(installedReload.api.store.get('world'),null,'the manually installed route patch no longer blocks editing after refresh');
+assert.equal(installedReload.api.store.get('house01').patch,'different edits');
 let b=browser({local:linked()});assert.equal(b.calls.length,0,'loading and local editing never auto-submit');
 await b.api.send({...draft,patch:'Previous COPY history '.repeat(50000)},b.report);
 const posts=b.calls.filter(c=>c.options?.method==='POST');assert.equal(posts.length,1);

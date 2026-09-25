@@ -3082,11 +3082,12 @@ function placeArena(wx, wy) {
       toast("there is already an arena here"); return;
     }
   const f = { id: featSeq++, kind: "arena", x: tx, y: ty, r: ARENA_R,
-              style: styleAt(tx, ty) };
+              style: styleAt(tx, ty),...(arenaEncounter!=='combat'?{encounter:arenaEncounter}:{}) };
   features.push(f);
   buildUndo.push({ kind: "add", id: f.id });
   realizeFeatures();
-  toast("arena cleared, " + (ARENA_R * 2) + " tiles across");
+  if(typeof spawnHuntingAnimals==='function')spawnHuntingAnimals();
+  toast(arenaEncounter!=='combat'?arenaEncounter+" hunting spot placed — no battle walls":"arena cleared, " + (ARENA_R * 2) + " tiles across");
 }
 
 function moveRegion(r, dx, dy, silent) {
@@ -3355,10 +3356,11 @@ function refreshBuild() {
   u.textContent = buildUndo.length ? "UNDO " + buildUndo.length : "UNDO";
   document.getElementById("tStyle").textContent = buildStyle.toUpperCase();
   document.getElementById("tKind").textContent = KINDS[areaKind].toUpperCase();
+  document.getElementById('tEncounter').textContent=arenaEncounter==='combat'?'COMBAT':arenaEncounter.toUpperCase()+' HUNT';
   document.getElementById("tAreas").classList.toggle("on", areaMode);
   if (arenaMode) {
     document.getElementById("bHint").textContent =
-      "ARENA: tap the path inside a route to clear a battle ring";
+      arenaEncounter!=='combat'?arenaEncounter.toUpperCase()+" HUNT: tap a route to place animals without battle walls":"ARENA: tap the path inside a route to clear a battle ring";
     return;
   }
   if (areaMode) {
@@ -3566,7 +3568,7 @@ const ARENA_REST = 300;                  /* seconds before it fills again */
 const cooling = new Map(), holy = new Set();
 function ringKey(a) { return MAPID + ":" + (a ? a.id : "?"); }
 function refillRing(a) {
-  if (!a || a.templeRoom || cooling.has(ringKey(a)) || holy.has(ringKey(a))) return;
+  if (!a || ['hare','boar'].includes(a.encounter) || a.templeRoom || cooling.has(ringKey(a)) || holy.has(ringKey(a))) return;
   let n = 0;
   for (const spec of (MD.foes || [])) {
     if (Math.hypot(spec.x - a.x, spec.y - a.y) > (a.r || 6) + 2) continue;
@@ -3786,6 +3788,7 @@ function stepArena(dt) {
   // Chests and exploration rewards keep running when combat is disabled.
   stepChest(dt);
   if (foesHeld) { arenaLock=null;arenaT=0;arenaGoing=false;falling=null;return; }
+  if(typeof stepHuntingGrounds==='function')stepHuntingGrounds(dt);
   if (trial) { stepTrial(dt); return; }
   if (MD?.templeExpanded) { stepExpandedTempleArena(dt); return; }
   const mapArenas = currentArenaFeatures();
@@ -3794,6 +3797,7 @@ function stepArena(dt) {
   }
   if (!arenaLock) {
     for (const f of mapArenas) {
+      if(['hare','boar'].includes(f.encounter))continue;
       if (Math.hypot(P.x / TS - f.x, P.y / TS - f.y) > f.r - 1) continue;
       if (cooling.has(ringKey(f)) || holy.has(ringKey(f))) continue;
       if (!arenaFoesLeft(f)) { refillRing(f); if (!arenaFoesLeft(f)) continue; }
@@ -3837,6 +3841,7 @@ function stepArena(dt) {
   }
 }
 function arenaRim(a) {
+  if(['hare','boar'].includes(a.encounter))return [];
   if(a.templeRoom)return expandedTempleArenaRim(a);
   const cacheKey = MAPID + ":" + a.x + "," + a.y + "," + a.r + ":" + ((MD.doors || []).length);
   if (a._rimCacheKey === cacheKey && a._rimCache) return a._rimCache;
@@ -4309,6 +4314,7 @@ atlasImg.onload = async () => {
       };
       setTimeout(again, 100);
     }
+    await loadAnimalSprites();
     await loadPublishedEditorLayouts();
     loadMap(W.start);    step("loadMap ok, " + MW + "x" + MH + " tiles");
     P.x = MD.spawn[0]; P.y = MD.spawn[1];
@@ -4539,6 +4545,9 @@ const BAG = [
     tell: "A heavy cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
     has: () => boarMeat > 0,
     icon: () => (SPR.pig_graze ? "pig_graze" : null) },
+  { key: "hareMeat", name: () => "Hare Meat" + (hareMeat > 1 ? " x" + hareMeat : ""),
+    tell: "A fresh cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
+    has: () => hareMeat > 0, icon: () => "hare_idle_d" },
   { key: "dragonFish", name: () => "Fresh Fish" + (dragonFish > 1 ? " x" + dragonFish : ""),
     tell: "A fresh catch for the dragon. Restores " + DRAGON_FISH_HEAL + " HP and gets it back on its feet.",
     has: () => dragonFish > 0,
@@ -4631,7 +4640,7 @@ function drawBagBig(big, spriteName, f) {
      in the full width, so every icon sat stranded at a third of its size. */
   const room = Math.min(big.width, big.height) - 24;
   const sc = Math.max(1, Math.floor(Math.min(room / sp[2], room / sp[3])));
-  const img = sp[5] === 2 ? smImg : sp[5] ? dragonImg : atlasImg;
+  const img = sheetOf(sp);
   drawGameImage(bg, img, sp[0] + fr * sp[2], sp[1], sp[2], sp[3],
                (big.width - sp[2] * sc) / 2, (big.height - sp[3] * sc) / 2,
                sp[2] * sc, sp[3] * sc);
@@ -5001,8 +5010,8 @@ function askTake() {
   }
   refreshBag();
 }
-const HEALS = { potion: 0, elixir: 1, boarMeat: 2, dragonFish: 3 };
-const USABLE = { potion: 1, elixir: 1, boarMeat: 1, dragonFish: 1, bomb: 1, dust: 1, bell: 1,
+const HEALS = { potion: 0, elixir: 1, boarMeat: 2, hareMeat: 3, dragonFish: 4 };
+const USABLE = { potion: 1, elixir: 1, boarMeat: 1, hareMeat: 1, dragonFish: 1, bomb: 1, dust: 1, bell: 1,
                  mark: 1, saint: 1, stone: 1, salt: 1 };
 function bagUsable() {
   const list = BAG.filter(it => {
@@ -5044,6 +5053,7 @@ function doUse(it) {
   const act = it.key === "potion" ? drinkPotion
             : it.key === "elixir" ? drinkElixir
             : it.key === "boarMeat" ? () => feedDragon("meat")
+            : it.key === "hareMeat" ? () => feedDragon("hare")
             : it.key === "dragonFish" ? () => feedDragon("fish")
             : it.key === "bomb"   ? useBomb
             : it.key === "dust"   ? useDust
@@ -5078,6 +5088,7 @@ function bagUse() {
   else if (it.key === "potion") opts.push({ n: "USE", go: drinkPotion });
   else if (it.key === "elixir") opts.push({ n: "USE", go: drinkElixir });
   else if (it.key === "boarMeat") opts.push({ n: "FEED DRAGON", go: () => feedDragon("meat") });
+  else if (it.key === "hareMeat") opts.push({ n: "FEED DRAGON", go: () => feedDragon("hare") });
   else if (it.key === "dragonFish") opts.push({ n: "FEED DRAGON", go: () => feedDragon("fish") });
   else if (it.charm) {
     const on = worn[it.charm];
@@ -5559,7 +5570,7 @@ function saveSummary(slot){
 function captureSave(){return {
   quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
-  breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, dragonFish, fishingPole,
+  breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, dragonFish, fishingPole,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5610,7 +5621,7 @@ function loadGame(slot=activeSaveSlot) {
     syncDragonVitality(false);
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
-    boarMeat=Math.max(0,s.boarMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
+    boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});

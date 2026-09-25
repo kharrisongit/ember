@@ -18,7 +18,21 @@
     }else if(a&&b&&typeof a==='object'&&typeof b==='object'&&!Array.isArray(a)&&!Array.isArray(b)){
       for(const k of Object.keys(a))if(!(k in b))out.push({path:[...path,k],remove:true});
       for(const k of Object.keys(b))diff(a[k],b[k],[...path,k],out);
+    }else if(path.length===1&&['terr','base_terr','felled_rle'].includes(path[0])&&typeof a==='string'&&typeof b==='string'){
+      // Terrain is RLE text. Extending a map usually changes just its tail;
+      // transfer that span instead of every unchanged row of the overworld.
+      let start=0,end=0;
+      while(start<Math.min(a.length,b.length)&&a[start]===b[start])start++;
+      while(end<Math.min(a.length,b.length)-start&&a[a.length-1-end]===b[b.length-1-end])end++;
+      const edit={path,start,deleteCount:a.length-start-end,text:b.slice(start,b.length-end)};
+      out.push(JSON.stringify(edit).length<JSON.stringify({path,value:b}).length?edit:{path,value:b});
     }else out.push({path,value:b});
+    // A resized map's display terrain and base ground are identical. Reuse the
+    // already-updated base instead of sending the same large string twice.
+    if(!path.length&&b.terr===b.base_terr&&a.terr!==b.terr){
+      const index=out.findIndex(c=>c.path.length===1&&c.path[0]==='terr');
+      if(index>=0){out.splice(index,1);out.push({path:['terr'],copy:'base_terr'});}
+    }
     return out;
   }
   const safeKey=k=>typeof k==='number'?Number.isInteger(k)&&k>=0&&k<4000000:typeof k==='string'&&k.length<200&&!['__proto__','constructor','prototype'].includes(k);
@@ -36,6 +50,12 @@
     for(const c of changes){
       if(!Array.isArray(c.path)||!c.path.length||c.path.length>24||!fields.includes(c.path[0])||!c.path.every(safeKey))throw Error('Invalid Build field');
       if(c.remove){if(c.path.length===1||typeof c.path.at(-1)==='number')throw Error('Invalid Build removal');}
+      else if('copy'in c){if(c.path.length!==1||c.path[0]!=='terr'||c.copy!=='base_terr')throw Error('Invalid Build copy');}
+      else if('text'in c){
+        if(c.path.length!==1||!['terr','base_terr','felled_rle'].includes(c.path[0])||typeof c.text!=='string'||
+          !Number.isInteger(c.start)||c.start<0||c.start>8000000||!Number.isInteger(c.deleteCount)||c.deleteCount<0||c.deleteCount>8000000)throw Error('Invalid Build text edit');
+        safeData(c.text);
+      }
       else if('length'in c){if(!Number.isInteger(c.length)||c.length<0||c.length>4000000)throw Error('Invalid Build array length');}
       else safeData(c.value);
     }
@@ -46,7 +66,13 @@
     for(const c of op.changes){
       let parent=value;for(const k of c.path.slice(0,-1)){if(!Object.hasOwn(parent,k))throw Error('Build path no longer exists');parent=parent[k];}
       const k=c.path.at(-1);
-      if(c.remove)delete parent[k];else if('length'in c){if(!Array.isArray(parent[k])||c.length>parent[k].length)throw Error('Invalid Build truncation');parent[k].length=c.length;}
+      if(c.remove)delete parent[k];
+      else if('copy'in c)parent[k]=value[c.copy];
+      else if('text'in c){
+        if(typeof parent[k]!=='string'||c.start+c.deleteCount>parent[k].length||parent[k].length-c.deleteCount+c.text.length>8000000)throw Error('Invalid Build text range');
+        parent[k]=parent[k].slice(0,c.start)+c.text+parent[k].slice(c.start+c.deleteCount);
+      }
+      else if('length'in c){if(!Array.isArray(parent[k])||c.length>parent[k].length)throw Error('Invalid Build truncation');parent[k].length=c.length;}
       else parent[k]=clone(c.value);
     }
     if(!Number.isInteger(value.w)||!Number.isInteger(value.h)||value.w<1||value.h<1||value.w>4000||value.h>4000||value.w*value.h>4000000)throw Error('Invalid map dimensions');

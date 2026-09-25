@@ -31,6 +31,20 @@
   }
   let store;
   try { store = createStore(root.localStorage); } catch (_) { store = createStore({getItem:()=>null,setItem:()=>{throw Error('Local storage unavailable');}}); }
+  // This exact COPY patch is now authored into the world. Retire its old local
+  // draft so refreshing after the manual install does not replay it or block Build.
+  const installedPatch=['EMBERFELL PATCH v3','MAP world',
+    'F route 9148 145 111 198 107 5 20 birch - - 145,111;145,67;198,67;198,107',
+    'F route 9149 198 104 198 112 5 20 birch - -',
+    'F arena 9150 168 67 6.3 birch'].join('\n');
+  try{
+    const draft=store.get('world');
+    if(draft?.patch?.trim()===installedPatch){
+      store.remove('world');
+      const active=JSON.parse(root.localStorage.getItem('emberfell.editor-send.v1')||'null');
+      if(active?.id===draft.submission?.id)root.localStorage.removeItem('emberfell.editor-send.v1');
+    }
+  }catch(_){}
   const TOKEN='emberfell.editor-github.v1', PAIR='emberfell.editor-pair.v1', ACTIVE='emberfell.editor-send.v1';
   const API='https://api.github.com/repos/kharrisongit/ember';
   const WORKFLOW='/actions/workflows/apply-editor-moves.yml';
@@ -150,5 +164,5 @@
   }
   root.EmberEditDrafts = {clone,fingerprint,createStore,store,send,resume,connected,encodeDraft,
     disconnect(){root.localStorage.removeItem(TOKEN);root.sessionStorage.removeItem(PAIR);},
-    version:'20260924-fresh-build',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
+    version:'20260925-boar-hunts',sourceRevision:'__EDITOR_SOURCE_REVISION__',inbox:INBOX};
 })(globalThis);

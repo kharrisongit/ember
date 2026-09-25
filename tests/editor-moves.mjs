@@ -295,6 +295,47 @@ g.c.worldFresh=structuredClone(market);g.c.worldLayout=worldLayout;g.run(`publis
 assert.equal(g.run('worldFresh.features.at(-1).id'),99999);
 console.log('PASS: an actual full-world Build edit fits the transport and applies to a clean world baseline.');
 
+// Opening Build used to expand the entire world even when a small route was
+// drawn far from its edges. Exercise the real button handler, then explicit growth.
+disk.clear();g=gameContext();installBuildHooks(g);g.c.world=structuredClone(market);
+g.run(`W.maps.world=world;visit('world');var oldWidth=MW,oldHeight=MH;
+ var widget={style:{},classList:{add(){},remove(){},toggle(){}}};document.getElementById=()=>widget;
+ var bEdit=widget,editEl=widget,drawA=null,drawB=null,drawArmed=false,areaMode=false,pickedArea=null,areaDrag=null,arenaMode=false,grabMode=false,grabRect=null,camFree=false;
+ function closeOthers(){}function soloTool(){}function refreshToolbar(){}function setPaint(){}function setArmed(){}function clampCam(){}function refreshBuild(){}
+ var COBBLE=2,FARM=3,WATER=4,BRIDGE=5;`);
+const part3Build=read('js/generated/game-part-3.js');
+g.run(part3Build.slice(part3Build.indexOf('function contentExtent('),part3Build.indexOf('const RIM =')));
+g.run(bootCode.slice(bootCode.indexOf('const buildEl ='),bootCode.indexOf('tap(bBuild,')));
+g.run('setBuild(true);saveEditorDraft()');
+assert.equal(g.run('MW'),market.w);assert.equal(g.run('MH'),market.h,'opening Build does not expand the world');
+assert.equal(g.run("EmberEditDrafts.store.get('world')"),null,'opening Build is not an edit');
+g.run(`features.push({id:9155,kind:'arena',x:168,y:67,r:6.3,style:'birch',encounter:'hare'});saveEditorDraft();`);
+let pending=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
+assert(!pending.operations[0].changes.some(c=>['w','h','terr','base_terr'].includes(c.path[0])));
+const huntPublished=applyMoves(empty,{...first,map:'world',operations:pending.operations},revision);
+g.c.huntPublished=huntPublished;g.c.huntFresh=structuredClone(market);
+g.run("publishedEditorLayouts=huntPublished;applyPublishedEditorLayout(huntFresh,'world')");
+assert.equal(g.run('huntFresh.features.at(-1).encounter'),'hare','hunting type survives publication');
+for(const [dx,dy]of [[0,37],[60,0]]){
+ g.run(`growWorld(MW+${dx},MH+${dy});saveEditorDraft();`);
+ pending=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('world'))"));
+ const op=pending.operations[0];assert(op.changes.some(c=>c.copy==='base_terr'),'resized ground is sent once');
+ g.c.transport={...first,map:'world',operations:pending.operations};
+ const encoded=await g.run('EmberEditDrafts.encodeDraft(transport)');assert(Buffer.byteLength(encoded)<65000,'full-world growth fits GitHub');
+ assert(zlib.gzipSync(JSON.stringify(g.c.transport),{level:1}).length<44000,'growth also fits with a browser using lower compression');
+ assert.deepEqual(decodeDraft(encoded),g.c.transport);
+ const before=JSON.parse(g.run("JSON.stringify(editorDraftBases.get('world').build)"));
+ const restored=B.apply(before,op);assert.equal(restored.h,g.run('MH'));assert.equal(restored.w,g.run('MW'));
+}
+const textBefore=B.snapshot({w:25,h:25,terr:'0.625',felled_rle:'0:1-20|1:1-20'}),textAfter=structuredClone(textBefore);
+textAfter.felled_rle='0:1-20|1:1-19';
+const textOp={before:B.hash(textBefore),after:B.hash(textAfter),changes:[{path:['felled_rle'],start:11,deleteCount:2,text:'19'}]};
+assert.deepEqual(B.apply(textBefore,textOp),textAfter);
+assert.throws(()=>B.apply(textBefore,{...textOp,changes:[{path:['felled_rle'],start:999,deleteCount:0,text:'x'}]}),/text range/);
+assert.throws(()=>B.validate([{path:['terr'],copy:'__proto__'}]),/Invalid Build copy/);
+assert.throws(()=>B.validate([{path:['features',0],start:0,deleteCount:0,text:'x'}]),/Invalid Build text edit/);
+console.log('PASS: real Build entry creates no map expansion/draft, hunting type publishes, full-world south/east growth fits GitHub, and terrain deltas validate exactly.');
+
 // Each send from one browser is a cumulative draft, including adjustments to
 // things that were already published earlier in that same session.
 disk.clear();g=gameContext();g.run(`visit('a');EmberEditDrafts.sourceRevision='${revision}';EmberEditDrafts.connected=()=>true;

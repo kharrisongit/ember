@@ -80,17 +80,17 @@ for(const [id,m]of maps)for(const h of m.templePlan.hazards){
 // Save and restore new-room progress, the existing boss key and legacy positions.
 let saved=null;
 Object.assign(c,{quest:1,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,
- gold:100,potions:1,treasuryTaken:new Set(),dragon:{hp:5,maxHp:5},elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,fishingPole:false,trial:null,activeSaveSlot:1,
+ gold:100,potions:1,treasuryTaken:new Set(),dragon:{hp:5,maxHp:5},elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,hareMeat:2,dragonFish:0,fishingPole:false,trial:null,activeSaveSlot:1,
  migrateLegacySave(){},readSaveSlot:()=>saved,syncDragonVitality(){},hasSword:()=>true,
  loadMap(id){c.MAPID=id;c.MD=W.maps[id];},cam:{},clampCam(){},canStand:(x,y)=>clear(c.MD,x,y)});
 run(game.slice(game.indexOf('function recoverTempleArrival('),game.indexOf('function blockedByTempleGate(')));
 run(part3.slice(part3.indexOf('function captureSave()'),part3.indexOf('function saveToSlot(')));
 run(part3.slice(part3.indexOf('function loadGame('),part3.indexOf('let mounted =')));
 c.MAPID='passage_west';c.MD=W.maps.passage_west;c.P={x:c.MD.spawn[0],y:c.MD.spawn[1]};saved=JSON.parse(JSON.stringify(run('captureSave()')));
-assert.equal(saved.passageLayoutVersion,1);assert(saved.templeDefeated['passage3:0']);assert(Object.keys(saved.templeDefeated).some(k=>k.includes(':spikes:')));
-for(const k of Object.keys(c.bossGone))delete c.bossGone[k];assert(run('loadGame(1)'));assert.deepEqual(c.bossGone,saved.templeDefeated);
+assert.equal(saved.hareMeat,2);c.hareMeat=0;assert.equal(saved.passageLayoutVersion,1);assert(saved.templeDefeated['passage3:0']);assert(Object.keys(saved.templeDefeated).some(k=>k.includes(':spikes:')));
+for(const k of Object.keys(c.bossGone))delete c.bossGone[k];assert(run('loadGame(1)'));assert.deepEqual(c.bossGone,saved.templeDefeated);assert.equal(c.hareMeat,2,'hare meat survives reload');
 for(const id of ['passage','passage2','passage3']){
  saved={map:id,x:40,y:80,quest:1,templeLayoutVersion:2,breathHas:{}};assert(run('loadGame(1)'));
- assert.deepEqual([c.P.x,c.P.y],Array.from(W.maps[id].spawn));assert.equal(Object.keys(c.bossGone).length,0,'save slots do not share passage defeats');
+ assert.equal(c.hareMeat,0,'older saves default to no hare meat');assert.deepEqual([c.P.x,c.P.y],Array.from(W.maps[id].spawn));assert.equal(Object.keys(c.bossGone).length,0,'save slots do not share passage defeats');
 }
 console.log('PASS: 20 sections, 89 rooms, exact Hollybeck area, all doors/chests/levers/enemies reachable, all five traps active and disableable, two world mouths, original Ashfiend, plain exit chamber, reverse traversal and save migration.');

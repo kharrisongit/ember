@@ -14,12 +14,19 @@ original and placement at the new location. Existing saved geometry overrides
 join the current map's submission. RESET discards only that map's local draft.
 
 Build changes capture the resulting terrain, features, objects, scenery and
-decks as a validated data diff. Actor moves keep their stable identities and
+decks as a validated data diff. Terrain strings send only their changed span,
+and identical terrain/base-terrain content is transferred once. Opening Build
+does not enlarge the map; use +EAST/+SOUTH or draw beyond its edge when needed. Actor moves keep their stable identities and
 linked collision behavior. Published Build history applies after earlier
 submissions, allowing later moves and Build changes to compose. Larger batches
 are compressed for GitHub's dispatch input limit; if a batch exceeds that limit,
 the game keeps the draft and explains the size error. Submission IDs are reused
 only when all structured operations are unchanged.
+
+The arena type button cycles HARE HUNT, BOAR HUNT and COMBAT. Hunting
+clearings keep three animals inside their boundary without battle walls. Each
+animal drops its own meat for dragon healing and returns after five minutes.
+The selected hunting type is included in both Send Changes and COPY.
 
 ## Sender and one-time connection
 

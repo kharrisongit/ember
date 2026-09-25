@@ -1318,6 +1318,7 @@ function restoreSchoolCast(){
 }
 function applyWorld(text) {
   W = JSON.parse(text);
+  if(typeof installBirchHuntingRoute==='function')installBirchHuntingRoute(W.maps.world);
   individualizeDialogue();
   const nan=W.maps.house26?.npcs?.find(n=>n.n==='Nan Ferrow');
   if(nan){
@@ -1385,6 +1386,7 @@ function applyWorld(text) {
       }
     }
   }
+  if(typeof installFarmAnimals==='function')installFarmAnimals();
   installKnightEncounter(); numberAllArenas(); installLavaGolem();
   installFishingVillager();
   installMarketCounters();
@@ -1483,6 +1485,7 @@ async function inflateAtlas() {
   registerDesertNpcSprites();
   registerDockOriginalSprites();
   registerStoneGolemSprites();
+  registerAnimalSprites();
   TERRT = ATLAS.terrain;
   GROUND_SETS = ATLAS.ground_sets || {};
   GROUND_FRINGE = ATLAS.ground_fringe || {};
@@ -2637,6 +2640,7 @@ document.addEventListener("fullscreenchange", () => setTimeout(resize, 120));
 document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 120));
 
 function sheetOf(s) {
+  if(typeof s[5]==='string')return animalSheets[s[5]];
   return s[5] === 5 ? knightStoryImg : s[5] === 4 ? kingDragonDeathImg : s[5] === 3 ? kingDragonImg : s[5] === 2 ? smImg : s[5] === 1 ? dragonImg : atlasImg;
 }
 function blit(dst, name, frame, dx, dy) {
@@ -3667,6 +3671,7 @@ function drawWorld(t, dt) {
   const underfoot = (o) => o.s !== undefined &&
     /^(hb_stair_[es]$|rc_(ores|cavedec|ladder|floor|rails)|ifloor|iwall_)/.test(NAMES[o.s]);
   for (const f of foes) {
+    if(f.huntingArena&&f.st==='dead'&&f.t>=1)continue;
     const P_ = ((FOE_BORROW[f.kind] || {})[
                   f.st === "swing" ? "atk" : (f.st === "dead" || f.st === "down" || f.st === "rise") ? "die"
                 : f.hurt > 0 ? "hurt" : ""])
@@ -3963,7 +3968,7 @@ function drawWorld(t, dt) {
       const s2 = SPR[o.item.spr];
       const fr = (o.item.anim && s2 && s2[4] > 1)
         ? Math.floor(t * 4 + (o.t || 0)) % s2[4] : 0;
-      if (s2) drawGameImage(ctx, s2[5] === 2 ? smImg : s2[5] ? dragonImg : atlasImg,
+      if (s2) drawGameImage(ctx, sheetOf(s2),
                             s2[0] + fr * s2[2], s2[1], s2[2], s2[3],
                             Math.round(o.x - s2[2] / 2), Math.round(o.y - s2[3]),
                             s2[2], s2[3]);
@@ -6414,7 +6419,7 @@ function blockedByGuard(x, y) {
   return y === my && x <= 120;
 }
 const GATE_X0 = 26, GATE_X1 = 33;
-const HERD = [[28, "cow_graze"], [30, "cow"], [32, "cow_graze"]];
+const HERD = [[28, "farm_bull_w"], [30, "farm_calf_w"], [32, "farm_bull_e"]];
 const herdHere = () => quest < Q.KING;
 function blockedByHerd(x, y) {
   if (x > 120) return false;
@@ -6970,7 +6975,7 @@ function unlockDragonBreath(kind) {
   return true;
 }
 function recoverStrandedDragon() {
-  if(!hasDragon() || boarMeat>0 || dragonFish>0 || !(dragon.down || dragon.hp<=0))return false;
+  if(!hasDragon() || boarMeat>0 || hareMeat>0 || dragonFish>0 || !(dragon.down || dragon.hp<=0))return false;
   dragon.maxHp=dragonMaxHp();dragon.hp=dragon.maxHp;
   dragon.down=false;dragon.revive=0;dragon.knockdown=0;dragon.hurt=0;dragon.inv=1.2;
   dragon.tr=null;dragon.air=false;dragon.moving=false;
@@ -7268,6 +7273,8 @@ function beamLength() {
 function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
+  if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
+  if (f.kind === 'boar') return {x:f.x,y:f.y-11,r:12};
   if (f.kind === "kdragon") {
     const [dx,dy] = directionVector(f.dir8 || legacyDirection(f.dir,f.flip));
     return { x: f.x - dx * 6, y: f.y - 38 - dy * 6, r: 36 };
@@ -7644,6 +7651,7 @@ function spawnFoes() {
     knightEncounterPhase = "waiting";
     knightEncounter = null;
   }
+  if(typeof spawnHuntingAnimals==='function')spawnHuntingAnimals();
 }
 function swordOverlaps(f) {
   const body = foeBodyProfile(f);
@@ -7824,7 +7832,7 @@ const worn  = { spore: false, ward: false, edge: false, brand: false, twin: fals
                 lamp: false, flame: false, wake: false };
 let wakeSpent = false;
 let gold = 50, potions = 0, elixirs = 0, bombs = 0, dust = 0;
-let boarMeat = 0, dragonFish = 0;
+let boarMeat = 0, hareMeat = 0, dragonFish = 0;
 let bells = 0, marks = 0, dropped = null;
 let breaths = 0, stones = 0, salts = 0;
 const BELL_COST = 40, MARK_COST = 20;
@@ -7875,6 +7883,7 @@ const WORTH = {
 };
 const GOLD_DROP_MULTIPLIER = 1.8;
 function dropGold(x, y, kind) {
+  if(kind==='boar'||kind==='hare')return 0;
   const base = WORTH[kind] !== undefined ? WORTH[kind]
              : BOSS_KIND.test(kind || "") ? 30 : 5;
   if (!base) return 0;                      /* his own dead pay nothing */
@@ -7946,16 +7955,22 @@ function drawFly() {
   g.globalAlpha = 1;
 }
 function grabGold() {
-  let got = 0, kept = [];
+  let got = 0, meat = 0, hare = 0, kept = [];
   for (const g of loot) {
     if(g.treasuryId&&treasuryGuarding()){kept.push(g);continue;}
+    if(g.kind==='boarMeat'||g.kind==='hareMeat'){
+      if(Math.hypot(g.x-P.x,g.y-P.y)<26){if(g.kind==='hareMeat')hare+=g.n;else meat+=g.n;}else kept.push(g);
+      continue;
+    }
     if (Math.hypot(g.x - P.x, g.y - P.y) < 26) { got += g.n; if(g.treasuryId)treasuryTaken.add(g.treasuryId); flyGold(g.x, g.y, g.n); }
     else kept.push(g);
   }
-  if (!got) return false;
+  if (!got&&!meat&&!hare) return false;
   loot = kept;
-  gold += got;
-  toast("Corin got " + got + " gold!");
+  gold += got;boarMeat+=meat;hareMeat+=hare;
+  const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',got?got+' gold':''].filter(Boolean);
+  toast(meat||hare?'Collected '+cuts.join(' and ')+' — feed it to your dragon.':"Corin got " + got + " gold!");
+  if(meat||hare)saveGame();
   return true;
 }
 function drawLoot() {
@@ -7964,6 +7979,7 @@ function drawLoot() {
   for (const g of loot) {
     if (g.x < cam.x - 32 || g.x > cam.x + vw + 32 ||
         g.y < cam.y - 32 || g.y > cam.y + vh + 32) continue;
+    if(g.kind==='boarMeat'||g.kind==='hareMeat'){drawHuntingMeat(g.x,g.y+Math.round(Math.sin(g.t*3)*1.5));continue;}
     const sp = SPR[g.art] || SPR.gold_p2;
     if (!sp) continue;
     const b = Math.round(Math.sin(g.t * 3) * 1.5);
@@ -7974,6 +7990,7 @@ function drawLoot() {
 }
 function stepLoot(dt) {
  for(const g of loot)g.t+=dt;
+ if(mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>(g.kind==='boarMeat'||g.kind==='hareMeat')&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
  if(MAPID==='royal_treasury'&&mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>g.treasuryId&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
 }
 let devItemTest = false;
@@ -7990,22 +8007,24 @@ function feedDragon(kind) {
   if (!hasDragon()) { toast("Corin does not have the dragon yet"); return false; }
   // A stale recovery flag from an earlier save must never block feeding.
   if (!dragon.down) dragon.revive = 0;
-  const fish = kind === "fish";
-  if ((fish ? dragonFish : boarMeat) <= 0 && !devSafe) {
-    toast(fish ? "no fish" : "no boar meat"); return false;
+  const fish = kind === "fish", hare = kind === "hare";
+  const food=fish?"fish":hare?"hare meat":"boar meat";
+  if ((fish ? dragonFish : hare ? hareMeat : boarMeat) <= 0 && !devSafe) {
+    toast("no "+food); return false;
   }
   syncDragonVitality(false);
   if (dragon.hp >= dragon.maxHp && !devSafe && !devItemTest) {
     toast("the dragon is already full"); return false;
   }
   const wasDown = dragon.down;
-  if (fish) dragonFish--; else boarMeat--;
+  if (fish) dragonFish--; else if(hare) hareMeat--; else boarMeat--;
   dragon.hp = Math.min(dragon.maxHp, dragon.hp + (fish ? DRAGON_FISH_HEAL : BOAR_MEAT_HEAL));
   dragon.down = wasDown ? true : dragon.hp <= 0;
   dragon.revive = wasDown && dragon.hp > 0 ? Math.min(dragon.revive || 1.2, 1.2) : 0;
   dragon.hurt = 0; dragon.inv = 1.2;
   if (dragonHere()) showHeal("dragon", dragon.x, dragon.y - 18);
-  toast((fish ? "fish" : "boar meat") + " restores the dragon");
+  toast(food + " restores the dragon");
+  saveGame();
   return true;
 }
 let saintT = 0;
@@ -8766,6 +8785,7 @@ const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|
 const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
+  if(f.huntingArena&&typeof dropHuntedMeat==='function')dropHuntedMeat(f);
   if(f.chestAmbush){f.hold=0;f.emerge=1;}
   if(f.kind==="treasuryknight"){royalDefeated.treasuryCaptain=true;recoverStrandedDragon();toast("Treasury Captain defeated — the treasure is yours!");}
   if(f.kind==="royalguard" && f.idx!==undefined){royalDefeated[MAPID+":"+f.idx]=true;if(!foes.some(q=>q!==f&&q.kind==="royalguard"&&q.st!=="dead"))recoverStrandedDragon();}
@@ -9424,7 +9444,7 @@ function stepFoes(dt) {
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
-    f._thinking = f.st !== "dead" && thinks(f);
+    f._thinking = !f.huntingArena && f.st !== "dead" && thinks(f);
     if (f._thinking) live.push(f);
   }
   // Regular battle music begins when a hostile enemy/boss is actively engaged.
@@ -9559,6 +9579,7 @@ function stepFoes(dt) {
     if (lastFight && MAPID === "cinderhold" &&
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
+    if(f.huntingArena){stepHuntingAnimal(f,dt);continue;}
     if(f.glassBlockHold>0){
       f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);
       f.x=f.glassBlockAnchorX;f.y=f.glassBlockAnchorY;f.retreat=0;f.st="idle";
@@ -10658,8 +10679,9 @@ function interact() {
   if (!sayNpc && dragon.down && dragonHere() &&
       Math.hypot(P.x - dragon.x, P.y - dragon.y) < 42) {
     if (boarMeat > 0) feedDragon("meat");
+    else if (hareMeat > 0) feedDragon("hare");
     else if (dragonFish > 0) feedDragon("fish");
-    else toast("the dragon needs boar meat or fish");
+    else toast("the dragon needs meat or fish");
     return;
   }
   if (!sayNpc && trialDemonHere() && !trial && Math.hypot(P.x - (MAPID==="witchmoor"?196:THRONE_DEMON.x), P.y - (MAPID==="witchmoor"?304:THRONE_DEMON.y)) < 48) {
@@ -11219,12 +11241,10 @@ function setBuild(on) {
     setArmed(false);          /* always open in PAN, never armed */
     areaMode = false; pickedArea = null; areaDrag = null; arenaMode = false;
     grabMode = false; grabRect = null;
-    const grew = ensureWorkspace();
     camFree = true;                 /* free the camera, but do not move it */
     clampCam();
     refreshBuild();
-    toast(grew ? "room added -- PAN to position, then tap PAN to draw"
-               : "PAN to position, then tap PAN to draw");
+    toast("PAN to position, then tap PAN to draw");
   }
   drawA = drawB = null;
 }
@@ -11289,7 +11309,10 @@ tap(document.getElementById("tArena"), () => {
   refreshBuild();
   if (arenaMode) setDev(false);
   refreshToolbar();
-  toast(arenaMode ? "tap the path to clear an arena" : "arena tool off");
+  toast(arenaMode ? (arenaEncounter!=='combat'?"tap the path to place a "+arenaEncounter+" hunting spot":"tap the path to clear an arena") : "arena tool off");
+});
+tap(document.getElementById('tEncounter'),()=>{
+  arenaEncounter={hare:'boar',boar:'combat',combat:'hare'}[arenaEncounter];refreshBuild();
 });
 tap(document.getElementById("tAreas"), () => {
   areaMode = !areaMode;
@@ -11620,7 +11643,7 @@ function buildPatch(currentAreaOnly=false) {
                 : ""));
     else if (f.kind === "arena")
       L.push("F arena " + f.id + " " + f.x + " " + f.y + " " +
-             (f.r || 6) + " " + f.style);
+             (f.r || 6) + " " + f.style + (['hare','boar'].includes(f.encounter)?' '+f.encounter:''));
     else
       L.push("F area " + f.id + " " + f.x0 + " " + f.y0 + " " + f.x1 + " " +
              f.y1 + " " + f.band + " " + f.style + " " +
@@ -11757,6 +11780,7 @@ const KINDS = ["Town", "Graveyard", "Temple", "Camp", "Ruin", "Farmstead"];
 let areaKind = 0;
 let areaMode = false, pickedArea = null, areaDrag = null;
 let arenaMode = false;
+let arenaEncounter = 'hare';
 let grabMode = false, grabRect = null, grabDrag = null;
 let regionMoves = [];
 const ARENA_R = 6.3;
