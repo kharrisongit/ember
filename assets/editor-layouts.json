@@ -46049,8 +46049,8 @@
         "kind": "actor",
         "key": "npc:Toft",
         "identity": "Toft",
-        "x": 12405,
-        "y": 3200,
+        "x": 12544,
+        "y": 3306,
         "originX": 12405,
         "originY": 3244
       },
@@ -46058,8 +46058,8 @@
         "kind": "actor",
         "key": "npc:Bevan",
         "identity": "Bevan",
-        "x": 12518,
-        "y": 3172,
+        "x": 12530,
+        "y": 3241,
         "originX": 12518,
         "originY": 3216
       },
@@ -46067,8 +46067,8 @@
         "kind": "actor",
         "key": "npc:Prue",
         "identity": "Prue",
-        "x": 12542,
-        "y": 3305,
+        "x": 12499,
+        "y": 3245,
         "originX": 12542,
         "originY": 3349
       },
@@ -46076,8 +46076,8 @@
         "kind": "actor",
         "key": "npc:Ovid",
         "identity": "Ovid",
-        "x": 12407,
-        "y": 3302,
+        "x": 12480,
+        "y": 3305,
         "originX": 12407,
         "originY": 3346
       },
@@ -46085,8 +46085,8 @@
         "kind": "actor",
         "key": "npc:Isolde",
         "identity": "Isolde",
-        "x": 12584,
-        "y": 3202,
+        "x": 12468,
+        "y": 3334,
         "originX": 12584,
         "originY": 3246
       },
@@ -47711,7 +47711,8 @@
     "9c7ba7a3-9be4-4216-8614-379fa49459a9",
     "ca7b3013-7664-446f-8d61-dcef43731da5",
     "dc006617-0ba4-46dc-a8af-e9570a903a3b",
-    "2bd74ff9-297e-449c-a26f-e0374e472e9a"
+    "2bd74ff9-297e-449c-a26f-e0374e472e9a",
+    "d07f27f4-c0f9-4b2d-9f96-1964ea5b7ee6"
   ],
   "sessions": {
     "witchmoor": {
@@ -47772,7 +47773,7 @@
     },
     "world": {
       "id": "984e76f6-e990-4a47-9961-e7fdbc08705f",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "3dd18ee5-f801f70f-346683",
       "baseFingerprint": "74762304-a92f5016-735253",
       "base": {
@@ -94564,7 +94565,7 @@
           "height": 600
         }
       },
-      "resultHash": "471ad9ed-59bbaf43-347022"
+      "resultHash": "9e00fd98-d50546c4-347022"
     }
   }
 }
