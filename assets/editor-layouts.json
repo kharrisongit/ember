@@ -47242,6 +47242,145 @@
         "y": 1103,
         "originX": 3920,
         "originY": 1104
+      },
+      "door:62": {
+        "kind": "door",
+        "key": "62",
+        "index": 62,
+        "to": "school",
+        "rect": {
+          "x": 4287,
+          "y": 1001,
+          "w": 16,
+          "h": 16
+        }
+      },
+      "door:64": {
+        "kind": "door",
+        "key": "64",
+        "index": 64,
+        "to": "inn",
+        "rect": {
+          "x": 4671,
+          "y": 1002,
+          "w": 16,
+          "h": 16
+        }
+      },
+      "collision:534,127": {
+        "kind": "collision",
+        "key": "534,127",
+        "blocked": false
+      },
+      "collision:535,127": {
+        "kind": "collision",
+        "key": "535,127",
+        "blocked": false
+      },
+      "collision:536,127": {
+        "kind": "collision",
+        "key": "536,127",
+        "blocked": false
+      },
+      "collision:537,127": {
+        "kind": "collision",
+        "key": "537,127",
+        "blocked": false
+      },
+      "collision:538,127": {
+        "kind": "collision",
+        "key": "538,127",
+        "blocked": false
+      },
+      "collision:539,127": {
+        "kind": "collision",
+        "key": "539,127",
+        "blocked": false
+      },
+      "collision:540,127": {
+        "kind": "collision",
+        "key": "540,127",
+        "blocked": false
+      },
+      "collision:541,127": {
+        "kind": "collision",
+        "key": "541,127",
+        "blocked": false
+      },
+      "collision:542,127": {
+        "kind": "collision",
+        "key": "542,127",
+        "blocked": false
+      },
+      "collision:543,127": {
+        "kind": "collision",
+        "key": "543,127",
+        "blocked": false
+      },
+      "collision:544,127": {
+        "kind": "collision",
+        "key": "544,127",
+        "blocked": false
+      },
+      "collision:545,127": {
+        "kind": "collision",
+        "key": "545,127",
+        "blocked": false
+      },
+      "collision:543,126": {
+        "kind": "collision",
+        "key": "543,126",
+        "blocked": false
+      },
+      "collision:544,126": {
+        "kind": "collision",
+        "key": "544,126",
+        "blocked": false
+      },
+      "collision:528,126": {
+        "kind": "collision",
+        "key": "528,126",
+        "blocked": false
+      },
+      "collision:529,126": {
+        "kind": "collision",
+        "key": "529,126",
+        "blocked": false
+      },
+      "collision:528,128": {
+        "kind": "collision",
+        "key": "528,128",
+        "blocked": false
+      },
+      "collision:529,127": {
+        "kind": "collision",
+        "key": "529,127",
+        "blocked": false
+      },
+      "collision:530,127": {
+        "kind": "collision",
+        "key": "530,127",
+        "blocked": false
+      },
+      "collision:531,127": {
+        "kind": "collision",
+        "key": "531,127",
+        "blocked": false
+      },
+      "collision:532,127": {
+        "kind": "collision",
+        "key": "532,127",
+        "blocked": false
+      },
+      "collision:533,127": {
+        "kind": "collision",
+        "key": "533,127",
+        "blocked": false
+      },
+      "collision:528,127": {
+        "kind": "collision",
+        "key": "528,127",
+        "blocked": false
       }
     },
     "witchmoor": {
@@ -48655,7 +48794,8 @@
     "80fb4bee-f100-435f-9d06-5a5c3712d038",
     "5f9457f5-1615-4a78-83b8-75e985f8bbe9",
     "9e9e2c4b-8b73-4886-b9dd-74ed9ded390f",
-    "699952cd-dac8-4a58-bb47-53e23b7756eb"
+    "699952cd-dac8-4a58-bb47-53e23b7756eb",
+    "ccfa5121-152f-4ef4-ae89-fc73e3f378cf"
   ],
   "sessions": {
     "witchmoor": {
@@ -48780,7 +48920,7 @@
     },
     "world": {
       "id": "491f9b2f-9b48-49e2-b75a-5f33248e7da6",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "94b0a652-32e4d7be-351391",
       "baseFingerprint": "40e9b55-e01f0089-735395",
       "base": {
@@ -95890,7 +96030,7 @@
           "originY": 3344
         }
       },
-      "resultHash": "2ff31d84-9d6564f6-351886"
+      "resultHash": "3255c821-1d7467f9-353768"
     }
   }
 }
