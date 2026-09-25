@@ -9,7 +9,8 @@ on:
       - 'js/**'
       - 'assets/interiors/**'
       - 'tests/**'
-      - 'tools/check-game-scripts.mjs'
+      - 'tools/**'
+      - 'assets/editor-layouts.json'
       - '.github/workflows/split-game.yml'
   pull_request:
     paths:
@@ -17,7 +18,8 @@ on:
       - 'js/**'
       - 'assets/interiors/**'
       - 'tests/**'
-      - 'tools/check-game-scripts.mjs'
+      - 'tools/**'
+      - 'assets/editor-layouts.json'
       - '.github/workflows/split-game.yml'
   workflow_dispatch:
 permissions:
@@ -38,6 +40,8 @@ jobs:
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs
           node tests/npc-placement.mjs
+          node tests/editor-source-compatibility.mjs
+          node tests/editor-publish-race.mjs
           node tests/hunting-grounds.mjs
           node tests/arena-number-tool.mjs
           node tests/animal-sprites.mjs

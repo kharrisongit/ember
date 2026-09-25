@@ -20,7 +20,7 @@ assert.throws(()=>applyMoves(a,{...next,operations:[{...next.operations[0],x:NaN
 assert.throws(()=>applyMoves(a,{...next,operations:[{kind:'shell',key:'x'}]},revision),/Unsupported editor operation/);
 const ctx=vm.createContext({console,fetch:()=>{throw Error('Local saves must not send anything');},localStorage:{getItem:()=>null,setItem:()=>{}}});
 vm.runInContext(fs.readFileSync(new URL('../js/editor-drafts.js',import.meta.url),'utf8'),ctx);
-vm.runInContext(`const stored=new Map();const s=EmberEditDrafts.createStore({getItem:k=>stored.get(k),setItem:(k,v)=>stored.set(k,v)});s.put('room-a',{moves:[1]});s.put('room-b',{moves:[2]});s.remove('room-a');if(s.get('room-b').moves[0]!==2)throw Error('Drafts crossed maps');const restored=EmberEditDrafts.createStore({getItem:k=>stored.get(k),setItem:()=>{}});if(restored.get('room-b').moves[0]!==2)throw Error('Reload lost edits');`,ctx);
+vm.runInContext(`const stored=new Map();const s=EmberEditDrafts.createStore({getItem:k=>stored.get(k),setItem:(k,v)=>stored.set(k,v)});s.put('room-a',{moves:[1]});s.put('room-b',{moves:[2]});s.remove('room-a');if(s.get('room-b').moves[0]!==2)throw Error('Drafts crossed maps');const restored=EmberEditDrafts.createStore({getItem:k=>stored.get(k),setItem:()=>{}});if(restored.get('room-b')!==null)throw Error('New session restored old edits');`,ctx);
 const actor={spr:'sentinel',editKey:'statue:left',x:100,y:200,moveBlocks:[0]};
 Object.assign(ctx,{m:{roomActors:[actor],roomBlocks:[[90,180,110,200]],npcs:[],objs:[]},shiftActorData(m,o,x,y){const dx=x-o.x,dy=y-o.y;o.x=x;o.y=y;for(const i of o.moveBlocks||[]){m.roomBlocks[i]=m.roomBlocks[i].map((v,j)=>v+(j%2?dy:dx));}}});
 vm.runInContext(fs.readFileSync(new URL('../js/published-editor-layouts.js',import.meta.url),'utf8'),ctx);
@@ -57,16 +57,17 @@ export function gameContext(){
 let g=gameContext();
 g.run(`visit('a');moveEditorActor(MD.roomActors[0],110,170,true);objs[0].x=56;saveEditorDraft();visit('b');objs[0].y=32;saveEditorDraft();visit('a');`);
 assert.equal(g.run('MD.roomActors[0].y'),170);assert.equal(g.run('objs[0].x'),56);assert.equal(g.run('MD.roomBlocks[0][1]'),150);
-g=gameContext();g.run(`visit('a');`);
-assert.equal(g.run('MD.roomActors[0].y'),170,'actor draft survives a browser reload');
-assert.equal(g.run('objs[0].x'),56,'ordinary prop survives reload');
-assert.equal(g.run('MD.roomBlocks[0][1]'),150,'collision restored exactly once');
+const freshPage=gameContext();freshPage.run("visit('a');");
+assert.equal(freshPage.run('MD.roomActors[0].y'),200,'Reload discards unpublished actor movement');
+assert.equal(freshPage.run('objs[0].x'),40,'Reload discards unpublished prop movement');
+assert.equal(freshPage.run('MD.roomBlocks[0][1]'),180,'Reload discards unpublished collision movement');
+assert.equal(freshPage.run("EmberEditDrafts.store.get('a')"),null);
 g.run(`visit('a',true);`);
 assert.equal(g.run('MD.roomActors[0].y'),200,'reset restores authored position');
 assert.equal(g.run('MD.roomBlocks[0][1]'),180,'reset restores collision');
 assert(g.run('MD.roomActors[0].extractedCanvas instanceof CanvasStandIn'),'reset preserves actual image/canvas objects');
 g.run(`visit('b');`);assert.equal(g.run('objs[0].y'),32,'reset does not discard another area');
-console.log('PASS: real game hooks preserve actors, props, collision and artwork across map switches, reloads and per-area reset.');
+console.log('PASS: real game hooks preserve actors, props, collision and artwork across map switches and per-area reset; browser reload starts fresh.');
 
 await import('./editor-direct-send.mjs');
 
@@ -103,11 +104,11 @@ assert.equal(vm.runInContext('terr[27]',paintContext),1,'local experiment stays 
 console.log('PASS: Delete and Paint round trips, furniture collision removal, object/scenery tombstones, generated-tree deletion, paint regeneration, stale-tile conflicts and retry.');
 g=gameContext();g.run(`visit('a',true);deleted.add(0);objs=[];decorGone.add('s0');decorDel.push(['s',60,60]);painted.set(26,4);terr[26]=4;actorLayouts.a={statue:{x:100,y:200,deleted:true}};saveEditorDraft();visit('b');visit('a');`);
 assert.equal(g.run('objs.length'),0);assert(g.run("decorGone.has('s0')"));assert.equal(g.run('terr[26]'),4);
-g=gameContext();g.run("visit('a');");assert.equal(g.run('objs.length'),0);assert.equal(g.run('terr[26]'),4);assert(g.run('MD.roomActors[0].editorDeleted'));
+{const fresh=gameContext();fresh.run("visit('a');");assert.equal(fresh.run('objs.length'),1);assert.equal(fresh.run('terr[26]'),0);assert(!fresh.run('MD.roomActors[0].editorDeleted'));}
 assert.equal(g.run('terrOrig[26]'),0,'unsent paint does not become the published baseline');
 assert.equal(g.run("EmberEditDrafts.store.get('a').operations.find(o=>o.kind==='paint').before[0]"),0);
 g.run("visit('a',true);");assert.equal(g.run('terr[26]'),0);assert.equal(g.run('objs.length'),1);assert(!g.run('MD.roomActors[0].editorDeleted'));
-console.log('PASS: unsent Delete and Paint survive map switches and reloads, keep their original baseline, and reset only the current area.');
+console.log('PASS: unsent Delete and Paint survive map switches, clear on reload, keep their original baseline, and reset only the current area.');
 
 // Tree moves were encoded as K + A, so the old gate wrongly called them Build.
 g=gameContext();g.run(`visit('a',true);felledNew=['3,4'];added=[{id:1,s:2,x:80,y:96}];objs.push(added[0]);nextId=1;saveEditorDraft();`);
@@ -115,7 +116,7 @@ const treeDraft=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('a'))
 assert(treeDraft.operations.some(o=>o.kind==='object-add'));assert(treeDraft.operations.some(o=>o.kind==='feature-delete'));
 const treeKey=treeDraft.operations.find(o=>o.kind==='object-add').key;
 g.run('saveEditorDraft();');assert.equal(g.run("EmberEditDrafts.store.get('a').operations.find(o=>o.kind==='object-add').key"),treeKey);
-g=gameContext();g.run("visit('a');");assert.equal(g.run('added[0].editorKey'),treeKey);assert.equal(g.run('nextId'),2,'old tree-move drafts cannot reuse an object ID');
+g.run("visit('b');visit('a');");assert.equal(g.run('added[0].editorKey'),treeKey);assert.equal(g.run('nextId'),2,'old tree-move drafts cannot reuse an object ID');
 const treeSubmission={...first,map:'a',operations:treeDraft.operations};
 const treeLayout=applyMoves(empty,treeSubmission,revision);
 assert.equal(applyMoves(treeLayout,treeSubmission,revision),treeLayout);
@@ -131,7 +132,7 @@ assert.throws(()=>applyMoves(empty,{...first,operations:[{kind:'object-add',key:
 // Box deletion already expands into structured deletions and paint operations.
 g.run(`clearedBoxes=[[2,2,4,4]];deleted.add(0);objs=objs.filter(o=>o.id!==0);saveEditorDraft();`);
 assert(g.run("EmberEditDrafts.store.get('a').operations.some(o=>o.kind==='object'&&o.deleted)"));
-console.log('PASS: generated-tree moves/additions survive reload, publish both ends, retry once, remain movable after publication, and support box deletions.');
+console.log('PASS: generated-tree moves/additions survive area switches, publish both ends, retry once, remain movable after publication, and support box deletions.');
 
 // An old device override already merged into the authored map is not a new edit.
 g=gameContext();g.run(`visit('b',true);MD.doors=[{x:2,y:3}];MD.collisionOverrides={'1,2':false};geometryEdits.b={doors:{0:{x:32,y:48,w:16,h:16}},collision:{'1,2':false}};objs[0].x=28;`);
@@ -205,8 +206,9 @@ assert.equal(g.run('scat[1]'),92);assert.equal(g.run('decks[0].x0'),5);
 g.run(`visit('b');visit('a');`);
 assert.equal(g.run('objs[0].x'),72);assert.equal(g.run('features[0].x0'),4);
 assert.equal(g.run('baseTerr[5*MW+5]'),1);assert.equal(g.run('terr[7*MW+7]'),4);
-g=gameContext();buildFixture(g);g.run(`visit('a');saveEditorDraft();`);
-assert.equal(g.run('objs[0].x'),72,'Build object moves survive browser reload');
+{const fresh=gameContext();buildFixture(fresh);fresh.run("visit('a');");assert.equal(fresh.run('objs[0].x'),40,'Reload discards unpublished Build changes');}
+g.run('saveEditorDraft();');
+assert.equal(g.run('objs[0].x'),72,'Build object moves survive map reentry');
 assert.equal(g.run('MD.npcs[0].x'),72);assert.equal(g.run('MD.npcs[0].d'),'Keep my dialogue');
 assert.equal(draftOf(g).operations[0].after,buildOp.after,'Build restore/resave is stable');
 const builtLayout=applyMoves(empty,{...first,map:'a',operations:builtDraft.operations},revision);
@@ -214,7 +216,7 @@ const builtMap=publishedMap(builtLayout,authored);
 assert.deepEqual(builtMap.objs,[1,72,72]);assert.equal(builtMap.features[0].x0,4);assert.equal(builtMap.decks[0].x0,5);
 assert.equal(builtMap.npcs[0].x,72);assert.equal(builtMap.editorPublishedPaint[0].value,4);
 g.run(`visit('a',true);`);assert.equal(g.run('objs[0].x'),40);assert.equal(g.run('features[0].x0'),2);
-console.log('PASS: actual area moves carry props, NPCs, scenery, decks, terrain and paint through local map changes, reload, publishing and reset.');
+console.log('PASS: actual area moves carry props, NPCs, scenery, decks, terrain and paint through local map changes, publishing and reset.');
 
 // Later ordinary edits and subsequent Build submissions compose with earlier ones.
 const B=globalThis.EmberBuildData;
@@ -410,7 +412,7 @@ console.log('PASS: repeated Build, Doors and Collision sends replace their earli
  let draft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
  assert.equal(draft.operations[0].key,'npc:Resident');assert(draft.operations[0].deleted);
  const published=applyMoves(empty,{...first,map:'a',operations:draft.operations},revision);
- e=entities();e.run("visitEntities('a')");assert(e.run('npcs[1].editorDeleted'),'NPC deletion survives a browser reload');
+ {const fresh=entities();fresh.run("visitEntities('a')");assert(!fresh.run('npcs[1].editorDeleted'),'Reload discards unpublished NPC deletion');}
  e.run("visitEntities('a',true)");assert(!e.run('npcs[1].editorDeleted'),'RESET restores an unpublished NPC');
  e.c.layouts=published;e.run("publishedEditorLayouts=layouts;applyPublishedEditorLayout(W.maps.a,'a');applyActorLayout(W.maps.a,'a')");
  assert(e.run('MD.npcs[1].publishedDeleted&&MD.npcs[1].editorDeleted'),'published deletion applies on a fresh device');
@@ -422,7 +424,7 @@ console.log('PASS: repeated Build, Doors and Collision sends replace their earli
  draft=JSON.parse(e.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
  assert.equal(draft.operations[0].key,'chest:heartstone:shadow');
  const chestLayout=applyMoves(empty,{...first,map:'a',operations:draft.operations},revision);
- e=entities();e.run("visitEntities('a')");assert.equal(e.run('CHESTS[0].y*16+16'),184,'reward position survives reload');
+ {const fresh=entities();fresh.run("visitEntities('a')");assert.equal(fresh.run('CHESTS[0].y*16+16'),136,'Reload discards unpublished chest movement');}
  e.run("visitEntities('a',true)");assert.equal(e.run('CHESTS[0].y*16+16'),136,'RESET restores reward globals as well as the proxy');
  assert.equal(e.run('MD.roomBlocks[1].join()'),'150,128,170,136');
  e.c.layouts=chestLayout;e.run("publishedEditorLayouts=layouts;applyPublishedEditorLayout(W.maps.a,'a')");
@@ -498,5 +500,28 @@ console.log('PASS: repeated Build, Doors and Collision sends replace their earli
   const sample=authored.find(a=>a.editKey==='npc:lineup:'+n.key);
   assert.deepEqual([sample.x,sample.y],[344+(i%8)*40,208+Math.floor(i/8)*48]);
  }
- console.log(`PASS: chest movement, haunted effects and NPC deletion survive save/reload/reset/publication; ${catalog.length} idle NPC appearances fit the egg field with stable deletions.`);
+ console.log(`PASS: chest movement, haunted effects and NPC deletion support page-local edits, fresh reload, reset and publication; ${catalog.length} idle NPC appearances fit the egg field with stable deletions.`);
+}
+
+// Changing every hunting animal stays small even when the published world has
+// object tombstones. These edits must never compact/reindex unrelated scenery.
+{
+ const g=gameContext();g.run(`W.maps.a.features=Array.from({length:16},(_,id)=>({id:id+100,kind:'arena',x:10,y:10,r:6,style:'winter',encounter:'bird'}));W.maps.a.editorDeletedObjects=[0];`);
+ const base=JSON.parse(g.run('JSON.stringify(W.maps.a)'));
+ g.run(`visit('a');for(const f of features)f.encounter='fox';saveEditorDraft();`);
+ const draft=JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('a'))"));
+ assert.equal(draft.operations.length,16);assert(draft.operations.every(o=>o.kind==='arena'));
+ const session={id:'66666666-6666-4666-8666-666666666666',sequence:1,baseHash:EmberBuildData.hash({})};
+ const submission={...first,map:'a',baseFingerprint:draft.baseFingerprint,session,operations:draft.operations};
+ g.c.transport=submission;
+ const size=Buffer.byteLength(await g.run('EmberEditDrafts.encodeDraft(transport)'));
+ assert(size<6000,'All 16 animal choices fit without a large world diff: '+size);
+ const layout=applyMoves(empty,submission,revision),published=publishedMap(layout,base);
+ assert(published.features.every(f=>f.encounter==='fox'));assert.deepEqual(published.objs,base.objs);
+ g.run(`features[0].encounter='bird';saveEditorDraft();visit('b');visit('a');`);
+ const later={...submission,id:next.id,session:{...session,sequence:2},operations:JSON.parse(g.run("JSON.stringify(EmberEditDrafts.store.get('a').operations)"))};
+ const updated=publishedMap(applyMoves(layout,later,revision),base);
+ assert.equal(updated.features[0].encounter,'bird','A later send can undo an animal choice');
+ assert(updated.features.slice(1).every(f=>f.encounter==='fox'));
+ console.log('PASS: all 16 hunting choices publish in '+size+' bytes, preserve scenery and support cumulative undo.');
 }

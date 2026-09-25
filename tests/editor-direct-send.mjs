@@ -25,7 +25,7 @@ function browser({local=storage(),session=storage(),hash='',run,fetcher}={}){
   return {api:context.EmberEditDrafts,local,session,calls,navigation,reports,report:(...args)=>reports.push(args)};
 }
 const linked=()=>{const local=storage();local.setItem(TOKEN,'github_pat_test');return local;};
-// Upgrade discards the owner's old editor work once, before any draft loads.
+// Every page load discards editor drafts while preserving game progress/auth.
 const oldLocal=linked(),oldSession=storage();
 const resetKeys=['emberfell.editor-drafts.v1','emberfell.geometry.v1','emberfell.actor-layout.v1','emberfell.editor-send.v1'];
 for(const key of resetKeys)oldLocal.setItem(key,JSON.stringify({old:true}));
@@ -35,14 +35,14 @@ for(const key of resetKeys)assert.equal(oldLocal.getItem(key),null);
 assert.equal(oldSession.getItem(PAIR),null);assert.equal(oldLocal.getItem('emberfell.save'),'game progress');assert(clean.api.connected());
 clean.api.store.put('world',{patch:'new route'});oldLocal.setItem('emberfell.geometry.v1','new geometry');
 const freshReload=browser({local:oldLocal,session:oldSession});
-assert.equal(freshReload.api.store.get('world').patch,'new route');assert.equal(oldLocal.getItem('emberfell.geometry.v1'),'new geometry');
+assert.equal(freshReload.api.store.get('world'),null);assert.equal(oldLocal.getItem('emberfell.geometry.v1'),null);assert.equal(oldLocal.getItem('emberfell.editor-drafts.v1'),null);assert.equal(clean.api.store.get('world').patch,'new route','Another page cannot erase this tab\'s in-memory edits');
 const installedPatch=['EMBERFELL PATCH v3','MAP world',
  'F route 9148 145 111 198 107 5 20 birch - - 145,111;145,67;198,67;198,107',
  'F route 9149 198 104 198 112 5 20 birch - -','F arena 9150 168 67 6.3 birch'].join('\n');
 freshReload.api.store.put('world',{patch:installedPatch});freshReload.api.store.put('house01',{patch:'different edits'});
 const installedReload=browser({local:oldLocal,session:oldSession});
 assert.equal(installedReload.api.store.get('world'),null,'the manually installed route patch no longer blocks editing after refresh');
-assert.equal(installedReload.api.store.get('house01').patch,'different edits');
+assert.equal(installedReload.api.store.get('house01'),null,'Every area starts fresh on reload');
 let b=browser({local:linked()});assert.equal(b.calls.length,0,'loading and local editing never auto-submit');
 await b.api.send({...draft,patch:'Previous COPY history '.repeat(50000)},b.report);
 const posts=b.calls.filter(c=>c.options?.method==='POST');assert.equal(posts.length,1);
@@ -62,6 +62,11 @@ await b.api.send(draft,b.report);assert(!b.api.connected());assert.match(b.repor
 b=browser({local:linked(),fetcher:async url=>url.startsWith('assets/')?Response.json({applied:[]}):url.includes('/runs?')?Response.json({workflow_runs:[existing]}):Response.json({status:'completed',conclusion:'failure'})});
 b.api.store.put('tp1',{patch:'saved'});await b.api.send(draft,b.report);
 assert.equal(b.api.store.get('tp1').patch,'saved');assert.match(b.reports.at(-1)[1],/could not publish/);
+let liveChecks=0;
+b=browser({local:linked(),fetcher:async url=>url.startsWith('assets/')?Response.json({applied:++liveChecks>=3?[draft.id]:[]}):url.includes('/runs?')?Response.json({workflow_runs:[existing]}):Response.json({status:'completed',conclusion:'cancelled'})});
+await b.api.send(draft,b.report);
+assert(b.reports.some(r=>r[1].includes('newer game publish')),'A replaced deployment waits for the newer Pages run');
+assert(b.reports.at(-1)[2].published,'Only the live receipt confirms that the newer deploy includes these edits');
 // A completed return uses only this tab's private key and sends the button's
 // saved draft. A copied/expired return cannot connect another browser session.
 b=browser();await b.api.send(draft,b.report);assert.equal(b.calls.length,0);

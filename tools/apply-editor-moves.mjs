@@ -6,13 +6,12 @@ import {gunzipSync} from 'node:zlib';
 import '../js/editor-build-data.js';
 const Build=globalThis.EmberBuildData;
 const keyOK=k=>typeof k==='string'&&k.length>0&&k.length<200&&!['__proto__','prototype','constructor'].includes(k);
-export function applyMoves(current,draft,revision) {
+export function applyMoves(current,draft,revision,validateSource) {
   assert.equal(draft.schema,1,'Unsupported edit format');
   assert.match(draft.id,/^[a-f0-9-]{36}$/,'Invalid submission ID');
   assert(keyOK(draft.map)&&/^[a-zA-Z0-9_-]+$/.test(draft.map),'Invalid map');
   assert.equal(current.schema,1);
   if(current.applied.includes(draft.id))return current;
-  assert.equal(draft.sourceRevision,revision,'Game code has changed. Refresh before making more moves; the old draft remains saved.');
   assert(Array.isArray(draft.operations)&&(draft.operations.length>0||draft.session)&&draft.operations.length<=200000,'Invalid number of editor operations');
   const next=structuredClone(current),seen=new Set();let map=next.maps[draft.map]||{};
   let receipt=null;
@@ -37,7 +36,18 @@ export function applyMoves(current,draft,revision) {
     }
   }
 
+  const base=structuredClone(map);
   for(const op of draft.operations){
+    if(op.kind==='arena'){
+      const animals=['bird','hare','boar','deer','fox'];
+      assert(Number.isSafeInteger(op.id)&&op.id>=0&&op.key===String(op.id),'Invalid hunting arena identity');
+      assert(op.before?.id===op.id&&op.before.kind==='arena'&&animals.includes(op.before.encounter)&&animals.includes(op.encounter),'Invalid hunting animal');
+      Build.validate([{path:['features',0],value:op.before}]);
+      const key='arena:'+op.key;assert(!seen.has(key),'Duplicate arena edit');seen.add(key);
+      const old=map[key];
+      if(old)assert(Build.hash({...old.before,encounter:old.encounter})===Build.hash(op.before),'This hunting arena changed in a newer submission. Refresh before sending.');
+      map[key]={kind:op.kind,key:op.key,id:op.id,before:structuredClone(old?.before||op.before),encounter:op.encounter};continue;
+    }
     if(op.kind==='build'){
       assert(!seen.size,'Build data must precede other edits');
       assert.equal(op.layout,Build.hash(map),'This area was published since your Build changes. Refresh before sending.');
@@ -124,6 +134,10 @@ export function applyMoves(current,draft,revision) {
     map[key]={kind:op.kind,key:op.key,...(op.kind==='actor'?{identity:op.identity,...(op.independent===true?{independent:true}:{})}:{sprite:op.sprite}),
       ...(op.kind==='decor'?{tag:op.tag,index:op.index}:{}),...(op.deleted===true?{deleted:true}:{}),x:op.x,y:op.y,originX:old?.originX??op.fromX,originY:old?.originY??op.fromY};
   }
+  if(draft.sourceRevision!==revision){
+    assert.equal(typeof validateSource,'function','Game code has changed; edit targets must be checked before publishing.');
+  }
+  if(validateSource)validateSource(base,draft);
   next.maps[draft.map]=map;next.applied.push(draft.id);
   if(receipt)(next.sessions||={})[draft.map]={...receipt,resultHash:Build.hash(map)};
   else if(next.sessions)delete next.sessions[draft.map];
@@ -139,7 +153,12 @@ if(process.argv[1]===fileURLToPath(import.meta.url)){
   const draft=decodeDraft(input);
   const path='assets/editor-layouts.json',current=JSON.parse(fs.readFileSync(path,'utf8'));
   let next;
-  try{next=applyMoves(current,draft,sourceRevision());}
+  try{
+    const revision=sourceRevision();
+    const validateSource=(draft.sourceRevision!==revision||draft.operations?.some(op=>op.kind==='arena'))&&!current.applied.includes(draft.id)?
+      await (await import('./editor-source-compatibility.mjs')).createSourceValidator(current):undefined;
+    next=applyMoves(current,draft,revision,validateSource);
+  }
   catch(error){
     // Data-only editor payloads contain no credentials. Keep rejected edits
     // recoverable from the run so the owner never has to copy them out again.

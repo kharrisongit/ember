@@ -1635,11 +1635,11 @@ let SPR = new Proxy(ATLAS.sprites, SPR_HANDLER);
 let TERRT = ATLAS.terrain;
 // Eight-way facing supplements legacy cardinal door/quest directions.
 // Device-local developer geometry; COPY exports exact pixel rectangles.
-const geometryEdits=(()=>{try{return JSON.parse(localStorage.getItem('emberfell.geometry.v1')||'{}')}catch(e){return {}}})();
+const geometryEdits={};
 let geometryPan=false;
 let doorEdit=false, geometryDrag=null, selectedDoor=-1, collisionPaint='block';
 function geometryMap(){return geometryEdits[MAPID]||(geometryEdits[MAPID]={doors:{},collision:{}})}
-function saveGeometry(){try{localStorage.setItem('emberfell.geometry.v1',JSON.stringify(geometryEdits))}catch(e){toast('Could not save edits; use COPY before leaving.')}}
+function saveGeometry(){/* Geometry belongs to this page session; publishing saves it to GitHub. */}
 function doorRect(d,index=(MD.doors||[]).indexOf(d)){
  const saved=geometryEdits[MAPID]?.doors?.[index];if(saved)return saved;
  if(d.triggerRect)return d.triggerRect;

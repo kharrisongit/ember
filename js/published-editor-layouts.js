@@ -59,6 +59,11 @@ function applyPublishedEditorEntries(m,id,layout) {
   }
   if(valid.length!==entries.length)console.warn('Some saved moves have changed anchors in '+id+' and were left unapplied.');
   for(const op of all){
+    if(op.kind==='arena'){
+      const arena=m.features?.find(f=>f.kind==='arena'&&f.id===op.id);
+      if(!arena||EmberBuildData.hash(arena)!==EmberBuildData.hash(op.before))throw Error('Published hunting arena '+op.id+' changed anchors.');
+      arena.encounter=op.encounter;
+    }
     if(op.kind==='door'){const d=m.doors?.[op.index];if(d&&d.to===op.to)d.triggerRect={...op.rect};}
     if(op.kind==='collision')(m.collisionOverrides||={})[op.key]=op.blocked;
   }

@@ -23,7 +23,8 @@ assert.equal(g.run('MD.npcs[1].packSpr'),'tavern_anim_8','Transferred scene NPC 
 assert.equal(g.run('MD.npcs[1].school'),undefined,'Transferred visible sprite replaces hidden dialogue proxy');
 assert.equal(g.run('MD.npcs[1].seatClipY'),undefined,'Old tabletop clipping does not travel');
 assert.equal(g.run('MD.npcs[1].d[0]'),'Hello','Dialogue preserved');
-g=setup();g.run(`visit('b');`);assert.equal(g.run('MD.npcs.length'),2,'Additions and transfer survive full reload');
+{const fresh=setup();fresh.run("visit('b');");assert.equal(fresh.run('MD.npcs.length'),0,'Reload discards unpublished additions/transfers');fresh.run("visit('a');");assert(!fresh.run('MD.npcs[0].editorDeleted'),'Reload restores the unpublished transfer source');}
+g.run("visit('a');visit('b');");assert.equal(g.run('MD.npcs.length'),2,'Additions and transfers survive area switches');
 assert.equal(g.run('MD.npcs[0].x'),144);
 const draft=g.run('EmberEditDrafts.store.get("b")');
 const submission={schema:1,id:'33333333-3333-4333-8333-333333333333',map:'b',sourceRevision:'test',operations:JSON.parse(JSON.stringify(draft.operations))};
@@ -45,7 +46,7 @@ const chair={exactFurniture:true,n:'north chair',x:80,y:90,sy:100,extractedCanva
 const resident={x:80,y:92,sy:76,seated:true};
 assert(c.houseChairDepth(chair,[resident])<76);resident.y+=8;resident.sy+=8;assert(c.houseChairDepth(chair,[resident])<84);
 resident.editorDeleted=true;assert.equal(c.houseChairDepth(chair,[resident]),100);resident.editorDeleted=false;resident.x+=100;assert.equal(c.houseChairDepth(chair,[resident]),100);
-console.log('PASS: NPC additions/transfers retain animation/dialogue through reload, publishing, retry, independent movement and reset; original NPC/art hidden once; house chairs follow seated people.');
+console.log('PASS: NPC additions/transfers retain animation/dialogue through area switches, publishing, retry, independent movement and reset; original NPC/art hidden once; house chairs follow seated people.');
 
 // Raw scene sheets contain multiple poses per frame. Both the picker and saved
 // additions must resolve to exactly one person, with the original frame stride.

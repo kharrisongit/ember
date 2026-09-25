@@ -18,6 +18,7 @@ c.thornwellRoads=JSON.parse(fs.readFileSync(root+'tests/fixtures/thornwell-road-
 c.graveyardPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/hollybeck-cleanup.json','utf8'));
 c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
 c.recoveredDraft=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-editor-draft.json','utf8'));
+c.hollybeckRecovery=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-36194050376.json','utf8'));
 run(`mode='play';camFree=false;let profile=[];
 for(const name of ['saveEditorDraft','editorPrepareMap','restoreOverworld','realizeFeatures','spawnFoes','applyActorLayout','prepareEditorEntities','buildGround','rebuildSolid','placeBirds']){
  const original=eval(name);eval(name+' = function(...args){const t=performance.now();const out=original(...args);profile.push({name:"'+name+'",ms:performance.now()-t,result:typeof out==="boolean"?out:undefined});return out;}');
@@ -44,7 +45,11 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert(hettie.packDirections&&hettie.packWalk&&!hettie.stationary&&!hettie.sk,'Hettie retains story movement without the old blonde skin');
   for(const dir of ['d','u','e','w'])for(const action of ['idle','walk'])assert(SPR[hettie.packSpr+'_'+action+'_'+dir][4]>1,'Hettie has animated '+action+' '+dir);
   assert(npcLookUsed({packSpr:'hettie96'})&&npcLookUsed({packSpr:'market_bread'}),'Retired blonde appearances cannot be added again');
+  const layout=publishedEditorLayouts.maps.world;
+  const operations=l=>[...(l?.build?operations(l.build.previous):[]),...Object.values(l||{}).filter(o=>o.kind&&o.kind!=='build')];
+  const publishedOps=operations(layout);
   const huntingSpecies={9150:'bird',9152:'hare',9154:'hare',9156:'hare',9159:'boar',9161:'boar',9163:'boar',9165:'deer',9167:'deer',9169:'deer',9171:'deer',9173:'deer',9175:'deer',9177:'fox',9179:'fox',9181:'fox'};
+  for(const op of publishedOps.filter(o=>o.kind==='arena'))huntingSpecies[op.id]=op.encounter;
   assert.equal(features.filter(isHuntingArena).length,16,'All placed hunting arenas remain');
   for(const [arenaId,species] of Object.entries(huntingSpecies)){
    assert.equal(MD.features.find(a=>a.id===Number(arenaId)).encounter,species,'Published regional species '+arenaId);
@@ -53,9 +58,6 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
    assert(animals.every(f=>f.kind===species),'Live animals match the region in arena '+arenaId);
   }
   // Check authored coordinates after the real Build, move and map-loading paths.
-  const layout=publishedEditorLayouts.maps.world;
-  const operations=l=>[...(l?.build?operations(l.build.previous):[]),...Object.values(l||{}).filter(o=>o.kind&&o.kind!=='build')];
-  const publishedOps=operations(layout);
   const miner=npcs.find(n=>n.n==='Toft'),formerSeller=npcs.find(n=>n.n==='Ovid');
   assert.equal(miner.packSpr,'npc_miner_mike_d');
   assert.equal(JSON.stringify(miner.sells),JSON.stringify(['potion','dust','saint']));
@@ -86,7 +88,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
    assert(MD.objs.some((v,i)=>i%3===0&&v===op.sprite&&MD.objs[i+1]===op.x&&MD.objs[i+2]===op.y),'Exact submitted tree placement '+op.key);
   }
   for(const patch of layout.build.changes.filter(p=>p.path[0]==='features')){
-   if('value' in patch){let v=MD;for(const k of patch.path)v=v[k];assert.equal(JSON.stringify(v),JSON.stringify(patch.value),'Exact submitted route/arena geometry');}
+   if('value' in patch){let v=MD;for(const k of patch.path)v=v[k];const expected=patch.path[2]==='encounter'?(huntingSpecies[MD.features[patch.path[1]].id]||patch.value):patch.value;assert.equal(JSON.stringify(v),JSON.stringify(expected),'Exact submitted route/arena geometry');}
   }
   assert(publishedEditorLayouts.applied.includes(recoveredDraft.id),'Failed draft recovery receipt');
   for(const op of recoveredDraft.operations){
@@ -110,10 +112,13 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
     }
    }
   }
-  const fixtureObjects=MD.objs.slice();
+  const topAdditions=Object.values(layout).filter(op=>op.kind==='object-add').length;
+  const fixtureObjects=MD.objs.slice(0,MD.objs.length-topAdditions*3);
   for(const op of Object.values(layout).filter(op=>op.kind==='object')){
-   assert.equal(MD.objs[Number(op.key)*3+1],op.x,'Latest submitted object X');
-   assert.equal(MD.objs[Number(op.key)*3+2],op.y,'Latest submitted object Y');
+   if(!op.deleted){
+    assert.equal(MD.objs[Number(op.key)*3+1],op.x,'Latest submitted object X');
+    assert.equal(MD.objs[Number(op.key)*3+2],op.y,'Latest submitted object Y');
+   }
    fixtureObjects[Number(op.key)*3+1]=op.originX;fixtureObjects[Number(op.key)*3+2]=op.originY;
   }
   assert.equal(EmberBuildData.hash(fixtureObjects),winterPatch.objectsHash,'Prior object placements preserved beneath latest moves');
@@ -139,7 +144,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   for(const [id,x,y,encounter] of expectedArenas){
    const arena=MD.features.find(f=>f.id===id);
    assert(arena,'Missing published arena '+id);
-   assert.equal(JSON.stringify([arena.x,arena.y,arena.encounter]),JSON.stringify([x,y,encounter]));
+   assert.equal(JSON.stringify([arena.x,arena.y,arena.encounter]),JSON.stringify([x,y,huntingSpecies[id]||encounter]));
    assert.equal(foes.filter(f=>f.huntingArena?.id===id).length,3,'Animals in arena '+id);
   }
   for(const draft of latestRecovered){
@@ -152,10 +157,18 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
      assert(a,'Recovered actor exists');assert.equal(a.x,latest.x);assert.equal(a.y,latest.y);
      if(latest.deleted)assert(a.editorDeleted,'Recovered NPC deletion');
     }
-    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));assert.equal(o.x,op.x);assert.equal(o.y,op.y);}
+    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),latest=layout['object:'+op.key]||op;if(latest.deleted)assert(!o);else{assert.equal(o.x,latest.x);assert.equal(o.y,latest.y);}}
     if(op.kind==='door')assert.equal(JSON.stringify(MD.doors[op.index].triggerRect),JSON.stringify(op.rect),'Recovered tavern doorway');
     if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);assert.equal(collisionOverride(tx*8+4,ty*8+4),op.blocked,'Recovered collision '+op.key);}
    }
+  }
+  for(const id of hollybeckRecovery.recoveredSubmissions)assert(publishedEditorLayouts.applied.includes(id),'Recovered/superseded send receipt');
+  for(const op of hollybeckRecovery.operations){
+   if(op.kind==='actor'){const n=npcs.find(n=>editorNpcKey(n)===op.key);assert.equal(n.x,op.x);assert.equal(n.y,op.y);}
+   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));if(op.deleted)assert(!o,'Recovered object deletion');else{assert.equal(o.x,op.x);assert.equal(o.y,op.y);}}
+   if(op.kind==='paint')for(let i=0;i<op.values.length;i++)assert.equal(terr[op.start+i],op.values[i],'Recovered Hollybeck paint');
+   if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);assert.equal(collisionOverride(tx*8+4,ty*8+4),op.blocked,'Recovered Hollybeck collision');}
+   if(op.kind==='feature-delete')assert(felled.has(op.key),'Recovered scenery removal');
   }
   if(worldVisits++){
    if(!profile.some(p=>p.name==='restoreOverworld'&&p.result===true))throw Error('Published overworld was not retained');
@@ -228,7 +241,7 @@ assert.equal(npcs.find(n=>editorNpcKey(n)===transferredKey).y,destination.y);
 assert(EmberEditDrafts.store.get('world').operations.some(o=>o.kind==='npc-transfer'),'SEND CHANGES includes the transfer from its destination');
 console.log('PASS: actual Add, move, delete and Transport controls survive interior/world switching and preserve animation and a single visible NPC.');
 // Arena numbers use current published/local features; selecting an animal is a
-// normal saved Build edit and must keep every other arena and path unchanged.
+// compact arena edit and must keep every other arena and path unchanged.
 const beforeNumbering=JSON.stringify(features);
 setArenas(true);
 assert.equal(JSON.stringify(features),beforeNumbering,'Opening arena numbers does not edit the map');
@@ -239,15 +252,16 @@ assert.equal(features.find(a=>a.id===9150).encounter,'fox');
 assert.equal(JSON.stringify(features.find(a=>a.id===9150)),JSON.stringify({...arenaBefore,encounter:'fox'}),'Only the animal type changes');
 assert.equal(foes.filter(f=>f.huntingArena?.id===9150&&f.kind==='fox').length,3,'New herd appears immediately');
 assert(!foes.some(f=>f.huntingArena?.id===9150&&f.kind==='bird'),'Previous animal type is removed');
-const huntBuild=EmberEditDrafts.store.get('world').operations.find(o=>o.kind==='build');
-assert(huntBuild,'SEND CHANGES contains the animal edit');
-const huntPublished=EmberBuildData.apply(editorDraftBases.get('world').build,huntBuild);
-assert.equal(huntPublished.features.find(a=>a.id===9150).encounter,'fox','Structured publishing includes the choice');
+const huntDraft=EmberEditDrafts.store.get('world'),huntOp=huntDraft.operations.find(o=>o.kind==='arena');
+assert(huntOp,'SEND CHANGES contains the animal edit');
+assert(!huntDraft.operations.some(o=>o.kind==='build'),'Animal choice does not resend world Build data');
+assert.equal(huntOp.encounter,'fox','Structured publishing includes the choice');
+assert(JSON.stringify(huntDraft.operations).length<3000,'Hunting edits and NPC transfer fit comfortably in GitHub');
 loadMap('house47');loadMap('world');
 assert.equal(features.find(a=>a.id===9150).encounter,'fox','Animal choice survives map reentry');
 assert.equal(foes.filter(f=>f.huntingArena?.id===9150&&f.kind==='fox').length,3);
 assert(changeArenaAnimal(9150,'bird'));setArenas(false);
-console.log('PASS: all hunting arenas are numbered; choosing an animal updates the herd, saves a publishable Build edit and survives map reentry.');
+console.log('PASS: all hunting arenas are numbered; choosing an animal updates the herd, sends compact data and survives map reentry.');
 console.log('PASS: current published Build layout applies, repeated interior exits retain the complete overworld, without terrain/collision rebuilding.');
 `);
 })().catch(e=>{console.error(e);process.exit(1)});

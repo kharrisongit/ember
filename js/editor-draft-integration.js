@@ -86,7 +86,17 @@ function saveEditorDraft() {
   if (!editorDraftReady || !MD || !editorDraftBases.has(MAPID) || editorDraftStale.has(MAPID)) return;
   const api=EmberEditDrafts, patch=buildPatch(true), old=api.store.get(MAPID);
   const base=editorDraftBases.get(MAPID).map;
-  const buildChanged=editorBuildActive.has(MAPID)||regionMoves.length>0||features.length!==(base.features||[]).length||features.some(f=>featOrig.get(f.id)!==JSON.stringify(f))||MW!==base.w||MH!==base.h;
+  const arenaOps=[],animals=['bird','hare','boar','deer','fox'];
+  let featureBuildChanged=features.length!==(base.features||[]).length;
+  for(const f of features){
+    if(featOrig.get(f.id)===JSON.stringify(f))continue;
+    const before=(base.features||[]).find(a=>a.id===f.id);
+    if(before?.kind==='arena'&&f.kind==='arena'&&animals.includes(before.encounter)&&animals.includes(f.encounter)&&
+      JSON.stringify({...f,encounter:before.encounter})===JSON.stringify(before)){
+      arenaOps.push({kind:'arena',key:String(f.id),id:f.id,before:api.clone(before),encounter:f.encounter});
+    }else featureBuildChanged=true;
+  }
+  const buildChanged=editorBuildActive.has(MAPID)||regionMoves.length>0||featureBuildChanged||MW!==base.w||MH!==base.h;
   if (!buildChanged&&!old?.session&&patch.includes('\n(no changes on this map)')) {
     if(old)try{api.store.remove(MAPID);}catch(_){}
     return;
@@ -97,6 +107,7 @@ function saveEditorDraft() {
     regionMoves,clearedBoxes,felledNew,decorGone:[...decorGone],decorDel,
     decorMoved:[...decorMoved].map(([k,d])=>{const a=d.tag==='s'?scat:sanm;return[k,{...d,x:a[d.di+1],y:a[d.di+2]}]})};
   const operations=api.clone(state.npcOps);
+  if(!buildChanged)operations.push(...arenaOps);
   // Moving a generated tree creates an ordinary object at its new position.
   // Keep a stable identity across saves/retries, including older saved drafts.
   for(const o of added)if(!deleted.has(o.id)){
@@ -173,7 +184,7 @@ function editorSendStatus(ok,message,record) {
     const text=document.createElement('div');text.setAttribute('role','status');panel.append(text);
     const link=document.createElement('a');link.textContent='View GitHub check';link.target='_blank';link.rel='noreferrer';link.style.cssText='display:none;color:#ead18a;margin-right:14px;';panel.append(link);
     const close=document.createElement('button');close.textContent='Dismiss';close.style.cssText='margin:8px 10px 0 0;';close.onclick=()=>panel.hidden=true;panel.append(close);
-    const disconnect=document.createElement('button');disconnect.textContent='Disconnect GitHub';disconnect.onclick=()=>{EmberEditDrafts.disconnect();editorSendStatus(false,'GitHub disconnected on this device. Your drafts are saved.');};panel.append(disconnect);
+    const disconnect=document.createElement('button');disconnect.textContent='Disconnect GitHub';disconnect.onclick=()=>{EmberEditDrafts.disconnect();editorSendStatus(false,'GitHub disconnected on this device. Your edits remain in this tab.');};panel.append(disconnect);
     document.body.append(panel);
   }
   panel.hidden=false;panel.children[0].textContent=message;

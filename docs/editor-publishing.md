@@ -1,6 +1,12 @@
 # Publishing edits from the game
 
-All map editor changes are saved on the current device. **Send Changes** submits only the
+Map editor changes live in memory for the current page session. Reloading or
+reopening the game starts fresh from the published map. Old drafts, geometry,
+COPY history and send records are cleared; game progress and the GitHub
+connection remain. Changing rooms keeps edits within the current page.
+Publish or COPY edits before refreshing if they should be kept.
+
+**Send Changes** submits only the
 current map, then runs `.github/workflows/apply-editor-moves.yml`. The workflow
 validates structured coordinates, runs the game checks, commits only
 `assets/editor-layouts.json`, and deploys Pages itself. GitHub's workflow token
@@ -30,8 +36,9 @@ The selected hunting type is included in both Send Changes and COPY.
 
 ARENAS also numbers existing hunting clearings. Tap a green number on the map
 or a hunting entry in the list to choose Bird, Hare, Boar, Deer or Fox. Choosing
-an animal replaces that clearing's herd immediately and saves a local Build
-edit. SEND CHANGES publishes the choice. Panning and pinching do not select a
+an animal replaces that clearing's herd immediately and records a compact arena
+edit with its stable ID and original feature data. Animal-only changes do not
+resend terrain, scenery or deleted-object arrays. SEND CHANGES publishes the choice. Panning and pinching do not select a
 number; Cancel leaves the current animal unchanged.
 
 ## Sender and one-time connection
@@ -57,24 +64,38 @@ be available, and the handoff must finish in the same tab within 15 minutes.
 Subsequent Send Changes calls dispatch the existing workflow directly via the
 GitHub REST API. No sender window or second publish button is involved. A small
 in-game status panel shows progress, completion or failure, and includes a
-Disconnect GitHub control. Refreshing the game resumes status checks only;
+Disconnect GitHub control. Refreshing starts a new editor session;
 normal saves and editor actions do not start network writes. The token is
 never included in draft exports. An expired token prompts a new connection.
 
-Each map draft keeps a stable editing-session ID and increasing send sequence.
+Within a page session, each map keeps a stable editing-session ID and increasing
+send sequence.
 The workflow remembers that session's original published layout. Later sends
 replace the same session's cumulative draft against that baseline, so moving an
 NPC again, repainting, changing a duplicate or undoing an edit does not conflict
 with the owner's earlier send. An older sequence or a different session's
 changes cannot overwrite the latest result. The metadata lives in the layout
-file's `sessions` object; it is not part of the rendered map overrides.
+file's `sessions` object; it is not part of the rendered map overrides and never
+restores drafts on a fresh page load. It prevents retries and undo from
+duplicating objects or overwriting a newer editing session.
 
 Each submission has a stable retry ID. The game checks published IDs and existing
 workflow run titles before dispatching, and holds another area's send while an
-editor workflow is active. The workflow also checks applied IDs, source versions,
-and conflicting sessions/positions before changing layout data. A failed non-fast-forward
-push stops instead of overwriting another commit. Local drafts remain available
-on errors. Rejected data-only payloads are also retained in the workflow log for recovery. GitHub workflow runs track direct submissions; the private inbox still
+editor workflow is active. The workflow checks applied IDs and conflicting
+sessions/positions. When game code changed, it prepares the current game map
+and validates the affected actor/scenery anchors, doors, collision overrides,
+actual painted terrain and Build baseline. Unrelated code, art and dialogue
+updates can publish without refreshing; actual target conflicts stop atomically.
+Arena edits also validate their original feature data.
+
+If main advances during a send, publishing fetches the latest main and reapplies,
+validates and checks the original submission, up to five attempts. It never
+force-pushes. Editor commits run separately from Pages deployments. Deployments
+check out latest main so an older queued run cannot restore an older game. A
+replaced deployment counts as complete only if the submission receipt is live.
+Edits remain in the current tab on errors. Rejected data-only payloads are also
+retained in the workflow log for recovery. GitHub workflow runs track direct
+submissions; the private inbox still
 retains historical submissions and supports the older popup game clients.
 
 ## Maintaining game code
@@ -88,8 +109,9 @@ Published moves match stable identities and their original positions before
 application. Actors carry their collision blocks, children and linked stair
 arrivals using the game's existing movement function. If authored layout changes
 invalidate an anchor, that move is left unapplied and needs review. Applied local
-drafts clear on a refresh; stale unpublished drafts remain recoverable with COPY.
+drafts and unpublished drafts both clear on a refresh, as requested by the owner.
 
-Run `node tests/editor-moves.mjs`, `node tools/check-game-scripts.mjs` and the
+Run `node tests/editor-moves.mjs`, `node tests/editor-source-compatibility.mjs`,
+`node tests/editor-publish-race.mjs`, `node tools/check-game-scripts.mjs` and the
 temple checks after changing this flow. The sender has `tests/sender.mjs` for
 authentication, origin, retry, contention and encrypted credential behavior.
