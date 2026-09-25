@@ -48369,6 +48369,82 @@
         "originX": 135.5,
         "originY": 169
       }
+    },
+    "house24": {
+      "actor:millwood:house24:3": {
+        "kind": "actor",
+        "key": "millwood:house24:3",
+        "identity": "iplant2",
+        "deleted": true,
+        "x": 152,
+        "y": 196,
+        "originX": 152,
+        "originY": 196
+      },
+      "actor:millwood:house24:11": {
+        "kind": "actor",
+        "key": "millwood:house24:11",
+        "identity": "produce box",
+        "deleted": true,
+        "x": 40,
+        "y": 194,
+        "originX": 39.5,
+        "originY": 194
+      },
+      "actor:millwood:house24:0": {
+        "kind": "actor",
+        "key": "millwood:house24:0",
+        "identity": "Furniture 12_280",
+        "x": 104,
+        "y": 183,
+        "originX": 113,
+        "originY": 187
+      },
+      "actor:millwood:house24:9": {
+        "kind": "actor",
+        "key": "millwood:house24:9",
+        "identity": "Furniture 6_85",
+        "x": 153,
+        "y": 76,
+        "originX": 159.5,
+        "originY": 92
+      },
+      "actor:millwood:house24:1": {
+        "kind": "actor",
+        "key": "millwood:house24:1",
+        "identity": "ifire0",
+        "x": 90,
+        "y": 74,
+        "originX": 88,
+        "originY": 80
+      },
+      "actor:millwood:house24:2": {
+        "kind": "actor",
+        "key": "millwood:house24:2",
+        "identity": "ishelf1",
+        "x": 49,
+        "y": 71,
+        "originX": 39,
+        "originY": 80
+      },
+      "actor:millwood:house24:10": {
+        "kind": "actor",
+        "key": "millwood:house24:10",
+        "identity": "hanging herbs",
+        "x": 200,
+        "y": 50,
+        "originX": 115,
+        "originY": 48
+      },
+      "actor:loot:house24:chest": {
+        "kind": "actor",
+        "key": "loot:house24:chest",
+        "identity": "temple71_chest",
+        "x": 117,
+        "y": 73,
+        "originX": 208,
+        "originY": 124
+      }
     }
   },
   "applied": [
@@ -48435,7 +48511,8 @@
     "0f043b5c-2366-4985-ad01-ba8831ab4903",
     "bc7d17e9-5fd1-4765-962c-435e383d1de3",
     "0f4aed21-6575-4165-944f-3b088a44392b",
-    "b849291f-9525-469c-967a-7d456e16d13a"
+    "b849291f-9525-469c-967a-7d456e16d13a",
+    "80fb4bee-f100-435f-9d06-5a5c3712d038"
   ],
   "sessions": {
     "witchmoor": {
@@ -48533,6 +48610,14 @@
       "baseFingerprint": "6d6e77c0-4b1b7284-2095",
       "base": {},
       "resultHash": "cebd94ee-fce6fbe8-916"
+    },
+    "house24": {
+      "id": "3409058f-ddde-4710-932f-db1c020196c3",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "f2fba869-eaef9567-3516",
+      "base": {},
+      "resultHash": "dfa14bc3-47d36ff-1144"
     }
   }
 }
