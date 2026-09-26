@@ -16,7 +16,7 @@ run('installFirstTemple();installSecondTemple();installThirdTemple();refineSecon
 run(read('js/first-temple.js'));run(read('js/sandspire-temple.js'));run(read('js/hollybeck-temple.js'));run(read('js/mountain-passage.js'));
 await run('prepareExpandedFirstTemple()');await run('prepareExpandedSandspireTemple()');await run('prepareExpandedHollybeckTemple()');await run('prepareExpandedMountainPassage()');
 
-Object.assign(c,{bossScene:null,foesHeld:true,foes:[],bossGone:{},arenaLock:null,arenaT:0,doorMotion:null,fadeDir:0,fade:0,FADE_T:.22,pendingActorStage:null,pendingDoor:null,arriveT:0,
+Object.assign(c,{sceneHold:()=>false,sayNpc:null,dragonHere:()=>false,dragonAllowedInMap:()=>true,bossScene:null,foesHeld:true,foes:[],bossGone:{},arenaLock:null,arenaT:0,doorMotion:null,fadeDir:0,fade:0,FADE_T:.22,pendingActorStage:null,pendingDoor:null,arriveT:0,
  geometryEdits:{},actorLayouts:{},quest:2,Q:{ABED:0,ERRAND:1},bolts:[],bannerName:null,bannerT:0,lastArea:null,arrivedDoor:null,recoverTempleArrival(){}});
 c.loadMap=id=>{c.MAPID=id;c.MD=W.maps[id];c.features=c.MD.features||[];};
 run(game.slice(game.indexOf('function doorRect('),game.indexOf('function collisionOverride(')));

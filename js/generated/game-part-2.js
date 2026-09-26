@@ -6244,8 +6244,41 @@ function stepHatchScene(dt) {
     }
   }
 }
+const DRAGON_NAME = 'Aurelius';
+let dragonIntroDone=false,dragonIntroArmed=false;
+function stepDragonIntroduction(){
+  if(dragonIntroDone||!hasDragon()||!dragonHere()||!dragon.on||MAPID!=='world')return false;
+  if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;
+  const dx=Math.abs(P.x-MAD_DOOR[0]),south=P.y-MAD_DOOR[1];
+  if(dx<320&&south>-160&&south<128)dragonIntroArmed=true;
+  if(!dragonIntroArmed||dx>600||south<128||south>720||P.dir!=='d')return false;
+  P.act=null;dragon.moving=false;
+  faceCorinAt(dragon.x,dragon.y);
+  playScene([
+    'Aurelius (mind): Corin. You need not keep looking back. I am still here.',
+    'Corin: Who said that?',
+    'Aurelius (mind): I did. My name is Aurelius.',
+    'Corin: Your mouth did not move. I heard you inside my head.',
+    'Aurelius (mind): Our bond carries thought. Speak aloud or think the words toward me; I will hear you.',
+    'Corin: But you only just hatched. How do you already know how to talk?',
+    'Aurelius (mind): Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
+    'Aurelius (mind): My body is new. My mind did not begin empty. What we discover together will still be our own.',
+    'Corin: So you know where we are going?',
+    'Aurelius (mind): Back to Millwood. And I know a quicker way than those two small feet.',
+    'Corin: You want me to ride you? Are you strong enough?',
+    'Aurelius (mind): Climb onto my shoulders. I chose you, Corin. I can carry you.',
+    'Corin: All right, Aurelius. Slowly, to begin with.',
+    'Open COMMAND and choose Mount to ride Aurelius. Use the movement controls to travel together. Choose Dismount from COMMAND to get down.',
+    'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
+  ],{after:()=>{
+    dragonIntroDone=true;dragonIntroArmed=false;saveGame();
+    setOvl('airm');
+  }});
+  return true;
+}
 function finishHatchScene() {
   quest = Q.DONE;
+  dragonIntroArmed=true;
   dragon.on = true;
   dragon.x = hatchScene ? hatchScene.dragonX : P.x - 24;
   dragon.y = hatchScene ? hatchScene.dragonY : P.y - 26;
@@ -6487,7 +6520,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene; }
+function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation); }
 function advanceScene() {
   if (revealing) { hideReveal(); return; }
   if (!scene) return;
@@ -6503,6 +6536,7 @@ function advanceScene() {
   if (scene.i < scene.lines.length) { showScene(); return; }
   if (scene.until && !scene.until()) { scene.waiting = true; showScene(); return; }
   const done = scene.after, scene0 = scene;
+  if(scene0.who&&typeof dragonConversationReaction==='function')dragonConversationReaction({n:scene0.who,said:scene0.lines});
   scene = null;
   const stay = scene0 && scene0.stay;
   showScene();
@@ -6727,6 +6761,7 @@ function nagNorth() {
 function stepQuest(dt) {
   nagNorth();
   clearBridge();
+  if(stepDragonIntroduction())return;
   if (scene || fadeDir || doorMotion || pendingDoor || pendingActorStage) return;
   if (MAPID !== "world") return;
 
@@ -8907,6 +8942,7 @@ const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|
 const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
+  if(typeof dragonBossBanter==='function')dragonBossBanter(f,true);
   if(f.huntingArena&&typeof dropHuntedMeat==='function')dropHuntedMeat(f);
   if(f.chestAmbush){f.hold=0;f.emerge=1;}
   if(f.kind==="treasuryknight"){royalDefeated.treasuryCaptain=true;recoverStrandedDragon();toast("Treasury Captain defeated — the treasure is yours!");}
@@ -10840,6 +10876,7 @@ function interact() {
         return;
       }
       const giver = sayNpc;
+      dragonConversationReaction(giver);
       sayNpc = null; sayOff(); showFace(null);
       if(canOdoGiveFishingPole(giver)){
         fishingPole=true;
@@ -10895,6 +10932,7 @@ function interact() {
     else beginNpcTalk(best);
     return;
   }
+  if (tryDragonConversation()) return;
   if (tryFishing()) return;
   if (typeof mounted !== "undefined" && mounted && dragonHere()) {
     clawNow();
@@ -10972,6 +11010,7 @@ function actionButton() {
      merchant talking again instead of buying. */
   if (typeof ask !== "undefined" && ask) { askTake(); return; }
   if (typeof bagOpen !== "undefined" && bagOpen) { bagUse(); return; }
+  if(!sceneHold()&&typeof dismissDragonBanter==='function'&&dismissDragonBanter())return;
   if (grabGold()) return;      /* gold underfoot comes first */
   interact();
 }

@@ -4039,6 +4039,7 @@ function frameCore(ms) {
   updateDeckHealth();
   if (ovl === "atkm") updateBreathRefills();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
+  if(atlasOpen||fishing)stepDragonBanter(dt);
   if(atlasOpen)return;
   if(fishing){
     stepFishing(dt);
@@ -4066,6 +4067,7 @@ function frameCore(ms) {
   stepHatchCamera(dt);
   stepKingsMen(dt);
   stepQuest(dt);
+  stepDragonBanter(dt);
   stepBreath(dt);
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
@@ -4153,6 +4155,7 @@ function useDoors(dt) {
     } else if (fadeDir < 0 && fade <= 0) { fade = 0; fadeDir = 0; }
     return;
   }
+  if(sceneHold()||sayNpc)return;
   if (!P.moving) return;
   if (arriveT > 0) return;
   const movingDir = P.dir === "s" ? (P.flip ? "l" : "r") : P.dir;
@@ -4180,6 +4183,13 @@ function useDoors(dt) {
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
+  if(dragonHere()&&dragon.on&&!dragonAllowedInMap(d.to)){
+    playScene(["Corin: wait here, I'll be right back"],{after:()=>beginDoorEntry(d)});
+    return;
+  }
+  beginDoorEntry(d);
+}
+function beginDoorEntry(d){
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
   if (animated) {
     doorMotion = { map: MAPID, d, t: 0, duration: d.stairDown ? 0.65 : 0.42, started: false };
@@ -5587,7 +5597,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
-  quest, smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole,
@@ -5643,6 +5653,8 @@ function loadGame(slot=activeSaveSlot) {
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
     boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
+    resetDragonBanter(s.dragonBanterSeen||[]);
+    dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
