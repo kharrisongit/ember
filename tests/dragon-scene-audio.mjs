@@ -80,3 +80,19 @@ const deathCount=sources.length;c.showDeath();await flush();assert.equal(sources
 c.deadShown=false;timers.forEach(f=>f());assert.equal(active('game-over').length,0,'Retry or loading a save stops the death sound');
 c.mode='title';timers.forEach(f=>f());assert.equal(active('sword-swing').length,0);assert.equal(active('key-item').length,0);
 console.log('PASS: accepted sword attacks, successful melee/projectile blocks, ordinary loot, key rewards, game over, grouped pickups, interior playback, and independent dragon/gameplay cleanup.');
+
+c.mode='play';c.deadShown=false;
+Object.assign(c,{smithUpgrade:false,worn:{},seenFoe:{},seenCount:0,
+ directionVector:()=>[0,1],foeBodyProfile:f=>({x:f.x,y:f.y,r:5}),swordOverlaps:()=>false,
+ makeFoeRetreat(){},kingDeflect(){},dropGold(){},markBossGone(){}});
+run(game.slice(game.indexOf('function swingHits()'),game.indexOf('\nlet edgeCarry')));
+const hitCount=()=>sources.filter(s=>s.buffer[0].includes('sword-hit')).length;
+const strike=async foes=>{c.foes=foes;c.P.act={kind:'swing',t:4};c.swingHits();await flush();};
+const target=()=>({x:10,y:26,kind:'gnoll1',st:'idle',hp:3});
+await strike([]);assert.equal(hitCount(),0,'Missing is silent');
+await strike([{...target(),x:1000},{...target(),ally:true},{...target(),st:'dead'},{...target(),kind:'kdragon',swordGuard:1}]);
+assert.equal(hitCount(),0,'Out-of-range, friendly, dead and deflecting targets do not play successful-hit audio');
+const enemy=target();await strike([enemy]);assert.equal(enemy.hp,2);assert.equal(hitCount(),1);
+c.swingHits();await flush();assert.equal(hitCount(),1,'A swing cannot repeat the hit sound every frame');
+await strike([target(),{...target(),hp:1}]);assert.equal(hitCount(),2,'A sweep hitting several enemies, including a kill, makes one impact cue');
+console.log('PASS: sword impact fires only on successful damage, once per swing; misses, allies, corpses and boss deflections stay silent.');
