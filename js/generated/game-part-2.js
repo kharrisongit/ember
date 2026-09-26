@@ -350,9 +350,9 @@ function tavernActorDepth(o,actors){
       if(seated)return Math.min(depth,seated.y-.5);
     }
   }
-  if(o.spr==='tavern_anim_14'||o.spr==='tavern_anim_8'){
+  if(/^tavern_anim_/.test(o.spr||'')){
     const tables=actors.filter(a=>a.exactFurniture&&/table/.test(a.n||'')&&!a.editorDeleted&&
-      Math.abs(o.x-a.x)<=a.extractedCanvas.width/2&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+8);
+      Math.abs(o.x-a.x)<=a.extractedCanvas.width/2+12&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+28);
     return Math.max(depth,...tables.map(a=>(a.sy??a.y)+.5));
   }
   return depth;
@@ -826,12 +826,24 @@ function repairCoralmere(){
   }
 }
 function npcTalkDistance(n){
-  if(n.counter){
-    const c=n.counter;
-    if(playerFacing4()!=='n'||Math.abs(P.x-c.x)>22||P.y<c.y+2||P.y>c.y+34)return Infinity;
-    return Math.hypot(P.x-n.talkX,P.y-n.talkY);
+  // Talking is proximity-based from every direction, including behind a vendor.
+  let distance=Math.hypot(n.x-P.x,n.y-P.y);
+  if(Number.isFinite(n.talkX)&&Number.isFinite(n.talkY))
+    distance=Math.min(distance,Math.hypot(n.talkX-P.x,n.talkY-P.y));
+  if(n.marketVendor){
+    // Reach the full counter edge of a Forgewick stand, not one narrow point.
+    // Use current furniture positions so published layout moves remain usable.
+    for(const a of MD.roomActors||[]){
+      if(a.editorDeleted||a.interiorNpc!==n.n||!/^market_.*_stall$/.test(a.spr||''))continue;
+      const sp=SPR[a.spr];if(!sp)continue;
+      const half=Math.round(sp[2]*1.1)/2;
+      if(Math.abs(n.x-a.x)>half+24||Math.abs(n.y-a.y)>64)continue;
+      const dx=Math.max(0,Math.abs(P.x-a.x)-half);
+      const dy=Math.max(a.y-Math.min(42,sp[3])-P.y,0,P.y-a.y);
+      distance=Math.min(distance,Math.hypot(dx,dy));
+    }
   }
-  return Math.min(Math.hypot(n.x-P.x,n.y-P.y),Math.hypot((n.talkX??n.x)-P.x,(n.talkY??n.y)-P.y));
+  return distance;
 }
 function arrangeNpcCast(){
   const outsideLooks=new Map(W.maps.world.npcs.map(n=>[n.n,{...n}]));
