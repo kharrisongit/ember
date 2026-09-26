@@ -49626,6 +49626,286 @@
         "y": 1680,
         "originX": 24408,
         "originY": 1728
+      },
+      "actor:npc:Rashida": {
+        "kind": "actor",
+        "key": "npc:Rashida",
+        "identity": "Rashida",
+        "deleted": true,
+        "x": 24504,
+        "y": 1472,
+        "originX": 24504,
+        "originY": 1472
+      },
+      "object:6027": {
+        "kind": "object",
+        "key": "6027",
+        "sprite": 1240,
+        "deleted": true,
+        "x": 24424,
+        "y": 1392,
+        "originX": 24424,
+        "originY": 1392
+      },
+      "object:6035": {
+        "kind": "object",
+        "key": "6035",
+        "sprite": 1246,
+        "deleted": true,
+        "x": 24392,
+        "y": 1360,
+        "originX": 24392,
+        "originY": 1360
+      },
+      "object:6036": {
+        "kind": "object",
+        "key": "6036",
+        "sprite": 1246,
+        "deleted": true,
+        "x": 24504,
+        "y": 1504,
+        "originX": 24504,
+        "originY": 1504
+      },
+      "object:6028": {
+        "kind": "object",
+        "key": "6028",
+        "sprite": 1240,
+        "deleted": true,
+        "x": 24424,
+        "y": 1840,
+        "originX": 24424,
+        "originY": 1840
+      },
+      "object:6034": {
+        "kind": "object",
+        "key": "6034",
+        "sprite": 1246,
+        "deleted": true,
+        "x": 24216,
+        "y": 1792,
+        "originX": 24216,
+        "originY": 1792
+      },
+      "object:6033": {
+        "kind": "object",
+        "key": "6033",
+        "sprite": 1246,
+        "deleted": true,
+        "x": 24104,
+        "y": 1824,
+        "originX": 24104,
+        "originY": 1824
+      },
+      "object:6042": {
+        "kind": "object",
+        "key": "6042",
+        "sprite": 1247,
+        "deleted": true,
+        "x": 24200,
+        "y": 1680,
+        "originX": 24200,
+        "originY": 1680
+      },
+      "collision:3050,222": {
+        "kind": "collision",
+        "key": "3050,222",
+        "blocked": true
+      },
+      "collision:3050,221": {
+        "kind": "collision",
+        "key": "3050,221",
+        "blocked": true
+      },
+      "collision:3050,220": {
+        "kind": "collision",
+        "key": "3050,220",
+        "blocked": true
+      },
+      "collision:3050,219": {
+        "kind": "collision",
+        "key": "3050,219",
+        "blocked": true
+      },
+      "collision:3050,218": {
+        "kind": "collision",
+        "key": "3050,218",
+        "blocked": true
+      },
+      "collision:3050,217": {
+        "kind": "collision",
+        "key": "3050,217",
+        "blocked": true
+      },
+      "collision:3051,221": {
+        "kind": "collision",
+        "key": "3051,221",
+        "blocked": true
+      },
+      "collision:3051,220": {
+        "kind": "collision",
+        "key": "3051,220",
+        "blocked": true
+      },
+      "collision:3051,219": {
+        "kind": "collision",
+        "key": "3051,219",
+        "blocked": true
+      },
+      "collision:3051,218": {
+        "kind": "collision",
+        "key": "3051,218",
+        "blocked": true
+      },
+      "collision:3051,217": {
+        "kind": "collision",
+        "key": "3051,217",
+        "blocked": true
+      },
+      "collision:3050,216": {
+        "kind": "collision",
+        "key": "3050,216",
+        "blocked": true
+      },
+      "collision:3051,216": {
+        "kind": "collision",
+        "key": "3051,216",
+        "blocked": true
+      },
+      "collision:3052,216": {
+        "kind": "collision",
+        "key": "3052,216",
+        "blocked": true
+      },
+      "collision:3053,216": {
+        "kind": "collision",
+        "key": "3053,216",
+        "blocked": true
+      },
+      "collision:3054,216": {
+        "kind": "collision",
+        "key": "3054,216",
+        "blocked": true
+      },
+      "collision:3055,216": {
+        "kind": "collision",
+        "key": "3055,216",
+        "blocked": true
+      },
+      "collision:3056,216": {
+        "kind": "collision",
+        "key": "3056,216",
+        "blocked": true
+      },
+      "collision:3049,215": {
+        "kind": "collision",
+        "key": "3049,215",
+        "blocked": false
+      },
+      "collision:3050,215": {
+        "kind": "collision",
+        "key": "3050,215",
+        "blocked": false
+      },
+      "collision:3051,215": {
+        "kind": "collision",
+        "key": "3051,215",
+        "blocked": false
+      },
+      "collision:3052,215": {
+        "kind": "collision",
+        "key": "3052,215",
+        "blocked": false
+      },
+      "collision:3053,215": {
+        "kind": "collision",
+        "key": "3053,215",
+        "blocked": false
+      },
+      "collision:3054,215": {
+        "kind": "collision",
+        "key": "3054,215",
+        "blocked": false
+      },
+      "collision:3055,215": {
+        "kind": "collision",
+        "key": "3055,215",
+        "blocked": false
+      },
+      "collision:3056,215": {
+        "kind": "collision",
+        "key": "3056,215",
+        "blocked": false
+      },
+      "collision:3049,216": {
+        "kind": "collision",
+        "key": "3049,216",
+        "blocked": false
+      },
+      "collision:3049,217": {
+        "kind": "collision",
+        "key": "3049,217",
+        "blocked": false
+      },
+      "collision:3049,218": {
+        "kind": "collision",
+        "key": "3049,218",
+        "blocked": false
+      },
+      "collision:3049,219": {
+        "kind": "collision",
+        "key": "3049,219",
+        "blocked": false
+      },
+      "collision:3049,220": {
+        "kind": "collision",
+        "key": "3049,220",
+        "blocked": false
+      },
+      "collision:3049,221": {
+        "kind": "collision",
+        "key": "3049,221",
+        "blocked": false
+      },
+      "collision:3049,222": {
+        "kind": "collision",
+        "key": "3049,222",
+        "blocked": false
+      },
+      "collision:3054,202": {
+        "kind": "collision",
+        "key": "3054,202",
+        "blocked": false
+      },
+      "collision:3055,202": {
+        "kind": "collision",
+        "key": "3055,202",
+        "blocked": false
+      },
+      "collision:3056,202": {
+        "kind": "collision",
+        "key": "3056,202",
+        "blocked": false
+      },
+      "collision:3056,203": {
+        "kind": "collision",
+        "key": "3056,203",
+        "blocked": false
+      },
+      "collision:3056,204": {
+        "kind": "collision",
+        "key": "3056,204",
+        "blocked": false
+      },
+      "collision:3055,203": {
+        "kind": "collision",
+        "key": "3055,203",
+        "blocked": false
+      },
+      "collision:3054,203": {
+        "kind": "collision",
+        "key": "3054,203",
+        "blocked": false
       }
     },
     "witchmoor": {
@@ -51412,7 +51692,8 @@
     "d655d879-e781-4569-b5d2-d54bc3f514ec",
     "5f3809ed-2729-4ced-87af-39b99f1a60a0",
     "66a65043-9ea5-4f29-81e5-4ae383293cae",
-    "a5b389e5-1881-493e-bf30-01f3bb03f836"
+    "a5b389e5-1881-493e-bf30-01f3bb03f836",
+    "4bdbf4a0-278a-454a-a2c2-fc91e0cf1a8f"
   ],
   "sessions": {
     "witchmoor": {
@@ -51537,7 +51818,7 @@
     },
     "world": {
       "id": "06af9303-7e4f-4cd3-9b13-19e969c741b8",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "e4ee61ac-b933ab56-386738",
       "baseFingerprint": "2c951c83-3cd6bc75-739588",
       "base": {
@@ -101047,7 +101328,7 @@
           "blocked": false
         }
       },
-      "resultHash": "b5242897-1c256bab-386866"
+      "resultHash": "deed9eae-2a3bde30-390859"
     },
     "tavern": {
       "id": "2b5ef6fd-11cc-49e8-adc8-3dd21e027401",
