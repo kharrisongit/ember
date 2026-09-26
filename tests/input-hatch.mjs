@@ -127,7 +127,7 @@ console.log('PASS: loading ignores input; title saves stay outside gameplay, Bac
 
 // Exercise the real cutscene setup, animation, render queue, and advance gate.
 const maddock={x:100,y:100},h=vm.createContext({
-  P:{x:100,y:140},TS:16,cam:{z:2},canStand:()=>true,faceCorinAt(){},faceToward(){},dragon:{on:true},
+  P:{x:100,y:140},TS:16,cam:{z:2},canStand:()=>true,canNpcStand:()=>true,faceCorinAt(){},faceToward(){},dragon:{on:true},
   HATCH_LINES:Array.from({length:20},()=>''),finishHatchScene(){},elder:()=>maddock,MAPID:'world',
   revealing:false,typeDone:()=>true,showScene(){},standableNear:(x,y)=>[x,y],rebuildSolid(){},
   playScene:(lines,opts)=>{h.scene={lines,i:0,t:0,...opts};},draw:[]
@@ -148,3 +148,12 @@ assert.equal(hatchFrame(3,.6).y,landing);hr('advanceScene()');assert.equal(h.sce
 for(const i of [4,5,6])assert.equal(hatchFrame(i,20).y,landing,'Egg rests on ground for the remaining dialogue');
 const dragonActor=hatchFrame(7,.1);assert.equal(dragonActor.x,hr('hatchScene.dragonX'));assert.equal(dragonActor.y,hr('hatchScene.dragonY'));
 console.log('PASS: egg is hidden for the first three lines, lowers at Maddock’s instruction, finishes before advancing, stays grounded, and becomes the hatchling at the original beat.');
+
+const beforeRetreat=hr('[...hatchScene.p0,...hatchScene.m0]');
+hr('advanceScene()');assert.equal(h.scene.i,7,'Cannot advance before both backward steps finish');
+hr('stepHatchScene(.55)');
+assert.equal(h.P.y-beforeRetreat[1],24,'Corin actually backs up from his current position');
+assert.equal(beforeRetreat[3]-maddock.y,24,'Maddock actually backs up from his current position');
+assert.equal(h.P.moving,false);assert.equal(maddock.scriptWalking,false);
+h.scene.t=1;hr('advanceScene()');assert.equal(h.scene.i,8);
+console.log('PASS: Both characters take visible backward steps and rapid A presses cannot skip their movement.');

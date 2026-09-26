@@ -126,12 +126,12 @@ for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
  }
  for(const d of m.doors.filter(d=>d.dir==='u')){
   northExits++;const r=d.triggerRect,x=r.x+r.w/2,y=r.y+r.h;
-  reset(id,x,y+8,'u');run('useDoors(0)');assert(!triggered(),id+' north exit must not open before contact');
+  reset(id,x,y+18,'u');run('useDoors(0)');assert(!triggered(),id+' north exit stays closed beyond one movement step');
   reset(id,x,y+7,'u');run('useDoors(0)');
   if(!(d.templeGuards||d.sandspireGuards)?.length)assert.equal(triggered(),d,id+' north threshold opens on contact');
  }
 }
-console.log(`PASS: ${contactDoors} contact-only passage doors, no duplicate door layers, ${northExits} north exits require contact.`);
+console.log(`PASS: ${contactDoors} contact-only passage doors, no duplicate door layers, ${northExits} north exits accept contact within one movement step.`);
 
 // The dev bypass applies immediately, without waiting for a draw or gate tick.
 run(game.slice(game.indexOf('function blockedByTempleGate('),game.indexOf('function repairCoralmere(')));
@@ -154,3 +154,25 @@ for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded)){
 c.MD={templeContinuous:true,templeGates:[{y:100,open:0}]};
 assert(!run('blockedByTempleGate(160,92)'));c.foesHeld=false;assert(run('blockedByTempleGate(160,92)'));
 console.log(`PASS: FOES bypasses ${bypassDoors} passage leaves in both directions, all guard locks, ${bypassGates} boss gates and legacy gates; normal locks restore.`);
+
+// Walk and run into every cross-map temple doorway with real movement and
+// footprint checks. Exact-coordinate teleports concealed the north-wall bug.
+c.PC_W=11;c.PC_H=7;c.running=false;c.blockedByNpcBuffer=()=>false;
+c.isSolid=(x,y)=>{
+ c.point=[x,y];if(run('expandedTempleSolid(...point)')||run('blockedByTempleGate(...point)'))return true;
+ return c.MD.roomBlocks.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b);
+};
+run(game.slice(game.indexOf('function canStand('),game.indexOf('const cv = document.getElementById')));
+c.foesHeld=true;let traversals=0,unreachable=[];
+for(const [id,m] of Object.entries(W.maps).filter(([,m])=>m.templeExpanded))for(const d of m.doors){
+ for(const fps of [20,30,60])for(const fast of [false,true])for(const lateral of [-8,0,8]){
+  const r=d.triggerRect,dir=d.dir,x=r.x+r.w/2+lateral,y=dir==='u'?r.y+r.h+48:r.y-32;
+  reset(id,x,y,dir);c.running=fast;c.PXW=m.w*16;c.PXH=m.h*16;
+  assert(run('canStand(P.x,P.y)'),id+' door approach has room for Corin');
+  for(let tick=0;tick<fps*2&&!triggered();tick++){run('movePlayer(0,'+(dir==='u'?-1:1)+','+(1/fps)+')');run('useDoors(0)');}
+  if(triggered()!==d)unreachable.push({id,to:d.to,dir,fps,fast,lateral,stoppedAt:c.P.y});
+  else traversals++;
+ }
+}
+assert.deepEqual(unreachable,[],'Every temple door is reachable by ordinary walking and running');
+console.log(`PASS: ${traversals} temple door approaches work by walking/running at 20, 30 and 60 fps, including off-center approaches in both directions.`);

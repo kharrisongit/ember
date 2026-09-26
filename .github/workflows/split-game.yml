@@ -40,6 +40,7 @@ jobs:
           node tests/audio-controls.mjs
           node tests/input-hatch.mjs
           node tests/dragon-dialogue.mjs
+          node tests/dragon-staging.mjs
           node tests/npc-callouts-facing.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs

@@ -18,56 +18,41 @@
   try { const stored=localStorage.getItem(KEY),n=Number(stored); if(stored!==null && Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
   let kingMode=false, millwoodMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
   const target=()=>Math.max(0,Math.min(1,pct/100));
-  const inMillwood=()=>{
+  const inNamedArea=(name)=>{
     try{
-      if(typeof MAPID==='undefined')return false;
-      if(MAPID!=='world')return typeof MD!=='undefined' && /^Millwood\b/.test(MD.title||'');
-      if(typeof features==='undefined'||typeof P==='undefined'||typeof TS==='undefined')return false;
+      if(MAPID!=='world')return (MD.title||'').startsWith(name)&&!/Temple|Graveyard/.test(MD.title||'');
       const x=P.x/TS,y=(P.y-1)/TS;
-      // Follow the current town boundary, including any published editor moves.
-      return features.some(f=>f.kind==='area'&&!f.hidden&&(f.label==='Millwood'||f.place==='Millwood')&&
+      return features.some(f=>f.kind==='area'&&!f.hidden&&(f.label===name||f.place===name)&&
         x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1);
     }catch(e){return false;}
   };
+  const inMillwood=()=>inNamedArea('Millwood');
   const inThornwell=()=>{
-    try {
-      if(typeof MAPID==='undefined') return false;
-      if(MAPID==='tavern' || MAPID==='inn') return true;
-      if(typeof MD!=='undefined' && /^Thornwell\b/.test(MD.title||'')) return true;
-      if(MAPID==='world' && typeof P!=='undefined' && typeof TS!=='undefined'){
-        const px=P.x/TS, py=P.y/TS;
-        // Thornwell atlas center is ~171,101. Keep this tight so Route 1/2 never steal the town theme.
-        return px>=145 && px<=198 && py>=72 && py<=132;
-      }
-    } catch(e) {}
-    return false;
+    try{return MAPID==='tavern'||MAPID==='inn'||inNamedArea('Thornwell');}catch(e){return false;}
   };
-  const inRoute1=()=>{
-    try {
-      if(typeof MAPID==='undefined' || MAPID!=='world' || typeof P==='undefined' || typeof TS==='undefined' || typeof features==='undefined') return false;
-      const px=P.x/TS, py=P.y/TS;
-      // Town zones win over the road at both ends.
-      const inMillwoodTown = inMillwood();
-      const inThornwellTown = px>=145 && px<=198 && py>=72 && py<=132;
-      if(inMillwoodTown || inThornwellTown) return false;
-      const legs=features.filter(f=>f.kind==='route' && (f.id===12 || f.id===13));
-      const segDist=(x,y,x0,y0,x1,y1)=>{
-        const dx=x1-x0,dy=y1-y0,l2=dx*dx+dy*dy;
-        if(!l2)return Math.hypot(x-x0,y-y0);
-        const t=Math.max(0,Math.min(1,((x-x0)*dx+(y-y0)*dy)/l2));
-        return Math.hypot(x-(x0+t*dx),y-(y0+t*dy));
+  const inForgewick=()=>inNamedArea('Forgewick');
+  const inIntertownRoute=()=>{
+    try{
+      if(MAPID!=='world')return false;
+      const x=P.x/TS,y=(P.y-1)/TS;
+      // Use published geometry, including every bend, rather than an atlas
+      // thumbnail's coordinates or the straight line between a road's ends.
+      if(features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&
+        x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))return false;
+      const nearSegment=(a,b,reach)=>{
+        const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy;
+        const t=len?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/len)):0;
+        return Math.hypot(x-a[0]-dx*t,y-a[1]-dy*t)<=reach;
       };
-      return legs.some(f=>segDist(px,py,f.x0,f.y0,f.x1,f.y1)<=Math.max(10,(f.w||5)*2.2));
-    } catch(e) { return false; }
-  };
-  const inForgewick=()=>{
-    try {
-      if(typeof MAPID==='undefined') return false;
-      if(typeof MD!=='undefined' && /^Forgewick\b/.test(MD.title||'') && !/Temple/i.test(MD.title||'')) return true;
-      if(MAPID==='world' && typeof P!=='undefined' && typeof TS!=='undefined')
-        return P.x>=385*TS && P.x<=465*TS && P.y>=125*TS && P.y<=190*TS;
-    } catch(e) {}
-    return false;
+      return features.some(f=>{
+        if(f.kind==='arena'&&typeof isHuntingArena==='function'&&isHuntingArena(f))
+          return Math.hypot(x-f.x,y-f.y)<=(f.r||10)+6;
+        // Northern Woods and the elder/Shroom paths retain the original song.
+        if(f.kind!=='route'||f.entrance||[3,5,212].includes(f.id)||!/^Route \d+$/.test(f.road||''))return false;
+        const pts=f.pts?.length>1?f.pts:[[f.x0,f.y0],[f.x1,f.y1]];
+        return pts.slice(1).some((p,i)=>nearSegment(pts[i],p,Math.max(12,(f.w||5)*2.2)));
+      });
+    }catch(e){return false;}
   };
   const inForgewickMine=()=>{
     try {
@@ -87,15 +72,7 @@
     } catch(e) {}
     return false;
   };
-  const inHollybeck=()=>{
-    try {
-      if(typeof MAPID==='undefined') return false;
-      if(typeof MD!=='undefined' && /^Hollybeck\b/.test(MD.title||'') && !/Temple|Graveyard/i.test(MD.title||'')) return true;
-      if(MAPID==='world' && typeof P!=='undefined' && typeof TS!=='undefined')
-        return P.x>=1148*TS && P.x<=1205*TS && P.y>=137*TS && P.y<=188*TS;
-    } catch(e) {}
-    return false;
-  };
+  const inHollybeck=()=>inNamedArea('Hollybeck');
 
   const inLavaRoute=()=>{
     try {
@@ -122,7 +99,7 @@
   const exploreTrack=()=>{
     const choices=[[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
       [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
-      [thornwellMode,thornwell],[fieldMode,field],[lavaRouteMode,lavaRoute],[true,bgm]];
+      [thornwellMode,thornwell],[lavaRouteMode,lavaRoute],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
   };
   const royalSpeaker=name=>/^(?:(?:King's|Royal|Black|White)\s+)?Knight\b|^(?:King )?Halvard$|^(?:Serjeant )?Bram$|^(?:Doran|Tolan)$/i.test(String(name||'').trim());
@@ -141,10 +118,50 @@
   };
   let kingMap=null,selected=null,unlocked=false,pending=0,fading=false;
   const gains=new Map(tracks.map(a=>[a,0]));
-  const applyVolumes=()=>{for(const a of tracks)a.volume=(gains.get(a)||0)*target();};
+  let audioContext=null,masterGain=null,masterPct=-1;
+  const channels=new Map();
+  const applyVolumes=()=>{
+    if(masterGain&&masterPct!==pct){
+      const gain=masterGain.gain,now=audioContext.currentTime;
+      gain.cancelScheduledValues(now);
+      if(pct===0)gain.value=0;
+      else gain.setTargetAtTime(target(),now,.015);
+      masterPct=pct;
+    }
+    for(const a of tracks){
+      const level=gains.get(a)||0,channel=channels.get(a);
+      if(channel){channel.gain.value=level;a.volume=1;}
+      else a.volume=level*target();
+    }
+  };
+  const openAudioGraph=()=>{
+    // iPhone ignores HTMLMediaElement.volume. Route each song through its
+    // own fade gain and one shared volume gain, created during a user gesture.
+    const Context=window.AudioContext||window.webkitAudioContext;
+    if(!Context)return;
+    if(!audioContext){
+      try{
+        audioContext=new Context();masterGain=audioContext.createGain();
+        masterGain.gain.value=target();masterPct=pct;
+        masterGain.connect(audioContext.destination);
+      }catch(e){audioContext=null;masterGain=null;return;}
+    }
+    for(const a of tracks)if(!channels.has(a)){
+      try{
+        const channel=audioContext.createGain();channel.gain.value=gains.get(a)||0;
+        const source=audioContext.createMediaElementSource(a);
+        source.connect(channel);channel.connect(masterGain);channels.set(a,channel);
+      }catch(e){/* Older browsers retain the media-volume fallback. */}
+    }
+    applyVolumes();
+    if(audioContext.state!=='running'){
+      try{Promise.resolve(audioContext.resume()).catch(()=>{});}catch(e){}
+    }
+  };
   const silence=()=>{
     ++fadeToken;pending=0;fading=false;
-    for(const a of tracks){gains.set(a,0);a.volume=0;a.pause();}
+    for(const a of tracks){gains.set(a,0);a.pause();}
+    applyVolumes();
   };
   const beginFade=token=>{
     const initial=new Map(gains),started=Date.now();fading=true;
@@ -162,7 +179,7 @@
     if(!unlocked||pct===0||!selected||pending||fading)return;
     if(!selected.paused&&gains.get(selected)===1&&tracks.every(a=>a===selected||!gains.get(a)))return;
     const a=selected,token=++fadeToken;pending=token;
-    a.volume=(gains.get(a)||0)*target();
+    applyVolumes();
     try{
       // Keep the outgoing song audible until the incoming audio actually plays.
       Promise.resolve(a.play()).then(()=>{
@@ -200,13 +217,13 @@
     const wantHollybeck=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && inHollybeck();
     const wantForgewick=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && inForgewick();
     const wantTown=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && inThornwell();
-    const wantField=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && !wantTown && inRoute1();
+    const wantField=inIntertownRoute();
     millwoodMode=wantMillwood; cinderholdMode=wantCinderhold; lavaRouteMode=wantLavaRoute; mineMode=wantMine; mysticMode=wantMystic; hollybeckMode=wantHollybeck; forgewickMode=wantForgewick; thornwellMode=wantTown; fieldMode=wantField;
     chooseMusic();
   };
   setInterval(syncRegionMusic,180);
   syncRegionMusic();
-  const startMusic=()=>{unlocked=true;playSelected();};
+  const startMusic=()=>{openAudioGraph();unlocked=true;playSelected();};
   window.EmberAudio={
     percent:()=>pct,
     set:v=>{

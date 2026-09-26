@@ -4038,6 +4038,7 @@ function frameCore(ms) {
   if(goldPickupCanvas)goldPickupCanvas.style.display='none';
   updateDeckHealth();
   if (ovl === "atkm") updateBreathRefills();
+  if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
   if(atlasOpen||fishing)stepDragonBanter(dt);
   if(atlasOpen)return;
@@ -4063,7 +4064,7 @@ function frameCore(ms) {
   stepShake(dt);
   greenFly(dt);
   stepWalkers(dt);
-  stepElder();
+  stepElder(dt);
   stepHatchCamera(dt);
   stepKingsMen(dt);
   stepQuest(dt);
@@ -4172,9 +4173,12 @@ function useDoors(dt) {
     const half=(horizontal?r.h:r.w)/2+4;
     if(Math.abs(lateral-center)>half)continue;
     const gap=want==='u'?P.y-7-(y0+r.h):want==='d'?y0-(P.y-1):want==='l'?P.x-5.5-(x0+r.w):x0-(P.x+5.5);
-    // Recessed south exits and castle stairs require crossing the actual threshold.
+    // A north wall can stop the feet one movement step short of its trigger.
+    // Accept that contact gap (up to a running frame at 20 fps), without moving
+    // the doorway or extending south exits out of their visible recesses.
     const contactOnly=MD.templeExpanded||(want==='d'&&(MD.royal||MAPID==='cinderhold'));
-    if(gap>(contactOnly||candidate.stairDown&&MD.royal?0:TS/2)||gap<-(horizontal?r.w:r.h)-7)continue;
+    const contactGap=MD.templeExpanded&&want==='u'?10:contactOnly||candidate.stairDown&&MD.royal?0:TS/2;
+    if(gap>contactGap||gap<-(horizontal?r.w:r.h)-7)continue;
     const score = Math.abs(gap) + Math.abs(lateral - center) * 0.1;
     if (score < best) { best = score; d = candidate; }
   }
@@ -5422,17 +5426,17 @@ const MENUS = {
     go: () => doUse(it)
   })) },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
-    { name: mounted ? "Dismount" : "Mount", el: "ride",
+    { name: mounted ? "Dismount" : "Mount", el: "ride", art: mounted ? "dismount" : "mount",
       tell: mounted ? "Slide down off its back."
                     : "Climb onto its shoulders and fly with it.",
       go: () => { const on = !mounted;
-              setMounted(on); setOvl(null);
+              if(setMounted(on)===false)return; setOvl(null);
               showReveal(on ? "corinride_" + (smithUpgrade ? "armor_" : "sword_") + "idle_s" : "dr5_idle_s",
                          on ? "CORIN TAKES THE REINS" : "CORIN SLIDES DOWN", undefined, true);
-              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", el: "wing",
+              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", el: "wing", art: dragon.air ? "land" : "takeoff",
       tell: dragon.air ? "Come down to the ground." : "Beat upward and fly.",
       go: () => { setDragonAir(!dragon.air); setOvl(null); } },
-    { name: "Summon", el: "wake",
+    { name: "Summon", el: "wake", blankWhenDisabled: true,
       dim: () => !charm.wake || wakeCool > 0 || wakeCount() >= 2,
       tell: () => !charm.wake ? "He is not carrying the Book of the Dead."
                 : wakeCount() >= 2 ? "Two of them are already with him."
@@ -5498,6 +5502,7 @@ function refreshOvl() {
                        desc.textContent = ""; return; }
   if (M.pick >= items.length) M.pick = items.length - 1;
   if (M.pick < 0) M.pick = 0;
+  if(items[M.pick].blankWhenDisabled&&items[M.pick].dim())M.pick=0;
   items.forEach((it, k) => {
     const d = document.createElement("div");
     d.className = "row" + (k === M.pick ? " on" : "");
@@ -5532,11 +5537,11 @@ function refreshOvl() {
         d.appendChild(sec);
       }
     }
-    if (it.el && EL_COLOUR[it.el]) {
+    if(ovl === "airm")paintCommandRow(d,it);
+    else if (it.el && EL_COLOUR[it.el]) {
       d.style.setProperty("--el", EL_COLOUR[it.el]);
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      d.appendChild(dot);
+      if(ovl === "atkm")appendActionIcon(d,it.art||it.el);
+      else {const dot=document.createElement("span");dot.className="dot";d.appendChild(dot);}
       if (it.dim && it.dim()) d.style.opacity = ".42";
       const nm = document.createElement("span");
       nm.textContent = (typeof it.name === "function") ? it.name() : it.name;
@@ -5565,6 +5570,29 @@ function refreshOvl() {
     if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
   }
 }
+function appendActionIcon(row,key){
+  const icon=document.createElement("img");icon.className="actionIcon";icon.alt="";
+  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v=20260926";
+  row.appendChild(icon);
+}
+function paintCommandRow(row,it){
+  const blank=!!(it.blankWhenDisabled&&it.dim());
+  row.dataset.blank=String(blank);row.classList.toggle("blank",blank);
+  row.setAttribute("aria-disabled",String(blank));row.setAttribute("aria-label",blank?"Unavailable command":it.name);
+  row.replaceChildren();
+  if(blank){row.classList.remove("on");return;}
+  row.style.setProperty("--el",EL_COLOUR[it.el]);
+  appendActionIcon(row,it.art||it.el);
+  const label=document.createElement("span");label.textContent=it.name;row.appendChild(label);
+}
+function updateCommandRows(){
+  const rows=document.getElementById("airRows").querySelectorAll(".row"),M=MENUS.airm,items=M.items();
+  items.forEach((it,i)=>{
+    const blank=!!(it.blankWhenDisabled&&it.dim());
+    if(rows[i]&&rows[i].dataset.blank!==String(blank))paintCommandRow(rows[i],it);
+    if(blank&&M.pick===i){M.pick=0;rows[0]?.classList.add("on");}
+  });
+}
 function updateBreathRefills(){
   const M=MENUS.atkm, rows=document.getElementById(M.rows);
   if(!rows)return;
@@ -5583,15 +5611,17 @@ function updateBreathRefills(){
 }
 function ovlStep(d) {
   if (!ovl) return;
-  const M = MENUS[ovl], n = M.items().length;
+  const M = MENUS[ovl], items=M.items(), n = items.length;
   if (!n) return;
   M.pick = (M.pick + d + n) % n;
+  while(items[M.pick].blankWhenDisabled&&items[M.pick].dim())M.pick=(M.pick+d+n)%n;
   refreshOvl();
 }
 function ovlTake() {
   if (!ovl) return;
   const M = MENUS[ovl], items = M.items();
-  if (items[M.pick] && items[M.pick].go) items[M.pick].go();
+  const it=items[M.pick];
+  if (it && it.go && !(it.dim&&it.dim())) it.go();
 }
 const atkCloseBtn=document.getElementById("atkCloseBtn");
 // Keep the menu in place through pointerup/touchend and the compatibility
@@ -5714,6 +5744,7 @@ function loadGame(slot=activeSaveSlot) {
     boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
     resetDragonBanter(s.dragonBanterSeen||[]);
     dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;
+    dragon.introOrigin=null;
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
@@ -5746,15 +5777,38 @@ function loadGame(slot=activeSaveSlot) {
 
 let mounted = false;
 const MOUNT_DX = 22, MOUNT_DY = -12;
+function dismountSpot() {
+  const sp=dragonSprite(dragon.dir),w=(sp?.[2]||128)*DRAGON_DRAW_SCALE,h=(sp?.[3]||96)*DRAGON_DRAW_SCALE;
+  const clearBody=(x,y)=>x+16<dragon.x-w/2-6 || x-16>dragon.x+w/2+6 || y<dragon.y-h-6 || y-40>dragon.y+6;
+  const angle=(playerFacing4()==='n'||playerFacing4()==='s')?0:Math.PI/2;
+  for(const radius of [64,80,96,128,160,192]){
+    for(const turn of [0,Math.PI,Math.PI/2,-Math.PI/2,Math.PI/4,-Math.PI/4,3*Math.PI/4,-3*Math.PI/4]){
+      const x=dragon.x+Math.cos(angle+turn)*radius,y=dragon.y+Math.sin(angle+turn)*radius;
+      if(clearBody(x,y)&&canStand(x,y))return [x,y];
+    }
+  }
+  return null;
+}
 function setMounted(on, quiet = false) {
-  if(fishing)return;
-  if (on && !dragonHere()) { toast("the dragon is not here"); return; }
-  if (on && dragon.down) { toast("the dragon is too hurt to ride"); return; }
-  if (on && dragon.knockdown > 0) { toast("the dragon is still getting up"); return; }
+  if(fishing)return false;
+  if (on && !dragonHere()) { toast("the dragon is not here"); return false; }
+  if (on && dragon.down) { toast("the dragon is too hurt to ride"); return false; }
+  if (on && dragon.knockdown > 0) { toast("the dragon is still getting up"); return false; }
+  const wasMounted=mounted;
   mounted = on;
-  if (on) { if (!dragon.air) setDragonAir(true); if (!quiet) toast("you climb onto its back"); }
+  if(!on&&wasMounted&&dragonHere()){
+    // Test the destination with walking collision enabled, including walls,
+    // water and arena boundaries. Never report a successful blocked dismount.
+    const spot=dismountSpot();
+    if(!spot&&!quiet){mounted=true;toast("Move to open ground before dismounting.");return false;}
+    if(spot){P.x=spot[0];P.y=spot[1];P.moving=false;P.act=null;}
+    dragon.placed=MAPID;dragon.moving=false;
+    dragon.followGap=Math.max(56,Math.hypot(P.x-dragon.x,P.y-dragonHover()-dragon.y));
+  }
+  if (on) { dragon.followGap=0;if (!dragon.air) setDragonAir(true); if (!quiet) toast("you climb onto its back"); }
   else if (!quiet) toast("you slide down");
   chunks.clear();
+  return true;
 }
 
 tap(document.getElementById("deadBtn"), () => { getUp(); });

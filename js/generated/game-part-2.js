@@ -1289,7 +1289,9 @@ function drawNpcFrame(o,s,frame,img){
   const scale=img?.spriteScale||1;
   // Lift the shoulders two pixels on the inhale, with the feet/table edge fixed.
   const height=s[3]+(/^villager_seated_/.test(o.packSpr||'')&&frame===1?2:0);
+  if(o.houseEntry){ctx.save();const u=Math.max(0,(o.houseEntry-.3)/.7);ctx.globalAlpha=1-u*u*(3-2*u);}
   drawGameImage(ctx,img,(s[0]+frame*s[2])*scale,s[1]*scale,s[2]*scale,s[3]*scale,Math.round(o.x-s[2]/2),Math.round(o.y-height),s[2],height);
+  if(o.houseEntry)ctx.restore();
   if(clip)ctx.restore();
 }
 
@@ -4341,10 +4343,10 @@ function drawWorld(t, dt) {
       const s=SPR[o.seatSpr];if(s){drawNpcFrame(o,s,Math.floor(t*3)%s[4],sheetOf(s));continue;}
     }
     if (o.packSpr) {
-      let direction = o.stationary ? "d" : o.f === "s" ? (o.flip ? "w" : "e") : (o.f || "d");
+      let direction = o.stationary && !o.packDirections ? "d" : o.f === "s" ? (o.flip ? "w" : "e") : (o.f || "d");
       const moved = Math.hypot(o.x - (o.px ?? o.x), o.y - (o.py ?? o.y));
       o.px = o.x; o.py = o.y;
-      const action = moved > 0.05 && !o.stationary && o.packWalk ? "walk" : "idle";
+      const action = moved > 0.05 && (!o.stationary || o.scriptWalking) && o.packWalk ? "walk" : "idle";
       /* Nan's horizontal rows are reversed; north and south are correctly labelled. */
       if (o.n === "Nan Ferrow" && action === "walk")
         direction = ({ e: "w", w: "e" })[direction] || direction;
@@ -5794,7 +5796,7 @@ function stepDragon(dt) {
     }
     return;
   }
-  const want = 34;
+  const want = dragon.followGap || 34;
   const dx = P.x - dragon.x, dy = (P.y - dragonHover()) - dragon.y;
   const d = Math.hypot(dx, dy);
   if (d > (dragonAirborne() ? 400 : 210)) {
@@ -6118,6 +6120,7 @@ function lockHatchCamera(c, m, hs) {
   /* Establish one composition for the whole dialogue.  Re-measuring the cast
      every time A advances a line made the camera visibly tug against itself. */
   const pts = [[P.x,P.y],[hs.eggX,hs.eggY],[hs.dragonX,hs.dragonY]];
+  const door=maddockDoor();pts.push([door.x,door.y]);
   if (m) pts.push([m.x,m.y]);
   const left = Math.min(...pts.map(p=>p[0]))-72;
   const right = Math.max(...pts.map(p=>p[0]))+72;
@@ -6132,13 +6135,12 @@ function stepHatchCamera(dt) {
   if (MAPID !== "world") {
     cam.z = c.zoom; camFree = false; hatchCamera = null; return;
   }
+  if(hatchExit && c.exitView){Object.assign(cam,c.exitView);return;}
   const m = elder();
   let x = P.x, y = P.y, z = c.zoom;
   if (hatchScene) {
     c.goal ||= lockHatchCamera(c, m, hatchScene);
     ({ x, y, z } = c.goal);
-  } else if (hatchExit && m && !m.away) {
-    x = m.x; y = m.y-16; z = c.zoom*0.85;
   } else {
     c.returnT += dt;
   }
@@ -6154,16 +6156,9 @@ function stepHatchCamera(dt) {
 function beginHatchScene(m) {
   hatchCamera = { zoom: cam.z, returnT: 0 };
   camFree = true;
-  const dx = P.x - m.x, dy = P.y - m.y;
-  const sx = Math.abs(dx) > Math.abs(dy) ? Math.sign(dx || 1) * TS : 0;
-  const sy = sx ? 0 : Math.sign(dy || 1) * TS;
-  if (canStand(P.x + sx, P.y + sy)) { P.x += sx; P.y += sy; }
-  const ex = P.x + (m.x - P.x) * 0.3, ey = P.y + (m.y - P.y) * 0.3;
-  // Keep the egg's landing spot fixed while Corin backs away one more tile.
-  for (let step = 0; step < 4; step++) {
-    if (!canStand(P.x + sx / 4, P.y + sy / 4)) break;
-    P.x += sx / 4; P.y += sy / 4;
-  }
+  // Save their retreat for the hatch itself instead of moving Corin before
+  // the first line. This also leaves room for his visible backward step.
+  const ex=(P.x+m.x)/2,ey=(P.y+m.y)/2;
   hatchScene = { x: ex, y: ey - 18, eggX: ex, eggY: ey,
                  stage: 0, t: 0, dragonX: ex, dragonY: ey,
                  dir: "s", spread: false, spreadT: 0, stoneShown: false,
@@ -6173,6 +6168,19 @@ function beginHatchScene(m) {
   dragon.on = false;
   playScene(HATCH_LINES, { who: "Maddock", hatch: true, stay: true, after: finishHatchScene });
   m.goto = null;
+}
+function hatchRetreat(actor,ox,oy,clear) {
+  const angle=Math.atan2(actor.y-oy,actor.x-ox);
+  let best=[actor.x,actor.y],distance=0;
+  for(const offset of [0,Math.PI/6,-Math.PI/6,Math.PI/3,-Math.PI/3,5*Math.PI/12,-5*Math.PI/12,Math.PI/2,-Math.PI/2]){
+    for(let step=2;step<=24;step+=2){
+      const x=actor.x+Math.cos(angle+offset)*step,y=actor.y+Math.sin(angle+offset)*step;
+      if(!clear(x,y))break;
+      if(step>distance){best=[x,y];distance=step;}
+    }
+    if(distance===24)break;
+  }
+  return best;
 }
 function stepHatchScene(dt) {
   if (!hatchScene || !scene || !scene.hatch) return;
@@ -6194,24 +6202,19 @@ function stepHatchScene(dt) {
   if (scene.i >= 7 && !hatchScene.spread && m) {
     hatchScene.spread = true;
     hatchScene.spreadT = 0;
-    const pdx = P.x - hatchScene.x, pdy = P.y - hatchScene.y;
-    const pd = Math.max(1, Math.hypot(pdx, pdy));
-    const mdx = m.x - hatchScene.x, mdy = m.y - hatchScene.y;
-    const md = Math.max(1, Math.hypot(mdx, mdy));
     hatchScene.p0 = [P.x, P.y]; hatchScene.m0 = [m.x, m.y];
-    hatchScene.p1 = standableNear(hatchScene.x + pdx / pd * TS * 2.5,
-                                  hatchScene.y + pdy / pd * TS * 2.5);
-    hatchScene.m1 = standableNear(hatchScene.x + mdx / md * TS * 2.5,
-                                  hatchScene.y + mdy / md * TS * 2.5);
+    hatchScene.p1 = hatchRetreat(P,hatchScene.x,hatchScene.y,canStand);
+    hatchScene.m1 = hatchRetreat(m,hatchScene.x,hatchScene.y,(x,y)=>canNpcStand(x,y,m));
     m.goto = null;
   }
   if (hatchScene.spread && hatchScene.spreadT < 1 && m) {
-    hatchScene.spreadT = Math.min(1, hatchScene.spreadT + dt / 0.45);
+    hatchScene.spreadT = Math.min(1, hatchScene.spreadT + dt / 0.55);
     const u = hatchScene.spreadT * hatchScene.spreadT * (3 - 2 * hatchScene.spreadT);
     P.x = hatchScene.p0[0] + (hatchScene.p1[0] - hatchScene.p0[0]) * u;
     P.y = hatchScene.p0[1] + (hatchScene.p1[1] - hatchScene.p0[1]) * u;
     m.x = hatchScene.m0[0] + (hatchScene.m1[0] - hatchScene.m0[0]) * u;
     m.y = hatchScene.m0[1] + (hatchScene.m1[1] - hatchScene.m0[1]) * u;
+    P.moving=hatchScene.spreadT<1;m.scriptWalking=P.moving;
     faceCorinAt(hatchScene.x, hatchScene.y);
     faceToward(m, hatchScene.x, hatchScene.y);
     if (hatchScene.spreadT === 1) rebuildSolid();
@@ -6285,9 +6288,9 @@ let dragonIntroDone=false,dragonIntroArmed=false;
 function stepDragonIntroduction(){
   if(dragonIntroDone||!hasDragon()||!dragonHere()||!dragon.on||MAPID!=='world')return false;
   if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;
-  const dx=Math.abs(P.x-MAD_DOOR[0]),south=P.y-MAD_DOOR[1];
-  if(dx<320&&south>-160&&south<128)dragonIntroArmed=true;
-  if(!dragonIntroArmed||dx>600||south<128||south>720||P.dir!=='d')return false;
+  dragonIntroArmed=true;
+  dragon.introOrigin ||= [P.x,P.y];
+  if(Math.hypot(P.x-dragon.introOrigin[0],P.y-dragon.introOrigin[1])<48)return false;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
   playScene([
@@ -6301,7 +6304,7 @@ function stepDragonIntroduction(){
     'Aurelius: Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
     'Aurelius: My body is new. My mind did not begin empty. What we discover together will still be our own.',
     'Corin: So you know where we are going?',
-    'Aurelius: Back to Millwood. And I know a quicker way than those two small feet.',
+    'Aurelius: That is your choice. But I know a quicker way than those two small feet.',
     'Corin: You want me to ride you? Are you strong enough?',
     'Aurelius: Climb onto my shoulders. I chose you, Corin. I can carry you.',
     'Corin: All right, Aurelius. Slowly, to begin with.',
@@ -6316,9 +6319,12 @@ function stepDragonIntroduction(){
 function finishHatchScene() {
   quest = Q.DONE;
   dragonIntroArmed=true;
+  dragon.introOrigin=[P.x,P.y];
   dragon.on = true;
   dragon.x = hatchScene ? hatchScene.dragonX : P.x - 24;
   dragon.y = hatchScene ? hatchScene.dragonY : P.y - 26;
+  dragon.air=false;dragon.tr=null;dragon.placed=MAPID;
+  if(hatchCamera)hatchCamera.exitView={x:cam.x,y:cam.y,z:cam.z};
   hatchScene = null;
   toast("The dragon follows you now");
   hatchExit = !!elder();
@@ -6387,17 +6393,66 @@ function elderArrived() {
   const e = elder();
   return !!e && !e.away && !e.goto;
 }
+function maddockDoor() {
+  const d=(MD.doors||[]).find(d=>d.to==='house22');
+  const r=d?doorRect(d):{x:MAD_DOOR[0]-8,y:MAD_DOOR[1]-8,w:16,h:16};
+  return {x:r.x+r.w/2,y:r.y+r.h+12};
+}
+function maddockWalkPath(e,to) {
+  const start=[e.x,e.y],step=8;
+  const clear=(a,b)=>{
+    const n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));
+    for(let i=1;i<=n;i++)if(!canNpcStand(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n,e))return false;
+    return true;
+  };
+  if(clear(start,to))return [to];
+  const q=[start],prev=new Map([['0,0',null]]),points=new Map([['0,0',start]]);
+  for(let i=0;i<q.length&&i<12000;i++){
+    const a=q[i],ax=Math.round((a[0]-start[0])/step),ay=Math.round((a[1]-start[1])/step),key=ax+','+ay;
+    if(Math.hypot(a[0]-to[0],a[1]-to[1])<24&&clear(a,to)){
+      const path=[to];for(let k=key;prev.get(k)!==null;k=prev.get(k))path.unshift(points.get(k));return path;
+    }
+    for(const [dx,dy]of [[1,0],[0,1],[-1,0],[0,-1]]){
+      const nx=ax+dx,ny=ay+dy,k=nx+','+ny,b=[start[0]+nx*step,start[1]+ny*step];
+      if(prev.has(k)||Math.abs(nx)>64||Math.abs(ny)>64||!clear(a,b))continue;
+      prev.set(k,key);points.set(k,b);q.push(b);
+    }
+  }
+  return null;
+}
 function goBackIn(useHouseDoor) {
   const e = elder();
   if (!e) return;
+  if(useHouseDoor){
+    const door=maddockDoor();
+    e.goto=null;e.scriptWalking=true;e.houseEntry=0;
+    e.houseWalk={door,path:maddockWalkPath(e,[door.x,door.y]),t:0,retry:0};
+    goingIn=true;return;
+  }
   e.goto = useHouseDoor ? [MAD_DOOR[0], MAD_DOOR[1]] : (doorRoute() || offStage());
   e.hurry = 1;
   goingIn = true;
 }
-function stepElder() {
+function stepElder(dt=1/60) {
   if (!goingIn) return;
   const e = elder();
   if (!e) { goingIn = false; hatchExit = false; return; }
+  if(e.houseWalk){
+    const walk=e.houseWalk;
+    if(!walk.path){walk.retry-=dt;if(walk.retry<=0){walk.path=maddockWalkPath(e,[walk.door.x,walk.door.y]);walk.retry=.5;}return;}
+    if(walk.path.length){
+      const [x,y]=walk.path[0],d=Math.hypot(x-e.x,y-e.y),step=Math.min(d,52*dt);
+      faceToward(e,x,y);
+      if(d){e.x+=(x-e.x)*step/d;e.y+=(y-e.y)*step/d;}
+      if(d<=step+.001)walk.path.shift();
+      return;
+    }
+    walk.t=Math.min(.85,walk.t+dt);e.houseEntry=Math.max(0,(walk.t-.15)/.7);
+    e.x=walk.door.x;e.y=walk.door.y-e.houseEntry*32;e.f='u';e.kf='u';e.flip=false;
+    if(walk.t<.85)return;
+    e.away=1;e.houseWalk=null;e.houseEntry=0;e.scriptWalking=false;
+    goingIn=false;hatchExit=false;return;
+  }
   if (e.goto) faceToward(e, e.goto[0], e.goto[1]);
   const atDoor = Math.hypot(e.x - MAD_DOOR[0], e.y - MAD_DOOR[1]) < (hatchExit ? 5 : TS);
   if (hatchExit && !atDoor) return;    /* follow him all the way to the doorway */
@@ -6455,6 +6510,7 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(m.houseWalk)continue;
     if(MAPID==='house22'&&m.n==='Elder Maddock'&&sayNpc!==m&&!scene&&!bossScene&&!m.goto){
       m.x=128;m.y=100;m.f='u';m.kf='u';m.flip=false;m.seatSpr=undefined;m.seatClipY=undefined;
       continue;
@@ -6565,6 +6621,7 @@ function advanceScene() {
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if (scene.hatch && scene.i === 3 && scene.t < 0.6) return; /* finish putting the egg down */
+  if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
   /* The hatchling's two turns are staged beats, not skippable text taps. */
   if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
   if (scene.hatch && scene.i === 9 &&

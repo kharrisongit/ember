@@ -18,19 +18,31 @@ run(read('js/dragon-dialogue.js'));
 const tick=(dt=.05)=>run(`stepDragonBanter(${dt})`);
 const clear=()=>{run('resetDragonBanter();dragonBanterGap=0');pendingScene=null;place=null;c.foes=[];};
 const active=()=>run('dragonBanterActive');
-// No dragon speech before the introduction. It starts only on the southbound road.
+// No dragon speech before the introduction. Walking away in any direction
+// starts it, including pending introductions restored away from Maddock's house.
 place='Millwood';tick();assert.equal(active(),null);
 assert.equal(run('stepDragonIntroduction()'),false);
-c.P.y=6130;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
-c.P.dir='u';assert.equal(run('stepDragonIntroduction()'),false);c.P.dir='d';
-assert.equal(run('stepDragonIntroduction()'),true);
-assert.match(pendingScene.lines[0],/voice.*inside your head/);
-assert(pendingScene.lines[1].startsWith('Aurelius:'));
-assert.equal(pendingScene.lines.filter(line=>/voice.*inside your head/.test(line)).length,1);
-assert(pendingScene.lines.join(' ').includes('share a consciousness'));
-assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
-pendingScene.after();pendingScene=null;assert.equal(menu,'airm');assert.equal(saves,1);
-assert.equal(run('stepDragonIntroduction()'),false);
+for(const [dir,dx,dy] of [['u',0,-48],['d',0,48],['s',48,0],['s',-48,0]]){
+ run('dragonIntroDone=false;dragon.introOrigin=[P.x,P.y]');
+ c.P.dir=dir;c.P.x+=dx;c.P.y+=dy;
+ c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
+ c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
+ assert.equal(run('stepDragonIntroduction()'),true,'Introduction works with displacement '+dx+','+dy);
+ assert.match(pendingScene.lines[0],/voice.*inside your head/);
+ assert(pendingScene.lines[1].startsWith('Aurelius:'));
+ assert.equal(pendingScene.lines.filter(line=>/voice.*inside your head/.test(line)).length,1);
+ assert(pendingScene.lines.join(' ').includes('share a consciousness'));
+ assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
+ assert(!pendingScene.lines.some(line=>line.includes('Back to Millwood')),'Dialogue does not assume a route');
+ pendingScene.after();pendingScene=null;assert.equal(menu,'airm');
+ assert.equal(run('stepDragonIntroduction()'),false,'Introduction only happens once');
+}
+assert.equal(saves,4);
+run('dragonIntroDone=false;dragon.introOrigin=null');c.P.x=3000;c.P.y=4000;
+assert.equal(run('stepDragonIntroduction()'),false);c.P.y-=47;
+assert.equal(run('stepDragonIntroduction()'),false);c.P.y--;
+assert.equal(run('stepDragonIntroduction()'),true,'Older pending save introduces Aurelius after walking a short distance');
+pendingScene.after();pendingScene=null;c.P.x=872;c.P.y=6130;
 // First visits, a timed dismissal and the actual action-button dismissal hook.
 clear();place='Millwood–Thornwell Road';tick();assert.equal(active(),null,'roads do not count as town visits');
 place='Thornwell';const movement=JSON.stringify(c.P);tick();assert.match(active().key,/place:Thornwell/);
