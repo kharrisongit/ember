@@ -8,18 +8,21 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sheet = new Image();
   let frames, raf = 0, lastFrame = -1, departed = false, departure;
+  let flying = false, takeoffTime = 0;
   let arrive;
   const arrival = new Promise(resolve => { arrive = resolve; });
 
   function draw(time) {
     if (departed) return;
-    const frame = reduced ? 0 : Math.floor(time / 125) % 9;
+    // A single raised-wing pose stays still throughout loading and at rest.
+    // Only departure advances the sprite strip, so loading cannot stutter it.
+    const frame = !flying || reduced ? 2 : (2 + Math.floor((time - takeoffTime) / 125)) % 9;
     if (frame !== lastFrame) {
       lastFrame = frame;
       ctx.clearRect(0, 0, 128, 128);
       ctx.drawImage(frames, frame * 128, 0, 128, 128, 0, 0, 128, 128);
     }
-    if (!reduced) raf = requestAnimationFrame(draw);
+    if (flying && !reduced) raf = requestAnimationFrame(draw);
   }
 
   sheet.onload = () => {
@@ -56,6 +59,9 @@
       departure = (async () => {
         await arrival;
         if (!actor.hidden) {
+          flying = true;
+          takeoffTime = performance.now();
+          draw(takeoffTime);
           const flight = actor.animate(reduced ? [{opacity:1}, {opacity:0}] : [
             {transform:'translate(0, 0) rotate(0)', opacity:1},
             {transform:'translate(-8px, 5px) rotate(-5deg)', opacity:1, offset:.13},

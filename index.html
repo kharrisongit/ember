@@ -33,6 +33,8 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23171310'/%3E%3Cpath d='M16 3c2 6 8 8 8 16a8 8 0 1 1-16 0c0-4 2-7 5-10 0 4 1 6 3 7-1-5 0-9 0-13Z' fill='%23e0913f'/%3E%3Cpath d='M16 15c3 3 4 5 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8Z' fill='%23f0e6d2'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/game.css?v=20260926-title-flight">
 <link rel="stylesheet" href="css/merchant-shop.css?v=20260926-shops1">
+<link rel="preload" href="assets/fonts/cinzel-decorative-bold.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="css/medieval-ui.css?v=20260926-manuscript1">
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="auto" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -94,7 +96,7 @@
   </div>
   <div id="bootLoadPanel" hidden><div id="bootLoadRows"></div><div id="bootLoadMsg" role="status"></div></div>
 </div>
-<script src="js/title-screen.js?v=20260926-title-flight"></script>
+<script src="js/title-screen.js?v=20260926-title-still"></script>
   <canvas id="cv"></canvas>
 <div id="npcLineupControls" hidden aria-label="NPC lineup browser"><button id="bNpcType" aria-label="Next NPC type">Walking ▸</button><button id="bNpcPrev" aria-label="Previous NPC page">‹</button><span id="npcLineupStatus" aria-live="polite"></span><button id="bNpcNext" aria-label="Next NPC page">›</button><button id="bNpcClose" aria-label="Close NPC lineup">×</button></div>
 <div id="geometryBar"><span id="geometryLabel"></span><span id="collisionBrushes"><button data-collision="block" class="on">Block</button><button data-collision="open">Open</button><button data-collision="reset">Restore</button></span><button id="geometryPan">PAN</button><button id="geometryCopy">COPY</button><button id="geometryDone">DONE</button></div>

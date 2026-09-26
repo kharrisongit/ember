@@ -1,0 +1,193 @@
+/* Shared manuscript, leather and brass treatment for player-facing text. */
+@font-face{
+  font-family:'Cinzel Decorative';font-style:normal;font-weight:700;font-display:swap;
+  src:url('../assets/fonts/cinzel-decorative-bold.woff') format('woff');
+}
+:root{
+  --dialogue-panel-height:110px;
+  --manuscript-ink:#362719;
+  --manuscript-gold:#b58a44;
+  --manuscript-edge:#513820;
+  --manuscript-paper:
+    radial-gradient(ellipse at 12% 18%,#fff8d940,transparent 48%),
+    repeating-linear-gradient(8deg,#69451e05 0 1px,transparent 1px 5px),
+    linear-gradient(105deg,#d6b984,#f0dfb9 16%,#ecdbb3 80%,#caae7b);
+  --manuscript-leather:
+    repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 4px),
+    linear-gradient(#493024,#241810);
+  --manuscript-frame:inset 0 0 0 1px #fae7b6,inset 0 0 0 3px #9b703e55,
+    0 0 0 1px #bd9455,0 0 0 3px #2b1c12,0 6px 16px #0007;
+  --manuscript-serif:Georgia,'Palatino Linotype','Times New Roman',serif;
+}
+
+/* The new display face is packaged with the game, including for offline use. */
+#titleWords{
+  font-family:'Cinzel Decorative',Georgia,serif;font-weight:700;
+  font-size:min(7.4vw,46px);line-height:1.12;letter-spacing:.045em;
+  color:#e8bd6b;text-shadow:0 1px 0 #fff0bc,0 3px 0 #71451f,0 5px 0 #28180e,0 0 22px #e7b66a26;
+}
+#titleWords .titleThe{font-size:.44em;letter-spacing:.38em}
+#titleWords .titleLast{font-size:1.22em;letter-spacing:.14em}
+#titleWords .titleDragonrider{letter-spacing:.045em}
+#bootBegin,#bootBtns button,#bootLoadRows button{
+  border-radius:3px;border-color:#a17b44;background:var(--manuscript-leather);
+  font-family:var(--manuscript-serif);color:#f2d595;
+  box-shadow:inset 0 0 0 2px #23170f,inset 0 0 0 3px #ba95542b,0 3px 0 #0d0906;
+}
+#bootBegin{font-size:16px;letter-spacing:.08em}
+#bootBtns button{font-size:15px}
+#bootBtns button.selected{background:linear-gradient(#69472c,#382519);border-color:#e0ba72}
+
+/* A roomier page and matching portrait/nameplate anchors. */
+#say{
+  height:var(--dialogue-panel-height);
+  border:3px solid var(--manuscript-edge);border-radius:3px;
+  background:var(--manuscript-paper);color:var(--manuscript-ink);
+  box-shadow:var(--manuscript-frame);padding:9px 18px;
+  font:15px/1.35 var(--manuscript-serif);letter-spacing:.005em;
+}
+#say::before{
+  content:'';position:absolute;inset:4px;pointer-events:none;
+  border:1px solid #865b2c66;border-radius:0;
+  background:
+    linear-gradient(135deg,#9b703e 0 43%,transparent 45%) left top/8px 8px no-repeat,
+    linear-gradient(225deg,#9b703e 0 43%,transparent 45%) right top/8px 8px no-repeat,
+    linear-gradient(45deg,#9b703e 0 43%,transparent 45%) left bottom/8px 8px no-repeat,
+    linear-gradient(315deg,#9b703e 0 43%,transparent 45%) right bottom/8px 8px no-repeat;
+}
+#sayname{
+  z-index:11;bottom:calc(var(--deck) + var(--dialogue-panel-height) + 8px);max-width:calc(100vw - 178px);
+  padding:5px 15px 6px;border:2px solid #a17b44;border-radius:3px 3px 0 0;
+  background:var(--manuscript-leather);color:#f4d69a;
+  box-shadow:inset 0 0 0 1px #24170f,0 -2px 6px #0005;
+  font:700 15px/1.1 var(--manuscript-serif);font-variant:small-caps;letter-spacing:.06em;
+  overflow:hidden;text-overflow:ellipsis;
+}
+#face{bottom:calc(var(--deck) + var(--dialogue-panel-height))}
+#say.narr{
+  background:var(--manuscript-paper);color:#65432b;border-color:var(--manuscript-edge);
+  font:italic 15px/1.35 var(--manuscript-serif);letter-spacing:.005em;
+}
+#say b{color:#793e2d}
+#toast,#revealCap,#campSay{
+  background:var(--manuscript-paper);color:var(--manuscript-ink);
+  border:3px solid var(--manuscript-edge);border-radius:3px;box-shadow:var(--manuscript-frame);
+  padding:11px 18px;font:15px/1.4 var(--manuscript-serif);letter-spacing:.015em;
+}
+#revealCap{width:max-content;max-width:min(88%,520px);text-align:center}
+#reveal{background:radial-gradient(ellipse at 50% 42%,#714c2738,transparent 64%),#120e0be8}
+#campSay{max-width:min(88%,520px);text-align:center;opacity:1!important}
+
+/* Conversation choices, confirmations and quantity pickers. */
+#bagAsk{
+  background:var(--manuscript-paper)!important;color:var(--manuscript-ink)!important;
+  border:3px solid var(--manuscript-edge)!important;border-radius:3px!important;
+  padding:9px!important;box-shadow:var(--manuscript-frame)!important;
+  font:15px/1.4 var(--manuscript-serif)!important;
+  scrollbar-color:#98703f #ddc69c;
+}
+#askRows>[data-ask-index]{
+  border:1px solid transparent;border-radius:2px!important;
+  margin:2px 0;padding:9px 10px!important;min-height:39px;
+  color:#47301e;box-sizing:border-box;
+}
+#askRows>[data-selected="true"]{
+  background:linear-gradient(90deg,#66392c,#7c4d36)!important;color:#fff1cf!important;
+  border-color:#9a7041;box-shadow:inset 0 0 0 1px #d3ad6b55;
+}
+#askRows>div:not([data-ask-index]){
+  border-radius:0!important;font-family:var(--manuscript-serif)!important;
+  border-bottom:1px solid #8d673f44;letter-spacing:.02em!important;
+}
+#askRows button{
+  color:#f1d79f;background:var(--manuscript-leather);border:1px solid #947044;border-radius:3px;
+}
+
+/* Aurelius's thoughts use an illuminated dark manuscript variant. */
+#say[data-telepathy="true"],#sayname[data-telepathy="true"],#bagAsk.dragonTalk,#dragonBanter{
+  background:repeating-linear-gradient(8deg,#c5e5d805 0 1px,transparent 1px 5px),
+    linear-gradient(115deg,#182d31,#263d40 55%,#18282c)!important;
+  color:#e3ebd8!important;border-color:#a38f5c!important;border-radius:3px!important;
+  box-shadow:inset 0 0 0 1px #91b8aa66,0 0 0 1px #261e13,0 4px 16px #0007!important;
+}
+#say[data-telepathy="true"]{font:italic 15px/1.35 var(--manuscript-serif)}
+#say[data-telepathy="true"]::before{border-color:#b5a56e66;opacity:.65}
+#sayname[data-telepathy="true"]{color:#eddaa1!important;font:italic 700 15px/1.1 var(--manuscript-serif)}
+#bagAsk.dragonTalk #askRows>div:not([data-ask-index]){
+  color:#e7d396!important;background:#b4a27212!important;border-left-color:#c1aa70!important;
+}
+#bagAsk.dragonTalk #askRows>[data-selected="true"]{
+  color:#fff0bf!important;background:#49605a!important;border-color:#c4b17b;
+  box-shadow:inset 3px 0 #dcc895;
+}
+#dragonBanter{padding:8px 13px 8px 8px;border-width:2px;font-size:14px}
+.telepathyPortrait{border-radius:3px;border:1px solid #ae9860;box-shadow:inset 0 0 0 1px #192c2f}
+
+/* Save lists form one bound page, including heading and explanatory footer. */
+#savePrompt,#saveSlots,#loadSlots,#manageSaves{
+  background:radial-gradient(ellipse at 50% 28%,#71503030,transparent 66%),#100d0bed!important;
+  padding:18px!important;flex-direction:column;
+}
+#savePrompt>b,#saveSlots>b,#loadSlots>b,#manageSaves>b{
+  position:static;transform:none;flex:0 0 auto;margin:0;width:min(88vw,390px);
+  border:2px solid #a17b44;border-bottom:0;border-radius:3px 3px 0 0;
+  background:var(--manuscript-leather);color:#f4d69a;
+  font:700 17px/1.2 var(--manuscript-serif);font-variant:small-caps;letter-spacing:.12em;
+  text-shadow:0 1px 2px #000;box-shadow:0 -2px 0 #261a10;
+}
+#savePrompt .rows,#saveSlots .rows,#loadSlots .rows,#manageSaves .rows{
+  flex:0 1 auto;min-height:0;max-height:min(48vh,290px);border:2px solid #a17b44;
+  border-bottom:0;border-top:0;border-radius:0;background:var(--manuscript-paper);
+  box-shadow:inset 0 0 14px #9e71362b;scrollbar-color:#98703f #ddc69c;
+}
+#savePrompt .row,#saveSlots .row,#loadSlots .row,#manageSaves .row{
+  background:#fff6df38;color:#4b321f;border-color:#ab8b5a66;
+  border-radius:2px!important;font:15px/1.3 var(--manuscript-serif)!important;
+  box-shadow:inset 0 1px #fff3d677;letter-spacing:0;
+}
+#savePrompt .row.on,#saveSlots .row.on,#loadSlots .row.on,#manageSaves .row.on{
+  background:linear-gradient(90deg,#66392c,#7c4d36)!important;color:#fff1cf!important;
+  border-color:#9a7041!important;box-shadow:inset 3px 0 #dabb7b!important;
+}
+#savePrompt .foot,#saveSlots .foot,#loadSlots .foot,#manageSaves .foot{
+  position:static!important;flex:0 0 auto;transform:none!important;
+  width:min(88vw,390px);margin:0;padding:10px 14px 13px!important;
+  background:var(--manuscript-paper);color:#62482e;font:12px/1.35 var(--manuscript-serif);
+  border:2px solid #a17b44!important;border-top:1px solid #a17b4466!important;
+  border-radius:0 0 3px 3px;opacity:1!important;box-shadow:0 4px 0 #25190f;
+}
+
+/* The same materials carry into settings, item descriptions and small menus. */
+#menu .plate,#soundPanel{
+  background:var(--manuscript-paper);border:3px solid var(--manuscript-edge);
+  border-radius:3px;box-shadow:var(--manuscript-frame);color:var(--manuscript-ink);
+}
+#menu .plate>b,#soundPanel>b{
+  color:#70472b;font:700 18px/1.2 var(--manuscript-serif);letter-spacing:.16em;
+  border-color:#ac8855;
+}
+#menu .row{font:15px/1.2 var(--manuscript-serif);color:#503621}
+#menu .row.on{background:#704531;color:#fff0ce;box-shadow:inset 3px 0 #daba78}
+#sound{background:#100d0bed!important}
+#soundVolumeLabel,#soundPct{color:#513820;font-family:var(--manuscript-serif)}
+#soundPanel .foot{color:#6b5339!important;font:12px/1.4 var(--manuscript-serif)!important}
+#soundActions button,#deadBtn{
+  background:var(--manuscript-leather)!important;color:#f2d59d!important;
+  border:1px solid #9b7644!important;border-radius:3px!important;
+  font-family:var(--manuscript-serif)!important;
+}
+#bagPanel{border-radius:3px;border-color:#997744;background:var(--manuscript-paper)}
+#bagPanel #bagDesc,#bagPanel #bagDesc span{color:#584129;font-family:var(--manuscript-serif)}
+#bagPanel #bagDesc b{color:#763f2b;font-family:var(--manuscript-serif);font-size:16px}
+#bagHead>b,#itemm>#itemQuickHead>b{font-family:var(--manuscript-serif)!important;font-variant:small-caps}
+#deadWhy{font:16px/1.5 var(--manuscript-serif)!important;color:#d9c7a2}
+#dead>div:first-child{font-family:'Cinzel Decorative',Georgia,serif}
+#bootBegin:focus-visible,#bootBtns button:focus-visible,#bootLoadRows button:focus-visible,
+#soundActions button:focus-visible,#askRows button:focus-visible{outline:2px solid #e6c57f;outline-offset:3px}
+
+@media(max-height:700px){#titleWords{font-size:min(7vw,30px)}}
+@media(max-height:500px){#titleWords{font-size:min(6.6vw,25px)}}
+@media(max-width:380px){
+  #say,#say.narr,#say[data-telepathy="true"]{font-size:14px;padding-left:15px;padding-right:15px}
+  #sayname{font-size:14px;padding-left:10px;padding-right:10px}
+}
