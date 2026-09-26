@@ -11,6 +11,7 @@ async function prepareMillwoodInteriors() {
   await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('remaining', /./);
+  prepareHearthBedrooms();
   if(W.maps.royal_cellar){
     const backdrop=new Image();
     backdrop.src='assets/interiors/royal-cellar.png?v=20260923-castle-audit2';
@@ -282,4 +283,25 @@ async function alignHouseTableSeats() {
     }
     map._seatsAligned=true;
   }
+}
+
+// Keep the existing room and saved positions as Corin's; Nan has her own door.
+function prepareHearthBedrooms(){
+  const home=W.maps.house26,corin=W.maps.house26_bedroom;
+  if(!home||!corin||W.maps.house26_bedroom2)return;
+  corin.title="Millwood — Corin's bedroom";
+  const nan={...corin,title:"Millwood — Nan's bedroom",spawn:[104,176],
+    npcs:[],objs:[],scatter:[],sanim:[],fobjs:[],features:[],regions:[],places:[],
+    roomBlocks:corin.roomBlocks.map(b=>b.slice()),
+    roomActors:corin.roomActors.map((a,i)=>({...a,editKey:'hearth:nan-bedroom:'+i,
+      moveBlocks:(a.moveBlocks||[]).slice(),sourceRect:a.sourceRect?.slice()})),
+    doors:[{x:6,y:12,to:'house26',tx:3,ty:5,dir:'d',wide:1}],
+    collisionOverrides:{...(corin.collisionOverrides||{})}};
+  W.maps.house26_bedroom2=nan;
+  home.doors.push({x:3,y:3,to:'house26_bedroom2',tx:6,ty:10,dir:'u',explicitDir:true,wide:0});
+  // Reuse the house's own stone doorway, at the same height and scale.
+  const base=home._roomBaseCanvas,g=base.getContext('2d');
+  const doorway=document.createElement('canvas');doorway.width=32;doorway.height=32;
+  doorway.getContext('2d').drawImage(base,168,32,32,32,0,0,32,32);
+  g.drawImage(doorway,40,32);
 }
