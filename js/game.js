@@ -1202,26 +1202,7 @@ function restoreSchoolCast(){
 function applyWorld(text) {
   W = JSON.parse(text);
   individualizeDialogue();
-  const nan=W.maps.house26?.npcs?.find(n=>n.n==='Nan Ferrow');
-  if(nan){
-    nan.d=[
-      'Nan Ferrow: When I was young, I saw a dragon pass over this valley.',
-      'Nan Ferrow: I told one person. The King\'s men were here inside a week, asking me to say it again.',
-      'Corin: What did you tell them?',
-      'Nan Ferrow: That I had been mistaken. It was the safest lie I ever learned.'
-    ];
-    nan.d2=[
-      'Nan Ferrow: They still pass over sometimes. Not often.',
-      'Corin: And nobody says anything?',
-      'Nan Ferrow: Nobody sensible. Halvard has been hunting the truth for most of my life.'
-    ];
-    nan.dv=[
-      'Nan Ferrow: I learned to deny what I saw. Because of you, our children will not have to.'
-    ];
-    nan.bio='Corin’s grandmother and an elder of Millwood.';
-    nan.dragonRumor=['Nan Ferrow: I hear about my own grandson from travellers now. Imagine that.'];
-    nan.dragonRumor2=['Nan Ferrow: I always knew you would find your own path. I did not expect it to have wings.'];
-  }
+  applyMillwoodStoryDialogue();
   dressSandspire();
   /* Maddock keeps his four-direction sheet for scripted movement. */
   for (const mid of ["world", "house22"]) {
@@ -5515,11 +5496,11 @@ function stepBirds(dt) {
   for (const b of BIRDS) { b.x += b.vx * dt; b.y += b.vy * dt; }
 }
 const HATCH_LINES = [
-      "Maddock: You were gone longer than an egg errand ought to take.",
+      "Maddock: Corin? What have you got there?",
       "Corin: Maddock, I found something in the north field.",
-      "Maddock: Let me see it. ...Corin, that is no hen's egg.",
-      "Maddock: Put it down. Slowly.",
-      "Maddock: That is a dragon's egg. There hasn't been one in Emberfell for fifty years.",
+      "Maddock: Let me see. Where did you find an egg that size?",
+      "Maddock: Set it here, gently. It is moving.",
+      "Maddock: A dragon’s egg. I never thought I would see one hatch.",
       "The egg moves.",
       "It shakes again -- harder.",
       "The shell splits. A hatchling pushes free.",
@@ -5527,14 +5508,14 @@ const HATCH_LINES = [
       "Then it turns to Corin and crosses the space between them.",
       "A smooth stone lies in the broken shell. It glows as Corin lifts it.",
       "Corin: Why did it come to me?",
-      "Maddock: Dragonriders didn't choose their dragons. The dragons chose them.",
-      "Maddock: Halvard will never let you keep her. If you mean to protect her, you will have to overthrow him.",
-      "Corin: Overthrow the king? Maddock, I am a miller's son.",
-      "Maddock: And she chose you. Leave Halvard on the throne and he will take her -- or kill you both.",
-      "Corin: I don't know if I can do this.",
-      "Maddock: You do not need to know yet. You only need to decide whether you will try.",
-      "Corin: ...All right. I will.",
-      "Maddock: Forgewick is the closest of the old rider temples from before Wingfall. If that stone has answers, I would start there.",
+      "Maddock: He has chosen you, Corin. That is how a rider’s bond begins.",
+      "Maddock: Halvard has spent fifty years making sure there would be no more riders. When he hears about this, he will come for you both.",
+      "Corin: Then where can we go?",
+      "Maddock: You cannot hide from him forever. Sooner or later, you will have to face him at Cinderhold, his fortress in the far east.",
+      "Corin: I would not last a minute against his guards.",
+      "Maddock: That is why you start at the old rider temple near Forgewick. Learn what that stone is, and what the two of you can do together.",
+      "Corin: How do we get to Forgewick?",
+      "Maddock: Forgewick is east of Thornwell. Follow the road through Thornwell and keep heading east. Ask for the old temple when you reach Forgewick.",
 ];
 
 let hatchScene = null;
@@ -6065,7 +6046,7 @@ function takeItem(it) {
     quest = Q.KING;
     playScene(["You gather six brown eggs into the nest-basket.",
                "The hens complain. One of them means it.",
-               "Hettie: Right -- on, you great sods. On!",
+               "Hettie: There we are. Plenty of grass over here, you two.",
                "The road north is clear."],
               { who: "Hettie", after: () => {
                 const her = npcs.find(m => /Hettie/.test(m.n || ""));
@@ -6149,10 +6130,10 @@ function questTalk() {
   if (quest === Q.ERRAND && nearNpc("Hettie")) {
     quest = Q.EGGS;
     playScene([
-      "Hettie: Morning, Corin. No, you are not getting past, look at them.",
-      "Hettie: Elder Maddock sent word at first light -- he wants eggs, today.",
-      "Hettie: Go grab them from the coop behind the mill and I will have this "
-        + "lot shifted by the time you are back.",
+      "Hettie: Morning, Corin. I am trying to get these two off the lane.",
+      "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
+      "Hettie: The coop is behind the mill. I should have this "
+        + "pair out of your way by the time you have the basket.",
     ], { who: "Hettie" });
     return true;
   }
@@ -6172,15 +6153,15 @@ function questTalk() {
   }
   if (quest === Q.ELDER && MAPID === "house22" && nearNpc("Maddock")) {
     playScene([
-      "Maddock: -- AH. Corin. God's teeth, boy, announce yourself.",
-      "Maddock: ...The eggs. Yes. Good lad. Put them on the table.",
-      "Corin: What is that painting? I have been in this room a hundred times "
-        + "and never looked at it.",
-      "Maddock: Fifty years ago seven Dragonriders kept the peace in Emberfell.",
-      "Maddock: Halvard was one of them. He turned on the other six and took the throne. We call it Wingfall.",
-      "Maddock: He won, and no dragon has been seen openly here since.",
-      "Corin: Then what is in the north wood?",
-      "Maddock: I do not know. But what Halvard did left the roads full of dead things. That is why nobody travels.",
+      "Maddock: Morning, Corin. Come in.",
+      "Maddock: Thank you for bringing those. Set the basket on the table.",
+      "Corin: Were those really dragons in the painting? I never "
+        + "noticed the people riding them.",
+      "Maddock: Yes. Seven riders once watched over Emberfell. People could travel from one end of the country to the other without fearing the road.",
+      "Maddock: Halvard rode with them. Fifty years ago he betrayed the other six and seized the throne. That was Wingfall.",
+      "Maddock: With the dragons gone, monsters spread out of the wilds and onto the roads. The king’s patrols do little to hold them back.",
+      "Corin: The king was asking about dragons in the north woods.",
+      "Maddock: Was he? Then someone has seen something. I hope they had the sense to keep their distance from his men.",
     ], { who: "Maddock", after: () => { quest = Q.NOISE; } });
     return true;
   }
@@ -6205,21 +6186,21 @@ function stepQuest(dt) {
 
   if (false) {
     playScene([
-      "Hettie: Morning, Corin. No, you are not getting past, look at them.",
-      "Hettie: Elder Maddock sent word at first light -- he wants eggs, today.",
-      "Hettie: Go grab them from the coop behind the mill and I will have this "
-        + "lot shifted by the time you are back.",
+      "Hettie: Morning, Corin. I am trying to get these two off the lane.",
+      "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
+      "Hettie: The coop is behind the mill. I should have this "
+        + "pair out of your way by the time you have the basket.",
     ], { who: "Hettie" });
     return;
   }
   if (quest === Q.ELDER && !warnedNorth &&
       P.y < (SPOT.elder[1] - 3) * TS && P.y > (SPOT.elder[1] - 20) * TS &&
       inRoadBand()) {
-    playScene(["Maddock: Hey!"], {
+    playScene(["Maddock: Corin, over here!"], {
       until: () => elderArrived(),
       after: () => { playScene([
-        "Maddock: Hoy. Those are mine, I think.",
-        "Maddock: My house is the other way, Corin. Bring them down.",
+        "Maddock: Hettie said you were bringing the eggs. Thank you.",
+        "Maddock: Come down to the house. We can put that basket somewhere safe.",
       ], { who: "Maddock", until: () => {
         goBackIn();
         return !!(elder() && elder().away);
@@ -6240,12 +6221,12 @@ function stepQuest(dt) {
     ], { after: () => {
       comeOut(P.x + 22, P.y + 2);
       playScene([
-        "Maddock: ...No. Not that way. Not unarmed.",
-        "Maddock: Take this. It was my father's and it is older than that.",
-        "Maddock: Shroom Pass has the dead walking in it now. Do not go quietly.",
+        "Maddock: Wait, Corin. If you are going to look, take my sword.",
+        "Maddock: It belonged to my father. The edge is sound, and I have kept it oiled.",
+        "Maddock: Monsters have been coming down through Shroom Pass. Stay on the path, and leave yourself a way back.",
         "Corin: What was it?",
-        "Maddock: I have no more idea than you do, and I have lived here "
-          + "sixty years. Go carefully. Come back.",
+        "Maddock: Something heavy came down beyond the ridge. I could feel it "
+          + "through the floor. Be careful, Corin.",
       ], { who: "Maddock", until: () => elderArrived(), after: () => {
         quest = Q.ARMED;
         goBackIn();
@@ -6324,11 +6305,11 @@ function stepQuest(dt) {
         }
       }
     }
-    playScene(["Maddock: Corin! Not one more step."], {
+    playScene(["Maddock: Corin! Bring that over here."], {
       until: () => elderArrived(),
       after: () => playScene([
-        "Maddock: What is that under your arm.",
-        "Maddock: ...Bring it here. Before anyone on that road sees it.",
+        "Maddock: You have been gone a while. Did you find what fell?",
+        "Maddock: Come off the road. The king’s men could still be nearby.",
       ], { who: "Maddock", after: () => {
         eggGate = Math.floor((P.y - 1) / TS) + 1;
         eggWarned = true;

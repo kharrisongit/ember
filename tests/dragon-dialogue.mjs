@@ -104,7 +104,7 @@ for(const [dx,dy]of [[40,0],[-40,0],[0,40],[0,-40]]){
  assert.equal(c.P.moving,false);assert.equal(c.ask.dragonConversation,true);c.askShut();
 }
 c.dragon.x=c.P.x+100;assert.equal(run('tryDragonConversation()'),false,'must approach');c.dragon.x=c.P.x+30;
-run('tryDragonConversation()');run('askTake()');assert(c.ask.opts.some(o=>o.n==='The shared dragon consciousness'));
+run('tryDragonConversation()');run("askPick=ask.opts.findIndex(o=>o.n==='Dragons and our bond');askTake()");assert(c.ask.opts.some(o=>o.n==='The shared dragon consciousness'));
 run('askTake()');assert(pendingScene.lines.length>=8);assert.equal(c.ask,null);
 assert(pendingScene.lines.every(line=>/^(Corin|Aurelius):/.test(line)));
 const long=pendingScene;pendingScene=null;long.after();assert(c.ask.opts.some(o=>o.n==='The heartstones'),'returns to its topic menu');
@@ -161,3 +161,34 @@ c.pressSkip();assert.equal(run('dragonIntroDone'),true);assert.equal(run('dragon
 assert.equal(run('tryDragonConversation()'),true,'Skip makes direct conversations available immediately');c.askShut();
 place='Millwood';tick();assert(active(),'Skip also enables travel thoughts');
 console.log('PASS: actual Skip grants and saves Aurelius dialogue; direct conversations and travel thoughts work without replaying the introduction.');
+
+// Journey topics unlock from saved visits and real quest rewards, with no future spoilers.
+clear();c.wonAll=false;c.cinderSeal=false;c.trialSealPlaced=false;c.brambleQuest=0;
+c.heartKnown=false;c.breathHas={fire:true};c.charm={};c.MAPID='world';
+const topicIds=()=>Array.from(run('dragonJourneyTopics().map(t=>t.id)'));
+assert.deepEqual(topicIds(),['home','monsters']);
+place='Sandspire';run('rememberDragonConversationPlace()');place='Millwood';
+assert(topicIds().includes('sandspire'));assert(!topicIds().includes('coralmere'));
+const visits=run('[...dragonBanterSeen]');c.visits=visits;run('resetDragonBanter(visits)');
+assert(topicIds().includes('sandspire'),'visited topics survive restoring save history');
+run("resetDragonBanter(['place:Thornwell:journey'])");
+assert(topicIds().includes('thornwell'),'existing saves inherit their known places');
+c.heartKnown=true;c.breathHas.lightning=true;c.breathHas.ice=true;c.breathHas.shadow=true;
+c.brambleQuest=2;c.charm.ward=true;
+for(const id of ['alderic','lightning','ice','shadow','bramble','ward'])assert(topicIds().includes(id),id);
+c.MAPID='royal_hall';assert(topicIds().includes('cinderhold'));
+c.wonAll=true;assert(!topicIds().includes('cinderhold'));assert(!topicIds().includes('home'));
+assert(topicIds().includes('future'));assert(!topicIds().includes('trials'));
+c.cinderSeal=true;assert(topicIds().includes('trials'));
+assert.doesNotMatch(run("DRAGON_LONG_TALKS.travelling.join(' ')"),/interiors|doorway|Cinderhold|temples/);
+// Every authored journey exchange is valid and has its own wording.
+const written=new Set();
+for(const t of run('DRAGON_JOURNEY_TOPICS'))for(const line of t.lines()){
+ assert.match(line,/^(Corin|Aurelius): /);assert(!written.has(line),'Repeated line: '+line);written.add(line);
+}
+c.MAPID='world';c.ask=null;pendingScene=null;run("openDragonConversation('journey')");
+const choice=c.ask.opts.find(o=>o.n==='What we want after all this');assert(choice);choice.go();
+assert(pendingScene.lines.some(line=>line.includes('watching a beetle')));
+const returnFromTalk=pendingScene.after;pendingScene=null;returnFromTalk();
+assert(c.ask.opts.some(o=>o.n==='What we want after all this'));
+console.log('PASS: journey topics unlock from visits, saved history, heartstones, quests and victory; dialogue returns to its topic menu.');

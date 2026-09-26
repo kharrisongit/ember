@@ -244,6 +244,7 @@ function stepDragonBanter(dt){
   if(dragonBanterActive&&(dragonBanterActive.map!==MAPID||dragonBanterActive.stage!==dragonStoryStage()))dismissDragonBanter();
   dragonBanterQueue=dragonBanterQueue.filter(b=>b.map===MAPID&&b.stage===dragonStoryStage());
   if(paused)return;
+  rememberDragonConversationPlace();
   const place=MAPID==='world'?areaUnder(P.x,P.y):(MD.title||MAPID);
   const title=MAPID==='world'?(DRAGON_PLACE_LINES[place]?place:null):Object.keys(DRAGON_PLACE_LINES).sort((a,b)=>b.length-a.length).find(k=>place?.includes(k));
   if(title)queueDragonBanter('place:'+title+':'+dragonStoryStage(),(wonAll?DRAGON_POST_PLACE_LINES:DRAGON_PLACE_LINES)[title]);
@@ -356,10 +357,10 @@ const DRAGON_LONG_TALKS={
     'Aurelius: Open COMMAND and choose Mount to climb onto my back. Choose Dismount there when you want your own feet on the ground.',
     'Corin: And flying?',
     'Aurelius: COMMAND also has Take off and Land. Use your movement controls to guide us. We should come down when you need to speak to people or examine something closely.',
-    'Corin: You do not fit through every doorway.',
-    'Aurelius: I can accompany you into Cinderhold and the temples. At houses, taverns, the school and other interiors, I will wait outside.',
-    'Corin: Sensible. I would never hear the end of it if you broke Nan’s door.',
-    'Aurelius: Nor would you hear the end of it from me if you called that getting stuck a tactical decision.'
+    'Corin: What does it feel like, flying with someone on your back?',
+    'Aurelius: At the moment, rather like carrying someone who expects to fall off.',
+    'Corin: I am working on that.',
+    'Aurelius: I know. We can stay low until you feel steadier.'
   ],
   battle:[
     'Corin: How do we fight as partners?',
@@ -466,6 +467,170 @@ function dragonSideQuest(topic){
     'Aurelius: No. Think of these as leads worth following. The people themselves will tell you what their gifts mean.'
   ];
 }
+// Visit history shares the existing saved conversation history. Older saves also
+// recognize the place remarks they heard before these topics were introduced.
+function dragonConversationPlace(){
+  return MAPID==='world'?areaUnder(P.x,P.y):(MD.title||MAPID);
+}
+function rememberDragonConversationPlace(){
+  const place=dragonConversationPlace();
+  if(!place)return;
+  const key='visited:'+place;
+  if(!dragonBanterSeen.has(key)){dragonBanterSeen.add(key);persistDragonBanterSeen();}
+}
+function dragonKnowsPlace(place){
+  const current=dragonConversationPlace()||'';
+  return current.includes(place)||[...dragonBanterSeen].some(key=>
+    key.startsWith('visited:')&&key.slice(8).includes(place)||key.startsWith('place:'+place+':'));
+}
+const DRAGON_JOURNEY_TOPICS=[
+  {id:'home',name:'Leaving Millwood',when:()=>!wonAll,lines:()=>[
+    'Corin: I keep thinking I have forgotten something at home.',
+    'Aurelius: Have you?',
+    'Corin: Probably. But that is not really what I mean. Everyone there is carrying on without me.',
+    'Aurelius: Would you rather they stopped until we returned?',
+    'Corin: No. I just wish I could see Nan put the lamp out tonight.',
+    'Aurelius: Tell me about her while we walk. I have only met her through your worry.'
+  ]},
+  {id:'monsters',name:'Why the roads became dangerous',when:()=>true,lines:()=>[
+    'Corin: Maddock remembers these roads before the monsters.',
+    'Aurelius: Dragons hunted here once. Larger creatures kept their distance, and riders dealt with those that threatened the settlements.',
+    'Corin: Then the dragons disappeared.',
+    'Aurelius: And over fifty years, the creatures they held back spread into places people had thought safe.',
+    wonAll?'Corin: Defeating Halvard has not driven them away.':'Corin: Can one dragon make the roads safe again?',
+    'Aurelius: We can help, but it will take time. People need safe crossings, patrols they can trust, and neighbours willing to help them.'
+  ]},
+  {id:'thornwell',name:'The people in Thornwell',when:()=>dragonKnowsPlace('Thornwell'),lines:()=>[
+    'Corin: I used to think Thornwell was terribly far from home.',
+    'Aurelius: And now?',
+    'Corin: Now I wonder what I missed by never going. I could spend a week just in the school.',
+    'Aurelius: You could ask the same question in every room and leave with a different answer.',
+    'Corin: Would that help?',
+    'Aurelius: I think I would enjoy finding out with you.'
+  ]},
+  {id:'forgewick',name:'A town full of furnaces',when:()=>dragonKnowsPlace('Forgewick'),lines:()=>[
+    'Corin: Does all that heat in Forgewick feel comfortable to you?',
+    'Aurelius: The heat does. The hammering makes my teeth itch.',
+    'Corin: I thought dragons would like a forge.',
+    'Aurelius: I like watching the work. Dunstan turns the same piece of metal over and over, noticing something different each time.',
+    'Corin: He noticed every nick in Maddock’s sword.',
+    'Aurelius: I noticed you trying to explain them before he had asked.'
+  ]},
+  {id:'sandspire',name:'Crossing the desert',when:()=>dragonKnowsPlace('Sandspire'),lines:()=>[
+    'Corin: Sand has got into places I did not know my boots had.',
+    'Aurelius: There is some beneath my scales. I am trying to be dignified about it.',
+    'Corin: How is that going?',
+    'Aurelius: Badly. When we find shade, I need you to scratch just below my left wing.',
+    'Corin: We should ask how people here keep it out of their clothes.',
+    'Aurelius: Yes. Their cloth wraps suddenly seem much more sensible than scales.'
+  ]},
+  {id:'coralmere',name:'Seeing the sea',when:()=>dragonKnowsPlace('Coralmere'),lines:()=>[
+    'Corin: Did you know the sea would smell like that?',
+    'Aurelius: I remembered salt. I did not remember the fish being quite so insistent.',
+    'Corin: Those are the docks. It is different out on the beach.',
+    'Aurelius: Then let us go there when we have time. I want to watch the water without a fisherman asking whether I frightened his catch.',
+    'Corin: Did you?',
+    'Aurelius: I was only looking. They reached their own conclusions.'
+  ]},
+  {id:'hollybeck',name:'The cold in Hollybeck',when:()=>dragonKnowsPlace('Hollybeck'),lines:()=>[
+    'Corin: Everyone here seems to know when snow is coming.',
+    'Aurelius: They are watching the clouds while you are watching your feet.',
+    'Corin: My feet keep disappearing into it.',
+    'Aurelius: Come close when we stop. I can keep you warm while you dry your gloves.',
+    'Corin: You do not mind?',
+    'Aurelius: I would mind carrying a rider who had frozen to the saddle.'
+  ]},
+  {id:'sporehollow',name:'The mushroom village',when:()=>dragonKnowsPlace('Sporehollow'),lines:()=>[
+    'Corin: I cannot tell whether the mushrooms are looking at me.',
+    'Aurelius: They notice our footsteps before they notice our faces.',
+    'Corin: Am I walking too loudly?',
+    'Aurelius: Compared with me, you are wonderfully discreet.',
+    'Corin: We should ask where it is safe to stand. Some of those little shoots might be somebody.',
+    'Aurelius: That would be a thoughtful question.'
+  ]},
+  {id:'mountains',name:'Beyond the mountain pass',when:()=>dragonKnowsPlace('Ashcrag')||dragonKnowsPlace('passage')||dragonKnowsPlace('Mountain Passage'),lines:()=>[
+    'Corin: Snow behind us, smoke ahead. I can hardly believe it is the same mountain.',
+    'Aurelius: Feel the air coming through the stone. There is heat below us.',
+    'Corin: And Cinderhold beyond it.',
+    wonAll?'Aurelius: We can take that road without wondering whether we will return.':'Aurelius: Yes. If you need to rest before we go farther, tell me.',
+    'Corin: I would like a moment.',
+    'Aurelius: Then we will have one.'
+  ]},
+  {id:'cinderhold',name:'Inside Cinderhold',when:()=>!wonAll&&(dragonKnowsPlace('Cinderhold')||MAPID.startsWith('royal_')),lines:()=>[
+    'Corin: He has all these rooms, and people still go hungry outside his walls.',
+    'Aurelius: You are angry.',
+    'Corin: Yes. More than I expected.',
+    'Aurelius: Stay beside me. We need to see who is in front of us, even here.',
+    'Corin: You think I might hurt someone who does not deserve it?',
+    'Aurelius: I think you would never forgive yourself. Let us be careful together.'
+  ]},
+  {id:'alderic',name:'What Alderic told us',when:()=>heartKnown,lines:()=>[
+    'Corin: Alderic spoke as though he had been waiting for us for years.',
+    'Aurelius: He was waiting for a rider. I wonder how often he thought nobody would come.',
+    'Corin: I wish I had known what to say.',
+    'Aurelius: You listened. He had kept that knowledge for someone who would listen.',
+    'Corin: We ought to go back someday.',
+    'Aurelius: I would like to tell him what we learned.'
+  ]},
+  {id:'lightning',name:'Learning to wield lightning',when:()=>breathHas.lightning,lines:()=>[
+    'Corin: I can still feel that lightning in my fingers.',
+    'Aurelius: I felt you pull away just before it struck.',
+    'Corin: I thought it was going to hit us.',
+    'Aurelius: So did I, the first time. Let us practise where there is nothing nearby to hurt.',
+    'Corin: Preferably nothing Nan owns.',
+    'Aurelius: We should make that a firm rule.'
+  ]},
+  {id:'ice',name:'Fire and ice',when:()=>breathHas.ice,lines:()=>[
+    'Corin: How can you breathe ice when you are warm enough to dry my gloves?',
+    'Aurelius: The heartstone changes what I can draw on. It feels strange to me as well.',
+    'Corin: Does it hurt?',
+    'Aurelius: No. But the cold lingers at the back of my throat.',
+    'Corin: Would something warm help?',
+    'Aurelius: We could find out. You have made tea sound very inviting.'
+  ]},
+  {id:'shadow',name:'The shadow heartstone',when:()=>breathHas.shadow,lines:()=>[
+    'Corin: That shadow frightens me more than the fire did.',
+    'Aurelius: What frightens you about it?',
+    'Corin: For a moment I could not see where you ended.',
+    'Aurelius: I was still beside you. Reach for my voice if it happens again.',
+    'Corin: Keep talking, then.',
+    'Aurelius: I can do that. You may regret asking.'
+  ]},
+  {id:'bramble',name:'After bringing Bramble home',when:()=>brambleQuest>=2,lines:()=>[
+    'Corin: I keep thinking about Bramble when he saw Rowan.',
+    'Aurelius: He nearly pulled you off your feet.',
+    'Corin: I did not mind. It was good to know we had done something right.',
+    'Aurelius: We should visit them again.',
+    'Corin: You like him, do you not?',
+    'Aurelius: He greeted me without asking what I could do for the kingdom. I appreciated that.'
+  ]},
+  {id:'ward',name:'Maelis’s gift',when:()=>!!charm.ward,lines:()=>[
+    'Corin: People made Maelis sound frightening. She helped us.',
+    'Aurelius: Did any of them say they had met her?',
+    'Corin: Not many. I suppose I should have asked.',
+    'Aurelius: We have met her now. We can tell people what happened.',
+    'Corin: I hope she knows we are grateful.',
+    'Aurelius: Tell her when we next pass through the marsh.'
+  ]},
+  {id:'future',name:'What we want after all this',when:()=>wonAll,lines:()=>[
+    'Corin: Yesterday I woke up and could not remember where we needed to go.',
+    'Aurelius: Where did you decide?',
+    'Corin: Nowhere, for a while. Is that awful?',
+    'Aurelius: I spent the morning watching a beetle. I am in no position to judge.',
+    'Corin: Nan would like us to stay near home.',
+    'Aurelius: So would I. When we travel again, I would like you to choose somewhere you want to see.'
+  ]},
+  {id:'trials',name:'The keeper’s challenge',when:()=>wonAll&&cinderSeal,lines:()=>[
+    'Corin: After everything, I am not sure I want another fight.',
+    'Aurelius: Then we need not accept one today.',
+    trialSealPlaced?'Corin: Even with the seal already in its place?':'Corin: Even though we took the seal?',
+    'Aurelius: The keeper offered a trial. We can decide when we are ready for it.',
+    'Corin: A quiet afternoon, then?',
+    'Aurelius: I would welcome one.'
+  ]}
+];
+function dragonJourneyTopics(){return DRAGON_JOURNEY_TOPICS.filter(topic=>topic.when());}
+
 function dragonCanConverse(){
   return dragonIntroDone&&hasDragon()&&dragonHere()&&dragon.on&&!dragon.down&&!dragon.air&&!mounted&&!ride&&!sceneHold()&&!sayNpc&&!doorMotion&&!fadeDir&&!editing&&!inFight();
 }
@@ -475,11 +640,13 @@ function tryDragonConversation(){
 }
 function openDragonConversation(category='root'){
   if(!dragonCanConverse())return;
+  rememberDragonConversationPlace();
   dismissDragonBanter();P.moving=false;P.act=null;dragon.moving=false;faceCorinAt(dragon.x,dragon.y);
   const speak=(lines,back=category)=>{askShut();playScene(typeof lines==='function'?lines():lines,{after:()=>openDragonConversation(back)});};
   const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key])});
   const options={
     root:[
+      {n:'What we have seen together',go:()=>openDragonConversation('journey')},
       {n:'Dragons and our bond',go:()=>openDragonConversation('dragons')},
       {n:'Emberfell and its history',go:()=>openDragonConversation('history')},
       {n:'What should we do next?',go:()=>speak(dragonCurrentQuest)},
@@ -488,10 +655,11 @@ function openDragonConversation(category='root'){
       topic('Tell me about yourself','self'),
       {n:'Let’s keep going',go:null}
     ],
+    journey:dragonJourneyTopics().map(t=>({n:t.name,go:()=>speak(t.lines)})),
     dragons:[topic('The shared dragon consciousness','consciousness'),topic('Why did you choose me?','choosing'),topic('The heartstones','heartstones')],
     history:[topic('Wingfall and the seven riders','wingfall'),topic('The land and its people','land'),topic(wonAll?'Life after Halvard':'Why Halvard fears us','halvard')],
     quests:['fishing','bramble','equipment','gifts'].map((key,i)=>({n:['Fishing and Odo',brambleQuest>=2?'Visit Rowan and Bramble':'Help Bramble find his person','Our weapons and protection','Charms and other gifts'][i],go:()=>speak(()=>dragonSideQuest(key))})),
-    travelling:[topic('Riding, flying and doorways','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
+    travelling:[topic('Riding and flying','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
   };
   if(!options[category])return;
   ask={quick:1,dragonConversation:true,back:category==='root'?null:()=>openDragonConversation(),opts:[{n:DRAGON_NAME,head:true},...options[category],...(category==='root'?[]:[{n:'Back to our other questions',go:()=>openDragonConversation()}])]};
