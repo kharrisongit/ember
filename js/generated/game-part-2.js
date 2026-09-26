@@ -6255,18 +6255,19 @@ function stepDragonIntroduction(){
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
   playScene([
-    'Aurelius (mind): Corin. You need not keep looking back. I am still here.',
+    'You hear a voice, but it seems to be inside your head.',
+    'Aurelius: Corin. You need not keep looking back. I am still here.',
     'Corin: Who said that?',
-    'Aurelius (mind): I did. My name is Aurelius.',
+    'Aurelius: I did. My name is Aurelius.',
     'Corin: Your mouth did not move. I heard you inside my head.',
-    'Aurelius (mind): Our bond carries thought. Speak aloud or think the words toward me; I will hear you.',
+    'Aurelius: Our bond carries thought. Speak aloud or think the words toward me; I will hear you.',
     'Corin: But you only just hatched. How do you already know how to talk?',
-    'Aurelius (mind): Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
-    'Aurelius (mind): My body is new. My mind did not begin empty. What we discover together will still be our own.',
+    'Aurelius: Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
+    'Aurelius: My body is new. My mind did not begin empty. What we discover together will still be our own.',
     'Corin: So you know where we are going?',
-    'Aurelius (mind): Back to Millwood. And I know a quicker way than those two small feet.',
+    'Aurelius: Back to Millwood. And I know a quicker way than those two small feet.',
     'Corin: You want me to ride you? Are you strong enough?',
-    'Aurelius (mind): Climb onto my shoulders. I chose you, Corin. I can carry you.',
+    'Aurelius: Climb onto my shoulders. I chose you, Corin. I can carry you.',
     'Corin: All right, Aurelius. Slowly, to begin with.',
     'Open COMMAND and choose Mount to ride Aurelius. Use the movement controls to travel together. Choose Dismount from COMMAND to get down.',
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
@@ -6378,7 +6379,7 @@ function speakerNamed(who) {
   return npcs.find(m => (m.n || "").toLowerCase().includes(who.toLowerCase()));
 }
 function faceToward(m, x, y) {
-  if (m.stationary && !(m.desertNative && !m.packSpr)) { m.f = "d"; m.kf = "d"; m.flip = false; return; }
+  if (m.stationary && !m.packDirections && !(m.desertNative && !m.packSpr)) { m.f = "d"; m.kf = "d"; m.flip = false; return; }
   const dx = x - m.x, dy = y - m.y;
   const sideways = Math.abs(dx) > Math.abs(dy);
   m.f = sideways ? "s" : (dy > 0 ? "d" : "u");
@@ -6418,7 +6419,7 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
-    if(MAPID==='house22'&&m.n==='Elder Maddock'&&!scene&&!bossScene&&!m.goto){
+    if(MAPID==='house22'&&m.n==='Elder Maddock'&&sayNpc!==m&&!scene&&!bossScene&&!m.goto){
       m.x=128;m.y=100;m.f='u';m.kf='u';m.flip=false;m.seatSpr=undefined;m.seatClipY=undefined;
       continue;
     }
@@ -6689,7 +6690,7 @@ function questTalk() {
                       Math.hypot(kk.x - P.x, kk.y - P.y) < 46;
              },
              after: () => {
-               royalBlackout('out of my way, boy!',()=>{
+               royalBlackout('Out of my way, boy!',()=>{
                  leavingNow=false;banishKingsMen();
                  if(quest===Q.KING)quest=Q.ELDER;
                },()=>{
@@ -10639,15 +10640,15 @@ function glassHatchPosition(){return W.maps.glasshouse?.roomActors?.find(a=>a.gl
 function glassHatchBlocked(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&glassHatchFrame()<3&&x>=h.x-20&&x<h.x+20&&y>=h.y-16&&y<h.y-2;}
 function glassHatchNear(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&Math.abs(x-h.x)<29&&Math.abs(y-(h.y-4))<28;}
 function drawHettieCallout(n,sp) {
-  const bob=Math.sin(tAcc*4)*1.5, x=Math.round(n.x-18),y=Math.round(n.y-sp[3]-21+bob);
-  ctx.save();ctx.fillStyle="#493529";ctx.fillRect(x+2,y+2,36,17);
+  const bob=Math.sin(tAcc*4)*1.5, x=Math.round(n.x-28),y=Math.round(n.y-sp[3]-21+bob);
+  ctx.save();
   ctx.fillStyle="#fff1d1";ctx.strokeStyle="#493529";ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(x+4,y);ctx.lineTo(x+32,y);ctx.quadraticCurveTo(x+36,y,x+36,y+4);
-  ctx.lineTo(x+36,y+12);ctx.quadraticCurveTo(x+36,y+16,x+32,y+16);
+  ctx.beginPath();ctx.moveTo(x+4,y);ctx.lineTo(x+52,y);ctx.quadraticCurveTo(x+56,y,x+56,y+4);
+  ctx.lineTo(x+56,y+12);ctx.quadraticCurveTo(x+56,y+16,x+52,y+16);
   ctx.lineTo(n.x+4,y+16);ctx.lineTo(n.x,y+21);ctx.lineTo(n.x-3,y+16);
   ctx.lineTo(x+4,y+16);ctx.quadraticCurveTo(x,y+16,x,y+12);ctx.lineTo(x,y+4);ctx.quadraticCurveTo(x,y,x+4,y);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.fillStyle="#34251b";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("hey!",n.x,y+8);
-  if(Math.sin(tAcc*3)>0.55){ctx.strokeStyle="#f4ce76";ctx.beginPath();ctx.moveTo(x-5,y+2);ctx.lineTo(x-8,y);ctx.moveTo(x+41,y+2);ctx.lineTo(x+44,y);ctx.stroke();}
+  ctx.fillStyle="#34251b";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("Yoo-hoo!",n.x,y+8);
+  if(Math.sin(tAcc*3)>0.55){ctx.strokeStyle="#f4ce76";ctx.beginPath();ctx.moveTo(x-5,y+2);ctx.lineTo(x-8,y);ctx.moveTo(x+61,y+2);ctx.lineTo(x+64,y);ctx.stroke();}
   ctx.restore();
 }
 

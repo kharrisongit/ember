@@ -4184,7 +4184,7 @@ function useDoors(dt) {
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
   if(dragonHere()&&dragon.on&&!dragonAllowedInMap(d.to)){
-    playScene(["Corin: wait here, I'll be right back"],{after:()=>beginDoorEntry(d)});
+    playScene(["Corin: Wait here, I'll be right back."],{after:()=>beginDoorEntry(d)});
     return;
   }
   beginDoorEntry(d);

@@ -10,7 +10,7 @@ const c=vm.createContext({
   sceneHold:()=>!!pendingScene,hatchCamera:null,sayNpc:null,fadeDir:0,doorMotion:null,pendingDoor:null,editing:false,ovl:null,ride:false,arenaLock:null,
   faceCorinAt(){},playScene:(lines,options)=>{pendingScene={lines,...options};},setOvl:m=>{menu=m;},saveGame:()=>saves++,
   wonAll:false,cinderSeal:false,brambleQuest:0,mode:'play',ask:null,bagOpen:false,atlasOpen:false,fishing:null,deadShown:false,foes:[],
-  areaUnder:()=>place,document:{createElement:()=>({style:{},setAttribute(){}}),body:{appendChild(){}}}
+  areaUnder:()=>place,document:{getElementById:()=>({appendChild(){}}),createElement:()=>({style:{},setAttribute(){}}),body:{appendChild(){}}}
 });
 const run=s=>vm.runInContext(s,c);
 run(part2.slice(part2.indexOf('const DRAGON_NAME ='),part2.indexOf('function finishHatchScene()')));
@@ -24,7 +24,9 @@ assert.equal(run('stepDragonIntroduction()'),false);
 c.P.y=6130;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
 c.P.dir='u';assert.equal(run('stepDragonIntroduction()'),false);c.P.dir='d';
 assert.equal(run('stepDragonIntroduction()'),true);
-assert(pendingScene.lines[0].startsWith('Aurelius (mind):'));
+assert.match(pendingScene.lines[0],/voice.*inside your head/);
+assert(pendingScene.lines[1].startsWith('Aurelius:'));
+assert.equal(pendingScene.lines.filter(line=>/voice.*inside your head/.test(line)).length,1);
 assert(pendingScene.lines.join(' ').includes('share a consciousness'));
 assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
 pendingScene.after();pendingScene=null;assert.equal(menu,'airm');assert.equal(saves,1);
@@ -33,11 +35,12 @@ assert.equal(run('stepDragonIntroduction()'),false);
 clear();place='Millwood–Thornwell Road';tick();assert.equal(active(),null,'roads do not count as town visits');
 place='Thornwell';const movement=JSON.stringify(c.P);tick();assert.match(active().key,/place:Thornwell/);
 assert.equal(JSON.stringify(c.P),movement,'banter does not alter player movement');
-assert.match(run('dragonBanterPanel.textContent'),/Aurelius · in your mind/);
-assert.match(run('dragonBanterPanel.textContent'),/Corin:/);
+assert.match(run('dragonBanterPanel.textContent'),/^Aurelius:/);
+assert.doesNotMatch(run('dragonBanterPanel.textContent'),/Corin:|mind/);
+tick(5.1);assert.match(run('dragonBanterPanel.textContent'),/^Corin:/);
 const dismissHook=part2.match(/if\(!sceneHold\(\)&&typeof dismissDragonBanter[^\n]+/)[0];
 run('(function(){'+dismissHook+'})()');assert.equal(active(),null);
-tick(6);assert.equal(active(),null,'same town does not repeat');
+tick(19);assert.equal(active(),null,'same town does not repeat');
 place='Forgewick';tick();assert(active());tick(12);assert.equal(active(),null,'times out without input');
 // Hiding on atlas/fishing and leaving allowed maps must also clear stale lines.
 clear();place='Millwood';tick();c.atlasOpen=true;tick();assert.equal(run('dragonBanterPanel.hidden'),true);c.atlasOpen=false;
@@ -54,9 +57,9 @@ clear();run("dragonConversationReaction({n:'Orin',said:['The king is defeated. W
 assert.doesNotMatch(active().lines.join(' '),/demands|live like this/);
 // New enemy types and boss outcomes, with no stale facing warning after a kill.
 c.wonAll=false;clear();c.foes=[{kind:'mage1',x:872,y:6140,hp:9,st:'idle'}];tick();assert.equal(active().key,'enemy:mage1');
-run('dismissDragonBanter()');tick(6);assert.equal(active(),null);
+run('dismissDragonBanter()');tick(19);assert.equal(active(),null);
 clear();run("dragonBossBanter({kind:'golem1',idx:4})");run("dragonBossBanter({kind:'golem1',idx:4},true)");tick();assert.match(active().key,/^victory:/);
-const seen=run('[...dragonBanterSeen]');clear();c.restored=seen;run('resetDragonBanter(restored)');run("dragonBossBanter({kind:'golem1',idx:4},true)");tick(6);assert.equal(active(),null,'saved events do not repeat');
+const seen=run('[...dragonBanterSeen]');clear();c.restored=seen;run('resetDragonBanter(restored)');run("dragonBossBanter({kind:'golem1',idx:4},true)");tick(19);assert.equal(active(),null,'saved events do not repeat');
 // Every current combat type has authored dialogue.
 const foeScope=vm.createContext({});
 vm.runInContext(part2.slice(part2.indexOf('const FOE = {'),part2.indexOf('const ROUTE_2_HP_START_X')),foeScope);
@@ -71,7 +74,7 @@ const door={to:'tavern',dir:'u'},d=vm.createContext({
 });
 const doors=s=>vm.runInContext(s,d);pendingScene=null;
 doors(part3.slice(part3.indexOf('function useDoors('),part3.indexOf('function drawArena(')));
-doors('useDoors(0)');assert.equal(pendingScene.lines[0],"Corin: wait here, I'll be right back");assert.equal(d.doorMotion,null);
+doors('useDoors(0)');assert.equal(pendingScene.lines[0],"Corin: Wait here, I'll be right back.");assert.equal(d.doorMotion,null);
 const first=pendingScene;doors('useDoors(0)');assert.equal(pendingScene,first,'does not repeatedly open the line');
 first.after();pendingScene=null;assert.equal(d.doorMotion.d,door);
 d.doorMotion=null;d.P.moving=true;door.to='tp1';doors('useDoors(0)');assert.equal(pendingScene,null);assert.equal(d.pendingDoor,door,'allowed interiors have no wait line');
@@ -91,7 +94,7 @@ for(const [dx,dy]of [[40,0],[-40,0],[0,40],[0,-40]]){
 c.dragon.x=c.P.x+100;assert.equal(run('tryDragonConversation()'),false,'must approach');c.dragon.x=c.P.x+30;
 run('tryDragonConversation()');run('askTake()');assert(c.ask.opts.some(o=>o.n==='The shared dragon consciousness'));
 run('askTake()');assert(pendingScene.lines.length>=8);assert.equal(c.ask,null);
-assert(pendingScene.lines.every(line=>/^(Corin|Aurelius \(mind\)):/.test(line)));
+assert(pendingScene.lines.every(line=>/^(Corin|Aurelius):/.test(line)));
 const long=pendingScene;pendingScene=null;long.after();assert(c.ask.opts.some(o=>o.n==='The heartstones'),'returns to its topic menu');
 c.askShut();
 const lock=vm.createContext({scene:null,revealing:false,hatchExit:false,bossScene:null,ask:{dragonConversation:true}});
@@ -108,3 +111,29 @@ assert.match(run("dragonCurrentQuest().join(' ')"),/all with us now/);
 c.wonAll=true;assert.match(run("dragonCurrentQuest().join(' ')"),/Halvard is defeated/);
 c.cinderSeal=true;c.trialSealPlaced=true;assert.match(run("dragonCurrentQuest().join(' ')"),/seal is placed/);
 console.log('PASS: Direct conversations from all sides, blocking menus, lengthy exchanges, return navigation and progress-aware quest clues.');
+// Ambient remarks are concise, unique by wording, and occasional after NPCs.
+c.wonAll=false;c.cinderSeal=false;c.ask=null;c.MAPID='world';clear();
+for(const table of ['DRAGON_PLACE_LINES','DRAGON_POST_PLACE_LINES','DRAGON_ENEMY_LINES','DRAGON_BOSS_LINES','DRAGON_BOSS_DEFEAT_LINES','DRAGON_NPC_THOUGHTS','DRAGON_REACTION_LINES']){
+ for(const pair of run('Object.values('+table+')'))for(const line of pair)assert(line.length<=64,table+': '+line);
+}
+run("queueDragonBanter('one',['A short thought.','A short reply.'])");tick();
+assert.equal(run("queueDragonBanter('another-event',['A short thought.','A new reply.'])"),false,'same wording never repeats under a new event ID');
+assert.equal(run("queueDragonBanter('another-reply',['A different thought.','A short reply.'])"),false,'Corin does not repeat his reply either');
+assert.match(run('dragonBanterPanel.style.cssText'),/position:absolute;bottom:8px/);
+assert.doesNotMatch(run('dragonBanterPanel.textContent'),/\n|mind/,'one speaker at a time without a mind suffix');
+clear();run("dragonBossBanter({kind:'golem1',idx:1})");tick();run('dismissDragonBanter()');
+c.MAPID='tp1';run("dragonBossBanter({kind:'golem1',idx:99})");tick(19);assert.equal(active(),null,'another guardian of the same kind does not repeat its line');
+c.MAPID='world';clear();run("dragonConversationReaction({n:'Odo',said:['This weather suits me.']})");tick();run('dismissDragonBanter()');
+run("dragonConversationReaction({n:'Wren',said:['Have a restful day.']})");assert.equal(run('dragonBanterQueue.length'),0,'nearby conversations do not create a stream of remarks');
+tick(100);run("dragonConversationReaction({n:'Wren',said:['Have a restful day.']})");assert.equal(run('dragonBanterQueue.length'),0,'a conversation heard during cooldown stays remembered');
+run("dragonConversationReaction({n:'Odo',said:['Different weather today.']})");assert.equal(run('dragonBanterQueue.length'),0,'one reaction per NPC per story stage');
+clear();run("resetDragonBanter(['npc:Orin:journey:king','boss:world:golem2:4'])");tick(100);
+run("dragonConversationReaction({n:'Another villager',said:['The king takes another levy.']})");assert.equal(run('dragonBanterQueue.length'),0,'older save histories suppress the same topic from another NPC');
+run("dragonBossBanter({kind:'golem2',idx:42})");assert.equal(run('dragonBanterQueue.length'),0,'old boss IDs migrate to a unique type');
+// History is persisted immediately without autosaving the player's position or quest.
+clear();const disk=new Map();disk.set('test.slot.2',JSON.stringify({dragonIntroDone:true,quest:8,x:100,y:200}));
+Object.assign(c,{activeSaveSlot:2,saveKey:slot=>'test.slot.'+slot,localStorage:{getItem:k=>disk.get(k)||null,setItem:(k,v)=>disk.set(k,v)}});
+run("queueDragonBanter('persistent',['A thought worth remembering.','I will remember it.'])");tick();
+const stored=JSON.parse(disk.get('test.slot.2'));assert.equal(stored.x,100);assert.equal(stored.quest,8);assert(stored.dragonBanterSeen.includes('persistent'));
+c.restoreHistory=stored.dragonBanterSeen;clear();run('resetDragonBanter(restoreHistory)');run("queueDragonBanter('new-id',['A thought worth remembering.','A different answer.'])");tick(20);assert.equal(active(),null,'reloading does not repeat a shown remark');
+console.log('PASS: short bottom captions, unique wording across events and saves, NPC cooldowns and old-history migration.');
