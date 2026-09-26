@@ -341,3 +341,13 @@ themed.c.gameplayStarted=false;themed.sync();await themed.advance();assert(!them
 themed.c.gameplayStarted=true;await themed.change('house22','Millwood — Maddock');assert(themed.elements.get('lastDragonriderTitleBgm').paused);
 themed.c.window.EmberEndingMusic.start();await themed.advance();assert(!themed.elements.get('lastDragonriderTitleBgm').paused);themed.c.window.EmberEndingMusic.stop();await themed.advance();assert(themed.elements.get('lastDragonriderTitleBgm').paused);
 console.log('PASS: mushroom forest/cave/hollow, elder woods, title screen and ending transitions.');
+
+const cinematic=setup();cinematic.c.gameplayStarted=false;cinematic.sync();cinematic.listeners.pointerdown();await cinematic.advance();
+const titleTrack=cinematic.elements.get('lastDragonriderTitleBgm');assert(!titleTrack.paused);
+const fadingTitle=cinematic.c.window.EmberTitleAudio.fadeOut(1200);await cinematic.advance(600);assert(titleTrack.volume>0&&titleTrack.volume<.35*.85);
+cinematic.sync();await cinematic.advance(650);await fadingTitle;assert(titleTrack.paused);
+await cinematic.advance(550);cinematic.sync();assert([...cinematic.elements.values()].every(a=>a.paused),'Silent beat stays silent despite region checks');
+const fadingGame=cinematic.c.window.EmberTitleAudio.fadeIn();await cinematic.advance(700);assert(!cinematic.track('Millwood').paused);assert(cinematic.track('Millwood').volume<.35*.85);assert(titleTrack.paused);
+await cinematic.advance(1000);await fadingGame;assert.equal(cinematic.c.gameplayStarted,false,'Music precedes gameplay');
+cinematic.c.gameplayStarted=true;cinematic.c.window.EmberTitleAudio.finish();assert(titleTrack.paused);
+console.log('PASS: title fades out, region checks preserve silence, and gameplay music fades in before controls unlock.');

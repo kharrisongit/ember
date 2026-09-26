@@ -16,6 +16,7 @@ class Element {
   }
   addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);}
   closest(selector){for(let e=this;e;e=e.parentNode)if(selector.split(',').some(s=>s.trim()==='#'+e.id))return e;return null;}
+  getBoundingClientRect(){return {width:800,height:600};}
   querySelectorAll(){return this.children;}
   appendChild(child){child.parentNode=this;this.children.push(child);}
   replaceChildren(){this.children=[];}
@@ -23,7 +24,7 @@ class Element {
 const body=new Element('body'),deck=new Element('deck',body),stage=new Element('stage',body);
 const nodes={body,deck,stage};
 for(const id of ['act','btnB','btnL','btnR','btnItems','btnMapQuick','btnDev','dpad'])nodes[id]=new Element(id,deck);
-for(const id of ['cv','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','bootLoadPanel','bootLoadRows','bootLoadMsg','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
+for(const id of ['cv','titleFade','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','bootLoadPanel','bootLoadRows','bootLoadMsg','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
 for(const [id,parent]of [['atkCloseBtn','atkm'],['airCloseBtn','airm'],['itemCloseBtn','itemm'],['itemFullBtn','itemm']])nodes[id]=new Element(id,nodes[parent]);
 const up=new Element('up',nodes.dpad);up.dataset={dx:'0',dy:'-1'};
 const captures={},keyboard={},intervals=[];
@@ -67,7 +68,7 @@ assert.equal(run('Object.keys(keys).length'),0);assert.equal(interactions,0);ass
 assert.equal(c.ovl,null);assert.equal(c.atlasOpen,false);
 run(section(p3,'const BOOT = {','const MENUS ='));
 run('BOOT.close()');assert.equal(run('gameplayStarted'),false,'Cannot bypass world loading');
-run('BOOT.to=async()=>{};bootBind();');
+run('BOOT.to=async()=>{};BOOT.pause=async()=>{};bootBind();');
 for(const start of ['act','bootNew','bootLoad']){
   run('gameplayStarted=false;gameplayReady=false;setOvl(null)');
   body.classList.remove('game-started');
@@ -91,6 +92,8 @@ for(const start of ['act','bootNew','bootLoad']){
     assert.equal(run('gameplayStarted'),false);assert.equal(run('BOOT.loading'),true);assert.match(nodes.bootLoadMsg.textContent,/could not/);
     loadWorks=true;dispatch(nodes.act,'mousedown');assert.equal(loadedSlot,2,'A loads the chosen slot');
   }
+  assert.equal(run('gameplayStarted'),false,'Gameplay waits for the title transition');
+  for(let i=0;i<16;i++)await Promise.resolve();
   assert.equal(run('gameplayStarted'),true,start+' starts normally once ready');
   assert.equal(body.classList.contains('boot-ready'),false);assert(body.classList.contains('game-started'));
   assert.equal(nodes.boot.style.display,'none');assert.equal(interactions,0,'Starting does not also interact');
@@ -165,3 +168,19 @@ console.log('PASS: Both characters take visible backward steps and rapid A press
 
 hr('stepHatchScene(.05)');assert.equal(hatchSounds,1,'The next dialogue beat does not replay the hatch');
 console.log('PASS: hatching plays its sound once, exactly when the egg becomes the hatchling.');
+
+// Resolve each cinematic stage separately: nothing can start gameplay early.
+const cinematicPauses=[],audioStages=[];
+c.window.EmberTitleAudio={fadeOut:ms=>{audioStages.push(['out',ms]);return Promise.resolve();},fadeIn:()=>{audioStages.push(['in']);return Promise.resolve();},finish:()=>audioStages.push(['finish'])};
+c.titlePause=ms=>new Promise(resolve=>cinematicPauses.push({ms,resolve}));
+run('gameplayStarted=false;gameplayReady=true;BOOT.loading=false;BOOT.pause=titlePause;');
+nodes.boot.style.display='flex';
+const closePromise=run('BOOT.close()');
+assert.equal(cinematicPauses[0].ms,1200);assert.equal(nodes.titleFade.style.opacity,'1');assert.equal(run('gameplayStarted'),false);
+run('BOOT.close()');assert.equal(cinematicPauses.length,1,'Double Start does not repeat the transition');
+async function nextPause(ms){assert.equal(cinematicPauses[0].ms,ms);cinematicPauses.shift().resolve();for(let i=0;i<10;i++)await Promise.resolve();}
+await nextPause(1200);assert.equal(nodes.boot.style.display,'none');assert.equal(nodes.titleFade.style.opacity,'1');assert.equal(audioStages.length,1);
+await nextPause(550);assert.equal(audioStages[1][0],'in');assert.equal(nodes.titleFade.style.opacity,'1');
+await nextPause(1400);assert.equal(nodes.titleFade.style.opacity,'0');assert.equal(run('gameplayStarted'),false);
+await nextPause(1100);await closePromise;assert.equal(run('gameplayStarted'),true);assert(nodes.titleFade.hidden);assert.equal(audioStages[2][0],'finish');
+console.log('PASS: duplicate Start ignored; black/title fade, silence, music lead-in, then picture and controls.');

@@ -4,7 +4,7 @@ let routeMusicIntroPlayed=false;
   const title=document.getElementById('lastDragonriderTitleBgm');
   const spores=document.getElementById('emberfellSporesBgm');
   const titleScreen=()=>{try{return typeof gameplayStarted==='undefined'||!gameplayStarted;}catch(e){return true;}};
-  let endingMode=false;
+  let endingMode=false,titleStage=null,titleStartedAt=null;
   const bgm=document.getElementById('emberfellHomeTownBgm');
   const millwood=document.getElementById('emberfellMillwoodBgm');
   const villain=document.getElementById('emberfellVillainBgm');
@@ -210,6 +210,7 @@ let routeMusicIntroPlayed=false;
   };
   const trackPaused=a=>bufferedTrack(a)?!loops.get(a).source:a.paused;
   const pauseTrack=a=>{
+    if(a===title)titleStartedAt=null;
     const loop=loops.get(a);
     if(loop){
       ++loop.request;
@@ -280,7 +281,7 @@ let routeMusicIntroPlayed=false;
       }catch(e){/* Older browsers retain the media-volume fallback. */}
     }
     applyVolumes();
-    prepareLoop(reveal);
+    prepareLoop(titleScreen()?title:reveal);
     if(audioContext.state!=='running'){
       try{Promise.resolve(audioContext.resume()).catch(()=>{});}catch(e){}
     }
@@ -306,7 +307,7 @@ let routeMusicIntroPlayed=false;
     if(!unlocked||pct===0||!selected||pending||fading)return;
     if(!trackPaused(selected)&&gains.get(selected)===1&&tracks.every(a=>a===selected||!gains.get(a)))return;
     const a=selected,token=++fadeToken;pending=token;
-    if(a===villain){
+    if(a===villain&&titleStage!=='in'){
       for(const other of tracks){gains.set(other,other===a?1:0);if(other!==a)pauseTrack(other);}
     }
     applyVolumes();
@@ -314,13 +315,15 @@ let routeMusicIntroPlayed=false;
       // Keep the outgoing song audible until the incoming audio actually plays.
       Promise.resolve(playTrack(a)).then(()=>{
         if(token!==fadeToken){if(pct===0||(a!==selected&&!gains.get(a)))pauseTrack(a);return;}
-        pending=0;if(a!==villain)beginFade(token);
+        pending=0;
+        if(a===title&&titleStartedAt===null)titleStartedAt=audioContext?audioContext.currentTime*1000:Date.now();
+        if(a!==villain||titleStage==='in')beginFade(token);
       },()=>{if(token===fadeToken)pending=0;});
     }catch(e){if(token===fadeToken)pending=0;}
   };
   const selectTrack=next=>{
     if(next===selected)return;
-    fadeDuration=next===reveal?150:next===millwood&&selected===villain?3200:900;
+    fadeDuration=titleStage==='in'?1400:next===reveal?150:next===millwood&&selected===villain?3200:900;
     fadeDelay=next===millwood&&selected===villain?400:0;
     ++fadeToken;pending=0;fading=false;selected=next;
     for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);
@@ -328,7 +331,7 @@ let routeMusicIntroPlayed=false;
       const beyondMillwood=typeof P!=='undefined'&&P.x>=80*TS;
       fieldStartPending=routeMusicIntroPlayed||beyondMillwood?10:0;
     }
-    if(next===villain){
+    if(next===villain&&titleStage!=='in'){
       next.currentTime=0;
       for(const a of tracks){gains.set(a,a===next?1:0);if(a!==next)pauseTrack(a);}
       applyVolumes();
@@ -337,7 +340,8 @@ let routeMusicIntroPlayed=false;
     playSelected();
   };
   const chooseMusic=()=>{
-    if(titleScreen()||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
+    if(titleStage==='out')return;
+    if((titleStage!=='in'&&titleScreen())||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
     if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
     try{if(mode!=='play'||quest<Q.NOISE||quest>Q.DONE){omenPlaying=false;omenHeard=false;}}catch(e){}
     if(omenPlaying){selectTrack(null);return;}
@@ -390,6 +394,29 @@ let routeMusicIntroPlayed=false;
       if(pct===0)silence();
       else {applyVolumes();startMusic();}
     }
+  };
+  const waitUntil=(check,timeout)=>new Promise(resolve=>{
+    const until=Date.now()+timeout;
+    const tick=()=>{if(check()||Date.now()>=until)resolve();else setTimeout(tick,50);};tick();
+  });
+  window.EmberTitleAudio={
+    waitReady:()=>waitUntil(()=>{
+      if(pct===0||!hasSong(title))return true;
+      const audible=titleStartedAt!==null&&!trackPaused(title)&&(!audioContext||audioContext.state==='running');
+      const hint=document.getElementById('bootHint');
+      if(hint)hint.textContent=audible?'':'Tap anywhere to hear the title music';
+      return audible&&(audioContext?audioContext.currentTime*1000:Date.now())-titleStartedAt>=4000;
+    },12000),
+    fadeOut:(ms=1200)=>{
+      titleStage='out';selected=null;fadeDuration=ms;fadeDelay=0;
+      ++fadeToken;pending=0;fading=false;beginFade(fadeToken);
+      return waitUntil(()=>!fading,ms+200);
+    },
+    fadeIn:()=>{
+      titleStage='in';syncRegionMusic();startMusic();
+      return waitUntil(()=>pct===0||!!(selected&&!trackPaused(selected)&&gains.get(selected)>=.99&&!fading),6500);
+    },
+    finish:()=>{titleStage=null;syncRegionMusic();},
   };
   applyVolumes();
   // Further taps must not jump an in-progress crossfade to full volume.

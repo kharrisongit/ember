@@ -4033,6 +4033,7 @@ function updateDeckHealth(){
   }
 }
 function frameCore(ms) {
+  if(window.__titleTransition){last=ms;drawWorld(tAcc,0);return;}
   if(window.EmberAttackAlign?.isOpen()){last=ms;return;}
   window.__firstFrame = true;
   // Clear the pickup layer even on frames that return early for menus or fishing.
@@ -5288,7 +5289,8 @@ const WM_ABOUT = {
   "Cinderhold":          "Dark keep on an island in the lava, at the end of the last road.",
 };
 const BOOT = {
-  at: 0, timer: 0, loading: false, loadPick: 0,
+  at: 0, timer: 0, loading: false, loadPick: 0, transitioning: false,
+  pause(ms) { return new Promise(resolve=>setTimeout(resolve,ms)); },
   paint() {
     const f = document.getElementById("bootFill");
     if (f) f.style.width = BOOT.at.toFixed(1) + "%";
@@ -5314,7 +5316,8 @@ const BOOT = {
   step(pct, msg) { BOOT.say(msg); },
   waiting: false,
   async ready() {
-    await BOOT.to(100, 900, "");
+    await Promise.all([BOOT.to(94,4200,""),window.EmberTitleAudio?.waitReady()]);
+    await BOOT.to(100,500,"");
     BOOT.waiting = true;
     gameplayReady = true;
     document.body.classList.add("boot-ready");
@@ -5333,15 +5336,24 @@ const BOOT = {
     try { migrateLegacySave(); has = !!(readSaveSlot(1)||readSaveSlot(2)||readSaveSlot(3)); } catch (e) { has = false; }
     if (l) { l.style.opacity = has ? "1" : ".35"; l.dataset.on = has ? "1" : ""; }
   },
-  close() {
-    if (!gameplayReady || BOOT.loading) return;
-    gameplayStarted = true;
-    gameplayReady = false;
+  async close() {
+    if (!gameplayReady || BOOT.loading || BOOT.transitioning) return;
+    BOOT.transitioning=true;window.__titleTransition=true;
+    gameplayReady=false;BOOT.waiting=false;clearPadInputs();
     document.body.classList.remove("boot-ready");
-    document.body.classList.add("game-started");
-    BOOT.waiting = false;
-    const el = document.getElementById("boot");
-    if (el) el.style.display = "none";
+    document.body.classList.remove("boot-load-open");
+    const shade=document.getElementById("titleFade"),el=document.getElementById("boot");
+    if(shade){shade.hidden=false;shade.style.transition="opacity 1200ms ease";shade.style.opacity="0";shade.getBoundingClientRect();shade.style.opacity="1";}
+    await Promise.all([BOOT.pause(1200),window.EmberTitleAudio?.fadeOut(1200)]);
+    if(el)el.style.display="none";
+    await BOOT.pause(550);
+    await Promise.all([BOOT.pause(1400),window.EmberTitleAudio?.fadeIn()]);
+    if(shade){shade.style.transition="opacity 1100ms ease";shade.style.opacity="0";}
+    await BOOT.pause(1100);
+    gameplayStarted=true;BOOT.transitioning=false;window.__titleTransition=false;
+    clearPadInputs();document.body.classList.add("game-started");
+    if(shade)shade.hidden=true;
+    window.EmberTitleAudio?.finish();
   },
   activate() { if (BOOT.loading) BOOT.takeLoad(); else BOOT.close(); },
   openLoad() {
@@ -5390,7 +5402,7 @@ const BOOT = {
       document.getElementById("bootLoadMsg").textContent = "That save could not be loaded. Choose another save or go back.";
       return;
     }
-    BOOT.back(); BOOT.close();
+    BOOT.loading=false;BOOT.close();
   },
   back() {
     globalThis.window?.EmberSfx?.ui?.();

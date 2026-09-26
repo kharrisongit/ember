@@ -61,7 +61,8 @@
 <audio id="emberfellSnowRouteBgm" loop preload="none" src="assets/audio/snow-route-loop.m4a?v=20260926-1"></audio>
 <audio id="lastDragonriderTitleBgm" loop preload="auto" src="assets/audio/title-ending-loop.m4a?v=20260926-1"></audio>
 <audio id="emberfellSporesBgm" loop preload="none" src="assets/audio/spores-loop.m4a?v=20260926-1"></audio>
-<script src="js/audio.js?v=20260926-six-tracks-title"></script>
+<script src="js/audio.js?v=20260926-title-transition"></script>
+<div id="titleFade" hidden aria-hidden="true" style="position:fixed;inset:0;z-index:2147483001;background:#000;opacity:0;pointer-events:auto"></div>
 <div id="stage">
 <div id="boot" style="position:absolute;inset:0;z-index:99;display:flex;
      flex-direction:column;align-items:center;justify-content:center;gap:14px;
@@ -393,7 +394,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dragon-dialogue.js?v=20260926-conversation-context"></script>
 <script src="assets/portraits/manifest.js?v=20260926-portraits2"></script>
 <script src="js/dialogue-portraits.js?v=20260926-hatch-close"></script>
-<script src="js/generated/game-part-3.js?v=20260926-attack-alignment" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260926-title-transition" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
