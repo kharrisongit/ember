@@ -74,7 +74,7 @@ function showDialoguePortrait(who) {
   faceEl.style.display='none';
   faceEl.style.backgroundImage='none';
   faceEl.className=who==='Corin'?'right':'left';
-  nameEl.className=(typeWho?'on ':'')+(who==='Corin'?'left':'right');
+  nameEl.className=who?(typeWho?'on ':'')+(who==='Corin'?'left':'right'):'';
   shownFace=portrait?portrait.id:-1;
   if(!portrait){faceEl.removeAttribute('data-speaker');return;}
   faceEl.dataset.speaker=PORTRAIT_ALIASES[who]||who;

@@ -23,9 +23,13 @@ for(let pack=1;pack<=7;pack++){
   assert.equal(bytes.toString('ascii',8,12),'WEBP');
 }
 // A late image must never resurrect a closed or different speaker's portrait.
-run("showDialoguePortrait('Nan Ferrow'); showDialoguePortrait(null)");
+run("typeWho='Nan Ferrow'; showDialoguePortrait('Nan Ferrow')");
+assert.equal(c.nameEl.className,'on right');
+run('showDialoguePortrait(null)');
+assert.equal(c.nameEl.className,'');
 scripts.at(-1).onload();images.at(-1).onload();await Promise.resolve();
 assert.equal(face.style.display,'none');
+assert.equal(c.nameEl.className,'');
 run("showDialoguePortrait('Aurelius');showDialoguePortrait('Corin')");
 scripts[0].onload();images.at(-1).onload();await Promise.resolve();
 assert.equal(face.dataset.speaker,'Corin');assert.equal(face.className,'right');
@@ -48,4 +52,18 @@ assert(!c.map.npcs[2].editorDeleted);
 // The editor's server-side validation has no DOM head or image loader.
 c.document.head=undefined;
 assert.equal(await run('loadPortraitPack(7)'),null);
+// Closing mid-sentence must stop the typewriter from restoring the name.
+const game=read('js/generated/game-part-2.js');
+run(game.slice(game.indexOf('const TYPE_CPS ='),game.indexOf('\nfunction showScene()')));
+run(game.slice(game.indexOf('function sayOff()'),game.indexOf('\nlet sayNpc =')));
+c.sayEl={classList:{remove(){}},style:{},innerHTML:''};
+c.esc=s=>s;
+run("typeStart('Nan Ferrow','A sentence still being typed.'); stepType(0.1); sayOff(); stepType(1)");
+assert.equal(c.nameEl.textContent,'');
+assert.equal(c.nameEl.className,'');
+assert.equal(face.style.display,'none');
+assert.equal(run('typeDone()'),true);
+run("typeStart('Corin','Next conversation.');typeAll();showFace('Corin')");
+assert.equal(c.nameEl.textContent,'Corin');
+assert.equal(c.nameEl.className,'on left');
 console.log('PASS: all 131 portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');

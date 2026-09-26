@@ -10514,6 +10514,8 @@ function faceFor(who) { return typeof portraitFor==='function' ? (portraitFor(wh
 function sayOn() { sayEl.classList.add("on"); sayEl.style.display = ""; }
 function sayOff() {
   sayEl.classList.remove("on"); sayEl.style.display = "";
+  typeWho = ""; typeFull = ""; typed = 0;
+  nameEl.textContent = "";
   nameEl.className = "";
   showFace(null);
 }
