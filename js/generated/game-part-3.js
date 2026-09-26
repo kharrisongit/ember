@@ -5326,11 +5326,16 @@ const BOOT = {
     document.getElementById("bootBtns").style.display="none";
     document.getElementById("bootBegin").hidden=false;
   },
-  begin() {
-    if(!gameplayReady||BOOT.menuOpen||BOOT.transitioning)return;
+  async begin() {
+    if(!gameplayReady||BOOT.menuOpen||BOOT.transitioning||BOOT.beginning)return;
+    BOOT.beginning=true;
+    // Unlock audio inside the user's gesture, before awaiting the flight.
     window.EmberTitleAudio?.begin();
-    BOOT.menuOpen=true;BOOT.menuPick=0;
     document.getElementById("bootBegin").hidden=true;
+    try { await window.EmberTitleScreen?.depart(); }
+    catch(e) { console.warn("Title flight could not finish",e); }
+    clearPadInputs();
+    BOOT.beginning=false;BOOT.menuOpen=true;BOOT.menuPick=0;
     document.body.classList.add("boot-menu-open");
     BOOT.showMenu();
   },

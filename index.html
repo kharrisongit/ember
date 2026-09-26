@@ -31,7 +31,7 @@
 <title>The Last Dragonrider</title>
 <meta name="description" content="The Last Dragonrider, a top-down pixel-art RPG.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23171310'/%3E%3Cpath d='M16 3c2 6 8 8 8 16a8 8 0 1 1-16 0c0-4 2-7 5-10 0 4 1 6 3 7-1-5 0-9 0-13Z' fill='%23e0913f'/%3E%3Cpath d='M16 15c3 3 4 5 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8Z' fill='%23f0e6d2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/game.css?v=20260926-dragon-portrait-seat">
+<link rel="stylesheet" href="css/game.css?v=20260926-title-flight">
 <link rel="stylesheet" href="css/merchant-shop.css?v=20260926-shops1">
 </head>
 <body>
@@ -68,9 +68,16 @@
      flex-direction:column;align-items:center;justify-content:center;gap:14px;
      background:radial-gradient(120% 90% at 50% 35%,#2b1d16 0%,#120c09 70%);
      color:#e8dcc0;font:14px/1.4 ui-monospace,monospace;text-align:center">
-  <div style="font-size:min(8vw,42px);font-weight:800;letter-spacing:.16em;
-       color:#f0c060;text-shadow:0 3px 0 #6b3a12,0 0 26px rgba(240,192,96,.28)">
-    THE LAST<br>DRAGONRIDER</div>
+  <div id="titleLogo">
+    <div id="titleSky" aria-hidden="true">
+      <div id="titleRider"><canvas id="titleRiderArt" width="128" height="128"></canvas></div>
+    </div>
+    <h1 id="titleWords" aria-label="The Last Dragonrider">
+      <span class="titleWord titleThe" aria-hidden="true">THE</span>
+      <span class="titleWord titleLast" aria-hidden="true">LAST</span>
+      <span class="titleWord titleDragonrider" aria-hidden="true">DRAGONRIDER</span>
+    </h1>
+  </div>
   <div id="bootLabel" style="font-size:13px;letter-spacing:.18em;opacity:.85;
        color:#e8dcc0">LOADING</div>
   <div id="bootBar" style="width:min(62vw,320px);height:7px;border:1px solid #5a4326;
@@ -87,6 +94,7 @@
   </div>
   <div id="bootLoadPanel" hidden><div id="bootLoadRows"></div><div id="bootLoadMsg" role="status"></div></div>
 </div>
+<script src="js/title-screen.js?v=20260926-title-flight"></script>
   <canvas id="cv"></canvas>
 <div id="npcLineupControls" hidden aria-label="NPC lineup browser"><button id="bNpcType" aria-label="Next NPC type">Walking ▸</button><button id="bNpcPrev" aria-label="Previous NPC page">‹</button><span id="npcLineupStatus" aria-live="polite"></span><button id="bNpcNext" aria-label="Next NPC page">›</button><button id="bNpcClose" aria-label="Close NPC lineup">×</button></div>
 <div id="geometryBar"><span id="geometryLabel"></span><span id="collisionBrushes"><button data-collision="block" class="on">Block</button><button data-collision="open">Open</button><button data-collision="reset">Restore</button></span><button id="geometryPan">PAN</button><button id="geometryCopy">COPY</button><button id="geometryDone">DONE</button></div>
@@ -394,7 +402,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dragon-dialogue.js?v=20260926-conversation-context"></script>
 <script src="assets/portraits/manifest.js?v=20260926-portraits2"></script>
 <script src="js/dialogue-portraits.js?v=20260926-hatch-close"></script>
-<script src="js/generated/game-part-3.js?v=20260926-press-begin" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260926-title-flight" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
