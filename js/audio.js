@@ -106,7 +106,7 @@ let routeMusicIntroPlayed=false;
   };
   const inCinderholdInterior=()=>{
     try {
-      if(typeof MAPID==='undefined') return false;
+      if(typeof MAPID==='undefined'||MAPID==='world') return false;
       if(MAPID==='cinderhold' || /^royal_/.test(MAPID)) return true;
       if(typeof MD!=='undefined' && /^Cinderhold\b/.test(MD.title||'')) return true;
     } catch(e) {}
@@ -154,7 +154,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);

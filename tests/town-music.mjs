@@ -33,7 +33,7 @@ function setup(stored=null,ios=false){
 const {c,track,elements,change,advance,listeners,sync,getStored}=setup();
 assert.equal(c.window.EmberAudio.percent(),35);assert([...elements.values()].every(a=>a.paused),'No autoplay before a gesture');
 listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35);
-for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['royal_entry','Cinderhold entry'],['mine2','Forgewick Mine']]){
+for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['mine2','Forgewick Mine']]){
  await change(map,title,x,y);assert.equal(track('Millwood').paused,false,title+' uses the default until its own song exists');assert.equal(track('Millwood').currentTime,17);
 }
 for(const a of elements.values())if(!['emberfellMillwoodBgm','emberfellVillainBgm'].includes(a.id))assert.equal(a.plays,0,'Empty audio placeholders never replace the default');
@@ -48,7 +48,7 @@ c.window.EmberKingMusic.start();await advance();assert.equal(track('Villain').pa
 c.scene=null;c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').paused,false);
 c.lastFight=1;await change('cinderhold','Throne room');assert.equal(track('Villain').paused,false,'Final battle starts the theme even without prior dialogue');
 c.lastFight=2;sync();await advance();assert.equal(track('Villain').paused,false,'King’s second phase keeps the song');
-c.wonAll=true;sync();await advance();assert.equal(track('Millwood').paused,false,'Victory restores the default');c.wonAll=false;c.lastFight=0;
+c.wonAll=true;sync();await advance();assert.equal(track('Cinderhold').paused,false,'Victory restores Cinderhold music');c.wonAll=false;c.lastFight=0;
 await change('world','Emberfell',30,430);
 // Royal music cuts the outgoing track immediately, including while buffering.
 track('Villain').waitForPlay=true;c.window.EmberKingMusic.start();
@@ -268,3 +268,15 @@ await interiors.change('school2','Thornwell School — Upper Study');assert.equa
 await interiors.change('tavern','The Copper Cup — Thornwell Tavern');assert(!interiors.track('Tavern').paused);assert(interiors.track('School').paused);assert(interiors.track('Thornwell').paused);
 await interiors.change('inn','Thornwell Inn');assert(!interiors.track('Thornwell').paused);assert(interiors.track('Tavern').paused);
 console.log('PASS: School loops continuously across both floors; Tavern uses its own track; other town interiors restore Thornwell.');
+
+const castle=setup();castle.listeners.pointerdown();await castle.advance();
+for(const id of ['royal_entry','royal_hall','royal_treasury','royal_seal','cinderhold']){
+ await castle.change(id,'Cinderhold — Castle');assert(!castle.track('Cinderhold').paused,id+' plays castle music');
+}
+assert.equal(castle.track('Cinderhold').plays,1,'Room transitions keep the same continuous loop');
+castle.c.lastFight=1;castle.sync();await castle.advance();assert(!castle.track('Villain').paused);assert(castle.track('Cinderhold').paused);
+castle.c.wonAll=true;castle.sync();await castle.advance();assert(!castle.track('Cinderhold').paused,'Victory restores castle music');
+for(const [id,title,x,y] of [['world','Cinderhold',1400,120],['world','Ashcrag',1300,200],['mine2','Forgewick Mine'],['house22','Millwood — Maddock’s House'],['inn','Thornwell Inn']]){
+ await castle.change(id,title,x,y);assert(castle.track('Cinderhold').paused,'Castle music stops in '+id+' '+title);
+}
+console.log('PASS: Cinderhold loop stays inside castle rooms, yields to final battle music, resumes after victory and stops on exit.');
