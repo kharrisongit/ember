@@ -2280,3 +2280,11 @@ body.pseudoFullscreen{
 #npcLineupControls button{font:inherit;font-weight:bold;min-width:32px;min-height:36px;padding:6px;border:1px solid #9d8052;border-radius:5px;background:#3d2f21;color:#f4e4bb;cursor:pointer;touch-action:manipulation}
 #npcLineupControls button:disabled{opacity:.35;cursor:default}
 #npcLineupStatus{white-space:nowrap;text-align:center;min-width:80px}
+
+/* Loading has no active game controls. A becomes available at LOADED. */
+body:not(.game-started) #deck,
+body:not(.game-started) #deck * { pointer-events: none !important; }
+body.boot-ready:not(.game-started) #act { pointer-events: auto !important; }
+/* Full-deck menus own the controller area until their click has completed. */
+body.deck-menu-open #deck,
+body.deck-menu-open #deck * { pointer-events: none !important; }

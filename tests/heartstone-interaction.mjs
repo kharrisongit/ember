@@ -8,7 +8,7 @@ const c=vm.createContext({TS:16,MAPID:'tp1_sanctum',MD:{},P:{},breathHas:{lightn
  SPR:{it_hs_light:[0],it_hs_ice:[0],it_hs_shadow:[0],heartstone_chest:[0,0,19,22,5]},HS_ICON:{lightning:'it_hs_light',ice:'it_hs_ice',shadow:'it_hs_shadow'},
  dragon:{hp:8,maxHp:8,down:false},dragonMaxHp:()=>8,syncDragonVitality(){},stepLootChestOpening(){},stepDark(){},checkDeepPrize(){},
  showReveal:(icon,caption)=>rewards.push({icon,caption}),saveGame:()=>saves++,toast:s=>notices.push(s),
- atlasOpen:false,fishing:null,BOOT:{waiting:false},deadShown:false,ovl:null,ask:null,bagOpen:false,grabGold:()=>false,
+ gameplayStarted:true,atlasOpen:false,fishing:null,BOOT:{waiting:false},deadShown:false,ovl:null,ask:null,bagOpen:false,grabGold:()=>false,
  sayNpc:null,glassHatchNear:()=>false,doorMotion:null,sceneHold:()=>false,ride:null,trialDemonHere:()=>false,trial:null,
  interactTrialPedestal:()=>false,tryFerrySign:()=>false,ferryTry:()=>false,tryHouseLootChest:()=>false,tryTreasuryChest:()=>false,tryExpandedTempleLever:()=>false,
  tryTempleLever:()=>false,tryCellarSupplies:()=>false,itemAt:()=>null,questTalk:()=>false,npcs:[],tryFishing:()=>false,

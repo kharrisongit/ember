@@ -5230,13 +5230,13 @@ function setBag(on) {
 const bagCloseBtn = document.getElementById("bagClose");
 const bagSaveBtn = document.getElementById("bagSave");
 const bagMusicBtn = document.getElementById("bagMusic");
-if (bagCloseBtn) bagCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setBag(false); });
-if (bagSaveBtn) bagSaveBtn.addEventListener("pointerup", e => {
+if (bagCloseBtn) bagCloseBtn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); setBag(false); });
+if (bagSaveBtn) bagSaveBtn.addEventListener("click", e => {
   e.preventDefault(); e.stopPropagation();
   setBag(false);
   setOvl("savePrompt");
 });
-if (bagMusicBtn) bagMusicBtn.addEventListener("pointerup", e => {
+if (bagMusicBtn) bagMusicBtn.addEventListener("click", e => {
   e.preventDefault(); e.stopPropagation();
   setBag(false);
   setOvl("sound");
@@ -5267,7 +5267,6 @@ const WM_ABOUT = {
   "Ashcrag":             "Volcanic mountain, the far mouth of the pass. Lava road beyond.",
   "Cinderhold":          "Dark keep on an island in the lava, at the end of the last road.",
 };
-let gameplayStarted = false;
 const BOOT = {
   at: 0, timer: 0,
   paint() {
@@ -5297,6 +5296,8 @@ const BOOT = {
   async ready() {
     await BOOT.to(100, 900, "");
     BOOT.waiting = true;
+    gameplayReady = true;
+    document.body.classList.add("boot-ready");
     const m = document.getElementById("bootMsg");
     const b = document.getElementById("bootBtns");
     const l = document.getElementById("bootLoad");
@@ -5313,7 +5314,11 @@ const BOOT = {
     if (l) { l.style.opacity = has ? "1" : ".35"; l.dataset.on = has ? "1" : ""; }
   },
   close() {
+    if (!gameplayReady) return;
     gameplayStarted = true;
+    gameplayReady = false;
+    document.body.classList.remove("boot-ready");
+    document.body.classList.add("game-started");
     BOOT.waiting = false;
     const el = document.getElementById("boot");
     if (el) el.style.display = "none";
@@ -5424,6 +5429,7 @@ function setOvl(which) {
     else el.style.display = (k === which) ? "block" : "none";
   }
   ovl = which || null;
+  document.body.classList.toggle("deck-menu-open", ovl === "airm" || ovl === "atkm");
   if (ovl) { MENUS[ovl].pick = 0; refreshOvl(); }
 }
 function refreshOvl() {
@@ -5532,9 +5538,11 @@ function ovlTake() {
   if (items[M.pick] && items[M.pick].go) items[M.pick].go();
 }
 const atkCloseBtn=document.getElementById("atkCloseBtn");
-if(atkCloseBtn)atkCloseBtn.addEventListener("pointerup",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
+// Keep the menu in place through pointerup/touchend and the compatibility
+// mouse events. Closing on pointerup can send the final click to DEV below it.
+if(atkCloseBtn)atkCloseBtn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
 const airCloseBtn=document.getElementById("airCloseBtn");
-if(airCloseBtn)airCloseBtn.addEventListener("pointerup",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
+if(airCloseBtn)airCloseBtn.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
 bindHold("btnL", () => {
                          trigHold("l", true);
                          if (hasDragon()) setOvl(ovl === "atkm" ? null : "atkm"); },
@@ -5549,8 +5557,8 @@ bindHold("btnItems", () => {
 bindHold("btnMapQuick", () => { if (atlasOpen) closeAtlas(); else openAtlas(); }, null);
 const itemCloseBtn = document.getElementById("itemCloseBtn");
 const itemFullBtn = document.getElementById("itemFullBtn");
-if (itemCloseBtn) itemCloseBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); });
-if (itemFullBtn) itemFullBtn.addEventListener("pointerup", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); setBag(true); });
+if (itemCloseBtn) itemCloseBtn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); });
+if (itemFullBtn) itemFullBtn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); setBag(true); });
 
 function soundPercent(){ return (window.EmberAudio && window.EmberAudio.percent) ? window.EmberAudio.percent() : 35; }
 function syncSoundDial(){
@@ -5570,8 +5578,8 @@ function syncSoundDial(){
   const fromPointer=e=>{const r=track.getBoundingClientRect();setV((e.clientX-r.left)/Math.max(1,r.width)*100);};
   if(track){track.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track.setPointerCapture?.(e.pointerId);fromPointer(e);});track.addEventListener("pointermove",e=>{if(drag)fromPointer(e);});track.addEventListener("pointerup",e=>{drag=false;track.releasePointerCapture?.(e.pointerId);});}
   if(knob){knob.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track?.setPointerCapture?.(e.pointerId);});}
-  if(mute)mute.addEventListener("pointerup",e=>{e.preventDefault();const v=soundPercent();setV(v===0?(lastNonZero||35):0);});
-  if(close)close.addEventListener("pointerup",e=>{e.preventDefault();setOvl(null);});
+  if(mute)mute.addEventListener("click",e=>{e.preventDefault();const v=soundPercent();setV(v===0?(lastNonZero||35):0);});
+  if(close)close.addEventListener("click",e=>{e.preventDefault();setOvl(null);});
 })();
 
 
@@ -5826,7 +5834,8 @@ setInterval(() => {
   }
   if (itemsBtn) itemsBtn.textContent = started ? "ITEMS" : "";
   if (mapBtn) mapBtn.textContent = started ? "MAP" : "";
-  if (ovl === "atkm") refreshOvl();
+  // Cooldowns update in place in frameCore; replacing these rows during a
+  // touch detaches the pressed button before the browser can deliver its click.
 }, 400);
 
 const SKIN_BAND = { y: 831, h: 142 };

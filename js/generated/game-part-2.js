@@ -3754,7 +3754,7 @@ function drawWorld(t, dt) {
   if (dragonHere() && dragon.on && !dragonAirborne() &&
       !(typeof mounted !== "undefined" && mounted))
     draw.push({ dg: true, x: dragon.x, y: dragon.y });
-  if (hatchScene && MAPID === "world")
+  if (hatchScene && hatchScene.stage >= 3 && MAPID === "world")
     draw.push({ hatchActor: true,
                 x: hatchScene.stage < 7 ? hatchScene.x : hatchScene.dragonX,
                 y: hatchScene.stage < 7 ? hatchScene.y : hatchScene.dragonY });
@@ -4692,9 +4692,16 @@ function drawWeather(t) {
   ctx.drawImage(weatherFrameCanvas, 0, 0);
 }
 
+// These flags exist before any controls are bound, including while later
+// scripts and the world are still loading.
+let gameplayStarted = false, gameplayReady = false;
 const keys = {};
 addEventListener("keydown", e => {
   const k=e.key.toLowerCase();
+  if (!gameplayStarted) {
+    if (k === " " || k === "a") { e.preventDefault(); if (!e.repeat) actionButton(); }
+    return;
+  }
   if(typeof ask!=='undefined'&&ask&&(k==='arrowup'||k==='arrowdown'||k==='escape')){
     e.preventDefault();if(k==='escape'){if(!e.repeat)askBack();}else askStep(k==='arrowup'?-1:1);return;
   }
@@ -4769,6 +4776,7 @@ function padBind() {
 
   for (const el of cells) {
     const press = (e) => {
+      if (!gameplayStarted) { e?.preventDefault(); return; }
       const dy = parseInt(el.dataset.dy, 10) || 0;
       const dx = parseInt(el.dataset.dx, 10) || 0;
       if(atlasOpen){atlasMove(dx,dy);e?.preventDefault();return;}
@@ -4844,6 +4852,9 @@ function bindHold(id, onDown, onUp) {
   if (!el) { (window.__boot = (window.__boot || "") +
               "\nbindHold: no element #" + id); return; }
   const down = (e) => {
+    if (!gameplayStarted && !(id === "act" && gameplayReady)) {
+      e?.preventDefault(); e?.stopPropagation(); return;
+    }
     el.classList.add("hit"); onDown();
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
   };
@@ -4857,6 +4868,22 @@ function bindHold(id, onDown, onUp) {
   el.addEventListener("mousedown", down);
   el.addEventListener("mouseup", up);
 }
+
+// A visible menu owns its touches. The deck-sized dragon menus cover every
+// controller; other menus still use the exposed D-pad, A and B to navigate.
+function blockCoveredGameInput(e) {
+  const target = e.target;
+  if (!target?.closest?.("#deck, #cv")) return;
+  let blocked = !gameplayStarted;
+  if (blocked && gameplayReady && target.closest("#act")) blocked = false;
+  if (gameplayStarted && (ovl || bagOpen || atlasOpen || ask)) {
+    blocked = ovl === "airm" || ovl === "atkm" ||
+      !target.closest("#dpad, #act, #btnB");
+  }
+  if (blocked) { e.preventDefault(); e.stopImmediatePropagation(); }
+}
+for (const event of ["pointerdown", "touchstart", "mousedown", "click"])
+  document.addEventListener(event, blockCoveredGameInput, { capture: true, passive: false });
 
 const SCROLLERS = ["toolbody", "bagLeft", "bagPanel", "bagRows", "bagAsk"];
 
@@ -6528,6 +6555,7 @@ function advanceScene() {
   if (scene.hold) return;          /* it has not begun */
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
+  if (scene.hatch && scene.i === 3 && scene.t < 0.6) return; /* finish putting the egg down */
   /* The hatchling's two turns are staged beats, not skippable text taps. */
   if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
   if (scene.hatch && scene.i === 9 &&
@@ -10636,7 +10664,7 @@ function finishSmithUpgrade() {
 }
 let glassHatchStarted = -1;
 function glassHatchFrame() { return glassHatchStarted < 0 ? 0 : Math.min(3, Math.floor((performance.now() / 1000 - glassHatchStarted) / 0.15)); }
-function glassHatchPosition(){return W.maps.glasshouse?.roomActors?.find(a=>a.glassHatch)||{x:68,y:120};}
+function glassHatchPosition(){return W?.maps?.glasshouse?.roomActors?.find(a=>a.glassHatch)||{x:68,y:120};}
 function glassHatchBlocked(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&glassHatchFrame()<3&&x>=h.x-20&&x<h.x+20&&y>=h.y-16&&y<h.y-2;}
 function glassHatchNear(x,y){const h=glassHatchPosition();return MAPID==='glasshouse'&&Math.abs(x-h.x)<29&&Math.abs(y-(h.y-4))<28;}
 function drawHettieCallout(n,sp) {
@@ -11001,6 +11029,7 @@ padBind();
   });
 }
 function actionButton() {
+  if (!gameplayStarted) { if (gameplayReady) BOOT.close(); return; }
   if(atlasOpen)return;
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}
   if (typeof BOOT !== "undefined" && BOOT.waiting) { BOOT.close(); return; }
