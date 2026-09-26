@@ -8038,7 +8038,7 @@ function swingHits() {
   a.hit = 1;
   const [dx,dy] = directionVector(playerFacing4(a));
   const tx = P.x + dx * 16, ty = P.y + dy * 16;
-  let landed=false;
+  let landed=false,golemLanded=false;
   for (const f of foes) {
     if (f.st === "dead" || f.ally) continue;      /* his own dead are not targets */
     const body = foeBodyProfile(f);
@@ -8055,7 +8055,8 @@ function swingHits() {
       edgeCarry += 0.2;
       if (edgeCarry >= 1) { dmg += 1; edgeCarry -= 1; }
     }
-    f.hp -= dmg; f.hurt = 0.25; landed=true;
+    f.hp -= dmg; f.hurt = 0.25;
+    if(/^golem\d*$/.test(f.kind))golemLanded=true;else landed=true;
     if (f.hp > 0) makeFoeRetreat(f, P.x, P.y);
     if (f.hp <= 0) {
       f.st = "dead"; f.t = 0;
@@ -8069,6 +8070,7 @@ function swingHits() {
     }
   }
   if(landed)globalThis.window?.EmberSfx?.hit();
+  if(golemLanded)globalThis.window?.EmberSfx?.golemHit();
 }
 let edgeCarry = 0;
 const charm = { spore: false, ward: false, edge: false, brand: false, twin: false,

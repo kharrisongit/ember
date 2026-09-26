@@ -96,3 +96,13 @@ const enemy=target();await strike([enemy]);assert.equal(enemy.hp,2);assert.equal
 c.swingHits();await flush();assert.equal(hitCount(),1,'A swing cannot repeat the hit sound every frame');
 await strike([target(),{...target(),hp:1}]);assert.equal(hitCount(),2,'A sweep hitting several enemies, including a kill, makes one impact cue');
 console.log('PASS: sword impact fires only on successful damage, once per swing; misses, allies, corpses and boss deflections stay silent.');
+
+const golemCount=()=>sources.filter(s=>s.buffer[0].includes('golem-hit')).length;
+const normalBefore=hitCount();
+for(const kind of ['golem1','golem2','golem3','golem4'])await strike([{...target(),kind}]);
+assert.equal(golemCount(),4);assert.equal(hitCount(),normalBefore,'Golems replace the ordinary impact sound');
+await strike([{...target(),kind:'golem1',ally:true},{...target(),kind:'golem2',st:'dead'},{...target(),kind:'golem3',x:1000}]);
+assert.equal(golemCount(),4,'Only a golem that actually takes sword damage produces an impact');
+await strike([{...target(),kind:'golem1'},{...target(),kind:'golem4',hp:1}]);assert.equal(golemCount(),5,'One golem impact per connected swing, including kills');
+await strike([target(),{...target(),kind:'golem2'}]);assert.equal(hitCount(),normalBefore+1);assert.equal(golemCount(),6,'Mixed targets each get their appropriate impact');
+console.log('PASS: all four golem types use their own successful sword impact; ordinary enemies keep theirs.');
