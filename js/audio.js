@@ -178,8 +178,8 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([millwood,reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
-  const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
+  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a)&&!loops.get(a).failed);
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
     const loop=loops.get(a);
@@ -218,7 +218,12 @@ let routeMusicIntroPlayed=false;
     if(loop.source)return;
     const request=++loop.request,buffer=loop.buffer||await prepareLoop(a);
     if(request!==loop.request)return;
-    if(!buffer)throw Error('Loop audio unavailable');
+    if(!buffer){
+      // Decoding/fetch failures must not strand the selected track in silence.
+      loop.failed=true;
+      audioContext.createMediaElementSource(a).connect(channels.get(a));
+      return a.play();
+    }
     const source=audioContext.createBufferSource();source.buffer=buffer;source.loop=true;
     source.connect(channels.get(a));loop.source=source;source.start();
   };

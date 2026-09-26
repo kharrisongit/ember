@@ -1,6 +1,6 @@
 import fs from 'node:fs';import zlib from 'node:zlib';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'),html=read('index.html');
-function setup(stored=null,ios=false){
+function setup(stored=null,ios=false,failBuffers=false){
  const elements=new Map(),timers=[],listeners={};let sync,now=0;
  const attrs=new Map([...html.matchAll(/<audio id="([^"]+)"([^>]*>)([\s\S]*?)<\/audio>/g)].map(m=>[m[1],(m[2]+m[3]).match(/src="([^"]*)"/)?.[1]||'']));
  const c=vm.createContext({mode:'play',quest:0,Q:{NOISE:5,ARMED:6,DONE:9},dragonJourneyEnded:false,dragonIntroDone:false,saveGame(){},MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
@@ -15,12 +15,14 @@ function setup(stored=null,ios=false){
   c.window.AudioContext=class{
    constructor(){this.state='suspended';this.currentTime=0;this.destination={};this.sources=new Map();this.resumes=0;contexts.push(this);}
    createGain(){return node();}
+   decodeAudioData(){return Promise.reject(Error('Decode failed'));}
    createMediaElementSource(a){assert(!this.sources.has(a),'One source per audio element');const source=node();source.gain=null;this.sources.set(a,source);return source;}
    resume(){this.resumes++;this.state='running';return Promise.resolve();}
   };
   const get=c.document.getElementById;
   c.document.getElementById=id=>{const a=get(id);Object.defineProperty(a,'volume',{configurable:true,get:()=>1,set(){}});return a;};
  }
+ if(failBuffers){c.window.AudioContext.prototype.createBufferSource=()=>{throw Error('Failed buffers must use streaming fallback');};c.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});}
  const audible=a=>{
   if(a.paused)return 0;let level=a.volume,n=contexts[0]?.sources.get(a);
   while(n){if(n.gain)level*=n.gain.value;n=n.next;}return level;
@@ -68,7 +70,7 @@ await change('inn','Thornwell Inn');assert.equal(track('Thornwell').paused,false
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
 for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000],['Thornwell','thornwell-shop.m4a',1600000]]){
- const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,name==='Villain'?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
+ const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,['Villain','Millwood'].includes(name)?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }
 console.log('PASS: default music covers unassigned areas; actual royal speakers and both final battle phases get the King’s theme; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');
@@ -313,3 +315,10 @@ pacing.c.window.EmberKingMusic.stop();await pacing.advance(300);assert.equal(pac
 await pacing.advance(1000);assert(pacing.track('Millwood').volume>0&&pacing.track('Millwood').volume<.35*.85*.5,'Millwood returns gradually after Halvard');
 await pacing.advance(2400);assert.equal(pacing.track('Millwood').volume,.35*.85);
 console.log('PASS: all output is 15% quieter; Millwood waits briefly then fades in over 3.2 seconds after the King.');
+
+const recovery=setup(null,true,true);recovery.listeners.touchstart();await recovery.advance();
+assert(!recovery.track('Millwood').paused,'Startup song plays directly without waiting for a decoded buffer');
+await recovery.change('school','Thornwell School');await recovery.advance();
+assert(!recovery.track('School').paused,'Failed loop decode falls back to media playback');
+assert.equal(recovery.audible(recovery.track('School')),.35*.85,'Fallback honors the same music gain');
+console.log('PASS: startup uses immediate media playback; failed buffered loops recover audibly with the shared mixer.');
