@@ -44,6 +44,7 @@ window.EmberPortraits={
   register(pack,source) { portraitPackSources.set(pack,source); }
 };
 function loadPortraitPack(pack) {
+  if(!document.head?.appendChild)return Promise.resolve(null);
   if(portraitPackPromises.has(pack))return portraitPackPromises.get(pack);
   const promise=new Promise(resolve=>{
     const script=document.createElement('script');

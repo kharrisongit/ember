@@ -45,4 +45,7 @@ c.map={npcs:[{n:'Chanter'},{n:'Morel'},{n:'Pip'}]};
 run("prepareDialoguePortraitCast(map,'world')");
 assert(c.map.npcs.slice(0,2).every(n=>n.editorDeleted&&n.noTalk));
 assert(!c.map.npcs[2].editorDeleted);
+// The editor's server-side validation has no DOM head or image loader.
+c.document.head=undefined;
+assert.equal(await run('loadPortraitPack(7)'),null);
 console.log('PASS: all 131 portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');
