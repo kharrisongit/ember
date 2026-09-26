@@ -5731,6 +5731,7 @@ function markKingCompleteForTest() {
     clampCam();
   }
   quest = Math.max(quest, Q.DONE);
+  dragonIntroDone=true;dragonIntroArmed=false;
   glassShield = true;
   wonAll = 1;
   if (MAPID === "cinderhold") npcs = npcs.filter(n => !/Halvard/.test(n.n || ""));
@@ -5752,6 +5753,7 @@ tap(document.getElementById("bSkip"), () => {
   kingWalk = 0;
   guardsAside = false;
   quest = Q.DONE;
+  dragonIntroDone=true;dragonIntroArmed=false;
   smithUpgrade = true;
   glassShield = true;
   dragon.on = true;
@@ -5785,7 +5787,7 @@ tap(document.getElementById("bSkip"), () => {
   if (typeof refreshBag === "function" && typeof bagOpen !== "undefined" && bagOpen)
     refreshBag();
   saveGame();
-  toast("Everything granted; Hunter and Bramble completed. Ready to explore.");
+  toast("Everything granted. Aurelius can talk; Hunter and Bramble completed.");
 });
 
 let bothHeldSince = -1, lHeld = false, rHeld = false;

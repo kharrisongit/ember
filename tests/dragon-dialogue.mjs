@@ -137,3 +137,15 @@ run("queueDragonBanter('persistent',['A thought worth remembering.','I will reme
 const stored=JSON.parse(disk.get('test.slot.2'));assert.equal(stored.x,100);assert.equal(stored.quest,8);assert(stored.dragonBanterSeen.includes('persistent'));
 c.restoreHistory=stored.dragonBanterSeen;clear();run('resetDragonBanter(restoreHistory)');run("queueDragonBanter('new-id',['A thought worth remembering.','A different answer.'])");tick(20);assert.equal(active(),null,'reloading does not repeat a shown remark');
 console.log('PASS: short bottom captions, unique wording across events and saves, NPC cooldowns and old-history migration.');
+// The actual Skip button grants dialogue immediately, without the hatch introduction.
+clear();c.ask=null;c.MAPID='world';c.wonAll=false;c.cinderSeal=false;c.P={x:872,y:6130,moving:false};c.dragon={on:false};
+c.document.getElementById=()=>({style:{},appendChild(){}});
+Object.assign(c,{tap:(el,fn)=>{c.pressSkip=fn;},skipBrambleForTest(){},Q:{DONE:9},kingsMen:()=>[],WORN_MAX:2,worn:{},
+ dragonGround:()=>true,charm:{},breathHas:{fire:true},syncDragonVitality(){c.dragon.maxHp=5;},potions:0,elixirs:0,boarMeat:0,dragonFish:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,gold:0,
+ BESTIARY:[],seenFoe:{},seenCount:0,rebuildBuckets(){},reindex(){},chunks:new Map(),toast(){},saveGame(){c.savedSkipIntro=run('dragonIntroDone');}});
+run('dragonIntroDone=false;dragonIntroArmed=true');
+run(part3.slice(part3.indexOf('tap(document.getElementById("bSkip")'),part3.indexOf('let bothHeldSince')));
+c.pressSkip();assert.equal(run('dragonIntroDone'),true);assert.equal(run('dragonIntroArmed'),false);assert.equal(c.savedSkipIntro,true);
+assert.equal(run('tryDragonConversation()'),true,'Skip makes direct conversations available immediately');c.askShut();
+place='Millwood';tick();assert(active(),'Skip also enables travel thoughts');
+console.log('PASS: actual Skip grants and saves Aurelius dialogue; direct conversations and travel thoughts work without replaying the introduction.');

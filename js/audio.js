@@ -1,6 +1,7 @@
 
 (()=>{
   const bgm=document.getElementById('emberfellHomeTownBgm');
+  const millwood=document.getElementById('emberfellMillwoodBgm');
   const villain=document.getElementById('emberfellVillainBgm');
   const battle=document.getElementById('emberfellBattleBgm');
   const thornwell=document.getElementById('emberfellThornwellBgm');
@@ -14,9 +15,20 @@
   if(!bgm) return;
   const KEY='emberfell.musicVolume';
   let pct=35;
-  try { const n=Number(localStorage.getItem(KEY)); if(Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
-  let kingMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
+  try { const stored=localStorage.getItem(KEY),n=Number(stored); if(stored!==null && Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
+  let kingMode=false, millwoodMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
   const target=()=>Math.max(0,Math.min(1,pct/100));
+  const inMillwood=()=>{
+    try{
+      if(typeof MAPID==='undefined')return false;
+      if(MAPID!=='world')return typeof MD!=='undefined' && /^Millwood\b/.test(MD.title||'');
+      if(typeof features==='undefined'||typeof P==='undefined'||typeof TS==='undefined')return false;
+      const x=P.x/TS,y=(P.y-1)/TS;
+      // Follow the current town boundary, including any published editor moves.
+      return features.some(f=>f.kind==='area'&&!f.hidden&&(f.label==='Millwood'||f.place==='Millwood')&&
+        x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1);
+    }catch(e){return false;}
+  };
   const inThornwell=()=>{
     try {
       if(typeof MAPID==='undefined') return false;
@@ -35,7 +47,7 @@
       if(typeof MAPID==='undefined' || MAPID!=='world' || typeof P==='undefined' || typeof TS==='undefined' || typeof features==='undefined') return false;
       const px=P.x/TS, py=P.y/TS;
       // Town zones win over the road at both ends.
-      const inMillwoodTown = px>=48 && px<=104 && py>=246 && py<=310;
+      const inMillwoodTown = inMillwood();
       const inThornwellTown = px>=145 && px<=198 && py>=72 && py<=132;
       if(inMillwoodTown || inThornwellTown) return false;
       const legs=features.filter(f=>f.kind==='route' && (f.id===12 || f.id===13));
@@ -102,10 +114,11 @@
     } catch(e) {}
     return false;
   };
-  const exploreTrack=()=>cinderholdMode&&cinderhold?cinderhold:(mineMode&&mine?mine:(mysticMode&&mystic?mystic:(hollybeckMode&&hollybeck?hollybeck:(forgewickMode&&forgewick?forgewick:(thornwellMode&&thornwell?thornwell:(fieldMode&&field?field:(lavaRouteMode&&lavaRoute?lavaRoute:bgm)))))));
+  const exploreTrack=()=>millwoodMode&&millwood?millwood:cinderholdMode&&cinderhold?cinderhold:(mineMode&&mine?mine:(mysticMode&&mystic?mystic:(hollybeckMode&&hollybeck?hollybeck:(forgewickMode&&forgewick?forgewick:(thornwellMode&&thornwell?thornwell:(fieldMode&&field?field:(lavaRouteMode&&lavaRoute?lavaRoute:bgm)))))));
   const safePlay=(a)=>{ if(!a || pct===0) return; const p=a.play(); if(p&&typeof p.catch==='function') p.catch(()=>{}); };
   const fade=(from,to,done)=>{
     const token=++fadeToken, steps=18, ms=28, goal=target(); let i=0;
+    if(from===to){if(to){to.volume=goal;safePlay(to);}return;}
     if(to){to.volume=0; safePlay(to);}
     const fromStart=from ? from.volume : 0;
     const tick=()=>{
@@ -115,12 +128,11 @@
       if(i<steps) setTimeout(tick,ms); else { if(from){from.pause();from.volume=goal;} if(to)to.volume=goal; if(done)done(); }
     }; tick();
   };
+  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute].filter(Boolean);
   const apply=()=>{
-    const v=target(), exp=exploreTrack();
-    if(battle) battle.pause();
-    if(pct===0){bgm.pause(); if(thornwell)thornwell.pause(); if(field)field.pause(); if(forgewick)forgewick.pause(); if(mystic)mystic.pause(); if(mine)mine.pause(); if(cinderhold)cinderhold.pause(); if(hollybeck)hollybeck.pause(); if(lavaRoute)lavaRoute.pause(); if(villain)villain.pause(); return;}
-    if(kingMode){bgm.pause(); if(thornwell)thornwell.pause(); if(field)field.pause(); if(forgewick)forgewick.pause(); if(mystic)mystic.pause(); if(mine)mine.pause(); if(cinderhold)cinderhold.pause(); if(hollybeck)hollybeck.pause(); if(lavaRoute)lavaRoute.pause(); if(villain)villain.volume=v;}
-    else {if(villain)villain.pause(); if(exp!==bgm)bgm.pause(); if(thornwell&&exp!==thornwell)thornwell.pause(); if(field&&exp!==field)field.pause(); if(forgewick&&exp!==forgewick)forgewick.pause(); if(mystic&&exp!==mystic)mystic.pause(); if(mine&&exp!==mine)mine.pause(); if(cinderhold&&exp!==cinderhold)cinderhold.pause(); if(hollybeck&&exp!==hollybeck)hollybeck.pause(); if(lavaRoute&&exp!==lavaRoute)lavaRoute.pause(); exp.volume=v;}
+    ++fadeToken; // A volume change or mute cancels an unfinished crossfade.
+    const active=pct===0?null:kingMode&&villain?villain:exploreTrack();
+    for(const track of tracks){if(track!==active)track.pause();else track.volume=target();}
   };
   const startMusic=()=>{
     if(pct===0) return;
@@ -135,6 +147,7 @@
   window.EmberBattleMusic={start:()=>{},stop:()=>{},active:()=>false};
   if(battle) battle.pause();
   const syncRegionMusic=()=>{
+    const wantMillwood=inMillwood();
     const wantCinderhold=inCinderholdInterior();
     const wantLavaRoute=!wantCinderhold && inLavaRoute();
     const wantMine=!wantCinderhold && !wantLavaRoute && inForgewickMine();
@@ -143,9 +156,9 @@
     const wantForgewick=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && inForgewick();
     const wantTown=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && inThornwell();
     const wantField=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && !wantTown && inRoute1();
-    if(wantCinderhold===cinderholdMode && wantLavaRoute===lavaRouteMode && wantMine===mineMode && wantMystic===mysticMode && wantHollybeck===hollybeckMode && wantTown===thornwellMode && wantField===fieldMode && wantForgewick===forgewickMode) return;
+    if(wantMillwood===millwoodMode && wantCinderhold===cinderholdMode && wantLavaRoute===lavaRouteMode && wantMine===mineMode && wantMystic===mysticMode && wantHollybeck===hollybeckMode && wantTown===thornwellMode && wantField===fieldMode && wantForgewick===forgewickMode) return;
     const old=exploreTrack();
-    cinderholdMode=wantCinderhold; lavaRouteMode=wantLavaRoute; mineMode=wantMine; mysticMode=wantMystic; hollybeckMode=wantHollybeck; forgewickMode=wantForgewick; thornwellMode=wantTown; fieldMode=wantField;
+    millwoodMode=wantMillwood; cinderholdMode=wantCinderhold; lavaRouteMode=wantLavaRoute; mineMode=wantMine; mysticMode=wantMystic; hollybeckMode=wantHollybeck; forgewickMode=wantForgewick; thornwellMode=wantTown; fieldMode=wantField;
     const next=exploreTrack();
     if(!kingMode&&pct>0) fade(old,next);
     else if(old!==next) old.pause();

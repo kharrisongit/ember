@@ -356,13 +356,15 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/npc-placement.js?v=20260925-green-hettie1"></script>
 <script src="js/editor-draft-integration.js?v=20260925-fresh-publish1"></script>
 <script src="js/dragon-dialogue.js?v=20260926-aurelius-refine2"></script>
-<script src="js/generated/game-part-3.js?v=20260926-aurelius-refine2" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260926-aurelius-skip1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
    lexical image objects declared inside game.js. */
 </script>
 
+<!-- Town tracks are separate compressed files, loaded when needed. -->
+<audio id="emberfellMillwoodBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-1"></audio>
 <!-- EMBERFELL_HOME_TOWN_BGM -->
 <audio id="emberfellHomeTownBgm" loop preload="auto" style="display:none" aria-hidden="true">
   <source src="data:audio/mp4;base64," type="audio/mp4">
@@ -383,6 +385,6 @@ window.addEventListener("unhandledrejection", function (e) {
 <audio id="emberfellHollybeckBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
 <audio id="emberfellCinderholdBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
 
-<audio id="emberfellLavaRouteBgm" loop preload="auto" style="display:none" aria-hidden="true" src="data:audio/mp4;base64,"></audio><script src="js/audio.js?v=20260922-2012"></script>
+<audio id="emberfellLavaRouteBgm" loop preload="auto" style="display:none" aria-hidden="true" src="data:audio/mp4;base64,"></audio><script src="js/audio.js?v=20260926-millwood1"></script>
 </body>
 </html>
