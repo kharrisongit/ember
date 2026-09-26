@@ -1,8 +1,9 @@
-/* Session-only dragon attack anchors. Exported deltas use world pixels, +x right, +y down. */
+/* Published dragon attack anchors with session-only editor adjustments. Exported deltas use world pixels, +x right, +y down. */
 (()=>{
   const directions=['n','ne','e','se','s','sw','w','nw'];
   const kinds=['slash','fire','ice','bolt','shadow'];
-  const offsets={ground:{},air:{}};
+  const defaults={"ground":{"slash:s":[1,-4],"slash:n":[1,17],"slash:e":[-14,15],"slash:w":[13,20],"fire:w":[-2,7],"fire:n":[-8,-9],"fire:e":[7,-8],"fire:s":[6,2],"ice:w":[-21,2],"ice:e":[18,-6],"ice:s":[5,18],"bolt:w":[-8,-1],"bolt:s":[0,18],"bolt:n":[0,-5]},"air":{"slash:w":[14,18],"slash:n":[3,21],"slash:e":[-12,15],"slash:s":[1,-1]}};
+  const offsets=JSON.parse(JSON.stringify(defaults));
   let opened=false,dir='s',air=false,kind='slash',playing=true,flight=false,phase=0,last=0,drag=null;
   const key=(k,d)=>k+':'+d;
   const get=(k,d,a)=>offsets[a?'air':'ground'][key(k,d)]||[0,0];
@@ -103,8 +104,8 @@
   $('daFrame').oninput=e=>{phase=Math.min(.999,Number(e.target.value)/1000);playing=false;refresh();};
   $('daFlight').onclick=()=>{flight=!flight;playing=true;phase=0;refresh();};
   for(const id of ['daX','daY'])$(id).onchange=()=>{set(kind,dir,air,Number($('daX').value),Number($('daY').value));refresh();};
-  $('daReset').onclick=()=>{set(kind,dir,air,0,0);refresh();};
-  $('daResetAll').onclick=()=>{offsets.ground={};offsets.air={};refresh();};
+  $('daReset').onclick=()=>{set(kind,dir,air,...(defaults[air?'air':'ground'][key(kind,dir)]||[0,0]));refresh();};
+  $('daResetAll').onclick=()=>{offsets.ground=JSON.parse(JSON.stringify(defaults.ground));offsets.air=JSON.parse(JSON.stringify(defaults.air));refresh();};
   const show=()=>{const text=JSON.stringify(snapshot(),null,2);$('daOutput').value=text;$('daOutput').hidden=false;return text;};
   $('daExport').onclick=()=>{show();$('daOutput').focus();$('daOutput').select();};
   $('daCopy').onclick=async()=>{const text=show();try{await navigator.clipboard.writeText(text);$('daStatus').textContent='Copied. Paste this alignment into our chat.';}catch(e){$('daOutput').focus();$('daOutput').select();$('daStatus').textContent='Select and copy the settings below, then paste them into our chat.';}};
