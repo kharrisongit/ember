@@ -9,6 +9,7 @@ let routeMusicIntroPlayed=false;
   const field=document.getElementById('emberfellFieldBgm');
   const desert=document.getElementById('emberfellDesertBgm');
   const sandspire=document.getElementById('emberfellSandspireBgm');
+  const seatown=document.getElementById('emberfellSeatownBgm');
   const school=document.getElementById('emberfellSchoolBgm');
   const tavern=document.getElementById('emberfellTavernBgm');
   const forgewick=document.getElementById('emberfellForgewickBgm');
@@ -75,6 +76,25 @@ let routeMusicIntroPlayed=false;
       return sandHere(x,y)||(ground===PAVING2&&inDesert(x,y));
     }catch(e){return false;}
   };
+  const inSeatownArea=()=>{
+    try{
+      if(inNamedArea('Coralmere'))return true;
+      if(MAPID!=='world')return false;
+      const x=Math.floor(P.x/TS),y=Math.floor((P.y-1)/TS);
+      if(inDesertRoute()||inMysticArea())return false;
+      if(typeof blossomBand!=='undefined'&&blossomBand&&typeof MW!=='undefined'&&blossomBand.has(y*MW+x))return true;
+      // Follow authored blossom roads through clearings and edited bends.
+      return features.some(f=>{
+        if(f.kind!=='route'||f.style!=='blossom')return false;
+        const pts=f.pts?.length>1?f.pts:[[f.x0,f.y0],[f.x1,f.y1]];
+        return pts.slice(1).some((b,i)=>{
+          const a=pts[i],dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy;
+          const t=len?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/len)):0;
+          return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy)<=12;
+        });
+      });
+    }catch(e){return false;}
+  };
   const inForgewickMine=()=>{
     try {
       if(typeof MAPID==='undefined') return false;
@@ -87,6 +107,10 @@ let routeMusicIntroPlayed=false;
       if(typeof MAPID==='undefined') return false;
       if(MAPID==='witch_room' || MAPID==='witch_demon') return true;
       if(typeof MD!=='undefined' && /Witchmoor|Dreadmarsh|Swamp|Marsh|Maelis/i.test(MD.title||'')) return true;
+      if(MAPID==='world'&&typeof inSwamp==='function'){
+        const x=Math.floor(P.x/TS),y=Math.floor((P.y-1)/TS);
+        return inSwamp(x,y)&&!(typeof inWinter==='function'&&inWinter(x,y));
+      }
       // Wetland/swamp stretch around Witchmoor and the Dreadmarsh on the world map.
       if(MAPID==='world' && typeof P!=='undefined' && typeof TS!=='undefined')
         return P.x>=1015*TS && P.x<=1145*TS && P.y>=205*TS && P.y<=355*TS;
@@ -112,7 +136,7 @@ let routeMusicIntroPlayed=false;
     } catch(e) {}
     return false;
   };
-  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire,school,tavern].filter(Boolean);
+  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire,school,tavern,seatown].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
@@ -132,7 +156,7 @@ let routeMusicIntroPlayed=false;
     const insideTemple=typeof MAPID!=='undefined'&&MAPID!=='world'&&typeof MD!=='undefined'&&MD&&!MD.mountainPassage&&(MD.templeExpanded||/^(?:tp|ds|sn)\d/.test(MAPID));
     const choices=[[MAPID==='school'||MAPID==='school2',school],[MAPID==='tavern',tavern],
       [insideTemple,temple],[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
-      [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
+      [mysticMode,mystic],[inSeatownArea(),seatown],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
       [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
   };
@@ -154,7 +178,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);

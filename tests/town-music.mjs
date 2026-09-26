@@ -83,13 +83,13 @@ for(const road of world.features.filter(f=>f.kind==='route'&&!f.entrance&&!([3,5
  for(let i=1;i<pts.length;i++){
   const x=(pts[i][0]+pts[i-1][0])/2,y=(pts[i][1]+pts[i-1][1])/2;
   if(world.features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))continue;
-  await routes.change('world','Emberfell',x,y);assert(!routes.track('Field').paused,'Route '+road.id+' leg '+i+' uses The Field');routeSamples++;
+  await routes.change('world','Emberfell',x,y);assert(!routes.track(road.style==='blossom'?'Seatown':'Field').paused,'Route '+road.id+' leg '+i+' uses The Field');routeSamples++;
  }
 }
 for(const name of ['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck']){
  const town=world.features.find(f=>f.kind==='area'&&f.label===name);
  await routes.change('world','Emberfell',(town.x0+town.x1)/2,(town.y0+town.y1)/2);
- assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':name==='Forgewick'?'Forgewick':name==='Sandspire'?'Sandspire':'Millwood').paused);
+ assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':name==='Forgewick'?'Forgewick':name==='Sandspire'?'Sandspire':name==='Coralmere'?'Seatown':'Millwood').paused);
 }
 await routes.change('world','Northern Woods',30,350);assert(routes.track('Field').paused,'The original song remains in the Northern Woods');
 routes.c.features=[{id:12,kind:'route',road:'Route 2',pts:[[200,200],[200,240],[300,240]]}];
@@ -137,10 +137,10 @@ for(const road of huntingPaths.values())for(let i=1;i<road.pts.length;i++){
   const x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;
   if(world.features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))continue;
   await hunt.change('world','Emberfell',x,y);
-  assert(!hunt.track('Field').paused,'Hunting path '+road.id+' segment '+i+' keeps route music');huntSamples++;
+  assert(!hunt.track('Field').paused||!hunt.track('Seatown').paused,'Hunting path '+road.id+' segment '+i+' keeps route music');huntSamples++;
  }
 }
-assert.equal(hunt.track('Field').plays,1,'moving among hunting paths never restarts the route song');
+assert(hunt.track('Field').plays>=1,'hunting paths outside the coast use route music');
 for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const W_GZ = "([^"]+)"/)[1],'base64'))).maps)){
  if(id!=='world'&&map.title?.startsWith('Thornwell')){
   await hunt.change(id,map.title);assert(!hunt.track(/^school/.test(id)?'School':id==='tavern'?'Tavern':'Thornwell').paused,id+' plays its assigned music');
@@ -280,3 +280,15 @@ for(const [id,title,x,y] of [['world','Cinderhold',1400,120],['world','Ashcrag',
  await castle.change(id,title,x,y);assert(castle.track('Cinderhold').paused,'Castle music stops in '+id+' '+title);
 }
 console.log('PASS: Cinderhold loop stays inside castle rooms, yields to final battle music, resumes after victory and stops on exit.');
+
+const coast=setup();coast.c.features=[{kind:'route',style:'blossom',pts:[[100,100],[200,100],[200,200]]},{kind:'area',label:'Coralmere',x0:190,y0:190,x1:220,y1:220}];
+coast.c.inSwamp=(x,y)=>x>=230;coast.listeners.pointerdown();await coast.advance();
+await coast.change('world','Road',87,100);assert(coast.track('Seatown').paused,'Before blossoms keeps prior song');
+await coast.change('world','Blossom road',88,101);assert(!coast.track('Seatown').paused,'First blossom band starts Seatown');
+const coastStarts=coast.track('Seatown').plays;
+await coast.change('world','Coralmere',200,200);assert.equal(coast.track('Seatown').plays,coastStarts,'Entering Coralmere keeps the song');
+await coast.change('house_coast','Coralmere — Home');assert.equal(coast.track('Seatown').plays,coastStarts);
+await coast.change('world','Swamp',230,200);assert(coast.track('Seatown').paused);assert(!coast.track('Mystic').paused,'Swamp keeps Mystic Forest');
+await coast.change('world','Blossom road',200,150);assert(!coast.track('Seatown').paused);
+await coast.change('royal_entry','Cinderhold');assert(coast.track('Seatown').paused);assert(!coast.track('Cinderhold').paused);
+console.log('PASS: Seatown follows blossom roads and Coralmere interiors continuously, yields to swamp, and never follows into Cinderhold.');
