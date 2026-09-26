@@ -48571,17 +48571,17 @@
       "collision:5423,425": {
         "kind": "collision",
         "key": "5423,425",
-        "blocked": true
+        "blocked": false
       },
       "collision:5424,425": {
         "kind": "collision",
         "key": "5424,425",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,425": {
         "kind": "collision",
         "key": "5425,425",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,424": {
         "kind": "collision",
@@ -48601,127 +48601,127 @@
       "collision:5416,421": {
         "kind": "collision",
         "key": "5416,421",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,420": {
         "kind": "collision",
         "key": "5416,420",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,419": {
         "kind": "collision",
         "key": "5416,419",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,418": {
         "kind": "collision",
         "key": "5416,418",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,417": {
         "kind": "collision",
         "key": "5416,417",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,416": {
         "kind": "collision",
         "key": "5416,416",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,415": {
         "kind": "collision",
         "key": "5416,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5417,415": {
         "kind": "collision",
         "key": "5417,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5418,415": {
         "kind": "collision",
         "key": "5418,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5419,415": {
         "kind": "collision",
         "key": "5419,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5420,415": {
         "kind": "collision",
         "key": "5420,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5421,415": {
         "kind": "collision",
         "key": "5421,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5422,415": {
         "kind": "collision",
         "key": "5422,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5423,415": {
         "kind": "collision",
         "key": "5423,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5424,415": {
         "kind": "collision",
         "key": "5424,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,415": {
         "kind": "collision",
         "key": "5425,415",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,416": {
         "kind": "collision",
         "key": "5425,416",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,417": {
         "kind": "collision",
         "key": "5425,417",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,418": {
         "kind": "collision",
         "key": "5425,418",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,419": {
         "kind": "collision",
         "key": "5425,419",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,420": {
         "kind": "collision",
         "key": "5425,420",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,421": {
         "kind": "collision",
         "key": "5425,421",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,422": {
         "kind": "collision",
         "key": "5425,422",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,423": {
         "kind": "collision",
         "key": "5425,423",
-        "blocked": true
+        "blocked": false
       },
       "collision:5425,424": {
         "kind": "collision",
         "key": "5425,424",
-        "blocked": true
+        "blocked": false
       },
       "collision:5398,411": {
         "kind": "collision",
@@ -48806,12 +48806,12 @@
       "collision:5405,409": {
         "kind": "collision",
         "key": "5405,409",
-        "blocked": true
+        "blocked": false
       },
       "collision:5405,408": {
         "kind": "collision",
         "key": "5405,408",
-        "blocked": true
+        "blocked": false
       },
       "collision:5398,406": {
         "kind": "collision",
@@ -48826,12 +48826,12 @@
       "collision:5398,408": {
         "kind": "collision",
         "key": "5398,408",
-        "blocked": true
+        "blocked": false
       },
       "collision:5398,409": {
         "kind": "collision",
         "key": "5398,409",
-        "blocked": true
+        "blocked": false
       },
       "collision:5399,407": {
         "kind": "collision",
@@ -48841,17 +48841,17 @@
       "collision:5399,408": {
         "kind": "collision",
         "key": "5399,408",
-        "blocked": true
+        "blocked": false
       },
       "collision:5399,409": {
         "kind": "collision",
         "key": "5399,409",
-        "blocked": true
+        "blocked": false
       },
       "collision:5404,408": {
         "kind": "collision",
         "key": "5404,408",
-        "blocked": true
+        "blocked": false
       },
       "collision:5388,410": {
         "kind": "collision",
@@ -48876,22 +48876,22 @@
       "collision:5416,411": {
         "kind": "collision",
         "key": "5416,411",
-        "blocked": true
+        "blocked": false
       },
       "collision:5416,410": {
         "kind": "collision",
         "key": "5416,410",
-        "blocked": true
+        "blocked": false
       },
       "collision:5417,410": {
         "kind": "collision",
         "key": "5417,410",
-        "blocked": true
+        "blocked": false
       },
       "collision:5417,411": {
         "kind": "collision",
         "key": "5417,411",
-        "blocked": true
+        "blocked": false
       },
       "collision:5438,406": {
         "kind": "collision",
@@ -49025,6 +49025,346 @@
         "key": "2809,88",
         "tx": 2809,
         "ty": 88
+      },
+      "collision:5400,409": {
+        "kind": "collision",
+        "key": "5400,409",
+        "blocked": false
+      },
+      "collision:5397,406": {
+        "kind": "collision",
+        "key": "5397,406",
+        "blocked": false
+      },
+      "collision:5397,407": {
+        "kind": "collision",
+        "key": "5397,407",
+        "blocked": false
+      },
+      "collision:5396,407": {
+        "kind": "collision",
+        "key": "5396,407",
+        "blocked": false
+      },
+      "collision:5396,406": {
+        "kind": "collision",
+        "key": "5396,406",
+        "blocked": false
+      },
+      "collision:5397,405": {
+        "kind": "collision",
+        "key": "5397,405",
+        "blocked": false
+      },
+      "collision:5390,406": {
+        "kind": "collision",
+        "key": "5390,406",
+        "blocked": false
+      },
+      "collision:5391,405": {
+        "kind": "collision",
+        "key": "5391,405",
+        "blocked": false
+      },
+      "collision:5392,405": {
+        "kind": "collision",
+        "key": "5392,405",
+        "blocked": false
+      },
+      "collision:5392,406": {
+        "kind": "collision",
+        "key": "5392,406",
+        "blocked": false
+      },
+      "collision:5393,406": {
+        "kind": "collision",
+        "key": "5393,406",
+        "blocked": false
+      },
+      "collision:5392,407": {
+        "kind": "collision",
+        "key": "5392,407",
+        "blocked": false
+      },
+      "collision:5391,407": {
+        "kind": "collision",
+        "key": "5391,407",
+        "blocked": false
+      },
+      "collision:5391,406": {
+        "kind": "collision",
+        "key": "5391,406",
+        "blocked": false
+      },
+      "collision:5434,406": {
+        "kind": "collision",
+        "key": "5434,406",
+        "blocked": true
+      },
+      "collision:5434,407": {
+        "kind": "collision",
+        "key": "5434,407",
+        "blocked": true
+      },
+      "collision:5435,407": {
+        "kind": "collision",
+        "key": "5435,407",
+        "blocked": true
+      },
+      "collision:5435,406": {
+        "kind": "collision",
+        "key": "5435,406",
+        "blocked": true
+      },
+      "collision:5416,406": {
+        "kind": "collision",
+        "key": "5416,406",
+        "blocked": true
+      },
+      "collision:5417,407": {
+        "kind": "collision",
+        "key": "5417,407",
+        "blocked": true
+      },
+      "collision:5417,406": {
+        "kind": "collision",
+        "key": "5417,406",
+        "blocked": true
+      },
+      "collision:5416,407": {
+        "kind": "collision",
+        "key": "5416,407",
+        "blocked": true
+      },
+      "collision:5382,406": {
+        "kind": "collision",
+        "key": "5382,406",
+        "blocked": true
+      },
+      "collision:5382,407": {
+        "kind": "collision",
+        "key": "5382,407",
+        "blocked": true
+      },
+      "collision:5383,407": {
+        "kind": "collision",
+        "key": "5383,407",
+        "blocked": true
+      },
+      "collision:5383,406": {
+        "kind": "collision",
+        "key": "5383,406",
+        "blocked": true
+      },
+      "collision:5384,406": {
+        "kind": "collision",
+        "key": "5384,406",
+        "blocked": true
+      },
+      "collision:5383,405": {
+        "kind": "collision",
+        "key": "5383,405",
+        "blocked": true
+      },
+      "collision:5382,405": {
+        "kind": "collision",
+        "key": "5382,405",
+        "blocked": true
+      },
+      "collision:5393,407": {
+        "kind": "collision",
+        "key": "5393,407",
+        "blocked": false
+      },
+      "collision:5423,422": {
+        "kind": "collision",
+        "key": "5423,422",
+        "blocked": false
+      },
+      "collision:5423,423": {
+        "kind": "collision",
+        "key": "5423,423",
+        "blocked": false
+      },
+      "collision:5423,424": {
+        "kind": "collision",
+        "key": "5423,424",
+        "blocked": false
+      },
+      "collision:5423,426": {
+        "kind": "collision",
+        "key": "5423,426",
+        "blocked": false
+      },
+      "collision:5424,426": {
+        "kind": "collision",
+        "key": "5424,426",
+        "blocked": false
+      },
+      "collision:5424,427": {
+        "kind": "collision",
+        "key": "5424,427",
+        "blocked": false
+      },
+      "collision:5424,428": {
+        "kind": "collision",
+        "key": "5424,428",
+        "blocked": false
+      },
+      "collision:5424,424": {
+        "kind": "collision",
+        "key": "5424,424",
+        "blocked": false
+      },
+      "collision:5425,426": {
+        "kind": "collision",
+        "key": "5425,426",
+        "blocked": false
+      },
+      "collision:5425,427": {
+        "kind": "collision",
+        "key": "5425,427",
+        "blocked": false
+      },
+      "collision:5422,426": {
+        "kind": "collision",
+        "key": "5422,426",
+        "blocked": false
+      },
+      "collision:5421,426": {
+        "kind": "collision",
+        "key": "5421,426",
+        "blocked": false
+      },
+      "collision:5420,426": {
+        "kind": "collision",
+        "key": "5420,426",
+        "blocked": false
+      },
+      "collision:5420,427": {
+        "kind": "collision",
+        "key": "5420,427",
+        "blocked": false
+      },
+      "collision:5419,427": {
+        "kind": "collision",
+        "key": "5419,427",
+        "blocked": false
+      },
+      "collision:5418,427": {
+        "kind": "collision",
+        "key": "5418,427",
+        "blocked": false
+      },
+      "collision:5417,427": {
+        "kind": "collision",
+        "key": "5417,427",
+        "blocked": false
+      },
+      "collision:5416,427": {
+        "kind": "collision",
+        "key": "5416,427",
+        "blocked": false
+      },
+      "collision:5423,427": {
+        "kind": "collision",
+        "key": "5423,427",
+        "blocked": false
+      },
+      "collision:5422,427": {
+        "kind": "collision",
+        "key": "5422,427",
+        "blocked": false
+      },
+      "collision:5421,427": {
+        "kind": "collision",
+        "key": "5421,427",
+        "blocked": false
+      },
+      "collision:5419,426": {
+        "kind": "collision",
+        "key": "5419,426",
+        "blocked": false
+      },
+      "collision:5418,426": {
+        "kind": "collision",
+        "key": "5418,426",
+        "blocked": false
+      },
+      "collision:5417,426": {
+        "kind": "collision",
+        "key": "5417,426",
+        "blocked": false
+      },
+      "collision:5416,426": {
+        "kind": "collision",
+        "key": "5416,426",
+        "blocked": false
+      },
+      "collision:5415,426": {
+        "kind": "collision",
+        "key": "5415,426",
+        "blocked": false
+      },
+      "collision:5414,422": {
+        "kind": "collision",
+        "key": "5414,422",
+        "blocked": false
+      },
+      "collision:5414,423": {
+        "kind": "collision",
+        "key": "5414,423",
+        "blocked": false
+      },
+      "collision:5414,424": {
+        "kind": "collision",
+        "key": "5414,424",
+        "blocked": false
+      },
+      "collision:5414,425": {
+        "kind": "collision",
+        "key": "5414,425",
+        "blocked": false
+      },
+      "collision:5414,426": {
+        "kind": "collision",
+        "key": "5414,426",
+        "blocked": false
+      },
+      "collision:5415,421": {
+        "kind": "collision",
+        "key": "5415,421",
+        "blocked": false
+      },
+      "collision:5415,422": {
+        "kind": "collision",
+        "key": "5415,422",
+        "blocked": false
+      },
+      "collision:5415,423": {
+        "kind": "collision",
+        "key": "5415,423",
+        "blocked": false
+      },
+      "collision:5415,424": {
+        "kind": "collision",
+        "key": "5415,424",
+        "blocked": false
+      },
+      "collision:5415,425": {
+        "kind": "collision",
+        "key": "5415,425",
+        "blocked": false
+      },
+      "collision:5415,427": {
+        "kind": "collision",
+        "key": "5415,427",
+        "blocked": false
+      },
+      "collision:5414,427": {
+        "kind": "collision",
+        "key": "5414,427",
+        "blocked": false
       }
     },
     "witchmoor": {
@@ -50448,7 +50788,8 @@
     "5ff85ed7-f074-43ae-b9f0-2c5e95dae528",
     "0288f488-944e-46cc-83cd-a487bac1a0d8",
     "89371e18-5b34-4996-bcb3-57d46809cb88",
-    "50e36d41-a9ec-47b2-bf1b-f124d8ba4428"
+    "50e36d41-a9ec-47b2-bf1b-f124d8ba4428",
+    "a46f0fde-6c97-4155-98e8-f1d1a9f3030f"
   ],
   "sessions": {
     "witchmoor": {
@@ -50572,10 +50913,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "bf4ccea9-cbd3-4ee9-b1f3-2a4fda9cda7a",
+      "id": "64c93c62-fcfa-4ec8-8b8c-e61c8e39de5f",
       "sequence": 1,
-      "baseHash": "732e033b-ff22f0b5-376602",
-      "baseFingerprint": "2cfc9b7a-6052a94-738935",
+      "baseHash": "d8b25926-3956e2f2-377972",
+      "baseFingerprint": "3ee5d269-e11e8f65-739103",
       "base": {
         "build": {
           "kind": "build",
@@ -99421,9 +99762,77 @@
             "encounter": "deer"
           },
           "encounter": "boar"
+        },
+        "object-add:a9b748f1-8adf-4433-a84b-e9bc0ab52cf5": {
+          "kind": "object-add",
+          "key": "a9b748f1-8adf-4433-a84b-e9bc0ab52cf5",
+          "sprite": 1431,
+          "x": 45128,
+          "y": 1440
+        },
+        "object-add:1ce23ff8-53e4-43cc-84ce-d102ba1f088c": {
+          "kind": "object-add",
+          "key": "1ce23ff8-53e4-43cc-84ce-d102ba1f088c",
+          "sprite": 1431,
+          "x": 45080,
+          "y": 1440
+        },
+        "object-add:a1e6e104-08d3-4a61-9625-f10b9ef111f0": {
+          "kind": "object-add",
+          "key": "a1e6e104-08d3-4a61-9625-f10b9ef111f0",
+          "sprite": 1431,
+          "x": 45149,
+          "y": 1361
+        },
+        "object-add:d261df9c-1bf9-4c49-992a-d842108e94e5": {
+          "kind": "object-add",
+          "key": "d261df9c-1bf9-4c49-992a-d842108e94e5",
+          "sprite": 1431,
+          "x": 45160,
+          "y": 1408
+        },
+        "object-add:1f779f5e-620e-47cf-afd4-401704e06e37": {
+          "kind": "object-add",
+          "key": "1f779f5e-620e-47cf-afd4-401704e06e37",
+          "sprite": 1431,
+          "x": 44952,
+          "y": 1440
+        },
+        "object-add:e9142599-5b77-4c4c-94d2-ab883b5e75f6": {
+          "kind": "object-add",
+          "key": "e9142599-5b77-4c4c-94d2-ab883b5e75f6",
+          "sprite": 1431,
+          "x": 44888,
+          "y": 1376
+        },
+        "object-add:f52f5ffd-579d-4cf9-948d-841e61736f4b": {
+          "kind": "object-add",
+          "key": "f52f5ffd-579d-4cf9-948d-841e61736f4b",
+          "sprite": 1431,
+          "x": 44904,
+          "y": 1424
+        },
+        "object-add:628e10ef-0960-43c4-b227-c81558710eac": {
+          "kind": "object-add",
+          "key": "628e10ef-0960-43c4-b227-c81558710eac",
+          "sprite": 1431,
+          "x": 44914,
+          "y": 1348
+        },
+        "feature-delete:2817,88": {
+          "kind": "feature-delete",
+          "key": "2817,88",
+          "tx": 2817,
+          "ty": 88
+        },
+        "feature-delete:2809,88": {
+          "kind": "feature-delete",
+          "key": "2809,88",
+          "tx": 2809,
+          "ty": 88
         }
       },
-      "resultHash": "d8b25926-3956e2f2-377972"
+      "resultHash": "d5d97cfa-7d473672-383096"
     }
   }
 }
