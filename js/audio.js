@@ -114,38 +114,83 @@
     } catch(e) {}
     return false;
   };
-  const exploreTrack=()=>millwoodMode&&millwood?millwood:cinderholdMode&&cinderhold?cinderhold:(mineMode&&mine?mine:(mysticMode&&mystic?mystic:(hollybeckMode&&hollybeck?hollybeck:(forgewickMode&&forgewick?forgewick:(thornwellMode&&thornwell?thornwell:(fieldMode&&field?field:(lavaRouteMode&&lavaRoute?lavaRoute:bgm)))))));
-  const safePlay=(a)=>{ if(!a || pct===0) return; const p=a.play(); if(p&&typeof p.catch==='function') p.catch(()=>{}); };
-  const fade=(from,to,done)=>{
-    const token=++fadeToken, steps=18, ms=28, goal=target(); let i=0;
-    if(from===to){if(to){to.volume=goal;safePlay(to);}return;}
-    if(to){to.volume=0; safePlay(to);}
-    const fromStart=from ? from.volume : 0;
-    const tick=()=>{
-      if(token!==fadeToken) return; i++; const q=i/steps;
-      if(from) from.volume=Math.max(0,fromStart*(1-q));
-      if(to) to.volume=Math.max(0,goal*q);
-      if(i<steps) setTimeout(tick,ms); else { if(from){from.pause();from.volume=goal;} if(to)to.volume=goal; if(done)done(); }
-    }; tick();
-  };
   const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute].filter(Boolean);
-  const apply=()=>{
-    ++fadeToken; // A volume change or mute cancels an unfinished crossfade.
-    const active=pct===0?null:kingMode&&villain?villain:exploreTrack();
-    for(const track of tracks){if(track!==active)track.pause();else track.volume=target();}
+  const hasSong=a=>{
+    const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
+    return !!src && !/^data:[^,]*,\s*$/.test(src);
   };
-  const startMusic=()=>{
-    if(pct===0) return;
-    const a=kingMode&&villain?villain:exploreTrack(); a.volume=target(); safePlay(a);
+  const exploreTrack=()=>{
+    const choices=[[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
+      [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
+      [thornwellMode,thornwell],[fieldMode,field],[lavaRouteMode,lavaRoute],[true,bgm]];
+    return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
+  };
+  const royalSpeaker=name=>/^(?:(?:King's|Royal|Black|White)\s+)?Knight\b|^(?:King )?Halvard$|^(?:Serjeant )?Bram$|^(?:Doran|Tolan)$/i.test(String(name||'').trim());
+  const royalConversation=()=>{
+    try{
+      if(typeof sayNpc!=='undefined'&&sayNpc&&royalSpeaker(sayNpc.n))return true;
+      if(typeof scene!=='undefined'&&scene){
+        if(royalSpeaker(scene.who))return true;
+        return (scene.lines||[]).some(line=>String(line).includes(':')&&royalSpeaker(String(line).split(':')[0]));
+      }
+    }catch(e){}
+    return false;
+  };
+  const finalBattle=()=>{
+    try{return MAPID==='cinderhold'&&!wonAll&&!!lastFight;}catch(e){return false;}
+  };
+  let kingMap=null,selected=null,unlocked=false,pending=0,fading=false;
+  const gains=new Map(tracks.map(a=>[a,0]));
+  const applyVolumes=()=>{for(const a of tracks)a.volume=(gains.get(a)||0)*target();};
+  const silence=()=>{
+    ++fadeToken;pending=0;fading=false;
+    for(const a of tracks){gains.set(a,0);a.volume=0;a.pause();}
+  };
+  const beginFade=token=>{
+    const initial=new Map(gains),started=Date.now();fading=true;
+    const tick=()=>{
+      if(token!==fadeToken)return;
+      const u=Math.min(1,(Date.now()-started)/900),ease=u*u*(3-2*u);
+      for(const a of tracks){const from=initial.get(a)||0;gains.set(a,from+((a===selected?1:0)-from)*ease);}
+      applyVolumes();
+      if(u<1)setTimeout(tick,25);
+      else {fading=false;for(const a of tracks)if(a!==selected)a.pause();}
+    };
+    tick();
+  };
+  const playSelected=()=>{
+    if(!unlocked||pct===0||!selected||pending||fading)return;
+    if(!selected.paused&&gains.get(selected)===1&&tracks.every(a=>a===selected||!gains.get(a)))return;
+    const a=selected,token=++fadeToken;pending=token;
+    a.volume=(gains.get(a)||0)*target();
+    try{
+      // Keep the outgoing song audible until the incoming audio actually plays.
+      Promise.resolve(a.play()).then(()=>{
+        if(token!==fadeToken){if(pct===0||(a!==selected&&!gains.get(a)))a.pause();return;}
+        pending=0;beginFade(token);
+      },()=>{if(token===fadeToken)pending=0;});
+    }catch(e){if(token===fadeToken)pending=0;}
+  };
+  const selectTrack=next=>{
+    if(next===selected)return;
+    ++fadeToken;pending=0;fading=false;selected=next;
+    for(const a of tracks)if(a!==next&&!gains.get(a))a.pause();
+    if(next===villain&&next.paused&&!gains.get(next))next.currentTime=0;
+    if(!next){beginFade(fadeToken);return;}
+    playSelected();
+  };
+  const chooseMusic=()=>{
+    // A loaded save or a map change cannot retain an old scripted royal cue.
+    try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
+    selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:exploreTrack());
   };
   window.EmberKingMusic={
-    start:()=>{ if(kingMode||!villain)return; kingMode=true; const from=exploreTrack(); villain.currentTime=0; fade(from,villain); },
-    stop:()=>{ if(!kingMode)return; kingMode=false; fade(villain,exploreTrack()); },
-    active:()=>kingMode
+    start:()=>{kingMode=true;try{kingMap=MAPID;}catch(e){}chooseMusic();},
+    stop:()=>{kingMode=false;chooseMusic();},
+    active:()=>selected===villain
   };
-  // Kept as a harmless compatibility shim for existing combat code. No battle track is played.
+  // Combat without a dedicated song keeps the area's music.
   window.EmberBattleMusic={start:()=>{},stop:()=>{},active:()=>false};
-  if(battle) battle.pause();
   const syncRegionMusic=()=>{
     const wantMillwood=inMillwood();
     const wantCinderhold=inCinderholdInterior();
@@ -156,28 +201,25 @@
     const wantForgewick=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && inForgewick();
     const wantTown=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && inThornwell();
     const wantField=!wantCinderhold && !wantLavaRoute && !wantMine && !wantMystic && !wantHollybeck && !wantForgewick && !wantTown && inRoute1();
-    if(wantMillwood===millwoodMode && wantCinderhold===cinderholdMode && wantLavaRoute===lavaRouteMode && wantMine===mineMode && wantMystic===mysticMode && wantHollybeck===hollybeckMode && wantTown===thornwellMode && wantField===fieldMode && wantForgewick===forgewickMode) return;
-    const old=exploreTrack();
     millwoodMode=wantMillwood; cinderholdMode=wantCinderhold; lavaRouteMode=wantLavaRoute; mineMode=wantMine; mysticMode=wantMystic; hollybeckMode=wantHollybeck; forgewickMode=wantForgewick; thornwellMode=wantTown; fieldMode=wantField;
-    const next=exploreTrack();
-    if(!kingMode&&pct>0) fade(old,next);
-    else if(old!==next) old.pause();
+    chooseMusic();
   };
   setInterval(syncRegionMusic,180);
   syncRegionMusic();
+  const startMusic=()=>{unlocked=true;playSelected();};
   window.EmberAudio={
     percent:()=>pct,
-    set:(v)=>{
+    set:v=>{
       pct=Math.max(0,Math.min(100,Number(v)||0));
-      try { localStorage.setItem(KEY,String(pct)); } catch(e) {}
-      apply();
-      if(pct>0) startMusic();
+      try{localStorage.setItem(KEY,String(pct));}catch(e){}
+      if(pct===0)silence();
+      else {applyVolumes();startMusic();}
     }
   };
-  apply();
-  // Browsers require a player gesture before audio can begin. Any normal game input starts it.
+  applyVolumes();
+  // Further taps must not jump an in-progress crossfade to full volume.
   window.addEventListener('pointerdown',startMusic,{passive:true});
   window.addEventListener('keydown',startMusic);
   window.addEventListener('touchstart',startMusic,{passive:true});
-  window.addEventListener('focus',()=>{ if(!document.hidden) startMusic(); });
+  window.addEventListener('focus',()=>{if(!document.hidden)startMusic();});
 })();

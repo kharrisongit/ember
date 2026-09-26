@@ -5268,7 +5268,7 @@ const WM_ABOUT = {
   "Cinderhold":          "Dark keep on an island in the lava, at the end of the last road.",
 };
 const BOOT = {
-  at: 0, timer: 0,
+  at: 0, timer: 0, loading: false, loadPick: 0,
   paint() {
     const f = document.getElementById("bootFill");
     if (f) f.style.width = BOOT.at.toFixed(1) + "%";
@@ -5314,7 +5314,7 @@ const BOOT = {
     if (l) { l.style.opacity = has ? "1" : ".35"; l.dataset.on = has ? "1" : ""; }
   },
   close() {
-    if (!gameplayReady) return;
+    if (!gameplayReady || BOOT.loading) return;
     gameplayStarted = true;
     gameplayReady = false;
     document.body.classList.remove("boot-ready");
@@ -5322,6 +5322,62 @@ const BOOT = {
     BOOT.waiting = false;
     const el = document.getElementById("boot");
     if (el) el.style.display = "none";
+  },
+  activate() { if (BOOT.loading) BOOT.takeLoad(); else BOOT.close(); },
+  openLoad() {
+    if (!gameplayReady) return;
+    BOOT.loading = true;
+    document.body.classList.add("boot-load-open");
+    document.getElementById("bootBtns").style.display = "none";
+    document.getElementById("bootLoadPanel").hidden = false;
+    document.getElementById("bootLabel").textContent = "LOAD GAME";
+    document.getElementById("bootHint").textContent = "Choose a save. B returns to the title screen.";
+    document.getElementById("bootLoadMsg").textContent = "";
+    const rows = document.getElementById("bootLoadRows");
+    rows.replaceChildren();
+    BOOT.loadPick = 3;
+    for (let slot = 1; slot <= SAVE_SLOT_COUNT; slot++) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = saveSummary(slot);
+      button.disabled = !readSaveSlot(slot);
+      if (!button.disabled && BOOT.loadPick === 3) BOOT.loadPick = slot - 1;
+      button.addEventListener("click", () => BOOT.takeLoad(slot - 1));
+      rows.appendChild(button);
+    }
+    const back = document.createElement("button");
+    back.type = "button"; back.textContent = "Back";
+    back.addEventListener("click", () => BOOT.back()); rows.appendChild(back);
+    BOOT.paintLoad();
+  },
+  paintLoad() {
+    document.getElementById("bootLoadRows").querySelectorAll("button").forEach((button, i) => {
+      button.classList.toggle("selected", i === BOOT.loadPick);
+    });
+  },
+  stepLoad(d) {
+    if (!BOOT.loading) return;
+    do { BOOT.loadPick = (BOOT.loadPick + d + 4) % 4; }
+    while (BOOT.loadPick < 3 && !readSaveSlot(BOOT.loadPick + 1));
+    BOOT.paintLoad();
+  },
+  takeLoad(pick = BOOT.loadPick) {
+    if (!BOOT.loading || !gameplayReady) return;
+    if (pick === 3) { BOOT.back(); return; }
+    if (!readSaveSlot(pick + 1)) return;
+    if (!loadGame(pick + 1)) {
+      document.getElementById("bootLoadMsg").textContent = "That save could not be loaded. Choose another save or go back.";
+      return;
+    }
+    BOOT.back(); BOOT.close();
+  },
+  back() {
+    BOOT.loading = false;
+    document.body.classList.remove("boot-load-open");
+    document.getElementById("bootLoadPanel").hidden = true;
+    document.getElementById("bootBtns").style.display = "flex";
+    document.getElementById("bootLabel").textContent = "LOADED!";
+    document.getElementById("bootHint").textContent = "press A to start";
   },
 };
 function bootStart() { try { BOOT.to(9, 450, "waking the embers"); } catch (e) {} }
@@ -5335,8 +5391,7 @@ function bootBind() {
   if (ld && ld.addEventListener)
     ld.addEventListener("click", () => {
       if (!ld.dataset.on) return;
-      BOOT.close();
-      try { setOvl("loadSlots"); } catch (e) {}
+      BOOT.openLoad();
     });
 }
 
@@ -5431,6 +5486,7 @@ function setOvl(which) {
   ovl = which || null;
   document.body.classList.toggle("deck-menu-open", ovl === "airm" || ovl === "atkm");
   if (ovl) { MENUS[ovl].pick = 0; refreshOvl(); }
+  if (ovl === "sound") syncSoundDial();
 }
 function refreshOvl() {
   if (!ovl) return;
@@ -5563,23 +5619,18 @@ if (itemFullBtn) itemFullBtn.addEventListener("click", e => { e.preventDefault()
 function soundPercent(){ return (window.EmberAudio && window.EmberAudio.percent) ? window.EmberAudio.percent() : 35; }
 function syncSoundDial(){
   const v=Math.max(0,Math.min(100,soundPercent()));
-  const knob=document.getElementById("soundKnob"), pct=document.getElementById("soundPct");
-  const fill=document.querySelector("#soundTrack>i"), mute=document.getElementById("soundMute");
-  if(knob){knob.style.setProperty("--vol",v);knob.setAttribute("aria-valuenow",v);}
+  const slider=document.getElementById("soundVolume"),pct=document.getElementById("soundPct"),mute=document.getElementById("soundMute");
+  if(slider){slider.value=String(v);slider.style.setProperty("--volume",v+"%");}
   if(pct)pct.textContent=Math.round(v)+"%";
-  if(fill)fill.style.width=v+"%";
   if(mute)mute.textContent=v===0?"UNMUTE":"MUTE";
 }
 (function wireSoundDial(){
-  const knob=document.getElementById("soundKnob"),track=document.getElementById("soundTrack");
-  const mute=document.getElementById("soundMute"),close=document.getElementById("soundClose");
-  let lastNonZero=35,drag=false;
+  const slider=document.getElementById("soundVolume"),mute=document.getElementById("soundMute"),close=document.getElementById("soundClose");
+  let lastNonZero=soundPercent()||35;
   const setV=v=>{v=Math.max(0,Math.min(100,Math.round(v)));if(v>0)lastNonZero=v;if(window.EmberAudio)window.EmberAudio.set(v);syncSoundDial();};
-  const fromPointer=e=>{const r=track.getBoundingClientRect();setV((e.clientX-r.left)/Math.max(1,r.width)*100);};
-  if(track){track.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track.setPointerCapture?.(e.pointerId);fromPointer(e);});track.addEventListener("pointermove",e=>{if(drag)fromPointer(e);});track.addEventListener("pointerup",e=>{drag=false;track.releasePointerCapture?.(e.pointerId);});}
-  if(knob){knob.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;track?.setPointerCapture?.(e.pointerId);});}
-  if(mute)mute.addEventListener("click",e=>{e.preventDefault();const v=soundPercent();setV(v===0?(lastNonZero||35):0);});
-  if(close)close.addEventListener("click",e=>{e.preventDefault();setOvl(null);});
+  if(slider)slider.addEventListener("input",()=>setV(Number(slider.value)));
+  if(mute)mute.addEventListener("click",e=>{e.preventDefault();const v=soundPercent();if(v>0)lastNonZero=v;setV(v===0?lastNonZero:0);});
+  if(close)close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
 })();
 
 

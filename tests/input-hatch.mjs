@@ -17,17 +17,19 @@ class Element {
   addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);}
   closest(selector){for(let e=this;e;e=e.parentNode)if(selector.split(',').some(s=>s.trim()==='#'+e.id))return e;return null;}
   querySelectorAll(){return this.children;}
+  appendChild(child){child.parentNode=this;this.children.push(child);}
+  replaceChildren(){this.children=[];}
 }
 const body=new Element('body'),deck=new Element('deck',body),stage=new Element('stage',body);
 const nodes={body,deck,stage};
 for(const id of ['act','btnB','btnL','btnR','btnItems','btnMapQuick','btnDev','dpad'])nodes[id]=new Element(id,deck);
-for(const id of ['cv','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
+for(const id of ['cv','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','bootLoadPanel','bootLoadRows','bootLoadMsg','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
 for(const [id,parent]of [['atkCloseBtn','atkm'],['airCloseBtn','airm'],['itemCloseBtn','itemm'],['itemFullBtn','itemm']])nodes[id]=new Element(id,nodes[parent]);
 const up=new Element('up',nodes.dpad);up.dataset={dx:'0',dy:'-1'};
 const captures={},keyboard={},intervals=[];
-let interactions=0,devToggles=0,refreshes=0;
+let interactions=0,devToggles=0,refreshes=0,loadWorks=true,loadedSlot=null;
 const c=vm.createContext({
-  document:{body,getElementById:id=>nodes[id]||null,querySelectorAll:()=>[],addEventListener:(t,f)=>{(captures[t]??=[]).push(f);}},
+  document:{body,getElementById:id=>nodes[id]||null,createElement:()=>new Element(''),querySelectorAll:()=>[],addEventListener:(t,f)=>{(captures[t]??=[]).push(f);}},
   window:{addEventListener(){}},navigator:{maxTouchPoints:0},addEventListener:(t,f)=>{keyboard[t]=f;},
   setInterval:fn=>{intervals.push(fn);return intervals.length;},clearInterval(){},setTimeout(){},Date,
   W:null,MAPID:'world',fishing:null,atlasOpen:false,ask:null,bagOpen:false,ovl:null,deadShown:false,glassShield:false,
@@ -37,12 +39,14 @@ const c=vm.createContext({
   openAtlas:()=>{c.atlasOpen=true;},closeAtlas:()=>{c.atlasOpen=false;},
   trigHold(){},hasDragon:()=>true,refreshOvl:()=>refreshes++,
   MENUS:{atkm:{},airm:{},itemm:{},sound:{},loadSlots:{}},
-  migrateLegacySave(){},readSaveSlot:()=>({}),wireBagDrag(){}
+  migrateLegacySave(){},readSaveSlot:slot=>slot<3?{}:null,wireBagDrag(){},SAVE_SLOT_COUNT:3,
+  saveSummary:slot=>'Slot '+slot,loadGame:slot=>{loadedSlot=slot;return loadWorks;}
 });
 const run=code=>vm.runInContext(code,c);
 run(section(p2,'let gameplayStarted =','const SCROLLERS ='));
 run(section(p2,'function actionButton() {','bindHold("act"'));
 run('bindHold("act",actionButton,null);padBind();');
+run(section(p2,'bindHold("btnB",','{\n  const fb = document.getElementById("btnFire")'));
 run(section(p3,'function setOvl(which) {','function refreshOvl()'));
 run(section(p3,'const atkCloseBtn=','function soundPercent()'));
 run(p3.slice(p3.lastIndexOf('(function () {'),p3.indexOf('bindAtlasAndGeometry();',p3.lastIndexOf('(function () {'))));
@@ -72,10 +76,25 @@ for(const start of ['act','bootNew','bootLoad']){
   dispatch(nodes.btnItems,'touchstart');dispatch(nodes.btnMapQuick,'mousedown');dispatch(nodes.btnDev,'click');
   assert.equal(c.ovl,null);assert.equal(c.atlasOpen,false);assert.equal(devToggles,0);
   dispatch(nodes[start],start==='act'?'touchstart':'click');
+  if(start==='bootLoad'){
+    assert.equal(run('gameplayStarted'),false,'Opening title saves never starts the game');
+    assert.equal(c.ovl,null,'Title saves do not open an in-game overlay');
+    assert.equal(body.classList.contains('game-started'),false);
+    assert.equal(nodes.bootLoadRows.children.length,4);assert(nodes.bootLoadRows.children[2].disabled,'Empty slots remain visible');
+    dispatch(nodes.bootLoadRows.children[3],'click');
+    assert.equal(run('gameplayStarted'),false);assert.equal(nodes.bootLabel.textContent,'LOADED!');assert(nodes.bootLoadPanel.hidden);
+    dispatch(nodes.bootLoad,'click');key('b');assert.equal(run('BOOT.loading'),false,'B returns to the title');
+    dispatch(nodes.bootLoad,'click');dispatch(up,'mousedown');assert.equal(run('BOOT.loadPick'),3,'Title D-pad can select Back');
+    dispatch(nodes.btnB,'touchstart');assert.equal(run('BOOT.loading'),false,'Touch B also returns to the title');
+    dispatch(nodes.bootLoad,'click');key('ArrowDown');assert.equal(run('BOOT.loadPick'),1);
+    loadWorks=false;dispatch(nodes.act,'mousedown');
+    assert.equal(run('gameplayStarted'),false);assert.equal(run('BOOT.loading'),true);assert.match(nodes.bootLoadMsg.textContent,/could not/);
+    loadWorks=true;dispatch(nodes.act,'mousedown');assert.equal(loadedSlot,2,'A loads the chosen slot');
+  }
   assert.equal(run('gameplayStarted'),true,start+' starts normally once ready');
   assert.equal(body.classList.contains('boot-ready'),false);assert(body.classList.contains('game-started'));
   assert.equal(nodes.boot.style.display,'none');assert.equal(interactions,0,'Starting does not also interact');
-  assert.equal(c.ovl,start==='bootLoad'?'loadSlots':null);
+  assert.equal(c.ovl,null);
 }
 run('setOvl(null)');dispatch(nodes.act,'mousedown');assert.equal(interactions,1,'Fresh A press works after starting');
 for(const [menu,close]of [['airm','airCloseBtn'],['atkm','atkCloseBtn'],['itemm','itemCloseBtn']]){
@@ -104,7 +123,7 @@ run(section(p2,'function glassHatchPosition()','function drawHettieCallout('));
 assert.equal(run('glassHatchNear(0,0)'),false,'World may still be null without the reported script error');
 c.W={maps:{glasshouse:{roomActors:[{glassHatch:true,x:100,y:200}]}}};c.MAPID='glasshouse';
 assert.equal(run('glassHatchNear(100,196)'),true,'Published hatch position still works');
-console.log('PASS: loading ignores touch and keyboard input; A/START/LOAD work once ready; modal Cancel consumes one complete gesture; DEV and quick controls stay blocked underneath; attack rows stay attached; null-world hatch lookup is safe.');
+console.log('PASS: loading ignores input; title saves stay outside gameplay, Back/B return to LOADED, failed loads stay on the title, and A loads the selected slot; Cancel consumes one gesture, covered controls stay blocked, and null-world hatch lookup is safe.');
 
 // Exercise the real cutscene setup, animation, render queue, and advance gate.
 const maddock={x:100,y:100},h=vm.createContext({

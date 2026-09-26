@@ -1888,13 +1888,15 @@ body.pseudoFullscreen{
 #sound>.rows{display:none!important}
 #soundPanel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(84vw,330px);padding:18px 20px 16px;box-sizing:border-box;border:1px solid #62533d;border-radius:16px;background:radial-gradient(circle at 50% 28%,#302a21,#18191d 65%);box-shadow:0 18px 44px rgba(0,0,0,.68),inset 0 0 0 1px rgba(255,255,255,.035);text-align:center}
 #soundPanel>b{display:block;color:#f0d39a;font:700 13px/1 ui-monospace,monospace;letter-spacing:.25em;margin-bottom:17px}
-#soundKnobWrap{display:flex;flex-direction:column;align-items:center;gap:7px}
-#soundKnob{--vol:35;width:82px;height:82px;border-radius:50%;position:relative;background:radial-gradient(circle at 38% 34%,#56514a 0 8%,#36332f 30%,#1d1d1f 68%,#111 70%);border:2px solid #75664e;box-shadow:0 6px 14px rgba(0,0,0,.6),inset 0 0 0 5px #242426}
-#soundKnob::before{content:"";position:absolute;left:50%;top:9px;width:3px;height:25px;border-radius:3px;background:#e3b866;transform-origin:50% 32px;transform:translateX(-50%) rotate(calc(-135deg + (var(--vol) * 2.7deg)));box-shadow:0 0 5px rgba(227,184,102,.45)}
-#soundKnob i{position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(255,255,255,.06)}
-#soundPct{color:#e9dfcb;font:700 12px/1 ui-monospace,monospace}
-#soundTrack{height:12px;margin:18px 2px 16px;border-radius:7px;background:#0e0f12;border:1px solid #4a4439;overflow:hidden;touch-action:none}
-#soundTrack>i{display:block;width:35%;height:100%;background:linear-gradient(90deg,#8d6739,#e1b568);border-radius:6px}
+#soundVolumeLabel{display:flex;align-items:center;justify-content:space-between;color:#e9dfcb;font:700 12px/1.4 ui-monospace,monospace}
+#soundPct{color:#f0d39a;font-size:16px}
+#soundVolume{--volume:35%;display:block;width:100%;height:38px;margin:20px 0 18px;padding:0;background:transparent;appearance:none;-webkit-appearance:none;touch-action:none;cursor:pointer}
+#soundVolume::-webkit-slider-runnable-track{height:10px;border-radius:6px;background:linear-gradient(to right,#dfb366 var(--volume),#0e0f12 var(--volume));border:1px solid #62533d}
+#soundVolume::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e;box-shadow:0 2px 5px #0008}
+#soundVolume::-moz-range-track{height:10px;border-radius:6px;background:#0e0f12;border:1px solid #62533d}
+#soundVolume::-moz-range-progress{height:10px;border-radius:6px;background:#dfb366}
+#soundVolume::-moz-range-thumb{width:25px;height:25px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e}
+#soundVolume:focus-visible{outline:2px solid #f0d39a;outline-offset:5px;border-radius:6px}
 #soundActions{display:flex;gap:9px}
 #soundActions button{flex:1;padding:10px;border-radius:9px;border:1px solid #665741;background:linear-gradient(#35312a,#25231f);color:#e8ddca;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em}
 #soundActions button:active{transform:translateY(1px);background:#493b29}
@@ -2288,3 +2290,15 @@ body.boot-ready:not(.game-started) #act { pointer-events: auto !important; }
 /* Full-deck menus own the controller area until their click has completed. */
 body.deck-menu-open #deck,
 body.deck-menu-open #deck * { pointer-events: none !important; }
+
+/* Title saves remain inside the title screen until a save loads successfully. */
+#bootLoadPanel{width:min(86vw,440px);max-height:48vh;overflow-y:auto;touch-action:pan-y}
+#bootLoadPanel[hidden]{display:none}
+#bootLoadRows{display:flex;flex-direction:column;gap:9px}
+#bootLoadRows button{padding:12px 14px;border:1px solid #746040;border-radius:9px;background:#21190f;color:#e8dcc0;font:12px/1.4 ui-monospace,monospace;text-align:left;touch-action:manipulation}
+#bootLoadRows button.selected{border-color:#f0c060;background:#3e2c15}
+#bootLoadRows button:disabled{opacity:.4}
+#bootLoadMsg{color:#edb99e;font:12px/1.4 ui-monospace,monospace;padding-top:8px}
+body.boot-load-open:not(.game-started) #btnB,
+body.boot-load-open:not(.game-started) #dpad,
+body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}

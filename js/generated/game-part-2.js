@@ -4695,11 +4695,18 @@ function drawWeather(t) {
 // These flags exist before any controls are bound, including while later
 // scripts and the world are still loading.
 let gameplayStarted = false, gameplayReady = false;
+function titleControlReady(id) {
+  return gameplayReady && (id === "act" || (BOOT.loading && (id === "btnB" || id === "dpad")));
+}
 const keys = {};
 addEventListener("keydown", e => {
   const k=e.key.toLowerCase();
   if (!gameplayStarted) {
     if (k === " " || k === "a") { e.preventDefault(); if (!e.repeat) actionButton(); }
+    else if (gameplayReady && BOOT.loading) {
+      if (k === "arrowup" || k === "arrowdown") { e.preventDefault(); BOOT.stepLoad(k === "arrowup" ? -1 : 1); }
+      if (k === "escape" || k === "b") { e.preventDefault(); if (!e.repeat) BOOT.back(); }
+    }
     return;
   }
   if(typeof ask!=='undefined'&&ask&&(k==='arrowup'||k==='arrowdown'||k==='escape')){
@@ -4776,9 +4783,9 @@ function padBind() {
 
   for (const el of cells) {
     const press = (e) => {
-      if (!gameplayStarted) { e?.preventDefault(); return; }
       const dy = parseInt(el.dataset.dy, 10) || 0;
       const dx = parseInt(el.dataset.dx, 10) || 0;
+      if (!gameplayStarted) { if (titleControlReady("dpad") && dy) BOOT.stepLoad(dy); e?.preventDefault(); return; }
       if(atlasOpen){atlasMove(dx,dy);e?.preventDefault();return;}
       if (typeof ask !== "undefined" && ask) {
         if (dx && ask.quantity) changePurchaseQuantity(dx > 0 ? 1 : -1);
@@ -4852,7 +4859,7 @@ function bindHold(id, onDown, onUp) {
   if (!el) { (window.__boot = (window.__boot || "") +
               "\nbindHold: no element #" + id); return; }
   const down = (e) => {
-    if (!gameplayStarted && !(id === "act" && gameplayReady)) {
+    if (!gameplayStarted && !titleControlReady(id)) {
       e?.preventDefault(); e?.stopPropagation(); return;
     }
     el.classList.add("hit"); onDown();
@@ -4875,7 +4882,8 @@ function blockCoveredGameInput(e) {
   const target = e.target;
   if (!target?.closest?.("#deck, #cv")) return;
   let blocked = !gameplayStarted;
-  if (blocked && gameplayReady && target.closest("#act")) blocked = false;
+  const control = target.closest("#act, #btnB, #dpad");
+  if (blocked && control && titleControlReady(control.id)) blocked = false;
   if (gameplayStarted && (ovl || bagOpen || atlasOpen || ask)) {
     blocked = ovl === "airm" || ovl === "atkm" ||
       !target.closest("#dpad, #act, #btnB");
@@ -4885,7 +4893,7 @@ function blockCoveredGameInput(e) {
 for (const event of ["pointerdown", "touchstart", "mousedown", "click"])
   document.addEventListener(event, blockCoveredGameInput, { capture: true, passive: false });
 
-const SCROLLERS = ["toolbody", "bagLeft", "bagPanel", "bagRows", "bagAsk"];
+const SCROLLERS = ["toolbody", "bagLeft", "bagPanel", "bagRows", "bagAsk", "bootLoadPanel"];
 
 function scrollerFor(node) {
   for (let el = node; el && el !== document.body; el = el.parentNode) {
@@ -4920,6 +4928,7 @@ document.addEventListener("touchstart", e => {
 
 document.addEventListener("touchmove", e => {
   if (!e.cancelable) return;
+  if (e.target?.closest?.('input[type="range"]')) return; /* native volume slider owns its drag */
   const el = lockEl || scrollerFor(e.target);
   if (!el) { e.preventDefault(); return; }        /* not a scroller: swallow */
   const t0 = e.touches[0];
@@ -6692,6 +6701,7 @@ function questTalk() {
       leavingNow = false;
       guardsAside = false;
       const k = kingNow();
+      if (window.EmberKingMusic) window.EmberKingMusic.start();
       playScene([
         near.n.split(" ").pop() + ": HALT.",
         near.n.split(" ").pop() + ": Close enough. The King is on this road.",
@@ -11029,7 +11039,7 @@ padBind();
   });
 }
 function actionButton() {
-  if (!gameplayStarted) { if (gameplayReady) BOOT.close(); return; }
+  if (!gameplayStarted) { if (gameplayReady) BOOT.activate(); return; }
   if(atlasOpen)return;
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}
   if (typeof BOOT !== "undefined" && BOOT.waiting) { BOOT.close(); return; }
@@ -11046,6 +11056,7 @@ function actionButton() {
 }
 bindHold("act", actionButton, null);
 bindHold("btnB", () => {
+  if (!gameplayStarted) { if (gameplayReady && BOOT.loading) BOOT.back(); return; }
   if(fishing){askShut();endFishing();return;}
   if(atlasOpen){closeAtlas();return;}
   if (typeof ask !== "undefined" && ask) { askBack(); return; }
