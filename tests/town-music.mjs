@@ -343,6 +343,8 @@ themed.c.window.EmberEndingMusic.start();await themed.advance();assert(!themed.e
 console.log('PASS: mushroom forest/cave/hollow, elder woods, title screen and ending transitions.');
 
 const cinematic=setup();cinematic.c.gameplayStarted=false;cinematic.sync();cinematic.listeners.pointerdown();await cinematic.advance();
+assert(cinematic.elements.get('lastDragonriderTitleBgm').paused,'Incidental loading taps do not start title music');
+cinematic.c.window.EmberTitleAudio.begin();await cinematic.advance();
 const titleTrack=cinematic.elements.get('lastDragonriderTitleBgm');assert(!titleTrack.paused);
 const fadingTitle=cinematic.c.window.EmberTitleAudio.fadeOut(1200);await cinematic.advance(600);assert(titleTrack.volume>0&&titleTrack.volume<.35*.85);
 cinematic.sync();await cinematic.advance(650);await fadingTitle;assert(titleTrack.paused);
@@ -351,3 +353,12 @@ const fadingGame=cinematic.c.window.EmberTitleAudio.fadeIn();await cinematic.adv
 await cinematic.advance(1000);await fadingGame;assert.equal(cinematic.c.gameplayStarted,false,'Music precedes gameplay');
 cinematic.c.gameplayStarted=true;cinematic.c.window.EmberTitleAudio.finish();assert(titleTrack.paused);
 console.log('PASS: title fades out, region checks preserve silence, and gameplay music fades in before controls unlock.');
+
+const gesture=setup(null,true);gesture.c.gameplayStarted=false;gesture.sync();
+gesture.listeners.pointerdown();assert.equal(gesture.contexts.length,0,'No AudioContext before Begin');
+gesture.c.window.EmberTitleAudio.begin();
+const gestureTitle=gesture.elements.get('lastDragonriderTitleBgm');
+assert.equal(gestureTitle.plays,1,'Title play is called synchronously within Begin');
+assert(gesture.contexts[0].sources.has(gestureTitle),'Title streams through the shared iPhone gain');
+assert.equal(gesture.contexts[0].state,'running');await gesture.advance();assert(gesture.audible(gestureTitle)>0);
+console.log('PASS: Begin synchronously resumes audio and plays streamed title music through the iPhone volume mixer.');

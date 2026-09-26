@@ -4691,16 +4691,16 @@ function drawWeather(t) {
 // scripts and the world are still loading.
 let gameplayStarted = false, gameplayReady = false;
 function titleControlReady(id) {
-  return gameplayReady && (id === "act" || (BOOT.loading && (id === "btnB" || id === "dpad")));
+  return gameplayReady && (id === "act" || ((BOOT.loading || BOOT.menuOpen) && (id === "btnB" || id === "dpad")));
 }
 const keys = {};
 addEventListener("keydown", e => {
   const k=e.key.toLowerCase();
   if (!gameplayStarted) {
     if (k === " " || k === "a") { e.preventDefault(); if (!e.repeat) actionButton(); }
-    else if (gameplayReady && BOOT.loading) {
+    else if (gameplayReady && BOOT.menuOpen) {
       if (k === "arrowup" || k === "arrowdown") { e.preventDefault(); BOOT.stepLoad(k === "arrowup" ? -1 : 1); }
-      if (k === "escape" || k === "b") { e.preventDefault(); if (!e.repeat) BOOT.back(); }
+      if (k === "escape" || k === "b") { e.preventDefault(); if (!e.repeat && BOOT.loading) BOOT.back(); }
     }
     return;
   }

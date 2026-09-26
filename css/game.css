@@ -2361,3 +2361,12 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
 
 /* Quiet, consistent line symbols for dragon abilities and commands. */
 #atkm .row .actionIcon,#airm .row .actionIcon,#atkm .row:nth-child(1) .actionIcon{width:24px!important;height:24px!important;flex:0 0 24px!important;filter:none;opacity:.82}
+
+/* Two-step title menu: the first deliberate gesture unlocks music. */
+#bootBegin,#bootBtns button{padding:12px 22px;border:1px solid #7a5a2e;border-radius:9px;background:#2a1d12;color:#f0c060;font:700 14px/1.4 ui-monospace,monospace;letter-spacing:.04em;touch-action:manipulation;cursor:pointer}
+#bootBegin[hidden]{display:none}
+#bootBtns{flex-direction:column;gap:10px;width:min(80vw,320px)}
+#bootBtns button.selected{background:#443017;border-color:#f0c060;box-shadow:0 0 0 1px #f0c06055}
+#bootBtns button:disabled{opacity:.35;cursor:default}
+body.boot-menu-open.boot-ready:not(.game-started) #dpad,
+body.boot-menu-open.boot-ready:not(.game-started) #dpad *{pointer-events:auto!important}

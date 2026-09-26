@@ -4,7 +4,7 @@ let routeMusicIntroPlayed=false;
   const title=document.getElementById('lastDragonriderTitleBgm');
   const spores=document.getElementById('emberfellSporesBgm');
   const titleScreen=()=>{try{return typeof gameplayStarted==='undefined'||!gameplayStarted;}catch(e){return true;}};
-  let endingMode=false,titleStage=null,titleStartedAt=null;
+  let endingMode=false,titleStage=null,titleAccepted=false;
   const bgm=document.getElementById('emberfellHomeTownBgm');
   const millwood=document.getElementById('emberfellMillwoodBgm');
   const villain=document.getElementById('emberfellVillainBgm');
@@ -197,7 +197,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,title,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a)&&!loops.get(a).failed);
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
@@ -210,7 +210,6 @@ let routeMusicIntroPlayed=false;
   };
   const trackPaused=a=>bufferedTrack(a)?!loops.get(a).source:a.paused;
   const pauseTrack=a=>{
-    if(a===title)titleStartedAt=null;
     const loop=loops.get(a);
     if(loop){
       ++loop.request;
@@ -316,7 +315,6 @@ let routeMusicIntroPlayed=false;
       Promise.resolve(playTrack(a)).then(()=>{
         if(token!==fadeToken){if(pct===0||(a!==selected&&!gains.get(a)))pauseTrack(a);return;}
         pending=0;
-        if(a===title&&titleStartedAt===null)titleStartedAt=audioContext?audioContext.currentTime*1000:Date.now();
         if(a!==villain||titleStage==='in')beginFade(token);
       },()=>{if(token===fadeToken)pending=0;});
     }catch(e){if(token===fadeToken)pending=0;}
@@ -377,6 +375,7 @@ let routeMusicIntroPlayed=false;
   setInterval(syncRegionMusic,180);
   syncRegionMusic();
   const startMusic=()=>{
+    if(titleScreen()&&!titleAccepted&&titleStage!=='in')return;
     // A/B, touchstart and pointerdown can all fire for one tap. Once audio is
     // running, leave its gain automation and media outputs entirely alone.
     if(unlocked&&(!audioContext||audioContext.state==='running')){
@@ -400,13 +399,12 @@ let routeMusicIntroPlayed=false;
     const tick=()=>{if(check()||Date.now()>=until)resolve();else setTimeout(tick,50);};tick();
   });
   window.EmberTitleAudio={
-    waitReady:()=>waitUntil(()=>{
-      if(pct===0||!hasSong(title))return true;
-      const audible=titleStartedAt!==null&&!trackPaused(title)&&(!audioContext||audioContext.state==='running');
-      const hint=document.getElementById('bootHint');
-      if(hint)hint.textContent=audible?'':'Tap anywhere to hear the title music';
-      return audible&&(audioContext?audioContext.currentTime*1000:Date.now())-titleStartedAt>=4000;
-    },12000),
+    begin:()=>{
+      titleAccepted=true;
+      // Called synchronously by the Begin gesture: Safari must see both
+      // AudioContext.resume() and HTMLMediaElement.play() in that gesture.
+      startMusic();
+    },
     fadeOut:(ms=1200)=>{
       titleStage='out';selected=null;fadeDuration=ms;fadeDelay=0;
       ++fadeToken;pending=0;fading=false;beginFade(fadeToken);
@@ -424,6 +422,5 @@ let routeMusicIntroPlayed=false;
   window.addEventListener('keydown',startMusic);
   window.addEventListener('touchstart',startMusic,{passive:true});
   window.addEventListener('focus',()=>{if(!document.hidden)startMusic();});
-  // Attempt loading-screen music; browsers that require a gesture retry on tap.
-  if(titleScreen())startMusic();
+  // The explicit Begin gesture starts title audio; loading stays silent.
 })();

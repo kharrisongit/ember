@@ -24,7 +24,7 @@ class Element {
 const body=new Element('body'),deck=new Element('deck',body),stage=new Element('stage',body);
 const nodes={body,deck,stage};
 for(const id of ['act','btnB','btnL','btnR','btnItems','btnMapQuick','btnDev','dpad'])nodes[id]=new Element(id,deck);
-for(const id of ['cv','titleFade','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','bootLoadPanel','bootLoadRows','bootLoadMsg','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
+for(const id of ['cv','titleFade','bootBegin','bootContinue','bootBar','boot','bootNew','bootLoad','bootFill','bootMsg','bootBtns','bootLabel','bootHint','bootLoadPanel','bootLoadRows','bootLoadMsg','atkm','airm','itemm','sound','loadSlots'])nodes[id]=new Element(id,stage);
 for(const [id,parent]of [['atkCloseBtn','atkm'],['airCloseBtn','airm'],['itemCloseBtn','itemm'],['itemFullBtn','itemm']])nodes[id]=new Element(id,nodes[parent]);
 const up=new Element('up',nodes.dpad);up.dataset={dx:'0',dy:'-1'};
 const captures={},keyboard={},intervals=[];
@@ -40,7 +40,7 @@ const c=vm.createContext({dragonCombatActive:()=>false,
   openAtlas:()=>{c.atlasOpen=true;},closeAtlas:()=>{c.atlasOpen=false;},
   trigHold(){},hasDragon:()=>true,refreshOvl:()=>refreshes++,
   MENUS:{atkm:{},airm:{},itemm:{},sound:{},loadSlots:{}},
-  migrateLegacySave(){},readSaveSlot:slot=>slot<3?{}:null,wireBagDrag(){},SAVE_SLOT_COUNT:3,
+  migrateLegacySave(){},readSaveSlot:slot=>slot<3?{when:slot*100}:null,wireBagDrag(){},SAVE_SLOT_COUNT:3,
   saveSummary:slot=>'Slot '+slot,loadGame:slot=>{loadedSlot=slot;return loadWorks;}
 });
 const run=code=>vm.runInContext(code,c);
@@ -69,11 +69,14 @@ assert.equal(c.ovl,null);assert.equal(c.atlasOpen,false);
 run(section(p3,'const BOOT = {','const MENUS ='));
 run('BOOT.close()');assert.equal(run('gameplayStarted'),false,'Cannot bypass world loading');
 run('BOOT.to=async()=>{};BOOT.pause=async()=>{};bootBind();');
-for(const start of ['act','bootNew','bootLoad']){
+for(const start of ['act','bootNew','bootContinue','bootLoad']){
   run('gameplayStarted=false;gameplayReady=false;setOvl(null)');
   body.classList.remove('game-started');
   await run('BOOT.ready()');
   assert(body.classList.contains('boot-ready'));
+  assert.equal(run('BOOT.menuOpen'),false);assert.equal(nodes.bootBtns.style.display,'none');
+  dispatch(nodes.act,'touchstart');assert.equal(run('BOOT.menuOpen'),true);assert.equal(run('gameplayStarted'),false,'First A only opens the title menu');
+  assert(nodes.bootBegin.hidden);assert.equal(nodes.bootBtns.style.display,'flex');
   dispatch(nodes.btnItems,'touchstart');dispatch(nodes.btnMapQuick,'mousedown');dispatch(nodes.btnDev,'click');
   assert.equal(c.ovl,null);assert.equal(c.atlasOpen,false);assert.equal(devToggles,0);
   dispatch(nodes[start],start==='act'?'touchstart':'click');
@@ -83,7 +86,7 @@ for(const start of ['act','bootNew','bootLoad']){
     assert.equal(body.classList.contains('game-started'),false);
     assert.equal(nodes.bootLoadRows.children.length,4);assert(nodes.bootLoadRows.children[2].disabled,'Empty slots remain visible');
     dispatch(nodes.bootLoadRows.children[3],'click');
-    assert.equal(run('gameplayStarted'),false);assert.equal(nodes.bootLabel.textContent,'LOADED!');assert(nodes.bootLoadPanel.hidden);
+    assert.equal(run('gameplayStarted'),false);assert.equal(nodes.bootLabel.textContent,'');assert(nodes.bootLoadPanel.hidden);
     dispatch(nodes.bootLoad,'click');key('b');assert.equal(run('BOOT.loading'),false,'B returns to the title');
     dispatch(nodes.bootLoad,'click');dispatch(up,'mousedown');assert.equal(run('BOOT.loadPick'),3,'Title D-pad can select Back');
     dispatch(nodes.btnB,'touchstart');assert.equal(run('BOOT.loading'),false,'Touch B also returns to the title');
@@ -92,6 +95,7 @@ for(const start of ['act','bootNew','bootLoad']){
     assert.equal(run('gameplayStarted'),false);assert.equal(run('BOOT.loading'),true);assert.match(nodes.bootLoadMsg.textContent,/could not/);
     loadWorks=true;dispatch(nodes.act,'mousedown');assert.equal(loadedSlot,2,'A loads the chosen slot');
   }
+  if(start==='bootContinue')assert.equal(loadedSlot,2,'Continue chooses the most recently saved slot');
   assert.equal(run('gameplayStarted'),false,'Gameplay waits for the title transition');
   for(let i=0;i<16;i++)await Promise.resolve();
   assert.equal(run('gameplayStarted'),true,start+' starts normally once ready');

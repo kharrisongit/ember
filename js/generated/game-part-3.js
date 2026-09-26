@@ -5289,7 +5289,7 @@ const WM_ABOUT = {
   "Cinderhold":          "Dark keep on an island in the lava, at the end of the last road.",
 };
 const BOOT = {
-  at: 0, timer: 0, loading: false, loadPick: 0, transitioning: false,
+  at: 0, timer: 0, loading: false, loadPick: 0, transitioning: false, menuOpen: false, menuPick: 0,
   pause(ms) { return new Promise(resolve=>setTimeout(resolve,ms)); },
   paint() {
     const f = document.getElementById("bootFill");
@@ -5316,32 +5316,63 @@ const BOOT = {
   step(pct, msg) { BOOT.say(msg); },
   waiting: false,
   async ready() {
-    await Promise.all([BOOT.to(94,4200,""),window.EmberTitleAudio?.waitReady()]);
-    await BOOT.to(100,500,"");
-    BOOT.waiting = true;
-    gameplayReady = true;
+    BOOT.at=100;BOOT.paint();BOOT.waiting=true;gameplayReady=true;
+    BOOT.menuOpen=false;BOOT.loading=false;
     document.body.classList.add("boot-ready");
-    const m = document.getElementById("bootMsg");
-    const b = document.getElementById("bootBtns");
-    const l = document.getElementById("bootLoad");
-    const bar = document.getElementById("bootFill");
-    if (bar) bar.style.width = "100%";
-    if (m) m.textContent = "";
-    if (b) b.style.display = "flex";
-    const lbl = document.getElementById("bootLabel");
-    if (lbl) { lbl.textContent = "LOADED!"; lbl.style.color = "#f0c060"; }
-    const h = document.getElementById("bootHint");
-    if (h) h.textContent = "press A to start";
-    let has = false;
-    try { migrateLegacySave(); has = !!(readSaveSlot(1)||readSaveSlot(2)||readSaveSlot(3)); } catch (e) { has = false; }
-    if (l) { l.style.opacity = has ? "1" : ".35"; l.dataset.on = has ? "1" : ""; }
+    document.getElementById("bootMsg").textContent="";
+    document.getElementById("bootLabel").textContent="";
+    document.getElementById("bootHint").textContent="";
+    document.getElementById("bootBar").style.display="none";
+    document.getElementById("bootBtns").style.display="none";
+    document.getElementById("bootBegin").hidden=false;
+  },
+  begin() {
+    if(!gameplayReady||BOOT.menuOpen||BOOT.transitioning)return;
+    window.EmberTitleAudio?.begin();
+    BOOT.menuOpen=true;BOOT.menuPick=0;
+    document.getElementById("bootBegin").hidden=true;
+    document.body.classList.add("boot-menu-open");
+    BOOT.showMenu();
+  },
+  latestSave() {
+    let slot=0,newest=-Infinity;
+    for(let i=1;i<=SAVE_SLOT_COUNT;i++){
+      const save=readSaveSlot(i);if(!save)continue;
+      const when=Number(save.when)||0;if(when>newest){newest=when;slot=i;}
+    }
+    return slot;
+  },
+  showMenu() {
+    try{migrateLegacySave();}catch(e){}
+    const has=!!BOOT.latestSave();
+    document.getElementById("bootBtns").style.display="flex";
+    document.getElementById("bootLoadPanel").hidden=true;
+    document.getElementById("bootLabel").textContent="";
+    document.getElementById("bootHint").textContent="Choose an option · A to select";
+    for(const id of ["bootContinue","bootLoad"])document.getElementById(id).disabled=!has;
+    BOOT.paintMenu();
+  },
+  paintMenu() {
+    ["bootNew","bootContinue","bootLoad"].forEach((id,i)=>document.getElementById(id).classList.toggle("selected",i===BOOT.menuPick));
+  },
+  stepMenu(d) {
+    if(!gameplayReady||!BOOT.menuOpen||BOOT.loading)return;
+    do{BOOT.menuPick=(BOOT.menuPick+d+3)%3;}while(BOOT.menuPick>0&&!BOOT.latestSave());
+    BOOT.paintMenu();
+  },
+  continueGame() {
+    if(!gameplayReady||!BOOT.menuOpen||BOOT.loading)return;
+    const slot=BOOT.latestSave();if(!slot)return;
+    if(!loadGame(slot)){document.getElementById("bootHint").textContent="That save could not be loaded. Try Load Save.";return;}
+    BOOT.close();
   },
   async close() {
-    if (!gameplayReady || BOOT.loading || BOOT.transitioning) return;
+    if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning) return;
     BOOT.transitioning=true;window.__titleTransition=true;
     gameplayReady=false;BOOT.waiting=false;clearPadInputs();
     document.body.classList.remove("boot-ready");
     document.body.classList.remove("boot-load-open");
+    document.body.classList.remove("boot-menu-open");
     const shade=document.getElementById("titleFade"),el=document.getElementById("boot");
     if(shade){shade.hidden=false;shade.style.transition="opacity 1200ms ease";shade.style.opacity="0";shade.getBoundingClientRect();shade.style.opacity="1";}
     await Promise.all([BOOT.pause(1200),window.EmberTitleAudio?.fadeOut(1200)]);
@@ -5355,9 +5386,13 @@ const BOOT = {
     if(shade)shade.hidden=true;
     window.EmberTitleAudio?.finish();
   },
-  activate() { if (BOOT.loading) BOOT.takeLoad(); else BOOT.close(); },
+  activate() {
+    if(!BOOT.menuOpen){BOOT.begin();return;}
+    if(BOOT.loading){BOOT.takeLoad();return;}
+    if(BOOT.menuPick===0)BOOT.close();else if(BOOT.menuPick===1)BOOT.continueGame();else BOOT.openLoad();
+  },
   openLoad() {
-    if (!gameplayReady) return;
+    if (!gameplayReady || !BOOT.menuOpen || !BOOT.latestSave()) return;
     BOOT.loading = true;
     document.body.classList.add("boot-load-open");
     document.getElementById("bootBtns").style.display = "none";
@@ -5388,7 +5423,7 @@ const BOOT = {
     });
   },
   stepLoad(d) {
-    if (!BOOT.loading) return;
+    if (!BOOT.loading) { BOOT.stepMenu(d); return; }
     globalThis.window?.EmberSfx?.ui?.();
     do { BOOT.loadPick = (BOOT.loadPick + d + 4) % 4; }
     while (BOOT.loadPick < 3 && !readSaveSlot(BOOT.loadPick + 1));
@@ -5409,24 +5444,17 @@ const BOOT = {
     BOOT.loading = false;
     document.body.classList.remove("boot-load-open");
     document.getElementById("bootLoadPanel").hidden = true;
-    document.getElementById("bootBtns").style.display = "flex";
-    document.getElementById("bootLabel").textContent = "LOADED!";
-    document.getElementById("bootHint").textContent = "press A to start";
+    BOOT.showMenu();
   },
 };
 function bootStart() { try { BOOT.to(9, 450, "waking the embers"); } catch (e) {} }
 bootStart();
 
 function bootBind() {
-  const nw = document.getElementById("bootNew");
-  const ld = document.getElementById("bootLoad");
-  if (nw && nw.addEventListener)
-    nw.addEventListener("click", () => { BOOT.close(); });
-  if (ld && ld.addEventListener)
-    ld.addEventListener("click", () => {
-      if (!ld.dataset.on) return;
-      BOOT.openLoad();
-    });
+  document.getElementById("bootBegin")?.addEventListener("click",()=>BOOT.begin());
+  document.getElementById("bootNew")?.addEventListener("click",()=>BOOT.close());
+  document.getElementById("bootContinue")?.addEventListener("click",()=>BOOT.continueGame());
+  document.getElementById("bootLoad")?.addEventListener("click",()=>BOOT.openLoad());
 }
 
 const MENUS = {
