@@ -1,6 +1,10 @@
 let routeMusicIntroPlayed=false;
 
 (()=>{
+  const title=document.getElementById('lastDragonriderTitleBgm');
+  const spores=document.getElementById('emberfellSporesBgm');
+  const titleScreen=()=>{try{return typeof gameplayStarted==='undefined'||!gameplayStarted;}catch(e){return true;}};
+  let endingMode=false;
   const bgm=document.getElementById('emberfellHomeTownBgm');
   const millwood=document.getElementById('emberfellMillwoodBgm');
   const villain=document.getElementById('emberfellVillainBgm');
@@ -19,6 +23,7 @@ let routeMusicIntroPlayed=false;
   const temple=document.getElementById('emberfellTempleBgm');
   const cinderhold=document.getElementById('emberfellCinderholdBgm');
   const hollybeck=document.getElementById('emberfellHollybeckBgm');
+  const snowRoute=document.getElementById('emberfellSnowRouteBgm');
   const lavaRoute=document.getElementById('emberfellLavaRouteBgm');
   if(!bgm) return;
   const KEY='emberfell.musicVolume';
@@ -98,7 +103,7 @@ let routeMusicIntroPlayed=false;
   const inForgewickMine=()=>{
     try {
       if(typeof MAPID==='undefined') return false;
-      return /^mine[2-5]$/.test(MAPID);
+      return /^mine(?:[2-5])?$/.test(MAPID);
     } catch(e) {}
     return false;
   };
@@ -119,6 +124,20 @@ let routeMusicIntroPlayed=false;
   };
   const inHollybeck=()=>inNamedArea('Hollybeck');
 
+  const inMushrooms=()=>{
+    try {
+      if(MAPID!=='world')return /shroom|spore|mushroom/i.test(MAPID+' '+(MD.title||''));
+      const x=P.x/TS,y=(P.y-1)/TS;
+      return features.some(f=>f.kind==='area'&&/shroom|spore|mushroom/i.test((f.label||'')+' '+(f.place||''))&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1);
+    } catch(e) { return false; }
+  };
+  const inElderWoods=()=>{
+    try {const x=P.x/TS,y=(P.y-1)/TS;return MAPID==='world'&&x>=1&&x<=72&&y>=241&&y<=403;}catch(e){return false;}
+  };
+  const inSnowRoute=()=>{
+    try { return MAPID==='world' && typeof inWinter==='function' && inWinter(Math.floor(P.x/TS),Math.floor((P.y-1)/TS)) && !inHollybeck(); } catch(e) { return false; }
+  };
+
   const inLavaRoute=()=>{
     try {
       if(typeof MAPID==='undefined' || MAPID!=='world' || typeof P==='undefined' || typeof TS==='undefined') return false;
@@ -136,7 +155,7 @@ let routeMusicIntroPlayed=false;
     } catch(e) {}
     return false;
   };
-  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire,school,tavern,seatown].filter(Boolean);
+  const tracks=[title,spores,bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,snowRoute,reveal,temple,desert,sandspire,school,tavern,seatown].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
@@ -156,8 +175,8 @@ let routeMusicIntroPlayed=false;
     const insideTemple=typeof MAPID!=='undefined'&&MAPID!=='world'&&typeof MD!=='undefined'&&MD&&!MD.mountainPassage&&(MD.templeExpanded||/^(?:tp|ds|sn)\d/.test(MAPID));
     const choices=[[MAPID==='school'||MAPID==='school2',school],[MAPID==='tavern',tavern],
       [insideTemple,temple],[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
-      [mysticMode,mystic],[inSeatownArea(),seatown],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
-      [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
+      [inMushrooms(),spores],[inElderWoods(),millwood],[mysticMode,mystic],[inSeatownArea(),seatown],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
+      [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inSnowRoute(),snowRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
   };
   const royalSpeaker=name=>/^(?:(?:King's|Royal|Black|White)\s+)?Knight\b|^(?:King )?Halvard$|^(?:Serjeant )?Bram$|^(?:Doran|Tolan)$/i.test(String(name||'').trim());
@@ -178,7 +197,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,title,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a)&&!loops.get(a).failed);
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
@@ -318,6 +337,7 @@ let routeMusicIntroPlayed=false;
     playSelected();
   };
   const chooseMusic=()=>{
+    if(titleScreen()||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
     if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
     try{if(mode!=='play'||quest<Q.NOISE||quest>Q.DONE){omenPlaying=false;omenHeard=false;}}catch(e){}
     if(omenPlaying){selectTrack(null);return;}
@@ -325,6 +345,7 @@ let routeMusicIntroPlayed=false;
     try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
     selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:exploreTrack());
   };
+  window.EmberEndingMusic={start:()=>{endingMode=true;chooseMusic();},stop:()=>{endingMode=false;chooseMusic();}};
   window.EmberKingMusic={
     start:()=>{kingMode=true;try{kingMap=MAPID;}catch(e){}chooseMusic();},
     stop:()=>{kingMode=false;chooseMusic();},
@@ -376,4 +397,6 @@ let routeMusicIntroPlayed=false;
   window.addEventListener('keydown',startMusic);
   window.addEventListener('touchstart',startMusic,{passive:true});
   window.addEventListener('focus',()=>{if(!document.hidden)startMusic();});
+  // Attempt loading-screen music; browsers that require a gesture retry on tap.
+  if(titleScreen())startMusic();
 })();

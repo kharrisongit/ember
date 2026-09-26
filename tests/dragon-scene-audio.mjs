@@ -138,7 +138,7 @@ console.log('PASS: breath impact plays once on successful enemy damage, includin
 let uiTime=100;c.performance.now=()=>uiTime;
 const uiCount=()=>sources.filter(s=>s.buffer[0].includes('ui-click')).length;
 c.mode='title';sfx.ui();sfx.ui();await flush();assert.equal(uiCount(),1,'One gesture can reach several handlers without doubling its click');
-let uiSound=active('ui-click')[0];assert.equal(uiSound.gain.gain.value,.7);assert.equal(uiSound.gain.to,output);
+let uiSound=active('ui-click')[0];assert.equal(uiSound.gain.gain.value,.7*.8);assert.equal(uiSound.gain.to,output);
 timers.forEach(f=>f());assert(!uiSound.stopped,'Title cleanup lets the short UI sound finish');
 uiTime+=100;sfx.ui();await flush();assert(uiSound.stopped);assert.equal(uiCount(),2,'A new press promptly restarts the click');
 c.document.hidden=true;timers.forEach(f=>f());assert.equal(active('ui-click').length,0);uiTime+=100;sfx.ui();await flush();assert.equal(uiCount(),2);

@@ -8944,6 +8944,7 @@ function lastFightHold() {
 function winGame() {
   if (wonAll) return;
   wonAll = 1;
+  window.EmberEndingMusic?.start();
   if (window.EmberKingMusic) window.EmberKingMusic.stop();
   /* The King is a persistent story removal, not a room-local actor state. */
   if (MAPID === "cinderhold") npcs = npcs.filter(n => !/Halvard/.test(n.n || ""));
@@ -8954,8 +8955,8 @@ function winGame() {
     "The two heads come to rest, one across the other.",
     "Corin: It is done, then.",
     "Corin: Come on. There is a long road home and nothing chasing us down it.",
-    "-- EMBERFELL --",
-  ], { hold: false });
+    "-- THE LAST DRAGONRIDER --",
+  ], { hold: false, after:()=>window.EmberEndingMusic?.stop() });
 }
 function plantGraves() {
   const ring = arenaLock;

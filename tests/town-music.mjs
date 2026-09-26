@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'),html=read
 function setup(stored=null,ios=false,failBuffers=false){
  const elements=new Map(),timers=[],listeners={};let sync,now=0;
  const attrs=new Map([...html.matchAll(/<audio id="([^"]+)"([^>]*>)([\s\S]*?)<\/audio>/g)].map(m=>[m[1],(m[2]+m[3]).match(/src="([^"]*)"/)?.[1]||'']));
- const c=vm.createContext({mode:'play',quest:0,Q:{NOISE:5,ARMED:6,DONE:9},dragonJourneyEnded:false,dragonIntroDone:false,saveGame(){},MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
+ const c=vm.createContext({gameplayStarted:true,mode:'play',quest:0,Q:{NOISE:5,ARMED:6,DONE:9},dragonJourneyEnded:false,dragonIntroDone:false,saveGame(){},MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
  wonAll:false,lastFight:0,scene:null,sayNpc:null,features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}],
  document:{hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,{id,src:attrs.get(id),paused:true,volume:1,currentTime:17,plays:0,
   addEventListener(k,f){(this.events||={})[k]=f;},getAttribute(k){return k==='src'?this.src:null;},querySelector(){return null;},
@@ -35,7 +35,7 @@ function setup(stored=null,ios=false,failBuffers=false){
 const {c,track,elements,change,advance,listeners,sync,getStored}=setup();
 assert.equal(c.window.EmberAudio.percent(),35);assert([...elements.values()].every(a=>a.paused),'No autoplay before a gesture');
 listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35*.85);
-for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['mine2','Forgewick Mine']]){
+for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['world','Unknown road',500,500]]){
  await change(map,title,x,y);assert.equal(track('Millwood').paused,false,title+' uses the default until its own song exists');assert.equal(track('Millwood').currentTime,17);
 }
 for(const a of elements.values())if(!['emberfellMillwoodBgm','emberfellVillainBgm'].includes(a.id))assert.equal(a.plays,0,'Empty audio placeholders never replace the default');
@@ -85,13 +85,13 @@ for(const road of world.features.filter(f=>f.kind==='route'&&!f.entrance&&!([3,5
  for(let i=1;i<pts.length;i++){
   const x=(pts[i][0]+pts[i-1][0])/2,y=(pts[i][1]+pts[i-1][1])/2;
   if(world.features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))continue;
-  await routes.change('world','Emberfell',x,y);assert(!routes.track(road.style==='blossom'?'Seatown':'Field').paused,'Route '+road.id+' leg '+i+' uses The Field');routeSamples++;
+  await routes.change('world','Emberfell',x,y);assert(!routes.track(road.style==='blossom'?'Seatown':x>=1288&&x<=1452&&y>=70&&y<=238?'LavaRoute':'Field').paused,'Route '+road.id+' leg '+i+' uses The Field');routeSamples++;
  }
 }
 for(const name of ['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck']){
  const town=world.features.find(f=>f.kind==='area'&&f.label===name);
  await routes.change('world','Emberfell',(town.x0+town.x1)/2,(town.y0+town.y1)/2);
- assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':name==='Forgewick'?'Forgewick':name==='Sandspire'?'Sandspire':name==='Coralmere'?'Seatown':'Millwood').paused);
+ assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':name==='Forgewick'?'Forgewick':name==='Sandspire'?'Sandspire':name==='Coralmere'?'Seatown':name==='Hollybeck'?'Hollybeck':'Millwood').paused);
 }
 await routes.change('world','Northern Woods',30,350);assert(routes.track('Field').paused,'The original song remains in the Northern Woods');
 routes.c.features=[{id:12,kind:'route',road:'Route 2',pts:[[200,200],[200,240],[300,240]]}];
@@ -139,7 +139,7 @@ for(const road of huntingPaths.values())for(let i=1;i<road.pts.length;i++){
   const x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;
   if(world.features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))continue;
   await hunt.change('world','Emberfell',x,y);
-  assert(!hunt.track('Field').paused||!hunt.track('Seatown').paused,'Hunting path '+road.id+' segment '+i+' keeps route music');huntSamples++;
+  assert(!hunt.track('Field').paused||!hunt.track('Seatown').paused||!hunt.track('LavaRoute').paused,'Hunting path '+road.id+' segment '+i+' keeps route music');huntSamples++;
  }
 }
 assert(hunt.track('Field').plays>=1,'hunting paths outside the coast use route music');
@@ -322,3 +322,22 @@ await recovery.change('school','Thornwell School');await recovery.advance();
 assert(!recovery.track('School').paused,'Failed loop decode falls back to media playback');
 assert.equal(recovery.audible(recovery.track('School')),.35*.85,'Fallback honors the same music gain');
 console.log('PASS: startup uses immediate media playback; failed buffered loops recover audibly with the shared mixer.');
+
+// Newly supplied regional tracks take priority over the general road fallback.
+const regions=setup();regions.listeners.pointerdown();await regions.advance();
+for(const id of ['mine','mine2','mine3','mine4','mine5']){await regions.change(id,'Forgewick Mine');assert.equal(regions.track('Mine').paused,false,id);}
+regions.c.inWinter=(x,y)=>x===1200;
+await regions.change('world','Snow route',1200,100);assert.equal(regions.track('SnowRoute').paused,false);assert(regions.track('Mine').paused);
+regions.c.features.push({kind:'area',label:'Hollybeck',x0:1190,x1:1210,y0:90,y1:110});
+await regions.change('world','Hollybeck',1200,100);assert.equal(regions.track('Hollybeck').paused,false);assert(regions.track('SnowRoute').paused);
+await regions.change('world','Ashcrag',1350,180);assert.equal(regions.track('LavaRoute').paused,false);assert(regions.track('Hollybeck').paused);
+await regions.change('royal_hall','Cinderhold Hall');assert.equal(regions.track('Cinderhold').paused,false);assert(regions.track('LavaRoute').paused);
+console.log('PASS: all mine floors, snow route, Hollybeck override, lava route and castle boundary.');
+
+const themed=setup();themed.listeners.pointerdown();await themed.advance();
+for(const [id,title]of [['shroom','Mushroom Cave'],['spore_home','Sporehollow']]){await themed.change(id,title);assert(!themed.track('Spores').paused);}
+themed.c.features=world.features;await themed.change('world','Spore forest',30,170);assert(!themed.track('Spores').paused);await themed.change('world','Sporehollow',95,77);assert(!themed.track('Spores').paused);await themed.change('world','Elder woods',45,374);assert(!themed.track('Millwood').paused);
+themed.c.gameplayStarted=false;themed.sync();await themed.advance();assert(!themed.elements.get('lastDragonriderTitleBgm').paused);
+themed.c.gameplayStarted=true;await themed.change('house22','Millwood — Maddock');assert(themed.elements.get('lastDragonriderTitleBgm').paused);
+themed.c.window.EmberEndingMusic.start();await themed.advance();assert(!themed.elements.get('lastDragonriderTitleBgm').paused);themed.c.window.EmberEndingMusic.stop();await themed.advance();assert(themed.elements.get('lastDragonriderTitleBgm').paused);
+console.log('PASS: mushroom forest/cave/hollow, elder woods, title screen and ending transitions.');
