@@ -5704,11 +5704,11 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
-  quest, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
-  breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole,
+  breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
 };}
@@ -5755,13 +5755,14 @@ function loadGame(slot=activeSaveSlot) {
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     chestAnim=null;
     restoreFatherCompass(s.fatherCompass);
+    if(typeof routeMusicIntroPlayed!=='undefined')routeMusicIntroPlayed=s.routeMusicIntroPlayed!==undefined?!!s.routeMusicIntroPlayed:!!(s.thornwellMet||s.x>=80*TS);
     for(const k in breathHas)breathHas[k]=k==='fire'||k==='slash'||!!s.breathHas?.[k];
     for(const map of Object.keys(chestOpen))delete chestOpen[map];
     for(const c of CHESTS)chestOpen[c.map]=!!breathHas[c.gift];
     syncDragonVitality(false);
     dragon.hp = Number.isFinite(s.dragonHp) ? Math.max(0, Math.min(dragon.maxHp, s.dragonHp)) : dragon.maxHp;
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
-    boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
+    boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;odoRodReferral=!!s.odoRodReferral;fishing=null;
     resetDragonBanter(s.dragonBanterSeen||[]);
     dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;
     if(typeof dragonJourneyEnded!=='undefined')dragonJourneyEnded=s.dragonJourneyEnded!==undefined?!!s.dragonJourneyEnded:
@@ -6044,6 +6045,7 @@ setInterval(() => {
   for (const n of npcs) {
     if (!n.patrol || n.goto) continue;
     if (typeof sayNpc !== "undefined" && sayNpc === n) continue;
+    if (scene?.npcActor===n || ask?.npcActor===n) continue;
     if (n.patrolFrom !== undefined && quest < n.patrolFrom) continue;
     if (n.restUntil === undefined) n.restUntil = 0;
     if (n.arrived === undefined) n.arrived = true;

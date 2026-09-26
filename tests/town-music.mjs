@@ -6,7 +6,7 @@ function setup(stored=null,ios=false){
  const c=vm.createContext({mode:'play',quest:0,Q:{NOISE:5,ARMED:6,DONE:9},dragonJourneyEnded:false,dragonIntroDone:false,saveGame(){},MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
  wonAll:false,lastFight:0,scene:null,sayNpc:null,features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}],
  document:{hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,{id,src:attrs.get(id),paused:true,volume:1,currentTime:17,plays:0,
-  getAttribute(k){return k==='src'?this.src:null;},querySelector(){return null;},
+  addEventListener(k,f){(this.events||={})[k]=f;},getAttribute(k){return k==='src'?this.src:null;},querySelector(){return null;},
   play(){this.plays++;if(this.waitForPlay)return new Promise(resolve=>{this.finishPlay=()=>{this.paused=false;resolve();};});this.paused=false;return Promise.resolve();},pause(){this.paused=true;}});return elements.get(id);}},
  localStorage:{getItem:()=>stored,setItem:(k,v)=>{stored=v;}},Date:{now:()=>now},setTimeout:(f,ms)=>timers.push({f,at:now+ms}),setInterval:f=>{sync=f;},window:{addEventListener:(k,f)=>{listeners[k]=f;}}});
  const contexts=[];
@@ -33,7 +33,7 @@ function setup(stored=null,ios=false){
 const {c,track,elements,change,advance,listeners,sync,getStored}=setup();
 assert.equal(c.window.EmberAudio.percent(),35);assert([...elements.values()].every(a=>a.paused),'No autoplay before a gesture');
 listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35);
-for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['royal_entry','Cinderhold entry'],['mine2','Forgewick Mine'],['witch_room','Witchmoor']]){
+for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['royal_entry','Cinderhold entry'],['mine2','Forgewick Mine']]){
  await change(map,title,x,y);assert.equal(track('Millwood').paused,false,title+' uses the default until its own song exists');assert.equal(track('Millwood').currentTime,17);
 }
 for(const a of elements.values())if(!['emberfellMillwoodBgm','emberfellVillainBgm'].includes(a.id))assert.equal(a.plays,0,'Empty audio placeholders never replace the default');
@@ -89,7 +89,7 @@ for(const road of world.features.filter(f=>f.kind==='route'&&!f.entrance&&!([3,5
 for(const name of ['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck']){
  const town=world.features.find(f=>f.kind==='area'&&f.label===name);
  await routes.change('world','Emberfell',(town.x0+town.x1)/2,(town.y0+town.y1)/2);
- assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':'Millwood').paused);
+ assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':name==='Forgewick'?'Forgewick':name==='Sandspire'?'Sandspire':'Millwood').paused);
 }
 await routes.change('world','Northern Woods',30,350);assert(routes.track('Field').paused,'The original song remains in the Northern Woods');
 routes.c.features=[{id:12,kind:'route',road:'Route 2',pts:[[200,200],[200,240],[300,240]]}];
@@ -188,3 +188,75 @@ assert(pcm&&rate&&channels);const stride=Math.floor(rate*channels*.1);
 for(let start=0;start+stride<pcm.length/2;start+=stride){let power=0;for(let i=0;i<stride;i++)power+=(pcm.readInt16LE((start+i)*2)/32768)**2;assert(Math.sqrt(power/stride)>.03,'Every 100ms stays audible, including the join');}
 for(let channel=0;channel<channels;channel++)assert(Math.abs(pcm.readInt16LE(channel*2)-pcm.readInt16LE(pcm.length-channels*2+channel*2))/32768<.02,'The seam has no discontinuity spike');
 console.log('PASS: lossless loop contains no silent/faded gap and has a continuous waveform join.');
+
+const intro=setup();intro.c.features=[{kind:'route',road:'Route 1',pts:[[65,430],[79,430]]}];
+intro.listeners.pointerdown();await intro.advance();
+await intro.change('world','Route to Thornwell',70,430);
+assert.equal(intro.track('Field').currentTime,0,'The first departure from Millwood includes the opening ten seconds');
+assert(vm.runInContext('routeMusicIntroPlayed',intro.c));
+intro.track('Field').currentTime=42;intro.sync();await intro.advance();assert.equal(intro.track('Field').currentTime,42,'Staying on the same road never restarts it');
+await intro.change('tavern','Thornwell Tavern');
+intro.c.features=[{kind:'route',road:'Route 2',pts:[[500,430],[540,430]]}];
+await intro.change('world','Road from Thornwell',520,430);assert.equal(intro.track('Field').currentTime,10,'Leaving Thornwell skips the intro');
+intro.track('Field').paused=true;intro.track('Field').events.ended();await intro.advance();
+assert.equal(intro.track('Field').currentTime,10,'Later loops skip the intro too');
+assert.equal(intro.track('Field').loop,false,'Native looping cannot replay the intro');
+console.log('PASS: route intro plays once leaving Millwood; later departures and loops begin at ten seconds.');
+
+const forge=setup();forge.listeners.pointerdown();await forge.advance();
+await forge.change('house33','Forgewick — Smithy');assert(!forge.track('Forgewick').paused,'Forgewick interiors use Home Town');
+await forge.change('mine2','Forgewick Mine');assert(forge.track('Forgewick').paused,'The mine retains its own music slot');
+await forge.change('tp1','Forgewick Temple');assert(forge.track('Forgewick').paused,'The temple retains its own music slot');
+assert(forge.track('Forgewick').src.includes('forgewick-home-town.m4a'));
+console.log('PASS: Home Town plays in Forgewick and its town interiors; mine and temple remain separate.');
+
+const temples=setup();temples.listeners.pointerdown();await temples.advance();
+for(const [id,title]of [['tp1','Forgewick Temple'],['tp1_crossroads','Forgewick Temple'],['ds1','Sandspire Temple'],['ds_sanctum','Sandspire Temple'],['sn1','Hollybeck Temple'],['sn_altar','Hollybeck Temple']]){
+ temples.c.MD.templeExpanded=true;await temples.change(id,title);temples.c.MD.templeExpanded=true;temples.sync();await temples.advance();
+ assert(!temples.track('Temple').paused,id+' uses Spooky Cave');
+ assert(temples.track('Forgewick').paused&&temples.track('Millwood').paused);
+}
+const templePlays=temples.track('Temple').plays;await temples.change('sn2','Hollybeck Temple');assert.equal(temples.track('Temple').plays,templePlays,'Room changes do not restart the temple song');
+await temples.change('mine2','Forgewick Mine');assert(temples.track('Temple').paused);
+await temples.change('passage','Mountain Passage');temples.c.MD={templeExpanded:true,mountainPassage:true};temples.sync();await temples.advance();assert(temples.track('Temple').paused,'The mountain passage is separate from the temples');
+console.log('PASS: all three temples and their side rooms share Spooky Cave continuously; mines and mountain passages stay separate.');
+
+const swamp=setup();swamp.listeners.pointerdown();await swamp.advance();
+for(const [map,title,x,y]of [['witch_room','Witchmoor'],['witch_demon','Witchmoor'],['world','Dreadmarsh',1080,280]]){
+ await swamp.change(map,title,x,y);assert(!swamp.track('Mystic').paused,map+' uses Mystic Forest');assert(swamp.track('Millwood').paused);
+}
+assert(swamp.track('Mystic').src.includes('swamp-mystic-forest.m4a'));
+console.log('PASS: Mystic Forest covers the swamp, witch’s house and witch encounter.');
+
+// The transition follows the same tile classifier used by the ground renderer.
+const desertTest=setup(),groundCode=read('js/generated/game-part-2.js');
+Object.assign(desertTest.c,{MW:14,MH:10,SAND:11,ROADSAND:12,PAVING2:8,GRASS:0,WALL:6,DIRT:1,COBBLE:2,
+ terr:new Uint8Array(140),baseTerr:new Uint8Array(140),features:[{kind:'route',road:'Route 3',pts:[[0,4],[14,4]]}]});
+for(let y=0;y<10;y++)for(let x=5;x<14;x++)desertTest.c.terr[y*14+x]=desertTest.c.baseTerr[y*14+x]=11;
+vm.runInContext(groundCode.slice(groundCode.indexOf('function inDesert('),groundCode.indexOf('function groundTile(')),desertTest.c);
+desertTest.listeners.pointerdown();await desertTest.advance();
+await desertTest.change('world','Emberfell',4.99,4.5);
+assert(desertTest.track('Desert').paused,'last grass tile must not start desert music even beside sand');
+assert(!desertTest.track('Field').paused);
+await desertTest.change('world','Emberfell',5,4.5);
+assert(!desertTest.track('Desert').paused,'first sand tile starts Desert');assert(desertTest.track('Field').paused);
+const starts=desertTest.track('Desert').plays;
+await desertTest.change('world','Emberfell',7,4.5);assert.equal(desertTest.track('Desert').plays,starts,'crossing sand keeps a continuous song');
+desertTest.c.features.push({kind:'area',label:'Sandspire',x0:9,y0:2,x1:12,y1:7});
+await desertTest.change('world','Emberfell',9,4.5);assert(!desertTest.track('Sandspire').paused);assert(desertTest.track('Desert').paused);
+const townStarts=desertTest.track('Sandspire').plays;
+await desertTest.change('house_desert','Sandspire — A home');assert.equal(desertTest.track('Sandspire').plays,townStarts,'town interiors keep the same loop');
+await desertTest.change('ds1','Sandspire Temple');assert(!desertTest.track('Temple').paused);assert(desertTest.track('Sandspire').paused);
+await desertTest.change('world','Emberfell',8.99,4.5);assert(!desertTest.track('Desert').paused);
+await desertTest.change('world','Emberfell',4.99,4.5);assert(desertTest.track('Desert').paused);assert(!desertTest.track('Field').paused);
+console.log('PASS: Desert begins at the first sand tile, never on adjacent grass; Sandspire and its homes share their own continuous song, temples keep Spooky Cave, and leaving restores the road track.');
+
+for(const file of ['desert-route-loop.wav','sandspire-town-loop.wav']){
+ const b=fs.readFileSync(new URL('../assets/audio/'+file,import.meta.url));
+ const channels=b.readUInt16LE(22),rate=b.readUInt32LE(24),data=b.subarray(44);
+ assert.equal(b.toString('ascii',0,4),'RIFF');assert.equal(b.readUInt16LE(34),16);
+ for(let ch=0;ch<channels;ch++)assert(Math.abs(data.readInt16LE(ch*2)-data.readInt16LE(data.length-channels*2+ch*2))/32768<.012,'no click at '+file+' wrap');
+ const window=Math.floor(rate*channels*.1);
+ for(let i=0;i+window<=data.length/2;i+=window){let power=0;for(let j=0;j<window;j++)power+=(data.readInt16LE((i+j)*2)/32768)**2;assert(Math.sqrt(power/window)>.005,'no silent loop padding in '+file);}
+}
+console.log('PASS: both delivered PCM loops have continuous joins and no silent encoder padding.');

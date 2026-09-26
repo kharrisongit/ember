@@ -1,6 +1,6 @@
 // Gameplay and dragon-scene effects share the music mixer, including its iPhone-safe volume gain.
 (()=>{
-  const files={ui:'ui-click',roar:'dragon-roar',distant:'dragon-distant-crash',
+  const files={coin:'coin-collect',ui:'ui-click',roar:'dragon-roar',distant:'dragon-distant-crash',
     crash:'dragon-crash',wings:'dragon-wings',breathing:'dragon-breathing',
     breathHit:'dragon-breath-hit',hatch:'egg-hatch',golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item'};
   const dragonEffects=['roar','distant','crash','wings','breathing'];
@@ -75,6 +75,7 @@
   };
   window.EmberSfx={
     ui:uiClick,
+    coin:()=>{if(inGame())play('coin');},
     breathHit:()=>{if(inGame())play('breathHit',false,true);},
     hatch:()=>{if(inGame())play('hatch',false,true);},
     golemHit:()=>{if(inGame())play('golemHit',false,true);},

@@ -2,7 +2,7 @@ import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:asser
 const read=p=>fs.readFileSync(p,'utf8');
 const c=vm.createContext({hasDragon:()=>c.hatched,hatched:false,wonAll:false,
  templeCompass:{owned:false},glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
- canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,
+ canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});
 vm.runInContext(read('js/npc-conversations.js'),c);
 const stories=vm.runInContext('NPC_STORIES',c),cast=JSON.parse(read('assets/portraits/cast.json'));
@@ -16,7 +16,14 @@ assert(!c.npcStoryGiftPending(nan),'Nan has no gift before hatching');c.hatched=
 c.templeCompass.owned=true;assert(!c.npcStoryGiftPending(nan));
 assert(c.npcStoryTopics(nan).some(t=>t.title==="Dad's compass"));assert(!c.npcStoryTopics(nan).some(t=>t.title==='Life after Halvard'));
 c.wonAll=true;assert(c.npcStoryTopics(nan).some(t=>t.title==='Life after Halvard'));
-assert(!c.npcStoryGiftPending({n:'Odo'}));assert(c.npcStoryGiftPending({n:'Calder'}));c.fishingPole=true;assert(!c.npcStoryGiftPending({n:'Calder'}));
+assert(c.npcStoryGiftPending({n:'Odo'}));assert(c.npcStoryGiftPending({n:'Calder'}));
+assert.match(c.fishingRodDialogue('Calder').join(' '),/Odo is my grandfather/);
+c.odoRodReferral=true;assert(!c.npcStoryGiftPending({n:'Odo'}));assert(!c.npcStoryGiftPending({n:'Calder'}));
+assert(c.npcStoryTopics({n:'Calder'}).some(t=>t.title==='Odo sent me for a fishing rod'));
+assert.match(c.fishingRodDialogue('Calder')[0],/Odo sent me/);
+assert.match(c.fishingRodDialogue('Odo')[0],/first camp on the road to Thornwell/);
+c.fishingPole=true;assert(!c.npcStoryTopics({n:'Calder'}).some(t=>t.title==='Odo sent me for a fishing rod'));
+assert(!c.npcStoryGiftPending({n:'Calder'}));
 const stockSource=read('js/generated/game-part-2.js').split('const STOCK = {')[1].split('\n};')[0];
 c.STOCK=Object.fromEntries([...stockSource.matchAll(/^  (\w+):/gm)].map(m=>[m[1],{}]));
 vm.runInContext(read('js/merchant-shop.js'),c);

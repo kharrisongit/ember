@@ -141,6 +141,39 @@ const DRAGON_REACTION_LINES={
   "home":["Everyone protects a world called home.", "Small does not mean unimportant."]
 };
 function dragonStoryStage(){return wonAll?'victory':'journey';}
+function dragonLearned(key){return dragonBanterSeen.has('learned:'+key);}
+// Learn from lines Corin actually sees, including conversations before hatching
+// and inside houses. Aurelius's own suggestions cannot unlock further leads.
+function rememberDragonKnowledge(who,text,persist=true){
+  if(!text||who==='Aurelius')return;
+  const before=dragonBanterSeen.size,words=String(text);
+  const learn=key=>dragonBanterSeen.add('learned:'+key);
+  if(/\bBramble\b/i.test(words))learn('bramble');
+  if(/demon|trials/i.test(words)&&/Maelis|Witchmoor/.test(who+' '+words))learn('trials');
+  if(/\bRowan\b/i.test(words)&&/tavern|Copper Cup/i.test(words))learn('bramble-owner');
+  if(/fishing|\brod\b|\bpole\b/i.test(words)&&/Odo|Calder/i.test(who+' '+words))learn('fishing');
+  if(/Dunstan/i.test(who+' '+words)&&/blade|armour|armor|blacksmith|sword|smith/i.test(words))learn('smith');
+  if(/Sela/i.test(who+' '+words)&&/shield|glass|protect/i.test(words))learn('shield');
+  if(who&&who!=='Corin'&&/charm|amulet|ward|lantern/i.test(words))learn('gift:'+who);
+  if(/temple|heartstone/i.test(words))for(const town of ['Forgewick','Hollybeck','Sandspire'])if(words.toLowerCase().includes(town.toLowerCase()))learn('temple:'+town);
+  if(persist&&before!==dragonBanterSeen.size)persistDragonBanterSeen();
+}
+function dragonGiftLeads(){
+  const seen=new Set();
+  return Object.values(W.maps).flatMap(map=>(map.npcs||[]).map(n=>({n,map})))
+    .filter(({n})=>{
+      if(!n.charm||n.charm==='edge'||charm[n.charm]||seen.has(n.charm)||!dragonLearned('gift:'+n.n))return false;
+      seen.add(n.charm);return true;
+    });
+}
+function dragonSideQuestTopics(){
+  return [
+    {id:'fishing',name:fishingPole?'Fishing with Calder’s rod':'Odo and Calder’s spare rod',known:fishingPole||(typeof odoRodReferral!=='undefined'&&odoRodReferral)||dragonLearned('fishing')},
+    {id:'bramble',name:brambleQuest>=2?'Visit Rowan and Bramble':dragonLearned('bramble')?'Help Bramble find his person':'Help our new dog find his person',known:brambleQuest>0||dragonLearned('bramble')},
+    {id:'equipment',name:'Our weapons and protection',known:smithUpgrade||glassShield||dragonLearned('smith')||dragonLearned('shield')},
+    {id:'gifts',name:'Charms and other gifts',known:Object.entries(charm).some(([key,value])=>key!=='edge'&&value)||dragonGiftLeads().length>0}
+  ].filter(topic=>topic.known);
+}
 function dragonLineKey(line){return 'line:'+line.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();}
 function persistDragonBanterSeen(){
   // Remember only dialogue history; never move the player's saved position.
@@ -210,6 +243,8 @@ function resetDragonBanter(seen=[]){
   dragonBanterSeen.clear();
   for(const key of seen)if(typeof key==='string'){
     dragonBanterSeen.add(key.replace(':sealed',':victory'));
+    const heard=key.match(/^heard:([^:]+):line:(.*)$/);
+    if(heard)rememberDragonKnowledge(heard[1],heard[2],false);
     // Upgrade history from the original per-NPC/per-boss IDs.
     const npc=key.match(/^npc:(.*):(journey|victory|sealed):([^:]+)$/);
     if(npc){
@@ -412,7 +447,7 @@ const DRAGON_LONG_TALKS={
     'Aurelius: Give me food before we face the next danger. Meat and fish help me recover. Open ITEMS to feed me what you are carrying.',
     'Corin: And if you cannot get up?',
     'Aurelius: Come close and press A with meat or fish in your supplies. I will need your help then.',
-    fishingPole?'Corin: Odo’s fishing pole should keep us supplied.':'Corin: We should ask Odo about fishing when he has gone home to Millwood.',
+    fishingPole?'Corin: The fishing rod Calder gave us should keep us supplied.':(typeof odoRodReferral!=='undefined'&&odoRodReferral)?'Corin: We should ask Calder for the spare rod Odo mentioned.':'Corin: We should keep enough food with us before setting out.',
     'Aurelius: Yes. Looking after each other is part of the journey, not an interruption to it.',
     'Corin: You have made eating sound very noble.',
     'Aurelius: I have a gift for explaining important things.'
@@ -435,38 +470,42 @@ function dragonCurrentQuest(){
     'Corin: Where should we go now?',
     'Aurelius: Halvard is defeated. We can return to the people who helped us and hear what freedom has changed for them.',
     'Corin: We still have unfinished business in places.',
-    !cinderSeal?'Aurelius: Return to Maelis in Witchmoor. With the king gone, a keeper of old trials has answered her circle. Speak with the demon there when you are ready.':
+    !cinderSeal?(dragonLearned('trials')?'Aurelius: We heard about the trials at Witchmoor. We can return there when we feel ready.':'Aurelius: Let us revisit the people we helped and follow up on anything they tell us. We will learn what has changed by listening.'):
       !trialSealPlaced?'Aurelius: You carry the Cinderhold Seal. The seal chamber adjoining the throne room is where it belongs.':
       'Aurelius: The seal is placed. The demon’s trials remain a challenge we can return to when we choose.',
     'Corin: And the ordinary things?',
     'Aurelius: They matter as much as ever. Missing companions, a useful gift, a promise to return. A victory does not make those things smaller.'
   ];
   const missing=[['lightning','Forgewick'],['shadow','Hollybeck'],['ice','Sandspire']].filter(([key])=>!breathHas[key]);
+  const knownTemples=missing.filter(([,town])=>dragonLearned('temple:'+town));
   return [
     'Corin: Help me put our next steps in order.',
     'Aurelius: Halvard threatens us and everyone living under his rule. Our goal is to reach Cinderhold ready to face him.',
-    !smithUpgrade?'Aurelius: First, Dunstan in Forgewick can improve Maddock’s blade and fit you with armour. Good equipment is a sensible beginning.':'Aurelius: Dunstan’s work has given you a stronger blade and armour. Keep supplies ready as well.',
-    'Corin: And the heartstones?',
-    missing.length?'Aurelius: We have more to discover in the old temples near '+missing.map(([,town])=>town).join(', ')+'. Their keepers and chambers hold the powers we have not found.':'Aurelius: Fire, lightning, shadow and ice are all with us now. The heartstones have given us the choices we came looking for.',
+    smithUpgrade?'Aurelius: Dunstan’s work has given you a stronger blade and armour. Keep supplies ready as well.':dragonLearned('smith')?'Aurelius: We heard that Dunstan can improve your equipment. Following up with him would be a sensible beginning.':'Aurelius: Keep food and supplies ready. We can ask the people we meet about the road ahead.',
+    !missing.length?'Aurelius: Fire, lightning, shadow and ice are all with us now. The heartstones have given us the choices we came looking for.':
+      knownTemples.length?'Aurelius: We have heard about the old temples near '+knownTemples.map(([,town])=>town).join(', ')+'. We can follow those leads and learn what their keepers know.':
+      'Aurelius: Let us follow the road Maddock described and ask questions as we go. We still have much to learn together.',
     'Corin: Does that mean we must hurry?',
     'Aurelius: Prepare, then move with purpose. Ask people what they need, look through the side paths, and do not mistake being tired for being ready.'
   ];
 }
 function dragonSideQuest(topic){
+  if(!dragonSideQuestTopics().some(t=>t.id===topic))return [
+    'Corin: Have we heard of anyone who needs our help?',
+    'Aurelius: No new leads yet. Let us listen to the people we meet.'
+  ];
   if(topic==='fishing')return fishingPole?[
     'Corin: How are our provisions looking?',
-    'Aurelius: Odo has already given you the pole. Face water and press A to fish, then stop the marker in the green arc.',
+    'Aurelius: Calder gave you his spare rod. Face water and press A to fish, then stop the marker in the green arc.',
     'Corin: The fish do not always cooperate.',
     'Aurelius: They have a different opinion about supper. Keep the catch in our supplies and feed me through ITEMS when I need to recover.',
     'Corin: You could offer to do the patient part.',
     'Aurelius: I am patiently waiting to be fed.'
   ]:[
     'Corin: We could use a steadier supply of food for you.',
-    'Aurelius: Odo knows the water around Millwood. Now that he has left his old spot and returned home, speak to him there.',
-    'Corin: He might lend me a fishing pole.',
-    'Aurelius: Ask him. People sometimes disguise useful gifts as complaints.',
-    'Corin: Then Odo must be the most generous man in Emberfell.',
-    'Aurelius: I will reserve judgement until we see the fish.'
+    (typeof odoRodReferral!=='undefined'&&odoRodReferral)?'Aurelius: Odo told us his grandson Calder has a spare rod. Ask him at the first camp on the road to Thornwell.':'Aurelius: We heard about a fishing rod. Let us finish that conversation and see whether one is available.',
+    'Corin: A little patience might save us some provisions.',
+    'Aurelius: I can offer encouragement from a respectful distance from the hook.'
   ];
   if(topic==='bramble')return brambleQuest>=2?[
     'Corin: We got Bramble back to Rowan.',
@@ -476,30 +515,28 @@ function dragonSideQuest(topic){
     'Corin: Are you jealous?',
     'Aurelius: I am considering whether I need a pair of ears.'
   ]:[
-    'Corin: Is there someone nearby who could use our help?',
-    brambleQuest===1?'Aurelius: Bramble is travelling with us. His person, Rowan the Hunter, is in Thornwell’s tavern. Bring him there.':'Aurelius: Look for Bramble on the road near Thornwell. A friendly dog far from his person is worth stopping for.',
-    'Corin: I suppose he cannot tell me his address.',
-    'Aurelius: Townspeople may know who is looking for him. A question can be more useful than another mile of guessing.',
-    'Corin: You will wait while I go into the tavern?',
-    'Aurelius: Of course. I would hate to stand on the dog.'
+    brambleQuest===1?'Corin: We should help our new companion find his way home.':'Corin: We heard about a dog called Bramble.',
+    dragonLearned('bramble-owner')?'Aurelius: We were told Rowan the Hunter is in Thornwell’s tavern. Let us ask him about the dog.':
+      'Aurelius: We do not know where his person is yet. Someone nearby may recognise him; let us ask.',
+    'Corin: Better than guessing which way he came from.',
+    'Aurelius: And we can keep him company while we find out.'
   ];
   if(topic==='equipment')return [
     'Corin: What could make our equipment better?',
-    smithUpgrade?'Aurelius: Dunstan has already strengthened your blade and armour. That work is done.':'Aurelius: Visit Dunstan, the blacksmith in Forgewick. Maddock’s blade gives him something to work with.',
-    glassShield?'Corin: And Sela’s Glass Shield is already with us.':'Corin: What about protecting myself?',
-    glassShield?'Aurelius: Hold B during battle to raise its field. A shield is useful only if you remember to use it.':'Aurelius: Speak with Sela in Forgewick. Her glasswork can offer a kind of protection ordinary metal cannot.',
+    ...(smithUpgrade?['Aurelius: Dunstan has already strengthened your blade and armour. That work is done.']:
+      dragonLearned('smith')?['Aurelius: We heard that Dunstan can work on your equipment. We should speak with him about Maddock’s blade.']:[]),
+    ...(glassShield?['Corin: Sela’s Glass Shield is with us.','Aurelius: Hold B during battle to raise its field. A shield is useful only if you remember to use it.']:
+      dragonLearned('shield')?['Aurelius: Sela told us about her glasswork. Let us ask her about the protection it can offer.']:[]),
     'Corin: Anything else?',
-    'Aurelius: Keep talking to craftspeople and travellers. Not every helpful thing waits in a chest behind a monster.'
+    'Aurelius: Keep talking to craftspeople and travellers. We will know more when we hear what they can offer.'
   ];
-  const remaining=Object.values(W.maps).flatMap(map=>(map.npcs||[]).map(n=>({n,map}))).filter(({n})=>n.charm&&!charm[n.charm]&&n.charm!=='edge');
-  const unique=remaining.filter((v,i,a)=>a.findIndex(q=>q.n.charm===v.n.charm)===i).slice(0,3);
+  const remaining=dragonGiftLeads().slice(0,3);
   return [
-    'Corin: Are there other useful things we have missed?',
-    'Aurelius: Small gifts can change a long journey. We should look for people with knowledge to share, not only things to sell.',
-    ...unique.map(({n,map})=>'Aurelius: '+n.n+(map.title&&map.title!=='Emberfell'&&map!==W.maps.world?' in '+map.title:'')+' may have something to offer. Speak with them when our path takes us there.'),
-    ...(!unique.length?['Aurelius: You have gathered the known gifts I would have suggested. That is a good reason to thank their keepers, rather than keep asking for more.']:[]),
-    'Corin: Does your shared memory tell you what everyone is carrying?',
-    'Aurelius: No. Think of these as leads worth following. The people themselves will tell you what their gifts mean.'
+    'Corin: What about the gifts people have mentioned?',
+    ...remaining.map(({n})=>'Aurelius: '+n.n+' spoke about something that might help. We can finish that conversation when we return.'),
+    ...(!remaining.length?['Aurelius: We have collected the gifts we know about so far. Other people may have stories to share when we meet them.']:[]),
+    'Corin: Your shared memory cannot tell you what everyone is carrying.',
+    'Aurelius: No. These are people we are getting to know together, just as you are getting to know me.'
   ];
 }
 // Record actual areas, never the names of towns mentioned by a road label.
@@ -813,7 +850,7 @@ function openDragonConversation(category='root'){
       {n:'Dragons and our bond',go:()=>openDragonConversation('dragons')},
       {n:'Emberfell and its history',go:()=>openDragonConversation('history')},
       {n:'What should we do next?',go:()=>speak(dragonCurrentQuest)},
-      {n:'Side quests and useful leads',go:()=>openDragonConversation('quests')},
+      ...(dragonSideQuestTopics().length?[{n:'Side quests and useful leads',go:()=>openDragonConversation('quests')}]:[]),
       {n:'Travelling and fighting together',go:()=>openDragonConversation('travelling')},
       {n:'You, me, and other mysteries',go:()=>openDragonConversation('personal')},
       {n:'Let’s keep going',go:null}
@@ -822,7 +859,7 @@ function openDragonConversation(category='root'){
     dragons:[topic('The shared dragon consciousness','consciousness'),topic('Why did you choose me?','choosing'),topic('The heartstones','heartstones')],
     personal:[topic('What do you want for yourself?','self'),...general('personal')],
     history:[...general('history'),topic('Wingfall and the seven riders','wingfall'),topic('The land and its people','land'),topic(wonAll?'Life after Halvard':'Why Halvard fears us','halvard')],
-    quests:['fishing','bramble','equipment','gifts'].map((key,i)=>({n:['Fishing and Odo',brambleQuest>=2?'Visit Rowan and Bramble':'Help Bramble find his person','Our weapons and protection','Charms and other gifts'][i],go:()=>speak(()=>dragonSideQuest(key))})),
+    quests:dragonSideQuestTopics().map(t=>({n:t.name,go:()=>speak(()=>dragonSideQuest(t.id))})),
     travelling:[topic('Riding and flying','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
   };
   if(!options[category])return;

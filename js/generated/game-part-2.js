@@ -6509,6 +6509,9 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(sayNpc===m||scene?.npcActor===m||(typeof ask!=='undefined'&&ask?.npcActor===m)){
+      faceToward(m,P.x,P.y);continue;
+    }
     if(m.houseWalk)continue;
     if(MAPID==='house22'&&m.n==='Elder Maddock'&&sayNpc!==m&&!scene&&!bossScene&&!m.goto){
       m.x=128;m.y=100;m.f='u';m.kf='u';m.flip=false;m.seatSpr=undefined;m.seatClipY=undefined;
@@ -6591,12 +6594,12 @@ function playScene(lines, opts) {
   scene = { lines, i: 0, t: 0, ...(opts || {}) };
   P.moving = false;
   if (!scene.hold) showScene();
-  walker = speakerNamed(scene.who);
+  walker = scene.npcActor || speakerNamed(scene.who);
   if (walker) {
     faceCorinAt(walker.x, walker.y);
     const dx = walker.x - P.x, dy = walker.y - P.y;
     const d = Math.max(1, Math.hypot(dx, dy));
-    if (d > 46 && !walker.goto && !walker.stationary) {
+    if (!scene.npcActor && d > 46 && !walker.goto && !walker.stationary) {
       if (!walker.home) walker.home = [walker.x, walker.y];
       const px = -dy / d, py = dx / d;      /* perpendicular, unit length */
       const side = (walker.x >= P.x) ? 1 : -1;
@@ -6635,7 +6638,8 @@ function advanceScene() {
   scene = null;
   const stay = scene0 && scene0.stay;
   showScene();
-  sendWalkerHome(stay);
+  if(scene0.npcActor)walker=null;
+  else sendWalkerHome(stay);
   if (done) done();
 }
 const HERD_Y = 415;
@@ -7154,6 +7158,7 @@ const TYPE_CPS = 45;
 let typed = 0, typeFull = "", typeWho = "";
 function typeStart(who, text) {
   typeWho = who; typeFull = text; typed = 0;
+  if(!scene?.telepathy&&typeof rememberDragonKnowledge==='function')rememberDragonKnowledge(who,text);
 }
 function typeDone() { return typed >= typeFull.length; }
 function typeAll() { typed = typeFull.length; typePaint(); }
@@ -8219,7 +8224,8 @@ function grabGold() {
     else kept.push(g);
   }
   if (!got&&!meat&&!hare&&!deer&&!fox&&!bird) return false;
-  globalThis.window?.EmberSfx?.pickup();
+  if(got)globalThis.window?.EmberSfx?.coin?.();
+  if(meat||hare||deer||fox||bird)globalThis.window?.EmberSfx?.pickup();
   loot = kept;
   gold += got;boarMeat+=meat;hareMeat+=hare;deerMeat+=deer;foxMeat+=fox;birdMeat+=bird;
   const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',deer?deer+' deer meat':'',fox?fox+' fox meat':'',bird?bird+' bird meat':'',got?got+' gold':''].filter(Boolean);
@@ -10847,7 +10853,7 @@ function drawPetHeart(n,t,sp) {
     for(let dx=0;dx<row.length;dx++)if(row[dx]==="1")ctx.fillRect(x+dx,y+dy,1,1);
   ctx.restore();
 }
-let fishingPole=false, fishing=null;
+let fishingPole=false, fishing=null, odoRodReferral=false;
 const FISH_TAU=Math.PI*2;
 function waterInReach(){
   if(!terr||!MW||!MH)return false;
@@ -10947,7 +10953,8 @@ function interact() {
       dragonConversationReaction(giver);
       sayNpc = null; sayOff(); showFace(null);
       if (giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) { giveFatherCompass(); return; }
-      if(canCamperGiveFishingPole(giver)){
+      if(canCamperGiveFishingPole(giver)&&giver.fishingRodGift){
+        delete giver.fishingRodGift;
         fishingPole=true; saveGame();
         showReveal('fishing_rod','Corin obtained a Fishing Pole! Face water and press A to fish.');
         return;
@@ -11013,10 +11020,11 @@ function interact() {
 function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
-function beginNpcTalk(best, greetingOnly=false) {
+function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     if(!greetingOnly && typeof openNpcTopics==='function' && openNpcTopics(best))return;
     if (MAPID === "cinderhold" && /Halvard/.test(best.n || "") && !wonAll && window.EmberKingMusic) window.EmberKingMusic.start();
     sayNpc = best; sayLine = 0;
+    best.fishingRodGift=false;
     if (!best.wasFacing) best.wasFacing = best.f;
     if (best.patrol && best.goto) { best.goto = null; best.arrived = true; }
     faceToward(best, P.x, P.y);
@@ -11025,14 +11033,13 @@ function beginNpcTalk(best, greetingOnly=false) {
     if (best.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) {
       sayNpc.said = FATHER_COMPASS_GIFT.slice();
     }
-    else if(canCamperGiveFishingPole(best)){
-      sayNpc.said=["Calder: Heading for Thornwell? Take the spare rod beside my pack. I only need the one.",
-        "Corin: You are sure?",
-        "Calder: I spend more time untangling two than fishing with either. You would be doing me a kindness.",
-        "Calder: Try Forgefalls, southeast of Thornwell. The quiet pools below the falls are good fishing. Keep clear of the fast water.",
-        "Corin: I will let you know what I catch.",
-        "Calder: Tell me about the small ones as well. Nobody ever does."];
-
+    else if(best.n==='Odo'&&!fishingPole){
+      sayNpc.said=fishingRodDialogue('Odo');
+      odoRodReferral=true;saveGame();
+    }
+    else if(canCamperGiveFishingPole(best)&&(!odoRodReferral||rodRequest)){
+      best.fishingRodGift=true;
+      sayNpc.said=fishingRodDialogue('Calder');
     }
     else if (best.n === "Sela" && !glassShield) {
       sayNpc.said = ["Sela: Corin, wait. I made something from the clearest furnace glass I have.",

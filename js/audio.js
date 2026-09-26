@@ -1,3 +1,4 @@
+let routeMusicIntroPlayed=false;
 
 (()=>{
   const bgm=document.getElementById('emberfellHomeTownBgm');
@@ -6,10 +7,13 @@
   const battle=document.getElementById('emberfellBattleBgm');
   const thornwell=document.getElementById('emberfellThornwellBgm');
   const field=document.getElementById('emberfellFieldBgm');
+  const desert=document.getElementById('emberfellDesertBgm');
+  const sandspire=document.getElementById('emberfellSandspireBgm');
   const forgewick=document.getElementById('emberfellForgewickBgm');
   const mystic=document.getElementById('emberfellMysticBgm');
   const reveal=document.getElementById('emberfellDragonRevealBgm');
   const mine=document.getElementById('emberfellMineBgm');
+  const temple=document.getElementById('emberfellTempleBgm');
   const cinderhold=document.getElementById('emberfellCinderholdBgm');
   const hollybeck=document.getElementById('emberfellHollybeckBgm');
   const lavaRoute=document.getElementById('emberfellLavaRouteBgm');
@@ -31,7 +35,7 @@
   const inThornwell=()=>{
     try{return MAPID==='tavern'||MAPID==='inn'||inNamedArea('Thornwell');}catch(e){return false;}
   };
-  const inForgewick=()=>inNamedArea('Forgewick');
+  const inForgewick=()=>!inForgewickMine()&&inNamedArea('Forgewick');
   const inIntertownRoute=()=>{
     try{
       if(MAPID!=='world')return false;
@@ -55,6 +59,18 @@
         const pts=f.pts?.length>1?f.pts:[[f.x0,f.y0],[f.x1,f.y1]];
         return pts.slice(1).some((p,i)=>nearSegment(pts[i],p,Math.max(12,(f.w||5)*2.2)));
       });
+    }catch(e){return false;}
+  };
+  const inDesertRoute=()=>{
+    try{
+      if(MAPID!=='world'||!terr||!MW||!MH)return false;
+      const x=Math.floor(P.x/TS),y=Math.floor((P.y-1)/TS);
+      if(x<0||y<0||x>=MW||y>=MH)return false;
+      // Use the rendered ground under Corin, never a broad nearby-desert radius.
+      const towns=['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Sporehollow','Cinderhold'];
+      if(features.some(f=>f.kind==='area'&&!f.hidden&&towns.includes(f.label||f.place)&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))return false;
+      const ground=terr[y*MW+x];
+      return sandHere(x,y)||(ground===PAVING2&&inDesert(x,y));
     }catch(e){return false;}
   };
   const inForgewickMine=()=>{
@@ -94,7 +110,7 @@
     } catch(e) {}
     return false;
   };
-  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal].filter(Boolean);
+  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
@@ -111,9 +127,10 @@
   };
   const exploreTrack=()=>{
     if(dragonJourney()&&hasSong(reveal))return reveal;
-    const choices=[[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
+    const insideTemple=typeof MAPID!=='undefined'&&MAPID!=='world'&&typeof MD!=='undefined'&&MD&&!MD.mountainPassage&&(MD.templeExpanded||/^(?:tp|ds|sn)\d/.test(MAPID));
+    const choices=[[insideTemple,temple],[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
       [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
-      [thornwellMode,thornwell],[lavaRouteMode,lavaRoute],[fieldMode,field],[true,bgm]];
+      [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
   };
   const royalSpeaker=name=>/^(?:(?:King's|Royal|Black|White)\s+)?Knight\b|^(?:King )?Halvard$|^(?:Serjeant )?Bram$|^(?:Doran|Tolan)$/i.test(String(name||'').trim());
@@ -134,32 +151,49 @@
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  let revealBuffer=null,revealLoading=null,revealSource=null,revealRequest=0;
-  const bufferedReveal=()=>!!(audioContext?.createBufferSource&&reveal);
-  const prepareReveal=()=>{
-    if(!bufferedReveal())return Promise.resolve(null);
-    if(!revealLoading)revealLoading=fetch(reveal.getAttribute('src'))
-      .then(r=>{if(!r.ok)throw Error('Reveal audio unavailable');return r.arrayBuffer();})
+  const loops=new Map([reveal,desert,sandspire].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
+  const prepareLoop=a=>{
+    if(!bufferedTrack(a))return Promise.resolve(null);
+    const loop=loops.get(a);
+    if(!loop.loading)loop.loading=fetch(a.getAttribute('src'))
+      .then(r=>{if(!r.ok)throw Error('Loop audio unavailable');return r.arrayBuffer();})
       .then(bytes=>audioContext.decodeAudioData(bytes))
-      .then(buffer=>revealBuffer=buffer).catch(()=>{revealLoading=null;return null;});
-    return revealLoading;
+      .then(buffer=>loop.buffer=buffer).catch(()=>{loop.loading=null;return null;});
+    return loop.loading;
   };
-  const trackPaused=a=>a===reveal&&bufferedReveal()?!revealSource:a.paused;
+  const trackPaused=a=>bufferedTrack(a)?!loops.get(a).source:a.paused;
   const pauseTrack=a=>{
-    if(a===reveal){
-      ++revealRequest;
-      if(revealSource){revealSource.stop();revealSource.disconnect();revealSource=null;}
+    const loop=loops.get(a);
+    if(loop){
+      ++loop.request;
+      if(loop.source){loop.source.stop();loop.source.disconnect();loop.source=null;}
     }
     a.pause();
   };
+  let fieldStartPending=null;
+  if(field){
+    field.loop=false;
+    field.addEventListener('ended',()=>{
+      fieldStartPending=10;
+      if(selected===field)playSelected();
+    });
+  }
   const playTrack=async a=>{
-    if(a!==reveal||!bufferedReveal())return a.play();
-    if(revealSource)return;
-    const request=++revealRequest,buffer=revealBuffer||await prepareReveal();
-    if(request!==revealRequest)return;
-    if(!buffer)throw Error('Reveal audio unavailable');
+    if(a===field&&fieldStartPending!==null){
+      a.currentTime=fieldStartPending;fieldStartPending=null;
+      await a.play();
+      if(!routeMusicIntroPlayed){routeMusicIntroPlayed=true;if(typeof saveGame==='function')saveGame();}
+      return;
+    }
+    if(!bufferedTrack(a))return a.play();
+    const loop=loops.get(a);
+    if(loop.source)return;
+    const request=++loop.request,buffer=loop.buffer||await prepareLoop(a);
+    if(request!==loop.request)return;
+    if(!buffer)throw Error('Loop audio unavailable');
     const source=audioContext.createBufferSource();source.buffer=buffer;source.loop=true;
-    source.connect(channels.get(reveal));revealSource=source;source.start();
+    source.connect(channels.get(a));loop.source=source;source.start();
   };
   const applyVolumes=()=>{
     if(masterGain&&masterPct!==pct){
@@ -190,12 +224,12 @@
     for(const a of tracks)if(!channels.has(a)){
       try{
         const channel=audioContext.createGain();channel.gain.value=gains.get(a)||0;
-        if(a!==reveal||!bufferedReveal())audioContext.createMediaElementSource(a).connect(channel);
+        if(!bufferedTrack(a))audioContext.createMediaElementSource(a).connect(channel);
         channel.connect(masterGain);channels.set(a,channel);
       }catch(e){/* Older browsers retain the media-volume fallback. */}
     }
     applyVolumes();
-    prepareReveal();
+    prepareLoop(reveal);
     if(audioContext.state!=='running'){
       try{Promise.resolve(audioContext.resume()).catch(()=>{});}catch(e){}
     }
@@ -237,6 +271,10 @@
     if(next===selected)return;
     ++fadeToken;pending=0;fading=false;selected=next;
     for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);
+    if(next===field){
+      const beyondMillwood=typeof P!=='undefined'&&P.x>=80*TS;
+      fieldStartPending=routeMusicIntroPlayed||beyondMillwood?10:0;
+    }
     if(next===villain){
       next.currentTime=0;
       for(const a of tracks){gains.set(a,a===next?1:0);if(a!==next)pauseTrack(a);}

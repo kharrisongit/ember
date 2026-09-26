@@ -160,3 +160,13 @@ uiTime+=100;c.scene.hold=true;c.advanceScene();await flush();assert.equal(uiCoun
 c.scene.hold=false;c.typeDone=()=>false;let completedText=false;c.typeAll=()=>{completedText=true;};
 uiTime+=100;c.advanceScene();await flush();assert(completedText);assert.equal(uiCount(),5,'Revealing a typing line clicks');
 console.log('PASS: dialogue/typing advances, menu taps, title playback, one click per gesture, reduced shared volume, and no clicks on disabled controls or gameplay A/B.');
+
+const coinCount=()=>sources.filter(s=>s.buffer[0].includes('coin-collect')).length;
+const itemsBefore=sources.filter(s=>s.buffer[0].includes('item-pickup')).length;
+c.loot=[{x:10,y:10,n:5},{x:11,y:10,n:7}];const goldBefore=c.gold;
+assert(c.grabGold());await flush();assert.equal(c.gold,goldBefore+12);assert.equal(coinCount(),1);
+assert.equal(sources.filter(s=>s.buffer[0].includes('item-pickup')).length,itemsBefore,'Coins have their own sound');
+assert(!c.grabGold());await flush();assert.equal(coinCount(),1,'No duplicate cue for an empty pickup');
+active('coin-collect')[0].onended();c.loot=[{x:10,y:10,n:1,kind:'birdMeat'},{x:10,y:10,n:1}];
+c.grabGold();await flush();assert.equal(coinCount(),2);
+console.log('PASS: a pile of coins plays one collection sound, separate from food pickups.');

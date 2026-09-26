@@ -341,7 +341,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/mountain-passage.js?v=20260925-atlas-recovery"></script>
 <script src="js/hollybeck-temple.js?v=20260924-sanctum2"></script>
 <script src="js/fishing.js?v=20260926-sword-pickups"></script>
-<script src="js/house-loot.js?v=20260926-sword-pickups"></script>
+<script src="js/house-loot.js?v=20260926-coin-nan-rod"></script>
 <script src="js/editor-build-data.js?v=20260925-build-ground"></script>
 <script src="js/editor-drafts.js?v=20260925-fresh-publish1"></script>
 <script src="js/published-editor-layouts.js?v=20260926-portraits2"></script>
@@ -349,10 +349,10 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/ghost-following.js?v=20260926-follow1"></script>
 <script src="js/merchant-shop.js?v=20260926-shops1"></script>
 <script src="js/inventory-icons.js?v=20260926-shops-journey-items"></script>
-<script src="js/temple-compass.js?v=20260926-nan-departure1"></script>
+<script src="js/temple-compass.js?v=20260926-coin-nan-rod"></script>
 <script src="js/millwood-interiors.js?v=20260926-two-bedrooms1"></script>
 <script src="js/generated/game-part-1.js?v=20260924-chests-statues1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260926-ui-click" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260926-conversation-context" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260925-deer-warm-return"></script>
 <script src="js/hollybeck-villagers.js?v=20260926-original-winter"></script>
@@ -360,12 +360,12 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/editor-entities.js?v=20260925-green-hettie1"></script>
 <script src="js/npc-placement.js?v=20260926-portraits2"></script>
 <script src="js/editor-draft-integration.js?v=20260925-fresh-publish1"></script>
-<script src="js/npc-conversations.js?v=20260926-stories1"></script>
+<script src="js/npc-conversations.js?v=20260926-conversation-context"></script>
 <script src="js/story-dialogue.js?v=20260926-hatch-close"></script>
-<script src="js/dragon-dialogue.js?v=20260926-dialogue-ui2"></script>
+<script src="js/dragon-dialogue.js?v=20260926-conversation-context"></script>
 <script src="assets/portraits/manifest.js?v=20260926-portraits2"></script>
 <script src="js/dialogue-portraits.js?v=20260926-hatch-close"></script>
-<script src="js/generated/game-part-3.js?v=20260926-ui-click" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260926-conversation-context" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
@@ -383,15 +383,17 @@ window.addEventListener("unhandledrejection", function (e) {
   <source src="data:audio/mp4;base64," type="audio/mp4">
 </audio>
 <audio id="emberfellThornwellBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/thornwell-shop.m4a?v=20260926-1"></audio>
+<audio id="emberfellDesertBgm" loop preload="none" src="assets/audio/desert-route-loop.wav?v=20260926-1"></audio>
+<audio id="emberfellSandspireBgm" loop preload="none" src="assets/audio/sandspire-town-loop.wav?v=20260926-1"></audio>
 <audio id="emberfellFieldBgm" preload="none" loop src="assets/audio/intertown-field.m4a?v=20260926-1"></audio>
-<audio id="emberfellForgewickBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
-<audio id="emberfellMysticBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
+<audio id="emberfellForgewickBgm" preload="auto" loop src="assets/audio/forgewick-home-town.m4a?v=20260926-1"></audio>
+<audio id="emberfellMysticBgm" preload="auto" loop src="assets/audio/swamp-mystic-forest.m4a?v=20260926-1"></audio>
 <audio id="emberfellDragonRevealBgm" loop preload="auto" src="assets/audio/dragon-mystic-loop.wav?v=20260926-1"></audio>
 <audio id="emberfellMineBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
 <audio id="emberfellHollybeckBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
 <audio id="emberfellCinderholdBgm" preload="auto" loop src="data:audio/mp4;base64,"></audio>
 
-<audio id="emberfellLavaRouteBgm" loop preload="auto" style="display:none" aria-hidden="true" src="data:audio/mp4;base64,"></audio><script src="js/audio.js?v=20260926-seamless-music"></script>
-<script src="js/dragon-scene-audio.js?v=20260926-ui-click"></script>
+<audio id="emberfellLavaRouteBgm" loop preload="auto" style="display:none" aria-hidden="true" src="data:audio/mp4;base64,"></audio><audio id="emberfellTempleBgm" loop preload="none" src="assets/audio/temples-spooky-cave.m4a?v=20260926-1"></audio><script src="js/audio.js?v=20260926-desert-sandspire"></script>
+<script src="js/dragon-scene-audio.js?v=20260926-coin-nan-rod"></script>
 </body>
 </html>

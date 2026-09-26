@@ -32,7 +32,7 @@ function lootChestFrame(id,opened,frames=6){
 function stepLootChestOpening(){
   for(const [id,a] of lootChestAnimations)if(performance.now()-a.start>=750){
     lootChestAnimations.delete(id);
-    if(a.map===MAPID){if(a.ghost)releaseChestGhost(id);else {if(a.caption.startsWith('+'))globalThis.window?.EmberSfx?.pickup();toast(a.caption);}}
+    if(a.map===MAPID){if(a.ghost)releaseChestGhost(id);else {if(/\+\d+ gold/.test(a.caption))globalThis.window?.EmberSfx?.coin?.();if(/\+\d+ (?!gold)[^·]+/.test(a.caption))globalThis.window?.EmberSfx?.pickup();toast(a.caption);}}
   }
 }
 async function prepareHouseLoot(){

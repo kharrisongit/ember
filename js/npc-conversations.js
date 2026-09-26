@@ -1850,14 +1850,42 @@ const NPC_STORIES = {
   ]
 };
 
+function fishingRodDialogue(name){
+  if(name==='Odo')return [
+    'Odo: Looking for a rod? Ask my grandson Calder. He keeps the first camp on the road to Thornwell. Tell him I sent you for his spare.',
+    'Corin: Calder is your grandson?',
+    'Odo: Aye. I gave him two rods when he set out. One to fish with, one to lend. He has had long enough to learn which is which.',
+    'Corin: I will ask him.',
+    'Odo: Try the quiet pools at Forgefalls when you have it. A little patience will put more on your plate than boasting will.'
+  ];
+  return odoRodReferral?[
+    'Corin: Odo sent me. He said you might have a spare fishing rod.',
+    'Calder: Grandfather did, did he? He gave me that spare years ago. Said a good rod ought to spend more time by water than tied to a pack.',
+    'Corin: Could I borrow it?',
+    'Calder: Keep it. He will be pleased somebody is finally listening to him.',
+    'Calder: Try the pools below Forgefalls, southeast of Thornwell. Cast where the current slows, and mind the fast water.',
+    'Corin: Thank you. I will tell Odo where his rod ended up.'
+  ]:[
+    'Calder: Do you fish, Corin? I have a spare rod here that deserves more use than I give it.',
+    'Corin: You are sure you do not need it?',
+    'Calder: Odo is my grandfather. He gave me two when I left Millwood: one for me, and one for whoever needed it. I think that makes this one yours.',
+    'Corin: That sounds like him. Thank you.',
+    'Calder: Try Forgefalls, southeast of Thornwell. The pools below the falls have quiet shelves where the fish gather. Stay clear of the fast water.',
+    'Corin: I will let you both know what I catch.',
+    'Calder: Tell Grandfather about the small ones too. He has heard enough enormous fish stories from me.'
+  ];
+}
+
 function npcStoryGiftPending(n){
-  return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||canCamperGiveFishingPole(n)||
+  return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
     (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
     (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
 }
 function npcStoryTopics(n){
   const profile=NPC_STORIES[n.n];if(!profile)return [];
   const topics=profile.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
+  if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true)});
   if(n.d2?.length)topics.push({title:'Another thing I meant to ask',lines:n.d2});
   if(hasDragon())topics.push({title:'A dragon on the road',lines:npcContextDialogue(n,true)});
   if(wonAll&&(n.dv2||n.dv)?.length)topics.push({title:'Life after Halvard',lines:n.dv2||n.dv});
@@ -1887,10 +1915,11 @@ function openNpcTopics(n){
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
   sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;
   const choose=topic=>{
+    if(topic.go){topic.go();return;}
     const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
-    playScene(lines,{who:n.n,after:()=>openNpcTopics(n)});
+    playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
-  ask={quick:1,npcConversation:n.n,opts:[{n:n.n,head:true},
+  ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
     {n:n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?',go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});

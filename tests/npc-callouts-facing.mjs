@@ -18,3 +18,19 @@ vm.runInContext(source.slice(source.indexOf('function drawHettieCallout('),sourc
 vm.runInContext('drawHettieCallout(n,sp)',d);assert.equal(texts[0][0],'Yoo-hoo!');assert.equal(rects.length,0,'Hettie callout has no shadow rectangle');
 assert(source.includes("royalBlackout('Out of my way, boy!'"));
 console.log('PASS: Maddock turns from all four sides and returns to his painting; Hettie calls Yoo-hoo without a shadow; King’s call is capitalized.');
+
+// A walking Nan must pause for every conversation path, then resume her route.
+const nan={n:'Nan Ferrow',x:100,y:100,goto:[150,100],packDirections:true};
+Object.assign(c,{npcs:[nan],MAPID:'world',P:{x:100,y:120},sayNpc:null,scene:null,walker:null,ask:null,
+ cam:{x:0,y:0,z:1},VW:400,VH:800,canNpcStand:()=>true});
+for(const kind of ['greeting','topic','menu']){
+ c.sayNpc=kind==='greeting'?nan:null;
+ c.scene=kind==='topic'?{npcActor:nan}:null;
+ c.ask=kind==='menu'?{npcActor:nan}:null;
+ for(let i=0;i<120;i++)run('stepWalkers(.05)');
+ assert.equal(nan.x,100,kind+' holds position');assert.equal(nan.y,100);
+ assert.equal(nan.kf,'d',kind+' faces Corin');
+}
+c.sayNpc=null;c.scene=null;c.ask=null;run('stepWalkers(.05)');
+assert(nan.x>100,'resumes walking after Goodbye');
+console.log('PASS: Nan stops for greetings, personal topics and menus, faces Corin, and resumes after the conversation.');

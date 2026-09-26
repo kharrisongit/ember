@@ -208,7 +208,7 @@ function prepareNanDeparture(){
   const door=MD.doors.find(d=>d.to==='house26');
   if(!home||!door)return;
   const r=door.triggerRect||{x:door.x*TS,y:door.y*TS,w:16,h:16};
-  npcs.push({...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:true,patrol:null,goto:null,
+  npcs.push({...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:false,packWalk:true,packDirections:true,houseWalk:null,scriptWalking:true,patrol:null,goto:null,
     fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false});
 }
 function stepNanDeparture(){
@@ -217,6 +217,30 @@ function stepNanDeparture(){
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
   if(!nan||Math.abs(P.x-nan.x)>104||Math.abs(P.y-nan.y)>78)return;
-  playScene(['Nan Ferrow: Corin! Before you go, love. Come here a moment.',...FATHER_COMPASS_GIFT.slice(1)],
-    {who:'Nan Ferrow',after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
+  // Stop Corin immediately; finish landing and Nan's approach before dialogue.
+  clearPadInputs();running=false;P.act=null;P.moving=false;
+  if(mounted)setMounted(false,true);
+  if(dragon.air||dragon.tr){
+    dragon.tr=null;
+    dragonGround(dragon.x,dragon.y)||dragonGround(P.x+40,P.y+24)||dragonGround(nan.x,nan.y+32);
+    dragon.air=false;dragon.placed=MAPID;startTransition('down',false);
+  }
+  nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
+  nan.home=[nan.x,nan.y];
+  const dx=nan.x-P.x,dy=nan.y-P.y,d=Math.hypot(dx,dy)||1;
+  let target=[P.x+dx/d*22,P.y+dy/d*22];
+  if(!canNpcStand(...target,nan)){
+    for(let a=0;a<16;a++){
+      const p=[P.x+Math.cos(a*Math.PI/8)*22,P.y+Math.sin(a*Math.PI/8)*22];
+      if(canNpcStand(...p,nan)){target=p;break;}
+    }
+  }
+  const path=maddockWalkPath(nan,target)||[target];
+  nan.goto=path.shift()||target;
+  playScene(['Nan Ferrow: Corin! Before you go, love.',...FATHER_COMPASS_GIFT.slice(1)],
+    {who:'Nan Ferrow',hold:()=>{
+      if(!nan.goto&&path.length)nan.goto=path.shift();
+      if(nan.goto||dragon.tr)return false;
+      faceToward(nan,P.x,P.y);return true;
+    },after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
 }

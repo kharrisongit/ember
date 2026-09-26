@@ -33,9 +33,18 @@ assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCom
 console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
- W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}]},P:{},revealing:false,scene:null});
+ W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null},
+ clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
 c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();assert(c.scene.lines[0].includes('Before you go'));
+assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
+const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 assert.equal(run('templeCompass.owned'),false,'gift waits for the encounter to finish');c.scene.after();assert.equal(run('templeCompass.owned'),true);
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
+
+c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};
+c.stepNanDeparture();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr.kind,'down');
+[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),false,'Conversation waits for landing');
+c.dragon.tr=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
+console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
