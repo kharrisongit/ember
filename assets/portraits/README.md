@@ -16,3 +16,8 @@ Tamsin; the student Bram is Brin; the tavern Pip is Puck. The newly placed drink
 are Eira and Fenton, with Tallis and Kip retaining their intended dialogue names.
 Original editor keys and source identities remain stable for saved placements.
 Chanter and Morel, the two human sprites at Shroom Pass, are retired.
+
+Aurelius and Halvard were revised with built-in imagegen on 2026-09-26.
+The young dragon follows the same sprite; Halvard retains his visible beard
+with complete shoulder contours. Revision prompts are in revision-prompts.json.
+Dialogue applies a lower-edge transparency fade to the entire portrait cast.

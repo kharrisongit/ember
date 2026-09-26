@@ -6078,7 +6078,7 @@ function royalBlackout(line,swap,after){
 }
 function questTalk() {
   if (quest <= Q.KING && MAPID === "world") {
-    const near = guards().find(m => Math.hypot(m.x - P.x, m.y - P.y) < 40);
+    const near = guards().find(m => Math.hypot(m.x - P.x, m.y - P.y) < 23);
     if (near) {
       leavingNow = false;
       guardsAside = false;
@@ -6125,7 +6125,7 @@ function questTalk() {
   if (MAPID !== "world" && MAPID !== "house22") return false;
   const nearNpc = (name, r) => {
     const m = npcs.find(x => (x.n || "").includes(name) && npcHere(x));
-    return m && Math.hypot(m.x - P.x, m.y - P.y) < (r || 34) ? m : null;
+    return m && npcTalkDistance(m) < (r || 23) ? m : null;
   };
   if (quest === Q.ERRAND && nearNpc("Hettie")) {
     quest = Q.EGGS;
@@ -9759,8 +9759,9 @@ const faceEl = document.getElementById("face");
 const nameEl = document.getElementById("sayname");
 faceEl.style.backgroundImage = 'url("' + FACE_SRC + '")';
 let shownFace = -1;
-function sayOn() { sayEl.classList.add("on"); sayEl.style.display = ""; }
+function sayOn() { setDialogueTone(!!scene?.telepathy); sayEl.classList.add("on"); sayEl.style.display = ""; }
 function sayOff() {
+  setDialogueTone(false);
   sayEl.classList.remove("on"); sayEl.style.display = "";
   nameEl.className = "";
 }
@@ -10257,7 +10258,7 @@ function interact() {
     }
     return;
   }
-  let best = null, bd = 32; // Reach across NPC footing and a final movement step.
+  let best = null, bd = 23; // Step close to the person or the accessible counter edge.
   for (const n of npcs) {
     if (!npcHere(n)) continue;
     if (n.noTalk) continue;
@@ -15913,6 +15914,7 @@ function askDraw() {
   const el = document.getElementById("bagAsk");
   const rows = document.getElementById("askRows");
   if (!el || !rows) return;
+  el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   wireBagDrag("bagAsk");
@@ -15971,6 +15973,7 @@ function askDraw() {
     } else {
       d.textContent = (i === askPick ? "\u25B8 " : "  ") + o.n;
     }
+    d.dataset.selected=i===askPick?"true":"false";
     d.dataset.askIndex = i;
     d.addEventListener("click", (e) => { e.stopPropagation(); if(el.moved)return; askPick = i; askTake(); });
     rows.appendChild(d);

@@ -6292,7 +6292,7 @@ function stepDragonIntroduction(){
     'Corin: All right, Aurelius. Slowly, to begin with.',
     'Open COMMAND and choose Mount to ride Aurelius. Use the movement controls to travel together. Choose Dismount from COMMAND to get down.',
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
-  ],{after:()=>{
+  ],{telepathy:true,after:()=>{
     dragonIntroDone=true;dragonIntroArmed=false;saveGame();
     setOvl('airm');
   }});
@@ -6735,7 +6735,7 @@ function royalBlackout(line,swap,after){
 }
 function questTalk() {
   if (quest <= Q.KING && MAPID === "world") {
-    const near = guards().find(m => Math.hypot(m.x - P.x, m.y - P.y) < 40);
+    const near = guards().find(m => Math.hypot(m.x - P.x, m.y - P.y) < 23);
     if (near) {
       leavingNow = false;
       guardsAside = false;
@@ -6783,7 +6783,7 @@ function questTalk() {
   if (MAPID !== "world" && MAPID !== "house22") return false;
   const nearNpc = (name, r) => {
     const m = npcs.find(x => (x.n || "").includes(name) && npcHere(x));
-    return m && Math.hypot(m.x - P.x, m.y - P.y) < (r || 34) ? m : null;
+    return m && npcTalkDistance(m) < (r || 23) ? m : null;
   };
   if (quest === Q.ERRAND && nearNpc("Hettie")) {
     quest = Q.EGGS;
@@ -10492,8 +10492,9 @@ const faceEl = document.getElementById("face");
 const nameEl = document.getElementById("sayname");
 let shownFace = -1;
 function faceFor(who) { return typeof portraitFor==='function' ? (portraitFor(who)?.id ?? -1) : -1; }
-function sayOn() { sayEl.classList.add("on"); sayEl.style.display = ""; }
+function sayOn() { setDialogueTone(!!scene?.telepathy); sayEl.classList.add("on"); sayEl.style.display = ""; }
 function sayOff() {
+  setDialogueTone(false);
   sayEl.classList.remove("on"); sayEl.style.display = "";
   typeWho = ""; typeFull = ""; typed = 0;
   nameEl.textContent = "";
@@ -10972,7 +10973,7 @@ function interact() {
     }
     return;
   }
-  let best = null, bd = 32; // Reach across NPC footing and a final movement step.
+  let best = null, bd = 23; // Step close to the person or the accessible counter edge.
   for (const n of npcs) {
     if (!npcHere(n)) continue;
     if (n.noTalk) continue;
@@ -11068,7 +11069,7 @@ function actionButton() {
      merchant talking again instead of buying. */
   if (typeof ask !== "undefined" && ask) { askTake(); return; }
   if (typeof bagOpen !== "undefined" && bagOpen) { bagUse(); return; }
-  if(!sceneHold()&&typeof dismissDragonBanter==='function'&&dismissDragonBanter())return;
+  if(!sceneHold()&&typeof dismissDragonBanter==='function'&&!dragonCombatActive()&&dismissDragonBanter())return;
   if (grabGold()) return;      /* gold underfoot comes first */
   interact();
 }

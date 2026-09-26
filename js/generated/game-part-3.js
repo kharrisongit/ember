@@ -4187,10 +4187,7 @@ function useDoors(dt) {
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
   if(!foesHeld && MD.firstTemple && d.templeForward && foes.some(f=>f.st!=="dead" && !f.ally)){toast("Defeat the guardians to open the next room.");return;}
-  if(dragonHere()&&dragon.on&&!dragonAllowedInMap(d.to)){
-    playScene(["Corin: Wait here, I'll be right back."],{after:()=>beginDoorEntry(d)});
-    return;
-  }
+  if(dragonHere()&&dragon.on&&!dragonAllowedInMap(d.to))dragonDoorExchange();
   beginDoorEntry(d);
 }
 function beginDoorEntry(d){
@@ -4936,6 +4933,7 @@ function askDraw() {
   const el = document.getElementById("bagAsk");
   const rows = document.getElementById("askRows");
   if (!el || !rows) return;
+  el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   wireBagDrag("bagAsk");
@@ -4994,6 +4992,7 @@ function askDraw() {
     } else {
       d.textContent = (i === askPick ? "\u25B8 " : "  ") + o.n;
     }
+    d.dataset.selected=i===askPick?"true":"false";
     d.dataset.askIndex = i;
     d.addEventListener("click", (e) => { e.stopPropagation(); if(el.moved)return; askPick = i; askTake(); });
     rows.appendChild(d);

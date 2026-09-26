@@ -57,7 +57,7 @@ const game=read('js/generated/game-part-2.js');
 run(game.slice(game.indexOf('const TYPE_CPS ='),game.indexOf('\nfunction showScene()')));
 run(game.slice(game.indexOf('function sayOff()'),game.indexOf('\nlet sayNpc =')));
 c.sayEl={classList:{remove(){}},style:{},innerHTML:''};
-c.esc=s=>s;
+c.esc=s=>s;c.setDialogueTone=()=>{};
 run("typeStart('Nan Ferrow','A sentence still being typed.'); stepType(0.1); sayOff(); stepType(1)");
 assert.equal(c.nameEl.textContent,'');
 assert.equal(c.nameEl.className,'');

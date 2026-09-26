@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-26",
+  "tool": "built-in imagegen",
+  "revisions": [
+    {
+      "key": "youngAurelius",
+      "prompt": "Use case: identity-preserve. Asset type: transparent painted fantasy RPG dialogue portrait. Image 1 shows the exact red dragon sprite to match. Image 2 is a portrait atlas for painterly style, and its top-row second portrait is the old Aurelius portrait to replace. Generate ONLY one new portrait of Aurelius, no sheet, no humans. He is a YOUNG red dragon, newly hatched but already wise through inherited dragon memories: youthful smooth brow, alert kind intelligent golden eyes, shorter softer youthful muzzle, small developing cream-gold horns and crest matching the sprite, red scales, cream segmented throat, small red wing roots. Youthful proportions, NOT elderly or craggy, no wrinkles, no beard, no huge ancient antlers. Not a cartoon baby; believable young creature with calm humorous warmth. Three-quarter head and upper chest, matching existing richly painted realistic fantasy portraits. Entire silhouette fits inside square with generous transparent margin, shoulder/wing roots fully visible on both sides. Bottom tapers with subtle painterly fading into transparency rather than a hard rectangular cut. No frame, text, background, props, or other characters.",
+      "refs": [
+        "/workspace/scratch/50813a22540b/cast/1.png",
+        "/workspace/scratch/50813a22540b/portraits-packed-1.png"
+      ]
+    },
+    {
+      "key": "halvardShoulders",
+      "prompt": "Use case: identity-preserve. Asset type: transparent painted fantasy RPG dialogue portrait. The reference atlas contains King Halvard in SECOND ROW FIRST CELL. Generate ONLY an edited standalone portrait of that same King Halvard. Preserve exactly his middle-aged bearded human face visible through the open blue-and-gold ornate winged helmet/mask, green cloak, gold clasps, blue-and-gold breastplate, stern expression and realistic painterly finish. Fix his squared-off shoulders: show both COMPLETE rounded shoulder contours with transparent space outside them, chest and cloak gently tapering toward a soft painterly transparent lower edge. Nothing cropped at left/right; horns/helmet fully visible. Tight portrait head-and-shoulders with enough transparent margin, no rectangular silhouette. No changes to his face, beard, costume colors or identity. No other portraits, no grid, frame, text or background.",
+      "refs": [
+        "/workspace/scratch/50813a22540b/portraits-packed-1.png"
+      ]
+    }
+  ],
+  "presentation": "All dialogue portraits use a lower-edge transparency fade to soften square shoulder cutoffs."
+}

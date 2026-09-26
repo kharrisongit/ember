@@ -2315,3 +2315,41 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
   bottom:calc(var(--deck) + 94px); pointer-events:none;
   background-repeat:no-repeat; image-rendering:auto; }
 @media (max-height:600px) { #face { width:112px; height:112px; } }
+
+/* Thought carried through the bond has its own ink, light and typography. */
+#say[data-telepathy="true"],#sayname[data-telepathy="true"] {
+  background:linear-gradient(125deg,#182641f5,#32203df5);border-color:#85cfcd;
+  color:#e8fff5;font-family:Georgia,'Palatino Linotype',serif;font-style:italic;
+  box-shadow:0 0 18px #6ad5cc24,inset 0 0 18px #ae85d518;
+}
+#say[data-telepathy="true"] {font-size:15px;letter-spacing:.01em;}
+#sayname[data-telepathy="true"] {color:#bceae2;font-size:16px;}
+#face { -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 74%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 74%,transparent 100%); }
+#face[data-telepathy="true"] {filter:drop-shadow(0 0 7px #79dad687);}
+#bagAsk.dragonTalk {
+  background:linear-gradient(145deg,#17253afc,#30203afa)!important;color:#e8fff5!important;
+  border:2px solid #85cfcd!important;border-radius:18px!important;
+  font:15px/1.4 Georgia,'Palatino Linotype',serif!important;
+  box-shadow:0 8px 28px #0009,0 0 18px #6ad5cc25!important;
+}
+#bagAsk.dragonTalk #askRows>div {color:#d9f3eb!important;}
+#bagAsk.dragonTalk #askRows>div:not([data-ask-index]) {
+  color:#9cdfd6!important;background:#71cbb51b!important;border-left-color:#8cd8d0!important;
+  font:italic 13px Georgia,serif!important;letter-spacing:.12em!important;
+}
+#bagAsk.dragonTalk #askRows>[data-selected="true"] {
+  background:#41616d!important;color:#fff8d6!important;box-shadow:inset 3px 0 #bcebe4;
+}
+#dragonBanter {
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:12;
+  display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 16px);
+  box-sizing:border-box;padding:6px 12px 6px 6px;border:1px solid #85cfcd;border-radius:18px 18px 18px 5px;
+  background:linear-gradient(120deg,#16263bf5,#30213df5);color:#e8fff5;
+  font:italic 14px/1.35 Georgia,'Palatino Linotype',serif;box-shadow:0 3px 12px #0007,0 0 10px #6ad5cc25;
+  pointer-events:none;white-space:normal;
+}
+#dragonBanter[hidden] {display:none;}
+.telepathyPortrait {display:block;flex:0 0 34px;width:34px;height:34px;border-radius:50%;
+  background-repeat:no-repeat;background-color:#65798342;box-shadow:0 0 0 1px #99ded58c;}
+.telepathyWords {max-width:340px;}

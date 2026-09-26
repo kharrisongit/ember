@@ -48,7 +48,7 @@ function loadPortraitPack(pack) {
   if(portraitPackPromises.has(pack))return portraitPackPromises.get(pack);
   const promise=new Promise(resolve=>{
     const script=document.createElement('script');
-    script.src='assets/portraits/pack-'+pack+'.js?v=20260926-portraits2';
+    script.src='assets/portraits/pack-'+pack+'.js?v=20260926-telepathy1';
     script.async=true;
     script.onerror=()=>{portraitPackPromises.delete(pack);script.remove();resolve(null);};
     script.onload=()=>{
@@ -90,3 +90,17 @@ function showDialoguePortrait(who) {
 }
 // Decode the starting cast while the existing boot screen is already visible.
 if(document.head?.appendChild)loadPortraitPack(1);
+
+// Small telepathy portraits reuse the same cast and decoded atlas as dialogue.
+function paintSmallPortrait(el,who){
+  const portrait=portraitFor(who);el.dataset.speaker=who;el.style.backgroundImage='none';
+  if(!portrait)return;
+  const paint=source=>{
+    if(!source||el.dataset.speaker!==who)return;
+    el.style.backgroundImage='url("'+source+'")';
+    el.style.backgroundSize='500% 400%';
+    el.style.backgroundPosition=(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
+  };
+  const cached=portraitPackImages.get(portrait.pack);
+  if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
+}

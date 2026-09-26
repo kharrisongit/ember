@@ -4,13 +4,17 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const part2=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 let pendingScene=null,menu=null,saves=0,place=null;
+const element=()=>({style:{},dataset:{},children:[],attributes:{},
+ setAttribute(k,v){this.attributes[k]=v;},appendChild(el){this.children.push(el);},
+ get textContent(){return this.children.length?this.children.map(el=>el.textContent||'').join(''):this.text||'';},
+ set textContent(v){this.text=v;}});
 const c=vm.createContext({
   gameplayStarted:true,MAPID:'world',MD:{},P:{x:872,y:6050,dir:'d',moving:true},MAD_DOOR:[872,5984],
   dragon:{on:true,x:850,y:6050,moving:true},hasDragon:()=>true,dragonHere:()=>c.MAPID==='world'||c.MAPID==='tp1',
   sceneHold:()=>!!pendingScene,hatchCamera:null,sayNpc:null,fadeDir:0,doorMotion:null,pendingDoor:null,editing:false,ovl:null,ride:false,arenaLock:null,
   faceCorinAt(){},playScene:(lines,options)=>{pendingScene={lines,...options};},setOvl:m=>{menu=m;},saveGame:()=>saves++,
-  wonAll:false,cinderSeal:false,brambleQuest:0,mode:'play',ask:null,bagOpen:false,atlasOpen:false,fishing:null,deadShown:false,foes:[],
-  areaUnder:()=>place,document:{getElementById:()=>({appendChild(){}}),createElement:()=>({style:{},setAttribute(){}}),body:{appendChild(){}}}
+  inFight:()=>false,wonAll:false,cinderSeal:false,brambleQuest:0,mode:'play',ask:null,bagOpen:false,atlasOpen:false,fishing:null,deadShown:false,foes:[],
+  areaUnder:()=>place,document:{getElementById:()=>({appendChild(){}}),createElement:element,body:{appendChild(){}}}
 });
 const run=s=>vm.runInContext(s,c);
 run(part2.slice(part2.indexOf('const DRAGON_NAME ='),part2.indexOf('function finishHatchScene()')));
@@ -47,9 +51,9 @@ pendingScene.after();pendingScene=null;c.P.x=872;c.P.y=6130;
 clear();place='Millwood–Thornwell Road';tick();assert.equal(active(),null,'roads do not count as town visits');
 place='Thornwell';const movement=JSON.stringify(c.P);tick();assert.match(active().key,/place:Thornwell/);
 assert.equal(JSON.stringify(c.P),movement,'banter does not alter player movement');
-assert.match(run('dragonBanterPanel.textContent'),/^Aurelius:/);
+assert.equal(run('dragonBanterPanel.speaker'),'Aurelius');assert.equal(run('dragonBanterPanel.children.length'),2);
 assert.doesNotMatch(run('dragonBanterPanel.textContent'),/Corin:|mind/);
-tick(5.1);assert.match(run('dragonBanterPanel.textContent'),/^Corin:/);
+tick(5.1);assert.equal(run('dragonBanterPanel.speaker'),'Corin');
 const dismissHook=part2.match(/if\(!sceneHold\(\)&&typeof dismissDragonBanter[^\n]+/)[0];
 run('(function(){'+dismissHook+'})()');assert.equal(active(),null);
 tick(19);assert.equal(active(),null,'same town does not repeat');
@@ -82,15 +86,16 @@ const door={to:'tavern',dir:'u'},d=vm.createContext({
  W:{maps:{tavern:{},tp1:{}}},MD:{doors:[door]},MAPID:'world',P:{x:40,y:52,dir:'u',moving:true},TS:16,
  bossScene:null,foesHeld:false,doorMotion:null,fadeDir:0,arriveT:0,sayNpc:null,arenaLock:null,arenaT:0,foes:[],dragon:{on:true},
  dragonHere:()=>true,dragonAllowedInMap:id=>id==='tp1',sceneHold:()=>!!pendingScene,
- doorExitDirection:d=>d.dir,doorRect:()=>({x:32,y:32,w:16,h:16}),playScene:(lines,options)=>{pendingScene={lines,...options};},pendingDoor:null
+ dragonDoorExchange:()=>{d.handoff=(d.handoff||0)+1;},doorExitDirection:d=>d.dir,doorRect:()=>({x:32,y:32,w:16,h:16}),playScene:(lines,options)=>{pendingScene={lines,...options};},pendingDoor:null
 });
 const doors=s=>vm.runInContext(s,d);pendingScene=null;
 doors(part3.slice(part3.indexOf('function useDoors('),part3.indexOf('function drawArena(')));
-doors('useDoors(0)');assert.equal(pendingScene.lines[0],"Corin: Wait here, I'll be right back.");assert.equal(d.doorMotion,null);
-const first=pendingScene;doors('useDoors(0)');assert.equal(pendingScene,first,'does not repeatedly open the line');
-first.after();pendingScene=null;assert.equal(d.doorMotion.d,door);
-d.doorMotion=null;d.P.moving=true;door.to='tp1';doors('useDoors(0)');assert.equal(pendingScene,null);assert.equal(d.pendingDoor,door,'allowed interiors have no wait line');
-console.log('PASS: Corin waits for dismissal before entering a house or tavern; permitted interiors keep normal entry.');
+doors('useDoors(0)');assert.equal(pendingScene,null);assert.equal(d.handoff,1);
+assert.equal(d.doorMotion.d,door,'entry starts without a dialogue pause');
+doors('useDoors(0)');assert.equal(d.handoff,1,'one handoff per doorway');
+d.doorMotion=null;d.P.moving=true;door.to='tp1';doors('useDoors(0)');
+assert.equal(d.handoff,1);assert.equal(d.pendingDoor,door,'allowed interiors enter normally');
+console.log('PASS: doorway exchange is nonblocking and fires only once while entry proceeds.');
 // Direct A interactions use a blocking topic menu and return there after long talks.
 clear();c.MAPID='world';c.P.x=872;c.P.y=6130;c.dragon.down=false;c.dragon.air=false;
 Object.assign(c,{mounted:false,inFight:()=>false,heartKnown:false,fishingPole:false,smithUpgrade:false,glassShield:false,trialSealPlaced:false,
@@ -98,12 +103,13 @@ Object.assign(c,{mounted:false,inFight:()=>false,heartKnown:false,fishingPole:fa
 c.sceneHold=()=>!!pendingScene||!!c.ask?.dragonConversation;
 // Use the actual menu selection controller, not a duplicate of it.
 run(part3.slice(part3.indexOf('function askTake()'),part3.indexOf('function askTake()')+part3.slice(part3.indexOf('function askTake()')).indexOf('\nfunction ')));
-for(const [dx,dy]of [[40,0],[-40,0],[0,40],[0,-40]]){
+for(const [dx,dy]of [[30,0],[-30,0],[0,30],[0,-30]]){
  c.dragon.x=c.P.x+dx;c.dragon.y=c.P.y+dy;
+ c.P.dir=dx?'s':dy>0?'d':'u';c.P.flip=dx<0;
  assert.equal(run('tryDragonConversation()'),true,'A works on every side of the dragon');
  assert.equal(c.P.moving,false);assert.equal(c.ask.dragonConversation,true);c.askShut();
 }
-c.dragon.x=c.P.x+100;assert.equal(run('tryDragonConversation()'),false,'must approach');c.dragon.x=c.P.x+30;
+c.dragon.x=c.P.x+100;assert.equal(run('tryDragonConversation()'),false,'must approach');c.dragon.x=c.P.x+30;c.dragon.y=c.P.y;c.P.dir='s';c.P.flip=false;
 run('tryDragonConversation()');run("askPick=ask.opts.findIndex(o=>o.n==='Dragons and our bond');askTake()");assert(c.ask.opts.some(o=>o.n==='The shared dragon consciousness'));
 run('askTake()');assert(pendingScene.lines.length>=8);assert.equal(c.ask,null);
 assert(pendingScene.lines.every(line=>/^(Corin|Aurelius):/.test(line)));
@@ -131,7 +137,7 @@ for(const table of ['DRAGON_PLACE_LINES','DRAGON_POST_PLACE_LINES','DRAGON_ENEMY
 run("queueDragonBanter('one',['A short thought.','A short reply.'])");tick();
 assert.equal(run("queueDragonBanter('another-event',['A short thought.','A new reply.'])"),false,'same wording never repeats under a new event ID');
 assert.equal(run("queueDragonBanter('another-reply',['A different thought.','A short reply.'])"),false,'Corin does not repeat his reply either');
-assert.match(run('dragonBanterPanel.style.cssText'),/position:absolute;bottom:8px/);
+assert.match(read('css/game.css'),/#dragonBanter[\s\S]*position:absolute;bottom:8px/);
 assert.doesNotMatch(run('dragonBanterPanel.textContent'),/\n|mind/,'one speaker at a time without a mind suffix');
 clear();run("dragonBossBanter({kind:'golem1',idx:1})");tick();run('dismissDragonBanter()');
 c.MAPID='tp1';run("dragonBossBanter({kind:'golem1',idx:99})");tick(19);assert.equal(active(),null,'another guardian of the same kind does not repeat its line');
@@ -158,6 +164,7 @@ Object.assign(c,{tap:(el,fn)=>{c.pressSkip=fn;},skipBrambleForTest(){},Q:{DONE:9
 run('dragonIntroDone=false;dragonIntroArmed=true');
 run(part3.slice(part3.indexOf('tap(document.getElementById("bSkip")'),part3.indexOf('let bothHeldSince')));
 c.pressSkip();assert.equal(run('dragonIntroDone'),true);assert.equal(run('dragonIntroArmed'),false);assert.equal(c.savedSkipIntro,true);
+c.P.dir='s';c.P.flip=false;c.dragon.x=c.P.x+30;c.dragon.y=c.P.y;
 assert.equal(run('tryDragonConversation()'),true,'Skip makes direct conversations available immediately');c.askShut();
 place='Millwood';tick();assert(active(),'Skip also enables travel thoughts');
 console.log('PASS: actual Skip grants and saves Aurelius dialogue; direct conversations and travel thoughts work without replaying the introduction.');
@@ -192,3 +199,24 @@ assert(pendingScene.lines.some(line=>line.includes('watching a beetle')));
 const returnFromTalk=pendingScene.after;pendingScene=null;returnFromTalk();
 assert(c.ask.opts.some(o=>o.n==='What we want after all this'));
 console.log('PASS: journey topics unlock from visits, saved history, heartstones, quests and victory; dialogue returns to its topic menu.');
+
+// Facing and combat gates prevent a following dragon from stealing attack input.
+c.ask=null;pendingScene=null;c.MAPID='world';c.P={x:100,y:100,dir:'d',moving:true};
+c.dragon={on:true,x:100,y:70};c.foes=[];c.arenaLock=null;
+assert.equal(run('tryDragonConversation()'),false,'following behind while walking');
+c.P.dir='u';assert.equal(run('tryDragonConversation()'),true,'deliberately face the nearby dragon');c.askShut();
+c.dragon.y=60;assert.equal(run('tryDragonConversation()'),false,'outside close range');c.dragon.y=70;
+for(const [key,value]of [['arenaLock',{}],['arenaT',1],['bossScene',{}],['trial',{}]]){
+ c[key]=value;assert.equal(run('tryDragonConversation()'),false,key+' blocks talking');c[key]=null;
+}
+c.inFight=()=>true;assert.equal(run('tryDragonConversation()'),false,'nearby fight');c.inFight=()=>false;
+c.foes=[{hp:10,st:'wind',x:800,y:800}];assert.equal(run('tryDragonConversation()'),false,'active distant attack');c.foes=[];
+c.P.act={kind:'swing'};assert.equal(run('tryDragonConversation()'),false,'attack animation');c.P.act=null;
+run('dragonDoorExchange()');assert.equal(active().handoff,true);assert.equal(run('dragonBanterPanel.speaker'),'Corin');
+c.MAPID='tavern';c.fadeDir=1;tick(3.2);assert.equal(run('dragonBanterPanel.speaker'),'Aurelius');
+assert.equal(run('dragonBanterPanel.hidden'),false,'telepathy survives crossing into an interior');
+assert.equal(pendingScene,null,'handoff never opens a scene');tick(5);assert.equal(active(),null);c.fadeDir=0;
+const replies=new Set();for(let i=0;i<12;i++){run('dragonDoorExchange()');replies.add(active().lines[1]);}
+assert.equal(replies.size,12);
+assert.equal(run('DRAGON_GENERAL_TOPICS.history.length+DRAGON_GENERAL_TOPICS.personal.length'),12);
+console.log('PASS: facing, short range, combat locks, 12 general topics, and 12 nonblocking doorway replies.');

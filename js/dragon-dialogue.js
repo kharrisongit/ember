@@ -223,22 +223,57 @@ function resetDragonBanter(seen=[]){
   dragonBanterQueue=[];dismissDragonBanter();dragonBanterGap=0;
   dragonNpcCooldown=seen.some(key=>typeof key==='string'&&key.startsWith('npc:'))?90:0;
 }
+const DRAGON_DOOR_REPLIES=[
+  'Hurry back, little one.', 'I’ll be here.', 'Take your time, Corin.',
+  'Try not to come back with another egg.', 'I will keep an eye on the road.',
+  'Bring back a story. Or a fish.', 'Go on. I could use a rest.',
+  'I will try to leave the flowers standing.', 'Give my regards to anyone kind.',
+  'I’ll save you a patch of sunshine.', 'Call if you need me.',
+  'I promise not to eat anything important.'
+];
+let dragonDoorReply=0;
+function dragonDoorExchange(){
+  if(!dragonIntroDone)return;
+  dismissDragonBanter();
+  dragonBanterActive={key:'doorway',lines:["Wait here, I’ll be right back.",DRAGON_DOOR_REPLIES[dragonDoorReply++%DRAGON_DOOR_REPLIES.length]],
+    speakers:['Corin',DRAGON_NAME],time:7,handoff:true};
+  paintDragonBanter();
+}
+function setDialogueTone(telepathy){
+  for(const el of [sayEl,nameEl,faceEl])el.dataset.telepathy=telepathy?'true':'false';
+}
 function paintDragonBanter(){
   if(!dragonBanterActive)return;
   if(!dragonBanterPanel){
     dragonBanterPanel=document.createElement('div');dragonBanterPanel.id='dragonBanter';
     dragonBanterPanel.setAttribute('role','status');dragonBanterPanel.setAttribute('aria-live','polite');
-    dragonBanterPanel.setAttribute('aria-label','Travel conversation. Press A to dismiss.');
-    dragonBanterPanel.style.cssText='position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 16px);box-sizing:border-box;padding:6px 10px;background:rgba(17,22,34,.9);border:1px solid #8292ae;border-radius:6px;color:#edf1ff;font:13px/1.35 Georgia,serif;z-index:5;pointer-events:none;white-space:normal';
+    const portrait=document.createElement('span');portrait.className='telepathyPortrait';
+    portrait.setAttribute('aria-hidden','true');
+    const words=document.createElement('span');words.className='telepathyWords';
+    dragonBanterPanel.appendChild(portrait);dragonBanterPanel.appendChild(words);
+    dragonBanterPanel.portraitEl=portrait;dragonBanterPanel.wordsEl=words;
     document.getElementById('stage').appendChild(dragonBanterPanel);
   }
-  const reply=dragonBanterActive.time<=5;
-  const text=(reply?'Corin':DRAGON_NAME)+': '+dragonBanterActive.lines[reply?1:0];
-  if(dragonBanterPanel.textContent!==text)dragonBanterPanel.textContent=text;
+  const reply=dragonBanterActive.time<=(dragonBanterActive.handoff?4:5),index=reply?1:0;
+  const speaker=(dragonBanterActive.speakers||[DRAGON_NAME,'Corin'])[index];
+  const text=dragonBanterActive.lines[index];
+  dragonBanterPanel.setAttribute('aria-label',speaker+': '+text);
+  dragonBanterPanel.wordsEl.textContent=text;
+  if(dragonBanterPanel.speaker!==speaker){
+    dragonBanterPanel.speaker=speaker;
+    if(typeof paintSmallPortrait==='function')paintSmallPortrait(dragonBanterPanel.portraitEl,speaker);
+  }
   dragonBanterPanel.hidden=false;
 }
 function stepDragonBanter(dt){
   dragonNpcCooldown=Math.max(0,dragonNpcCooldown-dt);
+  if(dragonBanterActive?.handoff){
+    const hidden=mode!=='play'||sceneHold()||sayNpc||ovl||ask||bagOpen||atlasOpen||editing||deadShown;
+    dragonBanterActive.time-=dt;
+    if(dragonBanterActive.time<=0)dismissDragonBanter();
+    else {paintDragonBanter();dragonBanterPanel.hidden=!!hidden;}
+    return;
+  }
   const paused=!!(!dragonIntroDone||!hasDragon()||!dragonHere()||fishing||mode!=='play'||sceneHold()||sayNpc||ovl||ask||bagOpen||atlasOpen||editing||fadeDir||doorMotion||deadShown);
   if(dragonBanterPanel)dragonBanterPanel.hidden=paused||!dragonBanterActive;
   if(dragonBanterActive&&(dragonBanterActive.map!==MAPID||dragonBanterActive.stage!==dragonStoryStage()))dismissDragonBanter();
@@ -631,19 +666,135 @@ const DRAGON_JOURNEY_TOPICS=[
 ];
 function dragonJourneyTopics(){return DRAGON_JOURNEY_TOPICS.filter(topic=>topic.when());}
 
+const DRAGON_GENERAL_TOPICS={
+  history:[
+    ['roads','Who built the old roads?',[
+      'Corin: Some of these roads are wider than anything in Millwood. Who needed all that room?',
+      'Aurelius: Carters, traders, families travelling together. The riders kept the routes open; they did not lay every stone themselves.',
+      'Corin: It must have been busy.',
+      'Aurelius: I remember arguments over whose wagon should move first. A remarkably cheerful sort of trouble, compared with being afraid to leave home.',
+      'Corin: People argued even then?',
+      'Aurelius: Of course. Peace is very noisy when it is going well.'
+    ]],
+    ['riders','What did riders do all day?',[
+      'Corin: Were the old riders always fighting?',
+      'Aurelius: They watched the roads, carried news and answered calls for help. A missing traveller could take more of their time than a battle.',
+      'Corin: Nobody puts that in the songs.',
+      'Aurelius: Searching the wrong valley for an afternoon is difficult to rhyme.',
+      'Corin: So there was ordinary work, too.',
+      'Aurelius: Much of it. I think I would have liked those days.'
+    ]],
+    ['ruins','Why keep the old temples?',[
+      'Corin: Why did people build temples for riders?',
+      'Aurelius: To preserve what they learned about dragons and the heartstones. A rider could teach someone they would never live to meet.',
+      'Corin: By leaving a stone building?',
+      'Aurelius: By leaving knowledge where someone could find it. Stone helped it survive the weather.',
+      'Corin: And some of it survived Halvard.',
+      'Aurelius: People cared for it when doing so was dangerous. We owe them more than a hurried look around.'
+    ]],
+    ['accounts','Whose version of history is true?',[
+      'Corin: If two people tell us different things about the past, who do we believe?',
+      'Aurelius: Ask how they know. Someone who saw a thing may remember it badly; someone repeating it may have changed it without meaning to.',
+      'Corin: Even your memories could be wrong?',
+      'Aurelius: Incomplete, certainly. I remember what dragons noticed. There was a great deal happening below their eye level.',
+      'Corin: Most of my life, for instance.',
+      'Aurelius: Yes. You will have to be the authority on that.'
+    ]],
+    ['absence','Where did the dragons go?',[
+      'Corin: Do you know where the other dragons went after Wingfall?',
+      'Aurelius: I have fragments of flight and fear. I cannot turn them into a map of where every dragon is now.',
+      'Corin: But some might still be out there.',
+      'Aurelius: They might. I want to know as much as you do.',
+      'Corin: I thought you would have an answer.',
+      'Aurelius: So did I. Being born with old memories has given me some unreasonable expectations of myself.'
+    ]]
+  ],
+  personal:[
+    ['dreams','Do dragons dream?',[
+      'Corin: Your feet move when you sleep. Are you dreaming?',
+      'Aurelius: Last night I was trying to land on a hill that kept becoming a sheep.',
+      'Corin: Ancient dragon wisdom?',
+      'Aurelius: I suspect supper was involved.',
+      'Corin: I dreamed I was back at the mill.',
+      'Aurelius: Did it stay a mill? You are doing better than I am.'
+    ]],
+    ['age','How can you know so much so young?',[
+      'Corin: Sometimes you sound older than Maddock. Then you chase a beetle.',
+      'Aurelius: I can remember a hundred winters and still be meeting my first beetle.',
+      'Corin: Does that get confusing?',
+      'Aurelius: Often. Knowing how something happened to another dragon is different from having it happen to me.',
+      'Corin: So I am allowed to explain things to you.',
+      'Aurelius: Please do. Especially beetles. That one surprised me.'
+    ]],
+    ['fear','Do you ever get frightened?',[
+      'Corin: You always sound so calm. Are you ever afraid?',
+      'Aurelius: Yes. When I lose sight of you in a fight, I am very afraid.',
+      'Corin: You never said.',
+      'Aurelius: I was trying to help you stay steady. I may have made it seem easier than it was.',
+      'Corin: You can tell me, you know.',
+      'Aurelius: I would like that. Perhaps we will both breathe a little easier.'
+    ]],
+    ['habits','What is strange about humans?',[
+      'Corin: What is the strangest thing about us?',
+      'Aurelius: You put your feet in little houses, then complain that your feet are hot.',
+      'Corin: Boots keep the stones out.',
+      'Aurelius: I have seen you empty them. Their success seems mixed.',
+      'Corin: Anything else?',
+      'Aurelius: You ask whether I am hungry as if the answer might have changed.'
+    ]],
+    ['joke','Tell me something funny',[
+      'Corin: You must remember a few dragon jokes.',
+      'Aurelius: A rider asks a dragon to guard his gold. When he returns, the dragon says nobody has touched a coin.',
+      'Corin: What happened?',
+      'Aurelius: The dragon ate the purse.',
+      'Corin: That is a terrible joke.',
+      'Aurelius: You are missing the expression on the dragon’s face. I have been practising it.'
+    ]],
+    ['friendship','What makes someone a good companion?',[
+      'Corin: Apart from carrying enough food, what do you want from a rider?',
+      'Aurelius: Tell me when I have hurt your feelings. I cannot mend something you insist is fine.',
+      'Corin: Is that from an old memory?',
+      'Aurelius: It is from yesterday. You went very quiet when I laughed at your landing.',
+      'Corin: I was trying quite hard.',
+      'Aurelius: I know that now. I am sorry, Corin.'
+    ]],
+    ['thoughts','Can you hear everything I think?',[
+      'Corin: When we speak like this, can you hear everything else in my head?',
+      'Aurelius: I hear what you send toward me. I am not sitting among your thoughts opening cupboards.',
+      'Corin: Good. Some of those cupboards are untidy.',
+      'Aurelius: Mine contain a surprising number of fish.',
+      'Corin: That does not surprise me at all.',
+      'Aurelius: Then you understand me without needing to look.'
+    ]]
+  ]
+};
+
+function dragonCombatActive(){
+  return inFight()||!!arenaLock||typeof arenaT!=='undefined'&&arenaT>0||
+    typeof bossScene!=='undefined'&&!!bossScene||typeof trial!=='undefined'&&!!trial||
+    foes.some(f=>!f.ally&&!f.storyPassive&&f.hp>0&&['wind','swing'].includes(f.st));
+}
+function playerFacesDragon(){
+  const dx=dragon.x-P.x,dy=dragon.y-P.y,d=Math.hypot(dx,dy);
+  if(d<6||d>36)return false;
+  const facing=P.dir==='s'?(P.flip?'l':'r'):P.dir;
+  const forward=facing==='u'?-dy:facing==='d'?dy:facing==='l'?-dx:dx;
+  return forward/d>=0.72;
+}
 function dragonCanConverse(){
-  return dragonIntroDone&&hasDragon()&&dragonHere()&&dragon.on&&!dragon.down&&!dragon.air&&!mounted&&!ride&&!sceneHold()&&!sayNpc&&!doorMotion&&!fadeDir&&!editing&&!inFight();
+  return dragonIntroDone&&hasDragon()&&dragonHere()&&dragon.on&&!dragon.down&&!dragon.air&&!mounted&&!ride&&!sceneHold()&&!sayNpc&&!doorMotion&&!fadeDir&&!editing&&!P.act&&!dragonCombatActive();
 }
 function tryDragonConversation(){
-  if(!dragonCanConverse()||Math.hypot(P.x-dragon.x,P.y-dragon.y)>56)return false;
+  if(!dragonCanConverse()||!playerFacesDragon())return false;
   openDragonConversation();return true;
 }
 function openDragonConversation(category='root'){
   if(!dragonCanConverse())return;
   rememberDragonConversationPlace();
   dismissDragonBanter();P.moving=false;P.act=null;dragon.moving=false;faceCorinAt(dragon.x,dragon.y);
-  const speak=(lines,back=category)=>{askShut();playScene(typeof lines==='function'?lines():lines,{after:()=>openDragonConversation(back)});};
+  const speak=(lines,back=category)=>{askShut();playScene(typeof lines==='function'?lines():lines,{telepathy:true,after:()=>openDragonConversation(back)});};
   const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key])});
+  const general=category=>(DRAGON_GENERAL_TOPICS[category]||[]).map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
   const options={
     root:[
       {n:'What we have seen together',go:()=>openDragonConversation('journey')},
@@ -652,12 +803,13 @@ function openDragonConversation(category='root'){
       {n:'What should we do next?',go:()=>speak(dragonCurrentQuest)},
       {n:'Side quests and useful leads',go:()=>openDragonConversation('quests')},
       {n:'Travelling and fighting together',go:()=>openDragonConversation('travelling')},
-      topic('Tell me about yourself','self'),
+      {n:'You, me, and other mysteries',go:()=>openDragonConversation('personal')},
       {n:'Let’s keep going',go:null}
     ],
     journey:dragonJourneyTopics().map(t=>({n:t.name,go:()=>speak(t.lines)})),
     dragons:[topic('The shared dragon consciousness','consciousness'),topic('Why did you choose me?','choosing'),topic('The heartstones','heartstones')],
-    history:[topic('Wingfall and the seven riders','wingfall'),topic('The land and its people','land'),topic(wonAll?'Life after Halvard':'Why Halvard fears us','halvard')],
+    personal:[topic('What do you want for yourself?','self'),...general('personal')],
+    history:[...general('history'),topic('Wingfall and the seven riders','wingfall'),topic('The land and its people','land'),topic(wonAll?'Life after Halvard':'Why Halvard fears us','halvard')],
     quests:['fishing','bramble','equipment','gifts'].map((key,i)=>({n:['Fishing and Odo',brambleQuest>=2?'Visit Rowan and Bramble':'Help Bramble find his person','Our weapons and protection','Charms and other gifts'][i],go:()=>speak(()=>dragonSideQuest(key))})),
     travelling:[topic('Riding and flying','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
   };
