@@ -4,7 +4,7 @@ const packed=read('js/generated/game-part-1.js'),W=JSON.parse(zlib.gunzipSync(Bu
 const m=W.maps.world,f=m.ferry,SPR=JSON.parse(zlib.gunzipSync(Buffer.from(packed.match(/const ATLAS_GZ = "([^"]+)"/)[1],'base64'))).sprites;
 const terr=Uint8Array.from(m.terr.split('|').flatMap(p=>{const[v,n]=p.split('.').map(Number);return Array(n).fill(v);}));
 const messages=[],c=vm.createContext({W,MD:m,MAPID:'world',SPR,TS:16,MW:m.w,terr,DECK:15,
- P:{},dragon:{},mounted:false,ride:null,objs:[],NAME2I:{},hidden:new Set(),rebuildBuckets(){},toast:s=>messages.push(s),playScene:lines=>messages.push(...lines),playerFacing4:()=>c.P.dir8,
+ P:{},dragon:{},dragonHere:()=>true,mounted:false,ride:null,objs:[],NAME2I:{},hidden:new Set(),rebuildBuckets(){},toast:s=>messages.push(s),playScene:lines=>messages.push(...lines),playerFacing4:()=>c.P.dir8,
  hunt:null,breath:null,claw:null,linger:0,refreshWingBtn(){},direction4:(x,y)=>Math.abs(x)>Math.abs(y)?x<0?'w':'e':y<0?'n':'s'});
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('function installFerrySigns()'),game.indexOf('function villageStandSize()')));

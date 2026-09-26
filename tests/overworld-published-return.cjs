@@ -167,7 +167,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
    if(op.kind==='actor'){const n=npcs.find(n=>editorNpcKey(n)===op.key);assert.equal(n.x,op.x);assert.equal(n.y,op.y);}
    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));if(op.deleted)assert(!o,'Recovered object deletion');else{assert.equal(o.x,op.x);assert.equal(o.y,op.y);}}
    if(op.kind==='paint')for(let i=0;i<op.values.length;i++)assert.equal(terr[op.start+i],op.values[i],'Recovered Hollybeck paint');
-   if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);assert.equal(collisionOverride(tx*8+4,ty*8+4),op.blocked,'Recovered Hollybeck collision');}
+   if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);const latest=publishedOps.filter(o=>o.kind==='collision'&&o.key===op.key).at(-1)||op;assert.equal(collisionOverride(tx*8+4,ty*8+4),latest.blocked,'Recovered Hollybeck collision follows latest edit '+op.key);}
    if(op.kind==='feature-delete')assert(felled.has(op.key),'Recovered scenery removal');
   }
   if(worldVisits++){
