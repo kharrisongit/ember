@@ -1,14 +1,14 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const sources=[],listeners={},documentListeners={},timers=[],output={};
+const sources=[],listeners={},documentListeners={},timers=[],cueTimers=[],output={};
 const context={
- decodeAudioData:async bytes=>bytes,
+ decodeAudioData:async bytes=>Object.assign(bytes,{duration:3}),
  createGain:()=>({gain:{value:1},connect(to){this.to=to;},disconnect(){}}),
  createBufferSource:()=>{const s={connect(to){this.gain=to;},start(){this.started=true;},stop(){this.stopped=true;},disconnect(){}};sources.push(s);return s;}
 };
 const c=vm.createContext({window:{EmberAudio:{graph:()=>({context,output})},addEventListener:(e,f)=>listeners[e]=f},
  document:{hidden:false,addEventListener:(e,f)=>documentListeners[e]=f},performance:{now:()=>0},fetch:async path=>({ok:true,arrayBuffer:async()=>[path]}),
- setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:320},TS:16,shake:0});
+ setTimeout:(f,ms)=>cueTimers.push({f,ms}),setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:320},TS:16,shake:0});
 const run=s=>vm.runInContext(s,c),flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 run(read('js/dragon-scene-audio.js'));listeners.touchstart();await flush();
 const api=c.window.EmberDragonSceneAudio,active=file=>sources.filter(s=>s.started&&!s.stopped&&s.buffer[0].includes(file));
@@ -170,3 +170,13 @@ assert(!c.grabGold());await flush();assert.equal(coinCount(),1,'No duplicate cue
 active('coin-collect')[0].onended();c.loot=[{x:10,y:10,n:1,kind:'birdMeat'},{x:10,y:10,n:1}];
 c.grabGold();await flush();assert.equal(coinCount(),2);
 console.log('PASS: a pile of coins plays one collection sound, separate from food pickups.');
+
+api.stop();c.quest=5;c.MAPID='world';c.mode='play';c.document.hidden=false;
+const cueStart=musicEvents.length,timerStart=cueTimers.length;
+api.distant();await flush();
+const warningTimers=cueTimers.slice(timerStart);assert.equal(warningTimers.length,2);
+for(const timer of warningTimers){assert.equal(timer.ms,2880,'Reveal handoff precedes the audio tail by 120ms');timer.f();}
+assert.deepEqual(musicEvents.slice(cueStart),['cut','reveal']);
+for(const name of ['dragon-roar','dragon-distant-crash'])for(const source of active(name))source.onended();
+assert.deepEqual(musicEvents.slice(cueStart),['cut','reveal'],'Ended events never restart Reveal after its early handoff');
+console.log('PASS: warning tails hand off to Reveal 120ms early, exactly once.');

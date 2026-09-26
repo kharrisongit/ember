@@ -6288,7 +6288,7 @@ function stepDragonIntroduction(){
   if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;
   dragonIntroArmed=true;
   dragon.introOrigin ||= [P.x,P.y];
-  if(Math.hypot(P.x-dragon.introOrigin[0],P.y-dragon.introOrigin[1])<48)return false;
+  if(Math.hypot(P.x-dragon.introOrigin[0],P.y-dragon.introOrigin[1])<96)return false;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
   playScene([

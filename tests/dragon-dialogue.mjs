@@ -26,7 +26,7 @@ const active=()=>run('dragonBanterActive');
 // starts it, including pending introductions restored away from Maddock's house.
 place='Millwood';tick();assert.equal(active(),null);
 assert.equal(run('stepDragonIntroduction()'),false);
-for(const [dir,dx,dy] of [['u',0,-48],['d',0,48],['s',48,0],['s',-48,0]]){
+for(const [dir,dx,dy] of [['u',0,-96],['d',0,96],['s',96,0],['s',-96,0]]){
  run('dragonIntroDone=false;dragon.introOrigin=[P.x,P.y]');
  c.P.dir=dir;c.P.x+=dx;c.P.y+=dy;
  c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
@@ -43,7 +43,7 @@ for(const [dir,dx,dy] of [['u',0,-48],['d',0,48],['s',48,0],['s',-48,0]]){
 }
 assert.equal(saves,4);
 run('dragonIntroDone=false;dragon.introOrigin=null');c.P.x=3000;c.P.y=4000;
-assert.equal(run('stepDragonIntroduction()'),false);c.P.y-=47;
+assert.equal(run('stepDragonIntroduction()'),false);c.P.y-=95;
 assert.equal(run('stepDragonIntroduction()'),false);c.P.y--;
 assert.equal(run('stepDragonIntroduction()'),true,'Older pending save introduces Aurelius after walking a short distance');
 pendingScene.after();pendingScene=null;c.P.x=872;c.P.y=6130;

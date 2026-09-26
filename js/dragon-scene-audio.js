@@ -7,7 +7,7 @@
   const downloads=new Map(),buffers=new Map(),voices=new Map();
   let currentPhase='off';
   for(const [name,file]of Object.entries(files))
-    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(name==='distant'?'20260926-tight-cue':'20260926-1'))
+    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(['distant','roar'].includes(name)?'20260926-short-tails':'20260926-1'))
       .then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).catch(()=>null));
   const ready=name=>{
     const graph=window.EmberAudio?.graph();
@@ -23,6 +23,8 @@
   };
   const play=(name,loop=false,restart=false,done=null)=>{
     if(voices.has(name)){if(!restart)return;stop(name);}
+    const callback=done;let completed=false;
+    done=()=>{if(completed)return;completed=true;callback?.();};
     const voice={requested:performance.now(),done};voices.set(name,voice);
     ready(name).then(buffer=>{
       if(voices.get(name)!==voice)return;
@@ -38,6 +40,10 @@
         source.disconnect();gain.disconnect();
       };
       source.start();
+      // Let Reveal meet the warning's last breath instead of waiting for the
+      // media-ended event and then starting another fade from silence.
+      if((name==='roar'||name==='distant')&&Number.isFinite(buffer.duration))
+        setTimeout(()=>{if(voices.get(name)===voice)done();},Math.max(0,buffer.duration-.12)*1000);
     });
   };
   const clear=()=>{for(const name of dragonEffects)stop(name);currentPhase='off';};
