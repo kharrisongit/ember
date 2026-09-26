@@ -16,7 +16,7 @@ export function validateDraftTargets(draft,state){
       if(op.kind==='actor'){
         target=op.key.startsWith('npc:')?(map.npcs||[]).find(n=>(n.editKey||'npc:'+n.n)===op.key):
           (map.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key);
-        assert(target&&(target.spr||target.n)===op.identity,conflict('the actor '+op.key+' changed'));
+        assert(target&&(target.spr||target.portraitOriginalName||target.n)===op.identity,conflict('the actor '+op.key+' changed'));
         assert(!target.editorDeleted||op.deleted,conflict('the actor '+op.key+' was deleted'));
       }else{
         const array=op.kind==='object'?map.objs:op.tag==='s'?map.scatter:map.sanim;
@@ -52,7 +52,7 @@ export function validateDraftTargets(draft,state){
     if(op.kind==='npc-add')assert(state.looks.includes(op.look),conflict('the NPC appearance is no longer available'));
     if(op.kind==='npc-transfer'){
       const source=state.sources[op.sourceMap]?.find(n=>(n.editKey||'npc:'+n.n)===op.sourceKey);
-      assert(source&&source.n===op.identity&&!source.editorDeleted,conflict('the transported NPC changed'));
+      assert(source&&(source.portraitOriginalName||source.n)===op.identity&&!source.editorDeleted,conflict('the transported NPC changed'));
     }
   }
 }

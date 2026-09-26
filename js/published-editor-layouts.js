@@ -35,7 +35,7 @@ function applyPublishedEditorEntries(m,id,layout) {
     (op.key.startsWith('npc:')?(m.npcs||[]).find(n=>(n.editKey||'npc:'+n.n)===op.key):(m.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key)) : null;
   // Check anchors together before parent moves shift children or linked collision.
   const valid=entries.filter(op=>{
-    if(op.kind==='actor'){const a=resolve(op);return a&&(a.spr||a.n)===op.identity&&a.x===op.originX&&a.y===op.originY;}
+    if(op.kind==='actor'){const a=resolve(op);return a&&(a.spr||a.portraitOriginalName||a.n)===op.identity&&a.x===op.originX&&a.y===op.originY;}
     const arr=op.kind==='object'?m.objs:op.tag==='s'?m.scatter:m.sanim;
     const i=op.kind==='object'?Number(op.key)*3:op.index;
     return arr&&arr[i]===op.sprite&&arr[i+1]===op.originX&&arr[i+2]===op.originY;

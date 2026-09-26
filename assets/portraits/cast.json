@@ -1,0 +1,1314 @@
+[
+  {
+    "name": "Corin",
+    "sprite": "corin_bare_idle_d",
+    "maps": [
+      "party"
+    ],
+    "id": 0,
+    "pack": 1,
+    "cell": 0
+  },
+  {
+    "name": "Aurelius",
+    "sprite": "dr5_pose_south",
+    "maps": [
+      "party"
+    ],
+    "id": 1,
+    "pack": 1,
+    "cell": 1
+  },
+  {
+    "name": "Hettie",
+    "sprite": "guild_citizen1_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 2,
+    "pack": 1,
+    "cell": 2
+  },
+  {
+    "name": "Gwil",
+    "sprite": "guild_citizen2_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 3,
+    "pack": 1,
+    "cell": 3
+  },
+  {
+    "name": "Odo",
+    "sprite": "pack_oldman",
+    "maps": [
+      "world"
+    ],
+    "id": 4,
+    "pack": 1,
+    "cell": 4
+  },
+  {
+    "name": "King Halvard",
+    "sprite": "kg_idle_d",
+    "maps": [
+      "world",
+      "cinderhold"
+    ],
+    "id": 5,
+    "pack": 1,
+    "cell": 5
+  },
+  {
+    "name": "Serjeant Bram",
+    "sprite": "royal_intro_guard_black",
+    "maps": [
+      "world"
+    ],
+    "id": 6,
+    "pack": 1,
+    "cell": 6
+  },
+  {
+    "name": "Doran",
+    "sprite": "royal_intro_guard_white",
+    "maps": [
+      "world"
+    ],
+    "id": 7,
+    "pack": 1,
+    "cell": 7
+  },
+  {
+    "name": "Tolan",
+    "sprite": "royal_intro_guard_white",
+    "maps": [
+      "world"
+    ],
+    "id": 8,
+    "pack": 1,
+    "cell": 8
+  },
+  {
+    "name": "Elder Maddock",
+    "sprite": "maddock_smith107_idle_d",
+    "maps": [
+      "world",
+      "house22"
+    ],
+    "id": 9,
+    "pack": 1,
+    "cell": 9
+  },
+  {
+    "name": "Pip",
+    "sprite": "npc_shroom_green_d",
+    "maps": [
+      "world"
+    ],
+    "id": 10,
+    "pack": 1,
+    "cell": 10
+  },
+  {
+    "name": "Mycella",
+    "sprite": "npc_shroom_blue_d",
+    "maps": [
+      "world"
+    ],
+    "id": 11,
+    "pack": 1,
+    "cell": 11
+  },
+  {
+    "name": "Bolete",
+    "sprite": "npc_shroom_purple_d",
+    "maps": [
+      "world"
+    ],
+    "id": 12,
+    "pack": 1,
+    "cell": 12
+  },
+  {
+    "name": "Truffle",
+    "sprite": "npc_shroom_yellow_d",
+    "maps": [
+      "world"
+    ],
+    "id": 13,
+    "pack": 1,
+    "cell": 13
+  },
+  {
+    "name": "Calder",
+    "sprite": "guild_fighter2_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 16,
+    "pack": 1,
+    "cell": 16
+  },
+  {
+    "name": "Prue",
+    "sprite": "market_citizen2_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 17,
+    "pack": 1,
+    "cell": 17
+  },
+  {
+    "name": "Toft",
+    "sprite": "npc_miner_mike_d",
+    "maps": [
+      "world"
+    ],
+    "id": 18,
+    "pack": 1,
+    "cell": 18
+  },
+  {
+    "name": "Linna",
+    "sprite": "guild_citizen2_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 19,
+    "pack": 1,
+    "cell": 19
+  },
+  {
+    "name": "Wren",
+    "sprite": "npc_farmer_buba_d",
+    "maps": [
+      "world"
+    ],
+    "id": 20,
+    "pack": 2,
+    "cell": 0
+  },
+  {
+    "name": "Bevan",
+    "sprite": "market_citizen1_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 21,
+    "pack": 2,
+    "cell": 1
+  },
+  {
+    "name": "Isolde",
+    "sprite": "market_citizen4_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 22,
+    "pack": 2,
+    "cell": 2
+  },
+  {
+    "name": "Nazim",
+    "sprite": "npc_desert1_idle",
+    "maps": [
+      "world"
+    ],
+    "id": 23,
+    "pack": 2,
+    "cell": 3
+  },
+  {
+    "name": "Halima",
+    "sprite": "npc_desert2_idle",
+    "maps": [
+      "world"
+    ],
+    "id": 24,
+    "pack": 2,
+    "cell": 4
+  },
+  {
+    "name": "Tarek",
+    "sprite": "npc_desert3_idle",
+    "maps": [
+      "world"
+    ],
+    "id": 25,
+    "pack": 2,
+    "cell": 5
+  },
+  {
+    "name": "Suhaila",
+    "sprite": "npc_desert4_idle",
+    "maps": [
+      "world"
+    ],
+    "id": 26,
+    "pack": 2,
+    "cell": 6
+  },
+  {
+    "name": "Idris",
+    "sprite": "npc_pharaoh_idle",
+    "maps": [
+      "world"
+    ],
+    "id": 27,
+    "pack": 2,
+    "cell": 7
+  },
+  {
+    "name": "Rashida",
+    "sprite": "desert_trader2",
+    "maps": [
+      "world"
+    ],
+    "id": 28,
+    "pack": 2,
+    "cell": 8
+  },
+  {
+    "name": "Bilal",
+    "sprite": "desert_trader1",
+    "maps": [
+      "world"
+    ],
+    "id": 29,
+    "pack": 2,
+    "cell": 9
+  },
+  {
+    "name": "Sella",
+    "sprite": "guild_mage4_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 30,
+    "pack": 2,
+    "cell": 10
+  },
+  {
+    "name": "The Shroom King",
+    "sprite": "npc_king_d",
+    "maps": [
+      "world"
+    ],
+    "id": 31,
+    "pack": 2,
+    "cell": 11
+  },
+  {
+    "name": "Ovid",
+    "sprite": "market_citizen3_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 32,
+    "pack": 2,
+    "cell": 12
+  },
+  {
+    "name": "Jamila",
+    "sprite": "desert_trader3",
+    "maps": [
+      "world"
+    ],
+    "id": 33,
+    "pack": 2,
+    "cell": 13
+  },
+  {
+    "name": "Nerissa",
+    "sprite": "market_citizen5_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 34,
+    "pack": 2,
+    "cell": 14
+  },
+  {
+    "name": "Astrid",
+    "sprite": "npc_chef_chloe_d",
+    "maps": [
+      "world"
+    ],
+    "id": 35,
+    "pack": 2,
+    "cell": 15
+  },
+  {
+    "name": "Colm",
+    "sprite": "npc_single_tavern_src_Eater",
+    "maps": [
+      "world"
+    ],
+    "id": 36,
+    "pack": 2,
+    "cell": 16
+  },
+  {
+    "name": "Tessa",
+    "sprite": "market_flute",
+    "maps": [
+      "world"
+    ],
+    "id": 37,
+    "pack": 2,
+    "cell": 17
+  },
+  {
+    "name": "Rowan the Hunter",
+    "sprite": "lodge_hunter_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 38,
+    "pack": 2,
+    "cell": 18
+  },
+  {
+    "name": "Bramble",
+    "sprite": "lodge_dog_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 39,
+    "pack": 2,
+    "cell": 19
+  },
+  {
+    "name": "Sverre",
+    "sprite": "hollybeck_sverre_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 40,
+    "pack": 3,
+    "cell": 0
+  },
+  {
+    "name": "Runa",
+    "sprite": "hollybeck_runa_idle_d",
+    "maps": [
+      "world"
+    ],
+    "id": 41,
+    "pack": 3,
+    "cell": 1
+  },
+  {
+    "name": "Eira",
+    "sprite": "npc_single_tavern_src_Drinker2",
+    "maps": [
+      "world"
+    ],
+    "id": 42,
+    "pack": 3,
+    "cell": 2
+  },
+  {
+    "name": "Fenton",
+    "sprite": "npc_single_tavern_src_Drinker1",
+    "maps": [
+      "world"
+    ],
+    "id": 43,
+    "pack": 3,
+    "cell": 3
+  },
+  {
+    "name": "Tallis",
+    "sprite": "market_lute",
+    "maps": [
+      "world"
+    ],
+    "id": 44,
+    "pack": 3,
+    "cell": 4
+  },
+  {
+    "name": "Kip",
+    "sprite": "hb_kobold",
+    "maps": [
+      "world"
+    ],
+    "id": 45,
+    "pack": 3,
+    "cell": 5
+  },
+  {
+    "name": "Ada",
+    "sprite": "villager_seated_common_a6_1",
+    "maps": [
+      "house00"
+    ],
+    "id": 46,
+    "pack": 3,
+    "cell": 6
+  },
+  {
+    "name": "Bren",
+    "sprite": "villager_seated_common_a6_4",
+    "maps": [
+      "house01"
+    ],
+    "id": 47,
+    "pack": 3,
+    "cell": 7
+  },
+  {
+    "name": "Berta",
+    "sprite": "villager_seated_common_c6_0",
+    "maps": [
+      "house02"
+    ],
+    "id": 48,
+    "pack": 3,
+    "cell": 8
+  },
+  {
+    "name": "Della",
+    "sprite": "royal_guest_woman",
+    "maps": [
+      "house03"
+    ],
+    "id": 49,
+    "pack": 3,
+    "cell": 9
+  },
+  {
+    "name": "Ewan",
+    "sprite": "royal_reader",
+    "maps": [
+      "house04"
+    ],
+    "id": 50,
+    "pack": 3,
+    "cell": 10
+  },
+  {
+    "name": "Fara",
+    "sprite": "villager_seated_common_a6_1",
+    "maps": [
+      "house06"
+    ],
+    "id": 51,
+    "pack": 3,
+    "cell": 11
+  },
+  {
+    "name": "Garrick",
+    "sprite": "royal_guest_man",
+    "maps": [
+      "house07"
+    ],
+    "id": 52,
+    "pack": 3,
+    "cell": 12
+  },
+  {
+    "name": "Hester",
+    "sprite": "villager_seated_coast_a4_1",
+    "maps": [
+      "house08"
+    ],
+    "id": 53,
+    "pack": 3,
+    "cell": 13
+  },
+  {
+    "name": "Junia",
+    "sprite": "villager_seated_common_a6_2",
+    "maps": [
+      "house10"
+    ],
+    "id": 54,
+    "pack": 3,
+    "cell": 14
+  },
+  {
+    "name": "Kellan",
+    "sprite": "villager_seated_common_a6_4",
+    "maps": [
+      "house11"
+    ],
+    "id": 55,
+    "pack": 3,
+    "cell": 15
+  },
+  {
+    "name": "Lysa",
+    "sprite": "villager_seated_common_b6_0",
+    "maps": [
+      "house13"
+    ],
+    "id": 56,
+    "pack": 3,
+    "cell": 16
+  },
+  {
+    "name": "Cinder",
+    "sprite": "villager_seated_common_a6_5",
+    "maps": [
+      "house15"
+    ],
+    "id": 57,
+    "pack": 3,
+    "cell": 17
+  },
+  {
+    "name": "Warden",
+    "sprite": "villager_seated_common_b6_3",
+    "maps": [
+      "house16"
+    ],
+    "id": 58,
+    "pack": 3,
+    "cell": 18
+  },
+  {
+    "name": "Ember",
+    "sprite": "villager_seated_common_b6_4",
+    "maps": [
+      "house17"
+    ],
+    "id": 59,
+    "pack": 3,
+    "cell": 19
+  },
+  {
+    "name": "Dagna",
+    "sprite": "villager_seated_common_b6_1",
+    "maps": [
+      "house17"
+    ],
+    "id": 60,
+    "pack": 4,
+    "cell": 0
+  },
+  {
+    "name": "Lode",
+    "sprite": "villager_seated_common_b6_5",
+    "maps": [
+      "house18"
+    ],
+    "id": 61,
+    "pack": 4,
+    "cell": 1
+  },
+  {
+    "name": "Pike",
+    "sprite": "villager_seated_common_c6_2",
+    "maps": [
+      "house19"
+    ],
+    "id": 62,
+    "pack": 4,
+    "cell": 2
+  },
+  {
+    "name": "Hallow",
+    "sprite": "villager_seated_common_c6_3",
+    "maps": [
+      "house20"
+    ],
+    "id": 63,
+    "pack": 4,
+    "cell": 3
+  },
+  {
+    "name": "Quarrel",
+    "sprite": "villager_seated_common_c6_4",
+    "maps": [
+      "house21"
+    ],
+    "id": 64,
+    "pack": 4,
+    "cell": 4
+  },
+  {
+    "name": "Flint",
+    "sprite": "villager_seated_common_c6_5",
+    "maps": [
+      "house21"
+    ],
+    "id": 65,
+    "pack": 4,
+    "cell": 5
+  },
+  {
+    "name": "Winnie",
+    "sprite": "seated_body_1",
+    "maps": [
+      "house23"
+    ],
+    "id": 66,
+    "pack": 4,
+    "cell": 6
+  },
+  {
+    "name": "Ned",
+    "sprite": "seated_body_13",
+    "maps": [
+      "house25"
+    ],
+    "id": 67,
+    "pack": 4,
+    "cell": 7
+  },
+  {
+    "name": "Nan Ferrow",
+    "sprite": "herbalist_idle_d",
+    "maps": [
+      "house26"
+    ],
+    "id": 68,
+    "pack": 4,
+    "cell": 8
+  },
+  {
+    "name": "Joss",
+    "sprite": "seated_body_2",
+    "maps": [
+      "house27"
+    ],
+    "id": 69,
+    "pack": 4,
+    "cell": 9
+  },
+  {
+    "name": "Greta",
+    "sprite": "guild_fighter2_idle_d",
+    "maps": [
+      "mine"
+    ],
+    "id": 70,
+    "pack": 4,
+    "cell": 10
+  },
+  {
+    "name": "Osric",
+    "sprite": "villager_seated_common_b6_3",
+    "maps": [
+      "house30"
+    ],
+    "id": 71,
+    "pack": 4,
+    "cell": 11
+  },
+  {
+    "name": "Alder",
+    "sprite": "villager_seated_common_b6_4",
+    "maps": [
+      "house31"
+    ],
+    "id": 72,
+    "pack": 4,
+    "cell": 12
+  },
+  {
+    "name": "Gwyneth",
+    "sprite": "villager_seated_common_b6_0",
+    "maps": [
+      "house31"
+    ],
+    "id": 73,
+    "pack": 4,
+    "cell": 13
+  },
+  {
+    "name": "Mattock",
+    "sprite": "villager_seated_common_d6_1",
+    "maps": [
+      "house32"
+    ],
+    "id": 74,
+    "pack": 4,
+    "cell": 14
+  },
+  {
+    "name": "Kiln",
+    "sprite": "villager_seated_common_d6_2",
+    "maps": [
+      "house32"
+    ],
+    "id": 75,
+    "pack": 4,
+    "cell": 15
+  },
+  {
+    "name": "Petra",
+    "sprite": "villager_seated_desert_a5_0",
+    "maps": [
+      "house33"
+    ],
+    "id": 76,
+    "pack": 4,
+    "cell": 16
+  },
+  {
+    "name": "Raff",
+    "sprite": "villager_seated_desert_a5_3",
+    "maps": [
+      "house34"
+    ],
+    "id": 77,
+    "pack": 4,
+    "cell": 17
+  },
+  {
+    "name": "Suri",
+    "sprite": "villager_seated_desert_a5_1",
+    "maps": [
+      "house35"
+    ],
+    "id": 78,
+    "pack": 4,
+    "cell": 18
+  },
+  {
+    "name": "Tavin",
+    "sprite": "villager_seated_desert_a5_4",
+    "maps": [
+      "house36"
+    ],
+    "id": 79,
+    "pack": 4,
+    "cell": 19
+  },
+  {
+    "name": "Una",
+    "sprite": "villager_seated_desert_a5_2",
+    "maps": [
+      "house38"
+    ],
+    "id": 80,
+    "pack": 5,
+    "cell": 0
+  },
+  {
+    "name": "Vela",
+    "sprite": "villager_seated_desert_b4_0",
+    "maps": [
+      "house39"
+    ],
+    "id": 81,
+    "pack": 5,
+    "cell": 1
+  },
+  {
+    "name": "Wystan",
+    "sprite": "villager_seated_desert_b4_2",
+    "maps": [
+      "house40"
+    ],
+    "id": 82,
+    "pack": 5,
+    "cell": 2
+  },
+  {
+    "name": "Rania",
+    "sprite": "villager_seated_desert_b4_1",
+    "maps": [
+      "house41"
+    ],
+    "id": 83,
+    "pack": 5,
+    "cell": 3
+  },
+  {
+    "name": "Latif",
+    "sprite": "villager_seated_desert_b4_3",
+    "maps": [
+      "house41"
+    ],
+    "id": 84,
+    "pack": 5,
+    "cell": 4
+  },
+  {
+    "name": "Yara",
+    "sprite": "villager_seated_coast_a4_2",
+    "maps": [
+      "house42"
+    ],
+    "id": 85,
+    "pack": 5,
+    "cell": 5
+  },
+  {
+    "name": "Doryn",
+    "sprite": "pack_boy",
+    "maps": [
+      "house43"
+    ],
+    "id": 86,
+    "pack": 5,
+    "cell": 6
+  },
+  {
+    "name": "Bry",
+    "sprite": "villager_seated_coast_b3_2",
+    "maps": [
+      "house45"
+    ],
+    "id": 87,
+    "pack": 5,
+    "cell": 7
+  },
+  {
+    "name": "Coral",
+    "sprite": "villager_seated_coast_b3_0",
+    "maps": [
+      "house45"
+    ],
+    "id": 88,
+    "pack": 5,
+    "cell": 8
+  },
+  {
+    "name": "Edda",
+    "sprite": "villager_seated_snow5_1",
+    "maps": [
+      "house46"
+    ],
+    "id": 89,
+    "pack": 5,
+    "cell": 9
+  },
+  {
+    "name": "Fennel",
+    "sprite": "villager_seated_snow5_3",
+    "maps": [
+      "house47"
+    ],
+    "id": 90,
+    "pack": 5,
+    "cell": 10
+  },
+  {
+    "name": "Bjorn",
+    "sprite": "villager_seated_snow5_4",
+    "maps": [
+      "house50"
+    ],
+    "id": 91,
+    "pack": 5,
+    "cell": 11
+  },
+  {
+    "name": "Cap",
+    "sprite": "villager_seated_common_a6_3",
+    "maps": [
+      "house52"
+    ],
+    "id": 92,
+    "pack": 5,
+    "cell": 12
+  },
+  {
+    "name": "Ilsa",
+    "sprite": "villager_seated_common_a6_0",
+    "maps": [
+      "house52"
+    ],
+    "id": 93,
+    "pack": 5,
+    "cell": 13
+  },
+  {
+    "name": "Meriel",
+    "sprite": "market_weapon",
+    "maps": [
+      "glasshouse"
+    ],
+    "id": 94,
+    "pack": 5,
+    "cell": 14
+  },
+  {
+    "name": "Elin",
+    "sprite": "pack_customer",
+    "maps": [
+      "glasshouse"
+    ],
+    "id": 95,
+    "pack": 5,
+    "cell": 15
+  },
+  {
+    "name": "Maelis",
+    "sprite": "guild_mage3_idle_d",
+    "maps": [
+      "witchmoor"
+    ],
+    "id": 96,
+    "pack": 5,
+    "cell": 16
+  },
+  {
+    "name": "Archivist Elowen",
+    "sprite": "school_src_Librarian_idle",
+    "maps": [
+      "school"
+    ],
+    "id": 97,
+    "pack": 5,
+    "cell": 17
+  },
+  {
+    "name": "Mira",
+    "sprite": "library_reader_red",
+    "maps": [
+      "school"
+    ],
+    "id": 98,
+    "pack": 5,
+    "cell": 18
+  },
+  {
+    "name": "Oren",
+    "sprite": "school_anim_5",
+    "maps": [
+      "school"
+    ],
+    "id": 99,
+    "pack": 5,
+    "cell": 19
+  },
+  {
+    "name": "Tamsin",
+    "sprite": "school_anim_6",
+    "maps": [
+      "school"
+    ],
+    "id": 100,
+    "pack": 6,
+    "cell": 0
+  },
+  {
+    "name": "Master Iven",
+    "sprite": "school2_anim_3",
+    "maps": [
+      "school2"
+    ],
+    "id": 101,
+    "pack": 6,
+    "cell": 1
+  },
+  {
+    "name": "Brin",
+    "sprite": "school2_anim_6",
+    "maps": [
+      "school2"
+    ],
+    "id": 102,
+    "pack": 6,
+    "cell": 2
+  },
+  {
+    "name": "Nell",
+    "sprite": "school2_anim_4",
+    "maps": [
+      "school2"
+    ],
+    "id": 103,
+    "pack": 6,
+    "cell": 3
+  },
+  {
+    "name": "Sable",
+    "sprite": "school2_anim_5",
+    "maps": [
+      "school2"
+    ],
+    "id": 104,
+    "pack": 6,
+    "cell": 4
+  },
+  {
+    "name": "Pella",
+    "sprite": "school2_anim_7",
+    "maps": [
+      "school2"
+    ],
+    "id": 105,
+    "pack": 6,
+    "cell": 5
+  },
+  {
+    "name": "Bess",
+    "sprite": "tavern_anim_9",
+    "maps": [
+      "tavern"
+    ],
+    "id": 106,
+    "pack": 6,
+    "cell": 6
+  },
+  {
+    "name": "Ronan",
+    "sprite": "tavern_anim_6",
+    "maps": [
+      "tavern"
+    ],
+    "id": 107,
+    "pack": 6,
+    "cell": 7
+  },
+  {
+    "name": "Venn",
+    "sprite": "tavern_anim_7",
+    "maps": [
+      "tavern"
+    ],
+    "id": 108,
+    "pack": 6,
+    "cell": 8
+  },
+  {
+    "name": "Hobb",
+    "sprite": "tavern_anim_8",
+    "maps": [
+      "tavern"
+    ],
+    "id": 109,
+    "pack": 6,
+    "cell": 9
+  },
+  {
+    "name": "Edric",
+    "sprite": "tavern_anim_10",
+    "maps": [
+      "tavern"
+    ],
+    "id": 110,
+    "pack": 6,
+    "cell": 10
+  },
+  {
+    "name": "Dorr",
+    "sprite": "tavern_anim_11",
+    "maps": [
+      "tavern"
+    ],
+    "id": 111,
+    "pack": 6,
+    "cell": 11
+  },
+  {
+    "name": "Ser Anwen",
+    "sprite": "tavern_anim_12",
+    "maps": [
+      "tavern"
+    ],
+    "id": 112,
+    "pack": 6,
+    "cell": 12
+  },
+  {
+    "name": "Grusk",
+    "sprite": "tavern_anim_13",
+    "maps": [
+      "tavern"
+    ],
+    "id": 113,
+    "pack": 6,
+    "cell": 13
+  },
+  {
+    "name": "Fen",
+    "sprite": "tavern_anim_14",
+    "maps": [
+      "tavern"
+    ],
+    "id": 114,
+    "pack": 6,
+    "cell": 14
+  },
+  {
+    "name": "Senn",
+    "sprite": "tavern_anim_16",
+    "maps": [
+      "tavern"
+    ],
+    "id": 115,
+    "pack": 6,
+    "cell": 15
+  },
+  {
+    "name": "Dain",
+    "sprite": "tavern_anim_17",
+    "maps": [
+      "tavern"
+    ],
+    "id": 116,
+    "pack": 6,
+    "cell": 16
+  },
+  {
+    "name": "Rusk",
+    "sprite": "tavern_anim_18",
+    "maps": [
+      "tavern"
+    ],
+    "id": 117,
+    "pack": 6,
+    "cell": 17
+  },
+  {
+    "name": "Linnet",
+    "sprite": "tavern_anim_19",
+    "maps": [
+      "tavern"
+    ],
+    "id": 118,
+    "pack": 6,
+    "cell": 18
+  },
+  {
+    "name": "Puck",
+    "sprite": "tavern_anim_20",
+    "maps": [
+      "tavern"
+    ],
+    "id": 119,
+    "pack": 6,
+    "cell": 19
+  },
+  {
+    "name": "Vale",
+    "sprite": "tavern_anim_21",
+    "maps": [
+      "tavern"
+    ],
+    "id": 120,
+    "pack": 7,
+    "cell": 0
+  },
+  {
+    "name": "Cerys",
+    "sprite": "tavern_anim_22",
+    "maps": [
+      "tavern"
+    ],
+    "id": 121,
+    "pack": 7,
+    "cell": 1
+  },
+  {
+    "name": "Nyra",
+    "sprite": "tavern_anim_23",
+    "maps": [
+      "tavern"
+    ],
+    "id": 122,
+    "pack": 7,
+    "cell": 2
+  },
+  {
+    "name": "Maren",
+    "sprite": "npc_lumberjack_jack_d",
+    "maps": [
+      "inn"
+    ],
+    "id": 123,
+    "pack": 7,
+    "cell": 3
+  },
+  {
+    "name": "Dunstan",
+    "sprite": "pack_smith_idle_d",
+    "maps": [
+      "smithy"
+    ],
+    "id": 124,
+    "pack": 7,
+    "cell": 4
+  },
+  {
+    "name": "Sela",
+    "sprite": "glassnew_anim_4",
+    "maps": [
+      "glasswork"
+    ],
+    "id": 125,
+    "pack": 7,
+    "cell": 5
+  },
+  {
+    "name": "Tam",
+    "sprite": "seated_body_11",
+    "maps": [
+      "house27_bedroom"
+    ],
+    "id": 126,
+    "pack": 7,
+    "cell": 6
+  },
+  {
+    "name": "Celia",
+    "sprite": "villager_seated_common_b6_2",
+    "maps": [
+      "house02_bedroom"
+    ],
+    "id": 127,
+    "pack": 7,
+    "cell": 7
+  },
+  {
+    "name": "Ivo",
+    "sprite": "villager_seated_common_d6_4",
+    "maps": [
+      "house17_bedroom"
+    ],
+    "id": 128,
+    "pack": 7,
+    "cell": 8
+  },
+  {
+    "name": "Merrin",
+    "sprite": "villager_seated_common_d6_5",
+    "maps": [
+      "house21_bedroom"
+    ],
+    "id": 129,
+    "pack": 7,
+    "cell": 9
+  },
+  {
+    "name": "Zella",
+    "sprite": "villager_seated_coast_b3_1",
+    "maps": [
+      "house43_bedroom"
+    ],
+    "id": 130,
+    "pack": 7,
+    "cell": 10
+  },
+  {
+    "name": "Iris",
+    "sprite": "villager_seated_snow5_2",
+    "maps": [
+      "house48_bedroom"
+    ],
+    "id": 131,
+    "pack": 7,
+    "cell": 11
+  },
+  {
+    "name": "Alderic",
+    "sprite": "guild_elder",
+    "maps": [
+      "tp1_sanctum"
+    ],
+    "id": 132,
+    "pack": 7,
+    "cell": 12
+  }
+]

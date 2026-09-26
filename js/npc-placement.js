@@ -3,16 +3,16 @@ const npcEditorOps={};
 // Keep placement UUIDs and editor names intact so existing GitHub moves still apply.
 const PLACED_NPC_DIALOGUE={
   'f30b6b62-a107-47b7-95ad-7cc27ab5c605':{
-    d:['Edda: Thornwell cider. Apple, a little honey, and whatever the bees were complaining about.',
-      'Corin: Is it good?', 'Edda: Ask me when I stop making that face.'],
-    d2:['Edda: Fen swears he can taste the difference between every orchard.',
-      'Edda: I poured him the same cider twice. Apparently the second orchard gets more sun.']
+    d:['Eira: Thornwell cider. Apple, a little honey, and whatever the bees were complaining about.',
+      'Corin: Is it good?', 'Eira: Ask me when I stop making that face.'],
+    d2:['Eira: Fenton swears he can taste the difference between every orchard.',
+      'Eira: I poured him the same cider twice. Apparently the second orchard gets more sun.']
   },
   '4448128f-6fca-4e17-88f9-389ee42251f7':{
-    d:['Fen: A toast to dry boots and a road that brings you home.',
-      'Corin: No toast to adventure?', 'Fen: That is how you get wet boots.'],
-    d2:['Fen: Edda thinks I cannot tell her cider apart.',
-      'Corin: Can you?', 'Fen: Of course. One cup was fuller.']
+    d:['Fenton: A toast to dry boots and a road that brings you home.',
+      'Corin: No toast to adventure?', 'Fenton: That is how you get wet boots.'],
+    d2:['Fenton: Eira thinks I cannot tell her cider apart.',
+      'Corin: Can you?', 'Fenton: Of course. One cup was fuller.']
   },
   '627dc59a-0b1b-4fba-a947-39f09f5987d2':{
     d:['Tallis: I tune the lute to the forge hammers. Saves an argument.',
@@ -74,7 +74,11 @@ function npcPendingOps(id){
   return draft.state.npcOps||[];
 }
 function npcPlacementKey(op){return 'npc:placed:'+op.key;}
-function npcPlacementSource(op){return W.maps[op.sourceMap]?.npcs?.find(n=>editorNpcKey(n)===op.sourceKey&&n.n===op.identity);}
+function npcPlacementSource(op){
+  const map=W.maps[op.sourceMap];
+  if(map&&typeof prepareDialoguePortraitCast==='function')prepareDialoguePortraitCast(map,op.sourceMap);
+  return map?.npcs?.find(n=>editorNpcKey(n)===op.sourceKey&&(n.n===op.identity||n.portraitOriginalName===op.identity));
+}
 function npcCreatePlacement(m,op){
   const key=npcPlacementKey(op);if(m.npcs?.some(n=>editorNpcKey(n)===key))return;
   let n;
@@ -140,7 +144,7 @@ function npcEditingAt(key,x,y,travel=false){
 }
 function transportSelectedNpc(city){
   const n=npcSelection();if(!n)return;
-  const sourceMap=MAPID,sourceKey=editorNpcKey(n),identity=n.n;
+  const sourceMap=MAPID,sourceKey=editorNpcKey(n),identity=n.portraitOriginalName||n.n;
   saveEditorDraft();document.getElementById('npcPlacementPanel')?.remove();
   if(MAPID!=='world')loadMap('world');
   const point=standNear(city.x,city.y),x=point.x*TS+TS/2,y=point.y*TS+TS;

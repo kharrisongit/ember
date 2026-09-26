@@ -2081,6 +2081,7 @@ function loadMap(id, fresh, discardDraft=false) {
   // Apply conversations after published additions and local transfers are restored.
   if(typeof prepareMarketNpcRoles==='function')prepareMarketNpcRoles(MD,id);
   if(typeof preparePlacedNpcDialogue==='function')preparePlacedNpcDialogue(MD);
+  if(typeof prepareDialoguePortraitCast==='function')prepareDialoguePortraitCast(MD,id);
   MW = MD.w; MH = MD.h; PXW = MW * TS; PXH = MH * TS;
   if (!camFree && mode === "play") cam.z = playZoom();
 
@@ -10505,42 +10506,20 @@ function stepAct(dt) {
   }
 }
 
-const FACE_OF = {};
-const FACE_CELL = 80, FACE_COLS = 8, FACE_ROWS = 5, FACE_SHOW = 124;
-const NO_FACE = new Set(["Bolete", "Cap", "Chanter", "Fungo", "Gill", "Morel", "Mott", "Mycella", "Nib", "Pip", "Russ", "Spore", "Truffle", "Velva"]);
-const FACE_COUNT = 0;  /* portraits 0..88 are drawn; 89..95 are empty slots */
-function faceFor(who) {
-  if (!who) return -1;
-  if (NO_FACE.has(who)) return -1;      /* the mushroom folk have no portrait */
-  if (FACE_OF[who] !== undefined) return FACE_OF[who];
-  for (const k in FACE_OF) if (who.includes(k) || k.includes(who)) return FACE_OF[k];
-  return -1;
-}
 const sayEl = document.getElementById("say");
 const faceEl = document.getElementById("face");
 const nameEl = document.getElementById("sayname");
-faceEl.style.backgroundImage = 'url("' + FACE_SRC + '")';
 let shownFace = -1;
+function faceFor(who) { return typeof portraitFor==='function' ? (portraitFor(who)?.id ?? -1) : -1; }
 function sayOn() { sayEl.classList.add("on"); sayEl.style.display = ""; }
 function sayOff() {
   sayEl.classList.remove("on"); sayEl.style.display = "";
   nameEl.className = "";
+  showFace(null);
 }
 function showFace(who) {
-  const i = faceFor(who);
-  shownFace = i;
-  const el = document.getElementById("face") || faceEl;
-  if (i < 0) { el.style.display = "none"; return; }
-  if (!el.style.backgroundImage || el.style.backgroundImage === "none")
-    el.style.backgroundImage = 'url("' + FACE_SRC + '")';
-  const faceSide = /Corin/.test(who) ? "right" : "left";
-  const k = FACE_SHOW / FACE_CELL;   /* drawn bigger than it is stored */
-  el.style.backgroundPosition =
-    `-${(i % FACE_COLS) * FACE_CELL * k}px -${Math.floor(i / FACE_COLS) * FACE_CELL * k}px`;
-  el.style.backgroundSize = (FACE_COLS * FACE_SHOW) + "px "
-                          + (FACE_ROWS * FACE_SHOW) + "px";
-  el.className = faceSide;
-  el.style.display = "block";
+  if(typeof showDialoguePortrait==='function')showDialoguePortrait(who);
+  else {shownFace=-1;faceEl.style.display='none';}
 }
 let sayNpc = null, sayLine = 0;
 function whoSays(npc, line) {
@@ -11078,7 +11057,6 @@ function beginNpcTalk(best) {
     typeStart(w0, t0);
     showFace(w0);
     typePaint();
-    showFace(best.n);
     sayEl.classList.remove("narr");     /* a villager is always a person */
     sayOn();
 }
