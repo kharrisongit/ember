@@ -4048,6 +4048,7 @@ function frameCore(ms) {
     return;
   }
   tAcc += dt;
+  stepFatherCompass();
   if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
   stepScene(dt);
@@ -4503,6 +4504,9 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
+  { key: "fatherCompass", kind: "key", name: "Father's Compass",
+    tell: "Your father's compass, entrusted to you by Nan. It'll guide you when you need it most.",
+    has: () => templeCompass.owned, icon: () => "inventory_compass" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",
     has: () => breathHas.lightning,
@@ -4559,29 +4563,29 @@ const BAG = [
   { key: "boarMeat", name: () => "Boar Meat" + (boarMeat > 1 ? " x" + boarMeat : ""),
     tell: "A heavy cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
     has: () => boarMeat > 0,
-    icon: () => (SPR.pig_graze ? "pig_graze" : null) },
+    icon: () => "inventory_boarMeat" },
   { key: "hareMeat", name: () => "Hare Meat" + (hareMeat > 1 ? " x" + hareMeat : ""),
     tell: "A fresh cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
-    has: () => hareMeat > 0, icon: () => "hare_idle_d" },
+    has: () => hareMeat > 0, icon: () => "inventory_hareMeat" },
   { key: "deerMeat", name: () => "Deer Meat" + (deerMeat > 1 ? " x" + deerMeat : ""),
     tell: "A fresh cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
-    has: () => deerMeat > 0, icon: () => "deer_idle_d" },
+    has: () => deerMeat > 0, icon: () => "inventory_deerMeat" },
   { key: "foxMeat", name: () => "Fox Meat" + (foxMeat > 1 ? " x" + foxMeat : ""),
     tell: "A fresh cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
-    has: () => foxMeat > 0, icon: () => "fox_idle_d" },
+    has: () => foxMeat > 0, icon: () => "inventory_foxMeat" },
   { key: "birdMeat", name: () => "Bird Meat" + (birdMeat > 1 ? " x" + birdMeat : ""),
     tell: "A fresh cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
-    has: () => birdMeat > 0, icon: () => "bird_idle_d" },
+    has: () => birdMeat > 0, icon: () => "inventory_birdMeat" },
   { key: "dragonFish", name: () => "Fresh Fish" + (dragonFish > 1 ? " x" + dragonFish : ""),
     tell: "A fresh catch for the dragon. Restores " + DRAGON_FISH_HEAL + " HP and gets it back on its feet.",
     has: () => dragonFish > 0,
-    icon: () => (SPR.hb_fish1 ? "hb_fish1" : null) },
+    icon: () => "inventory_dragonFish" },
   {key:'fishingPole',name:'Fishing Pole',kind:'key',has:()=>fishingPole,
     tell:'A gift from Odo after he returns home in Millwood. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> 'fishing_rod'},
   { key: "glassShield", name: "Glass Shield", kind: "key",
     tell: "Sela's clear-glass focus. Tap/hold B to raise a brief force field. Move with B held to run. Orange flashes warn of blockable attacks; red flashes warn of unblockable attacks.",
     has: () => glassShield,
-    icon: () => (SPR.it_ward ? "it_ward" : SPR.sh_glow ? "sh_glow" : null) },
+    icon: () => "inventory_glassShield" },
   { key: "wake", name: "Book of the Dead", kind: "key",
     tell: "Taken from the Hollybeck graves. Carry it and two of them rise at "
         + "your call -- there is no need to wear it.",
@@ -4622,7 +4626,7 @@ const BAG = [
   { key: "smithEquipment", kind: "key", name: "Forgewick armor and sword",
     tell: "Fitted by Dunstan. A stronger blade and armor that softens heavy blows.",
     has: () => smithUpgrade && hasSword(),
-    icon: () => "corin_armor_idle_d" },
+    icon: () => "inventory_smithEquipment" },
   { key: "cinderSeal", kind: "key", name: "Cinderhold Seal",
     tell: "Given by the demon after Halvard's defeat. Place it in the chamber adjoining the throne room, then speak to the demon there to begin the trials.",
     has: () => cinderSeal,
@@ -4659,11 +4663,12 @@ function drawBagBig(big, spriteName, f) {
   const sp = spriteName && SPR[spriteName];
   if (!sp) return;
   const fr = sp[4] > 1 ? ((f | 0) % sp[4]) : 0;
-  bg.imageSmoothingEnabled = false;
+  bg.imageSmoothingEnabled = isInventorySprite(sp);
   /* The canvas is 260px square. The original scaled to fit 88 and then centred
      in the full width, so every icon sat stranded at a third of its size. */
   const room = Math.min(big.width, big.height) - 24;
-  const sc = Math.max(1, Math.floor(Math.min(room / sp[2], room / sp[3])));
+  const fit = Math.min(room / sp[2], room / sp[3]);
+  const sc = isInventorySprite(sp) ? fit : Math.max(1, Math.floor(fit));
   const img = sheetOf(sp);
   drawGameImage(bg, img, sp[0] + fr * sp[2], sp[1], sp[2], sp[3],
                (big.width - sp[2] * sc) / 2, (big.height - sp[3] * sc) / 2,
@@ -4700,7 +4705,7 @@ function drawBagIcon(cv, spriteName, f) {
   const fit = Math.min(room / s[2], room / s[3]);
   const sc = fit >= 1 ? Math.min(3, Math.floor(fit)) : fit;
   const fr = s[4] > 1 ? ((f | 0) % s[4]) : 0;
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = isInventorySprite(s);
   drawGameImage(g, sheetOf(s), s[0] + fr * s[2], s[1], s[2], s[3],
               (cv.width - s[2] * sc) / 2, (cv.height - s[3] * sc) / 2,
               s[2] * sc, s[3] * sc);
@@ -5686,6 +5691,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   quest, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole,
@@ -5734,6 +5740,7 @@ function loadGame(slot=activeSaveSlot) {
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     chestAnim=null;
+    restoreFatherCompass(s.fatherCompass);
     for(const k in breathHas)breathHas[k]=k==='fire'||k==='slash'||!!s.breathHas?.[k];
     for(const map of Object.keys(chestOpen))delete chestOpen[map];
     for(const c of CHESTS)chestOpen[c.map]=!!breathHas[c.gift];
@@ -5811,7 +5818,7 @@ function setMounted(on, quiet = false) {
 }
 
 tap(document.getElementById("deadBtn"), () => { getUp(); });
-tap(document.getElementById("bCompass"), toggleTempleCompass);
+
 tap(document.getElementById("bSafe"), () => {
   devSafe = !devSafe;
   const b = document.getElementById("bSafe");
@@ -5859,6 +5866,7 @@ tap(document.getElementById('bNpcNext'),()=>changeNpcLineup(0,1));
 tap(document.getElementById('bNpcClose'),closeNpcLineup);
 tap(document.getElementById("bSkip"), () => {
   skipBrambleForTest();
+  if (typeof restoreFatherCompass === "function") restoreFatherCompass({owned:true,awakened:false});
   devItemTest = true;
   document.getElementById('bNpcLineup').style.display='';
   leavingNow = false;

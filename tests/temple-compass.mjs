@@ -57,11 +57,12 @@ assert.equal(temples.length,35);assert(backwards>0);
 assert.equal(c.compassTempleRoute(W.maps,'world',chests),null);
 assert.equal(c.compassTempleRoute(W.maps,'passage',chests),null);
 
-// The dev toggle closes its menu, persists across temple maps, and never draws
+// The inherited compass persists across temple maps and never draws
 // over boot/the overworld. Resizing keeps the badge in the game viewport corner.
 Object.assign(c,{MAPID:'tp1',MD:W.maps.tp1,P:{x:W.maps.tp1.spawn[0],y:W.maps.tp1.spawn[1]}});
 c.drawTempleCompass();assert.equal(draws,0,'off by default');
-c.toggleTempleCompass();assert.equal(button['aria-pressed'],'true');assert.equal(menu,false);
+c.restoreFatherCompass({owned:true,awakened:false});c.drawTempleCompass();assert.equal(draws,0,'gift remains dormant');
+c.restoreFatherCompass({owned:true,awakened:true});
 c.drawTempleCompass();assert(draws>0);assert.equal(circles.at(-1)[2],21);
 const cache=run('templeCompass.cache.field');c.drawTempleCompass();assert.equal(run('templeCompass.cache.field'),cache,'reuse field each frame');
 for (const [id,map] of [['world',W.maps.world],['passage',W.maps.passage]]) {
@@ -70,8 +71,8 @@ for (const [id,map] of [['world',W.maps.world],['passage',W.maps.passage]]) {
 Object.assign(c,{MAPID:'sn_sanctum',MD:W.maps.sn_sanctum,P:fields.get('sn_sanctum').target});
 c.gameplayStarted=false;const before=draws;c.drawTempleCompass();assert.equal(draws,before);
 c.gameplayStarted=true;c.drawTempleCompass();assert.equal(ctx.fillStyle,'#9cdac2','arrival changes to Heartstone gem');
-c.toggleTempleCompass();assert.equal(button['aria-pressed'],'false');
+c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false);assert.equal(run('templeCompass.awakened'),false);
 assert(rotations.every(Number.isFinite));
-assert(read('index.html').includes('id="bCompass"'));
-assert(read('js/generated/game-part-3.js').includes('tap(document.getElementById("bCompass"), toggleTempleCompass)'));
-console.log(`PASS: Compass routes all ${temples.length} temple maps, ${samples} room positions and ${backwards} side branches; ${simulated} simulated walks reach the next door/chest, plus arrival, caching and dev-toggle visibility.`);
+assert(!read('index.html').includes('id="bCompass"'));
+assert(read('js/generated/game-part-3.js').includes('restoreFatherCompass(s.fatherCompass)'));
+console.log(`PASS: Compass routes all ${temples.length} temple maps, ${samples} room positions and ${backwards} side branches; ${simulated} simulated walks reach the next door/chest, plus arrival, caching and ownership and awakening visibility.`);

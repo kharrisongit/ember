@@ -1543,6 +1543,7 @@ async function inflateAtlas() {
   registerDockOriginalSprites();
   registerStoneGolemSprites();
   registerAnimalSprites();
+  registerInventorySprites();
   TERRT = ATLAS.terrain;
   GROUND_SETS = ATLAS.ground_sets || {};
   GROUND_FRINGE = ATLAS.ground_fringe || {};
@@ -2629,6 +2630,7 @@ async function loadAtlasPages() {
   await loadDesertNpcAssets();
   await loadDockOriginalAssets();
   await loadRoyalAssets();
+  await loadInventoryIcons();
 }
 
 
@@ -7079,7 +7081,7 @@ function showReveal(sprName, caption, maxScale, still, after) {
   revealAfter = after || null;
   if (isKeyItemReveal(caption)) playKeyItemGet();
   if (revAnimTimer) { clearInterval(revAnimTimer); revAnimTimer = null; }
-  const scale = Math.max(3, Math.min(maxScale || 5,
+  const scale = Math.max(isInventorySprite(sp) ? 1 : 3, Math.min(maxScale || 5,
     Math.floor(Math.min(cv.width * 0.5 / sp[2], cv.height * 0.4 / sp[3]))));
   const img = sheetOf(sp);
   let sx = sp[0], sy = sp[1], sw = sp[2], sh = sp[3];
@@ -7101,7 +7103,7 @@ function showReveal(sprName, caption, maxScale, still, after) {
   revArt.width = sw * scale;
   revArt.height = sh * scale;
   const g = revArt.getContext("2d");
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = isInventorySprite(sp);
   const drawFrame = (frame) => {
     g.clearRect(0, 0, revArt.width, revArt.height);
     drawGameImage(g, img, sx + frame * sp[2], sy, sw, sh, 0, 0, revArt.width, revArt.height);
@@ -7159,6 +7161,7 @@ function stepType(dt) {
 
 function showScene() {
   if (!scene) { sayOff(); showFace(null); return; }
+  if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();
   const line = scene.waiting ? "..." :
     scene.lines[Math.min(scene.i, scene.lines.length - 1)];
   const colon = line.indexOf(": ");
@@ -10689,7 +10692,7 @@ function finishSmithUpgrade() {
   };
   if (!smithUpgrade) {
     smithUpgrade = true;
-    showReveal("corin_armor_idle_d", "Corin received an upgraded sword and armor!", 5, true, whetstone);
+    showReveal("inventory_smithEquipment", "Corin received an upgraded sword and armor!", 1, true, whetstone);
   } else whetstone();
 }
 let glassHatchStarted = -1;
@@ -10937,6 +10940,7 @@ function interact() {
       const giver = sayNpc;
       dragonConversationReaction(giver);
       sayNpc = null; sayOff(); showFace(null);
+      if (giver.n === "Nan Ferrow" && !templeCompass.owned) { giveFatherCompass(); return; }
       if(canOdoGiveFishingPole(giver)){
         fishingPole=true;
         showReveal('fishing_rod','Corin obtained a Fishing Pole! Face water and press A to fish.');
@@ -10944,7 +10948,7 @@ function interact() {
       }
       if(giver.n==='Sela'&&!glassShield){
         glassShield=true; saveGame();
-        showReveal(SPR.it_ward ? 'it_ward' : 'sh_glow','Corin obtained the Glass Shield! Hold B during battle to raise its force field.');
+        showReveal('inventory_glassShield','Corin obtained the Glass Shield! Hold B during battle to raise its force field.');
         return;
       }
       if (giver.n === "Dunstan" && hasSword() && (!smithUpgrade || !charm.edge)) {
@@ -11010,7 +11014,10 @@ function beginNpcTalk(best) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    if(canOdoGiveFishingPole(best)){
+    if (best.n === "Nan Ferrow" && !templeCompass.owned) {
+      sayNpc.said = FATHER_COMPASS_GIFT.slice();
+    }
+    else if(canOdoGiveFishingPole(best)){
       sayNpc.said=["Odo: A dragon, Corin? I leave the bridge for one afternoon and you find another mouth to feed.",
         "Odo: Take my spare fishing pole. You will need a catch of your own to keep that companion fed.",
         "Odo: Face water and press A. Stop the spinning marker inside the green arc to catch a fish. Feed your catch to the dragon when it needs to recover."];

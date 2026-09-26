@@ -99,9 +99,13 @@ const MILLWOOD_STORY_DIALOGUE={
       "Nan Ferrow: There is bread on the table. Take a piece before Hettie finds you another job."
     ],
     "d2": [
-      "Nan Ferrow: Your father used to leave flour on that very door latch. Now you leave mud.",
-      "Corin: I can clean it.",
-      "Nan Ferrow: The cloth is beside the basin. I am fond of you both, but I still like a clean latch."
+      "Corin: Was Mum much like me?",
+      "Nan Ferrow: She asked just as many questions. And she never could leave a hurt creature alone.",
+      "Corin: And Dad?",
+      "Nan Ferrow: That look you get when you have decided something? His, exactly. I used to see it across this very table.",
+      "Nan Ferrow: You were so small when I brought you home. I worried I had forgotten how to care for a baby.",
+      "Corin: You worked it out.",
+      "Nan Ferrow: So did you, love. We grew into this family together."
     ],
     "dm": [
       "Nan Ferrow: Come closer. Let me fasten that strap.",

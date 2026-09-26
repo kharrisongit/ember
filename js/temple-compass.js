@@ -1,6 +1,44 @@
-/* Dev-only guidance. Route through temple doors, then follow walkable floors
+/* Father’s compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
-const templeCompass = { enabled: false, cache: null };
+const templeCompass = { owned: false, awakened: false, cache: null };
+const FATHER_COMPASS_GIFT = [
+  "Nan Ferrow: Come here a moment, love. There is something I have kept for you.",
+  "Corin: A compass?",
+  "Nan Ferrow: Your father's. He used to turn it over in his hand whenever he was thinking.",
+  "Corin: You never told me that.",
+  "Nan Ferrow: There are so many little things I still want to tell you. Your mother would sing while she worked. Your father always joined in, badly.",
+  "Nan Ferrow: We lost them both when you were born. I brought you home, and I have looked after you ever since.",
+  "Corin: I wish I could remember them.",
+  "Nan Ferrow: I know, love. We can remember them together. Ask me whenever you like.",
+  "Nan Ferrow: Here. Keep this close. It'll guide you when you need it most.",
+  "Corin: I will. Thank you, Nan."
+];
+function restoreFatherCompass(saved) {
+  templeCompass.owned = !!saved?.owned;
+  templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
+  templeCompass.cache = null;
+}
+function giveFatherCompass() {
+  templeCompass.owned = true;
+  saveGame();
+  showReveal('inventory_compass', "Corin received his father's compass.");
+}
+function awakenFatherCompass() {
+  if (!templeCompass.owned || templeCompass.awakened) return;
+  templeCompass.awakened = true;
+  templeCompass.cache = null;
+  saveGame();
+}
+function stepFatherCompass() {
+  if (!templeCompass.owned || templeCompass.awakened || !gameplayStarted ||
+      mode !== 'play' || !compassTempleMap(MD) || sceneHold() || sayNpc ||
+      fadeDir !== 0 || fade > 0 || doorMotion || ovl || ask || bagOpen || editing || dying()) return;
+  playScene([
+    "Your father's compass grows warm in your pocket. A soft light shines through its face, and the needle begins to turn.",
+    "Corin: Thanks, Dad."
+  ], { compassReveal: true });
+}
+
 
 function compassTempleMap(map) {
   return !!(map?.templeExpanded && map.templePlan && !map.mountainPassage);
@@ -132,18 +170,8 @@ function compassTempleGuide(field, player) {
   return { ...aim, arrived: false };
 }
 
-function toggleTempleCompass() {
-  templeCompass.enabled = !templeCompass.enabled;
-  templeCompass.cache = null;
-  const button = document.getElementById('bCompass');
-  button?.classList.toggle('on', templeCompass.enabled);
-  button?.setAttribute('aria-pressed', String(templeCompass.enabled));
-  setDev(false);
-  toast(templeCompass.enabled ? 'Compass on — follow the pointer to the Heartstone chamber.' : 'Compass off.');
-}
-
 function drawTempleCompass() {
-  if (!templeCompass.enabled || !gameplayStarted || mode !== 'play' || !compassTempleMap(MD)) return;
+  if ((!templeCompass.owned || !templeCompass.awakened) || !gameplayStarted || mode !== 'play' || !compassTempleMap(MD)) return;
   const key = MAPID + ':' + editStamp;
   if (templeCompass.cache?.key !== key || templeCompass.cache.map !== MD) {
     const route = compassTempleRoute(W.maps, MAPID, CHESTS);

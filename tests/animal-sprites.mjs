@@ -41,6 +41,7 @@ c.ctx={};c.t=0;c.o={item:{spr:'farm_calf_w',anim:true},x:400,y:7000};
 c.drawGameImage=(_g,img)=>{c.herdImage=img};run('for(let i=0;i<1;i++){'+item+'}');
 assert.equal(c.herdImage,run('animalSheets.farm_calf_w'));
 const p3=read('js/generated/game-part-3.js');c.drawGameImage=(_g,img)=>{c.lastBagImage=img};
+run(read('js/inventory-icons.js'));
 run(p3.slice(p3.indexOf('function drawBagBig('),p3.indexOf('function bagTick(')));
 c.big={width:260,height:260,getContext:()=>({clearRect(){}})};
 run("drawBagBig(big,'hare_idle_d',0)");assert.equal(c.lastBagImage,run('animalSheets.hare_idle_d'));
