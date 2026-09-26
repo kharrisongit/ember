@@ -33,7 +33,7 @@ function finishFishing(caught){
   const f=fishing;if(!f||f.phase==='result')return;
   f.caught=caught;f.phase='result';f.resultAge=0;
   f.bonus=caught&&f.perfect>=3?1:0;
-  if(caught){dragonFish+=f.reward+f.bonus;fishingBurst(f,'#f9d67b',24);saveGame();}
+  if(caught){globalThis.window?.EmberSfx?.pickup();dragonFish+=f.reward+f.bonus;fishingBurst(f,'#f9d67b',24);saveGame();}
 }
 function fishingMiss(){
   const f=fishing;f.tension++;f.flash=.7;f.feedback='Too much strain!';f.lock=.42;

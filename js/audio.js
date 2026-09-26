@@ -204,6 +204,7 @@
     playSelected();
   };
   const chooseMusic=()=>{
+    if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
     // A loaded save or a map change cannot retain an old scripted royal cue.
     try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
     selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:exploreTrack());

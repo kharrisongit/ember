@@ -707,6 +707,7 @@ function tryCellarSupplies(){
  const a=MD.cellarCaches.find(a=>Math.abs(P.x-a.x)<26&&P.y>=a.y-3&&P.y<a.y+34);if(!a)return false;
  const key='royal_cellar:supply:'+a.id;
  if(bossGone[key]){toast('This shelf has already supplied your dragon.');return true;}
+ globalThis.window?.EmberSfx?.pickup();
  bossGone[key]=true;if(a.kind==='fish')dragonFish+=a.amount;else boarMeat+=a.amount;
  toast('Collected 10 '+(a.kind==='fish'?'fresh fish':'boar meat')+' — free provisions for your dragon.');saveGame();return true;
 }
@@ -5339,6 +5340,7 @@ function glassShieldDeflectFoe(f) {
   f.glassParryQueued = false;
   glassShieldPulse = .42;
   glassGifStart = tAcc;
+  globalThis.window?.EmberSfx?.block();
 
   // Recoil hop (~42px, about 2.5 tiles) away from Corin
   const px = f.glassParryPlayerX === undefined ? P.x : f.glassParryPlayerX;
@@ -5446,7 +5448,7 @@ function stepBolts(dt) {
     }
     if (!b.targetDragon && Math.hypot(P.x - b.x, (P.y - 8) - b.y) < 11) {
       if (glassShieldActive() && !b.unblockable) {
-        glassShieldPulse = .42; burstAt(b.art, b.dir, b.x, b.y);
+        glassShieldPulse = .42; globalThis.window?.EmberSfx?.block(); burstAt(b.art, b.dir, b.x, b.y);
         const dx=b.x-P.x,dy=b.y-(P.y-8),d=Math.hypot(dx,dy)||1;
         b.vx=dx/d; b.vy=dy/d; b.targetDragon=false; b.t=0; b.x+=b.vx*10; b.y+=b.vy*10;
         continue;
@@ -6709,11 +6711,12 @@ function kingsMen() {
 }
 
 function takeItem(it) {
+  if(it.key==="egg")globalThis.window?.EmberSfx?.key();else globalThis.window?.EmberSfx?.pickup();
   if (it.key === "eggs") {
     quest = Q.KING;
     playScene(["You gather six brown eggs into the nest-basket.",
                "The hens complain. One of them means it.",
-               "Hettie: There we are. Plenty of grass over here, you two.",
+               "Hettie: There we are. Plenty of grass over here.",
                "The road north is clear."],
               { who: "Hettie", after: () => {
                 const her = npcs.find(m => /Hettie/.test(m.n || ""));
@@ -7066,22 +7069,12 @@ let revAnimTimer = null;
 let revealQueue = [];
 let revealAfter = null;
 const REVEAL_BIG = { "drf_s": "drf_s", "dr5_idle_s": "dr5_idle_s" };
-const KEY_ITEM_GET_AUDIO = "data:audio/mp4;base64,";
-const keyItemGetSfx = new Audio(KEY_ITEM_GET_AUDIO);
-keyItemGetSfx.preload = "auto";
-keyItemGetSfx.volume = 0.72;
-function isKeyItemReveal(caption) {
+function isKeyItemReveal(caption, sprName='') {
+  if (/^inventory_(?:potion|elixir|boarMeat|hareMeat|deerMeat|foxMeat|birdMeat|dragonFish|bomb|dust|bell|mark|saint|stone|salt)$/.test(sprName)) return false;
   const c = String(caption || "");
   return /^Corin (?:obtained|received)\b/i.test(c) || /mysterious stone/i.test(c);
 }
-function playKeyItemGet() {
-  try {
-    keyItemGetSfx.pause();
-    keyItemGetSfx.currentTime = 0;
-    const p = keyItemGetSfx.play();
-    if (p && p.catch) p.catch(() => {});
-  } catch (e) {}
-}
+function playKeyItemGet() { globalThis.window?.EmberSfx?.key(); }
 function showReveal(sprName, caption, maxScale, still, after) {
   sprName = inventoryIconName(sprName);
   if (revealing) { revealQueue.push([sprName, caption, maxScale, still, after]); return; }
@@ -7089,7 +7082,8 @@ function showReveal(sprName, caption, maxScale, still, after) {
   const sp = SPR[sprName];
   if (!sp) { if (after) after(); return; }
   revealAfter = after || null;
-  if (isKeyItemReveal(caption)) playKeyItemGet();
+  if (isKeyItemReveal(caption, sprName)) playKeyItemGet();
+  else if (/^Corin (?:obtained|received)\b|^Maddock packs/i.test(caption)) globalThis.window?.EmberSfx?.pickup();
   if (revAnimTimer) { clearInterval(revAnimTimer); revAnimTimer = null; }
   const scale = Math.max(isInventorySprite(sp) ? 1 : 3, Math.min(maxScale || 5,
     Math.floor(Math.min(cv.width * 0.5 / sp[2], cv.height * 0.4 / sp[3]))));
@@ -8214,6 +8208,7 @@ function grabGold() {
     else kept.push(g);
   }
   if (!got&&!meat&&!hare&&!deer&&!fox&&!bird) return false;
+  globalThis.window?.EmberSfx?.pickup();
   loot = kept;
   gold += got;boarMeat+=meat;hareMeat+=hare;deerMeat+=deer;foxMeat+=fox;birdMeat+=bird;
   const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',deer?deer+' deer meat':'',fox?fox+' fox meat':'',bird?bird+' bird meat':'',got?got+' gold':''].filter(Boolean);
@@ -9487,6 +9482,7 @@ function buyStockQuantity(key,qty) {
     case "saint":breaths+=qty;break;case "stone":stones+=qty;break;
     case "salt":salts+=qty;break;default:return false;
   }
+  globalThis.window?.EmberSfx?.pickup();
   gold-=total;merchantShopReceipt="Packed "+qty+" × "+item.n.toLowerCase()+". Safe travels.";saveGame();toast(qty+" × "+item.n+" bought — "+gold+" gold left");return true;
 }
 function sellerAsk(giver) { openMerchantShop(giver); }
@@ -10056,6 +10052,7 @@ function markSafe() {
 function showDeath() {
   if (deadShown) return;
   deadShown = true;
+  globalThis.window?.EmberSfx?.death();
   const lost = Math.floor(gold * 0.3);
   const el = document.getElementById("dead");
   const why = document.getElementById("deadWhy");
@@ -10079,6 +10076,7 @@ function standUp() {
   standing = true;
   setTimeout(() => { standing = false; }, 900);
   deadShown = false;
+  globalThis.window?.EmberSfx?.stopDeath();
   const lost = Math.floor(gold * 0.3);
   gold = Math.max(0, gold - lost);
   if (lost > 0) dropped = { gold: lost };   /* a marker can fetch it back */
@@ -10465,6 +10463,7 @@ const ACT = {
 };
 function startAct(kind) {
   if (P.act || fadeDir !== 0) return;
+  if (kind === "swing" && hasSword()) globalThis.window?.EmberSfx?.sword();
   if (kind === "swing" && worn.brand) {
     brandCount++;
     brandHot = (brandCount % 3 === 0);

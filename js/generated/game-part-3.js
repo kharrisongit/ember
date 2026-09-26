@@ -5783,6 +5783,9 @@ function loadGame(slot=activeSaveSlot) {
     const retiredRoyalRoom={royal_archive:'royal_study',royal_lookout:'royal_guardroom',royal_pantry:'royal_westhall'}[s.map];if(retiredRoyalRoom)s.map=retiredRoyalRoom;
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);
     if(MD.royal&&(retiredRoyalRoom||!canStand(P.x,P.y))){P.x=MD.spawn[0];P.y=MD.spawn[1];}
+    if(typeof deadShown!=='undefined')deadShown=false;
+    globalThis.window?.EmberSfx?.stopDeath();
+    const deathScreen=globalThis.document?.getElementById?.('dead');if(deathScreen)deathScreen.style.display='none';
     cam.x=P.x;cam.y=P.y;clampCam();chunks.clear();toast("loaded slot "+slot);return true;
   } catch (e) { toast("could not load"); return false; }
 }

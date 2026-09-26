@@ -164,3 +164,6 @@ assert(!journey.track('DragonReveal').paused,'A save in the northern journey res
 journey.c.mode='title';journey.sync();await journey.advance();assert(journey.track('DragonReveal').paused);
 assert.match(html.match(/<audio id="emberfellDragonRevealBgm"[^>]+>/)[0],/\bloop\b/);
 console.log('PASS: Mystic Reveal loops through the northern journey and departure, is 30% quieter, resumes for a loaded journey, and releases music afterward.');
+journey.c.mode='play';journey.c.quest=9;journey.c.deadShown=true;journey.sync();await journey.advance();
+assert([...journey.elements.values()].every(a=>a.paused),'Area music fades out for the game-over cue');
+journey.c.deadShown=false;journey.sync();await journey.advance();assert(!journey.track('Millwood').paused,'Retry restores area music');
