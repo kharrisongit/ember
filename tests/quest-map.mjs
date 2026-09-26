@@ -1,0 +1,36 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const game=fs.readFileSync(new URL('../js/generated/game-part-2.js',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../js/quest-map.js',import.meta.url),'utf8').replace(/bindQuestAtlas\(\);\s*$/,'');
+const c=vm.createContext({console,Map,Set});
+vm.runInContext(`const ATLAS_LOCATIONS=${game.match(/const ATLAS_LOCATIONS=(.*);/)[1]};
+const Q={DONE:9};let quest=0,wonAll=false,brambleQuest=0,smithUpgrade=false,glassShield=false,odoRodReferral=false,fishingPole=false,cinderSeal=false,trialSealPlaced=false;
+const charm={},breathHas={lightning:false,ice:false,shadow:false},learned=new Set(),gifts=[];
+const TS=16,W={maps:{world:{features:[]}}};function dragonLearned(k){return learned.has(k)}function dragonGiftLeads(){return gifts}`,c);
+vm.runInContext(source,c);
+for(let stage=0;stage<10;stage++){
+ const q=vm.runInContext(`quest=${stage};atlasMainObjective()`,c);
+ assert(q.title&&q.detail&&q.place);
+ assert(vm.runInContext(`ATLAS_LOCATIONS.some(p=>p[0]===atlasMainObjective().place)`,c));
+}
+assert.equal(vm.runInContext('atlasQuestOptions().length',c),1,'No undiscovered side quests leaked');
+vm.runInContext("learned.add('fishing')",c);
+assert(vm.runInContext("atlasQuestOptions().some(q=>q.id==='fishing'&&q.place==='Route 1')",c));
+vm.runInContext('fishingPole=true',c);
+assert(!vm.runInContext("atlasQuestOptions().some(q=>q.id==='fishing')",c));
+vm.runInContext("learned.add('bramble');brambleQuest=1",c);
+assert(vm.runInContext("atlasQuestOptions().some(q=>q.id==='bramble')",c));
+vm.runInContext('brambleQuest=2',c);
+assert(!vm.runInContext("atlasQuestOptions().some(q=>q.id==='bramble')",c));
+vm.runInContext("W.maps.world.title='Millwood Valley';W.maps.world.features=[{kind:'area',label:'Sandspire',x0:100,y0:20,x1:200,y1:80}]",c);
+assert.equal(vm.runInContext("atlasPlaceFor(W.maps.world,{x:1600,y:640})",c),'Sandspire','World title must not misplace every quest in Millwood');
+vm.runInContext('smithUpgrade=true;charm.edge=true;glassShield=true',c);
+assert.equal(vm.runInContext('atlasMainObjective().place',c),'Forgewick Temple');
+vm.runInContext('breathHas.lightning=true',c);
+assert.equal(vm.runInContext('atlasMainObjective().place',c),'Sandspire Temple');
+vm.runInContext('breathHas.ice=true',c);
+assert.equal(vm.runInContext('atlasMainObjective().place',c),'Hollybeck Temple');
+vm.runInContext('breathHas.shadow=true',c);
+assert.equal(vm.runInContext('atlasMainObjective().place',c),'Cinderhold Castle');
+console.log('PASS: opening and journey destinations, learned-only side quests, completion removal and world gift locations.');

@@ -191,3 +191,35 @@
   #say,#say.narr,#say[data-telepathy="true"]{font-size:14px;padding-left:15px;padding-right:15px}
   #sayname{font-size:14px;padding-left:10px;padding-right:10px}
 }
+
+/* Parchment speaker tabs and portraits inset within the dialogue frame. */
+#sayname{
+  background:var(--manuscript-paper);color:var(--manuscript-ink);
+  border:3px solid var(--manuscript-edge);border-bottom:0;
+  box-shadow:inset 0 0 0 1px #fae7b6,inset 0 0 0 3px #9b703e55,0 0 0 1px #bd9455;
+  padding:6px 15px 7px;
+}
+#face.left{left:24px}
+#face.right{right:24px}
+
+/* Full-screen chart, with controls outside the draggable artwork. */
+#worldAtlas{position:fixed;inset:0;z-index:1200;height:100dvh}
+#worldAtlas header{padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));flex-shrink:0}
+#atlasClose{margin-left:auto;min-height:42px}
+#atlasBody{flex-direction:column}
+#atlasViewport{touch-action:none;cursor:grab;min-height:100px}
+#atlasViewport:active{cursor:grabbing}
+#atlasSurface{transition:none;user-select:none}
+#atlasSurface img{pointer-events:none;-webkit-user-drag:none}
+#atlasDetails{width:100%;max-width:none;min-width:0;flex-shrink:0;max-height:40dvh;border-left:0;border-top:3px double #aa8350;padding:10px 16px max(10px,env(safe-area-inset-bottom));opacity:1;background:var(--manuscript-paper);color:var(--manuscript-ink)}
+#atlasDetails h2{margin:0;font-size:20px}
+#atlasDetails p{margin:4px 0 8px;font-size:14px;line-height:1.35}
+#atlasDetails small,#atlasDetails label{color:#70502b;font:11px/1.4 Georgia,serif}
+#atlasDetails>small:first-child{display:none}
+.atlasQuestRow{display:flex;gap:8px;align-items:stretch}
+#worldAtlas #atlasQuestSelect{min-width:0;max-width:none;width:auto;flex:1;margin:0;font:14px Georgia,serif}
+#atlasFocus{font-size:12px!important;flex-shrink:0}
+#atlasObjective{font-weight:600}
+#atlasQuestMarker{position:absolute;color:#ffe080;font:24px Georgia,serif;line-height:1;transform:translate(-50%,-100%);text-shadow:0 0 3px #241208,2px 2px 0 #241208,-2px -2px 0 #241208;filter:drop-shadow(0 0 4px #ffcb53);pointer-events:none}
+#atlasQuestMarker[hidden]{display:none}
+@media (max-height:520px){#atlasDetails{max-height:46dvh;padding:6px 12px}#atlasText{display:none}#atlasDetails h2{font-size:16px}#atlasDetails p{font-size:12px}#worldAtlas header{padding:4px 12px}}

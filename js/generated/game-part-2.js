@@ -1667,8 +1667,8 @@ const ATLAS_LOCATIONS=[["Millwood", 72.79, 279.87, "Corin’s home town. Visit N
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
-function renderAtlas(){const p=ATLAS_LOCATIONS[atlasPick],view=document.getElementById('atlasViewport'),canvas=document.getElementById('atlasSurface');const scale=Math.max(1.35,Math.min(2.6,view.clientHeight/275));canvas.style.transform='translate('+(view.clientWidth/2-p[1]*scale)+'px,'+(view.clientHeight/2-p[2]*scale)+'px) scale('+scale+')';const cursor=document.getElementById('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';const panel=document.getElementById('atlasDetails');panel.classList.remove('settled');clearTimeout(renderAtlas.timer);renderAtlas.timer=setTimeout(()=>{document.getElementById('atlasName').textContent=p[0];document.getElementById('atlasText').textContent=p[3];panel.classList.add('settled')},360)}
-function openAtlas(from='game'){atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';requestAnimationFrame(renderAtlas)}
+function renderAtlas(){renderQuestAtlas()}
+function openAtlas(from='game'){atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
 function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
@@ -6182,7 +6182,7 @@ function stepHatchScene(dt) {
   if (!hatchScene || !scene || !scene.hatch) return;
   hatchScene.stage = scene.i;
   hatchScene.t = scene.t;
-  if(scene.i>=7&&!hatchScene.hatchSoundPlayed){
+  if((scene.i>=7||(scene.i===6&&scene.t>=.55))&&!hatchScene.hatchSoundPlayed){
     hatchScene.hatchSoundPlayed=true;globalThis.window?.EmberSfx?.hatch();
   }
   if (scene.i < 3) {
@@ -6611,7 +6611,7 @@ function playScene(lines, opts) {
   scene = { lines, i: 0, t: 0, ...(opts || {}) };
   P.moving = false;
   if (!scene.hold) showScene();
-  walker = scene.npcActor || speakerNamed(scene.who);
+  walker = scene.offscreen ? null : scene.npcActor || speakerNamed(scene.who);
   if (walker) {
     faceCorinAt(walker.x, walker.y);
     const dx = walker.x - P.x, dy = walker.y - P.y;
@@ -6636,7 +6636,7 @@ function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene |
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
-  if (scene.hold) return;          /* it has not begun */
+  if (scene.hold || scene.silent) return;          /* animation owns this beat */
   if (!typeDone()) { globalThis.window?.EmberSfx?.ui?.(); typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
@@ -6741,19 +6741,13 @@ function takeItem(it) {
   if(it.key==="egg")globalThis.window?.EmberSfx?.key();else globalThis.window?.EmberSfx?.pickup();
   if (it.key === "eggs") {
     quest = Q.KING;
-    playScene(["You gather six brown eggs into the nest-basket.",
-               "The hens complain. One of them means it.",
-               "Hettie: There we are. Plenty of grass over here.",
-               "The road north is clear."],
-              { who: "Hettie", after: () => {
-                const her = npcs.find(m => /Hettie/.test(m.n || ""));
-                if (her) beginHettieWalk(her);
-              } });
+    playScene(["Hettie: There we are. Plenty of grass over here."],
+      { who: "Hettie", offscreen:true, after: () => {
+        const her=npcs.find(m=>m.n==="Hettie");if(her)beginHettieWalk(her);
+      } });
   } else if (it.key === "egg") {
     quest = Q.CARRY;
-    playScene(["The egg is warm, and heavier than it looks.",
-               "Whatever is inside it moves once, and then is still.",
-               "Maddock needs to see this."]);
+    playScene(["Corin: Maddock needs to see this."]);
   }
   if (it.took) toast(it.took);
 }
@@ -6782,10 +6776,10 @@ function questTalk() {
       const k = kingNow();
       if (window.EmberKingMusic) window.EmberKingMusic.start();
       playScene([
-        near.n.split(" ").pop() + ": HALT.",
-        near.n.split(" ").pop() + ": Close enough. The King is on this road.",
+        near.n + ": HALT.",
+        near.n + ": Close enough. The King is on this road.",
         "Corin: I am only going up to the field.",
-        near.n.split(" ").pop() + ": Then you can wait a minute to do it.",
+        near.n + ": Then you can wait a minute to do it.",
       ], { after: () => {
         royalBlackout('Make way for King Halvard!',()=>{dismissRoadGuards();if(k)k.goto=null;},()=>{
           if(k){k.goto=standableNear(P.x+4,P.y-30)||[P.x+4,P.y-30];k.hurry=1;}
@@ -6914,11 +6908,7 @@ function stepQuest(dt) {
   if (quest === Q.NOISE && MAPID === "world" && near(SPOT.path, 5)) {
     window.EmberDragonSceneAudio?.distant();
     scatterBirds();
-    playScene([
-      "Something comes down in the north wood.",
-      "Not thunder. Lower than thunder, and it does not roll away.",
-      "The birds go up off the whole ridge at once.",
-    ], { after: () => {
+    playScene([], { silent:true, until:()=>scene.t>=1.5, after: () => {
       comeOut(P.x + 22, P.y + 2);
       playScene([
         "Maddock: Wait, Corin. If you are going to look, take my sword.",
@@ -6951,28 +6941,10 @@ function stepQuest(dt) {
     quest = Q.ARMED;
   }
   if (quest === Q.ARMED && near(SPOT.north, 2.5)) {
-    playScene([
-      "Something comes over the treeline, low and wrong.",
-    ], {
-      until: () => greenPhase === "sit",
-      after: () => playScene([
-        "It comes down in the top of the field and does not get up.",
-        "A dragon. Green, and torn about the wings, and breathing hard.",
-        "It sees you before you have taken three steps.",
-      ], {
-        until: () => greenP > 1.6,
-        after: () => playScene([
-          "It drags itself up out of the grass, and there is something "
-            + "on the stump where it was lying.",
-        ], {
-          until: () => { greenGone = true; return greenPhase === "gone"; },
-          after: () => playScene([
-            "The wings go out -- enormous, ragged -- and it is gone.",
-            "There was an egg under it.",
-          ], { after: () => { quest = Q.FLED; } }),
-        }),
-      }),
-    });
+    playScene([], {silent:true, until:()=>{
+      if(greenPhase==='sit'&&greenP>=2.2)greenGone=true;
+      return greenPhase==='gone';
+    },after:()=>{quest=Q.FLED;}});
     return;
   }
   if (quest === Q.CARRY && MAPID === "world" && elder() && elder().away) {
@@ -7078,6 +7050,15 @@ function stepScene(dt) {
   }
   scene.t += dt;
   stepHatchScene(dt);
+  if(scene.silent){
+    if(!scene.until||scene.until()){
+      const done=scene.after;scene=null;showScene();sendWalkerHome(true);if(done)done();
+    }
+    return;
+  }
+  if(scene.hatch&&scene.i>=5&&scene.i<=10&&!revealing&&scene.t>=(scene.i===5||scene.i===6?.85:1.2)){
+    advanceScene();return;
+  }
   if (scene.waiting && scene.until && scene.until()) {
     const done = scene.after, scene0 = scene;
     scene = null;
@@ -7192,6 +7173,9 @@ function stepType(dt) {
 
 function showScene() {
   if (!scene) { sayOff(); showFace(null); return; }
+  if(scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
+    sayOff();showFace(null);return;
+  }
   if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();
   const line = scene.waiting ? "..." :
     scene.lines[Math.min(scene.i, scene.lines.length - 1)];

@@ -1,7 +1,7 @@
 /* Speaker identities are independent of editor keys and map coordinates. */
 const FACE_OF=Object.fromEntries(Object.entries(DIALOGUE_PORTRAITS).map(([name,p])=>[name,p.id]));
 const PORTRAIT_ALIASES = {
-  Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
+  Bram:'Serjeant Bram', Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
   Halvard:'King Halvard', King:'King Halvard', Rowan:'Rowan the Hunter',
   Iven:'Master Iven', Elowen:'Archivist Elowen', 'Shroom King':'The Shroom King',
   'Cartwright Oswin':'Bevan','Miner Marn':'Toft','Miner Nerik':'Toft','Snowbuilder Nessa':'Runa',
@@ -49,7 +49,7 @@ function loadPortraitPack(pack) {
   if(portraitPackPromises.has(pack))return portraitPackPromises.get(pack);
   const promise=new Promise(resolve=>{
     const script=document.createElement('script');
-    script.src='assets/portraits/pack-'+pack+'.js?v=20260926-telepathy1';
+    script.src='assets/portraits/pack-'+pack+'.js?v=20260926-full-shoulders';
     script.async=true;
     script.onerror=()=>{portraitPackPromises.delete(pack);script.remove();resolve(null);};
     script.onload=()=>{

@@ -28,7 +28,7 @@ run('greenFly(1.1)');await flush();assert.equal(active('breathing').length,1);as
 run('greenGone=true;greenFly(.01)');await flush();assert.equal(active('breathing').length,0);assert.equal(active('wings').length,1);
 const takeoff=active('wings')[0];run('greenFly(1)');await flush();assert.equal(active('wings')[0],takeoff,'Takeoff flows into departure without restarting wings');
 run('greenFly(1.4)');await flush();assert.equal(active('wings').length,0);
-for(const s of sources){assert.equal(s.gain.gain.value,.7);assert.equal(s.gain.to,output,'Every effect honors the shared volume control');}
+for(const s of sources){assert.equal(s.gain.gain.value,/dragon-(roar|distant-crash)/.test(s.buffer[0])?.35:.7);assert.equal(s.gain.to,output,'Every effect honors the shared volume control');}
 c.quest=7;timers.forEach(f=>f());assert(sources.every(s=>s.stopped||s===sources[0]||s===sources[1]),'Leaving the story clears all effects');
 c.quest=6;api.phase('sit');c.mode='title';timers.forEach(f=>f());await flush();assert.equal(active('breathing').length,0,'A late decode cannot leak audio into the title');
 c.mode='play';api.phase('sit');await flush();assert.equal(active('breathing').length,1);c.document.hidden=true;timers.forEach(f=>f());assert.equal(active('breathing').length,0);

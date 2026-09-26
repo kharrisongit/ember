@@ -172,8 +172,9 @@ hr('stepHatchScene(.55)');
 assert.equal(h.P.y-beforeRetreat[1],24,'Corin steps away before the egg shakes');
 assert.equal(beforeRetreat[3]-maddock.y,24,'Maddock steps away before the egg shakes');
 hr('advanceScene()');assert.equal(h.scene.i,4);
-for(const i of [4,5,6])assert.equal(hatchFrame(i,20).y,landing,'Egg rests on ground for the remaining dialogue');
-assert.equal(hatchSounds,0,'The egg does not crack audibly before it hatches');
+for(const i of [4,5,6])assert.equal(hatchFrame(i,.1).y,landing,'Egg rests on ground for the remaining dialogue');
+assert.equal(hatchSounds,0,'Opening shakes precede the shell crack');
+hatchFrame(6,.6);assert.equal(hatchSounds,1,'Shell crack starts during the final shake, before the hatchling appears');
 const dragonActor=hatchFrame(7,.1);assert.equal(dragonActor.x,hr('hatchScene.dragonX'));assert.equal(dragonActor.y,hr('hatchScene.dragonY'));
 assert.equal(hatchSounds,1);hatchFrame(7,.5);assert.equal(hatchSounds,1,'The hatch sound does not repeat while dialogue waits');
 console.log('PASS: egg is hidden for the first three lines, lowers at Maddock’s instruction, finishes before advancing, stays grounded, and becomes the hatchling at the original beat.');
@@ -184,7 +185,7 @@ h.scene.t=1;hr('advanceScene()');assert.equal(h.scene.i,8);
 console.log('PASS: Both characters take visible backward steps and rapid A presses cannot skip their movement.');
 
 hr('stepHatchScene(.05)');assert.equal(hatchSounds,1,'The next dialogue beat does not replay the hatch');
-console.log('PASS: hatching plays its sound once, exactly when the egg becomes the hatchling.');
+console.log('PASS: hatching plays its sound once, during the final shake before the hatchling appears.');
 
 // Resolve each cinematic stage separately: nothing can start gameplay early.
 const cinematicPauses=[],audioStages=[];

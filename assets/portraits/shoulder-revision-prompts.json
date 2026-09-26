@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-26",
+  "method": "built-in image_gen",
+  "asset_paths": [
+    "assets/portraits/pack-1.js",
+    "assets/portraits/pack-2.js",
+    "assets/portraits/pack-3.js",
+    "assets/portraits/pack-4.js",
+    "assets/portraits/pack-5.js",
+    "assets/portraits/pack-6.js",
+    "assets/portraits/pack-7.js",
+    "assets/portraits/pack-8.js"
+  ],
+  "base_prompt": "Replacement game portrait atlas. Preserve exact character order and faces, hair, skin tones, species and costumes in a five-column four-row grid. Reframe every person waist up with both complete rounded shoulders and upper arms within the cell, with transparent side margins. Exactly two arms per human. Transparent background, no labels, no grid lines, no overlap. Retain empty cells.",
+  "identity_corrections": {
+    "Toft": "Older stocky miner, age 55, broad square weathered face, broad nose, thick grey horseshoe moustache, short salt-and-pepper hair. Preserve helmet lamp and leather work clothes. Clearly distinct from young Corin.",
+    "Serjeant Bram": "Black knight with deep brown skin and tightly curled black beard. Preserve armour and red scarf.",
+    "Tolan": "Broad round middle-aged face, reddish-brown eyebrows, sturdy curved nose, brown handlebar moustache and short brown hair under silver helmet. Preserve armour, red scarf and halberd. Distinct from blond Doran.",
+    "Tessa": "Exactly two arms, both bent upwards with two hands holding the flute. Remove additional arms and hands. Preserve green blouse and blue sleeves.",
+    "Scarf wearers": "Distinct ages, facial structures, complexions and expressions. Lower most face scarves to neck to distinguish individuals; retain existing clothing colours and turbans.",
+    "Fara": "Older, broad round face, prominent cheekbones, long silver-streaked braids tied back. Preserve green dress. Distinct from Ada.",
+    "Kellan": "Shaved head, long narrow face, clean-shaven chin and broad friendly smile. Preserve red vest. Distinct from Bren.",
+    "Warden": "Late forties, receding brown hairline, long nose, round face and thin moustache. Preserve leather vest and cream shirt. Distinct from Corin."
+  },
+  "armored_corin_prompt": "Identity-preserving game portrait edit. This is Corin in his upgraded armour. Keep exactly his same youthful face, tousled black hair, facial proportions, expression, silver plate armour and brown leather straps. Extend composition to WAIST UP, showing BOTH entire rounded shoulders and both upper arms fully inside canvas with generous transparent empty margins around sides. No shoulders clipped by edges, no arms raised, exactly two arms. Same painted realistic fantasy style. Single centered character on genuinely transparent background, no text, no border, no other people.",
+  "packing": "Extract generated cells, separate detached neighbour fragments, fit within 178x188 pixels in the existing 192px atlas cells. Preserve generated alpha and add transparent margins. No CSS portrait fade."
+}

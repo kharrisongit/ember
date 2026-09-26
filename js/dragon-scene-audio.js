@@ -33,20 +33,20 @@
       if(!buffer||!graph||(!loop&&performance.now()-voice.requested>1500)){voices.delete(name);done?.();return;}
       const source=graph.context.createBufferSource(),gain=graph.context.createGain();
       voice.source=source;voice.gain=gain;
-      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*(name==='ui'?.8:1);
+      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*(name==='ui'?.8:['roar','distant'].includes(name)?.5:1);
       source.connect(gain);gain.connect(graph.output);
       source.onended=()=>{
         if(voices.get(name)===voice){voices.delete(name);done?.();}
         source.disconnect();gain.disconnect();
       };
-      source.start();
+      source.start(0,name==='hatch'?.62:0);
       // Let Reveal meet the warning's last breath instead of waiting for the
       // media-ended event and then starting another fade from silence.
       if((name==='roar'||name==='distant')&&Number.isFinite(buffer.duration))
         setTimeout(()=>{if(voices.get(name)===voice)done();},Math.max(0,buffer.duration-.12)*1000);
     });
   };
-  const clear=()=>{for(const name of dragonEffects)stop(name);currentPhase='off';};
+  const clear=()=>{for(const name of dragonEffects)stop(name);currentPhase='off';window.EmberDragonMusic?.encounter?.(false);};
   const inGame=()=>{try{return !document.hidden&&mode==='play';}catch(e){return false;}};
   const playable=()=>{
     try{return inGame()&&MAPID==='world'&&quest>=Q.NOISE&&quest<=Q.ARMED;}catch(e){return false;}
@@ -55,6 +55,7 @@
     if(!playable()){clear();return;}
     if(next===currentPhase)return;
     currentPhase=next;
+    window.EmberDragonMusic?.encounter?.(['in','crash','sit','rise','depart'].includes(next));
     if(!['in','rise','depart'].includes(next))stop('wings');
     if(next!=='sit')stop('breathing');
     if(['in','rise','depart'].includes(next))play('wings',true);

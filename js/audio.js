@@ -160,7 +160,7 @@ let routeMusicIntroPlayed=false;
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
   };
-  let omenPlaying=false,omenHeard=false;
+  let omenPlaying=false,omenHeard=false,revealDucked=false;
   const dragonJourney=()=>{
     try{
       if(mode!=='play'||(quest<Q.ARMED&&!(quest===Q.NOISE&&omenHeard))||quest>Q.DONE||dragonJourneyEnded)return false;
@@ -255,7 +255,7 @@ let routeMusicIntroPlayed=false;
       masterPct=pct;
     }
     for(const a of tracks){
-      const level=(gains.get(a)||0)*(a===reveal ? .7 : 1),channel=channels.get(a);
+      const level=(gains.get(a)||0)*(a===reveal ? .7*(revealDucked?.5:1) : 1),channel=channels.get(a);
       if(channel){channel.gain.value=level;a.volume=1;}
       else a.volume=level*target();
     }
@@ -354,6 +354,7 @@ let routeMusicIntroPlayed=false;
     active:()=>selected===villain
   };
   window.EmberDragonMusic={
+    encounter:active=>{revealDucked=!!active;applyVolumes();},
     omen:()=>{omenPlaying=true;omenHeard=false;selected=null;silence();},
     reveal:()=>{omenPlaying=false;omenHeard=true;chooseMusic();}
   };

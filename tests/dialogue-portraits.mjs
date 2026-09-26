@@ -38,6 +38,7 @@ run("showDialoguePortrait('Unknown traveller')");assert.equal(face.style.display
 assert.equal(run("portraitFor('Pip').id"),10);
 assert.equal(run("portraitFor('Puck').id"),119);
 assert.equal(run("portraitFor('Maddock').id"),9);
+assert.equal(run("portraitFor('Bram').id"),run("portraitFor('Serjeant Bram').id"));
 // Renaming retains the identity addressed by old editor publications.
 c.map={npcs:[{n:'Tessa',d:['Tessa: Hello.','Corin: Hello.']}]};
 run("prepareDialoguePortraitCast(map,'school')");

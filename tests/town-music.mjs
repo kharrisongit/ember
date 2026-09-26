@@ -160,6 +160,11 @@ assert([...journey.elements.values()].every(a=>a.paused),'Finishing dialogue ear
 journey.c.window.EmberDragonMusic.reveal();await journey.advance();
 assert(!journey.track('DragonReveal').paused);assert(journey.track('Millwood').paused);
 assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7*.85)<1e-9,'Reveal retains its quieter iPhone mixer level');
+const revealNormal=journey.audible(journey.track('DragonReveal'));
+journey.c.window.EmberDragonMusic.encounter(true);
+assert.equal(journey.audible(journey.track('DragonReveal')),revealNormal*.5,'Arrival and crash halve the current Reveal volume');
+journey.c.window.EmberDragonMusic.encounter(false);
+assert.equal(journey.audible(journey.track('DragonReveal')),revealNormal,'Departure restores the original Reveal volume');
 for(const quest of [6,7,8,9]){
  journey.c.quest=quest;await journey.change('world','Northern Woods',30,350);
  assert(!journey.track('DragonReveal').paused,'Story stage '+quest+' keeps the loop');
