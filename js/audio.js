@@ -344,7 +344,15 @@ let routeMusicIntroPlayed=false;
   };
   setInterval(syncRegionMusic,180);
   syncRegionMusic();
-  const startMusic=()=>{openAudioGraph();unlocked=true;playSelected();};
+  const startMusic=()=>{
+    // A/B, touchstart and pointerdown can all fire for one tap. Once audio is
+    // running, leave its gain automation and media outputs entirely alone.
+    if(unlocked&&(!audioContext||audioContext.state==='running')){
+      if(selected&&trackPaused(selected))playSelected();
+      return;
+    }
+    openAudioGraph();unlocked=true;playSelected();
+  };
   window.EmberAudio={
     percent:()=>pct,
     graph:()=>audioContext&&({context:audioContext,output:masterGain}),

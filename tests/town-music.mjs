@@ -292,3 +292,18 @@ await coast.change('world','Swamp',230,200);assert(coast.track('Seatown').paused
 await coast.change('world','Blossom road',200,150);assert(!coast.track('Seatown').paused);
 await coast.change('royal_entry','Cinderhold');assert(coast.track('Seatown').paused);assert(!coast.track('Cinderhold').paused);
 console.log('PASS: Seatown follows blossom roads and Coralmere interiors continuously, yields to swamp, and never follows into Cinderhold.');
+
+const steady=setup(null,true);steady.listeners.touchstart();await steady.advance();
+let gainWrites=0,mediaWrites=0;
+for(const a of steady.elements.values()){
+ const source=steady.contexts[0].sources.get(a);let n=source?.next;
+ while(n){if(n.gain){let value=n.gain.value;Object.defineProperty(n.gain,'value',{configurable:true,get:()=>value,set:v=>{gainWrites++;value=v;}});}n=n.next;}
+ Object.defineProperty(a,'volume',{configurable:true,get:()=>1,set(){mediaWrites++;}});
+}
+const steadyStarts=steady.track('Millwood').plays;
+for(let i=0;i<30;i++){steady.listeners.pointerdown();steady.listeners.touchstart();steady.listeners.keydown();}
+assert.equal(gainWrites,0,'A/touch gestures never rewrite the running music gain');
+assert.equal(mediaWrites,0,'A/touch gestures never reset media output volume');
+assert.equal(steady.track('Millwood').plays,steadyStarts,'Repeated presses never restart the music');
+steady.contexts[0].state='interrupted';steady.listeners.touchstart();await steady.advance();assert.equal(steady.contexts[0].state,'running','Interrupted iPhone audio still recovers');
+console.log('PASS: repeated A/touch gestures do not touch music gains, media volumes or playback; interruption recovery still works.');
