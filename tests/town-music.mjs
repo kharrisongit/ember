@@ -147,3 +147,20 @@ for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read(
  }
 }
 console.log(`PASS: ${huntingPaths.size} authored hunting loops, ${huntSamples} samples, uninterrupted route playback and Thornwell interiors.`);
+
+// The story track spans the northern journey, including the dragon's departure.
+const journey=setup(null,true);journey.c.Q={ARMED:6};journey.c.mode='play';journey.c.quest=6;
+journey.listeners.touchstart();await journey.change('world','Northern Woods',30,350);
+assert(!journey.track('DragonReveal').paused);assert(journey.track('Millwood').paused);
+assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7)<1e-9,'Reveal is 30% quieter through the iPhone mixer');
+await journey.change('world','Northern Woods',30,340);
+assert.equal(journey.track('DragonReveal').plays,1,'Walking north does not restart the loop');
+journey.c.greenPhase='gone';journey.sync();await journey.advance();
+assert(!journey.track('DragonReveal').paused,'The closing scene lines retain Mystic Reveal');
+journey.c.quest=7;journey.sync();await journey.advance();
+assert(journey.track('DragonReveal').paused);assert(!journey.track('Millwood').paused,'Departure restores area music');
+journey.c.quest=6;journey.sync();await journey.advance();
+assert(!journey.track('DragonReveal').paused,'A save in the northern journey resumes its music');
+journey.c.mode='title';journey.sync();await journey.advance();assert(journey.track('DragonReveal').paused);
+assert.match(html.match(/<audio id="emberfellDragonRevealBgm"[^>]+>/)[0],/\bloop\b/);
+console.log('PASS: Mystic Reveal loops through the northern journey and departure, is 30% quieter, resumes for a loaded journey, and releases music afterward.');

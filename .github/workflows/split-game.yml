@@ -38,6 +38,7 @@ jobs:
         run: |
           node tests/town-music.mjs
           node tests/audio-controls.mjs
+          node tests/dragon-scene-audio.mjs
           node tests/input-hatch.mjs
           node tests/dragon-dialogue.mjs
           node tests/dragon-staging.mjs

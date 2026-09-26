@@ -8,6 +8,7 @@
   const field=document.getElementById('emberfellFieldBgm');
   const forgewick=document.getElementById('emberfellForgewickBgm');
   const mystic=document.getElementById('emberfellMysticBgm');
+  const reveal=document.getElementById('emberfellDragonRevealBgm');
   const mine=document.getElementById('emberfellMineBgm');
   const cinderhold=document.getElementById('emberfellCinderholdBgm');
   const hollybeck=document.getElementById('emberfellHollybeckBgm');
@@ -93,12 +94,16 @@
     } catch(e) {}
     return false;
   };
-  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute].filter(Boolean);
+  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
   };
+  const dragonJourney=()=>{
+    try{return mode==='play' && quest===Q.ARMED && MAPID==='world';}catch(e){return false;}
+  };
   const exploreTrack=()=>{
+    if(dragonJourney()&&hasSong(reveal))return reveal;
     const choices=[[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
       [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
       [thornwellMode,thornwell],[lavaRouteMode,lavaRoute],[fieldMode,field],[true,bgm]];
@@ -131,7 +136,7 @@
       masterPct=pct;
     }
     for(const a of tracks){
-      const level=gains.get(a)||0,channel=channels.get(a);
+      const level=(gains.get(a)||0)*(a===reveal ? .7 : 1),channel=channels.get(a);
       if(channel){channel.gain.value=level;a.volume=1;}
       else a.volume=level*target();
     }
@@ -228,6 +233,7 @@
   const startMusic=()=>{openAudioGraph();unlocked=true;playSelected();};
   window.EmberAudio={
     percent:()=>pct,
+    graph:()=>audioContext&&({context:audioContext,output:masterGain}),
     set:v=>{
       pct=Math.max(0,Math.min(100,Number(v)||0));
       try{localStorage.setItem(KEY,String(pct));}catch(e){}

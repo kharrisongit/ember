@@ -5884,7 +5884,7 @@ let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
 const GREEN_IN = 2.5, GREEN_CRASH = 1.1, GREEN_RISE = 0.9, GREEN_DEPART = 1.3;
 function greenFly(dt) {
   if (quest !== Q.ARMED || MAPID !== GREEN.map) {
-    greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; return;
+    greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; window.EmberDragonSceneAudio?.phase("off"); return;
   }
   const g = greenAt();
   const d = Math.hypot(P.x - g.x, P.y - g.y) / TS;
@@ -5908,6 +5908,7 @@ function greenFly(dt) {
     greenP += dt / GREEN_DEPART;
     if (greenP >= 1) { greenPhase = "gone"; greenT = 2; }
   }
+  window.EmberDragonSceneAudio?.phase(greenPhase);
 }
 function greenOffset() {
   if (greenPhase === "off") return null;
@@ -6881,6 +6882,7 @@ function stepQuest(dt) {
     return;
   }
   if (quest === Q.NOISE && MAPID === "world" && near(SPOT.path, 5)) {
+    window.EmberDragonSceneAudio?.distant();
     scatterBirds();
     playScene([
       "Something comes down in the north wood.",
