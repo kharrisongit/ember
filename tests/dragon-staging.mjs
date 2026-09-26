@@ -53,7 +53,7 @@ class Element{
  addEventListener(t,f){this.handlers[t]=f;}querySelectorAll(){return this.children;}
 }
 const nodes=Object.fromEntries(['airRows','airDesc','atkRows','atkDesc'].map(k=>[k,new Element()]));let summoned=0;
-const m=vm.createContext({document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
+const m=vm.createContext({dragonIntroDone:true,document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
  wakeCount:()=>0,wakeTheDead:()=>{summoned++;return false;},setMounted:()=>false,breathHas:{slash:true,fire:true,lightning:true,shadow:true,ice:true},breathWait:()=>0});
 const mr=s=>vm.runInContext(s,m);mr(section(p3,'const MENUS = {','let ovl = null;'));mr(section(p3,'function refreshOvl()','function updateBreathRefills()'));mr(section(p3,'function ovlStep(','const atkCloseBtn='));
 mr('refreshOvl()');const blank=nodes.airRows.children[2];
@@ -66,3 +66,7 @@ m.wakeCool=10;mr('updateCommandRows()');assert.equal(held.children.length,0,'Sum
 mr('ovl="atkm";refreshOvl()');assert.equal(nodes.atkRows.children.length,5);
 for(const row of nodes.atkRows.children){const icon=row.children.find(e=>e.className==='actionIcon');assert(icon);assert.match(read(icon.src.split('?')[0]),/<svg.*viewBox="0 0 24 24"/);}
 console.log('PASS: Locked and cooling Summon buttons are blank and inert; activation updates in place; both menus load the new artwork.');
+
+d.dragonIntroDone=false;d.dragonHere=()=>true;dr('mounted=false');
+assert.equal(dr('setMounted(true)'),false,'Riding locked before introduction');assert.equal(dr('mounted'),false);
+d.dragonIntroDone=true;assert.equal(dr('setMounted(true)'),true,'Riding unlocks after introduction');

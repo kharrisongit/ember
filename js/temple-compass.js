@@ -201,7 +201,12 @@ function drawTempleCompass() {
   ctx.restore();
 }
 
-// Nan steps outside after the hatch and calls Corin over as he passes her house.
+// Use the authored town boundary, not proximity to Nan's front door.
+function millwoodDepartureArea(){
+  const list=typeof features!=='undefined'?features:MD?.features||[];
+  return list.find(f=>f.kind==='area'&&(f.label==='Millwood'||f.place==='Millwood'))||null;
+}
+// Nan intercepts the return through Millwood before the journey east.
 function prepareNanDeparture(){
   if(MAPID!=='world'||!hasDragon()||templeCompass.owned||npcs.some(n=>n.fatherCompassVisitor))return;
   const home=W.maps.house26?.npcs.find(n=>n.n==='Nan Ferrow');
@@ -212,11 +217,16 @@ function prepareNanDeparture(){
     fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false});
 }
 function stepNanDeparture(){
-  if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||!dragonIntroDone||templeCompass.owned||
+  if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||templeCompass.owned||
      sceneHold()||sayNpc||fadeDir||fade||doorMotion||ovl||ask||bagOpen||editing||dying()||revealing)return;
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
-  if(!nan||Math.abs(P.x-nan.x)>104||Math.abs(P.y-nan.y)>78)return;
+  if(!nan)return;
+  const town=millwoodDepartureArea();
+  const inDepartureArea=town&&P.x>=(town.x0-6)*TS&&P.x<=(town.x1+10)*TS&&
+    P.y>=(town.y0-6)*TS&&P.y<=(town.y1+6)*TS;
+  const nearNan=Math.abs(P.x-nan.x)<=104&&Math.abs(P.y-nan.y)<=78;
+  if(!inDepartureArea&&!nearNan)return;
   // Stop Corin immediately; finish landing and Nan's approach before dialogue.
   clearPadInputs();running=false;P.act=null;P.moving=false;
   if(mounted)setMounted(false,true);

@@ -5545,6 +5545,7 @@ function stepTransition(dt) {
   refreshWingBtn();
 }
 function setDragonAir(on) {
+  if(on&&!dragonIntroDone){toast("Aurelius stays beside you for now.");return false;}
   if (dragon.down) { toast("the dragon is too hurt to move"); return; }
   if (dragon.tr || on === dragon.air) return;
   if (!on) {
@@ -6286,9 +6287,12 @@ let dragonJourneyEnded=false;
 function stepDragonIntroduction(){
   if(dragonIntroDone||!hasDragon()||!dragonHere()||!dragon.on||MAPID!=='world')return false;
   if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;
+  // Nan's farewell comes first. Aurelius speaks on the eastbound journey,
+  // six tiles beyond Millwood, never beside Maddock or inside town.
+  if(!templeCompass.owned)return false;
+  const town=millwoodDepartureArea();
+  if(!town||P.x<(town.x1+6)*TS)return false;
   dragonIntroArmed=true;
-  dragon.introOrigin ||= [P.x,P.y];
-  if(Math.hypot(P.x-dragon.introOrigin[0],P.y-dragon.introOrigin[1])<96)return false;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
   playScene([
@@ -11021,6 +11025,10 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(best.n==='Hettie'&&quest<Q.NOISE){
+      sayOff();showFace(null);faceToward(best,P.x,P.y);P.moving=false;
+      playScene([hettieErrandReminder()],{who:best.n,npcActor:best});return;
+    }
     if(!greetingOnly && typeof openNpcTopics==='function' && openNpcTopics(best))return;
     if (MAPID === "cinderhold" && /Halvard/.test(best.n || "") && !wonAll && window.EmberKingMusic) window.EmberKingMusic.start();
     sayNpc = best; sayLine = 0;

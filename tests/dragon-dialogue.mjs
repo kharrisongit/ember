@@ -9,6 +9,7 @@ const element=()=>({style:{},dataset:{},children:[],attributes:{},
  get textContent(){return this.children.length?this.children.map(el=>el.textContent||'').join(''):this.text||'';},
  set textContent(v){this.text=v;}});
 const c=vm.createContext({
+  TS:16,templeCompass:{owned:true},millwoodDepartureArea:()=>({x0:0,y0:404,x1:62,y1:453}),
   gameplayStarted:true,MAPID:'world',MD:{},P:{x:872,y:6050,dir:'d',moving:true},MAD_DOOR:[872,5984],
   dragon:{on:true,x:850,y:6050,moving:true},hasDragon:()=>true,dragonHere:()=>c.MAPID==='world'||c.MAPID==='tp1',
   sceneHold:()=>!!pendingScene,hatchCamera:null,sayNpc:null,fadeDir:0,doorMotion:null,pendingDoor:null,editing:false,ovl:null,ride:false,arenaLock:null,
@@ -22,31 +23,20 @@ run(read('js/dragon-dialogue.js'));
 const tick=(dt=.05)=>run(`stepDragonBanter(${dt})`);
 const clear=()=>{run('resetDragonBanter();dragonBanterGap=0');pendingScene=null;place=null;c.foes=[];};
 const active=()=>run('dragonBanterActive');
-// No dragon speech before the introduction. Walking away in any direction
-// starts it, including pending introductions restored away from Maddock's house.
+// Nan first; then the eastbound road, six tiles beyond the town boundary.
 place='Millwood';tick();assert.equal(active(),null);
-assert.equal(run('stepDragonIntroduction()'),false);
-for(const [dir,dx,dy] of [['u',0,-96],['d',0,96],['s',96,0],['s',-96,0]]){
- run('dragonIntroDone=false;dragon.introOrigin=[P.x,P.y]');
- c.P.dir=dir;c.P.x+=dx;c.P.y+=dy;
- c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
- c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
- assert.equal(run('stepDragonIntroduction()'),true,'Introduction works with displacement '+dx+','+dy);
- assert.match(pendingScene.lines[0],/voice.*inside your head/);
- assert(pendingScene.lines[1].startsWith('Aurelius:'));
- assert.equal(pendingScene.lines.filter(line=>/voice.*inside your head/.test(line)).length,1);
- assert(pendingScene.lines.join(' ').includes('share a consciousness'));
- assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
- assert(!pendingScene.lines.some(line=>line.includes('Back to Millwood')),'Dialogue does not assume a route');
- pendingScene.after();pendingScene=null;assert.equal(menu,'airm');
- assert.equal(run('stepDragonIntroduction()'),false,'Introduction only happens once');
-}
-assert.equal(saves,4);
-run('dragonIntroDone=false;dragon.introOrigin=null');c.P.x=3000;c.P.y=4000;
-assert.equal(run('stepDragonIntroduction()'),false);c.P.y-=95;
-assert.equal(run('stepDragonIntroduction()'),false);c.P.y--;
-assert.equal(run('stepDragonIntroduction()'),true,'Older pending save introduces Aurelius after walking a short distance');
-pendingScene.after();pendingScene=null;c.P.x=872;c.P.y=6130;
+c.P.x=60*16;c.P.y=430*16;assert.equal(run('stepDragonIntroduction()'),false,'No introduction inside Millwood');
+c.P.x=80*16;c.templeCompass.owned=false;assert.equal(run('stepDragonIntroduction()'),false,'Nan must give the compass first');
+c.templeCompass.owned=true;c.P.x=68*16-1;assert.equal(run('stepDragonIntroduction()'),false,'Wait six tiles after leaving town');
+c.P.x=68*16;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
+c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
+assert.equal(run('stepDragonIntroduction()'),true);
+assert.match(pendingScene.lines[0],/voice.*inside your head/);
+assert(pendingScene.lines.join(' ').includes('share a consciousness'));
+assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
+pendingScene.after();pendingScene=null;assert.equal(menu,'airm');
+assert.equal(run('stepDragonIntroduction()'),false,'Only once');
+c.P.x=872;c.P.y=6130;
 // First visits, a timed dismissal and the actual action-button dismissal hook.
 clear();place='Millwood–Thornwell Road';tick();assert.equal(active(),null,'roads do not count as town visits');
 place='Thornwell';const movement=JSON.stringify(c.P);tick();assert.match(active().key,/place:Thornwell/);

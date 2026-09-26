@@ -48,3 +48,13 @@ c.stepNanDeparture();assert.equal(c.mounted,false);assert.equal(c.dragon.air,fal
 [nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),false,'Conversation waits for landing');
 c.dragon.tr=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
+
+for(const [x,y]of [[60,425],[30,407],[67,430]]){
+ c.restoreFatherCompass();c.scene=null;c.dragonIntroDone=false;c.mounted=true;c.dragon.air=true;c.dragon.tr=null;
+ c.MD.features=[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}];
+ c.P={x:x*16,y:y*16};c.stepNanDeparture();
+ assert(c.scene,'Nan stops a bypass far from her house at '+x+','+y);
+ assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);
+ [nan.x,nan.y]=nan.goto;nan.goto=null;c.dragon.tr=null;c.scene.hold();c.scene.after();
+}
+console.log('PASS: Nan intercepts north/east town crossings and flying departures before the dragon introduction.');

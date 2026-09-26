@@ -31,3 +31,14 @@ assert.deepEqual(Array.from(c.merchantStock({n:'Wren'})),['potion','birdMeat','s
 for(const name of ['Toft','Idris','Nerissa','Astrid'])assert.deepEqual(Array.from(c.merchantStock({n:name})),Object.keys(c.STOCK).filter(k=>k!=='bomb'));
 assert.deepEqual(Array.from(c.merchantStock({n:'Maelis'})),['bomb']);
 console.log('PASS: all speaking portraits have distinct personal stories, quest gifts precede topics, Nan and victory topics respect progress, and merchant stock follows town/exclusivity rules.');
+c.hatched=false;assert.equal(c.npcStoryTopics(nan).length,0,'Nan keeps only her basic greeting before hatching');
+c.hatched=true;assert(c.npcStoryTopics(nan).length>=4,'Nan personal stories unlock after hatching');
+c.Q={NOISE:5};const hettie={n:'Hettie',d:['Hello'],d2:['A story']};
+for(c.quest=0;c.quest<5;c.quest++){
+ assert.equal(c.npcStoryTopics(hettie).length,0,'No Hettie topics before delivery');
+ assert.equal(c.openNpcTopics(hettie),false,'No early Hettie menu');
+}
+assert(c.npcStoryTopics(hettie).length>=2,'Egg delivery unlocks Hettie stories');
+const reminders=Array.from({length:4},()=>c.hettieErrandReminder());assert.equal(new Set(reminders).size,4);assert(reminders.every(s=>s.startsWith('Hettie:')));
+assert(read('js/generated/game-part-2.js').includes("if(best.n==='Hettie'&&quest<Q.NOISE)"),'All direct greetings use the errand reminder gate');
+console.log('PASS: Nan stories wait for hatching; Hettie menu waits for egg delivery, with four affectionate reminders beforehand.');

@@ -1881,7 +1881,19 @@ function npcStoryGiftPending(n){
     (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
     (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
 }
+let hettieErrandReminderIndex=0;
+function hettieErrandReminder(){
+  const lines=[
+    "Hettie: Off you go, Corin, love. Maddock will be waiting for those eggs.",
+    "Hettie: Get a move on, sweetheart. We can have a proper chat when your errand is done.",
+    "Hettie: Mind that basket, Corin. Gently with the eggs, quickly with your feet.",
+    "Hettie: Go on, love. I'll still be here when you've delivered them."
+  ];
+  return lines[hettieErrandReminderIndex++%lines.length];
+}
 function npcStoryTopics(n){
+  if(n.n==='Hettie'&&quest<Q.NOISE)return [];
+  if(n.n==='Nan Ferrow'&&!hasDragon())return [];
   const profile=NPC_STORIES[n.n];if(!profile)return [];
   const topics=profile.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
@@ -1911,6 +1923,7 @@ function npcStoryTopics(n){
   return topics;
 }
 function openNpcTopics(n){
+  if(n.n==='Hettie'&&quest<Q.NOISE)return false;
   if(!NPC_STORIES[n.n]||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
   sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;

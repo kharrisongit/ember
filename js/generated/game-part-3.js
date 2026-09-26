@@ -5443,14 +5443,14 @@ const MENUS = {
     go: () => doUse(it)
   })) },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
-    { name: mounted ? "Dismount" : "Mount", el: "ride", art: mounted ? "dismount" : "mount",
+    { name: mounted ? "Dismount" : "Mount", blankWhenDisabled:true, dim:()=>!mounted&&!dragonIntroDone, el: "ride", art: mounted ? "dismount" : "mount",
       tell: mounted ? "Slide down off its back."
                     : "Climb onto its shoulders and fly with it.",
       go: () => { const on = !mounted;
               if(setMounted(on)===false)return; setOvl(null);
               showReveal(on ? "corinride_" + (smithUpgrade ? "armor_" : "sword_") + "idle_s" : "dr5_idle_s",
                          on ? "CORIN TAKES THE REINS" : "CORIN SLIDES DOWN", undefined, true);
-              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", el: "wing", art: dragon.air ? "land" : "takeoff",
+              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", blankWhenDisabled:true, dim:()=>!dragon.air&&!dragonIntroDone, el: "wing", art: dragon.air ? "land" : "takeoff",
       tell: dragon.air ? "Come down to the ground." : "Beat upward and fly.",
       go: () => { setDragonAir(!dragon.air); setOvl(null); } },
     { name: "Summon", el: "wake", blankWhenDisabled: true,
@@ -5817,6 +5817,7 @@ function dismountSpot() {
 }
 function setMounted(on, quiet = false) {
   if(fishing)return false;
+  if(on&&!dragonIntroDone){toast("Aurelius has not offered you a ride yet.");return false;}
   if (on && !dragonHere()) { toast("the dragon is not here"); return false; }
   if (on && dragon.down) { toast("the dragon is too hurt to ride"); return false; }
   if (on && dragon.knockdown > 0) { toast("the dragon is still getting up"); return false; }
