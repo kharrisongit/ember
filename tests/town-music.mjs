@@ -33,7 +33,7 @@ function setup(stored=null,ios=false){
 const {c,track,elements,change,advance,listeners,sync,getStored}=setup();
 assert.equal(c.window.EmberAudio.percent(),35);assert([...elements.values()].every(a=>a.paused),'No autoplay before a gesture');
 listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35);
-for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['tavern','Thornwell Tavern'],['royal_entry','Cinderhold entry'],['mine2','Forgewick Mine'],['witch_room','Witchmoor']]){
+for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['royal_entry','Cinderhold entry'],['mine2','Forgewick Mine'],['witch_room','Witchmoor']]){
  await change(map,title,x,y);assert.equal(track('Millwood').paused,false,title+' uses the default until its own song exists');assert.equal(track('Millwood').currentTime,17);
 }
 for(const a of elements.values())if(!['emberfellMillwoodBgm','emberfellVillainBgm'].includes(a.id))assert.equal(a.plays,0,'Empty audio placeholders never replace the default');
@@ -63,15 +63,15 @@ c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').vo
 c.window.EmberKingMusic.start();c.window.EmberAudio.set(0);track('Villain').finishPlay();await advance();
 assert([...elements.values()].every(a=>a.paused&&a.volume===0),'Mute wins over a pending play and all scheduled fades');
 track('Villain').waitForPlay=false;c.window.EmberKingMusic.stop();c.window.EmberAudio.set(50);await advance();assert.equal(track('Millwood').volume,.5);assert.equal(track('Millwood').paused,false);
-// A future town song wins when installed, while the remaining map keeps its fallback.
-track('Thornwell').src='assets/audio/future-thornwell.m4a';await change('tavern','Thornwell Tavern');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
+// Thornwell uses its installed track, including the town interiors.
+await change('tavern','Thornwell Tavern');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
-for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000]]){
+for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000],['Thornwell','thornwell-shop.m4a',1600000]]){
  const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }
-console.log('PASS: default music covers unassigned areas; actual royal speakers and both final battle phases get the King’s theme; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and future town songs work.');
+console.log('PASS: default music covers unassigned areas; actual royal speakers and both final battle phases get the King’s theme; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');
 
 // The route music follows the entire authored network, including bends that
 // were far from the old endpoint-to-endpoint line. Town areas always win.
@@ -89,7 +89,7 @@ for(const road of world.features.filter(f=>f.kind==='route'&&!f.entrance&&!([3,5
 for(const name of ['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck']){
  const town=world.features.find(f=>f.kind==='area'&&f.label===name);
  await routes.change('world','Emberfell',(town.x0+town.x1)/2,(town.y0+town.y1)/2);
- assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track('Millwood').paused);
+ assert(routes.track('Field').paused,name+' town does not inherit route music');assert(!routes.track(name==='Thornwell'?'Thornwell':'Millwood').paused);
 }
 await routes.change('world','Northern Woods',30,350);assert(routes.track('Field').paused,'The original song remains in the Northern Woods');
 routes.c.features=[{id:12,kind:'route',road:'Route 2',pts:[[200,200],[200,240],[300,240]]}];
@@ -118,3 +118,32 @@ phone.c.window.EmberAudio.set(0);await phone.advance();assert([...phone.elements
 phone.contexts[0].state='interrupted';phone.listeners.touchstart();assert.equal(phone.contexts[0].state,'running','A fresh gesture resumes interrupted iPhone audio');assert.equal(phone.contexts.length,1,'Gestures reuse one mixer');
 const savedPhone=setup('1',true);savedPhone.listeners.pointerdown();await savedPhone.advance();assert.equal(savedPhone.audible(savedPhone.track('Millwood')),.01,'Saved volume controls iPhone output after reload');
 console.log('PASS: With the iPhone media-volume restriction reproduced, 1% output is 1/100 of 100%; gain-based fades, mute, interruption recovery and saved volume work.');
+
+// Regression: the published hunting loops are unnamed routes, not numbered roads.
+const published=JSON.parse(read('assets/editor-layouts.json')),huntingPaths=new Map();
+function findHuntingPaths(value){
+ if(!value||typeof value!=='object')return;
+ if(value.kind==='route'&&!value.road)huntingPaths.set(value.id,value);
+ for(const child of Object.values(value))findHuntingPaths(child);
+}
+findHuntingPaths(published.maps.world);
+huntingPaths.set(9148,{id:9148,kind:'route',w:5,pts:[[145,111],[145,67],[198,67],[198,107]]});
+const hunt=setup();hunt.c.features=[...world.features,...huntingPaths.values()];
+hunt.c.isHuntingArena=f=>f.kind==='arena'&&['bird','hare','boar','deer','fox'].includes(f.encounter);
+hunt.listeners.pointerdown();await hunt.advance();let huntSamples=0;
+for(const road of huntingPaths.values())for(let i=1;i<road.pts.length;i++){
+ const a=road.pts[i-1],b=road.pts[i];
+ for(const t of [.1,.5,.9]){
+  const x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;
+  if(world.features.some(f=>f.kind==='area'&&!f.hidden&&!f.wild&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1))continue;
+  await hunt.change('world','Emberfell',x,y);
+  assert(!hunt.track('Field').paused,'Hunting path '+road.id+' segment '+i+' keeps route music');huntSamples++;
+ }
+}
+assert.equal(hunt.track('Field').plays,1,'moving among hunting paths never restarts the route song');
+for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const W_GZ = "([^"]+)"/)[1],'base64'))).maps)){
+ if(id!=='world'&&map.title?.startsWith('Thornwell')){
+  await hunt.change(id,map.title);assert(!hunt.track('Thornwell').paused,id+' plays Thornwell music');
+ }
+}
+console.log(`PASS: ${huntingPaths.size} authored hunting loops, ${huntSamples} samples, uninterrupted route playback and Thornwell interiors.`);

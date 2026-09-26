@@ -48,7 +48,9 @@
         if(f.kind==='arena'&&typeof isHuntingArena==='function'&&isHuntingArena(f))
           return Math.hypot(x-f.x,y-f.y)<=(f.r||10)+6;
         // Northern Woods and the elder/Shroom paths retain the original song.
-        if(f.kind!=='route'||f.entrance||[3,5,212].includes(f.id)||!/^Route \d+$/.test(f.road||''))return false;
+        if(f.kind!=='route'||f.entrance||[3,5,212].includes(f.id))return false;
+        // Editor-built hunting loops have no road name; include their whole path.
+        if(f.road&&!/^Route \d+$/.test(f.road)&&!/hunt/i.test(f.road))return false;
         const pts=f.pts?.length>1?f.pts:[[f.x0,f.y0],[f.x1,f.y1]];
         return pts.slice(1).some((p,i)=>nearSegment(pts[i],p,Math.max(12,(f.w||5)*2.2)));
       });
