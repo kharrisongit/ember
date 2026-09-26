@@ -150,7 +150,7 @@ for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read(
 }
 console.log(`PASS: ${huntingPaths.size} authored hunting loops, ${huntSamples} samples, uninterrupted route playback and Thornwell interiors.`);
 
-// The story track spans the warning, woods, egg return, hatch and introduction.
+// The story track spans the warning, woods, egg return and hatch, then ends on returning home.
 const journey=setup(null,true);journey.c.quest=5;
 journey.listeners.touchstart();await journey.change('world','Northern Woods',30,350);
 journey.c.window.EmberDragonMusic.omen();
@@ -170,10 +170,17 @@ for(const quest of [6,7,8,9]){
  assert(!journey.track('DragonReveal').paused,'Story stage '+quest+' keeps the loop');
 }
 assert.equal(journey.track('DragonReveal').plays,1,'Story progression does not restart the music');
-journey.c.dragonIntroDone=true;journey.sync();await journey.advance();assert(!journey.track('DragonReveal').paused);
+assert.equal(journey.c.dragonIntroDone,false,'Aurelius has not introduced himself before the return home');
 await journey.change('world','Millwood',30,430);
 assert(journey.track('DragonReveal').paused);assert(!journey.track('Millwood').paused);assert(journey.c.dragonJourneyEnded);
 await journey.change('world','Northern Woods',30,350);assert(journey.track('DragonReveal').paused,'Leaving Millwood later does not restart story music');
+journey.c.features.push({kind:'route',road:'Route 1',pts:[[70,430],[120,430]],w:5});
+await journey.change('world','Route 1',90,430);assert(!journey.track('Field').paused,'The eastern road uses its own music after Nan');
+journey.c.dragonJourneyEnded=false;journey.c.templeCompass={owned:true};journey.sync();await journey.advance();
+assert(journey.c.dragonJourneyEnded&&journey.track('DragonReveal').paused,'A save already beyond Millwood recovers without returning home');
+journey.c.templeCompass.owned=false;journey.c.dragonJourneyEnded=false;journey.c.dragonIntroDone=true;journey.sync();await journey.advance();
+assert(journey.c.dragonJourneyEnded&&journey.track('DragonReveal').paused,'Older saves with the introduction complete also recover');
+journey.c.dragonIntroDone=false;
 journey.c.quest=8;journey.c.dragonJourneyEnded=false;journey.sync();await journey.advance();
 assert(!journey.track('DragonReveal').paused,'Loading an unfinished journey resumes the loop');
 journey.c.mode='title';journey.sync();await journey.advance();assert(journey.track('DragonReveal').paused);
@@ -181,7 +188,7 @@ assert.match(html.match(/<audio id="emberfellDragonRevealBgm"[^>]+>/)[0],/\bloop
 journey.c.mode='play';journey.c.quest=9;journey.c.deadShown=true;journey.sync();await journey.advance();
 assert([...journey.elements.values()].every(a=>a.paused),'Music fades out for the game-over cue');
 journey.c.deadShown=false;await journey.change('world','Millwood',30,430);assert(!journey.track('Millwood').paused,'Retry restores area music');
-console.log('PASS: warning cuts music immediately; Reveal waits for completion, spans hatch/introduction, ends on Millwood return and stays ended afterward.');
+console.log('PASS: warning cuts music immediately; Reveal waits for completion, spans hatching, ends on Millwood return before the introduction and stays ended afterward.');
 
 // Inspect the actual PCM loop: no padded silence or faded-out seam survives.
 const wav=fs.readFileSync(new URL('../assets/audio/dragon-mystic-loop.wav',import.meta.url));

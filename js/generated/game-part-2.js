@@ -11069,6 +11069,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         best.n + ": I think it will see to that on its own."];
     }
     else sayNpc.said = npcContextDialogue(best, alt);
+    sayNpc.said=npcDragonAwareDialogue(best,sayNpc.said);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);
     typeStart(w0, t0);
     showFace(w0);

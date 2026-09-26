@@ -69,10 +69,18 @@
   font:italic 15px/1.35 var(--manuscript-serif);letter-spacing:.005em;
 }
 #say b{color:#793e2d}
-#toast,#revealCap,#campSay{
+#revealCap,#campSay{
   background:var(--manuscript-paper);color:var(--manuscript-ink);
   border:3px solid var(--manuscript-edge);border-radius:3px;box-shadow:var(--manuscript-frame);
   padding:11px 18px;font:15px/1.4 var(--manuscript-serif);letter-spacing:.015em;
+}
+#toast{
+  top:calc(env(safe-area-inset-top,0px) + 12px);
+  padding:6px 12px;border:1px solid #b69a58;border-radius:18px;
+  background:linear-gradient(135deg,#302a20f5,#171813f5);color:#f4dfaa;
+  box-shadow:inset 0 1px 0 #f7dc9230,0 3px 10px #0006;
+  font:600 12px/1.3 system-ui,sans-serif;letter-spacing:.01em;
+  max-width:min(82vw,360px);
 }
 #revealCap{width:max-content;max-width:min(88%,520px);text-align:center}
 #reveal{background:radial-gradient(ellipse at 50% 42%,#714c2738,transparent 64%),#120e0be8}

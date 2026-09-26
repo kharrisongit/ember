@@ -3,6 +3,10 @@
 const templeCompass = { owned: false, awakened: false, cache: null };
 const FATHER_COMPASS_GIFT = [
   "Nan Ferrow: Come here a moment, love. There is something I have kept for you.",
+  "Nan Ferrow: But first—Corin, is that a dragon behind you? Are you hurt?",
+  "Corin: I am all right, Nan. He hatched up by Maddock's house and followed me. I think he chose me.",
+  "Nan Ferrow: Well, little one, you have chosen someone very dear to me. You two had better look after each other.",
+  "Nan Ferrow: And you, Corin, take this. I want you to have something of your father's on the road.",
   "Corin: A compass?",
   "Nan Ferrow: Your father's. He used to turn it over in his hand whenever he was thinking.",
   "Corin: You never told me that.",

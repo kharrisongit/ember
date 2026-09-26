@@ -1876,6 +1876,25 @@ function fishingRodDialogue(name){
   ];
 }
 
+// Gift/referral dialogue must acknowledge a visible companion as ordinary
+// greetings do. Keep each person's own reaction and preserve the quest lines.
+function npcDragonAwareDialogue(n,lines){
+  if(!hasDragon()||!dragonHere()||!dragon.on||n.pettable||
+     (MAPID==='world'&&!mounted&&Math.hypot(n.x-dragon.x,n.y-dragon.y)>=192))return lines;
+  if(/\bdragon\b|Aurelius|hatchling|\bwings\b|\bscales\b/i.test(lines.join(' ')))return lines;
+  const greetings={
+    Odo:"Odo: A dragon! I wondered what had sent every fish under the bridge. You will need more than a little bait to feed that friend.",
+    Calder:"Calder: You brought a dragon to my camp. I hope he likes fish, because my spare rod seems a better welcome than a single bowl of stew.",
+    Sela:"Sela: Oh, look at the light on his scales. A living dragon, right here at my shop. Come closer, Corin; I have something that may keep you both safer.",
+    Dunstan:"Dunstan: That is a dragon outside my forge. Maddock has some explaining to do. If you two are taking the road, I had better see to your gear.",
+    Maelis:"Maelis: A dragon has chosen you. Yes, I can see him; stop hovering in the doorway. Even he cannot keep every curse off your back.",
+    Sverre:"Sverre: A dragon's fire will be welcome in this cold. But take a steady light into the workings as well; flame cannot reach around every corner."
+  };
+  const reaction=greetings[n.n]||n.dragonNear?.[0]||n.dd?.find(line=>/dragon|Aurelius|wings|scales/i.test(line));
+  if(!reaction)return lines;
+  return [reaction.includes(':')?reaction:n.n+': '+reaction,...lines];
+}
+
 function npcStoryGiftPending(n){
   return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
     (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
@@ -1930,7 +1949,7 @@ function openNpcTopics(n){
   const choose=topic=>{
     if(topic.go){topic.go();return;}
     const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
-    playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
+    playScene(npcDragonAwareDialogue(n,lines),{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
     {n:n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?',go:()=>beginNpcTalk(n,true)},

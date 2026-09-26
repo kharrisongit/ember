@@ -164,7 +164,11 @@ let routeMusicIntroPlayed=false;
   const dragonJourney=()=>{
     try{
       if(mode!=='play'||(quest<Q.ARMED&&!(quest===Q.NOISE&&omenHeard))||quest>Q.DONE||dragonJourneyEnded)return false;
-      if(quest===Q.DONE&&dragonIntroDone&&MAPID==='world'&&inMillwood()){
+      // Aurelius introduces himself AFTER Nan's farewell, outside Millwood.
+      // Returning home ends Reveal even before that later conversation. The
+      // completed milestones also repair saves already on the eastern road.
+      if(quest===Q.DONE&&((MAPID==='world'&&inMillwood())||dragonIntroDone||
+          (typeof templeCompass!=='undefined'&&templeCompass.owned))){
         dragonJourneyEnded=true;saveGame();return false;
       }
       return true;
