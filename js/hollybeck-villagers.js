@@ -1,6 +1,6 @@
-// Extracted from the user's eight-frame sheet; no title, labels or background.
-DOCK_ORIGINAL_ASSETS.push({name:'hollybeck_runa_south_idle',w:24,h:30,frames:8,
-  src:'assets/sprites/hollybeck-runa-south-idle.png?v=20260926-runa-stable2'});
+// Four-frame breathing/blink sheet, cropped from the approved regenerated art.
+DOCK_ORIGINAL_ASSETS.push({name:'hollybeck_runa_south_idle',w:24,h:30,frames:4,
+  src:'assets/sprites/hollybeck-runa-four-frame-idle.png?v=20260926-runa4'});
 /* Six motion frames, closed eyes, and half-closed eyes for a smooth timed blink. */
 for(const person of ['sverre','runa'])for(const action of ['walk','idle']){
   for(const [row,dir]of ['d','u','e','w'].entries())DOCK_ORIGINAL_ASSETS.push({
@@ -13,7 +13,7 @@ function hollybeckNpcFrame(n,t,action){
   if(n.packSpr==='hollybeck_runa_south_idle'){
     // Hold the open-eye poses longer, then pass through the complete blink.
     const phase=(t%3.6+3.6)%3.6;
-    return phase<.9?0:phase<1.6?1:phase<2.3?2:phase<2.42?3:phase<2.56?4:phase<2.68?5:phase<3.1?6:7;
+    return phase<3.16?0:phase<3.30?1:phase<3.46?2:3;
   }
   // Blink timing is independent of footsteps; walking does not speed up blinking.
   const phase=(t+(n.t||0))%3.8;
