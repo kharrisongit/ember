@@ -188,3 +188,13 @@ await nextPause(550);assert.equal(audioStages[1][0],'in');assert.equal(nodes.tit
 await nextPause(1400);assert.equal(nodes.titleFade.style.opacity,'0');assert.equal(run('gameplayStarted'),false);
 await nextPause(1100);await closePromise;assert.equal(run('gameplayStarted'),true);assert(nodes.titleFade.hidden);assert.equal(audioStages[2][0],'finish');
 console.log('PASS: duplicate Start ignored; black/title fade, silence, music lead-in, then picture and controls.');
+
+// Both companions make room during the dragon's second, choosing approach.
+h.scene.i=9;h.scene.t=0;const chooseP=[h.P.x,h.P.y],chooseM=[maddock.x,maddock.y];
+const dragonBefore=hr('[hatchScene.dragonX,hatchScene.dragonY]');
+hr('stepHatchScene(.21)');assert(h.P.moving&&maddock.scriptWalking);assert(Math.hypot(maddock.x-chooseM[0],maddock.y-chooseM[1])>0);
+assert.deepEqual(Array.from(hr('[hatchScene.dragonX,hatchScene.dragonY]')),Array.from(dragonBefore),'Dragon waits while both step back');
+hr('advanceScene()');assert.equal(h.scene.i,9,'A cannot skip the second retreat');
+hr('stepHatchScene(.21)');assert.equal(Math.round(Math.hypot(maddock.x-chooseM[0],maddock.y-chooseM[1])),16);assert(!maddock.scriptWalking&&!h.P.moving);
+h.scene.t=1;hr('stepHatchScene(.1)');assert(hr('hatchScene.walking'),'Dragon walks after both finish');
+console.log('PASS: Corin and Maddock retreat together before the hatchling chooses Corin.');

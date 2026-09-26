@@ -6165,16 +6165,16 @@ function beginHatchScene(m) {
   playScene(HATCH_LINES, { who: "Maddock", hatch: true, stay: true, after: finishHatchScene });
   m.goto = null;
 }
-function hatchRetreat(actor,ox,oy,clear) {
+function hatchRetreat(actor,ox,oy,clear,maxStep=24) {
   const angle=Math.atan2(actor.y-oy,actor.x-ox);
   let best=[actor.x,actor.y],distance=0;
   for(const offset of [0,Math.PI/6,-Math.PI/6,Math.PI/3,-Math.PI/3,5*Math.PI/12,-5*Math.PI/12,Math.PI/2,-Math.PI/2]){
-    for(let step=2;step<=24;step+=2){
+    for(let step=2;step<=maxStep;step+=2){
       const x=actor.x+Math.cos(angle+offset)*step,y=actor.y+Math.sin(angle+offset)*step;
       if(!clear(x,y))break;
       if(step>distance){best=[x,y];distance=step;}
     }
-    if(distance===24)break;
+    if(distance===maxStep)break;
   }
   return best;
 }
@@ -6244,6 +6244,10 @@ function stepHatchScene(dt) {
       hatchScene.chooseBack = true;
       hatchScene.chooseBackT = 0;
       hatchScene.chooseP0 = [P.x,P.y];
+      if(m){
+        hatchScene.chooseM0=[m.x,m.y];
+        hatchScene.chooseM1=hatchRetreat(m,hatchScene.dragonX,hatchScene.dragonY,(x,y)=>canNpcStand(x,y,m),TS);
+      }
       const dx=P.x-hatchScene.dragonX,dy=P.y-hatchScene.dragonY,d=Math.hypot(dx,dy)||1;
       const tx=P.x+dx/d*TS,ty=P.y+dy/d*TS;
       hatchScene.chooseP1=canStand(tx,ty)?[tx,ty]:[P.x,P.y];
@@ -6253,7 +6257,14 @@ function stepHatchScene(dt) {
       const u=hatchScene.chooseBackT*hatchScene.chooseBackT*(3-2*hatchScene.chooseBackT);
       P.x=hatchScene.chooseP0[0]+(hatchScene.chooseP1[0]-hatchScene.chooseP0[0])*u;
       P.y=hatchScene.chooseP0[1]+(hatchScene.chooseP1[1]-hatchScene.chooseP0[1])*u;
+      P.moving=hatchScene.chooseBackT<1;
+      if(m&&hatchScene.chooseM0){
+        m.x=hatchScene.chooseM0[0]+(hatchScene.chooseM1[0]-hatchScene.chooseM0[0])*u;
+        m.y=hatchScene.chooseM0[1]+(hatchScene.chooseM1[1]-hatchScene.chooseM0[1])*u;
+        m.scriptWalking=P.moving;faceToward(m,hatchScene.dragonX,hatchScene.dragonY);
+      }
       faceCorinAt(hatchScene.dragonX,hatchScene.dragonY);
+      if(hatchScene.chooseBackT===1)rebuildSolid();
     }
     if (scene.i >= 9 && scene.t > 0.75 &&
         (!hatchScene.chooseBack||hatchScene.chooseBackT>=1) && !hatchScene.approachDone) {

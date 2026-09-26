@@ -33,7 +33,7 @@ assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCom
 console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
- W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null},
+ W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null},
  clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
@@ -49,12 +49,17 @@ c.stepNanDeparture();assert.equal(c.mounted,false);assert.equal(c.dragon.air,fal
 c.dragon.tr=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
 
-for(const [x,y]of [[60,425],[30,407],[67,430]]){
- c.restoreFatherCompass();c.scene=null;c.dragonIntroDone=false;c.mounted=true;c.dragon.air=true;c.dragon.tr=null;
- c.MD.features=[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}];
+// Entering the town boundary or passing the house must not freeze Corin.
+for(const [x,y]of [[30,397],[30,407],[60,425],[67,430],[14,420]]){
+ c.restoreFatherCompass();c.scene=null;c.dragonIntroDone=false;c.mounted=false;c.dragon.air=false;c.dragon.tr=null;
  c.P={x:x*16,y:y*16};c.stepNanDeparture();
- assert(c.scene,'Nan stops a bypass far from her house at '+x+','+y);
- assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);
- [nan.x,nan.y]=nan.goto;nan.goto=null;c.dragon.tr=null;c.scene.hold();c.scene.after();
+ assert.equal(c.scene,null,'No early farewell at '+x+','+y);
 }
-console.log('PASS: Nan intercepts north/east town crossings and flying departures before the dragon introduction.');
+// From each approach, the central plaza is the encounter point.
+for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
+ c.restoreFatherCompass();c.scene=null;c.npcs=[];c.prepareNanDeparture();
+ const waiting=c.npcs[0];assert(Math.hypot(waiting.x-31*16,waiting.y-428.5*16)<=3*16,'Nan waits near the center');
+ c.P={x:x*16,y:y*16};c.stepNanDeparture();assert(c.scene,'Plaza triggers farewell');
+ assert(Math.hypot(waiting.goto[0]-waiting.x,waiting.goto[1]-waiting.y)<90,'Nan has only a short approach');
+}
+console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza with a short walk.');

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const scripts=[],images=[];
 const face={style:{},dataset:{},removeAttribute(){delete this.dataset.speaker;}};
-const c=vm.createContext({console,Map,Image:class {constructor(){images.push(this);}},
+const c=vm.createContext({scene:null,console,Map,Image:class {constructor(){images.push(this);}},
   faceEl:face,nameEl:{},shownFace:-1,typeWho:'',SPR:{},
   editorNpcKey:n=>n.editKey||'npc:'+n.n,
   document:{head:{appendChild:s=>scripts.push(s)},createElement:()=>({remove(){}})}});

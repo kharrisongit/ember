@@ -201,7 +201,7 @@ function drawTempleCompass() {
   ctx.restore();
 }
 
-// Use the authored town boundary, not proximity to Nan's front door.
+// Place the farewell in the town center, after Corin has returned to Millwood.
 function millwoodDepartureArea(){
   const list=typeof features!=='undefined'?features:MD?.features||[];
   return list.find(f=>f.kind==='area'&&(f.label==='Millwood'||f.place==='Millwood'))||null;
@@ -213,8 +213,20 @@ function prepareNanDeparture(){
   const door=MD.doors.find(d=>d.to==='house26');
   if(!home||!door)return;
   const r=door.triggerRect||{x:door.x*TS,y:door.y*TS,w:16,h:16};
-  npcs.push({...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:false,packWalk:true,packDirections:true,houseWalk:null,scriptWalking:true,patrol:null,goto:null,
-    fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false});
+  const visitor={...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:false,packWalk:true,packDirections:true,houseWalk:null,scriptWalking:true,patrol:null,goto:null,
+    fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false};
+  const town=millwoodDepartureArea();
+  if(town){
+    const cx=(town.x0+town.x1)*TS/2,cy=(town.y0+town.y1)*TS/2;
+    // Wait on walkable ground beside the plaza, rather than across town.
+    let spot=null;
+    for(let radius=0;radius<=3&&!spot;radius++)for(let i=0;i<8;i++){
+      const x=cx-2*TS+Math.cos(i*Math.PI/4)*radius*TS,y=cy+Math.sin(i*Math.PI/4)*radius*TS;
+      if(canNpcStand(x,y,visitor)){spot=[x,y];break;}
+    }
+    if(spot)[visitor.x,visitor.y]=spot;
+  }
+  npcs.push(visitor);
 }
 function stepNanDeparture(){
   if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||templeCompass.owned||
@@ -223,10 +235,8 @@ function stepNanDeparture(){
   const nan=npcs.find(n=>n.fatherCompassVisitor);
   if(!nan)return;
   const town=millwoodDepartureArea();
-  const inDepartureArea=town&&P.x>=(town.x0-6)*TS&&P.x<=(town.x1+10)*TS&&
-    P.y>=(town.y0-6)*TS&&P.y<=(town.y1+6)*TS;
-  const nearNan=Math.abs(P.x-nan.x)<=104&&Math.abs(P.y-nan.y)<=78;
-  if(!inDepartureArea&&!nearNan)return;
+  const inTownCenter=town&&Math.hypot(P.x-(town.x0+town.x1)*TS/2,P.y-(town.y0+town.y1)*TS/2)<=4*TS;
+  if(!inTownCenter)return;
   // Stop Corin immediately; finish landing and Nan's approach before dialogue.
   clearPadInputs();running=false;P.act=null;P.moving=false;
   if(mounted)setMounted(false,true);
