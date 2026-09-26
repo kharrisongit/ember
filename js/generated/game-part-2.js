@@ -1205,7 +1205,12 @@ function repairSeating(){
     if(n){n.x=x;n.stationary=true;n.sceneReserved=true;}
   }
   const linna=world.npcs.find(n=>n.n==='Linna');
-  if(linna)Object.assign(linna,{stationary:true,patrol:undefined,patrolPoints:undefined,goto:undefined,sk:undefined,packWalk:false,idleFrame:0});
+  if(linna)Object.assign(linna,{
+    // The previous pack_girl sheet only waves; use the authored four-direction cast.
+    packSpr:'guild_citizen2',lookId:'guild_citizen2',packDirections:true,packWalk:true,
+    stationary:false,patrol:true,patrolPoints:[[4288,1664],[4288,1536]],
+    goto:undefined,sk:undefined,body:undefined,idleFrame:undefined,idleFps:6
+  });
   const wren=world.npcs.find(n=>n.n==='Wren');
   if(wren){
     const oldX=wren.x,oldY=1872;
