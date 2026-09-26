@@ -6178,6 +6178,9 @@ function stepHatchScene(dt) {
   if (!hatchScene || !scene || !scene.hatch) return;
   hatchScene.stage = scene.i;
   hatchScene.t = scene.t;
+  if(scene.i>=7&&!hatchScene.hatchSoundPlayed){
+    hatchScene.hatchSoundPlayed=true;globalThis.window?.EmberSfx?.hatch();
+  }
   if (scene.i < 3) {
     hatchScene.x = hatchScene.eggX;
     hatchScene.y = hatchScene.eggY - 18;
@@ -7561,6 +7564,7 @@ function stepBreath(dt) {
            Corin's attacks can finish it. */
         const damage = f.hp >= fullHp ? Math.min(power, Math.max(1, f.hp - 1)) : power;
         f.hp = Math.max(0, f.hp - damage); f.hurt = 0.35;
+        globalThis.window?.EmberSfx?.breathHit();
         if (f.hp <= 0) {
           f.st = "dead"; f.t = 0;
           if (!f.storyKnight) dropGold(f.x, f.y, f.kind);

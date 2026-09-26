@@ -106,3 +106,30 @@ assert.equal(golemCount(),4,'Only a golem that actually takes sword damage produ
 await strike([{...target(),kind:'golem1'},{...target(),kind:'golem4',hp:1}]);assert.equal(golemCount(),5,'One golem impact per connected swing, including kills');
 await strike([target(),{...target(),kind:'golem2'}]);assert.equal(hitCount(),normalBefore+1);assert.equal(golemCount(),6,'Mixed targets each get their appropriate impact');
 console.log('PASS: all four golem types use their own successful sword impact; ordinary enemies keep theirs.');
+
+sfx.hatch();await flush();assert.equal(active('egg-hatch').length,1);assert.equal(active('egg-hatch')[0].loop,false);assert.equal(active('egg-hatch')[0].gain.to,output);
+
+// Breath audio belongs to enemy damage, never casting, walls, or empty ground.
+Object.assign(c,{foesHeld:false,bossScene:null,dragonCombatPause:0,breathCooldown:{},breathWait:()=>0,
+ stepHunt(){},BREATH:{reach:152},DRAGON_BREATH:{fire:{damage:8},ice:{damage:20},bolt:{damage:12},shadow:{damage:16}},
+ FOE:{gnoll1:{hp:10}},isSolid:()=>false});
+run(game.slice(game.indexOf('function stepBreath('),game.indexOf('\nfunction drawLavaBubbles(')));
+const breathHits=()=>sources.filter(s=>s.buffer[0].includes('dragon-breath-hit')).length;
+const blast=async(foes,el='fire')=>{
+ c.foes=foes;c.breath={el,t:0,x:0,y:0,vx:1,vy:0,distance:0,hit:0,impactT:0,speed:200};
+ c.stepBreath(.1);await flush();
+ const before=breathHits();c.stepBreath(.2);await flush();return before;
+};
+await blast([]);assert.equal(breathHits(),0,'An empty shot is silent');
+const breathTarget=()=>({...target(),x:12,y:0,hp:10});
+await blast([{...breathTarget(),ally:true},{...breathTarget(),st:'dead'},{...breathTarget(),storyPassive:true}]);
+assert.equal(breathHits(),0,'Breath ignores allies, dead enemies, and story characters');
+c.isSolid=()=>true;await blast([breathTarget()]);assert.equal(breathHits(),0,'A wall impact is silent');c.isSolid=()=>false;
+for(const el of ['fire','ice','bolt','shadow']){
+ const foe=breathTarget(),before=await blast([foe],el);
+ assert.equal(breathHits(),before+1);assert(foe.hp<10,'The sound accompanies actual damage');
+ c.stepBreath(.05);await flush();assert.equal(breathHits(),before+1,'An impact cannot repeat every frame');
+ const sound=active('dragon-breath-hit')[0];assert.equal(sound.loop,false);assert.equal(sound.gain.gain.value,.7);assert.equal(sound.gain.to,output);
+}
+const injured={...breathTarget(),hp:2},beforeKill=await blast([injured]);assert.equal(injured.st,'dead');assert.equal(breathHits(),beforeKill+1,'Lethal breath also plays the impact');
+console.log('PASS: breath impact plays once on successful enemy damage, including kills; casting, misses, walls, allies and corpses stay silent.');

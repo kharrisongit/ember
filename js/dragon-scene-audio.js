@@ -2,7 +2,7 @@
 (()=>{
   const files={roar:'dragon-roar',distant:'dragon-distant-crash',
     crash:'dragon-crash',wings:'dragon-wings',breathing:'dragon-breathing',
-    golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item'};
+    breathHit:'dragon-breath-hit',hatch:'egg-hatch',golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item'};
   const dragonEffects=['roar','distant','crash','wings','breathing'];
   const downloads=new Map(),buffers=new Map(),voices=new Map();
   let currentPhase='off';
@@ -67,6 +67,8 @@
     stop:clear
   };
   window.EmberSfx={
+    breathHit:()=>{if(inGame())play('breathHit',false,true);},
+    hatch:()=>{if(inGame())play('hatch',false,true);},
     golemHit:()=>{if(inGame())play('golemHit',false,true);},
     hit:()=>{if(inGame())play('hit',false,true);},
     death:()=>{if(inGame()){for(const name of voices.keys())stop(name);play('death');}},
