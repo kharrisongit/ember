@@ -49617,6 +49617,15 @@
         "kind": "collision",
         "key": "525,229",
         "blocked": false
+      },
+      "actor:npc:Suhaila": {
+        "kind": "actor",
+        "key": "npc:Suhaila",
+        "identity": "Suhaila",
+        "x": 24312,
+        "y": 1680,
+        "originX": 24408,
+        "originY": 1728
       }
     },
     "witchmoor": {
@@ -51402,7 +51411,8 @@
     "ac3bca40-bdfb-4024-ae60-412ffc192a3b",
     "d655d879-e781-4569-b5d2-d54bc3f514ec",
     "5f3809ed-2729-4ced-87af-39b99f1a60a0",
-    "66a65043-9ea5-4f29-81e5-4ae383293cae"
+    "66a65043-9ea5-4f29-81e5-4ae383293cae",
+    "a5b389e5-1881-493e-bf30-01f3bb03f836"
   ],
   "sessions": {
     "witchmoor": {
@@ -51526,10 +51536,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "aeacde4c-c008-4f3f-a326-23cd8a1e2c5c",
+      "id": "06af9303-7e4f-4cd3-9b13-19e969c741b8",
       "sequence": 1,
-      "baseHash": "9638d76b-83f1fdef-385059",
-      "baseFingerprint": "b51c138d-b7aa1af7-739132",
+      "baseHash": "e4ee61ac-b933ab56-386738",
+      "baseFingerprint": "2c951c83-3cd6bc75-739588",
       "base": {
         "build": {
           "kind": "build",
@@ -98776,8 +98786,8 @@
           "rect": {
             "x": 4671,
             "y": 1002,
-            "w": 16,
-            "h": 16
+            "w": 22,
+            "h": 21
           }
         },
         "collision:534,127": {
@@ -100920,9 +100930,124 @@
           "kind": "collision",
           "key": "5445,393",
           "blocked": true
+        },
+        "collision:518,226": {
+          "kind": "collision",
+          "key": "518,226",
+          "blocked": false
+        },
+        "collision:518,227": {
+          "kind": "collision",
+          "key": "518,227",
+          "blocked": false
+        },
+        "collision:518,228": {
+          "kind": "collision",
+          "key": "518,228",
+          "blocked": false
+        },
+        "collision:518,229": {
+          "kind": "collision",
+          "key": "518,229",
+          "blocked": false
+        },
+        "collision:518,230": {
+          "kind": "collision",
+          "key": "518,230",
+          "blocked": false
+        },
+        "collision:527,226": {
+          "kind": "collision",
+          "key": "527,226",
+          "blocked": false
+        },
+        "collision:527,227": {
+          "kind": "collision",
+          "key": "527,227",
+          "blocked": false
+        },
+        "collision:527,228": {
+          "kind": "collision",
+          "key": "527,228",
+          "blocked": false
+        },
+        "collision:527,229": {
+          "kind": "collision",
+          "key": "527,229",
+          "blocked": false
+        },
+        "collision:527,230": {
+          "kind": "collision",
+          "key": "527,230",
+          "blocked": false
+        },
+        "collision:527,231": {
+          "kind": "collision",
+          "key": "527,231",
+          "blocked": false
+        },
+        "collision:526,226": {
+          "kind": "collision",
+          "key": "526,226",
+          "blocked": false
+        },
+        "collision:526,227": {
+          "kind": "collision",
+          "key": "526,227",
+          "blocked": false
+        },
+        "collision:526,228": {
+          "kind": "collision",
+          "key": "526,228",
+          "blocked": false
+        },
+        "collision:526,229": {
+          "kind": "collision",
+          "key": "526,229",
+          "blocked": false
+        },
+        "collision:526,230": {
+          "kind": "collision",
+          "key": "526,230",
+          "blocked": false
+        },
+        "collision:519,229": {
+          "kind": "collision",
+          "key": "519,229",
+          "blocked": false
+        },
+        "collision:520,229": {
+          "kind": "collision",
+          "key": "520,229",
+          "blocked": false
+        },
+        "collision:521,229": {
+          "kind": "collision",
+          "key": "521,229",
+          "blocked": false
+        },
+        "collision:522,229": {
+          "kind": "collision",
+          "key": "522,229",
+          "blocked": false
+        },
+        "collision:523,229": {
+          "kind": "collision",
+          "key": "523,229",
+          "blocked": false
+        },
+        "collision:524,229": {
+          "kind": "collision",
+          "key": "524,229",
+          "blocked": false
+        },
+        "collision:525,229": {
+          "kind": "collision",
+          "key": "525,229",
+          "blocked": false
         }
       },
-      "resultHash": "e4ee61ac-b933ab56-386738"
+      "resultHash": "b5242897-1c256bab-386866"
     },
     "tavern": {
       "id": "2b5ef6fd-11cc-49e8-adc8-3dd21e027401",
