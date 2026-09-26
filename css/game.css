@@ -2312,7 +2312,7 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
 
 /* Painted speaker busts sit on the upper edge of the dialogue box. */
 #face { position:fixed; width:144px; height:144px;
-  bottom:calc(var(--deck) + 94px); pointer-events:none;
+  bottom:calc(var(--deck) + 86px); pointer-events:none;
   background-repeat:no-repeat; image-rendering:auto; }
 @media (max-height:600px) { #face { width:112px; height:112px; } }
 
@@ -2324,8 +2324,6 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
 }
 #say[data-telepathy="true"] {font-size:15px;letter-spacing:.01em;}
 #sayname[data-telepathy="true"] {color:#bceae2;font-size:16px;}
-#face { -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 74%,transparent 100%);
-  mask-image:linear-gradient(to bottom,#000 0%,#000 74%,transparent 100%); }
 #face[data-telepathy="true"] {filter:drop-shadow(0 0 7px #79dad687);}
 #bagAsk.dragonTalk {
   background:linear-gradient(145deg,#17253afc,#30203afa)!important;color:#e8fff5!important;
@@ -2353,3 +2351,10 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
 .telepathyPortrait {display:block;flex:0 0 34px;width:34px;height:34px;border-radius:50%;
   background-repeat:no-repeat;background-color:#65798342;box-shadow:0 0 0 1px #99ded58c;}
 .telepathyWords {max-width:340px;}
+
+/* Menu contents and bold selection must never resize their container. */
+#bagAsk {overflow-x:hidden;scrollbar-gutter:stable;}
+#askRows {width:100%;min-width:0;}
+#askRows>div {max-width:100%;overflow-wrap:anywhere;}
+#itemRows,#bagLeft,#bagPanel {scrollbar-gutter:stable;overflow-x:hidden;}
+#bagDesc {width:100%;min-width:0;overflow-wrap:anywhere;}

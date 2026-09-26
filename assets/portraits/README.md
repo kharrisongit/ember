@@ -20,4 +20,4 @@ Chanter and Morel, the two human sprites at Shroom Pass, are retired.
 Aurelius and Halvard were revised with built-in imagegen on 2026-09-26.
 The young dragon follows the same sprite; Halvard retains his visible beard
 with complete shoulder contours. Revision prompts are in revision-prompts.json.
-Dialogue applies a lower-edge transparency fade to the entire portrait cast.
+Portraits overlap the top edge of the dialogue box without a CSS transparency fade.

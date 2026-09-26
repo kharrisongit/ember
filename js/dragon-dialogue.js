@@ -502,10 +502,21 @@ function dragonSideQuest(topic){
     'Aurelius: No. Think of these as leads worth following. The people themselves will tell you what their gifts mean.'
   ];
 }
-// Visit history shares the existing saved conversation history. Older saves also
-// recognize the place remarks they heard before these topics were introduced.
+// Record actual areas, never the names of towns mentioned by a road label.
+const DRAGON_VISIT_PLACES=['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Sporehollow','Ashcrag','Cinderhold'];
+function dragonPlaceIdentity(name){
+  if(typeof name!=='string'||/road|route|path|temple|graveyard|passage/i.test(name))return null;
+  return DRAGON_VISIT_PLACES.find(place=>name===place||name.startsWith(place+' — ')||name.startsWith(place+' – ')||name.startsWith(place+': '))||null;
+}
 function dragonConversationPlace(){
-  return MAPID==='world'?areaUnder(P.x,P.y):(MD.title||MAPID);
+  if(MAPID==='cinderhold'||MAPID.startsWith('royal_'))return 'Cinderhold';
+  if(MAPID!=='world')return dragonPlaceIdentity(MD.title||'');
+  if(typeof features==='undefined')return dragonPlaceIdentity(areaUnder(P.x,P.y));
+  const x=P.x/TS,y=(P.y-1)/TS;
+  const area=features.filter(f=>f.kind==='area'&&!f.hidden&&x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1)
+    .sort((a,b)=>(a.x1-a.x0)*(a.y1-a.y0)-(b.x1-b.x0)*(b.y1-b.y0))
+    .find(f=>DRAGON_VISIT_PLACES.includes(f.label||f.place));
+  return area?(area.label||area.place):null;
 }
 function rememberDragonConversationPlace(){
   const place=dragonConversationPlace();
@@ -514,9 +525,10 @@ function rememberDragonConversationPlace(){
   if(!dragonBanterSeen.has(key)){dragonBanterSeen.add(key);persistDragonBanterSeen();}
 }
 function dragonKnowsPlace(place){
-  const current=dragonConversationPlace()||'';
-  return current.includes(place)||[...dragonBanterSeen].some(key=>
-    key.startsWith('visited:')&&key.slice(8).includes(place)||key.startsWith('place:'+place+':'));
+  if(dragonConversationPlace()===place)return true;
+  return [...dragonBanterSeen].some(key=>
+    key.startsWith('visited:')&&dragonPlaceIdentity(key.slice(8))===place||
+    key==='place:'+place+':journey'||key==='place:'+place+':victory');
 }
 const DRAGON_JOURNEY_TOPICS=[
   {id:'home',name:'Leaving Millwood',when:()=>!wonAll,lines:()=>[
@@ -538,7 +550,7 @@ const DRAGON_JOURNEY_TOPICS=[
   {id:'thornwell',name:'The people in Thornwell',when:()=>dragonKnowsPlace('Thornwell'),lines:()=>[
     'Corin: I used to think Thornwell was terribly far from home.',
     'Aurelius: And now?',
-    'Corin: Now I wonder what I missed by never going. I could spend a week just in the school.',
+    'Corin: Now that we have made it here, I want to look around. I would like to see the school.',
     'Aurelius: You could ask the same question in every room and leave with a different answer.',
     'Corin: Would that help?',
     'Aurelius: I think I would enjoy finding out with you.'
@@ -548,8 +560,8 @@ const DRAGON_JOURNEY_TOPICS=[
     'Aurelius: The heat does. The hammering makes my teeth itch.',
     'Corin: I thought dragons would like a forge.',
     'Aurelius: I like watching the work. Dunstan turns the same piece of metal over and over, noticing something different each time.',
-    'Corin: He noticed every nick in Maddock’s sword.',
-    'Aurelius: I noticed you trying to explain them before he had asked.'
+    smithUpgrade?'Corin: He noticed every nick in Maddock’s sword.':'Corin: I should ask him to look at Maddock’s sword.',
+    smithUpgrade?'Aurelius: I noticed you trying to explain them before he had asked.':'Aurelius: He may ask how the edge got that way. You have time to prepare your explanation.'
   ]},
   {id:'sandspire',name:'Crossing the desert',when:()=>dragonKnowsPlace('Sandspire'),lines:()=>[
     'Corin: Sand has got into places I did not know my boots had.',
@@ -583,7 +595,7 @@ const DRAGON_JOURNEY_TOPICS=[
     'Corin: We should ask where it is safe to stand. Some of those little shoots might be somebody.',
     'Aurelius: That would be a thoughtful question.'
   ]},
-  {id:'mountains',name:'Beyond the mountain pass',when:()=>dragonKnowsPlace('Ashcrag')||dragonKnowsPlace('passage')||dragonKnowsPlace('Mountain Passage'),lines:()=>[
+  {id:'mountains',name:'Beyond the mountain pass',when:()=>dragonKnowsPlace('Ashcrag'),lines:()=>[
     'Corin: Snow behind us, smoke ahead. I can hardly believe it is the same mountain.',
     'Aurelius: Feel the air coming through the stone. There is heat below us.',
     'Corin: And Cinderhold beyond it.',

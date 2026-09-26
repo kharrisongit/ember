@@ -220,3 +220,15 @@ const replies=new Set();for(let i=0;i<12;i++){run('dragonDoorExchange()');replie
 assert.equal(replies.size,12);
 assert.equal(run('DRAGON_GENERAL_TOPICS.history.length+DRAGON_GENERAL_TOPICS.personal.length'),12);
 console.log('PASS: facing, short range, combat locks, 12 general topics, and 12 nonblocking doorway replies.');
+// A road mentioning a town is not a visit, including history from older builds.
+clear();c.MAPID='world';c.wonAll=false;place='Millwood–Thornwell Road';
+run("resetDragonBanter(['visited:Millwood–Thornwell Road','visited:Thornwell–Forgewick Road'])");
+assert(!topicIds().includes('thornwell'));assert(!topicIds().includes('forgewick'));
+c.TS=16;c.features=[{kind:'area',label:'Thornwell',x0:100,y0:100,x1:120,y1:120}];
+c.P={x:99*16,y:110*16+1};place='Thornwell';
+run('rememberDragonConversationPlace()');assert(!topicIds().includes('thornwell'),'nearby label cannot substitute for entering town');
+c.P.x=100*16;run('rememberDragonConversationPlace()');assert(topicIds().includes('thornwell'),'actual boundary unlocks town');
+c.P.x=99*16;assert(topicIds().includes('thornwell'),'a real visit remains known after leaving');
+run("resetDragonBanter(['visited:Hollybeck Graveyard','visited:Forgewick Temple','visited:Cinderhold Castle'])");
+assert(!topicIds().includes('hollybeck'));assert(!topicIds().includes('forgewick'));assert(!topicIds().includes('cinderhold'));
+console.log('PASS: exact town boundaries, persistent real visits, and rejection of road, temple and graveyard false visits.');

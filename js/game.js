@@ -15918,7 +15918,7 @@ function askDraw() {
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   wireBagDrag("bagAsk");
-  el.style.width=ask.quantity?'200px':ask.confirmation?'260px':'';
+  el.style.width=ask.quantity?'200px':ask.confirmation?'260px':ask.dragonConversation?'350px':'300px';
   rows.innerHTML = "";
   if(ask.quantity){
     const q=ask.quantity,item=STOCK[q.key];

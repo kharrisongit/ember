@@ -18,5 +18,5 @@
       ]
     }
   ],
-  "presentation": "All dialogue portraits use a lower-edge transparency fade to soften square shoulder cutoffs."
+  "presentation": "Portrait busts meet the dialogue box with no CSS transparency fade."
 }
