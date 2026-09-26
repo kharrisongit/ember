@@ -18,3 +18,19 @@ assert.equal(c.journeyGateProps().length,1,'only the returned market wagon remai
 c.MAPID='tp1';assert.equal(c.journeyGateProps().length,0);assert(c.progressionMoveAllowed(0,0));
 assert(fs.readFileSync('js/generated/game-part-2.js','utf8').includes('const HERD_Y = 415;'));
 console.log('PASS: four quest gates, required Forgewick equipment, return travel, all temple approaches, unlock removal and cow placement.');
+
+// The first hunting loop and the Millwood–Thornwell road cross gate longitudes far from roadworks.
+c.MAPID='world';c.brambleQuest=0;c.breathHas={};c.smithUpgrade=false;c.charm={};c.glassShield=false;
+for(const y of [205,350,430]){
+ c.P.x=319*16;c.P.y=y*16;
+ assert(c.progressionMoveAllowed(321*16,y*16),'Thornwell longitude stays open away from the wagon at y='+y);
+ assert(!c.progressionSolid(320*16,y*16));
+}
+for(const g of Object.values(gates)){
+ c.P.x=g.x-1000;c.P.y=g.y+1000;
+ assert(c.progressionMoveAllowed(g.x+1000,g.y+1000),'No remote invisible gate boundary');
+}
+const game=fs.readFileSync('js/generated/game-part-2.js','utf8');
+assert(game.includes('if(progressionSolid(px,py))return "story";'),'Collision overlay uses a visible gate colour');
+assert(game.includes('if(progressionSolid(px,py))return "roadworks";'),'Collision diagnostics identify roadworks');
+console.log('PASS: early hunting roads cross gate longitudes freely; actual roadblocks remain visible and enforced.');

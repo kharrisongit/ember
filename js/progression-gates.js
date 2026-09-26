@@ -18,7 +18,20 @@ function progressionSolid(x,y){
 }
 function progressionMoveAllowed(x,y){
   if(MAPID!=='world'||editing||mode!=='play')return true;
-  return Object.values(JOURNEY_GATES).every(g=>g.open()||g.inside(P.x,P.y)||!g.inside(x,y));
+  return Object.values(JOURNEY_GATES).every(g=>{
+    if(g.open()||g.inside(P.x,P.y)||!g.inside(x,y))return true;
+    // A gate is local roadwork, not a wall spanning every road at this longitude.
+    // Test the travel segment against the visible obstruction, preserving return travel.
+    let enter=0,leave=1;
+    for(const [from,to,lo,hi] of [[P.x,x,g.rect[0],g.rect[2]],[P.y,y,g.rect[1],g.rect[3]]]){
+      const delta=to-from;
+      if(!delta){if(from<lo||from>=hi)return true;continue;}
+      const a=(lo-from)/delta,b=(hi-from)/delta;
+      enter=Math.max(enter,Math.min(a,b));leave=Math.min(leave,Math.max(a,b));
+      if(enter>leave)return true;
+    }
+    return false;
+  });
 }
 function journeyWorker(name,sprite,key,x,y,lines,portrait){
   return {n:name,packSpr:sprite,packDirections:false,packWalk:false,stationary:true,serviceAppearance:true,

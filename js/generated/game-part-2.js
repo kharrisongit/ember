@@ -2356,6 +2356,7 @@ function blockedByTrialPedestal(px, py) {
 const whyBlocked = (px, py) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return "off the map";
+  if(progressionSolid(px,py))return "roadworks";
   if (solid[y * MW + x] === 1) return "solid[]";
   if (blockedByTrialPedestal(px, py)) return "trial pedestal";
   if (blockedByNpcBuffer(px, py)) return "npc half-tile buffer";
@@ -10117,7 +10118,7 @@ function standUp() {
 }
 function blockReason(px, py) {
   if(px<0||py<0||px>=MW*TS||py>=MH*TS)return "edge";
-  if(progressionSolid(px,py))return true;
+  if(progressionSolid(px,py))return "story";
   const override=collisionOverride(px,py);if(override!==undefined)return override?"custom":null;
   if(blockedByNpcBody(px,py)||blockedByNpcBuffer(px,py))return "npc";
   if(MD.roomBlocks?.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3]))return "furniture";
