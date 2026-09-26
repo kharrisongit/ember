@@ -4566,7 +4566,7 @@ const BAG = [
     has: () => dragonFish > 0,
     icon: () => (SPR.hb_fish1 ? "hb_fish1" : null) },
   {key:'fishingPole',name:'Fishing Pole',kind:'key',has:()=>fishingPole,
-    tell:'A gift from Liora at Forgefalls. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> 'fishing_rod'},
+    tell:'A gift from Odo after he returns home in Millwood. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> 'fishing_rod'},
   { key: "glassShield", name: "Glass Shield", kind: "key",
     tell: "Sela's clear-glass focus. Tap/hold B to raise a brief force field. Move with B held to run. Orange flashes warn of blockable attacks; red flashes warn of unblockable attacks.",
     has: () => glassShield,

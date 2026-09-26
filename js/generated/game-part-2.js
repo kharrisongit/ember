@@ -276,23 +276,8 @@ function installFishingVillager() {
     keep.push(s,x,y);
   }
   m.objs=keep;
-  NPC_VOICES.Liora=['Tell your winged friend the catch is coming; glaring at the water will not hurry it.',
-    'They say your travelling companion has scales. Mine usually fit in a bucket.',
-    'If the road leaves your dragon tired, bring it something fresh from the river.',
-    'Even the falls sound gentler without Halvard casting a shadow over the valley.'];
-  if(!m.npcs.some(n=>n.n==='Liora'))m.npcs.push({
-    n:'Liora',x:416*W.ts,y:329.5*W.ts,f:'d',stationary:true,
-    packSpr:'pack_fisher_boy',packDirections:false,packWalk:false,idleFps:6,lookId:'pack_fisher_boy',loc:'Forgefalls',
-    d:['The spray keeps my hair damp, but the trout make up for it.'],
-    d2:['Watch the green arc, not the waterfall. A patient thumb catches supper.'],
-    dd:['Your dragon has been watching my creel. I think we share an interest.'],
-    dd2:['A fish from your own line tastes better. Your dragon seems to agree.'],
-    dragonNear:['Tell your winged friend the catch is coming; glaring at the water will not hurry it.'],
-    dragonRumor:['They say your travelling companion has scales. Mine usually fit in a bucket.'],
-    dragonRumor2:['If the road leaves your dragon tired, bring it something fresh from the river.'],
-    dv:['Even the falls sound gentler without Halvard casting a shadow over the valley.'],
-    dv2:['You have earned a quiet afternoon here, Corin. Cast a line and let the world wait.']
-  });
+  // Fishing is now taught by Odo after he returns home with the bridge clear.
+  m.npcs=m.npcs.filter(n=>n.n!=='Liora');
 }
 function installFerrySigns(){
   const m=W.maps.world,f=m.ferry;if(!f)return;
@@ -10830,7 +10815,7 @@ function interact() {
       }
       const giver = sayNpc;
       sayNpc = null; sayOff(); showFace(null);
-      if(giver.n==='Liora'&&!fishingPole){
+      if(canOdoGiveFishingPole(giver)){
         fishingPole=true;
         showReveal('fishing_rod','Corin obtained a Fishing Pole! Face water and press A to fish.');
         return;
@@ -10891,6 +10876,9 @@ function interact() {
   }
   if (hasSword()) startAct("swing");
 }
+function canOdoGiveFishingPole(n) {
+  return n?.n==='Odo' && hasDragon() && n.odoAtHome===true && !fishingPole;
+}
 function beginNpcTalk(best) {
     if (MAPID === "cinderhold" && /Halvard/.test(best.n || "") && !wonAll && window.EmberKingMusic) window.EmberKingMusic.start();
     sayNpc = best; sayLine = 0;
@@ -10899,10 +10887,10 @@ function beginNpcTalk(best) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    if(best.n==='Liora'&&!fishingPole){
-      sayNpc.said=["The trout gather beneath Forgefalls, where the current brings their supper.",
-        "Here, Corin. My spare fishing pole deserves more adventures than my bag.",
-        "Face any water and press A. Stop the spinning marker inside the green arc to catch a fish. Your dragon can eat the catch to recover."];
+    if(canOdoGiveFishingPole(best)){
+      sayNpc.said=["Odo: A dragon, Corin? I leave the bridge for one afternoon and you find another mouth to feed.",
+        "Odo: Take my spare fishing pole. You will need a catch of your own to keep that companion fed.",
+        "Odo: Face water and press A. Stop the spinning marker inside the green arc to catch a fish. Feed your catch to the dragon when it needs to recover."];
     }
     else if (best.n === "Sela" && !glassShield) {
       sayNpc.said = ["Sela: Corin, wait. I made something from the clearest furnace glass I have.",
