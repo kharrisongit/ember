@@ -2069,6 +2069,11 @@ function loadMap(id, fresh, discardDraft=false) {
   if (fresh) delete edits[id];
   blockTiles = []; lineTiles = new Set(); rockTiles = new Set();
   MAPID = id; MD = W.maps[id];
+  if(!dragonAllowedInMap(id,MD)){
+    if(mounted)setMounted(false,true);
+    dragon.air=false;dragon.tr=null;dragon.moving=false;
+    breath=null;breathT=0;
+  }
   if(typeof prepareLocalNpcPlacements==='function')prepareLocalNpcPlacements(MD,id,savedEditorState);
   applyActorLayout(MD,id);
   // Apply conversations after published additions and local transfers are restored.
@@ -5445,7 +5450,7 @@ function dragonCanStand(x, y) {
   arenaPass = false;
   return !blocked;
 }
-function dragonAirborne() { return dragon.air && !dragon.tr; }
+function dragonAirborne() { return dragonHere() && dragon.air && !dragon.tr; }
 function dragonStep(dx, dy) {
   if (breath) return;
   if (dragonAirborne()) { dragon.x += dx; dragon.y += dy; return; }
@@ -5929,8 +5934,12 @@ function clearBridge() {
   fisher.goto=null;fisher.patrol=null;fisher.stationary=true;fisher.packWalk=false;
   fisher.f='d';fisher.flip=false;fisher.odoAtHome=true;
 }
-const indoors = () => /^house/.test(MAPID);
-const dragonHere = () => !dragonOff && hasDragon() && !indoors();
+const indoors = () => MAPID !== 'world';
+function dragonAllowedInMap(id,map=W.maps[id]) {
+  return id==='world'||id==='cinderhold'||!!map?.royal||!!map?.templeExpanded||
+    /^(?:tp|sn|ds)[1-4]$/.test(id);
+}
+const dragonHere = () => !dragonOff && hasDragon() && dragonAllowedInMap(MAPID);
 
 let scene = null;
 let walker = null;
