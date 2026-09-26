@@ -2,7 +2,7 @@
 const MILLWOOD_STORY_DIALOGUE={
   "Hettie": {
     "d": [
-      "Hettie: Give me a moment, Corin. They have both decided this is the best grass in Millwood.",
+      "Hettie: Give me a moment, Corin. The cows have decided this is the best grass in Millwood.",
       "Corin: Right in the middle of the lane?",
       "Hettie: Apparently it tastes better when someone is waiting."
     ],

@@ -6114,29 +6114,11 @@ function stepDeflectCamera(dt) {
   if ((!P.act || P.act.kind !== "fall") && (settled || c.t > 2)) deflectCamera = null;
 }
 function lockHatchCamera(c, m, hs) {
-  /* Establish one composition for the whole dialogue.  Re-measuring the cast
-     every time A advances a line made the camera visibly tug against itself. */
-  const pts = [[P.x,P.y],[hs.eggX,hs.eggY],[hs.dragonX,hs.dragonY]];
-  const door=maddockDoor();pts.push([door.x,door.y]);
-  if (m) pts.push([m.x,m.y]);
-  const left = Math.min(...pts.map(p=>p[0]))-72;
-  const right = Math.max(...pts.map(p=>p[0]))+72;
-  const top = Math.min(...pts.map(p=>p[1]))-92;
-  const bottom = Math.max(...pts.map(p=>p[1]))+42;
-  // Reserve the full height of either speaker portrait, even between lines.
-  // Keep one locked composition: changing speakers must not move the camera.
-  const view=typeof cv!=='undefined'?cv.getBoundingClientRect?.():null;
-  const box=typeof sayEl!=='undefined'?sayEl.getBoundingClientRect?.():null;
-  const portraitHeight=typeof getComputedStyle==='function'?parseFloat(getComputedStyle(faceEl).height)||144:144;
-  const scale=view?.height?VH/view.height:1;
-  const safeBottom=view&&box?.top>view.top?Math.min(VH,(box.top-view.top-portraitHeight-16)*scale):VH*.56;
-  const available=Math.max(100,safeBottom-16);
-  const z = Math.min(c.zoom*.85, VW*.88/(right-left), available/(bottom-top));
-  const centreX=(hs.eggX+hs.dragonX)/2;
-  const centreY=(top+bottom)/2;
-  return { x:centreX, y:centreY+(VH/2-(16+available/2))/z, z };
-
+  // Portraits are hidden for this scene, so keep the normal playing zoom.
+  // Place the egg above the text box and hold this composition between lines.
+  return { x: hs.eggX, y: hs.eggY + VH * .1 / c.zoom, z: c.zoom };
 }
+
 function stepHatchCamera(dt) {
   const c = hatchCamera;
   if (!c) return;
@@ -6164,8 +6146,7 @@ function stepHatchCamera(dt) {
 function beginHatchScene(m) {
   hatchCamera = { zoom: cam.z, returnT: 0 };
   camFree = true;
-  // Save their retreat for the hatch itself instead of moving Corin before
-  // the first line. This also leaves room for his visible backward step.
+  // Both step away when the egg is put down, before it starts shaking.
   const ex=(P.x+m.x)/2,ey=(P.y+m.y)/2;
   hatchScene = { x: ex, y: ey - 18, eggX: ex, eggY: ey,
                  stage: 0, t: 0, dragonX: ex, dragonY: ey,
@@ -6207,12 +6188,12 @@ function stepHatchScene(dt) {
     hatchScene.y = hatchScene.eggY;
   }
   const m = elder();
-  if (scene.i >= 7 && !hatchScene.spread && m) {
+  if (scene.i >= 3 && !hatchScene.spread && m) {
     hatchScene.spread = true;
     hatchScene.spreadT = 0;
     hatchScene.p0 = [P.x, P.y]; hatchScene.m0 = [m.x, m.y];
-    hatchScene.p1 = hatchRetreat(P,hatchScene.x,hatchScene.y,canStand);
-    hatchScene.m1 = hatchRetreat(m,hatchScene.x,hatchScene.y,(x,y)=>canNpcStand(x,y,m));
+    hatchScene.p1 = hatchRetreat(P,hatchScene.eggX,hatchScene.eggY,canStand);
+    hatchScene.m1 = hatchRetreat(m,hatchScene.eggX,hatchScene.eggY,(x,y)=>canNpcStand(x,y,m));
     m.goto = null;
   }
   if (hatchScene.spread && hatchScene.spreadT < 1 && m) {
@@ -6630,7 +6611,7 @@ function advanceScene() {
   if (scene.hold) return;          /* it has not begun */
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
-  if (scene.hatch && scene.i === 3 && scene.t < 0.6) return; /* finish putting the egg down */
+  if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
   /* The hatchling's two turns are staged beats, not skippable text taps. */
   if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
@@ -6816,10 +6797,10 @@ function questTalk() {
   if (quest === Q.ERRAND && nearNpc("Hettie")) {
     quest = Q.EGGS;
     playScene([
-      "Hettie: Morning, Corin. I am trying to get these two off the lane.",
+      "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
       "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
-      "Hettie: The coop is behind the mill. I should have this "
-        + "pair out of your way by the time you have the basket.",
+      "Hettie: The coop is behind the mill. I should have the "
+        + "cows out of your way by the time you have the basket.",
     ], { who: "Hettie" });
     return true;
   }
@@ -6873,10 +6854,10 @@ function stepQuest(dt) {
 
   if (false) {
     playScene([
-      "Hettie: Morning, Corin. I am trying to get these two off the lane.",
+      "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
       "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
-      "Hettie: The coop is behind the mill. I should have this "
-        + "pair out of your way by the time you have the basket.",
+      "Hettie: The coop is behind the mill. I should have the "
+        + "cows out of your way by the time you have the basket.",
     ], { who: "Hettie" });
     return;
   }

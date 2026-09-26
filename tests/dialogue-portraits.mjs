@@ -70,3 +70,10 @@ console.log('PASS: all 131 portraits, unique names, valid image packs, exact ali
 
 c.smithUpgrade=true;assert.equal(c.portraitFor("Corin").pack,8);c.smithUpgrade=false;assert.equal(c.portraitFor("Corin").pack,1);
 run(read("assets/portraits/pack-8.js"));assert(run("portraitPackSources.get(8).startsWith('data:image/webp;base64,')"));
+
+c.scene={hatch:true};run("showDialoguePortrait('Corin')");
+assert.equal(face.style.display,'none','Hatching hides Corin’s portrait');
+run("showDialoguePortrait('Maddock')");
+assert.equal(face.style.display,'none','Hatching hides Maddock’s portrait');
+c.scene=null;run("showDialoguePortrait('Corin')");
+assert.equal(face.style.display,'block','Portraits resume outside hatching');

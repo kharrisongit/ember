@@ -72,7 +72,8 @@ function portraitFor(who) {
   return DIALOGUE_PORTRAITS[name]||null;
 }
 function showDialoguePortrait(who) {
-  const request=++portraitRequest, portrait=portraitFor(who);
+  const request=++portraitRequest;
+  const portrait=typeof scene!=='undefined'&&scene?.hatch?null:portraitFor(who);
   faceEl.style.display='none';
   faceEl.style.backgroundImage='none';
   faceEl.className=who==='Corin'?'right':'left';

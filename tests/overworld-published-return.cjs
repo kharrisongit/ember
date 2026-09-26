@@ -272,7 +272,7 @@ const hatchElder=elder();hatchElder.away=0;
 for(const [dx,dy] of [[0,24],[24,0],[-24,0],[0,-24]]){
  hatchElder.x=ELDER_WELL[0]*TS+TS/2;hatchElder.y=ELDER_WELL[1]*TS+TS;hatchElder.goto=null;
  P.x=hatchElder.x+dx;P.y=hatchElder.y+dy;assert(canStand(P.x,P.y),'Corin can approach from this side');
- beginHatchScene(hatchElder);scene.i=7;scene.t=1;
+ beginHatchScene(hatchElder);scene.i=3;scene.t=1;
  for(let i=0;i<12;i++)stepHatchScene(.05);
  for(const [start,end]of [[hatchScene.p0,hatchScene.p1],[hatchScene.m0,hatchScene.m1]]){
   assert(Math.hypot(end[0]-start[0],end[1]-start[1])>=18,'Both characters visibly step away on the actual map');
