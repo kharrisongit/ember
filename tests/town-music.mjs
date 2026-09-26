@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8'),html=read
 function setup(stored=null,ios=false){
  const elements=new Map(),timers=[],listeners={};let sync,now=0;
  const attrs=new Map([...html.matchAll(/<audio id="([^"]+)"([^>]*>)([\s\S]*?)<\/audio>/g)].map(m=>[m[1],(m[2]+m[3]).match(/src="([^"]*)"/)?.[1]||'']));
- const c=vm.createContext({MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
+ const c=vm.createContext({mode:'play',quest:0,Q:{NOISE:5,ARMED:6,DONE:9},dragonJourneyEnded:false,dragonIntroDone:false,saveGame(){},MAPID:'house26',MD:{title:'Millwood — The Hearth House'},P:{x:24*16,y:430*16},TS:16,
  wonAll:false,lastFight:0,scene:null,sayNpc:null,features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}],
  document:{hidden:false,getElementById:id=>{if(!elements.has(id))elements.set(id,{id,src:attrs.get(id),paused:true,volume:1,currentTime:17,plays:0,
   getAttribute(k){return k==='src'?this.src:null;},querySelector(){return null;},
@@ -50,14 +50,14 @@ c.lastFight=1;await change('cinderhold','Throne room');assert.equal(track('Villa
 c.lastFight=2;sync();await advance();assert.equal(track('Villain').paused,false,'King’s second phase keeps the song');
 c.wonAll=true;sync();await advance();assert.equal(track('Millwood').paused,false,'Victory restores the default');c.wonAll=false;c.lastFight=0;
 await change('world','Emberfell',30,430);
-// Incoming audio may take time to buffer. Keep the old track until it plays.
-track('Villain').waitForPlay=true;c.window.EmberKingMusic.start();await advance();
-assert.equal(track('Millwood').volume,.35);assert.equal(track('Millwood').paused,false);assert.equal(track('Villain').volume,0);
-track('Villain').finishPlay();await advance(450);
-const half=track('Villain').volume;assert(half>.1&&half<.25);assert(track('Millwood').volume>0,'Both songs overlap during the fade');
-listeners.pointerdown();listeners.touchstart();assert.equal(track('Villain').volume,half,'Further touches do not jump to full volume');
-c.window.EmberAudio.set(70);assert.equal(track('Villain').volume,half*2,'Volume changes preserve the crossfade progress');
-assert.equal(getStored(),'70');
+// Royal music cuts the outgoing track immediately, including while buffering.
+track('Villain').waitForPlay=true;c.window.EmberKingMusic.start();
+assert.equal(track('Millwood').volume,0);assert(track('Millwood').paused);assert.equal(track('Villain').volume,.35);
+assert.equal(track('Villain').currentTime,0,'Every royal interruption starts on its opening beat');
+track('Villain').finishPlay();await advance(1);
+assert.equal(track('Villain').volume,.35,'The opening beat is never faded in');
+listeners.pointerdown();listeners.touchstart();assert.equal(track('Villain').volume,.35);
+c.window.EmberAudio.set(70);assert.equal(track('Villain').volume,.7);assert.equal(getStored(),'70');
 // Reverse a transition in flight; no third track or abandoned fade remains.
 c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').volume,.7);assert.equal(track('Villain').volume,0);assert(track('Villain').paused);
 c.window.EmberKingMusic.start();c.window.EmberAudio.set(0);track('Villain').finishPlay();await advance();
@@ -68,7 +68,7 @@ await change('tavern','Thornwell Tavern');assert.equal(track('Thornwell').paused
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
 for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000],['Thornwell','thornwell-shop.m4a',1600000]]){
- const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,/preload="none"/);assert(tag.includes('assets/audio/'+path));
+ const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,name==='Villain'?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }
 console.log('PASS: default music covers unassigned areas; actual royal speakers and both final battle phases get the King’s theme; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');
@@ -111,7 +111,7 @@ for(const pct of [1,100,25,75,0,1]){
 }
 phone.c.window.EmberAudio.set(100);await phone.advance();phone.c.window.EmberKingMusic.start();await phone.advance(450);
 const out=phone.audible(phone.track('Millwood')),incoming=phone.audible(phone.track('Villain'));
-assert(out>0&&out<1&&incoming>0&&incoming<1);assert(Math.abs(out+incoming-1)<1e-9,'iPhone crossfade keeps balanced output');
+assert.equal(out,0,'iPhone stops Millwood immediately');assert.equal(incoming,1,'iPhone king opening beat plays at full configured volume');
 phone.listeners.touchstart();assert.equal(phone.audible(phone.track('Villain')),incoming,'Tapping does not bypass the gain fade');
 phone.c.window.EmberAudio.set(1);assert(Math.abs(phone.audible(phone.track('Villain'))-incoming*.01)<1e-9,'Volume applies to both sides of the fade');
 phone.c.window.EmberAudio.set(0);await phone.advance();assert([...phone.elements.values()].every(a=>phone.audible(a)===0&&a.paused));
@@ -148,22 +148,43 @@ for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read(
 }
 console.log(`PASS: ${huntingPaths.size} authored hunting loops, ${huntSamples} samples, uninterrupted route playback and Thornwell interiors.`);
 
-// The story track spans the northern journey, including the dragon's departure.
-const journey=setup(null,true);journey.c.Q={ARMED:6};journey.c.mode='play';journey.c.quest=6;
+// The story track spans the warning, woods, egg return, hatch and introduction.
+const journey=setup(null,true);journey.c.quest=5;
 journey.listeners.touchstart();await journey.change('world','Northern Woods',30,350);
-assert(!journey.track('DragonReveal').paused);assert(journey.track('Millwood').paused);
-assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7)<1e-9,'Reveal is 30% quieter through the iPhone mixer');
-await journey.change('world','Northern Woods',30,340);
-assert.equal(journey.track('DragonReveal').plays,1,'Walking north does not restart the loop');
-journey.c.greenPhase='gone';journey.sync();await journey.advance();
-assert(!journey.track('DragonReveal').paused,'The closing scene lines retain Mystic Reveal');
-journey.c.quest=7;journey.sync();await journey.advance();
-assert(journey.track('DragonReveal').paused);assert(!journey.track('Millwood').paused,'Departure restores area music');
+journey.c.window.EmberDragonMusic.omen();
+assert([...journey.elements.values()].every(a=>a.paused),'Warning immediately cuts Millwood music');
 journey.c.quest=6;journey.sync();await journey.advance();
-assert(!journey.track('DragonReveal').paused,'A save in the northern journey resumes its music');
+assert([...journey.elements.values()].every(a=>a.paused),'Finishing dialogue early cannot start music over the roar/crash');
+journey.c.window.EmberDragonMusic.reveal();await journey.advance();
+assert(!journey.track('DragonReveal').paused);assert(journey.track('Millwood').paused);
+assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7)<1e-9,'Reveal retains its quieter iPhone mixer level');
+for(const quest of [6,7,8,9]){
+ journey.c.quest=quest;await journey.change('world','Northern Woods',30,350);
+ assert(!journey.track('DragonReveal').paused,'Story stage '+quest+' keeps the loop');
+}
+assert.equal(journey.track('DragonReveal').plays,1,'Story progression does not restart the music');
+journey.c.dragonIntroDone=true;journey.sync();await journey.advance();assert(!journey.track('DragonReveal').paused);
+await journey.change('world','Millwood',30,430);
+assert(journey.track('DragonReveal').paused);assert(!journey.track('Millwood').paused);assert(journey.c.dragonJourneyEnded);
+await journey.change('world','Northern Woods',30,350);assert(journey.track('DragonReveal').paused,'Leaving Millwood later does not restart story music');
+journey.c.quest=8;journey.c.dragonJourneyEnded=false;journey.sync();await journey.advance();
+assert(!journey.track('DragonReveal').paused,'Loading an unfinished journey resumes the loop');
 journey.c.mode='title';journey.sync();await journey.advance();assert(journey.track('DragonReveal').paused);
 assert.match(html.match(/<audio id="emberfellDragonRevealBgm"[^>]+>/)[0],/\bloop\b/);
-console.log('PASS: Mystic Reveal loops through the northern journey and departure, is 30% quieter, resumes for a loaded journey, and releases music afterward.');
 journey.c.mode='play';journey.c.quest=9;journey.c.deadShown=true;journey.sync();await journey.advance();
-assert([...journey.elements.values()].every(a=>a.paused),'Area music fades out for the game-over cue');
-journey.c.deadShown=false;journey.sync();await journey.advance();assert(!journey.track('Millwood').paused,'Retry restores area music');
+assert([...journey.elements.values()].every(a=>a.paused),'Music fades out for the game-over cue');
+journey.c.deadShown=false;await journey.change('world','Millwood',30,430);assert(!journey.track('Millwood').paused,'Retry restores area music');
+console.log('PASS: warning cuts music immediately; Reveal waits for completion, spans hatch/introduction, ends on Millwood return and stays ended afterward.');
+
+// Inspect the actual PCM loop: no padded silence or faded-out seam survives.
+const wav=fs.readFileSync(new URL('../assets/audio/dragon-mystic-loop.wav',import.meta.url));
+assert.equal(wav.toString('ascii',0,4),'RIFF');
+let pcm=null,rate=0,channels=0;
+for(let p=12;p+8<=wav.length;){const kind=wav.toString('ascii',p,p+4),size=wav.readUInt32LE(p+4);
+ if(kind==='fmt '){assert.equal(wav.readUInt16LE(p+8),1);channels=wav.readUInt16LE(p+10);rate=wav.readUInt32LE(p+12);assert.equal(wav.readUInt16LE(p+22),16);}
+ if(kind==='data')pcm=wav.subarray(p+8,p+8+size);p+=8+size+(size%2);
+}
+assert(pcm&&rate&&channels);const stride=Math.floor(rate*channels*.1);
+for(let start=0;start+stride<pcm.length/2;start+=stride){let power=0;for(let i=0;i<stride;i++)power+=(pcm.readInt16LE((start+i)*2)/32768)**2;assert(Math.sqrt(power/stride)>.03,'Every 100ms stays audible, including the join');}
+for(let channel=0;channel<channels;channel++)assert(Math.abs(pcm.readInt16LE(channel*2)-pcm.readInt16LE(pcm.length-channels*2+channel*2))/32768<.02,'The seam has no discontinuity spike');
+console.log('PASS: lossless loop contains no silent/faded gap and has a continuous waveform join.');

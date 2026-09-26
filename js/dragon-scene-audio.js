@@ -7,7 +7,7 @@
   const downloads=new Map(),buffers=new Map(),voices=new Map();
   let currentPhase='off';
   for(const [name,file]of Object.entries(files))
-    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v=20260926-1')
+    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(name==='distant'?'20260926-trim':'20260926-1'))
       .then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).catch(()=>null));
   const ready=name=>{
     const graph=window.EmberAudio?.graph();
@@ -19,21 +19,22 @@
   const stop=name=>{
     const voice=voices.get(name);voices.delete(name);
     if(voice?.source){try{voice.source.stop();}catch(e){}voice.source.disconnect();voice.gain.disconnect();}
+    voice?.done?.();
   };
-  const play=(name,loop=false,restart=false)=>{
+  const play=(name,loop=false,restart=false,done=null)=>{
     if(voices.has(name)){if(!restart)return;stop(name);}
-    const voice={requested:performance.now()};voices.set(name,voice);
+    const voice={requested:performance.now(),done};voices.set(name,voice);
     ready(name).then(buffer=>{
       if(voices.get(name)!==voice)return;
       const graph=window.EmberAudio?.graph();
       // A missed one-shot must not arrive late over an unrelated animation.
-      if(!buffer||!graph||(!loop&&performance.now()-voice.requested>1500)){voices.delete(name);return;}
+      if(!buffer||!graph||(!loop&&performance.now()-voice.requested>1500)){voices.delete(name);done?.();return;}
       const source=graph.context.createBufferSource(),gain=graph.context.createGain();
       voice.source=source;voice.gain=gain;
       source.buffer=buffer;source.loop=loop;gain.gain.value=.7;
       source.connect(gain);gain.connect(graph.output);
       source.onended=()=>{
-        if(voices.get(name)===voice)voices.delete(name);
+        if(voices.get(name)===voice){voices.delete(name);done?.();}
         source.disconnect();gain.disconnect();
       };
       source.start();
@@ -56,7 +57,13 @@
   };
   window.EmberDragonSceneAudio={
     phase,
-    distant:()=>{if(playable()){play('roar');play('distant');}},
+    distant:()=>{
+      if(!playable()||voices.has('roar')||voices.has('distant'))return;
+      window.EmberDragonMusic?.omen();
+      let remaining=2;
+      const finished=()=>{if(--remaining===0)window.EmberDragonMusic?.reveal();};
+      play('roar',false,false,finished);play('distant',false,false,finished);
+    },
     stop:clear
   };
   window.EmberSfx={

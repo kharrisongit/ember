@@ -12,8 +12,12 @@ const c=vm.createContext({window:{EmberAudio:{graph:()=>({context,output})},addE
 const run=s=>vm.runInContext(s,c),flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 run(read('js/dragon-scene-audio.js'));listeners.touchstart();await flush();
 const api=c.window.EmberDragonSceneAudio,active=file=>sources.filter(s=>s.started&&!s.stopped&&s.buffer[0].includes(file));
+const musicEvents=[];c.window.EmberDragonMusic={omen:()=>musicEvents.push('cut'),reveal:()=>musicEvents.push('reveal')};
 api.distant();await flush();assert.equal(active('roar').length,1);assert.equal(active('distant').length,1);
 api.distant();await flush();assert.equal(sources.length,2,'Repeated requests never double the warning');
+assert.deepEqual(musicEvents,['cut']);
+active('roar')[0].onended();assert.deepEqual(musicEvents,['cut'],'Music waits for the longer crash clip too');
+active('distant')[0].onended();assert.deepEqual(musicEvents,['cut','reveal'],'The music starts only after both sounds finish');
 const game=read('js/generated/game-part-2.js');
 run(game.slice(game.indexOf('const GREEN ='),game.indexOf('\nfunction followCam()')));
 run(game.slice(game.indexOf('function greenAt()'),game.indexOf('\nconst Q =')));
@@ -25,7 +29,7 @@ run('greenGone=true;greenFly(.01)');await flush();assert.equal(active('breathing
 const takeoff=active('wings')[0];run('greenFly(1)');await flush();assert.equal(active('wings')[0],takeoff,'Takeoff flows into departure without restarting wings');
 run('greenFly(1.4)');await flush();assert.equal(active('wings').length,0);
 for(const s of sources){assert.equal(s.gain.gain.value,.7);assert.equal(s.gain.to,output,'Every effect honors the shared volume control');}
-c.quest=7;timers.forEach(f=>f());assert(sources.every(s=>s.stopped),'Leaving the story clears all effects');
+c.quest=7;timers.forEach(f=>f());assert(sources.every(s=>s.stopped||s===sources[0]||s===sources[1]),'Leaving the story clears all effects');
 c.quest=6;api.phase('sit');c.mode='title';timers.forEach(f=>f());await flush();assert.equal(active('breathing').length,0,'A late decode cannot leak audio into the title');
 c.mode='play';api.phase('sit');await flush();assert.equal(active('breathing').length,1);c.document.hidden=true;timers.forEach(f=>f());assert.equal(active('breathing').length,0);
 assert.match(game,/EmberDragonSceneAudio\?\.distant\(\);\s+scatterBirds\(\)/,'The warning is attached to the scripted stop outside Maddock’s house');

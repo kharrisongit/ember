@@ -6277,6 +6277,7 @@ function stepHatchScene(dt) {
 }
 const DRAGON_NAME = 'Aurelius';
 let dragonIntroDone=false,dragonIntroArmed=false;
+let dragonJourneyEnded=false;
 function stepDragonIntroduction(){
   if(dragonIntroDone||!hasDragon()||!dragonHere()||!dragon.on||MAPID!=='world')return false;
   if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;

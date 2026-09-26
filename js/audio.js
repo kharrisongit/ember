@@ -99,8 +99,15 @@
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
   };
+  let omenPlaying=false,omenHeard=false;
   const dragonJourney=()=>{
-    try{return mode==='play' && quest===Q.ARMED && MAPID==='world';}catch(e){return false;}
+    try{
+      if(mode!=='play'||(quest<Q.ARMED&&!(quest===Q.NOISE&&omenHeard))||quest>Q.DONE||dragonJourneyEnded)return false;
+      if(quest===Q.DONE&&dragonIntroDone&&MAPID==='world'&&inMillwood()){
+        dragonJourneyEnded=true;saveGame();return false;
+      }
+      return true;
+    }catch(e){return false;}
   };
   const exploreTrack=()=>{
     if(dragonJourney()&&hasSong(reveal))return reveal;
@@ -127,6 +134,33 @@
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
+  let revealBuffer=null,revealLoading=null,revealSource=null,revealRequest=0;
+  const bufferedReveal=()=>!!(audioContext?.createBufferSource&&reveal);
+  const prepareReveal=()=>{
+    if(!bufferedReveal())return Promise.resolve(null);
+    if(!revealLoading)revealLoading=fetch(reveal.getAttribute('src'))
+      .then(r=>{if(!r.ok)throw Error('Reveal audio unavailable');return r.arrayBuffer();})
+      .then(bytes=>audioContext.decodeAudioData(bytes))
+      .then(buffer=>revealBuffer=buffer).catch(()=>{revealLoading=null;return null;});
+    return revealLoading;
+  };
+  const trackPaused=a=>a===reveal&&bufferedReveal()?!revealSource:a.paused;
+  const pauseTrack=a=>{
+    if(a===reveal){
+      ++revealRequest;
+      if(revealSource){revealSource.stop();revealSource.disconnect();revealSource=null;}
+    }
+    a.pause();
+  };
+  const playTrack=async a=>{
+    if(a!==reveal||!bufferedReveal())return a.play();
+    if(revealSource)return;
+    const request=++revealRequest,buffer=revealBuffer||await prepareReveal();
+    if(request!==revealRequest)return;
+    if(!buffer)throw Error('Reveal audio unavailable');
+    const source=audioContext.createBufferSource();source.buffer=buffer;source.loop=true;
+    source.connect(channels.get(reveal));revealSource=source;source.start();
+  };
   const applyVolumes=()=>{
     if(masterGain&&masterPct!==pct){
       const gain=masterGain.gain,now=audioContext.currentTime;
@@ -156,18 +190,19 @@
     for(const a of tracks)if(!channels.has(a)){
       try{
         const channel=audioContext.createGain();channel.gain.value=gains.get(a)||0;
-        const source=audioContext.createMediaElementSource(a);
-        source.connect(channel);channel.connect(masterGain);channels.set(a,channel);
+        if(a!==reveal||!bufferedReveal())audioContext.createMediaElementSource(a).connect(channel);
+        channel.connect(masterGain);channels.set(a,channel);
       }catch(e){/* Older browsers retain the media-volume fallback. */}
     }
     applyVolumes();
+    prepareReveal();
     if(audioContext.state!=='running'){
       try{Promise.resolve(audioContext.resume()).catch(()=>{});}catch(e){}
     }
   };
   const silence=()=>{
     ++fadeToken;pending=0;fading=false;
-    for(const a of tracks){gains.set(a,0);a.pause();}
+    for(const a of tracks){gains.set(a,0);pauseTrack(a);}
     applyVolumes();
   };
   const beginFade=token=>{
@@ -178,33 +213,42 @@
       for(const a of tracks){const from=initial.get(a)||0;gains.set(a,from+((a===selected?1:0)-from)*ease);}
       applyVolumes();
       if(u<1)setTimeout(tick,25);
-      else {fading=false;for(const a of tracks)if(a!==selected)a.pause();}
+      else {fading=false;for(const a of tracks)if(a!==selected)pauseTrack(a);}
     };
     tick();
   };
   const playSelected=()=>{
     if(!unlocked||pct===0||!selected||pending||fading)return;
-    if(!selected.paused&&gains.get(selected)===1&&tracks.every(a=>a===selected||!gains.get(a)))return;
+    if(!trackPaused(selected)&&gains.get(selected)===1&&tracks.every(a=>a===selected||!gains.get(a)))return;
     const a=selected,token=++fadeToken;pending=token;
+    if(a===villain){
+      for(const other of tracks){gains.set(other,other===a?1:0);if(other!==a)pauseTrack(other);}
+    }
     applyVolumes();
     try{
       // Keep the outgoing song audible until the incoming audio actually plays.
-      Promise.resolve(a.play()).then(()=>{
-        if(token!==fadeToken){if(pct===0||(a!==selected&&!gains.get(a)))a.pause();return;}
-        pending=0;beginFade(token);
+      Promise.resolve(playTrack(a)).then(()=>{
+        if(token!==fadeToken){if(pct===0||(a!==selected&&!gains.get(a)))pauseTrack(a);return;}
+        pending=0;if(a!==villain)beginFade(token);
       },()=>{if(token===fadeToken)pending=0;});
     }catch(e){if(token===fadeToken)pending=0;}
   };
   const selectTrack=next=>{
     if(next===selected)return;
     ++fadeToken;pending=0;fading=false;selected=next;
-    for(const a of tracks)if(a!==next&&!gains.get(a))a.pause();
-    if(next===villain&&next.paused&&!gains.get(next))next.currentTime=0;
+    for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);
+    if(next===villain){
+      next.currentTime=0;
+      for(const a of tracks){gains.set(a,a===next?1:0);if(a!==next)pauseTrack(a);}
+      applyVolumes();
+    }
     if(!next){beginFade(fadeToken);return;}
     playSelected();
   };
   const chooseMusic=()=>{
     if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
+    try{if(mode!=='play'||quest<Q.NOISE||quest>Q.DONE){omenPlaying=false;omenHeard=false;}}catch(e){}
+    if(omenPlaying){selectTrack(null);return;}
     // A loaded save or a map change cannot retain an old scripted royal cue.
     try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
     selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:exploreTrack());
@@ -213,6 +257,10 @@
     start:()=>{kingMode=true;try{kingMap=MAPID;}catch(e){}chooseMusic();},
     stop:()=>{kingMode=false;chooseMusic();},
     active:()=>selected===villain
+  };
+  window.EmberDragonMusic={
+    omen:()=>{omenPlaying=true;omenHeard=false;selected=null;silence();},
+    reveal:()=>{omenPlaying=false;omenHeard=true;chooseMusic();}
   };
   // Combat without a dedicated song keeps the area's music.
   window.EmberBattleMusic={start:()=>{},stop:()=>{},active:()=>false};

@@ -5697,7 +5697,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
-  quest, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
@@ -5757,6 +5757,8 @@ function loadGame(slot=activeSaveSlot) {
     boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;fishing=null;
     resetDragonBanter(s.dragonBanterSeen||[]);
     dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;
+    if(typeof dragonJourneyEnded!=='undefined')dragonJourneyEnded=s.dragonJourneyEnded!==undefined?!!s.dragonJourneyEnded:
+      !!(s.dragonIntroDone&&(s.map!=='world'||s.x>=80*TS||s.y>=404*TS||s.thornwellMet));
     dragon.introOrigin=null;
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
