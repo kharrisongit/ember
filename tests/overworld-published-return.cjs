@@ -206,6 +206,9 @@ loadMap('world');
 const returningGiver=npcs.find(n=>n.n==='Sverre');
 P.x=returningGiver.x;P.y=returningGiver.y+20;
 beginNpcTalk(returningGiver);
+assert.equal(ask.npcConversation,'Sverre','Returning visitors get the new conversation choices');
+assert.equal(sayNpc,null,'Opening topics does not restart the gift dialogue');
+askPick=1;askTake();
 assert(!sayNpc.said.some(line=>line.includes('Torvald left this lantern')),'Owned lantern does not repeat the handoff');
 for(let i=0;sayNpc&&i<20;i++){typeAll();interact();}
 assert.equal(sayNpc,null,'Follow-up conversation completes');
