@@ -67,3 +67,6 @@ run("typeStart('Corin','Next conversation.');typeAll();showFace('Corin')");
 assert.equal(c.nameEl.textContent,'Corin');
 assert.equal(c.nameEl.className,'on left');
 console.log('PASS: all 131 portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');
+
+c.smithUpgrade=true;assert.equal(c.portraitFor("Corin").pack,8);c.smithUpgrade=false;assert.equal(c.portraitFor("Corin").pack,1);
+run(read("assets/portraits/pack-8.js"));assert(run("portraitPackSources.get(8).startsWith('data:image/webp;base64,')"));

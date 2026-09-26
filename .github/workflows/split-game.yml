@@ -47,6 +47,9 @@ jobs:
           node tests/temple-compass.mjs
           node tests/father-compass.mjs
           node tests/inventory-icons.mjs
+          node tests/journey-gates.mjs
+          node tests/ghost-following.mjs
+          node tests/npc-conversations.mjs
           node tests/npc-placement.mjs
           node tests/editor-source-compatibility.mjs
           node tests/editor-publish-race.mjs

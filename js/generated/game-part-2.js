@@ -2202,6 +2202,8 @@ function loadMap(id, fresh, discardDraft=false) {
     const her = npcs.find(n => n.n === "Hettie");
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
+  if(typeof prepareJourneyGates==='function')prepareJourneyGates();
+  if(typeof prepareNanDeparture==='function')prepareNanDeparture();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
@@ -2289,6 +2291,7 @@ function rebuildSolid() {
       }
   }
   const stamp = (o) => {
+    if(typeof journeyWagon!=='undefined'&&MAPID==='world'&&o.id===journeyWagon.sourceId)return;
     const d = DEFS[o.s]; if (!d || !d.c) return;
     const cw = d.c[0], ch = d.c[1];
     const x0 = Math.floor((o.x - cw / 2) / TS), x1 = Math.floor((o.x + cw / 2 - 1) / TS);
@@ -2374,6 +2377,7 @@ const whyBlocked = (px, py) => {
 const isSolid = (px, py, ignoreNpcBuffer = false) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return true;
+  if(progressionSolid(px,py))return true;
   const override=collisionOverride(px,py);if(override!==undefined)return override;
   if (MAPID === "witchmoor" && wonAll && px >= 184 && px < 213 && py >= 282 && py < 311) return true;
   const wallEdit=editedTempleWallCollision(px,py);if(wallEdit===true)return true;
@@ -2464,8 +2468,8 @@ function movePlayer(dx, dy, dt) {
     }
   }
 
-  if (dx && canStand(nx, P.y)) P.x = nx;
-  if (dy && !touchExpandedTempleDoor(P.x,ny,dy) && canStand(P.x, ny)) P.y = ny;
+  if (dx && progressionMoveAllowed(nx,P.y) && canStand(nx, P.y)) P.x = nx;
+  if (dy && progressionMoveAllowed(P.x,ny) && !touchExpandedTempleDoor(P.x,ny,dy) && canStand(P.x, ny)) P.y = ny;
   P.x = Math.max(8, Math.min(PXW - 8, P.x));
   P.y = Math.max(16, Math.min(PXH - 2, P.y));
 }
@@ -3690,6 +3694,7 @@ function drawWorld(t, dt) {
   drawGraves();
 
   const draw = [];
+  draw.push(...journeyGateProps());
   for (const actor of (MD.roomActors || [])) if(!actor.editorDeleted&&!actor.editorProxy){
     if(/^market_.*_stall$/.test(actor.spr||'')){
       draw.push({marketActor:actor,x:actor.x,y:actor.y,sy:actor.y-180});
@@ -3706,6 +3711,7 @@ function drawWorld(t, dt) {
   const r1 = Math.min(CH - 1, Math.floor((cam.y + vh) / CELL) + 1);
   for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++)
     for (const o of buckets[r * CW + c]) {
+      if(journeyObjectHidden(o))continue;
       const s = SPR[NAMES[o.s]];
       if (!s) continue;
       const oxw = o.wx || 0, oyw = o.wy || 0;
@@ -3914,6 +3920,7 @@ function drawWorld(t, dt) {
       }
       continue;
     }
+    if (o.progressionProp) { drawJourneyProp(o,t); continue; }
     if (o.schoolArt) {
       const sp = SPR[o.spr];
       let fr = o.stillFrame ?? (o.glassHatch ? glassHatchFrame() : Math.floor(t / 0.15) % sp[4]);
@@ -4694,6 +4701,12 @@ addEventListener("keydown", e => {
       if (k === "escape" || k === "b") { e.preventDefault(); if (!e.repeat) BOOT.back(); }
     }
     return;
+  }
+  if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
+    e.preventDefault();if(e.repeat)return;
+    if(k==='b'||k==='escape')askBack();
+    else if(k==='arrowleft'||k==='arrowright'){if(ask.quantity)changePurchaseQuantity(k==='arrowright'?1:-1);else askStep(k==='arrowright'?1:-1);}
+    else askTake();return;
   }
   if(typeof ask!=='undefined'&&ask&&(k==='arrowup'||k==='arrowdown'||k==='escape')){
     e.preventDefault();if(k==='escape'){if(!e.repeat)askBack();}else askStep(k==='arrowup'?-1:1);return;
@@ -6110,8 +6123,19 @@ function lockHatchCamera(c, m, hs) {
   const right = Math.max(...pts.map(p=>p[0]))+72;
   const top = Math.min(...pts.map(p=>p[1]))-92;
   const bottom = Math.max(...pts.map(p=>p[1]))+42;
-  const z = Math.min(c.zoom*.85, VW*.88/(right-left), VH*.65/(bottom-top));
-  return { x:(left+right)/2, y:(top+bottom)/2 + VH*.1/z, z };
+  // Reserve the full height of either speaker portrait, even between lines.
+  // Keep one locked composition: changing speakers must not move the camera.
+  const view=typeof cv!=='undefined'?cv.getBoundingClientRect?.():null;
+  const box=typeof sayEl!=='undefined'?sayEl.getBoundingClientRect?.():null;
+  const portraitHeight=typeof getComputedStyle==='function'?parseFloat(getComputedStyle(faceEl).height)||144:144;
+  const scale=view?.height?VH/view.height:1;
+  const safeBottom=view&&box?.top>view.top?Math.min(VH,(box.top-view.top-portraitHeight-16)*scale):VH*.56;
+  const available=Math.max(100,safeBottom-16);
+  const z = Math.min(c.zoom*.85, VW*.88/(right-left), available/(bottom-top));
+  const centreX=(hs.eggX+hs.dragonX)/2;
+  const centreY=(top+bottom)/2;
+  return { x:centreX, y:centreY+(VH/2-(16+available/2))/z, z };
+
 }
 function stepHatchCamera(dt) {
   const c = hatchCamera;
@@ -6462,6 +6486,8 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
+  if(m.fatherCompassVisitor && templeCompass.owned)return false;
+  if(m.progressionWorker&&!journeyGateClosed(m.progressionWorker))return false;
   if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
   if (wonAll && /King Halvard/.test(m.n || "")) return false;
   if (m.away) return false;
@@ -6622,7 +6648,7 @@ function advanceScene() {
   sendWalkerHome(stay);
   if (done) done();
 }
-const HERD_Y = 414;
+const HERD_Y = 415;
 let gateRow = 370, eggGate = -1, fieldGate = -1;
 let eggWarned = false;
 const NORTH_GATE = 370;
@@ -7074,6 +7100,7 @@ function playKeyItemGet() {
   } catch (e) {}
 }
 function showReveal(sprName, caption, maxScale, still, after) {
+  sprName = inventoryIconName(sprName);
   if (revealing) { revealQueue.push([sprName, caption, maxScale, still, after]); return; }
   if (REVEAL_BIG[sprName] && SPR[REVEAL_BIG[sprName]]) sprName = REVEAL_BIG[sprName];
   const sp = SPR[sprName];
@@ -9425,6 +9452,10 @@ const STOCK = {
   potion: { n: "POTION",  cost: () => POTION_COST, go: buyPotion },
   elixir: { n: "ELIXIR",  cost: () => ELIXIR_COST, go: buyElixir },
   boarMeat: { n: "BOAR MEAT", cost: () => BOAR_MEAT_COST, go: buyBoarMeat },
+  hareMeat: { n: "HARE MEAT", cost: () => BOAR_MEAT_COST, go: () => buyStockQuantity("hareMeat",1) },
+  deerMeat: { n: "DEER MEAT", cost: () => BOAR_MEAT_COST, go: () => buyStockQuantity("deerMeat",1) },
+  foxMeat: { n: "FOX MEAT", cost: () => BOAR_MEAT_COST, go: () => buyStockQuantity("foxMeat",1) },
+  birdMeat: { n: "BIRD MEAT", cost: () => BOAR_MEAT_COST, go: () => buyStockQuantity("birdMeat",1) },
   dragonFish: { n: "FRESH FISH", cost: () => DRAGON_FISH_COST, go: buyDragonFish },
   bomb:   { n: "MAELIS'S CURSE", cost: () => BOMB_COST, go: buyBomb },
   dust:   { n: "MADNESS DUST", cost: () => DUST_COST, go: buyDust },
@@ -9434,26 +9465,20 @@ const STOCK = {
   stone:  { n: "RESURRECTION STONE", cost: () => STONE_COST, go: buyStone },
   salt:   { n: "CONSECRATION", cost: () => SALT_COST, go: buySalt },
 };
-function merchantAsk(giver) {
-  ask = { quick:1, opts:[
-    {n:"TALK",go:()=>beginNpcTalk(giver)},
-    {n:"PURCHASE",go:()=>sellerAsk(giver)},
-    {n:"LEAVE",go:null}
-  ]};askPick=0;askDraw();
-}
+function merchantAsk(giver) { openMerchantShop(giver); }
 function purchaseQuantity(giver,key,amount=1) {
   const item=STOCK[key];if(!item)return;
   if(gold<item.cost()){toast('Not enough gold for '+item.n.toLowerCase()+'.');sellerAsk(giver);return;}
   const max=Math.max(1,Math.min(99,Math.floor(gold/item.cost())));
   const qty=Math.max(1,Math.min(max,Math.trunc(amount)||1));
-  ask={quick:1,quantity:{giver,key,qty,max},back:()=>sellerAsk(giver),opts:[
+  ask={quick:1,shop:giver,quantity:{giver,key,qty,max},back:()=>sellerAsk(giver),opts:[
     {n:"CONTINUE  (A)",go:()=>confirmPurchase(giver,key,qty)},
     {n:"BACK",go:()=>sellerAsk(giver)}
   ]};askPick=0;askDraw();
 }
 function confirmPurchase(giver,key,qty){
   const item=STOCK[key];if(!item)return;
-  ask={quick:1,confirmation:{key,qty},back:()=>purchaseQuantity(giver,key,qty),opts:[
+  ask={quick:1,shop:giver,confirmation:{key,qty},back:()=>purchaseQuantity(giver,key,qty),opts:[
     {n:'Buy '+qty+' × '+item.n+' for '+qty*item.cost()+' gold?',head:true},
     {n:'YES, BUY  (A)',go:()=>{
       if(buyStockQuantity(key,qty))sellerAsk(giver);
@@ -9473,28 +9498,15 @@ function buyStockQuantity(key,qty) {
   if(gold<total){toast("not enough gold — "+total+" needed");return false;}
   switch(key){
     case "potion":potions+=qty;break;case "elixir":elixirs+=qty;break;
-    case "boarMeat":boarMeat+=qty;break;case "dragonFish":dragonFish+=qty;break;
+    case "boarMeat":boarMeat+=qty;break;case "hareMeat":hareMeat+=qty;break;case "deerMeat":deerMeat+=qty;break;case "foxMeat":foxMeat+=qty;break;case "birdMeat":birdMeat+=qty;break;case "dragonFish":dragonFish+=qty;break;
     case "bomb":bombs+=qty;break;case "dust":dust+=qty;break;
     case "bell":bells+=qty;break;case "mark":marks+=qty;break;
     case "saint":breaths+=qty;break;case "stone":stones+=qty;break;
     case "salt":salts+=qty;break;default:return false;
   }
-  gold-=total;toast(qty+" × "+item.n+" bought — "+gold+" gold left");return true;
+  gold-=total;merchantShopReceipt="Packed "+qty+" × "+item.n.toLowerCase()+". Safe travels.";saveGame();toast(qty+" × "+item.n+" bought — "+gold+" gold left");return true;
 }
-function sellerAsk(giver) {
-  const list = [].concat(giver.sells);
-  if (!/Maelis|witch/i.test(giver.n || ""))
-    list.push(giver.n === "Nerissa" ? "dragonFish" : "boarMeat");
-  const stock = [...new Set(list)].filter(k => STOCK[k]);
-  if (!stock.length) return;
-  const opts = stock.map(k => ({
-    n: STOCK[k].n + " -- " + STOCK[k].cost() + "g",
-    go: () => purchaseQuantity(giver,k),
-  }));
-  opts.push({ n: "BACK", go: () => merchantAsk(giver) });
-  ask = { opts, quick:1 }; askPick = 0;
-  askDraw();
-}
+function sellerAsk(giver) { openMerchantShop(giver); }
 function buyBreath() {
   if (gold < BREATH_COST) { toast("not enough gold -- " + gold + "/" + BREATH_COST); return false; }
   gold -= BREATH_COST; breaths++; toast("saint's breath bought -- " + gold + " gold left"); return true;
@@ -9610,12 +9622,7 @@ function targetFor(f) {
       f._hunt = best;
     }
     if (best) return { x: best.x, y: best.y, d: bd, isPlayer: false, foe: best };
-    const side = (f.slot % 2) ? -1 : 1;
-    const back = (P.dir === "u") ? -1 : 1;
-    const tx2 = P.x + side * 22;
-    const ty2 = P.y + back * 52;
-    return { x: tx2, y: ty2, d: Math.hypot(tx2 - f.x, ty2 - f.y),
-             isPlayer: false, follow: 1 };
+    return spiritFollowTarget(f);
   }
   if (bell && !f.ally) {
     const bd = Math.hypot(bell.x - f.x, bell.y - f.y);
@@ -9891,10 +9898,12 @@ function stepFoes(dt) {
     f.onDragon = !tgt.isPlayer;
     const dx = tgt.x - f.x, dy = tgt.y - f.y, d = tgt.d;
     if(f.kind==="kdragon") f.dir8=direction4(dx,dy,f.dir8);
-    const faceX = retreating && regularFoe(f) ? -dx : dx;
-    const faceY = retreating && regularFoe(f) ? -dy : dy;
-    if (Math.abs(faceX) > Math.abs(faceY)) { f.dir = "s"; f.flip = faceX < 0; }
-    else f.dir = faceY > 0 ? "d" : "u";
+    const faceX = f.ally && tgt.follow ? (f.spiritVX||0) : retreating && regularFoe(f) ? -dx : dx;
+    const faceY = f.ally && tgt.follow ? (f.spiritVY||0) : retreating && regularFoe(f) ? -dy : dy;
+    if (!(f.ally && tgt.follow) || Math.hypot(faceX,faceY)>8) {
+      if (Math.abs(faceX) > Math.abs(faceY)) { f.dir = "s"; f.flip = faceX < 0; }
+      else f.dir = faceY > 0 ? "d" : "u";
+    }
     const myTurn = (f === turnHolder);
     const want = k.standoff ? k.standoff : (myTurn ? k.reach - 4 : (tAcc < (f.blockStaggerUntil || 0) ? Math.min(k.ring, (k.reach || 26) + 24) : k.ring));
     f.slot = (f.slot === undefined) ? foes.indexOf(f) : f.slot;
@@ -9919,7 +9928,7 @@ function stepFoes(dt) {
         let stop = myTurn ? want : 6;
         if (f.mad > 0 && tgt.foe) stop = Math.max(6, k.reach - 6);
         if (tgt.toBell) stop = 14;          /* they crowd round it */
-        if (f.ally && tgt.follow) stop = 34;     /* they hold well off him */
+        if (f.ally && tgt.follow) stop = 16;     /* they hold well off him */
         if (k.standoff && d < k.standoff - 12) {
           rx = f.x - tgt.x; ry = f.y - tgt.y;
           rd = Math.hypot(rx, ry) || 1; stop = 0;
@@ -9928,8 +9937,9 @@ function stepFoes(dt) {
           let sp = k.speed * ((myTurn || (f.ally && tgt.foe) || (f.mad > 0 && tgt.foe)) ? 1 : 0.90);
           if (heavyFoe(f) && !tgt.retreat) sp *= 1.25;
           if (tgt.retreat) sp *= (regularFoe(f) ? 1.1 : 1.65) * (f.glassRetreatBoost || 1);
-          if (f.ally) sp = Math.max(sp, 150 + Math.min(120, rd * 1.2));
-          const nx = f.x + (rx / rd) * sp * dt, ny = f.y + (ry / rd) * sp * dt;
+          if (f.ally && !tgt.follow) sp = Math.max(sp, 150 + Math.min(120, rd * 1.2));
+          const drift=f.ally&&tgt.follow?spiritFollowVelocity(f,rx,ry,rd,dt):null;
+          const nx = drift?drift.x:f.x + (rx / rd) * sp * dt, ny = drift?drift.y:f.y + (ry / rd) * sp * dt;
           if (f.halfW === undefined) {
             const a = SPR[(FOE_ART[f.kind] || "sk") + "_idle_d"];
             f.halfW = a ? Math.max(6, Math.min(15, Math.round(a[2] * 0.22))) : 7;
@@ -10108,6 +10118,7 @@ function standUp() {
 }
 function blockReason(px, py) {
   if(px<0||py<0||px>=MW*TS||py>=MH*TS)return "edge";
+  if(progressionSolid(px,py))return true;
   const override=collisionOverride(px,py);if(override!==undefined)return override?"custom":null;
   if(blockedByNpcBody(px,py)||blockedByNpcBuffer(px,py))return "npc";
   if(MD.roomBlocks?.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3]))return "furniture";
@@ -10940,9 +10951,9 @@ function interact() {
       const giver = sayNpc;
       dragonConversationReaction(giver);
       sayNpc = null; sayOff(); showFace(null);
-      if (giver.n === "Nan Ferrow" && !templeCompass.owned) { giveFatherCompass(); return; }
-      if(canOdoGiveFishingPole(giver)){
-        fishingPole=true;
+      if (giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) { giveFatherCompass(); return; }
+      if(canCamperGiveFishingPole(giver)){
+        fishingPole=true; saveGame();
         showReveal('fishing_rod','Corin obtained a Fishing Pole! Face water and press A to fish.');
         return;
       }
@@ -11003,10 +11014,11 @@ function interact() {
   }
   if (hasSword()) startAct("swing");
 }
-function canOdoGiveFishingPole(n) {
-  return n?.n==='Odo' && hasDragon() && n.odoAtHome===true && !fishingPole;
+function canCamperGiveFishingPole(n) {
+  return n?.n==='Calder' && !fishingPole;
 }
-function beginNpcTalk(best) {
+function beginNpcTalk(best, greetingOnly=false) {
+    if(!greetingOnly && typeof openNpcTopics==='function' && openNpcTopics(best))return;
     if (MAPID === "cinderhold" && /Halvard/.test(best.n || "") && !wonAll && window.EmberKingMusic) window.EmberKingMusic.start();
     sayNpc = best; sayLine = 0;
     if (!best.wasFacing) best.wasFacing = best.f;
@@ -11014,13 +11026,17 @@ function beginNpcTalk(best) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    if (best.n === "Nan Ferrow" && !templeCompass.owned) {
+    if (best.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) {
       sayNpc.said = FATHER_COMPASS_GIFT.slice();
     }
-    else if(canOdoGiveFishingPole(best)){
-      sayNpc.said=["Odo: A dragon, Corin? I leave the bridge for one afternoon and you find another mouth to feed.",
-        "Odo: Take my spare fishing pole. You will need a catch of your own to keep that companion fed.",
-        "Odo: Face water and press A. Stop the spinning marker inside the green arc to catch a fish. Feed your catch to the dragon when it needs to recover."];
+    else if(canCamperGiveFishingPole(best)){
+      sayNpc.said=["Calder: Heading for Thornwell? Take the spare rod beside my pack. I only need the one.",
+        "Corin: You are sure?",
+        "Calder: I spend more time untangling two than fishing with either. You would be doing me a kindness.",
+        "Calder: Try Forgefalls, southeast of Thornwell. The quiet pools below the falls are good fishing. Keep clear of the fast water.",
+        "Corin: I will let you know what I catch.",
+        "Calder: Tell me about the small ones as well. Nobody ever does."];
+
     }
     else if (best.n === "Sela" && !glassShield) {
       sayNpc.said = ["Sela: Corin, wait. I made something from the clearest furnace glass I have.",

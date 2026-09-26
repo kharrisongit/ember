@@ -2,7 +2,7 @@ import fs from 'node:fs';import vm from 'node:vm';import zlib from 'node:zlib';i
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const assets=read('js/generated/game-part-1.js'),game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 const W=JSON.parse(zlib.gunzipSync(Buffer.from(assets.match(/const W_GZ = "([^"]+)"/)[1],'base64')));
-const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
+const c=vm.createContext({progressionSolid:()=>false,W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
  WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},
  fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
  breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},foes:[],foesHeld:false,bossGone:{},

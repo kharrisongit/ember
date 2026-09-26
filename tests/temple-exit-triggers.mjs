@@ -4,7 +4,7 @@ const game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-par
 const W=JSON.parse(zlib.gunzipSync(Buffer.from(assets.match(/const W_GZ = "([^"]+)"/)[1],'base64')));
 const buttons=[],list={innerHTML:'',appendChild:b=>buttons.push(b)};
 let travelClosed=false;
-const c=vm.createContext({W,window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
+const c=vm.createContext({progressionMoveAllowed:()=>true,W,window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
  fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
  breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
  isArea:()=>false,playZoom:()=>1,clampCam(){},checkArea(){},setDevTitle(){},toast(){},setTravel:on=>{travelClosed=!on;},

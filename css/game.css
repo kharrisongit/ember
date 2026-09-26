@@ -2358,3 +2358,6 @@ body.boot-load-open:not(.game-started) #dpad *{pointer-events:auto!important}
 #askRows>div {max-width:100%;overflow-wrap:anywhere;}
 #itemRows,#bagLeft,#bagPanel {scrollbar-gutter:stable;overflow-x:hidden;}
 #bagDesc {width:100%;min-width:0;overflow-wrap:anywhere;}
+
+/* Quiet, consistent line symbols for dragon abilities and commands. */
+#atkm .row .actionIcon,#airm .row .actionIcon,#atkm .row:nth-child(1) .actionIcon{width:24px!important;height:24px!important;flex:0 0 24px!important;filter:none;opacity:.82}

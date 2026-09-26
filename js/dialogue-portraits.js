@@ -4,6 +4,7 @@ const PORTRAIT_ALIASES = {
   Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
   Halvard:'King Halvard', King:'King Halvard', Rowan:'Rowan the Hunter',
   Iven:'Master Iven', Elowen:'Archivist Elowen', 'Shroom King':'The Shroom King',
+  'Cartwright Oswin':'Bevan','Miner Marn':'Toft','Miner Nerik':'Toft','Snowbuilder Nessa':'Runa',
   Dragon:'Aurelius', Knight:'Doran', 'Royal Guard':'Serjeant Bram'
 };
 const PORTRAIT_RENAMES = {
@@ -67,6 +68,7 @@ function loadPortraitPack(pack) {
 function portraitFor(who) {
   if(!who)return null;
   const name=PORTRAIT_ALIASES[who]||who;
+  if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   return DIALOGUE_PORTRAITS[name]||null;
 }
 function showDialoguePortrait(who) {

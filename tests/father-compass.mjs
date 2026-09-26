@@ -28,6 +28,14 @@ c.awakenFatherCompass();assert.equal(saves,2,'idempotent awakening');
 c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false,'awakening requires ownership');
 const game=read('js/generated/game-part-2.js'),bag=read('js/generated/game-part-3.js');
 assert(game.includes('if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();'));
-assert(game.includes('giver.n === "Nan Ferrow" && !templeCompass.owned'));
+assert(game.includes('giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned'));
 assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened}'));
 console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
+
+Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
+ W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}]},P:{},revealing:false,scene:null});
+c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
+c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
+c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();assert(c.scene.lines[0].includes('Before you go'));
+assert.equal(run('templeCompass.owned'),false,'gift waits for the encounter to finish');c.scene.after();assert.equal(run('templeCompass.owned'),true);
+c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');

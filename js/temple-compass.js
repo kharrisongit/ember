@@ -200,3 +200,23 @@ function drawTempleCompass() {
   ctx.closePath(); ctx.fill();
   ctx.restore();
 }
+
+// Nan steps outside after the hatch and calls Corin over as he passes her house.
+function prepareNanDeparture(){
+  if(MAPID!=='world'||!hasDragon()||templeCompass.owned||npcs.some(n=>n.fatherCompassVisitor))return;
+  const home=W.maps.house26?.npcs.find(n=>n.n==='Nan Ferrow');
+  const door=MD.doors.find(d=>d.to==='house26');
+  if(!home||!door)return;
+  const r=door.triggerRect||{x:door.x*TS,y:door.y*TS,w:16,h:16};
+  npcs.push({...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:true,patrol:null,goto:null,
+    fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false});
+}
+function stepNanDeparture(){
+  if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||!dragonIntroDone||templeCompass.owned||
+     sceneHold()||sayNpc||fadeDir||fade||doorMotion||ovl||ask||bagOpen||editing||dying()||revealing)return;
+  prepareNanDeparture();
+  const nan=npcs.find(n=>n.fatherCompassVisitor);
+  if(!nan||Math.abs(P.x-nan.x)>104||Math.abs(P.y-nan.y)>78)return;
+  playScene(['Nan Ferrow: Corin! Before you go, love. Come here a moment.',...FATHER_COMPASS_GIFT.slice(1)],
+    {who:'Nan Ferrow',after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
+}

@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const part1=read('js/generated/game-part-1.js'),game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 const W=JSON.parse(zlib.gunzipSync(Buffer.from(part1.match(/const W_GZ = "([^"]+)"/)[1],'base64')));
 const oldEnds=['passage','passage3'].map(id=>({...W.maps[id].doors.find(d=>d.to==='world')}));
-const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
+const c=vm.createContext({templeCompass:{owned:false,awakened:false},restoreFatherCompass(){},W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
  window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
  charm:{},worn:{},breathHas:{shadow:true,ice:true,lightning:true},chestOpen:{},MAPID:'passage',MD:null,P:{},foes:[],foesHeld:false,bossGone:{},
  sceneHold:()=>false,fadeDir:0,tAcc:0,hurtPlayer(){c.hits++;},hits:0,saveGame(){},toast(){},chunks:new Map(),

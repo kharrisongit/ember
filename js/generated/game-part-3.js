@@ -4040,6 +4040,7 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
+  if(ask?.shop||ask?.npcConversation)return;
   if(atlasOpen||fishing)stepDragonBanter(dt);
   if(atlasOpen)return;
   if(fishing){
@@ -4048,6 +4049,7 @@ function frameCore(ms) {
     return;
   }
   tAcc += dt;
+  stepNanDeparture();
   stepFatherCompass();
   if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
@@ -4510,15 +4512,15 @@ const BAG = [
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",
     has: () => breathHas.lightning,
-    icon: () => (SPR.it_hs_light ? "it_hs_light" : null) },
+    icon: () => "inventory_hs_light" },
   { key: "hs_shadow", kind: "key", name: "Heartstone of the Shadow",
     tell: "Cut from the first dragon. It takes the light out of what it touches.",
     has: () => breathHas.shadow,
-    icon: () => (SPR.it_hs_shadow ? "it_hs_shadow" : null) },
+    icon: () => "inventory_hs_shadow" },
   { key: "hs_ice", kind: "key", name: "Heartstone of the Ice",
     tell: "Cut from the first dragon. The last of the four.",
     has: () => breathHas.ice,
-    icon: () => (SPR.it_hs_ice ? "it_hs_ice" : null) },
+    icon: () => "inventory_hs_ice" },
   { key: "saint", name: () => "Saint's Breath" + (breaths > 1 ? " x" + breaths : ""),
     tell: "Sixteen seconds in which nothing touches him.",
     has: () => breaths > 0,
@@ -4535,14 +4537,14 @@ const BAG = [
   { key: "bell", name: () => "Bell Stake" + (bells > 1 ? " x" + bells : ""),
     tell: "Drive it in and it rings. Everything goes to the bell instead of to him.",
     has: () => bells > 0,
-    icon: () => (SPR.it_bell ? "it_bell" : null) },
+    icon: () => "inventory_bell" },
   { key: "mark", name: () => "Grave Marker" + (marks > 1 ? " x" + marks : ""),
     tell: () => (dropped && dropped.gold
                  ? "There is " + dropped.gold + " gold lying where he fell."
                  : "He has not dropped anything anywhere.")
               + " " + marks + " in the pack.",
     has: () => marks > 0,
-    icon: () => (SPR.it_mark ? "it_mark" : null) },
+    icon: () => "inventory_mark" },
   { key: "dust", name: () => "Madness Dust" + (dust > 1 ? " x" + dust : ""),
     tell: "Throw it up and for a little while they cannot tell one another from him.",
     has: () => dust > 0,
@@ -4551,15 +4553,15 @@ const BAG = [
     tell: "Throw it down and walk away from a fight. It will not save him "
         + "from the things that matter.",
     has: () => bombs > 0,
-    icon: () => (SPR.it_bomb ? "it_bomb" : SPR.sh_glow ? "sh_glow" : null) },
+    icon: () => "inventory_bomb" },
   { key: "elixir", name: () => "Elixir" + (elixirs > 1 ? " x" + elixirs : ""),
     tell: "Fills him to the brim. Whatever is in it, it is not for asking about.",
     has: () => elixirs > 0,
-    icon: () => (SPR.it_elixir ? "it_elixir" : null) },
+    icon: () => "inventory_elixir" },
   { key: "potion", name: () => "Potion" + (potions > 1 ? " x" + potions : ""),
     tell: "Two hearts back, and no waiting about for it.",
     has: () => potions > 0,
-    icon: () => (SPR.it_potion ? "it_potion" : null) },
+    icon: () => "inventory_potion" },
   { key: "boarMeat", name: () => "Boar Meat" + (boarMeat > 1 ? " x" + boarMeat : ""),
     tell: "A heavy cut for the dragon. Restores " + BOAR_MEAT_HEAL + " HP and gets it back on its feet.",
     has: () => boarMeat > 0,
@@ -4581,7 +4583,7 @@ const BAG = [
     has: () => dragonFish > 0,
     icon: () => "inventory_dragonFish" },
   {key:'fishingPole',name:'Fishing Pole',kind:'key',has:()=>fishingPole,
-    tell:'A gift from Odo after he returns home in Millwood. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> 'fishing_rod'},
+    tell:'A gift from Calder at the first camp on the road to Thornwell. He recommends the pools at Forgefalls. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> "inventory_fishingPole"},
   { key: "glassShield", name: "Glass Shield", kind: "key",
     tell: "Sela's clear-glass focus. Tap/hold B to raise a brief force field. Move with B held to run. Orange flashes warn of blockable attacks; red flashes warn of unblockable attacks.",
     has: () => glassShield,
@@ -4590,39 +4592,39 @@ const BAG = [
     tell: "Taken from the Hollybeck graves. Carry it and two of them rise at "
         + "your call -- there is no need to wear it.",
     has: () => charm.wake,
-    icon: () => (SPR.it_wake ? "it_wake" : SPR.it_stone ? "it_stone" : null) },
+    icon: () => "inventory_wake" },
   { key: "flame", kind: "charm", name: "Twin Flame",
     tell: "Won in the last gallery. With the Twin Heart worn, four kills and the heart beats again.",
     has: () => charm.flame, charm: "flame",
-    icon: () => (SPR.it_twinflame ? "it_twinflame" : SPR.fire_s ? "fire_s" : null) },
+    icon: () => "inventory_flame" },
   { key: "lamp", kind: "key", name: "Hollybeck Lantern",
     tell: "Torvald trimmed the wick himself. It has never once gone out, and the deep workings can be walked with it.",
     has: () => charm.lamp,
-    icon: () => (SPR.it_lamp ? "it_lamp" : SPR.wt_torch1 ? "wt_torch1" : null) },
+    icon: () => "inventory_lamp" },
   { key: "twin", kind: "charm", name: "Twin Heart",
     tell: "Once in each fight the dragon steps into a blow meant for Corin.",
     has: () => charm.twin, charm: "twin",
-    icon: () => (SPR.it_twin ? "it_twin" : SPR.dr5_idle_e ? "dr5_idle_e" : null) },
+    icon: () => "inventory_twin" },
   { key: "brand", kind: "charm", name: "Fire Slash",
     tell: "A rune cut into stone and still burning. Every third swing catches fire and bites harder.",
     has: () => charm.brand, charm: "brand",
-    icon: () => (SPR.it_brand ? "it_brand" : SPR.fslash_d ? "fslash_d" : null) },
+    icon: () => "inventory_brand" },
   { key: "spore", kind: "charm", name: "Spore of the deep ring",
     tell: "The Shroom King's gift. Worn, it feeds a heart back for every kill.",
     has: () => charm.spore, charm: "spore",
-    icon: () => (SPR.it_spore ? "it_spore" : SPR.ms3_idle_d ? "ms3_idle_d" : null) },
+    icon: () => "inventory_spore" },
   { key: "ward", kind: "charm", name: "Witch's Ward",
     tell: "Maelis strung it herself. Worn, it turns a quarter of any blow.",
     has: () => charm.ward, charm: "ward",
-    icon: () => (SPR.it_ward ? "it_ward" : SPR.it_stone ? "it_stone" : null) },
+    icon: () => "inventory_ward" },
   { key: "edge", kind: "charm", name: "Dunstan's Whetstone",
     tell: "He put an edge on it every morning for forty years. Every blow lands a little heavier.",
     has: () => charm.edge, charm: "edge",
-    icon: () => (SPR.it_edge ? "it_edge" : null) },
+    icon: () => "inventory_edge" },
   { key: "sword", kind: "key", name: "Sword",
     tell: "Taken from the Elder's hall. Heavier than it looks.",
     has: () => hasSword(),
-    icon: () => (SPR.it_sword ? "it_sword" : SPR.sm_atk_d ? "sm_atk_d" : null) },
+    icon: () => "inventory_sword" },
   { key: "smithEquipment", kind: "key", name: "Forgewick armor and sword",
     tell: "Fitted by Dunstan. A stronger blade and armor that softens heavy blows.",
     has: () => smithUpgrade && hasSword(),
@@ -4630,11 +4632,11 @@ const BAG = [
   { key: "cinderSeal", kind: "key", name: "Cinderhold Seal",
     tell: "Given by the demon after Halvard's defeat. Place it in the chamber adjoining the throne room, then speak to the demon there to begin the trials.",
     has: () => cinderSeal,
-    icon: () => "it_cinderseal" },
+    icon: () => "inventory_cinderSeal" },
   { key: "egg", name: "Dragon's egg",
     tell: "Warm to the touch. Maddock said there had not been one in fifty years.",
     has: () => quest >= Q.CARRY && quest < Q.DONE,
-    icon: () => (SPR.it_egg ? "it_egg" : SPR.nest1 ? "nest1" : null) },
+    icon: () => "inventory_egg" },
   { key: "heart", kind: "key",
     name: () => (heartKnown ? "Heartstone of the Flame" : "Mysterious stone"),
     tell: () => heartKnown
@@ -4642,11 +4644,11 @@ const BAG = [
         + "this is what binds a rider to a dragon."
       : "It was inside the shell. Smooth, and warmer than it ought to be.",
     has: () => quest >= Q.DONE,
-    icon: () => (SPR.it_hs_flame ? "it_hs_flame" : SPR.it_egg ? "it_egg" : null) },
+    icon: () => "inventory_heart" },
   { key: "eggs", name: "Six brown eggs",
     tell: "Gathered for the errand. Do not run.",
     has: () => quest >= Q.KING && quest < Q.ELDER,
-    icon: () => (SPR.nest2 ? "nest2" : null) },
+    icon: () => "inventory_eggs" },
 ];
 let bagOpen = false, bagPick = 0;
 
@@ -4658,6 +4660,7 @@ let bagFrame = 0, bagAnim = [], bagRAF = 0;
 const BAG_FPS = 9;
 
 function drawBagBig(big, spriteName, f) {
+  spriteName = inventoryIconName(spriteName);
   const bg = big.getContext("2d");
   bg.clearRect(0, 0, big.width, big.height);
   const sp = spriteName && SPR[spriteName];
@@ -4698,6 +4701,7 @@ function bagHeld() {
   return held;
 }
 function drawBagIcon(cv, spriteName, f) {
+  spriteName = inventoryIconName(spriteName);
   const g = cv.getContext("2d"), s = SPR[spriteName];
   g.clearRect(0, 0, cv.width, cv.height);
   if (!s) return;
@@ -4929,12 +4933,15 @@ function refreshBag() {
 let ask = null, askPick = 0;
 function askBack(){const back=ask?.back;askShut();if(back)back();}
 function askShut() {
+  hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
   ask = null;
   const el = document.getElementById("bagAsk");
   if (el) el.style.display = "none";
 }
 function askDraw() {
+  if(ask?.shop){drawMerchantShop();return;}
+  hideMerchantShop();
   const el = document.getElementById("bagAsk");
   const rows = document.getElementById("askRows");
   if (!el || !rows) return;
@@ -5576,7 +5583,7 @@ function refreshOvl() {
 }
 function appendActionIcon(row,key){
   const icon=document.createElement("img");icon.className="actionIcon";icon.alt="";
-  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v=20260926";
+  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v=20260926-subtle2";
   row.appendChild(icon);
 }
 function paintCommandRow(row,it){

@@ -61,8 +61,8 @@ assert.equal(blank.children.length,0,'Locked Summon is entirely blank');assert.e
 const click={preventDefault(){},stopPropagation(){}};blank.handlers.click(click);mr('ovlTake()');assert.equal(summoned,0,'Blank row cannot activate by touch or A');
 mr('MENUS.airm.pick=1;ovlStep(1)');assert.equal(mr('MENUS.airm.pick'),0,'Directional navigation skips the blank button');
 const held=nodes.airRows.children[2];m.charm.wake=true;mr('updateCommandRows()');assert.equal(nodes.airRows.children[2],held,'Availability changes do not detach a pressed button');
-assert.equal(held.children[0].src,'assets/icons/wake.svg?v=20260926');assert.equal(held.children[1].textContent,'Summon');held.handlers.click(click);assert.equal(summoned,1);
+assert.equal(held.children[0].src,'assets/icons/wake.svg?v=20260926-subtle2');assert.equal(held.children[1].textContent,'Summon');held.handlers.click(click);assert.equal(summoned,1);
 m.wakeCool=10;mr('updateCommandRows()');assert.equal(held.children.length,0,'Summon goes blank while unavailable again');
 mr('ovl="atkm";refreshOvl()');assert.equal(nodes.atkRows.children.length,5);
-for(const row of nodes.atkRows.children){const icon=row.children.find(e=>e.className==='actionIcon');assert(icon);assert.match(read(icon.src.split('?')[0]),/<svg.*viewBox="0 0 42 42"/);}
+for(const row of nodes.atkRows.children){const icon=row.children.find(e=>e.className==='actionIcon');assert(icon);assert.match(read(icon.src.split('?')[0]),/<svg.*viewBox="0 0 24 24"/);}
 console.log('PASS: Locked and cooling Summon buttons are blank and inert; activation updates in place; both menus load the new artwork.');

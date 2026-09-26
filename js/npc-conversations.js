@@ -1,0 +1,1898 @@
+/* Individually authored stories; source: assets/dialogue/npc-stories.tsv. */
+const NPC_STORIES = {
+  "Hettie": [
+    [
+      "Your first herd",
+      "My first cow belonged to my aunt. It followed her everywhere and refused to follow me at all.",
+      "How did you persuade it?",
+      "I borrowed her coat. By the time the cow noticed, we were friends. The coat never recovered."
+    ],
+    [
+      "A day off",
+      "I would like one morning when nobody needs feeding before I do.",
+      "Even the hens?",
+      "Especially the hens. They have had years to learn where the grain is."
+    ]
+  ],
+  "Gwil": [
+    [
+      "Working with wood",
+      "My father taught me to leave a young tree beside every stump. I thought he was making extra work.",
+      "Was he?",
+      "The first ones I planted are taller than the mill now. He was leaving work for somebody else."
+    ],
+    [
+      "Hettie's farm",
+      "Hettie lets me choose which jobs need doing first. Then she explains why I chose the wrong ones.",
+      "Do you argue?",
+      "Only until she hands me the right tool. We get a good deal done that way."
+    ]
+  ],
+  "Odo": [
+    [
+      "The fish you remember",
+      "I once hooked something so heavy I tied the line to the bridge. Spent an hour telling everyone it was a river king.",
+      "What was it?",
+      "My own lost bucket. Still the largest thing I have landed in public."
+    ],
+    [
+      "Waiting by the water",
+      "My brother used to fish from the other bank. We could spend a whole morning without saying a word.",
+      "Do you miss that?",
+      "Yes. Sometimes I still turn to tell him the fish are laughing at us."
+    ]
+  ],
+  "Tolan": [
+    [
+      "Before the uniform",
+      "I carried flour before I carried a spear. The sacks were heavier, but nobody hated seeing me arrive.",
+      "Why become a guard?",
+      "A regular wage. My little sister needed boots more than I needed to feel proud of my work."
+    ],
+    [
+      "Following orders",
+      "A shouted order sounds certain. That is useful when the person giving it has no idea what comes next.",
+      "What do you do then?",
+      "Watch the people it will hurt. They usually understand the order better than the officer does."
+    ]
+  ],
+  "Serjeant Bram": [
+    [
+      "Your old company",
+      "I learned every recruit's name before I learned how to shout properly. My serjeant thought I had my priorities wrong.",
+      "Did you change them?",
+      "No. A man listens differently when you know who he is."
+    ],
+    [
+      "The weight of rank",
+      "This badge belonged to somebody who could bring a whole patrol home without making a speech.",
+      "You admired him?",
+      "Still do. I polish it when I cannot work out what he would have done."
+    ]
+  ],
+  "Doran": [
+    [
+      "The black armor",
+      "Blackened steel shows less rust, and a careless polish leaves a bright mark. My old master could spot one across a yard.",
+      "Was he strict?",
+      "He believed a loose buckle was more dangerous than a fierce opponent. I have met both. He had a point."
+    ],
+    [
+      "A knight's supper",
+      "I learned to cook on patrol because nobody else would admit the porridge was burning.",
+      "What is your specialty?",
+      "Porridge that is not burning. You would be surprised how warmly it is received."
+    ]
+  ],
+  "Elder Maddock": [
+    [
+      "Your first journey",
+      "I left Millwood with two maps, three shirts and no spare socks. Rain taught me which of those mattered.",
+      "Did you go far?",
+      "As far as Thornwell before I bought socks. Much farther after I learned to ask for advice."
+    ],
+    [
+      "The names on maps",
+      "An old map calls the bend by our mill Widow's Reach. Nobody alive remembers whose widow she was.",
+      "Should the name change?",
+      "Perhaps. But I would like to learn her story before we rub out the last trace of it."
+    ]
+  ],
+  "Pip": [
+    [
+      "Listening through the caps",
+      "Heavy boots thump. Beetles tick. Rain makes so much noise under the caps that I can hardly think.",
+      "What do I sound like?",
+      "Quick, stop, quick. You look at everything. The ground keeps telling me you have found something new."
+    ],
+    [
+      "Your smallest friend",
+      "A beetle sleeps beneath my cap when the nights turn cold. It never asks first.",
+      "Do you mind?",
+      "It eats the mites. I think that is how beetles say thank you."
+    ]
+  ],
+  "Mycella": [
+    [
+      "The oldest ring",
+      "My mother taught me the old paths by their roots. The trees above them have changed twice since then.",
+      "Can you still find them?",
+      "With my feet. Your eyes look for a road. Mine wait for the earth to remember one."
+    ],
+    [
+      "Remembering the sky",
+      "When the dragons crossed overhead, their shadows cooled the whole ring. We would stop growing toward the sun for a moment.",
+      "Were you frightened?",
+      "Only the first time. Later I learned that a large shadow need not mean something cruel."
+    ]
+  ],
+  "Bolete": [
+    [
+      "Keeping the path open",
+      "I loosen the roots at the path's edge. They grow back every night, patient as anything.",
+      "Does that bother you?",
+      "No. They are doing their work. I am doing mine. We have a very polite disagreement."
+    ],
+    [
+      "The damp season",
+      "After a long dry spell, the first rain travels through all of us. Nobody can keep a secret then.",
+      "What sort of secret?",
+      "Who has been saving the sweetest rot. Do not look so shocked. You keep honey."
+    ]
+  ],
+  "Truffle": [
+    [
+      "The northern field",
+      "I tend the little caps where the ground is thin. They need shelter before they can give any.",
+      "How do you shelter a mushroom?",
+      "With a fallen leaf, carefully placed. Small things deserve a roof too."
+    ],
+    [
+      "A strange visitor",
+      "A fox once curled up beside me all winter. It thought I was part of its den.",
+      "Were you?",
+      "For that winter. It left a warm hollow and a great many fleas."
+    ]
+  ],
+  "The Shroom King": [
+    [
+      "Your crown",
+      "The ring put this crown on me after I listened through an entire argument without interrupting.",
+      "Was that all it took?",
+      "The argument lasted three wet seasons. I was not eager for another."
+    ],
+    [
+      "What the ring remembers",
+      "We keep the names of those who fed the soil before us. Nothing growing here stands alone.",
+      "Do humans have a place in that memory?",
+      "Those who tread gently do. Your kind are brief, Corin. Brief need not mean forgotten."
+    ]
+  ],
+  "Calder": [
+    [
+      "How the camp began",
+      "My cart lost an axle here nine years ago. I built a fire while I waited for help, and travellers kept stopping.",
+      "You never left?",
+      "I had shade, water and paying guests. It seemed rude to argue with a good accident."
+    ],
+    [
+      "Fishing at Forgefalls",
+      "The pools below Forgefalls have little shelves where the current slows. That is where I cast.",
+      "Why there?",
+      "Fish need a rest as much as travellers do. Sit quietly and let the river do the boasting."
+    ]
+  ],
+  "Prue": [
+    [
+      "Your father's work",
+      "Father never signed a stone. He said a wall ought to make you think of the house, not the mason.",
+      "How do you know which ones were his?",
+      "A small nick beneath the lowest corner. Apparently he wanted the wall to remember him even if nobody else did."
+    ],
+    [
+      "Starting again",
+      "I kept his tools wrapped for a year. Then a step broke outside a neighbour's door.",
+      "Did you mend it?",
+      "Badly, the first time. The second held. I think he would have been pleased I went back."
+    ]
+  ],
+  "Toft": [
+    [
+      "Your first shift",
+      "I went below with a new lamp and boots a size too large. The older miners filled the toes with spare cloth.",
+      "Did they tease you?",
+      "For months. They also checked my lamp at every turning. I understood that part later."
+    ],
+    [
+      "Opening the stall",
+      "I used to divide my last potion with whoever had forgotten theirs. Eventually I started bringing a box.",
+      "And charging for it?",
+      "Only after everyone began forgetting theirs on purpose. Friendship still gets an extra clean bandage."
+    ]
+  ],
+  "Linna": [
+    [
+      "The mill accounts",
+      "My first tally was wrong by one sack. I stayed up all night looking for it.",
+      "Did you find it?",
+      "Under the table, holding up a short leg. I have distrusted tidy explanations ever since."
+    ],
+    [
+      "A secret ambition",
+      "I would like to keep an account of things nobody buys. Birdsong, birthdays, the first warm morning.",
+      "Would anybody read it?",
+      "I would. It would be nice to finish a page without adding a total."
+    ]
+  ],
+  "Wren": [
+    [
+      "Learning remedies",
+      "Berta made me smell every jar before she let me read its label. I thought she was being difficult.",
+      "Was she?",
+      "One winter the labels all peeled off. Nobody missed a dose. I stopped complaining."
+    ],
+    [
+      "The stubborn plant",
+      "That little cutting came from a garden abandoned years ago. It flowered the day after I had nearly given up on it.",
+      "What did you change?",
+      "I moved it into the shade. It did not need more attention. It needed the right attention."
+    ]
+  ],
+  "Bevan": [
+    [
+      "Your first commission",
+      "My first paid job was a gate hinge. I made it thick enough to hold up a castle.",
+      "Did it work?",
+      "The post fell over. I learned to look at what my work would be attached to."
+    ],
+    [
+      "What you want to make",
+      "A cradle. Curved runners, no sharp corners, quiet enough not to wake a sleeping child.",
+      "That sounds unlike a forge.",
+      "Only if you think iron has to threaten somebody to be useful."
+    ]
+  ],
+  "Isolde": [
+    [
+      "Counting the ore",
+      "I can tell which crew filled a cart by how they stack it. The careful ones leave the tally where I can see it.",
+      "And the others?",
+      "Bury it under the heaviest lump. Then complain I take too long."
+    ],
+    [
+      "The missing names",
+      "I keep a second book with the names behind the numbers. A week's output will not tell you who worked with a bad hand.",
+      "Does anyone ask to see it?",
+      "Families do. That is reason enough to keep it."
+    ]
+  ],
+  "Nazim": [
+    [
+      "Your father's cistern",
+      "Father lined the cistern himself. Every bucketful we draw still passes the stones he set.",
+      "You must be proud.",
+      "I am. Though I wish he had taught me the trick of stopping a leak before he taught me how to boast about it."
+    ],
+    [
+      "Sharing water",
+      "A traveller once offered me a jewel for a drink. I gave him water and told him to keep the jewel.",
+      "Why?",
+      "He might need to buy another drink from someone less sensible."
+    ]
+  ],
+  "Halima": [
+    [
+      "The spice road",
+      "My mother could tell where a caravan had stopped by the smell of its canvas.",
+      "Can you?",
+      "Sometimes. Rain, smoke, cumin. Fear has no smell, whatever storytellers say. It shows in what people forget to unpack."
+    ],
+    [
+      "Your favourite spice",
+      "Cardamom. My mother put a little in tea when a guest looked too tired to tell their story.",
+      "Did it help?",
+      "Usually. Warm hands loosen a tongue better than questions do."
+    ]
+  ],
+  "Tarek": [
+    [
+      "That camel",
+      "The bad-tempered one carried me home with a broken ankle. Bit the man who tried to unload me too quickly.",
+      "You kept it?",
+      "Of course. Loyalty does not always have pleasant manners."
+    ],
+    [
+      "Caravan bells",
+      "Each family ties its bells a little differently. At night I can tell who is coming before I see their lanterns.",
+      "What does yours sound like?",
+      "An argument in a cupboard. I have been meaning to fix the third bell for six years."
+    ]
+  ],
+  "Suhaila": [
+    [
+      "Your daughter's loom",
+      "She weaves little blue birds into the borders. Says a blanket should promise somewhere cooler.",
+      "Do you weave too?",
+      "Not since my hands stiffened. I choose the thread and pretend not to notice when she changes the colours."
+    ],
+    [
+      "The evening well",
+      "We draw the last water slowly. People linger and tell each other what happened in the heat.",
+      "Even on uneventful days?",
+      "Especially then. A neighbour remembering your day is no small thing."
+    ]
+  ],
+  "Idris": [
+    [
+      "Your three sons",
+      "The eldest wants ships, the middle wants music, and the youngest wants whatever the middle wants.",
+      "Do you want them to stay?",
+      "I want them to come back with stories. Staying is only one way to keep a family close."
+    ],
+    [
+      "A fair bargain",
+      "My father taught me to leave a customer enough money for supper. A hungry customer remembers the wrong part of a bargain.",
+      "Do all traders agree?",
+      "Some call it foolish. Those traders rarely get invited to supper."
+    ]
+  ],
+  "Rashida": [
+    [
+      "Your first glass",
+      "A desert storm ruined my first batch. Fine grit blew straight into the cooling bowl.",
+      "Did you throw it away?",
+      "No. It sparkled in the sun. I sold it as something I had meant to do and spent months learning how to do it again."
+    ],
+    [
+      "Rival workshops",
+      "Forgewick glass has a certain heaviness. Very dependable. You could trust it with a bad-tempered guest.",
+      "Is that praise?",
+      "Do not tell Sela. We have both put years into this argument."
+    ]
+  ],
+  "Bilal": [
+    [
+      "Naming goats",
+      "I named the first goat Patience. It climbed onto my roof that afternoon.",
+      "What did you name the next one?",
+      "Ladder. I had begun to understand the arrangement."
+    ],
+    [
+      "A quiet morning",
+      "When the kids are asleep, I sit against the warm wall and listen to the herd breathe.",
+      "That sounds peaceful.",
+      "It is. Then Patience wakes up and eats something important."
+    ]
+  ],
+  "Sella": [
+    [
+      "Your stew",
+      "My mother thickened it with whatever the boats had failed to sell. I learned to cook by asking why nobody wanted a fish.",
+      "What was the answer?",
+      "Usually that it looked ugly. A terrible reason to waste supper."
+    ],
+    [
+      "Waiting for the boat",
+      "I know my husband's sail by its crooked patch. He says he will mend it properly next week.",
+      "You do not believe him?",
+      "I hope he does not. I can pick that patch out a mile beyond the point."
+    ]
+  ],
+  "Ovid": [
+    [
+      "The sound of town",
+      "Three taps and a scrape means someone is fitting a hinge. Long blows mean a blade. I learned by sweeping the workshops.",
+      "Do you still sweep?",
+      "Sometimes. People tell you things when they think you are listening to the floor."
+    ],
+    [
+      "A tune of your own",
+      "I have been writing a song with room for every trade in Forgewick.",
+      "How does it end?",
+      "I have not reached the bakers yet. They insist their verse should come before breakfast."
+    ]
+  ],
+  "Jamila": [
+    [
+      "Working the road",
+      "I used to keep my stock in a pack so heavy I had to sit down to turn around.",
+      "What changed?",
+      "I learned which things travellers actually needed. Then I learned they all needed them on the same afternoon."
+    ],
+    [
+      "A customer's kindness",
+      "A woman once paid me with a pair of knitted gloves. I thought I had made a terrible bargain in the desert.",
+      "Had you?",
+      "Not when I reached the highlands. I still have them. One thumb is blue."
+    ]
+  ],
+  "Nerissa": [
+    [
+      "Learning to swim",
+      "My aunt taught me in the shallows with a cork float tied to my waist. I refused to take it off for a week.",
+      "Even on land?",
+      "Especially on land. I thought it made me look experienced."
+    ],
+    [
+      "Reading the tide",
+      "My first ledger had tide marks in the margin. Customers thought they were decorations.",
+      "Why keep them there?",
+      "Because the sea decides when half my customers are paid. An account book should know who is really in charge."
+    ]
+  ],
+  "Astrid": [
+    [
+      "The first winter",
+      "I arrived with beautiful gloves that let every bit of wind through. Runa handed me a pair that looked like two potatoes.",
+      "Which pair did you keep?",
+      "The potatoes. Beauty is an expensive way to lose feeling in your fingers."
+    ],
+    [
+      "Feeding a town",
+      "A pot of soup makes people stand still long enough to notice who has not come home.",
+      "You keep track?",
+      "Somebody should. I save portions before anyone asks."
+    ]
+  ],
+  "Colm": [
+    [
+      "Your seat at the table",
+      "I used to eat standing up at work. One winter I realised I could remember the jobs but none of the meals.",
+      "So now you take your time?",
+      "I sit down. I taste things. It is a modest rebellion, but I recommend it."
+    ],
+    [
+      "The Copper Cup",
+      "A crowded room can be quiet if nobody requires you to perform for them.",
+      "Is that why you come here?",
+      "Bess knows when to leave a person alone. That is rarer than good cider."
+    ]
+  ],
+  "Tessa": [
+    [
+      "Your first audience",
+      "I played beside a fountain so the water would hide my mistakes. A child asked me to play the wrong bit again.",
+      "Did you?",
+      "Three times. It became the tune people asked for. I still owe that child a copper."
+    ],
+    [
+      "Taking requests",
+      "Everyone asks for something cheerful until I begin. Then they remember a sad song they love.",
+      "What do you choose?",
+      "The one they start humming before they finish asking."
+    ]
+  ],
+  "Rowan the Hunter": [
+    [
+      "Training Bramble",
+      "I taught him to follow a trail. He taught me that I leave a trail whenever I carry sausages.",
+      "Who learned faster?",
+      "He did. He also remembers the lesson longer."
+    ],
+    [
+      "Why you hunt",
+      "I know which clearings need leaving alone and which herds can spare an animal. Taking enough is harder than taking everything.",
+      "Who taught you that?",
+      "Ada. She asked whether I wanted a good winter or a good life."
+    ]
+  ],
+  "Sverre": [
+    [
+      "Your first blizzard",
+      "I tied myself to a fence post and waited. Spent the night cursing the fool who put a fence so far from shelter.",
+      "Who was it?",
+      "Me, the summer before. I build them closer together now."
+    ],
+    [
+      "A warm welcome",
+      "My mother kept spare mittens by the door. Different sizes, none of them matching.",
+      "For visitors?",
+      "For anyone trying to hide cold hands. Pride freezes faster than fingers."
+    ]
+  ],
+  "Runa": [
+    [
+      "Learning to cook",
+      "Astrid let me stir the soup when I was little. I thought that meant I had made it.",
+      "Did she correct you?",
+      "Not until I tried to put jam in the next pot. There are limits to encouragement."
+    ],
+    [
+      "The thaw",
+      "I like the first drip from the eaves. Everybody complains about the mud, but I listen for it all winter.",
+      "What do you do when it comes?",
+      "Open the door. Just for a minute. The house likes fresh air too."
+    ]
+  ],
+  "Eira": [
+    [
+      "The cider press",
+      "I inherited a press that leans left and a recipe that says a sensible amount of honey.",
+      "What is sensible?",
+      "That is what I am trying to find out. The bees have been very generous with advice and very stingy with honey."
+    ],
+    [
+      "A new flavour",
+      "I keep a bottle from every good batch, labelled with the weather that autumn.",
+      "Why the weather?",
+      "Apples remember the rain. I like being able to taste a year after everyone has stopped talking about it."
+    ]
+  ],
+  "Fenton": [
+    [
+      "Your toast",
+      "I once came home wearing somebody else's boots. Lost mine in a bog and traded a coat for the replacements.",
+      "Was it worth it?",
+      "I reached home. Dry boots and a road that brings you back is a toast I earned honestly."
+    ],
+    [
+      "An adventure worth telling",
+      "The best part of my longest journey was finding my sister waiting at the end of it.",
+      "Not the mountains?",
+      "The mountains did not make me supper. People forget to include supper in their stories."
+    ]
+  ],
+  "Tallis": [
+    [
+      "Learning rhythm",
+      "My teacher made me play beside a smith who kept dreadful time. Said a tune should survive an interruption.",
+      "Did yours?",
+      "Eventually. The smith began tapping along, and we both improved."
+    ],
+    [
+      "The unfinished verse",
+      "There is a verse for the glassworkers I cannot settle. Everything I write sounds too delicate.",
+      "What are they really like?",
+      "Loud, stubborn, wonderfully rude about bad glass. I should probably put that in."
+    ]
+  ],
+  "Kip": [
+    [
+      "Treasure on the shore",
+      "My first treasure was a brass button with a ship on it. I spent a month looking for the captain who lost it.",
+      "Did you find him?",
+      "Found a laundress with six more. I kept mine anyway. The ship still looks splendid."
+    ],
+    [
+      "The crab",
+      "It lives beneath the loose board. I put it back whenever somebody insists it is a problem.",
+      "Why keep it here?",
+      "It found the board before I did. That makes us neighbours, I think."
+    ]
+  ],
+  "Ada": [
+    [
+      "Meeting Rowan",
+      "He offered to carry my basket home. Bramble, who was very small then, stole a loaf out of it while we talked.",
+      "Did you let him carry it again?",
+      "Yes. I made him replace the loaf first. He still claims that was our first courtship expense."
+    ],
+    [
+      "An empty house",
+      "I like a quiet house for about an hour. Then I start putting things where Rowan will trip over them if he comes home late.",
+      "To scold him?",
+      "To hear him come in. There are less foolish methods, but this one also gets the baskets moved."
+    ]
+  ],
+  "Bren": [
+    [
+      "Elowen's accounts",
+      "I copied a story about Maelis for a neighbour once. Elowen asked me where the story came from.",
+      "Could you answer?",
+      "No. I had copied the words carefully and never thought to check whether any of them were true."
+    ],
+    [
+      "Learning to ask",
+      "Now I leave a blank space beneath every tale I write down.",
+      "What goes there?",
+      "The name of someone who was actually present. You would be surprised how much empty paper I own."
+    ]
+  ],
+  "Berta": [
+    [
+      "Teaching Wren",
+      "Wren asked why a remedy worked before she asked how much to use. I knew she would either be excellent or exhaust me.",
+      "Which was it?",
+      "Both. She still brings questions home. I leave a chair beside the fire for them."
+    ],
+    [
+      "An empty morning",
+      "For years I woke before sunrise to open the stall. My feet still try to take me there before breakfast.",
+      "What do you do instead?",
+      "Sit down until they remember I am retired. Then I go and visit anyway."
+    ]
+  ],
+  "Della": [
+    [
+      "The witch's visitors",
+      "My neighbour called Maelis wicked for ten years, then went to her when his daughter's fever would not break.",
+      "Did he change his mind?",
+      "He changed the subject. I thought his daughter getting well deserved a little more honesty."
+    ],
+    [
+      "Your little garden",
+      "I grow mint in a pot because I once let it into the garden. It took three summers to negotiate its surrender.",
+      "You talk to the plants?",
+      "Only the ambitious ones. They need to understand the boundaries."
+    ]
+  ],
+  "Ewan": [
+    [
+      "Notes in the margins",
+      "A reader drew a little furious face beside a king's tax decree. It told me more about the year than the decree did.",
+      "Do you leave notes too?",
+      "On separate paper. I want to argue with history, not make the next reader argue with me."
+    ],
+    [
+      "The book you want",
+      "A history written by the people who baked the bread while everybody else was making speeches.",
+      "Would it be very exciting?",
+      "People have crossed countries for a meal. I suspect the historians have missed rather a lot."
+    ]
+  ],
+  "Fara": [
+    [
+      "Broken glass",
+      "I broke my mother's favourite jug and carried every piece to Sela wrapped in my apron.",
+      "Could she mend it?",
+      "She made the pieces into a little window ornament. Mother said it caught more light than the jug ever did."
+    ],
+    [
+      "Keeping scraps",
+      "People leave broken things by my door now. Some mornings it looks as though a house has sneezed.",
+      "Do you find uses for all of them?",
+      "Not yet. I have learned that yet is a useful word."
+    ]
+  ],
+  "Garrick": [
+    [
+      "Knowing the hammers",
+      "The new apprentice strikes twice, hesitates, then strikes again. I used to find it maddening.",
+      "What changed?",
+      "One morning there was no hesitation. I felt absurdly proud of someone I had never met."
+    ],
+    [
+      "Before the workshops",
+      "This street was quieter when I was young. I complain about the noise, but I remember the winter two forges closed.",
+      "What was that like?",
+      "Too quiet. A working hammer tells you somebody will eat tonight."
+    ]
+  ],
+  "Hester": [
+    [
+      "Your first net",
+      "My grandmother cut a hole in the net I had just finished. I thought she was being cruel.",
+      "Why did she do that?",
+      "So I could mend it while I was warm, dry and not depending on it for supper."
+    ],
+    [
+      "A knot to remember",
+      "There is one knot I make exactly as she did. Slightly crooked, always sound.",
+      "Have you taught anyone?",
+      "Three neighbours and a boy who only wanted to tie his sister's door shut. I made him untie it first."
+    ]
+  ],
+  "Junia": [
+    [
+      "The lamp fund",
+      "I put a copper aside whenever I mend something instead of replacing it. The lamp will be paid for by old socks, mostly.",
+      "Does the shop know?",
+      "They need not. I intend to look very grand when I buy it."
+    ],
+    [
+      "The colour you chose",
+      "Amber. My room faces the wrong way for evening sunlight, and I have decided to correct the sun.",
+      "Will one lamp do that?",
+      "For the chair beside my window. I am not making unreasonable demands."
+    ]
+  ],
+  "Kellan": [
+    [
+      "Keeping time",
+      "My father had a clock that lost an hour whenever it rained. We were late to everything except droughts.",
+      "What happened to it?",
+      "I took it apart. Now it is always wrong, but in an understandable way."
+    ],
+    [
+      "The quiet hour",
+      "When the hammers stop for lunch, you can hear every spoon on the street.",
+      "Do you like that?",
+      "Yes. It sounds as though the whole town remembered to take care of itself."
+    ]
+  ],
+  "Lysa": [
+    [
+      "The crooked bird",
+      "I saved for that glass bird for months, then saw a perfect one at the same price.",
+      "Which did you choose?",
+      "The crooked one. It looks as though it has been listening to a very surprising story."
+    ],
+    [
+      "Making things",
+      "I carve little birds from fallen twigs. They mostly look like potatoes with opinions.",
+      "Will you sell them?",
+      "Not yet. My family has asked me to stop giving them away, which may be the first sign of a market."
+    ]
+  ],
+  "Cinder": [
+    [
+      "Keeping the fire",
+      "My grandmother could carry an ember from one house to another in a clay pot. A whole street shared her morning flame.",
+      "Did she teach you?",
+      "Yes. Keep the ash dry and never hurry. A small living thing deserves a steady hand."
+    ],
+    [
+      "Your name",
+      "I was named for the fire that kept our house warm through a dreadful winter.",
+      "A good name to have.",
+      "I think so. Though when someone calls for more cinders, I still look up."
+    ]
+  ],
+  "Warden": [
+    [
+      "The evening carts",
+      "His cart has a wheel that squeaks on every third turn. I hear it long before his boots reach the step.",
+      "Why does he not mend it?",
+      "He did once. I worried all evening. He lets it squeak a little now."
+    ],
+    [
+      "Packing supper",
+      "I used to pack what kept well. Now I add one thing he will be pleased to find.",
+      "What sort of thing?",
+      "An apple, a piece of cheese. Something that says the world contains more than stone and tired hands."
+    ]
+  ],
+  "Ember": [
+    [
+      "Coal in the bread",
+      "I complained to the baker until he let me watch a batch. The dust came in on my own coat.",
+      "Did you tell him?",
+      "Eventually. He still brushes the doorway when he sees me coming."
+    ],
+    [
+      "A clean corner",
+      "I keep one shelf covered with a cloth. A blue cup, a smooth pebble, a ribbon from my sister.",
+      "Why those things?",
+      "None of them have ever been useful. I like being reminded that they need not be."
+    ]
+  ],
+  "Dagna": [
+    [
+      "Fighting the dust",
+      "I once scrubbed this room from dawn until dark, then watched a single open window undo the whole day.",
+      "What did you do?",
+      "Sat down before I could start again. We had supper in a dusty room and survived perfectly well."
+    ],
+    [
+      "Learning to rest",
+      "I am trying to leave one task unfinished each evening.",
+      "Is it difficult?",
+      "Terribly. I keep choosing tasks I can finish before bed. I may need a larger task."
+    ]
+  ],
+  "Lode": [
+    [
+      "Sleeping by the forge",
+      "At first I stuffed wool in my ears. Then the silence kept me awake because I could not tell whether the night shift was safe.",
+      "What helped?",
+      "Learning their rhythm. Now a steady hammer is a lullaby, though a poor one to sing to a child."
+    ],
+    [
+      "The cup by your bed",
+      "It was a wedding gift. The handle rattles against the wall when the heavy hammer starts.",
+      "Why not move it?",
+      "My wife says the house is playing our song. Neither of us can sing, so this is an improvement."
+    ]
+  ],
+  "Pike": [
+    [
+      "The extra crust",
+      "My husband once shared his lunch with a new miner too shy to admit he had brought nothing.",
+      "You started packing more?",
+      "The next morning. He thinks I do not know. I think the new miner knows perfectly well."
+    ],
+    [
+      "Your own plans",
+      "I want to take a picnic somewhere I cannot hear a single cart.",
+      "What would you pack?",
+      "Less bread. For once I would like the basket to come home empty for an ordinary reason."
+    ]
+  ],
+  "Hallow": [
+    [
+      "The loose hinge",
+      "The mountain loosens it every month. I have kept the old screws in a jar as evidence.",
+      "Evidence for whom?",
+      "The mountain, should it ever agree to discuss compensation."
+    ],
+    [
+      "Your apprenticeship",
+      "I learned repairs from a woman who could fix anything except her own spectacles.",
+      "Why not those?",
+      "She needed them to see what was wrong. I learned early that even clever people need another pair of hands."
+    ]
+  ],
+  "Quarrel": [
+    [
+      "The baker's joke",
+      "He calls coal-free bread foreign bread. I call his prices a work of fiction.",
+      "Are you friends?",
+      "We have been having the same argument for twenty years. He leaves my loaf warm at the back."
+    ],
+    [
+      "Something you agree on",
+      "Flint says I complain because I enjoy it. I complain because things can be improved.",
+      "Everything?",
+      "His snoring cannot. I have conducted a thorough investigation."
+    ]
+  ],
+  "Flint": [
+    [
+      "Saving the embers",
+      "A traveller showed me how to bank the fire beneath a thick layer of ash. I gave him supper for the lesson.",
+      "A fair trade?",
+      "I have saved wood every winter since. I owe him a rather larger supper."
+    ],
+    [
+      "Living with Quarrel",
+      "She spots every loose board before anyone trips on it. People hear the complaint and miss the kindness underneath.",
+      "Do you tell her that?",
+      "I did once. She said kindness would have fixed the board already."
+    ]
+  ],
+  "Winnie": [
+    [
+      "Nan when she was young",
+      "Nan could dance until the musicians begged for a rest. She said tired feet were a poor excuse for a bad tune.",
+      "She never told me.",
+      "Ask her about the midsummer fiddle. Watch how she smiles before she answers."
+    ],
+    [
+      "Your mother",
+      "She used to bring me the first flowers she found each spring, dirt and roots still attached.",
+      "That sounds like me.",
+      "It does. You both believed a flower might miss its home if you cut it too short."
+    ]
+  ],
+  "Ned": [
+    [
+      "Mending harness",
+      "Leather tells you where it has been pulled too hard. Most breaks announce themselves for weeks.",
+      "Do people notice?",
+      "Usually after it breaks. Then they ask whether I can mend it yesterday."
+    ],
+    [
+      "An old promise",
+      "Your father once helped me carry a cart out of a ditch in pouring rain. Would not take a copper.",
+      "Did you repay him?",
+      "I mend Nan's straps before she has to ask. A debt can become a habit worth keeping."
+    ]
+  ],
+  "Nan Ferrow": [
+    [
+      "Mum's songs",
+      "Your mother knew songs for kneading, songs for mending, and one for finding things she had lost.",
+      "Did the last one work?",
+      "Only because your father heard it and came to help. He pretended he was not already looking."
+    ],
+    [
+      "How we became a family",
+      "Your parents died when you were born. I brought you home so small that my whole hand covered your back.",
+      "Were you afraid?",
+      "Of everything, love. Then you gripped my finger. There was still washing to do and milk to warm, and somebody needed me here."
+    ]
+  ],
+  "Joss": [
+    [
+      "Leaving Thornwell",
+      "I said I was coming for one winter. Packed one coat and left my good cups with a neighbour.",
+      "Will you go back for them?",
+      "One day. Though I suspect they have become her good cups by now."
+    ],
+    [
+      "Living with Tam",
+      "Tam never asked when I was leaving. Just made a second hook by the door.",
+      "Was that enough?",
+      "Sometimes a place becomes home because somebody makes room before you ask."
+    ]
+  ],
+  "Greta": [
+    [
+      "The sticking door",
+      "I know exactly where to lift it. My mother did too. We have both put off mending it for years.",
+      "Why?",
+      "The scrape tells me someone has come in. Down here, an unexpected silence is worse than a noisy hinge."
+    ],
+    [
+      "A day above ground",
+      "I like hanging washing outside. The clothes come back smelling of a place with a sky.",
+      "Do you ever stay outside longer?",
+      "I sometimes find a second basket that does not strictly need washing."
+    ]
+  ],
+  "Osric": [
+    [
+      "Books and danger",
+      "I used to read adventures aloud to my brother. He always wanted to be the fellow with the sword.",
+      "And you?",
+      "The fellow who knew a safe way home. The books never gave him enough lines."
+    ],
+    [
+      "The visitor you remember",
+      "A traveller once arrived asking whether our cellar led to a lost kingdom.",
+      "Did it?",
+      "It led to potatoes. He was disappointed until we cooked some."
+    ]
+  ],
+  "Alder": [
+    [
+      "Learning the hives",
+      "My first hive stung me whenever I hurried. I blamed the bees for an entire summer.",
+      "What changed?",
+      "Gwyneth asked whether I liked strangers rushing into my house. I slowed down."
+    ],
+    [
+      "Winter honey",
+      "I leave the bees more than the books advise. A bad winter does not read the books.",
+      "Does that cost you much?",
+      "Less than an empty hive in spring. I prefer to argue with a living colony."
+    ]
+  ],
+  "Gwyneth": [
+    [
+      "The unfinished scarf",
+      "It began as a scarf for Alder. Then winter grew colder and the scarf grew longer.",
+      "Will you ever finish?",
+      "Before it reaches the hives, I hope. Otherwise the bees may claim a share."
+    ],
+    [
+      "A chair by the fire",
+      "My mother always kept the warmest chair for whoever had just arrived.",
+      "Even strangers?",
+      "Especially strangers. A familiar face already knows where the blankets are."
+    ]
+  ],
+  "Mattock": [
+    [
+      "The sweeping",
+      "I can tell which seam my husband worked by the colour of the dust beneath his chair.",
+      "Does he believe you?",
+      "He tried changing chairs. That was an entertaining evening."
+    ],
+    [
+      "Your own work",
+      "I make little clay weights for looms. They need to be plain, even and dependable.",
+      "Do you enjoy it?",
+      "Very much. A useful thing can have a quiet life and still matter every day."
+    ]
+  ],
+  "Kiln": [
+    [
+      "The expensive shelf",
+      "That shelf holds every bowl I heated too quickly. I keep them where apprentices can see them.",
+      "To warn them?",
+      "To show them I am not scolding from a place of perfection. Also to discourage questions about my prices."
+    ],
+    [
+      "A good firing",
+      "You wait for hours without knowing whether your work has survived. Opening the kiln still makes my stomach turn.",
+      "Every time?",
+      "Every time I care about what is inside. I hope that never stops."
+    ]
+  ],
+  "Petra": [
+    [
+      "Checking the accounts",
+      "A caravan once reported a bridge washed away three days before it rained. Everyone panicked except the bookkeeper.",
+      "You?",
+      "I asked for the date. The bridge was fine. Their excuse for being late was not."
+    ],
+    [
+      "The story you kept",
+      "My mother's letters are full of small details. The price of oranges, a neighbour's new cat.",
+      "Why keep all of them?",
+      "Because those were her days. Nobody else thought to write them down."
+    ]
+  ],
+  "Raff": [
+    [
+      "The shutters",
+      "I learned to close them by watching where the sun hit my father's chair. He never owned a clock.",
+      "Did he need one?",
+      "Only when somebody tried to make him work through the hottest part of the day."
+    ],
+    [
+      "Evening visitors",
+      "People become more reasonable after sunset. I save difficult conversations until the walls have cooled.",
+      "Does that always work?",
+      "No. But at least we can argue without sweating into our tea."
+    ]
+  ],
+  "Suri": [
+    [
+      "Double seams",
+      "My first bag split on a caravan road. I spent an afternoon collecting lentils from the sand.",
+      "Did you manage it?",
+      "Not all of them. The ones I missed paid for a lesson I have never forgotten."
+    ],
+    [
+      "Clothes for travelling",
+      "A good coat needs room for a second layer and pockets you can reach with cold hands.",
+      "What about how it looks?",
+      "If it brings you home warm and whole, you will remember it as beautiful."
+    ]
+  ],
+  "Tavin": [
+    [
+      "The crowded doorway",
+      "My uncle used to leave his pack in the doorway. One summer we all stepped around it for a week after he left.",
+      "Was it still there?",
+      "No. Habit had become a piece of furniture."
+    ],
+    [
+      "Keeping guests",
+      "I put the drinking water where visitors can reach it without asking.",
+      "Why not offer it?",
+      "Some people are too polite to say they are thirsty. Hospitality ought to work for them too."
+    ]
+  ],
+  "Una": [
+    [
+      "Wrapping parcels",
+      "My sister moved away with a teacup wrapped in three of my best towels. I said I wanted the towels back.",
+      "Did she send them?",
+      "One at a time, around things she thought I would like. We have kept the parcel going for years."
+    ],
+    [
+      "The next parcel",
+      "I am sending a little packet of seeds. She says nothing grows in her yard.",
+      "Do you believe her?",
+      "I believe she has not tried these yet. Sisters are allowed to be stubborn on one another's behalf."
+    ]
+  ],
+  "Vela": [
+    [
+      "The knot in the rug",
+      "My grandmother hid a wrong-coloured knot in every rug. She said only the sky should try to be perfect.",
+      "Do you do that too?",
+      "I make enough mistakes without planning any. She would probably approve of the efficiency."
+    ],
+    [
+      "The pattern you chose",
+      "This border follows the route my family took to reach Sandspire. Every turn stands for a well.",
+      "Does anyone recognise it?",
+      "My aunt did. She sat down on the rug and began telling stories I had never heard."
+    ]
+  ],
+  "Wystan": [
+    [
+      "The second cup",
+      "I once agreed to buy six sacks of dates over a very pleasant pot of tea. The bill said sixteen.",
+      "Was it a trick?",
+      "Perhaps. The dates were excellent, but I learned to write before I drink."
+    ],
+    [
+      "A trader's reputation",
+      "A clever bargain feeds you once. A customer who comes back can feed you for years.",
+      "Then why do people cheat?",
+      "They are very hungry for tomorrow and strangely uninterested in the day after."
+    ]
+  ],
+  "Rania": [
+    [
+      "Chairs after sunset",
+      "We bring the chairs out when the walls start giving the heat back. The street becomes everybody's sitting room.",
+      "Who joins you?",
+      "Whoever carries a chair. The children bring boxes and consider themselves properly invited."
+    ],
+    [
+      "Meeting Latif",
+      "He offered to help mend a chair and spent the afternoon explaining how he would do it.",
+      "Did he mend it?",
+      "I did, while he talked. He brought tea the next day. We found our arrangement."
+    ]
+  ],
+  "Latif": [
+    [
+      "Accounts in the shade",
+      "I learned sums by counting my mother's market change. She paid me in the bruised fruit she could not sell.",
+      "Was that good pay?",
+      "I had no competing offers and an excellent opinion of bruised peaches."
+    ],
+    [
+      "The evening market",
+      "By evening people have told their best stories at least twice. You get a polished version with your supper.",
+      "Do you mind that?",
+      "Only when they polish the prices too."
+    ]
+  ],
+  "Yara": [
+    [
+      "The salt on the hinges",
+      "I oil them every week. My father said the sea takes a house apart one little piece at a time.",
+      "Can you stop it?",
+      "You can keep it busy with the bits you can replace."
+    ],
+    [
+      "Living by the coast",
+      "I tried living inland once. Everything was wonderfully dry and I could not sleep.",
+      "Why not?",
+      "I kept listening for the tide. A place can work its way into your breathing."
+    ]
+  ],
+  "Doryn": [
+    [
+      "Reading the gulls",
+      "My father taught me to watch the birds before the clouds. Clouds can look dramatic without doing anything.",
+      "And the gulls?",
+      "If they abandon a good fishing spot, I take the hint. They have more at stake than a damp shirt."
+    ],
+    [
+      "Your temper",
+      "Salt in the hinges, rain in the roof, and people telling me the view must be worth it.",
+      "Is it?",
+      "At sunrise, usually. Do not quote me when I am mending the roof."
+    ]
+  ],
+  "Bry": [
+    [
+      "The damp step",
+      "I slipped on it carrying a bowl of soup. Saved the bowl, lost the soup, acquired an audience.",
+      "Did anybody help?",
+      "Coral brought a cloth. Everyone else brought advice. We had enough advice to dry the whole street."
+    ],
+    [
+      "Making a home",
+      "We chose this house for the sound of the sea. Nobody mentioned how much of the sea would follow us inside.",
+      "Would you move?",
+      "No. I would buy a better mat."
+    ]
+  ],
+  "Coral": [
+    [
+      "The window lamp",
+      "My mother kept a light for my father. I thought it was a signal the whole sea could see.",
+      "Is yours a signal?",
+      "For one boat. That is a large enough world when you are waiting for it."
+    ],
+    [
+      "The crooked sail",
+      "I can mend a sail neatly. My husband prefers a patch he can recognise in bad light.",
+      "Do you agree?",
+      "I pretend to object. Then I choose thread bright enough for both of us to see."
+    ]
+  ],
+  "Edda": [
+    [
+      "Repairing the roof",
+      "We saved for a new table, then the roof began leaking. I ate from a crate for another winter.",
+      "Were you disappointed?",
+      "Yes. Then a storm came, and I ate from a dry crate. It was an excellent table that night."
+    ],
+    [
+      "What comes next",
+      "Now I am saving for a chair that does not require a folded rag under one leg.",
+      "A small ambition.",
+      "A comfortable one. I have learned to respect those."
+    ]
+  ],
+  "Fennel": [
+    [
+      "Closing the back door",
+      "I lost a whole night's sleep after leaving it open once. Nothing came in except leaves.",
+      "Why the worry, then?",
+      "Because I could not see beyond the dark. A latch is a little promise you can make yourself."
+    ],
+    [
+      "Growing herbs",
+      "I grow fennel because somebody thought naming me after it was very amusing. It seemed rude not to learn the plant.",
+      "Do you like it?",
+      "More than the joke. It asks less of me and goes well with fish."
+    ]
+  ],
+  "Bjorn": [
+    [
+      "The second ladle",
+      "My father came home late from hauling timber. If the pot was empty, he said he had eaten already.",
+      "Had he?",
+      "Usually not. I keep another ladle so nobody has to make that little lie in my house."
+    ],
+    [
+      "A proper broth",
+      "You need time more than meat. Bones, roots and a pot that has not forgotten yesterday.",
+      "Can a pot remember?",
+      "Mine does. It complains whenever I try a new recipe."
+    ]
+  ],
+  "Cap": [
+    [
+      "The moss bed",
+      "I moved it into the sun once, thinking it would grow faster. It went pale and stopped drinking.",
+      "How did you save it?",
+      "Put it back and stopped deciding what it ought to want. We get along much better now."
+    ],
+    [
+      "Winter stores",
+      "The best store is something still growing. Dried food keeps, but a living bed can feed you again.",
+      "Does that take more care?",
+      "Of course. So does keeping a friend instead of merely remembering one."
+    ]
+  ],
+  "Ilsa": [
+    [
+      "Saving the shoots",
+      "My family ate the young shoots one hungry spring. We had full bellies for a day and nothing to gather the next month.",
+      "What did you learn?",
+      "To keep a little future out of reach of a hungry evening."
+    ],
+    [
+      "Teaching patience",
+      "I mark the shoots we must leave with a loop of grass. Children understand a promise better when they can see it.",
+      "Do they keep it?",
+      "Usually. The adults require more reminders."
+    ]
+  ],
+  "Meriel": [
+    [
+      "Selling glass",
+      "I broke a display cup on my first day. Sela asked whether I had cut myself before she asked which cup.",
+      "Did you stay?",
+      "I decided then that I wanted to. A person tells you a great deal by the first question they ask."
+    ],
+    [
+      "Choosing a gift",
+      "People describe the recipient and accidentally tell me how much they love them.",
+      "How can you tell?",
+      "They remember which colour looks warm beside the person's favourite chair. Details like that."
+    ]
+  ],
+  "Elin": [
+    [
+      "The stained-glass flower",
+      "I came to replace a chipped cup. Then the light caught that flower, and my sensible errand abandoned me.",
+      "Will you buy it?",
+      "I may. A room can need something lovely without being able to explain the need."
+    ],
+    [
+      "Your own window",
+      "My kitchen gets a narrow strip of morning sun. I keep moving the table to catch it.",
+      "Would the flower help?",
+      "It would turn that strip blue and green. Breakfast could look like a different place."
+    ]
+  ],
+  "Maelis": [
+    [
+      "Your first remedy",
+      "My first patient was a goose with a broken wing. It bit me every morning until it could fly.",
+      "Did it thank you?",
+      "It left. Most healers would consider that an excellent outcome."
+    ],
+    [
+      "The stories about you",
+      "I am blamed for sour milk, failed courtships and one exceptionally dull wedding.",
+      "Did you cause any of them?",
+      "I attended the wedding. Even I could not have made it worse. People prefer a witch to an ordinary explanation."
+    ]
+  ],
+  "Archivist Elowen": [
+    [
+      "Saving the old books",
+      "An official once asked me to remove six names from an account of Wingfall. I asked him which copies he meant.",
+      "How many copies were there?",
+      "Enough that he left looking tired. The students had very busy hands that winter."
+    ],
+    [
+      "A librarian's work",
+      "People imagine I spend my days arranging knowledge. Mostly I help someone admit what they do not yet understand.",
+      "Is that difficult?",
+      "Only for the ones who believe a question makes them smaller. Children rarely have that trouble."
+    ]
+  ],
+  "Mira": [
+    [
+      "The miners' accounts",
+      "The official report called it a minor interruption. A miner's letter said they searched until every lamp was empty.",
+      "Which do you believe?",
+      "The letter. But I keep both, so nobody can say we did not know what was being hidden."
+    ],
+    [
+      "Your own journey",
+      "I want to see the places I write about. I have drawn the same mine entrance from four different descriptions.",
+      "Are they very different?",
+      "In one it faces the sunrise. In another it faces a tavern. I suspect I know which writer was thirstier."
+    ]
+  ],
+  "Oren": [
+    [
+      "Studying the dead",
+      "My grandfather spoke to the empty chair after my grandmother died. Nobody thought that was strange.",
+      "Is that why you study ghosts?",
+      "Partly. I want to understand where remembering ends and something answering begins."
+    ],
+    [
+      "Taking notes",
+      "I write frightening passages in the morning. At night every sound starts agreeing with them.",
+      "Does that help?",
+      "Immensely. Sunlight is an underrated research assistant."
+    ]
+  ],
+  "Tamsin": [
+    [
+      "The reading corner",
+      "I chose the chair with the torn cushion because nobody fought me for it. Now it is my chair, tear and all.",
+      "Have you mended it?",
+      "Yes, with blue thread. Everyone knows whose repair it is. I may have become territorial."
+    ],
+    [
+      "A story of your own",
+      "I am writing about a girl who finds a door inside a tree. I cannot decide what is behind it.",
+      "What does she want to find?",
+      "Her brother. I suppose I have answered my own question, haven't I?"
+    ]
+  ],
+  "Master Iven": [
+    [
+      "Your first class",
+      "I brought a map so old that three towns had different names. A pupil's grandmother corrected me through the window.",
+      "What did you do?",
+      "Invited her in. It became the best lesson I had prepared badly."
+    ],
+    [
+      "Why geography matters",
+      "A child who knows where bread, iron and salt come from knows that strangers have already helped them live.",
+      "Is that what you teach?",
+      "The map is only the beginning. I would like them to grow up curious about the hands beyond it."
+    ]
+  ],
+  "Brin": [
+    [
+      "Drawing temples",
+      "I draw each temple from every description I can find. Sometimes two travellers put the same door on opposite walls.",
+      "How do you decide?",
+      "I leave both in pencil. Guessing is useful if you remember it is a guess."
+    ],
+    [
+      "A future expedition",
+      "I want to measure an old stair properly. Everyone says it is impossibly steep. Nobody says how steep.",
+      "That sounds painstaking.",
+      "It sounds like something I could finally answer instead of repeating."
+    ]
+  ],
+  "Nell": [
+    [
+      "The royal histories",
+      "The king's writers call every cruel decision necessary. They never mention who had to bear it.",
+      "What would you write instead?",
+      "Names. A page of names would make necessity less comfortable to read."
+    ],
+    [
+      "Speaking in class",
+      "I used to lower my voice whenever I reached Halvard's name. Master Iven waited until I could say the whole sentence clearly.",
+      "Were you afraid?",
+      "I still am sometimes. But I would rather finish the sentence."
+    ]
+  ],
+  "Sable": [
+    [
+      "Three versions",
+      "I laid three accounts of Wingfall side by side. The newest copied a spelling mistake from the oldest and changed everything around it.",
+      "What did that tell you?",
+      "That the writer had read the truth before choosing another story."
+    ],
+    [
+      "Trusting a book",
+      "I do not want to distrust everything. That would be as lazy as believing everything.",
+      "What do you want?",
+      "Enough patience to check, and enough courage to change my mind when I find something better."
+    ]
+  ],
+  "Pella": [
+    [
+      "The globe",
+      "My father promised to show me the coast. When the roads grew dangerous, he bought this little globe instead.",
+      "Was that disappointing?",
+      "Yes. But he learned every place on it with me. He did what he could without pretending it was the same."
+    ],
+    [
+      "Your first destination",
+      "The coast. I want to see whether the sea really disappears into the sky.",
+      "What will you do when you get there?",
+      "Sit down and look until I stop trying to compare it with a picture."
+    ]
+  ],
+  "Bess": [
+    [
+      "Opening the Copper Cup",
+      "I bought six chairs, inherited two tables and borrowed enough cups for the first night. Half the village brought their own.",
+      "A good beginning.",
+      "One man still brings the same cup. Says he does not want to put a strain on the business."
+    ],
+    [
+      "Keeping the peace",
+      "I learned everyone's favourite song before I learned whose quarrels went back twenty years.",
+      "Which is more useful?",
+      "The songs. You can get two enemies humming before either notices the other has joined in."
+    ]
+  ],
+  "Ronan": [
+    [
+      "Learning cider",
+      "My first batch was so sharp Bess used it to clean a pan. I claimed that was its intended purpose.",
+      "Did she believe you?",
+      "She asked for another barrel. I had to become a better brewer out of professional embarrassment."
+    ],
+    [
+      "The orchard in autumn",
+      "There is one tree that ripens late. We always think it has failed, then it gives us the sweetest apples.",
+      "Do you name the batches after it?",
+      "I call that one Patience. Bess says I should drink less of it and practise more."
+    ]
+  ],
+  "Venn": [
+    [
+      "The oldest letter",
+      "I have a letter in my bag addressed to a boy who must be grown by now. His father wrote about coming home.",
+      "Do you know what happened?",
+      "No. That is why I cannot throw it away. Someone deserves to know he meant to come."
+    ],
+    [
+      "Why carry letters",
+      "My mother could not read. I watched her keep a letter for weeks before she trusted someone to read it aloud.",
+      "What did it say?",
+      "That her sister was well. Six words, and she slept properly that night."
+    ]
+  ],
+  "Hobb": [
+    [
+      "That table",
+      "I helped carry this table through the door. We had to take the legs off and turn it three times.",
+      "You made it sound easier earlier.",
+      "That is the reward for surviving hard work. You get to tell it as though you were competent throughout."
+    ],
+    [
+      "Your unfinished project",
+      "I am making a chair at home. It has three legs and a promising attitude.",
+      "When will it have four?",
+      "When I have studied this table a little longer. Research cannot be hurried."
+    ]
+  ],
+  "Edric": [
+    [
+      "Travelling light",
+      "I used to carry a spare for everything. Then I had to pay someone to help carry the spares.",
+      "What do you bring now?",
+      "Dry socks, a needle and enough courtesy to ask for help. Courtesy packs very small."
+    ],
+    [
+      "An ordinary evening",
+      "My favourite journeys have a day in them when nothing happens. No storm, no broken axle, no tale worth repeating.",
+      "Why remember those?",
+      "Because I was there, and I was content. A day need not entertain anyone else."
+    ]
+  ],
+  "Dorr": [
+    [
+      "Five more minutes",
+      "I used to unload wagons before dawn. My body still wakes me at that hour, whether I have work or not.",
+      "So you sleep here?",
+      "Bess makes enough noise that I know I am missing nothing dangerous."
+    ],
+    [
+      "Dreams at the table",
+      "I dreamed I had finished every job anyone had asked of me. Then somebody knocked.",
+      "Who was it?",
+      "No idea. I refused to answer. Best dream I have had in years."
+    ]
+  ],
+  "Ser Anwen": [
+    [
+      "Your oath",
+      "I swore to protect people. The wording was quite clear until somebody began explaining whom it did not include.",
+      "What did you do?",
+      "Asked them to show me that part of the oath. I was not invited back to the discussion."
+    ],
+    [
+      "Before you were knighted",
+      "I was a stable hand who kept repairing the training dummies. A captain asked whether I wanted to hit one instead.",
+      "You said yes?",
+      "After I finished stitching it. I have never liked leaving a job half done."
+    ]
+  ],
+  "Grusk": [
+    [
+      "Learning cards",
+      "Dain taught me with a deck missing two cards. Said it made the game more interesting.",
+      "Did you keep playing?",
+      "I made him play without knowing which two. His opinion of interesting changed considerably."
+    ],
+    [
+      "Your old trade",
+      "I hauled barrels before my shoulder gave out. I still catch myself measuring doors with my eyes.",
+      "Could you fit a barrel through this one?",
+      "Three abreast. Do not tell Bess I have considered it."
+    ]
+  ],
+  "Fen": [
+    [
+      "Learning to dance",
+      "My first partner counted every step aloud. We sounded like two people moving furniture.",
+      "Did you get better?",
+      "We stopped counting when the music was too good to talk over. That was the lesson."
+    ],
+    [
+      "A place to belong",
+      "I travelled alone long enough to forget how to enter a room without looking for the exit.",
+      "What helped?",
+      "Somebody holding out a hand when the tune began. You cannot watch every door while you are turning."
+    ]
+  ],
+  "Senn": [
+    [
+      "The bad hand",
+      "I once won a game with the worst hand at the table. Everyone was so certain I could not be that cheerful without good cards.",
+      "Were you cheerful?",
+      "I had just heard my brother was coming home. The cards had nothing to do with it."
+    ],
+    [
+      "Knowing when to fold",
+      "My father said a lost copper is a cheap lesson if you stop paying for it.",
+      "Do you listen?",
+      "More often than Dain thinks. He mistakes my leaving for a lack of courage. I call it having breakfast money."
+    ]
+  ],
+  "Dain": [
+    [
+      "The traveller's boots",
+      "Forgewick grit catches in a boot differently from Thornwell mud. I learned by sweeping this floor for Bess.",
+      "You used to work here?",
+      "Still do when my wagers go badly. She has found an excellent way to keep the floor clean."
+    ],
+    [
+      "A fair game",
+      "Nyra says I explain rules when they become useful to me. That is a harsh description of an excellent memory.",
+      "Could you explain them first?",
+      "I could. Grusk has begun insisting, with the sort of patience that makes a man nervous."
+    ]
+  ],
+  "Rusk": [
+    [
+      "The northern pass",
+      "I crossed with a man who talked the whole way. I wished him quiet until fog swallowed the path.",
+      "His voice helped?",
+      "Kept us together. I bought him supper and let him tell the entire journey again."
+    ],
+    [
+      "What you pack",
+      "A cord, a lamp, a dry scarf and a scrap of paper with my daughter's address.",
+      "Why the paper?",
+      "So that even if I cannot speak for myself, somebody knows where I belong."
+    ]
+  ],
+  "Linnet": [
+    [
+      "The old tune",
+      "My grandmother hummed it while kneading bread. She could not remember the words, which saved her trouble later.",
+      "When the king changed them?",
+      "Yes. Nobody could accuse her of forgetting words she had never claimed to know."
+    ],
+    [
+      "Playing without words",
+      "People put their own memories into a tune when you leave it room.",
+      "Do you hear the difference?",
+      "In the room, yes. Someone smiles, someone looks away. The same notes can visit very different homes."
+    ]
+  ],
+  "Puck": [
+    [
+      "A small audience",
+      "I practised behind the tavern until Bess opened the window and asked whether the same note had to suffer every day.",
+      "Was it that bad?",
+      "It had endured a great deal. She gave me a proper lesson out of pity for the neighbours."
+    ],
+    [
+      "The first good song",
+      "A customer asked who had written it. I nearly said someone famous, just to see how that felt.",
+      "What did you say?",
+      "Me. My voice cracked on the word, but I have been glad of it ever since."
+    ]
+  ],
+  "Vale": [
+    [
+      "The large hat",
+      "My sister made it to keep the rain off my spectacles. I said it was too large. She said my opinions were too damp.",
+      "Was she right?",
+      "Infuriatingly. I can read in a drizzle now."
+    ],
+    [
+      "Avoiding conversation",
+      "People see this hat and assume I have an interesting story. I had hoped they would assume I wanted shade.",
+      "Do you have a story?",
+      "Several. I prefer being asked to being announced."
+    ]
+  ],
+  "Cerys": [
+    [
+      "Two educations",
+      "My sister brings home facts. I bring home reasons people pretend not to know them.",
+      "Do you compare notes?",
+      "Over breakfast. She has begun calling this table a field study, which sounds more respectable than it deserves."
+    ],
+    [
+      "Your next lesson",
+      "I would like to learn cards well enough to lose for a reason I understand.",
+      "Why plan to lose?",
+      "Because expecting to win every lesson makes you a poor student and an expensive friend."
+    ]
+  ],
+  "Nyra": [
+    [
+      "Watching the spare hand",
+      "My uncle was a street conjurer. He taught me to watch what a person hopes I will ignore.",
+      "Does Dain know that?",
+      "He is discovering it one unsuccessful trick at a time."
+    ],
+    [
+      "A good performance",
+      "I like a trick when everyone agrees to be fooled. The surprise belongs to the audience then.",
+      "And when they do not agree?",
+      "Then it is just somebody taking something and hoping applause will cover the noise."
+    ]
+  ],
+  "Maren": [
+    [
+      "Keeping the inn",
+      "My first guest arrived soaked through and apologised for dripping on the floor. I brought towels before I asked his name.",
+      "Why remember that guest?",
+      "Because he returned with his whole family. A dry towel can be an introduction."
+    ],
+    [
+      "The quiet room",
+      "I put the best blankets in the room nearest the door. Late arrivals should not have to climb stairs half asleep.",
+      "Do guests notice?",
+      "They sleep. That is the notice I was hoping for."
+    ]
+  ],
+  "Dunstan": [
+    [
+      "Your first blade",
+      "My first sword bent at the hilt. My master hung it over the bench where I could see it every morning.",
+      "Did he ever take it down?",
+      "When I stopped being ashamed and started explaining what I had done wrong."
+    ],
+    [
+      "Fitting armor",
+      "A plate that pinches will steal your attention at the worst moment. Move your shoulders. Tell me honestly where it catches.",
+      "You would adjust it again?",
+      "As often as needed. Armor is meant to fit the person, Corin. I am not forging you to match it."
+    ]
+  ],
+  "Sela": [
+    [
+      "Glass and mistakes",
+      "A bubble ruins a pane if you pretend it is not there. In an ornament, it can become the point of the whole piece.",
+      "How do you decide?",
+      "By asking what the glass can still do well. Sulking does not improve the answer."
+    ],
+    [
+      "The shield's shape",
+      "I began with a window that held through a furnace blast. The frame was ruined. The glass was barely marked.",
+      "That led to the shield?",
+      "It led to a great many broken samples. Useful discoveries are usually surrounded by a very untidy floor."
+    ]
+  ],
+  "Tam": [
+    [
+      "The family press",
+      "Joss found the old screw under a sack and spent two afternoons getting it to turn. I had been using it to hang aprons.",
+      "Does it work well?",
+      "Better than it did when it was new, he says. Nobody who remembers it new is allowed to disagree."
+    ],
+    [
+      "A bottle for Nan",
+      "Nan brought soup when I was ill and refused to let me pay for the ingredients.",
+      "So you make her cider?",
+      "We have been failing to settle the account for years. It is a pleasant sort of debt."
+    ]
+  ],
+  "Celia": [
+    [
+      "Copying histories",
+      "I used to copy only the grand speeches. Then I found a laundry list tucked into a battle account.",
+      "You kept that too?",
+      "Someone still needed clean shirts while the world was changing. It made the story feel inhabited."
+    ],
+    [
+      "Your notebook",
+      "I leave the last page blank for a question I cannot answer yet.",
+      "Which question?",
+      "What ordinary people knew while the important people were still deciding what to call it."
+    ]
+  ],
+  "Ivo": [
+    [
+      "The tools above your bed",
+      "They belonged to my grandfather. I hung them there because I wanted to wake up remembering what he could make.",
+      "Even with the rattling?",
+      "Especially then. He was never a quiet man while he worked."
+    ],
+    [
+      "Your first project",
+      "I am making a wooden box with a lid that closes properly. It is proving more ambitious than I expected.",
+      "What will you keep in it?",
+      "The mistakes from making the next one. Grandfather kept a whole drawer of those."
+    ]
+  ],
+  "Merrin": [
+    [
+      "Watching the road",
+      "My brother always arrived without sending word. I took this table so I could see him before he reached the door.",
+      "Does he still visit?",
+      "When the roads allow it. I would rather watch a dull road than miss a familiar face."
+    ],
+    [
+      "A visitor's welcome",
+      "I keep a spare place even when I expect nobody. It makes unexpected company feel expected.",
+      "Does that matter?",
+      "You can see a person's shoulders lower when they realise they are not an inconvenience."
+    ]
+  ],
+  "Zella": [
+    [
+      "Mending nets",
+      "My mother made me mend the smallest holes first. I wanted to fix the dramatic ones and feel useful.",
+      "Why the small ones?",
+      "Because a little neglect becomes a large job. She had a way of making that apply to everything."
+    ],
+    [
+      "The spare cord",
+      "I carry it even when I am not fishing. It has mended straps, tied parcels and rescued a child's toy from a drain.",
+      "An eventful piece of string.",
+      "More useful than half the advice I have been given, and easier to keep in a pocket."
+    ]
+  ],
+  "Iris": [
+    [
+      "Stacking the firewood",
+      "I stack the dry wood close enough to reach without opening the outer door. My first winter taught me that lesson at midnight.",
+      "What happened?",
+      "The door froze shut. I burned a stool and spent spring explaining the missing seat."
+    ],
+    [
+      "A winter visitor",
+      "An old neighbour used to come over claiming she had run out of kindling. I always gave her tea first.",
+      "Was she really out?",
+      "Rarely. People invent small errands when they are lonely. I keep plenty of kindling."
+    ]
+  ],
+  "Alderic": [
+    [
+      "Waiting in the temple",
+      "I thought keeping watch meant staying ready for a single great moment. Most of it has been sweeping dust from the same steps.",
+      "Was it worth waiting?",
+      "You are here asking me that. It is the first time the answer has felt less like a promise."
+    ],
+    [
+      "The first dragon",
+      "The old accounts describe her strength carefully and her gentleness almost in passing.",
+      "Why would they do that?",
+      "People expect power to explain a life. I suspect the small kindnesses would tell us more about hers."
+    ]
+  ],
+  "King Halvard": [
+    [
+      "The old riders",
+      "They wanted every decision discussed until the season changed. I was the one willing to act.",
+      "They trusted you.",
+      "Trust is a fine word for expecting another man to carry your hesitation. I grew tired of carrying it."
+    ],
+    [
+      "What the crown costs",
+      "Every town asks the throne for safety, then calls the price cruelty. They remember peaceful years and forget who secured them.",
+      "And the people you killed?",
+      "You have come to judge fifty years with the certainty of a boy who has not ruled one day. Bring a better argument."
+    ]
+  ],
+  "Cartwright Oswin": [
+    [
+      "The broken wheel",
+      "That wheel has carried three harvests, two wedding feasts and a load of turnips nobody admitted ordering.",
+      "And it breaks here?",
+      "Right across the road. It has always had a talent for being noticed at the worst moment."
+    ],
+    [
+      "Your wagon",
+      "My father built the bed from timber he had saved for a boat. Decided roads were less likely to swallow him.",
+      "Was he right?",
+      "Usually. Ask me again when I have this wheel back on."
+    ]
+  ],
+  "Miner Marn": [
+    [
+      "Clearing the bank",
+      "You start with the loose stones above the cart. Pull the cart first and the rest comes down on your hands.",
+      "You have done this before?",
+      "Once, with someone shouting at me to hurry. I do not let anyone hurry me now."
+    ],
+    [
+      "After the shift",
+      "I carve little animals from stone chips. Nerik says they all look like badgers.",
+      "Do they?",
+      "The horse did. I have decided to make a family of badgers and call it a deliberate choice."
+    ]
+  ],
+  "Miner Nerik": [
+    [
+      "Working with Marn",
+      "Marn can tell a tired wheel by its squeak. I hear a squeak and hope it belongs to somebody else's cart.",
+      "Who noticed this one?",
+      "Marn. I am being allowed to forget that at a very leisurely pace."
+    ],
+    [
+      "Your first wage",
+      "I bought my mother a proper lamp with a glass chimney. She said the old one was perfectly good.",
+      "Was she pleased?",
+      "She carried it into every room before setting it down. I have rarely been thanked so thoroughly without words."
+    ]
+  ],
+  "Snowbuilder Nessa": [
+    [
+      "The snow family",
+      "I made the first one the year my brother could not get home. It wore his scarf and leaned the same way.",
+      "Did he see it?",
+      "When the thaw came, all that was left was the scarf. He said the resemblance was uncanny."
+    ],
+    [
+      "Making the faces",
+      "A crooked nose gives them something to talk about. Perfect snowmen look as though they have nothing left to learn.",
+      "And the little one?",
+      "That one is still deciding who it wants to be. I have left its hat loose."
+    ]
+  ]
+};
+
+function npcStoryGiftPending(n){
+  return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||canCamperGiveFishingPole(n)||
+    (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
+    (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
+}
+function npcStoryTopics(n){
+  const profile=NPC_STORIES[n.n];if(!profile)return [];
+  const topics=profile.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  if(n.d2?.length)topics.push({title:'Another thing I meant to ask',lines:n.d2});
+  if(hasDragon())topics.push({title:'A dragon on the road',lines:npcContextDialogue(n,true)});
+  if(wonAll&&(n.dv2||n.dv)?.length)topics.push({title:'Life after Halvard',lines:n.dv2||n.dv});
+  if(n.n==='Nan Ferrow'){
+    topics.push({title:'What was Dad like?',lines:[
+      'Nan Ferrow: Patient with a frightened animal. Hopeless with a tangled knot. He would sit there getting crosser while pretending he was perfectly calm.',
+      'Corin: I do that.',
+      'Nan Ferrow: I know, love. Your mother used to take the knot away and give him something else to hold.',
+      'Corin: What did he do then?',
+      'Nan Ferrow: Follow her about telling her how he would have untied it. She married him anyway.']});
+    topics.push({title:'When I was little',lines:[
+      'Nan Ferrow: You put a wounded moth in my best flour tin. I opened it expecting to bake.',
+      'Corin: Did it get better?',
+      'Nan Ferrow: It flew straight past my nose. You were so pleased you forgot to be sorry about the flour.',
+      'Corin: I am sorry now.',
+      'Nan Ferrow: Too late. I have been enjoying that story for years.']});
+    if(templeCompass.owned)topics.push({title:"Dad's compass",lines:[
+      'Corin: Did Dad take the compass everywhere?',
+      'Nan Ferrow: Even on walks he knew by heart. He said there was comfort in knowing where home lay.',
+      'Corin: I will look after it.',
+      'Nan Ferrow: Look after yourself. He would have wanted that far more.']});
+  }
+  return topics;
+}
+function openNpcTopics(n){
+  if(!NPC_STORIES[n.n]||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
+  if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
+  sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;
+  const choose=topic=>{
+    const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
+    playScene(lines,{who:n.n,after:()=>openNpcTopics(n)});
+  };
+  ask={quick:1,npcConversation:n.n,opts:[{n:n.n,head:true},
+    {n:n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?',go:()=>beginNpcTalk(n,true)},
+    ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
+  if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});
+  ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;
+}

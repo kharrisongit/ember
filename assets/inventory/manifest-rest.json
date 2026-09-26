@@ -1,0 +1,28 @@
+{
+  "cell": 128,
+  "columns": 4,
+  "keys": [
+    "hs_light",
+    "hs_shadow",
+    "hs_ice",
+    "bell",
+    "mark",
+    "bomb",
+    "elixir",
+    "potion",
+    "fishingPole",
+    "wake",
+    "flame",
+    "lamp",
+    "twin",
+    "brand",
+    "spore",
+    "ward",
+    "edge",
+    "sword",
+    "cinderSeal",
+    "egg",
+    "heart",
+    "eggs"
+  ]
+}
