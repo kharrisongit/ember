@@ -36,6 +36,7 @@ jobs:
         run: node tools/check-game-scripts.mjs
       - name: Check temple travel and combat
         run: |
+          node tests/dragon-dialogue.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs

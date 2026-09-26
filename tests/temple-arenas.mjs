@@ -6,7 +6,7 @@ const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,
  WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},
  fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),Image:class{async decode(){}},
  breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},foes:[],foesHeld:false,bossGone:{},
- sceneHold:()=>c.paused,paused:false,scene:null,fadeDir:0,doorMotion:null,trial:null,tAcc:0,arenaPass:false,
+ sceneHold:()=>c.paused,sayNpc:null,dragonHere:()=>false,dragonAllowedInMap:()=>true,paused:false,scene:null,fadeDir:0,doorMotion:null,trial:null,tAcc:0,arenaPass:false,
  stepChest(){},settleGraves(){},recoverStrandedDragon(){},saveGame(){},toast(){},rebuildBuckets(){},showRise(){},
  FOE:new Proxy({},{get:()=>({hp:20})}),enemyMaxHp:()=>20,NO_RESPAWN:/golem|devil/,
  royalDefeated:{},knightEncounterDone:false,houseLootTaken:new Set(),lootChestAnimations:new Map(),twinSpent:false,twinKills:0});
