@@ -49026,6 +49026,18 @@
         "tx": 2809,
         "ty": 88
       },
+      "door:50": {
+        "kind": "door",
+        "key": "50",
+        "index": 50,
+        "to": "house49",
+        "rect": {
+          "x": 43435,
+          "y": 3571,
+          "w": 48,
+          "h": 16
+        }
+      },
       "collision:5400,409": {
         "kind": "collision",
         "key": "5400,409",
@@ -49365,6 +49377,61 @@
         "kind": "collision",
         "key": "5414,427",
         "blocked": false
+      },
+      "collision:5438,388": {
+        "kind": "collision",
+        "key": "5438,388",
+        "blocked": false
+      },
+      "collision:5439,388": {
+        "kind": "collision",
+        "key": "5439,388",
+        "blocked": false
+      },
+      "collision:5440,388": {
+        "kind": "collision",
+        "key": "5440,388",
+        "blocked": false
+      },
+      "collision:5374,387": {
+        "kind": "collision",
+        "key": "5374,387",
+        "blocked": true
+      },
+      "collision:5374,388": {
+        "kind": "collision",
+        "key": "5374,388",
+        "blocked": true
+      },
+      "collision:5374,389": {
+        "kind": "collision",
+        "key": "5374,389",
+        "blocked": true
+      },
+      "collision:5374,390": {
+        "kind": "collision",
+        "key": "5374,390",
+        "blocked": true
+      },
+      "collision:5375,387": {
+        "kind": "collision",
+        "key": "5375,387",
+        "blocked": true
+      },
+      "collision:5375,388": {
+        "kind": "collision",
+        "key": "5375,388",
+        "blocked": true
+      },
+      "collision:5375,389": {
+        "kind": "collision",
+        "key": "5375,389",
+        "blocked": true
+      },
+      "collision:5375,390": {
+        "kind": "collision",
+        "key": "5375,390",
+        "blocked": true
       }
     },
     "witchmoor": {
@@ -50789,7 +50856,8 @@
     "0288f488-944e-46cc-83cd-a487bac1a0d8",
     "89371e18-5b34-4996-bcb3-57d46809cb88",
     "50e36d41-a9ec-47b2-bf1b-f124d8ba4428",
-    "a46f0fde-6c97-4155-98e8-f1d1a9f3030f"
+    "a46f0fde-6c97-4155-98e8-f1d1a9f3030f",
+    "ac3bca40-bdfb-4024-ae60-412ffc192a3b"
   ],
   "sessions": {
     "witchmoor": {
@@ -50914,7 +50982,7 @@
     },
     "world": {
       "id": "64c93c62-fcfa-4ec8-8b8c-e61c8e39de5f",
-      "sequence": 1,
+      "sequence": 2,
       "baseHash": "d8b25926-3956e2f2-377972",
       "baseFingerprint": "3ee5d269-e11e8f65-739103",
       "base": {
@@ -99832,7 +99900,7 @@
           "ty": 88
         }
       },
-      "resultHash": "d5d97cfa-7d473672-383096"
+      "resultHash": "c985661e-5cf465c4-384018"
     }
   }
 }
