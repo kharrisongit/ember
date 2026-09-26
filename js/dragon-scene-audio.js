@@ -7,7 +7,7 @@
   const downloads=new Map(),buffers=new Map(),voices=new Map();
   let currentPhase='off';
   for(const [name,file]of Object.entries(files))
-    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(name==='distant'?'20260926-trim':'20260926-1'))
+    downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(name==='distant'?'20260926-tight-cue':'20260926-1'))
       .then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).catch(()=>null));
   const ready=name=>{
     const graph=window.EmberAudio?.graph();

@@ -6909,8 +6909,7 @@ function stepQuest(dt) {
         "Maddock: It belonged to my father. The edge is sound, and I have kept it oiled.",
         "Maddock: Monsters have been coming down through Shroom Pass. Stay on the path, and leave yourself a way back.",
         "Corin: What was it?",
-        "Maddock: Something heavy came down beyond the ridge. I could feel it "
-          + "through the floor. Be careful, Corin.",
+        "Maddock: Well, the King wasn’t looking for wild boars, was he? Be careful, Corin.",
       ], { who: "Maddock", until: () => elderArrived(), after: () => {
         quest = Q.ARMED;
         goBackIn();

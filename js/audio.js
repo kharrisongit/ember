@@ -25,7 +25,7 @@ let routeMusicIntroPlayed=false;
   let pct=35;
   try { const stored=localStorage.getItem(KEY),n=Number(stored); if(stored!==null && Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
   let kingMode=false, millwoodMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
-  const target=()=>Math.max(0,Math.min(1,pct/100));
+  const target=()=>Math.max(0,Math.min(1,pct/100))*.85;
   const inNamedArea=(name)=>{
     try{
       if(MAPID!=='world')return (MD.title||'').startsWith(name)&&!/Temple|Graveyard/.test(MD.title||'');
@@ -174,11 +174,11 @@ let routeMusicIntroPlayed=false;
   const finalBattle=()=>{
     try{return MAPID==='cinderhold'&&!wonAll&&!!lastFight;}catch(e){return false;}
   };
-  let kingMap=null,selected=null,unlocked=false,pending=0,fading=false;
+  let kingMap=null,selected=null,unlocked=false,pending=0,fading=false,fadeDuration=900,fadeDelay=0;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([millwood,reveal,desert,sandspire,school,tavern,cinderhold,seatown].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
@@ -267,10 +267,10 @@ let routeMusicIntroPlayed=false;
     applyVolumes();
   };
   const beginFade=token=>{
-    const initial=new Map(gains),started=Date.now();fading=true;
+    const initial=new Map(gains),started=Date.now()+fadeDelay;fading=true;
     const tick=()=>{
       if(token!==fadeToken)return;
-      const u=Math.min(1,(Date.now()-started)/900),ease=u*u*(3-2*u);
+      const u=Math.max(0,Math.min(1,(Date.now()-started)/fadeDuration)),ease=u*u*(3-2*u);
       for(const a of tracks){const from=initial.get(a)||0;gains.set(a,from+((a===selected?1:0)-from)*ease);}
       applyVolumes();
       if(u<1)setTimeout(tick,25);
@@ -296,6 +296,8 @@ let routeMusicIntroPlayed=false;
   };
   const selectTrack=next=>{
     if(next===selected)return;
+    fadeDuration=next===reveal?150:next===millwood&&selected===villain?3200:900;
+    fadeDelay=next===millwood&&selected===villain?400:0;
     ++fadeToken;pending=0;fading=false;selected=next;
     for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);
     if(next===field){

@@ -26,13 +26,13 @@ function setup(stored=null,ios=false){
   while(n){if(n.gain)level*=n.gain.value;n=n.next;}return level;
  };
  vm.runInContext(read('js/audio.js'),c);
- const advance=async(ms=1000)=>{for(let i=0;i<5;i++)await Promise.resolve();const until=now+ms;while(timers.some(t=>t.at<=until)){timers.sort((a,b)=>a.at-b.at);const t=timers.shift();now=t.at;t.f();await Promise.resolve();}now=until;await Promise.resolve();};
+ const advance=async(ms=4000)=>{for(let i=0;i<5;i++)await Promise.resolve();const until=now+ms;while(timers.some(t=>t.at<=until)){timers.sort((a,b)=>a.at-b.at);const t=timers.shift();now=t.at;t.f();await Promise.resolve();}now=until;await Promise.resolve();};
  const change=async(map,title,x,y)=>{c.MAPID=map;c.MD={title};if(x!==undefined)c.P={x:x*16,y:y*16};sync();await advance();};
  return {c,track:name=>elements.get('emberfell'+name+'Bgm'),elements,change,advance,listeners,sync,contexts,audible,getStored:()=>stored};
 }
 const {c,track,elements,change,advance,listeners,sync,getStored}=setup();
 assert.equal(c.window.EmberAudio.percent(),35);assert([...elements.values()].every(a=>a.paused),'No autoplay before a gesture');
-listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35);
+listeners.pointerdown();await advance();assert.equal(track('Millwood').paused,false);assert.equal(track('Millwood').volume,.35*.85);
 for(const [map,title,x,y]of [['world','Northern Woods',30,390],['world','Elder’s clearing',50,370],['shroom','Mushroom cave'],['world','Unknown road',500,500],['mine2','Forgewick Mine']]){
  await change(map,title,x,y);assert.equal(track('Millwood').paused,false,title+' uses the default until its own song exists');assert.equal(track('Millwood').currentTime,17);
 }
@@ -52,17 +52,17 @@ c.wonAll=true;sync();await advance();assert.equal(track('Cinderhold').paused,fal
 await change('world','Emberfell',30,430);
 // Royal music cuts the outgoing track immediately, including while buffering.
 track('Villain').waitForPlay=true;c.window.EmberKingMusic.start();
-assert.equal(track('Millwood').volume,0);assert(track('Millwood').paused);assert.equal(track('Villain').volume,.35);
+assert.equal(track('Millwood').volume,0);assert(track('Millwood').paused);assert.equal(track('Villain').volume,.35*.85);
 assert.equal(track('Villain').currentTime,0,'Every royal interruption starts on its opening beat');
 track('Villain').finishPlay();await advance(1);
-assert.equal(track('Villain').volume,.35,'The opening beat is never faded in');
-listeners.pointerdown();listeners.touchstart();assert.equal(track('Villain').volume,.35);
-c.window.EmberAudio.set(70);assert.equal(track('Villain').volume,.7);assert.equal(getStored(),'70');
+assert.equal(track('Villain').volume,.35*.85,'The opening beat is never faded in');
+listeners.pointerdown();listeners.touchstart();assert.equal(track('Villain').volume,.35*.85);
+c.window.EmberAudio.set(70);assert.equal(track('Villain').volume,.7*.85);assert.equal(getStored(),'70');
 // Reverse a transition in flight; no third track or abandoned fade remains.
-c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').volume,.7);assert.equal(track('Villain').volume,0);assert(track('Villain').paused);
+c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').volume,.7*.85);assert.equal(track('Villain').volume,0);assert(track('Villain').paused);
 c.window.EmberKingMusic.start();c.window.EmberAudio.set(0);track('Villain').finishPlay();await advance();
 assert([...elements.values()].every(a=>a.paused&&a.volume===0),'Mute wins over a pending play and all scheduled fades');
-track('Villain').waitForPlay=false;c.window.EmberKingMusic.stop();c.window.EmberAudio.set(50);await advance();assert.equal(track('Millwood').volume,.5);assert.equal(track('Millwood').paused,false);
+track('Villain').waitForPlay=false;c.window.EmberKingMusic.stop();c.window.EmberAudio.set(50);await advance();assert.equal(track('Millwood').volume,.5*.85);assert.equal(track('Millwood').paused,false);
 // Thornwell uses its installed track, including the town interiors.
 await change('inn','Thornwell Inn');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
@@ -103,20 +103,20 @@ console.log(`PASS: The Field covers ${routeSamples} road segments, follows moved
 // Verify the connected gain graph's output, not the ignored media property.
 const phone=setup(null,true),volume=()=>phone.audible(phone.track('Millwood'));
 assert.equal(phone.contexts.length,0,'Audio graph waits for a user gesture');
-phone.listeners.touchstart();await phone.advance();assert.equal(phone.contexts.length,1);assert.equal(volume(),.35);
+phone.listeners.touchstart();await phone.advance();assert.equal(phone.contexts.length,1);assert.equal(volume(),.35*.85);
 for(const pct of [1,100,25,75,0,1]){
  phone.c.window.EmberAudio.set(pct);await phone.advance();
  assert.equal(phone.track('Millwood').volume,1,'iPhone keeps the media property at 100%');
- assert(Math.abs(volume()-pct/100)<1e-9,'Connected output really changes to '+pct+'%');
+ assert(Math.abs(volume()-pct/100*.85)<1e-9,'Connected output really changes to '+pct+'%');
 }
 phone.c.window.EmberAudio.set(100);await phone.advance();phone.c.window.EmberKingMusic.start();await phone.advance(450);
 const out=phone.audible(phone.track('Millwood')),incoming=phone.audible(phone.track('Villain'));
-assert.equal(out,0,'iPhone stops Millwood immediately');assert.equal(incoming,1,'iPhone king opening beat plays at full configured volume');
+assert.equal(out,0,'iPhone stops Millwood immediately');assert.equal(incoming,.85,'iPhone king opening beat plays at full configured volume');
 phone.listeners.touchstart();assert.equal(phone.audible(phone.track('Villain')),incoming,'Tapping does not bypass the gain fade');
 phone.c.window.EmberAudio.set(1);assert(Math.abs(phone.audible(phone.track('Villain'))-incoming*.01)<1e-9,'Volume applies to both sides of the fade');
 phone.c.window.EmberAudio.set(0);await phone.advance();assert([...phone.elements.values()].every(a=>phone.audible(a)===0&&a.paused));
 phone.contexts[0].state='interrupted';phone.listeners.touchstart();assert.equal(phone.contexts[0].state,'running','A fresh gesture resumes interrupted iPhone audio');assert.equal(phone.contexts.length,1,'Gestures reuse one mixer');
-const savedPhone=setup('1',true);savedPhone.listeners.pointerdown();await savedPhone.advance();assert.equal(savedPhone.audible(savedPhone.track('Millwood')),.01,'Saved volume controls iPhone output after reload');
+const savedPhone=setup('1',true);savedPhone.listeners.pointerdown();await savedPhone.advance();assert.equal(savedPhone.audible(savedPhone.track('Millwood')),.01*.85,'Saved volume controls iPhone output after reload');
 console.log('PASS: With the iPhone media-volume restriction reproduced, 1% output is 1/100 of 100%; gain-based fades, mute, interruption recovery and saved volume work.');
 
 // Regression: the published hunting loops are unnamed routes, not numbered roads.
@@ -157,7 +157,7 @@ journey.c.quest=6;journey.sync();await journey.advance();
 assert([...journey.elements.values()].every(a=>a.paused),'Finishing dialogue early cannot start music over the roar/crash');
 journey.c.window.EmberDragonMusic.reveal();await journey.advance();
 assert(!journey.track('DragonReveal').paused);assert(journey.track('Millwood').paused);
-assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7)<1e-9,'Reveal retains its quieter iPhone mixer level');
+assert(Math.abs(journey.audible(journey.track('DragonReveal'))-.35*.7*.85)<1e-9,'Reveal retains its quieter iPhone mixer level');
 for(const quest of [6,7,8,9]){
  journey.c.quest=quest;await journey.change('world','Northern Woods',30,350);
  assert(!journey.track('DragonReveal').paused,'Story stage '+quest+' keeps the loop');
@@ -307,3 +307,9 @@ assert.equal(mediaWrites,0,'A/touch gestures never reset media output volume');
 assert.equal(steady.track('Millwood').plays,steadyStarts,'Repeated presses never restart the music');
 steady.contexts[0].state='interrupted';steady.listeners.touchstart();await steady.advance();assert.equal(steady.contexts[0].state,'running','Interrupted iPhone audio still recovers');
 console.log('PASS: repeated A/touch gestures do not touch music gains, media volumes or playback; interruption recovery still works.');
+
+const pacing=setup();pacing.listeners.pointerdown();await pacing.advance();pacing.c.window.EmberKingMusic.start();await pacing.advance();
+pacing.c.window.EmberKingMusic.stop();await pacing.advance(300);assert.equal(pacing.track('Millwood').volume,0,'Pause before Millwood returns');
+await pacing.advance(1000);assert(pacing.track('Millwood').volume>0&&pacing.track('Millwood').volume<.35*.85*.5,'Millwood returns gradually after Halvard');
+await pacing.advance(2400);assert.equal(pacing.track('Millwood').volume,.35*.85);
+console.log('PASS: all output is 15% quieter; Millwood waits briefly then fades in over 3.2 seconds after the King.');
