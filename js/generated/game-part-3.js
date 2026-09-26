@@ -4033,6 +4033,7 @@ function updateDeckHealth(){
   }
 }
 function frameCore(ms) {
+  if(window.EmberAttackAlign?.isOpen()){last=ms;return;}
   window.__firstFrame = true;
   // Clear the pickup layer even on frames that return early for menus or fishing.
   if(goldPickupCanvas)goldPickupCanvas.style.display='none';

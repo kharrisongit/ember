@@ -5634,11 +5634,12 @@ function stepClaw(dt) {
 function kingFight() { return MAPID === "cinderhold"; }
 function drawClaw() {
   if (!claw) return;
+  const align=window.EmberAttackAlign?.offset("slash",claw.dir,dragonAirborne())||[0,0];
   const diag = claw.dir.length===2;
   const s2 = SPR["claw_" + (diag ? "e" : claw.dir)];
   if (diag && s2) {
     const [vx,vy]=directionVector(claw.dir),fr=Math.min(s2[4]-1,Math.floor(claw.t/CLAW.life*s2[4]));
-    ctx.save();ctx.translate(claw.x+vx*23,claw.y-12+vy*23);ctx.rotate(Math.atan2(vy,vx));
+    ctx.save();ctx.translate(claw.x+vx*23+align[0],claw.y-12+vy*23+align[1]);ctx.rotate(Math.atan2(vy,vx));
     drawGameImage(ctx,atlasImg,s2[0]+fr*s2[2],s2[1],s2[2],s2[3],0,-s2[3]/2,s2[2],s2[3]);ctx.restore();return;
   }
   if (!s2) return;
@@ -5650,8 +5651,8 @@ function drawClaw() {
   const fx = dragonFlip(claw.dir) ? -1 : 1;
   const cx = (-cs[2] / 2 + cs[2] * ct[0]) * DS * fx;
   const cy = (-cs[3] + cs[3] * ct[1]) * DS;
-  const ox = cx + (claw.dir === "e" ? 0 : claw.dir === "w" ? -s2[2] : -s2[2] / 2);
-  const oy = cy + (claw.dir === "n" ? -s2[3] : claw.dir === "s" ? 0 : -s2[3] / 2);
+  const ox = align[0] + cx + (claw.dir === "e" ? 0 : claw.dir === "w" ? -s2[2] : -s2[2] / 2);
+  const oy = align[1] + cy + (claw.dir === "n" ? -s2[3] : claw.dir === "s" ? 0 : -s2[3] / 2);
   const chue = kingFight() ? BREATH_HUE.kingclaw : null;
   if (!chue) {
     drawGameImage(ctx, atlasImg, s2[0] + f * s2[2], s2[1], s2[2], s2[3],
@@ -7387,7 +7388,8 @@ function mouthOf(dir) {
   const y = dragon.y + bob + (-s2[3] + s2[3] * m[1]) * DS;
   const [vx, vy] = directionVector(dir);
   /* The refreshed dragon art already places the anchor at the snout. */
-  return [x - vx * 3, y - vy * 3];
+  const align=window.EmberAttackAlign?.offset(dragonEl,dir,dragonAirborne())||[0,0];
+  return [x - vx * 3 + align[0], y - vy * 3 + align[1]];
 }
 
 let dragonEl = "fire";        /* which breath the L-menu last chose */
