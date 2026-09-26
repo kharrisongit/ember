@@ -4862,6 +4862,7 @@ function bindHold(id, onDown, onUp) {
     if (!gameplayStarted && !titleControlReady(id)) {
       e?.preventDefault(); e?.stopPropagation(); return;
     }
+    if(["btnL","btnR","btnItems","btnMapQuick"].includes(id))globalThis.window?.EmberSfx?.ui?.();
     el.classList.add("hit"); onDown();
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
   };
@@ -6613,10 +6614,10 @@ function sendWalkerHome(stay) {
 }
 function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation); }
 function advanceScene() {
-  if (revealing) { hideReveal(); return; }
+  if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
   if (scene.hold) return;          /* it has not begun */
-  if (!typeDone()) { typeAll(); return; }
+  if (!typeDone()) { globalThis.window?.EmberSfx?.ui?.(); typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
@@ -6624,6 +6625,7 @@ function advanceScene() {
   if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
   if (scene.hatch && scene.i === 9 &&
       (scene.t < 1.1 || !hatchScene || !hatchScene.approachDone)) return;
+  globalThis.window?.EmberSfx?.ui?.();
   scene.i++;
   scene.t = 0;
   if (scene.i < scene.lines.length) { showScene(); return; }
@@ -9476,6 +9478,7 @@ function confirmPurchase(giver,key,qty){
 }
 function changePurchaseQuantity(delta) {
   if(!ask?.quantity)return;
+  globalThis.window?.EmberSfx?.ui?.();
   const {giver,key,qty}=ask.quantity;purchaseQuantity(giver,key,qty+delta);
 }
 function buyStockQuantity(key,qty) {
@@ -10929,6 +10932,7 @@ function interact() {
     if (said) return;
   }
   if (sayNpc) {
+    globalThis.window?.EmberSfx?.ui?.();
     if (!typeDone()) { typeAll(); return; }   /* finish the line first */
     sayLine++;
     if (sayLine >= (sayNpc.said || sayNpc.d).length) {
@@ -10992,6 +10996,7 @@ function interact() {
   if (best && best.pettable) return;
   if (best && /Ald[e]?ric/.test(best.n || "")) heartKnown = true;
   if (best) {
+    globalThis.window?.EmberSfx?.ui?.();
     const giftPending=(best.charm && !charm[best.charm]) || (best.gift && !breathHas[best.gift]);
     if(best.sells && !giftPending) merchantAsk(best);
     else beginNpcTalk(best);
@@ -11072,18 +11077,18 @@ padBind();
   });
 }
 function actionButton() {
-  if (!gameplayStarted) { if (gameplayReady) BOOT.activate(); return; }
+  if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
   if(atlasOpen)return;
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}
   if (typeof BOOT !== "undefined" && BOOT.waiting) { BOOT.close(); return; }
-  if (deadShown) { getUp(); return; }
+  if (deadShown) { globalThis.window?.EmberSfx?.ui?.(); getUp(); return; }
   if (typeof ovl !== "undefined" && ovl) { ovlTake(); return; }   /* A takes the entry */
   /* Any open menu takes A, not just the quick one. A shop list is built as
      a plain ask, so A used to fall through to interact() and start the
      merchant talking again instead of buying. */
   if (typeof ask !== "undefined" && ask) { askTake(); return; }
   if (typeof bagOpen !== "undefined" && bagOpen) { bagUse(); return; }
-  if(!sceneHold()&&typeof dismissDragonBanter==='function'&&!dragonCombatActive()&&dismissDragonBanter())return;
+  if(!sceneHold()&&typeof dismissDragonBanter==='function'&&!dragonCombatActive()&&dismissDragonBanter()){ globalThis.window?.EmberSfx?.ui?.(); return; }
   if (grabGold()) return;      /* gold underfoot comes first */
   interact();
 }
@@ -11091,10 +11096,10 @@ bindHold("act", actionButton, null);
 bindHold("btnB", () => {
   if (!gameplayStarted) { if (gameplayReady && BOOT.loading) BOOT.back(); return; }
   if(fishing){askShut();endFishing();return;}
-  if(atlasOpen){closeAtlas();return;}
+  if(atlasOpen){globalThis.window?.EmberSfx?.ui?.();closeAtlas();return;}
   if (typeof ask !== "undefined" && ask) { askBack(); return; }
-  if (typeof bagOpen !== "undefined" && bagOpen) { setBag(false); return; }
-  if (typeof ovl !== "undefined" && ovl) { setOvl(null); return; }
+  if (typeof bagOpen !== "undefined" && bagOpen) { globalThis.window?.EmberSfx?.ui?.(); setBag(false); return; }
+  if (typeof ovl !== "undefined" && ovl) { globalThis.window?.EmberSfx?.ui?.(); setOvl(null); return; }
   running = true;
   if (glassShield && inFight()) { glassShieldHeld = true; glassShieldWindowUntil = tAcc + GLASS_BLOCK_WINDOW; glassShieldPulse = Math.max(glassShieldPulse,.18); tryGlassShieldParry(); }
 }, () => { running = false; glassShieldHeld = false; });

@@ -4931,7 +4931,7 @@ function refreshBag() {
   }
 }
 let ask = null, askPick = 0;
-function askBack(){const back=ask?.back;askShut();if(back)back();}
+function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();const back=ask?.back;askShut();if(back)back();}
 function askShut() {
   hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
@@ -5012,6 +5012,7 @@ function askDraw() {
 }
 function askStep(d) {
   if (!ask) return;
+  globalThis.window?.EmberSfx?.ui?.();
   if(ask.quantity){changePurchaseQuantity(-d);return;}
   const n = ask.opts.length;
   let k = askPick;
@@ -5034,6 +5035,7 @@ function askTake() {
   if (!ask) return;
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
+  globalThis.window?.EmberSfx?.ui?.();
   const key = ask.key, quick = ask.quick;
   askShut();
   if (quick) { if (o.go) o.go(); return; }   /* the on-screen list does its own box */
@@ -5113,6 +5115,7 @@ function doUse(it) {
   return true;
 }
 function bagUse() {
+  globalThis.window?.EmberSfx?.ui?.();
   if (ask) { askTake(); return; }
   if (bookOpen) { bookOpen = false; refreshBag(); return; }
   const held = bagHeld();
@@ -5145,6 +5148,7 @@ function bagUse() {
   askDraw();
 }
 function bagStep(d) {
+  globalThis.window?.EmberSfx?.ui?.();
   if (ask) { askStep(d > 0 ? 1 : -1); return; }   /* the box has the pad */
   if (bookOpen) {
     bookPick += (Math.abs(d) >= 4) ? (d > 0 ? 2 : -2) : d;
@@ -5372,6 +5376,7 @@ const BOOT = {
   },
   stepLoad(d) {
     if (!BOOT.loading) return;
+    globalThis.window?.EmberSfx?.ui?.();
     do { BOOT.loadPick = (BOOT.loadPick + d + 4) % 4; }
     while (BOOT.loadPick < 3 && !readSaveSlot(BOOT.loadPick + 1));
     BOOT.paintLoad();
@@ -5387,6 +5392,7 @@ const BOOT = {
     BOOT.back(); BOOT.close();
   },
   back() {
+    globalThis.window?.EmberSfx?.ui?.();
     BOOT.loading = false;
     document.body.classList.remove("boot-load-open");
     document.getElementById("bootLoadPanel").hidden = true;
@@ -5564,7 +5570,7 @@ function refreshOvl() {
     const takeMenuRow = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
       M.pick = k;
-      if (it.go && !(it.dim && it.dim())) it.go();
+      if (it.go && !(it.dim && it.dim())) { globalThis.window?.EmberSfx?.ui?.(); it.go(); }
     };
     /* Fullscreen requests must run directly inside the user's pointer gesture.
        On iOS/Chrome a synthetic/delayed click can lose transient activation. */
@@ -5624,6 +5630,7 @@ function ovlStep(d) {
   if (!ovl) return;
   const M = MENUS[ovl], items=M.items(), n = items.length;
   if (!n) return;
+  globalThis.window?.EmberSfx?.ui?.();
   M.pick = (M.pick + d + n) % n;
   while(items[M.pick].blankWhenDisabled&&items[M.pick].dim())M.pick=(M.pick+d+n)%n;
   refreshOvl();
@@ -5632,7 +5639,7 @@ function ovlTake() {
   if (!ovl) return;
   const M = MENUS[ovl], items = M.items();
   const it=items[M.pick];
-  if (it && it.go && !(it.dim&&it.dim())) it.go();
+  if (it && it.go && !(it.dim&&it.dim())) { globalThis.window?.EmberSfx?.ui?.(); it.go(); }
 }
 const atkCloseBtn=document.getElementById("atkCloseBtn");
 // Keep the menu in place through pointerup/touchend and the compatibility

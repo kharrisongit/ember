@@ -1,6 +1,6 @@
 // Gameplay and dragon-scene effects share the music mixer, including its iPhone-safe volume gain.
 (()=>{
-  const files={roar:'dragon-roar',distant:'dragon-distant-crash',
+  const files={ui:'ui-click',roar:'dragon-roar',distant:'dragon-distant-crash',
     crash:'dragon-crash',wings:'dragon-wings',breathing:'dragon-breathing',
     breathHit:'dragon-breath-hit',hatch:'egg-hatch',golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item'};
   const dragonEffects=['roar','distant','crash','wings','breathing'];
@@ -66,7 +66,15 @@
     },
     stop:clear
   };
+  let lastUi=-Infinity;
+  const uiClick=()=>{
+    if(document.hidden||performance.now()-lastUi<40)return;
+    lastUi=performance.now();
+    // Wait for the gesture's audio-unlock listener, including the first title tap.
+    Promise.resolve().then(()=>{if(!document.hidden)play('ui',false,true);});
+  };
   window.EmberSfx={
+    ui:uiClick,
     breathHit:()=>{if(inGame())play('breathHit',false,true);},
     hatch:()=>{if(inGame())play('hatch',false,true);},
     golemHit:()=>{if(inGame())play('golemHit',false,true);},
@@ -78,6 +86,16 @@
     pickup:()=>{if(inGame())play('pickup');},
     key:()=>{if(inGame())play('key',false,true);}
   };
+  // Menu controls also include clickable divs and inventory cells. A/B and the
+  // D-pad call the semantic handlers below, so movement/combat never clicks.
+  document.addEventListener('click',e=>{
+    const target=e.target?.closest?.('button,[role="button"],.btn,.equipBtn,#bagRows .slot:not(.empty),#bagBook,#bootNew,#bootLoad');
+    if(!target||target.disabled||target.getAttribute('aria-disabled')==='true')return;
+    if(target.closest('#dpad,#act,#btnB'))return;
+    if(target.id==='bootLoad'&&!target.dataset.on)return;
+    if(target.closest('#bagRows')&&typeof bagDragged==='function'&&bagDragged())return;
+    uiClick();
+  },true);
   const warm=()=>{for(const name of Object.keys(files))ready(name);};
   window.addEventListener('pointerdown',warm,{passive:true});
   window.addEventListener('touchstart',warm,{passive:true});
@@ -85,7 +103,7 @@
   // Stop old scenes after loading another save, returning to the title, or
   // backgrounding the app, even when the simulation itself is paused.
   setInterval(()=>{
-    if(!inGame()){for(const name of voices.keys())stop(name);currentPhase='off';}
+    if(!inGame()){for(const name of voices.keys())if(name!=='ui'||document.hidden)stop(name);currentPhase='off';}
     else if(!playable())clear();
     if(typeof deadShown!=='undefined'&&!deadShown)stop('death');
   },180);

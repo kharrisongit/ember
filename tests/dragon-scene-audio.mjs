@@ -1,13 +1,13 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const sources=[],listeners={},timers=[],output={};
+const sources=[],listeners={},documentListeners={},timers=[],output={};
 const context={
  decodeAudioData:async bytes=>bytes,
  createGain:()=>({gain:{value:1},connect(to){this.to=to;},disconnect(){}}),
  createBufferSource:()=>{const s={connect(to){this.gain=to;},start(){this.started=true;},stop(){this.stopped=true;},disconnect(){}};sources.push(s);return s;}
 };
 const c=vm.createContext({window:{EmberAudio:{graph:()=>({context,output})},addEventListener:(e,f)=>listeners[e]=f},
- document:{hidden:false},performance:{now:()=>0},fetch:async path=>({ok:true,arrayBuffer:async()=>[path]}),
+ document:{hidden:false,addEventListener:(e,f)=>documentListeners[e]=f},performance:{now:()=>0},fetch:async path=>({ok:true,arrayBuffer:async()=>[path]}),
  setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:320},TS:16,shake:0});
 const run=s=>vm.runInContext(s,c),flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 run(read('js/dragon-scene-audio.js'));listeners.touchstart();await flush();
@@ -133,3 +133,30 @@ for(const el of ['fire','ice','bolt','shadow']){
 }
 const injured={...breathTarget(),hp:2},beforeKill=await blast([injured]);assert.equal(injured.st,'dead');assert.equal(breathHits(),beforeKill+1,'Lethal breath also plays the impact');
 console.log('PASS: breath impact plays once on successful enemy damage, including kills; casting, misses, walls, allies and corpses stay silent.');
+
+// The UI shares the mixer, but is also available while choosing a title save.
+let uiTime=100;c.performance.now=()=>uiTime;
+const uiCount=()=>sources.filter(s=>s.buffer[0].includes('ui-click')).length;
+c.mode='title';sfx.ui();sfx.ui();await flush();assert.equal(uiCount(),1,'One gesture can reach several handlers without doubling its click');
+let uiSound=active('ui-click')[0];assert.equal(uiSound.gain.gain.value,.7);assert.equal(uiSound.gain.to,output);
+timers.forEach(f=>f());assert(!uiSound.stopped,'Title cleanup lets the short UI sound finish');
+uiTime+=100;sfx.ui();await flush();assert(uiSound.stopped);assert.equal(uiCount(),2,'A new press promptly restarts the click');
+c.document.hidden=true;timers.forEach(f=>f());assert.equal(active('ui-click').length,0);uiTime+=100;sfx.ui();await flush();assert.equal(uiCount(),2);
+c.document.hidden=false;c.mode='play';
+const part3=read('js/generated/game-part-3.js');
+run(part3.slice(part3.indexOf('function askTake()'),part3.indexOf('\nconst HEALS =')));
+c.askShut=()=>{c.ask=null;};c.askPick=0;let chosen=0;
+const button={disabled:false,getAttribute:()=>null,closest:()=>null};
+uiTime+=100;documentListeners.click({target:{closest:()=>button}});
+c.ask={quick:true,opts:[{go:()=>chosen++}]};c.askTake();await flush();
+assert.equal(chosen,1);assert.equal(uiCount(),3,'A tapped shop/topic option gets just one click');
+uiTime+=100;button.disabled=true;documentListeners.click({target:{closest:()=>button}});await flush();assert.equal(uiCount(),3,'Disabled menu buttons stay silent');
+button.disabled=false;button.closest=selector=>selector==='#dpad,#act,#btnB'?button:null;
+documentListeners.click({target:{closest:()=>button}});await flush();assert.equal(uiCount(),3,'Gameplay controls are excluded from generic clicks');
+Object.assign(c,{revealing:false,scene:{i:0,t:1,lines:['hello','goodbye']},typeDone:()=>true,showScene(){},sendWalkerHome(){}});
+run(game.slice(game.indexOf('function advanceScene()'),game.indexOf('\nconst HERD_Y')));
+uiTime+=100;c.advanceScene();await flush();assert.equal(c.scene.i,1);assert.equal(uiCount(),4,'Advancing a conversation clicks');
+uiTime+=100;c.scene.hold=true;c.advanceScene();await flush();assert.equal(uiCount(),4,'An unavailable cutscene advance is silent');
+c.scene.hold=false;c.typeDone=()=>false;let completedText=false;c.typeAll=()=>{completedText=true;};
+uiTime+=100;c.advanceScene();await flush();assert(completedText);assert.equal(uiCount(),5,'Revealing a typing line clicks');
+console.log('PASS: dialogue/typing advances, menu taps, title playback, one click per gesture, reduced shared volume, and no clicks on disabled controls or gameplay A/B.');
