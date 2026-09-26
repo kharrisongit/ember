@@ -64,7 +64,7 @@ c.window.EmberKingMusic.start();c.window.EmberAudio.set(0);track('Villain').fini
 assert([...elements.values()].every(a=>a.paused&&a.volume===0),'Mute wins over a pending play and all scheduled fades');
 track('Villain').waitForPlay=false;c.window.EmberKingMusic.stop();c.window.EmberAudio.set(50);await advance();assert.equal(track('Millwood').volume,.5);assert.equal(track('Millwood').paused,false);
 // Thornwell uses its installed track, including the town interiors.
-await change('tavern','Thornwell Tavern');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
+await change('inn','Thornwell Inn');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
 for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000],['Thornwell','thornwell-shop.m4a',1600000]]){
@@ -143,7 +143,7 @@ for(const road of huntingPaths.values())for(let i=1;i<road.pts.length;i++){
 assert.equal(hunt.track('Field').plays,1,'moving among hunting paths never restarts the route song');
 for(const [id,map]of Object.entries(JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.js').match(/const W_GZ = "([^"]+)"/)[1],'base64'))).maps)){
  if(id!=='world'&&map.title?.startsWith('Thornwell')){
-  await hunt.change(id,map.title);assert(!hunt.track('Thornwell').paused,id+' plays Thornwell music');
+  await hunt.change(id,map.title);assert(!hunt.track(/^school/.test(id)?'School':id==='tavern'?'Tavern':'Thornwell').paused,id+' plays its assigned music');
  }
 }
 console.log(`PASS: ${huntingPaths.size} authored hunting loops, ${huntSamples} samples, uninterrupted route playback and Thornwell interiors.`);
@@ -251,7 +251,7 @@ await desertTest.change('world','Emberfell',8.99,4.5);assert(!desertTest.track('
 await desertTest.change('world','Emberfell',4.99,4.5);assert(desertTest.track('Desert').paused);assert(!desertTest.track('Field').paused);
 console.log('PASS: Desert begins at the first sand tile, never on adjacent grass; Sandspire and its homes share their own continuous song, temples keep Spooky Cave, and leaving restores the road track.');
 
-for(const file of ['desert-route-loop.wav','sandspire-town-loop.wav']){
+for(const file of ['desert-route-loop.wav','sandspire-town-loop.wav','school-loop.wav','tavern-loop.wav']){
  const b=fs.readFileSync(new URL('../assets/audio/'+file,import.meta.url));
  const channels=b.readUInt16LE(22),rate=b.readUInt32LE(24),data=b.subarray(44);
  assert.equal(b.toString('ascii',0,4),'RIFF');assert.equal(b.readUInt16LE(34),16);
@@ -260,3 +260,11 @@ for(const file of ['desert-route-loop.wav','sandspire-town-loop.wav']){
  for(let i=0;i+window<=data.length/2;i+=window){let power=0;for(let j=0;j<window;j++)power+=(data.readInt16LE((i+j)*2)/32768)**2;assert(Math.sqrt(power/window)>.005,'no silent loop padding in '+file);}
 }
 console.log('PASS: both delivered PCM loops have continuous joins and no silent encoder padding.');
+
+const interiors=setup();interiors.listeners.pointerdown();await interiors.advance();
+await interiors.change('school','Thornwell School — Reading Hall');assert(!interiors.track('School').paused);assert(interiors.track('Thornwell').paused);
+const schoolStarts=interiors.track('School').plays;
+await interiors.change('school2','Thornwell School — Upper Study');assert.equal(interiors.track('School').plays,schoolStarts,'going upstairs never restarts school music');
+await interiors.change('tavern','The Copper Cup — Thornwell Tavern');assert(!interiors.track('Tavern').paused);assert(interiors.track('School').paused);assert(interiors.track('Thornwell').paused);
+await interiors.change('inn','Thornwell Inn');assert(!interiors.track('Thornwell').paused);assert(interiors.track('Tavern').paused);
+console.log('PASS: School loops continuously across both floors; Tavern uses its own track; other town interiors restore Thornwell.');

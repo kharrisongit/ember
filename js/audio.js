@@ -9,6 +9,8 @@ let routeMusicIntroPlayed=false;
   const field=document.getElementById('emberfellFieldBgm');
   const desert=document.getElementById('emberfellDesertBgm');
   const sandspire=document.getElementById('emberfellSandspireBgm');
+  const school=document.getElementById('emberfellSchoolBgm');
+  const tavern=document.getElementById('emberfellTavernBgm');
   const forgewick=document.getElementById('emberfellForgewickBgm');
   const mystic=document.getElementById('emberfellMysticBgm');
   const reveal=document.getElementById('emberfellDragonRevealBgm');
@@ -110,7 +112,7 @@ let routeMusicIntroPlayed=false;
     } catch(e) {}
     return false;
   };
-  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire].filter(Boolean);
+  const tracks=[bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,reveal,temple,desert,sandspire,school,tavern].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
@@ -128,7 +130,8 @@ let routeMusicIntroPlayed=false;
   const exploreTrack=()=>{
     if(dragonJourney()&&hasSong(reveal))return reveal;
     const insideTemple=typeof MAPID!=='undefined'&&MAPID!=='world'&&typeof MD!=='undefined'&&MD&&!MD.mountainPassage&&(MD.templeExpanded||/^(?:tp|ds|sn)\d/.test(MAPID));
-    const choices=[[insideTemple,temple],[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
+    const choices=[[MAPID==='school'||MAPID==='school2',school],[MAPID==='tavern',tavern],
+      [insideTemple,temple],[millwoodMode,millwood],[cinderholdMode,cinderhold],[mineMode,mine],
       [mysticMode,mystic],[hollybeckMode,hollybeck],[forgewickMode,forgewick],
       [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
@@ -151,7 +154,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([reveal,desert,sandspire,school,tavern].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a));
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
