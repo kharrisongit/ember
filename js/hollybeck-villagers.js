@@ -1,3 +1,6 @@
+// Extracted from the user's eight-frame sheet; no title, labels or background.
+DOCK_ORIGINAL_ASSETS.push({name:'hollybeck_runa_south_idle',w:24,h:30,frames:8,
+  src:'assets/sprites/hollybeck-runa-south-idle.png?v=20260926-runa1'});
 /* Six motion frames, closed eyes, and half-closed eyes for a smooth timed blink. */
 for(const person of ['sverre','runa'])for(const action of ['walk','idle']){
   for(const [row,dir]of ['d','u','e','w'].entries())DOCK_ORIGINAL_ASSETS.push({
@@ -7,6 +10,11 @@ for(const person of ['sverre','runa'])for(const action of ['walk','idle']){
   });
 }
 function hollybeckNpcFrame(n,t,action){
+  if(n.packSpr==='hollybeck_runa_south_idle'){
+    // Hold the open-eye poses longer, then pass through the complete blink.
+    const phase=(t%3.6+3.6)%3.6;
+    return phase<.9?0:phase<1.6?1:phase<2.3?2:phase<2.42?3:phase<2.56?4:phase<2.68?5:phase<3.1?6:7;
+  }
   // Blink timing is independent of footsteps; walking does not speed up blinking.
   const phase=(t+(n.t||0))%3.8;
   if(phase<.08||phase>=.18&&phase<.26)return 7;
@@ -35,6 +43,9 @@ function prepareHollybeckVillagers(m,id){
     const {sprite,...npc}=person;
     m.npcs.push({...npc,editKey,packSpr:'hollybeck_'+sprite,packDirections:true,packWalk:true,
       loc:'Hollybeck',stationary:false,patrol:true,patrolSpeed:24,patrolRest:3500,
-      idleFps:4,f:'d',noTalk:false});
+      idleFps:4,f:'d',noTalk:false,...(sprite==='runa'?{
+        packSpr:'hollybeck_runa_south_idle',packDirections:false,packWalk:false,
+        stationary:true,patrol:false
+      }:null)});
   }
 }
