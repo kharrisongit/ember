@@ -1,6 +1,6 @@
 // Extracted from the user's eight-frame sheet; no title, labels or background.
 DOCK_ORIGINAL_ASSETS.push({name:'hollybeck_runa_south_idle',w:24,h:30,frames:8,
-  src:'assets/sprites/hollybeck-runa-south-idle.png?v=20260926-runa1'});
+  src:'assets/sprites/hollybeck-runa-south-idle.png?v=20260926-runa-stable2'});
 /* Six motion frames, closed eyes, and half-closed eyes for a smooth timed blink. */
 for(const person of ['sverre','runa'])for(const action of ['walk','idle']){
   for(const [row,dir]of ['d','u','e','w'].entries())DOCK_ORIGINAL_ASSETS.push({
