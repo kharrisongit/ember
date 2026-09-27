@@ -1,0 +1,6 @@
+#ridingHint{position:fixed;z-index:950;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);box-sizing:border-box;max-width:min(560px,88vw);padding:10px 16px;border:2px solid #c78d67;border-radius:7px;background:#293e43f2;color:#fff6e3;font:600 14px/1.4 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 3px 14px #0005}
+#ridingHint[hidden]{display:none}
+.riding-target{outline:3px solid #ffe2a3!important;outline-offset:4px;animation:ridingGuidePulse 1s ease-in-out infinite!important}
+body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opacity:.35!important}
+@keyframes ridingGuidePulse{50%{outline-color:#c78d67;box-shadow:0 0 0 7px #ffe2a333}}
+@media(prefers-reduced-motion:reduce){.riding-target{animation:none!important}}

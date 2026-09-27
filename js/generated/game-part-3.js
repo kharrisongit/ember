@@ -3800,12 +3800,14 @@ function stepArena(dt) {
     if (MAPID !== "world") { arenaLock = null; arenaT = 0; return; }
   }
   if (!arenaLock) {
+    if(globalThis.window?.EmberRiding?.blocksArenaEntry())return;
     for (const f of mapArenas) {
       if(['hare','boar','deer','fox','bird'].includes(f.encounter))continue;
       if (Math.hypot(P.x / TS - f.x, P.y / TS - f.y) > f.r - 1) continue;
       if (cooling.has(ringKey(f)) || holy.has(ringKey(f))) continue;
       if (!arenaFoesLeft(f)) { refillRing(f); if (!arenaFoesLeft(f)) continue; }
       arenaLock = f; arenaT = 0; arenaGoing = false;
+      globalThis.window?.EmberRiding?.entered(f);
       break;
     }
   } else {
@@ -3837,8 +3839,10 @@ function stepArena(dt) {
     if (arenaT < 0) {
       if (!bossRing(arenaLock) && !holy.has(ringKey(arenaLock)))
         cooling.set(ringKey(arenaLock), ARENA_REST);
+      const completedRing=arenaLock;
       recoverStrandedDragon();
       arenaLock = null; arenaT = 0; arenaGoing = false;
+      globalThis.window?.EmberRiding?.completed(completedRing);
       twinSpent = false; twinKills = 0;   /* ready for the next ring */
       for (const f of foes) if (f.raised) { f.ally = 0; f.raised = 0; f.st = "dead"; f.t = 0; }
     }
@@ -4052,6 +4056,7 @@ function frameCore(ms) {
     return;
   }
   tAcc += dt;
+  globalThis.window?.EmberRiding?.step(dt);
   stepNanDeparture();
   stepFatherCompass();
   if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
@@ -4075,12 +4080,12 @@ function frameCore(ms) {
   stepKingsMen(dt);
   stepQuest(dt);
   stepDragonBanter(dt);
-  stepBreath(dt);
+  if(!globalThis.window?.EmberRiding?.holding())stepBreath(dt);
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
-  stepClaw(dt);
+  if(!globalThis.window?.EmberRiding?.holding())stepClaw(dt);
   stepAnims(dt);   /* one-shot animations run in the editor too */
-  if (mode === "play") stepBolts(dt);
+  if (mode === "play"&&!globalThis.window?.EmberRiding?.holding()) stepBolts(dt);
   stepFerry(dt);
   stepDeflectCamera(dt);
   drawWorld(tAcc, dt);
@@ -5112,6 +5117,7 @@ function doUse(it) {
   if (!act) return false;
   const done = act();
   if (done === false) return false;
+  if(globalThis.window?.EmberRiding?.usedItem(it))return true;
   setBag(false);setOvl(null);
   const said = USE_SAID[it.key];
   if (said) flashReveal(SPR[said[0]] ? said[0] : "it_potion", said[1]);
@@ -5485,6 +5491,7 @@ const MENUS = {
   ] },
   atkm: { rows: "atkRows", desc: "atkDesc", pick: 0, items: () => ATTACKS.filter(a=>breathHas[EL_BREATH[a.el]]) },
   itemm: { rows: "itemRows", desc: "itemDesc", pick: 0, items: () => bagUsable().map(it => ({
+    key: it.key,
     name: () => typeof it.name === "function" ? it.name() : it.name,
     el: it.key === "potion" ? "potion" : it.key === "elixir" ? "elixir" : "item",
     icon: it.icon ? it.icon() : null,
@@ -5493,14 +5500,14 @@ const MENUS = {
     go: () => doUse(it)
   })) },
   airm: { rows: "airRows", desc: "airDesc", pick: 0, items: () => [
-    { name: mounted ? "Dismount" : "Mount", blankWhenDisabled:true, dim:()=>!mounted&&!dragonIntroDone, el: "ride", art: mounted ? "dismount" : "mount",
+    { name: mounted ? "Dismount" : "Mount", blankWhenDisabled:true, dim:()=>!mounted&&(!dragonIntroDone||globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()||dragonTooHurtToFly()), el: "ride", art: mounted ? "dismount" : "mount",
       tell: mounted ? "Slide down off its back."
                     : "Climb onto its shoulders and fly with it.",
       go: () => { const on = !mounted;
-              if(setMounted(on)===false)return; setOvl(null);
+              if(setMounted(on)===false)return; if(globalThis.window?.EmberRiding?.mountedAction(on))return; setOvl(null);
               showReveal(on ? "corinride_" + (smithUpgrade ? "armor_" : "sword_") + "idle_s" : "dr5_idle_s",
                          on ? "CORIN TAKES THE REINS" : "CORIN SLIDES DOWN", undefined, true);
-              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", blankWhenDisabled:true, dim:()=>!dragon.air&&!dragonIntroDone, el: "wing", art: dragon.air ? "land" : "takeoff",
+              setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", blankWhenDisabled:true, dim:()=>!dragon.air&&(!dragonIntroDone||globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()||dragonTooHurtToFly()), el: "wing", art: dragon.air ? "land" : "takeoff",
       tell: dragon.air ? "Come down to the ground." : "Beat upward and fly.",
       go: () => { setDragonAir(!dragon.air); setOvl(null); } },
     { name: "Summon", el: "wake", blankWhenDisabled: true,
@@ -5537,7 +5544,7 @@ const ATTACKS = [
               if (dragon.down) { toast("the dragon is hurt -- feed it first"); return; }
               const wait = breathWait(a.el);
               if (wait > 0) { toast((DRAGON_BREATH[a.el]?.name || "breath") + " ready in " + wait.toFixed(1) + "s"); return; }
-              dragonEl = a.el; breatheFire(); },
+              dragonEl = a.el; if(breatheFire())globalThis.window?.EmberRiding?.fired(a.el); },
 }));
 const EL_COLOUR = { claw: "#8b806c", fire: "#b65e45", ice: "#56859d",
                     bolt: "#bd913b", shadow: "#896889",
@@ -5547,6 +5554,7 @@ const EL_COLOUR = { claw: "#8b806c", fire: "#b65e45", ice: "#56859d",
                     elixir: "#bd913b", item: "#a18a66" };
 let ovl = null;
 function setOvl(which) {
+  if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
   if(which&&fishing)return;
   for (const k in MENUS) {
     const el = document.getElementById(k);
@@ -5558,6 +5566,7 @@ function setOvl(which) {
   document.body.classList.toggle("deck-menu-open", ovl === "airm" || ovl === "atkm");
   if (ovl) { MENUS[ovl].pick = 0; refreshOvl(); }
   if (ovl === "sound") syncSoundDial();
+  globalThis.window?.EmberRiding?.opened(which);
 }
 function refreshOvl() {
   if (!ovl) return;
@@ -5619,6 +5628,7 @@ function refreshOvl() {
     }
     const takeMenuRow = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
+      if(globalThis.window?.EmberRiding?.allowedItem(ovl,it)===false)return;
       M.pick = k;
       if (it.go && !(it.dim && it.dim())) { globalThis.window?.EmberSfx?.ui?.(); it.go(); }
     };
@@ -5636,6 +5646,7 @@ function refreshOvl() {
     const on = rows.querySelector(".row.on");
     if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
   }
+  globalThis.window?.EmberRiding?.paint();
 }
 function appendActionIcon(row,key){
   const icon=document.createElement("img");icon.className="actionIcon";icon.alt="";
@@ -5677,18 +5688,20 @@ function updateBreathRefills(){
   });
 }
 function ovlStep(d) {
+  if(globalThis.window?.EmberRiding?.holding()){window.EmberRiding.paint();return;}
   if (!ovl) return;
   const M = MENUS[ovl], items=M.items(), n = items.length;
   if (!n) return;
   globalThis.window?.EmberSfx?.ui?.();
   M.pick = (M.pick + d + n) % n;
-  while(items[M.pick].blankWhenDisabled&&items[M.pick].dim())M.pick=(M.pick+d+n)%n;
+  for(let skipped=0;skipped<n&&items[M.pick].blankWhenDisabled&&items[M.pick].dim();skipped++)M.pick=(M.pick+d+n)%n;
   refreshOvl();
 }
 function ovlTake() {
   if (!ovl) return;
   const M = MENUS[ovl], items = M.items();
   const it=items[M.pick];
+  if(it&&globalThis.window?.EmberRiding?.allowedItem(ovl,it)===false)return;
   if (it && it.go && !(it.dim&&it.dim())) { globalThis.window?.EmberSfx?.ui?.(); it.go(); }
 }
 const atkCloseBtn=document.getElementById("atkCloseBtn");
@@ -5757,6 +5770,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   quest, routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened},
   charm:{...charm}, worn:{...worn},
@@ -5855,6 +5869,7 @@ function loadGame(slot=activeSaveSlot) {
     if(typeof deadShown!=='undefined')deadShown=false;
     globalThis.window?.EmberSfx?.stopDeath();
     const deathScreen=globalThis.document?.getElementById?.('dead');if(deathScreen)deathScreen.style.display='none';
+    globalThis.window?.EmberRiding?.restore(s);
     cam.x=P.x;cam.y=P.y;clampCam();chunks.clear();toast("loaded slot "+slot);return true;
   } catch (e) { toast("could not load"); return false; }
 }
@@ -5875,6 +5890,8 @@ function dismountSpot() {
   return null;
 }
 function setMounted(on, quiet = false) {
+  if(on&&globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()){toast("Aurelius has not offered you a ride yet.");return false;}
+  if(on&&dragonTooHurtToFly()){toast("Aurelius needs food before he can carry you again.");return false;}
   if(fishing)return false;
   if(on&&!dragonIntroDone){toast("Aurelius has not offered you a ride yet.");return false;}
   if (on && !dragonHere()) { toast("the dragon is not here"); return false; }
@@ -5891,7 +5908,7 @@ function setMounted(on, quiet = false) {
     dragon.placed=MAPID;dragon.moving=false;
     dragon.followGap=Math.max(56,Math.hypot(P.x-dragon.x,P.y-dragonHover()-dragon.y));
   }
-  if (on) { dragon.followGap=0;if (!dragon.air) setDragonAir(true); if (!quiet) toast("you climb onto its back"); }
+  if (on) { dragon.followGap=0;dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();if (!dragon.air) setDragonAir(true); if (!quiet) toast("you climb onto its back"); }
   else if (!quiet) toast("you slide down");
   chunks.clear();
   return true;
@@ -5931,6 +5948,7 @@ function markKingCompleteForTest() {
   }
   quest = Math.max(quest, Q.DONE);
   dragonIntroDone=true;dragonIntroArmed=false;
+  globalThis.window?.EmberRiding?.skip();
   glassShield = true;
   wonAll = 1;
   if (MAPID === "cinderhold") npcs = npcs.filter(n => !/Halvard/.test(n.n || ""));
@@ -5954,6 +5972,7 @@ tap(document.getElementById("bSkip"), () => {
   guardsAside = false;
   quest = Q.DONE;
   dragonIntroDone=true;dragonIntroArmed=false;
+  globalThis.window?.EmberRiding?.skip();
   smithUpgrade = true;
   glassShield = true;
   dragon.on = true;

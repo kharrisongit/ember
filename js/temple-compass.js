@@ -14,6 +14,8 @@ const FATHER_COMPASS_GIFT = [
   "Corin: I wish I could remember them.",
   "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
   "Corin: I promise, Nan.",
+  "Nan Ferrow: Oh, and take this for your new friend, in case he gets hungry.",
+  "Corin: Thank you, Nan. I think he will appreciate that.",
   "Nan Ferrow: Good. Both of you. Take care of each other, love."
 ];
 function fatherCompassGift(nan){
@@ -28,9 +30,11 @@ function restoreFatherCompass(saved) {
   templeCompass.cache = null;
 }
 function giveFatherCompass() {
+  if(templeCompass.owned)return;
   templeCompass.owned = true;
+  hareMeat += 3;
   saveGame();
-  showReveal('inventory_compass', "Corin received his father's compass.");
+  showReveal('inventory_compass', "Corin received his father's compass and 3 Hare Meat.");
 }
 function awakenFatherCompass() {
   if (!templeCompass.owned || templeCompass.awakened) return;

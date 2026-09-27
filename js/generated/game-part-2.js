@@ -4789,6 +4789,7 @@ addEventListener("keydown", e => {
     }
     return;
   }
+  if(globalThis.window?.EmberRiding?.key(e))return;
   if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
     e.preventDefault();if(e.repeat)return;
     if(k==='b'||k==='escape')askBack();
@@ -4948,6 +4949,7 @@ function bindHold(id, onDown, onUp) {
     if (!gameplayStarted && !titleControlReady(id)) {
       e?.preventDefault(); e?.stopPropagation(); return;
     }
+    if(globalThis.window?.EmberRiding?.allowControl(id)===false){e?.preventDefault();e?.stopPropagation();return;}
     if(["btnL","btnR","btnItems","btnMapQuick"].includes(id))globalThis.window?.EmberSfx?.ui?.();
     el.classList.add("hit"); onDown();
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
@@ -4966,6 +4968,7 @@ function bindHold(id, onDown, onUp) {
 // A visible menu owns its touches. The deck-sized dragon menus cover every
 // controller; other menus still use the exposed D-pad, A and B to navigate.
 function blockCoveredGameInput(e) {
+  if(globalThis.window?.EmberRiding?.blockPointer(e))return;
   const target = e.target;
   if (!target?.closest?.("#deck, #cv")) return;
   let blocked = !gameplayStarted;
@@ -5629,7 +5632,15 @@ function stepTransition(dt) {
   dragon.air = tr.to;
   refreshWingBtn();
 }
+function dragonFlightMinimum(){return Math.max(1,Math.ceil((dragon.maxHp||20)*.25));}
+function dragonTooHurtToFly(){return dragon.down||dragon.hp<=dragonFlightMinimum();}
+function groundInjuredDragon(){
+  if(!dragonTooHurtToFly()||(!dragon.air&&!dragon.tr?.to))return;
+  dragon.air=false;dragon.tr=null;refreshWingBtn();
+}
 function setDragonAir(on) {
+  if(on&&globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()){toast("Aurelius stays beside you for now.");return false;}
+  if(on&&dragonTooHurtToFly()){toast("Aurelius is too hurt to fly. Feed him meat or fish.");return false;}
   if(on&&!dragonIntroDone){toast("Aurelius stays beside you for now.");return false;}
   if (dragon.down) { toast("the dragon is too hurt to move"); return; }
   if (dragon.tr || on === dragon.air) return;
@@ -5758,6 +5769,12 @@ function drawClaw() {
   }
 }
 function stepDragon(dt) {
+  groundInjuredDragon();
+  if(globalThis.window?.EmberRiding?.holding()){
+    dragon.t+=dt;dragon.moving=false;
+    if(mounted){dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();stepTransition(dt);}
+    return;
+  }
   if (bossScene) return;
   if (dragon.revive > 0) {
     dragon.revive = Math.max(0, dragon.revive - dt);
@@ -6416,7 +6433,7 @@ function stepDragonIntroduction(){
   // Speak as Corin leaves Maddock's clearing after the hatch and walk-off.
   // The fixed fallback also works when loading an older save before the intro.
   const origin=dragon.introOrigin||[SPOT.elder[0]*TS,SPOT.elder[1]*TS];
-  if(Math.hypot(P.x-origin[0],P.y-origin[1])<3*TS)return false;
+  if(Math.hypot(P.x-origin[0],P.y-origin[1])<10*TS)return false;
   dragonIntroArmed=true;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
@@ -6431,15 +6448,11 @@ function stepDragonIntroduction(){
     'Aurelius: Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
     'Aurelius: My body is new. My mind did not begin empty. What we discover together will still be our own.',
     'Corin: So you know where we are going?',
-    'Aurelius: That is your choice. But I know a quicker way than those two small feet.',
-    'Corin: You want me to ride you? Are you strong enough?',
-    'Aurelius: Climb onto my shoulders. I chose you, Corin. I can carry you.',
-    'Corin: All right, Aurelius. Slowly, to begin with.',
-    'Open COMMAND and choose Mount to ride Aurelius. Use the movement controls to travel together. Choose Dismount from COMMAND to get down.',
+    'Aurelius: That is your choice. Wherever you go, I will stay beside you.',
+    'Corin: Then we had better make a start.',
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
   ],{telepathy:true,after:()=>{
     dragonIntroDone=true;dragonIntroArmed=false;saveGame();
-    setOvl('airm');
   }});
   return true;
 }
@@ -6745,7 +6758,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation); }
+function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding(); }
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
@@ -7348,9 +7361,11 @@ function breathWait(kind = dragonEl) {
   return Math.max(0, breathCooldown[breathElementKey(kind)] || 0);
 }
 function hurtDragon(n) {
+  if(globalThis.window?.EmberRiding?.holding())return false;
   if (foesHeld) return false;
   if (!dragonHere() || dragon.down || dragon.inv > 0 || devSafe) return false;
-  dragon.hp = Math.max(0, dragon.hp - Math.max(1, n));
+  dragon.hp = Math.max(globalThis.window?.EmberRiding?.protectFirstBattle()?1:0, dragon.hp - Math.max(1, n));
+  groundInjuredDragon();
   dragon.hurt = 0.42; dragon.inv = 0.55;
   if (dragon.hp <= 0) {
     dragon.down = true; dragon.moving = false; dragon.air = false; dragon.tr = null;
@@ -7528,13 +7543,13 @@ function breatheFire() {
   if (best) {
     /* King breaths have a deliberate wind-up and keep a clear standoff. */
     if (best.kind === "kdragon" || best.kind === "lich") {
-      hunt = { foe: best, t: 0, kingBreath: true }; return;
+      hunt = { foe: best, t: 0, kingBreath: true }; return true;
     }
-    hunt = { foe: best, t: 0 }; return;
+    hunt = { foe: best, t: 0 }; return true;
   }
   const d = playerFacing4();
   dragon.dir = d;
-  fireNow(d);
+  fireNow(d);return true;
 }
 const DRAGON_PROJECTILE = { fire: 10, ice: 13, bolt: 17, shadow: 17 };
 function kingDragonMouth(f, dir) {
@@ -10560,6 +10575,7 @@ function drawHeartsCanvasLegacy() {
 }
 let foesHeld = false;
 function stepCombat(dt) {
+  if(globalThis.window?.EmberRiding?.holding()){for(const f of foes)if(f.st!=='dead')f.t+=dt;stepFall(dt);return;}
   stepTempleGates(dt);
   stepFly(dt); // Cosmetic pickups keep moving even with foes disabled.
   if (pInv > 0) pInv -= dt;
@@ -11203,6 +11219,7 @@ padBind();
 }
 function actionButton() {
   if(window.EmberCloud?.isOpen())return;
+  if(globalThis.window?.EmberRiding?.action())return;
   if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
   if(atlasOpen)return;
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}

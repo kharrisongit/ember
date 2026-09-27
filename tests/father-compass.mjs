@@ -3,13 +3,13 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const read=p=>fs.readFileSync(p,'utf8');
 let saves=0,reveal;
-const c=vm.createContext({npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
+const c=vm.createContext({hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
  sceneHold:()=>!!c.scene,sayNpc:null,fadeDir:0,fade:0,doorMotion:null,ovl:null,ask:null,bagOpen:false,editing:false,dying:()=>false,
  saveGame:()=>saves++,showReveal:(...args)=>reveal=args,playScene:(lines,opts)=>c.scene={lines,i:0,...opts}});
 const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
 c.stepFatherCompass();assert.equal(c.scene,undefined,'no reveal before Nan gives the compass');
-c.giveFatherCompass();assert.equal(saves,1);assert.equal(reveal[0],'inventory_compass');
+c.giveFatherCompass();assert.equal(c.hareMeat,3);c.giveFatherCompass();assert.equal(c.hareMeat,3,'Gift cannot duplicate');assert.equal(saves,1);assert.equal(reveal[0],'inventory_compass');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),false);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');

@@ -27,14 +27,14 @@ const active=()=>run('dragonBanterActive');
 place='Millwood';tick();assert.equal(active(),null);
 c.templeCompass.owned=false;
 c.P.x=872;c.P.y=6050;assert.equal(run('stepDragonIntroduction()'),false,'No interruption at hatch position');
-c.P.y=6097;assert.equal(run('stepDragonIntroduction()'),false,'Allow three tiles before speaking');
-c.P.y=6098;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
+c.P.y=6209;assert.equal(run('stepDragonIntroduction()'),false,'Allow ten tiles before speaking');
+c.P.y=6210;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
 c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
 assert.equal(run('stepDragonIntroduction()'),true);
 assert.match(pendingScene.lines[0],/voice.*inside your head/);
 assert(pendingScene.lines.join(' ').includes('share a consciousness'));
-assert(pendingScene.lines.some(line=>line.includes('COMMAND')));
-pendingScene.after();pendingScene=null;assert.equal(menu,'airm');
+assert(!pendingScene.lines.some(line=>/COMMAND|Mount|ride you/i.test(line)),'Introduction does not teach riding');
+pendingScene.after();pendingScene=null;assert.equal(menu,null);
 assert.equal(run('stepDragonIntroduction()'),false,'Only once');
 c.P.x=872;c.P.y=6130;
 // First visits, a timed dismissal and the actual action-button dismissal hook.

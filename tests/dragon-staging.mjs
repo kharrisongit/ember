@@ -34,7 +34,7 @@ console.log('PASS: Maddock walks around obstacles into the edited doorway; the c
 
 let clear=()=>true,notices=[];
 const d=vm.createContext({dragon:{on:true,x:200,y:200,dir:'s',air:true},P:{x:200,y:226,moving:true,act:{}},MAPID:'world',
- fishing:null,dragonHere:()=>true,dragonSprite:()=>[0,0,176,176],DRAGON_DRAW_SCALE:.42,playerFacing4:()=>d.dir,
+ dragonTooHurtToFly:()=>false,fishing:null,dragonHere:()=>true,dragonSprite:()=>[0,0,176,176],DRAGON_DRAW_SCALE:.42,playerFacing4:()=>d.dir,
  canStand:(x,y)=>{assert.equal(vm.runInContext('mounted',d),false,'Uses on-foot collision when choosing a landing');return clear(x,y);},
  dragonHover:()=>d.dragon.air?26:0,setDragonAir:on=>{d.dragon.air=on;},toast:s=>notices.push(s),chunks:new Map()});
 const dr=s=>vm.runInContext(s,d);dr(section(p3,'let mounted = false;','tap(document.getElementById("deadBtn")'));
@@ -53,7 +53,7 @@ class Element{
  addEventListener(t,f){this.handlers[t]=f;}querySelectorAll(){return this.children;}
 }
 const nodes=Object.fromEntries(['airRows','airDesc','atkRows','atkDesc'].map(k=>[k,new Element()]));let summoned=0;
-const m=vm.createContext({dragonIntroDone:true,document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
+const m=vm.createContext({dragonTooHurtToFly:()=>false,dragonIntroDone:true,document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
  wakeCount:()=>0,wakeTheDead:()=>{summoned++;return false;},setMounted:()=>false,breathHas:{slash:true,fire:true,lightning:true,shadow:true,ice:true},breathWait:()=>0});
 const mr=s=>vm.runInContext(s,m);mr(section(p3,'const MENUS = {','let ovl = null;'));mr(section(p3,'function refreshOvl()','function updateBreathRefills()'));mr(section(p3,'function ovlStep(','const atkCloseBtn='));
 mr('refreshOvl()');const blank=nodes.airRows.children[2];
