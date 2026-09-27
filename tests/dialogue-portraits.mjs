@@ -13,9 +13,9 @@ const run=s=>vm.runInContext(s,c);
 run(read('assets/portraits/manifest.js'));
 run(read('js/dialogue-portraits.js'));
 const cast=JSON.parse(read('assets/portraits/cast.json'));
-assert.equal(new Set(cast.map(n=>n.name)).size,131);
+assert.equal(new Set(cast.map(n=>n.name)).size,133);
 assert(cast.every(n=>run(`portraitFor(${JSON.stringify(n.name)})`)?.id===n.id));
-for(let pack=1;pack<=7;pack++){
+for(let pack=1;pack<=8;pack++){
   run(read('assets/portraits/pack-'+pack+'.js'));
   const source=run(`portraitPackSources.get(${pack})`);
   const bytes=Buffer.from(source.split(',')[1],'base64');
@@ -67,7 +67,7 @@ assert.equal(run('typeDone()'),true);
 run("typeStart('Corin','Next conversation.');typeAll();showFace('Corin')");
 assert.equal(c.nameEl.textContent,'Corin');
 assert.equal(c.nameEl.className,'on left');
-console.log('PASS: all 131 portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');
+console.log('PASS: all 133 cast portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');
 
 c.smithUpgrade=true;assert.equal(c.portraitFor("Corin").pack,8);c.smithUpgrade=false;assert.equal(c.portraitFor("Corin").pack,1);
 run(read("assets/portraits/pack-8.js"));assert(run("portraitPackSources.get(8).startsWith('data:image/webp;base64,')"));
@@ -78,3 +78,6 @@ run("showDialoguePortrait('Maddock')");
 assert.equal(face.style.display,'none','Hatching hides Maddock’s portrait');
 c.scene=null;run("showDialoguePortrait('Corin')");
 assert.equal(face.style.display,'block','Portraits resume outside hatching');
+
+assert.notEqual(run("portraitFor('Miner Marn').id"),run("portraitFor('Toft').id"));
+assert.notEqual(run("portraitFor('Miner Marn').id"),run("portraitFor('Miner Nerik').id"));

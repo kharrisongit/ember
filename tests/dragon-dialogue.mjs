@@ -11,7 +11,7 @@ const element=()=>({style:{},dataset:{},children:[],attributes:{},
 const c=vm.createContext({
   TS:16,templeCompass:{owned:true},millwoodDepartureArea:()=>({x0:0,y0:404,x1:62,y1:453}),
   gameplayStarted:true,MAPID:'world',MD:{},P:{x:872,y:6050,dir:'d',moving:true},MAD_DOOR:[872,5984],
-  dragon:{on:true,x:850,y:6050,moving:true},hasDragon:()=>true,dragonHere:()=>c.MAPID==='world'||c.MAPID==='tp1',
+  dragon:{on:true,x:850,y:6050,moving:true,introOrigin:[872,6050]},hasDragon:()=>true,dragonHere:()=>c.MAPID==='world'||c.MAPID==='tp1',
   sceneHold:()=>!!pendingScene,hatchCamera:null,sayNpc:null,fadeDir:0,doorMotion:null,pendingDoor:null,editing:false,ovl:null,ride:false,arenaLock:null,
   faceCorinAt(){},playScene:(lines,options)=>{pendingScene={lines,...options};},setOvl:m=>{menu=m;},saveGame:()=>saves++,
   inFight:()=>false,wonAll:false,cinderSeal:false,brambleQuest:0,mode:'play',ask:null,bagOpen:false,atlasOpen:false,fishing:null,deadShown:false,foes:[],
@@ -23,12 +23,12 @@ run(read('js/dragon-dialogue.js'));
 const tick=(dt=.05)=>run(`stepDragonBanter(${dt})`);
 const clear=()=>{run('resetDragonBanter();dragonBanterGap=0');pendingScene=null;place=null;c.foes=[];};
 const active=()=>run('dragonBanterActive');
-// Nan first; then the eastbound road, six tiles beyond the town boundary.
+// The introduction begins when leaving the elder's hatch clearing, before Nan.
 place='Millwood';tick();assert.equal(active(),null);
-c.P.x=60*16;c.P.y=430*16;assert.equal(run('stepDragonIntroduction()'),false,'No introduction inside Millwood');
-c.P.x=80*16;c.templeCompass.owned=false;assert.equal(run('stepDragonIntroduction()'),false,'Nan must give the compass first');
-c.templeCompass.owned=true;c.P.x=68*16-1;assert.equal(run('stepDragonIntroduction()'),false,'Wait six tiles after leaving town');
-c.P.x=68*16;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
+c.templeCompass.owned=false;
+c.P.x=872;c.P.y=6050;assert.equal(run('stepDragonIntroduction()'),false,'No interruption at hatch position');
+c.P.y=6097;assert.equal(run('stepDragonIntroduction()'),false,'Allow three tiles before speaking');
+c.P.y=6098;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
 c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
 assert.equal(run('stepDragonIntroduction()'),true);
 assert.match(pendingScene.lines[0],/voice.*inside your head/);

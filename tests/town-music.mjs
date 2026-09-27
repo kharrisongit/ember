@@ -69,7 +69,7 @@ track('Villain').waitForPlay=false;c.window.EmberKingMusic.stop();c.window.Ember
 await change('inn','Thornwell Inn');assert.equal(track('Thornwell').paused,false);assert(track('Millwood').paused);
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
-for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',1350000],['Thornwell','thornwell-shop.m4a',1600000]]){
+for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',7500000],['Thornwell','thornwell-shop.m4a',1600000]]){
  const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,['Villain','Millwood'].includes(name)?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }

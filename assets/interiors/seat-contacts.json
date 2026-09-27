@@ -341,6 +341,36 @@
       "width": 19,
       "bottom": 20,
       "center": 0.0
+    },
+    "villager_seated_unique_fara": {
+      "height": 24,
+      "width": 24,
+      "bottom": 23,
+      "center": 0.0
+    },
+    "villager_seated_unique_kellan": {
+      "height": 24,
+      "width": 24,
+      "bottom": 23,
+      "center": -0.5
+    },
+    "villager_seated_unique_osric": {
+      "height": 24,
+      "width": 24,
+      "bottom": 23,
+      "center": -0.5
+    },
+    "villager_seated_unique_alder": {
+      "height": 24,
+      "width": 24,
+      "bottom": 23,
+      "center": 0.0
+    },
+    "villager_seated_unique_gwyneth": {
+      "height": 24,
+      "width": 24,
+      "bottom": 23,
+      "center": -0.5
     }
   },
   "tables": {

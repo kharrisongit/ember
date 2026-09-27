@@ -35,19 +35,19 @@ console.log('PASS: Nan’s heirloom, family history, dormant ownership, transiti
 
 Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
  W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null},
- clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
+ pendingActorStage:null,cam:{x:0,y:0,z:1},VW:400,VH:300,clampCam(){},faceCorinAt(){},refreshWingBtn(){},standableNear:(x,y)=>[x,y],clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
+const finishBlackout=()=>{assert.equal(c.fadeDir,1);assert.equal(typeof c.pendingActorStage,'function');c.fade=1;c.fadeDir=0;const stage=c.pendingActorStage;c.pendingActorStage=null;stage();c.fadeDir=-1;assert.equal(c.scene.hold(),false,'No approach behind fade');c.fade=0;c.fadeDir=0;c.scene.hold();};
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
-c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
+c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();finishBlackout();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 assert.equal(run('templeCompass.owned'),false,'gift waits for the encounter to finish');c.scene.after();assert.equal(run('templeCompass.owned'),true);
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
 
 c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};
-c.stepNanDeparture();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr.kind,'down');
-[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),false,'Conversation waits for landing');
-c.dragon.tr=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
+c.stepNanDeparture();assert.equal(c.mounted,true,'Dismount is hidden until full black');finishBlackout();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr,null,'No visible landing animation');
+[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
 
 // Entering the town boundary or passing the house must not freeze Corin.
@@ -60,7 +60,7 @@ for(const [x,y]of [[30,397],[30,407],[60,425],[67,430],[14,420]]){
 for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
  c.restoreFatherCompass();c.scene=null;c.npcs=[];c.prepareNanDeparture();
  const waiting=c.npcs[0];assert(Math.hypot(waiting.x-31*16,waiting.y-428.5*16)<=3*16,'Nan waits near the center');
- c.P={x:x*16,y:y*16};c.stepNanDeparture();assert(c.scene,'Plaza triggers farewell');
+ c.P={x:x*16,y:y*16};c.stepNanDeparture();finishBlackout();assert(c.scene,'Plaza triggers farewell');
  assert(Math.hypot(waiting.goto[0]-waiting.x,waiting.goto[1]-waiting.y)<90,'Nan has only a short approach');
 }
 console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza with a short walk.');

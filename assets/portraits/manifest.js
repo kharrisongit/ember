@@ -654,5 +654,15 @@ const DIALOGUE_PORTRAITS = {
     "id": 132,
     "pack": 7,
     "cell": 12
+  },
+  "Miner Marn": {
+    "id": 134,
+    "pack": 8,
+    "cell": 1
+  },
+  "Miner Nerik": {
+    "id": 135,
+    "pack": 8,
+    "cell": 2
   }
 };

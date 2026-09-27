@@ -4,7 +4,7 @@ const PORTRAIT_ALIASES = {
   Bram:'Serjeant Bram', Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
   Halvard:'King Halvard', King:'King Halvard', Rowan:'Rowan the Hunter',
   Iven:'Master Iven', Elowen:'Archivist Elowen', 'Shroom King':'The Shroom King',
-  'Cartwright Oswin':'Bevan','Miner Marn':'Toft','Miner Nerik':'Toft','Snowbuilder Nessa':'Runa',
+  'Cartwright Oswin':'Bevan','Snowbuilder Nessa':'Runa',
   Dragon:'Aurelius', Knight:'Doran', 'Royal Guard':'Serjeant Bram'
 };
 const PORTRAIT_RENAMES = {
@@ -49,7 +49,7 @@ function loadPortraitPack(pack) {
   if(portraitPackPromises.has(pack))return portraitPackPromises.get(pack);
   const promise=new Promise(resolve=>{
     const script=document.createElement('script');
-    script.src='assets/portraits/pack-'+pack+'.js?v=20260926-full-shoulders';
+    script.src='assets/portraits/pack-'+pack+'.js?v=20260927-cast-final';
     script.async=true;
     script.onerror=()=>{portraitPackPromises.delete(pack);script.remove();resolve(null);};
     script.onload=()=>{

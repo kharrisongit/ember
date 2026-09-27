@@ -54,11 +54,11 @@ function prepareJourneyGates(){
   npcs.push(journeyWorker('Miner Marn','npc_miner_mike_d','forgewick',fw.x-42,fw.y+29,[
     'Miner Marn: A cart tipped across the road and brought half the bank down with it. We are clearing it now.',
     'Miner Marn: Dunstan and Sela can see to your gear while we finish here. Mind the old temple road, though.'
-  ],'Toft'));
+  ]));
   npcs.push(journeyWorker('Miner Nerik','npc_miner_mike_d','forgewick',fw.x-40,fw.y-31,[
     'Miner Nerik: One stone at a time. Pull the wrong one and we start all over.',
     'Miner Nerik: We will have the carts shifted before long.'
-  ],'Toft'));
+  ]));
   npcs.push(journeyWorker('Snowbuilder Nessa','winter_npc_1','hollybeck',hb.x-50,hb.y+8,[
     'Snowbuilder Nessa: I meant to build one. Then it looked lonely.',
     'Snowbuilder Nessa: Now there is a whole family in the road. Let me finish their faces and I will move them to the square.'

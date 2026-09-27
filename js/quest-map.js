@@ -45,7 +45,10 @@ function atlasQuestOptions(){
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.');
  if(dragonLearned('smith')&&!smithUpgrade)add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
  if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in the glass shop about her shield.');
+ if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
+ if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','Unlock summoning: Book of the Dead','Hollybeck Graveyard','Defeat every wave of ghosts and claim the Book of the Dead to summon two allied wraiths in battle.');
  for(const {n,map} of dragonGiftLeads()){
+  if(n.charm==='lamp'&&dragonLearned('lantern'))continue;
   const place=atlasPlaceFor(map,n);
   if(place)add('gift:'+n.charm,n.n+'’s gift',place,'Return to '+n.n+' and finish the conversation about their gift.');
  }

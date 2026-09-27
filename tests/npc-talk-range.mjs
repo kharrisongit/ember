@@ -5,11 +5,12 @@ const game=fs.readFileSync(new URL('../js/generated/game-part-2.js',import.meta.
 const c=vm.createContext({P:{x:0,y:0},MD:{roomActors:[]},SPR:{},npcs:[],npcHere:()=>true,lastFight:false,MAPID:'world'});
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('function npcTalkDistance('),game.indexOf('function arrangeNpcCast(')));
-const selection=game.slice(game.indexOf('  let best = null, bd = 23;'),game.indexOf('  if (best && tryBrambleReunion'));
-const pick=()=>run('(function(){'+selection+'\nreturn best;})()');
+const pick=()=>run('nearestTalkNpc()');
 c.npcs=[{n:'Villager',x:28,y:0}];assert.equal(pick(),null,'old long range no longer starts a talk');
 c.npcs[0].x=22;assert.equal(pick().n,'Villager','nearby NPC remains reachable');
 c.npcs=[{n:'Shopkeeper',x:0,y:-60,talkX:0,talkY:0}];c.P.y=22;
 assert.equal(pick().n,'Shopkeeper','accessible counter anchor stays usable');c.P.y=28;assert.equal(pick(),null);
 assert.match(game,/m && npcTalkDistance\(m\) < \(r \|\| 23\)/,'quest conversations respect counter anchors and close range');
+c.P={x:240,y:235};c.npcs=[{n:'Ser Anwen',x:286,y:256,talkX:260,talkY:238},{n:'Rowan the Hunter',x:240,y:220}];assert.equal(pick().n,'Rowan the Hunter','Offset talk anchor cannot steal Rowan’s close interaction');
+c.npcs[0].talkX=306;c.npcs[0].talkY=260;c.P={x:306,y:278};assert.equal(pick().n,'Ser Anwen','Anwen remains reachable beside his own chair');
 console.log('PASS: NPCs require close range while seats, counters and quest talk retain accessible anchors.');

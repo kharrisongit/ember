@@ -1898,6 +1898,26 @@ function fishingRodDialogue(name,n){
   ];
 }
 
+const LIBRARY_QUEST_HINTS={
+  Mira:{title:"Torvald's lantern for the mines",lines:[
+    "Mira: Torvald's special lantern lets you see in the dark mine galleries. He left it with Sverre in Hollybeck. Speak with Sverre to get the Hollybeck Lantern before exploring the deep mines.",
+    "Corin: So I should visit Hollybeck before going farther underground?",
+    "Mira: Yes. Find Sverre in Hollybeck and ask for Torvald's lantern. Once you have it, carry it into the mines; its light never goes out."]},
+  Oren:{title:'Defeat the graveyard ghosts to unlock summoning',lines:[
+    "Oren: Defeat every wave of ghosts in the graveyard northwest of Hollybeck to earn the Book of the Dead. That book unlocks summoning: you can call two wraiths to fight for you.",
+    "Corin: Do I have to clear the whole graveyard?",
+    "Oren: All the waves. Do not leave after the first fight. Finish them, claim the Book of the Dead, and you can summon allies in battle without equipping a charm."]},
+  Tamsin:{title:"Maelis's protective ward",lines:[
+    "Tamsin: Maelis has a protective ward for travellers. Visit her in Witchmoor, north of Dreadmarsh, and speak with her to receive it.",
+    "Corin: What does the ward do?",
+    "Tamsin: Wear Maelis's ward to reduce the harm enemies do to you. She also sells bombs if you bring coin."]},
+  Brin:{title:'Find the three elemental Heartstones',lines:[
+    "Brin: Explore the old temples and claim their Heartstones to teach Aurelius new breath attacks.",
+    "Corin: Which temples should we look for?",
+    "Brin: The temple southeast of Forgewick holds Lightning. Sandspire's temple to the southeast holds Ice. The temple northeast of Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
+};
+function libraryQuestHint(n){return LIBRARY_QUEST_HINTS[n.n]||null;}
+
 function npcStoryGiftPending(n){
   return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
     (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
@@ -1955,7 +1975,7 @@ function openNpcTopics(n){
     playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
-    {n:n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?',go:()=>beginNpcTalk(n,true)},
+    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?'),go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;

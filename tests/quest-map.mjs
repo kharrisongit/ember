@@ -34,3 +34,9 @@ assert.equal(vm.runInContext('atlasMainObjective().place',c),'Hollybeck Temple')
 vm.runInContext('breathHas.shadow=true',c);
 assert.equal(vm.runInContext('atlasMainObjective().place',c),'Cinderhold Castle');
 console.log('PASS: opening and journey destinations, learned-only side quests, completion removal and world gift locations.');
+
+vm.runInContext("learned.add('lantern');learned.add('graveyard')",c);
+assert(vm.runInContext("atlasQuestOptions().some(q=>q.id==='gift:lamp'&&q.place==='Hollybeck'&&/Sverre/.test(q.detail))",c));
+assert(vm.runInContext("atlasQuestOptions().some(q=>q.id==='graveyard'&&q.place==='Hollybeck Graveyard'&&/summon/.test(q.detail))",c));
+vm.runInContext('charm.lamp=true;charm.wake=true',c);
+assert(!vm.runInContext("atlasQuestOptions().some(q=>q.id==='gift:lamp'||q.id==='graveyard')",c));

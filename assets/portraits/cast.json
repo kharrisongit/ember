@@ -173,7 +173,7 @@
   },
   {
     "name": "Linna",
-    "sprite": "guild_citizen2_idle_d",
+    "sprite": "pack_girl",
     "maps": [
       "world"
     ],
@@ -493,7 +493,7 @@
   },
   {
     "name": "Fara",
-    "sprite": "villager_seated_common_a6_1",
+    "sprite": "villager_seated_unique_fara",
     "maps": [
       "house06"
     ],
@@ -533,7 +533,7 @@
   },
   {
     "name": "Kellan",
-    "sprite": "villager_seated_common_a6_4",
+    "sprite": "villager_seated_unique_kellan",
     "maps": [
       "house11"
     ],
@@ -683,7 +683,7 @@
   },
   {
     "name": "Greta",
-    "sprite": "guild_fighter2_idle_d",
+    "sprite": "greta_idle",
     "maps": [
       "mine"
     ],
@@ -693,7 +693,7 @@
   },
   {
     "name": "Osric",
-    "sprite": "villager_seated_common_b6_3",
+    "sprite": "villager_seated_unique_osric",
     "maps": [
       "house30"
     ],
@@ -703,7 +703,7 @@
   },
   {
     "name": "Alder",
-    "sprite": "villager_seated_common_b6_4",
+    "sprite": "villager_seated_unique_alder",
     "maps": [
       "house31"
     ],
@@ -713,7 +713,7 @@
   },
   {
     "name": "Gwyneth",
-    "sprite": "villager_seated_common_b6_0",
+    "sprite": "villager_seated_unique_gwyneth",
     "maps": [
       "house31"
     ],
@@ -1310,5 +1310,25 @@
     "id": 132,
     "pack": 7,
     "cell": 12
+  },
+  {
+    "id": 134,
+    "name": "Miner Marn",
+    "sprite": "npc_miner_mike_d",
+    "maps": [
+      "world"
+    ],
+    "pack": 8,
+    "cell": 1
+  },
+  {
+    "id": 135,
+    "name": "Miner Nerik",
+    "sprite": "npc_miner_mike_d",
+    "maps": [
+      "world"
+    ],
+    "pack": 8,
+    "cell": 2
   }
 ]

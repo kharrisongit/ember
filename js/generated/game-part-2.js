@@ -846,6 +846,23 @@ function npcTalkDistance(n){
   }
   return distance;
 }
+function nearestTalkNpc(){
+  const eligible=n=>npcHere(n)&&!n.noTalk&&!(lastFight&&MAPID==='cinderhold'&&/Halvard/.test(n.n||''));
+  let best=null,bd=23;
+  for(const n of npcs){
+    if(!eligible(n))continue;
+    const d=Math.hypot(n.x-P.x,n.y-P.y);
+    if(d<bd){bd=d;best=n;}
+  }
+  if(best)return best;
+  bd=23;
+  for(const n of npcs){
+    if(!eligible(n))continue;
+    const d=npcTalkDistance(n);
+    if(d<bd){bd=d;best=n;}
+  }
+  return best;
+}
 function arrangeNpcCast(){
   const outsideLooks=new Map(W.maps.world.npcs.map(n=>[n.n,{...n}]));
   const seatIds=[1,2,6,8,11,12,13];
@@ -1008,6 +1025,8 @@ function arrangeNpcCast(){
   reserveMillwoodCast();
   finishTownCast();
   repairSeating();
+  const greta=W.maps.mine?.npcs.find(n=>n.n==='Greta');
+  if(greta)Object.assign(greta,{packSpr:'greta_idle',lookId:'greta_idle',packDirections:false,packWalk:false,stationary:true,sk:undefined,body:undefined,patrol:undefined,goto:undefined});
   // Generated table portraits belong indoors; keep outdoor residents standing.
   for(const n of W.maps.world.npcs){
     if(!n.seated&&!/^(?:seated_body_|pack_pupil_|villager_seated_)/.test(n.packSpr||''))continue;
@@ -1040,6 +1059,13 @@ function villagerIdleFrame(o,t,frames){
   return frame%frames;
 }
 function finishTownCast(){
+  // Each resident owns the sprite matched to their existing portrait.
+  const uniqueResidents={"Fara": "villager_seated_unique_fara", "Kellan": "villager_seated_unique_kellan", "Osric": "villager_seated_unique_osric", "Alder": "villager_seated_unique_alder", "Gwyneth": "villager_seated_unique_gwyneth"};
+  SPR.villager_seated_unique_fara=[0,1101080,24,24,4];
+  SPR.villager_seated_unique_kellan=[0,1101104,24,24,4];
+  SPR.villager_seated_unique_osric=[0,1101128,24,24,4];
+  SPR.villager_seated_unique_alder=[0,1101152,24,24,4];
+  SPR.villager_seated_unique_gwyneth=[0,1101176,24,24,4];
   const world=W.maps.world;
   // Bryn is retired; Ada now appears only in her own Thornwell home.
   world.npcs=world.npcs.filter(n=>n.n!=='Bryn'&&n.n!=='Ada'&&n.n!=='Ember');
@@ -1052,6 +1078,7 @@ function finishTownCast(){
     return id;
   };
   const regionalCast = {"common":[{"key":"villager_seated_common_a6_0","sex":"female","species":"human"},{"key":"villager_seated_common_a6_1","sex":"female","species":"human"},{"key":"villager_seated_common_a6_2","sex":"female","species":"human"},{"key":"villager_seated_common_a6_3","sex":"male","species":"human"},{"key":"villager_seated_common_a6_4","sex":"male","species":"human"},{"key":"villager_seated_common_a6_5","sex":"male","species":"human"},{"key":"villager_seated_common_b6_0","sex":"female","species":"human"},{"key":"villager_seated_common_b6_1","sex":"female","species":"human"},{"key":"villager_seated_common_b6_2","sex":"female","species":"human"},{"key":"villager_seated_common_b6_3","sex":"male","species":"human"},{"key":"villager_seated_common_b6_4","sex":"male","species":"human"},{"key":"villager_seated_common_b6_5","sex":"male","species":"human"},{"key":"villager_seated_common_c6_0","sex":"female","species":"human"},{"key":"villager_seated_common_c6_1","sex":"female","species":"human"},{"key":"villager_seated_common_c6_2","sex":"male","species":"human"},{"key":"villager_seated_common_c6_3","sex":"male","species":"human"},{"key":"villager_seated_common_c6_4","sex":"male","species":"human"},{"key":"villager_seated_common_c6_5","sex":"male","species":"human"},{"key":"villager_seated_common_d6_0","sex":"female","species":"human"},{"key":"villager_seated_common_d6_1","sex":"male","species":"human"},{"key":"villager_seated_common_d6_2","sex":"male","species":"human"},{"key":"villager_seated_common_d6_3","sex":"male","species":"human"},{"key":"villager_seated_common_d6_4","sex":"male","species":"goblin"},{"key":"villager_seated_common_d6_5","sex":"male","species":"orc"}],"desert":[{"key":"villager_seated_desert_a5_0","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_1","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_2","sex":"female","species":"human"},{"key":"villager_seated_desert_a5_3","sex":"male","species":"human"},{"key":"villager_seated_desert_a5_4","sex":"male","species":"human"},{"key":"villager_seated_desert_b4_0","sex":"female","species":"lizard"},{"key":"villager_seated_desert_b4_1","sex":"female","species":"human"},{"key":"villager_seated_desert_b4_2","sex":"male","species":"lizard"},{"key":"villager_seated_desert_b4_3","sex":"male","species":"human"}],"coast":[{"key":"villager_seated_coast_a4_0","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_1","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_2","sex":"female","species":"human"},{"key":"villager_seated_coast_a4_3","sex":"male","species":"human"},{"key":"villager_seated_coast_b3_0","sex":"female","species":"human"},{"key":"villager_seated_coast_b3_1","sex":"female","species":"human"},{"key":"villager_seated_coast_b3_2","sex":"male","species":"human"}],"snow":[{"key":"villager_seated_snow5_0","sex":"female","species":"human"},{"key":"villager_seated_snow5_1","sex":"female","species":"human"},{"key":"villager_seated_snow5_2","sex":"female","species":"human"},{"key":"villager_seated_snow5_3","sex":"male","species":"human"},{"key":"villager_seated_snow5_4","sex":"male","species":"human"}]};
+  const establishedResidents={"Ada": "villager_seated_common_a6_1", "Bren": "villager_seated_common_a6_4", "Berta": "villager_seated_common_c6_0", "Fara": "villager_seated_common_a6_1", "Hester": "villager_seated_coast_a4_1", "Junia": "villager_seated_common_a6_2", "Kellan": "villager_seated_common_a6_4", "Lysa": "villager_seated_common_b6_0", "Cinder": "villager_seated_common_a6_5", "Warden": "villager_seated_common_b6_3", "Ember": "villager_seated_common_b6_4", "Dagna": "villager_seated_common_b6_1", "Lode": "villager_seated_common_b6_5", "Pike": "villager_seated_common_c6_2", "Hallow": "villager_seated_common_c6_3", "Quarrel": "villager_seated_common_c6_4", "Flint": "villager_seated_common_c6_5", "Osric": "villager_seated_common_b6_3", "Alder": "villager_seated_common_b6_4", "Gwyneth": "villager_seated_common_b6_0", "Mattock": "villager_seated_common_d6_1", "Kiln": "villager_seated_common_d6_2", "Petra": "villager_seated_desert_a5_0", "Raff": "villager_seated_desert_a5_3", "Suri": "villager_seated_desert_a5_1", "Tavin": "villager_seated_desert_a5_4", "Una": "villager_seated_desert_a5_2", "Vela": "villager_seated_desert_b4_0", "Wystan": "villager_seated_desert_b4_2", "Rania": "villager_seated_desert_b4_1", "Latif": "villager_seated_desert_b4_3", "Yara": "villager_seated_coast_a4_2", "Bry": "villager_seated_coast_b3_2", "Coral": "villager_seated_coast_b3_0", "Edda": "villager_seated_snow5_1", "Fennel": "villager_seated_snow5_3", "Bjorn": "villager_seated_snow5_4", "Cap": "villager_seated_common_a6_3", "Ilsa": "villager_seated_common_a6_0", "Celia": "villager_seated_common_b6_2", "Ivo": "villager_seated_common_d6_4", "Merrin": "villager_seated_common_d6_5", "Zella": "villager_seated_coast_b3_1", "Iris": "villager_seated_snow5_2"};
   // Keep the house residents' established portraits after removing the outdoor seats.
   const counts=new Map([
     ['Thornwell',new Set(['villager_seated_common_a6_0','villager_seated_common_a6_3','villager_seated_common_b6_1'])],
@@ -1065,7 +1092,8 @@ function finishTownCast(){
     const region=town==='Sandspire'?'desert':town==='Coralmere'?'coast':town==='Hollybeck'?'snow':'common';
     const pool=regionalCast[region].filter(s=>town!=='Thornwell'||s.species==='human');
     const sex=women.has(n.n)?'female':'male';
-    const actor=pool.find(s=>s.sex===sex&&!used.has(s.key));
+    const owned=uniqueResidents[n.n]||establishedResidents[n.n];
+    const actor=owned?{key:owned}:pool.find(s=>s.sex===sex&&!used.has(s.key));
     if(!actor)throw Error('Regional seated cast exhausted for '+n.n+' in '+town);
     used.add(actor.key);
     Object.assign(n,{packSpr:actor.key,lookId:actor.key,
@@ -1219,10 +1247,11 @@ function repairSeating(){
   }
   const linna=world.npcs.find(n=>n.n==='Linna');
   if(linna)Object.assign(linna,{
-    // The previous pack_girl sheet only waves; use the authored four-direction cast.
-    packSpr:'guild_citizen2',lookId:'guild_citizen2',packDirections:true,packWalk:true,
-    stationary:false,patrol:true,patrolPoints:[[4288,1664],[4288,1536]],
-    goto:undefined,sk:undefined,body:undefined,idleFrame:undefined,idleFps:6
+    // Restore Linna's own woman sprite. Its first pose is a resting idle;
+    // the remaining frames wave and must not be used as a walking cycle.
+    packSpr:'pack_girl',lookId:'pack_girl',packDirections:false,packWalk:false,
+    stationary:true,patrol:undefined,patrolPoints:undefined,
+    goto:undefined,sk:undefined,body:undefined,idleFrame:0,idleFps:0
   });
   const wren=world.npcs.find(n=>n.n==='Wren');
   if(wren){
@@ -1335,7 +1364,7 @@ function restoreTavernCast(){
     ['Bess',9,240,128,240,150],['Ronan',6,208,144,224,148],
     ['Venn',7,80,176,64,190],['Hobb',8,160,184,144,168],
     ['Edric',10,120,272,134,266],['Dorr',11,416,240,440,240],
-    ['Ser Anwen',12,280,256,260,238],['Grusk',13,388,272,388,230],
+    ['Ser Anwen',12,280,256,300,260],['Grusk',13,388,272,388,230],
     ['Fen',14,184,192,220,190],
     ['Senn',16,304,256,318,236],['Dain',17,360,280,345,278],
     ['Rusk',18,144,176,131,193],['Linnet',19,256,176,256,196],
@@ -1353,7 +1382,10 @@ function restoreTavernCast(){
   // Keep the user's tavern arrangement; align Hobb's arms with the tabletop.
   for(const [i,x,y]of [[17,374,272],[23,407,273],[12,286,256],
     [20,201,208],[8,158,182],[18,127,177]]){
-    const a=m.roomActors.find(a=>a.spr==='tavern_anim_'+i);a.x=x;a.y=y;
+    const a=m.roomActors.find(a=>a.spr==='tavern_anim_'+i);
+    const n=m.npcs.find(n=>n.lookId===a.spr);
+    if(n){n.talkX+=x-n.x;n.talkY+=y-n.y;n.x=x;n.y=y;}
+    a.x=x;a.y=y;
   }
   m.roomActors.push({spr:'stump_stool',x:210,y:140,sy:143,schoolArt:true,
     sceneReserved:true,editKey:'tavern:ronan_stool'});
@@ -2033,6 +2065,27 @@ function restoreOverworld(state, fresh) {
   return true;
 }
 
+function prepareGlassShopInteractions(map,id){
+  if(id==='glasswork'){
+    const master=map.roomActors?.find(a=>a.spr==='glassnew_anim_4');
+    const sela=map.npcs?.find(n=>n.n==='Sela');
+    if(master&&sela){
+      // The master and table share a sheet. Block the whole tabletop, including
+      // its southern edge, so Corin cannot walk underneath its painted front.
+      if(!master._glassTableBlock){
+        master.moveBlocks ||= [];
+        master.moveBlocks.push((map.roomBlocks ||= []).push([master.x-29,master.y-25,master.x+29,master.y])-1);
+        master._glassTableBlock=true;
+      }
+      sela.talkX=master.x;sela.talkY=master.y+10;
+    }
+  }else if(id==='glasshouse'){
+    const counter=map.roomActors?.find(a=>a.n==='glass counter'||a.n==='glass-counter');
+    const keeper=map.npcs?.find(n=>n.n==='Maren'||n.n==='Meriel');
+    if(keeper){keeper.talkX=keeper.x;keeper.talkY=counter?counter.y+10:132;}
+  }
+}
+
 function loadMap(id, fresh, discardDraft=false) {
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
   if(!W.maps[id])throw new Error('no such map: '+id);
@@ -2041,6 +2094,7 @@ function loadMap(id, fresh, discardDraft=false) {
   editorDraftReady=false;editorMapLoading=true;
   if(typeof prepareEditorEntities==='function')prepareEditorEntities(W.maps[id],id);
   if(typeof prepareMarketNpcCast==='function')prepareMarketNpcCast(W.maps[id],id);
+  prepareGlassShopInteractions(W.maps[id],id);
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
   chestAnim = null;
@@ -2065,6 +2119,7 @@ function loadMap(id, fresh, discardDraft=false) {
   }
   if(typeof prepareLocalNpcPlacements==='function')prepareLocalNpcPlacements(MD,id,savedEditorState);
   applyActorLayout(MD,id);
+  prepareGlassShopInteractions(MD,id);
   // Apply conversations after published additions and local transfers are restored.
   if(typeof prepareMarketNpcRoles==='function')prepareMarketNpcRoles(MD,id);
   if(typeof preparePlacedNpcDialogue==='function')preparePlacedNpcDialogue(MD);
@@ -2553,11 +2608,27 @@ function drawPixelImage(g,img,sx,sy,sw,sh,dx,dy,dw,dh){
   if(g.imageSmoothingEnabled===false&&dw>0&&dh>0&&g.getTransform){
     const m=g.getTransform();
     if(!m.b&&!m.c&&m.a&&m.d){
-      const left=Math.round(dx*m.a+m.e),right=Math.round((dx+dw)*m.a+m.e);
-      const top=Math.round(dy*m.d+m.f),bottom=Math.round((dy+dh)*m.d+m.f);
-      const width=Math.abs(right-left),height=Math.abs(bottom-top);
+      let left=Math.round(dx*m.a+m.e),right=Math.round((dx+dw)*m.a+m.e);
+      let top=Math.round(dy*m.d+m.f),bottom=Math.round((dy+dh)*m.d+m.f);
+      let width=Math.abs(right-left),height=Math.abs(bottom-top);
       if(!width||!height)return;
-      if(left!==dx*m.a+m.e||right!==(dx+dw)*m.a+m.e||top!==dy*m.d+m.f||bottom!==(dy+dh)*m.d+m.f){
+      let clipped=false;
+      if(g.canvas){
+        // Submit only the visible slice when scenery crosses a canvas edge.
+        // In particular, keep the remaining canopy/flowers drawing after their
+        // destination origin has passed the left edge of the screen.
+        const l=Math.max(0,Math.min(left,right)),r=Math.min(g.canvas.width,Math.max(left,right));
+        const t=Math.max(0,Math.min(top,bottom)),b=Math.min(g.canvas.height,Math.max(top,bottom));
+        if(r<=l||b<=t)return;
+        if(r-l<width||b-t<height){
+          sx+=(m.a>0?l-left:left-r)*sw/width;
+          sy+=(m.d>0?t-top:top-b)*sh/height;
+          sw*= (r-l)/width;sh*= (b-t)/height;
+          left=m.a>0?l:r;top=m.d>0?t:b;
+          width=r-l;height=b-t;clipped=true;
+        }
+      }
+      if(clipped||left!==dx*m.a+m.e||right!==(dx+dw)*m.a+m.e||top!==dy*m.d+m.f||bottom!==(dy+dh)*m.d+m.f){
         // Draw directly in device pixels. Converting back into large world
         // coordinates loses precision again near the eastern end of the map.
         g.setTransform(Math.sign(m.a),0,0,Math.sign(m.d),left,top);
@@ -3554,7 +3625,11 @@ function frameOf(nameIdx, t, seed) {
   const d = DEFS[nameIdx];
   if (!d || !d.f) return 0;
   const rate = d.fj ? d.f * (1 + d.fj * (((seed % 1) + 1) % 1)) : d.f;
-  return Math.floor(t * rate + (d.s0 !== undefined ? d.s0 : seed)) | 0;
+  const frames=SPR[NAMES[nameIdx]]?.[4]||1;
+  const frame=Math.floor(t * rate + (d.s0 !== undefined ? d.s0 : seed));
+  // Procedural scenery has negative IDs. JavaScript's remainder otherwise
+  // samples before its sprite strip, producing missing or unrelated artwork.
+  return ((frame%frames)+frames)%frames;
 }
 
 const PLAY_ACROSS = 14;    /* world tiles visible across */
@@ -3583,6 +3658,13 @@ let stroke = null;            /* tiles touched by the stroke in progress */
 let undoStack = [];
 const UNDO_LIMIT = 40;
 let mapDirty = true;
+
+function worldArtVisible(x,y,w,h,vw,vh){
+  // Include the full drawn rectangle, with one device-independent screen pixel
+  // for snapped edges. The anchor may be outside while a canopy is still visible.
+  const pad=1/cam.z;
+  return x+w>=cam.x-pad&&x<=cam.x+vw+pad&&y+h>=cam.y-pad&&y<=cam.y+vh+pad;
+}
 
 function drawWorld(t, dt) {
   const z = cam.z;
@@ -3679,8 +3761,7 @@ function drawWorld(t, dt) {
       for (let i = 0; i < b.length; i += 3) {
         const s = SPR[NAMES[b[i]]], px = b[i + 1], py = b[i + 2];
         if (!s) continue;
-        if (px + (s[2] >> 1) < cam.x || px - (s[2] >> 1) > cam.x + vw ||
-            py < cam.y || py - s[3] > cam.y + vh) continue;
+        if(!worldArtVisible(px-(s[2]>>1),py-s[3],s[2],s[3],vw,vh))continue;
         if (!scatterFits(px, py, NAMES[b[i]])) continue;
         const d = DEFS[b[i]];
         const f = Math.floor(t * (d && d.f ? d.f : 6) + ((px * 7 + py * 13) % 8)) % s[4];
@@ -3723,8 +3804,8 @@ function drawWorld(t, dt) {
       const oxw = o.wx || 0, oyw = o.wy || 0;
       const market=isVillageMarketStand(o);
       const artW=market?Math.round(s[2]*villageStandSize().scale):s[2],artH=market?Math.round(s[3]*villageStandSize().scale)+villageStandSize().headroom:s[3];
-      if (o.x + oxw + artW / 2 < cam.x || o.x + oxw - artW / 2 > cam.x + vw) continue;
-      if (o.y + oyw < cam.y || o.y + oyw - artH > cam.y + vh) continue;
+      const artX=Math.round(o.x+oxw-artW/2),artY=Math.round(o.y+oyw-artH+(DEFS[o.s]?.o||0));
+      if(!worldArtVisible(artX,artY,artW,artH,vw,vh))continue;
       const wd = DEFS[o.s];
       if (wd && wd.wd && !editing) wanderStep(o, wd, dt);
       draw.push(o);
@@ -6315,11 +6396,10 @@ let dragonJourneyEnded=false;
 function stepDragonIntroduction(){
   if(dragonIntroDone||!hasDragon()||!dragonHere()||!dragon.on||MAPID!=='world')return false;
   if(sceneHold()||hatchCamera||sayNpc||fadeDir||doorMotion||pendingDoor||editing||ovl||ride||arenaLock||!P.moving)return false;
-  // Nan's farewell comes first. Aurelius speaks on the eastbound journey,
-  // six tiles beyond Millwood, never beside Maddock or inside town.
-  if(!templeCompass.owned)return false;
-  const town=millwoodDepartureArea();
-  if(!town||P.x<(town.x1+6)*TS)return false;
+  // Speak as Corin leaves Maddock's clearing after the hatch and walk-off.
+  // The fixed fallback also works when loading an older save before the intro.
+  const origin=dragon.introOrigin||[SPOT.elder[0]*TS,SPOT.elder[1]*TS];
+  if(Math.hypot(P.x-origin[0],P.y-origin[1])<3*TS)return false;
   dragonIntroArmed=true;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);
@@ -10999,14 +11079,7 @@ function interact() {
     }
     return;
   }
-  let best = null, bd = 23; // Step close to the person or the accessible counter edge.
-  for (const n of npcs) {
-    if (!npcHere(n)) continue;
-    if (n.noTalk) continue;
-    if (lastFight && MAPID === "cinderhold" && /Halvard/.test(n.n || "")) continue;
-    const d = npcTalkDistance(n);
-    if (d < bd) { bd = d; best = n; }
-  }
+  const best=nearestTalkNpc();
   if (best && tryBrambleReunion(best)) return;
   if (best && petCompanion(best)) return;
   if (best && best.pettable) return;
@@ -11080,6 +11153,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         "Corin: I will keep it burning.",
         best.n + ": I think it will see to that on its own."];
     }
+    else if(typeof libraryQuestHint==='function'&&libraryQuestHint(best))sayNpc.said=libraryQuestHint(best).lines;
     else sayNpc.said = npcContextDialogue(best, alt);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);
     typeStart(w0, t0);

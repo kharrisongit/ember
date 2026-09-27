@@ -154,7 +154,13 @@ function rememberDragonKnowledge(who,text,persist=true){
   if(/fishing|\brod\b|\bpole\b/i.test(words)&&/Odo|Calder/i.test(who+' '+words))learn('fishing');
   if(/Dunstan/i.test(who+' '+words)&&/blade|armour|armor|blacksmith|sword|smith/i.test(words))learn('smith');
   if(/Sela/i.test(who+' '+words)&&/shield|glass|protect/i.test(words))learn('shield');
-  if(who&&who!=='Corin'&&/charm|amulet|ward|lantern/i.test(words))learn('gift:'+who);
+  if(who&&who!=='Corin'&&/charm|amulet|ward|lantern/i.test(words)){
+    learn('gift:'+who);
+    for(const map of Object.values(W.maps))for(const n of map.npcs||[])
+      if(n.charm&&words.toLowerCase().includes(n.n.toLowerCase()))learn('gift:'+n.n);
+  }
+  if(/Torvald|Hollybeck Lantern/i.test(words)&&/lantern|light/i.test(words))learn('lantern');
+  if(/graveyard|Book of the Dead/i.test(words)&&/ghost|wraith|summon/i.test(words))learn('graveyard');
   if(/temple|heartstone/i.test(words))for(const town of ['Forgewick','Hollybeck','Sandspire'])if(words.toLowerCase().includes(town.toLowerCase()))learn('temple:'+town);
   if(persist&&before!==dragonBanterSeen.size)persistDragonBanterSeen();
 }
@@ -171,6 +177,8 @@ function dragonSideQuestTopics(){
     {id:'fishing',name:fishingPole?'Fishing with Calder’s rod':'Odo and Calder’s spare rod',known:fishingPole||(typeof odoRodReferral!=='undefined'&&odoRodReferral)||dragonLearned('fishing')},
     {id:'bramble',name:brambleQuest>=2?'Visit Rowan and Bramble':dragonLearned('bramble')?'Help Bramble find his person':'Help our new dog find his person',known:brambleQuest>0||dragonLearned('bramble')},
     {id:'equipment',name:'Our weapons and protection',known:smithUpgrade||glassShield||dragonLearned('smith')||dragonLearned('shield')},
+    {id:'lantern',name:'Torvald’s lantern for the mines',known:charm.lamp||dragonLearned('lantern')},
+    {id:'graveyard',name:'The Book of the Dead and summoning',known:charm.wake||dragonLearned('graveyard')},
     {id:'gifts',name:'Charms and other gifts',known:Object.entries(charm).some(([key,value])=>key!=='edge'&&value)||dragonGiftLeads().length>0}
   ].filter(topic=>topic.known);
 }
@@ -530,10 +538,25 @@ function dragonSideQuest(topic){
     'Corin: Anything else?',
     'Aurelius: Keep talking to craftspeople and travellers. We will know more when we hear what they can offer.'
   ];
+  if(topic==='lantern')return charm.lamp?[
+    'Corin: We have the Hollybeck Lantern now.',
+    'Aurelius: Carry it into the dark mine galleries. Its steady light lets you explore the deep workings.'
+  ]:[
+    'Corin: Mira mentioned a way to see in the mines.',
+    'Aurelius: Torvald left his special lantern with Sverre in Hollybeck. Let us ask Sverre for it before we go deep underground.'
+  ];
+  if(topic==='graveyard')return charm.wake?[
+    'Corin: We earned the Book of the Dead.',
+    'Aurelius: You can now summon two wraiths to fight beside us. You only need to carry the book; it does not use a charm slot.'
+  ]:[
+    'Corin: How do we learn to summon allies?',
+    'Aurelius: Defeat every wave of ghosts in the graveyard northwest of Hollybeck. The reward is the Book of the Dead, which lets you summon two wraiths in battle.',
+    'Corin: We should stay until the whole challenge is finished.'
+  ];
   const remaining=dragonGiftLeads().slice(0,3);
   return [
     'Corin: What about the gifts people have mentioned?',
-    ...remaining.map(({n})=>'Aurelius: '+n.n+' spoke about something that might help. We can finish that conversation when we return.'),
+    ...remaining.map(({n})=>'Aurelius: '+n.n+' has a gift we heard about. We should visit and ask about it.'),
     ...(!remaining.length?['Aurelius: We have collected the gifts we know about so far. Other people may have stories to share when we meet them.']:[]),
     'Corin: Your shared memory cannot tell you what everyone is carrying.',
     'Aurelius: No. These are people we are getting to know together, just as you are getting to know me.'

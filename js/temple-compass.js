@@ -246,30 +246,36 @@ function stepNanDeparture(){
   const town=millwoodDepartureArea();
   const inTownCenter=town&&Math.hypot(P.x-(town.x0+town.x1)*TS/2,P.y-(town.y0+town.y1)*TS/2)<=4*TS;
   if(!inTownCenter)return;
-  // Stop Corin immediately; finish landing and Nan's approach before dialogue.
+  // Freeze input, then hide landing and staging behind the existing scene fade.
   clearPadInputs();running=false;P.act=null;P.moving=false;
-  if(mounted)setMounted(false,true);
-  if(dragon.air||dragon.tr){
-    dragon.tr=null;
-    dragonGround(dragon.x,dragon.y)||dragonGround(P.x+40,P.y+24)||dragonGround(nan.x,nan.y+32);
-    dragon.air=false;dragon.placed=MAPID;startTransition('down',false);
-  }
-  nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
-  nan.home=[nan.x,nan.y];
-  const dx=nan.x-P.x,dy=nan.y-P.y,d=Math.hypot(dx,dy)||1;
-  let target=[P.x+dx/d*22,P.y+dy/d*22];
-  if(!canNpcStand(...target,nan)){
-    for(let a=0;a<16;a++){
-      const p=[P.x+Math.cos(a*Math.PI/8)*22,P.y+Math.sin(a*Math.PI/8)*22];
-      if(canNpcStand(...p,nan)){target=p;break;}
+  pendingActorStage=()=>{
+    if(mounted)setMounted(false,true);
+    dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
+    [P.x,P.y]=standableNear(P.x,P.y);
+    dragonGround(P.x+48,P.y+24)||dragonGround(P.x-48,P.y+24)||dragonGround(nan.x,nan.y+32);
+    refreshWingBtn();
+    nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
+    nan.home=[nan.x,nan.y];
+    const dx=nan.x-P.x,dy=nan.y-P.y,d=Math.hypot(dx,dy)||1;
+    let target=[P.x+dx/d*22,P.y+dy/d*22];
+    if(!canNpcStand(...target,nan)){
+      for(let a=0;a<16;a++){
+        const p=[P.x+Math.cos(a*Math.PI/8)*22,P.y+Math.sin(a*Math.PI/8)*22];
+        if(canNpcStand(...p,nan)){target=p;break;}
+      }
     }
-  }
-  const path=maddockWalkPath(nan,target)||[target];
-  nan.goto=path.shift()||target;
-  playScene(fatherCompassGift(nan),
-    {who:'Nan Ferrow',hold:()=>{
-      if(!nan.goto&&path.length)nan.goto=path.shift();
-      if(nan.goto||dragon.tr)return false;
-      faceToward(nan,P.x,P.y);return true;
-    },after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
+    const path=maddockWalkPath(nan,target)||[target];
+    nan.goto=null;
+    faceCorinAt(nan.x,nan.y);
+    cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;clampCam();
+    playScene(fatherCompassGift(nan),
+      {who:'Nan Ferrow',hold:()=>{
+        // Nan starts walking after the picture has returned.
+        if(fadeDir||fade>0)return false;
+        if(!nan.goto&&path.length)nan.goto=path.shift();
+        if(nan.goto)return false;
+        faceToward(nan,P.x,P.y);return true;
+      },after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
+  };
+  fadeDir=1;
 }
