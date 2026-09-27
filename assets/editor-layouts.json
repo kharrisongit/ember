@@ -51606,6 +51606,17 @@
         "key": "49,19",
         "blocked": true
       }
+    },
+    "house22": {
+      "actor:maddock:dragon-painting": {
+        "kind": "actor",
+        "key": "maddock:dragon-painting",
+        "identity": "Dragon painting",
+        "x": 118,
+        "y": 51,
+        "originX": 128,
+        "originY": 58
+      }
     }
   },
   "applied": [
@@ -51693,7 +51704,8 @@
     "5f3809ed-2729-4ced-87af-39b99f1a60a0",
     "66a65043-9ea5-4f29-81e5-4ae383293cae",
     "a5b389e5-1881-493e-bf30-01f3bb03f836",
-    "4bdbf4a0-278a-454a-a2c2-fc91e0cf1a8f"
+    "4bdbf4a0-278a-454a-a2c2-fc91e0cf1a8f",
+    "69888e43-24c0-49ba-8704-f33a2601e17c"
   ],
   "sessions": {
     "witchmoor": {
@@ -101337,6 +101349,14 @@
       "baseFingerprint": "49dfd06-ee96428-30533",
       "base": {},
       "resultHash": "f192aaa1-21b096d5-4870"
+    },
+    "house22": {
+      "id": "df923c9d-27b5-4c41-b224-68dee389f460",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "f9402578-6b48059e-5138",
+      "base": {},
+      "resultHash": "1047d615-c398c7ef-153"
     }
   }
 }
