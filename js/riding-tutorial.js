@@ -1,7 +1,8 @@
 /* The first road battle teaches real controls; no simulated menu selections. */
 (function(){
   'use strict';
-  const FIRST_ARENA=208;
+  // Arena tool #5: the eastbound road out of Millwood (stable feature ID 11).
+  const FIRST_ARENA=11;
   let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const holding=()=>!!phase&&phase!=='battle';
@@ -60,6 +61,7 @@
     return false;
   }
   function allowOverlay(which){
+    if(!unlocked&&(which==='airm'||which==='atkm'))return false;
     if(!holding()||internal)return true;
     return (phase==='dragonButton'&&which==='atkm')||(phase==='itemsButton'&&which==='itemm')||
       ((phase==='mount'||phase==='dismount')&&which==='airm')||(phase==='fire'&&which==='atkm')||(phase==='heal'&&which==='itemm');
@@ -118,6 +120,7 @@
     return true;
   }
   function allowControl(id){
+    if(!unlocked&&(id==='btnL'||id==='btnR'))return false;
     if(!holding())return true;
     return id==='act'||(phase==='dragonButton'&&id==='btnL')||(phase==='itemsButton'&&id==='btnItems');
   }
@@ -139,15 +142,21 @@
     if(event.target?.closest?.('.riding-target,#act,#say'))return false;
     event.preventDefault();event.stopImmediatePropagation();return true;
   }
-  function capture(){return {version:1,done,unlocked,phase,ringId};}
+  function capture(){return {version:2,done,unlocked,phase,ringId};}
   function restore(saved){
     clearHighlight();notice('');phase='';resumeRecovery=false;document.body.classList.remove('riding-guide');
     const data=saved.ridingTutorial;
-    if(data?.version===1){done=!!data.done;unlocked=!!data.unlocked;ringId=data.ringId??null;resumeRecovery=!done&&recoveryPhases.has(data.phase);}
+    if(data?.version===1||data?.version===2){
+      done=!!data.done;ringId=data.ringId??null;
+      resumeRecovery=!done&&recoveryPhases.has(data.phase);
+      // Incomplete lessons from the previous arena restart at #5. A lesson
+      // already in combat or recovery keeps its unlocked controls on reload.
+      unlocked=done||resumeRecovery||(ringId===FIRST_ARENA&&data.phase==='battle');
+    }
     else{
       // Existing players who were already taught riding keep their controls.
-      unlocked=!!saved.dragonIntroDone;
-      done=unlocked&&!!(saved.thornwellMet||saved.smithUpgrade||saved.wonAll||saved.breathHas?.lightning||saved.x>=220*TS);ringId=null;
+      done=!!saved.dragonIntroDone&&!!(saved.thornwellMet||saved.smithUpgrade||saved.wonAll||saved.breathHas?.lightning||saved.x>=220*TS);
+      unlocked=done;ringId=null;
     }
     if(resumeRecovery){phase='recovery';document.body.classList.add('riding-guide');}
     if((resumeRecovery||done)&&ringId!==null&&MAPID==='world'){

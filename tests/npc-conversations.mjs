@@ -1,7 +1,7 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(p,'utf8');
 const c=vm.createContext({hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
- templeCompass:{owned:false},glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
+ templeCompass:{owned:false,meatGiven:false},nanGiftPending:()=>!c.templeCompass.owned||!c.templeCompass.meatGiven,glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
  canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});
 vm.runInContext(read('js/npc-world-talks.js'),c);
@@ -14,7 +14,7 @@ for(const n of cast.filter(n=>!['Corin','Aurelius','Bramble'].includes(n.name)))
 const replies=Object.values(stories).flatMap(topics=>topics.map(t=>t[1]));assert.equal(new Set(replies).size,replies.length,'no repeated opening stories');
 const nan={n:'Nan Ferrow',d:['Hello'],dd:['Aurelius'],dv:['Home again']};
 assert(!c.npcStoryGiftPending(nan),'Nan has no gift before hatching');c.hatched=true;assert(c.npcStoryGiftPending(nan));
-c.templeCompass.owned=true;assert(!c.npcStoryGiftPending(nan));
+c.templeCompass.owned=true;assert(c.npcStoryGiftPending(nan),'Nan still has meat to give');c.templeCompass.meatGiven=true;assert(!c.npcStoryGiftPending(nan));
 assert(c.npcStoryTopics(nan).some(t=>t.title==="Dad's compass"));assert(!c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
 c.wonAll=true;assert(c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
 assert(c.npcStoryGiftPending({n:'Odo'}));assert(c.npcStoryGiftPending({n:'Calder'}));
@@ -91,7 +91,7 @@ console.log('PASS: repeated topic selections preserve personal exchanges, genera
 
 // Check the rendered menu and its callbacks across the whole authored cast at
 // each story stage, rather than testing only the list of topic titles.
-Object.assign(c,{fishingPole:true,odoRodReferral:true,templeCompass:{owned:true},quest:5,brambleQuest:0});
+Object.assign(c,{fishingPole:true,odoRodReferral:true,templeCompass:{owned:true,meatGiven:true},quest:5,brambleQuest:0});
 for(const hatched of [false,true])for(const victory of [false,true]){
  c.hatched=hatched;c.wonAll=victory;
  for(const [name,profile] of Object.entries(stories)){

@@ -6,17 +6,20 @@ const check=(code,message)=>assert(run(code),message);
 run(`
 MAPID='world';MD=W.maps.world;features=MD.features;quest=Q.DONE;mode='play';gameplayStarted=true;
 dragonIntroDone=true;dragon.on=true;dragon.maxHp=20;dragon.hp=20;dragon.down=false;dragon.knockdown=0;
-P.x=30*TS;P.y=340*TS;P.act=null;scene=null;revealing=false;
+P.x=98*TS;P.y=352*TS;P.act=null;scene=null;revealing=false;
 canStand=()=>true;dragonGround=()=>true;rebuildSolid=()=>{};clampCam=()=>{};
 stepChest=()=>{};stepHuntingGrounds=()=>{};saveGame=()=>{};showReveal=()=>{};showScene=()=>{};showHeal=()=>{};
-const testRing=features.find(a=>a.id===208);
+const testRing=features.find(a=>a.id===11);
 foes=[{kind:'plant1',x:P.x+20,y:P.y,hp:8,st:'approach',t:0,dir:'s'}];
 currentArenaFeatures=()=>[testRing];
 `);
-check('!!testRing&&testRing.enemyStage===1','The lesson uses the first road battle, not a hunting arena');
+check('features.filter(a=>a.kind==="arena").sort((a,b)=>a.x-b.x||a.y-b.y)[4].id===testRing.id','Tutorial matches arena tool #5');
+check('!!testRing&&testRing.enemyStage===3','The lesson uses the first road battle, not a hunting arena');
 check('!setMounted(true)','New games cannot mount before the riding lesson');
 check('setDragonAir(true)===false','New games cannot fly before the riding lesson');
-run("setOvl('airm');ovlStep(1);setOvl(null)");check('ovl===null','An entirely locked command menu still navigates and closes');
+for(const menu of ['airm','atkm']){run(`setOvl('${menu}')`);check('ovl===null','Locked menu cannot be opened: '+menu);}
+check("!EmberRiding.allowControl('btnL')&&!EmberRiding.allowControl('btnR')",'Both touch buttons are locked before the lesson');
+run('EmberRiding.entered(features.find(a=>a.id===208))');check("!EmberRiding.holding()",'The northern arena cannot start this tutorial');
 run('stepArena(.05)');check("EmberRiding.capture().phase==='walls'",'Entering the first arena starts the lesson');
 const before=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
 for(let i=0;i<10;i++)run('stepArena(.05);EmberRiding.step(.05);stepCombat(.05)');
@@ -54,11 +57,11 @@ check('EmberRiding.capture().done&&!EmberRiding.holding()','Healing completes an
 check('setDragonAir(true)!==false','Flight is available after healing');
 // Loading during recovery resumes its remaining lesson with food and without new attackers.
 const completed=run('JSON.parse(JSON.stringify(EmberRiding.capture()))');
-c.recoverySave={ridingTutorial:{version:1,done:false,unlocked:true,phase:'heal',ringId:208}};
+c.recoverySave={ridingTutorial:{version:1,done:false,unlocked:true,phase:'heal',ringId:11}};
 run('mounted=false;hareMeat=0;dragon.hp=2;EmberRiding.restore(recoverySave);EmberRiding.step(.05)');
 check("scene&&EmberRiding.holding()&&hareMeat===1",'Reload during recovery cannot strand the player');
-check("cooling.has('world:208')",'Cleared tutorial arena stays clear through a reload');
+check("cooling.has('world:11')",'Cleared tutorial arena stays clear through a reload');
 c.completedSave={ridingTutorial:completed};run('scene=null;EmberRiding.restore(completedSave);EmberRiding.entered(testRing)');check('!EmberRiding.holding()','Completed lesson never repeats');
 run('EmberRiding.restore({dragonIntroDone:true,thornwellMet:true})');check('EmberRiding.capture().done&&EmberRiding.unlocked()','Existing later saves keep riding without replaying the tutorial');
-run('EmberRiding.restore({dragonIntroDone:true,thornwellMet:false,x:700})');check('!EmberRiding.capture().done&&EmberRiding.unlocked()','Existing early saves can still receive the battle lesson');
+run('EmberRiding.restore({dragonIntroDone:true,thornwellMet:false,x:700})');check('!EmberRiding.capture().done&&!EmberRiding.unlocked()','Existing early saves wait for the battle lesson');
 console.log('PASS: first-arena detection, idle enemies, forced real Mount/Fire/Dismount/food actions, input gating, injury landing, recovery, and save migration.');

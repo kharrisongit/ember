@@ -9,7 +9,12 @@ const c=vm.createContext({hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true
 const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
 c.stepFatherCompass();assert.equal(c.scene,undefined,'no reveal before Nan gives the compass');
-c.giveFatherCompass();assert.equal(c.hareMeat,3);c.giveFatherCompass();assert.equal(c.hareMeat,3,'Gift cannot duplicate');assert.equal(saves,1);assert.equal(reveal[0],'inventory_compass');
+assert.equal(c.nanGiftBeat(5),false);assert.equal(saves,0);
+assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_compass');
+assert.equal(c.nanGiftBeat(6),false);assert.equal(saves,1,'Compass cannot duplicate');
+assert.equal(c.nanGiftBeat(11),false);assert.equal(c.hareMeat,0,'Meat waits for Nan’s own line');
+assert.equal(c.nanGiftBeat(12),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
+assert.equal(c.nanGiftBeat(12),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),false);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
@@ -20,21 +25,21 @@ c.MD={mountainPassage:true};c.stepFatherCompass();assert.equal(c.scene,undefined
 c.MD={templeExpanded:true,templePlan:{}};c.stepFatherCompass();assert.equal(c.scene.compassReveal,true);
 assert.match(c.scene.lines[0],/light/);assert.equal(c.scene.lines[1],'Corin: Thanks, Dad.');
 assert.equal(run('templeCompass.awakened'),false,'waits for Corin’s response');
-c.awakenFatherCompass();assert.equal(saves,2);c.scene=null;c.stepFatherCompass();assert.equal(c.scene,null,'only once');
+c.awakenFatherCompass();assert.equal(saves,3);c.scene=null;c.stepFatherCompass();assert.equal(c.scene,null,'only once');
 const saved=run('({owned:templeCompass.owned,awakened:templeCompass.awakened})');
 c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false,'old saves reset ownership');
 c.restoreFatherCompass(saved);assert.equal(run('templeCompass.awakened'),true,'new saves keep awakening');
-c.awakenFatherCompass();assert.equal(saves,2,'idempotent awakening');
+c.awakenFatherCompass();assert.equal(saves,3,'idempotent awakening');
 c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false,'awakening requires ownership');
 const game=read('js/generated/game-part-2.js'),bag=read('js/generated/game-part-3.js');
 assert(game.includes('if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();'));
-assert(game.includes('sayNpc.said = fatherCompassGift(best);'));
-assert(game.includes('giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned'));
-assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened}'));
+assert(game.includes('if(scene.nanGifts&&nanGiftBeat(scene.i))return;'));
+assert(game.includes("best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()"));
+assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven}'));
 console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
- W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null},
+ W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null,on:true},dragonHere:()=>true,dragonCanStand:()=>true,direction4:()=> 's',
  pendingActorStage:null,cam:{x:0,y:0,z:1},VW:400,VH:300,clampCam(){},faceCorinAt(){},refreshWingBtn(){},standableNear:(x,y)=>[x,y],clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
 const finishBlackout=()=>{assert.equal(c.fadeDir,1);assert.equal(typeof c.pendingActorStage,'function');c.fade=1;c.fadeDir=0;const stage=c.pendingActorStage;c.pendingActorStage=null;stage();c.fadeDir=-1;assert.equal(c.scene.hold(),false,'No approach behind fade');c.fade=0;c.fadeDir=0;c.scene.hold();};
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
@@ -42,7 +47,7 @@ c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNa
 c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();finishBlackout();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
-assert.equal(run('templeCompass.owned'),false,'gift waits for the encounter to finish');c.scene.after();assert.equal(run('templeCompass.owned'),true);
+assert.equal(run('templeCompass.owned'),false,'gift waits for its dialogue line');c.nanGiftBeat(6);c.nanGiftBeat(12);assert.equal(run('templeCompass.owned'),true);
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
 
 c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};
@@ -61,6 +66,8 @@ for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
  c.restoreFatherCompass();c.scene=null;c.npcs=[];c.prepareNanDeparture();
  const waiting=c.npcs[0];assert(Math.hypot(waiting.x-31*16,waiting.y-428.5*16)<=3*16,'Nan waits near the center');
  c.P={x:x*16,y:y*16};c.stepNanDeparture();finishBlackout();assert(c.scene,'Plaza triggers farewell');
+ assert((waiting.goto[0]-c.P.x)*(c.dragon.x-c.P.x)+(waiting.goto[1]-c.P.y)*(c.dragon.y-c.P.y)<0,'Dragon stands behind Corin, opposite Nan');
+ assert(Math.hypot(c.dragon.x-c.P.x,c.dragon.y-c.P.y)>=40,'Dragon has room behind Corin');
  assert(Math.hypot(waiting.goto[0]-waiting.x,waiting.goto[1]-waiting.y)<90,'Nan has only a short approach');
 }
 console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza with a short walk.');
@@ -72,3 +79,11 @@ assert.match(indoors[0],/What has kept you/);assert.match(indoors[1],/I found a 
 assert.deepEqual(Array.from(indoors.slice(2)),Array.from(run('FATHER_COMPASS_GIFT.slice(2)')));
 assert(!indoors.some(l=>/Aurelius|But first|Before you go/.test(l)));
 console.log('PASS: Nan responds naturally to seeing the dragon or hearing Corin’s news, without knowing his name early.');
+
+// A reload between gifts preserves the compass and still delivers the meat.
+c.restoreFatherCompass({owned:true,awakened:false,meatGiven:false});
+const meat=c.hareMeat;c.scene=null;c.fade=0;c.fadeDir=0;c.npcs=[];c.P={x:31*16,y:429*16};
+c.stepNanDeparture();finishBlackout();assert.equal(c.scene.i,8);
+assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),true);assert.equal(c.hareMeat,meat+3);
+assert.equal(c.nanGiftBeat(12),false);
+console.log('PASS: gifts have separate dialogue beats and icons, dragon stays behind Corin from each approach, and partial-gift saves resume without duplicates.');

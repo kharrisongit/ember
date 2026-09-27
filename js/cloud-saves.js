@@ -22,22 +22,21 @@
   dialog.append(header,intro,account,message,help,actions,manager,slots,imports,options);document.body.appendChild(dialog);
   const titleButtons=el('div');titleButtons.id='bootAccountButtons';
   const titleButton=button('Sign In',()=>open());titleButton.id='bootCloud';
-  const manageButton=button('Manage saves',manage);manageButton.id='bootManage';
-  titleButtons.append(titleButton,manageButton);document.getElementById('bootBtns')?.after(titleButtons);
+  titleButtons.append(titleButton);document.getElementById('bootBtns')?.after(titleButtons);
   const titleStatus=el('span');titleStatus.id='bootCloudStatus';titleButtons.after(titleStatus);
   function summary(raw){
     if(raw===null||!raw)return 'Empty slot';
     try{const s=JSON.parse(raw);return String(s.map).replaceAll('_',' ')+' · '+new Date(s.when).toLocaleString();}catch{return 'Unreadable save';}
   }
   function refreshTitle(){
-    if(!playing()&&typeof BOOT!=='undefined'&&BOOT.menuOpen&&!BOOT.loading){
-      if(document.getElementById('bootLoadPanel')?.hidden===false)BOOT.paintLoad?.();
+    if(!playing()&&typeof BOOT!=='undefined'&&BOOT.menuOpen){
+      if(BOOT.loading)BOOT.openLoad();
       else BOOT.showMenu();
     }
   }
   function render(){
-    titleButton.textContent=user?'Logged in':'Sign In';
-    title.textContent=user?'Logged in':'Sign In';
+    titleButton.textContent=user?'Signed In':'Sign In';
+    title.textContent=user?'Signed In':'Sign In';
     titleStatus.textContent=status;
     if(!opened)return;
     account.textContent=user?(user.email||user.displayName||'Google account'):store.owner?'Account saves on this device':'Not signed in';

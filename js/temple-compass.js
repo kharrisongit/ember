@@ -1,6 +1,6 @@
 /* Father’s compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
-const templeCompass = { owned: false, awakened: false, cache: null };
+const templeCompass = { owned: false, awakened: false, meatGiven: false, cache: null };
 const FATHER_COMPASS_GIFT = [
   "Nan Ferrow: Corin... is that a dragon? Where did he come from?",
   "Corin: I found an egg in the woods. It hatched by Maddock's house.",
@@ -27,14 +27,24 @@ function fatherCompassGift(nan){
 function restoreFatherCompass(saved) {
   templeCompass.owned = !!saved?.owned;
   templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
+  // Earlier saves received the meat together with the compass.
+  templeCompass.meatGiven = saved?.meatGiven === undefined ? templeCompass.owned : !!saved.meatGiven;
   templeCompass.cache = null;
 }
 function giveFatherCompass() {
   if(templeCompass.owned)return;
   templeCompass.owned = true;
-  hareMeat += 3;
   saveGame();
-  showReveal('inventory_compass', "Corin received his father's compass and 3 Hare Meat.");
+  showReveal('inventory_compass', "Corin received his father's compass.");
+}
+function nanGiftPending(){return !templeCompass.owned || !templeCompass.meatGiven;}
+function nanGiftBeat(index){
+  if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
+  if(index===12&&!templeCompass.meatGiven){
+    templeCompass.meatGiven=true;hareMeat+=3;saveGame();
+    showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat.');return true;
+  }
+  return false;
 }
 function awakenFatherCompass() {
   if (!templeCompass.owned || templeCompass.awakened) return;
@@ -221,7 +231,7 @@ function millwoodDepartureArea(){
 }
 // Nan intercepts the return through Millwood before the journey east.
 function prepareNanDeparture(){
-  if(MAPID!=='world'||!hasDragon()||templeCompass.owned||npcs.some(n=>n.fatherCompassVisitor))return;
+  if(MAPID!=='world'||!hasDragon()||!nanGiftPending()||npcs.some(n=>n.fatherCompassVisitor))return;
   const home=W.maps.house26?.npcs.find(n=>n.n==='Nan Ferrow');
   const door=MD.doors.find(d=>d.to==='house26');
   if(!home||!door)return;
@@ -242,7 +252,7 @@ function prepareNanDeparture(){
   npcs.push(visitor);
 }
 function stepNanDeparture(){
-  if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||templeCompass.owned||
+  if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||!nanGiftPending()||
      sceneHold()||sayNpc||fadeDir||fade||doorMotion||ovl||ask||bagOpen||editing||dying()||revealing)return;
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
@@ -250,13 +260,24 @@ function stepNanDeparture(){
   const town=millwoodDepartureArea();
   const inTownCenter=town&&Math.hypot(P.x-(town.x0+town.x1)*TS/2,P.y-(town.y0+town.y1)*TS/2)<=4*TS;
   if(!inTownCenter)return;
+  startNanFarewell(nan);
+}
+function placeDragonBehindCorin(target){
+  if(!dragonHere()||!dragon.on)return;
+  const back=Math.atan2(P.y-target[1],P.x-target[0]);
+  for(const distance of [56,72,88,40])for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4]){
+    const x=P.x+Math.cos(back+offset)*distance,y=P.y+Math.sin(back+offset)*distance;
+    if(!dragonCanStand(x,y))continue;
+    dragon.x=x;dragon.y=y;dragon.dir=direction4(target[0]-x,target[1]-y,'s');return;
+  }
+}
+function startNanFarewell(nan){
   // Freeze input, then hide landing and staging behind the existing scene fade.
   clearPadInputs();running=false;P.act=null;P.moving=false;
   pendingActorStage=()=>{
     if(mounted)setMounted(false,true);
     dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
     [P.x,P.y]=standableNear(P.x,P.y);
-    dragonGround(P.x+48,P.y+24)||dragonGround(P.x-48,P.y+24)||dragonGround(nan.x,nan.y+32);
     refreshWingBtn();
     nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
     nan.home=[nan.x,nan.y];
@@ -269,17 +290,18 @@ function stepNanDeparture(){
       }
     }
     const path=maddockWalkPath(nan,target)||[target];
+    placeDragonBehindCorin(target);
     nan.goto=null;
     faceCorinAt(nan.x,nan.y);
     cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;clampCam();
     playScene(fatherCompassGift(nan),
-      {who:'Nan Ferrow',hold:()=>{
+      {who:'Nan Ferrow',nanGifts:true,i:templeCompass.owned?8:0,hold:()=>{
         // Nan starts walking after the picture has returned.
         if(fadeDir||fade>0)return false;
         if(!nan.goto&&path.length)nan.goto=path.shift();
         if(nan.goto)return false;
-        faceToward(nan,P.x,P.y);return true;
-      },after:()=>{if(!templeCompass.owned)giveFatherCompass();}});
+        faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
+      }});
   };
   fadeDir=1;
 }

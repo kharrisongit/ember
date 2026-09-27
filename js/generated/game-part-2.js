@@ -5774,6 +5774,7 @@ function drawClaw() {
 }
 function stepDragon(dt) {
   groundInjuredDragon();
+  if(scene?.nanGifts){dragon.t+=dt;dragon.moving=false;return;}
   if(globalThis.window?.EmberRiding?.holding()){
     dragon.t+=dt;dragon.moving=false;
     if(mounted){dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();stepTransition(dt);}
@@ -6358,6 +6359,31 @@ function stepHatchScene(dt) {
     showReveal(SPR.it_hs_flame ? "it_hs_flame" : "it_egg",
                "Corin obtained a mysterious stone", 3);
   }
+  if(scene.i===10&&!revealing&&m&&!hatchScene.maddockArrived){
+    if(!hatchScene.maddockPath){
+      // Keep his whole walk clear of the hatchling and Corin, then talk from
+      // Corin's side of the dragon. The silent stone beat owns this approach.
+      const clear=(x,y)=>canNpcStand(x,y,m)&&
+        Math.hypot(x-hatchScene.dragonX,y-hatchScene.dragonY)>=32&&Math.hypot(x-P.x,y-P.y)>=18;
+      for(const [dx,dy]of [[0,26],[-26,0],[0,-26]]){
+        const target=[P.x+dx,P.y+dy];
+        if(!clear(...target))continue;
+        const path=maddockWalkPath(m,target,clear);
+        if(path){hatchScene.maddockPath=path;break;}
+      }
+    }
+    const path=hatchScene.maddockPath;
+    if(path?.length){
+      const [x,y]=path[0],dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,44*dt);
+      faceToward(m,x,y);m.scriptWalking=true;
+      if(d<=step){m.x=x;m.y=y;path.shift();}
+      else{m.x+=dx/d*step;m.y+=dy/d*step;}
+    }
+    if(path&&!path.length){
+      hatchScene.maddockArrived=true;m.scriptWalking=false;
+      faceToward(m,P.x,P.y);faceCorinAt(m.x,m.y);rebuildSolid();
+    }
+  }
   if (scene.i >= 8) {
     const lookAt = scene.i === 8 && m ? m : P;
     const targetDir = Math.abs(lookAt.x - hatchScene.dragonX) > Math.abs(lookAt.y - hatchScene.dragonY)
@@ -6542,11 +6568,11 @@ function maddockDoor() {
   const r=d?doorRect(d):{x:MAD_DOOR[0]-8,y:MAD_DOOR[1]-8,w:16,h:16};
   return {x:r.x+r.w/2,y:r.y+r.h+12};
 }
-function maddockWalkPath(e,to) {
+function maddockWalkPath(e,to,canWalk=(x,y)=>canNpcStand(x,y,e)) {
   const start=[e.x,e.y],step=8;
   const clear=(a,b)=>{
     const n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));
-    for(let i=1;i<=n;i++)if(!canNpcStand(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n,e))return false;
+    for(let i=1;i<=n;i++)if(!canWalk(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n))return false;
     return true;
   };
   if(clear(start,to))return [to];
@@ -6656,6 +6682,7 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
     if(sayNpc===m||scene?.npcActor===m||(typeof ask!=='undefined'&&ask?.npcActor===m)){
       faceToward(m,P.x,P.y);continue;
     }
@@ -6727,7 +6754,7 @@ function stepWalkers(dt) {
     m.y += dy / d * Math.min(sp, d);
     faceToward(m, m.goto[0], m.goto[1]);
   }
-  if (walker && scene) faceToward(walker, P.x, P.y);
+  if (walker && scene && !(scene.hatch&&walker.scriptWalking)) faceToward(walker, P.x, P.y);
 }
 
 function faceCorinAt(x, y) {
@@ -6769,12 +6796,14 @@ function advanceScene() {
   if (scene.hold || scene.silent) return;          /* animation owns this beat */
   if (!typeDone()) { globalThis.window?.EmberSfx?.ui?.(); typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
+  if(scene.nanGifts&&nanGiftBeat(scene.i))return;
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
   /* The hatchling's two turns are staged beats, not skippable text taps. */
   if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
   if (scene.hatch && scene.i === 9 &&
       (scene.t < 1.1 || !hatchScene || !hatchScene.approachDone)) return;
+  if(scene.hatch&&scene.i===10&&!hatchScene?.maddockArrived)return;
   globalThis.window?.EmberSfx?.ui?.();
   scene.i++;
   scene.t = 0;
@@ -11084,7 +11113,6 @@ function interact() {
       const giver = sayNpc;
       dragonConversationReaction(giver);
       sayNpc = null; sayOff(); showFace(null);
-      if (giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) { giveFatherCompass(); return; }
       if(canCamperGiveFishingPole(giver)&&giver.fishingRodGift){
         delete giver.fishingRodGift;
         fishingPole=true; saveGame();
@@ -11146,6 +11174,9 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
+      startNanFarewell(best);return;
+    }
     if(best.n==='Hettie'&&quest<Q.NOISE){
       sayOff();showFace(null);faceToward(best,P.x,P.y);P.moving=false;
       playScene([hettieErrandReminder()],{who:best.n,npcActor:best});return;
@@ -11159,10 +11190,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    if (best.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) {
-      sayNpc.said = fatherCompassGift(best);
-    }
-    else if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
+    if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
       sayNpc.said=fishingRodDialogue('Odo',best);
       odoRodReferral=true;saveGame();
     }

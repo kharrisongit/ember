@@ -14,6 +14,7 @@ class Element {
     const classes=new Set();this.classList={add:k=>classes.add(k),remove:k=>classes.delete(k),contains:k=>classes.has(k),
       toggle:(k,on)=>{if(on??!classes.has(k))classes.add(k);else classes.delete(k);}};
   }
+  setAttribute(name,value){this[name]=value;}
   addEventListener(type,fn){(this.listeners[type]??=[]).push(fn);}
   closest(selector){for(let e=this;e;e=e.parentNode)if(selector.split(',').some(s=>s.trim()==='#'+e.id))return e;return null;}
   getBoundingClientRect(){return {width:800,height:600};}
@@ -97,11 +98,12 @@ for(const start of ['act','bootNew','bootContinue','bootLoad']){
     assert.equal(run('gameplayStarted'),false,'Opening title saves never starts the game');
     assert.equal(c.ovl,null,'Title saves do not open an in-game overlay');
     assert.equal(body.classList.contains('game-started'),false);
-    assert.equal(nodes.bootLoadRows.children.length,4);assert(nodes.bootLoadRows.children[2].disabled,'Empty slots remain visible');
-    dispatch(nodes.bootLoadRows.children[3],'click');
+    assert.equal(nodes.bootLoadRows.children.length,5);assert(nodes.bootLoadRows.children[2].disabled,'Empty slots remain visible');
+    assert.equal(nodes.bootLoadRows.children[3].textContent,'Manage saves');
+    dispatch(nodes.bootLoadRows.children[4],'click');
     assert.equal(run('gameplayStarted'),false);assert.equal(nodes.bootLabel.textContent,'');assert(nodes.bootLoadPanel.hidden);
     dispatch(nodes.bootLoad,'click');key('b');assert.equal(run('BOOT.loading'),false,'B returns to the title');
-    dispatch(nodes.bootLoad,'click');dispatch(up,'mousedown');assert.equal(run('BOOT.loadPick'),3,'Title D-pad can select Back');
+    dispatch(nodes.bootLoad,'click');dispatch(up,'mousedown');assert.equal(run('BOOT.loadPick'),4,'Title D-pad can select Back');
     dispatch(nodes.btnB,'touchstart');assert.equal(run('BOOT.loading'),false,'Touch B also returns to the title');
     dispatch(nodes.bootLoad,'click');key('ArrowDown');assert.equal(run('BOOT.loadPick'),1);
     loadWorks=false;dispatch(nodes.act,'mousedown');
@@ -139,6 +141,8 @@ assert.equal(dispatch(nodes.act,'pointerdown').defaultPrevented,undefined,'Inven
 c.bagOpen=false;
 run(section(p3,'setInterval(() => {\n  const started =','const SKIN_BAND ='));
 run('setOvl("atkm")');const before=refreshes;intervals.at(-1)();assert.equal(refreshes,before,'Label updates never detach a pressed attack row');
+c.window.EmberRiding={unlocked:()=>false};intervals.at(-1)();assert.equal(nodes.btnL['aria-disabled'],'true');assert.equal(nodes.btnR['aria-disabled'],'true');
+c.window.EmberRiding={unlocked:()=>true};intervals.at(-1)();assert.equal(nodes.btnL['aria-disabled'],'false');assert.equal(nodes.btnR['aria-disabled'],'false');delete c.window.EmberRiding;
 run(section(p2,'function glassHatchPosition()','function drawHettieCallout('));
 assert.equal(run('glassHatchNear(0,0)'),false,'World may still be null without the reported script error');
 c.W={maps:{glasshouse:{roomActors:[{glassHatch:true,x:100,y:200}]}}};c.MAPID='glasshouse';
@@ -228,3 +232,20 @@ hr('advanceScene()');assert.equal(h.scene.i,9,'A cannot skip the second retreat'
 hr('stepHatchScene(.21)');assert.equal(Math.round(Math.hypot(maddock.x-chooseM[0],maddock.y-chooseM[1])),16);assert(!maddock.scriptWalking&&!h.P.moving);
 h.scene.t=1;hr('stepHatchScene(.1)');assert(hr('hatchScene.walking'),'Dragon walks after both finish');
 console.log('PASS: Corin and Maddock retreat together before the hatchling chooses Corin.');
+
+// Maddock walks around the hatchling before dialogue resumes face to face.
+hr(section(p2,'function maddockWalkPath(','function goBackIn('));
+h.SPR={it_hs_flame:true};h.showReveal=()=>{h.revealing=true;};
+h.scene.t=3;hr('stepHatchScene(2)');assert(hr('hatchScene.approachDone'));
+hr('advanceScene()');assert.equal(h.scene.i,10);hr('stepHatchScene(.05)');assert(h.revealing);
+hr('stepHatchScene(.05)');assert(!hr('hatchScene.maddockPath'),'Maddock waits for the stone popup');
+h.revealing=false;
+for(let i=0;i<400&&!hr('hatchScene.maddockArrived');i++){
+ const before=[maddock.x,maddock.y];h.scene.t+=.05;hr('stepHatchScene(.05)');
+ assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=2.201,'Approach walks without teleporting');
+ assert(hr('Math.hypot(m.x-hatchScene.dragonX,m.y-hatchScene.dragonY)>=31.99'),'Path avoids the hatchling');
+ hr('advanceScene()');if(!hr('hatchScene.maddockArrived'))assert.equal(h.scene.i,10,'Rapid A cannot skip the walk');
+}
+assert(hr('hatchScene.maddockArrived'));assert.equal(h.scene.i,11);
+assert(Math.hypot(maddock.x-h.P.x,maddock.y-h.P.y)<=27,'Maddock talks beside Corin, clear of the dragon');
+console.log('PASS: Maddock walks around the hatchling after the stone reveal; conversation waits for his face-to-face arrival.');

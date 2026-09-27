@@ -1938,7 +1938,7 @@ function libraryQuestHint(n){
 }
 
 function npcStoryGiftPending(n){
-  return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
+  return (n.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending())||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
     (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
     (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
 }

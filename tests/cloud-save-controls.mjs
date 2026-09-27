@@ -48,6 +48,6 @@ storage.set(key(1),save(3));c.gameplayStarted=true;c.EmberCloud.manage();assert(
 c.gameplayStarted=false;c.EmberCloud.open();await tick();
 assert(all().some(n=>n.textContent.includes('Sign into Google to save your progress')));
 button('Sign in with Google').click();await tick();
-assert.equal(nodes.get('bootCloud').textContent,'Logged in');assert.equal(nodes.get('cloudSaveTitle').textContent,'Logged in');assert(c.EmberCloud.isSignedIn());
+assert.equal(nodes.get('bootCloud').textContent,'Signed In');assert.equal(nodes.get('cloudSaveTitle').textContent,'Signed In');assert(c.EmberCloud.isSignedIn());
 button('Sign out').click();await tick();assert.equal(nodes.get('bootCloud').textContent,'Sign In');assert(!c.EmberCloud.isSignedIn());
 console.log('PASS: offline management, delete confirmation/cancellation, stale-choice protection, active-save protection, Google explanation, and signed-in/out labels.');

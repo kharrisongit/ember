@@ -5361,7 +5361,8 @@ const BOOT = {
     document.getElementById("bootLoadPanel").hidden=true;
     document.getElementById("bootLabel").textContent="";
     document.getElementById("bootHint").textContent="Choose an option · A to select";
-    for(const id of ["bootContinue","bootLoad"])document.getElementById(id).disabled=!has;
+    document.getElementById("bootContinue").disabled=!has;
+    document.getElementById("bootLoad").disabled=false;
     BOOT.paintMenu();
   },
   paintMenu() {
@@ -5369,7 +5370,7 @@ const BOOT = {
   },
   stepMenu(d) {
     if(!gameplayReady||!BOOT.menuOpen||BOOT.loading)return;
-    do{BOOT.menuPick=(BOOT.menuPick+d+3)%3;}while(BOOT.menuPick>0&&!BOOT.latestSave());
+    do{BOOT.menuPick=(BOOT.menuPick+d+3)%3;}while(BOOT.menuPick===1&&!BOOT.latestSave());
     BOOT.paintMenu();
   },
   continueGame() {
@@ -5405,7 +5406,7 @@ const BOOT = {
     if(BOOT.menuPick===0)BOOT.close();else if(BOOT.menuPick===1)BOOT.continueGame();else BOOT.openLoad();
   },
   openLoad() {
-    if (!gameplayReady || !BOOT.menuOpen || !BOOT.latestSave()) return;
+    if (!gameplayReady || !BOOT.menuOpen) return;
     BOOT.loading = true;
     document.body.classList.add("boot-load-open");
     document.getElementById("bootBtns").style.display = "none";
@@ -5425,6 +5426,9 @@ const BOOT = {
       button.addEventListener("click", () => BOOT.takeLoad(slot - 1));
       rows.appendChild(button);
     }
+    const manage = document.createElement("button");
+    manage.type = "button"; manage.textContent = "Manage saves";
+    manage.addEventListener("click", () => BOOT.takeLoad(3)); rows.appendChild(manage);
     const back = document.createElement("button");
     back.type = "button"; back.textContent = "Back";
     back.addEventListener("click", () => BOOT.back()); rows.appendChild(back);
@@ -5438,13 +5442,14 @@ const BOOT = {
   stepLoad(d) {
     if (!BOOT.loading) { BOOT.stepMenu(d); return; }
     globalThis.window?.EmberSfx?.ui?.();
-    do { BOOT.loadPick = (BOOT.loadPick + d + 4) % 4; }
+    do { BOOT.loadPick = (BOOT.loadPick + d + 5) % 5; }
     while (BOOT.loadPick < 3 && !readSaveSlot(BOOT.loadPick + 1));
     BOOT.paintLoad();
   },
   takeLoad(pick = BOOT.loadPick) {
     if (!BOOT.loading || !gameplayReady) return;
-    if (pick === 3) { BOOT.back(); return; }
+    if (pick === 3) { window.EmberCloud?.manage(); return; }
+    if (pick === 4) { BOOT.back(); return; }
     if (!readSaveSlot(pick + 1)) return;
     if (!loadGame(pick + 1)) {
       document.getElementById("bootLoadMsg").textContent = "That save could not be loaded. Choose another save or go back.";
@@ -5474,8 +5479,7 @@ const MENUS = {
   savePrompt: { rows: "savePromptRows", desc: "savePromptDesc", pick: 0, items: () => [
     { name: "Overwrite existing save", tell: "Choose an existing save slot to overwrite.", go: () => setOvl("saveSlots") },
     { name: "Create new save", tell: "Use the first empty save slot.", go: () => { const slot=firstEmptySaveSlot(); if(!slot){toast("all save slots are full — overwrite one instead");setOvl("saveSlots");return;} saveToSlot(slot); setOvl(null); } },
-    { name: "Manage saves", tell: "Review save slots and confirm a deletion.", go: () => {setOvl(null);window.EmberCloud?.manage();} },
-    { name: () => window.EmberCloud?.isSignedIn() ? "Logged in" : "Sign In", tell: "Sign into Google for cloud saves.", go: () => {setOvl(null);window.EmberCloud?.open();} },
+    { name: () => window.EmberCloud?.isSignedIn() ? "Signed In" : "Sign In", tell: "Sign into Google for cloud saves.", go: () => {setOvl(null);window.EmberCloud?.open();} },
     { name: "Back", tell: "Close the save menu.", go: () => setOvl(null) }
   ] },
   saveSlots: { rows: "saveSlotRows", desc: "saveSlotDesc", pick: 0, items: () => saveSlotItems("overwrite") },
@@ -5772,7 +5776,7 @@ function saveSummary(slot){
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   quest, routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened},
+  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
@@ -5813,6 +5817,7 @@ function saveSlotItems(mode){
     }
   }
   if(mode==="overwrite"&&!items.length)items.push({name:"No saves to overwrite",tell:"Create a new save first.",dim:()=>true});
+  if(mode==="load")items.push({name:"Manage saves",tell:"Review save slots and confirm a deletion.",go:()=>{setOvl(null);window.EmberCloud?.manage();}});
   items.push({name:"Back",tell:mode==="overwrite"?"Return to save options.":"Close this menu.",go:()=>setOvl(mode==="overwrite"?"savePrompt":null)});
   return items;
 }
@@ -6031,6 +6036,7 @@ setInterval(() => {
 setInterval(() => {
   const started = !!gameplayStarted;
   const on = started && hasDragon();
+  const unlocked = on && (globalThis.window?.EmberRiding?.unlocked() ?? true);
   const dragonBtn = document.getElementById("btnL");
   const commandBtn = document.getElementById("btnR");
   const itemsBtn = document.getElementById("btnItems");
@@ -6038,10 +6044,12 @@ setInterval(() => {
   if (dragonBtn) {
     dragonBtn.textContent = on ? "DRAGON" : "";
     dragonBtn.style.opacity = on ? "" : "0.38";
+    dragonBtn.setAttribute("aria-disabled",String(!unlocked));
   }
   if (commandBtn) {
     commandBtn.textContent = on ? "COMMAND" : "";
     commandBtn.style.opacity = on ? "" : "0.38";
+    commandBtn.setAttribute("aria-disabled",String(!unlocked));
   }
   if (itemsBtn) itemsBtn.textContent = started ? "ITEMS" : "";
   if (mapBtn) mapBtn.textContent = started ? "MAP" : "";

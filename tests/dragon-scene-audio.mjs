@@ -57,6 +57,8 @@ run(game.slice(game.indexOf('function isKeyItemReveal('),game.indexOf('\nfunctio
 for(const caption of ['Corin obtained a Heartstone!','Corin received his father’s compass.','Corin obtained a mysterious stone'])assert(c.isKeyItemReveal(caption));
 assert(!c.isKeyItemReveal('Corin obtained a Potion!','inventory_potion'));
 assert(!c.isKeyItemReveal('Corin planted the Grave Marker!','inventory_mark'));
+assert(!c.isKeyItemReveal('Corin received 3 Hare Meat.','inventory_hareMeat'));
+assert(c.isKeyItemReveal("Corin received his father's compass.",'inventory_compass'));
 assert(!c.isKeyItemReveal('THE DRAGON CHOOSES HIM'));
 // Actual ground-loot collection is silent when nothing is acquired.
 Object.assign(c,{loot:[],gold:0,boarMeat:0,hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,toast(){},saveGame(){},flyGold(){},treasuryGuarding:()=>false});
