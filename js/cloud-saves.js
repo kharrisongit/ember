@@ -11,8 +11,13 @@
   const title=el('h2','Cloud saves');title.id='cloudSaveTitle';
   const account=el('p'),message=el('p'),actions=el('div'),slots=el('div'),guest=el('div');message.setAttribute('role','status');
   const button=(label,fn)=>{const b=el('button',label);b.type='button';b.addEventListener('click',()=>{try{Promise.resolve(fn()).catch(fail);}catch(e){fail(e);}});return b;};
-  const close=button('Close',()=>dialog.close());
-  dialog.append(title,account,message,actions,slots,guest,close);document.body.appendChild(dialog);
+  const close=button('Done',()=>dialog.close());close.className='cloud-close';
+  const header=el('div');header.className='cloud-header';header.append(title,close);
+  const help=el('p');help.className='cloud-help';
+  account.className='cloud-account';message.className='cloud-status';actions.className='cloud-actions';
+  const options=el('details'),optionLabel=el('summary','Account & title screen'),secondary=el('div');secondary.className='cloud-secondary';options.append(optionLabel,secondary);
+  const imports=el('details'),importLabel=el('summary','Bring an existing save');imports.append(importLabel,guest);imports.hidden=true;
+  dialog.append(header,account,message,help,actions,slots,imports,options);document.body.appendChild(dialog);
   const titleButton=button('Cloud saves',open);titleButton.id='bootCloud';document.getElementById('bootBtns')?.after(titleButton);
   const titleStatus=el('span');titleStatus.id='bootCloudStatus';titleButton.after(titleStatus);
   function summary(raw){
@@ -28,18 +33,21 @@
   function render(){
     titleStatus.textContent=status;
     if(!opened)return;
-    account.textContent=user?'Connected as '+(user.email||user.displayName||'Google player'):store.owner?'Your account’s saves are available on this device.':'Play offline, or connect Google to sync saves between devices.';
-    message.textContent=status;actions.replaceChildren();slots.replaceChildren();guest.replaceChildren();
+    account.textContent=user?(user.email||user.displayName||'Google account'):store.owner?'Account saves on this device':'Not signed in';
+    help.textContent=user&&user.uid===store.owner?'Save normally while playing. Your saves upload automatically when you’re online.':store.owner?'Your saves are kept on this device. Sign in again to sync them.':'Connect Google to carry your progress between devices.';
+    message.textContent=status;actions.replaceChildren();slots.replaceChildren();guest.replaceChildren();secondary.replaceChildren();
+    options.hidden=!user&&!playing();imports.hidden=true;
+    optionLabel.textContent=playing()?'Account & title screen':'Account';
     if(!user){
       const sign=button(sdk?'Sign in with Google':'Loading Google sign-in…',signIn);sign.disabled=!sdk||accountBusy||playing();actions.append(sign);
       if(!sdk&&!loading)actions.append(button('Retry connection',()=>init()));
     }else{
       const sync=button('Sync now',()=>flush(true));sync.disabled=busy;actions.append(sync);
-      const out=button('Sign out',signOut);out.disabled=playing()||busy||accountBusy;actions.append(out);
+      const out=button('Sign out',signOut);out.disabled=playing()||busy||accountBusy;secondary.append(out);
     }
     if(playing()){
-      actions.append(el('p','To switch accounts or load a cloud version, save and return to the title screen.'));
-      actions.append(button('Save and return to title',()=>{if(saveToSlot(activeSaveSlot,true))location.reload();}));
+      secondary.append(el('p','Switch accounts or choose a cloud version at the title screen. Exiting saves on this device and reloads the game.'));
+      secondary.append(button('Save & exit to title',()=>{if(saveToSlot(activeSaveSlot,true))location.reload();}));
     }
     for(const [slot,remote] of store.conflicts){
       const box=el('section');box.append(el('h3','Slot '+slot+' has two versions'),el('p','This device: '+summary(localStorage.getItem(store.key(slot)))),el('p','Cloud: '+summary(remote?.deleted?null:remote?.saveJson)));
@@ -51,7 +59,8 @@
       for(let slot=1;slot<=3;slot++){
         const raw=localStorage.getItem(store.key(slot,''));if(!window.EmberCloudSaveValid(raw))continue;
         // Existing device-only saves are offered explicitly; never silently assigned to an account.
-        const box=el('section');box.append(el('p','Device-only slot '+slot+': '+summary(raw)),button('Copy to an empty account slot',()=>{
+        imports.hidden=false;
+        const box=el('section');box.append(el('h3','Device save · Slot '+slot),el('p',summary(raw)),button('Copy to account',()=>{
           const target=store.importGuest(slot);status=target?'Copied to account slot '+target:'All account slots are occupied. Your device-only save is unchanged.';render();
         }));guest.append(box);
       }

@@ -37,14 +37,33 @@
 <link rel="stylesheet" href="css/medieval-ui.css?v=20260926-homecoming">
 <style>
 #bootCloud,#bootCloudStatus{display:none}
-.boot-ready #bootCloud{display:inline-block;margin-top:8px;padding:8px 16px;color:#ead8b3;background:#251b13;border:1px solid #826139;border-radius:7px;font:inherit;font-size:13px}
-.boot-ready #bootCloudStatus{display:block;font-size:11px;max-width:85vw;color:#c5b593}
-#cloudSaveDialog{box-sizing:border-box;width:min(92vw,520px);max-height:85dvh;overflow:auto;border:1px solid #9d7848;border-radius:12px;background:#211911;color:#f2e6cd;padding:22px;font:15px/1.45 system-ui,sans-serif;touch-action:auto}
-#cloudSaveDialog::backdrop{background:#000b}
-#cloudSaveDialog h2{margin:0 0 12px}#cloudSaveDialog h3{font-size:16px}
-#cloudSaveDialog button{font:inherit;background:#49351e;color:#fff0d7;border:1px solid #a58350;border-radius:6px;padding:10px 12px;margin:4px;min-height:44px;cursor:pointer}
-#cloudSaveDialog button:disabled{opacity:.5;cursor:default}#cloudSaveDialog button:focus-visible{outline:3px solid #f5ce78}
-#cloudSaveDialog section{border-top:1px solid #796044;margin-top:14px;padding-top:8px}
+.boot-ready #bootCloud{display:inline-block;margin:0;padding:6px 16px;min-height:44px;color:#c8baa1;background:transparent;border:0;border-radius:4px;font:14px Georgia,serif;cursor:pointer}
+.boot-ready #bootCloudStatus{display:block;margin-top:-10px;font:11px/1.4 system-ui,sans-serif;max-width:85vw;color:#a69d8e}
+#cloudSaveDialog{box-sizing:border-box;width:min(92vw,440px);max-height:85dvh;overflow:auto;overscroll-behavior:contain;border:1px solid #50483c;border-radius:8px;background:#201d18;color:#eee7da;padding:24px;font:14px/1.55 system-ui,sans-serif;touch-action:auto;box-shadow:0 16px 60px #0008;text-align:left;color-scheme:dark}
+#cloudSaveDialog::backdrop{background:#0009}
+#cloudSaveDialog .cloud-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+#cloudSaveDialog h2{margin:0;font:24px/1.2 Georgia,serif;font-weight:400}
+#cloudSaveDialog h3{font-size:14px;font-weight:600;margin:0 0 8px}
+#cloudSaveDialog p{margin:0 0 12px;overflow-wrap:anywhere}
+#cloudSaveDialog .cloud-account{color:#aaa395;font-size:12px;margin-bottom:20px}
+#cloudSaveDialog .cloud-status{font-size:16px;font-weight:500;margin-bottom:6px}
+#cloudSaveDialog .cloud-help{color:#bdb5a7;font-size:13px;margin-bottom:20px}
+#cloudSaveDialog button{box-sizing:border-box;font:inherit;background:#302b23;color:#eee7da;border:1px solid #605441;border-radius:4px;padding:10px 14px;margin:0;min-height:44px;cursor:pointer;box-shadow:none;text-shadow:none}
+#cloudSaveDialog button:hover:not(:disabled){background:#3a3329;border-color:#958164}
+#cloudSaveDialog button:disabled{opacity:.45;cursor:default}
+#cloudSaveDialog button:focus-visible,#cloudSaveDialog summary:focus-visible,#bootCloud:focus-visible{outline:2px solid #d3bb8f;outline-offset:3px}
+#cloudSaveDialog .cloud-close{border:0;background:transparent;color:#bdb5a7;padding:8px;min-width:44px}
+#cloudSaveDialog .cloud-actions{display:flex;flex-wrap:wrap;gap:8px}
+#cloudSaveDialog .cloud-actions>button{flex:1}
+#cloudSaveDialog details{border-top:1px solid #403a30;margin-top:20px;padding-top:4px}
+#cloudSaveDialog summary{min-height:44px;box-sizing:border-box;padding:12px 0;color:#c8bdab;font-size:13px;cursor:pointer}
+#cloudSaveDialog .cloud-secondary{padding:8px 0 0}
+#cloudSaveDialog .cloud-secondary p{font-size:12px;color:#aaa395}
+#cloudSaveDialog section{border-top:1px solid #403a30;margin-top:20px;padding-top:16px}
+#cloudSaveDialog section p{font-size:13px;color:#bdb5a7}
+#cloudSaveDialog section button{margin:4px 8px 0 0}
+#cloudSaveDialog details section:first-child{border-top:0;margin-top:0;padding-top:8px}
+@media(max-width:380px){#cloudSaveDialog{padding:18px}#cloudSaveDialog h2{font-size:22px}#cloudSaveDialog section button{width:100%;margin-right:0}}
 </style>
 </head>
 <body>
@@ -447,6 +466,6 @@ window.addEventListener("unhandledrejection", function (e) {
 
 <script src="js/dragon-scene-audio.js?v=20260926-map-portraits"></script>
 <script src="js/dragon-attack-align.js?v=20260926-published-offsets"></script>
-<script src="js/cloud-saves.js?v=20260927-cloud1"></script>
+<script src="js/cloud-saves.js?v=20260927-cloud-ui2"></script>
 </body>
 </html>
