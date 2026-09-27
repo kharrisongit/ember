@@ -21,9 +21,9 @@ const MILLWOOD_STORY_DIALOGUE={
       "Hettie: The cattle are keeping their distance. Give them a little room until they get used to him."
     ],
     "dd2": [
-      "Hettie: Gwil and I can manage things here while you are away.",
-      "Corin: I left half my work unfinished.",
-      "Hettie: We noticed. We will save you something particularly muddy for when you get back."
+      "Hettie: Gwil and I have the farm in hand. How are you getting on with your dragon?",
+      "Corin: He follows me everywhere. I keep thinking about all the work I left you.",
+      "Hettie: We can manage. There will be plenty of muddy jobs left when you get back."
     ],
     "dragonNear": [
       "Hettie: He has been watching the hens. Tell him those are spoken for."
@@ -113,9 +113,9 @@ const MILLWOOD_STORY_DIALOGUE={
       "Nan Ferrow: Then it has been looked after. You must look after yourself just as carefully."
     ],
     "dd": [
-      "Nan Ferrow: So this is who you brought home. Hello, Aurelius.",
-      "Corin: You are taking this rather well.",
-      "Nan Ferrow: I have had the whole village warn me. Nobody thought to tell me he had such lovely eyes."
+      "Nan Ferrow: How is your dragon settling in? He looks quite at home beside you.",
+      "Corin: He follows me even when I only go a few steps.",
+      "Nan Ferrow: Then mind where you put your feet. You used to do the same to me when you were small."
     ],
     "dd2": [
       "Nan Ferrow: Does he sleep well? And are you sleeping at all?",

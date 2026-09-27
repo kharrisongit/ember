@@ -1850,49 +1850,52 @@ const NPC_STORIES = {
   ]
 };
 
-function fishingRodDialogue(name){
-  if(name==='Odo')return [
-    'Odo: Looking for a rod? Ask my grandson Calder. He keeps the first camp on the road to Thornwell. Tell him I sent you for his spare.',
-    'Corin: Calder is your grandson?',
-    'Odo: Aye. I gave him two rods when he set out. One to fish with, one to lend. He has had long enough to learn which is which.',
-    'Corin: I will ask him.',
-    'Odo: Try the quiet pools at Forgefalls when you have it. A little patience will put more on your plate than boasting will.'
-  ];
+function npcSeesDragon(n){
+  return !!n&&hasDragon()&&dragonHere()&&dragon.on&&!n.pettable&&
+    (mounted||Math.hypot(n.x-dragon.x,n.y-dragon.y)<192);
+}
+// This option talks about the companion, independently of unrelated quest hints.
+function npcDragonConversation(n,alt=false){
+  if(wonAll&&npcSeesDragon(n))return n.dragonNear||n.dd2||n.dd||n.d;
+  if(npcSeesDragon(n))return (alt&&n.dd2)||n.dd||n.dragonNear||n.d;
+  return (alt&&n.dragonRumor2)||n.dragonRumor||n.d;
+}
+function fishingRodDialogue(name,n){
+  const visible=npcSeesDragon(n);
+  if(name==='Odo'){
+    if(odoRodReferral)return [
+      'Odo: Calder is at the first camp on the road to Thornwell. Ask him for the spare rod and tell him I sent you.',
+      'Corin: I will look for him there.',
+      'Odo: No need to buy one. That rod has years left in it.'
+    ];
+    return [
+      visible?"Odo: Corin, there's a dragon following you. Please tell me you know he's there.":'Odo: You look as though you have somewhere to be, Corin.',
+      visible?'Corin: I know. He is coming with me, and I need a way to keep him fed.':'Corin: I could use a fishing rod for the journey. Do you have a spare?',
+      'Odo: Ask my grandson Calder. He keeps the first camp on the road to Thornwell. Tell him I sent you for his spare rod.',
+      'Corin: Calder is your grandson?',
+      'Odo: Aye. I gave him two when he set out. One to fish with, one to lend. He has had long enough to learn which is which.',
+      'Corin: I will ask him.',
+      'Odo: Try the quiet pools at Forgefalls when you have it. A little patience will put more on your plate than boasting will.'
+    ];
+  }
   return odoRodReferral?[
     'Corin: Odo sent me. He said you might have a spare fishing rod.',
-    'Calder: Grandfather did, did he? He gave me that spare years ago. Said a good rod ought to spend more time by water than tied to a pack.',
-    'Corin: Could I borrow it?',
+    'Calder: Grandfather did, did he? He gave me that spare years ago.',
+    visible?'Calder: Is that dragon travelling with you? You will get more use out of the rod than I do.':'Calder: He said a good rod ought to spend more time by water than tied to a pack.',
+    visible?'Corin: Yes. I do not think a few scraps will keep him fed for long.':'Corin: Could I borrow it?',
     'Calder: Keep it. He will be pleased somebody is finally listening to him.',
     'Calder: Try the pools below Forgefalls, southeast of Thornwell. Cast where the current slows, and mind the fast water.',
     'Corin: Thank you. I will tell Odo where his rod ended up.'
   ]:[
-    'Calder: Do you fish, Corin? I have a spare rod here that deserves more use than I give it.',
-    'Corin: You are sure you do not need it?',
+    visible?'Calder: Easy there. I have never had a dragon walk into my camp before. Is he with you?':'Calder: Do you fish, Corin? I have a spare rod here that deserves more use than I give it.',
+    visible?'Corin: He is. I hope we are not crowding you.':'Corin: You are sure you do not need it?',
+    ...(visible?['Calder: There is room by the fire. What do you feed him?','Corin: Fish, when I can get them.','Calder: Then take my spare rod.']:[]),
     'Calder: Odo is my grandfather. He gave me two when I left Millwood: one for me, and one for whoever needed it. I think that makes this one yours.',
     'Corin: That sounds like him. Thank you.',
     'Calder: Try Forgefalls, southeast of Thornwell. The pools below the falls have quiet shelves where the fish gather. Stay clear of the fast water.',
     'Corin: I will let you both know what I catch.',
     'Calder: Tell Grandfather about the small ones too. He has heard enough enormous fish stories from me.'
   ];
-}
-
-// Gift/referral dialogue must acknowledge a visible companion as ordinary
-// greetings do. Keep each person's own reaction and preserve the quest lines.
-function npcDragonAwareDialogue(n,lines){
-  if(!hasDragon()||!dragonHere()||!dragon.on||n.pettable||
-     (MAPID==='world'&&!mounted&&Math.hypot(n.x-dragon.x,n.y-dragon.y)>=192))return lines;
-  if(/\bdragon\b|Aurelius|hatchling|\bwings\b|\bscales\b/i.test(lines.join(' ')))return lines;
-  const greetings={
-    Odo:"Odo: A dragon! I wondered what had sent every fish under the bridge. You will need more than a little bait to feed that friend.",
-    Calder:"Calder: You brought a dragon to my camp. I hope he likes fish, because my spare rod seems a better welcome than a single bowl of stew.",
-    Sela:"Sela: Oh, look at the light on his scales. A living dragon, right here at my shop. Come closer, Corin; I have something that may keep you both safer.",
-    Dunstan:"Dunstan: That is a dragon outside my forge. Maddock has some explaining to do. If you two are taking the road, I had better see to your gear.",
-    Maelis:"Maelis: A dragon has chosen you. Yes, I can see him; stop hovering in the doorway. Even he cannot keep every curse off your back.",
-    Sverre:"Sverre: A dragon's fire will be welcome in this cold. But take a steady light into the workings as well; flame cannot reach around every corner."
-  };
-  const reaction=greetings[n.n]||n.dragonNear?.[0]||n.dd?.find(line=>/dragon|Aurelius|wings|scales/i.test(line));
-  if(!reaction)return lines;
-  return [reaction.includes(':')?reaction:n.n+': '+reaction,...lines];
 }
 
 function npcStoryGiftPending(n){
@@ -1916,9 +1919,9 @@ function npcStoryTopics(n){
   const profile=NPC_STORIES[n.n];if(!profile)return [];
   const topics=profile.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
-  if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true)});
-  if(n.d2?.length)topics.push({title:'Another thing I meant to ask',lines:n.d2});
-  if(hasDragon())topics.push({title:'A dragon on the road',lines:npcContextDialogue(n,true)});
+  if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
+  if(n.d2?.length&&n.n!=='Hettie')topics.push({title:'Another thing I meant to ask',lines:n.d2});
+  if(hasDragon()&&(!wonAll||npcSeesDragon(n)))topics.push({title:'A dragon on the road',lines:npcDragonConversation(n)});
   if(wonAll&&(n.dv2||n.dv)?.length)topics.push({title:'Life after Halvard',lines:n.dv2||n.dv});
   if(n.n==='Nan Ferrow'){
     topics.push({title:'What was Dad like?',lines:[
@@ -1949,7 +1952,7 @@ function openNpcTopics(n){
   const choose=topic=>{
     if(topic.go){topic.go();return;}
     const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
-    playScene(npcDragonAwareDialogue(n,lines),{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
+    playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
     {n:n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?',go:()=>beginNpcTalk(n,true)},

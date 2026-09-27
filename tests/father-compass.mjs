@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const read=p=>fs.readFileSync(p,'utf8');
 let saves=0,reveal;
-const c=vm.createContext({gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
+const c=vm.createContext({npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
  sceneHold:()=>!!c.scene,sayNpc:null,fadeDir:0,fade:0,doorMotion:null,ovl:null,ask:null,bagOpen:false,editing:false,dying:()=>false,
  saveGame:()=>saves++,showReveal:(...args)=>reveal=args,playScene:(lines,opts)=>c.scene={lines,i:0,...opts}});
 const run=s=>vm.runInContext(s,c);
@@ -12,7 +12,7 @@ c.stepFatherCompass();assert.equal(c.scene,undefined,'no reveal before Nan gives
 c.giveFatherCompass();assert.equal(saves,1);assert.equal(reveal[0],'inventory_compass');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),false);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
-assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.join(" ")')),'Nan does not explain the magic');
+assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
 for(const prop of ['fade','fadeDir','doorMotion','ovl','ask','bagOpen','editing','sayNpc']){
  c[prop]=1;c.stepFatherCompass();assert.equal(c.scene,undefined,prop+' defers reveal');c[prop]=0;
 }
@@ -28,6 +28,7 @@ c.awakenFatherCompass();assert.equal(saves,2,'idempotent awakening');
 c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false,'awakening requires ownership');
 const game=read('js/generated/game-part-2.js'),bag=read('js/generated/game-part-3.js');
 assert(game.includes('if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();'));
+assert(game.includes('sayNpc.said = fatherCompassGift(best);'));
 assert(game.includes('giver.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned'));
 assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened}'));
 console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
@@ -37,7 +38,7 @@ Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,drago
  clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
-c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();assert(c.scene.lines[0].includes('Before you go'));
+c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 assert.equal(run('templeCompass.owned'),false,'gift waits for the encounter to finish');c.scene.after();assert.equal(run('templeCompass.owned'),true);
@@ -63,3 +64,11 @@ for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
  assert(Math.hypot(waiting.goto[0]-waiting.x,waiting.goto[1]-waiting.y)<90,'Nan has only a short approach');
 }
 console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza with a short walk.');
+
+// Indoors or with the dragon away, Corin brings up what happened himself.
+c.npcSeesDragon=()=>false;
+const indoors=c.fatherCompassGift({n:'Nan Ferrow'});
+assert.match(indoors[0],/What has kept you/);assert.match(indoors[1],/I found a dragon's egg/);
+assert.deepEqual(Array.from(indoors.slice(2)),Array.from(run('FATHER_COMPASS_GIFT.slice(2)')));
+assert(!indoors.some(l=>/Aurelius|But first|Before you go/.test(l)));
+console.log('PASS: Nan responds naturally to seeing the dragon or hearing Corin’s news, without knowing his name early.');

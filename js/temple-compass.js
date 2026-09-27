@@ -2,21 +2,26 @@
    inside the current map. Closed combat gates never change the destination. */
 const templeCompass = { owned: false, awakened: false, cache: null };
 const FATHER_COMPASS_GIFT = [
-  "Nan Ferrow: Come here a moment, love. There is something I have kept for you.",
-  "Nan Ferrow: But first—Corin, is that a dragon behind you? Are you hurt?",
-  "Corin: I am all right, Nan. He hatched up by Maddock's house and followed me. I think he chose me.",
-  "Nan Ferrow: Well, little one, you have chosen someone very dear to me. You two had better look after each other.",
-  "Nan Ferrow: And you, Corin, take this. I want you to have something of your father's on the road.",
+  "Nan Ferrow: Corin... is that a dragon? Where did he come from?",
+  "Corin: I found an egg in the woods. It hatched by Maddock's house.",
+  "Nan Ferrow: You're not hurt?",
+  "Corin: No. Maddock says he chose me. He hasn't left my side since.",
+  "Nan Ferrow: You were only out for the morning. I wasn't expecting this.",
+  "Corin: Neither was I. Maddock thinks the old rider temple might have some answers.",
+  "Nan Ferrow: Beyond Millwood, then. Come here, love. There is something I want you to take.",
   "Corin: A compass?",
-  "Nan Ferrow: Your father's. He used to turn it over in his hand whenever he was thinking.",
-  "Corin: You never told me that.",
-  "Nan Ferrow: There are so many little things I still want to tell you. Your mother would sing while she worked. Your father always joined in, badly.",
-  "Nan Ferrow: We lost them both when you were born. I brought you home, and I have looked after you ever since.",
+  "Nan Ferrow: Your father's. He carried it everywhere. I've kept it since we lost him and your mother, when you were born.",
   "Corin: I wish I could remember them.",
-  "Nan Ferrow: I know, love. We can remember them together. Ask me whenever you like.",
-  "Nan Ferrow: Here. Keep this close. It'll guide you when you need it most.",
-  "Corin: I will. Thank you, Nan."
+  "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
+  "Corin: I promise, Nan.",
+  "Nan Ferrow: Good. Both of you. Take care of each other, love."
 ];
+function fatherCompassGift(nan){
+  if(npcSeesDragon(nan))return FATHER_COMPASS_GIFT.slice();
+  return ["Nan Ferrow: There you are, love. What has kept you?",
+    "Corin: I found a dragon's egg in the woods. It hatched by Maddock's house.",
+    ...FATHER_COMPASS_GIFT.slice(2)];
+}
 function restoreFatherCompass(saved) {
   templeCompass.owned = !!saved?.owned;
   templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
@@ -261,7 +266,7 @@ function stepNanDeparture(){
   }
   const path=maddockWalkPath(nan,target)||[target];
   nan.goto=path.shift()||target;
-  playScene(['Nan Ferrow: Corin! Before you go, love.',...FATHER_COMPASS_GIFT.slice(1)],
+  playScene(fatherCompassGift(nan),
     {who:'Nan Ferrow',hold:()=>{
       if(!nan.goto&&path.length)nan.goto=path.shift();
       if(nan.goto||dragon.tr)return false;

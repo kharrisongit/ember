@@ -5887,7 +5887,12 @@ function drawDragon() {
 
 const GREEN = { map: "world", tx: 30, ty: 19, fps: 7, scale: 1 };
 let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
-const GREEN_IN = 2.5, GREEN_CRASH = 1.1, GREEN_RISE = 0.9, GREEN_DEPART = 1.3;
+const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 10, GREEN_RISE = 1.2, GREEN_DEPART = 2;
+function greenEncounterFinished(){
+  // A late approach must still leave a full breathing beat to witness.
+  if(greenPhase==='sit'&&greenP>=GREEN_REST&&scene.t>=GREEN_REST)greenGone=true;
+  return greenPhase==='gone';
+}
 function greenFly(dt) {
   if (quest !== Q.ARMED || MAPID !== GREEN.map) {
     greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; window.EmberDragonSceneAudio?.phase("off"); return;
@@ -6941,10 +6946,7 @@ function stepQuest(dt) {
     quest = Q.ARMED;
   }
   if (quest === Q.ARMED && near(SPOT.north, 2.5)) {
-    playScene([], {silent:true, until:()=>{
-      if(greenPhase==='sit'&&greenP>=2.2)greenGone=true;
-      return greenPhase==='gone';
-    },after:()=>{quest=Q.FLED;}});
+    playScene([], {silent:true,until:greenEncounterFinished,after:()=>{quest=Q.FLED;}});
     return;
   }
   if (quest === Q.CARRY && MAPID === "world" && elder() && elder().away) {
@@ -10676,20 +10678,14 @@ function drawFerry(g) {
   g.restore();
 }
 function npcContextDialogue(n, alt) {
+  if (wonAll) return (alt && n.dv2) || n.dv || n.d;
   if(brambleQuest===1 && n.n!=="Rowan the Hunter" && !n.pettable &&
      (MAPID==="tavern" || (MD.title||"").startsWith("Thornwell") ||
       (MAPID==="world"&&n.x>=220*TS&&n.x<=320*TS&&n.y>=44*TS&&n.y<=150*TS)))
     return BRAMBLE_HINTS[n.n] || n.d;
 
-  // Victory must outrank merchant repeats and every old fear-of-Halvard line.
-  if (wonAll) return (alt && n.dv2) || n.dv || n.d;
-  if (hasDragon()) {
-    const visible = MAPID === "world" && dragonHere() && dragon.on &&
-      (mounted || Math.hypot(n.x - dragon.x, n.y - dragon.y) < 160);
-    if (visible) return (alt && n.dd2) || n.dd || n.dragonNear || n.d;
-    return (alt && n.dragonRumor2) || n.dragonRumor || n.d;
-  }
-  if (alt && n.d2) return n.d2;
+  if (hasDragon()) return npcDragonConversation(n,alt);
+  if (alt && n.d2 && n.n !== 'Hettie') return n.d2;
   return (hasSword() && n.dm) || n.d;
 }
 
@@ -11037,39 +11033,43 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
     if (best.n === "Nan Ferrow" && hasDragon() && !templeCompass.owned) {
-      sayNpc.said = FATHER_COMPASS_GIFT.slice();
+      sayNpc.said = fatherCompassGift(best);
     }
-    else if(best.n==='Odo'&&!fishingPole){
-      sayNpc.said=fishingRodDialogue('Odo');
+    else if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
+      sayNpc.said=fishingRodDialogue('Odo',best);
       odoRodReferral=true;saveGame();
     }
     else if(canCamperGiveFishingPole(best)&&(!odoRodReferral||rodRequest)){
       best.fishingRodGift=true;
-      sayNpc.said=fishingRodDialogue('Calder');
+      sayNpc.said=fishingRodDialogue('Calder',best);
     }
     else if (best.n === "Sela" && !glassShield) {
-      sayNpc.said = ["Sela: Corin, wait. I made something from the clearest furnace glass I have.",
+      sayNpc.said = [npcSeesDragon(best)?"Sela: A dragon at my shop. I've only ever seen them in coloured glass. Are you two travelling together?":"Sela: Corin, I've been working on something for travellers.",
+        npcSeesDragon(best)?"Corin: We are. I could use some protection for the road.":"Corin: What is it?",
+        "Sela: A shield, made from the clearest furnace glass I have.",
         "Sela: It is not meant to stop a blade by being harder than steel. The glass catches the force and throws it back.",
         "Sela: Take the Glass Shield. Hold B when something attacks you and the field will turn the blow away."];
     }
     else if (best.n === "Maelis" && !charm.ward) {
-      sayNpc.said = ["You have a talent for finding things that bite, Corin.",
+      sayNpc.said = [npcSeesDragon(best)?"Maelis: So a dragon chose you. That will draw attention, Corin. Some of it you will not want.":"Maelis: You have a talent for finding things that bite, Corin.",
         "Take my ward. Wear it, and a little of their spite will fall short.",
         "That is a gift. If you want to buy a curse, ask me another time."];
     }
     else if (best.n === "Dunstan" && hasSword() && !smithUpgrade) {
-      sayNpc.said = [...(wonAll ? (best.dv || []) : []), "Maddock's blade has served you well. Let me fit you with something stronger.",
+      sayNpc.said = [...(wonAll ? (best.dv || []) : []),
+        npcSeesDragon(best)?"Dunstan: A dragon, and Maddock's old sword. You two look bound for a difficult road.":"Dunstan: That is Maddock's old blade. It has served you well.",
+        "Corin: Can you improve it?",
+        "Dunstan: I can. And you will need armour to match. Give me a moment.",
         "There. A stronger edge, and armor to match."];
     }
     else if (best.charm === "lamp" && !charm.lamp) {
       sayNpc.said = [best.n + ": Torvald left this lantern with me before he went. Trimmed the wick himself.",
         "Corin: The wind has not put it out?",
-        best.n + ": Nothing has. Not once. Take it, Corin. You will need a steady light in the deep workings.",
+        best.n + (npcSeesDragon(best)?": Nothing has. Take it with you. Even with a dragon beside you, you will want a steady light in those workings.":": Nothing has. Not once. Take it, Corin. You will need a steady light in the deep workings."),
         "Corin: I will keep it burning.",
         best.n + ": I think it will see to that on its own."];
     }
     else sayNpc.said = npcContextDialogue(best, alt);
-    sayNpc.said=npcDragonAwareDialogue(best,sayNpc.said);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);
     typeStart(w0, t0);
     showFace(w0);
