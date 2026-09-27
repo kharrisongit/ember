@@ -242,10 +242,11 @@ hr('stepHatchScene(.05)');assert(!hr('hatchScene.maddockPath'),'Maddock waits fo
 h.revealing=false;
 for(let i=0;i<400&&!hr('hatchScene.maddockArrived');i++){
  const before=[maddock.x,maddock.y];h.scene.t+=.05;hr('stepHatchScene(.05)');
- assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=2.201,'Approach walks without teleporting');
+ assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=3.001,'Approach walks without teleporting');
  assert(hr('Math.hypot(m.x-hatchScene.dragonX,m.y-hatchScene.dragonY)>=31.99'),'Path avoids the hatchling');
  hr('advanceScene()');if(!hr('hatchScene.maddockArrived'))assert.equal(h.scene.i,10,'Rapid A cannot skip the walk');
 }
 assert(hr('hatchScene.maddockArrived'));assert.equal(h.scene.i,11);
 assert(Math.hypot(maddock.x-h.P.x,maddock.y-h.P.y)<=27,'Maddock talks beside Corin, clear of the dragon');
+assert.equal(maddock.y,h.P.y-26,'Maddock stops north of Corin');
 console.log('PASS: Maddock walks around the hatchling after the stone reveal; conversation waits for his face-to-face arrival.');

@@ -6362,10 +6362,10 @@ function stepHatchScene(dt) {
   if(scene.i===10&&!revealing&&m&&!hatchScene.maddockArrived){
     if(!hatchScene.maddockPath){
       // Keep his whole walk clear of the hatchling and Corin, then talk from
-      // Corin's side of the dragon. The silent stone beat owns this approach.
+      // Corin's north side. The silent stone beat owns this approach.
       const clear=(x,y)=>canNpcStand(x,y,m)&&
         Math.hypot(x-hatchScene.dragonX,y-hatchScene.dragonY)>=32&&Math.hypot(x-P.x,y-P.y)>=18;
-      for(const [dx,dy]of [[0,26],[-26,0],[0,-26]]){
+      for(const [dx,dy]of [[0,-26],[-12,-26],[12,-26]]){
         const target=[P.x+dx,P.y+dy];
         if(!clear(...target))continue;
         const path=maddockWalkPath(m,target,clear);
@@ -6374,7 +6374,7 @@ function stepHatchScene(dt) {
     }
     const path=hatchScene.maddockPath;
     if(path?.length){
-      const [x,y]=path[0],dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,44*dt);
+      const [x,y]=path[0],dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,60*dt);
       faceToward(m,x,y);m.scriptWalking=true;
       if(d<=step){m.x=x;m.y=y;path.shift();}
       else{m.x+=dx/d*step;m.y+=dy/d*step;}
