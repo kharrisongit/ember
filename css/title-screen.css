@@ -1,0 +1,29 @@
+/* Dawn palette for the title screen. The black rider stays silhouetted against
+   a light sky along its entire arrival/departure path. */
+#boot{
+  background:radial-gradient(ellipse at 50% 25%,#fff0d7aa,transparent 58%),
+    linear-gradient(180deg,#91bdcd 0%,#cad8cf 30%,#f1dbb8 60%,#dca173 100%)!important;
+  color:#293e43!important;
+}
+#titleSky{background:radial-gradient(ellipse at 50% 40%,#fff3dacc 0%,#fff3da40 45%,transparent 75%)}
+#titleWords{color:#293e43;text-shadow:0 1px 0 #fff4df,0 3px 8px #fff0d766}
+#bootBegin,#bootBtns button,#bootLoadRows button{
+  color:#293e43;background:#f8edd8;border:1px solid #887a62;
+  box-shadow:inset 0 1px 0 #fff9ec,0 2px 5px #594a3320;border-radius:4px;
+}
+#bootBegin:hover,#bootBtns button:hover:not(:disabled),#bootLoadRows button:hover:not(:disabled){background:#fff7e8;border-color:#405d64}
+#bootBtns button.selected,#bootLoadRows button.selected{
+  color:#fff6e3;background:#36565d;border-color:#29424a;
+  box-shadow:inset 0 1px 0 #ffffff20,0 2px 5px #263b4226;
+}
+#bootBtns button:disabled,#bootLoadRows button:disabled{color:#766e60;background:#e0d5bf;border-color:#b4a88e;opacity:1;box-shadow:none}
+#bootBegin:focus-visible,#bootBtns button:focus-visible,#bootLoadRows button:focus-visible,
+body.boot-ready #bootCloud:focus-visible{outline:2px solid #29454d;outline-offset:3px}
+#bootLabel{color:#293e43!important;opacity:1!important}
+#bootMsg,#bootHint{color:#3c5154;opacity:1!important}
+#bootBar{background:#fff1d6!important;border-color:#8d866e!important}
+#bootFill{background:#426971!important}
+#bootLoadMsg{color:#70391f}
+body.boot-ready #bootCloud{color:#304a50;background:transparent}
+body.boot-ready #bootCloud:hover{background:#fff5df66}
+body.boot-ready #bootCloudStatus{color:#465750}
