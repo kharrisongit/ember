@@ -1,0 +1,106 @@
+/* Dawn palette, scoped to utility menus so conversation artwork stays intact. */
+#bag,#itemm,#atkm,#airm,#menu,#sound,#savePrompt,#saveSlots,#loadSlots,#manageSaves,#cloudSaveDialog,#worldAtlas {
+  --dawn-paper:#f8edd8;
+  --dawn-ink:#293e43;
+  --dawn-muted:#536361;
+  --dawn-edge:#9b947e;
+  --dawn-teal:#36565d;
+  --dawn-copper:#975638;
+  scrollbar-color:#82948d #eadbc2;
+}
+#bag,#itemm,#atkm,#airm {
+  background:linear-gradient(180deg,#f1e5cf,#dfc9aa)!important;
+  color:var(--dawn-ink)!important;
+  border-color:var(--dawn-edge)!important;
+  box-shadow:0 -4px 16px #293e4326!important;
+}
+#bagHead,#bag>div:first-child {border-color:var(--dawn-edge)}
+#bagHead b,#itemm>b,#itemm>#itemQuickHead>b,#atkm>b,#airm>b {
+  color:var(--dawn-ink)!important;text-shadow:none!important;
+}
+#bagPanel {background:var(--dawn-paper);border-color:var(--dawn-edge);box-shadow:none}
+#bagPanel #bagDesc,#bagPanel #bagDesc span {color:var(--dawn-muted)}
+#bagPanel #bagDesc b {color:var(--dawn-copper)}
+#bagDesc {border-color:#9b947e66}
+#bag .slot,#itemm .row {
+  background:#f8edd8;color:var(--dawn-ink);border-color:#b6aa91;
+  text-shadow:none;box-shadow:inset 0 1px #fffaf0;
+}
+#bag .slot .n {color:var(--dawn-ink);text-shadow:0 1px #fffaf0}
+#bag .slot.on,#itemm .row.on {
+  background:#d8e2d5;border-color:var(--dawn-teal);
+  box-shadow:inset 0 0 0 2px var(--dawn-teal);
+}
+#bagHead .chip:not(.gold),#bagHead #bagClose,#itemFullBtn,#itemCloseBtn,
+#atkCloseBtn,#airCloseBtn,#bag .equipBtn,#soundActions button {
+  background:var(--dawn-paper)!important;color:var(--dawn-teal)!important;
+  border-color:var(--dawn-edge)!important;box-shadow:inset 0 1px #fffaf0!important;
+  text-shadow:none!important;
+}
+#bagHead .chip.gold {color:var(--dawn-copper);background:#e9d4b5;border-color:#b99c77}
+#bag .equipBtn.on,#bag .equipBtn:active,#soundActions button:active,
+#itemFullBtn:active,#itemCloseBtn:active,#atkCloseBtn:active,#airCloseBtn:active,
+#bagHead .chip:not(.gold):active {
+  background:var(--dawn-teal)!important;color:#fff6e3!important;border-color:#29424a!important;
+}
+/* Elemental borders and cooldown rings retain their attack-specific colors. */
+#atkm .row:nth-child(n),#airm .row:nth-child(n) {
+  background:radial-gradient(circle at 38% 28%,#fffaf0,#e9d9bd)!important;
+  color:var(--dawn-ink)!important;text-shadow:none!important;
+  box-shadow:inset 0 0 0 2px #fffaf066,0 3px 7px #594a3333!important;
+}
+#atkm .row.on:nth-child(n),#airm .row.on:nth-child(n) {
+  background:#d8e2d5!important;
+  box-shadow:inset 0 0 0 2px #36565d,0 0 0 2px #36565d!important;
+}
+#airm .row.blank:nth-child(n) {background:#d3c4a9!important;border-color:#b6aa91!important;box-shadow:inset 0 1px 4px #594a3326!important}
+#atkm .row.breathRefill .breathSecs {background:#36565d!important;color:#fff6e3!important;text-shadow:none!important}
+#deckHealth {background:linear-gradient(#f8edd8,#e9d9bd)!important;border-color:#9b947e!important;box-shadow:0 3px 8px #594a3326!important}
+
+/* Utility sheets reached from inventory. */
+#menu,#sound,#savePrompt,#saveSlots,#loadSlots,#manageSaves {background:#293e4399!important}
+#menu .plate,#soundPanel {
+  background:var(--dawn-paper);color:var(--dawn-ink);border-color:var(--dawn-edge);
+  box-shadow:inset 0 1px #fffaf0,0 6px 20px #293e4333;
+}
+#menu .plate>b,#soundPanel>b {color:var(--dawn-teal);border-color:var(--dawn-edge);text-shadow:none}
+#menu .row {color:var(--dawn-ink)}
+#menu .row.on {background:var(--dawn-teal);color:#fff6e3;box-shadow:inset 3px 0 #c78d67}
+#soundVolumeLabel,#soundPct {color:var(--dawn-ink)}
+#soundPanel .foot {color:var(--dawn-muted)!important}
+#soundVolume::-webkit-slider-runnable-track {background:linear-gradient(to right,#36565d var(--volume),#d3c4a9 var(--volume));border-color:#9b947e}
+#soundVolume::-webkit-slider-thumb {background:#975638;border-color:#fff6e3;box-shadow:0 2px 5px #594a3340}
+#soundVolume::-moz-range-track {background:#d3c4a9;border-color:#9b947e}
+#soundVolume::-moz-range-progress {background:#36565d}
+#soundVolume::-moz-range-thumb {background:#975638;border-color:#fff6e3}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves)>b {
+  background:var(--dawn-teal);color:#fff6e3;border-color:var(--dawn-edge);text-shadow:none;box-shadow:none;
+}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .rows,
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .foot {
+  background:var(--dawn-paper);color:var(--dawn-muted);border-color:var(--dawn-edge)!important;box-shadow:none;
+}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .row {
+  background:#fff5e3;color:var(--dawn-ink);border-color:#b6aa91;box-shadow:none;
+}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .row::before {background:linear-gradient(135deg,#c78d67 0 24%,#eadbc2 25% 44%,#36565d 45%);border-color:#9b947e;box-shadow:none}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .row.on {
+  background:var(--dawn-teal)!important;color:#fff6e3!important;border-color:#29424a!important;box-shadow:inset 3px 0 #c78d67!important;
+}
+:is(#savePrompt,#saveSlots,#loadSlots,#manageSaves) .row.on::after {color:#fff6e3}
+#cloudSaveDialog {background:var(--dawn-paper);color:var(--dawn-ink);border-color:var(--dawn-edge);color-scheme:light;box-shadow:0 8px 30px #293e4340}
+#cloudSaveDialog::backdrop {background:#293e4399}
+#cloudSaveDialog .cloud-account,#cloudSaveDialog .cloud-help,#cloudSaveDialog .cloud-secondary p,
+#cloudSaveDialog section p,#cloudSaveDialog summary {color:var(--dawn-muted)}
+#cloudSaveDialog button {background:#eadbc2;color:var(--dawn-ink);border-color:var(--dawn-edge)}
+#cloudSaveDialog button:hover:not(:disabled),#cloudSaveDialog button:active {background:var(--dawn-teal);color:#fff6e3;border-color:#29424a}
+#cloudSaveDialog .cloud-close {background:transparent;color:var(--dawn-teal)}
+#cloudSaveDialog details,#cloudSaveDialog section {border-color:#9b947e66}
+#worldAtlas {background:#eadbc2;color:var(--dawn-ink)}
+#worldAtlas header {background:var(--dawn-paper);border-color:var(--dawn-edge)}
+#atlasDetails {background:var(--dawn-paper);color:var(--dawn-ink);border-color:var(--dawn-edge)}
+#atlasDetails small,#atlasDetails label {color:var(--dawn-muted)}
+#worldAtlas button,#worldAtlas select {background:var(--dawn-paper);color:var(--dawn-teal);border-color:var(--dawn-edge);color-scheme:light}
+#worldAtlas button:active {background:var(--dawn-teal);color:#fff6e3}
+:is(#bag,#itemm,#atkm,#airm,#menu,#sound,#cloudSaveDialog,#worldAtlas) button:focus-visible,
+#cloudSaveDialog summary:focus-visible,#soundVolume:focus-visible {outline:2px solid #36565d;outline-offset:3px}
