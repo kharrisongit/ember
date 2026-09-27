@@ -168,7 +168,15 @@
     try{await sdk.signOut(auth);user=null;store.activate('');status='Signed out · device-only saves';refreshTitle();}
     finally{accountBusy=false;render();}
   }
-  function open(manageOnly=false){opened=true;deleteChoice=null;dialog.showModal();render();if(!manageOnly)init();}
+  function fitGameScreen(){
+    const bounds=document.getElementById('stage')?.getBoundingClientRect();
+    if(!bounds)return;
+    Object.assign(dialog.style,{left:bounds.left+'px',top:bounds.top+'px',width:bounds.width+'px',height:bounds.height+'px'});
+  }
+  function open(manageOnly=false){opened=true;deleteChoice=null;fitGameScreen();dialog.showModal();dialog.scrollTop=0;render();if(!manageOnly)init();}
+  window.addEventListener('resize',()=>{if(opened)fitGameScreen();});
+  if(typeof ResizeObserver!=='undefined')new ResizeObserver(()=>{if(opened)fitGameScreen();}).observe(document.getElementById('stage'));
+  dialog.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
   function manage(){manager.open=true;open(true);manager.scrollIntoView?.({block:'nearest'});}
   dialog.addEventListener('close',()=>{opened=false;deleteChoice=null;});
   window.addEventListener('keydown',e=>{if(opened){e.stopImmediatePropagation();if(e.key==='Escape'){e.preventDefault();dialog.close();}}},true);

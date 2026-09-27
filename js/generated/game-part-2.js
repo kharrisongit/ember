@@ -5022,7 +5022,7 @@ document.addEventListener("touchstart", e => {
 
 document.addEventListener("touchmove", e => {
   if (!e.cancelable) return;
-  if (e.target?.closest?.('input[type="range"]')) return; /* native volume slider owns its drag */
+  if (e.target?.closest?.('#cloudSaveDialog,input[type="range"]')) return; /* native volume slider owns its drag */
   const el = lockEl || scrollerFor(e.target);
   if (!el) { e.preventDefault(); return; }        /* not a scroller: swallow */
   const t0 = e.touches[0];
@@ -6366,17 +6366,27 @@ function stepHatchScene(dt) {
       // Keep his whole walk clear of the hatchling and Corin, then talk from
       // Corin's north side. The silent stone beat owns this approach.
       const clear=(x,y)=>canNpcStand(x,y,m)&&
-        Math.hypot(x-hatchScene.dragonX,y-hatchScene.dragonY)>=32&&Math.hypot(x-P.x,y-P.y)>=18;
+        Math.hypot(x-hatchScene.dragonX,y-hatchScene.dragonY)>=24&&Math.hypot(x-P.x,y-P.y)>=18;
       for(const [dx,dy]of [[0,-26],[-12,-26],[12,-26]]){
         const target=[P.x+dx,P.y+dy];
         if(!clear(...target))continue;
-        const path=maddockWalkPath(m,target,clear);
+        // Cross above the dragon before approaching Corin; shortest-path alone
+        // can choose the long southern detour around the well.
+        const northY=Math.min(P.y-34,hatchScene.dragonY-40);
+        const waypoints=[[hatchScene.dragonX,northY],[P.x,northY],target];
+        let from=m,path=[];
+        for(const waypoint of waypoints){
+          const leg=maddockWalkPath(from,waypoint,(x,y)=>clear(x,y)&&y<=Math.max(m.y,P.y)+1&&
+            (Math.abs(x-hatchScene.dragonX)>8||y<=hatchScene.dragonY-24));
+          if(!leg){path=null;break;}
+          path.push(...leg);from={x:waypoint[0],y:waypoint[1]};
+        }
         if(path){hatchScene.maddockPath=path;break;}
       }
     }
     const path=hatchScene.maddockPath;
     if(path?.length){
-      const [x,y]=path[0],dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,60*dt);
+      const [x,y]=path[0],dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,90*dt);
       faceToward(m,x,y);m.scriptWalking=true;
       if(d<=step){m.x=x;m.y=y;path.shift();}
       else{m.x+=dx/d*step;m.y+=dy/d*step;}
@@ -10842,14 +10852,16 @@ function drawFerry(g) {
               -s[2] / 2, -s[3] / 2, s[2], s[3]);
   g.restore();
 }
+function brambleHint(n){
+  if(brambleQuest!==1||n.pettable||n.n==='Rowan the Hunter')return null;
+  const lines=BRAMBLE_HINTS[n.portraitOriginalName||n.n];
+  return lines?{title:"Do you know Bramble?",lines:lines.map(line=>n.n+': '+line)}:null;
+}
 function npcContextDialogue(n, alt) {
   const finished=typeof npcFinishedRoadwork==='function'&&npcFinishedRoadwork(n);
   if(finished)return [n.n+': '+finished[2]];
   if (wonAll) return (typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt)) || (alt && n.dv2) || n.dv || n.d;
-  if(brambleQuest===1 && n.n!=="Rowan the Hunter" && !n.pettable &&
-     (MAPID==="tavern" || (MD.title||"").startsWith("Thornwell") ||
-      (MAPID==="world"&&n.x>=220*TS&&n.x<=320*TS&&n.y>=44*TS&&n.y<=150*TS)))
-    if(BRAMBLE_HINTS[n.n])return BRAMBLE_HINTS[n.n];
+  if(brambleHint(n))return brambleHint(n).lines;
 
   const audited=typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt);
   if(audited)return audited;
@@ -10929,7 +10941,7 @@ function syncBrambleParty() {
   }else if(brambleQuest===1){
     const dog=brambleActor("Bramble");dog.x=P.x;dog.y=P.y;npcs.push(dog);
   }
-  if(MAPID==="tavern"&&brambleQuest<2){const hunter=brambleActor("Rowan the Hunter");hunter.x=240;hunter.y=220;npcs.push(hunter);}
+  if(MAPID==="tavern"&&brambleQuest<2){const hunter=brambleActor("Rowan the Hunter");hunter.x=256;hunter.y=220;npcs.push(hunter);}
 }
 function bramblePath(from,to) {
   const snap=p=>p.map(v=>Math.round(v/8)*8),a=snap(from),b=snap(to),q=[a],seen=new Map([[a.join(','),null]]);
@@ -10957,15 +10969,29 @@ function tryBrambleReunion(n) {
     "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,after:()=>{
       brambleQuest=2;
       const exit=MD.doors.find(d=>d.to==="world"),target=[exit.x*TS+8,exit.y*TS-8];
-      brambleDeparture=[n,dog].filter(Boolean).map((actor,i)=>({actor,path:bramblePath([actor.x,actor.y],[target[0]+i*8,target[1]])}));
+      brambleDeparture={phase:'south',hunter:n,dog,target,
+        path:bramblePath([n.x,n.y],[n.x,n.y+24])};
       brambleTrail=[];
     }});return true;
 }
 function stepThornwellWelcome(dt) {
   syncBrambleParty();
   if(brambleDeparture){
-    for(const v of brambleDeparture){if(v.path)moveBrambleActor(v.actor,v.path,54,dt);else if(v.actor.x<cam.x-32||v.actor.x>cam.x+VW/cam.z+32||v.actor.y<cam.y-32||v.actor.y>cam.y+VH/cam.z+32)v.path=[];}
-    if(brambleDeparture.every(v=>v.path&&v.path.length===0)){npcs=npcs.filter(n=>!n.brambleCompanion);brambleDeparture=null;brambleQuest=3;}return;
+    const d=brambleDeparture;
+    if(d.phase==='calling')return;
+    if(d.phase==='south'){
+      moveBrambleActor(d.hunter,d.path,54,dt);
+      if(!d.path?.length){
+        d.phase='calling';
+        playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,after:()=>{
+          d.phase='leaving';
+          d.party=[d.hunter,d.dog].filter(Boolean).map((actor,i)=>({actor,path:bramblePath([actor.x,actor.y],[d.target[0]+i*8,d.target[1]])}));
+        }});
+      }
+      return;
+    }
+    for(const v of d.party){if(v.path)moveBrambleActor(v.actor,v.path,54,dt);else if(v.actor.x<cam.x-32||v.actor.x>cam.x+VW/cam.z+32||v.actor.y<cam.y-32||v.actor.y>cam.y+VH/cam.z+32)v.path=[];}
+    if(d.party.every(v=>v.path&&v.path.length===0)){npcs=npcs.filter(n=>!n.brambleCompanion);brambleDeparture=null;brambleQuest=3;}return;
   }
   if(thornwellArrival){
     const a=thornwellArrival;moveBrambleActor(a.dog,a.path,100,dt);
@@ -11235,6 +11261,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     else if(best.charm&&!charm[best.charm]&&typeof npcWorldProfile==='function'&&npcWorldProfile(best)?.gift){
       sayNpc.said=npcWorldProfile(best).gift.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line);
     }
+    else if(brambleHint(best))sayNpc.said=brambleHint(best).lines;
     else if(typeof libraryQuestHint==='function'&&libraryQuestHint(best))sayNpc.said=libraryQuestHint(best).lines;
     else sayNpc.said = npcContextDialogue(best, alt);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);

@@ -27,3 +27,8 @@ complete shoulders and upper arms. Cells are repacked with transparent margins,
 without CSS edge fades. Toft now has an older, broad face and grey moustache;
 Serjeant Bram has dark skin; scarf wearers have distinct visible faces; Tessa
 has two arms holding her flute. Corin’s upgraded armour has the same full framing.
+
+Fen and Rowan use individual transparent WebP overrides (`fen.webp`, `rowan.webp`),
+rendered by the same dialogue and small-portrait helpers. Generated with the built-in
+image tool from their original cells: Fen's hat removed; Rowan's small felt hat
+replaced with a large woven straw hat. Faces, clothing and painted style preserved.

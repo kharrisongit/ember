@@ -16,7 +16,7 @@ for(const [name,p] of Object.entries(profiles)){
  for(const text of p.halvard){assert(text.length>35);assert(!distinct.has(text),name+' repeats another opinion');distinct.add(text);}
  if(p.history){assert.equal(p.history.length,4);for(const text of [p.history[1],p.history[3]]){assert(!distinct.has(text),name+' repeats history');distinct.add(text);}}
 }
-run(`quest=Q.NOISE;templeCompass.owned=true;fishingPole=true;odoRodReferral=true;glassShield=true;smithUpgrade=true;charm.edge=true;brambleQuest=3;dragon.on=true;`);
+run(`quest=Q.NOISE;templeCompass.owned=true;templeCompass.meatGiven=true;fishingPole=true;odoRodReferral=true;glassShield=true;smithUpgrade=true;charm.edge=true;brambleQuest=3;dragon.on=true;`);
 // Normal journey: outside Millwood the egg has already hatched. Test the
 // companion both beside the speaker and waiting outside an interior.
 run(`quest=Q.DONE;dragonOff=false;`);
@@ -55,9 +55,9 @@ for(const name of ['Pip','Mycella','Truffle','Orin','Hask','Bevan','Marek']){
 }
 c.actor={n:'Linna',x:0,y:0,d:['Old'],dragonRumor:['duplicated line']};run("MAPID='house01'");
 assert.match(run('npcContextDialogue(actor,true).join(" ")'),/grain carts/);
-for(const [name,key] of [['Wren','twin'],['Rashida','brand'],['The Shroom King','spore']]){
+for(const [name,key] of [['Fen','twin'],['Rashida','brand'],['The Shroom King','spore']]){
  c.actor={n:name,charm:key,x:0,y:0,d:['Old'],dd:['Old']};run("wonAll=true;brambleQuest=1;MAPID='tavern';charm[actor.charm]=false;");
- run('beginNpcTalk(actor,true)');assert.equal(run('sayNpc.said.length'),3,name+' first gift explained even after victory or during another quest');
+ run('beginNpcTalk(actor,true)');assert.equal(run('sayNpc.said.length'),name==='Fen'?4:3,name+' first gift explained even after victory or during another quest');
  run('wonAll=false;charm[actor.charm]=true;brambleQuest=3');
  assert(!run('npcContextDialogue(actor,false).some(l=>/Take this|Take a spore/.test(l))'),name+' no repeated gift offer');
 }

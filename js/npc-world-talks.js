@@ -230,15 +230,7 @@ const NPC_WORLD_TALKS = {
       "dd2": [
         "The king's men have been buying salve for burns. Seeing your companion makes me wonder what they have been sent after."
       ]
-    },
-    "afterGift": [
-      "Keep the charm somewhere safe. If you need more supplies, ask; I would rather prepare a traveller than patch one up."
-    ],
-    "gift": [
-      "I have a charm called the Twin Heart. Wear it, and once in a fight your dragon can take a blow meant for you.",
-      "Corin: Will that hurt him?",
-      "It is protection you share, not an excuse to be careless. Take it, and look after each other."
-    ]
+    }
   },
   "Bevan": {
     "halvard": [
@@ -910,6 +902,13 @@ const NPC_WORLD_TALKS = {
     ]
   },
   "Fen": {
+    "gift": [
+      "Fen: Two dancers have to look after each other. I reckon it is the same for you and your dragon.",
+      "Fen: Take the Twin Heart. Wear it, and once in a fight your dragon can take a blow meant for you.",
+      "Corin: Will that hurt him?",
+      "Fen: Yes. So look after him too. Two hearts, remember?"
+    ],
+    "afterGift": ["Fen: Keep looking after each other. That is how you stay in step."],
     "halvard": [
       "His patrols make a room forget it was enjoying itself. I keep dancing partly because somebody ought to remember.",
       "I can dance without counting uniforms at the door. I may wear out Bess's floor making up for lost evenings."

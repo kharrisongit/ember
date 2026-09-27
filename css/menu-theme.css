@@ -112,3 +112,7 @@
 #atkm .row.breathRefill .breathFill {
   background:conic-gradient(from -90deg,var(--el) 0 var(--ring,100%),#b6aa914d var(--ring,100%) 100%)!important;
 }
+
+/* The account sheet fills the game screen, leaving the controller below it. */
+#cloudSaveDialog{position:fixed;inset:auto;margin:0;max-width:none;max-height:none;border-radius:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:18px 22px}
+#cloudSaveDialog .cloud-header{position:sticky;top:-18px;z-index:1;background:var(--dawn-paper);padding:12px 0;margin-bottom:12px}

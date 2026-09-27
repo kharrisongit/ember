@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const nodes=new Map();
 class Element{
- constructor(tag){this.tagName=tag;this.children=[];this.listeners={};this.textContent='';this.hidden=false;this.disabled=false;this.open=false;}
+ constructor(tag){this.style={};this.tagName=tag;this.children=[];this.listeners={};this.textContent='';this.hidden=false;this.disabled=false;this.open=false;}
  set id(id){this._id=id;nodes.set(id,this);}get id(){return this._id;}
  setAttribute(){}addEventListener(type,fn){this.listeners[type]=fn;}
  append(...children){this.children.push(...children);}appendChild(child){this.append(child);}
@@ -27,6 +27,7 @@ const c=vm.createContext({console:{warn(){}},crypto:{randomUUID:()=>String(++non
    signOut:async()=>{auth.currentUser=null;authNotify(null);}},
   {getFirestore:()=>({}),doc:()=>({}),serverTimestamp:()=>0,runTransaction:async(db,fn)=>fn({get:async()=>({exists:()=>false}),set(){}})}];}
 });c.window=c;const run=code=>vm.runInContext(code,c);
+const stage=new Element('div');stage.id='stage';stage.getBoundingClientRect=()=>({left:30,top:12,width:720,height:405});
 const boot=new Element('div');boot.id='bootBtns';
 run(read('js/cloud-save-core.js'));
 const p3=read('js/generated/game-part-3.js');
@@ -40,6 +41,8 @@ const key=slot=>c.EmberCloudState.key(slot);
 assert.equal(nodes.get('bootCloud').textContent,'Sign In');
 storage.set(key(1),save(1));storage.set('emberfell.save',save(1));
 c.EmberCloud.manage();assert(nodes.get('cloudSaveManager').open);assert.equal(connectionCount,0);
+assert.deepEqual({...nodes.get('cloudSaveDialog').style},{left:'30px',top:'12px',width:'720px',height:'405px'});
+let stopped=false;nodes.get('cloudSaveDialog').listeners.touchmove({stopPropagation(){stopped=true;}});assert(stopped,'Native scrolling stays outside the game touch handler');
 button('Delete…').click();assert(storage.has(key(1)));button('Cancel').click();assert(storage.has(key(1)));
 button('Delete…').click();storage.set(key(1),save(2));button('Delete slot 1').click();assert.equal(storage.get(key(1)),save(2),'Changed saves require a fresh confirmation');
 button('Delete…').click();button('Delete slot 1').click();assert(!storage.has(key(1)));assert.equal(storage.get('emberfell.save.migrated'),'1');

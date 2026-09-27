@@ -1,6 +1,6 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(p,'utf8');
-const c=vm.createContext({hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
+const c=vm.createContext({brambleHint:()=>null,hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
  templeCompass:{owned:false,meatGiven:false},nanGiftPending:()=>!c.templeCompass.owned||!c.templeCompass.meatGiven,glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
  canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});
@@ -47,7 +47,7 @@ console.log('PASS: Nan stories wait for hatching; Hettie menu waits for egg deli
 // Exercise the menu callbacks themselves: personal topics must start with their
 // authored exchange, while the general greeting accounts for the companion.
 const game=read('js/generated/game-part-2.js');
-vm.runInContext(game.slice(game.indexOf('function npcContextDialogue('),game.indexOf('\nfunction ',game.indexOf('function npcContextDialogue(')+10)),c);
+vm.runInContext(game.slice(game.indexOf('function brambleHint('),game.indexOf('\nfunction ',game.indexOf('function npcContextDialogue(')+10)),c);
 vm.runInContext(game.slice(game.indexOf('function beginNpcTalk('),game.indexOf('\nconst esc =')),c);
 vm.runInContext(read('js/story-dialogue.js'),c);
 Object.assign(c,{hatched:true,wonAll:false,quest:5,brambleQuest:0,TS:16,MD:{},P:{x:0,y:0},window:{},
@@ -72,7 +72,7 @@ c.openNpcTopics(gran);c.ask.opts.find(o=>o.n==='What was Dad like?').go();
 assert.match(c.scene.lines[0],/Patient with a frightened animal/);assert(!c.scene.lines.some(l=>/dragon|Aurelius/i.test(l)));
 c.dragon.x=500;assert.equal(c.npcContextDialogue(farm,false),farm.dragonRumor,'Absent dragon is not described as standing beside Corin');
 c.dragon.x=0;c.brambleQuest=1;c.MAPID='tavern';c.BRAMBLE_HINTS={Hettie:['Lost dog']};
-assert.equal(c.npcContextDialogue(farm,false),c.BRAMBLE_HINTS.Hettie);
+assert.deepEqual(Array.from(c.npcContextDialogue(farm,false)),['Hettie: Lost dog']);
 assert(!c.npcStoryTopics(farm).some(t=>t.title==='A dragon on the road'),'The greeting must not also appear under a dragon topic');
 c.wonAll=true;assert.equal(c.npcContextDialogue(farm,false),farm.dv,'Victory takes priority over earlier quest worries');
 c.wonAll=false;c.brambleQuest=0;c.MAPID='world';c.fishingPole=false;c.odoRodReferral=false;

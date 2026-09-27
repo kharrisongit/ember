@@ -26,6 +26,13 @@ function prepareDialoguePortraitCast(m,id) {
         if(Array.isArray(n[field]))n[field]=n[field].map(line=>line.startsWith(old+':')?name+line.slice(old.length):line);
       n.n=name;
     }
+    if(n.n==='Wren'){
+      if(n.charm==='twin')delete n.charm;
+      n.d=['Wren: Comfrey, feverfew, and salves for the road. What do you need?'];
+      n.dd=['Wren: Let me know if your dragon needs tending.'];
+      n.dragonRumor=['Wren: Look after your companion, Corin.'];
+    }
+    if(n.n==='Fen')n.charm='twin';
     if(n.n==='Chanter'||n.n==='Morel') {
       // Preserve stable source slots for editor history; these humans are retired.
       n.editorDeleted=n.publishedDeleted=true;
@@ -69,7 +76,9 @@ function portraitFor(who) {
   if(!who)return null;
   const name=PORTRAIT_ALIASES[who]||who;
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
-  return DIALOGUE_PORTRAITS[name]||null;
+  const portrait=DIALOGUE_PORTRAITS[name];
+  if(name==='Fen'||name==='Rowan the Hunter')return {...portrait,src:'assets/portraits/'+(name==='Fen'?'fen':'rowan')+'.webp?v=20260927'};
+  return portrait||null;
 }
 function showDialoguePortrait(who) {
   const request=++portraitRequest;
@@ -84,10 +93,11 @@ function showDialoguePortrait(who) {
   const paint=source=>{
     if(!source||request!==portraitRequest)return;
     faceEl.style.backgroundImage='url("'+source+'")';
-    faceEl.style.backgroundSize='500% 400%';
-    faceEl.style.backgroundPosition=(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
+    faceEl.style.backgroundSize=portrait.src?'contain':'500% 400%';
+    faceEl.style.backgroundPosition=portrait.src?'center bottom':(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
     faceEl.style.display='block';
   };
+  if(portrait.src){paint(portrait.src);return;}
   const cached=portraitPackImages.get(portrait.pack);
   if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
 }
@@ -101,9 +111,10 @@ function paintSmallPortrait(el,who){
   const paint=source=>{
     if(!source||el.dataset.speaker!==who)return;
     el.style.backgroundImage='url("'+source+'")';
-    el.style.backgroundSize='500% 400%';
-    el.style.backgroundPosition=(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
+    el.style.backgroundSize=portrait.src?'contain':'500% 400%';
+    el.style.backgroundPosition=portrait.src?'center bottom':(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
   };
+  if(portrait.src){paint(portrait.src);return;}
   const cached=portraitPackImages.get(portrait.pack);
   if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
 }

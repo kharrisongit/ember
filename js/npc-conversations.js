@@ -2020,7 +2020,7 @@ function openNpcTopics(n){
     playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
-    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
+    {n:brambleHint(n)?.title||libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;

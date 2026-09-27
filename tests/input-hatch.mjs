@@ -242,8 +242,9 @@ hr('stepHatchScene(.05)');assert(!hr('hatchScene.maddockPath'),'Maddock waits fo
 h.revealing=false;
 for(let i=0;i<400&&!hr('hatchScene.maddockArrived');i++){
  const before=[maddock.x,maddock.y];h.scene.t+=.05;hr('stepHatchScene(.05)');
- assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=3.001,'Approach walks without teleporting');
- assert(hr('Math.hypot(m.x-hatchScene.dragonX,m.y-hatchScene.dragonY)>=31.99'),'Path avoids the hatchling');
+ assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=4.501,'Approach walks without teleporting');
+ if(Math.abs(maddock.x-hr('hatchScene.dragonX'))<8)assert(maddock.y<=hr('hatchScene.dragonY')-24,'Maddock crosses north of the dragon');
+ assert(hr('Math.hypot(m.x-hatchScene.dragonX,m.y-hatchScene.dragonY)>=23.99'),'Path avoids the hatchling');
  hr('advanceScene()');if(!hr('hatchScene.maddockArrived'))assert.equal(h.scene.i,10,'Rapid A cannot skip the walk');
 }
 assert(hr('hatchScene.maddockArrived'));assert.equal(h.scene.i,11);
