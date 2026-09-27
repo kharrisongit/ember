@@ -1909,18 +1909,22 @@ greenSceneSource.src = window.EMBER_MEDIA.greenSceneSourceSrc;
 const GREEN_SCENE_CEL_W = 128, GREEN_SCENE_CEL_H = 112, GREEN_SCENE_DRAW = 96;
 // The supplied sheet has 6 flight, 6 crash, 5 resting and 6 takeoff poses,
 // with unequal spacing. Keep explicit source rectangles, not a guessed grid.
+// Its top row never raises the wings fully. Flight slot 2 borrows the clean
+// raised-wing takeoff pose so every flap has a visible upstroke.
 const GREEN_SCENE_RECTS = [
-  [[0,0,256,225],[280,0,265,225],[566,0,223,225],[789,0,248,225],[1038,0,242,225],[1280,0,256,225]],
+  [[0,0,256,225],[280,0,265,225],[761,719,282,218],[789,0,248,225],[1038,0,242,225],[1280,0,256,225]],
   [[0,231,193,220],[196,243,243,246],[439,293,265,240],[704,321,301,215],[1005,370,270,165],[1277,409,259,126]],
   [[0,539,285,178],[290,539,266,178],[558,539,303,178],[866,539,299,178],[1177,539,359,178]],
   [[0,838,283,163],[285,784,269,211],[483,733,352,268],[761,719,282,283],[974,733,299,229],[1286,720,250,226]]
 ];
 // Anchor flight at the shoulder, not the bottom of the wing. The supplied
 // poses have different wing heights; bottom alignment makes the body jump.
-const GREEN_FLIGHT_ANCHORS = [[110,90],[390,115],[664,84],[896,129],[1138,94],[1390,146]];
+const GREEN_FLIGHT_ANCHORS = [[110,90],[390,115],[862,863],[896,129],[1138,94],[1390,146]];
 // A few takeoff silhouettes interleave horizontally in the source sheet.
 // Polygon crop boundaries exclude the neighboring pose without repainting it.
 const GREEN_SCENE_MASKS = {
+  // Isolate the raised pose from its takeoff dust and the next dragon's head.
+  '0:2': [[780,719],[1043,719],[1043,748],[977,772],[953,821],[969,893],[999,902],[999,937],[972,937],[965,915],[910,909],[899,918],[905,932],[887,935],[870,929],[867,918],[862,931],[843,931],[829,909],[817,892],[799,878],[780,885],[761,877],[768,823]],
   '3:1': [[285,1000],[285,910],[329,876],[343,825],[381,782],[406,809],[417,882],[450,904],[484,917],[554,939],[554,1000]],
   '3:2': [[483,756],[757,733],[758,840],[767,899],[835,961],[835,1002],[551,1002],[552,938],[523,909],[483,893]],
   '3:3': [[780,719],[1043,719],[1043,748],[977,772],[953,821],[969,893],[993,935],[1043,981],[1043,1005],[827,1005],[827,952],[790,920],[761,877],[768,823]],
@@ -5990,9 +5994,9 @@ function drawDragon() {
 const GREEN = { map: "world", tx: 30, ty: 19, fps: 7, scale: 1 };
 let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
 const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 5, GREEN_RISE = 1.2, GREEN_DEPART = 2;
-// Follow the wing positions out and back instead of alternating steep and
-// flat poses in source-sheet order. Flight uses scene time, so pauses stay still.
-const GREEN_WING_CYCLE = [0,2,4,1,3,5,3,1,4,2];
+// Down -> half-raised -> fully raised -> down, with readable peak poses.
+// Use scene time for both the arrival and departure flights.
+const GREEN_WING_CYCLE = [0,4,2,2,4,0];
 function greenFlightFrame(){
   const elapsed=greenP*(greenPhase==='in'?GREEN_IN:GREEN_DEPART);
   return GREEN_WING_CYCLE[Math.floor(elapsed*GREEN.fps)%GREEN_WING_CYCLE.length];
