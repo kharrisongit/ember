@@ -28,8 +28,8 @@ run('greenFly(.2)');await flush();assert.equal(sources.filter(s=>s.buffer[0].inc
 run('greenFly(1.1)');await flush();assert.equal(active('breathing').length,1);assert(active('breathing')[0].loop);
 c.scene={t:20};assert.equal(c.greenEncounterFinished(),false);assert.equal(run('greenGone'),false,'Waiting during arrival does not consume the resting phase');
 c.scene.t=0;run('greenP=50');assert.equal(c.greenEncounterFinished(),false);assert.equal(run('greenGone'),false,'Arriving late still allows a full breathing pause');
-c.scene.t=9.9;c.greenEncounterFinished();assert.equal(run('greenGone'),false);assert.equal(active('breathing').length,1);
-c.scene.t=10.1;c.greenEncounterFinished();assert.equal(run('greenGone'),true);
+c.scene.t=4.9;c.greenEncounterFinished();assert.equal(run('greenGone'),false);assert.equal(active('breathing').length,1);
+c.scene.t=5.1;c.greenEncounterFinished();assert.equal(run('greenGone'),true,'The resting pause ends after five seconds');
 run('greenFly(.01)');await flush();assert.equal(active('breathing').length,0);assert.equal(active('wings').length,1);
 const takeoff=active('wings')[0];run('greenFly(1.3)');await flush();assert.equal(active('wings')[0],takeoff,'Takeoff flows into departure without restarting wings');
 run('greenFly(2.1)');await flush();assert.equal(active('wings').length,0);assert.equal(c.greenEncounterFinished(),true,'Quest resumes only after departure');

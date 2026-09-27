@@ -1883,6 +1883,9 @@ const GREEN_SCENE_RECTS = [
   [[0,539,285,178],[290,539,266,178],[558,539,303,178],[866,539,299,178],[1177,539,359,178]],
   [[0,838,283,163],[285,784,269,211],[483,733,352,268],[761,719,282,283],[974,733,299,229],[1286,720,250,226]]
 ];
+// Anchor flight at the shoulder, not the bottom of the wing. The supplied
+// poses have different wing heights; bottom alignment makes the body jump.
+const GREEN_FLIGHT_ANCHORS = [[110,90],[390,115],[664,84],[896,129],[1138,94],[1390,146]];
 // A few takeoff silhouettes interleave horizontally in the source sheet.
 // Polygon crop boundaries exclude the neighboring pose without repainting it.
 const GREEN_SCENE_MASKS = {
@@ -1916,8 +1919,9 @@ async function prepareGreenScene() {
       const rects = GREEN_SCENE_RECTS[row];
       const [x,y,w,h] = rects[Math.min(frame, rects.length-1)];
       const scale = .32, dw = w * scale, dh = h * scale;
-      const dx = frame * GREEN_SCENE_CEL_W + (GREEN_SCENE_CEL_W-dw)/2;
-      const dy = row * GREEN_SCENE_CEL_H + GREEN_SCENE_CEL_H - 6 - dh;
+      const anchor = row === 0 ? GREEN_FLIGHT_ANCHORS[frame] : null;
+      const dx = frame * GREEN_SCENE_CEL_W + (anchor ? 58-(anchor[0]-x)*scale : (GREEN_SCENE_CEL_W-dw)/2);
+      const dy = row * GREEN_SCENE_CEL_H + (anchor ? 64-(anchor[1]-y)*scale : GREEN_SCENE_CEL_H-6-dh);
       out.save();
       const mask = GREEN_SCENE_MASKS[row + ':' + frame];
       if (mask) {
@@ -4079,7 +4083,7 @@ function drawWorld(t, dt) {
       const f = greenPhase === "sit" ? 0
         : greenPhase === "crash" ? Math.min(5, Math.floor(greenP * 6))
         : greenPhase === "rise" ? Math.min(5, Math.floor(greenP * 6))
-        : Math.floor(performance.now() / 1000 * GREEN.fps) % 6;
+        : greenFlightFrame();
       const off = greenOffset() || [0, 0];
       const w2 = GREEN_SCENE_DRAW, h2 = w2 * GREEN_SCENE_CEL_H / GREEN_SCENE_CEL_W;
       const ddx = Math.round(o.x - w2 / 2 + off[0]);
@@ -5887,7 +5891,14 @@ function drawDragon() {
 
 const GREEN = { map: "world", tx: 30, ty: 19, fps: 7, scale: 1 };
 let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
-const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 10, GREEN_RISE = 1.2, GREEN_DEPART = 2;
+const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 5, GREEN_RISE = 1.2, GREEN_DEPART = 2;
+// Follow the wing positions out and back instead of alternating steep and
+// flat poses in source-sheet order. Flight uses scene time, so pauses stay still.
+const GREEN_WING_CYCLE = [0,2,4,1,3,5,3,1,4,2];
+function greenFlightFrame(){
+  const elapsed=greenP*(greenPhase==='in'?GREEN_IN:GREEN_DEPART);
+  return GREEN_WING_CYCLE[Math.floor(elapsed*GREEN.fps)%GREEN_WING_CYCLE.length];
+}
 function greenEncounterFinished(){
   // A late approach must still leave a full breathing beat to witness.
   if(greenPhase==='sit'&&greenP>=GREEN_REST&&scene.t>=GREEN_REST)greenGone=true;
