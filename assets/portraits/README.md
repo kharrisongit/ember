@@ -32,3 +32,11 @@ Fen and Rowan use individual transparent WebP overrides (`fen.webp`, `rowan.webp
 rendered by the same dialogue and small-portrait helpers. Generated with the built-in
 image tool from their original cells: Fen's hat removed; Rowan's small felt hat
 replaced with a large woven straw hat. Faces, clothing and painted style preserved.
+
+September 27 cast corrections use individual 384px WebP portraits for Isolde,
+Linna, Bevan, Cartwright Oswin, Ovid and Prue. Each was generated with the built-in
+image tool using the current pixel sprite as identity reference and an existing
+painted portrait as style reference. The women retain their sprite hair, skin,
+and clothing colors; Prue is young with long white hair and bangs. Bors retains
+Mattock's original portrait and stable editor identity. All portrait packs and
+individual overrides now preload during the loading/title screens.

@@ -360,7 +360,7 @@ const DIALOGUE_PORTRAITS = {
     "pack": 4,
     "cell": 13
   },
-  "Mattock": {
+  "Bors": {
     "id": 74,
     "pack": 4,
     "cell": 14

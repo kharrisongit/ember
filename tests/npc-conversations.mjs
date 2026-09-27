@@ -72,7 +72,7 @@ c.openNpcTopics(gran);c.ask.opts.find(o=>o.n==='What was Dad like?').go();
 assert.match(c.scene.lines[0],/Patient with a frightened animal/);assert(!c.scene.lines.some(l=>/dragon|Aurelius/i.test(l)));
 c.dragon.x=500;assert.equal(c.npcContextDialogue(farm,false),farm.dragonRumor,'Absent dragon is not described as standing beside Corin');
 c.dragon.x=0;c.brambleQuest=1;c.MAPID='tavern';c.BRAMBLE_HINTS={Hettie:['Lost dog']};
-assert.deepEqual(Array.from(c.npcContextDialogue(farm,false)),['Hettie: Lost dog']);
+assert.deepEqual(Array.from(c.brambleHint(farm).lines),['Hettie: Lost dog']);
 assert(!c.npcStoryTopics(farm).some(t=>t.title==='A dragon on the road'),'The greeting must not also appear under a dragon topic');
 c.wonAll=true;assert.equal(c.npcContextDialogue(farm,false),farm.dv,'Victory takes priority over earlier quest worries');
 c.wonAll=false;c.brambleQuest=0;c.MAPID='world';c.fishingPole=false;c.odoRodReferral=false;

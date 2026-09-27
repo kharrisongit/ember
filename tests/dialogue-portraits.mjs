@@ -12,6 +12,7 @@ c.window=c;
 const run=s=>vm.runInContext(s,c);
 run(read('assets/portraits/manifest.js'));
 run(read('js/dialogue-portraits.js'));
+assert.equal(scripts.length,8,'All portrait packs start loading before any conversation');
 const cast=JSON.parse(read('assets/portraits/cast.json'));
 assert.equal(new Set(cast.map(n=>n.name)).size,133);
 assert(cast.every(n=>run(`portraitFor(${JSON.stringify(n.name)})`)?.id===n.id));

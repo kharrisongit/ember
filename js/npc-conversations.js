@@ -212,16 +212,16 @@ const NPC_STORIES = {
   ],
   "Linna": [
     [
-      "The mill accounts",
-      "My first tally was wrong by one sack. I stayed up all night looking for it.",
-      "Did you find it?",
-      "Under the table, holding up a short leg. I have distrusted tidy explanations ever since."
+      "Market mornings",
+      "I like getting to the market before the carts are unloaded. Everyone thinks they have brought the best thing in town.",
+      "Who is usually right?",
+      "The baker. It is difficult to argue with warm bread."
     ],
     [
-      "A secret ambition",
-      "I would like to keep an account of things nobody buys. Birdsong, birthdays, the first warm morning.",
-      "Would anybody read it?",
-      "I would. It would be nice to finish a page without adding a total."
+      "A room at the inn",
+      "When I help Maren make the beds, I leave the window open a little. The rooms smell of the garden by evening.",
+      "Even in winter?",
+      "Only while I am working. I am trying to welcome people, not freeze them."
     ]
   ],
   "Wren": [
@@ -240,30 +240,30 @@ const NPC_STORIES = {
   ],
   "Bevan": [
     [
-      "Your first commission",
-      "My first paid job was a gate hinge. I made it thick enough to hold up a castle.",
-      "Did it work?",
-      "The post fell over. I learned to look at what my work would be attached to."
+      "Choosing apples",
+      "I turn every apple over before I put it in the basket. A bruise underneath can spoil the ones beside it.",
+      "Does that take a long time?",
+      "Less time than apologising to everybody who bought one."
     ],
     [
-      "What you want to make",
-      "A cradle. Curved runners, no sharp corners, quiet enough not to wake a sleeping child.",
-      "That sounds unlike a forge.",
-      "Only if you think iron has to threaten somebody to be useful."
+      "Your garden",
+      "I planted far too many carrots my first year. Every neighbour received a basket.",
+      "Were they pleased?",
+      "For the first three baskets. After that they started pretending to be out."
     ]
   ],
   "Isolde": [
     [
-      "Counting the ore",
-      "I can tell which crew filled a cart by how they stack it. The careful ones leave the tally where I can see it.",
-      "And the others?",
-      "Bury it under the heaviest lump. Then complain I take too long."
+      "Your drinks",
+      "My grandmother taught me to make berry cordial. She never measured anything.",
+      "How did you learn the recipe?",
+      "By making it too sweet three summers running. She drank every batch and waited for me to notice."
     ],
     [
-      "The missing names",
-      "I keep a second book with the names behind the numbers. A week's output will not tell you who worked with a bad hand.",
-      "Does anyone ask to see it?",
-      "Families do. That is reason enough to keep it."
+      "The travelling stall",
+      "Everything has its own place before I move this cart. Bottles do not forgive a loose strap.",
+      "Have you ever lost any?",
+      "One whole shelf. The road smelled of apples for a week. I check the straps twice now."
     ]
   ],
   "Nazim": [
@@ -952,7 +952,7 @@ const NPC_STORIES = {
       "Especially strangers. A familiar face already knows where the blankets are."
     ]
   ],
-  "Mattock": [
+  "Bors": [
     [
       "The sweeping",
       "I can tell which seam my husband worked by the colour of the dust beneath his chair.",
@@ -2011,7 +2011,7 @@ function npcStoryTopics(n){
 }
 function openNpcTopics(n){
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
-  if((!NPC_STORIES[n.n]&&!npcWorldProfile(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
+  if((!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
   sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;
   const choose=topic=>{
@@ -2020,7 +2020,8 @@ function openNpcTopics(n){
     playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
-    {n:brambleHint(n)?.title||libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
+    ...(brambleHint(n)?[{n:brambleHint(n).title,go:()=>choose(brambleHint(n))}]:[]),
+    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;

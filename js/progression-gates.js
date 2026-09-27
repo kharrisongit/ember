@@ -9,11 +9,11 @@ const JOURNEY_GATES = {
   hollybeck:{x:2727*16,y:215*16,rect:[2727*16-15,215*16-64,2727*16+15,215*16+56],open:()=>wonAll||breathHas.ice,
     inside:(x,y)=>(x>=2727*16&&y>=211*16)||x>=2840*16}
 };
-const journeyWagon={spr:'gw_cart',home:[12410,3374],scale:2.5,sourceId:null};
+const journeyWagon={spr:'story_broken_wagon',home:[12410,3374],scale:1,sourceId:null};
+const brokenWagonImage=new Image();brokenWagonImage.src='assets/props/broken-wagon.png?v=20260927';
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 function progressionSolid(x,y){
   if(MAPID!=='world')return false;
-  if(JOURNEY_GATES.thornwell.open()){const [wx,wy]=journeyWagon.home;if(Math.abs(x-wx)<26&&y>=wy-23&&y<wy)return true;}
   return Object.values(JOURNEY_GATES).some(g=>!g.open()&&x>=g.rect[0]&&x<g.rect[2]&&y>=g.rect[1]&&y<g.rect[3]);
 }
 function progressionMoveAllowed(x,y){
@@ -40,11 +40,6 @@ function journeyWorker(name,sprite,key,x,y,lines,portrait){
 }
 function prepareJourneyGates(){
   if(MAPID!=='world')return;
-  if(!MD._journeyWagonLocated){
-    MD._journeyWagonLocated=true;
-    const cart=objs.find(o=>/cart|wagon/.test(NAMES[o.s]||'')&&o.x>12200&&o.x<12800&&o.y>3100&&o.y<3500);
-    if(cart){journeyWagon.sourceId=cart.id;journeyWagon.spr=NAMES[cart.s];journeyWagon.home=[cart.x,cart.y];journeyWagon.scale=1;rebuildSolid();}
-  }
   if(npcs.some(n=>n.progressionWorker))return;
   const th=JOURNEY_GATES.thornwell,fw=JOURNEY_GATES.forgewick,hb=JOURNEY_GATES.hollybeck;
   npcs.push(journeyWorker('Cartwright Oswin','market_citizen1_idle_d','thornwell',th.x-62,th.y-8,[
@@ -72,7 +67,7 @@ function journeyGateProps(){
   if(MAPID!=='world')return [];
   const out=[],th=JOURNEY_GATES.thornwell,fw=JOURNEY_GATES.forgewick,ss=JOURNEY_GATES.sandspire,hb=JOURNEY_GATES.hollybeck;
   if(!th.open())out.push(progressionProp(journeyWagon.spr,th.x,th.y+28,journeyWagon.scale));
-  else if(journeyWagon.sourceId===null)out.push(progressionProp(journeyWagon.spr,...journeyWagon.home,journeyWagon.scale));
+
   if(!fw.open()){
     out.push(progressionProp('rp_carts_0_14_2',fw.x-2,fw.y-25,2),progressionProp('rp_carts_1_6_2',fw.x+3,fw.y+27,2));
     for(const [dx,dy] of [[-5,-54],[8,-4],[-8,47],[11,56]])out.push(progressionProp('rc_cavedec_0_0',fw.x+dx,fw.y+dy,2));
@@ -82,6 +77,11 @@ function journeyGateProps(){
   return out;
 }
 function drawJourneyProp(o,t){
+  if(o.spr==='story_broken_wagon'){
+    if(brokenWagonImage.complete&&brokenWagonImage.naturalWidth!==0)
+      drawGameImage(ctx,brokenWagonImage,0,0,80,56,Math.round(o.x-40),Math.round(o.y-56),80,56);
+    return;
+  }
   const s=SPR[o.spr];if(!s)return;
   const frame=o.spr==='camel_sit'?Math.floor(t*2.2+o.phase)%s[4]:0;
   const width=s[2]*o.scale,height=s[3]*o.scale;

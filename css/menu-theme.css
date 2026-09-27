@@ -116,3 +116,8 @@
 /* The account sheet fills the game screen, leaving the controller below it. */
 #cloudSaveDialog{position:fixed;inset:auto;margin:0;max-width:none;max-height:none;border-radius:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:18px 22px}
 #cloudSaveDialog .cloud-header{position:sticky;top:-18px;z-index:1;background:var(--dawn-paper);padding:12px 0;margin-bottom:12px}
+
+/* Compact conversation lists keep the world visible; long lists scroll. */
+#bagAsk.conversationTopics{width:260px!important;max-width:calc(100% - 28px)!important;max-height:min(48%,300px)!important;overflow-y:auto!important;overscroll-behavior:contain;padding:7px!important}
+#bagAsk.conversationTopics #askRows>div.topicSpeaker{position:sticky;top:-7px;z-index:1;background:#f3e7d2!important;color:#36565d!important;font:700 18px/1.3 Georgia,serif!important;letter-spacing:.02em!important;text-transform:none!important;padding:10px 8px!important;border-bottom:1px solid #9b947e}
+#bagAsk.conversationTopics #askRows>[data-ask-index]{padding:7px 8px!important;font-size:13px!important;line-height:1.4!important}

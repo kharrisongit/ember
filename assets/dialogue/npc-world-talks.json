@@ -202,18 +202,43 @@
   },
   "Linna": {
     "halvard": [
-      "The crown's figures always balance. It is the village accounts that come up short after the collectors leave.",
-      "I am keeping the old tallies. If anyone claims the levy was fair, they can sit beside me and explain each missing sack."
+      "The inn has had fewer travellers since the king's patrols started stopping people on the roads. I miss hearing where everyone has been.",
+      "People are planning journeys again. I have promised Maren I will help get the spare rooms ready."
     ],
     "history": [
-      "The mill's old accounts",
-      "The old mill books record grain lent between households. Some debts were settled in labour, or forgiven after a poor harvest.",
-      "Why write down a forgiven debt?",
-      "So the next person keeping the book would not ask for it again. A record can protect a kindness as well as a payment."
+      "Helping at the inn",
+      "I used to carry baskets from the market for Maren. Now she trusts me to choose what goes in them.",
+      "What do you bring back?",
+      "Bread, fruit, clean linen. And usually one thing we did not need because it smelled too good to leave."
+    ],
+    "bramble": [
+      "Oh, Bramble! He waits outside the inn when he smells breakfast. His owner is Rowan, the hunter. You will find him at the Copper Cup in northern Thornwell."
     ],
     "greetings": {
+      "d": [
+        "Linna: Welcome to Thornwell. If you need a bed, Maren keeps the inn.",
+        "Corin: Do you work there?",
+        "Linna: I help with errands. It is a good excuse to see everyone in town."
+      ],
+      "dd": [
+        "Linna: Is that little dragon travelling with you?",
+        "Corin: He is. His name is Aurelius.",
+        "Linna: Well, welcome to Thornwell, both of you. I will keep my bread basket out of his reach."
+      ],
+      "dd2": [
+        "Linna: He is keeping close to you. You must be getting on well.",
+        "Corin: We are learning."
+      ],
       "away": [
-        "News of your journey has arrived ahead of the grain carts. I am having trouble deciding which reports deserve a place in my book."
+        "Linna: I heard you have a dragon travelling with you. Is he waiting outside?",
+        "Corin: Yes. There is more room for him there.",
+        "Linna: Sensible. Most rooms here were built with rather smaller guests in mind."
+      ],
+      "dv": [
+        "Linna: You are back! Maren will want to hear everything. Come to the inn when you have had a rest."
+      ],
+      "dv2": [
+        "Linna: I like hearing carts on the road again. It means people feel safe enough to visit."
       ]
     }
   },
@@ -233,22 +258,68 @@
   },
   "Bevan": {
     "halvard": [
-      "His orders arrive with deadlines and no room for questions. I make spearheads because refusing would cost more than a day's wages.",
-      "I have put the spearhead patterns away. There are hinges and plough fittings waiting, and I find I prefer the noise they make."
+      "The king's collectors take the best produce before my customers even see it. I still have to explain why the good apples are gone.",
+      "I can sell what we grow without setting half of it aside for the crown. The market feels like ours again."
+    ],
+    "bramble": [
+      "Bramble knows my stall. Rowan always buys him an apple slice. Look for the hunter at the Copper Cup in Thornwell."
     ],
     "greetings": {
+      "d": [
+        "Bevan: Apples, carrots, and whatever looked good in the garden this morning.",
+        "Corin: Those are fine apples.",
+        "Bevan: Try one before you choose. A shiny skin is not everything."
+      ],
       "dd": [
-        "The crown ordered forty spearheads from me. Seeing a young dragon on the road makes that order harder to put out of my mind.",
-        "Corin: Did they say what the weapons were for?",
-        "Bevan: No. That is what troubles me."
+        "Bevan: Your dragon is very interested in my baskets.",
+        "Corin: I think he is hoping there is meat in one.",
+        "Bevan: Only vegetables here. I am afraid I will have to disappoint him."
+      ],
+      "away": [
+        "Bevan: I heard about your dragon. I hope you packed more than apples for him."
+      ],
+      "dv": [
+        "Bevan: We are keeping the best of the harvest this year. You helped make that possible, Corin."
+      ],
+      "dv2": [
+        "Bevan: There is enough here to share. That feels better than any victory speech."
       ]
     }
   },
   "Isolde": {
     "halvard": [
-      "A report can make an exhausted crew look idle. Halvard's officers seem remarkably fond of that sort of report.",
-      "I am adding the lost shifts and injuries to the output book. Whoever reads it next will have to see the whole account."
-    ]
+      "I serve whoever comes to my stall, but the king's patrols have a habit of expecting their drinks for nothing.",
+      "For the first time in years, a uniform at the market does not make everyone fall quiet. I could get used to that."
+    ],
+    "bramble": [
+      "That is Rowan's dog. The hunter buys a bottle from me when he is passing through. Try the Copper Cup in Thornwell; that is where he stops when he is home."
+    ],
+    "greetings": {
+      "d": [
+        "Isolde: Cider, berry cordial, and fresh water. What will it be?",
+        "Corin: Just looking, thank you.",
+        "Isolde: Take your time. The shade is free."
+      ],
+      "dd": [
+        "Isolde: Oh! Keep your dragon's tail clear of the bottles, please.",
+        "Corin: Sorry. We will give your stall some room.",
+        "Isolde: Thank you. He is welcome to the water, though."
+      ],
+      "dd2": [
+        "Isolde: He can look as much as he likes. Just no tasting the corks."
+      ],
+      "away": [
+        "Isolde: I heard you are travelling with a dragon. Does he drink from a bucket?",
+        "Corin: If it is a big enough bucket.",
+        "Isolde: I had better keep the large one handy, then."
+      ],
+      "dv": [
+        "Isolde: A drink for the road, Corin? After what you have done, this one is on me."
+      ],
+      "dv2": [
+        "Isolde: The market is busy again. I have not enjoyed running out of cider this much in years."
+      ]
+    }
   },
   "Nazim": {
     "halvard": [
@@ -607,7 +678,7 @@
       "I will keep the chair by the fire. Coming through hard years can leave a person tired long after the reason is gone."
     ]
   },
-  "Mattock": {
+  "Bors": {
     "halvard": [
       "He measures the seam by what leaves in carts. I measure it by the dust my husband coughs into a cloth.",
       "I want the crews heard before we celebrate how much the mines can produce. We already know what it costs to ignore them."
@@ -1074,6 +1145,9 @@
       "The wheel is sound and the road is clear. I have checked every pin twice.",
       "Will it last?",
       "With sensible loads and a little care. The sensible loads may prove the harder part."
+    ],
+    "bramble": [
+      "Bramble came nosing around my tools earlier. Take him to Rowan at the Copper Cup, north through Thornwell. His owner should be there by now."
     ]
   },
   "Miner Marn": {

@@ -4,7 +4,7 @@ const PORTRAIT_ALIASES = {
   Bram:'Serjeant Bram', Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
   Halvard:'King Halvard', King:'King Halvard', Rowan:'Rowan the Hunter',
   Iven:'Master Iven', Elowen:'Archivist Elowen', 'Shroom King':'The Shroom King',
-  'Cartwright Oswin':'Bevan','Snowbuilder Nessa':'Runa',
+  Mattock:'Bors','Snowbuilder Nessa':'Runa',
   Dragon:'Aurelius', Knight:'Doran', 'Royal Guard':'Serjeant Bram'
 };
 const PORTRAIT_RENAMES = {
@@ -17,7 +17,7 @@ const PORTRAIT_RENAMES = {
 };
 function prepareDialoguePortraitCast(m,id) {
   for(const n of m.npcs||[]) {
-    const key=editorNpcKey(n), name=PORTRAIT_RENAMES[id+':'+key]||PORTRAIT_RENAMES[key];
+    const key=editorNpcKey(n), name=n.n==='Mattock'?'Bors':PORTRAIT_RENAMES[id+':'+key]||PORTRAIT_RENAMES[key];
     if(name && n.n!==name) {
       n.editKey=key; // Old published moves continue to address this same person.
       n.portraitOriginalName ||= n.n;
@@ -45,6 +45,8 @@ function prepareDialoguePortraitCast(m,id) {
     }
   }
 }
+const PORTRAIT_FILES={Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
+const portraitFileImages=new Map();
 const portraitPackPromises=new Map(), portraitPackImages=new Map();
 const portraitPackSources=new Map();
 let portraitRequest=0;
@@ -77,7 +79,7 @@ function portraitFor(who) {
   const name=PORTRAIT_ALIASES[who]||who;
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   const portrait=DIALOGUE_PORTRAITS[name];
-  if(name==='Fen'||name==='Rowan the Hunter')return {...portrait,src:'assets/portraits/'+(name==='Fen'?'fen':'rowan')+'.webp?v=20260927'};
+  if(PORTRAIT_FILES[name])return {...(portrait||{id:134}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260927-cast-corrected'};
   return portrait||null;
 }
 function showDialoguePortrait(who) {
@@ -101,8 +103,15 @@ function showDialoguePortrait(who) {
   const cached=portraitPackImages.get(portrait.pack);
   if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
 }
-// Decode the starting cast while the existing boot screen is already visible.
-if(document.head?.appendChild)loadPortraitPack(1);
+// Warm the full cast during the existing loading/title screens. Conversation
+// should never be the first time we fetch a portrait's script and decode it.
+if(document.head?.appendChild){
+  for(let pack=1;pack<=8;pack++)loadPortraitPack(pack);
+  for(const file of Object.values(PORTRAIT_FILES)){
+    const img=new Image();img.src='assets/portraits/'+file+'.webp?v=20260927-cast-corrected';
+    portraitFileImages.set(file,img);
+  }
+}
 
 // Small telepathy portraits reuse the same cast and decoded atlas as dialogue.
 function paintSmallPortrait(el,who){

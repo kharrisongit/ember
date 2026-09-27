@@ -4958,6 +4958,7 @@ function askDraw() {
   const rows = document.getElementById("askRows");
   if (!el || !rows) return;
   el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
+  el.classList.toggle("conversationTopics",!!(ask?.npcConversation||ask?.dragonConversation));
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   wireBagDrag("bagAsk");
@@ -4992,6 +4993,7 @@ function askDraw() {
                 : "color:#7a3f3a;background:rgba(190,110,95,.26);"
                 + "border-left:3px solid #b0685c;");
       d.textContent = o.n;
+      if(ask.npcConversation||ask.dragonConversation)d.className="topicSpeaker";
       if(ask.confirmation)d.style.cssText='padding:8px;font-size:14px;line-height:1.45;font-weight:bold;white-space:normal;overflow-wrap:anywhere';
       rows.appendChild(d);
       return;

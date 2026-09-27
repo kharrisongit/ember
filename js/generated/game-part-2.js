@@ -1247,11 +1247,10 @@ function repairSeating(){
   }
   const linna=world.npcs.find(n=>n.n==='Linna');
   if(linna)Object.assign(linna,{
-    // Restore Linna's own woman sprite. Its first pose is a resting idle;
-    // the remaining frames wave and must not be used as a walking cycle.
-    packSpr:'pack_girl',lookId:'pack_girl',packDirections:false,packWalk:false,
-    stationary:true,patrol:undefined,patrolPoints:undefined,
-    goto:undefined,sk:undefined,body:undefined,idleFrame:0,idleFps:0
+    // Use a complete directional set so her town patrol can actually animate.
+    packSpr:'market_citizen4',lookId:'market_citizen4',packDirections:true,packWalk:true,
+    stationary:false,serviceAppearance:true,patrol:true,patrolPoints:[[4288,1664],[4288,1536]],
+    goto:undefined,sk:undefined,body:undefined,idleFrame:undefined,idleFps:4
   });
   const wren=world.npcs.find(n=>n.n==='Wren');
   if(wren){
@@ -5022,7 +5021,7 @@ document.addEventListener("touchstart", e => {
 
 document.addEventListener("touchmove", e => {
   if (!e.cancelable) return;
-  if (e.target?.closest?.('#cloudSaveDialog,input[type="range"]')) return; /* native volume slider owns its drag */
+  if (e.target?.closest?.('#cloudSaveDialog,#merchantShop,input[type="range"]')) return; /* native volume slider owns its drag */
   const el = lockEl || scrollerFor(e.target);
   if (!el) { e.preventDefault(); return; }        /* not a scroller: swallow */
   const t0 = e.touches[0];
@@ -10866,14 +10865,18 @@ function drawFerry(g) {
 }
 function brambleHint(n){
   if(brambleQuest!==1||n.pettable||n.n==='Rowan the Hunter')return null;
-  const lines=BRAMBLE_HINTS[n.portraitOriginalName||n.n];
+  const profile=typeof npcWorldProfile==='function'&&npcWorldProfile(n);
+  let lines=profile?.bramble||BRAMBLE_HINTS[n.portraitOriginalName||n.n];
+  const inTown=/Thornwell|Copper Cup/.test((MD?.title||'')+' '+(n.loc||''))||
+    (MAPID==='world'&&n.x>=220*TS&&n.x<=322*TS&&n.y>=44*TS&&n.y<=150*TS);
+  if(!lines&&inTown)lines=[MAPID==='tavern'?'That is Rowan’s dog, Bramble. His owner is here in the Copper Cup. Bring him over to the hunter.':'That is Bramble, Rowan’s dog. Look for Rowan at the Copper Cup, the tavern in northern Thornwell.'];
   return lines?{title:"Do you know Bramble?",lines:lines.map(line=>n.n+': '+line)}:null;
 }
+
 function npcContextDialogue(n, alt) {
   const finished=typeof npcFinishedRoadwork==='function'&&npcFinishedRoadwork(n);
   if(finished)return [n.n+': '+finished[2]];
   if (wonAll) return (typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt)) || (alt && n.dv2) || n.dv || n.d;
-  if(brambleHint(n))return brambleHint(n).lines;
 
   const audited=typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt);
   if(audited)return audited;
@@ -10940,6 +10943,19 @@ function brambleActor(name) {
   const src=W.maps.world.npcs.find(n=>n.n===name);
   return {...src,id:"bramble-"+name,t:0,brambleCompanion:true,goto:null};
 }
+function placeBrambleBesideCorin(dog){
+  for(const distance of [24,32,16,40,48])for(const [dx,dy]of [[1,0],[-1,0],[0,1],[0,-1],[.71,.71],[-.71,.71],[.71,-.71],[-.71,-.71]]){
+    const x=P.x+dx*distance,y=P.y+dy*distance;
+    if(!canStand(x,y))continue;
+    dog.x=x;dog.y=y;dog.away=false;return true;
+  }
+  dog.away=true;return false;
+}
+function brambleWelcomeInside(){
+  const town=MD.regions?.find(r=>r.name==='Thornwell')||{x0:220,x1:320,y0:44,y1:150};
+  const inset=8;
+  return P.x>=(town.x0+inset)*TS&&P.x<=(town.x1-inset)*TS&&P.y>=(town.y0+inset)*TS&&P.y<=(town.y1-inset)*TS;
+}
 function syncBrambleParty() {
   if(brambleMap===MAPID)return;
   if(brambleQuest===2){brambleQuest=3;brambleDeparture=null;}
@@ -10951,7 +10967,7 @@ function syncBrambleParty() {
       if(brambleQuest===3)npcs.push(brambleActor("Rowan the Hunter"));
     }
   }else if(brambleQuest===1){
-    const dog=brambleActor("Bramble");dog.x=P.x;dog.y=P.y;npcs.push(dog);
+    const dog=brambleActor("Bramble");placeBrambleBesideCorin(dog);npcs.push(dog);
   }
   if(MAPID==="tavern"&&brambleQuest<2){const hunter=brambleActor("Rowan the Hunter");hunter.x=256;hunter.y=220;npcs.push(hunter);}
 }
@@ -10997,13 +11013,28 @@ function stepThornwellWelcome(dt) {
         d.phase='calling';
         playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,after:()=>{
           d.phase='leaving';
-          d.party=[d.hunter,d.dog].filter(Boolean).map((actor,i)=>({actor,path:bramblePath([actor.x,actor.y],[d.target[0]+i*8,d.target[1]])}));
+          // Give the waiting dog room before leading him toward the door.
+          // Independent routes can otherwise send Rowan straight through him.
+          const dogStart=d.dog&&[d.dog.x,d.dog.y];
+          d.path=maddockWalkPath(d.hunter,d.target,(x,y)=>canStand(x,y)&&
+            (!dogStart||Math.hypot(x-dogStart[0],y-dogStart[1])>=28));
+          d.trail=d.dog?(bramblePath([d.dog.x,d.dog.y],[d.hunter.x,d.hunter.y])||[]):[];
         }});
       }
       return;
     }
-    for(const v of d.party){if(v.path)moveBrambleActor(v.actor,v.path,54,dt);else if(v.actor.x<cam.x-32||v.actor.x>cam.x+VW/cam.z+32||v.actor.y<cam.y-32||v.actor.y>cam.y+VH/cam.z+32)v.path=[];}
-    if(d.party.every(v=>v.path&&v.path.length===0)){npcs=npcs.filter(n=>!n.brambleCompanion);brambleDeparture=null;brambleQuest=3;}return;
+    if(d.path?.length){
+      moveBrambleActor(d.hunter,d.path,54,dt);
+      const last=d.trail.at(-1);
+      if(!last||Math.hypot(d.hunter.x-last[0],d.hunter.y-last[1])>=4||!d.path.length)d.trail.push([d.hunter.x,d.hunter.y]);
+    }
+    if(d.path&&!d.path.length)d.hunter.away=true;
+    if(d.dog&&d.trail.length){
+      const gap=Math.hypot(d.dog.x-d.hunter.x,d.dog.y-d.hunter.y);
+      const speed=d.hunter.away?54:Math.min(54,Math.max(0,gap-28)/dt);
+      if(speed>0)moveBrambleActor(d.dog,d.trail,speed,dt);
+    }
+    if(d.hunter.away&&(!d.dog||!d.trail.length)){npcs=npcs.filter(n=>!n.brambleCompanion);brambleDeparture=null;brambleQuest=3;}return;
   }
   if(thornwellArrival){
     const a=thornwellArrival;moveBrambleActor(a.dog,a.path,100,dt);
@@ -11011,12 +11042,12 @@ function stepThornwellWelcome(dt) {
     return;
   }
   if(brambleQuest===1){
-    const dog=npcs.find(n=>n.pettable);if(!dog||sceneHold()||sayNpc||mounted||ride||doorMotion)return;
+    const dog=npcs.find(n=>n.pettable);if(dog?.away&&!placeBrambleBesideCorin(dog))return;if(!dog||sceneHold()||sayNpc||mounted||ride||doorMotion)return;
     const last=brambleTrail.at(-1);
     if(last&&Math.hypot(P.x-last[0],P.y-last[1])>40){
       const route=bramblePath([dog.x,dog.y],[P.x,P.y]);
       if(route)brambleTrail=route;
-      else if(Math.hypot(dog.x-P.x,dog.y-P.y)>200&&(dog.x<cam.x-32||dog.x>cam.x+VW/cam.z+32||dog.y<cam.y-32||dog.y>cam.y+VH/cam.z+32)){dog.x=P.x;dog.y=P.y;brambleTrail=[];}
+      else if(Math.hypot(dog.x-P.x,dog.y-P.y)>200&&(dog.x<cam.x-32||dog.x>cam.x+VW/cam.z+32||dog.y<cam.y-32||dog.y>cam.y+VH/cam.z+32)){placeBrambleBesideCorin(dog);brambleTrail=[];}
       else return;
     }else if(!last||Math.hypot(P.x-last[0],P.y-last[1])>=5)brambleTrail.push([P.x,P.y]);
     if(brambleTrail.length>600)brambleTrail.splice(0,brambleTrail.length-600);
@@ -11027,7 +11058,7 @@ function stepThornwellWelcome(dt) {
     return;
   }
   if(brambleQuest!==0||MAPID!=="world"||mode!=="play"||editing||sceneHold()||sayNpc||doorMotion||ride||mounted)return;
-  if(P.x<220*TS||P.x>320*TS||P.y<44*TS||P.y>150*TS)return;
+  if(!brambleWelcomeInside())return;
   const dog=npcs.find(n=>n.pettable),path=welcomePath();if(!dog||!path)return;
   if(Math.hypot(dog.x-P.x,dog.y-P.y)<150){
     const nearby=bramblePath([dog.x,dog.y],[P.x+24,P.y]);if(!nearby)return;thornwellArrival={dog,path:nearby};
@@ -11048,8 +11079,15 @@ function petCompanion(n) {
   if ((n.pettedUntil || 0)>now) return true;
   faceToward(n,P.x,P.y);
   n.pettedUntil=now+1.6;
-  pHp=pMax; showHeal("potion");
-  toast("You scratch Bramble behind the ears. Full health restored!");
+  pHp=pMax;showHeal("potion");
+  if(hasDragon()){
+    const wasDown=dragon.down||dragon.hp<=0;
+    dragon.maxHp=dragonMaxHp();dragon.hp=dragon.maxHp;
+    dragon.down=false;dragon.revive=0;dragon.knockdown=0;dragon.hurt=0;
+    if(wasDown){dragon.tr=null;dragon.air=false;dragon.moving=false;}
+    showHeal('dragon');refreshWingBtn();
+  }
+  toast(hasDragon()?"Bramble cheers you both up. Corin and Aurelius are fully healed!":"You scratch Bramble behind the ears. Full health restored!");
   return true;
 }
 function drawPetHeart(n,t,sp) {
@@ -11273,7 +11311,6 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     else if(best.charm&&!charm[best.charm]&&typeof npcWorldProfile==='function'&&npcWorldProfile(best)?.gift){
       sayNpc.said=npcWorldProfile(best).gift.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line);
     }
-    else if(brambleHint(best))sayNpc.said=brambleHint(best).lines;
     else if(typeof libraryQuestHint==='function'&&libraryQuestHint(best))sayNpc.said=libraryQuestHint(best).lines;
     else sayNpc.said = npcContextDialogue(best, alt);
     const [w0, t0] = whoSays(best, sayNpc.said[0]);

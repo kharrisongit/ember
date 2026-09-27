@@ -21,7 +21,7 @@ function drawMerchantShop(){
   merchantShopSelection=key;
   const item=STOCK[key],bagItem=BAG.find(it=>it.key===key),qty=detail?.qty||1;
   let root=document.getElementById('merchantShop');
-  if(!root){root=document.createElement('section');root.id='merchantShop';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');document.body.appendChild(root);}
+  if(!root){root=document.createElement('section');root.id='merchantShop';root.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');document.body.appendChild(root);}
   document.body.classList.add('shop-open');document.getElementById('bagAsk').style.display='none';
   const stockScroll=root.querySelector('.shop-stock')?.scrollTop||0;
   root.className=witch?'witch-shop':'';root.setAttribute('aria-label',giver.n+' shop');
