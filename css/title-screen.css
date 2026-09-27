@@ -18,12 +18,12 @@
 }
 #bootBtns button:disabled,#bootLoadRows button:disabled{color:#766e60;background:#e0d5bf;border-color:#b4a88e;opacity:1;box-shadow:none}
 #bootBegin:focus-visible,#bootBtns button:focus-visible,#bootLoadRows button:focus-visible,
-body.boot-ready #bootCloud:focus-visible{outline:2px solid #29454d;outline-offset:3px}
+body.boot-ready #bootAccountButtons button:focus-visible{outline:2px solid #29454d;outline-offset:3px}
 #bootLabel{color:#293e43!important;opacity:1!important}
 #bootMsg,#bootHint{color:#3c5154;opacity:1!important}
 #bootBar{background:#fff1d6!important;border-color:#8d866e!important}
 #bootFill{background:#426971!important}
 #bootLoadMsg{color:#70391f}
-body.boot-ready #bootCloud{color:#304a50;background:transparent}
-body.boot-ready #bootCloud:hover{background:#fff5df66}
+body.boot-ready #bootAccountButtons button{color:#fff6e3;background:#36565d;border:1px solid #29424a;box-shadow:inset 0 1px 0 #ffffff20,0 2px 5px #263b4226}
+body.boot-ready #bootAccountButtons button:hover{background:#29424a}
 body.boot-ready #bootCloudStatus{color:#465750}

@@ -148,8 +148,10 @@ console.log('PASS: loading ignores input; title saves stay outside gameplay, Bac
 // Exercise the real cutscene setup, animation, render queue, and advance gate.
 let hatchSounds=0;
 const maddock={x:100,y:100},h=vm.createContext({window:{EmberSfx:{hatch:()=>hatchSounds++}},dragonCombatActive:()=>false,
+  scene:null,fadeDir:0,pendingActorStage:null,ELDER_WELL:[48,373],VW:800,VH:600,
+  clearPadInputs(){},clampCam(){},lockHatchCamera:(c,m,hs)=>({x:hs.eggX,y:hs.eggY,z:c.zoom}),
   P:{x:100,y:140},TS:16,cam:{z:2},canStand:()=>true,canNpcStand:()=>true,faceCorinAt(){},faceToward(){},dragon:{on:true},
-  HATCH_LINES:Array.from({length:20},()=>''),finishHatchScene(){},elder:()=>maddock,MAPID:'world',
+  HATCH_LINES:Array.from({length:20},(_,i)=>i===0?'Maddock: Corin! What is that under your arm!':''),finishHatchScene(){},elder:()=>maddock,MAPID:'world',
   revealing:false,typeDone:()=>true,showScene(){},standableNear:(x,y)=>[x,y],rebuildSolid(){},
   playScene:(lines,opts)=>{h.scene={lines,i:0,t:0,...opts};},draw:[]
 });
@@ -157,7 +159,21 @@ const hr=code=>vm.runInContext(code,h);
 hr('let hatchScene=null,hatchCamera=null,camFree=false;');
 hr(section(p2,'function beginHatchScene(','const DRAGON_NAME ='));
 hr(section(p2,'function advanceScene() {','const HERD_Y ='));
-h.m=maddock;hr('beginHatchScene(m)');
+hr(section(p2,'function royalBlackout(','function questTalk()'));
+h.m=maddock;
+const stages=[];
+for(const [dx,dy] of [[0,40],[0,-40],[40,0],[-40,0]]){
+  Object.assign(maddock,{x:776,y:5984});h.P.x=maddock.x+dx;h.P.y=maddock.y+dy;
+  h.scene=null;h.fadeDir=0;hr('hatchScene=null;beginHatchScene(m)');
+  assert.equal(h.fadeDir,1);assert.equal(h.P.x,776+dx,'No visible relocation before blackout');
+  hr('{const swap=pendingActorStage;pendingActorStage=null;swap();}');
+  assert.equal(h.scene.lines[0],'Maddock: Corin! What is that under your arm!');
+  stages.push(JSON.stringify(hr('[P.x,P.y,m.x,m.y,hatchScene.eggX,hatchScene.eggY]')));
+  assert.equal(h.P.x,maddock.x-48);assert.equal(h.P.y,maddock.y);
+  h.scene.after();assert.equal(h.scene.i,1,'Opening line does not repeat after black');assert.equal(h.fadeDir,-1);
+}
+assert(stages.every(stage=>stage===stages[0]),'All four approaches stage identically');
+console.log('PASS: four approach angles wait for blackout, show the exact line, and place Corin west with identical egg spacing.');
 const drawHatch=section(p2,'  if (hatchScene && hatchScene.stage','  if (bell)');
 function hatchFrame(i,t){h.scene.i=i;h.scene.t=t;h.draw=[];hr('stepHatchScene(.016)');hr(drawHatch);return h.draw[0];}
 for(let i=0;i<3;i++)for(const t of [0,.5,30])assert.equal(hatchFrame(i,t),undefined,'Egg stays hidden throughout dialogue '+i);
@@ -169,8 +185,8 @@ assert.equal(hatchFrame(3,.6).y,landing);
 hr('advanceScene()');assert.equal(h.scene.i,3,'Rapid A cannot skip either backward step');
 const beforeRetreat=hr('[...hatchScene.p0,...hatchScene.m0]');
 hr('stepHatchScene(.55)');
-assert.equal(h.P.y-beforeRetreat[1],24,'Corin steps away before the egg shakes');
-assert.equal(beforeRetreat[3]-maddock.y,24,'Maddock steps away before the egg shakes');
+assert.equal(beforeRetreat[0]-h.P.x,24,'Corin steps away before the egg shakes');
+assert.equal(maddock.x-beforeRetreat[2],24,'Maddock steps away before the egg shakes');
 hr('advanceScene()');assert.equal(h.scene.i,4);
 for(const i of [4,5,6])assert.equal(hatchFrame(i,.1).y,landing,'Egg rests on ground for the remaining dialogue');
 assert.equal(hatchSounds,0,'Opening shakes precede the shell crack');

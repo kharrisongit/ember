@@ -26,7 +26,7 @@ await d.useCloud(1,backend);assert.equal(d.storage.getItem(d.key(1)),save(6));
 // A second cloud change invalidates an old conflict choice.
 put(d,1,7);put(b,1,8);await b.syncSlot(1,backend);await d.syncSlot(1,backend);put(b,1,9);await b.syncSlot(1,backend);assert.equal(await d.useCloud(1,backend),false);assert.equal(d.storage.getItem(d.key(1)),save(7));assert.equal(await d.useCloud(1,backend),true);assert.equal(d.storage.getItem(d.key(1)),save(9));
 // Versioned deletion and stale offline progress also produce a conflict.
-b.storage.removeItem(b.key(1));b.saved(1);await b.syncSlot(1,backend);assert(database.get('alice/1').deleted);put(d,1,10);await d.syncSlot(1,backend);assert(d.conflicts.has(1));await d.useCloud(1,backend);assert.equal(d.storage.getItem(d.key(1)),null);
+b.remove(1);await b.syncSlot(1,backend);assert(database.get('alice/1').deleted);put(d,1,10);await d.syncSlot(1,backend);assert(d.conflicts.has(1));await d.useCloud(1,backend);assert.equal(d.storage.getItem(d.key(1)),null);
 // Network failure leaves both data and the pending marker intact across reload.
 put(d,2,11);await assert.rejects(d.syncSlot(2,{transact:async()=>{throw Error('offline');}}));const restored=new c.EmberCloudSaveStore(d.storage);assert.equal(restored.owner,'alice');assert(restored.meta(2).dirty);await restored.syncSlot(2,backend);assert.equal(database.get('alice/2').saveJson,save(11));
 // Another account sees only its own local slots and cloud documents.
@@ -35,3 +35,10 @@ restored.activate('bob');assert.equal(restored.storage.getItem(restored.key(2)),
 database.set('alice/3',{format:1,revision:'bad',deleted:false,saveJson:'{"map":null}'});await assert.rejects(restored.syncSlot(3,backend));assert.equal(restored.storage.getItem(restored.key(3)),null);
 assert.throws(()=>restored.key(4));
 console.log('PASS: account isolation, guest import, two-device conflicts, idempotent retry, in-flight saves, active-game protection, conflict revalidation, deletions, offline recovery and malformed data rejection.');
+
+// Device deletion clears its legacy mirror and cannot migrate back on reload.
+const guest=make();put(guest,1,13);guest.storage.setItem('emberfell.save',save(13));
+guest.remove(1);assert.equal(guest.storage.getItem(guest.key(1)),null);
+assert.equal(guest.storage.getItem('emberfell.save'),null);assert.equal(guest.storage.getItem('emberfell.save.migrated'),'1');
+assert.deepEqual(Array.from(guest.dirtySlots()),[],'Device-only deletions do not queue account writes');
+console.log('PASS: deleting a device save clears legacy resurrection; account deletion syncs a revisioned tombstone.');

@@ -6176,7 +6176,7 @@ function stepBirds(dt) {
   for (const b of BIRDS) { b.x += b.vx * dt; b.y += b.vy * dt; }
 }
 const HATCH_LINES = [
-      "Maddock: Corin? What have you got there?",
+      "Maddock: Corin! What is that under your arm!",
       "Corin: Maddock, I found something in the north field.",
       "Maddock: Let me see. Where did you find an egg that size?",
       "Maddock: Set it here, gently. It is moving.",
@@ -6248,19 +6248,36 @@ function stepHatchCamera(dt) {
   }
 }
 function beginHatchScene(m) {
-  hatchCamera = { zoom: cam.z, returnT: 0 };
-  camFree = true;
-  // Both step away when the egg is put down, before it starts shaking.
-  const ex=(P.x+m.x)/2,ey=(P.y+m.y)/2;
-  hatchScene = { x: ex, y: ey - 18, eggX: ex, eggY: ey,
-                 stage: 0, t: 0, dragonX: ex, dragonY: ey,
-                 dir: "s", spread: false, spreadT: 0, stoneShown: false,
-                 approachDone: false, turnStage: -1 };
-  faceCorinAt(ex, ey);
-  faceToward(m, ex, ey);
-  dragon.on = false;
-  playScene(HATCH_LINES, { who: "Maddock", hatch: true, stay: true, after: finishHatchScene });
+  if (!m || scene || fadeDir || pendingActorStage || hatchScene) return;
   m.goto = null;
+  P.moving = false;
+  royalBlackout(HATCH_LINES[0], () => {
+    // Stage the same west-to-east composition entirely behind the blackout.
+    m.x = ELDER_WELL[0] * TS + TS / 2;
+    m.y = ELDER_WELL[1] * TS + TS;
+    m.home = [m.x, m.y]; m.goto = null; m.scriptWalking = false;
+    P.x = m.x - TS * 3; P.y = m.y; P.act = null;
+    clearPadInputs();
+    hatchCamera = { zoom: cam.z, returnT: 0 };
+    camFree = true;
+    // Both step away when the egg is put down, before it starts shaking.
+    const ex=(P.x+m.x)/2,ey=(P.y+m.y)/2;
+    hatchScene = { x: ex, y: ey - 18, eggX: ex, eggY: ey,
+                   stage: 0, t: 0, dragonX: ex, dragonY: ey,
+                   dir: "s", spread: false, spreadT: 0, stoneShown: false,
+                   approachDone: false, turnStage: -1 };
+    faceCorinAt(ex, ey);
+    faceToward(m, ex, ey);
+    dragon.on = false;
+    hatchCamera.goal = lockHatchCamera(hatchCamera, m, hatchScene);
+    cam.x = hatchCamera.goal.x - VW / cam.z / 2;
+    cam.y = hatchCamera.goal.y - VH / cam.z / 2;
+    clampCam(); rebuildSolid();
+  }, () => {
+    // The first line was shown on black; retain the later animation indices.
+    playScene(HATCH_LINES, { i: 1, who: "Maddock", npcActor: m, hatch: true, stay: true, after: finishHatchScene });
+    m.goto = null;
+  });
 }
 function hatchRetreat(actor,ox,oy,clear,maxStep=24) {
   const angle=Math.atan2(actor.y-oy,actor.x-ox);

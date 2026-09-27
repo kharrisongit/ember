@@ -5468,7 +5468,8 @@ const MENUS = {
   savePrompt: { rows: "savePromptRows", desc: "savePromptDesc", pick: 0, items: () => [
     { name: "Overwrite existing save", tell: "Choose an existing save slot to overwrite.", go: () => setOvl("saveSlots") },
     { name: "Create new save", tell: "Use the first empty save slot.", go: () => { const slot=firstEmptySaveSlot(); if(!slot){toast("all save slots are full — overwrite one instead");setOvl("saveSlots");return;} saveToSlot(slot); setOvl(null); } },
-    { name: "Cloud saves", tell: "Google sign-in, cloud sync and saved versions.", go: () => {setOvl(null);window.EmberCloud?.open();} },
+    { name: "Manage saves", tell: "Review save slots and confirm a deletion.", go: () => {setOvl(null);window.EmberCloud?.manage();} },
+    { name: () => window.EmberCloud?.isSignedIn() ? "Logged in" : "Sign In", tell: "Sign into Google for cloud saves.", go: () => {setOvl(null);window.EmberCloud?.open();} },
     { name: "Back", tell: "Close the save menu.", go: () => setOvl(null) }
   ] },
   saveSlots: { rows: "saveSlotRows", desc: "saveSlotDesc", pick: 0, items: () => saveSlotItems("overwrite") },
@@ -5738,10 +5739,12 @@ function readSaveSlot(slot){ try{return JSON.parse(localStorage.getItem(saveKey(
 function migrateLegacySave(){
   if(window.EmberCloudState?.owner)return;
   try{
+    if(localStorage.getItem("emberfell.save.migrated"))return;
     if(!readSaveSlot(1)){
       const legacy=JSON.parse(localStorage.getItem("emberfell.save")||"null");
       if(legacy)localStorage.setItem(saveKey(1),JSON.stringify(legacy));
     }
+    localStorage.setItem("emberfell.save.migrated","1");
   }catch(e){}
 }
 migrateLegacySave();
@@ -5776,8 +5779,12 @@ function saveToSlot(slot,quiet=false){
 /* Story/autosave calls continue silently into the currently active slot. */
 function saveGame(){ saveToSlot(activeSaveSlot,true); }
 function deleteSaveSlot(slot){
-  try{localStorage.removeItem(saveKey(slot));window.EmberCloudState?.saved(slot); if(activeSaveSlot===slot)activeSaveSlot=1; toast("slot "+slot+" deleted"); refreshOvl();}
-  catch(e){toast("could not delete save");}
+  try{
+    if(window.EmberCloudState)window.EmberCloudState.remove(slot);
+    else{localStorage.setItem("emberfell.save.migrated","1");localStorage.removeItem("emberfell.save");localStorage.removeItem(saveKey(slot));}
+    if(activeSaveSlot===slot)activeSaveSlot=1;
+    toast("slot "+slot+" deleted");refreshOvl();return true;
+  }catch(e){toast("could not delete save");return false;}
 }
 function saveSlotItems(mode){
   const items=[];
@@ -5788,7 +5795,7 @@ function saveSlotItems(mode){
     }else if(mode==="load"){
       items.push({name:label,tell:data?"Load this save.":"This slot is empty.",dim:()=>!readSaveSlot(slot),go:()=>{if(loadGame(slot))setOvl(null);}});
     }else{
-      items.push({name:label,tell:data?"Press A again to delete this save slot.":"This slot is empty.",dim:()=>!readSaveSlot(slot),go:()=>{if(data)deleteSaveSlot(slot);}});
+      items.push({name:label,tell:data?"Review this slot before deleting it.":"This slot is empty.",dim:()=>!readSaveSlot(slot),go:()=>{setOvl(null);window.EmberCloud?.manage();}});
     }
   }
   if(mode==="overwrite"&&!items.length)items.push({name:"No saves to overwrite",tell:"Create a new save first.",dim:()=>true});

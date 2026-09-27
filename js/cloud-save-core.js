@@ -28,6 +28,16 @@
       if(!this.owner)return;
       this.setMeta(slot,{...this.meta(slot),dirty:true,writeId:this.makeId()});this.onChange();this.onDirty();
     }
+    remove(slot){
+      const key=this.key(slot),raw=this.storage.getItem(key);
+      if(!this.owner){
+        // Deleted device saves must never be resurrected by legacy migration.
+        this.storage.setItem('emberfell.save.migrated','1');
+        if(this.storage.getItem('emberfell.save')===raw)this.storage.removeItem('emberfell.save');
+      }
+      this.storage.removeItem(key);
+      this.saved(slot);this.onChange();
+    }
     dirtySlots(){return [1,2,3].filter(n=>this.meta(n).dirty);}
     backup(slot,...values){
       const key=this.key(slot)+'.backups',old=parse(this.storage.getItem(key))||[];
