@@ -369,7 +369,7 @@ const DRAGON_LONG_TALKS={
     'Aurelius: You found something you did not understand, and carried it to someone who might help. You did not break it open to see whether it was valuable.',
     'Corin: It was an egg. I thought that would be rather cruel.',
     'Aurelius: You say that as though everyone would agree. That is part of my answer.',
-    'Corin: I am still a miller’s son. I have never led anyone anywhere.',
+    'Corin: Before this began, I was a miller’s son who had never led anyone anywhere.',
     'Aurelius: A rider is a companion, Corin. Not a person made taller by sitting above another living thing.',
     'Corin: And if I make the wrong choice?',
     'Aurelius: I will tell you. You may do the same for me. A bond without disagreement would be a very lonely kind of obedience.',
@@ -384,7 +384,7 @@ const DRAGON_LONG_TALKS={
     heartKnown?'Corin: Alderic said the stones came from the first dragon.':'Corin: Maddock thought the old temples might have answers.',
     heartKnown?'Aurelius: That account lives in our shared memory too. Something ancient was divided into powers that could be carried. The knowledge deserves care.':'Aurelius: Then we should listen to the keepers who have waited there. An inherited memory is no excuse to ignore a living witness.',
     'Corin: Could I order you to use them?',
-    'Aurelius: You can ask. You should also listen. Power that cannot hear an answer becomes the sort of power we are resisting.',
+    'Aurelius: You can ask. You should also listen. Power that cannot hear an answer becomes the sort of power we should never accept.',
     'Corin: I would rather have you than a collection of weapons.',
     'Aurelius: Good. Weapons make poor conversation.'
   ],
@@ -422,7 +422,7 @@ const DRAGON_LONG_TALKS={
     'Corin: No throne for a miller’s son?',
     'Aurelius: You already complain about sitting still. Let us begin by visiting the people who helped us.'
   ]:[
-    'Corin: Why would Halvard fear a dragon that has only just hatched?',
+    'Corin: Why would Halvard fear a young dragon like you?',
     'Aurelius: Because I chose someone without asking his permission. A bond freely given is a thing he cannot manufacture by decree.',
     'Corin: Maddock thinks he will take you, or kill us both.',
     'Aurelius: Then we must prepare. Being right will not turn aside a blade. Friends, equipment and the heartstones can help us reach him alive.',
@@ -461,15 +461,15 @@ const DRAGON_LONG_TALKS={
     'Corin: You have made eating sound very noble.',
     'Aurelius: I have a gift for explaining important things.'
   ],
-  self:[
+  self:()=>[
     'Corin: What do you want, Aurelius? Apart from supper.',
     'Aurelius: To learn which parts of the world I love for myself. To see a place my inherited memories describe and discover what they missed.',
     'Corin: Such as?',
     'Aurelius: The smell of bread at a particular door. Whether snow is worth getting cold for. What makes you laugh when you have forgotten to be worried.',
     'Corin: Those are rather small things for a dragon.',
     'Aurelius: Only if you measure them by size. What do you want?',
-    'Corin: To come home without bringing danger to everyone there.',
-    'Aurelius: Then I would like to see that day with you.',
+    wonAll?'Corin: To go home and have enough time to feel at home again.':'Corin: To come home without bringing danger to everyone there.',
+    wonAll?'Aurelius: Then let us give ourselves that time.':'Aurelius: Then I would like to see that day with you.',
     'Corin: And after that?',
     'Aurelius: We can have the luxury of deciding after that.'
   ]
@@ -543,7 +543,7 @@ function dragonSideQuest(topic){
     'Corin: We have the Hollybeck Lantern now.',
     'Aurelius: Carry it into the dark mine galleries. Its steady light lets you explore the deep workings.'
   ]:[
-    'Corin: Mira mentioned a way to see in the mines.',
+    'Corin: We heard about a way to see in the mines.',
     'Aurelius: Torvald left his special lantern with Sverre in Hollybeck. Let us ask Sverre for it before we go deep underground.'
   ];
   if(topic==='graveyard')return charm.wake?[
@@ -721,10 +721,10 @@ const DRAGON_JOURNEY_TOPICS=[
     'Aurelius: Tell her when we next pass through the marsh.'
   ]},
   {id:'future',name:'What we want after all this',when:()=>wonAll,lines:()=>[
-    'Corin: Yesterday I woke up and could not remember where we needed to go.',
-    'Aurelius: Where did you decide?',
+    'Corin: I keep trying to work out where we need to go, then remembering we can choose.',
+    'Aurelius: Where would you like to go?',
     'Corin: Nowhere, for a while. Is that awful?',
-    'Aurelius: I spent the morning watching a beetle. I am in no position to judge.',
+    'Aurelius: I would happily spend an afternoon watching a beetle. You will hear no complaint from me.',
     'Corin: Nan would like us to stay near home.',
     'Aurelius: So would I. When we travel again, I would like you to choose somewhere you want to see.'
   ]},
@@ -785,10 +785,10 @@ const DRAGON_GENERAL_TOPICS={
   personal:[
     ['dreams','Do dragons dream?',[
       'Corin: Your feet move when you sleep. Are you dreaming?',
-      'Aurelius: Last night I was trying to land on a hill that kept becoming a sheep.',
+      'Aurelius: Sometimes I dream of trying to land on a hill that keeps becoming a sheep.',
       'Corin: Ancient dragon wisdom?',
       'Aurelius: I suspect supper was involved.',
-      'Corin: I dreamed I was back at the mill.',
+      'Corin: When I dream, I am usually back at the mill.',
       'Aurelius: Did it stay a mill? You are doing better than I am.'
     ]],
     ['age','How can you know so much so young?',[
@@ -827,9 +827,9 @@ const DRAGON_GENERAL_TOPICS={
       'Corin: Apart from carrying enough food, what do you want from a rider?',
       'Aurelius: Tell me when I have hurt your feelings. I cannot mend something you insist is fine.',
       'Corin: Is that from an old memory?',
-      'Aurelius: It is from yesterday. You went very quiet when I laughed at your landing.',
-      'Corin: I was trying quite hard.',
-      'Aurelius: I know that now. I am sorry, Corin.'
+      'Aurelius: It is something I need to remember myself. I might laugh at a landing without realising how hard you were trying.',
+      'Corin: I would rather you helped me get better at it.',
+      'Aurelius: Then tell me. I would rather learn than leave you feeling hurt.'
     ]],
     ['thoughts','Can you hear everything I think?',[
       'Corin: When we speak like this, can you hear everything else in my head?',

@@ -8,6 +8,7 @@ on:
       - 'index.html'
       - 'js/**'
       - 'assets/interiors/**'
+      - 'assets/dialogue/**'
       - 'tests/**'
       - 'tools/**'
       - 'assets/editor-layouts.json'
@@ -17,6 +18,7 @@ on:
       - 'index.html'
       - 'js/**'
       - 'assets/interiors/**'
+      - 'assets/dialogue/**'
       - 'tests/**'
       - 'tools/**'
       - 'assets/editor-layouts.json'
@@ -51,6 +53,7 @@ jobs:
           node tests/journey-gates.mjs
           node tests/ghost-following.mjs
           node tests/npc-conversations.mjs
+          node tests/npc-world-talks.mjs
           node tests/npc-placement.mjs
           node tests/editor-source-compatibility.mjs
           node tests/editor-publish-race.mjs

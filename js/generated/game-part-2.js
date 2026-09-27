@@ -10769,14 +10769,20 @@ function drawFerry(g) {
   g.restore();
 }
 function npcContextDialogue(n, alt) {
-  if (wonAll) return (alt && n.dv2) || n.dv || n.d;
+  const finished=typeof npcFinishedRoadwork==='function'&&npcFinishedRoadwork(n);
+  if(finished)return [n.n+': '+finished[2]];
+  if (wonAll) return (typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt)) || (alt && n.dv2) || n.dv || n.d;
   if(brambleQuest===1 && n.n!=="Rowan the Hunter" && !n.pettable &&
      (MAPID==="tavern" || (MD.title||"").startsWith("Thornwell") ||
       (MAPID==="world"&&n.x>=220*TS&&n.x<=320*TS&&n.y>=44*TS&&n.y<=150*TS)))
-    return BRAMBLE_HINTS[n.n] || n.d;
+    if(BRAMBLE_HINTS[n.n])return BRAMBLE_HINTS[n.n];
 
+  const audited=typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt);
+  if(audited)return audited;
   if (hasDragon()) return npcDragonConversation(n,alt);
-  if (alt && n.d2 && n.n !== 'Hettie') return n.d2;
+  // Old d2 follow-ups may require a line that was never spoken. Optional
+  // conversations now have their own complete, named exchanges.
+
   return (hasSword() && n.dm) || n.d;
 }
 
@@ -11152,6 +11158,9 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         best.n + (npcSeesDragon(best)?": Nothing has. Take it with you. Even with a dragon beside you, you will want a steady light in those workings.":": Nothing has. Not once. Take it, Corin. You will need a steady light in the deep workings."),
         "Corin: I will keep it burning.",
         best.n + ": I think it will see to that on its own."];
+    }
+    else if(best.charm&&!charm[best.charm]&&typeof npcWorldProfile==='function'&&npcWorldProfile(best)?.gift){
+      sayNpc.said=npcWorldProfile(best).gift.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line);
     }
     else if(typeof libraryQuestHint==='function'&&libraryQuestHint(best))sayNpc.said=libraryQuestHint(best).lines;
     else sayNpc.said = npcContextDialogue(best, alt);

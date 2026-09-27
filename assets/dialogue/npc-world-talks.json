@@ -1,0 +1,1242 @@
+{
+  "Hettie": {
+    "halvard": [
+      "Halvard's collectors count the grain before we know whether the harvest will feed us. I would like him to spend one winter eating what he leaves behind.",
+      "I have stopped setting aside the crown's share. The first extra sack goes to anyone whose cupboard is bare."
+    ],
+    "history": [
+      "Millwood's harvests",
+      "Neighbours used to bring their grain to the mill together. If a cart broke, everybody behind it got down to help.",
+      "Did they mind waiting?",
+      "Of course. They complained all the way through the repair. Being neighbours did not require being cheerful about it."
+    ]
+  },
+  "Gwil": {
+    "halvard": [
+      "The crown wants sound timber and pays for scraps. I mend the village fences first, whatever the order on the paper says.",
+      "We can choose what to build with our own wood. Hettie wants the sheds repaired; I would like a new bridge rail before somebody falls in."
+    ],
+    "history": [
+      "The old millwork",
+      "Look at the older repairs around Millwood. Different woods, different hands. People used what they could spare.",
+      "Does that make them weaker?",
+      "Only if the work is poor. A town can be patched together and still stand soundly."
+    ]
+  },
+  "Odo": {
+    "halvard": [
+      "His men ask who crosses this bridge. I tell them about the fish. They have yet to notice I am much better informed about people.",
+      "For once, a visitor can cross without being questioned. I might even put down my rod long enough to welcome them."
+    ],
+    "history": [
+      "Life around the bridge",
+      "People stopped on this bridge to exchange news long before anyone put up a noticeboard.",
+      "You were listening even then?",
+      "I was fishing. If people insist on conducting history beside my line, I cannot be expected to close my ears."
+    ]
+  },
+  "Tolan": {
+    "halvard": [
+      "I took an oath to keep the road safe. Lately my orders mostly concern stopping people who have done nothing wrong.",
+      "I still have a spear and a duty to the people on this road. I would like the next order I follow to serve both."
+    ]
+  },
+  "Serjeant Bram": {
+    "halvard": [
+      "You can make a frightened recruit obey almost anything. A king ought to be ashamed of relying on that.",
+      "Some of my men are waiting for someone to tell them what to think. I have told them to begin by listening to the people they frightened."
+    ]
+  },
+  "Doran": {
+    "halvard": [
+      "I owe my rank to the crown. That makes speaking against Halvard difficult; it does not make every order right.",
+      "Taking off the badge would be easy. Living among the people who remember it will take rather more courage."
+    ]
+  },
+  "Elder Maddock": {
+    "halvard": [
+      "I remember the riders before Halvard's account became the only one people dared repeat. Keep asking who lived through a story, Corin, and who profits from it.",
+      "He spent so long trying to be the end of our history. Now we have the difficult work of teaching what happened without raising another generation on hatred."
+    ],
+    "history": [
+      "The roads before Wingfall",
+      "The riders helped keep the roads open. Carters and masons did the ordinary work of maintaining them; those names rarely reached the songs.",
+      "Was travel easy then?",
+      "Easier in some seasons than others. Do not let nostalgia persuade you we never had mud or a broken wheel."
+    ]
+  },
+  "Pip": {
+    "halvard": [
+      "When soldiers come, everyone goes quiet. I do not understand a king who wants his arrival to sound like that.",
+      "We heard laughter coming down the path. I went to look instead of hiding under the caps."
+    ],
+    "greetings": {
+      "dd": [
+        "The caps are trembling all along the path. They can feel your dragon walking.",
+        "Corin: Are we hurting them?",
+        "Pip: No. Just give the little ones room. They have never felt footsteps like his."
+      ],
+      "dd2": [
+        "The caps have settled since you stopped walking. I think they are listening to his breathing."
+      ]
+    }
+  },
+  "Mycella": {
+    "halvard": [
+      "I remember the forest before his reign. He speaks as though anything older than his crown must belong beneath it.",
+      "Roots outlast a man's commands. I am relieved that the people above them have been given another chance as well."
+    ],
+    "history": [
+      "The forest before the crown",
+      "Young trees spread into clearings, old trees fell, and the rings grew beneath both. Humans gave those changes dates. We remember which roots returned.",
+      "Do you remember the riders?",
+      "I remember dragons crossing above the canopy. What their riders said to one another belonged to a world I could not hear."
+    ],
+    "greetings": {
+      "dd": [
+        "I saw dragons above this valley when I was young. I never expected to stand this close to one.",
+        "Corin: He hatched near Millwood. Everything is new to him.",
+        "Mycella: Then let him look. There is no need to hurry every first meeting."
+      ],
+      "dd2": [
+        "Keep your young companion on the clear path. The deep hollow hides soft ground beneath the caps."
+      ]
+    }
+  },
+  "Bolete": {
+    "halvard": [
+      "A patrol cut through the young caps to save a few steps. When I objected, they showed me the king's mark.",
+      "I have planted where the patrol cut through. It will take several wet seasons to cover the damage, but nobody is stopping me."
+    ],
+    "greetings": {
+      "dd2": [
+        "Your dragon will attract the crown's attention. Do not assume a small patrol is the only one watching the road."
+      ]
+    }
+  },
+  "Truffle": {
+    "halvard": [
+      "His men stamp the ground and call it theirs. I would trust them more if they noticed what they were crushing.",
+      "The ground has not forgotten the boots. Give the little caps time; quiet does not immediately feel safe."
+    ],
+    "greetings": {
+      "d": [
+        "The northern ground carries every footstep a long way. Stay on the firm path; the quiet patches can be soft beneath the grass."
+      ],
+      "dd": [
+        "Your companion walks lightly for something with such large feet. The caps felt you coming before I saw either of you.",
+        "Corin: He hatched near Millwood. He is still learning where to put those feet.",
+        "Truffle: Give him room to turn. The new shoots are easy to miss."
+      ],
+      "dd2": [
+        "I can tell your steps from his now. Yours hurry; his keep stopping beside interesting things."
+      ],
+      "dv2": [
+        "I remember feeling your young companion's steps along our path. I am glad you have both come back to walk it again."
+      ]
+    }
+  },
+  "The Shroom King": {
+    "halvard": [
+      "Halvard believes being king means nobody may refuse him. My ring would take this crown away if I stopped hearing them.",
+      "I hope your people choose who speaks for them carefully. Being rid of a cruel ruler is a beginning, not the whole task."
+    ],
+    "history": [
+      "How the ring chooses a voice",
+      "We listen until the quietest concern has been heard. Whoever wears the crown must remember the concerns, not merely the loudest speakers.",
+      "Does that take a long time?",
+      "Often. We lose more time repairing a decision made before anyone understood its cost."
+    ],
+    "afterGift": [
+      "Walk gently through the ring, Corin. You are a guest here, and the little ones are learning what that means."
+    ],
+    "gift": [
+      "Take a spore of the deep ring. Wear it, and defeating an enemy will restore a little of your strength.",
+      "Corin: Why give it to me?",
+      "You have roads still to walk. We would like to hear what you found when you return."
+    ]
+  },
+  "Calder": {
+    "halvard": [
+      "Travellers used to ask whether my fire was warm. Now they ask whether I have seen a patrol. That is what his peace has done for business.",
+      "People are lingering over breakfast again. Yesterday two strangers argued about the best road simply because both roads were open."
+    ],
+    "history": [
+      "Travellers' camps",
+      "A camp became useful when people knew they could find water and company there. The fire mattered less than the certainty someone would tend it.",
+      "What kept them coming back?",
+      "Hearing that the last traveller reached the next town. News of a safe road is good advertising."
+    ],
+    "greetings": {
+      "dd": [
+        "A dragon at my camp. I will have trouble persuading the next guests that I did not invent this.",
+        "Corin: He is better company than most people expect."
+      ],
+      "dd2": [
+        "There is room by the fire for you. Your companion can rest on the open ground beside the camp."
+      ]
+    }
+  },
+  "Prue": {
+    "halvard": [
+      "Father dressed stone for royal wagons until his fingers would not straighten. The clerk recorded the blocks, never his name.",
+      "If the town repairs those walls, I want the masons named. People ought to know whose hands kept the rain off them."
+    ],
+    "greetings": {
+      "dd2": [
+        "It is good to see something young and curious here. Give your dragon room; people will want to stop and look."
+      ]
+    }
+  },
+  "Toft": {
+    "halvard": [
+      "A royal seal does not keep a mine roof up. I wish the men who set the quotas would come below before demanding another cart.",
+      "I want the crews deciding when a gallery is unsafe. We have had enough courage praised by people standing in daylight."
+    ],
+    "history": [
+      "The older galleries",
+      "The mine grew a passage at a time. Each crew left marks so the next could tell sound work from a place nobody had tested.",
+      "Can we trust those marks now?",
+      "Treat them as someone's last report, not a promise. Water and time can undo a careful man's work."
+    ]
+  },
+  "Linna": {
+    "halvard": [
+      "The crown's figures always balance. It is the village accounts that come up short after the collectors leave.",
+      "I am keeping the old tallies. If anyone claims the levy was fair, they can sit beside me and explain each missing sack."
+    ],
+    "history": [
+      "The mill's old accounts",
+      "The old mill books record grain lent between households. Some debts were settled in labour, or forgiven after a poor harvest.",
+      "Why write down a forgiven debt?",
+      "So the next person keeping the book would not ask for it again. A record can protect a kindness as well as a payment."
+    ],
+    "greetings": {
+      "away": [
+        "News of your journey has arrived ahead of the grain carts. I am having trouble deciding which reports deserve a place in my book."
+      ]
+    }
+  },
+  "Wren": {
+    "halvard": [
+      "I treat the king's men when they come to my counter. I wish he cared as much about the injuries he sends them home with.",
+      "I will still treat anyone who needs help. Ending his rule should mean fewer wounds, not choosing different people to neglect."
+    ],
+    "greetings": {
+      "dd": [
+        "He seems alert. Let me know if your dragon needs tending; I would rather hear about a small injury than a neglected one."
+      ],
+      "dd2": [
+        "The king's men have been buying salve for burns. Seeing your companion makes me wonder what they have been sent after."
+      ]
+    },
+    "afterGift": [
+      "Keep the charm somewhere safe. If you need more supplies, ask; I would rather prepare a traveller than patch one up."
+    ],
+    "gift": [
+      "I have a charm called the Twin Heart. Wear it, and once in a fight your dragon can take a blow meant for you.",
+      "Corin: Will that hurt him?",
+      "It is protection you share, not an excuse to be careless. Take it, and look after each other."
+    ]
+  },
+  "Bevan": {
+    "halvard": [
+      "His orders arrive with deadlines and no room for questions. I make spearheads because refusing would cost more than a day's wages.",
+      "I have put the spearhead patterns away. There are hinges and plough fittings waiting, and I find I prefer the noise they make."
+    ],
+    "greetings": {
+      "dd": [
+        "The crown ordered forty spearheads from me. Seeing a young dragon on the road makes that order harder to put out of my mind.",
+        "Corin: Did they say what the weapons were for?",
+        "Bevan: No. That is what troubles me."
+      ]
+    }
+  },
+  "Isolde": {
+    "halvard": [
+      "A report can make an exhausted crew look idle. Halvard's officers seem remarkably fond of that sort of report.",
+      "I am adding the lost shifts and injuries to the output book. Whoever reads it next will have to see the whole account."
+    ]
+  },
+  "Nazim": {
+    "halvard": [
+      "A thirsty soldier gets water here. His king does not get to claim the well because I offered it.",
+      "Our well will stay open to travellers. I would like that kindness to survive whoever arrives carrying the next banner."
+    ],
+    "history": [
+      "Sandspire's cisterns",
+      "Routes through the dry country followed places where water could be stored. A market could grow only when travellers trusted the next drink would be there.",
+      "Was your father's cistern part of that?",
+      "He repaired and lined what others had begun. I am proud of his work without needing him to have invented water."
+    ]
+  },
+  "Halima": {
+    "halvard": [
+      "The crown takes its cut at each stop, then blames traders when spice costs more. My mother could name every hand between the sack and the customer.",
+      "I can tell a customer the price without apologising for a levy I never chose. It feels like recovering my own voice."
+    ],
+    "history": [
+      "The caravan roads",
+      "Goods travelled farther than most people who bought them. A sack could change hands several times before anyone here opened it.",
+      "How do you know its history?",
+      "Marks on the wrapping, a familiar knot, a trader who remembers the last owner. Not every useful record lives in a book."
+    ]
+  },
+  "Tarek": {
+    "halvard": [
+      "A royal order cannot tell a camel when it is too tired to walk. I have lost good animals to officers who insisted otherwise.",
+      "We can let the caravan rest through the heat. I wish the animals we buried could have had that choice."
+    ]
+  },
+  "Suhaila": {
+    "halvard": [
+      "My daughter works late to cover the levy. Halvard would call that loyalty if he ever bothered to ask why her lamp is burning.",
+      "She put her loom away before supper yesterday. We had a whole conversation with both her hands resting in her lap."
+    ]
+  },
+  "Idris": {
+    "halvard": [
+      "I used to tell my sons a careful trader could make a life here. Each new demand from Cinderhold makes that promise harder to keep.",
+      "Perhaps my boys will still choose the coast. I want them leaving from curiosity, not because I could offer them no future here."
+    ]
+  },
+  "Rashida": {
+    "halvard": [
+      "He wants beautiful glass in his halls and cheap glass on his invoices. I have an opinion of his taste, but a worse one of his honesty.",
+      "I would like my next fine piece to sit in a house whose owner saved for it. I am tired of calling an order an honour."
+    ],
+    "afterGift": [
+      "The glassworkers of Sandspire and Forgewick could argue all afternoon. I will spare you that unless you mean to buy a cup."
+    ],
+    "gift": [
+      "Take this fire rune, Corin. Wear it and every third sword swing will strike with flame.",
+      "Corin: You are giving it to me?",
+      "A traveller may have more use for it than a glassworker. I have a furnace when I need heat."
+    ]
+  },
+  "Bilal": {
+    "halvard": [
+      "The collectors count the kids before they are weaned. Even a goat knows better than to take everything at once.",
+      "I am keeping two young does this year. Freedom, in my yard, begins with a herd large enough to survive a bad season."
+    ]
+  },
+  "Sella": {
+    "halvard": [
+      "A man in a warm hall can decree a larger catch. He cannot persuade the sea to give one. The hungry people end up at my pot.",
+      "I would like to cook because people enjoy my stew, instead of because it is the only meal they can stretch to."
+    ]
+  },
+  "Ovid": {
+    "halvard": [
+      "His officers demand supplies for the road and call payment a matter for another clerk. My landlord has never accepted that explanation.",
+      "There is a list of unpaid royal orders under my counter. I do not expect miracles, but I will not pretend it never happened."
+    ],
+    "greetings": {
+      "d": [
+        "Potions for the road. Tell me what you need before you open anything; I prefer my counter in one piece."
+      ]
+    }
+  },
+  "Jamila": {
+    "halvard": [
+      "Every checkpoint has a different account of what the king requires. Somehow every account ends with my purse being lighter.",
+      "I can count my costs before I leave home again. That may sound dull. Dull is an excellent condition for a trader."
+    ]
+  },
+  "Nerissa": {
+    "halvard": [
+      "He taxes what comes ashore without sharing the risk of bringing it in. I would like to see him explain that bargain to a storm.",
+      "The harbour needs repairs before anybody orders a celebration. I hope we spend our first free money on something that lasts."
+    ],
+    "history": [
+      "How Coralmere grew",
+      "Boats brought catches, goods and people who thought they would stay one night. Some repaired a net, took work, and stopped counting the nights.",
+      "Is that how your family came here?",
+      "My aunt came looking for work. The grand history would call her a settler. She called it finding somewhere the rent could be paid."
+    ]
+  },
+  "Astrid": {
+    "halvard": [
+      "When winter closes the roads, decrees do not feed us. Neighbours do. I know which of those I trust.",
+      "I am glad he is gone. I still count the stores each evening; being free will not make winter shorter."
+    ]
+  },
+  "Colm": {
+    "halvard": [
+      "I have heard enough proclamations to know when someone is trying to sell me hunger as duty. Let me eat before asking for my gratitude.",
+      "For years I lowered my voice before complaining. I still catch myself doing it. It is a habit I will enjoy losing."
+    ]
+  },
+  "Tessa": {
+    "halvard": [
+      "I can play a tune he has forbidden without singing a word. That is the small amount of disobedience I can carry in public.",
+      "I want the old words back as well as the notes. People should get to decide which verses they remember."
+    ]
+  },
+  "Rowan the Hunter": {
+    "halvard": [
+      "A royal hunting boundary means little to a hungry family. I take what the woods can spare and try not to meet a patrol coming home.",
+      "I hope we keep limits on the hunt, even now. Halvard being gone does not mean the woods can feed every careless appetite."
+    ]
+  },
+  "Sverre": {
+    "halvard": [
+      "I have helped people through storms while his officers argued over travel papers. A stamp is poor shelter.",
+      "We can mend the road without waiting for someone far away to admit it is broken. Bring willing hands; that is permission enough for me."
+    ],
+    "history": [
+      "Hollybeck's winter customs",
+      "People left lamps in windows so a neighbour caught outside could find a door. Later we began keeping spare gloves there too.",
+      "For anyone who knocked?",
+      "Anyone cold enough to knock. Asking where they came from could wait until they stopped shaking."
+    ],
+    "greetings": {
+      "d": [
+        "Warm your hands before you set out again. A traveller who cannot feel his fingers is in no state to trust a rope."
+      ]
+    },
+    "afterGift": [
+      "Torvald's lantern will keep its light. It cannot tell you whether the floor ahead is sound."
+    ]
+  },
+  "Runa": {
+    "halvard": [
+      "I do not remember a different king. I would like to know whether grown people always checked the door before speaking.",
+      "I have questions about what comes next. It is strange how much easier it is to ask them when nobody tells me to hush."
+    ],
+    "history": [
+      "Why we save the thaw water",
+      "The first thaw can run away before the ground is ready to hold it. Older neighbours taught us to catch what we could for the gardens.",
+      "Is that why everyone watches the eaves?",
+      "Some are thinking of gardens. Some simply want proof that winter can end."
+    ]
+  },
+  "Eira": {
+    "halvard": [
+      "The levy takes good cider and leaves me explaining the short barrels. I would rather disappoint the king than my neighbours, but he sends armed men to complain.",
+      "I have saved a barrel for the people who helped with the apples. This time the first toast belongs to them."
+    ]
+  },
+  "Fenton": {
+    "halvard": [
+      "I have walked enough roads to know fear does not end at a town boundary. Halvard has made strangers suspicious of the very people who could help them.",
+      "On my next journey I would like to ask for directions without first proving I am harmless. Perhaps that will take time."
+    ]
+  },
+  "Tallis": {
+    "halvard": [
+      "The royal songs leave no room for anyone who carried the wood or buried the dead. Those are the verses I listen for.",
+      "We need songs that remember the cost as well as your victory. I would not thank you properly by making it sound easy."
+    ]
+  },
+  "Kip": {
+    "halvard": [
+      "I found a coin with his face rubbed smooth. Nobody wanted it less. I thought that was rather telling.",
+      "I will keep that worn coin. I like the thought that all those ordinary hands lasted longer than his face on it."
+    ]
+  },
+  "Ada": {
+    "halvard": [
+      "He calls these hunting grounds his. I have yet to see him bring a meal to anybody whose traps were confiscated.",
+      "I want families to eat without hiding the pot when someone knocks. Rowan will still hear from me if he takes more than we need."
+    ]
+  },
+  "Bren": {
+    "halvard": [
+      "I have repeated tales just because an official-looking page said they were true. Halvard benefits from people being embarrassed to admit that mistake.",
+      "I am checking the stories I passed along. I owe the people who believed me corrections, not a claim that I always knew better."
+    ]
+  },
+  "Berta": {
+    "halvard": [
+      "Fear keeps people away from a healer until a small injury becomes a bad one. A kingdom run that way is expensive in things no treasury counts.",
+      "Wren will have work enough without people hiding their wounds. I hope we can make asking for help feel ordinary again."
+    ]
+  },
+  "Della": {
+    "halvard": [
+      "He is happy to let people fear a witch while his own men take their stores. Maelis has helped more sick neighbours than any proclamation ever did.",
+      "I would like us to stop needing someone to blame for every misfortune. Removing Halvard will not cure that habit on its own."
+    ]
+  },
+  "Ewan": {
+    "halvard": [
+      "The official histories give him every success and somebody else every failure. Even a bad novelist would vary the plot.",
+      "We must keep his proclamations beside the accounts that contradict them. Otherwise somebody will say we exaggerated because we won."
+    ]
+  },
+  "Fara": {
+    "halvard": [
+      "Orders for fine windows travel faster than requests for repairs. I suppose a king need never look through a cracked pane.",
+      "Sela's scraps can mend quite a few things. I would like our next busy season to leave more homes sound, not more halls grand."
+    ]
+  },
+  "Garrick": {
+    "halvard": [
+      "An extra royal order keeps the hammers going and the apprentices too tired to learn. Work is welcome. Being worked into the ground is something else.",
+      "I hope we learn what a normal shift sounds like. Young hands ought to have something left in them after the hammer stops."
+    ]
+  },
+  "Hester": {
+    "halvard": [
+      "The crown takes a share of the catch even when the net needs replacing. A man who has never mended one can be generous with other people's work.",
+      "I have promised to teach two neighbours to mend their own nets. We will need more than a change of ruler to look after ourselves."
+    ],
+    "history": [
+      "The harbour's shared work",
+      "When a boat was overdue, neighbours checked the shore together. Even rivals needed enough hands to mend nets before the next tide.",
+      "Did that end their quarrels?",
+      "Usually until the boat came back. Helping someone need not mean agreeing with them about everything."
+    ]
+  },
+  "Junia": {
+    "halvard": [
+      "I can postpone buying a lamp. People who cannot afford bread have nothing left to postpone. That is who I think of when the levy rises.",
+      "I would like everyone to have a little money for something they simply like. Keeping people alive should not be our highest ambition."
+    ]
+  },
+  "Kellan": {
+    "halvard": [
+      "The town keeps time by its work. His collectors always arrive as though we have been sitting idle waiting to pay them.",
+      "It would be pleasant to mark a year by new apprentices and weddings. I am tired of remembering it by increases in the levy."
+    ]
+  },
+  "Lysa": {
+    "halvard": [
+      "He wants admiration from people he has frightened. I cannot understand mistaking one look for the other.",
+      "I can put a little glass dragon in my window now. It should never have required courage to like a beautiful thing."
+    ]
+  },
+  "Cinder": {
+    "halvard": [
+      "I have shared a live coal with neighbours who could not buy fuel. I would like the king to explain why that is left to us.",
+      "I will keep carrying the morning fire. A kinder town still takes neighbours getting out of bed to help one another."
+    ]
+  },
+  "Warden": {
+    "halvard": [
+      "My husband comes home too tired to finish supper, and the crown asks why the carts are late. That question tells me enough about Halvard.",
+      "He stayed awake through supper yesterday. I would like more evenings like that before anybody asks what else we can sacrifice."
+    ]
+  },
+  "Ember": {
+    "halvard": [
+      "He calls the mines the wealth of the realm. Strange how little of that wealth remains on the streets covered in its dust.",
+      "I want the people washing coal out of their sleeves to have a say in where the earnings go. We have been invisible long enough."
+    ]
+  },
+  "Dagna": {
+    "halvard": [
+      "There is no royal order for cleaning the dust from a child's bed. That part of the work is apparently beneath notice.",
+      "I am glad the banners have changed. I will be happier when cleaner water and shorter shifts follow them."
+    ]
+  },
+  "Lode": {
+    "halvard": [
+      "The night shift grew longer while the promises stayed the same length. I no longer believe a better winter is always one more cart away.",
+      "A quiet forge should mean people are resting, not that families have lost their living. We need to find our way to that."
+    ]
+  },
+  "Pike": {
+    "halvard": [
+      "I pack extra food because a crew can be kept below past supper. Halvard's share never seems to wait until morning.",
+      "I hope the crews can come home when they say they will. I would like to set the table without listening for trouble."
+    ]
+  },
+  "Hallow": {
+    "halvard": [
+      "A blast loosens our windows, but the crown's men say repairs are our affair. They become very interested in responsibility when it belongs to someone else.",
+      "If the mine prospers again, some of the money ought to hold the houses together. I have enough old screws to make my case."
+    ]
+  },
+  "Quarrel": {
+    "halvard": [
+      "You can complain about a leaking roof until someone fixes it. Complain about the king and people ask you to lower your voice. I object to the difference.",
+      "Now I can complain at a sensible volume. Flint says he had hoped liberation might be quieter. He should have known me better."
+    ]
+  },
+  "Flint": {
+    "halvard": [
+      "I save each ember while his collectors tell us to give more. There comes a point when careful living cannot cover another man's waste.",
+      "We can use the wood we saved for our own winter. Quarrel has already made a list of people who need a share."
+    ]
+  },
+  "Winnie": {
+    "halvard": [
+      "I remember neighbours gathering without wondering who might repeat their words. Halvard has taken ordinary ease from people who never threatened him.",
+      "I would like a gathering with music and no one posted at the door. Nan still knows the steps, whatever she tells you."
+    ]
+  },
+  "Ned": {
+    "halvard": [
+      "An officer rode a horse here with a torn strap and demanded I fix it at once. The king's mark was apparently meant to hurry the stitching.",
+      "A hurried repair can kill somebody. I hope we remember that rank is no substitute for listening to someone who knows the work."
+    ]
+  },
+  "Nan Ferrow": {
+    "halvard": [
+      "I have spent too many years being careful about a man's name in my own kitchen. You deserve a life where fear of the king is not an ordinary household chore.",
+      "You have done enough to earn some quiet, love. People will keep asking things of you. You are allowed to say you need to come home."
+    ],
+    "history": [
+      "Growing up in Millwood",
+      "When I was little, a visit from Thornwell meant somebody would stay for supper. News took time, so people made room for the person carrying it.",
+      "Did everyone know everyone?",
+      "No, love. That was why we asked them to sit down."
+    ]
+  },
+  "Joss": {
+    "halvard": [
+      "I left Thornwell looking for a little peace. Halvard's demands travelled the same roads I did. Moving does not put you outside a king's reach.",
+      "Perhaps I can visit the neighbours I left behind. I would like the journey to be a visit this time, instead of an escape."
+    ]
+  },
+  "Greta": {
+    "halvard": [
+      "We hear orders arrive from above and send ore back up. Halvard has arranged a very comfortable distance between himself and the consequences.",
+      "I want somebody to come down and ask what needs fixing before writing the next order. I have quite a list ready."
+    ]
+  },
+  "Osric": {
+    "halvard": [
+      "I like danger in books because I can close them. His rule has made people afraid in rooms that ought to feel safe.",
+      "Perhaps adventures will become something people choose again. I intend to enjoy most of mine from this chair."
+    ]
+  },
+  "Alder": {
+    "halvard": [
+      "If I took from the hives the way he takes from the village, there would be no bees next spring. I wonder who taught him to count.",
+      "I will still leave enough honey for winter. The end of a levy is an opportunity to recover, not an excuse to strip everything bare."
+    ]
+  },
+  "Gwyneth": {
+    "halvard": [
+      "People arrive here pretending they are merely cold. Sometimes they have been questioned on the road and need to sit where nobody demands an answer.",
+      "I will keep the chair by the fire. Coming through hard years can leave a person tired long after the reason is gone."
+    ]
+  },
+  "Mattock": {
+    "halvard": [
+      "He measures the seam by what leaves in carts. I measure it by the dust my husband coughs into a cloth.",
+      "I want the crews heard before we celebrate how much the mines can produce. We already know what it costs to ignore them."
+    ]
+  },
+  "Kiln": {
+    "halvard": [
+      "A royal buyer rejected half a firing over the colour, then offered to take it cheaply. I have not mistaken power for good judgement since.",
+      "I can sell a bowl without worrying whether somebody dislikes a colour on behalf of the crown. That is a surprisingly good feeling."
+    ]
+  },
+  "Petra": {
+    "halvard": [
+      "His messengers bring a single account and call it certainty. I want dates, witnesses and a second set of figures.",
+      "The records need checking while people still remember them. A new seal at the top of a page will not make a lie true."
+    ],
+    "history": [
+      "Reading a town's history",
+      "An account book can show a bad harvest without mentioning the weather. A sudden change in grain prices is a question worth taking to other records.",
+      "Is that better than a storyteller?",
+      "Different. The figures can tell you what changed. A person may tell you what it felt like to live through it."
+    ]
+  },
+  "Raff": {
+    "halvard": [
+      "He orders work through the noon heat from a shaded room. I would listen more politely if he came out and stood beside us.",
+      "I hope those making decisions will ask why we close the shutters at noon. Some customs are experience, not stubbornness."
+    ]
+  },
+  "Suri": {
+    "halvard": [
+      "I mend the straps of travellers frightened to stop long enough for a proper repair. The patrols make the road harder on everyone.",
+      "A woman waited while I finished both seams today. Nobody had warned her to move on before a patrol came."
+    ]
+  },
+  "Tavin": {
+    "halvard": [
+      "I keep water within reach of every guest. His men once asked why I did not require their names first.",
+      "A thirsty person can drink here without answering questions. I would like that to be too ordinary for anyone to remark on."
+    ]
+  },
+  "Una": {
+    "halvard": [
+      "I avoid names on parcels when a family asks me to. Think of the work that goes into making a gift look like nothing worth inspecting.",
+      "I can write my sister's name plainly on the next parcel. She will probably notice that before she notices what I sent."
+    ]
+  },
+  "Vela": {
+    "halvard": [
+      "My grandmother put our family's route into a rug. Halvard can rename a road; he cannot make me unlearn her pattern.",
+      "I want to teach the pattern to someone young enough to have walked those roads without fear. Then they can add their own turns."
+    ],
+    "history": [
+      "Sandspire's woven maps",
+      "Some families worked wells and turns in the road into their borders. The pattern helped children remember a journey before they made it.",
+      "Could I navigate by one?",
+      "Only with someone who knows the pattern. A rug is a reminder, not permission to walk into the dunes unprepared."
+    ]
+  },
+  "Wystan": {
+    "halvard": [
+      "A trader who changed the bargain as often as Halvard changes a levy would have no customers left. He has soldiers instead.",
+      "I would like the next agreements written where everyone can read them. Trust lasts longer when neither side has to guess the terms."
+    ]
+  },
+  "Rania": {
+    "halvard": [
+      "After sunset we bring our chairs outside, but we still look around before mentioning him. He has managed to intrude even when nobody invited him.",
+      "We argued about him in the street last night. Nobody agreed on everything, and nobody asked us to stop. I rather enjoyed that."
+    ]
+  },
+  "Latif": {
+    "halvard": [
+      "I keep the crown's charges in their own column. It is useful to know how much of a hard year was weather and how much was a decision.",
+      "I am not tearing out that column. If we remember the figures, the next official will find it harder to invent a kinder past."
+    ]
+  },
+  "Yara": {
+    "halvard": [
+      "The sea wears at this house honestly. It never claims to be protecting me while taking another piece.",
+      "We still need sound doors and winter stores. I hope the people who promise a better coast begin with those."
+    ],
+    "history": [
+      "Building for the coast",
+      "Old houses turn their sheltered sides toward the worst weather. You can see where builders learned from the mistakes of the house next door.",
+      "And the salt still gets in?",
+      "Always. Local wisdom mostly tells you which repairs to expect, not how to escape them forever."
+    ]
+  },
+  "Doryn": {
+    "halvard": [
+      "I can read bad weather. A collector with a smile gives less warning and usually costs more.",
+      "I will take an honest storm over another polite demand from Cinderhold. At least now there is only the weather to grumble about today."
+    ]
+  },
+  "Bry": {
+    "halvard": [
+      "A patrol nearly knocked me off that step once and blamed the wet stone. I have heard that manner in every royal notice since.",
+      "I would like an apology from someone who means it. Until then, I am keeping the step dry for visitors who mind where they put their feet."
+    ]
+  },
+  "Coral": {
+    "halvard": [
+      "When a boat is late, I worry about the weather and the king's men. One would be enough for a lifetime.",
+      "There is one less reason to fear a late sail. The sea will give me plenty without Halvard's help."
+    ]
+  },
+  "Edda": {
+    "halvard": [
+      "We repair our roofs while his halls receive new stone. I wonder how many quiet suppers a grand entrance is worth to him.",
+      "I hope the first building plans concern houses people actually live in. We have waited long enough for dry beds."
+    ]
+  },
+  "Fennel": {
+    "halvard": [
+      "I am frightened enough of the graveyard. A living king ought to make the rest of the road feel safer, not give me another reason to bolt the door.",
+      "I still shut the door at dusk. I might stay outside a little longer beforehand, though. That seems a fair beginning."
+    ]
+  },
+  "Bjorn": {
+    "halvard": [
+      "I make the broth stretch because people arrive with less coin each winter. Halvard's collectors never ask who went without.",
+      "I would welcome a winter when everyone can bring something to the pot. Until then, I will keep making room."
+    ]
+  },
+  "Cap": {
+    "halvard": [
+      "The royal men saw damp ground where we saw a nursery. They wanted it cleared before asking what lived there.",
+      "We have kept the nursery. I hope the next people who come here ask us to show them around before drawing a boundary."
+    ]
+  },
+  "Ilsa": {
+    "halvard": [
+      "We leave young shoots so there will be food later. His people call anything left growing a missed harvest.",
+      "Now we have room to let the beds recover. I would rather promise you a harvest next year than boast about a feast today."
+    ]
+  },
+  "Meriel": {
+    "halvard": [
+      "When a customer mentions the royal household, I brace for a complaint I am not allowed to answer. Buying a cup should not work that way.",
+      "I can ask every customer the same questions now. What do you need, what do you like, and can you carry it home safely?"
+    ]
+  },
+  "Elin": {
+    "halvard": [
+      "I have saved for that flower while the levy takes a little more each season. I resent how much of my life has been spent postponing small pleasures.",
+      "Perhaps I will finally buy the flower. I do not need a grand monument to remember that life can become kinder."
+    ]
+  },
+  "Maelis": {
+    "halvard": [
+      "He finds my reputation useful. People frightened of a woman in the marsh ask fewer questions about armed men on their own doorstep.",
+      "Do not expect every frightened story to die with him. People will need practice asking each other what actually happened."
+    ],
+    "history": [
+      "Why people settled near the marsh",
+      "Water, reeds, fish and useful plants brought people here. Fear came later, and made an ordinary livelihood sound like a sinister choice.",
+      "Are the frightening stories all false?",
+      "No. The marsh has real dangers. An invented one can keep you from recognising the danger under your next step."
+    ],
+    "greetings": {
+      "d": [
+        "A ward is useful, but it will not make a reckless traveller wise. I also sell bombs, if you need them for the road."
+      ]
+    }
+  },
+  "Archivist Elowen": {
+    "halvard": [
+      "His preferred history has no witnesses who can disagree. Keeping the other accounts is the most useful objection I can make.",
+      "We must preserve the lies as well as expose them. Future pupils deserve to see how a false account was made convincing."
+    ],
+    "history": [
+      "What happened at Wingfall?",
+      "Before Wingfall, seven Dragonriders kept the peace. Halvard was one of them. Fifty years ago he turned against the other six and claimed the throne.",
+      "Why do the books disagree?",
+      "Royal accounts call the others traitors. Older records describe the same people as protectors. Read who wrote an account, and when, before trusting its judgement."
+    ]
+  },
+  "Mira": {
+    "halvard": [
+      "A report can call lost miners a delay in production. That tells you whose comfort the king wants the reader to consider.",
+      "I want to collect the families' accounts while they can still correct us. Names should come before totals for once."
+    ]
+  },
+  "Oren": {
+    "halvard": [
+      "He speaks of glory as though nobody has to tend the graves afterward. I find the omissions difficult to forgive.",
+      "We should learn the names of those who never saw this day. Celebration and mourning need not cancel each other out."
+    ]
+  },
+  "Tamsin": {
+    "halvard": [
+      "I cross out words in my own stories because they do not fit. He crosses out people's accounts because he dislikes what they reveal.",
+      "I can let a character disagree with a ruler without hiding the page. I had not realised how much that would change what I wanted to write."
+    ]
+  },
+  "Master Iven": {
+    "halvard": [
+      "A lesson in which the answer must always praise the king teaches obedience, not thought. I ask my pupils how they know a thing.",
+      "Now we can ask the difficult questions aloud. I will still insist they support their answers; freedom is not a reason to stop thinking."
+    ],
+    "history": [
+      "How the towns depended on each other",
+      "Millwood sent grain along roads that brought back Thornwell fruit and Forgewick tools. Sandspire's caravans and Coralmere's boats carried things no single town could make.",
+      "So no town really stood alone?",
+      "Exactly. Even the people who never travelled lived partly by strangers' work."
+    ]
+  },
+  "Brin": {
+    "halvard": [
+      "The temples were here before his crown. I think that is why he dislikes people examining them closely.",
+      "The ruins still need careful study. I do not want us replacing his convenient stories with convenient stories of our own."
+    ]
+  },
+  "Nell": {
+    "halvard": [
+      "I want to ask why his authority depends on us never asking how he acquired it. Iven says to keep the question, even when I have to choose my moment to speak.",
+      "I would like a ruler whose work we can examine without first reciting praise. That seems a reasonable place to start."
+    ]
+  },
+  "Sable": {
+    "halvard": [
+      "He sends new accounts of Wingfall to the school and expects us to put the old ones away. I do not trust a history whose first instruction is to stop comparing it with anything else.",
+      "Keep the versions side by side. Otherwise the person who rewrote them can claim we misunderstood the change."
+    ]
+  },
+  "Pella": {
+    "halvard": [
+      "I study places I am afraid I will never safely reach. It is hard to be grateful to a king for roads you cannot use.",
+      "I want to see the coast before making another map of it. For the first time that sounds like a plan, rather than a wish."
+    ]
+  },
+  "Bess": {
+    "halvard": [
+      "His men listen at tables and call it keeping the peace. People come here to put down a day's worries, not acquire new ones.",
+      "My customers are beginning to speak at their ordinary volume again. I had forgotten just how noisy a comfortable room can be."
+    ],
+    "history": [
+      "Travellers and the Copper Cup",
+      "The room grew around travellers needing a place to sit. News passed from table to table long before anyone agreed which version was true.",
+      "How did you choose what to believe?",
+      "I asked who had actually been there. A full cup improves a story more reliably than it improves the facts."
+    ]
+  },
+  "Ronan": {
+    "halvard": [
+      "You learn to stop pouring when a conversation suddenly goes quiet. Usually a uniform has come through the door.",
+      "I am hearing arguments about cider again. Remarkably stupid arguments. I have missed them more than I expected."
+    ]
+  },
+  "Venn": {
+    "halvard": [
+      "I carry letters written as though somebody else will open them. Families deserve to speak plainly to one another.",
+      "There is room in a letter for hopes again. I would like to carry more invitations and fewer careful little assurances that nobody should worry."
+    ],
+    "history": [
+      "The old letter routes",
+      "A carrier would leave a bundle with someone trusted, who passed it to the next traveller heading the right way. The routes depended on people remembering their promises.",
+      "Did many letters get lost?",
+      "Enough that families numbered them. An account of the past can have missing pages because somebody's pack got wet, not because someone meant to hide them."
+    ]
+  },
+  "Hobb": {
+    "halvard": [
+      "His men can demand another drink on the crown's account. I still owe for mine. Even I can see something wrong with that arrangement.",
+      "Bess says freedom has not cancelled my tab. A cruel blow, though I suppose a fair one."
+    ]
+  },
+  "Edric": {
+    "halvard": [
+      "I have watched good workers grow afraid of a knock at the door. I do not care how fine his speeches sound after that.",
+      "We should remember who helped their neighbours when it was difficult. A new reign ought to begin with better examples than a crown alone."
+    ]
+  },
+  "Dorr": {
+    "halvard": [
+      "If you want my opinion of Halvard, ask when my head stops pounding. I would like the complaint to be properly considered.",
+      "He is gone? Good. Wake me for breakfast. I intend to enjoy at least one ordinary morning without discussing a king."
+    ]
+  },
+  "Ser Anwen": {
+    "halvard": [
+      "I have served men who confused a silent room with agreement. Halvard has built a kingdom around that mistake.",
+      "There are soldiers who need to answer for their actions. There are also frightened recruits who need somewhere better to begin. We must tell the difference."
+    ]
+  },
+  "Grusk": {
+    "halvard": [
+      "A king who chooses the rules, deals the cards and punishes anyone who leaves is not winning an honest game.",
+      "Let us agree the rules before anyone sits in his chair. I have had enough of finding out what the stake was after losing it."
+    ]
+  },
+  "Fen": {
+    "halvard": [
+      "His patrols make a room forget it was enjoying itself. I keep dancing partly because somebody ought to remember.",
+      "I can dance without counting uniforms at the door. I may wear out Bess's floor making up for lost evenings."
+    ]
+  },
+  "Senn": {
+    "halvard": [
+      "I will risk a copper on cards. I will not wager someone else's safety on a king promising that this time he has taken enough.",
+      "The future finally feels uncertain in a way I can welcome. I would still advise keeping some breakfast money."
+    ]
+  },
+  "Dain": {
+    "halvard": [
+      "Halvard would be barred from this table. Even I explain a rule after someone catches me changing it.",
+      "Grusk says we are playing honestly tonight in honour of the occasion. He seems to think looking directly at me improves the announcement."
+    ]
+  },
+  "Rusk": {
+    "halvard": [
+      "A decree calls a pass secure, and a traveller goes missing in it. I trust the people who came through more than the people who sent them.",
+      "I want fresh reports before calling any road safe. Your victory matters too much to waste it by pretending every danger vanished with him."
+    ]
+  },
+  "Linnet": {
+    "halvard": [
+      "He can demand new words to an old tune. He cannot decide what people remember when they hear the first few notes.",
+      "I am writing down the old verses before they slip away. Surviving in whispers should not be the only way a song survives."
+    ],
+    "history": [
+      "Songs before the royal verses",
+      "Families kept their own words to the same tunes. A wedding verse might turn into a work song two villages down the road.",
+      "Was there an original version?",
+      "Somebody probably thought theirs was. Shared songs rarely stay the property of the first singer."
+    ]
+  },
+  "Puck": {
+    "halvard": [
+      "I worry about playing the wrong song before I worry about playing it badly. That is a miserable order for a musician's worries.",
+      "I would like to be nervous because people are listening carefully. It is a much better sort of fear than wondering who might report the tune."
+    ]
+  },
+  "Vale": {
+    "halvard": [
+      "I prefer quiet work. Halvard seems to regard anyone doing something he does not understand as an accusation.",
+      "I hope we can be left to harmless eccentricities again. A large hat need not conceal a conspiracy."
+    ]
+  },
+  "Cerys": {
+    "halvard": [
+      "My sister checks the written facts. I listen to what people will only say after looking over their shoulders. His history fails both tests.",
+      "We should compare the records with the people who lived through them. Relief is not a reason to let anyone tidy away the awkward parts."
+    ]
+  },
+  "Nyra": {
+    "halvard": [
+      "A conjurer asks the audience to enjoy a deception. Halvard expects them to live inside it and thank him.",
+      "I want the clever words examined closely before we applaud whoever comes next. We have paid enough for an impressive performance."
+    ]
+  },
+  "Maren": {
+    "halvard": [
+      "Guests ask whether I keep a list for the soldiers. An inn should be somewhere you can sleep without rehearsing an explanation for being there.",
+      "A family booked two nights instead of leaving before dawn. I hope that becomes too ordinary for me to remember."
+    ]
+  },
+  "Dunstan": {
+    "halvard": [
+      "He orders weapons, then wonders why every grievance ends with steel. I would rather spend my skill keeping people whole.",
+      "There will be tools to mend and young smiths to teach. I look forward to making things whose success is measured in years of use."
+    ],
+    "history": [
+      "Forgewick's craft",
+      "Ore alone did not make Forgewick. Smiths needed fuel, food, water and people willing to learn difficult work from one another.",
+      "Did the workshops cooperate?",
+      "They argued constantly. Then somebody needed a second pair of tongs and went next door."
+    ],
+    "greetings": {
+      "d": [
+        "Keep the blade clean and check your armour straps after a hard fight. Good gear still needs looking after."
+      ]
+    }
+  },
+  "Sela": {
+    "halvard": [
+      "I learned to make protection because people were being hurt. Halvard has been generous with opportunities to test my work.",
+      "I would like the next difficult thing I make to be beautiful and entirely unnecessary for surviving a journey."
+    ],
+    "history": [
+      "How glassmaking took root",
+      "Furnaces brought workers together here. Some learned to shape metal; others learned what sand could become in the heat. Those trades share more than they admit.",
+      "Do smiths ever help you?",
+      "With tools and furnace fittings. Dunstan would be unbearable if I called that artistic collaboration."
+    ]
+  },
+  "Tam": {
+    "halvard": [
+      "His demands arrive before the apples are ripe, as though a tree might hurry for a royal seal. Joss and I do what we can with the season we get.",
+      "I am keeping enough good apples to share with Nan. I would like to plan a winter by who is coming to supper."
+    ]
+  },
+  "Celia": {
+    "halvard": [
+      "The official accounts keep telling us what everyone believed. My notebook is full of people who apparently failed to believe it.",
+      "I want to write down the disagreement while we can hear it. A free country should not need every remembered voice to sound the same."
+    ],
+    "history": [
+      "The lives between the dates",
+      "Histories often skip from one ruler to the next. Letters and household lists show people carrying on through those grand dividing lines.",
+      "Does that change the history?",
+      "It gives the dates people to happen to. A victory means more when you know who was waiting for news."
+    ]
+  },
+  "Ivo": {
+    "halvard": [
+      "My grandfather's tools made useful things. Too many of the orders coming from Cinderhold begin by asking how much damage something can do.",
+      "I have an idea for a better tool chest. It is pleasant to consider a new project without wondering whether someone will order it turned into a weapon."
+    ]
+  },
+  "Merrin": {
+    "halvard": [
+      "I watch the road for family. His men watch it for people to stop. We have very different ideas of a useful day's watching.",
+      "I am hoping to recognise more faces on that road. Even an unremarkable visit would feel like something restored."
+    ]
+  },
+  "Zella": {
+    "halvard": [
+      "I tie knots for people who have to trust them at sea. Halvard makes promises as though nobody will ever have to put weight on one.",
+      "I would like future promises checked as carefully as a working net. Find the weakness before someone is depending on it."
+    ]
+  },
+  "Iris": {
+    "halvard": [
+      "We stack wood before winter. The crown demands its share afterward. I would like the people making that decision to spend a night in the coldest house.",
+      "We can count what we need without subtracting a demand we cannot refuse. I hope nobody here has to burn a good chair this winter."
+    ]
+  },
+  "Alderic": {
+    "halvard": [
+      "He treats the riders' inheritance as something he can own by denying it to others. Knowledge kept only for a ruler is a poor inheritance.",
+      "Guard what you have learned from becoming another ruler's private power. The temples were meant to carry knowledge beyond one lifetime."
+    ],
+    "history": [
+      "Why the temples preserve knowledge",
+      "A rider's life ends. What they learned need not end with them. The temples gave later riders somewhere to find what their predecessors had kept.",
+      "Did they all teach the same things?",
+      "They preserved different parts of an inheritance. Learn carefully; possessing a stone is not the same as understanding its use."
+    ],
+    "afterLightning": [
+      "You have the Lightning Heartstone now. Learn how Aurelius answers it before reaching for more power.",
+      "Corin: We will practise.",
+      "Good. The temples keep knowledge for riders; they do not spare riders the work of learning."
+    ]
+  },
+  "Cartwright Oswin": {
+    "halvard": [
+      "A royal wagon gets the road cleared first, no matter whose wheel has broken. I have lost days waiting beside loads that could not afford the delay.",
+      "I would like repairs decided by who needs help. A little common sense would keep more carts moving than a grand escort ever did."
+    ],
+    "roadwork": [
+      "thornwell",
+      "The repaired wheel",
+      "The wheel is sound and the road is clear. I have checked every pin twice.",
+      "Will it last?",
+      "With sensible loads and a little care. The sensible loads may prove the harder part."
+    ]
+  },
+  "Miner Marn": {
+    "halvard": [
+      "The crown asks why we clear a fall so slowly. I would rather hear complaints above ground than lose Nerik under a hurried repair.",
+      "We will still move the dangerous stones carefully. I hope the people writing the schedules have finally learned to ask the crew."
+    ],
+    "roadwork": [
+      "forgewick",
+      "After clearing the road",
+      "The carts are shifted and the bank is stable. We checked the high stones before letting anyone through.",
+      "Can we pass now?",
+      "Yes. Leave room for loaded carts; a clear road still needs people looking where they go."
+    ]
+  },
+  "Miner Nerik": {
+    "halvard": [
+      "I am new enough to be told what to do and old enough to see when it is foolish. Marn has kept me safe when an order would not.",
+      "I want the next new miner to learn the work without first learning which orders might get him killed."
+    ],
+    "roadwork": [
+      "forgewick",
+      "A finished shift",
+      "That is the last cart out of the way. Marn made me check the bank once more before putting the tools down.",
+      "Was it worth checking?",
+      "Nothing moved. I am learning that an uneventful inspection is a very good result."
+    ]
+  },
+  "Snowbuilder Nessa": {
+    "halvard": [
+      "I make snow families because I miss people. Halvard's roads have given too many of us a reason to understand that.",
+      "Perhaps next winter my brother can help build his own likeness. I will have to find him a less flattering carrot."
+    ],
+    "history": [
+      "Winter visitors",
+      "When roads closed, people made little figures of the relatives who could not come. That is the custom my family taught me, anyway.",
+      "Does everyone here do it?",
+      "Not everyone. A family habit can be worth keeping without pretending it belongs to the whole town."
+    ],
+    "roadwork": [
+      "hollybeck",
+      "Room on the road",
+      "The snow family is safely out of the way. Travellers can get through without stepping over anybody's nose.",
+      "Will you build more?",
+      "Perhaps a little dog. Somewhere that does not require another road closure."
+    ]
+  },
+  "Orin": {
+    "halvard": [
+      "I knew your father when people could disagree in the square without an officer wanting names. I am tired of pretending that is too much to ask.",
+      "I have lived long enough to see the square become ours again. Sit a while, Corin. I would like to enjoy that with you."
+    ],
+    "history": [
+      "The orchards of Thornwell",
+      "An orchard takes years before it gives much back. The people who planted the oldest trees knew someone else might eat most of the fruit.",
+      "Do you know their names?",
+      "A few. I wish we had written down more of them while there was someone left to ask."
+    ],
+    "greetings": {
+      "dd": [
+        "Keep your companion clear of the cider, Corin. I would rather not find out whether dragons like apples by losing a barrel."
+      ],
+      "dd2": [
+        "There is space beside the orchard path for him to rest. Mind the young trees."
+      ]
+    }
+  },
+  "Weft": {
+    "halvard": [
+      "His patrols pass my empty beds and call the road prosperous. Perhaps they count the horses instead of the guests.",
+      "Both camps could use a season of busy fires. I would rather compete over the stew than wonder whether anyone is coming at all."
+    ]
+  },
+  "Dorrick": {
+    "halvard": [
+      "His officers want the deep galleries opened. They have not stood at that door and listened. I have.",
+      "We can decide what is safe before somebody promises another shipment. I will not miss having that decision made from a warm hall."
+    ]
+  },
+  "Hask": {
+    "halvard": [
+      "Young people leave, old people wait, and his notices say everything is thriving. I would like one written by someone who stays long enough to notice.",
+      "I hope some of the young ones come back for a visit. They need not settle here to let us know they are alive."
+    ],
+    "greetings": {
+      "d": [
+        "Not many young travellers stop to speak here. Most are already looking farther down the road.",
+        "Corin: Where are they going?",
+        "Hask: Somewhere they hope will be different. I wish more of them wrote home."
+      ],
+      "dd": [
+        "A dragon in the square. I thought I had reached the age when this town could no longer surprise me."
+      ],
+      "dd2": [
+        "Keep his tail clear of the benches, lad. Some of us need a moment to stand up."
+      ]
+    }
+  },
+  "Garrow": {
+    "halvard": [
+      "I have sat through enough of his reign to recognise a new demand dressed in an old promise. This bench has heard most of them.",
+      "I expected to wear out before his reign did. For once I am delighted that my judgement was poor."
+    ],
+    "greetings": {
+      "dd2": [
+        "There are people who would report a dragon before asking whether it had harmed anyone. Choose your company carefully."
+      ]
+    }
+  },
+  "Marek": {
+    "halvard": [
+      "The wagons pass with royal seals and nobody will explain the work. People who trust their workers do not keep every order a mystery.",
+      "I would like to know what I am loading and who it is meant to help. A plain answer would improve my opinion of government considerably."
+    ],
+    "greetings": {
+      "d": [
+        "Royal wagons go north with their covers tied shut. I am asked to handle the empty carts afterward, never to see the loads.",
+        "Corin: Do you know what they carry?",
+        "Marek: No. And I distrust anyone who insists that means there is nothing worth asking about."
+      ],
+      "dd": [
+        "Keep your dragon away from the royal wagons. I do not know what they carry, but I would rather you did not become part of the answer."
+      ],
+      "dd2": [
+        "Watch for royal escorts farther along the road. A quiet cart can hide work somebody does not want witnessed."
+      ]
+    }
+  },
+  "Bregga": {
+    "halvard": [
+      "His men ask for fuel as though winter is an excuse we invented. The forest will not replace a season's cutting because a king commands it.",
+      "We need to let the cut ground recover. Being able to refuse another demand may save more lives than anyone will count."
+    ]
+  },
+  "Torvald": {
+    "halvard": [
+      "A king who sends men into dark workings should care whether they come back. I learned to expect that concern from fellow miners instead.",
+      "I want the lost men remembered by name. A new tally at the pithead is no answer to the families who kept waiting."
+    ],
+    "greetings": {
+      "d": [
+        "The road south can be hard going. Before you explore the Forgewick mines, make sure you have a light you can depend on."
+      ]
+    },
+    "afterGift": [
+      "The deep workings still deserve caution, even with a steady lantern. Leave yourself a clear way back."
+    ]
+  },
+  "Ingrid": {
+    "halvard": [
+      "I have warmed people turned back by a patrol when the storm was already coming. No argument about the king's rights makes that right.",
+      "There will be a place by the fire for anyone coming home. We have spent long enough practising how to let people in quietly."
+    ]
+  },
+  "Sigrun": {
+    "halvard": [
+      "I count houses, graves and how many bowls I can fill. None of his proclamations has improved those numbers.",
+      "I would like this town to grow for cheerful reasons. Children, visitors, another table needed at supper. We are owed some ordinary years."
+    ]
+  },
+  "Asta": {
+    "halvard": [
+      "I came outside to study people and learned how quickly they change the subject when a patrol appears. That seems a poor recommendation for a king.",
+      "I have begun writing down what people say without lowering their voices. It is a much livelier collection of notes."
+    ]
+  }
+}

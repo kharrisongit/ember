@@ -1858,7 +1858,7 @@ function npcSeesDragon(n){
 function npcDragonConversation(n,alt=false){
   if(wonAll&&npcSeesDragon(n))return n.dragonNear||n.dd2||n.dd||n.d;
   if(npcSeesDragon(n))return (alt&&n.dd2)||n.dd||n.dragonNear||n.d;
-  return (alt&&n.dragonRumor2)||n.dragonRumor||n.d;
+  return n.dragonRumor||n.d;
 }
 function fishingRodDialogue(name,n){
   const visible=npcSeesDragon(n);
@@ -1916,7 +1916,26 @@ const LIBRARY_QUEST_HINTS={
     "Corin: Which temples should we look for?",
     "Brin: The temple southeast of Forgewick holds Lightning. Sandspire's temple to the southeast holds Ice. The temple northeast of Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
 };
-function libraryQuestHint(n){return LIBRARY_QUEST_HINTS[n.n]||null;}
+function libraryQuestHint(n){
+  const base=LIBRARY_QUEST_HINTS[n.n];if(!base)return null;
+  if(n.n==='Mira'&&charm.lamp)return {title:'Using the Hollybeck Lantern',lines:[
+    "Mira: You have Torvald's lantern now. Carry it as you explore the dark galleries; its light lets you see what ordinary lamps miss.",
+    'Corin: It should make the next visit easier.',
+    'Mira: Easier to see, certainly. Watch the creatures and the footing all the same.']};
+  if(n.n==='Oren'&&charm.wake)return {title:'Using the Book of the Dead',lines:[
+    'Oren: You recovered the Book of the Dead. Its summoning calls two wraiths to fight beside you.',
+    'Corin: Do I need to equip it?',
+    'Oren: No charm slot is needed. Carry the book and use Summon in battle.']};
+  if(n.n==='Tamsin'&&charm.ward)return {title:'The ward Maelis gave me',lines:[
+    'Tamsin: You have her ward, then. Equip it when you need its protection against enemy blows.',
+    'Corin: I am glad I went to ask her myself.',
+    'Tamsin: So am I. An actual visit is worth more than the rumours people repeat about her.']};
+  if(n.n==='Brin'&&breathHas.lightning&&breathHas.ice&&breathHas.shadow)return {title:'The three Heartstones',lines:[
+    'Brin: Lightning, Ice and Shadow. You have recovered the three temple Heartstones.',
+    'Corin: There was a good deal the books could not prepare us for.',
+    'Brin: Tell us what you found when you have time. I would like the next account to include someone who was there.']};
+  return base;
+}
 
 function npcStoryGiftPending(n){
   return (n.n==='Nan Ferrow'&&hasDragon()&&!templeCompass.owned)||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
@@ -1933,15 +1952,42 @@ function hettieErrandReminder(){
   ];
   return lines[hettieErrandReminderIndex++%lines.length];
 }
+function npcWorldProfile(n){return typeof NPC_WORLD_TALKS==='undefined'?null:NPC_WORLD_TALKS[n.n]||null;}
+function npcFinishedRoadwork(n){
+  const row=npcWorldProfile(n)?.roadwork;
+  return row&&typeof JOURNEY_GATES!=='undefined'&&JOURNEY_GATES[row[0]]?.open()?row:null;
+}
+function npcWorldTopics(n){
+  const p=npcWorldProfile(n);if(!p)return [];
+  const topics=[{title:wonAll?'After Halvard’s defeat':'King Halvard',lines:p.halvard[wonAll?1:0].split(/(?<=[.!?])\s+/).map(line=>n.n+': '+line)}];
+  if(p.history){const [title,first,question,last]=p.history;topics.push({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]});}
+  return topics;
+}
+function npcAuditedGreeting(n,alt){
+  const p=npcWorldProfile(n);if(!p)return null;
+  const spoken=lines=>lines?.map(line=>/^[^:]{1,21}: /.test(line)?line:n.n+': '+line)||null;
+  if(wonAll)return spoken((alt&&p.greetings?.dv2)||p.greetings?.dv);
+  if(n.charm){
+    if(!charm[n.charm]&&p.gift)return spoken(p.gift);
+    if(charm[n.charm]&&p.afterGift)return spoken(p.afterGift);
+  }
+  if(n.n==='Alderic'&&breathHas.lightning)return spoken(p.afterLightning);
+  // Normal play beyond Millwood includes Aurelius. Indoors, distinguish news
+  // about him from a claim that he is standing beside the speaker.
+  const visible=hasDragon()&&npcSeesDragon(n);
+  const field=hasDragon()?(visible?'dd':'away'):'d';
+  return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
+}
 function npcStoryTopics(n){
   if(n.n==='Hettie'&&quest<Q.NOISE)return [];
   if(n.n==='Nan Ferrow'&&!hasDragon())return [];
-  const profile=NPC_STORIES[n.n];if(!profile)return [];
-  const topics=profile.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  const profile=NPC_STORIES[n.n]||[];
+  const finished=npcFinishedRoadwork(n);
+  const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
+  const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
-  if(n.d2?.length&&n.n!=='Hettie')topics.push({title:'Another thing I meant to ask',lines:n.d2});
-  if(wonAll&&(n.dv2||n.dv)?.length)topics.push({title:'Life after Halvard',lines:n.dv2||n.dv});
+  topics.push(...npcWorldTopics(n));
   if(n.n==='Nan Ferrow'){
     topics.push({title:'What was Dad like?',lines:[
       'Nan Ferrow: Patient with a frightened animal. Hopeless with a tangled knot. He would sit there getting crosser while pretending he was perfectly calm.',
@@ -1965,7 +2011,7 @@ function npcStoryTopics(n){
 }
 function openNpcTopics(n){
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
-  if(!NPC_STORIES[n.n]||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
+  if((!NPC_STORIES[n.n]&&!npcWorldProfile(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
   sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;
   const choose=topic=>{

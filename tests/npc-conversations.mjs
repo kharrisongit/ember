@@ -4,6 +4,7 @@ const c=vm.createContext({hasDragon:()=>c.hatched,hatched:false,wonAll:false,dra
  templeCompass:{owned:false},glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
  canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});
+vm.runInContext(read('js/npc-world-talks.js'),c);
 vm.runInContext(read('js/npc-conversations.js'),c);
 const stories=vm.runInContext('NPC_STORIES',c),cast=JSON.parse(read('assets/portraits/cast.json'));
 for(const n of cast.filter(n=>!['Corin','Aurelius','Bramble'].includes(n.name))){
@@ -14,8 +15,8 @@ const replies=Object.values(stories).flatMap(topics=>topics.map(t=>t[1]));assert
 const nan={n:'Nan Ferrow',d:['Hello'],dd:['Aurelius'],dv:['Home again']};
 assert(!c.npcStoryGiftPending(nan),'Nan has no gift before hatching');c.hatched=true;assert(c.npcStoryGiftPending(nan));
 c.templeCompass.owned=true;assert(!c.npcStoryGiftPending(nan));
-assert(c.npcStoryTopics(nan).some(t=>t.title==="Dad's compass"));assert(!c.npcStoryTopics(nan).some(t=>t.title==='Life after Halvard'));
-c.wonAll=true;assert(c.npcStoryTopics(nan).some(t=>t.title==='Life after Halvard'));
+assert(c.npcStoryTopics(nan).some(t=>t.title==="Dad's compass"));assert(!c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
+c.wonAll=true;assert(c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
 assert(c.npcStoryGiftPending({n:'Odo'}));assert(c.npcStoryGiftPending({n:'Calder'}));
 assert.match(c.fishingRodDialogue('Calder').join(' '),/Odo is my grandfather/);
 c.odoRodReferral=true;assert(!c.npcStoryGiftPending({n:'Odo'}));assert(!c.npcStoryGiftPending({n:'Calder'}));
