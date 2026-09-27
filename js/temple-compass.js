@@ -300,6 +300,7 @@ function startNanFarewell(nan){
         if(fadeDir||fade>0)return false;
         if(!nan.goto&&path.length)nan.goto=path.shift();
         if(nan.goto)return false;
+        nan.scriptWalking=false;
         faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
       }});
   };

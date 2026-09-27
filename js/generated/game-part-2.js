@@ -6587,12 +6587,23 @@ function maddockWalkPath(e,to,canWalk=(x,y)=>canNpcStand(x,y,e)) {
     for(let i=1;i<=n;i++)if(!canWalk(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n))return false;
     return true;
   };
+  // The grid finds a safe route; actors follow straight visible segments,
+  // not alternating eight-pixel horizontal/vertical steps.
+  const straighten=path=>{
+    const result=[];let from=start,i=0;
+    while(i<path.length){
+      let next=i;
+      for(let j=path.length-1;j>i;j--)if(clear(from,path[j])){next=j;break;}
+      result.push(path[next]);from=path[next];i=next+1;
+    }
+    return result;
+  };
   if(clear(start,to))return [to];
   const q=[start],prev=new Map([['0,0',null]]),points=new Map([['0,0',start]]);
   for(let i=0;i<q.length&&i<12000;i++){
     const a=q[i],ax=Math.round((a[0]-start[0])/step),ay=Math.round((a[1]-start[1])/step),key=ax+','+ay;
     if(Math.hypot(a[0]-to[0],a[1]-to[1])<24&&clear(a,to)){
-      const path=[to];for(let k=key;prev.get(k)!==null;k=prev.get(k))path.unshift(points.get(k));return path;
+      const path=[to];for(let k=key;prev.get(k)!==null;k=prev.get(k))path.unshift(points.get(k));return straighten(path);
     }
     for(const [dx,dy]of [[1,0],[0,1],[-1,0],[0,-1]]){
       const nx=ax+dx,ny=ay+dy,k=nx+','+ny,b=[start[0]+nx*step,start[1]+ny*step];
@@ -6654,6 +6665,7 @@ function speakerNamed(who) {
 function faceToward(m, x, y) {
   if (m.stationary && !m.packDirections && !(m.desertNative && !m.packSpr)) { m.f = "d"; m.kf = "d"; m.flip = false; return; }
   const dx = x - m.x, dy = y - m.y;
+  if(Math.hypot(dx,dy)<.01)return; // Reaching a waypoint must not flip the sprite north.
   const sideways = Math.abs(dx) > Math.abs(dy);
   m.f = sideways ? "s" : (dy > 0 ? "d" : "u");
   m.flip = sideways && dx < 0;
@@ -6766,7 +6778,7 @@ function stepWalkers(dt) {
     m.y += dy / d * Math.min(sp, d);
     faceToward(m, m.goto[0], m.goto[1]);
   }
-  if (walker && scene && !(scene.hatch&&walker.scriptWalking)) faceToward(walker, P.x, P.y);
+  if (walker && scene && !walker.goto && !walker.scriptWalking) faceToward(walker, P.x, P.y);
 }
 
 function faceCorinAt(x, y) {
