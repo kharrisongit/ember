@@ -1854,7 +1854,7 @@ function npcSeesDragon(n){
   return !!n&&hasDragon()&&dragonHere()&&dragon.on&&!n.pettable&&
     (mounted||Math.hypot(n.x-dragon.x,n.y-dragon.y)<192);
 }
-// This option talks about the companion, independently of unrelated quest hints.
+// Companion reactions belong to the contextual greeting, not a duplicate topic.
 function npcDragonConversation(n,alt=false){
   if(wonAll&&npcSeesDragon(n))return n.dragonNear||n.dd2||n.dd||n.d;
   if(npcSeesDragon(n))return (alt&&n.dd2)||n.dd||n.dragonNear||n.d;
@@ -1941,7 +1941,6 @@ function npcStoryTopics(n){
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
   if(n.d2?.length&&n.n!=='Hettie')topics.push({title:'Another thing I meant to ask',lines:n.d2});
-  if(hasDragon()&&(!wonAll||npcSeesDragon(n)))topics.push({title:'A dragon on the road',lines:npcDragonConversation(n)});
   if(wonAll&&(n.dv2||n.dv)?.length)topics.push({title:'Life after Halvard',lines:n.dv2||n.dv});
   if(n.n==='Nan Ferrow'){
     topics.push({title:'What was Dad like?',lines:[
@@ -1975,7 +1974,7 @@ function openNpcTopics(n){
     playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
-    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'How are things?'),go:()=>beginNpcTalk(n,true)},
+    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;

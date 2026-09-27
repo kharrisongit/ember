@@ -61,7 +61,7 @@ for(let visit=0;visit<2;visit++)for(const [title,first,question,last] of stories
  c.scene.after();assert.equal(c.ask.npcConversation,'Hettie','Returning to the menu preserves the selected speaker');
 }
 for(const expected of [farm.dd,farm.dd2]){
- c.openNpcTopics(farm);c.ask.opts.find(o=>o.n==='How are things?').go();
+ c.openNpcTopics(farm);c.ask.opts.find(o=>o.n==='Hello!').go();
  assert.deepEqual(Array.from(c.sayNpc.said),Array.from(expected));
 }
 c.hatched=false;c.beginNpcTalk(farm,true);c.beginNpcTalk(farm,true);
@@ -72,7 +72,7 @@ assert.match(c.scene.lines[0],/Patient with a frightened animal/);assert(!c.scen
 c.dragon.x=500;assert.equal(c.npcContextDialogue(farm,false),farm.dragonRumor,'Absent dragon is not described as standing beside Corin');
 c.dragon.x=0;c.brambleQuest=1;c.MAPID='tavern';c.BRAMBLE_HINTS={Hettie:['Lost dog']};
 assert.equal(c.npcContextDialogue(farm,false),c.BRAMBLE_HINTS.Hettie);
-assert.equal(c.npcStoryTopics(farm).find(t=>t.title==='A dragon on the road').lines,farm.dd,'A dragon topic does not turn into an unrelated quest hint');
+assert(!c.npcStoryTopics(farm).some(t=>t.title==='A dragon on the road'),'The greeting must not also appear under a dragon topic');
 c.wonAll=true;assert.equal(c.npcContextDialogue(farm,false),farm.dv,'Victory takes priority over earlier quest worries');
 c.wonAll=false;c.brambleQuest=0;c.MAPID='world';c.fishingPole=false;c.odoRodReferral=false;
 const odo={n:'Odo',x:20,y:0,d:['Odo: Morning.'],dd:['Odo: Mind that tail near my line.'],dd2:['Odo: Does your dragon like fish?']};
@@ -87,3 +87,29 @@ c.odoRodReferral=false;assert.match(c.fishingRodDialogue('Calder',calder)[0],/dr
 c.dragon.x=500;
 for(const name of ['Odo','Calder'])assert(!c.fishingRodDialogue(name,{n:name,x:20,y:0}).some(l=>/dragon/.test(l)),'Absent companion does not trigger a sighting');
 console.log('PASS: repeated topic selections preserve personal exchanges, general greetings react to presence/progress, and fishing referrals remember prior conversations.');
+
+// Check the rendered menu and its callbacks across the whole authored cast at
+// each story stage, rather than testing only the list of topic titles.
+Object.assign(c,{fishingPole:true,odoRodReferral:true,templeCompass:{owned:true},quest:5,brambleQuest:0});
+for(const hatched of [false,true])for(const victory of [false,true]){
+ c.hatched=hatched;c.wonAll=victory;
+ for(const [name,profile] of Object.entries(stories)){
+  c.MAPID=name==='King Halvard'?'cinderhold':'world';
+  const npc={n:name,x:20,y:0,d:[name+': Morning.'],dd:[name+': Your companion is welcome.'],dv:[name+': Peace at last.']};
+  assert(c.openNpcTopics(npc),name+' menu opens');
+  const labels=c.ask.opts.map(o=>o.n);
+  assert(!labels.includes('A dragon on the road')&&!labels.includes('How are things?'),name+' has no duplicate greeting topic');
+  const label=c.libraryQuestHint(npc)?.title||(name==='King Halvard'?'I came for the stolen eggs.':'Hello!');
+  assert.equal(labels.filter(l=>l===label).length,1,name+' has one greeting/quest entry');
+  if(name==='King Halvard')continue;
+  c.ask.opts.find(o=>o.n===label).go();
+  assert.equal(c.sayNpc,npc,name+' greeting addresses the selected NPC');
+  if(c.libraryQuestHint(npc))assert.equal(c.sayNpc.said,c.libraryQuestHint(npc).lines,'Pupils retain direct quest guidance');
+  if(name==='Nan Ferrow'&&!hatched)continue;
+  for(const [title,first,question,last] of profile){
+   c.openNpcTopics(npc);c.ask.opts.find(o=>o.n===title).go();
+   assert.deepEqual(Array.from(c.scene.lines),[name+': '+first,'Corin: '+question,name+': '+last],name+' personal topic stays distinct from greeting');
+  }
+ }
+}
+console.log('PASS: every authored NPC menu has one contextual greeting or quest entry, no duplicate dragon option, and distinct personal-topic callbacks across story stages.');
