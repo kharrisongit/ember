@@ -10,7 +10,7 @@ function spiritFollowTarget(f){
     if(trail.points.length>120)trail.points.shift();
   }
   const slot=f.slot||0,side=slot%2?-1:1;
-  let remaining=84+(slot%2)*28,point=trail.points[0]||P,dx=0,dy=1;
+  let remaining=42+(slot%2)*16,point=trail.points[0]||P,dx=0,dy=1;
   for(let i=trail.points.length-1;i>0;i--){
     const a=trail.points[i],b=trail.points[i-1],d=Math.hypot(a.x-b.x,a.y-b.y);
     if(d<.01)continue;
@@ -23,12 +23,12 @@ function spiritFollowTarget(f){
   const elapsed=Math.max(0,Math.min(.1,foeClock-(f.spiritAimTime??foeClock)));
   f.spiritAimTime=foeClock;
   if(!f.spiritAim||f.spiritMap!==MAPID){f.spiritAim={...desired};f.spiritMap=MAPID;f.spiritVX=f.spiritVY=0;}
-  const ease=1-Math.exp(-elapsed/ (.28+(slot%2)*.12));
+  const ease=1-Math.exp(-elapsed/ (.12+(slot%2)*.05));
   f.spiritAim.x+=(desired.x-f.spiritAim.x)*ease;f.spiritAim.y+=(desired.y-f.spiritAim.y)*ease;
   return {...f.spiritAim,d:Math.hypot(f.spiritAim.x-f.x,f.spiritAim.y-f.y),isPlayer:false,follow:1};
 }
 function spiritFollowVelocity(f,rx,ry,distance,dt){
-  const speed=Math.min(235,105+distance*.9),ease=1-Math.exp(-dt/.3);
+  const speed=Math.min(235,135+distance*1.2),ease=1-Math.exp(-dt/.14);
   f.spiritVX=(f.spiritVX||0)+(rx/distance*speed-(f.spiritVX||0))*ease;
   f.spiritVY=(f.spiritVY||0)+(ry/distance*speed-(f.spiritVY||0))*ease;
   return {x:f.x+f.spiritVX*dt,y:f.y+f.spiritVY*dt};

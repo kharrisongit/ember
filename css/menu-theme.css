@@ -104,3 +104,11 @@
 #worldAtlas button:active {background:var(--dawn-teal);color:#fff6e3}
 :is(#bag,#itemm,#atkm,#airm,#menu,#sound,#cloudSaveDialog,#worldAtlas) button:focus-visible,
 #cloudSaveDialog summary:focus-visible,#soundVolume:focus-visible {outline:2px solid #36565d;outline-offset:3px}
+
+/* Dark ink for the fine illustrated strokes on cream action orbs. */
+#atkm .row .actionIcon,#airm .row .actionIcon {
+  filter:brightness(.34) saturate(.65) drop-shadow(0 1px 0 #fffaf088);
+}
+#atkm .row.breathRefill .breathFill {
+  background:conic-gradient(from -90deg,var(--el) 0 var(--ring,100%),#b6aa914d var(--ring,100%) 100%)!important;
+}

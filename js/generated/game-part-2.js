@@ -9945,7 +9945,7 @@ function stepFoes(dt) {
     if (f.ally) {
       f.hx = P.x; f.hy = P.y; f.ring = 0;
       const gap = Math.hypot(f.x - P.x, f.y - P.y);
-      if (gap > 420) {
+      if (gap > 240) {
         const side = (f.slot % 2) ? -1 : 1;
         for (const [ox, oy] of [[side * 22, 52], [side * 26, 40],
                                 [-side * 22, 52], [0, 58], [0, -58]]) {
@@ -10020,7 +10020,7 @@ function stepFoes(dt) {
         let stop = myTurn ? want : 6;
         if (f.mad > 0 && tgt.foe) stop = Math.max(6, k.reach - 6);
         if (tgt.toBell) stop = 14;          /* they crowd round it */
-        if (f.ally && tgt.follow) stop = 16;     /* they hold well off him */
+        if (f.ally && tgt.follow) stop = 8;      /* settle close to their trail position */
         if (k.standoff && d < k.standoff - 12) {
           rx = f.x - tgt.x; ry = f.y - tgt.y;
           rd = Math.hypot(rx, ry) || 1; stop = 0;
@@ -10122,7 +10122,7 @@ function stepFoes(dt) {
   }
 }
 let pHp = 6, pMax = 6, pInv = 0;
-function inFight() { return foes.some(f => f.st !== "dead" && Math.hypot(f.x - P.x, f.y - P.y) < 200); }
+function inFight() { return foes.some(f => !f.ally && !f.storyPassive && f.st !== "dead" && Math.hypot(f.x - P.x, f.y - P.y) < 200); }
 let devSafe = false;
 let dragonOff = false;
 let devDragonPassive = false;

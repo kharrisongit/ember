@@ -5538,12 +5538,12 @@ const ATTACKS = [
               if (wait > 0) { toast((DRAGON_BREATH[a.el]?.name || "breath") + " ready in " + wait.toFixed(1) + "s"); return; }
               dragonEl = a.el; breatheFire(); },
 }));
-const EL_COLOUR = { claw: "#d8d2c4", fire: "#ff8a2b", ice: "#4fb4ff",
-                    bolt: "#ffd23c", shadow: "#a074e0",
-                    wing: "#79d18a", ride: "#e0a35c",
-                    wake: "#8fd8ff",      /* the risen: cold blue */
-                    potion: "#e05a4a",    /* the flask: red */
-                    elixir: "#f0c250", item: "#c6a97a" }; /* general usable item */
+const EL_COLOUR = { claw: "#8b806c", fire: "#b65e45", ice: "#56859d",
+                    bolt: "#bd913b", shadow: "#896889",
+                    wing: "#6e8970", ride: "#ad7952",
+                    wake: "#658d9b",      /* the risen: muted blue */
+                    potion: "#b65e45",    /* the flask: rust red */
+                    elixir: "#bd913b", item: "#a18a66" };
 let ovl = null;
 function setOvl(which) {
   if(which&&fishing)return;
