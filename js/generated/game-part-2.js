@@ -11176,6 +11176,7 @@ padBind();
   });
 }
 function actionButton() {
+  if(window.EmberCloud?.isOpen())return;
   if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
   if(atlasOpen)return;
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}

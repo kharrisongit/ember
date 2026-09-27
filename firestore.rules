@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /players/{uid}/saves/{slot} {
+      function owner() {
+        return request.auth != null && request.auth.uid == uid && slot in ['1', '2', '3'];
+      }
+      function validSave() {
+        let d = request.resource.data;
+        return d.keys().hasAll(['format','revision','parent','deleted','saveJson','updatedAt'])
+          && d.keys().hasOnly(['format','revision','parent','deleted','saveJson','updatedAt'])
+          && d.format == 1
+          && d.revision is string && d.revision.size() > 0 && d.revision.size() <= 80
+          && (d.parent == null || (d.parent is string && d.parent.size() <= 80))
+          && d.deleted is bool && d.saveJson is string && d.saveJson.size() <= 262144
+          && (!d.deleted || d.saveJson == '')
+          && d.updatedAt == request.time;
+      }
+      allow read: if owner();
+      allow create: if owner() && validSave() && request.resource.data.parent == null;
+      allow update: if owner() && validSave()
+        && request.resource.data.parent == resource.data.revision
+        && request.resource.data.revision != resource.data.revision;
+      // Deletions use versioned empty saves, preventing an offline device from resurrecting them.
+      allow delete: if false;
+    }
+  }
+}

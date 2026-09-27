@@ -190,6 +190,7 @@ function persistDragonBanterSeen(){
     if(!saved?.dragonIntroDone)return;
     saved.dragonBanterSeen=[...dragonBanterSeen];
     localStorage.setItem(key,JSON.stringify(saved));
+    window.EmberCloudState?.saved(activeSaveSlot);
   }catch(e){}
 }
 function dragonConversationReaction(n){
