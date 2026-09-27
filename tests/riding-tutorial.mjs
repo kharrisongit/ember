@@ -1,16 +1,21 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
-const {run,context:c}=await loadEditorGame(new URL('..',import.meta.url).pathname,{log(){},warn(){},error:console.error},{furniture:false});
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom();
+const {run,context:c}=await loadEditorGame(new URL('..',import.meta.url).pathname,{log(){},warn(){},error:console.error},{furniture:false,document:dom.document});
 const check=(code,message)=>assert(run(code),message);
 run(`
 MAPID='world';MD=W.maps.world;features=MD.features;quest=Q.DONE;mode='play';gameplayStarted=true;
 dragonIntroDone=true;dragon.on=true;dragon.maxHp=20;dragon.hp=20;dragon.down=false;dragon.knockdown=0;
 P.x=98*TS;P.y=352*TS;P.act=null;scene=null;revealing=false;
-canStand=()=>true;dragonGround=()=>true;rebuildSolid=()=>{};clampCam=()=>{};
+canStand=()=>true;dragonCanStand=()=>true;dragonGround=()=>true;rebuildSolid=()=>{};rebuildBuckets=()=>{};clampCam=()=>{};
+MW=4000;MH=600;solid=new Uint8Array(MW*MH);blockedByNpcBody=()=>false;blockedByNpcBuffer=()=>false;
+dragon.x=P.x-140;dragon.y=P.y;dragon.air=false;dragon.placed=MAPID;
+SPR.dr3_s=[0,0,128,96];
 stepChest=()=>{};stepHuntingGrounds=()=>{};saveGame=()=>{};showReveal=()=>{};showScene=()=>{};showHeal=()=>{};
 const testRing=features.find(a=>a.id===11);
-foes=[{kind:'plant1',x:P.x+20,y:P.y,hp:8,st:'approach',t:0,dir:'s'}];
+foes=[{kind:'plant1',x:P.x+20,y:P.y,hp:8,st:'approach',t:0,dir:'s'},{kind:'plant2',x:P.x+40,y:P.y+20,hp:12,st:'idle',t:0,dir:'s'}];
 currentArenaFeatures=()=>[testRing];
 `);
 check('features.filter(a=>a.kind==="arena").sort((a,b)=>a.x-b.x||a.y-b.y)[4].id===testRing.id','Tutorial matches arena tool #5');
@@ -20,8 +25,14 @@ check('setDragonAir(true)===false','New games cannot fly before the riding lesso
 for(const menu of ['airm','atkm']){run(`setOvl('${menu}')`);check('ovl===null','Locked menu cannot be opened: '+menu);}
 check("!EmberRiding.allowControl('btnL')&&!EmberRiding.allowControl('btnR')",'Both touch buttons are locked before the lesson');
 run('EmberRiding.entered(features.find(a=>a.id===208))');check("!EmberRiding.holding()",'The northern arena cannot start this tutorial');
-run('stepArena(.05)');check("EmberRiding.capture().phase==='walls'",'Entering the first arena starts the lesson');
+run('stepArena(.05)');check("EmberRiding.capture().phase==='gather'",'Entering the first arena starts the lesson');
+check('foes.every(f=>f.y<testRing.y*TS)','All tutorial enemies start in the north');
 const before=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
+for(let i=0;i<6;i++)run('stepArena(.05);EmberRiding.step(.05);stepDragon(.05)');
+check('!scene&&arenaT<=.18','No dialogue or closed fence before Aurelius joins Corin');
+for(let i=0;i<100&&!run('scene');i++)run('stepArena(.05);EmberRiding.step(.05);stepDragon(.05);stepCombat(.05)');
+check('Math.hypot(dragon.x/TS-testRing.x,dragon.y/TS-testRing.y)<testRing.r-1.5','Dragon is safely inside the fence');
+check('Math.hypot(dragon.x-P.x,dragon.y-P.y)<55','Dragon stands beside Corin before talking');
 for(let i=0;i<10;i++)run('stepArena(.05);EmberRiding.step(.05);stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),before,'Enemies idle in place throughout the rising walls and dialogue');
 check("scene.lines[0]==='Aurelius: Quick! Get on my back!'",'Correct opening line at full walls');
@@ -30,13 +41,16 @@ finish();check("ovl==='airm'&&EmberRiding.capture().phase==='mount'",'Command me
 check("EmberRiding.allowedItem('airm',MENUS.airm.items()[0])",'Mount enabled');
 check("!EmberRiding.allowedItem('airm',MENUS.airm.items()[1])",'Cannot bypass Mount with Take off');
 run('setOvl(null)');check("ovl==='airm'",'Cancel cannot skip a required choice');
-run('MENUS.airm.pick=0;ovlTake()');check("mounted&&ovl===null&&EmberRiding.capture().phase==='dragonButton'",'Real Mount action advances to Dragon button');
+dom.touch(dom.element('airRows').children[0]);check("mounted&&ovl===null&&EmberRiding.capture().phase==='dragonButton'",'Real Mount action advances to Dragon button');
 run("setOvl('itemm')");check('ovl===null','Wrong control cannot advance the lesson');
-run("setOvl('atkm')");check("scene.lines[0]==='Aurelius: What should I do?'",'Dragon asks for the attack');finish();
-check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'Fire menu waits for actual input');
+dom.touch(dom.element('btnL'));check("scene.lines[0]==='Aurelius: What should I do?'",'Dragon asks for the attack');
+check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'A touch opens Fire immediately without an extra A press');
 run('MENUS.atkm.pick=0;ovlTake()');check("EmberRiding.capture().phase==='fire'",'Slash cannot bypass Fire lesson');
-run('MENUS.atkm.pick=1;ovlTake()');check("EmberRiding.capture().phase==='battle'&&!EmberRiding.holding()&&ovl===null",'Selecting real Fire releases combat');
-check('!!hunt||!!breath','Fire issues a real dragon attack');
+dom.touch(dom.element('atkRows').children[1]);check("EmberRiding.capture().phase==='battle'&&!EmberRiding.holding()&&ovl===null",'Selecting real Fire releases combat');
+check('!!breath&&!hunt&&!scene','Fire launches a projectile from the saddle and clears the prompt');
+const beforeHit=run('foes.reduce((sum,f)=>sum+f.hp,0)');
+for(let i=0;i<30;i++)run('stepBreath(.05);stepDragon(.05)');
+assert(run('foes.reduce((sum,f)=>sum+f.hp,0)')<beforeHit,'The tutorial fire actually reaches and damages an enemy');
 // Injuries prohibit flight, land an airborne dragon, and never faint him during this first lesson.
 run('dragon.air=true;dragon.tr=null;dragon.inv=0;hurtDragon(100)');
 check('dragon.hp===1&&!dragon.down&&!dragon.air','First battle leaves a living, grounded dragon');
@@ -50,7 +64,7 @@ check('dragon.hp<=dragonFlightMinimum()&&hareMeat>=1','Recovery always has low h
 finish();check("ovl==='airm'&&EmberRiding.capture().phase==='dismount'",'Dismount is the required command');
 run('MENUS.airm.pick=0;ovlTake()');check('!mounted','Real dismount gets Corin off the dragon');finish();
 check("EmberRiding.capture().phase==='itemsButton'",'Next highlights Items');
-run("setOvl('itemm')");check("EmberRiding.capture().phase==='heal'",'Items opens the healing lesson');
+dom.touch(dom.element('btnItems'));check("EmberRiding.capture().phase==='heal'",'Items opens the healing lesson');
 run("MENUS.itemm.pick=MENUS.itemm.items().findIndex(it=>it.key==='hareMeat');ovlTake()");
 check("dragon.hp===20&&EmberRiding.capture().phase==='thanks'",'Real food restores HP before completion');finish();
 check('EmberRiding.capture().done&&!EmberRiding.holding()','Healing completes and releases all controls');
@@ -64,4 +78,12 @@ check("cooling.has('world:11')",'Cleared tutorial arena stays clear through a re
 c.completedSave={ridingTutorial:completed};run('scene=null;EmberRiding.restore(completedSave);EmberRiding.entered(testRing)');check('!EmberRiding.holding()','Completed lesson never repeats');
 run('EmberRiding.restore({dragonIntroDone:true,thornwellMet:true})');check('EmberRiding.capture().done&&EmberRiding.unlocked()','Existing later saves keep riding without replaying the tutorial');
 run('EmberRiding.restore({dragonIntroDone:true,thornwellMet:false,x:700})');check('!EmberRiding.capture().done&&!EmberRiding.unlocked()','Existing early saves wait for the battle lesson');
-console.log('PASS: first-arena detection, idle enemies, forced real Mount/Fire/Dismount/food actions, input gating, injury landing, recovery, and save migration.');
+// Trees can cut off the ground route; he flies in and lands before speaking.
+run(`scene=null;arenaLock=testRing;arenaT=0;mounted=false;dragon.hp=20;dragon.down=false;
+P.x=testRing.x*TS;P.y=testRing.y*TS;dragon.x=P.x-150;dragon.y=P.y;
+dragonCanStand=(x,y)=>x>testRing.x*TS-60;
+foes=[{kind:'plant1',x:P.x,y:P.y+40,hp:8,st:'idle',t:0}];
+EmberRiding.entered(testRing);`);
+for(let i=0;i<100&&!run('scene');i++)run('stepArena(.05);EmberRiding.step(.05);stepDragon(.05)');
+check("scene&&EmberRiding.capture().phase==='mountTalk'&&!dragon.air",'A blocked ground route still ends with a landed companion inside the fence');
+console.log('PASS: north-side enemies, companion arrival before closing walls, touch-only Mount/Dragon/Fire, projectile damage, input gating, closer dismount, healing, and save migration.');

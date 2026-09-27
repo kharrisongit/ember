@@ -5776,7 +5776,9 @@ function stepDragon(dt) {
   groundInjuredDragon();
   if(scene?.nanGifts){dragon.t+=dt;dragon.moving=false;return;}
   if(globalThis.window?.EmberRiding?.holding()){
-    dragon.t+=dt;dragon.moving=false;
+    dragon.t+=dt;
+    if(window.EmberRiding.gather(dt))return;
+    dragon.moving=false;
     if(mounted){dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();stepTransition(dt);}
     return;
   }
@@ -7574,6 +7576,12 @@ function breatheFire() {
     if ((f.kind === "kdragon" || f.kind === "lich" || d < 320) && d < bd) { bd = d; best = f; }
   }
   if (best) {
+    if(typeof mounted!=="undefined"&&mounted&&best.kind!=="kdragon"&&best.kind!=="lich"){
+      // A rider aims from the saddle. Companion pathfinding would be reset
+      // to Corin every frame and never reach its requested firing position.
+      faceCorinAt(best.x,best.y);dragon.dir=playerFacing4();
+      fireNow(dragon.dir,best);return !!breath;
+    }
     /* King breaths have a deliberate wind-up and keep a clear standoff. */
     if (best.kind === "kdragon" || best.kind === "lich") {
       hunt = { foe: best, t: 0, kingBreath: true }; return true;

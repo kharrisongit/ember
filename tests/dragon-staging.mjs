@@ -40,7 +40,7 @@ const d=vm.createContext({dragon:{on:true,x:200,y:200,dir:'s',air:true},P:{x:200
 const dr=s=>vm.runInContext(s,d);dr(section(p3,'let mounted = false;','tap(document.getElementById("deadBtn")'));
 const reset=dir=>{d.dir=dir;Object.assign(d.dragon,{x:200,y:200,dir,air:true});d.P.x=200;d.P.y=226;dr('mounted=true');};
 function separated(){const {x,y}=d.P;return x+16<163||x-16>237||y<126||y-40>200;}
-for(const dir of ['n','s','e','w']){reset(dir);assert(dr('setMounted(false)'));assert(separated(),dir+' dismount keeps the visible sprites apart');assert.equal(d.P.moving,false);assert.equal(d.P.act,null);assert(d.dragon.followGap>=Math.hypot(d.P.x-d.dragon.x,d.P.y-26-d.dragon.y),'Dragon keeps the new spacing afterward');}
+for(const dir of ['n','s','e','w']){reset(dir);assert(dr('setMounted(false)'));assert(separated(),dir+' dismount keeps the visible sprites apart');assert(Math.hypot(d.P.x-d.dragon.x,d.P.y-d.dragon.y)<64,'Dismount lands closer than the previous 64-pixel minimum');assert.equal(d.P.moving,false);assert.equal(d.P.act,null);assert(d.dragon.followGap>=Math.hypot(d.P.x-d.dragon.x,d.P.y-26-d.dragon.y),'Dragon keeps the new spacing afterward');}
 clear=(x,y)=>x<180;reset('s');assert(dr('setMounted(false)'));assert(d.P.x<180,'Chooses a free side when the first side is blocked');
 clear=()=>false;reset('s');assert.equal(dr('setMounted(false)'),false);assert.equal(dr('mounted'),true);assert.equal(d.P.x,200);assert.match(notices.at(-1),/open ground/);
 d.dragonHere=()=>false;assert(dr('setMounted(false,true)'),'Entering a dragon-free interior can still clear the mount state');assert.equal(dr('mounted'),false);

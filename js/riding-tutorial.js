@@ -3,7 +3,7 @@
   'use strict';
   // Arena tool #5: the eastbound road out of Millwood (stable feature ID 11).
   const FIRST_ARENA=11;
-  let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0;
+  let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const holding=()=>!!phase&&phase!=='battle';
   const hint=document.createElement('div');hint.id='ridingHint';hint.hidden=true;hint.setAttribute('role','status');document.body.appendChild(hint);
@@ -38,11 +38,64 @@
   function entered(ring){
     if(done||phase||MAPID!=='world'||ring.id!==FIRST_ARENA||!hasDragon()||!dragonIntroDone)return;
     if(mounted)setMounted(false,true);
-    ringId=ring.id;moveTo('walls');
-    // Stop existing wind-ups at their current positions before the walls rise.
-    for(const foe of foes)if(foe.st!=='dead'&&!foe.ally){foe.st='idle';foe.t=0;}
-    hunt=null;breath=null;claw=null;dragon.moving=false;
+    ringId=ring.id;moveTo('gather');
+    hunt=null;breath=null;claw=null;dragonFacingLocked=false;
+    dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
+    const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
+    const inRing=(x,y)=>Math.hypot(x-cx,y-cy)<limit;
+    const enemies=foes.filter(f=>f.st!=='dead'&&!f.ally&&Math.hypot(f.x/TS-ring.x,f.y/TS-ring.y)<ring.r+5);
+    const north=[];
+    for(let y=cy-32;y>=cy-limit+12;y-=24)for(const offset of [-36,0,36,-54,54]){
+      const x=cx+offset;
+      if(inRing(x,y)&&dragonCanStand(x,y))north.push([x,y]);
+    }
+    // Put this battle's enemies together in the north, away from the lesson.
+    enemies.forEach((foe,i)=>{
+      const spot=north[i%north.length];
+      if(spot){[foe.x,foe.y]=spot;foe.hx=foe.x;foe.hy=foe.y;}
+      foe.st='idle';foe.t=0;foe.dir='s';
+    });
+    rebuildBuckets();
+    let flyIn=false;
+    const approach=(actor,x,y,clear)=>{
+      let landing=null;
+      for(const radius of [0,8,16,24,32])for(let a=0;a<8;a++){
+        const target=[x+Math.cos(a*Math.PI/4)*radius,y+Math.sin(a*Math.PI/4)*radius];
+        if(target[1]<cy+8||!inRing(...target)||!clear(...target))continue;
+        landing ||= target;
+        const path=maddockWalkPath(actor,target,clear);
+        if(path)return path;
+      }
+      // If trees cut off his ground route, Aurelius can hop over them and
+      // land on a checked spot inside, before asking Corin to mount.
+      if(actor===dragon&&landing){flyIn=true;return [landing];}
+      return null;
+    };
+    assembly={p:approach(P,cx-24,cy+32,canStand),d:approach(dragon,cx+24,cy+36,dragonCanStand)};
+    dragon.air=flyIn;
     if(dragon.hp<=dragonFlightMinimum()){dragon.hp=dragonFlightMinimum()+1;dragon.down=false;dragon.revive=0;dragon.knockdown=0;}
+  }
+  function gather(dt){
+    if(phase!=='gather')return false;
+    const walk=(actor,path,speed)=>{
+      actor.moving=false;if(!path)return false;
+      let left=speed*dt;
+      while(path.length&&left>0){
+        const [x,y]=path[0],dx=x-actor.x,dy=y-actor.y,d=Math.hypot(dx,dy),step=Math.min(d,left);
+        if(actor===P)faceCorinAt(x,y);else dragon.dir=direction4(dx,dy,dragon.dir);
+        actor.moving=d>0;
+        if(d<=step){actor.x=x;actor.y=y;path.shift();}
+        else{actor.x+=dx/d*step;actor.y+=dy/d*step;}
+        left-=step;
+      }
+      return path.length===0;
+    };
+    const playerReady=walk(P,assembly.p,90),dragonReady=walk(dragon,assembly.d,130);
+    if(playerReady&&dragonReady){
+      P.moving=false;dragon.moving=false;dragon.air=false;faceCorinAt(P.x,P.y-TS);dragon.dir='n';
+      assembly=null;moveTo('walls');
+    }
+    return true;
   }
   function step(dt){
     if(!gameplayStarted||mode!=='play')return;
@@ -69,17 +122,18 @@
   function opened(which){
     if(internal)return;
     if(phase==='dragonButton'&&which==='atkm'){
-      moveTo('fireTalk');
-      say(['Aurelius: What should I do?'],()=>{
-        breathCooldown.fire=0;
-        moveTo('fire','Choose Fire to attack.');overlay('atkm');
-      });
+      breathCooldown.fire=0;
+      moveTo('fire','Choose Fire to attack.');
+      // Keep the menu open under his question; the next input selects Fire.
+      playScene(['Aurelius: What should I do?'],{telepathy:true,ridingFirePrompt:true});
+      paint();
     }else if(phase==='itemsButton'&&which==='itemm'){
       moveTo('heal','Choose Hare Meat to heal Aurelius.');paint();
     }
   }
   function fired(element){
     if(phase!=='fire'||element!=='fire')return;
+    if(scene?.ridingFirePrompt){scene=null;showScene();}
     moveTo('battle','Press A for Slash!');hintTime=8;overlay(null);saveGame();
   }
   function completed(ring){
@@ -126,6 +180,7 @@
   }
   function action(){
     if(!holding())return false;
+    if(phase==='fire'&&ovl==='atkm'){ovlTake();return true;}
     if(scene){advanceScene();return true;}
     if(phase==='dragonButton'){setOvl('atkm');return true;}
     if(phase==='itemsButton'){setOvl('itemm');return true;}
@@ -144,7 +199,7 @@
   }
   function capture(){return {version:2,done,unlocked,phase,ringId};}
   function restore(saved){
-    clearHighlight();notice('');phase='';resumeRecovery=false;document.body.classList.remove('riding-guide');
+    clearHighlight();notice('');phase='';assembly=null;resumeRecovery=false;document.body.classList.remove('riding-guide');
     const data=saved.ridingTutorial;
     if(data?.version===1||data?.version===2){
       done=!!data.done;ringId=data.ringId??null;
@@ -168,6 +223,6 @@
     }
   }
   function skip(){done=true;unlocked=true;resumeRecovery=false;moveTo('');}
-  window.EmberRiding={holding,step,entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
+  window.EmberRiding={holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
     unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',blocksArenaEntry:()=>recoveryPhases.has(phase)};
 })();

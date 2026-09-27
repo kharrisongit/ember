@@ -3812,6 +3812,10 @@ function stepArena(dt) {
     }
   } else {
     const ring = arenaLock;
+    if(globalThis.window?.EmberRiding?.gathering()){
+      // Leave a low opening until both companions have walked inside.
+      arenaT=Math.min(.18,arenaT+dt*3);return;
+    }
     const waves = ring.waves
       || (ring.wave2 ? [{ say: "Oh no! There's more!", at: ring.wave2 }] : []);
     if (ring._wave === undefined) ring._wave = 0;
@@ -5884,9 +5888,9 @@ let mounted = false;
 const MOUNT_DX = 22, MOUNT_DY = -12;
 function dismountSpot() {
   const sp=dragonSprite(dragon.dir),w=(sp?.[2]||128)*DRAGON_DRAW_SCALE,h=(sp?.[3]||96)*DRAGON_DRAW_SCALE;
-  const clearBody=(x,y)=>x+16<dragon.x-w/2-6 || x-16>dragon.x+w/2+6 || y<dragon.y-h-6 || y-40>dragon.y+6;
+  const clearBody=(x,y)=>x+12<dragon.x-w/2-3 || x-12>dragon.x+w/2+3 || y<dragon.y-h-3 || y-40>dragon.y+3;
   const angle=(playerFacing4()==='n'||playerFacing4()==='s')?0:Math.PI/2;
-  for(const radius of [64,80,96,128,160,192]){
+  for(const radius of [44,48,52,56,64,80,96,128,160,192]){
     for(const turn of [0,Math.PI,Math.PI/2,-Math.PI/2,Math.PI/4,-Math.PI/4,3*Math.PI/4,-3*Math.PI/4]){
       const x=dragon.x+Math.cos(angle+turn)*radius,y=dragon.y+Math.sin(angle+turn)*radius;
       if(clearBody(x,y)&&canStand(x,y))return [x,y];
@@ -5911,7 +5915,7 @@ function setMounted(on, quiet = false) {
     if(!spot&&!quiet){mounted=true;toast("Move to open ground before dismounting.");return false;}
     if(spot){P.x=spot[0];P.y=spot[1];P.moving=false;P.act=null;}
     dragon.placed=MAPID;dragon.moving=false;
-    dragon.followGap=Math.max(56,Math.hypot(P.x-dragon.x,P.y-dragonHover()-dragon.y));
+    dragon.followGap=Math.max(40,Math.hypot(P.x-dragon.x,P.y-dragonHover()-dragon.y));
   }
   if (on) { dragon.followGap=0;dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();if (!dragon.air) setDragonAir(true); if (!quiet) toast("you climb onto its back"); }
   else if (!quiet) toast("you slide down");
