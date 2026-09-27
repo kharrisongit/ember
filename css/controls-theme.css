@@ -1,0 +1,43 @@
+/* Dawn colors for the gameplay controls. */
+#deck {
+  background:linear-gradient(180deg,#f1e5cf,#dfc9aa);
+  border-top-color:#9b947e;
+  color:#293e43;
+}
+#dpad {
+  background:#d3c4a9;
+  box-shadow:0 0 0 1px #9c9079,0 4px 12px #594a3326;
+}
+#dpad::after {box-shadow:inset 0 0 0 1px #fff8e966}
+#dpad div[data-dx] {background:#f8edd8;color:#304f57}
+#dpad .mid::after {background:#a79b82;box-shadow:0 0 0 1px #8c826e}
+#dpad div[data-dx].hit {background:#36565d;color:#fff6e3}
+#ab .rb {
+  color:#fff6e3;
+  box-shadow:0 0 0 1px #786d58,0 3px 8px #594a3333;
+}
+#ab #btnB {background:#975638;color:#fff6e3}
+#ab #act {background:#36565d;color:#fff6e3}
+#ab #btnB.hit,#ab #act.hit {background:#f8edd8;color:#293e43}
+#actionStack .trig {
+  background:linear-gradient(180deg,#fff5e3,#e9d9bd)!important;
+  border-color:#9b947e!important;
+  color:#304f57!important;
+  text-shadow:none!important;
+  box-shadow:inset 0 1px 0 #fffaf0,0 3px 0 #b5a58a,0 4px 7px #594a3320!important;
+}
+#actionStack .trig::before {background:#ffffff80!important}
+#actionStack .trig:active,#actionStack .trig.on,#actionStack .trig.hit {
+  background:#36565d!important;
+  border-color:#29424a!important;
+  color:#fff6e3!important;
+  box-shadow:inset 0 1px 2px #21383d55,0 1px 0 #9b947e!important;
+}
+#utilityBtns .trig {background:#eadcc4;border-color:#a99b81;color:#40575a}
+#utilityBtns .trig.hit,#utilityBtns .trig:active {background:#36565d;color:#fff6e3}
+#deckHealth .deckHpRow,#deckHealth .deckVital>span {color:#304f57}
+#deckHealth .deckPortrait {
+  border-color:#8c927e!important;
+  background:#f8edd8!important;
+  box-shadow:inset 0 0 0 1px #fffaf080!important;
+}
