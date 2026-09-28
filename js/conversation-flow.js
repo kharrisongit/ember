@@ -157,7 +157,8 @@
     if(autoReply){
       const playback=autoReply,current=scene;
       const dt=Math.max(0,Math.min(50,now-playback.last));playback.last=now;
-      if(current!==playback.scene||ask||!session)autoReply=null;
+      // The final answer stays on screen until Next returns to the greeting.
+      if(current!==playback.scene||ask||!session||current.i>=current.lines.length-1)autoReply=null;
       else if(!document.hidden&&!window.EmberCloud?.isOpen()&&!revealing&&!current.hold&&!current.silent&&!current.arriving&&sayEl.classList.contains('on')){
         if(playback.index!==current.i){playback.index=current.i;playback.read=0;}
         if(typeDone()){
