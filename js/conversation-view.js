@@ -46,7 +46,7 @@
     sayEl.classList.remove('scrolls');sayEl.setAttribute('role','button');sayEl.tabIndex=0;
     homes=null;room=null;lastNpc='';lastCorin='';partnerName='';npcName='';
   }
-  function update({partner,speaker,phase,canLeave,backAvailable}){
+  function update({partner,speaker,phase,canLeave,backAvailable,automatic}){
     if(!room)return;
     if(partnerName!==partner){lastNpc='';lastCorin='';partnerName=partner;npcName=partner;}
     const speaking=sayEl.classList.contains('on'),corin=speaker==='Corin';
@@ -74,7 +74,7 @@
     const corinEcho=player.querySelector('.conversationCorinEcho');
     corinEcho.hidden=speaking&&corin;const reply=lastCorin||(typeof CORIN_TOPIC_GREETINGS!=='undefined'&&CORIN_TOPIC_GREETINGS[partner]||'Hello, '+partner+'. Have you a moment to talk?');if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
     const active=phase==='listen'&&speaking&&!revealing&&!ask?._profileOpen;
-    const ready=active&&typeDone()&&!scene?.hold;
+    const ready=active&&!automatic&&typeDone()&&!scene?.hold;
     for(const [lane,isCorin]of [[stage,false],[player,true]]){
       const talking=active&&corin===isCorin;
       lane.classList.toggle('is-speaking',talking);
@@ -87,6 +87,7 @@
     secondary.disabled=!backAvailable&&!canLeave;
     room.querySelector('.conversationNext').disabled=phase==='listen'&&!speaking&&!revealing;
   }
+  function greeting(){lastNpc='';lastCorin='';}
   function beginTopic(question){lastCorin=playerFacingText(question);}
-  window.EmberConversationView={profile,mount,release,update,beginTopic};
+  window.EmberConversationView={profile,mount,release,update,beginTopic,greeting};
 })();

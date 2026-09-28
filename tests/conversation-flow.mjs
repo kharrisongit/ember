@@ -77,7 +77,7 @@ assert(!rows.querySelector('.deckTabs'));assert(rows.querySelector('.deckReplyPr
 assert.equal(rows.querySelectorAll('.deckTopic').length,0,'Replies use a distinct menu, not topic cards');
 assert.equal(rows.querySelectorAll('.deckReply').length,3);assert(rows.classList.contains('replyMenu'));
 assert(player.querySelector('.conversationSpeaker').hidden);
-assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Original, authored alternative and other story paths');
+assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Three replies stay within the current exchange');
 assert(box.querySelector('.conversationGoodbye'),'B remains available while choosing an optional reply');
 assert.equal(box.querySelector('.conversationPlayer').dataset.mode,'replies');
 const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping scenery never chooses a reply');
@@ -90,13 +90,15 @@ assert(box.querySelector('.conversationNpcEcho').textContent.length>0,'The NPC�
 assert.equal(box.querySelector('.conversationStage').querySelector('.conversationPortrait').dataset.speaker,'Hettie');
 assert(!box.querySelector('.deckReadRing'),'Reply cards do not display a meaningless zero-topic counter');
 assert.equal(rows.querySelectorAll('.deckReply').find(n=>n.dataset.selected==='true').dataset.askIndex,2,'The selected reply remains highlighted while it is spoken');assert.equal(box.style.display,'grid');
-run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
+const autoLine=()=>run(`typeAll();var autoNow=performance.now();for(var frame=0;frame<120;frame++){if(scene)scene.t+=.05;EmberConversationFlow.tick(autoNow+frame*50);}`);
+assert(box.querySelector('.conversationPlayer').querySelector('.conversationAdvance').hidden,'Automatic exchanges do not request Next');
+autoLine();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
 assert.equal(player.querySelector('.conversationCorinEcho').textContent,'I would have offered it an apple.','Corin’s actual reply remains while the NPC answers');
-finish();assert.equal(run('ask.npcConversation'),'Hettie');
+autoLine();assert.equal(run('ask.npcConversation'),'Hettie');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'welcome');
 assert(!player.querySelector('.conversationSpeaker').hidden);assert(!box.querySelector('.conversationChat').hidden);
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,'I would have offered it an apple.','Returning to Chat keeps the latest spoken line');
-assert.match(box.querySelector('.conversationNpcEcho').textContent,/spoiled/);
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,responses.Hettie,'A completed topic restores Corin’s greeting');
+assert.equal(run('typeFull'),greetings.Hettie,'A completed topic restores the NPC greeting');
 assert(!box.querySelector('.deckHistoryToggle'));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 box.querySelector('.conversationChat').onclick({stopPropagation(){}});
@@ -130,12 +132,13 @@ run('openNpcTopics(person)');select('Your first herd');
 box.querySelector('.conversationGoodbye').onclick({stopPropagation(){}});
 assert(!run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
 run('openNpcTopics(person)');
-// Follow a different personal thread without dismissing/reopening the panel.
-select('Your first herd');run('typeAll();scene.t=1');step();
-select('Tell me about “A day off”.');assert.equal(run('typeWho'),'Corin');
-run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/one morning/);
-run('typeAll();scene.t=1');step();assert(run('ask.replyChoices'));run('askBack()');
-assert.equal(run('ask.npcConversation'),'Hettie');assert.equal(run('scene'),null);
+// Every reply remains on this topic, including later topics without bespoke branches.
+select('A day off');run('typeAll();scene.t=1');step();
+assert.equal(run('ask.opts.filter(o=>!o.head).length'),3);
+assert(!run('ask.opts.some(o=>/another question|Tell me about “/.test(o.n))'));
+select('I could do the morning feeding.');assert.equal(run('typeWho'),'Corin');
+autoLine();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/warm breakfast/);
+autoLine();assert.equal(run('ask.npcConversation'),'Hettie');assert.equal(run('scene'),null);
 // The actual pointer path rejects drags, multi-touch and synthetic click echoes.
 select('Your first herd');
 dom.dispatch(canvas,'pointerdown');dom.dispatch(canvas,'pointermove',{clientX:30});dom.dispatch(canvas,'pointerup',{clientX:30});dom.dispatch(canvas,'click');

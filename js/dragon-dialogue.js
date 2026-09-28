@@ -896,7 +896,7 @@ function openDragonConversation(category='root'){
     heartstones:['I do not want power to change who we are.','Then keep asking what we mean to do with it. A new strength gives us another choice. It does not have to take the old ones away.'],
     self:['You can want something that has nothing to do with me.','I know. And you can love your home without asking my permission. That is part of what makes travelling together a choice worth making.']
   };
-  const speak=(lines,back=category,reply)=>{askShut();const spoken=typeof lines==='function'?lines():lines;playScene(spoken,{telepathy:true,after:()=>openDragonConversation(back),conversationReplies:{topic:{lines:spoken,reply},handled:new Set()}});};
+  const speak=(lines,back=category,reply)=>{askShut();const spoken=window.EmberConversationBranches.prepare(typeof lines==='function'?lines():lines,'Aurelius');playScene(spoken,{telepathy:true,after:()=>openDragonConversation(back),conversationReplies:{topic:{lines:spoken,reply},handled:new Set()}});};
   const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key],category,replies[key])});
   const general=category=>[...(DRAGON_GENERAL_TOPICS[category]||[]),...(typeof dragonExtraTopics==='function'?dragonExtraTopics(category):[])].map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
   const options={

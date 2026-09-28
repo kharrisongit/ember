@@ -1,7 +1,7 @@
 /* A conversation owns its parchment until Goodbye. `ask` still only owns an
    actual choice: speech, gifts and story callbacks keep their normal clocks. */
 (function(){
-  let session=null,keeping=0,pointer=null,suppressClick=0;
+  let session=null,keeping=0,pointer=null,suppressClick=0,autoReply=null;
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave}={}){
@@ -23,7 +23,7 @@
     sayEl.setAttribute('aria-label',hint);
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
-      phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',canLeave:canGoodbye(),backAvailable:needsBack()});
+      phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',canLeave:canGoodbye(),backAvailable:needsBack(),automatic:!!autoReply});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -31,7 +31,8 @@
     if(typeWho===name&&typeFull===playerFacingText(line))sayOff();
   }
   function greet(menu){
-    if(menu.replyChoices||scene||sayNpc||session.exchanged)return;
+    if(menu.replyChoices||scene||sayNpc)return;
+    if(session.exchanged){session.exchanged=false;session.browsing=false;session.greeting=null;window.EmberConversationView?.greeting();}
     const name=menu.dragonConversation?'Aurelius':menu.npcConversation;
     const actor=menu.npcActor;
     const authored=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[name];
@@ -45,7 +46,7 @@
   function reset(){
     clearGreeting();
     window.EmberConversationView?.release();
-    session=null;pointer=null;
+    session=null;pointer=null;autoReply=null;
     for(const cls of ['conversation-session','conversation-speaking','topics-open'])document.body.classList.remove(cls);
     box().classList.remove('conversationListening');
     box().removeAttribute('aria-modal');box().removeAttribute('role');
@@ -64,7 +65,7 @@
   function listening(selected){
     if(!session||ask)return;
     const el=box();el.classList.add('conversationListening');
-    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckReply'))button.disabled=true;
+    for(const button of el.querySelectorAll('.deckProfileToggle, .deckTopic, .deckReply'))button.disabled=true;
     for(const row of el.querySelectorAll('.deckTopic, .deckReply')){
       const chosen=Number(row.dataset.askIndex)===selected;
       row.dataset.selected=String(chosen);row.setAttribute('aria-pressed',String(chosen));
@@ -82,6 +83,7 @@
   function take(option){
     if(!isMenu(ask))return false;
     if(welcoming()){openChat();return true;}
+    autoReply=null;
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
@@ -92,6 +94,7 @@
     if(!option.navigation||old.replyChoices)session.browsing=false;
     clearGreeting();
     retained(()=>{askShut();option.go?.();});
+    if(old.replyChoices&&scene&&!ask){session.exchanged=true;autoReply={scene,index:scene.i,read:0,last:performance.now()};}
     if(ask?.shop){
       session.shopping=true;document.body.classList.remove('topics-open');document.body.classList.remove('conversation-session');
       window.EmberConversationView?.release();
@@ -137,6 +140,7 @@
     else{ask=previous;askDraw();}
   }
   function back(){
+    autoReply=null;
     if(!session||session.shopping)return false;
     if(ask?.replyChoices){
       const done=scene?.after;scene=null;sayOff();retained(()=>{askShut();if(done)done();else restore();});
@@ -146,22 +150,36 @@
     // Internal Back navigation never closes the root; the secondary control does.
     return true;
   }
-  function tick(){
+  function tick(now=performance.now()){
     if(session&&(session.map!==MAPID||mode!=='play'||bossScene||atlasOpen||bagOpen||editing)){
       const hadMenu=isMenu(ask);reset();if(hadMenu)askShut();else box().style.display='none';
+    }
+    if(autoReply){
+      const playback=autoReply,current=scene;
+      const dt=Math.max(0,Math.min(50,now-playback.last));playback.last=now;
+      if(current!==playback.scene||ask||!session)autoReply=null;
+      else if(!document.hidden&&!window.EmberCloud?.isOpen()&&!revealing&&!current.hold&&!current.silent&&!current.arriving&&sayEl.classList.contains('on')){
+        if(playback.index!==current.i){playback.index=current.i;playback.read=0;}
+        if(typeDone()){
+          playback.read+=dt;
+          // Leave each completed line long enough to read; Next can still hurry it.
+          const pause=Math.max(1100,Math.min(4500,typeFull.length*24));
+          if(playback.read>=pause){sync();advanceScene();playback.read=0;}
+        }else playback.read=0;
+      }
     }
     if(session&&!ask&&!scene&&!sayNpc&&!revealing&&!doorMotion&&!fadeDir)restore();
     sync();
   }
-  function playTopic(actor,topic,alternatives=[]){
+  function playTopic(actor,topic){
     const after=()=>openNpcTopics(actor);
-    playScene(topic.lines.map(line=>{const [who,words]=whoSays(actor,line);return who?who+': '+words:words;}),
-      {who:actor.n,npcActor:actor,after,conversationReplies:{topic,alternatives,handled:new Set()}});
+    playScene(window.EmberConversationBranches.prepare(topic.lines,actor.n).map(line=>{const [who,words]=whoSays(actor,line);return who?who+': '+words:words;}),
+      {who:actor.n,npcActor:actor,after,conversationReplies:{topic,handled:new Set()}});
   }
   function beforeLine(current){
     const book=current.conversationReplies,index=current.i;
     if(!session||!book||book.handled.has(index)||!current.lines[index]?.startsWith('Corin: '))return false;
-    book.handled.add(index);
+    autoReply=null;book.handled.add(index);
     const spoken=current.lines[index].slice(7),previous=session.menu;
     const choose=(words,answer)=>()=>{
       if(scene!==current)return;
@@ -175,16 +193,10 @@
       const [words,answer]=book.topic.reply;
       options.push({n:words,summary:'Corin · Another way to answer',navigation:true,go:choose(words,[(current.who||previous.npcConversation||'Aurelius')+': '+answer])});
     }
-    const other=book.alternatives?.find(t=>t.title!==book.topic?.title&&t.lines&&!t.go);
-    if(other)options.push({n:'Tell me about “'+other.title+'”.',summary:'Corin · Follow a different topic',navigation:true,go:()=>{
-      discussedTopics.add(current.npcActor.n+':'+other.title);
-      scene=null;sayOff();
-      playScene(['Corin: Tell me about “'+other.title+'”.'],{who:current.who,npcActor:current.npcActor,after:()=>playTopic(current.npcActor,other,[])});
-    }});
-    if(options.length===1){
-      options.push({n:'I have another question.',summary:'Corin · Return to our topics',navigation:true,go:()=>{
-        scene=null;playScene(['Corin: I have another question.'],{who:current.who,npcActor:current.npcActor,telepathy:current.telepathy,after:current.after});
-      }});
+    for(const [words,answer]of window.EmberConversationBranches.choices(current,index)){
+      if(options.some(o=>o.n===words))continue;
+      options.push({n:words,navigation:true,go:choose(words,[(current.who||previous.npcConversation||'Aurelius')+': '+answer])});
+      if(options.length>=3)break;
     }
     // Keep the NPC’s completed line visible while Corin weighs his answer.
     ask={quick:1,npcConversation:previous.npcConversation,dragonConversation:previous.dragonConversation,

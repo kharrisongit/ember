@@ -40,7 +40,7 @@
     const stage=node('section','conversationStage');stage.setAttribute('aria-label','Their words');
     const speech=node('div','conversationNpcSpeech');speech.append(node('div','conversationNpcEcho scrolls'),advanceCue());
     const identity=node('div','conversationSpeaker');identity.append(portrait(name),node('strong','conversationSpeakerName',name));
-    stage.append(identity,speech);return stage;
+    speech.append(identity);stage.append(speech);return stage;
   }
   function makePlayer(workspace){
     const player=node('section','conversationPlayer');player.setAttribute('aria-label','Corin’s side of the conversation');
@@ -50,9 +50,9 @@
     const chat=node('button','conversationChat','Chat');chat.type='button';
     chat.onclick=e=>{e.stopPropagation();window.EmberConversationFlow.openChat();};
     chat.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationFlow.openChat();}};
-    body.append(workspace,speech,chat);player.append(body,identity);return player;
+    speech.append(identity);body.append(workspace,speech,chat);player.append(body);return player;
   }
-  function makeControls(){
+  function makeControls(profileButton){
     const footer=node('footer','conversationFooter');
     const controls=node('div','conversationAB');
     for(const [label,cls,action]of [['Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.secondary()],['Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
@@ -61,7 +61,7 @@
       button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.secondary();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
       controls.append(button);
     }
-    footer.append(controls);return footer;
+    footer.append(profileButton,controls);return footer;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
@@ -82,16 +82,12 @@
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
     box.querySelector('.deckHeader')?.remove();box.querySelector('.deckProfile')?.remove();
-    const header=node('header','deckHeader');
-    const identity=node('div','deckIdentity');
-    identity.append(node('strong','deckName',name),node('small','deckEyebrow',ask.dragonConversation?'Through the bond':'Conversation'));
-    const profileButton=node('button','deckProfileToggle','Profile');profileButton.type='button';
+    const profileButton=node('button','deckProfileToggle','View Character Profile');profileButton.type='button';
     profileButton.setAttribute('aria-label','Character profile: '+name);
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');
     profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;askDraw();};
     profileButton.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)profileButton.onclick();}};
-    header.append(identity,profileButton);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
       const info=window.EmberConversationView.profile(name,ask.npcActor);
@@ -109,7 +105,7 @@
     const hint=document.getElementById('topicScrollHint');
     workspace.replaceChildren(rows,...(hint?[hint]:[]));
     const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen;dossier.append(profile);
-    box.replaceChildren(header,stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
+    box.replaceChildren(stage,player,dossier,makeControls(profileButton));window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
     if(ask.replyChoices){

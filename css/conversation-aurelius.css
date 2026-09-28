@@ -1,7 +1,5 @@
 /* Aurelius: a shared inner sky, with dragon-scale patterns and bond light. */
 #bagAsk.conversationTopics.journalDeck.dragonTalk{--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
-#bagAsk.journalDeck.dragonTalk>.deckHeader{background:linear-gradient(105deg,#102334,#224550)!important;border-bottom-color:#b6aa70;color:#f4e2ad!important;box-shadow:0 4px 20px #08152680}
-#bagAsk.dragonTalk .deckName{color:#ffe2a0;text-shadow:0 0 16px #eabe6244}
 #bagAsk.dragonTalk .deckEyebrow{color:#97c9bb}
 #bagAsk.dragonTalk .deckProfileToggle{background:#234b54;border-color:#819e89;color:#fff0bf}
 #bagAsk.dragonTalk .deckProfileToggle:hover,#bagAsk.dragonTalk .deckProfileToggle[aria-expanded=true]{background:#567166;border-color:#dbc987;color:#fff6d7}
@@ -51,3 +49,5 @@ body.conversation-session #bagAsk.journalDeck.dragonTalk .is-speaking #say{borde
 #bagAsk.dragonTalk .is-speaking .conversationSpeakerName{background:#52746b;color:#fff0bb;border-color:#e0cb88}
 #bagAsk.dragonTalk .is-speaking .conversationPortrait{filter:drop-shadow(0 0 12px #bde0ae77)}
 #bagAsk.dragonTalk .conversationAdvance{background:linear-gradient(transparent,#193542 35%);color:#ecda9d}
+
+#bagAsk.dragonTalk .conversationStage,#bagAsk.dragonTalk .conversationPlayer{--voice-color:#ead084;--voice-glow:#86e3be77;--voice-paper:linear-gradient(130deg,#345b61,#233e51)}

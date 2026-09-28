@@ -199,7 +199,7 @@ function openThornwellAudience(actor){
   askPick=1;askDraw();return true;
 }
 function thornwellKingTopics(n){
-  const topic=(title,summary,lines)=>({n:title,summary,category:'world',go:()=>thornwellAudienceLines(n,lines)});
+  const topic=(title,summary,lines)=>({n:title,summary,category:'world',go:()=>window.EmberConversationFlow.playTopic(n,{title,lines})});
   return [
     {n:'You remember the eggs?',category:'story',summary:'The king remembers an errand better than a name',go:()=>thornwellAnswer(n,'eggs',[
       'King Halvard: Six eggs and a boy who insisted they had somewhere more important to be. Quite an impression.',
@@ -312,7 +312,7 @@ function thornwellKnightTopics(n){
       ]]
     ]
   };
-  return (data[n.n]||[]).map(([title,summary,lines])=>({n:title,summary,category:'story',go:()=>thornwellAudienceLines(n,lines)}));
+  return (data[n.n]||[]).map(([title,summary,lines])=>({n:title,summary,category:'story',go:()=>window.EmberConversationFlow.playTopic(n,{title,lines})}));
 }
 function thornwellDoorArrived(from){
   if(from==='tavern'&&MAPID==='world'&&thornwellRoyal.stage===4)thornwellCheckpoint(5);
