@@ -6403,9 +6403,9 @@ function stepHatchScene(dt) {
     }
   }
   if (scene.i >= 8) {
-    // Five deliberate looks: Maddock, Corin, Maddock, Corin, Maddock.
+    // Three unhurried looks: Maddock, Corin, Maddock.
     // The next beat settles on Corin and starts the approach.
-    const lookBeat=Math.min(4,Math.max(0,Math.floor((scene.t-.3)/.6)));
+    const lookBeat=Math.min(2,Math.max(0,Math.floor((scene.t-.3)/.9)));
     const lookAt = scene.i === 8 && m && lookBeat%2===0 ? m : P;
     const targetDir = Math.abs(lookAt.x - hatchScene.dragonX) > Math.abs(lookAt.y - hatchScene.dragonY)
       ? (lookAt.x > hatchScene.dragonX ? "e" : "w")
@@ -6849,7 +6849,7 @@ function advanceScene() {
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
   /* The hatchling's look-around and choice are staged beats, not skippable text taps. */
-  if (scene.hatch && scene.i === 8 && scene.t < 3.3) return;
+  if (scene.hatch && scene.i === 8 && scene.t < 3.0) return;
   if (scene.hatch && scene.i === 9 &&
       (scene.t < 1.1 || !hatchScene || !hatchScene.approachDone)) return;
   if(scene.hatch&&scene.i===10&&!hatchScene?.maddockArrived)return;

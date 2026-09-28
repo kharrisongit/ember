@@ -226,12 +226,12 @@ console.log('PASS: duplicate Start ignored; black/title fade, silence, music lea
 // The silent look-around beat completes before choosing Corin.
 const looks=[];
 h.scene.i=8;
-for(const t of [.31,.91,1.51,2.11,2.71]){
+for(const t of [.31,1.21,2.11]){
  h.scene.t=t;hr('stepHatchScene(.01)');looks.push(hr('hatchScene.dir'));
  hr('advanceScene()');assert.equal(h.scene.i,8,'Early A cannot skip the extra looks');
 }
-assert.deepEqual(looks,['e','w','e','w','e']);
-h.scene.t=3.3;hr('advanceScene()');assert.equal(h.scene.i,9);
+assert.deepEqual(looks,['e','w','e']);
+h.scene.t=3.0;hr('advanceScene()');assert.equal(h.scene.i,9);
 // Both companions make room during the dragon's second, choosing approach.
 h.scene.i=9;h.scene.t=0;const chooseP=[h.P.x,h.P.y],chooseM=[maddock.x,maddock.y];
 const dragonBefore=hr('[hatchScene.dragonX,hatchScene.dragonY]');
