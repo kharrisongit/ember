@@ -22,3 +22,15 @@ run(`const a=patio.roomActors[1];const published=patioFixture();applyPublishedEd
 assert.deepEqual(run('published.roomActors.map(a=>[a.x,a.y])'),run('patio.roomActors.map(a=>[a.x,a.y])'),'Published table edits restore after an older whole-patio move');
 run("prepareTavernPatio(published,'world')");assert.equal(run('published.roomActors.length'),4,'Revisiting does not duplicate tables');
 console.log('PASS: four independently selectable patio tables preserve old group moves, move only their own collision, and restore local/published positions.');
+run(`
+const oldPatio=Object.assign(patioFixture(),{w:200,h:200,terr:'0.40000',base_terr:'0.40000'});
+const oldBase=EmberBuildData.snapshot(oldPatio),oldAfter={...oldBase,w:201,terr:'0.40200',base_terr:'0.40200'};
+const oldBuild={build:{kind:'build',previous:{},before:EmberBuildData.hash(oldBase),after:EmberBuildData.hash(oldAfter),changes:EmberBuildData.diff(oldBase,oldAfter)}};
+applyPublishedEditorEntries(oldPatio,'world',oldBuild);
+const newBase=EmberBuildData.snapshot(oldPatio),newAfter={...newBase,w:202,terr:'0.40400',base_terr:'0.40400'};
+const newBuild={build:{kind:'build',previous:oldBuild,before:EmberBuildData.hash(newBase),after:EmberBuildData.hash(newAfter),changes:EmberBuildData.diff(newBase,newAfter)}};
+const reloaded=Object.assign(patioFixture(),{w:200,h:200,terr:'0.40000',base_terr:'0.40000'});
+applyPublishedEditorEntries(reloaded,'world',newBuild);
+`);
+assert.equal(run('reloaded.w'),202);assert.equal(run('reloaded.roomActors.length'),4);
+console.log('PASS: legacy Build history loads before migration, and newer Build snapshots restore independent tables exactly once.');

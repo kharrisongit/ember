@@ -17,9 +17,12 @@ function applyPublishedEditorLayout(m,id) {
   m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];
   applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
 }
-function applyPublishedEditorEntries(m,id,layout) {
+function applyPublishedEditorEntries(m,id,layout,final=true) {
   if(layout.build){
-    applyPublishedEditorEntries(m,id,layout.build.previous);
+    applyPublishedEditorEntries(m,id,layout.build.previous,false);
+    // Old Build snapshots predate independent patio tables. Migrate only when
+    // the next snapshot was authored with the new table entities.
+    if(EmberBuildData.hash(EmberBuildData.snapshot(m))!==layout.build.before&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id);
     Object.assign(m,EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build));
   }
   const all=Object.values(layout).filter(op=>op.kind!=='build');
@@ -27,7 +30,7 @@ function applyPublishedEditorEntries(m,id,layout) {
   // Future moves/deletions use their stable ordinary-object indices.
   m.objs ||= [];
   for(const op of all)if(op.kind==='object-add')m.objs.push(op.sprite,op.x,op.y);
-  if(typeof prepareTavernPatio==='function')prepareTavernPatio(m,id,all);
+  if((final||all.some(op=>op.kind==='actor'&&op.key?.startsWith('patio:')))&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id,all);
   const paint=new Map((m.editorPublishedPaint||[]).map(op=>[op.index,op]));
   for(const op of all)if(op.kind==='paint')paint.set(op.index,op);
   m.editorPublishedPaint=[...paint.values()];
