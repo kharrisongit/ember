@@ -3665,7 +3665,7 @@ let undoStack = [];
 const UNDO_LIMIT = 40;
 let mapDirty = true;
 
-// Keep simulation camera targets separate from the smoothly presented view.
+// Smooth scripted camera changes only; editor gestures remain immediate.
 let cameraPresentation=null,cameraLogical=null;
 function restoreCameraTarget(){
   if(cameraLogical){Object.assign(cam,cameraLogical);cameraLogical=null;}
@@ -3674,16 +3674,18 @@ function presentCamera(dt){
   restoreCameraTarget();
   const target={...cam},cx=cam.x+VW/cam.z/2,cy=cam.y+VH/cam.z/2;
   const old=cameraPresentation;
+  const cinematic=!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
+  const scripted=!mapGesturesAllowed()&&(cinematic||old?.cinematic||old?.settling);
   const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
-  const zooming=!reset&&(Math.abs(old.z-cam.z)>.001||old.settling);
+  const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||old.settling);
   if(zooming){
     const k=1-Math.exp(-7*Math.max(0,Math.min(dt||0,.05)));
     const z=old.z+(cam.z-old.z)*k,x=old.cx+(cx-old.cx)*k,y=old.cy+(cy-old.cy)*k;
     const settling=Math.abs(z-cam.z)>.001||Math.hypot(x-cx,y-cy)>.1;
     cameraLogical=target;
     Object.assign(cam,{z,x:x-VW/z/2,y:y-VH/z/2});
-    cameraPresentation={map:MAPID,mode,z,cx:x,cy:y,settling};
-  }else cameraPresentation={map:MAPID,mode,z:cam.z,cx,cy,settling:false};
+    cameraPresentation={map:MAPID,mode,z,cx:x,cy:y,settling,cinematic};
+  }else cameraPresentation={map:MAPID,mode,z:cam.z,cx,cy,settling:false,cinematic};
 }
 
 function worldArtVisible(x,y,w,h,vw,vh){
@@ -5392,6 +5394,8 @@ function overviewZoom() {
   return Math.max(fitZoom(), Math.max(VW / PXW, VH / PXH) * 1.6);
 }
 function setZoom(z, ax, ay) {
+  // A direct gesture takes over from any remaining cinematic return.
+  cameraLogical=null;cameraPresentation=null;
   const minZ = fitZoom();
   const nz = Math.max(minZ, Math.min(6, z));
   const w = screenToWorld(ax, ay);

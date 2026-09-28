@@ -2447,18 +2447,21 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   refreshBuild();
 }
 
-/* Continue the existing north-path borders (x26/x34) to the stump. */
+/* Fill both north-path borders through the sparse field up to the stump. */
 function extendStumpTreeLine(){
   if(MAPID!=="world")return;
   const si=NAME2I.mw_tree;if(si===undefined)return;
-  fobjs=fobjs.filter(o=>!o.stumpBorder);
+  // The old approach includes border entries with missing sprite references.
+  // Replace the full run, including those invisible entries, with existing tree art.
+  fobjs=fobjs.filter(o=>!o.stumpBorder&&!([26,34].includes(Math.floor(o.x/TS))&&
+    o.y>=21*TS&&o.y<=57*TS&&!SPR[NAMES[o.s]]));
   let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
   for(const x of [26,34]){
-    for(let y=20;y<=32;y++){
+    for(let y=20;y<=56;y++){
       terr[y*MW+x]=WALL;
       if(!blockTiles.includes(y*MW+x))blockTiles.push(y*MW+x);
     }
-    for(let y=20;y<32;y+=4){
+    for(let y=20;y<=56;y+=3){
       fobjs.push({id:id--,s:si,x:x*TS+TS/2,y:(y+1)*TS,feat:1,stumpBorder:true});
     }
   }

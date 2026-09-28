@@ -36,12 +36,12 @@ run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.
 console.log('PASS: Corin reacts during flight, after impact, and after departure; pickup unlocks after his final line.');
 
 // The render layer eases every visible zoom without changing simulation targets.
-run("cameraPresentation=null;cameraLogical=null;fade=0;mode='play';VW=390;VH=510;cam={x:0,y:0,z:3};presentCamera(1/60)");
+run("cameraPresentation=null;cameraLogical=null;fade=0;mode='play';VW=390;VH=510;greenCamera={zoom:3};cam={x:0,y:0,z:3};presentCamera(1/60)");
 run('cam={x:50,y:60,z:2.7};presentCamera(1/60)');
 assert(run('cam.z>2.7&&cam.z<3'),'Entry zoom moves partway, never jumps');
 run('restoreCameraTarget()');assert.equal(run('cam.z'),2.7,'Simulation retains its intended zoom');
 for(let i=0;i<90;i++)run('presentCamera(1/60);restoreCameraTarget()');
-run('cam={x:0,y:0,z:3};presentCamera(1/60)');
+run('greenCamera=null;cam={x:0,y:0,z:3};presentCamera(1/60)');
 assert(run('cam.z>2.7&&cam.z<3'),'Return zoom also eases');
 for(let i=0;i<90;i++)run('restoreCameraTarget();presentCamera(1/60)');
 assert(run('Math.abs(cam.z-3)<.001'),'Camera settles at normal zoom');
@@ -49,9 +49,21 @@ run('restoreCameraTarget();cam.x+=10;presentCamera(1/60)');
 assert.equal(run('cam.x'),10,'Ordinary movement has no camera smoothing lag');
 console.log('PASS: zoom entry and return are smooth, simulation targets survive, and normal running stays responsive.');
 
-run("MAPID='world';MW=64;MH=64;terr=new Uint8Array(MW*MH);fobjs=[];blockTiles=[];extendStumpTreeLine()");
-assert.equal(run('fobjs.filter(o=>o.stumpBorder).length'),6,'Both existing tree rows extend to the stump');
-assert(run('[26,34].every(x=>Array.from({length:13},(_,i)=>terr[(20+i)*MW+x]).every(t=>t===WALL))'),'Borders block side exits continuously');
-assert(run('Array.from({length:13},(_,i)=>terr[(20+i)*MW+30]).every(t=>t!==WALL)'),'Path to the stump stays open');
-run('extendStumpTreeLine()');assert.equal(run('fobjs.length'),6,'Rebuild does not duplicate trees');
+run("MAPID='world';MW=64;MH=64;terr=new Uint8Array(MW*MH);fobjs=[{id:-1,s:undefined,x:424,y:528}];blockTiles=[];extendStumpTreeLine()");
+assert.equal(run('fobjs.filter(o=>o.stumpBorder).length'),26,'Both existing tree rows extend to the stump');
+assert(run('[26,34].every(x=>Array.from({length:37},(_,i)=>terr[(20+i)*MW+x]).every(t=>t===WALL))'),'Borders block side exits continuously');
+assert(run('Array.from({length:37},(_,i)=>terr[(20+i)*MW+30]).every(t=>t!==WALL)'),'Path to the stump stays open');
+run('extendStumpTreeLine()');assert.equal(run('fobjs.length'),26,'Rebuild does not duplicate trees');
 console.log('PASS: stump corridor has continuous collision, matching tree rows, and an open approach.');
+
+run('restoreCameraTarget();editing=true;cam.z=1.5;presentCamera(1/60)');
+assert.equal(run('cam.z'),1.5,'Editor zoom is immediate');
+run('editing=false;cam.z=2;presentCamera(1/60)');
+assert.equal(run('cam.z'),2,'Ordinary camera changes are not treated as cutscenes');
+run('PXW=1024;PXH=1024;greenCamera={zoom:2};cam.z=1.8;presentCamera(1/60);setZoom(1.4,100,100);restoreCameraTarget()');
+assert.equal(run('cam.z'),1.4,'Pinch overrides a pending cinematic frame without restoring its stale target');
+run('greenCamera=null');
+console.log('PASS: editing zoom is immediate, including interruption of cinematic easing.');
+
+assert(run('fobjs.every(o=>SPR[NAMES[o.s]]&&DEFS[o.s])'),'Every tree in the extended row has drawable art and collision');
+assert(run('[26,34].every(x=>Array.from({length:13},(_,i)=>20+i*3).every(y=>fobjs.some(o=>o.x===x*TS+TS/2&&o.y===(y+1)*TS)))'),'Both rows cover the whole previous gap up to the stump');
