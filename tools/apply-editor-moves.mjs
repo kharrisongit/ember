@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {sourceRevision} from './editor-source-version.mjs';
 import {gunzipSync} from 'node:zlib';
 import '../js/editor-build-data.js';
+import '../js/audio-mix.js';
 const Build=globalThis.EmberBuildData;
 const keyOK=k=>typeof k==='string'&&k.length>0&&k.length<200&&!['__proto__','prototype','constructor'].includes(k);
 export function applyMoves(current,draft,revision,validateSource) {
@@ -38,6 +39,16 @@ export function applyMoves(current,draft,revision,validateSource) {
 
   const base=structuredClone(map);
   for(const op of draft.operations){
+    if(op.kind==='audio'){
+      assert(globalThis.EmberAudioMix.valid(op.key,op.value)&&globalThis.EmberAudioMix.valid(op.key,op.before),'Invalid audio level');
+      assert(typeof op.client==='string'&&/^[a-f0-9-]{36}$/.test(op.client)&&Number.isSafeInteger(op.sequence)&&op.sequence>0,'Invalid audio edit identity');
+      const key='audio:'+op.key;assert(!seen.has(key),'Duplicate audio edit');seen.add(key);
+      const value=next.audio?.[op.key]??1,prior=next.audioReceipts?.[op.key];
+      const own=prior?.client===op.client;
+      assert(own?op.sequence>prior.sequence:value===op.before||value===op.value,'Audio mix changed in a newer submission. Refresh before sending.');
+      (next.audio||={})[op.key]=op.value;
+      (next.audioReceipts||={})[op.key]={client:op.client,sequence:op.sequence};continue;
+    }
     if(op.kind==='arena'){
       const animals=['bird','hare','boar','deer','fox'];
       assert(Number.isSafeInteger(op.id)&&op.id>=0&&op.key===String(op.id),'Invalid hunting arena identity');

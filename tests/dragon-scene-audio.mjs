@@ -53,6 +53,8 @@ run("startAct('swing')");await flush();assert.equal(sources.length,count,'Blocke
 c.P.act=null;run("startAct('swing')");await flush();assert(firstSwing.stopped);assert.equal(active('sword-swing').length,1,'Each accepted attack restarts its own sound');
 api.phase('off');timers.forEach(f=>f());assert.equal(active('sword-swing').length,1,'Dragon cleanup cannot silence ordinary gameplay');
 sfx.pickup();sfx.pickup();await flush();assert.equal(active('item-pickup').length,1,'A batch of loot makes one pickup sound');
+assert.equal(active('item-pickup')[0].gain.gain.value,.7*.9);
+sfx.door();await flush();assert.equal(active('door-open')[0].gain.gain.value,.7*.65);
 sfx.key();await flush();assert.equal(active('key-item').length,1);
 run(game.slice(game.indexOf('function isKeyItemReveal('),game.indexOf('\nfunction showReveal(')));
 for(const caption of ['Corin obtained a Heartstone!','Corin received his father’s compass.','Corin obtained a mysterious stone'])assert(c.isKeyItemReveal(caption));
@@ -189,3 +191,10 @@ assert.deepEqual(musicEvents.slice(cueStart),['cut','reveal']);
 for(const name of ['dragon-roar','dragon-distant-crash'])for(const source of active(name))source.onended();
 assert.deepEqual(musicEvents.slice(cueStart),['cut','reveal'],'Ended events never restart Reveal after its early handoff');
 console.log('PASS: warning tails hand off to Reveal 120ms early, exactly once.');
+
+// Dev previews remain audible even outside the scripted dragon encounter.
+c.mode='play';c.document.hidden=false;c.quest=99;c.deadShown=false;
+sfx.preview('wings');await flush();timers.forEach(f=>f());
+assert.equal(active('dragon-wings').length,1);sfx.stopPreview('wings');assert.equal(active('dragon-wings').length,0);
+sfx.preview('death');await flush();timers.forEach(f=>f());assert.equal(active('game-over').length,1);sfx.stopPreview('death');
+console.log('PASS: dev sound previews survive normal scene cleanup and stop explicitly.');

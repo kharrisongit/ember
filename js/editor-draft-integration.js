@@ -85,6 +85,7 @@ function saveEditorDraft() {
   clearTimeout(editorDraftTimer);
   if (!editorDraftReady || !MD || !editorDraftBases.has(MAPID) || editorDraftStale.has(MAPID)) return;
   const api=EmberEditDrafts, patch=buildPatch(true), old=api.store.get(MAPID);
+  const audioOps=globalThis.EmberAudioMix?.operations()||[];
   const base=editorDraftBases.get(MAPID).map;
   const arenaOps=[],animals=['bird','hare','boar','deer','fox'];
   let featureBuildChanged=features.length!==(base.features||[]).length;
@@ -97,7 +98,7 @@ function saveEditorDraft() {
     }else featureBuildChanged=true;
   }
   const buildChanged=editorBuildActive.has(MAPID)||regionMoves.length>0||featureBuildChanged||MW!==base.w||MH!==base.h;
-  if (!buildChanged&&!old?.session&&patch.includes('\n(no changes on this map)')) {
+  if (!audioOps.length&&!buildChanged&&!old?.session&&patch.includes('\n(no changes on this map)')) {
     if(old)try{api.store.remove(MAPID);}catch(_){}
     return;
   }
@@ -159,6 +160,7 @@ function saveEditorDraft() {
       operations.push({kind:'door',key:String(g.index),index:g.index,to:d.to,before,rect:{x:g.x,y:g.y,w:g.w,h:g.h}});
     }else operations.push({kind:'collision',key:g.cell.join(','),before:MD.collisionOverrides?.[g.cell.join(',')]??null,blocked:g.blocked});
   }
+  operations.push(...audioOps);
   const sameSubmission=old?.submission?.sourceRevision===api.sourceRevision&&JSON.stringify(old.submission.operations)===JSON.stringify(operations);
   const draft={baseFingerprint:editorDraftBases.get(MAPID).fingerprint,sourceRevision:api.sourceRevision,patch,state,operations,session:old?.session||null,publishedPatch:old?.publishedPatch||null,
     updatedAt:new Date().toISOString(),submission:sameSubmission?old.submission:null,
@@ -172,6 +174,7 @@ function scheduleEditorDraft() {
   clearTimeout(editorDraftTimer); editorDraftTimer=setTimeout(saveEditorDraft,200);
 }
 function editorSendStatus(ok,message,record) {
+  if(ok&&record?.published)globalThis.EmberAudioMix?.published(record.id);
   if(ok&&record){const draft=EmberEditDrafts.store.get(record.map);if(draft){
     if(draft.submission?.id===record.id)draft.sentAt=new Date().toISOString();
     if(record.published&&record.patch)draft.publishedPatch=record.patch;
@@ -206,6 +209,7 @@ function sendEditorChanges() {
     try { api.store.put(MAPID,draft); } catch (_) { /* Sending is still available when local storage is full. */ }
   }
   const map=MAPID, submission=draft.submission;
+  globalThis.EmberAudioMix?.sending(submission);
   if(!api.connected())saveGame();
   api.send(submission,(ok,message,record)=>{
     if(ok){const latest=api.store.get(map);if(latest?.submission?.id===submission.id){latest.sentAt=new Date().toISOString();try{api.store.put(map,latest);}catch(_){}}}

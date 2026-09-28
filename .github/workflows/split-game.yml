@@ -44,6 +44,7 @@ jobs:
           node tests/riding-tutorial.mjs
           node tests/town-music.mjs
           node tests/audio-controls.mjs
+          node tests/audio-mix.mjs
           node tests/dragon-scene-audio.mjs
           node tests/input-hatch.mjs
           node tests/dragon-dialogue.mjs
@@ -52,6 +53,8 @@ jobs:
           node tests/cutscene-walking.mjs
           node tests/green-encounter.mjs
           node tests/thornwell-followup.mjs
+          node tests/tavern-patio.mjs
+          node tests/bramble-departure.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs

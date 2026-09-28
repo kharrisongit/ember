@@ -1,5 +1,40 @@
 /* Stable editor identities for rewards and the optional NPC audition field. */
 let devNpcLineupActive=false,devNpcLineupCategory='walking',devNpcLineupPage=0;
+// The old patio is one transparent sheet containing four separate table sets.
+function prepareTavernPatio(m,id,entries=[]){
+  if(id!=='world')return;
+  const sprite=(W.names?.indexOf('ifloor_tavern_patio')??-1),source=SPR.ifloor_tavern_patio;
+  if(sprite<0||!source)return;
+  for(let i=0;i<m.objs.length;i+=3){
+    if(m.objs[i]!==sprite)continue;
+    const objectId=i/3,ox=m.objs[i+1],oy=m.objs[i+2];
+    const move=entries.find(o=>o.kind==='object'&&Number(o.key)===objectId&&o.sprite===sprite&&o.originX===ox&&o.originY===oy);
+    const x=move?.x??ox,y=move?.y??oy;
+    const cuts=[[96,184,47,27],[128,193,47,46],[208,208,47,27],[240,184,47,27]];
+    m.roomActors||=[];
+    cuts.forEach(([cx,cy,w,h],j)=>{
+      const spr='tavern_patio_table_'+j,key='patio:'+objectId+':table:'+j;
+      if(m.roomActors.some(a=>a.editKey===key))return;
+      if(!SPR[spr]){
+        const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+        const g=canvas.getContext('2d');g.imageSmoothingEnabled=false;
+        drawGameImage(g,sheetOf(source),source[0]+cx,source[1]+cy,w,h,0,0,w,h);
+        if(j===2)g.clearRect(45,0,2,2);
+        if(j===0)g.clearRect(42,24,5,3);
+        if(j===1){g.clearRect(0,0,16,15);g.clearRect(0,15,10,4);} // Neighbouring table overlaps this crop's empty corner.
+        animalSheets[spr]=canvas;SPR[spr]=[0,0,w,h,1,spr];
+      }
+      const homeX=ox-source[2]/2+cx+w/2,homeY=oy-source[3]+cy+h;
+      const blocks=(m.roomBlocks||[]).map((b,k)=>({b,k})).filter(({b})=>Math.abs((b[0]+b[2])/2-homeX)<8&&Math.abs(b[3]-homeY)<13);
+      for(const {b}of blocks){b[0]+=x-ox;b[2]+=x-ox;b[1]+=y-oy;b[3]+=y-oy;}
+      m.roomActors.push({spr,editKey:key,n:'Tavern patio table '+(j+1),x:homeX+x-ox,y:homeY+y-oy,
+        schoolArt:true,interiorFurniture:true,moveBlocks:blocks.map(b=>b.k),
+        ...(move?.deleted?{editorDeleted:true,publishedDeleted:true}:{})});
+    });
+    m.editorDeletedObjects||=[];
+    if(!m.editorDeletedObjects.includes(objectId))m.editorDeletedObjects.push(objectId);
+  }
+}
 const NPC_LINEUP_TYPES=[['walking','Walking'],['standing','Standing'],['seated','Seated'],['scenes','At work']];
 
 function prepareEditorEntities(m,id) {

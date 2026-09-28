@@ -2,10 +2,10 @@
 (()=>{
   const files={coin:'coin-collect',ui:'ui-click',roar:'dragon-roar',distant:'dragon-distant-crash',
     crash:'dragon-crash',wings:'dragon-wings',breathing:'dragon-breathing',
-    breathHit:'dragon-breath-hit',hatch:'egg-hatch',golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item'};
+    breathHit:'dragon-breath-hit',hatch:'egg-hatch',golemHit:'golem-hit',hit:'sword-hit',death:'game-over',block:'shield-block',sword:'sword-swing',pickup:'item-pickup',key:'key-item',door:'door-open'};
   const dragonEffects=['roar','distant','crash','wings','breathing'];
   const downloads=new Map(),buffers=new Map(),voices=new Map();
-  let currentPhase='off';
+  let currentPhase='off',previewName=null;
   for(const [name,file]of Object.entries(files))
     downloads.set(name,fetch('assets/audio/'+file+'.m4a?v='+(['distant','roar'].includes(name)?'20260926-short-tails':'20260926-1'))
       .then(r=>{if(!r.ok)throw Error('Audio unavailable');return r.arrayBuffer();}).catch(()=>null));
@@ -33,7 +33,7 @@
       if(!buffer||!graph||(!loop&&performance.now()-voice.requested>1500)){voices.delete(name);done?.();return;}
       const source=graph.context.createBufferSource(),gain=graph.context.createGain();
       voice.source=source;voice.gain=gain;
-      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*(name==='ui'?.8:['roar','distant'].includes(name)?.3:1);
+      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*({ui:.8,roar:.3,distant:.3,door:.65,pickup:.9}[name]??1)*(window.EmberAudioMix?.level('sfx:'+name)??1);
       source.connect(gain);gain.connect(graph.output);
       source.onended=()=>{
         if(voices.get(name)===voice){voices.delete(name);done?.();}
@@ -46,7 +46,7 @@
         setTimeout(()=>{if(voices.get(name)===voice)done();},Math.max(0,buffer.duration-.12)*1000);
     });
   };
-  const clear=()=>{for(const name of dragonEffects)stop(name);currentPhase='off';window.EmberDragonMusic?.encounter?.(false);};
+  const clear=()=>{for(const name of dragonEffects)if(name!==previewName)stop(name);currentPhase='off';window.EmberDragonMusic?.encounter?.(false);};
   const inGame=()=>{try{return !document.hidden&&mode==='play';}catch(e){return false;}};
   const playable=()=>{
     try{return inGame()&&MAPID==='world'&&quest>=Q.NOISE&&quest<=Q.ARMED;}catch(e){return false;}
@@ -80,7 +80,11 @@
     // Wait for the gesture's audio-unlock listener, including the first title tap.
     Promise.resolve().then(()=>{if(!document.hidden)play('ui',false,true);});
   };
+  window.EmberAudioMix?.subscribe(()=>{for(const [name,voice]of voices)if(voice.gain)voice.gain.gain.value=.7*({ui:.8,roar:.3,distant:.3,door:.65,pickup:.9}[name]??1)*window.EmberAudioMix.level('sfx:'+name);});
   window.EmberSfx={
+    preview:name=>{if(Object.hasOwn(files,name)){play(name,false,true,()=>{if(previewName===name)previewName=null;});previewName=name;}},
+    stopPreview:name=>{if(Object.hasOwn(files,name)){if(previewName===name)previewName=null;stop(name);}},
+    door:()=>{if(inGame())play('door',false,true);},
     ui:uiClick,
     coin:()=>{if(inGame())play('coin');},
     breathHit:()=>{if(inGame())play('breathHit',false,true);},
@@ -113,6 +117,6 @@
   setInterval(()=>{
     if(!inGame()){for(const name of voices.keys())if(name!=='ui'||document.hidden)stop(name);currentPhase='off';}
     else if(!playable())clear();
-    if(typeof deadShown!=='undefined'&&!deadShown)stop('death');
+    if(typeof deadShown!=='undefined'&&!deadShown&&previewName!=='death')stop('death');
   },180);
 })();

@@ -1,6 +1,6 @@
 /* Local roadworks change with story progress; temple approaches and return roads remain open. */
 const JOURNEY_GATES = {
-  thornwell:{x:320*16,y:102*16,rect:[320*16-40,102*16-72,320*16+40,102*16+56],open:()=>wonAll||brambleQuest>=2,
+  thornwell:{x:320*16,y:100*16,rect:[320*16-40,100*16-72,320*16+40,100*16+56],open:()=>wonAll||brambleQuest>=2,
     inside:(x,y)=>x>=320*16},
   forgewick:{x:815*16,y:140*16,rect:[815*16-17,140*16-62,815*16+18,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
     inside:(x,y)=>(x>=815*16&&y<220*16)||x>=1080*16},

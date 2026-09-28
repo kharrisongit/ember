@@ -4236,6 +4236,7 @@ function useDoors(dt) {
   beginDoorEntry(d);
 }
 function beginDoorEntry(d){
+  globalThis.window?.EmberSfx?.door?.();
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
   if (animated) {
     doorMotion = { map: MAPID, d, t: 0, duration: d.stairDown ? 0.65 : 0.42, started: false };
@@ -5717,7 +5718,7 @@ function refreshOvl() {
 }
 function appendActionIcon(row,key){
   const icon=document.createElement("img");icon.className="actionIcon";icon.alt="";
-  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v=20260926-subtle2";
+  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v="+(["mount","dismount","takeoff"].includes(key)?"20260928-rider-flight":"20260926-subtle2");
   row.appendChild(icon);
 }
 function paintCommandRow(row,it){

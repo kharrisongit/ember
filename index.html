@@ -95,7 +95,8 @@
 <audio id="emberfellSnowRouteBgm" loop preload="none" src="assets/audio/snow-route-loop.m4a?v=20260926-1"></audio>
 <audio id="lastDragonriderTitleBgm" loop preload="auto" src="assets/audio/title-ending-loop.m4a?v=20260926-1"></audio>
 <audio id="emberfellSporesBgm" loop preload="none" src="assets/audio/spores-loop.m4a?v=20260926-1"></audio>
-<script src="js/audio.js?v=20260928-battle-crossfade"></script>
+<script src="js/audio-mix.js?v=20260928-mixer"></script>
+<script src="js/audio.js?v=20260928-mixer"></script>
 <div id="titleFade" hidden aria-hidden="true" style="position:fixed;inset:0;z-index:2147483001;background:#000;opacity:0;pointer-events:auto"></div>
 <div id="stage">
 <div id="boot" style="position:absolute;inset:0;z-index:99;display:flex;
@@ -240,6 +241,7 @@
   <div class="btn" id="bNoDrag"><span class="ico">&#9866;</span>NO DRAGON</div>
   <div class="btn" id="bDragonPassive"><span class="ico">&#9825;</span>DRAGON PASSIVE</div>
   <button type="button" class="btn" id="bAttackAlign">DRAGON ATTACKS</button>
+  <button type="button" class="btn" id="bAudioMix">AUDIO MIXER</button>
   <div class="btn" id="bDoors">DOORS</div>
   <div class="btn" id="bTrace"><span class="ico">▦</span>COLLIDE</div>
   <div class="btn" id="bSendChanges"><span class="ico">↑</span>SEND CHANGES</div>
@@ -416,22 +418,22 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/house-loot.js?v=20260926-coin-nan-rod"></script>
 <script src="js/editor-build-data.js?v=20260925-build-ground"></script>
 <script src="js/editor-drafts.js?v=20260925-fresh-publish1"></script>
-<script src="js/published-editor-layouts.js?v=20260926-portraits2"></script>
-<script src="js/progression-gates.js?v=20260928-cutscene-topics"></script>
+<script src="js/published-editor-layouts.js?v=20260928-mixer"></script>
+<script src="js/progression-gates.js?v=20260928-patio-departure"></script>
 <script src="js/ghost-following.js?v=20260927-spirit-palette1"></script>
 <script src="js/merchant-shop.js?v=20260927-thornwell-cast"></script>
 <script src="js/inventory-icons.js?v=20260928-inventory-page-fix"></script>
 <script src="js/temple-compass.js?v=20260928-cutscene-topics"></script>
 <script src="js/millwood-interiors.js?v=20260928-open-face-steady-breath"></script>
 <script src="js/generated/game-part-1.js?v=20260927-cast-quests" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260928-cutscene-topics" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260928-patio-departure" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260928-stable-battles"></script>
 <script src="js/hollybeck-villagers.js?v=20260926-original-winter"></script>
 <script src="js/market-npcs.js?v=20260925-winter-market5"></script>
-<script src="js/editor-entities.js?v=20260925-green-hettie1"></script>
+<script src="js/editor-entities.js?v=20260928-patio-departure"></script>
 <script src="js/npc-placement.js?v=20260926-portraits2"></script>
-<script src="js/editor-draft-integration.js?v=20260925-fresh-publish1"></script>
+<script src="js/editor-draft-integration.js?v=20260928-mixer"></script>
 <script src="js/npc-world-talks.js?v=20260928-cutscene-topics"></script>
 <script src="js/npc-conversations.js?v=20260928-cutscene-topics"></script>
 <script src="js/story-dialogue.js?v=20260927-context"></script>
@@ -440,7 +442,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dialogue-portraits.js?v=20260928-aurelius-two-horns"></script>
 <script src="js/quest-map.js?v=20260927-cast-quests"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20260928-cutscene-topics" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260928-patio-departure" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
@@ -468,10 +470,11 @@ window.addEventListener("unhandledrejection", function (e) {
 
 
 
-<script src="js/dragon-scene-audio.js?v=20260928-quieter-warning"></script>
+<script src="js/dragon-scene-audio.js?v=20260928-mixer"></script>
 <script src="js/dragon-attack-align.js?v=20260926-published-offsets"></script>
 <script src="js/arena-entry.js?v=20260928-battle-healing-map"></script>
 <script src="js/riding-tutorial.js?v=20260928-cutscene-topics"></script>
 <script src="js/cloud-saves.js?v=20260927-bramble-north"></script>
+<script src="js/audio-mix-editor.js?v=20260928-mixer"></script>
 </body>
 </html>

@@ -1250,10 +1250,11 @@ function repairSeating(){
   }
   const linna=world.npcs.find(n=>n.n==='Linna');
   if(linna)Object.assign(linna,{
-    // Restore Linna's original complete idle/walk set, separate from Isolde.
-    packSpr:'guild_citizen2',lookId:'guild_citizen2',packDirections:true,packWalk:true,
-    stationary:false,serviceAppearance:true,patrol:true,patrolPoints:[[4288,1664],[4288,1536]],
-    goto:undefined,sk:undefined,body:undefined,idleFrame:undefined,idleFps:4
+    // Her original woman sheet has a neutral first pose, then waving frames.
+    // Do not substitute another resident's walking sheet for her identity.
+    packSpr:'pack_girl',lookId:'pack_girl',packDirections:false,packWalk:false,
+    stationary:true,serviceAppearance:true,patrol:undefined,patrolPoints:undefined,
+    goto:undefined,sk:undefined,body:undefined,idleFrame:0,idleFps:0
   });
   const wren=world.npcs.find(n=>n.n==='Wren');
   if(wren){
@@ -11124,6 +11125,17 @@ function tryBrambleReunion(n) {
       brambleTrail=[];
     }});return true;
 }
+function planBrambleDeparture(d){
+  const dogStart=d.dog&&[d.dog.x,d.dog.y];
+  // A dog already inside the waiting radius must not trap Rowan inside it.
+  const clearance=dogStart?Math.min(28,Math.hypot(d.hunter.x-dogStart[0],d.hunter.y-dogStart[1])):0;
+  const path=maddockWalkPath(d.hunter,d.target,(x,y)=>canNpcStand(x,y,d.hunter)&&
+    (!dogStart||Math.hypot(x-dogStart[0],y-dogStart[1])>=clearance-.01));
+  const trail=d.dog?maddockWalkPath(d.dog,[d.hunter.x,d.hunter.y]):[];
+  d.retry=.5;
+  if(!path||!trail)return false;
+  d.path=path;d.trail=trail;return true;
+}
 function stepThornwellWelcome(dt) {
   syncBrambleParty();
   if(brambleDeparture){
@@ -11137,12 +11149,14 @@ function stepThornwellWelcome(dt) {
           d.phase='leaving';
           // Give the waiting dog room before leading him toward the door.
           // Independent routes can otherwise send Rowan straight through him.
-          const dogStart=d.dog&&[d.dog.x,d.dog.y];
-          d.path=maddockWalkPath(d.hunter,d.target,(x,y)=>canStand(x,y)&&
-            (!dogStart||Math.hypot(x-dogStart[0],y-dogStart[1])>=28));
-          d.trail=d.dog?(bramblePath([d.dog.x,d.dog.y],[d.hunter.x,d.hunter.y])||[]):[];
+          d.path=null;d.trail=[];planBrambleDeparture(d);
         }});
       }
+      return;
+    }
+    if(!d.path){
+      d.retry=(d.retry||0)-dt;
+      if(d.retry<=0)planBrambleDeparture(d);
       return;
     }
     if(d.path?.length){

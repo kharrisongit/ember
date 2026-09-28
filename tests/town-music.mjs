@@ -27,6 +27,7 @@ function setup(stored=null,ios=false,failBuffers=false){
   if(a.paused)return 0;let level=a.volume,n=contexts[0]?.sources.get(a);
   while(n){if(n.gain)level*=n.gain.value;n=n.next;}return level;
  };
+ vm.runInContext(read('js/audio-mix.js'),c);c.window.EmberAudioMix=c.EmberAudioMix;
  vm.runInContext(read('js/audio.js'),c);
  const advance=async(ms=4000)=>{for(let i=0;i<5;i++)await Promise.resolve();const until=now+ms;while(timers.some(t=>t.at<=until)){timers.sort((a,b)=>a.at-b.at);const t=timers.shift();now=t.at;t.f();await Promise.resolve();}now=until;await Promise.resolve();};
  const change=async(map,title,x,y)=>{c.MAPID=map;c.MD={title};if(x!==undefined)c.P={x:x*16,y:y*16};sync();await advance();};
@@ -416,3 +417,13 @@ assert(battleReturn.audible(battleReturn.track('DragonReveal'))<.35*.85*.7,'Jour
 await battleReturn.advance(2400);
 assert(battleReturn.track('Battle').paused,'Battle stops only once its fade completes');
 console.log('PASS: battle exit crossfades for 2.4 seconds, including the normally fast Reveal cue.');
+
+for(const ios of [false,true]){
+ const m=setup(null,ios);m.listeners.pointerdown();await m.advance();
+ const song=m.track('Millwood'),before=m.audible(song),plays=song.plays;
+ m.c.EmberAudioMix.set('music:'+song.id,.4);
+ assert(Math.abs(m.audible(song)-before*.4)<1e-8,'Playing song changes immediately');assert.equal(song.plays,plays,'Adjustment never restarts music');
+ m.c.window.EmberAudio.preview('emberfellTavernBgm');await m.advance();assert(!m.track('Tavern').paused);m.sync();await m.advance();assert(!m.track('Tavern').paused,'Preview survives region polling');
+ m.c.window.EmberAudio.stopPreview();await m.advance();assert(!song.paused,'Stop restores current gameplay music');
+}
+console.log('PASS: song mixer applies live without restarting on desktop/iPhone; previews survive region checks and restore gameplay music.');

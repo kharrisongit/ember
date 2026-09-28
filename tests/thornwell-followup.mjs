@@ -12,10 +12,10 @@ run("MAPID='world';MD=W.maps.world;P.x=222*TS;P.y=112*TS");assert(!run('brambleW
 c.canStand=(x,y)=>x>=100&&x<=200&&y>=100&&y<=200;
 run('P.x=100;P.y=120');c.dog={pettable:true};assert(run('placeBrambleBesideCorin(dog)'));assert(run('Math.hypot(dog.x-P.x,dog.y-P.y)>=16'));assert(c.canStand(c.dog.x,c.dog.y));
 run('dragon.hp=0;dragon.down=true;dragon.revive=2;pHp=1;tAcc=10');assert(run('petCompanion(dog)'));assert.equal(run('pHp'),run('pMax'));assert.equal(run('dragon.hp'),run('dragon.maxHp'));assert(!run('dragon.down'));assert.equal(run('dragon.revive'),0);
-const linna=run("W.maps.world.npcs.find(n=>n.n==='Linna')");assert(linna.packWalk&&linna.packDirections&&!linna.stationary);
-assert.equal(linna.packSpr,'guild_citizen2');
+const linna=run("W.maps.world.npcs.find(n=>n.n==='Linna')");assert(linna.stationary&&!linna.packWalk);
+assert.equal(linna.packSpr,'pack_girl');assert.equal(linna.idleFrame,0,'Linna does not wave');
 const isolde=run("W.maps.world.npcs.find(n=>n.n==='Isolde')");assert(!isolde.packSpr.startsWith(linna.packSpr));
-for(const dir of ['d','u','e','w'])for(const action of ['idle','walk'])assert(run(`SPR.${linna.packSpr}_${action}_${dir}[4]>1`));
+assert.notEqual(linna.packSpr,run("W.maps.world.npcs.find(n=>n.n==='Gwil').packSpr"));
 assert(run("Object.values(W.maps).some(m=>m.npcs?.some(n=>n.n==='Bors'))"));assert(!run("Object.values(W.maps).some(m=>m.npcs?.some(n=>n.n==='Mattock'))"));
 for(const name of ['Isolde','Linna','Bevan','Cartwright Oswin','Ovid','Prue']){c.who=name;const p=run('portraitFor(who)');assert(p.src,name+' has corrected art');assert(fs.existsSync(p.src.split('?')[0]));}
 for(const name of ['Isolde','Linna']){c.actor={n:name};const p=run('npcWorldProfile(actor)');assert(!/ledger|burn the page|keep my hands/i.test(JSON.stringify(p)));}

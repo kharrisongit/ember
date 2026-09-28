@@ -6,6 +6,7 @@ async function loadPublishedEditorLayouts() {
   const data=await response.json();
   if(data.schema!==1||!data.maps||!Array.isArray(data.applied))throw Error('Invalid published editor moves');
   publishedEditorLayouts=data;
+  globalThis.EmberAudioMix?.load(data.audio);
 }
 function applyPublishedEditorLayout(m,id) {
   if(publishedEditorMaps.has(m))return;
@@ -26,6 +27,7 @@ function applyPublishedEditorEntries(m,id,layout) {
   // Future moves/deletions use their stable ordinary-object indices.
   m.objs ||= [];
   for(const op of all)if(op.kind==='object-add')m.objs.push(op.sprite,op.x,op.y);
+  if(typeof prepareTavernPatio==='function')prepareTavernPatio(m,id,all);
   const paint=new Map((m.editorPublishedPaint||[]).map(op=>[op.index,op]));
   for(const op of all)if(op.kind==='paint')paint.set(op.index,op);
   m.editorPublishedPaint=[...paint.values()];

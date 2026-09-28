@@ -198,6 +198,7 @@ let routeMusicIntroPlayed=false;
   const finalBattle=()=>{
     try{return MAPID==='cinderhold'&&!wonAll&&!!lastFight;}catch(e){return false;}
   };
+  let previewTrack=null;
   let kingMap=null,selected=null,unlocked=false,pending=0,fading=false,fadeDuration=900,fadeDelay=0;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
@@ -260,9 +261,9 @@ let routeMusicIntroPlayed=false;
       masterPct=pct;
     }
     for(const a of tracks){
-      const level=(gains.get(a)||0)*(a===reveal ? .7*(revealDucked?.5:1) : 1),channel=channels.get(a);
+      const level=(gains.get(a)||0)*(window.EmberAudioMix?.level('music:'+a.id)??1)*(a===reveal ? .7*(revealDucked?.5:1) : 1),channel=channels.get(a);
       if(channel){channel.gain.value=level;a.volume=1;}
-      else a.volume=level*target();
+      else a.volume=Math.min(1,level*target());
     }
   };
   const openAudioGraph=()=>{
@@ -345,6 +346,7 @@ let routeMusicIntroPlayed=false;
     playSelected();
   };
   const chooseMusic=()=>{
+    if(previewTrack){selectTrack(previewTrack);return;}
     if(titleStage==='out')return;
     if(titleScreen()||endingMode||(typeof deadShown!=='undefined'&&deadShown))battleMode=false;
     if((titleStage!=='in'&&titleScreen())||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
@@ -396,7 +398,12 @@ let routeMusicIntroPlayed=false;
     }
     openAudioGraph();unlocked=true;playSelected();
   };
+  window.EmberAudioMix?.subscribe(applyVolumes);
   window.EmberAudio={
+    unlock:startMusic,
+    tracks:()=>tracks.filter(hasSong).map(a=>a.id),
+    preview:id=>{previewTrack=tracks.find(a=>a.id===id&&hasSong(a))||null;openAudioGraph();unlocked=true;chooseMusic();playSelected();},
+    stopPreview:()=>{previewTrack=null;chooseMusic();},
     percent:()=>pct,
     graph:()=>audioContext&&({context:audioContext,output:masterGain}),
     set:v=>{
