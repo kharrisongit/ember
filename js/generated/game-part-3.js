@@ -4077,9 +4077,9 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
-  if(ask?.shop||ask?.npcConversation||ask?.dragonConversation){
+  if(ask?.shop||ask?.npcConversation||ask?.dragonConversation||ask?.conversationPrompt){
     if(ask.npcActor)faceToward(ask.npcActor,P.x,P.y);
-    if(ask.npcConversation||ask.dragonConversation){tAcc+=dt;drawWorld(tAcc,dt);ask.repaintWorld=false;}
+    if(ask.npcConversation||ask.dragonConversation||ask.conversationPrompt){tAcc+=dt;drawWorld(tAcc,dt);ask.repaintWorld=false;}
     else if(ask.repaintWorld){drawWorld(tAcc,0);ask.repaintWorld=false;}
     return;
   }
@@ -4982,8 +4982,9 @@ let ask = null, askPick = 0;
 const discussedTopics=new Set(),topicMenuPositions=new Map();
 function topicMenuKey(){return (ask?.npcConversation||(ask?.dragonConversation?"Aurelius":""))+(ask?.topicScope?":"+ask.topicScope:"");}
 function topicMemoryKey(o){return (ask?.npcConversation||(ask?.dragonConversation?"Aurelius":""))+":"+o.n;}
+function topicScrollViewport(){const box=document.getElementById('bagAsk');return box?.querySelector('.conversationWorkspace')||box;}
 function updateTopicScrollHint() {
-  const box=document.getElementById('bagAsk'),hint=document.getElementById('topicScrollHint');
+  const box=topicScrollViewport(),hint=document.getElementById('topicScrollHint');
   if(!box||!hint)return;
   hint.hidden=!(ask?.npcConversation||ask?.dragonConversation)||box.scrollHeight-box.clientHeight-box.scrollTop<=3;
 }
@@ -4998,7 +4999,7 @@ function wireTopicScrollHint(box) {
 }
 function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;if(globalThis.window?.EmberConversationFlow?.back())return;const back=ask?.back;askShut();if(back)back();}
 function askShut() {
-  if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:document.getElementById('bagAsk')?.scrollTop||0});
+  if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:topicScrollViewport()?.scrollTop||0});
   hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
   ask = null;
@@ -5016,12 +5017,17 @@ function askDraw() {
   if (!el || !rows) return;
   el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
   el.classList.toggle("conversationTopics",!!(ask?.npcConversation||ask?.dragonConversation));
+  el.classList.toggle('conversationPrompt',!!ask?.conversationPrompt);
   document.body.classList.toggle("topics-open",!!(ask?.npcConversation||ask?.dragonConversation));
   wireTopicScrollHint(el);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   if((ask.npcConversation||ask.dragonConversation)&&window.EmberConversationDeck){window.EmberConversationDeck.draw(el,rows);globalThis.window?.EmberConversationFlow?.menu(ask);return;}
   el.classList.remove("journalDeck");
+  el.classList.remove('historyOpen');el.classList.remove('profileOpen');
+  const scrollHint=document.getElementById('topicScrollHint');
+  el.replaceChildren(rows,...(scrollHint?[scrollHint]:[]));
+  if(ask.conversationPrompt&&window.EmberConversationDeck){window.EmberConversationDeck.prompt(el,rows);return;}
   const returning=!ask._topicDrawn&&(ask.npcConversation||ask.dragonConversation)?topicMenuPositions.get(ask.npcConversation||'Aurelius'):null;
   if(returning){const index=ask.opts.findIndex(o=>!o.head&&o.n===returning.name);if(index>=0)askPick=index;}
   ask._topicDrawn=true;
@@ -5104,7 +5110,7 @@ function askDraw() {
   updateTopicScrollHint();
 }
 function askStep(d) {
-  if (!ask || ask._profileOpen) return;
+  if (!ask || ask._profileOpen || ask._historyOpen) return;
   globalThis.window?.EmberSfx?.ui?.();
   if(ask.quantity){changePurchaseQuantity(-d);return;}
   const n = ask.opts.length;
@@ -5116,11 +5122,12 @@ function askStep(d) {
   askPick = k;
   askDraw();
   const box=document.getElementById("bagAsk"), row=box.querySelector('[data-ask-index="'+askPick+'"]');
-  if(row){const a=row.getBoundingClientRect(),b=box.getBoundingClientRect();
-    const heading=box.querySelector('.deckHeader,.topicSpeaker'),tabs=box.querySelector('.deckTabs'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+(tabs?tabs.getBoundingClientRect().height:0)+6;
+  const viewport=topicScrollViewport();
+  if(row){const a=row.getBoundingClientRect(),b=viewport.getBoundingClientRect();
+    const heading=viewport.querySelector('.topicSpeaker'),tabs=viewport.querySelector('.deckTabs'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+(tabs?tabs.getBoundingClientRect().height:0)+6;
     const bottom=b.bottom-(document.getElementById('topicScrollHint')?.hidden===false?24:6);
-    if(a.top<top)box.scrollTop-=top-a.top;
-    else if(a.bottom>bottom)box.scrollTop+=a.bottom-bottom;}
+    if(a.top<top)viewport.scrollTop-=top-a.top;
+    else if(a.bottom>bottom)viewport.scrollTop+=a.bottom-bottom;}
   updateTopicScrollHint();
 }
 const USE_SAID = {
@@ -5129,7 +5136,7 @@ const USE_SAID = {
 };
 function askTake() {
   if (!ask) return;
-  if(ask._profileOpen){window.EmberConversationDeck.back();return;}
+  if(ask._profileOpen||ask._historyOpen){window.EmberConversationDeck.back();return;}
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
   if(globalThis.window?.EmberConversationFlow?.take(o))return;

@@ -7,8 +7,16 @@ const box=dom.element('bagAsk'),rows=dom.element('askRows'),say=dom.element('say
 run(`MAPID='world';MD=W.maps.world;MW=MD.w;MH=MD.h;terr=new Uint8Array(MW*MH);mode='play';gameplayStarted=true;quest=Q.DONE;dragon.on=true;dragonOff=false;dragonIntroDone=true;
 thornwellRoyal.stage=7;faceToward=()=>{};dragonConversationReaction=()=>{};saveGame=()=>{};
 var person={n:'Hettie',x:100,y:100,d:['Hettie: A pleasant morning.']};
-P.x=100;P.y=130;openNpcTopics(person);`);
+P.x=100;P.y=130;EmberConversationFlow.prompt(person);`);
 const select=name=>{c.selection=name;run('askPick=ask.opts.findIndex(o=>o.n===selection);askTake();');};
+assert(run('ask.conversationPrompt'),'First interaction opens a small invitation');
+assert(!run('EmberConversationFlow.active()'),'No full-screen session before confirming Talk');
+assert(!box.classList.contains('conversationTopics'));
+run('askBack()');assert.equal(run('ask'),null,'B cancels the invitation');
+run('EmberConversationFlow.prompt(person)');select('Talk');
+assert(run('EmberConversationFlow.active()'));
+assert.equal(box.getAttribute('aria-modal'),'true');
+assert.equal(say.parentNode,box.querySelector('.conversationStage'),'Dialogue lives in the full-screen portrait area');
 const step=()=>run('if(scene)scene.t=1;EmberConversationFlow.advance();');
 const finish=()=>{for(let i=0;i<25&&run('!!scene||!!sayNpc');i++){assert(!run('ask?.replyChoices'),'Test must choose a reply explicitly');run('typeAll()');step();}};
 const tap=(target=canvas)=>{dom.dispatch(target,'pointerdown');dom.dispatch(target,'pointerup');dom.dispatch(target,'click');};
@@ -22,8 +30,9 @@ tap(say);tap();assert.equal(run('typeFull'),greetings.Hettie,'Greeting stays unt
 assert.equal(run('scene'),null,'A greeting never starts a quest scene');
 run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),greetings.Hettie);
 select('Your first herd');
+assert.equal(box.querySelector('.conversationStage').dataset.phase,'listen');
 assert.equal(run('ask'),null,'Speech continues with no modal ask blocking its clock');
-assert.equal(box.style.display,'block');
+assert.equal(box.style.display,'grid');
 assert(run('document.body.classList.contains("topics-open")'));
 assert(run('document.body.classList.contains("conversation-speaking")'));
 assert(box.querySelectorAll('.deckTopic').every(b=>b.disabled));
@@ -31,7 +40,8 @@ assert(box.querySelector('.conversationContinue'));
 assert(run('!typeDone()'));
 tap(say);assert(run('typeDone()'));assert.equal(run('scene.i'),0,'First tap only completes the text');
 run('scene.t=1');tap();assert(run('ask.replyChoices'),'Second tap offers Corin replies');
-assert.equal(box.style.display,'block');assert.equal(run('typeWho'),'Hettie','NPC’s line remains while choosing');
+assert.equal(box.querySelector('.conversationStage').dataset.phase,'reply');
+assert.equal(box.style.display,'grid');assert.equal(run('typeWho'),'Hettie','NPC’s line remains while choosing');
 assert(!rows.querySelector('.deckTabs'));assert(rows.querySelector('.deckReplyPrompt'));
 assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Original, authored alternative and other story paths');
 assert(!box.querySelector('.deckClose'),'Reply choices cannot bypass a pending exchange');
@@ -39,9 +49,15 @@ const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping 
 select('I would have offered it an apple.');assert.equal(run('typeWho'),'Corin');
 assert.match(run('typeFull'),/apple/);
 assert(!box.querySelector('.deckReadRing'),'Reply cards do not display a meaningless zero-topic counter');
-assert.equal(rows.querySelectorAll('.deckTopic').find(n=>n.dataset.selected==='true').dataset.askIndex,2,'The selected reply remains highlighted while it is spoken');assert.equal(box.style.display,'block');
+assert.equal(rows.querySelectorAll('.deckTopic').find(n=>n.dataset.selected==='true').dataset.askIndex,2,'The selected reply remains highlighted while it is spoken');assert.equal(box.style.display,'grid');
 run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
 finish();assert.equal(run('ask.npcConversation'),'Hettie');
+assert.equal(box.querySelector('.conversationStage').dataset.phase,'explore');
+box.querySelector('.deckHistoryToggle').onclick();
+assert(run('ask._historyOpen'));assert(box.querySelectorAll('.conversationMemory').length>=4);
+assert(run(`EmberConversationFlow.history().some(line=>line.speaker==='Corin'&&line.text.includes('apple'))`));
+const historyPick=run('askPick');run('askStep(1)');assert.equal(run('askPick'),historyPick,'History cannot select a hidden topic');
+run('askBack()');assert(!run('ask._historyOpen'));
 run('askBack()');assert.equal(run('ask.npcConversation'),'Hettie','Back at the root does not mean Goodbye');
 // Follow a different personal thread without dismissing/reopening the panel.
 select('Your first herd');run('typeAll();scene.t=1');step();
@@ -72,8 +88,14 @@ run("drawMerchantShop=()=>{document.getElementById('bagAsk').style.display='none
 assert(run('!!ask.shop'));run('askBack();EmberConversationFlow.tick()');assert.equal(run('ask.npcConversation'),'Hettie','B closes shopping and resumes the conversation');
 select('Goodbye');assert.equal(run('ask'),null);assert(!run('EmberConversationFlow.active()'));assert.equal(box.style.display,'none');
 assert(!say.classList.contains('on'),'Goodbye removes the default dialogue too');
+assert.equal(say.parentNode,c.document.body,'Closing full conversation restores the cutscene dialogue overlay');
+run('EmberConversationFlow.prompt(person)');assert(run("ask.opts.some(o=>o.n==='Buy supplies')"),'Merchants offer Talk and Buy before opening either full screen');
+select('Buy supplies');assert(run('!!ask.shop'));assert(!run('EmberConversationFlow.active()'));
+run('askShut()');
 // Ordinary story dialogue gains tapping without creating a conversation panel.
 run(`playScene(['Corin: Wait for me.','Hettie: No running.'],{npcActor:person});`);
+assert(!run('EmberConversationFlow.active()'),'A story scene does not create a full conversation');
+assert.equal(say.parentNode,c.document.body);
 tap();assert(run('typeDone()'));assert.equal(run('scene.i'),0);run('scene.t=1');tap();assert.equal(run('scene.i'),1);
 run('scene.hold=()=>false;showScene()');tap();assert.equal(run('scene.i'),1,'Cinematic holds cannot be tapped past');
 run('scene=null;sayOff()');
@@ -95,7 +117,8 @@ for(const [name,reply]of Object.entries(source)){
  assert.equal(run('typeFull'),reply[1],name+' responds to the selected words');
 }
 // Aurelius participates too, with distinct responses to personal questions.
-run(`askShut();scene=null;sayNpc=null;MAPID='world';dragon.air=false;P.act=null;openDragonConversation('dragons');`);
+run(`askShut();scene=null;sayNpc=null;MAPID='world';dragon.air=false;P.act=null;EmberConversationFlow.prompt(dragon,{dragon:true});`);
+assert(!run('EmberConversationFlow.active()'));select('Talk');select('Dragons and our bond');
 assert.equal(run('typeFull'),greetings.Aurelius);
 assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius greets Corin through the bond');
 select('Why did you choose me?');

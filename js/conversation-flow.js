@@ -4,12 +4,34 @@
   let session=null,keeping=0,pointer=null,suppressClick=0;
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
+  function prompt(actor,{dragon:telepathy=false,talk,leave}={}){
+    clearPadInputs();running=false;P.act=null;P.moving=false;
+    const name=telepathy?'Aurelius':actor.n;
+    if(actor){if(!telepathy){actor.goto=null;faceToward(actor,P.x,P.y);}faceCorinAt(actor.x,actor.y);}
+    const buy=actor?.sells&&!(actor.charm&&!charm[actor.charm])&&!(actor.gift&&!breathHas[actor.gift]);
+    ask={quick:1,conversationPrompt:true,npcActor:actor,back:leave,opts:[{n:name,head:true},
+      {n:'Talk',go:talk||(()=>telepathy?openDragonConversation():beginNpcTalk(actor))},
+      ...(buy?[{n:'Buy supplies',go:()=>openMerchantShop(actor)}]:[]),
+      {n:leave?'Ask leave to go':'Leave',go:leave||null}]};
+    askPick=1;askDraw();return true;
+  }
+  function rememberLine(){
+    if(!session||session.shopping||!sayEl.classList.contains('on')||!typeDone()||!typeFull)return;
+    const last=session.history.at(-1);
+    if(last?.speaker===typeWho&&last.text===typeFull)return;
+    session.history.push({speaker:typeWho||'Narrator',text:typeFull});
+    if(session.history.length>60)session.history.shift();
+  }
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
     const hint=session?.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
+    rememberLine();
+    if(session&&!session.shopping)window.EmberConversationView?.update({
+      partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
+      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -30,16 +52,19 @@
   }
   function reset(){
     clearGreeting();
+    window.EmberConversationView?.release();
     session=null;pointer=null;
     for(const cls of ['conversation-session','conversation-speaking','topics-open'])document.body.classList.remove(cls);
     box().classList.remove('conversationListening');
+    box().removeAttribute('aria-modal');box().removeAttribute('role');
   }
   function menu(menu){
-    if(!session)session={map:MAPID,menu};
+    if(!session)session={map:MAPID,menu,history:[],subject:'A moment to talk'};
+    if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation)session.subject='A moment to talk';
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
-    box().classList.remove('conversationListening');greet(menu);sync();
+    box().classList.remove('conversationListening');box().querySelector('.conversationContinue')?.remove();greet(menu);sync();
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
@@ -57,18 +82,21 @@
     el.querySelector('.conversationContinue')?.remove();
     const next=document.createElement('button');next.className='conversationContinue';next.type='button';
     next.textContent='Continue conversation';next.onclick=()=>advance();
-    el.querySelector('.deckHeader')?.after(next);sync();
+    el.querySelector('.conversationStage')?.appendChild(next);sync();
   }
   function take(option){
     if(!isMenu(ask))return false;
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
+    rememberLine();
+    if(!old.replyChoices&&!option.navigation)session.subject=option.n;
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
     clearGreeting();
     retained(()=>{askShut();option.go?.();});
     if(ask?.shop){
       session.shopping=true;document.body.classList.remove('topics-open');document.body.classList.remove('conversation-session');
+      window.EmberConversationView?.release();
       sync();
     }else listening(selected);
     return true;
@@ -143,6 +171,11 @@
       opts:[{n:'What will Corin say?',head:true},...options]};askPick=1;askDraw();sync();return true;
   }
   function key(e){
+    if(session&&!session.shopping&&e.key==='Tab'){
+      const focusable=[...box().querySelectorAll('button, [tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);
+      if(focusable.length){const i=focusable.indexOf(document.activeElement);e.preventDefault();focusable[(i+(e.shiftKey?-1:1)+focusable.length)%focusable.length].focus();}
+      return true;
+    }
     if(!session||ask)return false;
     const key=e.key.toLowerCase();
     if(!['a','enter',' ','b','escape'].includes(key))return false;
@@ -153,20 +186,23 @@
   function advance(){
     if(window.EmberCloud?.isOpen()||atlasOpen||bagOpen||ovl||editing)return false;
     if(ask?.replyChoices||isMenu(ask)||!sayEl.classList.contains('on')&&!revealing)return false;
+    rememberLine();
     if(scene||revealing)advanceScene();else if(sayNpc)interact();else return false;
     tick();return true;
   }
   function candidate(target){
-    if(target?.closest?.('#bagAsk, #deck, #merchantShop, #cloudSaveDialog, button, input, select, textarea, a'))return false;
+    if(target?.closest?.('button, input, select, textarea, a'))return false;
+    if(!target?.closest?.('.conversationStage')&&target?.closest?.('#bagAsk, #deck, #merchantShop, #cloudSaveDialog'))return false;
     return gameplayStarted&&!window.EmberCloud?.isOpen()&&!editing&&!atlasOpen&&!bagOpen&&!ovl&&!ask?.shop&&
-      (sayEl.classList.contains('on')||revealing)&&!!target?.closest?.('#say, #sayname, #face, #cv, #stage, #reveal, #revealCap');
+      (sayEl.classList.contains('on')||revealing)&&!!target?.closest?.('#say, #sayname, #face, #cv, #stage, #reveal, #revealCap, .conversationStage');
   }
   function input(e){
     const target=candidate(e.target),stop=()=>{e.preventDefault();e.stopImmediatePropagation();return true;};
+    const start=()=>{if(e.target?.closest?.('.conversationStage')){e.stopImmediatePropagation();return true;}return stop();};
     if(e.type==='pointerdown'){
       if(pointer){pointer.cancelled=true;return target?stop():false;}
       if(!target)return false;
-      pointer={id:e.pointerId,x:e.clientX,y:e.clientY,cancelled:e.isPrimary===false};return stop();
+      pointer={id:e.pointerId,x:e.clientX,y:e.clientY,cancelled:e.isPrimary===false};return start();
     }
     if(e.type==='pointermove'&&pointer){
       if(e.pointerId!==pointer.id||Math.hypot(e.clientX-pointer.x,e.clientY-pointer.y)>12)pointer.cancelled=true;
@@ -178,12 +214,12 @@
     }
     if(target&&['touchstart','mousedown','click'].includes(e.type)){
       if(e.type==='click'&&e.detail===0&&performance.now()>suppressClick)advance();
-      return stop();
+      return e.type==='click'?stop():start();
     }
     return false;
   }
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)advance();}});
-  window.EmberConversationFlow={menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session};
+  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session,history:()=>session?.history||[]};
 })();

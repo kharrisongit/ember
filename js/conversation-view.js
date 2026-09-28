@@ -30,5 +30,28 @@
     return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||''})
       .map(([key,value])=>[key,playerFacingText(value)]));
   }
-  window.EmberConversationView={profile};
+  let homes=null,stage=null;
+  function mount(target){
+    stage=target;
+    const nodes=[sayEl,faceEl,nameEl];
+    if(!homes)homes=nodes.map(node=>({node,parent:node.parentNode||document.body}));
+    for(const node of nodes)target.appendChild(node);
+  }
+  function release(){
+    if(homes)for(const {node,parent}of homes)parent.appendChild(node);
+    homes=null;stage=null;
+  }
+  function update({partner,speaker,phase,subject}){
+    if(!stage)return;
+    stage.dataset.speaker=speaker==='Corin'?'corin':'npc';stage.dataset.phase=phase;
+    const title=stage.querySelector('.conversationSubject');
+    if(title)title.textContent=playerFacingText(subject||'A moment to talk');
+    const turn=stage.querySelector('.conversationTurn');
+    if(turn)turn.textContent=phase==='reply'?'Choose Corin’s reply':phase==='listen'?(speaker||partner)+' is speaking':'Where will the conversation go?';
+    for(const chip of stage.querySelectorAll('.conversationPhase')){
+      const current=chip.dataset.phase===phase;
+      chip.classList.toggle('is-current',current);chip.setAttribute('aria-current',current?'step':'false');
+    }
+  }
+  window.EmberConversationView={profile,mount,release,update};
 })();

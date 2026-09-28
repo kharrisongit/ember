@@ -157,7 +157,10 @@ function thornwellSummon(){
       'King Halvard: Then serve smaller portions to everyone else. There. A king has solved your difficulty.',
       'Doran: Generous of you, sire.',
       'King Halvard: Now, boy. Tell me what you have been doing with yourself.'
-    ],()=>openThornwellAudience(king),king);
+    ],()=>{
+      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
+      else openThornwellAudience(king);
+    },king);
   }),king);
 }
 function thornwellAudienceLines(actor,lines,after){thornwellScene(lines,after||(()=>openThornwellAudience(actor)),actor);}

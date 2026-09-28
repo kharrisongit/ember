@@ -883,6 +883,7 @@ function dragonCanConverse(){
 }
 function tryDragonConversation(){
   if(!dragonCanConverse()||!playerFacesDragon())return false;
+  if(globalThis.window?.EmberConversationFlow?.prompt(dragon,{dragon:true}))return true;
   openDragonConversation();return true;
 }
 function openDragonConversation(category='root'){

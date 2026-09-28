@@ -46,6 +46,8 @@ tick(800);
 assert.equal(run('brambleQuest'),3,'Rowan and Bramble leave before the summons');
 assert.equal(run('thornwellRoyal.stage'),3);
 assert(run('thornwellAudiencePending()'),'The exit waits for the mandatory audience');
+assert(run('ask?.conversationPrompt'),'The king’s opening scene waits for confirmation before full conversation');
+run("askPick=ask.opts.findIndex(o=>o.n==='Talk');askTake()");
 assert.equal(run('ask?.npcConversation'),'King Halvard');
 assert(run('Math.hypot(P.x-thornwellKing().x,P.y-thornwellKing().y)<55'),'Corin actually walks to the corner table');
 assert(spoken.some(s=>s.includes('boy with the eggs')));

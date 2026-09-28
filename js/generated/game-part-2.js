@@ -4829,7 +4829,7 @@ addEventListener("keydown", e => {
   if(globalThis.window?.EmberArenaEntry?.key(e))return;
   if(globalThis.window?.EmberRiding?.key(e))return;
   if(globalThis.window?.EmberConversationFlow?.key(e))return;
-  if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation||ask?.dragonConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
+  if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation||ask?.dragonConversation||ask?.conversationPrompt)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
     e.preventDefault();if(e.repeat)return;
     if(k==='b'||k==='escape')askBack();
     else if(k==='arrowleft'||k==='arrowright'){if(ask.quantity)changePurchaseQuantity(k==='arrowright'?1:-1);else askStep(k==='arrowright'?1:-1);}
@@ -11406,6 +11406,7 @@ function interact() {
   if (best) {
     globalThis.window?.EmberSfx?.ui?.();
     const giftPending=(best.charm && !charm[best.charm]) || (best.gift && !breathHas[best.gift]);
+    if(globalThis.window?.EmberConversationFlow?.prompt(best))return;
     if(best.sells && !giftPending) merchantAsk(best);
     else beginNpcTalk(best);
     return;

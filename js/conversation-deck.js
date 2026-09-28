@@ -15,20 +15,49 @@
   }
   function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=playerFacingText(text);return e;}
   function back(){
+    if(ask?._historyOpen){ask._historyOpen=false;askDraw();return true;}
     if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
     if(ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
     return false;
+  }
+  function prompt(box,rows){
+    box.classList.add('conversationPrompt');box.style.display='block';box.style.width='';
+    box.setAttribute('role','dialog');box.setAttribute('aria-label',ask.opts[0].n+' — interact');
+    const heading=node('div','conversationPromptHeading',ask.opts[0].n);
+    const hint=document.getElementById('topicScrollHint');if(hint)hint.hidden=true;
+    rows.replaceChildren();box.replaceChildren(heading,rows,...(hint?[hint]:[]));
+    ask.opts.forEach((option,i)=>{
+      if(option.head)return;
+      const button=node('button','conversationPromptChoice');button.type='button';button.dataset.askIndex=i;
+      button.dataset.selected=String(i===askPick);button.setAttribute('aria-pressed',String(i===askPick));
+      button.append(node('span','',option.n),node('kbd','',i===askPick?'A':' '));
+      button.onclick=e=>{e.stopPropagation();askPick=i;askTake();};
+      button.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){askPick=i;askTake();}}};rows.appendChild(button);
+    });
+    box.appendChild(node('small','conversationPromptHint','Choose an action · A to confirm · B to leave'));
+  }
+  function makeStage(){
+    const stage=node('section','conversationStage');stage.setAttribute('aria-label','Conversation');
+    const ribbon=node('div','conversationRibbon');
+    for(const [phase,label]of [['explore','Explore'],['listen','Listen'],['reply','Your reply']]){
+      const chip=node('span','conversationPhase',label);chip.dataset.phase=phase;ribbon.appendChild(chip);
+    }
+    stage.append(ribbon,node('p','conversationSubject','A moment to talk'),node('small','conversationTurn','Where will the conversation go?'));
+    return stage;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
     const memory=!ask._topicDrawn?topicMenuPositions.get(scope):null;
     if(memory){ask._deckFilter=memory.filter||'all';const i=ask.opts.findIndex(o=>!o.head&&o.n===memory.name);if(i>=0)askPick=i;}
     const filter=ask.replyChoices?'all':ask._deckFilter||'all',enter=!ask._topicDrawn||ask._deckLastFilter!==filter;
-    const oldScroll=memory?.scroll??box.scrollTop;
+    const workspace=box.querySelector('.conversationWorkspace')||node('div','conversationWorkspace');
+    const stage=box.querySelector('.conversationStage')||makeStage();
+    const oldScroll=memory?.scroll??workspace.scrollTop;
     ask._topicDrawn=true;ask._deckLastFilter=filter;
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
-    box.style.display='block';box.style.width='100%';rows.replaceChildren();
+    box.style.display='grid';box.style.width='100%';rows.replaceChildren();
     const name=ask.npcConversation||'Aurelius';
+    box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Conversation with '+name);
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
     box.querySelector('.deckHeader')?.remove();box.querySelector('.deckProfile')?.remove();
@@ -37,7 +66,7 @@
     profileButton.setAttribute('aria-label','Character profile: '+name);
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');
-    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;askDraw();};
+    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;ask._historyOpen=false;askDraw();};
     const portrait=node('span','journalPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
     const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
     identity.append(node('strong','deckName',name));
@@ -48,10 +77,13 @@
     profileButton.append(portrait,identity);if(!ask.replyChoices)profileButton.append(ring);
     const controls=node('div','deckHeaderControls');
     const parent=ask.back&&ask.topicScope!=='thornwell-audience';
-    if(ask._profileOpen||filter!=='all'||parent){
+    if(ask._profileOpen||ask._historyOpen||filter!=='all'||parent){
       const previous=node('button','deckBack','‹ Back');previous.type='button';previous.setAttribute('aria-label','Back to previous topic list');
       previous.onclick=e=>{e.stopPropagation();askBack();};controls.append(previous);
     }
+    const historyToggle=node('button','deckHistoryToggle','History');historyToggle.type='button';
+    historyToggle.setAttribute('aria-expanded',String(!!ask._historyOpen));historyToggle.setAttribute('aria-controls','conversationHistory');
+    historyToggle.onclick=()=>{ask._historyOpen=!ask._historyOpen;ask._profileOpen=false;askDraw();};controls.append(historyToggle);
     const close=node('button','deckClose','Goodbye');close.type='button';close.setAttribute('aria-label','Leave conversation');
     close.onclick=e=>{e.stopPropagation();if(ask.replyChoices){askBack();return;}if(window.EmberConversationFlow){window.EmberConversationFlow.goodbye();return;}const leave=ask.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;askShut();if(leave)leave();};if(!ask.replyChoices)controls.append(close);
     header.append(profileButton,controls);
@@ -64,16 +96,24 @@
       profile.append(facts);
       if(info.memory){profile.append(node('small','deckEyebrow','In their own words'),node('blockquote','',info.memory));}
     }
+    const history=node('section','deckHistory');history.id='conversationHistory';history.hidden=!ask._historyOpen;
+    history.append(node('small','deckEyebrow','This conversation'),node('h2','','Conversation so far'));
+    const lines=window.EmberConversationFlow?.history()||[];
+    for(const line of lines){const entry=node('article','conversationMemory');entry.append(node('strong','',line.speaker),node('p','',line.text));history.appendChild(entry);}
+    if(!lines.length)history.appendChild(node('p','','Your conversation will be recorded here as you talk.'));
     const hint=document.getElementById('topicScrollHint');
-    box.replaceChildren(header,profile,rows,...(hint?[hint]:[]));
+    workspace.replaceChildren(profile,history,rows,...(hint?[hint]:[]));
+    box.replaceChildren(header,stage,workspace);window.EmberConversationView?.mount(stage);
+    if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
+    box.classList.toggle('historyOpen',!!ask._historyOpen);
     const tabs=node('nav','deckTabs');tabs.setAttribute('aria-label','Conversation categories');
     for(const [key,label]of Object.entries(groups)){
       const count=topics.filter(o=>key==='all'||key==='new'&&!seen(o)||category(o)===key).length;
       if(key!=='all'&&key!=='new'&&!count)continue;
       const b=node('button','deckTab',label);b.type='button';b.setAttribute('aria-pressed',String(key===filter));
       b.append(node('span','deckTabCount',String(count)));
-      b.onclick=e=>{e.stopPropagation();ask._deckFilter=key;askPick=ask.opts.findIndex(o=>visible(o,key));box.scrollTop=0;askDraw();};tabs.append(b);
+      b.onclick=e=>{e.stopPropagation();ask._deckFilter=key;askPick=ask.opts.findIndex(o=>visible(o,key));workspace.scrollTop=0;askDraw();};tabs.append(b);
     }
     if(!ask.replyChoices)rows.append(tabs);
     else rows.append(node('p','deckReplyPrompt','What will Corin say?'));
@@ -96,7 +136,7 @@
       rows.append(b);
     }
     if(filter==='new'&&!topics.some(o=>!seen(o)))rows.append(node('p','deckEmpty','Every story here has been heard. Revisit a favorite, or see what the road brings next.'));
-    box.scrollTop=oldScroll||0;updateTopicScrollHint();
+    workspace.scrollTop=oldScroll||0;updateTopicScrollHint();
   }
-  window.EmberConversationDeck={draw,visible,category,back};
+  window.EmberConversationDeck={draw,prompt,visible,category,back};
 })();
