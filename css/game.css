@@ -1890,13 +1890,13 @@ body.pseudoFullscreen{
 #soundPanel>b{display:block;color:#f0d39a;font:700 13px/1 ui-monospace,monospace;letter-spacing:.25em;margin-bottom:17px}
 #soundVolumeLabel{display:flex;align-items:center;justify-content:space-between;color:#e9dfcb;font:700 12px/1.4 ui-monospace,monospace}
 #soundPct{color:#f0d39a;font-size:16px}
-#soundVolume{--volume:35%;display:block;width:100%;height:38px;margin:20px 0 18px;padding:0;background:transparent;appearance:none;-webkit-appearance:none;touch-action:none;cursor:pointer}
-#soundVolume::-webkit-slider-runnable-track{height:10px;border-radius:6px;background:linear-gradient(to right,#dfb366 var(--volume),#0e0f12 var(--volume));border:1px solid #62533d}
-#soundVolume::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e;box-shadow:0 2px 5px #0008}
-#soundVolume::-moz-range-track{height:10px;border-radius:6px;background:#0e0f12;border:1px solid #62533d}
-#soundVolume::-moz-range-progress{height:10px;border-radius:6px;background:#dfb366}
-#soundVolume::-moz-range-thumb{width:25px;height:25px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e}
-#soundVolume:focus-visible{outline:2px solid #f0d39a;outline-offset:5px;border-radius:6px}
+:is(#soundVolume,.soundMixRange){--volume:35%;display:block;width:100%;height:38px;margin:20px 0 18px;padding:0;background:transparent;appearance:none;-webkit-appearance:none;touch-action:none;cursor:pointer}
+:is(#soundVolume,.soundMixRange)::-webkit-slider-runnable-track{height:10px;border-radius:6px;background:linear-gradient(to right,#dfb366 var(--volume),#0e0f12 var(--volume));border:1px solid #62533d}
+:is(#soundVolume,.soundMixRange)::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e;box-shadow:0 2px 5px #0008}
+:is(#soundVolume,.soundMixRange)::-moz-range-track{height:10px;border-radius:6px;background:#0e0f12;border:1px solid #62533d}
+:is(#soundVolume,.soundMixRange)::-moz-range-progress{height:10px;border-radius:6px;background:#dfb366}
+:is(#soundVolume,.soundMixRange)::-moz-range-thumb{width:25px;height:25px;border:2px solid #f0d39a;border-radius:50%;background:#9f783e}
+:is(#soundVolume,.soundMixRange):focus-visible{outline:2px solid #f0d39a;outline-offset:5px;border-radius:6px}
 #soundActions{display:flex;gap:9px}
 #soundActions button{flex:1;padding:10px;border-radius:9px;border:1px solid #665741;background:linear-gradient(#35312a,#25231f);color:#e8ddca;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em}
 #soundActions button:active{transform:translateY(1px);background:#493b29}
@@ -2415,3 +2415,19 @@ body.boot-menu-open.boot-ready:not(.game-started) #dpad *{pointer-events:auto!im
 
 /* Aurelius has extra transparent space under his bust; seat it on the dialogue box. */
 #face[data-speaker="Aurelius"] { transform:translateY(8%); }
+
+/* Player mixer and quick Bag shortcuts. */
+#itemQuickHead .itemQuickSpacer{flex:1}
+#itemQuickHead #itemFullBtn{margin-right:0}
+#itemSaveBtn,#itemMusicBtn{height:27px;padding:0 9px;border:1px solid #a18c66;border-radius:6px;background:#e7dbc0;color:#3c4236;font:700 9px/1 Georgia,serif}
+#soundPanel{max-height:calc(100dvh - 30px);overflow-y:auto}
+.soundMixLabel{display:flex;justify-content:space-between;font:700 12px/1.4 ui-monospace,monospace;color:#e9dfcb}
+#soundSong{display:block;text-align:left;color:#b7ac98;margin-top:3px;font-size:11px}
+#soundUiMute{width:100%;margin:0 0 12px;min-height:36px;border:1px solid #665741;border-radius:8px;background:#302b24;color:#e8ddca;font:700 11px/1 ui-monospace,monospace}
+
+:is(#soundVolume,.soundMixRange){margin:8px 0 12px}
+
+#itemm>#itemQuickHead{gap:6px!important}
+#itemFullBtn{min-width:110px!important;padding:0 8px!important;font-size:10px!important}
+#itemSaveBtn,#itemMusicBtn{height:42px;min-width:48px;padding:0 8px;font-size:10px}
+#itemCloseBtn{width:36px!important;min-width:36px!important}

@@ -44,6 +44,7 @@ jobs:
           node tests/riding-tutorial.mjs
           node tests/town-music.mjs
           node tests/audio-controls.mjs
+          node tests/player-bag-menu.mjs
           node tests/audio-mix.mjs
           node tests/dragon-scene-audio.mjs
           node tests/input-hatch.mjs

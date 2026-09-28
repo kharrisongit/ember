@@ -3650,7 +3650,7 @@ function playZoom() {
   if (!VW || !VH) return 2.5;
   const interior = MAPID !== "world";
   const z = Math.min(VW / ((interior ? 13 : PLAY_ACROSS) * TS), VH / ((interior ? 9 : PLAY_DOWN) * TS));
-  return Math.max(interior ? 2.15 : PLAY_MIN, Math.min(PLAY_MAX, z)) * (interior ? 1.03 * 0.99 : 0.9 * 1.02 * 1.02 * 0.90);
+  return Math.max(interior ? 2.15 : PLAY_MIN, Math.min(PLAY_MAX, z)) * (interior ? 1.03 * 0.99 : 0.9 * 1.02 * 1.02 * 0.90 * 1.03);
 }
 let cam = { x: 0, y: 0, z: 2.5 };
 let mode = "play";
@@ -3682,7 +3682,7 @@ function presentCamera(dt){
   const cinematic=!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
   const scripted=!mapGesturesAllowed()&&(cinematic||old?.cinematic||old?.settling);
   const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
-  const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||old.settling);
+  const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||Math.hypot(old.cx-cx,old.cy-cy)>.1||old.settling);
   if(zooming){
     const k=1-Math.exp(-7*Math.max(0,Math.min(dt||0,.05)));
     const z=old.z+(cam.z-old.z)*k,x=old.cx+(cx-old.cx)*k,y=old.cy+(cy-old.cy)*k;
@@ -6138,6 +6138,9 @@ function greenAt() {
 const Q = { ABED: 0, ERRAND: 1, EGGS: 2, KING: 3, ELDER: 4, NOISE: 5,
             ARMED: 6, FLED: 7, CARRY: 8, DONE: 9 };
 let quest = Q.ABED;
+let bagOwned=false;
+function hasBag(){return bagOwned||quest>Q.EGGS;}
+function receiveErrandBag(){bagOwned=true;showReveal("inventory_bag", "Hettie gave Corin a Bag!",2.5,true);}
 const hasSword = () => quest >= Q.ARMED;
 let smithUpgrade = false;
 let glassShield = false, glassShieldHeld = false, glassShieldPulse = 0;
@@ -7111,9 +7114,10 @@ function questTalk() {
     playScene([
       "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
       "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
+      "Hettie: Here, take this bag. It will keep your things together on the way.",
       "Hettie: The coop is behind the mill. I should have the "
         + "cows out of your way by the time you have the basket.",
-    ], { who: "Hettie" });
+    ], { who: "Hettie", after:receiveErrandBag });
     return true;
   }
   if (quest === Q.CARRY && MAPID === "world" && nearNpc("Maddock")) {
@@ -7377,6 +7381,7 @@ let revealQueue = [];
 let revealAfter = null;
 const REVEAL_BIG = { "drf_s": "drf_s", "dr5_idle_s": "dr5_idle_s" };
 function isKeyItemReveal(caption, sprName='') {
+  if(sprName==='inventory_bag')return true;
   if (/^inventory_(?:potion|elixir|boarMeat|hareMeat|deerMeat|foxMeat|birdMeat|dragonFish|bomb|dust|bell|mark|saint|stone|salt)$/.test(sprName)) return false;
   const c = String(caption || "");
   return /^Corin (?:obtained|received)\b/i.test(c) || /mysterious stone/i.test(c);

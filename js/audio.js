@@ -29,6 +29,9 @@ let routeMusicIntroPlayed=false;
   const KEY='emberfell.musicVolume';
   let pct=35;
   try { const stored=localStorage.getItem(KEY),n=Number(stored); if(stored!==null && Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
+  const mixKey='emberfell.playerAudioMix';
+  let playerMix={music:{},effects:100,uiMuted:false};
+  try{const saved=JSON.parse(localStorage.getItem(mixKey)||'null');if(saved&&typeof saved==='object'){playerMix.effects=Math.max(0,Math.min(100,Number(saved.effects)??100));if(!Number.isFinite(playerMix.effects))playerMix.effects=100;playerMix.uiMuted=!!saved.uiMuted;for(const [key,value]of Object.entries(saved.music||{}))if(Number.isFinite(value)&&value>=0&&value<=100)playerMix.music[key]=value;}}catch(e){}
   let battleMode=false,battleMap=null;
   let kingMode=false, millwoodMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
   const target=()=>Math.max(0,Math.min(1,pct/100))*.85;
@@ -201,7 +204,7 @@ let routeMusicIntroPlayed=false;
   let previewTrack=null;
   let kingMap=null,selected=null,unlocked=false,pending=0,fading=false,fadeDuration=900,fadeDelay=0;
   const gains=new Map(tracks.map(a=>[a,0]));
-  let audioContext=null,masterGain=null,masterPct=-1;
+  let audioContext=null,masterGain=null,effectsGain=null,masterPct=-1;
   const channels=new Map();
   const loops=new Map([battle,reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a)&&!loops.get(a).failed);
@@ -260,8 +263,9 @@ let routeMusicIntroPlayed=false;
       else gain.setTargetAtTime(target(),now,.015);
       masterPct=pct;
     }
+    if(effectsGain)effectsGain.gain.value=playerMix.effects/100;
     for(const a of tracks){
-      const level=(gains.get(a)||0)*(window.EmberAudioMix?.level('music:'+a.id)??1)*(a===reveal ? .7*(revealDucked?.5:1) : 1),channel=channels.get(a);
+      const level=(gains.get(a)||0)*(window.EmberAudioMix?.level('music:'+a.id)??1)*(playerMix.music[a.id]??100)/100*(a===reveal ? .7*(revealDucked?.5:1) : 1),channel=channels.get(a);
       if(channel){channel.gain.value=level;a.volume=1;}
       else a.volume=Math.min(1,level*target());
     }
@@ -276,6 +280,7 @@ let routeMusicIntroPlayed=false;
         audioContext=new Context();masterGain=audioContext.createGain();
         masterGain.gain.value=target();masterPct=pct;
         masterGain.connect(audioContext.destination);
+        effectsGain=audioContext.createGain();effectsGain.gain.value=playerMix.effects/100;effectsGain.connect(masterGain);
       }catch(e){audioContext=null;masterGain=null;return;}
     }
     for(const a of tracks)if(!channels.has(a)){
@@ -405,7 +410,15 @@ let routeMusicIntroPlayed=false;
     preview:id=>{previewTrack=tracks.find(a=>a.id===id&&hasSong(a))||null;openAudioGraph();unlocked=true;chooseMusic();playSelected();},
     stopPreview:()=>{previewTrack=null;chooseMusic();},
     percent:()=>pct,
-    graph:()=>audioContext&&({context:audioContext,output:masterGain}),
+    graph:()=>audioContext&&({context:audioContext,output:masterGain,effects:effectsGain}),
+    uiMuted:()=>playerMix.uiMuted,
+    mixState:()=>({music:playerMix.music[selected?.id]??100,effects:playerMix.effects,uiMuted:playerMix.uiMuted,track:selected?(window.EmberAudioMix?.catalog['music:'+selected.id]||selected.id):null}),
+    setMix:values=>{
+      for(const key of ['music','effects'])if(Number.isFinite(values[key])){const value=Math.max(0,Math.min(100,values[key]));if(key==='music'){if(selected)playerMix.music[selected.id]=value;}else playerMix.effects=value;}
+      if(typeof values.uiMuted==='boolean')playerMix.uiMuted=values.uiMuted;
+      try{localStorage.setItem(mixKey,JSON.stringify(playerMix));}catch(e){}
+      applyVolumes();
+    },
     set:v=>{
       pct=Math.max(0,Math.min(100,Number(v)||0));
       try{localStorage.setItem(KEY,String(pct));}catch(e){}

@@ -4549,6 +4549,7 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
+  { key:"bag",kind:"key",name:"Hettie’s Bag",tell:"Hettie gave you this sturdy bag for your errand. It keeps your supplies together.",has:hasBag,icon:()=>"inventory_bag" },
   { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
     tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; the compass will guide you when you need it most.",
     has: () => templeCompass.owned, icon: () => "inventory_mapCompass" },
@@ -4974,6 +4975,8 @@ function refreshBag() {
   }
 }
 let ask = null, askPick = 0;
+const discussedTopics=new Set(),topicMenuPositions=new Map();
+function topicMemoryKey(o){return (ask?.npcConversation||(ask?.dragonConversation?"Aurelius":""))+":"+o.n;}
 function updateTopicScrollHint() {
   const box=document.getElementById('bagAsk'),hint=document.getElementById('topicScrollHint');
   if(!box||!hint)return;
@@ -4990,9 +4993,11 @@ function wireTopicScrollHint(box) {
 }
 function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();const back=ask?.back;askShut();if(back)back();}
 function askShut() {
+  if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(ask.npcConversation||'Aurelius',{name:ask.opts[askPick]?.n,scroll:document.getElementById('bagAsk')?.scrollTop||0});
   hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
   ask = null;
+  document.body.classList.remove("topics-open");
   const el = document.getElementById("bagAsk");
   if (el) el.style.display = "none";
 }
@@ -5004,9 +5009,13 @@ function askDraw() {
   if (!el || !rows) return;
   el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
   el.classList.toggle("conversationTopics",!!(ask?.npcConversation||ask?.dragonConversation));
+  document.body.classList.toggle("topics-open",!!(ask?.npcConversation||ask?.dragonConversation));
   wireTopicScrollHint(el);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
+  const returning=!ask._topicDrawn&&(ask.npcConversation||ask.dragonConversation)?topicMenuPositions.get(ask.npcConversation||'Aurelius'):null;
+  if(returning){const index=ask.opts.findIndex(o=>!o.head&&o.n===returning.name);if(index>=0)askPick=index;}
+  ask._topicDrawn=true;
   wireBagDrag("bagAsk");
   el.style.width=ask.quantity?'200px':ask.confirmation?'260px':ask.dragonConversation?'350px':'300px';
   rows.innerHTML = "";
@@ -5041,9 +5050,12 @@ function askDraw() {
       d.textContent = o.n;
       if(ask.npcConversation||ask.dragonConversation){
         d.className="topicSpeaker";
+        d.textContent="";const identity=document.createElement('span');identity.className='topicIdentity';identity.textContent=o.n;
+        const guide=document.createElement('small');guide.textContent=ask.opts.filter(o=>!o.head&&o.go).length+' topics · Choose what to ask';identity.appendChild(guide);d.appendChild(identity);
         const portrait=document.createElement('span');portrait.className='topicPortrait';
         portrait.setAttribute('aria-hidden','true');
         paintSmallPortrait(portrait,ask.npcConversation||'Aurelius');d.appendChild(portrait);
+        const close=document.createElement('button');close.className='topicClose';close.type='button';close.textContent='Close';close.addEventListener('click',e=>{e.stopPropagation();askBack();});d.appendChild(close);
       }
       if(ask.confirmation)d.style.cssText='padding:8px;font-size:14px;line-height:1.45;font-weight:bold;white-space:normal;overflow-wrap:anywhere';
       rows.appendChild(d);
@@ -5069,11 +5081,17 @@ function askDraw() {
     } else {
       d.textContent = (i === askPick ? "\u25B8 " : "  ") + o.n;
     }
+    if(ask.npcConversation||ask.dragonConversation){
+      d.style.setProperty('--topic-delay',Math.min(i-1,5)*35+'ms');
+      if(discussedTopics.has(topicMemoryKey(o))){const badge=document.createElement('small');badge.className='topicVisited';badge.textContent='✓ Discussed';d.appendChild(badge);d.setAttribute('aria-label',o.n+' — discussed');}
+    }
     d.dataset.selected=i===askPick?"true":"false";
     d.dataset.askIndex = i;
+    if(ask.npcConversation||ask.dragonConversation){d.setAttribute("role","button");d.tabIndex=0;d.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();askPick=i;askTake();}});}
     d.addEventListener("click", (e) => { e.stopPropagation(); if(el.moved)return; askPick = i; askTake(); });
     rows.appendChild(d);
   });
+  if(returning)el.scrollTop=returning.scroll;
   updateTopicScrollHint();
 }
 function askStep(d) {
@@ -5105,6 +5123,7 @@ function askTake() {
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
   globalThis.window?.EmberSfx?.ui?.();
+  if((ask.npcConversation||ask.dragonConversation)&&o.go)discussedTopics.add(topicMemoryKey(o));
   const key = ask.key, quick = ask.quick;
   askShut();
   if (quick) { if (o.go) o.go(); return; }   /* the on-screen list does its own box */
@@ -5309,7 +5328,7 @@ function bagDragged() {
   return !!(left && left.moved);
 }
 function setBag(on) {
-  if(on&&fishing)return;
+  if(on&&(fishing||!hasBag()))return;
   if (!on) { bookOpen = false; askShut(); }      /* both shut with the pack */
   bagOpen = on;
   document.getElementById("bag").style.display = on ? "flex" : "none";
@@ -5418,6 +5437,9 @@ const BOOT = {
   showMenu() {
     try{migrateLegacySave();}catch(e){}
     const has=!!BOOT.latestSave();
+    BOOT.menuOrder=has?["bootContinue","bootNew","bootLoad"]:["bootNew","bootContinue","bootLoad"];
+    const buttons=document.getElementById("bootBtns");
+    for(const id of BOOT.menuOrder)buttons.appendChild(document.getElementById(id));
     document.getElementById("bootBtns").style.display="flex";
     document.getElementById("bootLoadPanel").hidden=true;
     document.getElementById("bootLabel").textContent="";
@@ -5427,11 +5449,11 @@ const BOOT = {
     BOOT.paintMenu();
   },
   paintMenu() {
-    ["bootNew","bootContinue","bootLoad"].forEach((id,i)=>document.getElementById(id).classList.toggle("selected",i===BOOT.menuPick));
+    (BOOT.menuOrder||["bootNew","bootContinue","bootLoad"]).forEach((id,i)=>document.getElementById(id).classList.toggle("selected",i===BOOT.menuPick));
   },
   stepMenu(d) {
     if(!gameplayReady||!BOOT.menuOpen||BOOT.loading)return;
-    do{BOOT.menuPick=(BOOT.menuPick+d+3)%3;}while(BOOT.menuPick===1&&!BOOT.latestSave());
+    do{BOOT.menuPick=(BOOT.menuPick+d+3)%3;}while((BOOT.menuOrder||["bootNew","bootContinue","bootLoad"])[BOOT.menuPick]==="bootContinue"&&!BOOT.latestSave());
     BOOT.paintMenu();
   },
   continueGame() {
@@ -5464,7 +5486,8 @@ const BOOT = {
   activate() {
     if(!BOOT.menuOpen){BOOT.begin();return;}
     if(BOOT.loading){BOOT.takeLoad();return;}
-    if(BOOT.menuPick===0)BOOT.close();else if(BOOT.menuPick===1)BOOT.continueGame();else BOOT.openLoad();
+    const choice=(BOOT.menuOrder||["bootNew","bootContinue","bootLoad"])[BOOT.menuPick];
+    if(choice==="bootNew")BOOT.close();else if(choice==="bootContinue")BOOT.continueGame();else BOOT.openLoad();
   },
   openLoad() {
     if (!gameplayReady || !BOOT.menuOpen) return;
@@ -5622,6 +5645,7 @@ const EL_COLOUR = { claw: "#8b806c", fire: "#b65e45", ice: "#56859d",
                     elixir: "#bd913b", item: "#a18a66" };
 let ovl = null;
 function setOvl(which) {
+  if(which==="itemm"&&!hasBag())return;
   if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
   if(which&&fishing)return;
   for (const k in MENUS) {
@@ -5787,6 +5811,7 @@ bindHold("btnR", () => {
                          if (hasDragon()) setOvl(ovl === "airm" ? null : "airm"); },
                  () => { trigHold("r", false); });
 bindHold("btnItems", () => {
+                         if(!hasBag())return;
                          setOvl(ovl === "itemm" ? null : "itemm");
                          if (ovl === "itemm") setTimeout(() => wireBagDrag("itemRows"), 0); }, null);
 bindHold("btnMapQuick", () => { if (atlasOpen) closeAtlas(); else openAtlas(); }, null);
@@ -5795,18 +5820,30 @@ const itemFullBtn = document.getElementById("itemFullBtn");
 if (itemCloseBtn) itemCloseBtn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); });
 if (itemFullBtn) itemFullBtn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); setOvl(null); setBag(true); });
 
+for(const [id,target]of [["itemSaveBtn","savePrompt"],["itemMusicBtn","sound"]])document.getElementById(id)?.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();setOvl(target);});
+
 function soundPercent(){ return (window.EmberAudio && window.EmberAudio.percent) ? window.EmberAudio.percent() : 35; }
 function syncSoundDial(){
+  const help=document.getElementById("soundDesc");if(help)help.textContent="Balance the current song and effects. UI sound controls menu and A-button clicks.";
   const v=Math.max(0,Math.min(100,soundPercent()));
   const slider=document.getElementById("soundVolume"),pct=document.getElementById("soundPct"),mute=document.getElementById("soundMute");
   if(slider){slider.value=String(v);slider.style.setProperty("--volume",v+"%");}
   if(pct)pct.textContent=Math.round(v)+"%";
   if(mute)mute.textContent=v===0?"UNMUTE":"MUTE";
+  const mix=window.EmberAudio?.mixState?.();
+  if(mix){
+    for(const [id,value]of [["soundMusic",mix.music],["soundEffects",mix.effects]]){const range=document.getElementById(id),out=document.getElementById(id+"Pct");if(range){range.value=value;range.style.setProperty("--volume",value+"%");}if(out)out.textContent=Math.round(value)+"%";}
+    const song=document.getElementById("soundSong"),ui=document.getElementById("soundUiMute");
+    if(song)song.textContent=mix.track||"No song playing";
+    if(ui){ui.textContent=mix.uiMuted?"UI SOUND: OFF":"UI SOUND: ON";ui.setAttribute("aria-pressed",String(mix.uiMuted));}
+  }
 }
 (function wireSoundDial(){
   const slider=document.getElementById("soundVolume"),mute=document.getElementById("soundMute"),close=document.getElementById("soundClose");
   let lastNonZero=soundPercent()||35;
   const setV=v=>{v=Math.max(0,Math.min(100,Math.round(v)));if(v>0)lastNonZero=v;if(window.EmberAudio)window.EmberAudio.set(v);syncSoundDial();};
+  for(const [id,key]of [["soundMusic","music"],["soundEffects","effects"]])document.getElementById(id)?.addEventListener("input",e=>{window.EmberAudio?.setMix({[key]:Number(e.target.value)});syncSoundDial();});
+  document.getElementById("soundUiMute")?.addEventListener("click",()=>{const mix=window.EmberAudio?.mixState();if(mix)window.EmberAudio.setMix({uiMuted:!mix.uiMuted});syncSoundDial();});
   if(slider)slider.addEventListener("input",()=>setV(Number(slider.value)));
   if(mute)mute.addEventListener("click",e=>{e.preventDefault();const v=soundPercent();if(v>0)lastNonZero=v;setV(v===0?lastNonZero:0);});
   if(close)close.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();setOvl(null);});
@@ -5839,7 +5876,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
-  quest, routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, bagOwned:hasBag(), discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
@@ -5892,6 +5929,7 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
@@ -5927,7 +5965,7 @@ function loadGame(slot=activeSaveSlot) {
       if(m.hollybeck||m.mountainPassage){m.templeClock=0;for(const a of m.templeHazards){a.frame=0;a.active=false;a.x=a.minX+12;}for(const a of m.roomActors)if(a.templeExitDoor)a.openT=0;}
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
-    quest=s.quest;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
+    quest=s.quest;bagOwned=s.bagOwned===undefined?quest>=Q.EGGS:!!s.bagOwned;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.mountainPassage&&s.passageLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.hollybeck&&s.hollybeckLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
@@ -6114,7 +6152,7 @@ setInterval(() => {
     commandBtn.style.opacity = on ? "" : "0.38";
     commandBtn.setAttribute("aria-disabled",String(!unlocked));
   }
-  if (itemsBtn) itemsBtn.textContent = started ? "ITEMS" : "";
+  if (itemsBtn) {const ready=started&&hasBag();itemsBtn.textContent=ready?"BAG":"";itemsBtn.style.opacity=ready?"":"0.38";itemsBtn.setAttribute("aria-disabled",String(!ready));}
   refreshMapControls(started);
   // Cooldowns update in place in frameCore; replacing these rows during a
   // touch detaches the pressed button before the browser can deliver its click.

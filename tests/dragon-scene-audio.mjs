@@ -198,3 +198,5 @@ sfx.preview('wings');await flush();timers.forEach(f=>f());
 assert.equal(active('dragon-wings').length,1);sfx.stopPreview('wings');assert.equal(active('dragon-wings').length,0);
 sfx.preview('death');await flush();timers.forEach(f=>f());assert.equal(active('game-over').length,1);sfx.stopPreview('death');
 console.log('PASS: dev sound previews survive normal scene cleanup and stop explicitly.');
+
+c.window.EmberAudio.uiMuted=()=>true;const beforeUi=sources.length;sfx.ui();await flush();assert.equal(sources.length,beforeUi,'Player UI mute silences confirmation clicks');

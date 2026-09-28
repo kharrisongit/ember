@@ -93,6 +93,7 @@ Object.assign(c,{mounted:false,inFight:()=>false,heartKnown:false,fishingPole:fa
  breathHas:{fire:true,lightning:false,shadow:false,ice:false},charm:{},W:{maps:{world:{npcs:[{n:'Wren',charm:'twin'}]}}},askPick:0,askDraw(){},askShut:()=>{c.ask=null;}});
 c.sceneHold=()=>!!pendingScene||!!c.ask?.dragonConversation;
 // Use the actual menu selection controller, not a duplicate of it.
+run(part3.slice(part3.indexOf('const discussedTopics='),part3.indexOf('function updateTopicScrollHint()')));
 run(part3.slice(part3.indexOf('function askTake()'),part3.indexOf('function askTake()')+part3.slice(part3.indexOf('function askTake()')).indexOf('\nfunction ')));
 for(const [dx,dy]of [[30,0],[-30,0],[0,30],[0,-30]]){
  c.dragon.x=c.P.x+dx;c.dragon.y=c.P.y+dy;

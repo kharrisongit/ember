@@ -1,5 +1,5 @@
 /* Dawn palette, scoped to utility menus so conversation artwork stays intact. */
-#bag,#itemm,#atkm,#airm,#menu,#sound,#savePrompt,#saveSlots,#loadSlots,#manageSaves,#cloudSaveDialog,#worldAtlas {
+#bag,#itemm,#atkm,#airm,#menu,#sound,#savePrompt,#saveSlots,#loadSlots,#manageSaves,#cloudSaveDialog,#worldAtlas,#bagAsk.conversationTopics {
   --dawn-paper:#f8edd8;
   --dawn-ink:#293e43;
   --dawn-muted:#536361;
@@ -68,11 +68,11 @@
 #menu .row.on {background:var(--dawn-teal);color:#fff6e3;box-shadow:inset 3px 0 #c78d67}
 #soundVolumeLabel,#soundPct {color:var(--dawn-ink)}
 #soundPanel .foot {color:var(--dawn-muted)!important}
-#soundVolume::-webkit-slider-runnable-track {background:linear-gradient(to right,#36565d var(--volume),#d3c4a9 var(--volume));border-color:#9b947e}
-#soundVolume::-webkit-slider-thumb {background:#975638;border-color:#fff6e3;box-shadow:0 2px 5px #594a3340}
-#soundVolume::-moz-range-track {background:#d3c4a9;border-color:#9b947e}
-#soundVolume::-moz-range-progress {background:#36565d}
-#soundVolume::-moz-range-thumb {background:#975638;border-color:#fff6e3}
+:is(#soundVolume,.soundMixRange)::-webkit-slider-runnable-track {background:linear-gradient(to right,#36565d var(--volume),#d3c4a9 var(--volume));border-color:#9b947e}
+:is(#soundVolume,.soundMixRange)::-webkit-slider-thumb {background:#975638;border-color:#fff6e3;box-shadow:0 2px 5px #594a3340}
+:is(#soundVolume,.soundMixRange)::-moz-range-track {background:#d3c4a9;border-color:#9b947e}
+:is(#soundVolume,.soundMixRange)::-moz-range-progress {background:#36565d}
+:is(#soundVolume,.soundMixRange)::-moz-range-thumb {background:#975638;border-color:#fff6e3}
 :is(#savePrompt,#saveSlots,#loadSlots,#manageSaves)>b {
   background:var(--dawn-teal);color:#fff6e3;border-color:var(--dawn-edge);text-shadow:none;box-shadow:none;
 }
@@ -117,13 +117,16 @@
 #cloudSaveDialog{position:fixed;inset:auto;margin:0;max-width:none;max-height:none;border-radius:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:18px 22px}
 #cloudSaveDialog .cloud-header{position:sticky;top:-18px;z-index:1;background:var(--dawn-paper);padding:12px 0;margin-bottom:12px}
 
-/* Compact conversation lists keep the world visible; long lists scroll. */
-#bagAsk.conversationTopics{width:220px!important;max-width:calc(100% - 28px)!important;max-height:min(42%,250px)!important;overflow-y:auto!important;overscroll-behavior:contain;padding:6px!important}
+/* Conversations occupy the controller deck, leaving the world visible. */
+#bagAsk.conversationTopics{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;height:var(--deck)!important;max-height:none!important;box-sizing:border-box!important;border-radius:0!important;border:0!important;border-top:2px solid var(--dawn-edge)!important;z-index:60!important;overflow-y:auto!important;overscroll-behavior:contain;touch-action:pan-y;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 16px)!important;background:var(--dawn-paper)!important;box-shadow:0 -6px 22px #0005!important}
+#bagAsk.conversationTopics #askRows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#bagAsk.conversationTopics .topicSpeaker{grid-column:1/-1}
+body.topics-open #deck,body.topics-open #deck *{pointer-events:none!important}
 #bagAsk.conversationTopics #askRows>div.topicSpeaker{
-  position:sticky;top:-6px;z-index:2;margin:0 0 4px!important;
+  position:sticky;top:-10px;z-index:2;margin:0 0 4px!important;
   background:linear-gradient(90deg,#29484f,#41636a,#29484f)!important;color:#fff1cf!important;
   font:700 16px/1.3 Georgia,serif!important;letter-spacing:.025em!important;text-transform:none!important;
-  text-align:left;min-height:52px;display:flex;align-items:center;padding:6px 58px 6px 10px!important;border:0!important;border-top:2px solid #b6a17b!important;border-bottom:2px solid #b6a17b!important;
+  text-align:left;min-height:52px;display:flex;align-items:center;padding:6px 118px 6px 10px!important;border:0!important;border-top:2px solid #b6a17b!important;border-bottom:2px solid #b6a17b!important;
   clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%);
   text-shadow:0 1px 1px #152d33;
 }
@@ -135,4 +138,20 @@
 @keyframes topicArrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 @media(prefers-reduced-motion:reduce){#topicScrollHint span{animation:none}}
 
-#bagAsk.conversationTopics #askRows>[data-ask-index]{padding:6px 7px!important;font-size:12px!important;line-height:1.4!important}
+#bagAsk.conversationTopics #askRows>[data-ask-index]{display:flex;align-items:center;min-height:52px;box-sizing:border-box;padding:10px 12px!important;font:600 15px/1.3 Georgia,serif!important;border:1px solid #b4a07b!important;border-radius:10px!important;background:#e6dbc4;color:#353f37;cursor:pointer}
+#bagAsk.conversationTopics #askRows>[data-selected="true"]{background:#cbd5c4!important;color:#293e43!important;border-color:#607a67!important;box-shadow:inset 0 0 0 1px #607a67}
+#bagAsk.conversationTopics .topicClose{position:absolute;right:60px;top:10px;min-height:34px;padding:0 8px;border:1px solid #b8a982;border-radius:7px;background:#e5d7b8;color:#30464a;font:600 12px Georgia,serif}
+#bagAsk.conversationTopics #topicScrollHint{background:linear-gradient(transparent,var(--dawn-paper) 70%)}
+
+#bagAsk.conversationTopics .topicIdentity{min-width:0}
+#bagAsk.conversationTopics .topicIdentity small{display:block;margin-top:4px;font:500 10px/1.2 system-ui,sans-serif;color:#d8dfcf;text-shadow:none;letter-spacing:0}
+#bagAsk.conversationTopics #askRows>[data-ask-index]{position:relative;flex-direction:column;justify-content:center;align-items:flex-start;transition:background .16s,border-color .16s,transform .12s;animation:topicCardIn .22s both;animation-delay:var(--topic-delay,0ms)}
+#bagAsk.conversationTopics #askRows>[data-ask-index]:active{transform:scale(.97);background:#bdcdb9!important}
+#bagAsk.conversationTopics #askRows>[data-ask-index]:focus-visible{outline:2px solid #496e5e;outline-offset:2px}
+#bagAsk.conversationTopics .topicVisited{display:block;margin-top:5px;font:600 10px/1.2 system-ui,sans-serif;letter-spacing:.02em;opacity:.75}
+@keyframes topicCardIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics #askRows>[data-ask-index]{animation:none;transition:none}}
+
+.soundMixLabel,.soundMixLabel output{color:var(--dawn-ink)}
+#soundSong{color:var(--dawn-muted)}
+#soundUiMute{background:#e6dbc4;color:var(--dawn-ink);border-color:var(--dawn-edge)}

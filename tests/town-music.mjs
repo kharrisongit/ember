@@ -427,3 +427,16 @@ for(const ios of [false,true]){
  m.c.window.EmberAudio.stopPreview();await m.advance();assert(!song.paused,'Stop restores current gameplay music');
 }
 console.log('PASS: song mixer applies live without restarting on desktop/iPhone; previews survive region checks and restore gameplay music.');
+
+{
+ const m=setup(null,true);m.listeners.pointerdown();await m.advance();
+ const a=m.c.window.EmberAudio,base=m.audible(m.track('Millwood'));
+ a.setMix({music:25,effects:40,uiMuted:true});
+ assert(Math.abs(m.audible(m.track('Millwood'))-base*.25)<1e-8);assert.equal(a.graph().effects.gain.value,.4);assert(a.uiMuted());
+ assert.equal(a.mixState().music,25);assert.equal(a.mixState().effects,40);
+ await m.change('tavern','Thornwell Tavern');assert.equal(a.mixState().music,100,'Music adjustment belongs to the song playing');
+ await m.change('house26','Millwood — The Hearth House');assert.equal(a.mixState().music,25,'Returning restores the song preference');
+ a.setMix({effects:0,uiMuted:false});assert.equal(a.graph().effects.gain.value,0);assert(!a.uiMuted());
+ assert(m.audible(m.track('Millwood'))>0,'Effects mute leaves music playing');
+}
+console.log('PASS: player current-song levels, effects gain and independent UI mute work through iPhone audio graph.');

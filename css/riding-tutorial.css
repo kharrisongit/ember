@@ -13,12 +13,12 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 #ridingHint.slash-prompt{border-color:#ffa56e;background:linear-gradient(115deg,#542936,#261624);color:#fff2e0;box-shadow:0 0 0 4px #261624,0 8px 28px #0009,0 0 30px #fb804650}
 #ridingHint.slash-prompt:before,#ridingHint.slash-prompt:after{background:#ffa56e;color:#361e2a}
 #ridingHint.slash-prompt:after{content:'DRAGON • SLASH'}
-#arenaReady{position:fixed;z-index:951;left:50%;bottom:calc(var(--deck) + 18px);transform:translateX(-50%);width:min(380px,90vw);padding:14px 24px;border:2px solid #ebc77a;border-radius:6px 22px;background:linear-gradient(140deg,#442936f5,#142834f5);color:#fff4d8;text-align:center;box-shadow:0 0 0 3px #101c26,0 8px 28px #0009;cursor:pointer;animation:combatPromptIn .25s ease-out}
+#arenaReady{position:fixed;z-index:951;left:50%;bottom:calc(var(--deck) + 18px);transform:translateX(-50%);width:min(260px,74vw);padding:8px 14px;border:2px solid #ebc77a;border-radius:6px 22px;background:linear-gradient(140deg,#442936f5,#142834f5);color:#fff4d8;text-align:center;box-shadow:0 0 0 3px #101c26,0 8px 28px #0009;cursor:pointer;animation:combatPromptIn .25s ease-out}
 #arenaReady[hidden]{display:none}
 #arenaReady span,#arenaReady strong{display:block}
 #arenaReady .battle-kicker{font:800 10px/1.2 system-ui,sans-serif;letter-spacing:.22em;color:#ebc77a}
-#arenaReady strong{margin:5px 0 9px;font:800 clamp(22px,5.5vw,30px)/1.1 Georgia,serif}
-#arenaReady .battle-confirm{font:600 13px/1.4 system-ui,sans-serif}
-#arenaReady b{display:inline-grid;place-items:center;width:25px;height:25px;margin:0 3px;border-radius:50%;background:#ebc77a;color:#182a38;box-shadow:0 2px 0 #987536;font-size:17px}
+#arenaReady strong{margin:3px 0 5px;font:800 clamp(17px,4vw,20px)/1.1 Georgia,serif}
+#arenaReady .battle-confirm{font:600 11px/1.3 system-ui,sans-serif}
+#arenaReady b{display:inline-grid;place-items:center;width:20px;height:20px;margin:0 3px;border-radius:50%;background:#ebc77a;color:#182a38;box-shadow:0 2px 0 #987536;font-size:14px}
 @keyframes combatPromptIn{from{opacity:0;transform:translate(-50%,12px) scale(.96)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
 @media(prefers-reduced-motion:reduce){#ridingHint.combat-prompt,#arenaReady{animation:none}}

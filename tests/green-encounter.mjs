@@ -67,3 +67,7 @@ console.log('PASS: editing zoom is immediate, including interruption of cinemati
 
 assert(run('fobjs.every(o=>SPR[NAMES[o.s]]&&DEFS[o.s])'),'Every tree in the extended row has drawable art and collision');
 assert(run('[26,34].every(x=>Array.from({length:13},(_,i)=>20+i*3).every(y=>fobjs.some(o=>o.x===x*TS+TS/2&&o.y===(y+1)*TS)))'),'Both rows cover the whole previous gap up to the stump');
+
+run("restoreCameraTarget();cameraPresentation=null;cameraLogical=null;greenCamera=null;editing=false;fade=0;cam={x:0,y:0,z:3};presentCamera(1/60);greenCamera={zoom:3};cam.x=70;cam.y=90;presentCamera(1/60)");
+assert(run('cam.x>0&&cam.x<70&&cam.y>0&&cam.y<90'),'Stump framing eases position even with unchanged zoom');assert.equal(run('cam.z'),3);
+console.log('PASS: same-zoom stump entry pans smoothly without a first-frame jump.');

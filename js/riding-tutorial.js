@@ -192,7 +192,7 @@
     pHp=Math.max(1,Math.min(pHp,pMax-1));potions=Math.max(1,potions);
     saveGame();moveTo('corinHealTalk');
     playScene(['Corin: Ow... I should drink a potion before I go any farther.'],{who:'Corin',after:()=>{
-      moveTo('corinItemsButton','Open the highlighted ITEMS button.');paint();
+      moveTo('corinItemsButton','Open the highlighted BAG button.');paint();
     }});
   }
   function beginRecovery(){
@@ -216,7 +216,7 @@
     say([
       'Aurelius: I am too hurt to fly. A little food will help me recover.',
       'Corin: Nan packed some hare meat for you. Let me get it.'
-    ],()=>{moveTo('itemsButton','Open the highlighted ITEMS button.');overlay(null);paint();});
+    ],()=>{moveTo('itemsButton','Open the highlighted BAG button.');overlay(null);paint();});
   }
   function usedItem(item){
     if(phase==='corinHeal'&&item.key==='potion'){

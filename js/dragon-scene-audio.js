@@ -34,7 +34,7 @@
       const source=graph.context.createBufferSource(),gain=graph.context.createGain();
       voice.source=source;voice.gain=gain;
       source.buffer=buffer;source.loop=loop;gain.gain.value=.7*({ui:.8,roar:.3,distant:.3,door:.65,pickup:.9}[name]??1)*(window.EmberAudioMix?.level('sfx:'+name)??1);
-      source.connect(gain);gain.connect(graph.output);
+      source.connect(gain);gain.connect(graph.effects||graph.output);
       source.onended=()=>{
         if(voices.get(name)===voice){voices.delete(name);done?.();}
         source.disconnect();gain.disconnect();
@@ -75,7 +75,7 @@
   };
   let lastUi=-Infinity;
   const uiClick=()=>{
-    if(document.hidden||performance.now()-lastUi<40)return;
+    if(document.hidden||window.EmberAudio?.uiMuted?.()||performance.now()-lastUi<40)return;
     lastUi=performance.now();
     // Wait for the gesture's audio-unlock listener, including the first title tap.
     Promise.resolve().then(()=>{if(!document.hidden)play('ui',false,true);});
