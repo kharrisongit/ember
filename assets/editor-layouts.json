@@ -97,8 +97,8 @@
         "kind": "actor",
         "key": "millwood:house26:4",
         "identity": "ishelf4",
-        "x": 40,
-        "y": 70,
+        "x": 32,
+        "y": 69,
         "originX": 31,
         "originY": 80
       },
@@ -51929,7 +51929,8 @@
     "4bdbf4a0-278a-454a-a2c2-fc91e0cf1a8f",
     "69888e43-24c0-49ba-8704-f33a2601e17c",
     "5ee7d1eb-4838-40c0-9562-7cc6e3480487",
-    "4d69824c-ee69-4f88-a68d-b3bf72c2a28a"
+    "4d69824c-ee69-4f88-a68d-b3bf72c2a28a",
+    "1ef89369-07cb-4592-a751-aeeb30806a40"
   ],
   "sessions": {
     "witchmoor": {
@@ -101884,6 +101885,124 @@
       "baseFingerprint": "f9402578-6b48059e-5138",
       "base": {},
       "resultHash": "1047d615-c398c7ef-153"
+    },
+    "house26": {
+      "id": "724bcea8-d102-4617-ae1e-e87c8ceb46e8",
+      "sequence": 1,
+      "baseHash": "b2259797-e966aff7-1689",
+      "baseFingerprint": "a35141d0-24705eca-6153",
+      "base": {
+        "actor:millwood:house26:5": {
+          "kind": "actor",
+          "key": "millwood:house26:5",
+          "identity": "iplant0",
+          "deleted": true,
+          "x": 176,
+          "y": 171,
+          "originX": 166.5,
+          "originY": 195
+        },
+        "actor:millwood:house26:2": {
+          "kind": "actor",
+          "key": "millwood:house26:2",
+          "identity": "iplant4",
+          "x": 87,
+          "y": 206,
+          "originX": 32,
+          "originY": 197
+        },
+        "actor:millwood:house26:3": {
+          "kind": "actor",
+          "key": "millwood:house26:3",
+          "identity": "iplant4",
+          "x": 151,
+          "y": 206,
+          "originX": 152,
+          "originY": 197
+        },
+        "actor:millwood:house26:11": {
+          "kind": "actor",
+          "key": "millwood:house26:11",
+          "identity": "Furniture 61_159",
+          "x": 117,
+          "y": 126,
+          "originX": 130.5,
+          "originY": 150
+        },
+        "actor:millwood:house26:9": {
+          "kind": "actor",
+          "key": "millwood:house26:9",
+          "identity": "dining table",
+          "x": 90,
+          "y": 140,
+          "originX": 104.5,
+          "originY": 167
+        },
+        "actor:millwood:house26:8": {
+          "kind": "actor",
+          "key": "millwood:house26:8",
+          "identity": "south chair",
+          "x": 91,
+          "y": 144,
+          "originX": 104,
+          "originY": 167
+        },
+        "actor:millwood:house26:10": {
+          "kind": "actor",
+          "key": "millwood:house26:10",
+          "identity": "Furniture 9_159",
+          "x": 61,
+          "y": 125,
+          "originX": 78.5,
+          "originY": 150
+        },
+        "actor:millwood:house26:7": {
+          "kind": "actor",
+          "key": "millwood:house26:7",
+          "identity": "north chair",
+          "x": 89,
+          "y": 105,
+          "originX": 104,
+          "originY": 134
+        },
+        "actor:millwood:house26:6": {
+          "kind": "actor",
+          "key": "millwood:house26:6",
+          "identity": "Furniture 163_81",
+          "x": 128,
+          "y": 69,
+          "originX": 128,
+          "originY": 77
+        },
+        "actor:millwood:house26:1": {
+          "kind": "actor",
+          "key": "millwood:house26:1",
+          "identity": "ifire0",
+          "x": 91,
+          "y": 75,
+          "originX": 88,
+          "originY": 80
+        },
+        "actor:millwood:house26:4": {
+          "kind": "actor",
+          "key": "millwood:house26:4",
+          "identity": "ishelf4",
+          "x": 40,
+          "y": 70,
+          "originX": 31,
+          "originY": 80
+        },
+        "actor:millwood:house26:0": {
+          "kind": "actor",
+          "key": "millwood:house26:0",
+          "identity": "Furniture 12_280",
+          "x": 91,
+          "y": 163,
+          "originX": 113,
+          "originY": 187
+        }
+      },
+      "resultHash": "ab9fa0ae-1f504e1a-1689"
     }
   }
 }
