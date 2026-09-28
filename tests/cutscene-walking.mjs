@@ -28,13 +28,13 @@ for(let i=0;i<60;i++){
  assert(c.actor.x>=previous&&c.actor.x-previous<=110/60+.001,'Nan walks east without teleporting');
 }
 assert.equal(c.actor.x,80);assert.equal(c.actor.goto,null);
-// Nan keeps walking after dialogue and disappears only beyond the west edge.
-run('scene=null;actor.nanDeparting=true;actor.scriptWalking=true;actor.noTalk=true;cam.x=0');
+// Nan returns south after dialogue and disappears only when her full sprite exits.
+run('scene=null;actor.nanDeparting=true;actor.scriptWalking=true;actor.noTalk=true;cam.y=0;VH=300;cam.z=2');
 assert(run('npcHere(actor)'),'Gift completion does not hide a departing Nan');
 for(let i=0;i<160&&!c.actor.away;i++){
- const previous=c.actor.x;run('stepWalkers(1/60)');
- assert.equal(c.actor.y,40);assert(Math.abs(previous-c.actor.x-72/60)<.001,'Steady westward walk-off');
- if(c.actor.x+24>=0)assert(!c.actor.away,'Nan stays visible until her whole sprite exits');
+ const previous=c.actor.y;run('stepWalkers(1/60)');
+ assert.equal(c.actor.x,80);assert(Math.abs(c.actor.y-previous-72/60)<.001,'Steady southward walk-off');
+ if(c.actor.y-64<=150)assert(!c.actor.away,'Nan stays visible until her whole sprite exits');
 }
 assert(c.actor.away);assert.equal(c.actor.nanDeparting,false);
 // Walking actors face the route, even when Corin stands in another direction.

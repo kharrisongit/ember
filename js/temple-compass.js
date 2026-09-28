@@ -244,7 +244,7 @@ function drawTempleCompass() {
   ctx.restore();
 }
 
-// Meet Corin as soon as he crosses back into Millwood after the hatch.
+// Meet Corin just south of Millwood's houses after the hatch.
 function millwoodDepartureArea(){
   const list=typeof features!=='undefined'?features:MD?.features||[];
   return list.find(f=>f.kind==='area'&&(f.label==='Millwood'||f.place==='Millwood'))||null;
@@ -266,6 +266,11 @@ function stepNanDeparture(){
   const town=millwoodDepartureArea();
   const inTown=town&&P.x>=town.x0*TS&&P.x<=town.x1*TS&&P.y>=town.y0*TS&&P.y<=town.y1*TS;
   if(!inTown)return;
+  const houses=(MD.doors||[]).filter(d=>/^house\d+$/.test(d.to)&&
+    d.x>=town.x0&&d.x<=town.x1&&d.y>=town.y0&&d.y<=town.y1);
+  const houseBottom=Math.max(town.y0*TS,...houses.map(d=>
+    d.triggerRect?d.triggerRect.y+d.triggerRect.h:(d.y+1)*TS));
+  if(P.y<houseBottom+TS)return; // Clear the last doorstep by one tile.
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
   if(!nan)return;
@@ -286,11 +291,13 @@ function startNanFarewell(nan){
   dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
   refreshWingBtn();
   nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
-  const target=[P.x-22,P.y];
+  const target=[P.x,P.y+36];
   placeDragonBehindCorin(target);
-  // Spawn beyond both the current and following camera's west edge. Keep
-  // Corin and the picture in place; Nan enters naturally without a fade.
-  nan.x=Math.min(cam.x,P.x-VW/cam.z/2)-24;nan.y=P.y;
+  // Start fully below both the current and following camera views, then
+  // walk north to Corin without moving him or cutting away.
+  const sprite=SPR[nan.packSpr+'_walk_u']||SPR[nan.packSpr+'_idle_d'];
+  const height=sprite?.[3]||64;
+  nan.x=P.x;nan.y=Math.max(cam.y+VH/cam.z,P.y+VH/cam.z/2)+height+1;
   nan.home=[nan.x,nan.y];
   nan.goto=target;nan.straightSceneWalk=true;nan.away=false;
   faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
@@ -298,7 +305,7 @@ function startNanFarewell(nan){
     {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
       nan.straightSceneWalk=false;nan.goto=null;nan.nanDeparting=true;
       nan.scriptWalking=true;nan.noTalk=true;
-      faceToward(nan,nan.x-32,nan.y);
+      faceToward(nan,nan.x,nan.y+32);
     },hold:()=>{
       if(nan.goto)return false;
       nan.scriptWalking=false;

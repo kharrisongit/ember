@@ -6731,9 +6731,10 @@ function stepWalkers(dt) {
   for (const m of npcs) {
     if(!npcHere(m))continue;
     if(m.nanDeparting){
-      // Keep her visible and walking west until her whole sprite leaves view.
-      faceToward(m,m.x-32,m.y);m.x-=72*dt;m.scriptWalking=true;
-      if(m.x+24<cam.x){m.away=true;m.nanDeparting=false;m.scriptWalking=false;m.goto=null;}
+      // Return south the way she approached; hide only after her head exits.
+      faceToward(m,m.x,m.y+32);m.y+=72*dt;m.scriptWalking=true;
+      const sprite=SPR[m.packSpr+'_walk_d']||SPR[m.packSpr+'_idle_d'];
+      if(m.y-(sprite?.[3]||64)>cam.y+VH/cam.z){m.away=true;m.nanDeparting=false;m.scriptWalking=false;m.goto=null;}
       continue;
     }
     if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
