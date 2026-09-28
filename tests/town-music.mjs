@@ -393,3 +393,15 @@ combat.c.deadShown=false;combat.sync();await combat.advance();assert(combat.trac
 assert.match(html.match(/<audio id="emberfellBattleBgm"[^>]+>/)[0],/\bloop\b/);
 assert(fs.statSync(new URL('../assets/audio/heated-battle.m4a',import.meta.url)).size>100000,'Delivered battle recording is installed');
 console.log('PASS: battle cue starts at readiness, survives repeated updates, respects royal scenes, restores exploration, and clears on map changes/death.');
+
+// A partial AAC encode can be large yet unplayable without its MP4 sample index.
+const battleBytes=fs.readFileSync(new URL('../assets/audio/heated-battle.m4a',import.meta.url)),atoms=[];
+for(let offset=0;offset<battleBytes.length;){
+ assert(offset+8<=battleBytes.length,'Complete MP4 atom header');
+ const size=battleBytes.readUInt32BE(offset),kind=battleBytes.toString('ascii',offset+4,offset+8);
+ assert(size>=8&&offset+size<=battleBytes.length,'Complete, finalized '+kind+' atom');
+ atoms.push(kind);offset+=size;
+}
+assert(atoms.includes('moov')&&atoms.includes('mdat'),'Battle track contains both the sample index and audio');
+assert(atoms.indexOf('moov')<atoms.indexOf('mdat'),'Sample index is at the front for prompt playback');
+console.log('PASS: battle recording is finalized and ready for streaming, not a partial encode.');

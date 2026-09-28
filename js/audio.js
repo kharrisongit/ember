@@ -286,6 +286,8 @@ let routeMusicIntroPlayed=false;
     }
     applyVolumes();
     prepareLoop(titleScreen()?title:reveal);
+    // Decode during the initial gesture so arena readiness does not wait on a download.
+    prepareLoop(battle);
     if(audioContext.state!=='running'){
       try{Promise.resolve(audioContext.resume()).catch(()=>{});}catch(e){}
     }
