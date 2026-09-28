@@ -40,8 +40,23 @@
     const z=Math.max(.1,Math.min(preferred,(safe.right-safe.left)/Math.max(1,right-left+12),(safe.bottom-safe.top)/Math.max(1,bottom-top+12)));
     return {z,x:(left+right)/2-(safe.left+safe.right)/2/z,y:(top+bottom)/2-(safe.top+safe.bottom)/2/z};
   }
-  let active=false,portraits=null,lastName='',lastCorinKit=null;
-  function hide(){active=false;document.body.classList.remove('conversation-framed');if(portraits)portraits.hidden=true;return null;}
+  // Reserve both possible dialogue portrait positions. The single #face remains
+  // owned by showDialoguePortrait, so changing speakers never changes the camera.
+  function conversationFrame(actors,viewport,preferred){
+    const {width,height,panelTop,portraitSize,menu}=viewport;
+    const bottom=Math.min(height,panelTop)-16;
+    const middle={left:portraitSize+18,right:width-portraitSize-18,top:24,bottom};
+    if(menu)return framing(actors,{left:18,right:width-18,top:24,bottom},preferred);
+    const between=framing(actors,middle,preferred);
+    // On narrow phones there is more room above the portrait corners. Keep the
+    // pair horizontally centered there rather than shrinking them to fit a slit.
+    const above={left:18,right:width-18,top:24,bottom:bottom-portraitSize};
+    if(above.bottom<=above.top+48)return between;
+    const upper=framing(actors,above,preferred);
+    return upper.z>between.z+.01?upper:between;
+  }
+  let active=false;
+  function hide(){active=false;return null;}
   function frame(){
     const menu=!!(ask?.npcConversation||ask?.dragonConversation);
     const dialogue=sayEl.classList.contains('on');
@@ -58,24 +73,13 @@
     if(!name||!portraitFor(name))return hide();
     const canvas=cv.getBoundingClientRect(),panel=document.getElementById(menu?'bagAsk':'say').getBoundingClientRect();
     if(!canvas.width||!canvas.height)return hide();
-    if(!portraits){
-      portraits=document.createElement('div');portraits.id='conversationPortraits';portraits.setAttribute('aria-hidden','true');
-      for(const side of ['npc','corin']){const p=document.createElement('div');p.className='conversationPortrait '+side;portraits.append(p);}
-      document.body.append(portraits);
-    }
-    if(lastCorinKit!==smithUpgrade){paintSmallPortrait(portraits.children[1],'Corin');lastCorinKit=smithUpgrade;}
-    if(lastName!==name){paintSmallPortrait(portraits.children[0],name);lastName=name;}
-    portraits.hidden=false;active=true;document.body.classList.add('conversation-framed');
-    portraits.children[0].classList.toggle('speaking',menu||typeWho!== 'Corin');
-    portraits.children[1].classList.toggle('speaking',typeWho==='Corin');
-    const bottom=panel.top,portraitWidth=innerHeight<=520?82:Math.min(144,Math.max(82,innerWidth*.13));
-    portraits.style.bottom=Math.max(0,innerHeight-bottom)+'px';
+    active=true;
     const sx=VW/canvas.width,sy=VH/canvas.height;
-    const safe={left:(portraitWidth+18)*sx,right:VW-(portraitWidth+18)*sx,top:24*sy,
-      bottom:Math.max(80,Math.min(canvas.height,bottom-canvas.top)-16)*sy};
+    const portraitSize=innerHeight<=600?112:144;
     const actors=[{x:P.x,y:P.y,width:28,height:40},
       {x:actor.x,y:actor.y,width:actor===dragon?84:32,height:actor===dragon?62:48}];
-    return framing(actors,safe,Math.min(5.5,playZoom()*1.22));
+    return conversationFrame(actors,{width:VW,height:VH,panelTop:(panel.top-canvas.top)*sy,
+      portraitSize:portraitSize*Math.max(sx,sy),menu},Math.min(5.5,playZoom()*1.22));
   }
-  window.EmberConversationView={frame,framing,profile,active:()=>active};
+  window.EmberConversationView={frame,framing,conversationFrame,profile,active:()=>active};
 })();

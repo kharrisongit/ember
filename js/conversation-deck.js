@@ -43,7 +43,8 @@
     identity.append(node('strong','deckName',name));
     const sub=node('span','deckProgressText',`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
     const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
-    identity.append(node('small','deckProfileHint',ask._profileOpen?'Close character profile ▴':'Character profile ▾'));
+    identity.append(node('span','deckProfileHint',ask._profileOpen?'Close profile ▴':'View profile ▾'));
+    profileButton.title=ask._profileOpen?'Tap the banner to return to topics':'Tap the banner for biography and character details';
     profileButton.append(portrait,identity,ring);
     const controls=node('div','deckHeaderControls');
     const parent=ask.back&&ask.topicScope!=='thornwell-audience';

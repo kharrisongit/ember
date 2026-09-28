@@ -1,23 +1,25 @@
 /* A manuscript opens upward from the controller deck. Height is animated, so
-   portraits and the visible world follow its actual moving upper edge. */
-:root{--topic-height:min(52dvh,max(330px,44dvh));--topic-opening-height:min(var(--deck),var(--topic-height))}
+   the camera follows its actual moving upper edge. */
+:root{--topic-height:60dvh;--topic-opening-height:min(var(--deck),var(--topic-height))}
 #bagAsk.conversationTopics.journalDeck{height:var(--topic-height);padding:0 0 max(14px,env(safe-area-inset-bottom))!important;background:var(--manuscript-paper)!important;border-top:3px double var(--manuscript-edge)!important;color:var(--manuscript-ink);overflow-x:hidden;animation:conversationGrow .62s cubic-bezier(.2,.7,.2,1) both;scroll-padding-top:120px}
 @keyframes conversationGrow{from{height:var(--topic-opening-height)}to{height:var(--topic-height)}}
 #bagAsk.conversationTopics.journalDeck #askRows{width:auto!important;max-width:none!important;margin:0!important;padding:0 12px!important;box-sizing:border-box;gap:9px}
-#bagAsk.conversationTopics.journalDeck>.deckHeader{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;width:100%;max-width:none;min-height:86px;margin:0!important;padding:0!important;box-sizing:border-box;border:0;border-bottom:3px double #8e683b;background:var(--manuscript-paper)!important;box-shadow:0 4px 12px #51382020;color:var(--manuscript-ink)!important;text-shadow:none;isolation:isolate}
-#bagAsk .deckProfileToggle{display:flex;align-items:center;gap:13px;flex:1;min-width:0;min-height:83px;text-align:left;padding:8px 12px 8px 6px;margin:0;border:0;border-radius:0;background:transparent;color:inherit;cursor:pointer}
+#bagAsk.conversationTopics.journalDeck>.deckHeader{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;width:100%;max-width:none;min-height:100px;margin:0!important;padding:0!important;box-sizing:border-box;border:0;border-bottom:3px double #8e683b;background:var(--manuscript-paper)!important;box-shadow:0 4px 12px #51382020;color:var(--manuscript-ink)!important;text-shadow:none;isolation:isolate}
+#bagAsk .deckProfileToggle{display:flex;align-items:center;gap:13px;flex:1;min-width:0;min-height:97px;box-sizing:border-box;text-align:left;padding:8px 12px 8px 6px;margin:0;border:0;border-radius:0;background:transparent;color:inherit;cursor:pointer}
 #bagAsk .journalPortrait{flex:0 0 64px;width:64px;height:64px;border-radius:5px 20px 5px 20px;background-color:#c4a475;border:1px solid #886030;box-shadow:inset 0 0 0 2px #ead1a1,0 2px 5px #51382033}
 #bagAsk .deckIdentity .deckEyebrow,#bagAsk .deckEyebrow{color:#825e35;font:600 9px/1.3 system-ui;letter-spacing:.12em;text-transform:uppercase}
-#bagAsk .deckName{font:600 22px/1.1 var(--manuscript-serif);color:#362719;letter-spacing:0;text-transform:none;margin:3px 0}
+#bagAsk .deckName{font:600 22px/1.1 var(--manuscript-serif);color:#362719;letter-spacing:0;text-transform:none;margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #bagAsk .deckProgressText{color:#705535;font:11px/1.3 system-ui}
-#bagAsk .deckProfileHint{display:block;color:#896235;font:10px/1.3 system-ui;margin-top:3px}
+#bagAsk .deckProfileHint{display:flex;width:max-content;max-width:100%;align-items:center;min-height:25px;margin-top:5px;padding:3px 10px;box-sizing:border-box;border:1px solid #61401f;border-radius:5px;background:linear-gradient(#91693e,#6d4929);color:#fff1d2;font:700 12px/1.25 var(--manuscript-serif);box-shadow:inset 0 1px #e6c38a55,0 2px 3px #51382022;white-space:nowrap;transition:background .18s,box-shadow .18s}
+#bagAsk .deckProfileToggle:hover .deckProfileHint,#bagAsk .deckProfileToggle:focus-visible .deckProfileHint{background:#51361e;box-shadow:0 0 0 2px #d7b477}
+#bagAsk .deckProfileToggle[aria-expanded=true] .deckProfileHint{background:#e3c79a;color:#50351b}
 #bagAsk .deckReadRing{background:conic-gradient(#9b6930 var(--read),#b59b6f55 0);margin-left:auto}
 #bagAsk .deckReadRing span{background:#eddab3;color:#66461f}
 .deckHeaderControls{display:flex;align-items:center;gap:7px;padding:8px 10px 8px 0}
 #bagAsk .deckClose,#bagAsk .deckBack{position:static;align-self:center;min-height:36px;min-width:36px;padding:4px 9px;border:1px solid #997547;border-radius:4px;background:#ead5ab;color:#50371f;cursor:pointer}
 #bagAsk .deckBack{font:600 12px var(--manuscript-serif);white-space:nowrap}
 #bagAsk .deckClose{font:25px/1 Georgia}
-#bagAsk .deckTabs{top:86px;background:#ebd7af;margin:0 -12px;padding:8px 12px;box-shadow:0 4px 8px #51382017}
+#bagAsk .deckTabs{top:100px;background:#ebd7af;margin:0 -12px;padding:8px 12px;box-shadow:0 4px 8px #51382017}
 #bagAsk .deckTab{background:#f5e4c2;color:#6b4b28;border-color:#ad8956;border-radius:5px;font-family:var(--manuscript-serif);font-size:12px}
 #bagAsk .deckTab[aria-pressed=true]{background:#765333;color:#fff0cf;border-color:#684424}
 #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{background:linear-gradient(115deg,#f6e7c9,#e7cfa2)!important;color:#3e2b19!important;border-color:#b18b53!important;border-left-color:#bd985e!important;border-radius:3px 10px 10px 3px!important;min-height:76px;box-shadow:inset 0 1px #fff6dc,0 2px 2px #6c482014}
@@ -32,11 +34,11 @@
 .deckProfileFacts{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font:12px/1.5 system-ui;margin:12px 0}.deckProfileFacts dt{color:#866238}.deckProfileFacts dd{margin:0;color:#51361e}
 #bagAsk .deckProfile blockquote{max-width:760px;margin:6px 0 12px;padding:5px 0 5px 14px;border-left:2px solid #ac8146;font:italic 15px/1.5 var(--manuscript-serif);color:#715133}
 @keyframes profileUnfold{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-#conversationPortraits{position:fixed;left:0;right:0;z-index:59;height:clamp(82px,13vw,144px);pointer-events:none}
-#conversationPortraits[hidden]{display:none}.conversationPortrait{position:absolute;bottom:0;width:clamp(82px,13vw,144px);height:100%;background-repeat:no-repeat;filter:brightness(.82);opacity:.9;transition:filter .25s,opacity .25s}
-.conversationPortrait.npc{left:0}.conversationPortrait.corin{right:0;transform:scaleX(-1)}.conversationPortrait.speaking{filter:brightness(1);opacity:1}
-body.conversation-framed #face{display:none!important}body.conversation-framed #sayname{left:50%!important;right:auto!important;transform:translateX(-50%);max-width:calc(100vw - 2 * clamp(82px,13vw,144px) - 24px);overflow:hidden;text-overflow:ellipsis}#face.left{left:0!important}#face.right{right:0!important}
+/* Dialogue keeps its original single portrait and opposite speaker nameplate.
+   Topic menus contain only the small portrait inside their profile banner. */
+#face.left{left:0!important}#face.right{right:0!important}
+body.topics-open #face,body.topics-open #sayname{display:none!important}
 #bagAsk button:focus-visible{outline:2px solid #80512d;outline-offset:-3px}
 @media(max-width:420px){#bagAsk .deckReadRing{display:none}#bagAsk .deckName{font-size:19px}#bagAsk .deckProfileToggle{gap:8px;padding-right:4px}#bagAsk .deckHeaderControls{gap:4px;padding-right:6px}#bagAsk .journalPortrait{width:54px;height:62px;flex-basis:54px}#bagAsk .deckBack{padding:4px 6px}#bagAsk .deckIdentity .deckEyebrow{font-size:8px}}
-@media(max-height:520px){:root{--topic-height:52dvh}#bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:64px}#bagAsk .deckProfileToggle{min-height:61px;padding-top:4px;padding-bottom:4px}#bagAsk .journalPortrait{width:48px;height:48px;flex-basis:48px}#bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity .deckEyebrow{display:none}#bagAsk .deckTabs{top:64px;padding-top:5px;padding-bottom:5px}#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:62px}#conversationPortraits{height:82px}.conversationPortrait{width:82px}}
-@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk .deckProfile,.conversationPortrait{animation:none!important;transition:none!important}}
+@media(max-height:520px){:root{--topic-height:60dvh}#bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:80px}#bagAsk .deckProfileToggle{min-height:77px;padding-top:4px;padding-bottom:4px}#bagAsk .journalPortrait{width:48px;height:48px;flex-basis:48px}#bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity .deckEyebrow{display:none}#bagAsk .deckTabs{top:80px;padding-top:5px;padding-bottom:5px}#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:62px}}
+@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk .deckProfile,#bagAsk .deckProfileHint{animation:none!important;transition:none!important}}
