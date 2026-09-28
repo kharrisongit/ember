@@ -67,7 +67,7 @@
 </style>
 <link rel="stylesheet" href="css/title-screen.css?v=20260927-hatch-save-controls1">
 <link rel="stylesheet" href="css/controls-theme.css?v=20260927-dawn1">
-<link rel="stylesheet" href="css/menu-theme.css?v=20260927-thornwell-cast">
+<link rel="stylesheet" href="css/menu-theme.css?v=20260928-topic-banner">
 <link rel="stylesheet" href="css/riding-tutorial.css?v=20260927-arena5-farewell1">
 </head>
 <body>
@@ -186,6 +186,7 @@
      box-shadow:0 4px 0 rgba(0,0,0,.28);padding:6px;
      font:13px/1.5 ui-monospace,monospace;color:#33302a">
   <div id="askRows"></div>
+  <div id="topicScrollHint" hidden aria-hidden="true"><span>▼</span></div>
 </div>
 <div id="dead" style="position:absolute;inset:0;z-index:12;display:none;
      background:#07060a;color:#e8ddc8;
@@ -422,10 +423,10 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/ghost-following.js?v=20260927-spirit-palette1"></script>
 <script src="js/merchant-shop.js?v=20260927-thornwell-cast"></script>
 <script src="js/inventory-icons.js?v=20260926-shops-journey-items"></script>
-<script src="js/temple-compass.js?v=20260928-straight-cutscenes"></script>
+<script src="js/temple-compass.js?v=20260928-no-fade-arrival"></script>
 <script src="js/millwood-interiors.js?v=20260928-open-face-steady-breath"></script>
 <script src="js/generated/game-part-1.js?v=20260927-cast-quests" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260928-straight-cutscenes" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260928-west-clearing" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260925-deer-warm-return"></script>
 <script src="js/hollybeck-villagers.js?v=20260926-original-winter"></script>
@@ -438,10 +439,10 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/story-dialogue.js?v=20260927-context"></script>
 <script src="js/dragon-dialogue.js?v=20260927-lore1"></script>
 <script src="assets/portraits/manifest.js?v=20260927-thornwell-cast"></script>
-<script src="js/dialogue-portraits.js?v=20260927-thornwell-cast"></script>
+<script src="js/dialogue-portraits.js?v=20260928-aurelius-two-horns"></script>
 <script src="js/quest-map.js?v=20260927-cast-quests"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20260927-thornwell-cast" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260928-topic-banner" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the

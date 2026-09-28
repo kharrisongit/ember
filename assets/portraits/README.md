@@ -40,3 +40,8 @@ painted portrait as style reference. The women retain their sprite hair, skin,
 and clothing colors; Prue is young with long white hair and bangs. Bors retains
 Mattock's original portrait and stable editor identity. All portrait packs and
 individual overrides now preload during the loading/title screens.
+
+Aurelius's individual `aurelius.webp` portrait was edited with built-in imagegen
+on September 28 to retain exactly two head horns, matching the sprite.
+His red scales, pale throat, wings, pose and painted portrait style are preserved.
+The edit prompt is recorded in `aurelius-two-horns-prompt.txt`.

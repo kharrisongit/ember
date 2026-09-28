@@ -2270,7 +2270,6 @@ function loadMap(id, fresh, discardDraft=false) {
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
-  if(typeof prepareNanDeparture==='function')prepareNanDeparture();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
@@ -6279,12 +6278,12 @@ function beginHatchScene(m) {
   m.goto = null;
   P.moving = false;
   royalBlackout(HATCH_LINES[0], () => {
-    // Stage Maddock west and Corin east for the north-then-east approach.
-    m.x = ELDER_WELL[0] * TS + TS / 2;
-    // Leave room south of the well for the straight northern walking lane.
-    m.y = ELDER_WELL[1] * TS + TS * 3;
+    // Stage Corin west of Maddock for the north-then-west approach.
+    // Use the open clearing west of the well, above the southern tree crowns.
+    m.x = (ELDER_WELL[0] - 5) * TS + TS / 2;
+    m.y = ELDER_WELL[1] * TS + TS;
     m.home = [m.x, m.y]; m.goto = null; m.scriptWalking = false;
-    P.x = m.x + TS * 3; P.y = m.y; P.act = null;
+    P.x = m.x - TS * 3; P.y = m.y; P.act = null;
     clearPadInputs();
     hatchCamera = { zoom: cam.z, returnT: 0 };
     camFree = true;
@@ -6367,8 +6366,8 @@ function stepHatchScene(dt) {
   }
   if(scene.i===10&&!revealing&&m&&!hatchScene.maddockArrived){
     if(!hatchScene.maddockPath){
-      // The blackout places Corin east of Maddock. Use exactly two legs:
-      // one or two steps north, then east to Corin's column. The scene owns
+      // The blackout places Corin west of Maddock. Use exactly two legs:
+      // one or two steps north, then west to Corin's column. The scene owns
       // this movement; grid pathfinding must not add diagonal detours.
       const northY=P.y-26;
       hatchScene.maddockPath=[[m.x,northY],[P.x,northY]];
@@ -6464,7 +6463,7 @@ function stepDragonIntroduction(){
   // Speak as Corin leaves Maddock's clearing after the hatch and walk-off.
   // The fixed fallback also works when loading an older save before the intro.
   const origin=dragon.introOrigin||[SPOT.elder[0]*TS,SPOT.elder[1]*TS];
-  if(Math.hypot(P.x-origin[0],P.y-origin[1])<10*TS)return false;
+  if(Math.hypot(P.x-origin[0],P.y-origin[1])<18*TS)return false;
   dragonIntroArmed=true;
   P.act=null;dragon.moving=false;
   faceCorinAt(dragon.x,dragon.y);

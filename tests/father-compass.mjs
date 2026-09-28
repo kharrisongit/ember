@@ -41,31 +41,33 @@ console.log('PASS: Nanâ€™s heirloom, family history, dormant ownership, transiti
 Object.assign(c,{MAPID:'world',TS:16,hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
  W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null,on:true},dragonHere:()=>true,dragonCanStand:()=>true,direction4:()=> 's',
  pendingActorStage:null,cam:{x:0,y:0,z:1},VW:400,VH:300,clampCam(){},faceCorinAt(){},refreshWingBtn(){},standableNear:(x,y)=>[x,y],clearPadInputs(){},running:false,canNpcStand:()=>true,maddockWalkPath:(n,t)=>[t],faceToward(){},setMounted:()=>{c.mounted=false;},dragonGround:()=>true,startTransition:()=>{c.dragon.tr={kind:'down'};}});
-const finishBlackout=()=>{assert.equal(c.fadeDir,1);assert.equal(typeof c.pendingActorStage,'function');c.fade=1;c.fadeDir=0;const stage=c.pendingActorStage;c.pendingActorStage=null;stage();c.fadeDir=-1;assert.equal(c.scene.hold(),false,'No approach behind fade');c.fade=0;c.fadeDir=0;c.scene.hold();};
+const startApproach=()=>{assert.equal(c.fadeDir,0,'No farewell fade');assert.equal(c.pendingActorStage,null,'No blackout staging');assert(c.scene);assert.equal(c.scene.hold(),false,'Dialogue waits for Nan to arrive');};
 c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
-c.P={x:c.npcs[0].x+30,y:c.npcs[0].y};c.stepNanDeparture();finishBlackout();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
+assert(c.npcs[0].away,'Nan has no visible waiting presence');c.P={x:31*16,y:429*16};c.stepNanDeparture();startApproach();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 assert.equal(run('templeCompass.owned'),false,'gift waits for its dialogue line');c.nanGiftBeat(6);c.nanGiftBeat(12);assert.equal(run('templeCompass.owned'),true);
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
 
 c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};
-c.stepNanDeparture();assert.equal(c.mounted,true,'Dismount is hidden until full black');finishBlackout();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr,null,'No visible landing animation');
+c.stepNanDeparture();startApproach();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr,null,'No visible landing animation');
 [nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
 
 // Entering the town boundary or passing the house must not freeze Corin.
 for(const [x,y]of [[30,397],[30,407],[60,425],[67,430],[14,420]]){
  c.restoreFatherCompass();c.scene=null;c.dragonIntroDone=false;c.mounted=false;c.dragon.air=false;c.dragon.tr=null;
- c.P={x:x*16,y:y*16};c.stepNanDeparture();
+ c.npcs=[];c.P={x:x*16,y:y*16};c.stepNanDeparture();
+ assert.equal(c.npcs.length,0,'No outdoor Nan before reaching the plaza');
  assert.equal(c.scene,null,'No early farewell at '+x+','+y);
 }
 // From each approach, the central plaza is the encounter point.
 for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
  c.restoreFatherCompass();c.scene=null;c.npcs=[];c.prepareNanDeparture();
- const waiting=c.npcs[0];assert(Math.hypot(waiting.x-31*16,waiting.y-428.5*16)<=3*16,'Nan waits near the center');
- c.P={x:x*16,y:y*16};c.stepNanDeparture();finishBlackout();assert(c.scene,'Plaza triggers farewell');
+ const waiting=c.npcs[0];assert(waiting.away,'Nan stays hidden until the encounter');
+ c.P={x:x*16,y:y*16};const corin={...c.P},camera={...c.cam};c.stepNanDeparture();startApproach();assert(c.scene,'Plaza triggers farewell');
+ assert.deepEqual([c.P.x,c.P.y],[corin.x,corin.y],'Corin stays in place without a fade');assert.deepEqual(c.cam,camera,'Camera stays in place');
  assert((waiting.goto[0]-c.P.x)*(c.dragon.x-c.P.x)+(waiting.goto[1]-c.P.y)*(c.dragon.y-c.P.y)<0,'Dragon stands behind Corin, opposite Nan');
  assert(Math.hypot(c.dragon.x-c.P.x,c.dragon.y-c.P.y)>=40,'Dragon has room behind Corin');
  assert(waiting.x<c.cam.x,'Nan starts beyond the west edge');
@@ -86,7 +88,7 @@ console.log('PASS: Nan responds naturally to seeing the dragon or hearing Corinâ
 // A reload between gifts preserves the compass and still delivers the meat.
 c.restoreFatherCompass({owned:true,awakened:false,meatGiven:false});
 const meat=c.hareMeat;c.scene=null;c.fade=0;c.fadeDir=0;c.npcs=[];c.P={x:31*16,y:429*16};
-c.stepNanDeparture();finishBlackout();assert.equal(c.scene.i,8);
+c.stepNanDeparture();startApproach();assert.equal(c.scene.i,8);
 assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),true);assert.equal(c.hareMeat,meat+3);
 assert.equal(c.nanGiftBeat(12),false);
 console.log('PASS: gifts have separate dialogue beats and icons, dragon stays behind Corin from each approach, and partial-gift saves resume without duplicates.');

@@ -1,0 +1,5 @@
+Tool: built-in image_gen (transparent background).
+Edit target: original Aurelius portrait, pack 1, cell 1.
+Output: assets/portraits/aurelius.webp (384px game asset).
+
+Use case: precise-object-edit. Edit target: the attached existing painted dialogue portrait of Aurelius, a young red dragon, for the Emberfell game. Correct only the spikes on his HEAD: he must have exactly TWO ivory/gold horns, one on either side of the top/back of the skull. Keep the two large swept-back horns. Remove every extra head horn, little forehead spike, crown spike and cheek spike; replace their bases naturally with smooth red scales. His head should have a clean silhouette with precisely two horns total. Preserve his identity, original face and expression, muzzle, eyes, red scale colors, pale segmented throat and belly, seated pose, wings, body proportions, painted fantasy RPG portrait style and chest-up composition. Neck/body detailing can remain, but no other horns on the head. No text, no border. True transparent background, crisp clean alpha edges. Center full portrait inside a square canvas with a little clear margin; do not crop the wings or horns.

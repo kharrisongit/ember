@@ -45,7 +45,7 @@ function prepareDialoguePortraitCast(m,id) {
     }
   }
 }
-const PORTRAIT_FILES={Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
+const PORTRAIT_FILES={Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
 const portraitFileImages=new Map();
 const portraitPackPromises=new Map(), portraitPackImages=new Map();
 const portraitPackSources=new Map();

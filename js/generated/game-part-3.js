@@ -4943,6 +4943,20 @@ function refreshBag() {
   }
 }
 let ask = null, askPick = 0;
+function updateTopicScrollHint() {
+  const box=document.getElementById('bagAsk'),hint=document.getElementById('topicScrollHint');
+  if(!box||!hint)return;
+  hint.hidden=!(ask?.npcConversation||ask?.dragonConversation)||box.scrollHeight-box.clientHeight-box.scrollTop<=3;
+}
+function wireTopicScrollHint(box) {
+  if(box.topicScrollWired)return;
+  box.topicScrollWired=true;
+  box.addEventListener('scroll',updateTopicScrollHint,{passive:true});
+  if(typeof ResizeObserver!=='undefined'){
+    const observer=new ResizeObserver(updateTopicScrollHint);
+    observer.observe(box);observer.observe(document.getElementById('askRows'));
+  }
+}
 function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();const back=ask?.back;askShut();if(back)back();}
 function askShut() {
   hideMerchantShop();
@@ -4959,6 +4973,7 @@ function askDraw() {
   if (!el || !rows) return;
   el.classList.toggle("dragonTalk",!!ask?.dragonConversation);
   el.classList.toggle("conversationTopics",!!(ask?.npcConversation||ask?.dragonConversation));
+  wireTopicScrollHint(el);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
   wireBagDrag("bagAsk");
@@ -5023,6 +5038,7 @@ function askDraw() {
     d.addEventListener("click", (e) => { e.stopPropagation(); if(el.moved)return; askPick = i; askTake(); });
     rows.appendChild(d);
   });
+  updateTopicScrollHint();
 }
 function askStep(d) {
   if (!ask) return;
@@ -5038,8 +5054,11 @@ function askStep(d) {
   askDraw();
   const box=document.getElementById("bagAsk"), row=box.querySelector('[data-ask-index="'+askPick+'"]');
   if(row){const a=row.getBoundingClientRect(),b=box.getBoundingClientRect();
-    if(a.top<b.top+6)box.scrollTop-=b.top+6-a.top;
-    else if(a.bottom>b.bottom-6)box.scrollTop+=a.bottom-b.bottom+6;}
+    const heading=box.querySelector('.topicSpeaker'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+6;
+    const bottom=b.bottom-(document.getElementById('topicScrollHint')?.hidden===false?24:6);
+    if(a.top<top)box.scrollTop-=top-a.top;
+    else if(a.bottom>bottom)box.scrollTop+=a.bottom-bottom;}
+  updateTopicScrollHint();
 }
 const USE_SAID = {
   mark:   ["it_mark",   "Corin planted the Grave Marker!"],

@@ -237,29 +237,18 @@ function prepareNanDeparture(){
   if(!home||!door)return;
   const r=door.triggerRect||{x:door.x*TS,y:door.y*TS,w:16,h:16};
   const visitor={...home,x:r.x+r.w/2+26,y:r.y+r.h+9,f:'d',kf:'d',stationary:false,packWalk:true,packDirections:true,houseWalk:null,scriptWalking:true,patrol:null,goto:null,
-    fatherCompassVisitor:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false};
-  const town=millwoodDepartureArea();
-  if(town){
-    const cx=(town.x0+town.x1)*TS/2,cy=(town.y0+town.y1)*TS/2;
-    // Wait on walkable ground beside the plaza, rather than across town.
-    let spot=null;
-    for(let radius=0;radius<=3&&!spot;radius++)for(let i=0;i<8;i++){
-      const x=cx-2*TS+Math.cos(i*Math.PI/4)*radius*TS,y=cy+Math.sin(i*Math.PI/4)*radius*TS;
-      if(canNpcStand(x,y,visitor)){spot=[x,y];break;}
-    }
-    if(spot)[visitor.x,visitor.y]=spot;
-  }
+    fatherCompassVisitor:true,away:true,editKey:'story:nan-departure',editorDeleted:false,noTalk:false};
   npcs.push(visitor);
 }
 function stepNanDeparture(){
   if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||!nanGiftPending()||
      sceneHold()||sayNpc||fadeDir||fade||doorMotion||ovl||ask||bagOpen||editing||dying()||revealing)return;
-  prepareNanDeparture();
-  const nan=npcs.find(n=>n.fatherCompassVisitor);
-  if(!nan)return;
   const town=millwoodDepartureArea();
   const inTownCenter=town&&Math.hypot(P.x-(town.x0+town.x1)*TS/2,P.y-(town.y0+town.y1)*TS/2)<=4*TS;
   if(!inTownCenter)return;
+  prepareNanDeparture();
+  const nan=npcs.find(n=>n.fatherCompassVisitor);
+  if(!nan)return;
   startNanFarewell(nan);
 }
 function placeDragonBehindCorin(target){
@@ -272,35 +261,25 @@ function placeDragonBehindCorin(target){
   }
 }
 function startNanFarewell(nan){
-  // Freeze input, then hide landing and staging behind the existing scene fade.
   clearPadInputs();running=false;P.act=null;P.moving=false;
-  pendingActorStage=()=>{
-    if(mounted)setMounted(false,true);
-    dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
-    [P.x,P.y]=standableNear(P.x,P.y);
-    refreshWingBtn();
-    nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
-    nan.home=[nan.x,nan.y];
-    const target=[P.x-22,P.y];
-    placeDragonBehindCorin(target);
-    cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;clampCam();
-    // Stage her just beyond the west screen edge while black. The entire
-    // approach shares Corin's Y; no diagonal route or collision sidesteps.
-    nan.x=Math.min(cam.x-24,target[0]-32);nan.y=P.y;
-    nan.goto=null;nan.straightSceneWalk=true;nan.away=false;
-    const path=[target];
-    faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
-    playScene(fatherCompassGift(nan),
-      {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
-        nan.straightSceneWalk=false;nan.scriptWalking=false;nan.goto=null;nan.away=true;
-      },hold:()=>{
-        // Nan starts walking after the picture has returned.
-        if(fadeDir||fade>0)return false;
-        if(!nan.goto&&path.length)nan.goto=path.shift();
-        if(nan.goto)return false;
-        nan.scriptWalking=false;
-        faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
-      }});
-  };
-  fadeDir=1;
+  if(mounted){setMounted(false,true);[P.x,P.y]=standableNear(P.x,P.y);}
+  dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
+  refreshWingBtn();
+  nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
+  const target=[P.x-22,P.y];
+  placeDragonBehindCorin(target);
+  // Spawn beyond both the current and following camera's west edge. Keep
+  // Corin and the picture in place; Nan enters naturally without a fade.
+  nan.x=Math.min(cam.x,P.x-VW/cam.z/2)-24;nan.y=P.y;
+  nan.home=[nan.x,nan.y];
+  nan.goto=target;nan.straightSceneWalk=true;nan.away=false;
+  faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
+  playScene(fatherCompassGift(nan),
+    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
+      nan.straightSceneWalk=false;nan.scriptWalking=false;nan.goto=null;nan.away=true;
+    },hold:()=>{
+      if(nan.goto)return false;
+      nan.scriptWalking=false;
+      faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
+    }});
 }
