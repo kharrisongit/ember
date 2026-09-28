@@ -68,7 +68,7 @@
 <link rel="stylesheet" href="css/title-screen.css?v=20260927-hatch-save-controls1">
 <link rel="stylesheet" href="css/controls-theme.css?v=20260927-dawn1">
 <link rel="stylesheet" href="css/menu-theme.css?v=20260928-topic-banner">
-<link rel="stylesheet" href="css/riding-tutorial.css?v=20260927-arena5-farewell1">
+<link rel="stylesheet" href="css/riding-tutorial.css?v=20260928-battle-ready">
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="auto" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -76,9 +76,7 @@
   <source src="data:audio/mp4;base64," type="audio/mp4">
 </audio>
 <audio id="emberfellVillainBgm" loop preload="auto" style="display:none" aria-hidden="true" src="assets/audio/kings-villain-theme.m4a?v=20260926-trim-start"></audio>
-<audio id="emberfellBattleBgm" preload="auto" style="display:none" aria-hidden="true">
-  <source src="data:audio/mp4;base64," type="audio/mp4">
-</audio>
+<audio id="emberfellBattleBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/heated-battle.m4a?v=20260928-1"></audio>
 <audio id="emberfellThornwellBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/thornwell-shop.m4a?v=20260926-1"></audio>
 <audio id="emberfellSeatownBgm" preload="none" loop src="assets/audio/seatown-loop.m4a?v=20260926-1"></audio>
 <audio id="emberfellSchoolBgm" loop preload="none" src="assets/audio/school-loop.wav?v=20260926-1"></audio>
@@ -97,7 +95,7 @@
 <audio id="emberfellSnowRouteBgm" loop preload="none" src="assets/audio/snow-route-loop.m4a?v=20260926-1"></audio>
 <audio id="lastDragonriderTitleBgm" loop preload="auto" src="assets/audio/title-ending-loop.m4a?v=20260926-1"></audio>
 <audio id="emberfellSporesBgm" loop preload="none" src="assets/audio/spores-loop.m4a?v=20260926-1"></audio>
-<script src="js/audio.js?v=20260926-homecoming"></script>
+<script src="js/audio.js?v=20260928-battle-ready"></script>
 <div id="titleFade" hidden aria-hidden="true" style="position:fixed;inset:0;z-index:2147483001;background:#000;opacity:0;pointer-events:auto"></div>
 <div id="stage">
 <div id="boot" style="position:absolute;inset:0;z-index:99;display:flex;
@@ -410,7 +408,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/generated/media-5.js?v=1790049472"></script>
 <script src="js/generated/media-6.js?v=1790049472"></script>
 <script src="js/generated/media-7.js?v=1790049472"></script>
-<script src="js/first-temple.js?v=20260924-temple-scale1"></script>
+<script src="js/first-temple.js?v=20260928-battle-ready"></script>
 <script src="js/sandspire-temple.js?v=20260924-temple-scale1"></script>
 <script src="js/mountain-passage.js?v=20260925-atlas-recovery"></script>
 <script src="js/hollybeck-temple.js?v=20260924-sanctum2"></script>
@@ -426,7 +424,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/temple-compass.js?v=20260928-nan-south-houses"></script>
 <script src="js/millwood-interiors.js?v=20260928-open-face-steady-breath"></script>
 <script src="js/generated/game-part-1.js?v=20260927-cast-quests" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
-<script src="js/generated/game-part-2.js?v=20260928-learn-sword" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260928-battle-ready" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260925-deer-warm-return"></script>
 <script src="js/hollybeck-villagers.js?v=20260926-original-winter"></script>
@@ -442,7 +440,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dialogue-portraits.js?v=20260928-aurelius-two-horns"></script>
 <script src="js/quest-map.js?v=20260927-cast-quests"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20260928-nan-map-gifts" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260928-battle-ready" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script>
 /* Late artwork is intentionally disabled until it is exposed through a shared
    asset namespace. Loading it as a separate classic script cannot see the
@@ -472,7 +470,8 @@ window.addEventListener("unhandledrejection", function (e) {
 
 <script src="js/dragon-scene-audio.js?v=20260926-map-portraits"></script>
 <script src="js/dragon-attack-align.js?v=20260926-published-offsets"></script>
-<script src="js/riding-tutorial.js?v=20260928-learn-sword"></script>
+<script src="js/arena-entry.js?v=20260928-battle-ready"></script>
+<script src="js/riding-tutorial.js?v=20260928-battle-ready"></script>
 <script src="js/cloud-saves.js?v=20260927-bramble-north"></script>
 </body>
 </html>

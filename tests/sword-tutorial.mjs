@@ -17,7 +17,7 @@ assert(run('hasSword()'),'Corin still carries the sword before the tutorial');
 assert.equal(run('corinKit()'),'corin_sword_','The equipped sword remains visible');
 run('startAct("swing")');assert.equal(run('P.act'),null,'Sword attacks are locked before the tutorial');
 dom.touch(dom.element('act'));assert.equal(run('P.act'),null,'The real A control cannot swipe early');
-assert(run('foes.every(f=>f.ridingArena===208&&f.st==="idle"&&f.y===swordRing.y*TS+TS/2-TS)'),
+assert(run('foes.every(f=>f.ridingArena===208&&f.st==="idle"&&f.y===swordRing.y*TS+TS)'),
   'First northern arena enemies wait near the center, within sight');
 const waiting=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
 for(let i=0;i<60;i++)run('stepFoes(.05)');
@@ -33,6 +33,7 @@ for(let i=0;i<20;i++)run('stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Enemies wait through dialogue');
 run('scene.t=1');dom.touch(dom.element('act'));
 assert.equal(run('scene'),null);assert.equal(dom.element('ridingHint').textContent,'Press A to Swipe');
+assert(dom.element('ridingHint').classList.contains('combat-prompt'),'Swipe uses the prominent combat card');
 assert(run('EmberRiding.holding()'));assert.equal(run('P.act'),null,'Dialogue dismissal does not perform the swipe');
 assert(dom.element('act').classList.contains('riding-target'));
 run('setOvl("itemm")');assert.equal(run('ovl'),null,'Other controls cannot bypass the tutorial');

@@ -374,3 +374,22 @@ assert.equal(gestureTitle.plays,1,'Title play is called synchronously within Beg
 assert(gesture.contexts[0].sources.has(gestureTitle),'Title streams through the shared iPhone gain');
 assert.equal(gesture.contexts[0].state,'running');await gesture.advance();assert(gesture.audible(gestureTitle)>0);
 console.log('PASS: Begin synchronously resumes audio and plays streamed title music through the iPhone volume mixer.');
+
+// The arena cue starts exactly when requested, loops, and yields back to exploration.
+const combat=setup();combat.listeners.pointerdown();await combat.advance();
+combat.c.window.EmberBattleMusic.start();await combat.advance();
+assert(!combat.track('Battle').paused&&combat.c.window.EmberBattleMusic.active());
+assert.equal(combat.track('Battle').currentTime,0,'Each new encounter starts at the opening');
+combat.track('Battle').currentTime=42;combat.c.window.EmberBattleMusic.start();await combat.advance();
+assert.equal(combat.track('Battle').currentTime,42,'Repeated updates never restart the battle song');
+combat.c.window.EmberKingMusic.start();await combat.advance();assert(!combat.track('Villain').paused,'Royal scenes retain their theme');
+combat.c.window.EmberKingMusic.stop();await combat.advance();assert(!combat.track('Battle').paused,'Remaining combat resumes its song');
+combat.c.window.EmberBattleMusic.stop();await combat.advance();assert(combat.track('Battle').paused&&!combat.track('Millwood').paused,'Clearing restores exploration');
+combat.c.window.EmberBattleMusic.start();await combat.advance();assert.equal(combat.track('Battle').currentTime,0);
+await combat.change('inn','Thornwell Inn');assert(combat.track('Battle').paused&&!combat.track('Thornwell').paused,'Map changes clear the old battle');
+combat.c.window.EmberBattleMusic.start();await combat.advance();combat.c.deadShown=true;combat.sync();await combat.advance();
+assert([...combat.elements.values()].every(a=>a.paused),'Death stops battle music');
+combat.c.deadShown=false;combat.sync();await combat.advance();assert(combat.track('Battle').paused,'Old combat cannot resume after death');
+assert.match(html.match(/<audio id="emberfellBattleBgm"[^>]+>/)[0],/\bloop\b/);
+assert(fs.statSync(new URL('../assets/audio/heated-battle.m4a',import.meta.url)).size>100000,'Delivered battle recording is installed');
+console.log('PASS: battle cue starts at readiness, survives repeated updates, respects royal scenes, restores exploration, and clears on map changes/death.');

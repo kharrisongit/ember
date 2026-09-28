@@ -3673,6 +3673,7 @@ function worldArtVisible(x,y,w,h,vw,vh){
 }
 
 function drawWorld(t, dt) {
+  globalThis.window?.EmberArenaEntry?.frameCamera();
   const z = cam.z;
   const vw = VW / z, vh = VH / z;
   ctx.fillStyle = MD.bg || "#1d2a1b";
@@ -4795,6 +4796,7 @@ addEventListener("keydown", e => {
     }
     return;
   }
+  if(globalThis.window?.EmberArenaEntry?.key(e))return;
   if(globalThis.window?.EmberRiding?.key(e))return;
   if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
     e.preventDefault();if(e.repeat)return;
@@ -4955,7 +4957,7 @@ function bindHold(id, onDown, onUp) {
     if (!gameplayStarted && !titleControlReady(id)) {
       e?.preventDefault(); e?.stopPropagation(); return;
     }
-    if(globalThis.window?.EmberRiding?.allowControl(id)===false){e?.preventDefault();e?.stopPropagation();return;}
+    if((globalThis.window?.EmberArenaEntry?.holding()&&id!=="act")||globalThis.window?.EmberRiding?.allowControl(id)===false){e?.preventDefault();e?.stopPropagation();return;}
     if(["btnL","btnR","btnItems","btnMapQuick"].includes(id))globalThis.window?.EmberSfx?.ui?.();
     el.classList.add("hit"); onDown();
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
@@ -4974,6 +4976,7 @@ function bindHold(id, onDown, onUp) {
 // A visible menu owns its touches. The deck-sized dragon menus cover every
 // controller; other menus still use the exposed D-pad, A and B to navigate.
 function blockCoveredGameInput(e) {
+  if(globalThis.window?.EmberArenaEntry?.blockPointer(e))return;
   if(globalThis.window?.EmberRiding?.blockPointer(e))return;
   const target = e.target;
   if (!target?.closest?.("#deck, #cv")) return;
@@ -5784,6 +5787,7 @@ function stepDragon(dt) {
     if(mounted){dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();stepTransition(dt);}
     return;
   }
+  if(globalThis.window?.EmberArenaEntry?.holding()){dragon.moving=false;return;}
   if (bossScene) return;
   if (dragon.revive > 0) {
     dragon.revive = Math.max(0, dragon.revive - dt);
@@ -5868,7 +5872,7 @@ function stepDragon(dt) {
   let far = null, fd2 = -1;
   if (!foesHeld && !devDragonPassive && dragonCombatPause <= 0) {
     for (const f of foes) {
-      if (f.st === "dead" || f.ally || f.storyPassive) continue;
+      if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
       const dx = f.x - P.x, dy = f.y - P.y, d2 = dx * dx + dy * dy;
       if (d2 < 16900 && d2 > fd2) { fd2 = d2; far = f; }
     }
@@ -6238,7 +6242,7 @@ let hatchScene = null;
 let hatchExit = false;
 let hatchCamera = null;
 let deflectCamera = null;
-function cameraOwnsView() { return !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
+function cameraOwnsView() { return !!globalThis.window?.EmberArenaEntry?.holding() || !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
 function stepDeflectCamera(dt) {
   const c = deflectCamera;
   if (!c) return;
@@ -6853,7 +6857,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding(); }
+function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
@@ -7643,7 +7647,7 @@ function breatheFire() {
   dragonRecallT = 0;
   let best = null, bd = 1e9;
   for (const f of foes) {
-    if (f.st === "dead" || f.ally || f.storyPassive) continue;
+    if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
     const d = Math.hypot(f.x - dragon.x, f.y - dragon.y);
     /* The king dragon may be across the arena: approach its firing distance
        instead of wasting the player command as a blind shot. */
@@ -7707,7 +7711,7 @@ function stepHunt(dt) {
   if (!hunt) return;
   hunt.t += dt;
   const f = hunt.foe;
-  if (f.st === "dead" || hunt.t > 4) { hunt = null; return; }
+  if (f.st === "dead" || globalThis.window?.EmberArenaEntry?.protected(f) || hunt.t > 4) { hunt = null; return; }
   if (hunt.kingBreath) {
     const body = foeBodyProfile(f);
     const dx = body.x - dragon.x, dy = body.y - dragon.y;
@@ -7751,7 +7755,7 @@ function beamLength() {
   const [dx,dy] = directionVector(breath.dir);
   let stop = BREATH.reach;
   for (const f of foes) {
-    if (f.st === "dead" || f.storyPassive) continue;
+    if (f.st === "dead" || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
     const rx = f.x - breath.x, ry = f.y - breath.y;
     const along = rx * dx + ry * dy;
     const across = Math.abs(rx * dy - ry * dx);
@@ -7800,7 +7804,7 @@ function stepBreath(dt) {
       if (isSolid(nx, ny)) { b.hit = 1; break; }
       b.x = nx; b.y = ny; b.distance += step; travel -= step;
       const f = foes.find(f => {
-        if (f.st === "dead" || f.ally || f.storyPassive) return false;
+        if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) return false;
         const body = foeBodyProfile(f);
         return Math.hypot(body.x - b.x, body.y - b.y) < body.r;
       });
@@ -8148,6 +8152,7 @@ function spawnFoes() {
   }
   if(typeof spawnHuntingAnimals==='function')spawnHuntingAnimals();
   globalThis.window?.EmberRiding?.stageEnemies();
+  globalThis.window?.EmberArenaEntry?.prepare();
 }
 function swordOverlaps(f) {
   const body = foeBodyProfile(f);
@@ -8293,7 +8298,7 @@ function swingHits() {
   const tx = P.x + dx * 16, ty = P.y + dy * 16;
   let landed=false,golemLanded=false;
   for (const f of foes) {
-    if (f.st === "dead" || f.ally) continue;      /* his own dead are not targets */
+    if (f.st === "dead" || f.ally || globalThis.window?.EmberArenaEntry?.protected(f)) continue;      /* his own dead are not targets */
     const body = foeBodyProfile(f);
     if (!swordOverlaps(f) && Math.hypot(body.x - tx, body.y - ty) > 20 + body.r) continue;
     // Each variant has its own page and encounter order.
@@ -9662,7 +9667,7 @@ function useBomb() {
   castSkull(ring.x * TS, ring.y * TS, "#a8c8bc", () => {
     let n = 0;
     for (const f of foes) {
-      if (f.ally || f.st === "dead") continue;
+      if (f.ally || f.st === "dead" || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
       if (ring.templeRoom ? !expandedTempleFoeInArena(ring,f) : Math.hypot(f.x / TS - ring.x, f.y / TS - ring.y) > (ring.r || 6) + 5) continue;
       f.st = "dead"; f.t = 0; f.hp = 0; f.mad = 0;
       if(ring.templeRoom)markBossGone(f);
@@ -9844,7 +9849,7 @@ function targetFor(f) {
     let best = null, bd = 220;
     const fresh = f._huntT !== undefined && f._huntT > foeClock - 0.25;
     const kept = f._hunt;
-    if (fresh && (!kept || (kept.st !== "dead" &&
+    if (fresh && (!kept || (kept.st !== "dead" && !globalThis.window?.EmberArenaEntry?.protected(kept) &&
                             Math.hypot(kept.x - f.x, kept.y - f.y) < 300))) {
       if (kept) return { x: kept.x, y: kept.y,
                          d: Math.hypot(kept.x - f.x, kept.y - f.y),
@@ -9853,7 +9858,7 @@ function targetFor(f) {
     } else {
       f._huntT = foeClock;
       for (const q of foes) {
-      if (q === f || q.st === "dead") continue;
+      if (q === f || q.st === "dead" || globalThis.window?.EmberArenaEntry?.protected(q)) continue;
       if (f.ally && q.ally) continue;
       if (!f.ally && q.ally) continue;   /* a maddened foe leaves his side alone */
       const d = Math.hypot(q.x - f.x, q.y - f.y);
@@ -9930,13 +9935,9 @@ function stepFoes(dt) {
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
-    f._thinking = !f.huntingArena && f.st !== "dead" && !globalThis.window?.EmberRiding?.waitingEnemy(f) && thinks(f);
+    f._thinking = !f.huntingArena && f.st !== "dead" && !globalThis.window?.EmberRiding?.waitingEnemy(f) && !globalThis.window?.EmberArenaEntry?.protected(f) && thinks(f);
     if (f._thinking) live.push(f);
   }
-  // Regular battle music begins when a hostile enemy/boss is actively engaged.
-  // King music has priority and the battle track resumes only if combat remains afterward.
-  const musicCombat = live.some(f => !f.ally && f.st !== "dead");
-  /* Battle music intentionally disabled for now. Area music continues during combat. */
   turnT -= dt;
   if (foeCool > 0) foeCool -= dt;
   if (!turnHolder || turnHolder.st === "dead" || turnT <= 0) {
@@ -10691,7 +10692,7 @@ function drawHeartsCanvasLegacy() {
 }
 let foesHeld = false;
 function stepCombat(dt) {
-  if(globalThis.window?.EmberRiding?.holding()){for(const f of foes)if(f.st!=='dead')f.t+=dt;stepFall(dt);return;}
+  if(globalThis.window?.EmberArenaEntry?.holding()||globalThis.window?.EmberRiding?.holding()){for(const f of foes)if(f.st!=='dead')f.t+=dt;stepFall(dt);return;}
   stepTempleGates(dt);
   stepFly(dt); // Cosmetic pickups keep moving even with foes disabled.
   if (pInv > 0) pInv -= dt;
@@ -11390,6 +11391,7 @@ padBind();
 }
 function actionButton() {
   if(window.EmberCloud?.isOpen())return;
+  if(globalThis.window?.EmberArenaEntry?.action())return;
   if(globalThis.window?.EmberRiding?.action())return;
   if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
   if(atlasOpen)return;

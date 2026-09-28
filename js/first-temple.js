@@ -141,7 +141,7 @@ function expandedTempleArenaRim(ring){
   return ring._templeRim=out;
 }
 function stepExpandedTempleArena(dt){
-  if(sceneHold()||fadeDir||doorMotion)return;
+  if((sceneHold()&&!globalThis.window?.EmberArenaEntry?.holding())||fadeDir||doorMotion)return;
   if(arenaLock&&arenaLock.templeMap!==MAPID){arenaLock=null;arenaT=0;arenaGoing=false;}
   if(!arenaLock){
     // Wait until Corin's full footprint is inside, including when entering
@@ -149,6 +149,7 @@ function stepExpandedTempleArena(dt){
     const ring=expandedTempleArenas().find(a=>expandedTempleArenaContains(a,P.x,P.y-6,12)&&arenaFoesLeft(a));
     if(!ring)return;
     arenaLock=ring;arenaT=0;arenaGoing=false;
+    globalThis.window?.EmberArenaEntry?.entered(ring);
   }
   arenaGoing=!arenaFoesLeft(arenaLock);
   arenaT=Math.min(1,arenaT+dt*(arenaGoing?-2.2:3));

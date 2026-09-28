@@ -29,6 +29,7 @@ let routeMusicIntroPlayed=false;
   const KEY='emberfell.musicVolume';
   let pct=35;
   try { const stored=localStorage.getItem(KEY),n=Number(stored); if(stored!==null && Number.isFinite(n) && n>=0 && n<=100) pct=n; } catch(e) {}
+  let battleMode=false,battleMap=null;
   let kingMode=false, millwoodMode=false, thornwellMode=false, fieldMode=false, forgewickMode=false, mysticMode=false, mineMode=false, cinderholdMode=false, hollybeckMode=false, lavaRouteMode=false, fadeToken=0;
   const target=()=>Math.max(0,Math.min(1,pct/100))*.85;
   const inNamedArea=(name)=>{
@@ -201,7 +202,7 @@ let routeMusicIntroPlayed=false;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,masterPct=-1;
   const channels=new Map();
-  const loops=new Map([reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
+  const loops=new Map([battle,reveal,desert,sandspire,school,tavern,cinderhold,seatown,mine,hollybeck,lavaRoute,snowRoute,spores].filter(Boolean).map(a=>[a,{buffer:null,loading:null,source:null,request:0}]));
   const bufferedTrack=a=>!!(audioContext?.createBufferSource&&loops.has(a)&&!loops.get(a).failed);
   const prepareLoop=a=>{
     if(!bufferedTrack(a))return Promise.resolve(null);
@@ -325,7 +326,7 @@ let routeMusicIntroPlayed=false;
   };
   const selectTrack=next=>{
     if(next===selected)return;
-    fadeDuration=titleStage==='in'?1400:next===reveal?150:next===millwood&&selected===villain?3200:900;
+    fadeDuration=titleStage==='in'?1400:next===reveal?150:next===battle?250:next===millwood&&selected===villain?3200:900;
     fadeDelay=next===millwood&&selected===villain?400:0;
     ++fadeToken;pending=0;fading=false;selected=next;
     for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);
@@ -343,13 +344,15 @@ let routeMusicIntroPlayed=false;
   };
   const chooseMusic=()=>{
     if(titleStage==='out')return;
+    if(titleScreen()||endingMode||(typeof deadShown!=='undefined'&&deadShown))battleMode=false;
     if((titleStage!=='in'&&titleScreen())||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
     if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
     try{if(mode!=='play'||quest<Q.NOISE||quest>Q.DONE){omenPlaying=false;omenHeard=false;}}catch(e){}
     if(omenPlaying){selectTrack(null);return;}
     // A loaded save or a map change cannot retain an old scripted royal cue.
     try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
-    selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:exploreTrack());
+    if(battleMode&&(battleMap!==MAPID||!gameplayStarted||(typeof deadShown!=='undefined'&&deadShown)))battleMode=false;
+    selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:battleMode&&hasSong(battle)?battle:exploreTrack());
   };
   window.EmberEndingMusic={start:()=>{endingMode=true;chooseMusic();},stop:()=>{endingMode=false;chooseMusic();}};
   window.EmberKingMusic={
@@ -362,8 +365,10 @@ let routeMusicIntroPlayed=false;
     omen:()=>{omenPlaying=true;omenHeard=false;selected=null;silence();},
     reveal:()=>{omenPlaying=false;omenHeard=true;chooseMusic();}
   };
-  // Combat without a dedicated song keeps the area's music.
-  window.EmberBattleMusic={start:()=>{},stop:()=>{},active:()=>false};
+  window.EmberBattleMusic={
+    start:()=>{if(!battleMode){battle.currentTime=0;battleMap=MAPID;}battleMode=true;chooseMusic();},
+    stop:()=>{battleMode=false;chooseMusic();},active:()=>battleMode&&selected===battle
+  };
   const syncRegionMusic=()=>{
     const wantMillwood=inMillwood();
     const wantCinderhold=inCinderholdInterior();

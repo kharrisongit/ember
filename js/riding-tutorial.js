@@ -9,7 +9,7 @@
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const holding=()=>!!phase&&phase!=='battle';
   const hint=document.createElement('div');hint.id='ridingHint';hint.hidden=true;hint.setAttribute('role','status');document.body.appendChild(hint);
-  const notice=text=>{hint.textContent=text;hint.hidden=!text;};
+  const notice=text=>{hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swipe|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
     phase=next;clearHighlight();notice(text);hintTime=0;
@@ -44,11 +44,11 @@
       return;
     }
     const sword=ring.id===SWORD_ARENA;
-    if((ring.id!==FIRST_ARENA&&!sword)||(sword&&swordDone))return;
+    if((ring.id!==FIRST_ARENA&&!sword)||(sword?swordDone:done))return;
     const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
     const north=[];
-    // The smaller northern arena keeps its waiting row just above the center.
-    for(let y=sword?cy-TS:cy-limit+12+2*TS;y<=(sword?cy:cy-32);y+=24)for(const offset of [-36,0,36,-54,54]){
+    // Bring both tutorial rows into view; their sprites stand near the center.
+    for(let y=sword?cy+TS/2:cy;y<=(sword?cy+TS/2:cy);y+=24)for(const offset of [-36,0,36,-54,54]){
       const x=cx+offset;
       if(Math.hypot(x-cx,y-cy)<limit&&dragonCanStand(x,y))north.push([x,y]);
     }
@@ -63,7 +63,7 @@
   }
   function waitingEnemy(foe){
     if(MAPID==='world'&&foe.ridingArena===SWORD_ARENA)return !swordDone;
-    return MAPID==='world'&&foe.ridingArena===FIRST_ARENA&&
+    return !done&&MAPID==='world'&&foe.ridingArena===FIRST_ARENA&&
       (arenaLock?.id!==FIRST_ARENA||holding());
   }
   function entered(ring){
@@ -93,7 +93,7 @@
       if(actor===dragon&&landing){flyIn=true;return [landing];}
       return null;
     };
-    assembly={p:approach(P,cx-24,cy+32,canStand),d:approach(dragon,cx+24,cy+36,dragonCanStand)};
+    assembly={p:approach(P,cx-24,cy+60,canStand),d:approach(dragon,cx+24,cy+56,dragonCanStand)};
     dragon.air=flyIn;
     if(dragon.hp<=dragonFlightMinimum()){dragon.hp=dragonFlightMinimum()+1;dragon.down=false;dragon.revive=0;dragon.knockdown=0;}
   }
@@ -122,14 +122,14 @@
   function step(dt){
     if(!gameplayStarted||mode!=='play')return;
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
-      moveTo('swordTalk');
+      window.EmberBattleMusic?.start();moveTo('swordTalk');
       playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',after:()=>{
         moveTo('swordSwipe','Press A to Swipe');paint();
       }});
     }
     if(resumeRecovery&&!scene&&!revealing){resumeRecovery=false;beginRecovery();return;}
     if(phase==='walls'&&arenaT>=1&&!scene){
-      unlocked=true;moveTo('mountTalk');
+      window.EmberBattleMusic?.start();unlocked=true;moveTo('mountTalk');
       say(['Aurelius: Quick! Get on my back!'],()=>{
         moveTo('mount','Choose Mount in COMMAND.');overlay('airm');
       });
@@ -162,7 +162,8 @@
   function fired(element){
     if(phase!=='fire'||element!=='fire')return;
     if(scene?.ridingFirePrompt){scene=null;showScene();}
-    moveTo('battle','Press A for Slash!');hintTime=8;overlay(null);saveGame();
+    window.EmberArenaEntry?.activate(arenaLock);
+    moveTo('battle','Press A to Slash');hintTime=8;overlay(null);saveGame();
   }
   function completed(ring){
     if(done||phase!=='battle'||ring?.id!==ringId)return;
@@ -210,7 +211,7 @@
     if(!holding())return false;
     if(phase==='swordSwipe'){
       startAct('swing');
-      if(P.act?.kind==='swing'){swordDone=true;moveTo('');saveGame();}
+      if(P.act?.kind==='swing'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('');saveGame();}
       return true;
     }
     if(phase==='fire'&&ovl==='atkm'){ovlTake();return true;}

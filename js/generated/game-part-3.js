@@ -3587,7 +3587,7 @@ function refillRing(a) {
                 st: "idle", t: 0, dir: "d", flip: false, hurt: 0 });
     n++;
   }
-  if (n) { globalThis.window?.EmberRiding?.stageEnemies(a); rebuildBuckets(); a._wave = 0; }
+  if (n) { globalThis.window?.EmberRiding?.stageEnemies(a); globalThis.window?.EmberArenaEntry?.prepare(a); rebuildBuckets(); a._wave = 0; }
 }
 function stepArenas(dt) {
   for (const [k, v] of cooling) {
@@ -3597,6 +3597,7 @@ function stepArenas(dt) {
 }
 let falling = null;
 function releaseArena() {
+  globalThis.window?.EmberArenaEntry?.completed(arenaLock);
   settleGraves();
   if(arenaLock && !arenaFoesLeft(arenaLock)) recoverStrandedDragon();
   if (arenaLock && arenaT > 0.2) falling = { ring: arenaLock, t: 0, life: 1.0 };
@@ -3808,6 +3809,7 @@ function stepArena(dt) {
       if (!arenaFoesLeft(f)) { refillRing(f); if (!arenaFoesLeft(f)) continue; }
       arenaLock = f; arenaT = 0; arenaGoing = false;
       globalThis.window?.EmberRiding?.entered(f);
+      globalThis.window?.EmberArenaEntry?.entered(f);
       break;
     }
   } else {
@@ -3846,6 +3848,7 @@ function stepArena(dt) {
       const completedRing=arenaLock;
       recoverStrandedDragon();
       arenaLock = null; arenaT = 0; arenaGoing = false;
+      globalThis.window?.EmberArenaEntry?.completed(completedRing);
       globalThis.window?.EmberRiding?.completed(completedRing);
       twinSpent = false; twinKills = 0;   /* ready for the next ring */
       for (const f of foes) if (f.raised) { f.ally = 0; f.raised = 0; f.st = "dead"; f.t = 0; }
@@ -4060,6 +4063,7 @@ function frameCore(ms) {
     return;
   }
   tAcc += dt;
+  globalThis.window?.EmberArenaEntry?.step(dt);
   globalThis.window?.EmberRiding?.step(dt);
   stepNanDeparture();
   stepFatherCompass();
@@ -4084,12 +4088,12 @@ function frameCore(ms) {
   stepKingsMen(dt);
   stepQuest(dt);
   stepDragonBanter(dt);
-  if(!globalThis.window?.EmberRiding?.holding())stepBreath(dt);
+  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())stepBreath(dt);
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
-  if(!globalThis.window?.EmberRiding?.holding())stepClaw(dt);
+  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())stepClaw(dt);
   stepAnims(dt);   /* one-shot animations run in the editor too */
-  if (mode === "play"&&!globalThis.window?.EmberRiding?.holding()) stepBolts(dt);
+  if (mode === "play"&&!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()) stepBolts(dt);
   stepFerry(dt);
   stepDeflectCamera(dt);
   drawWorld(tAcc, dt);
@@ -6181,6 +6185,7 @@ setInterval(() => {
 }, 400);
 
 function clawNow() {
+  if(globalThis.window?.EmberArenaEntry?.holding())return;
   if(fishing)return;
   if(devDragonPassive){toast("dragon attacks are disabled in dev tools");return;}
   if (!dragonHere() || !dragon.on) { toast("the dragon is not here"); return; }
@@ -6194,7 +6199,7 @@ function clawNow() {
   }
   let best = null, bd = 1e9;
   for (const f of foes) {
-    if (f.st === "dead") continue;
+    if (f.st === "dead" || f.ally || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
     const d = Math.hypot(f.x - dragon.x, f.y - dragon.y);
     if (d < 150 && d < bd) { bd = d; best = f; }
   }
@@ -6212,7 +6217,7 @@ function clawNow() {
   const RIDE_REACH = 46, RIDE_ARC = 0.42;   /* cos of about 65 degrees */
   const [fx,fy] = directionVector(dragon.dir);
   for (const f of foes) {
-    if (f.st === "dead" || f.ally) continue;
+    if (f.st === "dead" || f.ally || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
     const body = foeBodyProfile(f);
     const ax = body.x - dragon.x, ay = body.y - dragon.y;
     const d = Math.hypot(ax, ay);
