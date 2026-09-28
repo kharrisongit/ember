@@ -1,6 +1,6 @@
 /* Generated inventory artwork shares the normal sprite pipeline, including shops and reveals. */
 async function loadInventoryIcons() {
-  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344]]) {
+  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002304]]) {
   const image = new Image();
   image.src = 'assets/inventory/'+file+'?v=20260926-all-items';
   await image.decode();
@@ -16,11 +16,12 @@ function registerInventorySprites() {
   keys.forEach((key,i) => { SPR['inventory_'+key] = [(i%4)*cell,y+Math.floor(i/4)*cell,cell,cell,1]; });
   const remaining = ["hs_light", "hs_shadow", "hs_ice", "bell", "mark", "bomb", "elixir", "potion", "fishingPole", "wake", "flame", "lamp", "twin", "brand", "spore", "ward", "edge", "sword", "cinderSeal", "egg", "heart", "eggs"];
   remaining.forEach((key,i) => { SPR['inventory_'+key] = [(i%4)*cell,3001344+Math.floor(i/4)*cell,cell,cell,1]; });
+  SPR.inventory_mapCompass=[0,3002304,128,128,1];
   for (const [alias,key] of Object.entries({it_saint:'saint',it_res:'stone',it_salt:'salt',it_dust:'dust'}))
     SPR[alias] = SPR['inventory_'+key];
 }
 
-function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112)); }
+function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002304); }
 
 // Resolve only UI art; world pickups retain their original sprite sizes.
 const INVENTORY_UI_ALIASES = {

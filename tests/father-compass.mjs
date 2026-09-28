@@ -10,14 +10,14 @@ const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
 c.stepFatherCompass();assert.equal(c.scene,undefined,'no reveal before Nan gives the compass');
 assert.equal(c.nanGiftBeat(5),false);assert.equal(saves,0);
-assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_compass');
+assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_mapCompass');
 assert.equal(c.nanGiftBeat(6),false);assert.equal(saves,1,'Compass cannot duplicate');
 assert.equal(c.nanGiftBeat(11),false);assert.equal(c.hareMeat,0,'Meat waits for Nan’s own line');
-assert.equal(c.worldMapUnlocked(),false,'Compass alone does not grant the map');
-assert.equal(c.nanGiftBeat(12),true);assert(c.worldMapUnlocked());assert.equal(c.hareMeat,0);
-assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,2,'Map cannot duplicate');
+assert(c.worldMapUnlocked(),'The combined gift immediately unlocks the map');
+assert.equal(c.nanGiftBeat(12),false);assert(c.worldMapUnlocked());assert.equal(c.hareMeat,0);
+assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,1,'Map is part of the same gift');
 assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
-assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,3,'Meat cannot duplicate');
+assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),false);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
@@ -28,11 +28,11 @@ c.MD={mountainPassage:true};c.stepFatherCompass();assert.equal(c.scene,undefined
 c.MD={templeExpanded:true,templePlan:{}};c.stepFatherCompass();assert.equal(c.scene.compassReveal,true);
 assert.match(c.scene.lines[0],/light/);assert.equal(c.scene.lines[1],'Corin: Thanks, Dad.');
 assert.equal(run('templeCompass.awakened'),false,'waits for Corin’s response');
-c.awakenFatherCompass();assert.equal(saves,4);c.scene=null;c.stepFatherCompass();assert.equal(c.scene,null,'only once');
+c.awakenFatherCompass();assert.equal(saves,3);c.scene=null;c.stepFatherCompass();assert.equal(c.scene,null,'only once');
 const saved=run('({owned:templeCompass.owned,awakened:templeCompass.awakened})');
 c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false,'old saves reset ownership');
 c.restoreFatherCompass(saved);assert.equal(run('templeCompass.awakened'),true,'new saves keep awakening');
-c.awakenFatherCompass();assert.equal(saves,4,'idempotent awakening');
+c.awakenFatherCompass();assert.equal(saves,3,'idempotent awakening');
 c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false,'awakening requires ownership');
 const game=read('js/generated/game-part-2.js'),bag=read('js/generated/game-part-3.js');
 assert(game.includes('if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();'));
@@ -99,8 +99,15 @@ console.log('PASS: gifts have separate dialogue beats and icons, dragon stays be
 
 // A save between compass and map resumes without losing or repeating gifts.
 c.restoreFatherCompass({owned:true,meatGiven:false,mapGiven:false});
-assert.equal(c.worldMapUnlocked(),false);assert(c.nanGiftPending());
-assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),true);
+assert(c.worldMapUnlocked(),'Partial legacy gifts gain the combined map');assert(c.nanGiftPending());
+assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),false);
 assert(c.worldMapUnlocked());assert.equal(c.nanGiftBeat(12),false);
 c.restoreFatherCompass({owned:true,meatGiven:true});assert(c.worldMapUnlocked(),'Legacy gift saves keep map access');
 c.restoreFatherCompass();assert.equal(c.worldMapUnlocked(),false,'New game locks the map again');
+
+const buttons=new Map(['btnMapQuick','bagMap'].map(id=>[id,{textContent:'MAP',style:{},setAttribute(){}}]));
+c.document={getElementById:id=>buttons.get(id)};
+c.restoreFatherCompass();c.refreshMapControls();
+assert.equal(buttons.get('btnMapQuick').textContent,'');assert(buttons.get('btnMapQuick').disabled);
+c.giveFatherCompass();assert.equal(buttons.get('btnMapQuick').textContent,'MAP');assert(!buttons.get('btnMapQuick').disabled);
+console.log('PASS: the combined map and compass uses one reveal, migrates partial saves, and keeps MAP blank until received.');

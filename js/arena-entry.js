@@ -95,12 +95,58 @@
     const s=owners.get(f);
     return !!s&&s.phase!=='active';
   }
+  function gatherCompanion(s){
+    s.companion=null;
+    if(!dragonHere()||!dragon.on||mounted)return;
+    const a=s.ring,b=bounds(a);
+    const inside=(x,y)=>a.templeRoom?expandedTempleArenaContains(a,x,y,20):Math.hypot(x-b.x,y-b.y)<Math.min(b.rx,b.ry);
+    // Prefer a horizontal pair, with checked landing spots inside every entrance.
+    let target=null;
+    for(const dy of [0,-8,8,-16,16,-32,32,-48,48]){
+      for(const dx of [40,-40,32,-32]){
+        const x=P.x+dx,y=P.y+dy;
+        if(inside(x,y)&&dragonCanStand(x,y)&&!s.foes.some(f=>living(f)&&Math.hypot(f.x-x,f.y-y)<28)){
+          target=[x,y];break;
+        }
+      }
+      if(target)break;
+    }
+    if(!target)return;
+    const path=maddockWalkPath(dragon,target,dragonCanStand);
+    // A short hop also gets him across a closing entrance or a blocked ground route.
+    const route=path||[target];
+    let distance=0,previous=[dragon.x,dragon.y];
+    for(const point of route){distance+=Math.hypot(point[0]-previous[0],point[1]-previous[1]);previous=point;}
+    dragon.tr=null;dragonFacingLocked=false;
+    dragon.air=!path&&!dragonTooHurtToFly();
+    s.companion={path:route,speed:Math.max(280,distance/.45)};
+  }
+  function gather(dt){
+    if(!holding())return;
+    dragon.t+=dt;dragon.moving=false;
+    if(mounted){dragon.x=P.x;dragon.y=P.y;stepTransition(dt);return;}
+    const arrival=pending.companion;if(!arrival)return;
+    let left=arrival.speed*dt;
+    while(arrival.path.length&&left>0){
+      const [x,y]=arrival.path[0],dx=x-dragon.x,dy=y-dragon.y,d=Math.hypot(dx,dy),step=Math.min(d,left);
+      dragon.dir=direction4(dx,dy,dragon.dir);dragon.moving=d>0;
+      if(d<=step){dragon.x=x;dragon.y=y;arrival.path.shift();}
+      else{dragon.x+=dx/d*step;dragon.y+=dy/d*step;}
+      left-=step;
+    }
+    if(!arrival.path.length){
+      const b=bounds(pending.ring);
+      dragon.moving=false;dragon.air=false;dragon.placed=MAPID;
+      dragon.dir=direction4(b.x-dragon.x,b.y-dragon.y,dragon.dir);
+      faceCorinAt(b.x,b.y);pending.companion=null;
+    }
+  }
   function entered(a){
     register();const s=state(a);
     if(s.phase==='active'||pending===s)return;
     stage(s);pending=s;s.phase=window.EmberRiding?.holding()?'tutorial':'walls';
     clearPadInputs();for(const k in keys)keys[k]=0;running=false;P.moving=false;P.act=null;
-    if(s.phase!=='tutorial'){hunt=null;breath=null;claw=null;setOvl(null);}
+    if(s.phase!=='tutorial'){hunt=null;breath=null;claw=null;setOvl(null);gatherCompanion(s);}
     if(cameraZoom===null)cameraZoom=cam.z;
   }
   function activate(a){
@@ -146,7 +192,7 @@
       if(!window.EmberRiding?.holding())activate(pending.ring);
       return;
     }
-    if(pending.phase==='walls'&&arenaT>=1&&!pending.paths.size&&!scene&&!revealing&&!bossScene){
+    if(pending.phase==='walls'&&arenaT>=1&&!pending.paths.size&&!pending.companion&&!scene&&!revealing&&!bossScene){
       pending.phase='prompt';popup.hidden=false;window.EmberBattleMusic?.start();
     }
   }
@@ -168,7 +214,7 @@
   function frameCamera(){
     if(!pending||bossScene||hatchCamera)return;
     const cast=[P,...pending.foes.filter(living)];
-    if(window.EmberRiding?.holding()&&dragonHere())cast.push(dragon);
+    if(dragonHere())cast.push(dragon);
     const l=Math.min(...cast.map(f=>f.x-40)),r=Math.max(...cast.map(f=>f.x+40));
     const t=Math.min(...cast.map(f=>f.y-80)),b=Math.max(...cast.map(f=>f.y+8));
     // Fit the visible sprites closely instead of reserving a large empty border.
@@ -181,5 +227,5 @@
     cam.y=focus-(VH<360?VH/2:top+usable/2)/cam.z;
   }
   popup.addEventListener('click',e=>{e.preventDefault();action();});
-  window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};
+  window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,gather,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};
 })();

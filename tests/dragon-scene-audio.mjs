@@ -166,7 +166,8 @@ run(game.slice(game.indexOf('function advanceScene()'),game.indexOf('\nconst HER
 uiTime+=100;c.advanceScene();await flush();assert.equal(c.scene.i,1);assert.equal(uiCount(),4,'Advancing a conversation clicks');
 uiTime+=100;c.scene.hold=true;c.advanceScene();await flush();assert.equal(uiCount(),4,'An unavailable cutscene advance is silent');
 c.scene.hold=false;c.typeDone=()=>false;let completedText=false;c.typeAll=()=>{completedText=true;};
-uiTime+=100;c.advanceScene();await flush();assert(completedText);assert.equal(uiCount(),5,'Revealing a typing line clicks');
+uiTime+=100;c.advanceScene();await flush();assert(completedText);assert.equal(uiCount(),4,'Revealing a typing line stays silent');
+c.typeDone=()=>true;c.scene.t=1;uiTime+=100;c.advanceScene();await flush();assert.equal(uiCount(),5,'The next press dismisses the line with one click');
 console.log('PASS: dialogue/typing advances, menu taps, title playback, one click per gesture, reduced shared volume, and no clicks on disabled controls or gameplay A/B.');
 
 const coinCount=()=>sources.filter(s=>s.buffer[0].includes('coin-collect')).length;

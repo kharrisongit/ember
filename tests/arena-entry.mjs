@@ -66,6 +66,28 @@ for(let i=0;i<100;i++)run('EmberArenaEntry.step(.05)');
 assert(run('foes[0].y>testRing.y*TS+8&&foes[0].st==="idle"'),'Formation finishes on new opposite side');
 console.log('PASS: all four entry directions, protected approach, one-A battle start, visible phone framing, reverse respawns, consecration, and smooth visible restaging.');
 
+// Aurelius catches up during the pause, including a blocked ground route.
+for(const [dx,dy]of [[0,1],[0,-1],[-1,0],[1,0]]){
+ c.entry=[dx,dy];
+ run(`EmberArenaEntry.reset();arenaLock=null;arenaT=0;arenaGoing=false;cooling.clear();holy.clear();
+ P.x=testRing.x*TS+8+entry[0]*(testRing.r-2)*TS;P.y=testRing.y*TS+8+entry[1]*(testRing.r-2)*TS;
+ dragon.on=true;dragon.hp=20;dragon.down=false;dragon.air=false;dragon.placed=MAPID;
+ dragon.x=P.x+entry[0]*300;dragon.y=P.y+entry[1]*300;var fromDragon=[dragon.x,dragon.y];
+ foes=[{kind:'plant1',x:testRing.x*TS,y:testRing.y*TS,hp:8,st:'idle',t:0}];
+ EmberArenaEntry.prepare();stepArena(.05);`);
+ assert(run('dragon.x===fromDragon[0]&&dragon.y===fromDragon[1]'),'Arrival starts without teleporting');
+ run('EmberArenaEntry.step(.05);stepDragon(.05)');
+ assert(dom.element('arenaReady').hidden,'Prompt waits for the companion');
+ assert(run('Math.hypot(dragon.x-fromDragon[0],dragon.y-fromDragon[1])>0'),'Dragon zips in during the pause');
+ for(let i=0;i<100&&dom.element('arenaReady').hidden;i++){tick();run('stepDragon(.05)');}
+ assert(!dom.element('arenaReady').hidden,'Prompt appears after both are staged');
+ assert(run('Math.hypot(dragon.x-P.x,dragon.y-P.y)<=57&&Math.abs(dragon.y-P.y)<=16'),'Companions are side by side at the prompt');
+ assert(run('dragonCanStand(dragon.x,dragon.y)&&!dragon.air&&!dragon.moving'),'Dragon lands safely');
+ run('EmberArenaEntry.action()');
+}
+run('dragon.on=false');
+console.log('PASS: companion arrival is animated and completed before the prompt from all four entrances.');
+
 // Rectangular temple rooms use the same readiness gate from every doorway.
 run("EmberArenaEntry.reset();EmberRiding.skip();MAPID='test-temple';const room=[320,320,640,640];const templeRing={id:'temple-room:0',kind:'arena',templeRoom:room,templeMap:MAPID,x:30,y:30,r:10};MD={templeExpanded:true,templeRoomArenas:[templeRing],foes:[],templePlan:{hazards:[]},templeFloors:[room]};features=[];");
 for(const [dx,dy]of [[0,1],[0,-1],[-1,0],[1,0]]){

@@ -5814,7 +5814,7 @@ function stepDragon(dt) {
     if(mounted){dragon.x=P.x;dragon.y=P.y;dragon.dir=playerFacing4();stepTransition(dt);}
     return;
   }
-  if(globalThis.window?.EmberArenaEntry?.holding()){dragon.moving=false;return;}
+  if(globalThis.window?.EmberArenaEntry?.holding()){window.EmberArenaEntry.gather(dt);return;}
   if (bossScene) return;
   if (dragon.revive > 0) {
     dragon.revive = Math.max(0, dragon.revive - dt);
@@ -6906,7 +6906,7 @@ function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
   if (scene.hold || scene.silent) return;          /* animation owns this beat */
-  if (!typeDone()) { globalThis.window?.EmberSfx?.ui?.(); typeAll(); return; }
+  if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if(scene.greenEncounter&&scene.i<2)return; // Flight/rest timing owns these reactions.
   if(scene.nanGifts&&nanGiftBeat(scene.i))return;
@@ -8374,6 +8374,7 @@ function swingHits() {
   }
   if(landed)globalThis.window?.EmberSfx?.hit();
   if(golemLanded)globalThis.window?.EmberSfx?.golemHit();
+  if(landed||golemLanded)globalThis.window?.EmberRiding?.swordContact();
 }
 let edgeCarry = 0;
 const charm = { spore: false, ward: false, edge: false, brand: false, twin: false,
@@ -10343,7 +10344,7 @@ function hurtPlayer(n) {
     while (wardCarry >= 1 && n > 0) { n -= 1; wardCarry -= 1; }
   }
   if (n <= 0) { pInv = 1.1; return; }
-  pHp = Math.max(0, pHp - n);
+  pHp = Math.max(globalThis.window?.EmberRiding?.protectSwordBattle()?1:0, pHp - n);
   pInv = 1.1;
   if (pHp <= 0) { P.act = { kind: "die", t: 0, dir: P.dir, flip: P.flip, dir8: playerFacing4() }; return; }
   P.act = { kind: "hurt", t: 0, dir: P.dir, flip: P.flip, dir8: playerFacing4() };
@@ -11285,8 +11286,8 @@ function interact() {
     if (said) return;
   }
   if (sayNpc) {
-    globalThis.window?.EmberSfx?.ui?.();
     if (!typeDone()) { typeAll(); return; }   /* finish the line first */
+    globalThis.window?.EmberSfx?.ui?.();
     sayLine++;
     if (sayLine >= (sayNpc.said || sayNpc.d).length) {
       if (sayNpc.wasFacing) { sayNpc.f = sayNpc.wasFacing; sayNpc.wasFacing = null; }

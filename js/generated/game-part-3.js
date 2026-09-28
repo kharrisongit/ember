@@ -4544,9 +4544,9 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
-  { key: "fatherCompass", kind: "key", name: "Father's Compass",
-    tell: "Your father's compass, entrusted to you by Nan. It'll guide you when you need it most.",
-    has: () => templeCompass.owned, icon: () => "inventory_compass" },
+  { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
+    tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; the compass will guide you when you need it most.",
+    has: () => templeCompass.owned, icon: () => "inventory_mapCompass" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",
     has: () => breathHas.lightning,

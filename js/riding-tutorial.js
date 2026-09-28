@@ -4,12 +4,13 @@
   // Arena tool #5: the eastbound road out of Millwood (stable feature ID 11).
   const FIRST_ARENA=11;
   const SWORD_ARENA=208;
-  let swordDone=false;
+  let swordDone=false,corinHealDone=false,corinHit=false,corinStartHp=6,resumeCorin=false;
   let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
-  const holding=()=>!!phase&&phase!=='battle';
+  const corinRecoveryPhases=new Set(['corinRecovery','corinHealTalk','corinItemsButton','corinHeal','corinThanks']);
+  const holding=()=>!!phase&&phase!=='battle'&&phase!=='swordBattle';
   const hint=document.createElement('div');hint.id='ridingHint';hint.hidden=true;hint.setAttribute('role','status');document.body.appendChild(hint);
-  const notice=text=>{hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swipe|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
+  const notice=text=>{hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
     phase=next;clearHighlight();notice(text);hintTime=0;
@@ -22,12 +23,12 @@
     if(!holding()||internal)return true;
     if((phase==='mount'||phase==='dismount')&&menu==='airm')return item.el==='ride';
     if(phase==='fire'&&menu==='atkm')return item.el==='fire';
-    return phase==='heal'&&menu==='itemm'&&item.key==='hareMeat';
+    return menu==='itemm'&&((phase==='heal'&&item.key==='hareMeat')||(phase==='corinHeal'&&item.key==='potion'));
   }
   function paint(){
     if(!holding())return;
     clearHighlight();
-    const control=phase==='swordSwipe'?'act':phase==='dragonButton'?'btnL':phase==='itemsButton'?'btnItems':null;
+    const control=phase==='swordSwipe'?'act':phase==='dragonButton'?'btnL':['itemsButton','corinItemsButton'].includes(phase)?'btnItems':null;
     if(control){document.getElementById(control)?.classList.add('riding-target');return;}
     if(!ovl||!MENUS[ovl])return;
     const menu=MENUS[ovl],items=menu.items(),rows=document.getElementById(menu.rows)?.querySelectorAll('.row')||[];
@@ -68,6 +69,7 @@
   }
   function entered(ring){
     if(!swordDone&&!phase&&MAPID==='world'&&ring.id===SWORD_ARENA&&hasSword()){
+      corinStartHp=pHp;corinHit=false;
       stageEnemies(ring);moveTo('swordWalls');return;
     }
     if(done||phase||MAPID!=='world'||ring.id!==FIRST_ARENA||!hasDragon()||!dragonIntroDone)return;
@@ -124,10 +126,11 @@
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();moveTo('swordTalk');
       playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',after:()=>{
-        moveTo('swordSwipe','Press A to Swipe');paint();
+        moveTo('swordSwipe','Press A to Swing Your Sword');paint();
       }});
     }
     if(resumeRecovery&&!scene&&!revealing){resumeRecovery=false;beginRecovery();return;}
+    if(resumeCorin&&!scene&&!revealing){resumeCorin=false;beginCorinRecovery();return;}
     if(phase==='walls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();unlocked=true;moveTo('mountTalk');
       say(['Aurelius: Quick! Get on my back!'],()=>{
@@ -144,8 +147,8 @@
   function allowOverlay(which){
     if(!unlocked&&(which==='airm'||which==='atkm'))return false;
     if(!holding()||internal)return true;
-    return (phase==='dragonButton'&&which==='atkm')||(phase==='itemsButton'&&which==='itemm')||
-      ((phase==='mount'||phase==='dismount')&&which==='airm')||(phase==='fire'&&which==='atkm')||(phase==='heal'&&which==='itemm');
+    return (phase==='dragonButton'&&which==='atkm')||(['itemsButton','corinItemsButton'].includes(phase)&&which==='itemm')||
+      ((phase==='mount'||phase==='dismount')&&which==='airm')||(phase==='fire'&&which==='atkm')||(['heal','corinHeal'].includes(phase)&&which==='itemm');
   }
   function opened(which){
     if(internal)return;
@@ -157,6 +160,8 @@
       paint();
     }else if(phase==='itemsButton'&&which==='itemm'){
       moveTo('heal','Choose Hare Meat to heal Aurelius.');paint();
+    }else if(phase==='corinItemsButton'&&which==='itemm'){
+      moveTo('corinHeal','Choose Potion to restore Corin’s hearts.');paint();
     }
   }
   function fired(element){
@@ -166,9 +171,29 @@
     moveTo('battle','Press A to Slash');hintTime=8;overlay(null);saveGame();
   }
   function completed(ring){
+    if(!corinHealDone&&phase==='swordBattle'&&ring?.id===SWORD_ARENA){beginCorinRecovery();return;}
     if(done||phase!=='battle'||ring?.id!==ringId)return;
     // A scripted exhausted state makes this lesson reliable even after a clean win.
     moveTo('recovery');beginRecovery();
+  }
+  function swordContact(){
+    if(phase!=='swordBattle'||corinHealDone||corinHit)return;
+    corinHit=true;
+    // The first close exchange guarantees a small, nonlethal graze if no
+    // enemy has already hurt him. It happens on contact, never on a missed A.
+    if(pHp>=corinStartHp&&pHp>1){
+      pHp--;pInv=1.1;
+      P.act={kind:'hurt',t:0,dir:P.dir,flip:P.flip,dir8:playerFacing4()};
+    }
+  }
+  function beginCorinRecovery(){
+    moveTo('corinRecovery');overlay(null);
+    // Keep a reload or an automatic healing charm from making the lesson unusable.
+    pHp=Math.max(1,Math.min(pHp,pMax-1));potions=Math.max(1,potions);
+    saveGame();moveTo('corinHealTalk');
+    playScene(['Corin: Ow... I should drink a potion before I go any farther.'],{who:'Corin',after:()=>{
+      moveTo('corinItemsButton','Open the highlighted ITEMS button.');paint();
+    }});
   }
   function beginRecovery(){
     moveTo('recovery');
@@ -194,6 +219,13 @@
     ],()=>{moveTo('itemsButton','Open the highlighted ITEMS button.');overlay(null);paint();});
   }
   function usedItem(item){
+    if(phase==='corinHeal'&&item.key==='potion'){
+      moveTo('corinThanks');overlay(null);setBag(false);
+      playScene(['Corin: That’s better. Potions restore my hearts. I should keep some with me.'],{who:'Corin',after:()=>{
+        corinHealDone=true;moveTo('');saveGame();
+      }});
+      return true;
+    }
     if(phase!=='heal'||item.key!=='hareMeat'||dragon.hp<=dragonFlightMinimum())return false;
     moveTo('thanks');overlay(null);setBag(false);
     say(['Aurelius: That is better. Thank you, Corin.',
@@ -205,19 +237,19 @@
   function allowControl(id){
     if(!unlocked&&(id==='btnL'||id==='btnR'))return false;
     if(!holding())return true;
-    return id==='act'||(phase==='dragonButton'&&id==='btnL')||(phase==='itemsButton'&&id==='btnItems');
+    return id==='act'||(phase==='dragonButton'&&id==='btnL')||(['itemsButton','corinItemsButton'].includes(phase)&&id==='btnItems');
   }
   function action(){
     if(!holding())return false;
     if(phase==='swordSwipe'){
       startAct('swing');
-      if(P.act?.kind==='swing'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('');saveGame();}
+      if(P.act?.kind==='swing'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('swordBattle');saveGame();}
       return true;
     }
     if(phase==='fire'&&ovl==='atkm'){ovlTake();return true;}
     if(scene){advanceScene();return true;}
     if(phase==='dragonButton'){setOvl('atkm');return true;}
-    if(phase==='itemsButton'){setOvl('itemm');return true;}
+    if(['itemsButton','corinItemsButton'].includes(phase)){setOvl('itemm');return true;}
     return !ovl;
   }
   function key(event){
@@ -231,12 +263,15 @@
     if(event.target?.closest?.('.riding-target,#act,#say'))return false;
     event.preventDefault();event.stopImmediatePropagation();return true;
   }
-  function capture(){return {version:2,done,unlocked,phase,ringId,swordDone};}
+  function capture(){return {version:3,done,unlocked,phase,ringId,swordDone,corinHealDone,corinHit,corinStartHp};}
   function restore(saved){
-    clearHighlight();notice('');phase='';assembly=null;resumeRecovery=false;document.body.classList.remove('riding-guide');
+    clearHighlight();notice('');phase='';assembly=null;resumeRecovery=false;resumeCorin=false;document.body.classList.remove('riding-guide');
     const data=saved.ridingTutorial;
     swordDone=data?.swordDone===undefined?(saved.quest>Q.ARMED||!!data?.done):!!data.swordDone;
-    if(data?.version===1||data?.version===2){
+    corinHealDone=data?.version===3?!!data.corinHealDone:swordDone;
+    corinHit=!!data?.corinHit;corinStartHp=Number.isFinite(data?.corinStartHp)?data.corinStartHp:pHp;
+    resumeCorin=!corinHealDone&&corinRecoveryPhases.has(data?.phase);
+    if(data?.version===1||data?.version===2||data?.version===3){
       done=!!data.done;ringId=data.ringId??null;
       resumeRecovery=!done&&recoveryPhases.has(data.phase);
       // Incomplete lessons from the previous arena restart at #5. A lesson
@@ -249,6 +284,12 @@
       unlocked=done;ringId=null;
     }
     if(resumeRecovery){phase='recovery';document.body.classList.add('riding-guide');}
+    if(resumeCorin){
+      phase='corinRecovery';document.body.classList.add('riding-guide');
+      cooling.set('world:'+SWORD_ARENA,ARENA_REST);
+      const ring=MAPID==='world'&&currentArenaFeatures().find(a=>a.id===SWORD_ARENA);
+      if(ring)for(const foe of foes)if(!foe.ally&&Math.hypot(foe.x/TS-ring.x,foe.y/TS-ring.y)<ring.r+5)foe.st='dead';
+    }else if(!corinHealDone&&data?.phase==='swordBattle')phase='swordBattle';
     if((resumeRecovery||done)&&ringId!==null&&MAPID==='world'){
       cooling.set('world:'+ringId,ARENA_REST);
       const ring=currentArenaFeatures().find(a=>a.id===ringId);
@@ -258,8 +299,8 @@
     }
     stageEnemies();
   }
-  function skip(){swordDone=true;done=true;unlocked=true;resumeRecovery=false;moveTo('');}
-  window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
+  function skip(){swordDone=true;corinHealDone=true;done=true;unlocked=true;resumeRecovery=false;resumeCorin=false;moveTo('');}
+  window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,swordContact,allowControl,action,key,blockPointer,capture,restore,skip,
     canSwipe:()=>swordDone||phase==='swordSwipe',
-    unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',blocksArenaEntry:()=>recoveryPhases.has(phase)};
+    unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',protectSwordBattle:()=>phase==='swordBattle',blocksArenaEntry:()=>recoveryPhases.has(phase)||corinRecoveryPhases.has(phase)};
 })();

@@ -9,12 +9,12 @@ const FATHER_COMPASS_GIFT = [
   "Nan Ferrow: You were only out for the morning. I wasn't expecting this.",
   "Corin: Neither was I. Maddock thinks the old rider temple might have some answers.",
   "Nan Ferrow: Beyond Millwood, then. Come here, love. There is something I want you to take.",
-  "Corin: A compass?",
+  "Corin: A map and a compass?",
   "Nan Ferrow: Your father's. He carried it everywhere. I've kept it since we lost him and your mother, when you were born.",
   "Corin: I wish I could remember them.",
   "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
   "Corin: I promise, Nan.",
-  "Nan Ferrow: Take this map, too. Follow the eastern road to Thornwell, and keep it handy if you lose your way.",
+  "Nan Ferrow: Follow the eastern road to Thornwell. Keep the map and compass handy if you lose your way.",
   "Corin: I will. Thank you.",
   "Nan Ferrow: Oh, and take this for your new friend, in case he gets hungry.",
   "Corin: Thank you, Nan. I think he will appreciate that.",
@@ -31,16 +31,18 @@ function restoreFatherCompass(saved) {
   templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
   // Earlier saves received the meat together with the compass.
   templeCompass.meatGiven = saved?.meatGiven === undefined ? templeCompass.owned : !!saved.meatGiven;
-  // Existing compass saves already had access to the map.
-  templeCompass.mapGiven = saved?.mapGiven === undefined ? templeCompass.owned : !!saved.mapGiven;
+  // The map and compass are one gift, including saves between the old gift beats.
+  templeCompass.mapGiven = templeCompass.owned;
   templeCompass.cache = null;
   refreshMapControls();
 }
 function giveFatherCompass() {
-  if(templeCompass.owned)return;
+  if(templeCompass.owned&&templeCompass.mapGiven)return;
   templeCompass.owned = true;
+  templeCompass.mapGiven = true;
+  refreshMapControls();
   saveGame();
-  showReveal('inventory_compass', "Corin received his father's compass.");
+  showReveal('inventory_mapCompass', "Corin received Father's Map & Compass.");
 }
 function worldMapUnlocked(){return templeCompass.mapGiven;}
 function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gameplayStarted){
@@ -50,16 +52,12 @@ function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gamepl
     const button=document.getElementById(id);if(!button)continue;
     button.setAttribute('aria-disabled',String(!available));
     button.disabled=!available;button.style.opacity=available?'':'0.38';
-    if(id==='btnMapQuick')button.textContent=started?'MAP':'';
+    if(id==='btnMapQuick')button.textContent=available?'MAP':'';
   }
 }
 function nanGiftPending(){return !templeCompass.owned || !templeCompass.mapGiven || !templeCompass.meatGiven;}
 function nanGiftBeat(index){
   if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
-  if(index===12&&!templeCompass.mapGiven){
-    templeCompass.mapGiven=true;refreshMapControls();saveGame();
-    toast('Corin received a map. MAP is now available.');return true;
-  }
   if(index===14&&!templeCompass.meatGiven){
     templeCompass.meatGiven=true;hareMeat+=3;saveGame();
     showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat.');return true;
