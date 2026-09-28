@@ -5804,7 +5804,7 @@ function saveSummary(slot){
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   quest, routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven},
+  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
@@ -6068,7 +6068,6 @@ setInterval(() => {
   const dragonBtn = document.getElementById("btnL");
   const commandBtn = document.getElementById("btnR");
   const itemsBtn = document.getElementById("btnItems");
-  const mapBtn = document.getElementById("btnMapQuick");
   if (dragonBtn) {
     dragonBtn.textContent = on ? "DRAGON" : "";
     dragonBtn.style.opacity = on ? "" : "0.38";
@@ -6080,7 +6079,7 @@ setInterval(() => {
     commandBtn.setAttribute("aria-disabled",String(!unlocked));
   }
   if (itemsBtn) itemsBtn.textContent = started ? "ITEMS" : "";
-  if (mapBtn) mapBtn.textContent = started ? "MAP" : "";
+  refreshMapControls(started);
   // Cooldowns update in place in frameCore; replacing these rows during a
   // touch detaches the pressed button before the browser can deliver its click.
 }, 400);

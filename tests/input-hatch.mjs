@@ -139,6 +139,7 @@ run('setOvl("itemm")');dispatch(nodes.itemFullBtn,'click');assert.equal(c.ovl,nu
 assert(dispatch(nodes.btnDev,'click').defaultPrevented,'Inventory also blocks underlying DEV');
 assert.equal(dispatch(nodes.act,'pointerdown').defaultPrevented,undefined,'Inventory retains exposed A navigation');
 c.bagOpen=false;
+c.refreshMapControls=()=>{};
 run(section(p3,'setInterval(() => {\n  const started =','const SKIN_BAND ='));
 run('setOvl("atkm")');const before=refreshes;intervals.at(-1)();assert.equal(refreshes,before,'Label updates never detach a pressed attack row');
 c.window.EmberRiding={unlocked:()=>false};intervals.at(-1)();assert.equal(nodes.btnL['aria-disabled'],'true');assert.equal(nodes.btnR['aria-disabled'],'true');

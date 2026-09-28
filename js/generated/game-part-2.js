@@ -1703,7 +1703,7 @@ let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
 function renderAtlas(){renderQuestAtlas()}
-function openAtlas(from='game'){atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
+function openAtlas(from='game'){if(!worldMapUnlocked())return;atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
 function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});

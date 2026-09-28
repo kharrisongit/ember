@@ -1,6 +1,6 @@
 /* Father’s compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
-const templeCompass = { owned: false, awakened: false, meatGiven: false, cache: null };
+const templeCompass = { owned: false, awakened: false, meatGiven: false, mapGiven: false, cache: null };
 const FATHER_COMPASS_GIFT = [
   "Nan Ferrow: Corin... is that a dragon? Where did he come from?",
   "Corin: I found an egg in the woods. It hatched by Maddock's house.",
@@ -14,6 +14,8 @@ const FATHER_COMPASS_GIFT = [
   "Corin: I wish I could remember them.",
   "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
   "Corin: I promise, Nan.",
+  "Nan Ferrow: Take this map, too. Follow the eastern road to Thornwell, and keep it handy if you lose your way.",
+  "Corin: I will. Thank you.",
   "Nan Ferrow: Oh, and take this for your new friend, in case he gets hungry.",
   "Corin: Thank you, Nan. I think he will appreciate that.",
   "Nan Ferrow: Good. Both of you. Take care of each other, love."
@@ -29,7 +31,10 @@ function restoreFatherCompass(saved) {
   templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
   // Earlier saves received the meat together with the compass.
   templeCompass.meatGiven = saved?.meatGiven === undefined ? templeCompass.owned : !!saved.meatGiven;
+  // Existing compass saves already had access to the map.
+  templeCompass.mapGiven = saved?.mapGiven === undefined ? templeCompass.owned : !!saved.mapGiven;
   templeCompass.cache = null;
+  refreshMapControls();
 }
 function giveFatherCompass() {
   if(templeCompass.owned)return;
@@ -37,10 +42,25 @@ function giveFatherCompass() {
   saveGame();
   showReveal('inventory_compass', "Corin received his father's compass.");
 }
-function nanGiftPending(){return !templeCompass.owned || !templeCompass.meatGiven;}
+function worldMapUnlocked(){return templeCompass.mapGiven;}
+function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gameplayStarted){
+  if(typeof document==='undefined')return;
+  const available=!!started&&worldMapUnlocked();
+  for(const id of ['btnMapQuick','bagMap']){
+    const button=document.getElementById(id);if(!button)continue;
+    button.setAttribute('aria-disabled',String(!available));
+    button.disabled=!available;button.style.opacity=available?'':'0.38';
+    if(id==='btnMapQuick')button.textContent=started?'MAP':'';
+  }
+}
+function nanGiftPending(){return !templeCompass.owned || !templeCompass.mapGiven || !templeCompass.meatGiven;}
 function nanGiftBeat(index){
   if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
-  if(index===12&&!templeCompass.meatGiven){
+  if(index===12&&!templeCompass.mapGiven){
+    templeCompass.mapGiven=true;refreshMapControls();saveGame();
+    toast('Corin received a map. MAP is now available.');return true;
+  }
+  if(index===14&&!templeCompass.meatGiven){
     templeCompass.meatGiven=true;hareMeat+=3;saveGame();
     showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat.');return true;
   }
@@ -224,7 +244,7 @@ function drawTempleCompass() {
   ctx.restore();
 }
 
-// Place the farewell in the town center, after Corin has returned to Millwood.
+// Meet Corin as soon as he crosses back into Millwood after the hatch.
 function millwoodDepartureArea(){
   const list=typeof features!=='undefined'?features:MD?.features||[];
   return list.find(f=>f.kind==='area'&&(f.label==='Millwood'||f.place==='Millwood'))||null;
@@ -244,8 +264,8 @@ function stepNanDeparture(){
   if(!gameplayStarted||mode!=='play'||MAPID!=='world'||!hasDragon()||!nanGiftPending()||
      sceneHold()||sayNpc||fadeDir||fade||doorMotion||ovl||ask||bagOpen||editing||dying()||revealing)return;
   const town=millwoodDepartureArea();
-  const inTownCenter=town&&Math.hypot(P.x-(town.x0+town.x1)*TS/2,P.y-(town.y0+town.y1)*TS/2)<=4*TS;
-  if(!inTownCenter)return;
+  const inTown=town&&P.x>=town.x0*TS&&P.x<=town.x1*TS&&P.y>=town.y0*TS&&P.y<=town.y1*TS;
+  if(!inTown)return;
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
   if(!nan)return;

@@ -41,7 +41,7 @@
     if(!ring||ring.id!==FIRST_ARENA)return;
     const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
     const north=[];
-    for(let y=cy-limit+12;y<=cy-32;y+=24)for(const offset of [-36,0,36,-54,54]){
+    for(let y=cy-limit+12+2*TS;y<=cy-32;y+=24)for(const offset of [-36,0,36,-54,54]){
       const x=cx+offset;
       if(Math.hypot(x-cx,y-cy)<limit&&dragonCanStand(x,y))north.push([x,y]);
     }
