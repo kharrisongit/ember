@@ -11058,10 +11058,12 @@ let thornwellMet=false, thornwellArrival=null, thornwellReturn=null;
 let brambleQuest=0, brambleMap="", brambleTrail=[], brambleDeparture=null;
 function welcomePath() {
   // Local, collision-checked staging along an approach into town.
-  const start=[Math.round(P.x/8)*8+24,Math.round(P.y/8)*8];
-  if(!canStand(...start))return null;
+  const px=Math.round(P.x/8)*8,py=Math.round(P.y/8)*8;
+  const starts=[[24,0],[-24,0],[0,24],[0,-24],[24,24],[-24,24],[24,-24],[-24,-24]]
+    .map(([dx,dy])=>[px+dx,py+dy]).filter(p=>canStand(...p));
+  if(!starts.length)return null;
   const stagingDistance=Math.max(80,Math.min(200,VW/cam.z/2+30));
-  const q=[{p:start,path:[start]}],seen=new Set([start.join(',')]);let best=null;
+  const q=starts.map(p=>({p,path:[p]})),seen=new Set(starts.map(p=>p.join(',')));let best=null;
   for(let i=0;i<q.length&&i<3000;i++){
     const cur=q[i],dist=Math.hypot(cur.p[0]-P.x,cur.p[1]-P.y);
     if(dist>=stagingDistance&&cur.path.length>=8){best=cur.path;break;}
@@ -11208,7 +11210,7 @@ function stepThornwellWelcome(dt) {
   if(!brambleWelcomeInside())return;
   const dog=npcs.find(n=>n.pettable),path=welcomePath();if(!dog||!path)return;
   if(Math.hypot(dog.x-P.x,dog.y-P.y)<150){
-    const nearby=bramblePath([dog.x,dog.y],[P.x+24,P.y]);if(!nearby)return;thornwellArrival={dog,path:nearby};
+    const nearby=bramblePath([dog.x,dog.y],path.at(-1));if(!nearby)return;thornwellArrival={dog,path:nearby};
   }else{[dog.x,dog.y]=path[0];thornwellArrival={dog,path:path.slice(1)};}
   brambleQuest=1;thornwellMet=true;
   playScene(["Corin: Oh! Hello there. Come here, boy.","Corin scratches the dog's ears. His tail wags furiously.","Corin: You have a collar. We'd better find your owner.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];if(typeof beginThornwellDetour==="function")beginThornwellDetour();}});

@@ -110,4 +110,9 @@ assert(run('dragon.x')>xBefore+250);assert(run('hasDragon()'));assert.equal(run(
 assert.equal(run('atlasMainObjective().title'),'Return Bramble quietly');
 run('skipBrambleForTest()');assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 run('devUnlocked=true');assert(run('replayThornwellForTest()'));assert.equal(run('thornwellRoyal.stage'),0);assert(run('brambleWelcomeInside()'));
+assert(run('welcomePath()'),'The replay position has a real approach even beside the town fence');
+tick(1200);
+assert.equal(run('brambleQuest'),1,'Bramble actually reaches Corin');
+assert.equal(run('thornwellRoyal.stage'),1,'The real Bramble arrival starts the detour');
+assert.equal(run('dragonHere()'),false,'The entire replay opening finishes with Aurelius away');
 console.log('PASS: published exit, shove, eastbound procession, Forgefalls reunion, completed journal, discreet flight and developer skip.');
