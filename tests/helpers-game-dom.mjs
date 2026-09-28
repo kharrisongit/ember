@@ -36,7 +36,7 @@ export function gameDom(){
     createElement:tag=>new Element(tag),getElementById:element,querySelectorAll:s=>body.querySelectorAll(s),querySelector:s=>body.querySelector(s),
     addEventListener:(type,fn)=>{if(!captures.has(type))captures.set(type,[]);captures.get(type).push(fn);}};};
   const dispatch=(target,type,properties={})=>{
-    const e={target,type,key:'',detail:1,pointerId:1,isPrimary:true,clientX:0,clientY:0,...properties,touches:type==='touchstart'?[{clientX:0,clientY:0}]:[],preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.stopped=true;},stopImmediatePropagation(){this.stopped=true;}};
+    const e={target,type,key:'',detail:1,pointerId:1,isPrimary:true,clientX:0,clientY:0,touches:type==='touchstart'?[{clientX:0,clientY:0}]:[],...properties,preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.stopped=true;},stopImmediatePropagation(){this.stopped=true;}};
     for(const fn of captures.get(type)||[]){fn(e);if(e.stopped)return e;}
     for(let node=target;node;node=node.parentNode){for(const fn of node.listeners.get(type)||[])fn(e);if(e.stopped)break;}
     return e;

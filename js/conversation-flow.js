@@ -25,13 +25,13 @@
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
-    const hint=session?.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':!typeDone()?'Tap to finish the line':'Tap to continue';
+    const hint=session?(session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'A · Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
     rememberLine();
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
-      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject});
+      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject,canLeave:canGoodbye()});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -64,7 +64,7 @@
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
-    box().classList.remove('conversationListening');box().querySelector('.conversationContinue')?.remove();greet(menu);sync();
+    box().classList.remove('conversationListening');greet(menu);sync();
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
@@ -72,18 +72,14 @@
   function listening(selected){
     if(!session||ask)return;
     const el=box();el.classList.add('conversationListening');
-    for(const button of el.querySelectorAll('button'))button.disabled=true;
+    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckTab'))button.disabled=true;
     for(const row of el.querySelectorAll('.deckTopic')){
       const chosen=Number(row.dataset.askIndex)===selected;
       row.dataset.selected=String(chosen);row.setAttribute('aria-pressed',String(chosen));
     }
-    const status=el.querySelector('.deckProgressText');if(status)status.textContent='Tap the dialogue to continue';
-    const prompt=el.querySelector('.deckReplyPrompt');if(prompt)prompt.textContent='Corin’s chosen reply';
-    el.querySelector('.conversationContinue')?.remove();
-    const next=document.createElement('button');next.className='conversationContinue';next.type='button';
-    next.textContent='Continue conversation';next.onclick=()=>advance();
-    el.querySelector('.conversationStage')?.appendChild(next);sync();
+    sync();
   }
+
   function take(option){
     if(!isMenu(ask))return false;
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
@@ -101,11 +97,21 @@
     }else listening(selected);
     return true;
   }
+  function canGoodbye(){
+    // Authored topic branches can end immediately. Finish required story
+    // dialogue and item reveals first so their rewards/callbacks still run.
+    return !!session&&!session.shopping&&!revealing&&!sayNpc&&(!scene||!!scene.conversationReplies);
+  }
   function goodbye(callback){
+    if(!canGoodbye())return false;
     callback??=session?.menu?.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;
-    // Only offered between lines: required rewards and story after-callbacks
-    // cannot be interrupted by closing the parchment mid-exchange.
-    askShut();if(callback)callback();
+    if(scene?.conversationReplies){scene=null;sayOff();}
+    askShut();if(callback)callback();return true;
+  }
+  function next(){
+    if(!session||session.shopping)return false;
+    if(isMenu(ask)){askTake();return true;}
+    return advance();
   }
   function restore(){
     if(!session)return;
@@ -176,11 +182,11 @@
       if(focusable.length){const i=focusable.indexOf(document.activeElement);e.preventDefault();focusable[(i+(e.shiftKey?-1:1)+focusable.length)%focusable.length].focus();}
       return true;
     }
-    if(!session||ask)return false;
+    if(!session||session.shopping)return false;
     const key=e.key.toLowerCase();
     if(!['a','enter',' ','b','escape'].includes(key))return false;
     e.preventDefault();
-    if(!e.repeat&&!['b','escape'].includes(key))advance();
+    if(!e.repeat){if(['b','escape'].includes(key))goodbye();else next();}
     return true;
   }
   function advance(){
@@ -191,6 +197,7 @@
     tick();return true;
   }
   function candidate(target){
+    if(session&&!session.shopping)return false; // Full conversations use their A / B controls.
     if(target?.closest?.('button, input, select, textarea, a'))return false;
     if(!target?.closest?.('.conversationStage')&&target?.closest?.('#bagAsk, #deck, #merchantShop, #cloudSaveDialog'))return false;
     return gameplayStarted&&!window.EmberCloud?.isOpen()&&!editing&&!atlasOpen&&!bagOpen&&!ovl&&!ask?.shop&&
@@ -220,6 +227,6 @@
   }
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
-  sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)advance();}});
-  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session,history:()=>session?.history||[]};
+  sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){if(session)next();else advance();}}});
+  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,active:()=>!!session,history:()=>session?.history||[]};
 })();

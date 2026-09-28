@@ -7,7 +7,7 @@ const click=node=>{assert(node);node.onclick({stopPropagation(){}});};
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;thornwellRoyal.stage=7;faceToward=()=>{};
 openNpcTopics({n:'Linna',x:150,y:150,d:['Hello']});`);
 assert.equal(box.querySelector('.deckHeader').parentNode,box,'Banner spans the panel independently of the topic columns');
-assert.equal(box.querySelector('.deckProfileHint').textContent,'View profile ▾','Profile access has a clear action label');
+assert.equal(box.querySelector('.deckProfileHint').textContent,'Character profile ›','Profile access has a clear action label');
 const original=run('askPick');
 click(box.querySelector('.deckProfileToggle'));
 assert.equal(run('ask._profileOpen'),true);
@@ -28,7 +28,7 @@ var dismissals=0;thornwellDismissAudience=()=>{dismissals++;};
 openThornwellAudience(king);ask._deckFilter='world';askDraw();`);
 run('askBack()');assert.equal(run('dismissals'),0,'Leaving a filter does not dismiss the king');
 click(box.querySelector('.deckProfileToggle'));run('askBack()');assert.equal(run('dismissals'),0);
-click(box.querySelector('.deckClose'));assert.equal(run('dismissals'),1,'Leaving the audience still runs its required story callback');
+click(box.querySelector('.conversationGoodbye'));assert.equal(run('dismissals'),1,'Leaving the audience still runs its required story callback');
 
 // Conversations leave the gameplay camera alone, including authored scenes,
 // gift overlays, menu navigation and alternating dialogue portraits.
@@ -66,7 +66,7 @@ run('revealing=false;scene.silent=true;scene.npcActor.y+=80;presentCamera(.016);
 assert.deepEqual(run('({...cam})'),before,'Nan’s walk-off does not move the camera');
 run('scene=null;sayOff();openNpcTopics({n:"Linna",x:140,y:130,d:["Hello"]});');
 assert.equal(dom.element('face').style.display,'block','A topic list keeps its greeting portrait above the dialogue');
-assert.equal(c.document.querySelectorAll('.conversationPortrait').length,0,'No paired portrait overlay is created');
+assert.equal(c.document.querySelectorAll('.conversationPortrait').length,2,'Full conversation has a fixed portrait for each participant');
 run('askShut();presentCamera(.016)');
 assert(!dom.element('say').classList.contains('on'),'Goodbye dismisses the greeting');
 assert.deepEqual(run('({...cam})'),before,'Goodbye does not zoom out');
@@ -74,4 +74,4 @@ assert.equal(run(`playerFacingText('Millwood, indoors (house26)')`),'Millwood, i
 assert.equal(run(`playerFacingText('Visit house26')`),'Visit '+run('W.maps.house26.title'));
 run(`openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});ask.opts.push({n:'Visit house26',go:()=>{}});askDraw();`);
 assert(!rows.querySelectorAll('.deckTopic').some(n=>/house\d/i.test(n.getAttribute('aria-label'))));
-console.log('PASS: profiles, safe Back/leave paths, unique greetings, single alternating portrait, and normal camera throughout conversations and gifts.');
+console.log('PASS: profiles, safe Back/leave paths, distinct profiles, fixed conversation portraits, alternating cutscene portraits, and normal camera throughout conversations and gifts.');

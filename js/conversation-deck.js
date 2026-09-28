@@ -8,7 +8,7 @@
   const category=o=>o.category||(o.navigation?'folder':!o.go?'leave':/^(Hello|I came for)/.test(o.n)?'greeting':/supplies/.test(o.n)?'trade':/Halvard|Wingfall|history|land and/.test(o.n)?'world':/quest|next\?|lead|temple|Heartstone|rod|lantern|ward|Bramble|summon/i.test(o.n)?'lead':'story');
   const seen=o=>discussedTopics.has(topicMemoryKey(o));
   function visible(o,filter){
-    if(o.head)return false;
+    if(o.head||category(o)==='leave')return false;
     const cat=category(o);
     if(['leave','greeting','trade','folder'].includes(cat))return true;
     return filter==='all'||filter==='new'&&!seen(o)||filter===cat;
@@ -36,22 +36,43 @@
     });
     box.appendChild(node('small','conversationPromptHint','Choose an action · A to confirm · B to leave'));
   }
-  function makeStage(){
-    const stage=node('section','conversationStage');stage.setAttribute('aria-label','Conversation');
-    const ribbon=node('div','conversationRibbon');
-    for(const [phase,label]of [['explore','Explore'],['listen','Listen'],['reply','Your reply']]){
-      const chip=node('span','conversationPhase',label);chip.dataset.phase=phase;ribbon.appendChild(chip);
+  function portrait(who){
+    const image=node('span','conversationPortrait');image.setAttribute('aria-hidden','true');paintSmallPortrait(image,who);return image;
+  }
+  function makeStage(name){
+    const stage=node('section','conversationStage');stage.setAttribute('aria-label','Their words');
+    const speech=node('div','conversationNpcSpeech');speech.append(node('div','conversationNpcEcho scrolls'));
+    const identity=node('div','conversationSpeaker');identity.append(portrait(name),node('strong','conversationSpeakerName',name));
+    stage.append(identity,speech);return stage;
+  }
+  function makePlayer(workspace){
+    const player=node('section','conversationPlayer');player.setAttribute('aria-label','Corin’s side of the conversation');
+    const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'),node('small','conversationPlayerTurn','Your topics'));
+    const body=node('div','conversationPlayerBody');
+    const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'));
+    body.append(workspace,speech);player.append(body,identity);return player;
+  }
+  function makeControls(){
+    const footer=node('footer','conversationFooter');
+    const context=node('div','conversationContext');context.append(node('p','conversationSubject','A moment to talk'),node('small','conversationTurn','Choose a topic'));
+    const controls=node('div','conversationAB');
+    for(const [key,label,cls,action]of [['B','Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.goodbye()],['A','Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
+      const button=node('button','conversationControl '+cls);button.type='button';button.setAttribute('aria-label',key+' — '+label);
+      button.append(node('strong','',key),node('span','',label));
+      button.onclick=e=>{e.stopPropagation();action();};
+      button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.goodbye();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
+      controls.append(button);
     }
-    stage.append(ribbon,node('p','conversationSubject','A moment to talk'),node('small','conversationTurn','Where will the conversation go?'));
-    return stage;
+    footer.append(context,controls);return footer;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
     const memory=!ask._topicDrawn?topicMenuPositions.get(scope):null;
     if(memory){ask._deckFilter=memory.filter||'all';const i=ask.opts.findIndex(o=>!o.head&&o.n===memory.name);if(i>=0)askPick=i;}
     const filter=ask.replyChoices?'all':ask._deckFilter||'all',enter=!ask._topicDrawn||ask._deckLastFilter!==filter;
-    const workspace=box.querySelector('.conversationWorkspace')||node('div','conversationWorkspace');
-    const stage=box.querySelector('.conversationStage')||makeStage();
+    const workspace=box.querySelector('.conversationWorkspace')||node('div','conversationWorkspace scrolls');
+    const stage=box.querySelector('.conversationStage')||makeStage(ask.npcConversation||'Aurelius');
+    const player=box.querySelector('.conversationPlayer')||makePlayer(workspace);
     const oldScroll=memory?.scroll??workspace.scrollTop;
     ask._topicDrawn=true;ask._deckLastFilter=filter;
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
@@ -67,14 +88,13 @@
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');
     profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;ask._historyOpen=false;askDraw();};
-    const portrait=node('span','journalPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
     const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
     identity.append(node('strong','deckName',name));
     const sub=node('span','deckProgressText',ask.replyChoices?'Choose Corin’s reply':`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
     const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
-    identity.append(node('span','deckProfileHint',ask._profileOpen?'Close profile ▴':'View profile ▾'));
+    identity.append(node('span','deckProfileHint',ask._profileOpen?'‹ Return to conversation':'Character profile ›'));
     profileButton.title=ask._profileOpen?'Tap the banner to return to topics':'Tap the banner for biography and character details';
-    profileButton.append(portrait,identity);if(!ask.replyChoices)profileButton.append(ring);
+    profileButton.append(identity);if(!ask.replyChoices)profileButton.append(ring);
     const controls=node('div','deckHeaderControls');
     const parent=ask.back&&ask.topicScope!=='thornwell-audience';
     if(ask._profileOpen||ask._historyOpen||filter!=='all'||parent){
@@ -84,13 +104,13 @@
     const historyToggle=node('button','deckHistoryToggle','History');historyToggle.type='button';
     historyToggle.setAttribute('aria-expanded',String(!!ask._historyOpen));historyToggle.setAttribute('aria-controls','conversationHistory');
     historyToggle.onclick=()=>{ask._historyOpen=!ask._historyOpen;ask._profileOpen=false;askDraw();};controls.append(historyToggle);
-    const close=node('button','deckClose','Goodbye');close.type='button';close.setAttribute('aria-label','Leave conversation');
-    close.onclick=e=>{e.stopPropagation();if(ask.replyChoices){askBack();return;}if(window.EmberConversationFlow){window.EmberConversationFlow.goodbye();return;}const leave=ask.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;askShut();if(leave)leave();};if(!ask.replyChoices)controls.append(close);
     header.append(profileButton,controls);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
       const info=window.EmberConversationView.profile(name,ask.npcActor);
-      profile.append(node('small','deckEyebrow',info.role),node('h2','',name),node('p','',info.bio));
+      const hero=node('div','deckProfileHero');
+      const identity=node('div','deckProfileIdentity');identity.append(node('small','deckEyebrow','Character profile'),node('h2','',name),node('p','deckProfileRole',info.role));
+      hero.append(portrait(name),identity);profile.append(hero,node('h3','','Biography'),node('p','',info.bio));
       const facts=node('dl','deckProfileFacts');
       for(const [label,value]of [['Home',info.home],['Conversation',`${read} of ${topics.length} topics explored`],['Ask about',info.interests]]){facts.append(node('dt','',label),node('dd','',value));}
       profile.append(facts);
@@ -102,8 +122,10 @@
     for(const line of lines){const entry=node('article','conversationMemory');entry.append(node('strong','',line.speaker),node('p','',line.text));history.appendChild(entry);}
     if(!lines.length)history.appendChild(node('p','','Your conversation will be recorded here as you talk.'));
     const hint=document.getElementById('topicScrollHint');
-    workspace.replaceChildren(profile,history,rows,...(hint?[hint]:[]));
-    box.replaceChildren(header,stage,workspace);window.EmberConversationView?.mount(stage);
+    workspace.replaceChildren(rows,...(hint?[hint]:[]));
+    const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen&&!ask._historyOpen;dossier.append(profile,history);
+    const returnButton=node('button','deckReturn','‹ Return to conversation');returnButton.type='button';returnButton.onclick=()=>{ask._profileOpen=false;ask._historyOpen=false;askDraw();};dossier.append(returnButton);
+    box.replaceChildren(header,stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
     box.classList.toggle('historyOpen',!!ask._historyOpen);
