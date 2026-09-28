@@ -7,7 +7,7 @@
   button.addEventListener('click',()=>{
     if(panel){panel.hidden=!panel.hidden;if(panel.hidden)stop();return;}
     panel=document.createElement('section');panel.id='audioMixPanel';panel.setAttribute('aria-label','Audio mixer');
-    panel.style.cssText='position:fixed;right:8px;top:max(8px,env(safe-area-inset-top));z-index:9998;width:min(370px,calc(100vw - 16px));max-height:72dvh;overflow:auto;box-sizing:border-box;padding:12px;background:#17242bf5;color:#eee2c8;border:1px solid #ae9864;border-radius:10px;font:14px/1.4 sans-serif;box-shadow:0 4px 20px #0009;touch-action:pan-y';
+    panel.style.cssText='position:fixed;right:8px;top:max(8px,env(safe-area-inset-top));z-index:9998;width:min(370px,calc(100vw - 16px));max-height:72dvh;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box;padding:12px;background:#17242bf5;color:#eee2c8;border:1px solid #ae9864;border-radius:10px;font:14px/1.4 sans-serif;box-shadow:0 4px 20px #0009;touch-action:pan-y';
     const heading=document.createElement('strong');heading.textContent='AUDIO MIXER';const header=document.createElement('div');header.style='position:sticky;top:-12px;background:#17242b;z-index:1;margin:-12px -12px 8px;padding:12px 12px 1px';header.append(heading);panel.append(header);
     const controls=document.createElement('div');controls.style='display:flex;gap:6px;flex-wrap:wrap;margin:10px 0';
     for(const [label,fn]of [['Close',close],['Stop preview',stop],['Reset unsent',()=>{stop();mix.reset();saveEditorDraft();}],['Send Changes',()=>sendEditorChanges()]]){

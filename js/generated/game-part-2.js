@@ -5057,7 +5057,7 @@ document.addEventListener("touchstart", e => {
 
 document.addEventListener("touchmove", e => {
   if (!e.cancelable) return;
-  if (e.target?.closest?.('#cloudSaveDialog,#merchantShop,input[type="range"]')) return; /* native volume slider owns its drag */
+  if (e.target?.closest?.('#cloudSaveDialog,#merchantShop,#audioMixPanel,input[type="range"]')) return; /* native volume slider owns its drag */
   const el = lockEl || scrollerFor(e.target);
   if (!el) { e.preventDefault(); return; }        /* not a scroller: swallow */
   const t0 = e.touches[0];

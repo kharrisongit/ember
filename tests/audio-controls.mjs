@@ -23,7 +23,7 @@ let move;
 const touch=vm.createContext({document:{addEventListener:(type,f)=>{if(type==='touchmove')move=f;}},lockEl:null,scrollerFor:()=>null});
 vm.runInContext(p2.slice(p2.indexOf('document.addEventListener("touchmove", e => {'),p2.indexOf('document.addEventListener("touchend", () => { lockEl')),touch);
 // closest accepts comma-separated selector lists, as the browser does.
-for(const selector of ['input[type="range"]','#cloudSaveDialog','#merchantShop']){
+for(const selector of ['input[type="range"]','#cloudSaveDialog','#merchantShop','#audioMixPanel']){
  const target={closest:selectors=>selectors.split(',').some(s=>s.trim()===selector)?target:null};
  const e={cancelable:true,target,preventDefault(){this.prevented=true;}};
  move(e);assert(!e.prevented,selector+' retains its native touch gesture');
