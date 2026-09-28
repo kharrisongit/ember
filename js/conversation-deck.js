@@ -13,7 +13,7 @@
     if(['leave','greeting','trade','folder'].includes(cat))return true;
     return filter==='all'||filter==='new'&&!seen(o)||filter===cat;
   }
-  function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+  function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=playerFacingText(text);return e;}
   function back(){
     if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
     if(ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
@@ -90,7 +90,7 @@
       copy.append(node('small','',detail));
       const badge=node('span','deckTopicBadge',ask.replyChoices?'↵':cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
       badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
-      b.setAttribute('aria-label',o.n+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
+      b.setAttribute('aria-label',playerFacingText(o.n)+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
       b.onclick=e=>{e.stopPropagation();if(box.moved)return;askPick=i;askTake();};
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};
       rows.append(b);

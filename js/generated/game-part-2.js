@@ -6565,7 +6565,7 @@ function stepDragonIntroduction(){
     'Aurelius: That is your choice. Wherever you go, I will stay beside you.',
     'Corin: Then we had better make a start.',
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
-  ],{telepathy:true,after:()=>{
+  ],{telepathy:true,conversationCamera:{},after:()=>{
     dragonIntroDone=true;dragonIntroArmed=false;saveGame();
   }});
   return true;
@@ -6808,7 +6808,9 @@ function stepWalkers(dt) {
       // Return south the way she approached; hide only after her head exits.
       faceToward(m,m.x,m.y+32);m.y+=72*dt;m.scriptWalking=true;
       const sprite=SPR[m.packSpr+'_walk_d']||SPR[m.packSpr+'_idle_d'];
-      if(m.y-(sprite?.[3]||64)>cam.y+VH/cam.z){m.away=true;m.nanDeparting=false;m.scriptWalking=false;m.goto=null;}
+      const view=globalThis.window?.EmberConversationView?.frame()||cam;
+      const bottom=Math.max(view.y+VH/view.z,cameraPresentation?.map===MAPID?cameraPresentation.cy+VH/cameraPresentation.z/2:-Infinity);
+      if(m.y-(sprite?.[3]||64)>bottom)finishNanDeparture(m);
       continue;
     }
     if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
@@ -7468,7 +7470,17 @@ function flashReveal(sprName, caption, ms) {
 
 const TYPE_CPS = 45;
 let typed = 0, typeFull = "", typeWho = "";
+function playerFacingText(text){
+  // Editor house IDs sometimes travel in location metadata or topic text.
+  // Keep identifiers intact in world data; only translate their displayed form.
+  return String(text??'').replace(/\s*\(\s*house\d+(?:_[a-z0-9]+)*\s*\)/gi,'')
+    .replace(/\bhouse\d+(?:_[a-z0-9]+)*\b/gi,id=>{
+      const title=W.maps[id.toLowerCase()]?.title;
+      return title&&!/\bhouse\d/i.test(title)?title:'the house';
+    });
+}
 function typeStart(who, text) {
+  text=playerFacingText(text);
   typeWho = who; typeFull = text; typed = 0;
   if(!scene?.telepathy&&typeof rememberDragonKnowledge==='function')rememberDragonKnowledge(who,text);
 }

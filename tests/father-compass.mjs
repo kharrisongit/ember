@@ -49,13 +49,21 @@ c.restoreFatherCompass();c.prepareNanDeparture();assert.equal(c.npcs.length,0);
 c.hatched=true;c.prepareNanDeparture();assert.equal(c.npcs.length,1);c.prepareNanDeparture();assert.equal(c.npcs.length,1,'Nan is not duplicated');
 assert(c.npcs[0].away,'Nan has no visible waiting presence');c.P={x:31*16,y:429*16};c.stepNanDeparture();startApproach();assert.deepEqual(Array.from(c.scene.lines),Array.from(run('FATHER_COMPASS_GIFT')),'Automatic encounter keeps the same complete conversation as manual talk');
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
-const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=37);
+let nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=37);
 assert.equal(run('templeCompass.owned'),false,'gift waits for its dialogue line');c.nanGiftBeat(6);c.nanGiftBeat(12);c.nanGiftBeat(14);assert.equal(run('templeCompass.owned'),true);
-const goodbye=[nan.x,nan.y];c.scene.after();assert.deepEqual([nan.x,nan.y],goodbye,'Goodbye never teleports Nan');assert.equal(nan.away,false);assert(nan.nanDeparting);
+const goodbye=[nan.x,nan.y],cameraOwner=c.scene.conversationCamera;
+c.scene.after();assert.deepEqual([nan.x,nan.y],goodbye,'Goodbye never teleports Nan');assert.equal(nan.away,false);assert(nan.nanDeparting);
+assert(c.scene.silent,'A silent scene keeps player input locked for the walk-off');
+assert.equal(c.scene.conversationCamera,cameraOwner,'Walk-off retains the gift conversation camera');
+assert.equal(c.scene.until(),false,'Control remains locked while Nan is visible');
+c.finishNanDeparture(nan);assert.equal(c.scene.until(),true);
+assert.equal(c.W.maps.house26.npcs[0].away,false,'Nan is available back inside her house');
+c.scene.after();assert(!c.npcs.includes(nan),'The outdoor visitor is removed after walking off screen');
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
 
 c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};
 c.stepNanDeparture();startApproach();assert.equal(c.mounted,false);assert.equal(c.dragon.air,false);assert.equal(c.dragon.tr,null,'No visible landing animation');
+nan=c.scene.npcActor;
 [nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=37);
 console.log('PASS: Nan approaches within talking distance, blocks advances while approaching, and forces a mounted flying dragon to land first.');
 

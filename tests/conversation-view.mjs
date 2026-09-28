@@ -82,4 +82,21 @@ assert.equal(dom.element('face').style.display,'none','Dialogue portrait is abse
 assert.equal(c.document.querySelectorAll('.conversationPortrait').length,0,'No paired portrait overlay is created');
 run('askShut();sayOff();EmberConversationView.frame()');assert.equal(run('EmberConversationView.active()'),false);
 
+// Authored introductions retain a close-up through narration and reward overlays.
+run(`scene={telepathy:true,conversationCamera:{},lines:['Aurelius: Corin.','Corin: Who said that?'],i:0,t:1};
+dragon.on=true;dragon.air=false;dragon.x=150;dragon.y=130;dragon.placed=MAPID;dragonOff=false;
+showScene();var introFrame=EmberConversationView.frame();`);
+assert(run('introFrame.z>Math.max(playZoom(),cam.z)'),'The introduction zooms in from the gameplay view');
+run('scene.i=1;showScene()');assert.deepEqual(run('EmberConversationView.frame()'),run('introFrame'));
+run(`scene={nanGifts:true,conversationCamera:{},npcActor:{n:'Nan Ferrow',x:100,y:166},lines:['Nan Ferrow: Take this.'],i:0,t:1};
+showScene();var giftFrame=EmberConversationView.frame();revealing=true;sayOff();`);
+assert.deepEqual(run('EmberConversationView.frame()'),run('giftFrame'),'An item reveal cannot release the camera');
+run('revealing=false;scene.silent=true;scene.npcActor.y+=80');
+assert.deepEqual(run('EmberConversationView.frame()'),run('giftFrame'),'The walk-off cannot follow Nan or reframe');
+run('scene=null;sayOff()');assert.equal(run('EmberConversationView.frame()'),null);
+assert.equal(run(`playerFacingText('Millwood, indoors (house26)')`),'Millwood, indoors');
+assert.equal(run(`playerFacingText('Visit house26')`),'Visit '+run('W.maps.house26.title'));
+run(`openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});ask.opts.push({n:'Visit house26',go:()=>{}});askDraw();`);
+assert(!rows.querySelectorAll('.deckTopic').some(n=>/house\d/i.test(n.getAttribute('aria-label'))),'Topic accessibility labels use place names too');
+
 console.log('PASS: full-width banner, profiles, safe Back/leave paths, camera fit in 60 viewport/body/animation cases, single alternating portrait, fixed speaker framing, and continuous menu frames.');

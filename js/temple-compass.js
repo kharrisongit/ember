@@ -322,14 +322,30 @@ function startNanFarewell(nan){
   nan.home=[nan.x,nan.y];
   nan.goto=target;nan.straightSceneWalk=true;nan.away=false;
   faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
+  const conversationCamera={};
   playScene(fatherCompassGift(nan),
-    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
+    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,conversationCamera,i:templeCompass.owned?8:0,after:()=>{
+      clearPadInputs();running=false;P.act=null;P.moving=false;
       nan.straightSceneWalk=false;nan.goto=null;nan.nanDeparting=true;
       nan.scriptWalking=true;nan.noTalk=true;
       faceToward(nan,nan.x,nan.y+32);
+      // The farewell still owns input and its camera while Nan walks away.
+      // Only release Corin after the whole sprite has left the screen.
+      playScene([],{silent:true,nanGifts:true,npcActor:nan,conversationCamera,
+        until:()=>!nan.nanDeparting,after:()=>{
+          npcs=npcs.filter(n=>n!==nan||!n.fatherCompassVisitor);
+          clearPadInputs();P.moving=false;
+        }});
     },hold:()=>{
       if(nan.goto||hettie?.nanSceneAside?.length)return false;
       nan.scriptWalking=false;
       faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
     }});
+}
+function finishNanDeparture(nan){
+  nan.away=true;nan.nanDeparting=false;nan.scriptWalking=false;nan.goto=null;
+  // Her indoor actor retains its published position; the outdoor visitor is
+  // removed after this beat instead of walking visibly back through scenery.
+  const home=W.maps.house26?.npcs.find(n=>n.n==='Nan Ferrow');
+  if(home){home.away=false;home.noTalk=false;}
 }

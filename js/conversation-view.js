@@ -28,7 +28,8 @@
     const interests=stories.map(s=>s[0]).join(' · ')||'Life in Emberfell · The road ahead';
     const data=biographies[name]||['A familiar face in '+home,home,
       name+' is part of the everyday life of '+home+'. '+(stories.length?'Their stories of '+stories[0][0].toLowerCase()+' offer a glimpse of the memories and people that matter to them.':'A conversation may reveal what matters to them, and what has changed along the road.')];
-    return {name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||''};
+    return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||''})
+      .map(([key,value])=>[key,playerFacingText(value)]));
   }
   // All inputs and outputs use canvas pixels; CSS viewport geometry is converted
   // at the boundary. Fitting the complete bodies keeps heads and feet visible.
@@ -68,9 +69,10 @@
   function hide(){active=false;return null;}
   function frame(){
     const session=window.EmberConversationFlow?.cameraSession();
+    const owner=session||scene?.conversationCamera;
     const geometry=innerWidth+':'+innerHeight+':'+VW+':'+VH;
-    if(!session)locked=null;
-    if(session&&locked?.session===session&&locked.map===MAPID&&locked.geometry===geometry&&mode==='play'&&!editing&&!atlasOpen){
+    if(!owner)locked=null;
+    if(owner&&locked?.owner===owner&&locked.map===MAPID&&locked.geometry===geometry&&mode==='play'&&!editing&&!atlasOpen){
       active=true;return locked.target;
     }
     const menu=!!(ask?.npcConversation||ask?.dragonConversation);
@@ -100,7 +102,16 @@
       const lineHeight=innerHeight<=520?74:innerWidth<=600?Math.min(144,Math.max(128,innerHeight*.16)):Math.min(132,Math.max(100,innerHeight*.14));
       const viewport={width:VW,height:VH,panelTop:(innerHeight*.4-lineHeight-8-canvas.top)*sy};
       const target=sessionFrame(actors,viewport,playZoom()*1.16);
-      locked={session,map:MAPID,geometry,target};return target;
+      locked={owner,map:MAPID,geometry,target};return target;
+    }
+    if(owner){
+      // Story conversations use a close-up too. Keep the same target through
+      // narration, alternating portraits, gift reveals and Nan's walk-off.
+      const zoom=Math.max(playZoom(),cam.z)*1.16,portrait=portraitSize*Math.max(sx,sy);
+      const span=Math.max(...actors.map(a=>a.x+a.width/2))-Math.min(...actors.map(a=>a.x-a.width/2));
+      const panelTop=(panel.top-canvas.top)*sy-(span*zoom>VW-2*(portrait+18)?portrait:0);
+      const target=sessionFrame(actors,{width:VW,height:VH,panelTop},zoom);
+      locked={owner,map:MAPID,geometry,target};return target;
     }
     return conversationFrame(actors,{width:VW,height:VH,panelTop:(panel.top-canvas.top)*sy,
       portraitSize:portraitSize*Math.max(sx,sy),menu:menu&&!dialogue},Math.min(5.5,playZoom()*1.22));
