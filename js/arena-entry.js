@@ -169,10 +169,10 @@
     if(!pending||bossScene||hatchCamera)return;
     const cast=[P,...pending.foes.filter(living)];
     if(window.EmberRiding?.holding()&&dragonHere())cast.push(dragon);
-    const l=Math.min(...cast.map(f=>f.x-48)),r=Math.max(...cast.map(f=>f.x+48));
-    const t=Math.min(...cast.map(f=>f.y-96)),b=Math.max(...cast.map(f=>f.y+16));
-    // Leave the top HUD and the bottom prompt/dialogue clear on phone screens.
-    const top=44,bottom=150,usable=Math.max(40,VH-top-bottom);
+    const l=Math.min(...cast.map(f=>f.x-40)),r=Math.max(...cast.map(f=>f.x+40));
+    const t=Math.min(...cast.map(f=>f.y-80)),b=Math.max(...cast.map(f=>f.y+8));
+    // Fit the visible sprites closely instead of reserving a large empty border.
+    const top=24,bottom=130,usable=Math.max(40,VH-top-bottom);
     cam.z=Math.min(cameraZoom||playZoom(),(VW-24)/(r-l),usable/(b-t));
     cam.x=(l+r)/2-VW/cam.z/2;cam.y=(t+b)/2-(top+usable/2)/cam.z;
   }

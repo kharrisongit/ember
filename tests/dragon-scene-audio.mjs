@@ -8,7 +8,7 @@ const context={
 };
 const c=vm.createContext({window:{EmberAudio:{graph:()=>({context,output})},addEventListener:(e,f)=>listeners[e]=f},
  document:{hidden:false,addEventListener:(e,f)=>documentListeners[e]=f},performance:{now:()=>0},fetch:async path=>({ok:true,arrayBuffer:async()=>[path]}),
- setTimeout:(f,ms)=>cueTimers.push({f,ms}),setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:320},TS:16,shake:0});
+ setTimeout:(f,ms)=>cueTimers.push({f,ms}),setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:320},TS:16,shake:0,cam:{z:3}});
 const run=s=>vm.runInContext(s,c),flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 run(read('js/dragon-scene-audio.js'));listeners.touchstart();await flush();
 const api=c.window.EmberDragonSceneAudio,active=file=>sources.filter(s=>s.started&&!s.stopped&&s.buffer[0].includes(file));

@@ -3673,6 +3673,7 @@ function worldArtVisible(x,y,w,h,vw,vh){
 }
 
 function drawWorld(t, dt) {
+  frameGreenEncounter();
   globalThis.window?.EmberArenaEntry?.frameCamera();
   const z = cam.z;
   const vw = VW / z, vh = VH / z;
@@ -6002,6 +6003,7 @@ function drawDragon() {
 
 const GREEN = { map: "world", tx: 30, ty: 19, fps: 7, scale: 1 };
 let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
+let greenCamera = null;
 const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 5, GREEN_RISE = 1.2, GREEN_DEPART = 2;
 // Down -> half-raised -> fully raised -> down, with readable peak poses.
 // Use scene time for both the arrival and departure flights.
@@ -6015,23 +6017,38 @@ function greenEncounterFinished(){
   if(greenPhase==='sit'&&greenP>=GREEN_REST&&scene.t>=GREEN_REST)greenGone=true;
   return greenPhase==='gone';
 }
+function releaseGreenCamera(){
+  if(!greenCamera)return;
+  cam.z=greenCamera.zoom;greenCamera=null;camFree=false;followCam();
+}
+function frameGreenEncounter(){
+  if(!greenCamera||!scene?.greenEncounter||MAPID!==GREEN.map)return;
+  const g=greenAt(),left=Math.min(P.x-24,g.x-60),right=Math.max(P.x+24,g.x+60);
+  const top=Math.min(P.y-64,g.y-100),bottom=Math.max(P.y+12,g.y+16);
+  // Reserve room for Corin's portrait/dialogue below the complete landing sprite.
+  const inset=24,available=Math.max(40,VH-inset-160);
+  cam.z=Math.min(greenCamera.zoom,(VW-24)/(right-left),available/(bottom-top));
+  cam.x=(left+right)/2-VW/cam.z/2;
+  cam.y=(top+bottom)/2-(inset+available/2)/cam.z;
+}
 function beginGreenEncounter(){
   if(scene)return;
+  greenCamera ||= {zoom:cam.z};
   if(greenPhase==='off'){greenPhase='in';greenP=0;greenT=0;}
   const i=greenPhase==='gone'?2:['sit','rise','depart'].includes(greenPhase)?1:0;
   playScene(['Corin: What the…','Corin: Are…are you okay?','Corin: Hey! You forgot something!'],
-    {who:'Corin',greenEncounter:true,i,after:()=>{quest=Q.FLED;}});
+    {who:'Corin',greenEncounter:true,i,after:()=>{quest=Q.FLED;releaseGreenCamera();}});
   const g=greenAt();faceCorinAt(g.x,g.y);
 }
 function greenFly(dt) {
   if (quest !== Q.ARMED || MAPID !== GREEN.map) {
+    releaseGreenCamera();
     greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; window.EmberDragonSceneAudio?.phase("off"); return;
   }
   const g = greenAt();
   const d = Math.hypot(P.x - g.x, P.y - g.y) / TS;
-  // Begin when the landing spot is in the nearby clearing, so the arrival
-  // and Corin's reaction happen together instead of finishing offscreen.
-  if(greenPhase==='off'&&d<5&&!sceneHold()&&!sayNpc)beginGreenEncounter();
+  // Let Corin reach the stump instead of stopping him five tiles down the path.
+  if(greenPhase==='off'&&d<2.25&&!sceneHold()&&!sayNpc)beginGreenEncounter();
   if (greenPhase === "in") {
     greenP += dt / GREEN_IN;
     greenT = Math.min(1, greenP);
@@ -6242,7 +6259,7 @@ let hatchScene = null;
 let hatchExit = false;
 let hatchCamera = null;
 let deflectCamera = null;
-function cameraOwnsView() { return !!globalThis.window?.EmberArenaEntry?.holding() || !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
+function cameraOwnsView() { return !!greenCamera || !!globalThis.window?.EmberArenaEntry?.holding() || !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
 function stepDeflectCamera(dt) {
   const c = deflectCamera;
   if (!c) return;

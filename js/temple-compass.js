@@ -268,9 +268,15 @@ function stepNanDeparture(){
   if(!inTown)return;
   const houses=(MD.doors||[]).filter(d=>/^house\d+$/.test(d.to)&&
     d.x>=town.x0&&d.x<=town.x1&&d.y>=town.y0&&d.y<=town.y1);
-  const houseBottom=Math.max(town.y0*TS,...houses.map(d=>
-    d.triggerRect?d.triggerRect.y+d.triggerRect.h:(d.y+1)*TS));
-  if(P.y<houseBottom+TS)return; // Clear the last doorstep by one tile.
+  // The first house on each side of the north path forms the town entrance.
+  // Houses farther into Millwood (including Nan's home) do not move this line.
+  const pathX=(town.road?.x??(town.x0+town.x1)/2)*TS;
+  const center=d=>d.triggerRect?d.triggerRect.x+d.triggerRect.w/2:(d.x+.5)*TS;
+  const bottom=d=>d.triggerRect?d.triggerRect.y+d.triggerRect.h:(d.y+1)*TS;
+  const entranceHouses=[houses.filter(d=>center(d)<pathX),houses.filter(d=>center(d)>=pathX)]
+    .map(side=>side.sort((a,b)=>bottom(a)-bottom(b)||Math.abs(center(a)-pathX)-Math.abs(center(b)-pathX))[0]).filter(Boolean);
+  const houseBottom=Math.max(town.y0*TS,...entranceHouses.map(bottom));
+  if(P.y<houseBottom+TS)return; // One tile past the two flanking doorsteps.
   prepareNanDeparture();
   const nan=npcs.find(n=>n.fatherCompassVisitor);
   if(!nan)return;

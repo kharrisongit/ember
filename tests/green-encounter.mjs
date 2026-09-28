@@ -4,6 +4,12 @@ const {context:c,run}=await loadEditorGame(process.cwd(),console,{furniture:fals
 const shown=[];c.showScene=()=>shown.push(run('scene?scene.lines[scene.i]:null'));
 c.typeDone=()=>true;c.window.EmberDragonSceneAudio={phase(){}};
 run("MAPID='world';quest=Q.ARMED;scene=null;P.x=GREEN.tx*TS+8;P.y=(GREEN.ty+4)*TS;greenFly(.01)");
+assert.equal(run('scene'),null,'The approach stays playable until Corin reaches the stump');
+run('P.y=greenAt().y+2*TS;greenFly(.01)');
+for(const [w,h]of [[390,510],[844,250],[1280,680]]){
+ c.size=[w,h];run('VW=size[0];VH=size[1];frameGreenEncounter()');
+ assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-84-cam.y)*cam.z>=24&&(g.y-cam.y)*cam.z<VH-150})()'),'Complete landed dragon is visible above dialogue at '+w+'×'+h);
+}
 assert.equal(shown.at(-1),'Corin: What the…');
 run('stepScene(1.5)');assert(!run('scene.greenTextHidden'),'Flight reaction has time to read');
 run('stepScene(.1)');assert(run('scene.greenTextHidden'),'Flight reaction clears after 1.6 seconds');
@@ -21,5 +27,5 @@ run('greenFly(.01);greenFly(1.2);stepScene(.1)');assert.equal(run('scene.i'),1);
 run('greenFly(2);stepScene(.1)');assert.equal(shown.at(-1),'Corin: Hey! You forgot something!');
 assert(!run('scene.greenTextHidden'),'The final line is visible and awaits confirmation');
 assert.equal(run('quest'),run('Q.ARMED'),'Egg quest waits for the final line');
-run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.equal(run('scene'),null);
+run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.equal(run('scene'),null);assert.equal(run('greenCamera'),null,'Normal camera returns after the last line');
 console.log('PASS: Corin reacts during flight, after impact, and after departure; pickup unlocks after his final line.');
