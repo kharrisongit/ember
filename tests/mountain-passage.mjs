@@ -84,6 +84,7 @@ Object.assign(c,{dragonIntroDone:true,dragonIntroArmed:false,dragonBanterSeen:ne
  migrateLegacySave(){},readSaveSlot:()=>saved,syncDragonVitality(){},hasSword:()=>true,
  loadMap(id){c.MAPID=id;c.MD=W.maps[id];},cam:{},clampCam(){},canStand:(x,y)=>clear(c.MD,x,y)});
 run(game.slice(game.indexOf('function recoverTempleArrival('),game.indexOf('function blockedByTempleGate(')));
+Object.assign(c,{Q:{EGGS:2},bagOwned:false,hasBag:()=>false,discussedTopics:new Set(),topicMenuPositions:new Map()});
 run(part3.slice(part3.indexOf('function captureSave()'),part3.indexOf('function saveToSlot(')));
 run(part3.slice(part3.indexOf('function loadGame('),part3.indexOf('let mounted =')));
 c.MAPID='passage_west';c.MD=W.maps.passage_west;c.P={x:c.MD.spawn[0],y:c.MD.spawn[1]};saved=JSON.parse(JSON.stringify(run('captureSave()')));
