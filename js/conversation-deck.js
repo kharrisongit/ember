@@ -27,7 +27,7 @@
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
     const header=node('div','topicSpeaker deckHeader');
-    const portrait=node('span','deckPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
+    const portrait=node('span','journalPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
     const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
     identity.append(node('strong','deckName',name));
     const sub=node('span','deckProgressText',`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);

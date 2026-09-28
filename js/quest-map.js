@@ -91,7 +91,7 @@ const ATLAS_PLACE_NOTES={
 function atlasMilestoneData(){return [
  ['A bond begins',quest>=Q.DONE],['Bramble home',brambleQuest>=2],
  ['Ready for the road',!!(smithUpgrade&&charm.edge&&glassShield)],
- ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Halvard defeated',!!wonAll]
+ ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
  ];}
 function atlasQuestComplete(id){
  if(id==='main')return !!wonAll;
@@ -205,7 +205,7 @@ function atlasApplyPan(){
  atlasPan.x=limit(atlasPan.x,1536*z,view.clientWidth);atlasPan.y=limit(atlasPan.y,512*z,view.clientHeight);
  s.style.transform=`translate(${atlasPan.x}px,${atlasPan.y}px) scale(${z})`;
  s.style.setProperty('--map-label-scale',String(Math.min(2.5,Math.max(.5,1/z))));
- s.classList.toggle('mapOverview',z<.65);
+ s.classList.toggle('mapOverview',z<1.05);
 }
 function atlasShowDetails(){
  const p=ATLAS_LOCATIONS[atlasPick],q=atlasQuests.find(q=>q.id===atlasTrackedQuest);

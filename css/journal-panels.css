@@ -4,7 +4,7 @@
 #bagAsk.conversationTopics.journalDeck #askRows>.deckHeader{position:sticky;top:0;z-index:4;grid-column:1/-1;display:flex;gap:11px;min-height:80px;margin:0 -12px!important;padding:9px 12px!important;clip-path:none;background:linear-gradient(115deg,#223f46,#3c6669 60%,#264b52)!important;border:0!important;border-bottom:3px double #d8bc87!important;color:#fff2d8;box-shadow:0 4px 14px #142f4230;overflow:hidden;isolation:isolate}
 .deckHeader::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,#f8e7b515 45%,transparent 65%);transform:translateX(-100%);pointer-events:none;z-index:-1}
 .deckEntering .deckHeader::after{animation:deckLight 1.4s ease-out both}
-#bagAsk .deckPortrait{position:relative;display:block;flex:0 0 60px;width:60px;height:60px;border-radius:50%;background-color:#c1b18c;background-repeat:no-repeat;border:1px solid #e0c18b;box-shadow:0 0 0 3px #1f3e4370,0 4px 12px #12292c60;image-rendering:auto}
+#bagAsk .journalPortrait{position:relative;display:block;flex:0 0 60px;width:60px;height:60px;border-radius:50%;background-color:#c1b18c;background-repeat:no-repeat;border:1px solid #e0c18b;box-shadow:0 0 0 3px #1f3e4370,0 4px 12px #12292c60;image-rendering:auto}
 .deckIdentity{min-width:0;flex:1}.deckIdentity .deckEyebrow{display:block;font:600 9px/1.2 system-ui;letter-spacing:.13em;text-transform:uppercase;color:#d2d7bf}.deckName{display:block;font:600 21px/1.15 Georgia,serif;margin:4px 0;overflow-wrap:anywhere}.deckProgressText{font:11px/1.4 system-ui;color:#e0deca}
 .deckReadRing{display:grid;place-items:center;position:relative;flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:conic-gradient(#e4bd7f var(--read),#93b2ac35 0)}.deckReadRing span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#31545b;font:600 10px system-ui;color:#f8e9ce}
 #bagAsk .deckClose{align-self:flex-start;min-width:32px;min-height:32px;background:#ffffff0b;border:1px solid #b8c4ae66;border-radius:50%;color:#f6e7cb;font:24px/1 Georgia;padding:0;cursor:pointer}
@@ -20,7 +20,7 @@
 #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic-leave{grid-column:1/-1;min-height:43px;background:#e3d6b9!important;border-style:dashed!important}.deckTopic-leave .deckTopicCopy small{display:none}.deckEmpty{grid-column:1/-1;margin:8px 0;color:#64756c;font:italic 13px/1.5 Georgia}
 @keyframes journalCardIn{from{opacity:0;transform:translateY(12px) rotateX(-8deg)}to{opacity:1;transform:none}}@keyframes deckLight{to{transform:translateX(100%)}}
 @media(min-width:760px){#bagAsk.conversationTopics.journalDeck #askRows{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:360px){#bagAsk .deckPortrait{width:48px;height:48px;flex-basis:48px}.deckName{font-size:18px}.deckReadRing{display:none}#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{gap:5px;padding:8px!important;font-size:12px!important}.deckTopicIcon{width:22px;flex-basis:22px}.deckTopicCopy small{font-size:9px}}
+@media(max-width:360px){#bagAsk .journalPortrait{width:48px;height:48px;flex-basis:48px}.deckName{font-size:18px}.deckReadRing{display:none}#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{gap:5px;padding:8px!important;font-size:12px!important}.deckTopicIcon{width:22px;flex-basis:22px}.deckTopicCopy small{font-size:9px}}
 @media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck *,#bagAsk.conversationTopics.journalDeck *::after{animation:none!important;transition:none!important}}
 
 /* The atlas is art above, a working journal below. */
