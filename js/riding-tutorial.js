@@ -1,8 +1,10 @@
-/* The first road battle teaches real controls; no simulated menu selections. */
+/* The first sword and riding battles teach the real combat controls. */
 (function(){
   'use strict';
   // Arena tool #5: the eastbound road out of Millwood (stable feature ID 11).
   const FIRST_ARENA=11;
+  const SWORD_ARENA=208;
+  let swordDone=false;
   let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const holding=()=>!!phase&&phase!=='battle';
@@ -25,7 +27,7 @@
   function paint(){
     if(!holding())return;
     clearHighlight();
-    const control=phase==='dragonButton'?'btnL':phase==='itemsButton'?'btnItems':null;
+    const control=phase==='swordSwipe'?'act':phase==='dragonButton'?'btnL':phase==='itemsButton'?'btnItems':null;
     if(control){document.getElementById(control)?.classList.add('riding-target');return;}
     if(!ovl||!MENUS[ovl])return;
     const menu=MENUS[ovl],items=menu.items(),rows=document.getElementById(menu.rows)?.querySelectorAll('.row')||[];
@@ -37,28 +39,37 @@
   }
   function stageEnemies(ring){
     if(MAPID!=='world')return;
-    ring ||= currentArenaFeatures().find(a=>a.id===FIRST_ARENA);
-    if(!ring||ring.id!==FIRST_ARENA)return;
+    if(!ring){
+      for(const a of currentArenaFeatures())if(a.id===FIRST_ARENA||a.id===SWORD_ARENA)stageEnemies(a);
+      return;
+    }
+    const sword=ring.id===SWORD_ARENA;
+    if((ring.id!==FIRST_ARENA&&!sword)||(sword&&swordDone))return;
     const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
     const north=[];
-    for(let y=cy-limit+12+2*TS;y<=cy-32;y+=24)for(const offset of [-36,0,36,-54,54]){
+    // The smaller northern arena keeps its waiting row just above the center.
+    for(let y=sword?cy-TS:cy-limit+12+2*TS;y<=(sword?cy:cy-32);y+=24)for(const offset of [-36,0,36,-54,54]){
       const x=cx+offset;
       if(Math.hypot(x-cx,y-cy)<limit&&dragonCanStand(x,y))north.push([x,y]);
     }
     if(!north.length)return;
     const enemies=foes.filter(f=>f.st!=='dead'&&!f.ally&&!f.huntingArena&&
-      (f.ridingArena===FIRST_ARENA||Math.hypot(f.x/TS-ring.x,f.y/TS-ring.y)<ring.r+5));
+      (f.ridingArena===ring.id||Math.hypot(f.x/TS-ring.x,f.y/TS-ring.y)<ring.r+5));
     enemies.forEach((foe,i)=>{
-      if(foe.ridingArena===FIRST_ARENA)return; // Entering must never relocate a visible foe.
+      if(foe.ridingArena===ring.id)return; // Entering must never relocate a visible foe.
       [foe.x,foe.y]=north[i%north.length];foe.hx=foe.x;foe.hy=foe.y;
-      foe.ridingArena=FIRST_ARENA;foe.st='idle';foe.t=0;foe.dir='s';
+      foe.ridingArena=ring.id;foe.st='idle';foe.t=0;foe.dir='s';
     });
   }
   function waitingEnemy(foe){
+    if(MAPID==='world'&&foe.ridingArena===SWORD_ARENA)return !swordDone;
     return MAPID==='world'&&foe.ridingArena===FIRST_ARENA&&
       (arenaLock?.id!==FIRST_ARENA||holding());
   }
   function entered(ring){
+    if(!swordDone&&!phase&&MAPID==='world'&&ring.id===SWORD_ARENA&&hasSword()){
+      stageEnemies(ring);moveTo('swordWalls');return;
+    }
     if(done||phase||MAPID!=='world'||ring.id!==FIRST_ARENA||!hasDragon()||!dragonIntroDone)return;
     if(mounted)setMounted(false,true);
     ringId=ring.id;moveTo('gather');
@@ -110,6 +121,12 @@
   }
   function step(dt){
     if(!gameplayStarted||mode!=='play')return;
+    if(phase==='swordWalls'&&arenaT>=1&&!scene){
+      moveTo('swordTalk');
+      playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',after:()=>{
+        moveTo('swordSwipe','Press A to Swipe');paint();
+      }});
+    }
     if(resumeRecovery&&!scene&&!revealing){resumeRecovery=false;beginRecovery();return;}
     if(phase==='walls'&&arenaT>=1&&!scene){
       unlocked=true;moveTo('mountTalk');
@@ -191,6 +208,11 @@
   }
   function action(){
     if(!holding())return false;
+    if(phase==='swordSwipe'){
+      startAct('swing');
+      if(P.act?.kind==='swing'){swordDone=true;moveTo('');saveGame();}
+      return true;
+    }
     if(phase==='fire'&&ovl==='atkm'){ovlTake();return true;}
     if(scene){advanceScene();return true;}
     if(phase==='dragonButton'){setOvl('atkm');return true;}
@@ -208,10 +230,11 @@
     if(event.target?.closest?.('.riding-target,#act,#say'))return false;
     event.preventDefault();event.stopImmediatePropagation();return true;
   }
-  function capture(){return {version:2,done,unlocked,phase,ringId};}
+  function capture(){return {version:2,done,unlocked,phase,ringId,swordDone};}
   function restore(saved){
     clearHighlight();notice('');phase='';assembly=null;resumeRecovery=false;document.body.classList.remove('riding-guide');
     const data=saved.ridingTutorial;
+    swordDone=data?.swordDone===undefined?(saved.quest>Q.ARMED||!!data?.done):!!data.swordDone;
     if(data?.version===1||data?.version===2){
       done=!!data.done;ringId=data.ringId??null;
       resumeRecovery=!done&&recoveryPhases.has(data.phase);
@@ -232,8 +255,9 @@
         for(const foe of foes)if(!foe.ally&&Math.hypot(foe.x/TS-ring.x,foe.y/TS-ring.y)<ring.r+5)foe.st='dead';
       }
     }
+    stageEnemies();
   }
-  function skip(){done=true;unlocked=true;resumeRecovery=false;moveTo('');}
+  function skip(){swordDone=true;done=true;unlocked=true;resumeRecovery=false;moveTo('');}
   window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
     unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',blocksArenaEntry:()=>recoveryPhases.has(phase)};
 })();

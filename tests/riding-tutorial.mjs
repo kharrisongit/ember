@@ -24,7 +24,7 @@ check('!setMounted(true)','New games cannot mount before the riding lesson');
 check('setDragonAir(true)===false','New games cannot fly before the riding lesson');
 for(const menu of ['airm','atkm']){run(`setOvl('${menu}')`);check('ovl===null','Locked menu cannot be opened: '+menu);}
 check("!EmberRiding.allowControl('btnL')&&!EmberRiding.allowControl('btnR')",'Both touch buttons are locked before the lesson');
-run('EmberRiding.entered(features.find(a=>a.id===208))');check("!EmberRiding.holding()",'The northern arena cannot start this tutorial');
+run('EmberRiding.restore({quest:Q.DONE});EmberRiding.entered(features.find(a=>a.id===208))');check("!EmberRiding.holding()",'The northern arena cannot start this tutorial');
 run('EmberRiding.stageEnemies(testRing)');
 check('foes.every(f=>f.ridingArena===11&&f.y<testRing.y*TS)','Enemies spawn at the north before entry');
 check('foes.every(f=>f.y>=testRing.y*TS+TS/2-(testRing.r-1.5)*TS+12+2*TS)', 'Waiting enemies are two tiles below their former north-edge row');
