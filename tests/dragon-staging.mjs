@@ -5,7 +5,7 @@ const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const p2=read('js/generated/game-part-2.js'),p3=read('js/generated/game-part-3.js');
 const section=(s,a,b)=>s.slice(s.indexOf(a),s.indexOf(b,s.indexOf(a)+a.length));
 const e={x:40,y:120,away:0},door={x:150,y:90,w:20,h:26};
-const c=vm.createContext({elder:()=>e,MD:{doors:[{to:'house22'}]},doorRect:()=>door,MAD_DOOR:[900,900],TS:16,
+const c=vm.createContext({elder:()=>e,SPR:{},MD:{doors:[{to:'house22'}]},doorRect:()=>door,MAD_DOOR:[900,900],TS:16,
  canNpcStand:(x,y)=>!(x>=75&&x<=100&&y>=80&&y<=155),faceToward:(m,x,y)=>{m.f=y<m.y?'u':'d';},
  P:{x:40,y:160},cam:{x:12,y:90,z:2},VW:400,VH:300,MAPID:'world',clampCam(){},toast(){},
  faceCorinAt:(x,y)=>{c.P.lookAt=[x,y];},dragon:{},Q:{DONE:9},quest:8,dragonIntroArmed:false});
@@ -45,6 +45,33 @@ assert(Math.abs(c.cam.x+c.VW/c.cam.z/2-conversation.x)<.001,'Conversation settle
 run('stepHatchCamera(.05)');
 assert(Math.abs(c.cam.z-2.7)<.00001,'Conversation keeps a stable tighter zoom');
 console.log('PASS: Maddock walks around obstacles into the edited doorway; the camera remains fixed until he enters, then returns to normal zoom.');
+
+// Off-screen departures release controls before the rest of the walk home.
+c.SPR.maddock_walk_u=[0,0,40,64,4];
+c.SPR.maddock_idle_d=[0,0,40,64,4];
+c.canNpcStand=()=>true;
+c.scene=null;c.revealing=false;c.bossScene=null;
+run(section(p2,'function sceneHold()','function advanceScene()'));
+for(const [width,height,zoom]of [[400,300,2.7],[390,600,3],[1000,450,2]]){
+ c.VW=width;c.VH=height;
+ Object.assign(c.cam,{x:0,y:0,z:zoom});
+ const right=width/zoom,bottom=height/zoom;
+ for(const [x,y,dx,dy]of [[-20,bottom/2,-1,0],[Math.floor(right)+20,bottom/2,1,0],[right/2,0,0,-1],[right/2,Math.floor(bottom)+64,0,1]]){
+  Object.assign(c.cam,{x:0,y:0,z:zoom});
+  Object.assign(e,{x,y,packSpr:'maddock',f:'u',away:0,goto:null,scriptWalking:true,houseEntry:0,
+   houseWalk:{door:{x:1000,y:1000},path:[[1000,1000]],t:0,retry:0}});
+  run('goingIn=true;hatchExit=true;hatchScene=null;hatchCamera={zoom:2,returnT:0,exitView:{...cam}}');
+  run('stepElder(0)');assert(!e.away,'Sprite touching the edge stays visible');assert(run('sceneHold()'));
+  const locked=JSON.stringify(c.cam);run('stepHatchCamera(.1)');assert.equal(JSON.stringify(c.cam),locked);
+  e.x+=dx;e.y+=dy;run('stepElder(0)');
+  assert(e.away,'Maddock returns home as soon as the whole sprite leaves the view');
+  assert.deepEqual([e.x,e.y],[1000,968],'Uses the edited house doorway');
+  assert.equal(e.houseWalk,null);assert.equal(e.houseEntry,0);assert.equal(e.scriptWalking,false);
+  assert.equal(run('goingIn'),false);assert.equal(run('sceneHold()'),false,'Controls release immediately');
+  run('stepHatchCamera(.1)');assert.equal(run('hatchCamera.returnT'),.1,'Camera starts easing back immediately');
+ }
+}
+console.log('PASS: all four screen edges preserve the complete sprite, then return Maddock home and release controls at portrait and landscape sizes.');
 
 let clear=()=>true,notices=[];
 const d=vm.createContext({dragon:{on:true,x:200,y:200,dir:'s',air:true},P:{x:200,y:226,moving:true,act:{}},MAPID:'world',

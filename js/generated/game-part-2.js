@@ -6641,6 +6641,20 @@ function stepElder(dt=1/60) {
   if (!e) { goingIn = false; if(hatchExit)faceCorinAt(dragon.x,dragon.y); hatchExit = false; return; }
   if(e.houseWalk){
     const walk=e.houseWalk;
+    // Keep the close-up fixed until his whole walking sprite leaves it.
+    // The indoor Maddock is already available once the hatch quest is done.
+    if(hatchExit){
+      const dir=e.f==='s'?(e.flip?'w':'e'):(e.f||'d');
+      const sprite=SPR[e.packSpr+'_walk_'+dir]||SPR[e.packSpr+'_idle_d'];
+      const halfW=(sprite?.[2]||60)/2,height=sprite?.[3]||60;
+      const left=Math.round(e.x-halfW),top=Math.round(e.y-height);
+      if(left+halfW*2<cam.x||left>cam.x+VW/cam.z||
+         top+height<cam.y||top>cam.y+VH/cam.z){
+        e.x=walk.door.x;e.y=walk.door.y-32;e.away=1;e.goto=null;
+        e.houseWalk=null;e.houseEntry=0;e.scriptWalking=false;
+        goingIn=false;hatchExit=false;faceCorinAt(dragon.x,dragon.y);return;
+      }
+    }
     if(!walk.path){walk.retry-=dt;if(walk.retry<=0){walk.path=maddockWalkPath(e,[walk.door.x,walk.door.y]);walk.retry=.5;}return;}
     if(walk.path.length){
       const [x,y]=walk.path[0],d=Math.hypot(x-e.x,y-e.y),step=Math.min(d,52*dt);
