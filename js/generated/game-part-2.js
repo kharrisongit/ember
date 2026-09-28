@@ -6520,6 +6520,7 @@ function finishHatchScene() {
   toast("The dragon follows you now");
   hatchExit = !!elder();
   goBackIn(true);
+  faceCorinAt(dragon.x,dragon.y);
 }
 function standableNear(x, y) {
   if (canStand(x, y)) return [x, y];
@@ -7271,8 +7272,12 @@ function stepScene(dt) {
   scene.t += dt;
   stepHatchScene(dt);
   if(scene.greenEncounter){
-    if(scene.i===0&&greenPhase==='sit'){scene.i=1;scene.t=0;showScene();}
-    if(scene.i===1&&greenEncounterFinished()){scene.i=2;scene.t=0;showScene();}
+    if(scene.i===0&&greenPhase==='sit'){scene.i=1;scene.t=0;scene.greenTextHidden=false;showScene();}
+    if(scene.i===1&&greenEncounterFinished()){scene.i=2;scene.t=0;scene.greenTextHidden=false;showScene();}
+    // Brief reactions clear the view while the cinematic continues on its own timer.
+    if(scene.i<2&&!scene.greenTextHidden&&typeDone()&&scene.t>=(scene.i===0?1.6:2.2)){
+      scene.greenTextHidden=true;sayOff();showFace(null);
+    }
     return;
   }
   if(scene.silent){
@@ -7398,7 +7403,7 @@ function stepType(dt) {
 
 function showScene() {
   if (!scene) { sayOff(); showFace(null); return; }
-  if(scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
+  if(scene.greenTextHidden||scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
     sayOff();showFace(null);return;
   }
   if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();

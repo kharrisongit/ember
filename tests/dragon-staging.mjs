@@ -15,6 +15,8 @@ run(section(p2,'function maddockDoor()','function northShut()'));
 run(section(p2,'function lockHatchCamera(','function beginHatchScene('));
 run(section(p2,'function finishHatchScene()','function standableNear('));
 run('finishHatchScene()');
+assert.deepEqual(c.P.lookAt,[c.dragon.x,c.dragon.y],'Corin turns to the dragon as Maddock starts leaving');
+assert(!e.away,'Maddock is still outside when Corin turns');
 assert(e.houseWalk.path.length>1,'Maddock routes around an obstacle instead of teleporting through it');
 assert.deepEqual(JSON.parse(JSON.stringify(e.houseWalk.door)),{x:160,y:128},'Uses the edited doorway, not the old constant');
 const camera=JSON.stringify(c.cam);let seenDoor=false,entered=false;
@@ -27,7 +29,7 @@ for(let i=0;i<1000&&!e.away;i++){
  if(!e.away){run('stepHatchCamera(1/60)');assert.equal(JSON.stringify(c.cam),camera,'Camera stays exactly fixed throughout the walk and entrance');}
 }
 assert(seenDoor&&entered&&e.away,'Maddock visibly walks into his house');
-assert.deepEqual(c.P.lookAt,[c.dragon.x,c.dragon.y],'Corin turns back to the dragon when Maddock is inside');
+assert.deepEqual(c.P.lookAt,[c.dragon.x,c.dragon.y],'Corin keeps facing the dragon through Maddock’s exit');
 const framing=c.lockHatchCamera({zoom:2},e,{eggX:100,eggY:100});
 assert.equal(framing.z,2.24,'Hatch camera zooms in twelve percent');
 assert.equal(run('hatchExit'),false);assert(run('hatchCamera'),'Camera waits until the entrance has finished');
