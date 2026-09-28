@@ -45,7 +45,7 @@
     const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
     identity.append(node('span','deckProfileHint',ask._profileOpen?'Close profile ▴':'View profile ▾'));
     profileButton.title=ask._profileOpen?'Tap the banner to return to topics':'Tap the banner for biography and character details';
-    profileButton.append(portrait,identity,ring);
+    profileButton.append(portrait,identity);if(!ask.replyChoices)profileButton.append(ring);
     const controls=node('div','deckHeaderControls');
     const parent=ask.back&&ask.topicScope!=='thornwell-audience';
     if(ask._profileOpen||filter!=='all'||parent){

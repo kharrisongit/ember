@@ -56,3 +56,5 @@ body.conversation-session #sayname{bottom:calc(var(--topic-height) + var(--conve
 #bagAsk.conversationListening .deckTabs,#bagAsk.conversationListening .deckReadRing{opacity:.5}
 #bagAsk .conversationContinue{display:block;width:calc(100% - 24px);margin:10px 12px;padding:12px;border:1px solid #9a703c;border-radius:5px;background:linear-gradient(#faf0d6,#e3c591);color:#59381f;font:600 15px var(--manuscript-serif);cursor:pointer;animation:profileUnfold .2s ease-out}
 @media(max-height:520px){body.conversation-session{--conversation-line-height:74px;--conversation-face-size:76px}body.conversation-session #say{font-size:12px;padding:7px 12px 19px}}
+
+@media(max-width:600px) and (min-height:521px){body.conversation-session{--conversation-line-height:clamp(128px,16dvh,144px)}body.conversation-session #say{font-size:13px;line-height:1.3}}

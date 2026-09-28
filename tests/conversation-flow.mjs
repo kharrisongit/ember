@@ -28,7 +28,9 @@ assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Original, authored alt
 assert(!box.querySelector('.deckClose'),'Reply choices cannot bypass a pending exchange');
 const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping scenery never chooses a reply');
 select('I would have offered it an apple.');assert.equal(run('typeWho'),'Corin');
-assert.match(run('typeFull'),/apple/);assert.equal(box.style.display,'block');
+assert.match(run('typeFull'),/apple/);
+assert(!box.querySelector('.deckReadRing'),'Reply cards do not display a meaningless zero-topic counter');
+assert.equal(rows.querySelectorAll('.deckTopic').find(n=>n.dataset.selected==='true').dataset.askIndex,2,'The selected reply remains highlighted while it is spoken');assert.equal(box.style.display,'block');
 run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
 finish();assert.equal(run('ask.npcConversation'),'Hettie');
 run('askBack()');assert.equal(run('ask.npcConversation'),'Hettie','Back at the root does not mean Goodbye');

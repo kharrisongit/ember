@@ -26,10 +26,16 @@
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
   function retained(fn){keeping++;try{return fn();}finally{keeping--;sync();}}
-  function listening(){
+  function listening(selected){
     if(!session||ask)return;
     const el=box();el.classList.add('conversationListening');
     for(const button of el.querySelectorAll('button'))button.disabled=true;
+    for(const row of el.querySelectorAll('.deckTopic')){
+      const chosen=Number(row.dataset.askIndex)===selected;
+      row.dataset.selected=String(chosen);row.setAttribute('aria-pressed',String(chosen));
+    }
+    const status=el.querySelector('.deckProgressText');if(status)status.textContent='Tap the dialogue to continue';
+    const prompt=el.querySelector('.deckReplyPrompt');if(prompt)prompt.textContent='Corin’s chosen reply';
     el.querySelector('.conversationContinue')?.remove();
     const next=document.createElement('button');next.className='conversationContinue';next.type='button';
     next.textContent='Continue conversation';next.onclick=()=>advance();
@@ -37,7 +43,7 @@
   }
   function take(option){
     if(!isMenu(ask))return false;
-    const old=ask;
+    const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
@@ -45,7 +51,7 @@
     if(ask?.shop){
       session.shopping=true;document.body.classList.remove('topics-open');document.body.classList.remove('conversation-session');
       sync();
-    }else listening();
+    }else listening(selected);
     return true;
   }
   function goodbye(callback){
@@ -103,6 +109,7 @@
     }
     const other=book.alternatives?.find(t=>t.title!==book.topic?.title&&t.lines&&!t.go);
     if(other)options.push({n:'Tell me about “'+other.title+'”.',summary:'Corin · Follow a different topic',navigation:true,go:()=>{
+      discussedTopics.add(current.npcActor.n+':'+other.title);
       scene=null;sayOff();
       playScene(['Corin: Tell me about “'+other.title+'”.'],{who:current.who,npcActor:current.npcActor,after:()=>playTopic(current.npcActor,other,[])});
     }});
@@ -159,5 +166,5 @@
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)advance();}});
-  window.EmberConversationFlow={menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session};
+  window.EmberConversationFlow={menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session,cameraSession:()=>session&&!session.shopping?session:null};
 })();

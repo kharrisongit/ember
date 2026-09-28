@@ -55,9 +55,24 @@
     const upper=framing(actors,above,preferred);
     return upper.z>between.z+.01?upper:between;
   }
-  let active=false;
+  let active=false,locked=null;
+  function sessionFrame(actors,viewport,zoom){
+    const safe={left:18,right:viewport.width-18,top:24,bottom:Math.min(viewport.height,viewport.panelTop)-16};
+    const fit=framing(actors,safe,zoom);
+    // Choose the close-up once. Fitting a newly opened box on every line was
+    // repeatedly changing the zoom and undoing the player's conversation view.
+    const cx=fit.x+(safe.left+safe.right)/2/fit.z;
+    const cy=fit.y+(safe.top+safe.bottom)/2/fit.z;
+    return {z:zoom,x:cx-(safe.left+safe.right)/2/zoom,y:cy-(safe.top+safe.bottom)/2/zoom};
+  }
   function hide(){active=false;return null;}
   function frame(){
+    const session=window.EmberConversationFlow?.cameraSession();
+    const geometry=innerWidth+':'+innerHeight+':'+VW+':'+VH;
+    if(!session)locked=null;
+    if(session&&locked?.session===session&&locked.map===MAPID&&locked.geometry===geometry&&mode==='play'&&!editing&&!atlasOpen){
+      active=true;return locked.target;
+    }
     const menu=!!(ask?.npcConversation||ask?.dragonConversation);
     const dialogue=sayEl.classList.contains('on');
     if(mode!=='play'||editing||atlasOpen||(!menu&&!dialogue)||greenCamera||hatchCamera||bossScene||deflectCamera||fishing||
@@ -78,8 +93,17 @@
     const portraitSize=document.body.classList.contains('conversation-session')?Math.min(innerHeight<=520?76:144,Math.max(72,innerWidth*.2)):(innerHeight<=600?112:144);
     const actors=[{x:P.x,y:P.y,width:28,height:40},
       {x:actor.x,y:actor.y,width:actor===dragon?84:32,height:actor===dragon?62:48}];
+    if(session){
+      // Reserve the final parchment and speech space at entry, even while the
+      // panel grows. Topics, replies, profiles and speaker changes share this
+      // exact target until Goodbye (or a real viewport/map change).
+      const lineHeight=innerHeight<=520?74:innerWidth<=600?Math.min(144,Math.max(128,innerHeight*.16)):Math.min(132,Math.max(100,innerHeight*.14));
+      const viewport={width:VW,height:VH,panelTop:(innerHeight*.4-lineHeight-8-canvas.top)*sy};
+      const target=sessionFrame(actors,viewport,playZoom()*1.16);
+      locked={session,map:MAPID,geometry,target};return target;
+    }
     return conversationFrame(actors,{width:VW,height:VH,panelTop:(panel.top-canvas.top)*sy,
       portraitSize:portraitSize*Math.max(sx,sy),menu:menu&&!dialogue},Math.min(5.5,playZoom()*1.22));
   }
-  window.EmberConversationView={frame,framing,conversationFrame,profile,active:()=>active};
+  window.EmberConversationView={frame,framing,conversationFrame,sessionFrame,profile,active:()=>active};
 })();
