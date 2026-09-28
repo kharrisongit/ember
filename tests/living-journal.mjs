@@ -43,7 +43,9 @@ click(chapter);
 assert.equal(run('ask.topicScope'),'history');
 assert(!run(`discussedTopics.has('Aurelius:Emberfell and its history')`),'Opening a chapter does not mark a story heard');
 assert(cards().some(b=>b.getAttribute('aria-label').startsWith('Can a map remember a place?')));
-assert(cards().some(b=>b.classList.contains('deckTopic-folder')),'Back remains accessible');
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back','The secondary control handles folder navigation');
+click(box.querySelector('.conversationGoodbye'));assert.equal(run('ask.topicScope'),'root');
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 // Tracking is a saved preference; it must not grant the reward or reveal an unknown lead.
 run(`askShut();MAPID='world';P.x=30*TS;P.y=425*TS;odoRodReferral=true;fishingPole=false;atlasTrackedQuest='fishing';atlasBegin()`);
 assert.equal(dom.element('atlasQuestTitle').textContent,'Calder’s spare rod');

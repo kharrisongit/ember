@@ -15,23 +15,15 @@
       {n:leave?'Ask leave to go':'Leave',go:leave||null}]};
     askPick=1;askDraw();return true;
   }
-  function rememberLine(){
-    if(!session||session.shopping||!sayEl.classList.contains('on')||!typeDone()||!typeFull)return;
-    const last=session.history.at(-1);
-    if(last?.speaker===typeWho&&last.text===typeFull)return;
-    session.history.push({speaker:typeWho||'Narrator',text:typeFull});
-    if(session.history.length>60)session.history.shift();
-  }
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
-    const hint=session?(session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'A · Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
+    const hint=session?(session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
-    rememberLine();
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
-      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject,canLeave:canGoodbye()});
+      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject,canLeave:canGoodbye(),backAvailable:needsBack()});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -59,7 +51,7 @@
     box().removeAttribute('aria-modal');box().removeAttribute('role');
   }
   function menu(menu){
-    if(!session)session={map:MAPID,menu,history:[],subject:'A moment to talk'};
+    if(!session)session={map:MAPID,menu,subject:'A moment to talk'};
     if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation)session.subject='A moment to talk';
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
@@ -85,7 +77,6 @@
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
-    rememberLine();
     if(!old.replyChoices&&!option.navigation)session.subject=option.n;
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
     clearGreeting();
@@ -101,6 +92,14 @@
     // Authored topic branches can end immediately. Finish required story
     // dialogue and item reveals first so their rewards/callbacks still run.
     return !!session&&!session.shopping&&!revealing&&!sayNpc&&(!scene||!!scene.conversationReplies);
+  }
+  function needsBack(){
+    return !!session&&!session.shopping&&isMenu(ask)&&!!(ask._profileOpen||
+      ask._deckFilter&&ask._deckFilter!=='all'||ask.replyChoices||ask.back&&ask.topicScope!=='thornwell-audience');
+  }
+  function secondary(){
+    if(needsBack()){askBack();sync();return true;}
+    return goodbye();
   }
   function goodbye(callback){
     if(!canGoodbye())return false;
@@ -128,7 +127,7 @@
     }else if(ask?.back&&ask.topicScope!=='thornwell-audience'){
       const parent=ask.back;retained(()=>{askShut();parent();});
     }
-    // B / Escape at the root leaves the conversation open. Goodbye is explicit.
+    // Internal Back navigation never closes the root; the secondary control does.
     return true;
   }
   function tick(){
@@ -186,13 +185,12 @@
     const key=e.key.toLowerCase();
     if(!['a','enter',' ','b','escape'].includes(key))return false;
     e.preventDefault();
-    if(!e.repeat){if(['b','escape'].includes(key))goodbye();else next();}
+    if(!e.repeat){if(['b','escape'].includes(key))secondary();else next();}
     return true;
   }
   function advance(){
     if(window.EmberCloud?.isOpen()||atlasOpen||bagOpen||ovl||editing)return false;
     if(ask?.replyChoices||isMenu(ask)||!sayEl.classList.contains('on')&&!revealing)return false;
-    rememberLine();
     if(scene||revealing)advanceScene();else if(sayNpc)interact();else return false;
     tick();return true;
   }
@@ -228,5 +226,5 @@
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){if(session)next();else advance();}}});
-  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,active:()=>!!session,history:()=>session?.history||[]};
+  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,needsBack,secondary,active:()=>!!session};
 })();

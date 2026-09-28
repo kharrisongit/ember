@@ -8,14 +8,13 @@
   const category=o=>o.category||(o.navigation?'folder':!o.go?'leave':/^(Hello|I came for)/.test(o.n)?'greeting':/supplies/.test(o.n)?'trade':/Halvard|Wingfall|history|land and/.test(o.n)?'world':/quest|next\?|lead|temple|Heartstone|rod|lantern|ward|Bramble|summon/i.test(o.n)?'lead':'story');
   const seen=o=>discussedTopics.has(topicMemoryKey(o));
   function visible(o,filter){
-    if(o.head||category(o)==='leave')return false;
+    if(o.head||o.backNavigation||category(o)==='leave')return false;
     const cat=category(o);
     if(['leave','greeting','trade','folder'].includes(cat))return true;
     return filter==='all'||filter==='new'&&!seen(o)||filter===cat;
   }
   function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=playerFacingText(text);return e;}
   function back(){
-    if(ask?._historyOpen){ask._historyOpen=false;askDraw();return true;}
     if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
     if(ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
     return false;
@@ -56,11 +55,10 @@
     const footer=node('footer','conversationFooter');
     const context=node('div','conversationContext');context.append(node('p','conversationSubject','A moment to talk'),node('small','conversationTurn','Choose a topic'));
     const controls=node('div','conversationAB');
-    for(const [key,label,cls,action]of [['B','Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.goodbye()],['A','Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
-      const button=node('button','conversationControl '+cls);button.type='button';button.setAttribute('aria-label',key+' — '+label);
-      button.append(node('strong','',key),node('span','',label));
+    for(const [label,cls,action]of [['Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.secondary()],['Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
+      const button=node('button','conversationControl '+cls,label);button.type='button';button.setAttribute('aria-label',label);
       button.onclick=e=>{e.stopPropagation();action();};
-      button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.goodbye();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
+      button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.secondary();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
       controls.append(button);
     }
     footer.append(context,controls);return footer;
@@ -83,28 +81,15 @@
     const read=topics.filter(seen).length;
     box.querySelector('.deckHeader')?.remove();box.querySelector('.deckProfile')?.remove();
     const header=node('header','deckHeader');
-    const profileButton=node('button','deckProfileToggle');profileButton.type='button';
+    const identity=node('div','deckIdentity');
+    identity.append(node('strong','deckName',name),node('small','deckEyebrow',ask.dragonConversation?'Through the bond':'Conversation'));
+    const profileButton=node('button','deckProfileToggle','Profile');profileButton.type='button';
     profileButton.setAttribute('aria-label','Character profile: '+name);
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');
-    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;ask._historyOpen=false;askDraw();};
-    const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
-    identity.append(node('strong','deckName',name));
-    const sub=node('span','deckProgressText',ask.replyChoices?'Choose Corin’s reply':`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
-    const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
-    identity.append(node('span','deckProfileHint',ask._profileOpen?'‹ Return to conversation':'Character profile ›'));
-    profileButton.title=ask._profileOpen?'Tap the banner to return to topics':'Tap the banner for biography and character details';
-    profileButton.append(identity);if(!ask.replyChoices)profileButton.append(ring);
-    const controls=node('div','deckHeaderControls');
-    const parent=ask.back&&ask.topicScope!=='thornwell-audience';
-    if(ask._profileOpen||ask._historyOpen||filter!=='all'||parent){
-      const previous=node('button','deckBack','‹ Back');previous.type='button';previous.setAttribute('aria-label','Back to previous topic list');
-      previous.onclick=e=>{e.stopPropagation();askBack();};controls.append(previous);
-    }
-    const historyToggle=node('button','deckHistoryToggle','History');historyToggle.type='button';
-    historyToggle.setAttribute('aria-expanded',String(!!ask._historyOpen));historyToggle.setAttribute('aria-controls','conversationHistory');
-    historyToggle.onclick=()=>{ask._historyOpen=!ask._historyOpen;ask._profileOpen=false;askDraw();};controls.append(historyToggle);
-    header.append(profileButton,controls);
+    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;askDraw();};
+    profileButton.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)profileButton.onclick();}};
+    header.append(identity,profileButton);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
       const info=window.EmberConversationView.profile(name,ask.npcActor);
@@ -114,21 +99,17 @@
       const facts=node('dl','deckProfileFacts');
       for(const [label,value]of [['Home',info.home],['Conversation',`${read} of ${topics.length} topics explored`],['Ask about',info.interests]]){facts.append(node('dt','',label),node('dd','',value));}
       profile.append(facts);
-      if(info.memory){profile.append(node('small','deckEyebrow','In their own words'),node('blockquote','',info.memory));}
+      if(info.memory){
+        const quote=node('figure','deckProfileQuote');
+        quote.append(node('figcaption','deckEyebrow','In their own words'),node('blockquote','',info.memory));profile.append(quote);
+      }
     }
-    const history=node('section','deckHistory');history.id='conversationHistory';history.hidden=!ask._historyOpen;
-    history.append(node('small','deckEyebrow','This conversation'),node('h2','','Conversation so far'));
-    const lines=window.EmberConversationFlow?.history()||[];
-    for(const line of lines){const entry=node('article','conversationMemory');entry.append(node('strong','',line.speaker),node('p','',line.text));history.appendChild(entry);}
-    if(!lines.length)history.appendChild(node('p','','Your conversation will be recorded here as you talk.'));
     const hint=document.getElementById('topicScrollHint');
     workspace.replaceChildren(rows,...(hint?[hint]:[]));
-    const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen&&!ask._historyOpen;dossier.append(profile,history);
-    const returnButton=node('button','deckReturn','‹ Return to conversation');returnButton.type='button';returnButton.onclick=()=>{ask._profileOpen=false;ask._historyOpen=false;askDraw();};dossier.append(returnButton);
+    const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen;dossier.append(profile);
     box.replaceChildren(header,stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
-    box.classList.toggle('historyOpen',!!ask._historyOpen);
     const tabs=node('nav','deckTabs');tabs.setAttribute('aria-label','Conversation categories');
     for(const [key,label]of Object.entries(groups)){
       const count=topics.filter(o=>key==='all'||key==='new'&&!seen(o)||category(o)===key).length;

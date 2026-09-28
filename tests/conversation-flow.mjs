@@ -67,12 +67,8 @@ assert.equal(rows.querySelectorAll('.deckTopic').find(n=>n.dataset.selected==='t
 run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
 finish();assert.equal(run('ask.npcConversation'),'Hettie');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'explore');
-box.querySelector('.deckHistoryToggle').onclick();
-assert(run('ask._historyOpen'));assert(box.querySelectorAll('.conversationMemory').length>=4);
-assert(run(`EmberConversationFlow.history().some(line=>line.speaker==='Corin'&&line.text.includes('apple'))`));
-const historyPick=run('askPick');run('askStep(1)');assert.equal(run('askPick'),historyPick,'History cannot select a hidden topic');
-run('askBack()');assert(!run('ask._historyOpen'));
-run('askBack()');assert.equal(run('ask.npcConversation'),'Hettie','Back at the root does not mean Goodbye');
+assert(!box.querySelector('.deckHistoryToggle'));
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 // Touch locking must recognize the actual nested scroller, not the full-screen shell.
 const workspace=box.querySelector('.conversationWorkspace');
 workspace.scrollHeight=1200;workspace.clientHeight=280;workspace.scrollTop=80;
@@ -91,8 +87,12 @@ dom.dispatch(dossier,'touchstart',{touches:[{clientX:10,clientY:180}]});
 assert.equal(run('lockEl'),dossier);
 assert(!dom.dispatch(dossier,'touchmove',{cancelable:true,touches:[{clientX:10,clientY:100}]}).defaultPrevented);
 dom.dispatch(dossier,'touchend');run('askBack()');
-// B is an explicit Goodbye, including during optional dialogue and reply choices.
+// The secondary control returns from replies, then becomes Goodbye at the root.
 select('Your first herd');next();run('scene.t=1');next();assert(run('ask.replyChoices'));
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');
+run("EmberConversationFlow.key({key:'b',preventDefault(){}})");
+assert(run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 run("EmberConversationFlow.key({key:'b',preventDefault(){}})");
 assert(!run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
 run('openNpcTopics(person)');select('Your first herd');
@@ -169,6 +169,8 @@ assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius greets Corin 
 select('Why did you choose me?');
 for(let i=0;i<10&&!run('ask?.replyChoices');i++){run('typeAll();if(scene)scene.t=1');step();}
 assert(run('ask?.replyChoices'));assert(run('ask.opts.some(o=>/disappoint/.test(o.n))'));
+assert(box.classList.contains('dragonTalk'),'Aurelius’s theme persists through branching replies');
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');
 select('What if I disappoint you?');run('typeAll();scene.t=1');step();assert.equal(run('typeWho'),'Aurelius');assert.match(run('typeFull'),/mistakes/);
 finish();assert.equal(run('ask.topicScope'),'dragons');
 // Changing area / loading another scene cannot resurrect an old conversation.

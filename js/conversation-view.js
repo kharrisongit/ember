@@ -27,7 +27,7 @@
     const interests=stories.map(s=>s[0]).join(' · ')||'Life in Emberfell · The road ahead';
     const data=biographies[name]||['A familiar face in '+home,home,
       name+' is part of the everyday life of '+home+'. '+(stories.length?'Their stories of '+stories[0][0].toLowerCase()+' offer a glimpse of the memories and people that matter to them.':'A conversation may reveal what matters to them, and what has changed along the road.')];
-    return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||''})
+    return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||(name==='Aurelius'&&typeof NPC_TOPIC_GREETINGS!=='undefined'?NPC_TOPIC_GREETINGS.Aurelius:'')})
       .map(([key,value])=>[key,playerFacingText(value)]));
   }
   const reveal=document.getElementById('reveal');
@@ -46,7 +46,7 @@
     sayEl.classList.remove('scrolls');sayEl.setAttribute('role','button');sayEl.tabIndex=0;
     homes=null;room=null;lastNpc='';lastCorin='';partnerName='';npcName='';
   }
-  function update({partner,speaker,phase,subject,canLeave}){
+  function update({partner,speaker,phase,subject,canLeave,backAvailable}){
     if(!room)return;
     if(partnerName!==partner){lastNpc='';lastCorin='';partnerName=partner;npcName=partner;}
     if(phase==='explore')lastCorin='';
@@ -71,8 +71,11 @@
     const title=room.querySelector('.conversationSubject');
     if(title)title.textContent=playerFacingText(subject||'A moment to talk');
     const turn=room.querySelector('.conversationTurn');
-    if(turn)turn.textContent=ask?._profileOpen?'Character profile':ask?._historyOpen?'Conversation history':phase==='reply'?'Choose Corin’s reply':phase==='explore'?'Choose a topic':canLeave?'A · Next line':'Finish this exchange before saying goodbye';
-    room.querySelector('.conversationGoodbye').disabled=!canLeave;
+    if(turn)turn.textContent=ask?._profileOpen?'Character profile':phase==='reply'?'Choose Corin’s reply':phase==='explore'?'Choose a topic':canLeave?'Next line':'Finish this exchange before saying goodbye';
+    const secondary=room.querySelector('.conversationGoodbye'),label=backAvailable?'Back':'Goodbye';
+    if(secondary.textContent!==label)secondary.textContent=label;
+    secondary.setAttribute('aria-label',label);secondary.dataset.action=backAvailable?'back':'goodbye';
+    secondary.disabled=!backAvailable&&!canLeave;
     room.querySelector('.conversationNext').disabled=phase==='listen'&&!speaking&&!revealing;
   }
   window.EmberConversationView={profile,mount,release,update};

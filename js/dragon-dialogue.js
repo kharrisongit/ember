@@ -919,6 +919,6 @@ function openDragonConversation(category='root'){
   };
   if(!options[category])return;
   if(category==='history'||category==='quests')for(const o of options[category])o.category=category==='history'?'world':'lead';
-  ask={quick:1,dragonConversation:true,topicScope:category,back:category==='root'?null:()=>openDragonConversation(),opts:[{n:DRAGON_NAME,head:true},...options[category],...(category==='root'?[]:[{n:'Back to our other questions',navigation:true,go:()=>openDragonConversation()}])]};
+  ask={quick:1,dragonConversation:true,topicScope:category,back:category==='root'?null:()=>openDragonConversation(),opts:[{n:DRAGON_NAME,head:true},...options[category],...(category==='root'?[]:[{n:'Back to our other questions',navigation:true,backNavigation:true,go:()=>openDragonConversation()}])]};
   askPick=1;askDraw();
 }

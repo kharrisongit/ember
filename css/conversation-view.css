@@ -1,31 +1,25 @@
 /* Topic conversations have two fixed sides. Story-only dialogue stays in-world. */
-#bagAsk.conversationTopics.journalDeck{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;max-width:none!important;min-width:0;box-sizing:border-box;z-index:10040!important;grid-template-columns:minmax(0,1fr);grid-template-rows:auto clamp(150px,29dvh,290px) minmax(0,1fr) auto;padding:0!important;border:0!important;border-radius:0!important;background:var(--manuscript-paper)!important;color:var(--manuscript-ink);overflow:hidden!important;scrollbar-gutter:auto;isolation:isolate;animation:conversationUnfold .48s cubic-bezier(.2,.7,.2,1) both}
+#bagAsk.conversationTopics.journalDeck{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;max-width:none!important;min-width:0;box-sizing:border-box;z-index:10040!important;grid-template-columns:minmax(0,1fr);grid-template-rows:auto clamp(170px,32dvh,340px) minmax(0,1fr) auto;padding:0!important;border:0!important;border-radius:0!important;background:var(--manuscript-paper)!important;color:var(--manuscript-ink);overflow:hidden!important;scrollbar-gutter:auto;isolation:isolate;animation:conversationUnfold .48s cubic-bezier(.2,.7,.2,1) both}
 @keyframes conversationUnfold{from{clip-path:inset(100% 0 0);opacity:.65}to{clip-path:inset(0);opacity:1}}
-#bagAsk.conversationTopics.journalDeck>.deckHeader{grid-row:1;grid-column:1;position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:76px;margin:0!important;padding:max(6px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 6px max(14px,env(safe-area-inset-left))!important;box-sizing:border-box;border:0;border-bottom:3px double #9d7b48;background:var(--manuscript-paper)!important;box-shadow:0 4px 12px #51382020;color:var(--manuscript-ink)!important;text-shadow:none}
-#bagAsk .deckProfileToggle{display:flex;align-items:center;gap:13px;flex:1;min-width:0;box-sizing:border-box;text-align:left;padding:0;margin:0;border:0;background:transparent;color:inherit;cursor:pointer}
-#bagAsk .deckIdentity{min-width:0}
-#bagAsk .deckIdentity .deckEyebrow,#bagAsk .deckEyebrow{color:#825e35;font:600 9px/1.3 system-ui;letter-spacing:.12em;text-transform:uppercase}
-#bagAsk .deckName{display:block;font:600 23px/1.1 var(--manuscript-serif);color:#362719;letter-spacing:0;text-transform:none;margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#bagAsk .deckProgressText{color:#705535;font:11px/1.3 system-ui}
-#bagAsk .deckProfileHint{display:inline-flex;align-items:center;margin:3px 0 0 10px;padding:4px 8px;border:1px solid #a27b4b;border-radius:4px;color:#654220;background:#fff1d4;font:700 12px/1.25 var(--manuscript-serif)}
-#bagAsk .deckProfileToggle:hover .deckProfileHint,#bagAsk .deckProfileToggle:focus-visible .deckProfileHint{background:#dac397}
-#bagAsk .deckReadRing{background:conic-gradient(#9b6930 var(--read),#b59b6f55 0);margin-left:18px}
-#bagAsk .deckReadRing span{background:#eddab3;color:#66461f}
-.deckHeaderControls{display:flex;align-items:center;gap:7px;flex-shrink:0}
-#bagAsk .deckBack,#bagAsk .deckHistoryToggle,#bagAsk .deckReturn{position:static;min-height:40px;min-width:40px;padding:6px 12px;border:1px solid #997547;border-radius:4px;background:#ead5ab;color:#50371f;cursor:pointer;font:600 13px var(--manuscript-serif);white-space:nowrap}
-#bagAsk .deckHistoryToggle[aria-expanded=true]{background:#745135;color:#fff0cf}
+#bagAsk.conversationTopics.journalDeck>.deckHeader{grid-row:1;grid-column:1;position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:50px;margin:0!important;padding:max(6px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 6px max(14px,env(safe-area-inset-left))!important;box-sizing:border-box;border:0;border-bottom:3px double #9d7b48;background:var(--manuscript-paper)!important;box-shadow:0 4px 12px #51382020;color:var(--manuscript-ink)!important;text-shadow:none}
+#bagAsk .deckIdentity{display:flex;align-items:baseline;gap:12px;min-width:0;flex:1}
+#bagAsk .deckEyebrow{color:#825e35;font:600 9px/1.3 system-ui;letter-spacing:.12em;text-transform:uppercase}
+#bagAsk .deckName{display:block;min-width:0;font:600 21px/1.15 var(--manuscript-serif);color:#362719;letter-spacing:0;text-transform:none;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bagAsk .deckProfileToggle{flex:0 0 auto;min-height:36px;min-width:72px;padding:5px 14px;border:1px solid #997547;border-radius:5px;background:#ead5ab;color:#50371f;cursor:pointer;font:600 13px var(--manuscript-serif)}
+#bagAsk .deckProfileToggle:hover,#bagAsk .deckProfileToggle[aria-expanded=true]{background:#745135;color:#fff0cf}
 #bagAsk button:focus-visible{outline:2px solid #80512d;outline-offset:-3px}
 #bagAsk button:disabled{cursor:default;opacity:.45}
 
 /* NPC words above; Corin's choices or words below. Portraits never swap lanes. */
 .conversationStage,.conversationPlayer{display:grid;min-width:0;min-height:0;gap:18px;padding:14px max(20px,env(safe-area-inset-right)) 14px max(20px,env(safe-area-inset-left));box-sizing:border-box;overflow:hidden}
-.conversationStage{grid-row:2;grid-column:1;grid-template-columns:clamp(90px,17vw,190px) minmax(0,1fr);border-bottom:3px double #a37b46;background:radial-gradient(ellipse at 8% 75%,#cfb27699,transparent 45%),repeating-linear-gradient(135deg,#a3804210 0 1px,transparent 1px 14px),#eddbb7}
-.conversationPlayer{grid-row:3;grid-column:1;grid-template-columns:minmax(0,1fr) clamp(90px,17vw,190px);background:linear-gradient(100deg,#f6e8cb,#e3cfac)}
-.conversationSpeaker{min-height:0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
-.conversationPortrait{display:block;flex:0 0 auto;width:min(100%,18dvh);aspect-ratio:1;min-height:0;max-height:none;background-repeat:no-repeat;filter:drop-shadow(0 5px 5px #63452633);image-rendering:auto}
+.conversationStage{grid-row:2;grid-column:1;grid-template-columns:clamp(110px,24vw,260px) minmax(0,1fr);border-bottom:3px double #a37b46;background:radial-gradient(ellipse at 8% 75%,#cfb27699,transparent 45%),repeating-linear-gradient(135deg,#a3804210 0 1px,transparent 1px 14px),#eddbb7}
+.conversationPlayer{grid-row:3;grid-column:1;grid-template-columns:minmax(0,1fr) clamp(110px,24vw,260px);background:linear-gradient(100deg,#f6e8cb,#e3cfac)}
+.conversationSpeaker{container-type:size;min-height:0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.conversationPortrait{display:block;flex:0 0 auto;width:min(100%,24dvh);aspect-ratio:1;min-height:0;max-height:none;background-repeat:no-repeat;filter:drop-shadow(0 5px 5px #63452633);image-rendering:auto}
 .conversationSpeakerName{color:#4e351f;font:700 16px/1.2 var(--manuscript-serif);overflow-wrap:anywhere}
 .conversationPlayerTurn{font:600 10px/1.2 system-ui;color:#6a7968;text-transform:uppercase;letter-spacing:.08em}
-.conversationPlayer .conversationPortrait{max-height:190px}
+.conversationSpeaker .conversationPortrait{width:min(100%,24dvh,calc(100cqh - 38px))}
+.conversationPlayer .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 60px))}
 .conversationPlayerBody,.conversationNpcSpeech,.conversationCorinSpeech{position:relative;min-height:0;min-width:0;overflow:hidden}
 .conversationPlayerBody{display:grid;grid-template-rows:minmax(0,1fr)}
 .conversationCorinSpeech{display:none}
@@ -60,34 +54,34 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
 
 /* The character record replaces both conversation lanes with a separate page. */
 .conversationDossier{grid-row:2/4;grid-column:1;padding:24px max(20px,env(safe-area-inset-right)) 30px max(20px,env(safe-area-inset-left));background:repeating-linear-gradient(0deg,#49635a0a 0 1px,transparent 1px 26px),#e1e5d5;animation:profileUnfold .25s ease-out}
-.conversationDossier[hidden],#bagAsk .deckProfile[hidden],#bagAsk .deckHistory[hidden]{display:none!important}
-#bagAsk.profileOpen .conversationStage,#bagAsk.profileOpen .conversationPlayer,#bagAsk.historyOpen .conversationStage,#bagAsk.historyOpen .conversationPlayer{display:none}
-#bagAsk.profileOpen>.deckHeader,#bagAsk.historyOpen>.deckHeader{background:#304f51!important;border-bottom-color:#adbb9b;color:#fff1d2!important}
-#bagAsk.profileOpen .deckName,#bagAsk.historyOpen .deckName{color:#fff1d2}
-#bagAsk.profileOpen .deckEyebrow,#bagAsk.profileOpen .deckProgressText,#bagAsk.historyOpen .deckEyebrow,#bagAsk.historyOpen .deckProgressText{color:#d6dfcb}
-#bagAsk .deckProfile,#bagAsk .deckHistory{max-width:900px;margin:0 auto 20px;padding:0;color:#304a44}
+.conversationDossier[hidden],#bagAsk .deckProfile[hidden]{display:none!important}
+#bagAsk.profileOpen .conversationStage,#bagAsk.profileOpen .conversationPlayer{display:none}
+#bagAsk.profileOpen>.deckHeader{background:#304f51!important;border-bottom-color:#adbb9b;color:#fff1d2!important}
+#bagAsk.profileOpen .deckName{color:#fff1d2}
+#bagAsk.profileOpen .deckEyebrow{color:#d6dfcb}
+#bagAsk .deckProfile{max-width:900px;margin:0 auto 20px;padding:0;color:#304a44}
 #bagAsk .deckProfileHero{display:flex;align-items:center;gap:28px;padding:20px;margin:0 0 24px;background:#304f51;border:4px double #c8bc8e;box-shadow:0 8px 18px #263f3c22;color:#fff1d2}
-#bagAsk .deckProfileHero .conversationPortrait{flex:0 0 150px;width:150px;height:150px;max-height:none}
+#bagAsk .deckProfileHero .conversationPortrait{flex:0 0 190px;width:190px;height:190px;max-height:none}
+.deckProfileIdentity{min-width:0;overflow-wrap:anywhere}
 #bagAsk .deckProfileHero .deckEyebrow{color:#d7cfaa}
-#bagAsk .deckProfile h2,#bagAsk .deckHistory h2{margin:5px 0 12px;font:600 28px var(--manuscript-serif)}
+#bagAsk .deckProfile h2{margin:5px 0 12px;font:600 28px var(--manuscript-serif)}
 #bagAsk .deckProfile h3{font:600 18px var(--manuscript-serif);border-bottom:1px solid #95a48b;padding-bottom:7px}
-#bagAsk .deckProfile p,#bagAsk .deckHistory p{font:16px/1.6 var(--manuscript-serif);margin:0 0 14px}
+#bagAsk .deckProfile p{font:16px/1.6 var(--manuscript-serif);margin:0 0 14px}
 .deckProfileFacts{display:grid;grid-template-columns:max-content 1fr;gap:10px 20px;font:13px/1.5 system-ui;margin:20px 0;padding:18px;background:#f8f3df;border:1px solid #a6b196}.deckProfileFacts dt{color:#61765d}.deckProfileFacts dd{margin:0;color:#304a44}
-#bagAsk .deckProfile blockquote{margin:6px 0 12px;padding:8px 0 8px 16px;border-left:3px solid #889b78;font:italic 16px/1.5 var(--manuscript-serif);color:#506449}
-#bagAsk .deckReturn{display:block;margin:18px auto;background:#304f51;color:#fff1d2;border-color:#8c9c86;padding:10px 20px}
-.conversationMemory{padding:12px 16px;margin:9px 0;border-left:3px solid #819177;background:#fff9e9}.conversationMemory strong{font:700 13px var(--manuscript-serif);color:#476154}
-#bagAsk .conversationMemory p{margin:5px 0 0}
+#bagAsk .deckProfileQuote{position:relative;isolation:isolate;margin:28px 0 12px;padding:24px 28px;background:linear-gradient(115deg,#314e4a,#456457);border:4px double #c8b67f;border-radius:3px 18px 3px 18px;box-shadow:0 5px 0 #78846955,0 12px 24px #273a3722;color:#fff2cf}
+#bagAsk .deckProfileQuote::before{content:'“';position:absolute;right:18px;top:0;color:#f4dca622;font:120px/1 Georgia;z-index:-1;pointer-events:none}
+#bagAsk .deckProfileQuote .deckEyebrow{color:#dfcd99;letter-spacing:.16em}
+#bagAsk .deckProfileQuote blockquote{margin:12px 0 0;padding:0;border:0;font:italic 19px/1.65 var(--manuscript-serif);color:inherit}
 @keyframes profileUnfold{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* Familiar A / B circles stay at the lower right throughout the conversation. */
+/* Next and the context-aware Back / Goodbye stay in the lower right. */
 .conversationFooter{grid-row:4;grid-column:1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px max(16px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));border-top:3px double #b69b72;background:linear-gradient(#f1e5cf,#dfc9aa);box-sizing:border-box}
 .conversationContext{min-width:0}
 .conversationSubject{margin:0 0 4px;color:#654c2e;font:italic 14px/1.3 var(--manuscript-serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .conversationTurn{color:#6b6c54;font:11px/1.3 system-ui}
 .conversationAB{display:flex;gap:12px;flex-shrink:0}
-#bagAsk .conversationControl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:72px;height:72px;padding:4px;border:0;border-radius:50%;color:#fff6e3;box-shadow:0 0 0 1px #786d58,0 3px 8px #594a3333;cursor:pointer;touch-action:manipulation;transition:transform .08s,background .08s}
+#bagAsk .conversationControl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:72px;height:72px;padding:4px;border:0;border-radius:50%;color:#fff6e3;font:700 14px/1.2 var(--manuscript-serif);box-shadow:0 0 0 1px #786d58,0 3px 8px #594a3333;cursor:pointer;touch-action:manipulation;transition:transform .08s,background .08s}
 #bagAsk .conversationNext{background:#36565d}#bagAsk .conversationGoodbye{background:#975638}
-.conversationControl strong{font:700 23px/1 system-ui}.conversationControl span{font:600 11px/1.2 system-ui}
 #bagAsk .conversationControl:active:not(:disabled){transform:scale(.94);background:#f8edd8;color:#293e43}
 
 /* An in-world invitation is always a separate, small confirmation. */
@@ -100,25 +94,24 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
 .conversationPromptHint{display:block;padding:8px 3px 0;color:#89653f;font:10px/1.3 system-ui}
 @media(max-width:1050px){#bagAsk.conversationTopics.journalDeck #askRows{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){
-  #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:82px;gap:5px}
-  #bagAsk .deckReadRing{display:none}#bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity .deckEyebrow{font-size:8px}#bagAsk .deckProfileHint{margin:3px 0 0;font-size:11px}#bagAsk .deckProgressText{display:none}
-  .deckHeaderControls{gap:4px}#bagAsk .deckBack,#bagAsk .deckHistoryToggle{font-size:11px;padding:6px 8px}
-  .conversationStage,.conversationPlayer{gap:10px;padding:12px}.conversationStage{grid-template-columns:clamp(76px,23vw,126px) minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) clamp(76px,23vw,126px)}
+  #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:48px;gap:5px}
+  #bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity>.deckEyebrow{display:none}#bagAsk .deckProfileToggle{min-height:34px;padding:5px 12px;font-size:12px}
+  .conversationStage,.conversationPlayer{gap:10px;padding:12px}.conversationStage{grid-template-columns:clamp(100px,32vw,170px) minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) clamp(100px,32vw,170px)}
   .conversationSpeakerName{font-size:13px}.conversationPlayerTurn{font-size:9px}
   body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:15px;line-height:1.45;padding:12px}
   #bagAsk.conversationTopics.journalDeck #askRows{grid-template-columns:minmax(0,1fr)}
   #bagAsk .deckTopicIcon{display:none}#bagAsk .deckTab{font-size:11px;padding:4px 6px;gap:4px}
-  .conversationSubject{font-size:12px}.conversationTurn{font-size:10px}.conversationAB{gap:9px}#bagAsk .conversationControl{width:62px;height:62px}
-  #bagAsk .deckProfileHero{gap:14px;padding:14px}#bagAsk .deckProfileHero .conversationPortrait{flex-basis:94px;width:94px;height:94px}#bagAsk .deckProfile h2{font-size:23px}.deckProfileFacts{grid-template-columns:1fr;gap:4px;padding:14px}.deckProfileFacts dd{margin-bottom:10px}
+  .conversationSubject{font-size:12px}.conversationTurn{font-size:10px}.conversationAB{gap:9px}#bagAsk .conversationControl{width:62px;height:62px;font-size:13px}
+  #bagAsk .deckProfileHero{gap:14px;padding:14px}#bagAsk .deckProfileHero .conversationPortrait{flex-basis:120px;width:120px;height:120px}#bagAsk .deckProfile h2{font-size:23px}.deckProfileFacts{grid-template-columns:1fr;gap:4px;padding:14px}.deckProfileFacts dd{margin-bottom:10px}
 }
 @media(max-height:560px){
-  #bagAsk.conversationTopics.journalDeck{grid-template-rows:auto minmax(100px,29dvh) minmax(0,1fr) auto}
-  #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:50px;padding-top:4px!important;padding-bottom:4px!important}
-  #bagAsk .deckName{font-size:17px;margin:1px 0}#bagAsk .deckIdentity .deckEyebrow,#bagAsk .deckProgressText,#bagAsk .deckReadRing{display:none}#bagAsk .deckProfileHint{font-size:10px;padding:2px 6px;margin:2px 0 0}
-  .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));gap:12px}.conversationStage{grid-template-columns:94px minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) 94px}
-  .conversationSpeaker{gap:2px}.conversationPortrait{width:60px;max-height:none}.conversationPlayer .conversationPortrait{max-height:75px}.conversationSpeakerName{font-size:11px}.conversationPlayerTurn{font-size:8px}
+  #bagAsk.conversationTopics.journalDeck{grid-template-rows:auto minmax(100px,32dvh) minmax(0,1fr) auto}
+  #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:44px;padding-top:4px!important;padding-bottom:4px!important}
+  #bagAsk .deckName{font-size:17px;margin:0}#bagAsk .deckIdentity>.deckEyebrow{display:none}#bagAsk .deckProfileToggle{min-height:32px;padding:4px 12px}
+  .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));gap:12px}.conversationStage{grid-template-columns:125px minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) 125px}
+  .conversationSpeaker{gap:2px}.conversationSpeaker .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 26px))}.conversationPlayer .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 38px))}.conversationSpeakerName{font-size:11px}.conversationPlayerTurn{font-size:8px}
   body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:14px;line-height:1.4;padding:9px 12px}
-  #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:64px}.conversationFooter{padding-top:5px;padding-bottom:max(5px,env(safe-area-inset-bottom))}.conversationSubject{font-size:12px}#bagAsk .conversationControl{width:52px;height:52px}.conversationControl strong{font-size:18px}.conversationControl span{font-size:9px}
+  #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:64px}.conversationFooter{padding-top:5px;padding-bottom:max(5px,env(safe-area-inset-bottom))}.conversationSubject{font-size:12px}#bagAsk .conversationControl{width:52px;height:52px;font-size:11px}
   #bagAsk.conversationPrompt{bottom:12px!important}
 }
 @media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk.conversationPrompt,.conversationDossier{animation:none!important;transition:none!important}}

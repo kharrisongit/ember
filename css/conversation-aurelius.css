@@ -1,0 +1,46 @@
+/* Aurelius: a shared inner sky, with dragon-scale patterns and bond light. */
+#bagAsk.conversationTopics.journalDeck.dragonTalk{--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
+#bagAsk.journalDeck.dragonTalk>.deckHeader{background:linear-gradient(105deg,#102334,#224550)!important;border-bottom-color:#b6aa70;color:#f4e2ad!important;box-shadow:0 4px 20px #08152680}
+#bagAsk.dragonTalk .deckName{color:#ffe2a0;text-shadow:0 0 16px #eabe6244}
+#bagAsk.dragonTalk .deckEyebrow{color:#97c9bb}
+#bagAsk.dragonTalk .deckProfileToggle{background:#234b54;border-color:#819e89;color:#fff0bf}
+#bagAsk.dragonTalk .deckProfileToggle:hover,#bagAsk.dragonTalk .deckProfileToggle[aria-expanded=true]{background:#567166;border-color:#dbc987;color:#fff6d7}
+#bagAsk.dragonTalk .conversationStage{position:relative;isolation:isolate;background:radial-gradient(ellipse at 14% 65%,#447c7166,transparent 55%),radial-gradient(ellipse at 80% 0,#43568055,transparent 60%),#112a3b;border-bottom-color:#799a86}
+#bagAsk.dragonTalk .conversationStage::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 28%,#e5d39a 0 1px,transparent 2px),radial-gradient(circle at 35% 75%,#b8ded4 0 1px,transparent 2px),radial-gradient(circle at 74% 18%,#c4d9e6 0 1px,transparent 2px),radial-gradient(ellipse at 14% 70%,#719a652f,transparent 45%);background-size:127px 109px,183px 151px,231px 197px,100% 100%;animation:bondShimmer 7s ease-in-out infinite alternate}
+@keyframes bondShimmer{from{opacity:.35;transform:translateY(3px)}to{opacity:.85;transform:translateY(-3px)}}
+#bagAsk.dragonTalk .conversationPlayer{background:radial-gradient(ellipse at 92% 45%,#375e6a77,transparent 55%),repeating-radial-gradient(ellipse at 100% 0,transparent 0 25px,#9fcdb90b 26px 27px,transparent 28px 49px),#102636}
+#bagAsk.dragonTalk .conversationSpeaker{position:relative;isolation:isolate}
+#bagAsk.dragonTalk .conversationSpeaker::before{content:'';position:absolute;width:88%;aspect-ratio:1;border:3px double #abc19466;border-radius:50%;background:radial-gradient(circle,#a7c58e2a,transparent 70%);box-shadow:0 0 26px #91c8aa22,inset 0 0 22px #94c7b122;z-index:-1;pointer-events:none}
+#bagAsk.dragonTalk .conversationPortrait{filter:drop-shadow(0 0 12px #d8c27344)}
+#bagAsk.dragonTalk .conversationSpeakerName{color:#f8df9f}
+#bagAsk.dragonTalk .conversationPlayerTurn{color:#a9d3c7}
+body.conversation-session #bagAsk.journalDeck.dragonTalk #say,#bagAsk.dragonTalk .conversationNpcEcho,#bagAsk.dragonTalk .conversationCorinEcho{background:linear-gradient(140deg,#203f4c,#152d3e);color:#f2ebd2;border-color:#92b09b;box-shadow:inset 0 0 0 3px #0c2431,0 0 14px #82b2a518;border-radius:12px 4px 12px 4px;scrollbar-color:#91ab91 #142c3a}
+body.conversation-session #bagAsk.journalDeck.dragonTalk .conversationCorinSpeech #say,#bagAsk.dragonTalk .conversationCorinEcho{background:linear-gradient(130deg,#26354d,#1c3041);border-color:#a9b9cc;box-shadow:inset 0 0 0 3px #182235,0 0 14px #9bace318}
+#bagAsk.dragonTalk .deckTabs{background:#112a3b;box-shadow:0 4px 10px #091b2d}
+#bagAsk.dragonTalk .deckTab{background:#254653;color:#d7e6d3;border-color:#597a76}
+#bagAsk.dragonTalk .deckTab[aria-pressed=true]{background:#bbc598;color:#18323d;border-color:#e4d6a4}
+#bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckTopic{background:linear-gradient(120deg,#203f50,#162e40)!important;color:#eeebcd!important;border-color:#587e81!important;border-left-color:#90b49c!important;border-radius:10px 3px 10px 3px!important;box-shadow:inset 0 1px #90b4a422,0 3px 8px #08172455}
+#bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckTopic[data-selected=true]{background:linear-gradient(120deg,#436363,#294b58)!important;border-color:#e4ca83!important;border-left-color:#ebd18a!important;box-shadow:inset 0 0 0 1px #cab77277,0 0 12px #dbc17c22}
+#bagAsk.dragonTalk .deckTopicIcon,#bagAsk.dragonTalk .deckTopicBadge{color:#dfc88b}
+#bagAsk.dragonTalk .deckTopicCopy small,#bagAsk.dragonTalk .deckEmpty{color:#abc8c2}
+#bagAsk.dragonTalk .deckReplyPrompt{color:#f0dca6}
+#bagAsk.dragonTalk .conversationWorkspace,#bagAsk.dragonTalk .conversationDossier{scrollbar-color:#b0bb91 #122a3a}
+#bagAsk.conversationTopics.journalDeck.dragonTalk #topicScrollHint{background:linear-gradient(transparent,#102636 70%);color:#d4d4a0}
+#bagAsk.dragonTalk .conversationFooter{background:linear-gradient(110deg,#132b3b,#23414b);border-top-color:#87977d}
+#bagAsk.dragonTalk .conversationSubject{color:#e9d9a7}#bagAsk.dragonTalk .conversationTurn{color:#adcfc4}
+#bagAsk.dragonTalk .conversationControl{box-shadow:0 0 0 1px #9caf90,0 0 15px #abc18e18,0 3px 8px #0005;color:#fff0c0}
+#bagAsk.dragonTalk .conversationNext{background:radial-gradient(circle at 40% 30%,#608a78,#2d535c 70%)}
+#bagAsk.dragonTalk .conversationGoodbye{background:radial-gradient(circle at 40% 30%,#59718a,#2a4258 70%)}
+#bagAsk.dragonTalk .conversationControl:active:not(:disabled){background:#d7dab6;color:#1a3743}
+#bagAsk.dragonTalk button:focus-visible{outline-color:#efd699}
+/* The dragon's profile retains the bond palette on a separate illuminated page. */
+#bagAsk.dragonTalk .conversationDossier{background:repeating-linear-gradient(0deg,#a9c6b608 0 1px,transparent 1px 30px),radial-gradient(ellipse at 50% 0,#304657,#142536 75%)}
+#bagAsk.dragonTalk .deckProfile{color:#dce5d4}
+#bagAsk.dragonTalk .deckProfileHero{background:radial-gradient(ellipse at 15% 50%,#69877255,transparent 65%),#183343;border-color:#c8bc85;color:#f7e2b0}
+#bagAsk.dragonTalk .deckProfileHero .deckEyebrow{color:#b7d0ac}
+#bagAsk.dragonTalk .deckProfile h3{color:#e7d7a4;border-bottom-color:#6b8880}
+#bagAsk.dragonTalk .deckProfileFacts{background:#213948;border-color:#607b79}
+#bagAsk.dragonTalk .deckProfileFacts dt{color:#a2c4b0}#bagAsk.dragonTalk .deckProfileFacts dd{color:#edf0db}
+#bagAsk.dragonTalk .deckProfileQuote{background:radial-gradient(ellipse at 0 0,#72897666,transparent 70%),linear-gradient(120deg,#25494e,#253850);border-color:#d9c381;box-shadow:0 5px 0 #091b2b99,0 0 24px #d8c28118;color:#fff0ca}
+#bagAsk.dragonTalk .deckProfileQuote .deckEyebrow{color:#e5cf95}
+@media(prefers-reduced-motion:reduce){#bagAsk.dragonTalk .conversationStage::before{animation:none}}
