@@ -296,6 +296,23 @@ function startNanFarewell(nan){
   refreshWingBtn();
   nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
   const target=[P.x,P.y+36];
+  const hettie=npcs.find(n=>n.n==='Hettie'&&npcHere(n));
+  if(hettie){
+    // Clear the conversation and Nan's approach lane before either speaks.
+    hettie.goto=null;hettie.nanSceneAside=[];
+    if(Math.abs(hettie.x-P.x)<112&&Math.abs(hettie.y-P.y)<176){
+      const side=hettie.x<P.x?-1:1;
+      const candidates=[];
+      for(const dx of [side*128,side*160,-side*128])for(const dy of [0,48,-48,96])
+        candidates.push([P.x+dx,hettie.y+dy]);
+      candidates.sort((a,b)=>Math.hypot(a[0]-hettie.x,a[1]-hettie.y)-Math.hypot(b[0]-hettie.x,b[1]-hettie.y));
+      for(const point of candidates){
+        if(!canNpcStand(...point,hettie))continue;
+        const path=maddockWalkPath(hettie,point);
+        if(path){hettie.nanSceneAside=path;break;}
+      }
+    }
+  }
   placeDragonBehindCorin(target);
   // Start fully below both the current and following camera views, then
   // walk north to Corin without moving him or cutting away.
@@ -311,7 +328,7 @@ function startNanFarewell(nan){
       nan.scriptWalking=true;nan.noTalk=true;
       faceToward(nan,nan.x,nan.y+32);
     },hold:()=>{
-      if(nan.goto)return false;
+      if(nan.goto||hettie?.nanSceneAside?.length)return false;
       nan.scriptWalking=false;
       faceToward(nan,P.x,P.y);faceCorinAt(nan.x,nan.y);return true;
     }});

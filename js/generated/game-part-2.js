@@ -847,7 +847,7 @@ function npcTalkDistance(n){
   return distance;
 }
 function nearestTalkNpc(){
-  const eligible=n=>npcHere(n)&&!n.noTalk&&!(lastFight&&MAPID==='cinderhold'&&/Halvard/.test(n.n||''));
+  const eligible=n=>npcHere(n)&&!n.noTalk&&!n.scriptWalking&&!n.houseWalk&&!n.nanSceneAside&&!(lastFight&&MAPID==='cinderhold'&&/Halvard/.test(n.n||''));
   let best=null,bd=23;
   for(const n of npcs){
     if(!eligible(n))continue;
@@ -1250,8 +1250,8 @@ function repairSeating(){
   }
   const linna=world.npcs.find(n=>n.n==='Linna');
   if(linna)Object.assign(linna,{
-    // Use a complete directional set so her town patrol can actually animate.
-    packSpr:'market_citizen4',lookId:'market_citizen4',packDirections:true,packWalk:true,
+    // Restore Linna's original complete idle/walk set, separate from Isolde.
+    packSpr:'guild_citizen2',lookId:'guild_citizen2',packDirections:true,packWalk:true,
     stationary:false,serviceAppearance:true,patrol:true,patrolPoints:[[4288,1664],[4288,1536]],
     goto:undefined,sk:undefined,body:undefined,idleFrame:undefined,idleFps:4
   });
@@ -2265,6 +2265,10 @@ function loadMap(id, fresh, discardDraft=false) {
     if(painted.size||(MD.editorPublishedPaint||[]).length)rebuildSolid();
   }else placeBirds();
   editorMapLoading=false;
+  if (id === "world") {
+    const king = npcs.find(n => n.n === "The Shroom King");
+    if (king) { king.stationary = true; king.patrol = null; king.goto = null; }
+  }
   if (id === "world" && quest >= Q.KING) {
     const her = npcs.find(n => n.n === "Hettie");
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
@@ -6050,10 +6054,9 @@ function releaseGreenCamera(){
 function frameGreenEncounter(){
   if(!greenCamera||!scene?.greenEncounter||MAPID!==GREEN.map)return;
   const g=greenAt(),left=Math.min(P.x-24,g.x-60),right=Math.max(P.x+24,g.x+60);
-  const top=Math.min(P.y-64,g.y-100),bottom=Math.max(P.y+12,g.y+16);
   // Reserve room for Corin's portrait/dialogue below the complete landing sprite.
   const inset=24,available=Math.max(40,VH-inset-160);
-  cam.z=Math.max(greenCamera.zoom*.9,Math.min(greenCamera.zoom,(VW-24)/(right-left),available/(bottom-top)));
+  cam.z=greenCamera.zoom;
   cam.x=(left+right)/2-VW/cam.z/2;
   cam.y=(g.y-40)-Math.min(VH/2,inset+available/2)/cam.z;
 }
@@ -6779,6 +6782,14 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(m.nanSceneAside){
+      if(scene?.nanGifts||npcs.some(n=>n.nanDeparting)){
+        moveBrambleActor(m,m.nanSceneAside,90,dt);
+        m.scriptWalking=!!m.nanSceneAside.length;
+        continue;
+      }
+      delete m.nanSceneAside;m.scriptWalking=false;
+    }
     if(m.nanDeparting){
       // Return south the way she approached; hide only after her head exits.
       faceToward(m,m.x,m.y+32);m.y+=72*dt;m.scriptWalking=true;
@@ -6795,7 +6806,7 @@ function stepWalkers(dt) {
       else{m.x+=dx/d*step;m.y+=dy/d*step;}
       continue;
     }
-    if(sayNpc===m||scene?.npcActor===m||(typeof ask!=='undefined'&&ask?.npcActor===m)){
+    if(sayNpc===m||(scene&&(scene.npcActor===m||walker===m)&&!scene.arriving)||(typeof ask!=='undefined'&&ask?.npcActor===m)){
       faceToward(m,P.x,P.y);continue;
     }
     if(m.houseWalk)continue;
@@ -6878,8 +6889,8 @@ function faceCorinAt(x, y) {
 
 function playScene(lines, opts) {
   scene = { lines, i: 0, t: 0, ...(opts || {}) };
+  if(typeof quietDragonBanter==='function')quietDragonBanter();
   P.moving = false;
-  if (!scene.hold) showScene();
   walker = scene.offscreen ? null : scene.npcActor || speakerNamed(scene.who);
   if (walker) {
     faceCorinAt(walker.x, walker.y);
@@ -6893,6 +6904,9 @@ function playScene(lines, opts) {
                      P.y + dy / d * 20 + py * 22 * side];
     }
   }
+  // Finish an approach before revealing or accepting input on its first line.
+  scene.arriving = !scene.hatch && !!(walker?.goto || walker?.houseWalk);
+  showScene();
 }
 function sendWalkerHome(stay) {
   if (walker && !walker.home) { walker = null; return; }
@@ -6905,7 +6919,7 @@ function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene |
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
-  if (scene.hold || scene.silent) return;          /* animation owns this beat */
+  if (scene.hold || scene.silent || scene.arriving) return; /* animation owns this beat */
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if(scene.greenEncounter&&scene.i<2)return; // Flight/rest timing owns these reactions.
@@ -7314,6 +7328,11 @@ function banishKingsMen() {
 
 function stepScene(dt) {
   if (!scene) return;
+  if (scene.arriving) {
+    if (walker?.goto || walker?.houseWalk) return;
+    scene.arriving = false;
+    if (!scene.hold) showScene();
+  }
   if (scene.hold) {
     if (!scene.hold()) { sayOff(); showFace(null); return; }
     scene.hold = null;
@@ -7453,7 +7472,7 @@ function stepType(dt) {
 
 function showScene() {
   if (!scene) { sayOff(); showFace(null); return; }
-  if(scene.greenTextHidden||scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
+  if(scene.hold||scene.arriving||scene.greenTextHidden||scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
     sayOff();showFace(null);return;
   }
   if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();
@@ -7464,7 +7483,7 @@ function showScene() {
   const text = who ? line.slice(colon + 2) : line;
   typeStart(who, text);
   typePaint();
-  showFace(who);
+  showFace(scene.hidePortrait ? null : who);
   sayEl.classList.toggle("narr", !who);
   sayIsNarr = !who;
   sayOn();

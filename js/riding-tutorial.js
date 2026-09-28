@@ -125,7 +125,7 @@
     if(!gameplayStarted||mode!=='play')return;
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();moveTo('swordTalk');
-      playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',after:()=>{
+      playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',hidePortrait:true,after:()=>{
         moveTo('swordSwipe','Press A to Swing Your Sword');paint();
       }});
     }

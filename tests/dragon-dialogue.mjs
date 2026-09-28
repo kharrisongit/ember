@@ -246,3 +246,20 @@ c.P.x=99*16;assert(topicIds().includes('thornwell'),'a real visit remains known 
 run("resetDragonBanter(['visited:Hollybeck Graveyard','visited:Forgewick Temple','visited:Cinderhold Castle'])");
 assert(!topicIds().includes('hollybeck'));assert(!topicIds().includes('forgewick'));assert(!topicIds().includes('cinderhold'));
 console.log('PASS: exact town boundaries, persistent real visits, and rejection of road, temple and graveyard false visits.');
+
+// Travel captions yield to every combat lock and leave ten quiet seconds afterwards.
+for(const kind of ['cutscene','arena','fight','boss','trial']){
+ clear();run("queueDragonBanter('before',['Before the interruption.','Yes.'])");tick();assert(active());
+ if(kind==='cutscene')pendingScene={};
+ if(kind==='arena')c.arenaLock={};
+ if(kind==='fight')c.inFight=()=>true;
+ if(kind==='boss')c.bossScene={};
+ if(kind==='trial')c.trial={};
+ tick();assert.equal(active(),null);assert.equal(run('dragonBanterPanel.hidden'),true);
+ run("queueDragonBanter('after',['A later thought.','I hear you.'])");tick(20);assert.equal(active(),null,kind+' remains quiet while active');
+ pendingScene=null;c.arenaLock=null;c.bossScene=null;c.trial=null;c.inFight=()=>false;
+ tick(9);assert.equal(active(),null,kind+' leaves a quiet period');
+ run('dragonDoorExchange()');assert.equal(active(),null,'Door replies respect the same quiet period');
+ tick(20);assert(active(),'Ambient dialogue eventually resumes');
+}
+console.log('PASS: ambient thoughts stop for cutscenes and all battle states, including doorway replies during the post-scene quiet period.');

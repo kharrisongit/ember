@@ -289,25 +289,25 @@ const NPC_WORLD_TALKS = {
   },
   "Isolde": {
     "halvard": [
-      "I serve whoever comes to my stall, but the king's patrols have a habit of expecting their drinks for nothing.",
+      "I make drinks for anyone who asks, but the king's patrols have a habit of expecting theirs for nothing.",
       "For the first time in years, a uniform at the market does not make everyone fall quiet. I could get used to that."
     ],
     "bramble": [
-      "That is Rowan's dog. The hunter buys a bottle from me when he is passing through. Try the Copper Cup in Thornwell; that is where he stops when he is home."
+      "That is Rowan's dog. The hunter buys a bottle from me when he is passing through. Try the Copper Cup on the north side of town; that is where he stops when he is home."
     ],
     "greetings": {
       "d": [
         "Isolde: Cider, berry cordial, and fresh water. What will it be?",
         "Corin: Just looking, thank you.",
-        "Isolde: Take your time. The shade is free."
+        "Isolde: No hurry. Find me when you are thirsty."
       ],
       "dd": [
-        "Isolde: Oh! Keep your dragon's tail clear of the bottles, please.",
-        "Corin: Sorry. We will give your stall some room.",
-        "Isolde: Thank you. He is welcome to the water, though."
+        "Isolde: Oh! Is your dragon thirsty after the journey?",
+        "Corin: Probably. He is always happy to stop for a drink.",
+        "Isolde: There is plenty of fresh water in town. Help yourselves."
       ],
       "dd2": [
-        "Isolde: He can look as much as he likes. Just no tasting the corks."
+        "Isolde: Has your companion had his drink? A long road makes thirsty work."
       ],
       "away": [
         "Isolde: I heard you are travelling with a dragon. Does he drink from a bucket?",

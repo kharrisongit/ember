@@ -28,6 +28,7 @@ assert(run('EmberRiding.holding()'));assert.equal(run('scene'),null,'Wait for wa
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Entry does not reposition enemies');
 run('stepArena(.4);EmberRiding.step(.4)');
 assert.equal(run('scene.lines[0]'),"Corin: What are these walls? I can’t escape! I have to fight!");
+assert.equal(run('scene.hidePortrait'),true,'The trapped reaction leaves the battlefield visible');
 run('startAct("swing")');assert.equal(run('P.act'),null,'Attacks stay locked during Corin’s dialogue');
 for(let i=0;i<20;i++)run('stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Enemies wait through dialogue');

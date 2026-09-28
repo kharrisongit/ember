@@ -14,7 +14,7 @@ for(const [w,h]of [[390,510],[844,250],[1280,680]]){
  c.size=[w,h];run('VW=size[0];VH=size[1];frameGreenEncounter()');
  assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-40-cam.y)*cam.z>=0&&(g.y-40-cam.y)*cam.z<VH-100})()'),'Landed dragon stays in view with close framing at '+w+'×'+h);
 }
-assert(run('cam.z>=greenCamera.zoom*.9'),'Dragon scene pulls back at most 10 percent');
+assert.equal(run('cam.z'),run('greenCamera.zoom'),'Dragon scene keeps normal gameplay zoom');
 assert.equal(shown.at(-1),'Corin: What the…');
 run('stepScene(1.5)');assert(!run('scene.greenTextHidden'),'Flight reaction has time to read');
 run('stepScene(.1)');assert(run('scene.greenTextHidden'),'Flight reaction clears after 1.6 seconds');

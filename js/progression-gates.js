@@ -1,6 +1,6 @@
 /* Local roadworks change with story progress; temple approaches and return roads remain open. */
 const JOURNEY_GATES = {
-  thornwell:{x:320*16,y:102*16,rect:[320*16-32,102*16-58,320*16+32,102*16+38],open:()=>wonAll||brambleQuest>=2,
+  thornwell:{x:320*16,y:102*16,rect:[320*16-40,102*16-72,320*16+40,102*16+56],open:()=>wonAll||brambleQuest>=2,
     inside:(x,y)=>x>=320*16},
   forgewick:{x:815*16,y:140*16,rect:[815*16-17,140*16-62,815*16+18,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
     inside:(x,y)=>(x>=815*16&&y<220*16)||x>=1080*16},
@@ -10,7 +10,7 @@ const JOURNEY_GATES = {
     inside:(x,y)=>(x>=2727*16&&y>=211*16)||x>=2840*16}
 };
 const journeyWagon={spr:'story_broken_wagon',home:[12410,3374],scale:1,sourceId:null};
-const brokenWagonImage=new Image();brokenWagonImage.src='assets/props/broken-wagon.png?v=20260927';
+const brokenWagonImage=new Image();brokenWagonImage.src='assets/props/broken-wagon.png?v=20260928-vertical';
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 function progressionSolid(x,y){
   if(MAPID!=='world')return false;
@@ -66,7 +66,7 @@ function progressionProp(spr,x,y,scale=1,phase=0){return {progressionProp:true,s
 function journeyGateProps(){
   if(MAPID!=='world')return [];
   const out=[],th=JOURNEY_GATES.thornwell,fw=JOURNEY_GATES.forgewick,ss=JOURNEY_GATES.sandspire,hb=JOURNEY_GATES.hollybeck;
-  if(!th.open())out.push(progressionProp(journeyWagon.spr,th.x,th.y+28,journeyWagon.scale));
+  if(!th.open())out.push(progressionProp(journeyWagon.spr,th.x,th.y+56,journeyWagon.scale));
 
   if(!fw.open()){
     out.push(progressionProp('rp_carts_0_14_2',fw.x-2,fw.y-25,2),progressionProp('rp_carts_1_6_2',fw.x+3,fw.y+27,2));
@@ -79,7 +79,7 @@ function journeyGateProps(){
 function drawJourneyProp(o,t){
   if(o.spr==='story_broken_wagon'){
     if(brokenWagonImage.complete&&brokenWagonImage.naturalWidth!==0)
-      drawGameImage(ctx,brokenWagonImage,0,0,80,56,Math.round(o.x-40),Math.round(o.y-56),80,56);
+      drawGameImage(ctx,brokenWagonImage,0,0,brokenWagonImage.naturalWidth,brokenWagonImage.naturalHeight,Math.round(o.x-40),Math.round(o.y-128),80,128);
     return;
   }
   const s=SPR[o.spr];if(!s)return;

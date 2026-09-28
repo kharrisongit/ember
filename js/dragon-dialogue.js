@@ -1,6 +1,7 @@
 /* Aurelius's optional telepathic banter never opens a blocking game dialogue. */
 const dragonBanterSeen=new Set();
 let dragonBanterQueue=[],dragonBanterActive=null,dragonBanterGap=0,dragonBanterPanel=null,dragonNpcCooldown=0;
+let dragonBanterQuiet=0;
 const DRAGON_PLACE_LINES={
   "Millwood":["Apples and chimney smoke. This is home.", "Nan will notice if anything smells singed."],
   "Thornwell":["A busy town beneath quiet branches.", "The branches hear plenty of gossip."],
@@ -248,6 +249,10 @@ function dismissDragonBanter(){
   if(dragonBanterPanel)dragonBanterPanel.hidden=true;
   return true;
 }
+function quietDragonBanter(){
+  dragonBanterQuiet=10;
+  dismissDragonBanter();
+}
 function resetDragonBanter(seen=[]){
   dragonBanterSeen.clear();
   for(const key of seen)if(typeof key==='string'){
@@ -264,7 +269,7 @@ function resetDragonBanter(seen=[]){
     const boss=key.match(/^(boss|victory):[^:]+:([^:]+):[^:]+$/);
     if(boss)dragonBanterSeen.add(boss[1]+':'+boss[2]);
   }
-  dragonBanterQueue=[];dismissDragonBanter();dragonBanterGap=0;
+  dragonBanterQueue=[];dismissDragonBanter();dragonBanterGap=0;dragonBanterQuiet=0;
   dragonNpcCooldown=seen.some(key=>typeof key==='string'&&key.startsWith('npc:'))?90:0;
 }
 const DRAGON_DOOR_REPLIES=[
@@ -277,7 +282,7 @@ const DRAGON_DOOR_REPLIES=[
 ];
 let dragonDoorReply=0;
 function dragonDoorExchange(){
-  if(!dragonIntroDone)return;
+  if(!dragonIntroDone||dragonBanterQuiet||sceneHold()||dragonCombatActive())return;
   dismissDragonBanter();
   dragonBanterActive={key:'doorway',lines:["Wait here, I’ll be right back.",DRAGON_DOOR_REPLIES[dragonDoorReply++%DRAGON_DOOR_REPLIES.length]],
     speakers:['Corin',DRAGON_NAME],time:7,handoff:true};
@@ -311,6 +316,16 @@ function paintDragonBanter(){
 }
 function stepDragonBanter(dt){
   dragonNpcCooldown=Math.max(0,dragonNpcCooldown-dt);
+  const interrupted=sceneHold()||!!sayNpc||dragonCombatActive();
+  if(interrupted){
+    quietDragonBanter();
+    return;
+  }
+  dragonBanterQuiet=Math.max(0,dragonBanterQuiet-dt);
+  if(dragonBanterQuiet){
+    if(dragonBanterPanel)dragonBanterPanel.hidden=true;
+    return;
+  }
   if(dragonBanterActive?.handoff){
     const hidden=mode!=='play'||sceneHold()||sayNpc||ovl||ask||bagOpen||atlasOpen||editing||deadShown;
     dragonBanterActive.time-=dt;

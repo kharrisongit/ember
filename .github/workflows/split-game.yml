@@ -49,6 +49,9 @@ jobs:
           node tests/dragon-dialogue.mjs
           node tests/dragon-staging.mjs
           node tests/npc-callouts-facing.mjs
+          node tests/cutscene-walking.mjs
+          node tests/green-encounter.mjs
+          node tests/thornwell-followup.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
           node tests/temple-compass.mjs

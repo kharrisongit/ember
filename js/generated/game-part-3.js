@@ -4076,7 +4076,11 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
-  if(ask?.shop||ask?.npcConversation)return;
+  if(ask?.shop||ask?.npcConversation){
+    if(ask.npcActor)faceToward(ask.npcActor,P.x,P.y);
+    if(ask.repaintWorld){drawWorld(tAcc,0);ask.repaintWorld=false;}
+    return;
+  }
   if(atlasOpen||fishing)stepDragonBanter(dt);
   if(atlasOpen)return;
   if(fishing){
@@ -5034,7 +5038,12 @@ function askDraw() {
                 : "color:#7a3f3a;background:rgba(190,110,95,.26);"
                 + "border-left:3px solid #b0685c;");
       d.textContent = o.n;
-      if(ask.npcConversation||ask.dragonConversation)d.className="topicSpeaker";
+      if(ask.npcConversation||ask.dragonConversation){
+        d.className="topicSpeaker";
+        const portrait=document.createElement('span');portrait.className='topicPortrait';
+        portrait.setAttribute('aria-hidden','true');
+        paintSmallPortrait(portrait,ask.npcConversation||'Aurelius');d.appendChild(portrait);
+      }
       if(ask.confirmation)d.style.cssText='padding:8px;font-size:14px;line-height:1.45;font-weight:bold;white-space:normal;overflow-wrap:anywhere';
       rows.appendChild(d);
       return;
@@ -6183,9 +6192,9 @@ setInterval(() => {
   if (typeof npcs === "undefined" || editing || fishing) return;
   const now = Date.now();
   for (const n of npcs) {
-    if (!n.patrol || n.goto) continue;
+    if (n.stationary || !n.patrol || n.goto || n.nanSceneAside) continue;
     if (typeof sayNpc !== "undefined" && sayNpc === n) continue;
-    if (scene?.npcActor===n || ask?.npcActor===n) continue;
+    if ((scene&&(scene.npcActor===n||walker===n)) || ask?.npcActor===n) continue;
     if (n.patrolFrom !== undefined && quest < n.patrolFrom) continue;
     if (n.restUntil === undefined) n.restUntil = 0;
     if (n.arrived === undefined) n.arrived = true;

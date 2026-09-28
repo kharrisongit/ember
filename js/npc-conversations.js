@@ -260,10 +260,10 @@ const NPC_STORIES = {
       "By making it too sweet three summers running. She drank every batch and waited for me to notice."
     ],
     [
-      "The travelling stall",
-      "Everything has its own place before I move this cart. Bottles do not forgive a loose strap.",
+      "Delivering your drinks",
+      "I wrap every bottle before I set out on deliveries. Glass does not forgive a loose strap.",
       "Have you ever lost any?",
-      "One whole shelf. The road smelled of apples for a week. I check the straps twice now."
+      "One whole basket. The road smelled of apples for a week. I check the straps twice now."
     ]
   ],
   "Nazim": [
@@ -2013,13 +2013,18 @@ function openNpcTopics(n){
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
   if((!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
+  n.goto=null;n.arrived=true;n.scriptWalking=false;n.px=n.x;n.py=n.y;
+  const directional=n.packSpr?.replace(/_idle_d$/,'');
+  if(directional&&['d','u','e','w'].every(d=>SPR[directional+'_idle_'+d])){
+    n.packSpr=directional;n.packDirections=true;
+  }
   sayOff();showFace(null);faceToward(n,P.x,P.y);P.moving=false;
   const choose=topic=>{
     if(topic.go){topic.go();return;}
     const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
     playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
-  ask={quick:1,npcConversation:n.n,npcActor:n,opts:[{n:n.n,head:true},
+  ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},
     ...(brambleHint(n)?[{n:brambleHint(n).title,go:()=>choose(brambleHint(n))}]:[]),
     {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),go:()=>beginNpcTalk(n,true)},
     ...npcStoryTopics(n).map(topic=>({n:topic.title,go:()=>choose(topic)}))]};
