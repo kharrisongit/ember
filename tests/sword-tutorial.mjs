@@ -6,13 +6,17 @@ const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){},error
 run(`MAPID='world';MD=W.maps.world;features=MD.features;quest=Q.ARMED;mode='play';gameplayStarted=true;
 scene=null;revealing=false;fadeDir=0;fade=0;P.act=null;dragon.on=false;
 canStand=()=>true;dragonCanStand=()=>true;rebuildSolid=()=>{};rebuildBuckets=()=>{};clampCam=()=>{};
-MW=4000;MH=600;solid=new Uint8Array(MW*MH);blockedByNpcBody=()=>false;blockedByNpcBuffer=()=>false;
+MW=4000;MH=600;solid=new Uint8Array(MW*MH);terr=new Uint8Array(MW*MH);blockedByNpcBody=()=>false;blockedByNpcBuffer=()=>false;
 stepChest=()=>{};stepHuntingGrounds=()=>{};saveGame=()=>{};showScene=()=>{};typeDone=()=>true;
 const swordRing=features.find(a=>a.id===208);
 P.x=swordRing.x*TS;P.y=(swordRing.y+swordRing.r+2)*TS;
 foes=[{kind:'ghost',x:swordRing.x*TS,y:swordRing.y*TS,hp:8,st:'approach',t:0,dir:'s'},
 {kind:'ghost',x:swordRing.x*TS+20,y:swordRing.y*TS+10,hp:8,st:'idle',t:0,dir:'s'}];
 currentArenaFeatures=()=>[swordRing];EmberRiding.restore({quest:Q.ARMED});`);
+assert(run('hasSword()'),'Corin still carries the sword before the tutorial');
+assert.equal(run('corinKit()'),'corin_sword_','The equipped sword remains visible');
+run('startAct("swing")');assert.equal(run('P.act'),null,'Sword attacks are locked before the tutorial');
+dom.touch(dom.element('act'));assert.equal(run('P.act'),null,'The real A control cannot swipe early');
 assert(run('foes.every(f=>f.ridingArena===208&&f.st==="idle"&&f.y===swordRing.y*TS+TS/2-TS)'),
   'First northern arena enemies wait near the center, within sight');
 const waiting=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
@@ -24,6 +28,7 @@ assert(run('EmberRiding.holding()'));assert.equal(run('scene'),null,'Wait for wa
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Entry does not reposition enemies');
 run('stepArena(.4);EmberRiding.step(.4)');
 assert.equal(run('scene.lines[0]'),"Corin: What are these walls? I can’t escape! I have to fight!");
+run('startAct("swing")');assert.equal(run('P.act'),null,'Attacks stay locked during Corin’s dialogue');
 for(let i=0;i<20;i++)run('stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Enemies wait through dialogue');
 run('scene.t=1');dom.touch(dom.element('act'));
@@ -35,11 +40,14 @@ dom.touch(dom.element('act'));
 assert.equal(run('P.act.kind'),'swing','The prompted A press performs a real sword attack');
 assert(!run('EmberRiding.holding()'));assert(run('EmberRiding.capture().swordDone'));
 assert(run('foes.every(f=>!EmberRiding.waitingEnemy(f))'),'Enemies activate immediately');
+run('P.act=null;startAct("swing")');assert.equal(run('P.act.kind'),'swing','Further sword attacks stay unlocked');
 run('stepFoes(.05)');assert(run('foes.some(f=>f._thinking)'),'Normal enemy AI resumes');
 c.saved=run('({quest:Q.ARMED,ridingTutorial:EmberRiding.capture()})');
 run('EmberRiding.restore(saved);EmberRiding.entered(swordRing)');assert(!run('EmberRiding.holding()'),'Completed lesson stays completed on reload');
+assert(run('EmberRiding.canSwipe()'),'Save restoration preserves sword use');
 run('EmberRiding.restore({quest:Q.FLED});EmberRiding.entered(swordRing)');assert(!run('EmberRiding.holding()'),'Later legacy saves do not repeat the lesson');
 run('EmberRiding.restore({quest:Q.ARMED,ridingTutorial:{version:2,swordDone:false}});EmberRiding.entered(swordRing)');
 assert.equal(run('EmberRiding.capture().phase'),'swordWalls','An incomplete lesson restarts safely');
+run('P.act=null;startAct("swing")');assert.equal(run('P.act'),null,'Incomplete saves keep sword attacks locked');
 run('EmberRiding.skip()');assert(run('EmberRiding.capture().swordDone'));assert(!run('EmberRiding.holding()'));
 console.log('PASS: sword arena stages enemies before entry, waits through walls and Corin’s line, teaches a real A swipe, resumes AI, and preserves completion across saves.');

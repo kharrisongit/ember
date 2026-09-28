@@ -259,5 +259,6 @@
   }
   function skip(){swordDone=true;done=true;unlocked=true;resumeRecovery=false;moveTo('');}
   window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
+    canSwipe:()=>swordDone||phase==='swordSwipe',
     unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',blocksArenaEntry:()=>recoveryPhases.has(phase)};
 })();

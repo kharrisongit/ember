@@ -7137,6 +7137,8 @@ function stepQuest(dt) {
       playScene([
         "Maddock: Wait, Corin. If you are going to look, take my sword.",
         "Maddock: It belonged to my father. The edge is sound, and I have kept it oiled.",
+        "Corin: Maddock, I don’t know how to use this thing.",
+        "Maddock: Oh, I imagine you’ll figure it out quick enough. Trust yourself.",
         "Maddock: Monsters have been coming down through Shroom Pass. Stay on the path, and leave yourself a way back.",
         "Corin: What was it?",
         "Maddock: Well, the King wasn’t looking for wild boars, was he? Be careful, Corin.",
@@ -10723,6 +10725,7 @@ const ACT = {
 };
 function startAct(kind) {
   if (P.act || fadeDir !== 0) return;
+  if (kind === "swing" && globalThis.window?.EmberRiding?.canSwipe?.() === false) return;
   if (kind === "swing" && hasSword()) globalThis.window?.EmberSfx?.sword();
   if (kind === "swing" && worn.brand) {
     brandCount++;
