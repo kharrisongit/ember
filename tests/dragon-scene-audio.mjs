@@ -34,7 +34,7 @@ c.scene.t=5.1;c.greenEncounterFinished();assert.equal(run('greenGone'),true,'The
 run('greenFly(.01)');await flush();assert.equal(active('breathing').length,0);assert.equal(active('wings').length,1);
 const takeoff=active('wings')[0];run('greenFly(1.3)');await flush();assert.equal(active('wings')[0],takeoff,'Takeoff flows into departure without restarting wings');
 run('greenFly(2.1)');await flush();assert.equal(active('wings').length,0);assert.equal(c.greenEncounterFinished(),true,'Quest resumes only after departure');
-for(const s of sources){assert.equal(s.gain.gain.value,/dragon-(roar|distant-crash)/.test(s.buffer[0])?.35:.7);assert.equal(s.gain.to,output,'Every effect honors the shared volume control');}
+for(const s of sources){assert.equal(s.gain.gain.value,/dragon-(roar|distant-crash)/.test(s.buffer[0])?.21:.7);assert.equal(s.gain.to,output,'Every effect honors the shared volume control');}
 c.quest=7;timers.forEach(f=>f());assert(sources.every(s=>s.stopped||s===sources[0]||s===sources[1]),'Leaving the story clears all effects');
 c.quest=6;api.phase('sit');c.mode='title';timers.forEach(f=>f());await flush();assert.equal(active('breathing').length,0,'A late decode cannot leak audio into the title');
 c.mode='play';api.phase('sit');await flush();assert.equal(active('breathing').length,1);c.document.hidden=true;timers.forEach(f=>f());assert.equal(active('breathing').length,0);

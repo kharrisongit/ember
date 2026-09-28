@@ -33,11 +33,12 @@ EmberArenaEntry.prepare();`);
  assert(!dom.element('arenaReady').hidden,name+' prompt appears');
  assert.equal(run('musicStarts'),starts+1,'Music begins with the popup');
  assert(run('foes.every(f=>f.st==="idle"&&f.hp===8)'),name+' enemies wait intact');
- // Both portrait and landscape phone play areas leave the whole group above the card.
+ // Portrait and landscape framing keeps enemies in view without a distant zoom.
  for(const [w,h]of [[390,510],[844,250],[1280,680]]){
   c.size=[w,h];run('VW=size[0];VH=size[1];EmberArenaEntry.frameCamera()');
   assert(run(`cam.z>Math.min(3,(VW-24)/(Math.max(P.x,...foes.map(f=>f.x))-Math.min(P.x,...foes.map(f=>f.x))+96),Math.max(40,VH-194)/(Math.max(P.y,...foes.map(f=>f.y))-Math.min(P.y,...foes.map(f=>f.y))+112))`),'Entry framing stays closer than the old padded view');
-  assert(run('foes.every(f=>(f.x-40-cam.x)*cam.z>=0&&(f.x+40-cam.x)*cam.z<=VW&&(f.y-80-cam.y)*cam.z>=24-1e-6&&(f.y+8-cam.y)*cam.z<=VH-130+1e-6)'),name+' enemies visible at '+w+'×'+h);
+  assert(run('cam.z>=2.7-1e-6'),'Arena pause pulls back at most 10 percent');
+  assert(run('foes.every(f=>(f.x-cam.x)*cam.z>=0&&(f.x-cam.x)*cam.z<=VW&&(f.y-32-cam.y)*cam.z>=0&&(f.y-32-cam.y)*cam.z<=VH)'),name+' enemies visible at '+w+'×'+h);
  }
  dom.touch(dom.element('act'));
  assert(!run('EmberArenaEntry.holding()'),'One A starts the battle');

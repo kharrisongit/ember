@@ -3665,6 +3665,27 @@ let undoStack = [];
 const UNDO_LIMIT = 40;
 let mapDirty = true;
 
+// Keep simulation camera targets separate from the smoothly presented view.
+let cameraPresentation=null,cameraLogical=null;
+function restoreCameraTarget(){
+  if(cameraLogical){Object.assign(cam,cameraLogical);cameraLogical=null;}
+}
+function presentCamera(dt){
+  restoreCameraTarget();
+  const target={...cam},cx=cam.x+VW/cam.z/2,cy=cam.y+VH/cam.z/2;
+  const old=cameraPresentation;
+  const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
+  const zooming=!reset&&(Math.abs(old.z-cam.z)>.001||old.settling);
+  if(zooming){
+    const k=1-Math.exp(-7*Math.max(0,Math.min(dt||0,.05)));
+    const z=old.z+(cam.z-old.z)*k,x=old.cx+(cx-old.cx)*k,y=old.cy+(cy-old.cy)*k;
+    const settling=Math.abs(z-cam.z)>.001||Math.hypot(x-cx,y-cy)>.1;
+    cameraLogical=target;
+    Object.assign(cam,{z,x:x-VW/z/2,y:y-VH/z/2});
+    cameraPresentation={map:MAPID,mode,z,cx:x,cy:y,settling};
+  }else cameraPresentation={map:MAPID,mode,z:cam.z,cx,cy,settling:false};
+}
+
 function worldArtVisible(x,y,w,h,vw,vh){
   // Include the full drawn rectangle, with one device-independent screen pixel
   // for snapped edges. The anchor may be outside while a canopy is still visible.
@@ -3675,6 +3696,7 @@ function worldArtVisible(x,y,w,h,vw,vh){
 function drawWorld(t, dt) {
   frameGreenEncounter();
   globalThis.window?.EmberArenaEntry?.frameCamera();
+  presentCamera(dt);
   const z = cam.z;
   const vw = VW / z, vh = VH / z;
   ctx.fillStyle = MD.bg || "#1d2a1b";
@@ -6027,9 +6049,9 @@ function frameGreenEncounter(){
   const top=Math.min(P.y-64,g.y-100),bottom=Math.max(P.y+12,g.y+16);
   // Reserve room for Corin's portrait/dialogue below the complete landing sprite.
   const inset=24,available=Math.max(40,VH-inset-160);
-  cam.z=Math.min(greenCamera.zoom,(VW-24)/(right-left),available/(bottom-top));
+  cam.z=Math.max(greenCamera.zoom*.9,Math.min(greenCamera.zoom,(VW-24)/(right-left),available/(bottom-top)));
   cam.x=(left+right)/2-VW/cam.z/2;
-  cam.y=(top+bottom)/2-(inset+available/2)/cam.z;
+  cam.y=(g.y-40)-Math.min(VH/2,inset+available/2)/cam.z;
 }
 function beginGreenEncounter(){
   if(scene)return;

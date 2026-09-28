@@ -8,8 +8,9 @@ assert.equal(run('scene'),null,'The approach stays playable until Corin reaches 
 run('P.y=greenAt().y+2*TS;greenFly(.01)');
 for(const [w,h]of [[390,510],[844,250],[1280,680]]){
  c.size=[w,h];run('VW=size[0];VH=size[1];frameGreenEncounter()');
- assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-84-cam.y)*cam.z>=24&&(g.y-cam.y)*cam.z<VH-150})()'),'Complete landed dragon is visible above dialogue at '+w+'×'+h);
+ assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-40-cam.y)*cam.z>=0&&(g.y-40-cam.y)*cam.z<VH-100})()'),'Landed dragon stays in view with close framing at '+w+'×'+h);
 }
+assert(run('cam.z>=greenCamera.zoom*.9'),'Dragon scene pulls back at most 10 percent');
 assert.equal(shown.at(-1),'Corin: What the…');
 run('stepScene(1.5)');assert(!run('scene.greenTextHidden'),'Flight reaction has time to read');
 run('stepScene(.1)');assert(run('scene.greenTextHidden'),'Flight reaction clears after 1.6 seconds');
@@ -29,3 +30,17 @@ assert(!run('scene.greenTextHidden'),'The final line is visible and awaits confi
 assert.equal(run('quest'),run('Q.ARMED'),'Egg quest waits for the final line');
 run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.equal(run('scene'),null);assert.equal(run('greenCamera'),null,'Normal camera returns after the last line');
 console.log('PASS: Corin reacts during flight, after impact, and after departure; pickup unlocks after his final line.');
+
+// The render layer eases every visible zoom without changing simulation targets.
+run("cameraPresentation=null;cameraLogical=null;fade=0;mode='play';VW=390;VH=510;cam={x:0,y:0,z:3};presentCamera(1/60)");
+run('cam={x:50,y:60,z:2.7};presentCamera(1/60)');
+assert(run('cam.z>2.7&&cam.z<3'),'Entry zoom moves partway, never jumps');
+run('restoreCameraTarget()');assert.equal(run('cam.z'),2.7,'Simulation retains its intended zoom');
+for(let i=0;i<90;i++)run('presentCamera(1/60);restoreCameraTarget()');
+run('cam={x:0,y:0,z:3};presentCamera(1/60)');
+assert(run('cam.z>2.7&&cam.z<3'),'Return zoom also eases');
+for(let i=0;i<90;i++)run('restoreCameraTarget();presentCamera(1/60)');
+assert(run('Math.abs(cam.z-3)<.001'),'Camera settles at normal zoom');
+run('restoreCameraTarget();cam.x+=10;presentCamera(1/60)');
+assert.equal(run('cam.x'),10,'Ordinary movement has no camera smoothing lag');
+console.log('PASS: zoom entry and return are smooth, simulation targets survive, and normal running stays responsive.');

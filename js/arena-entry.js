@@ -173,8 +173,12 @@
     const t=Math.min(...cast.map(f=>f.y-80)),b=Math.max(...cast.map(f=>f.y+8));
     // Fit the visible sprites closely instead of reserving a large empty border.
     const top=24,bottom=130,usable=Math.max(40,VH-top-bottom);
-    cam.z=Math.min(cameraZoom||playZoom(),(VW-24)/(r-l),usable/(b-t));
-    cam.x=(l+r)/2-VW/cam.z/2;cam.y=(t+b)/2-(top+usable/2)/cam.z;
+    const normal=cameraZoom||playZoom();
+    cam.z=Math.max(normal*.9,Math.min(normal,(VW-24)/(r-l),usable/(b-t)));
+    cam.x=(l+r)/2-VW/cam.z/2;
+    const enemies=pending.foes.filter(living);
+    const focus=enemies.length?(Math.min(...enemies.map(f=>f.y))+Math.max(...enemies.map(f=>f.y)))/2-32:(t+b)/2;
+    cam.y=focus-(VH<360?VH/2:top+usable/2)/cam.z;
   }
   popup.addEventListener('click',e=>{e.preventDefault();action();});
   window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};

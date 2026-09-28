@@ -33,7 +33,7 @@
       if(!buffer||!graph||(!loop&&performance.now()-voice.requested>1500)){voices.delete(name);done?.();return;}
       const source=graph.context.createBufferSource(),gain=graph.context.createGain();
       voice.source=source;voice.gain=gain;
-      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*(name==='ui'?.8:['roar','distant'].includes(name)?.5:1);
+      source.buffer=buffer;source.loop=loop;gain.gain.value=.7*(name==='ui'?.8:['roar','distant'].includes(name)?.3:1);
       source.connect(gain);gain.connect(graph.output);
       source.onended=()=>{
         if(voices.get(name)===voice){voices.delete(name);done?.();}
