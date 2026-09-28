@@ -1,10 +1,10 @@
 /* Aurelius: a shared inner sky, with dragon-scale patterns and bond light. */
-#bagAsk.conversationTopics.journalDeck.dragonTalk{--conversation-paper:#1b3544;--conversation-edge:#92b09b;--conversation-ink:#f2ebd2;--conversation-active-paper:#284953;--conversation-active-edge:#e5d08d;--conversation-glow:#b5d9b755;--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
+#bagAsk.conversationTopics.journalDeck.dragonTalk{--conversation-sign-paper:#203e50;--conversation-sign-ink:#fff1c1;--conversation-light:#9edab955;--conversation-paper:#1b3544;--conversation-edge:#92b09b;--conversation-ink:#f2ebd2;--conversation-active-paper:#284953;--conversation-active-edge:#e5d08d;--conversation-glow:#b5d9b755;--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
 #bagAsk.dragonTalk .deckEyebrow{color:#97c9bb}
 #bagAsk.dragonTalk .deckProfileToggle{background:#234b54;border-color:#819e89;color:#fff0bf}
 #bagAsk.dragonTalk .deckProfileToggle:hover,#bagAsk.dragonTalk .deckProfileToggle[aria-expanded=true]{background:#567166;border-color:#dbc987;color:#fff6d7}
 #bagAsk.dragonTalk .conversationStage{position:relative;isolation:isolate;background:radial-gradient(ellipse at 14% 65%,#447c7166,transparent 55%),radial-gradient(ellipse at 80% 0,#43568055,transparent 60%),#112a3b;border-bottom-color:#799a86}
-#bagAsk.dragonTalk .conversationStage::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 28%,#e5d39a 0 1px,transparent 2px),radial-gradient(circle at 35% 75%,#b8ded4 0 1px,transparent 2px),radial-gradient(circle at 74% 18%,#c4d9e6 0 1px,transparent 2px),radial-gradient(ellipse at 14% 70%,#719a652f,transparent 45%);background-size:127px 109px,183px 151px,231px 197px,100% 100%;animation:bondShimmer calc(7s / var(--conversation-motion-rate,1)) ease-in-out infinite alternate}
+#bagAsk.dragonTalk .conversationStage::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 14% 70%,#719a6544,transparent 55%);animation:bondShimmer calc(7s / var(--conversation-motion-rate,1)) ease-in-out infinite alternate}
 @keyframes bondShimmer{from{opacity:.35;transform:translateY(3px)}to{opacity:.85;transform:translateY(-3px)}}
 #bagAsk.dragonTalk .conversationPlayer{background:radial-gradient(ellipse at 92% 45%,#375e6a77,transparent 55%),repeating-radial-gradient(ellipse at 100% 0,transparent 0 25px,#9fcdb90b 26px 27px,transparent 28px 49px),#102636}
 #bagAsk.dragonTalk .conversationSpeaker{isolation:isolate}
@@ -45,3 +45,12 @@
 #bagAsk.dragonTalk .is-speaking .conversationPortrait{filter:drop-shadow(0 0 12px #bde0ae77)}
 
 body.conversation-session #bagAsk.dragonTalk #say,#bagAsk.dragonTalk .conversationNpcEcho,#bagAsk.dragonTalk .conversationCorinEcho{scrollbar-color:#91ab91 #142c3a}
+
+/* Individual stars have staggered rhythms, so the sky twinkles organically. */
+#bagAsk.dragonTalk .conversationStars{display:block;position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+#bagAsk.dragonTalk .conversationStars i{position:absolute;left:var(--star-x);top:var(--star-y);width:var(--star-size);height:var(--star-size);border-radius:50%;background:#f6e9bd;box-shadow:0 0 5px #d1eee5aa;opacity:.6;animation:bondStarTwinkle calc(var(--star-duration) / var(--conversation-motion-rate,1)) ease-in-out infinite;animation-delay:calc(var(--star-delay) / var(--conversation-motion-rate,1))}
+#bagAsk.dragonTalk .conversationStars i:nth-child(3n){background:#bce0fa;box-shadow:0 0 7px #aedbecaa}
+#bagAsk.dragonTalk .conversationPlayer .conversationStars{transform:scaleX(-1)}
+#bagAsk.dragonTalk .conversationPlayer .conversationStars i{animation-direction:reverse}
+@keyframes bondStarTwinkle{0%,100%{opacity:.18;transform:scale(.75)}45%{opacity:1;transform:scale(1.2)}70%{opacity:.4;transform:scale(.9)}}
+@media(prefers-reduced-motion:reduce){#bagAsk.dragonTalk .conversationStars i{animation:none;opacity:.65;transform:none}}

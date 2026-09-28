@@ -7,7 +7,9 @@ const click=node=>{assert(node);node.onclick({stopPropagation(){}});};
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;thornwellRoyal.stage=7;faceToward=()=>{};
 openNpcTopics({n:'Linna',x:150,y:150,d:['Hello']});`);
 assert(!box.querySelector('.deckHeader'),'No redundant top banner');
-assert.equal(box.querySelector('.deckProfileToggle').parentNode,box.querySelector('.conversationFooter'));
+assert.equal(box.querySelector('.deckProfileToggle').parentNode,box.querySelector('.conversationStage').querySelector('.conversationSpeaker'));
+assert.equal(box.querySelector('.conversationChat').parentNode,box.querySelector('.conversationFooter'));
+assert.equal(box.dataset.conversationTheme,'thornwell');
 assert.equal(box.querySelector('.conversationStage').querySelector('.conversationSpeaker').parentNode,box.querySelector('.conversationNpcSpeech'),'NPC portrait attaches directly to its speech box');
 assert.equal(box.querySelector('.conversationPlayer').querySelector('.conversationSpeaker').parentNode,box.querySelector('.conversationCorinSpeech'),'Corin portrait attaches directly to his speech box');
 assert.equal(box.querySelector('.deckProfileToggle').textContent,'View Character Profile');
@@ -97,4 +99,9 @@ assert.equal(run(`playerFacingText('Millwood, indoors (house26)')`),'Millwood, i
 assert.equal(run(`playerFacingText('Visit house26')`),'Visit '+run('W.maps.house26.title'));
 run(`openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});ask.opts.push({n:'Visit house26',go:()=>{}});askDraw();`);
 assert(!rows.querySelectorAll('.deckTopic').some(n=>/house\d/i.test(n.getAttribute('aria-label'))));
+// Themes follow NPC homes and indoor casts, and Aurelius keeps his own sky.
+for(const [name,theme]of [['Hettie','millwood'],['Linna','thornwell'],['Dunstan','forgewick'],['Nazim','sandspire'],['Maelis','marsh'],['Torvald','snow'],['Maren','coast'],['Mycella','shroom'],['King Halvard','cinderhold'],['Aurelius','aurelius']]){
+  c.themeName=name;assert.equal(run('EmberConversationView.theme(themeName)'),theme,name);
+}
+assert.equal(run(`EmberConversationView.theme('Pip',W.maps.tavern.npcs.find(n=>n.n==='Pip'))`),'thornwell','An actual actor disambiguates names used in different regions');
 console.log('PASS: profiles, safe Back/leave paths, distinct profiles, fixed conversation portraits, alternating cutscene portraits, and normal camera throughout conversations and gifts.');

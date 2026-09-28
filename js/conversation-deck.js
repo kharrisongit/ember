@@ -47,13 +47,23 @@
     const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'));
     const body=node('div','conversationPlayerBody');
     const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'),advanceCue());
+    speech.append(identity);body.append(workspace,speech);player.append(body);return player;
+  }
+  function makeStars(){
+    const sky=node('div','conversationStars');sky.setAttribute('aria-hidden','true');
+    for(let i=0;i<22;i++){
+      const star=node('i','');
+      for(const [key,value]of Object.entries({x:(7+i*37)%97+'%',y:(11+i*29)%91+'%',size:(i%5===0?3:2)+'px',duration:(2.8+i%7*.43)+'s',delay:(-i*.73)+'s'}))star.style.setProperty('--star-'+key,value);
+      sky.append(star);
+    }
+    return sky;
+  }
+  function makeControls(){
+    const footer=node('footer','conversationFooter');
     const chat=node('button','conversationChat','Chat');chat.type='button';
+    chat.setAttribute('aria-controls','askRows');
     chat.onclick=e=>{e.stopPropagation();window.EmberConversationFlow.openChat();};
     chat.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationFlow.openChat();}};
-    speech.append(identity);body.append(workspace,speech,chat);player.append(body);return player;
-  }
-  function makeControls(profileButton){
-    const footer=node('footer','conversationFooter');
     const controls=node('div','conversationAB');
     for(const [label,cls,action]of [['Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.secondary()],['Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
       const button=node('button','conversationControl '+cls,label);button.type='button';button.setAttribute('aria-label',label);
@@ -61,7 +71,7 @@
       button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.secondary();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
       controls.append(button);
     }
-    footer.append(profileButton,controls);return footer;
+    footer.append(chat,controls);return footer;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
@@ -78,6 +88,11 @@
     rows.classList.toggle('replyMenu',!!ask.replyChoices);
     rows.setAttribute('role','group');rows.setAttribute('aria-label',ask.replyChoices?'Choose Corin’s reply':'Conversation topics');
     const name=ask.npcConversation||'Aurelius';
+    box.dataset.conversationTheme=window.EmberConversationView.theme(name,ask.npcActor);
+    for(const lane of [stage,player]){
+      if(name==='Aurelius'&&!lane.querySelector('.conversationStars'))lane.append(makeStars());
+      else if(name!=='Aurelius')lane.querySelector('.conversationStars')?.remove();
+    }
     box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Conversation with '+name);
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
@@ -86,8 +101,10 @@
     profileButton.setAttribute('aria-label','Character profile: '+name);
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');
-    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;askDraw();};
+    profileButton.onclick=e=>{e?.stopPropagation();if(!ask)return;ask._profileOpen=!ask._profileOpen;askDraw();};
     profileButton.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)profileButton.onclick();}};
+    stage.querySelector('.deckProfileToggle')?.remove();
+    stage.querySelector('.conversationSpeaker').append(profileButton);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
       const info=window.EmberConversationView.profile(name,ask.npcActor);
@@ -105,7 +122,7 @@
     const hint=document.getElementById('topicScrollHint');
     workspace.replaceChildren(rows,...(hint?[hint]:[]));
     const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen;dossier.append(profile);
-    box.replaceChildren(stage,player,dossier,makeControls(profileButton));window.EmberConversationView?.mount(box);
+    box.replaceChildren(stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
     if(ask.replyChoices){

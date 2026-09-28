@@ -30,6 +30,28 @@
     return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||(name==='Aurelius'&&typeof NPC_TOPIC_GREETINGS!=='undefined'?NPC_TOPIC_GREETINGS.Aurelius:'')})
       .map(([key,value])=>[key,playerFacingText(value)]));
   }
+  // Prefer the actual actor, then their authored home, so visitors and duplicate
+  // names keep the right region even when Corin meets them away from home.
+  function theme(who,actor){
+    const name=PORTRAIT_ALIASES[who]||who;
+    if(name==='Aurelius')return 'aurelius';
+    const entries=Object.entries(W.maps).flatMap(([map,m])=>(m.npcs||[]).map(n=>({map,n})));
+    const found=entries.find(e=>e.n===actor)||entries.find(e=>e.n.n===name&&e.n.loc)||entries.find(e=>e.n.n===name);
+    const map=found?.map||MAPID,source=actor||found?.n;
+    const hometown=biographies[name]?.[1]||actor?.loc||found?.n.loc||'';
+    const mapTown={school:'Thornwell',school2:'Thornwell',tavern:'Thornwell',inn:'Thornwell',smithy:'Forgewick',glasswork:'Forgewick',glasshouse:'Forgewick',mine:'Forgewick'}[map];
+    const regions=[[/Millwood/i,'millwood'],[/Thornwell/i,'thornwell'],[/Forgewick|Forgefalls/i,'forgewick'],[/Sandspire/i,'sandspire'],[/Witchmoor|Dreadmarsh|swamp|marsh/i,'marsh'],[/Hollybeck|Frostcrag|snow/i,'snow'],[/Coralmere|coast/i,'coast'],[/Shroom|Sporehollow/i,'shroom'],[/Cinderhold|Ashcrag|king’s retinue/i,'cinderhold']];
+    const match=place=>regions.find(([pattern])=>pattern.test(place||''))?.[1];
+    const homeTheme=match(hometown)||match(mapTown)||match(W.maps[map]?.title)||match(map);
+    if(homeTheme)return homeTheme;
+    if(map==='world'&&source){
+      const x=source.x/TS,y=source.y/TS;
+      const areas=(W.maps.world.features||[]).filter(f=>f.kind==='area'&&match(f.label||f.place));
+      const area=areas.filter(f=>x>=f.x0&&x<=f.x1&&y>=f.y0&&y<=f.y1).sort((a,b)=>(a.x1-a.x0)*(a.y1-a.y0)-(b.x1-b.x0)*(b.y1-b.y0))[0];
+      if(area)return match(area.label||area.place);
+    }
+    return match(typeof atlasCurrentArea==='function'?atlasCurrentArea():'')||'millwood';
+  }
   const reveal=document.getElementById('reveal');
   let homes=null,room=null,lastNpc='',lastCorin='',partnerName='',npcName='';
   function mount(target){
@@ -61,8 +83,9 @@
     const choosing=phase==='explore'||phase==='reply';
     player.querySelector('.conversationWorkspace').hidden=!choosing;
     player.querySelector('.conversationSpeaker').hidden=choosing;
-    const chat=player.querySelector('.conversationChat');chat.hidden=phase!=='welcome';
-    if(chat.textContent!=='Chat with '+partner)chat.textContent='Chat with '+partner;
+    const chat=room.querySelector('.conversationChat');
+    chat.disabled=phase!=='welcome'||!!ask?._profileOpen;
+    chat.setAttribute('aria-expanded',String(phase==='explore'&&!ask?._profileOpen));
     chat.setAttribute('aria-label','Chat with '+partner);
     const target=room.querySelector(corin?'.conversationCorinSpeech':'.conversationNpcSpeech');
     if(sayEl.parentNode!==target){target.appendChild(sayEl);sayEl.scrollTop=0;}
@@ -90,5 +113,5 @@
   }
   function greeting(){lastNpc='';lastCorin='';}
   function beginTopic(question){lastCorin=playerFacingText(question);}
-  window.EmberConversationView={profile,mount,release,update,beginTopic,greeting};
+  window.EmberConversationView={profile,theme,mount,release,update,beginTopic,greeting};
 })();
