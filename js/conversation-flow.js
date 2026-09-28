@@ -23,7 +23,7 @@
     sayEl.setAttribute('aria-label',hint);
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
-      phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',subject:session.subject,canLeave:canGoodbye(),backAvailable:needsBack()});
+      phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',canLeave:canGoodbye(),backAvailable:needsBack()});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -31,7 +31,7 @@
     if(typeWho===name&&typeFull===playerFacingText(line))sayOff();
   }
   function greet(menu){
-    if(menu.replyChoices||scene||sayNpc)return;
+    if(menu.replyChoices||scene||sayNpc||session.exchanged)return;
     const name=menu.dragonConversation?'Aurelius':menu.npcConversation;
     const actor=menu.npcActor;
     const authored=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[name];
@@ -51,8 +51,8 @@
     box().removeAttribute('aria-modal');box().removeAttribute('role');
   }
   function menu(menu){
-    if(!session)session={map:MAPID,menu,browsing:false,subject:'A moment to talk'};
-    if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation){session.subject='A moment to talk';session.browsing=false;}
+    if(!session)session={map:MAPID,menu,browsing:false,exchanged:false};
+    if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation){session.exchanged=false;session.browsing=false;}
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
@@ -64,7 +64,7 @@
   function listening(selected){
     if(!session||ask)return;
     const el=box();el.classList.add('conversationListening');
-    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckReply, .deckTab'))button.disabled=true;
+    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckReply'))button.disabled=true;
     for(const row of el.querySelectorAll('.deckTopic, .deckReply')){
       const chosen=Number(row.dataset.askIndex)===selected;
       row.dataset.selected=String(chosen);row.setAttribute('aria-pressed',String(chosen));
@@ -72,13 +72,22 @@
     sync();
   }
 
+  function openingQuestion(option){
+    const title=playerFacingText(option.opening||option.n).trim();
+    if(/[?!.]$/.test(title))return title;
+    if(/^(who|what|when|where|why|how|can|could|do|does|did|have|has|is|are|will|would|may)\b/i.test(title))return title+'?';
+    if(/^(I|we|hello|hi|tell|let[’']s)\b/i.test(title))return title+'.';
+    return 'Tell me about '+title.replace(/^(The|A|An|Your|Our|My)\b/,word=>word.toLowerCase())+'.';
+  }
   function take(option){
     if(!isMenu(ask))return false;
     if(welcoming()){openChat();return true;}
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
-    if(!old.replyChoices&&!option.navigation)session.subject=option.n;
+    if(!old.replyChoices&&!option.navigation&&option.category!=='trade'){
+      session.exchanged=true;window.EmberConversationView?.beginTopic(openingQuestion(option));
+    }
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
     if(!option.navigation||old.replyChoices)session.browsing=false;
     clearGreeting();
@@ -199,6 +208,7 @@
   function advance(){
     if(window.EmberCloud?.isOpen()||atlasOpen||bagOpen||ovl||editing)return false;
     if(ask?.replyChoices||isMenu(ask)||!sayEl.classList.contains('on')&&!revealing)return false;
+    sync(); // Capture the completed line before the next speaker replaces it.
     if(scene||revealing)advanceScene();else if(sayNpc)interact();else return false;
     tick();return true;
   }

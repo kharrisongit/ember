@@ -10,34 +10,40 @@
 #bagAsk button:focus-visible{outline:2px solid #80512d;outline-offset:-3px}
 #bagAsk button:disabled{cursor:default;opacity:.45}
 
-/* NPC words above; Corin's choices or words below. Portraits never swap lanes. */
-.conversationStage,.conversationPlayer{display:grid;min-width:0;min-height:0;gap:18px;padding:14px max(20px,env(safe-area-inset-right)) 14px max(20px,env(safe-area-inset-left));box-sizing:border-box;overflow:hidden}
-.conversationStage{grid-row:2;grid-column:1;grid-template-columns:clamp(110px,24vw,260px) minmax(0,1fr);border-bottom:3px double #a37b46;background:radial-gradient(ellipse at 8% 75%,#cfb27699,transparent 45%),repeating-linear-gradient(135deg,#a3804210 0 1px,transparent 1px 14px),#eddbb7}
-.conversationPlayer{grid-row:3;grid-column:1;grid-template-columns:minmax(0,1fr) clamp(110px,24vw,260px);background:linear-gradient(100deg,#f6e8cb,#e3cfac)}
-.conversationSpeaker{container-type:size;min-height:0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
-.conversationPortrait{display:block;flex:0 0 auto;width:min(100%,24dvh);aspect-ratio:1;min-height:0;max-height:none;background-repeat:no-repeat;filter:drop-shadow(0 5px 5px #63452633);image-rendering:auto}
-.conversationSpeakerName{color:#4e351f;font:700 16px/1.2 var(--manuscript-serif);overflow-wrap:anywhere}
-.conversationPlayerTurn{font:600 10px/1.2 system-ui;color:#6a7968;text-transform:uppercase;letter-spacing:.08em}
-.conversationSpeaker .conversationPortrait{width:min(100%,24dvh,calc(100cqh - 38px))}
-.conversationPlayer .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 60px))}
-.conversationPlayerBody,.conversationNpcSpeech,.conversationCorinSpeech{position:relative;min-height:0;min-width:0;overflow:hidden}
-.conversationPlayerBody{display:grid;grid-template-rows:minmax(0,1fr)}
+/* Portraits sit over the outer corners of compact, full-width speech boxes. */
+.conversationStage,.conversationPlayer{--speech-height:clamp(92px,15dvh,146px);--chat-space:0px;--portrait-size:min(184px,18dvh,max(52px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)));container-type:size;position:relative;display:flex;align-items:flex-end;min-width:0;min-height:0;padding:14px max(20px,env(safe-area-inset-right)) 14px max(20px,env(safe-area-inset-left));box-sizing:border-box;overflow:hidden}
+.conversationStage{grid-row:2;grid-column:1;border-bottom:3px double #a37b46;background:radial-gradient(ellipse at 8% 75%,#cfb27699,transparent 45%),repeating-linear-gradient(135deg,#a3804210 0 1px,transparent 1px 14px),#eddbb7}
+.conversationPlayer{grid-row:3;grid-column:1;background:linear-gradient(100deg,#f6e8cb,#e3cfac)}
+.conversationSpeaker{position:absolute;left:max(20px,env(safe-area-inset-left));right:max(20px,env(safe-area-inset-right));bottom:calc(var(--speech-height) + var(--chat-space) + 4px);height:var(--portrait-size);min-width:0;display:flex;align-items:flex-end;gap:12px;pointer-events:none;z-index:3}
+.conversationPortrait{display:block;flex:0 0 var(--portrait-size);width:var(--portrait-size);height:var(--portrait-size);aspect-ratio:1;background-repeat:no-repeat;filter:drop-shadow(0 5px 5px #63452633);image-rendering:auto;transition:filter .2s}
+.conversationSpeakerName{margin:0 0 10px auto;max-width:calc(100% - var(--portrait-size) - 18px);padding:5px 12px;border:1px solid #a18157;border-radius:5px;background:#eee0bd;color:#4e351f;font:700 15px/1.2 var(--manuscript-serif);overflow-wrap:anywhere;box-shadow:0 2px 5px #48311a22;transition:background .2s,border-color .2s}
+.conversationPlayer .conversationSpeaker{flex-direction:row-reverse}
+.conversationPlayer .conversationSpeakerName{margin-left:0;margin-right:auto}
+.conversationPlayerBody{position:relative;display:flex;flex-direction:column;justify-content:flex-end;height:100%;width:100%;min-height:0;min-width:0}
+.conversationNpcSpeech,.conversationCorinSpeech{position:relative;flex:0 0 auto;width:100%;height:var(--speech-height);min-height:0;min-width:0}
 .conversationCorinSpeech{display:none}
 .conversationPlayer[data-mode=speech] .conversationCorinSpeech,.conversationPlayer[data-mode=welcome] .conversationCorinSpeech{display:block;animation:conversationPaneIn .22s ease-out}
-.conversationPlayer[data-mode=welcome] .conversationPlayerBody{grid-template-rows:minmax(0,1fr) auto;gap:10px}
-.conversationPlayer[data-mode=topics],.conversationPlayer[data-mode=replies]{grid-template-columns:minmax(0,1fr)}
-.conversationPlayer[data-mode=topics] .conversationWorkspace,.conversationPlayer[data-mode=replies] .conversationWorkspace{animation:conversationPaneIn .25s ease-out}
+.conversationPlayer[data-mode=welcome]{--chat-space:54px}
+.conversationPlayer[data-mode=welcome] .conversationPlayerBody{gap:10px}
+.conversationPlayer[data-mode=topics] .conversationWorkspace,.conversationPlayer[data-mode=replies] .conversationWorkspace{flex:1;animation:conversationPaneIn .25s ease-out}
 .conversationPlayer .conversationWorkspace[hidden],.conversationPlayer .conversationSpeaker[hidden],.conversationChat[hidden]{display:none!important}
-#bagAsk .conversationChat{justify-self:start;max-width:100%;min-height:44px;padding:10px 22px;border:1px solid #94703f;border-radius:5px;background:linear-gradient(#8d6540,#644a31);color:#fff1cd;box-shadow:inset 0 1px #debd8177,0 3px 5px #6a492e22;font:700 15px/1.25 var(--manuscript-serif);cursor:pointer;touch-action:manipulation}
+#bagAsk .conversationChat{align-self:flex-start;flex:0 0 auto;max-width:100%;min-height:44px;padding:10px 22px;border:1px solid #94703f;border-radius:5px;background:linear-gradient(#8d6540,#644a31);color:#fff1cd;box-shadow:inset 0 1px #debd8177,0 3px 5px #6a492e22;font:700 15px/1.25 var(--manuscript-serif);cursor:pointer;touch-action:manipulation}
 #bagAsk .conversationChat:active{background:#523c2c;transform:translateY(1px)}
 @keyframes conversationPaneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 body.conversation-session #bagAsk #face,body.conversation-session #bagAsk #sayname{display:none!important}
-body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{position:absolute;inset:0;left:0;right:0;top:0;bottom:0;max-height:none;width:auto;height:auto;margin:0;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;padding:clamp(12px,2vw,24px);font:18px/1.5 var(--manuscript-serif);text-align:left;color:var(--manuscript-ink);background:var(--manuscript-paper);border:2px solid #a5804d;border-radius:4px 14px 14px 4px;box-shadow:inset 0 0 0 3px #faefd1,0 3px 10px #62401920;cursor:default;z-index:1}
+body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{position:absolute;inset:0;left:0;right:0;top:0;bottom:0;max-height:none;width:auto;height:auto;margin:0;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;padding:18px 22px 36px;font:18px/1.5 var(--manuscript-serif);text-align:left;color:var(--manuscript-ink);background:var(--manuscript-paper);border:2px solid #a5804d;border-radius:5px 12px 12px 5px;box-shadow:inset 0 0 0 3px #faefd1,0 3px 10px #62401920;cursor:default;z-index:1;transition:border-color .2s,box-shadow .2s}
 body.conversation-session #bagAsk #say.on{display:block}
-body.conversation-session #bagAsk .conversationCorinSpeech #say,.conversationCorinEcho{border-color:#a5804d;border-radius:14px 4px 4px 14px;background:var(--manuscript-paper)}
+body.conversation-session #bagAsk .conversationCorinSpeech #say,.conversationCorinEcho{border-radius:12px 5px 5px 12px}
 body.conversation-session #bagAsk #say[data-telepathy=true]{background:linear-gradient(120deg,#f3edcd,#e1e3c1);color:#394d44}
 body.conversation-session #say::after{display:none}
-.conversationNpcEcho[hidden],.conversationCorinEcho[hidden]{display:none}
+.conversationNpcEcho[hidden],.conversationCorinEcho[hidden],.conversationAdvance[hidden]{display:none}
+body.conversation-session #bagAsk .is-speaking #say{border-color:#ad641f;box-shadow:inset 0 0 0 2px #f9dba1,0 0 0 2px #b9864b55,0 0 22px #d1963d33}
+#bagAsk .is-speaking .conversationSpeakerName{background:#79502b;border-color:#a76f35;color:#fff3d0}
+#bagAsk .is-speaking .conversationSpeakerName::before{content:'●';display:inline-block;margin-right:7px;font-size:9px;color:#f9d47e;vertical-align:middle}
+#bagAsk .is-speaking .conversationPortrait{filter:drop-shadow(0 0 10px #d5a14a66)}
+.conversationAdvance{position:absolute;left:7px;right:7px;bottom:5px;z-index:4;display:flex;justify-content:center;align-items:center;gap:8px;min-height:22px;background:linear-gradient(transparent,#f2e3c6 35%);color:#74502b;font:700 11px/1.3 system-ui;pointer-events:none}
+.conversationAdvanceArrow{display:inline-block;font-size:12px;animation:conversationArrowBounce .85s ease-in-out infinite}
+@keyframes conversationArrowBounce{0%,100%{transform:translateY(-2px)}50%{transform:translateY(2px)}}
 /* Cutscenes retain tap-to-advance and a single alternating portrait. */
 #say.on{cursor:pointer;pointer-events:auto;touch-action:manipulation}
 #say.on::after{content:attr(data-advance-hint);position:absolute;right:14px;bottom:5px;color:#886238;font:600 10px/1.2 system-ui;letter-spacing:.025em;pointer-events:none}
@@ -46,12 +52,9 @@ body.topics-open:not(.conversation-speaking) #face,body.topics-open:not(.convers
 body.conversation-session #deck{visibility:hidden;pointer-events:none}
 body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid-column:1;min-height:0;min-width:0;overflow:hidden;z-index:10;background:#23190ee8}
 
-.conversationWorkspace,.conversationDossier{min-height:0;min-width:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;scroll-padding-top:80px}
+.conversationWorkspace,.conversationDossier{min-height:0;min-width:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;scroll-padding-top:8px}
 .conversationWorkspace{padding:0 5px 10px 0}
 #bagAsk.conversationTopics.journalDeck #askRows{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr));align-content:start}
-#bagAsk .deckTabs{position:sticky;top:0;flex-wrap:wrap;overflow:visible;touch-action:pan-y;background:#f1e0bc;margin:0;padding:4px 0 9px;box-shadow:0 4px 8px #51382017}
-#bagAsk .deckTab{background:#f5e4c2;color:#6b4b28;border-color:#ad8956;border-radius:5px;font:600 12px var(--manuscript-serif);min-height:36px;padding:5px 8px;touch-action:pan-y}
-#bagAsk .deckTab[aria-pressed=true]{background:#765333;color:#fff0cf;border-color:#684424}
 #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{background:linear-gradient(115deg,#f6e7c9,#e7cfa2)!important;color:#3e2b19!important;border-color:#b18b53!important;border-left-color:#bd985e!important;border-radius:3px 10px 10px 3px!important;min-height:80px;box-shadow:inset 0 1px #fff6dc,0 2px 2px #6c482014;touch-action:pan-y}
 #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic[data-selected=true]{background:linear-gradient(110deg,#fff0c9,#dfba7e)!important;border-color:#825628!important;border-left-color:#7e432b!important;box-shadow:inset 0 0 0 1px #bd9050,0 2px 6px #74512a22}
 #bagAsk .deckTopicIcon,#bagAsk .deckTopicBadge{color:#8c6030}#bagAsk .deckTopicCopy small,#bagAsk .deckEmpty{color:#856642}
@@ -93,10 +96,7 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
 @keyframes profileUnfold{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* Next and the context-aware Back / Goodbye stay in the lower right. */
-.conversationFooter{grid-row:4;grid-column:1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px max(16px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));border-top:3px double #b69b72;background:linear-gradient(#f1e5cf,#dfc9aa);box-sizing:border-box}
-.conversationContext{min-width:0}
-.conversationSubject{margin:0 0 4px;color:#654c2e;font:italic 14px/1.3 var(--manuscript-serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.conversationTurn{color:#6b6c54;font:11px/1.3 system-ui}
+.conversationFooter{grid-row:4;grid-column:1;display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:8px max(16px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));border-top:3px double #b69b72;background:linear-gradient(#f1e5cf,#dfc9aa);box-sizing:border-box}
 .conversationAB{display:flex;gap:12px;flex-shrink:0}
 #bagAsk .conversationControl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:72px;height:72px;padding:4px;border:0;border-radius:50%;color:#fff6e3;font:700 14px/1.2 var(--manuscript-serif);box-shadow:0 0 0 1px #786d58,0 3px 8px #594a3333;cursor:pointer;touch-action:manipulation;transition:transform .08s,background .08s}
 #bagAsk .conversationNext{background:#36565d}#bagAsk .conversationGoodbye{background:#975638}
@@ -114,22 +114,25 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
 @media(max-width:600px){
   #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:48px;gap:5px}
   #bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity>.deckEyebrow{display:none}#bagAsk .deckProfileToggle{min-height:34px;padding:5px 12px;font-size:12px}
-  .conversationStage,.conversationPlayer{gap:10px;padding:12px}.conversationStage{grid-template-columns:clamp(100px,32vw,170px) minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) clamp(100px,32vw,170px)}
-  .conversationSpeakerName{font-size:13px}.conversationPlayerTurn{font-size:9px}
-  body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:15px;line-height:1.45;padding:12px}
+  .conversationStage,.conversationPlayer{padding:12px;--portrait-size:min(154px,19dvh,max(52px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)))}
+  .conversationSpeaker{left:12px;right:12px;bottom:calc(var(--speech-height) + var(--chat-space) + 2px)}.conversationSpeakerName{font-size:12px;padding:4px 8px}
+  body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:15px;line-height:1.45;padding:15px 14px 34px}
   #bagAsk.conversationTopics.journalDeck #askRows{grid-template-columns:minmax(0,1fr)}
-  #bagAsk .deckTopicIcon{display:none}#bagAsk .deckTab{font-size:11px;padding:4px 6px;gap:4px}
-  .conversationSubject{font-size:12px}.conversationTurn{font-size:10px}.conversationAB{gap:9px}#bagAsk .conversationControl{width:62px;height:62px;font-size:13px}
+  #bagAsk .deckTopicIcon{display:none}
+  .conversationAB{gap:9px}#bagAsk .conversationControl{width:62px;height:62px;font-size:13px}
   #bagAsk .deckProfileHero{gap:14px;padding:14px}#bagAsk .deckProfileHero .conversationPortrait{flex-basis:120px;width:120px;height:120px}#bagAsk .deckProfile h2{font-size:23px}.deckProfileFacts{grid-template-columns:1fr;gap:4px;padding:14px}.deckProfileFacts dd{margin-bottom:10px}
 }
 @media(max-height:560px){
   #bagAsk.conversationTopics.journalDeck{grid-template-rows:auto minmax(0,1fr) minmax(0,1fr) auto}
   #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:44px;padding-top:4px!important;padding-bottom:4px!important}
   #bagAsk .deckName{font-size:17px;margin:0}#bagAsk .deckIdentity>.deckEyebrow{display:none}#bagAsk .deckProfileToggle{min-height:32px;padding:4px 12px}
-  .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));gap:12px}.conversationStage{grid-template-columns:125px minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) 125px}
-  .conversationSpeaker{gap:2px}.conversationSpeaker .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 26px))}.conversationPlayer .conversationPortrait{width:min(100%,26dvh,calc(100cqh - 38px))}.conversationSpeakerName{font-size:11px}.conversationPlayerTurn{font-size:8px}
-  body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:14px;line-height:1.4;padding:9px 12px}
-  #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:64px}.conversationFooter{padding-top:5px;padding-bottom:max(5px,env(safe-area-inset-bottom))}.conversationSubject{font-size:12px}#bagAsk .conversationControl{width:52px;height:52px;font-size:11px}
+  .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));--speech-height:clamp(60px,18dvh,95px);--portrait-size:min(116px,22dvh,max(30px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)))}
+  .conversationSpeaker{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:calc(var(--speech-height) + var(--chat-space) - 4px)}.conversationSpeakerName{font-size:11px;margin-bottom:10px;padding:3px 8px}
+  .conversationPlayer[data-mode=welcome]{--chat-space:38px}.conversationPlayer[data-mode=welcome] .conversationPlayerBody{gap:6px}
+  #bagAsk .conversationChat{width:auto;max-width:100%;min-height:32px;padding:6px 12px;font-size:12px}
+  body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:14px;line-height:1.4;padding:12px 14px 28px}
+  .conversationAdvance{font-size:9px;min-height:18px;bottom:4px}
+  #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:64px}.conversationFooter{padding-top:5px;padding-bottom:max(5px,env(safe-area-inset-bottom))}#bagAsk .conversationControl{width:52px;height:52px;font-size:11px}
   #bagAsk.conversationPrompt{bottom:12px!important}
 }
-@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk.conversationPrompt,.conversationDossier,.conversationPlayer .conversationWorkspace,.conversationPlayer .conversationCorinSpeech{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk.conversationPrompt,.conversationDossier,.conversationPlayer .conversationWorkspace,.conversationPlayer .conversationCorinSpeech,.conversationAdvanceArrow{animation:none!important;transition:none!important}}

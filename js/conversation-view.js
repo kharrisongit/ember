@@ -46,10 +46,9 @@
     sayEl.classList.remove('scrolls');sayEl.setAttribute('role','button');sayEl.tabIndex=0;
     homes=null;room=null;lastNpc='';lastCorin='';partnerName='';npcName='';
   }
-  function update({partner,speaker,phase,subject,canLeave,backAvailable}){
+  function update({partner,speaker,phase,canLeave,backAvailable}){
     if(!room)return;
     if(partnerName!==partner){lastNpc='';lastCorin='';partnerName=partner;npcName=partner;}
-    if(phase==='explore')lastCorin='';
     const speaking=sayEl.classList.contains('on'),corin=speaker==='Corin';
     if(speaking){
       const words=typeFull.slice(0,Math.floor(typed));
@@ -73,17 +72,21 @@
     const npcEcho=stage.querySelector('.conversationNpcEcho');
     npcEcho.hidden=speaking&&!corin;if(npcEcho.textContent!==lastNpc)npcEcho.textContent=lastNpc;
     const corinEcho=player.querySelector('.conversationCorinEcho');
-    corinEcho.hidden=speaking&&corin;const reply=phase==='welcome'?(typeof CORIN_TOPIC_GREETINGS!=='undefined'&&CORIN_TOPIC_GREETINGS[partner]||'Hello, '+partner+'. Have you a moment to talk?'):lastCorin||'I’m listening.';if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
-    player.querySelector('.conversationPlayerTurn').textContent=phase==='reply'?'Your reply':phase==='explore'?'Your topics':phase==='welcome'?'Your greeting':corin?'Your words':'Listening';
-    const title=room.querySelector('.conversationSubject');
-    if(title)title.textContent=playerFacingText(subject||'A moment to talk');
-    const turn=room.querySelector('.conversationTurn');
-    if(turn)turn.textContent=ask?._profileOpen?'Character profile':phase==='reply'?'Choose Corin’s reply':phase==='explore'?'Choose a topic':phase==='welcome'?'Chat when you’re ready':canLeave?'Next line':'Finish this exchange before saying goodbye';
+    corinEcho.hidden=speaking&&corin;const reply=lastCorin||(typeof CORIN_TOPIC_GREETINGS!=='undefined'&&CORIN_TOPIC_GREETINGS[partner]||'Hello, '+partner+'. Have you a moment to talk?');if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
+    const active=phase==='listen'&&speaking&&!revealing&&!ask?._profileOpen;
+    const ready=active&&typeDone()&&!scene?.hold;
+    for(const [lane,isCorin]of [[stage,false],[player,true]]){
+      const talking=active&&corin===isCorin;
+      lane.classList.toggle('is-speaking',talking);
+      lane.querySelector('.conversationSpeakerName').setAttribute('aria-label',(isCorin?'Corin':npcName)+(talking?' — speaking':''));
+      lane.querySelector('.conversationAdvance').hidden=!(ready&&corin===isCorin);
+    }
     const secondary=room.querySelector('.conversationGoodbye'),label=backAvailable?'Back':'Goodbye';
     if(secondary.textContent!==label)secondary.textContent=label;
     secondary.setAttribute('aria-label',label);secondary.dataset.action=backAvailable?'back':'goodbye';
     secondary.disabled=!backAvailable&&!canLeave;
     room.querySelector('.conversationNext').disabled=phase==='listen'&&!speaking&&!revealing;
   }
-  window.EmberConversationView={profile,mount,release,update};
+  function beginTopic(question){lastCorin=playerFacingText(question);}
+  window.EmberConversationView={profile,mount,release,update,beginTopic};
 })();

@@ -1,22 +1,15 @@
 /* The conversation deck renders the existing choices; story callbacks remain
    responsible for gifts, knowledge and progression. */
 (function(){
-  const groups={all:'All topics',new:'Unheard',lead:'Leads',story:'Personal',world:'The realm'};
   const icons={lead:'compass',story:'chat',world:'book',trade:'coin',greeting:'sun',leave:'arrow',folder:'book'};
   const paths={compass:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM16 8l-3 5-5 3 3-5Z',chat:'M4 4h16v12H9l-5 4V4Zm4 5h8M8 12h5',book:'M12 5C9 3 5 3 2 4v15c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Zm0 0v15',coin:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm3 6H9v4h6v4H9m3-11v14',sun:'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-6v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2',arrow:'M4 12h15m-6-6 6 6-6 6'};
   function symbol(kind){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+paths[icons[kind]||'chat']+'"/></svg>';}
   const category=o=>o.category||(o.navigation?'folder':!o.go?'leave':/^(Hello|I came for)/.test(o.n)?'greeting':/supplies/.test(o.n)?'trade':/Halvard|Wingfall|history|land and/.test(o.n)?'world':/quest|next\?|lead|temple|Heartstone|rod|lantern|ward|Bramble|summon/i.test(o.n)?'lead':'story');
   const seen=o=>discussedTopics.has(topicMemoryKey(o));
-  function visible(o,filter){
-    if(o.head||o.backNavigation||category(o)==='leave')return false;
-    const cat=category(o);
-    if(['leave','greeting','trade','folder'].includes(cat))return true;
-    return filter==='all'||filter==='new'&&!seen(o)||filter===cat;
-  }
+  const visible=o=>!o.head&&!o.backNavigation&&category(o)!=='leave';
   function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=playerFacingText(text);return e;}
   function back(){
     if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
-    if(!window.EmberConversationFlow?.welcoming()&&ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
     return false;
   }
   function prompt(box,rows){
@@ -38,17 +31,22 @@
   function portrait(who){
     const image=node('span','conversationPortrait');image.setAttribute('aria-hidden','true');paintSmallPortrait(image,who);return image;
   }
+  function advanceCue(){
+    const cue=node('div','conversationAdvance');cue.hidden=true;
+    const arrow=node('span','conversationAdvanceArrow','▼');arrow.setAttribute('aria-hidden','true');
+    cue.append(arrow,node('span','','Press Next to continue'));return cue;
+  }
   function makeStage(name){
     const stage=node('section','conversationStage');stage.setAttribute('aria-label','Their words');
-    const speech=node('div','conversationNpcSpeech');speech.append(node('div','conversationNpcEcho scrolls'));
+    const speech=node('div','conversationNpcSpeech');speech.append(node('div','conversationNpcEcho scrolls'),advanceCue());
     const identity=node('div','conversationSpeaker');identity.append(portrait(name),node('strong','conversationSpeakerName',name));
     stage.append(identity,speech);return stage;
   }
   function makePlayer(workspace){
     const player=node('section','conversationPlayer');player.setAttribute('aria-label','Corin’s side of the conversation');
-    const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'),node('small','conversationPlayerTurn','Your topics'));
+    const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'));
     const body=node('div','conversationPlayerBody');
-    const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'));
+    const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'),advanceCue());
     const chat=node('button','conversationChat','Chat');chat.type='button';
     chat.onclick=e=>{e.stopPropagation();window.EmberConversationFlow.openChat();};
     chat.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationFlow.openChat();}};
@@ -56,7 +54,6 @@
   }
   function makeControls(){
     const footer=node('footer','conversationFooter');
-    const context=node('div','conversationContext');context.append(node('p','conversationSubject','A moment to talk'),node('small','conversationTurn','Choose a topic'));
     const controls=node('div','conversationAB');
     for(const [label,cls,action]of [['Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.secondary()],['Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
       const button=node('button','conversationControl '+cls,label);button.type='button';button.setAttribute('aria-label',label);
@@ -64,18 +61,18 @@
       button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.secondary();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
       controls.append(button);
     }
-    footer.append(context,controls);return footer;
+    footer.append(controls);return footer;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
     const memory=!ask._topicDrawn?topicMenuPositions.get(scope):null;
-    if(memory){ask._deckFilter=memory.filter||'all';const i=ask.opts.findIndex(o=>!o.head&&o.n===memory.name);if(i>=0)askPick=i;}
-    const filter=ask.replyChoices?'all':ask._deckFilter||'all',enter=!ask._topicDrawn||ask._deckLastFilter!==filter;
+    if(memory){const i=ask.opts.findIndex(o=>!o.head&&o.n===memory.name);if(i>=0)askPick=i;}
+    const enter=!ask._topicDrawn;ask._deckFilter='all';
     const workspace=box.querySelector('.conversationWorkspace')||node('div','conversationWorkspace scrolls');
     const stage=box.querySelector('.conversationStage')||makeStage(ask.npcConversation||'Aurelius');
     const player=box.querySelector('.conversationPlayer')||makePlayer(workspace);
     const oldScroll=memory?.scroll??workspace.scrollTop;
-    ask._topicDrawn=true;ask._deckLastFilter=filter;
+    ask._topicDrawn=true;
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
     box.style.display='grid';box.style.width='100%';rows.replaceChildren();
     rows.classList.toggle('replyMenu',!!ask.replyChoices);
@@ -115,19 +112,10 @@
     box.replaceChildren(header,stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
-    const tabs=node('nav','deckTabs');tabs.setAttribute('aria-label','Conversation categories');
-    for(const [key,label]of Object.entries(groups)){
-      const count=topics.filter(o=>key==='all'||key==='new'&&!seen(o)||category(o)===key).length;
-      if(key!=='all'&&key!=='new'&&!count)continue;
-      const b=node('button','deckTab',label);b.type='button';b.setAttribute('aria-pressed',String(key===filter));
-      b.append(node('span','deckTabCount',String(count)));
-      b.onclick=e=>{e.stopPropagation();ask._deckFilter=key;askPick=ask.opts.findIndex(o=>visible(o,key));workspace.scrollTop=0;askDraw();};tabs.append(b);
-    }
-    if(!ask.replyChoices)rows.append(tabs);
-    else{
+    if(ask.replyChoices){
       const heading=node('header','deckReplyHeading');heading.append(node('small','deckEyebrow','Corin’s reply'),node('h2','deckReplyPrompt','What do you say?'));rows.append(heading);
     }
-    const choices=ask.opts.map((o,i)=>({o,i})).filter(({o})=>visible(o,filter));
+    const choices=ask.opts.map((o,i)=>({o,i})).filter(({o})=>visible(o));
     if(!choices.some(({i})=>i===askPick))askPick=choices[0]?.i??0;
     let animated=0;
     for(const {o,i}of choices){
@@ -151,7 +139,6 @@
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};
       rows.append(b);
     }
-    if(filter==='new'&&!topics.some(o=>!seen(o)))rows.append(node('p','deckEmpty','Every story here has been heard. Revisit a favorite, or see what the road brings next.'));
     workspace.scrollTop=oldScroll||0;updateTopicScrollHint();
   }
   window.EmberConversationDeck={draw,prompt,visible,category,back};
