@@ -2439,11 +2439,29 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
 
   if(!editorMapLoading)applyEditorPaint();
   repairArenaTreeEdges();
+  extendStumpTreeLine();
   clearForgefallsCliffTrees();
   chunks.clear();
   indexDecks();
   reindex();
   refreshBuild();
+}
+
+/* Continue the existing north-path borders (x26/x34) to the stump. */
+function extendStumpTreeLine(){
+  if(MAPID!=="world")return;
+  const si=NAME2I.mw_tree;if(si===undefined)return;
+  fobjs=fobjs.filter(o=>!o.stumpBorder);
+  let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
+  for(const x of [26,34]){
+    for(let y=20;y<=32;y++){
+      terr[y*MW+x]=WALL;
+      if(!blockTiles.includes(y*MW+x))blockTiles.push(y*MW+x);
+    }
+    for(let y=20;y<32;y+=4){
+      fobjs.push({id:id--,s:si,x:x*TS+TS/2,y:(y+1)*TS,feat:1,stumpBorder:true});
+    }
+  }
 }
 
 /* Explicit arena rings run after route/biome cleanup so their trees survive. */

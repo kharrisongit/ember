@@ -6068,9 +6068,10 @@ function greenFly(dt) {
     greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; window.EmberDragonSceneAudio?.phase("off"); return;
   }
   const g = greenAt();
-  const d = Math.hypot(P.x - g.x, P.y - g.y) / TS;
-  // Let Corin reach the stump instead of stopping him five tiles down the path.
-  if(greenPhase==='off'&&d<2.25&&!sceneHold()&&!sayNpc)beginGreenEncounter();
+  // Only the space directly in front of the stump starts the encounter.
+  const stumpY=(GREEN.ty+2)*TS;
+  const atStump=Math.abs(P.x-g.x)<=TS*.9&&P.y>=stumpY&&P.y<=stumpY+TS;
+  if(greenPhase==='off'&&atStump&&!sceneHold()&&!sayNpc)beginGreenEncounter();
   if (greenPhase === "in") {
     greenP += dt / GREEN_IN;
     greenT = Math.min(1, greenP);

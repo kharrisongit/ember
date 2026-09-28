@@ -328,7 +328,7 @@ let routeMusicIntroPlayed=false;
   };
   const selectTrack=next=>{
     if(next===selected)return;
-    fadeDuration=titleStage==='in'?1400:next===reveal?150:next===battle?250:next===millwood&&selected===villain?3200:900;
+    fadeDuration=titleStage==='in'?1400:selected===battle&&next!==battle?2400:next===reveal?150:next===battle?250:next===millwood&&selected===villain?3200:900;
     fadeDelay=next===millwood&&selected===villain?400:0;
     ++fadeToken;pending=0;fading=false;selected=next;
     for(const a of tracks)if(a!==next&&!gains.get(a))pauseTrack(a);

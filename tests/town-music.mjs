@@ -405,3 +405,14 @@ for(let offset=0;offset<battleBytes.length;){
 assert(atoms.includes('moov')&&atoms.includes('mdat'),'Battle track contains both the sample index and audio');
 assert(atoms.indexOf('moov')<atoms.indexOf('mdat'),'Sample index is at the front for prompt playback');
 console.log('PASS: battle recording is finalized and ready for streaming, not a partial encode.');
+
+const battleReturn=setup();battleReturn.c.quest=6;battleReturn.c.MAPID='world';battleReturn.c.P={x:488,y:800};
+battleReturn.listeners.pointerdown();battleReturn.sync();await battleReturn.advance();
+battleReturn.c.window.EmberBattleMusic.start();await battleReturn.advance();
+battleReturn.c.window.EmberBattleMusic.stop();await battleReturn.advance(600);
+assert(battleReturn.audible(battleReturn.track('Battle'))>0,'Battle remains audible during the exit fade');
+assert(battleReturn.audible(battleReturn.track('DragonReveal'))>0,'Previous journey song fades back in alongside battle');
+assert(battleReturn.audible(battleReturn.track('DragonReveal'))<.35*.85*.7,'Journey music has not jumped to full volume');
+await battleReturn.advance(2400);
+assert(battleReturn.track('Battle').paused,'Battle stops only once its fade completes');
+console.log('PASS: battle exit crossfades for 2.4 seconds, including the normally fast Reveal cue.');

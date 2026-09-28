@@ -5,7 +5,11 @@ const shown=[];c.showScene=()=>shown.push(run('scene?scene.lines[scene.i]:null')
 c.typeDone=()=>true;c.window.EmberDragonSceneAudio={phase(){}};
 run("MAPID='world';quest=Q.ARMED;scene=null;P.x=GREEN.tx*TS+8;P.y=(GREEN.ty+4)*TS;greenFly(.01)");
 assert.equal(run('scene'),null,'The approach stays playable until Corin reaches the stump');
-run('P.y=greenAt().y+2*TS;greenFly(.01)');
+for(const [dx,dy]of [[-2,2],[2,2],[0,-1],[0,0],[0,3]]){
+ c.approach=[dx,dy];run('P.x=greenAt().x+approach[0]*TS;P.y=greenAt().y+approach[1]*TS;greenFly(.01)');
+ assert.equal(run('scene'),null,'Only the stump approach triggers the scene');
+}
+run('P.x=greenAt().x;P.y=greenAt().y+2*TS;greenFly(.01)');
 for(const [w,h]of [[390,510],[844,250],[1280,680]]){
  c.size=[w,h];run('VW=size[0];VH=size[1];frameGreenEncounter()');
  assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-40-cam.y)*cam.z>=0&&(g.y-40-cam.y)*cam.z<VH-100})()'),'Landed dragon stays in view with close framing at '+w+'×'+h);
@@ -44,3 +48,10 @@ assert(run('Math.abs(cam.z-3)<.001'),'Camera settles at normal zoom');
 run('restoreCameraTarget();cam.x+=10;presentCamera(1/60)');
 assert.equal(run('cam.x'),10,'Ordinary movement has no camera smoothing lag');
 console.log('PASS: zoom entry and return are smooth, simulation targets survive, and normal running stays responsive.');
+
+run("MAPID='world';MW=64;MH=64;terr=new Uint8Array(MW*MH);fobjs=[];blockTiles=[];extendStumpTreeLine()");
+assert.equal(run('fobjs.filter(o=>o.stumpBorder).length'),6,'Both existing tree rows extend to the stump');
+assert(run('[26,34].every(x=>Array.from({length:13},(_,i)=>terr[(20+i)*MW+x]).every(t=>t===WALL))'),'Borders block side exits continuously');
+assert(run('Array.from({length:13},(_,i)=>terr[(20+i)*MW+30]).every(t=>t!==WALL)'),'Path to the stump stays open');
+run('extendStumpTreeLine()');assert.equal(run('fobjs.length'),6,'Rebuild does not duplicate trees');
+console.log('PASS: stump corridor has continuous collision, matching tree rows, and an open approach.');
