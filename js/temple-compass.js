@@ -322,16 +322,15 @@ function startNanFarewell(nan){
   nan.home=[nan.x,nan.y];
   nan.goto=target;nan.straightSceneWalk=true;nan.away=false;
   faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
-  const conversationCamera={};
   playScene(fatherCompassGift(nan),
-    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,conversationCamera,i:templeCompass.owned?8:0,after:()=>{
+    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
       clearPadInputs();running=false;P.act=null;P.moving=false;
       nan.straightSceneWalk=false;nan.goto=null;nan.nanDeparting=true;
       nan.scriptWalking=true;nan.noTalk=true;
       faceToward(nan,nan.x,nan.y+32);
-      // The farewell still owns input and its camera while Nan walks away.
+      // The farewell still owns input while Nan walks away.
       // Only release Corin after the whole sprite has left the screen.
-      playScene([],{silent:true,nanGifts:true,npcActor:nan,conversationCamera,
+      playScene([],{silent:true,nanGifts:true,npcActor:nan,
         until:()=>!nan.nanDeparting,after:()=>{
           npcs=npcs.filter(n=>n!==nan||!n.fatherCompassVisitor);
           clearPadInputs();P.moving=false;

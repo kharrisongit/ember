@@ -7,11 +7,29 @@
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
-    const hint=ask?.replyChoices?'Choose Corin’s reply below':!typeDone()?'Tap to finish the line':'Tap to continue';
+    const hint=session?.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
   }
+  function clearGreeting(){
+    if(!session?.greeting)return;
+    const {name,line}=session.greeting;session.greeting=null;
+    if(typeWho===name&&typeFull===playerFacingText(line))sayOff();
+  }
+  function greet(menu){
+    if(menu.replyChoices||scene||sayNpc)return;
+    const name=menu.dragonConversation?'Aurelius':menu.npcConversation;
+    const actor=menu.npcActor;
+    const authored=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[name];
+    const fallback=actor?.d?.find(line=>!line.startsWith('Corin: '));
+    const line=authored||(fallback?whoSays(actor,fallback)[1]:name+' at your service. What would you like to ask?');
+    if(session.greeting?.name===name&&sayEl.classList.contains('on'))return;
+    session.greeting={name,line};
+    typeStart(name,line);typeAll();sayIsNarr=false;sayEl.classList.remove('narr');
+    showFace(name);sayOn();setDialogueTone(!!menu.dragonConversation);
+  }
   function reset(){
+    clearGreeting();
     session=null;pointer=null;
     for(const cls of ['conversation-session','conversation-speaking','topics-open'])document.body.classList.remove(cls);
     box().classList.remove('conversationListening');
@@ -21,7 +39,7 @@
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
-    box().classList.remove('conversationListening');sync();
+    box().classList.remove('conversationListening');greet(menu);sync();
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
@@ -47,6 +65,7 @@
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
+    clearGreeting();
     retained(()=>{askShut();option.go?.();});
     if(ask?.shop){
       session.shopping=true;document.body.classList.remove('topics-open');document.body.classList.remove('conversation-session');
@@ -166,5 +185,5 @@
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)advance();}});
-  window.EmberConversationFlow={menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session,cameraSession:()=>session&&!session.shopping?session:null};
+  window.EmberConversationFlow={menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,input,key,goodbye,active:()=>!!session};
 })();

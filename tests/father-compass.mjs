@@ -51,10 +51,9 @@ assert(c.npcs[0].away,'Nan has no visible waiting presence');c.P={x:31*16,y:429*
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 let nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=37);
 assert.equal(run('templeCompass.owned'),false,'gift waits for its dialogue line');c.nanGiftBeat(6);c.nanGiftBeat(12);c.nanGiftBeat(14);assert.equal(run('templeCompass.owned'),true);
-const goodbye=[nan.x,nan.y],cameraOwner=c.scene.conversationCamera;
+const goodbye=[nan.x,nan.y];
 c.scene.after();assert.deepEqual([nan.x,nan.y],goodbye,'Goodbye never teleports Nan');assert.equal(nan.away,false);assert(nan.nanDeparting);
 assert(c.scene.silent,'A silent scene keeps player input locked for the walk-off');
-assert.equal(c.scene.conversationCamera,cameraOwner,'Walk-off retains the gift conversation camera');
 assert.equal(c.scene.until(),false,'Control remains locked while Nan is visible');
 c.finishNanDeparture(nan);assert.equal(c.scene.until(),true);
 assert.equal(c.W.maps.house26.npcs[0].away,false,'Nan is available back inside her house');

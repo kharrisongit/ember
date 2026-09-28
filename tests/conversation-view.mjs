@@ -30,73 +30,48 @@ run('askBack()');assert.equal(run('dismissals'),0,'Leaving a filter does not dis
 click(box.querySelector('.deckProfileToggle'));run('askBack()');assert.equal(run('dismissals'),0);
 click(box.querySelector('.deckClose'));assert.equal(run('dismissals'),1,'Leaving the audience still runs its required story callback');
 
-// Phone and desktop camera fits keep bodies clear of either portrait corner,
-// including the taller topic panel at every sampled point during its growth.
-for(const [width,height,deck]of [[390,844,180],[844,390,180],[1363,936,240]]){
- for(const progress of [0,.2,.5,.8,1])for(const dragon of [false,true])for(const menu of [false,true]){
-  const target=height*.6,panelHeight=menu?deck+(target-deck)*progress:deck+120;
-  const portraitSize=height<=600?112:144,panelTop=height-panelHeight;
-  c.viewport={width,height:height-deck,panelTop,portraitSize,menu};
-  c.actors=[{x:100,y:100,width:28,height:40},{x:dragon?158:136,y:106,width:dragon?84:32,height:dragon?62:48}];
-  const camera=run('EmberConversationView.conversationFrame(actors,viewport,3.5)');
-  for(const a of c.actors){
-   const left=(a.x-a.width/2-camera.x)*camera.z,right=(a.x+a.width/2-camera.x)*camera.z;
-   const top=(a.y-a.height-camera.y)*camera.z,bottom=(a.y+6-camera.y)*camera.z;
-   assert(left>=18-1e-6&&right<=width-18+1e-6,'Both speakers stay on screen');
-   assert(top>=24-1e-6&&bottom<=panelTop-16+1e-6,'Bodies clear the growing panel');
-   if(!menu)assert(bottom<=panelTop-16-portraitSize+1e-6||(left>=portraitSize+18-1e-6&&right<=width-portraitSize-18+1e-6),'Neither portrait position can cover a speaker');
-  }
- }
-}
-// The real presenter eases both position and zoom, then restores its untouched
-// logical camera before the next simulation frame. Menus draw every RAF.
-dom.element('cv').getBoundingClientRect=()=>({left:0,top:0,width:800,height:420});
-box.getBoundingClientRect=()=>({top:330,width:800,height:270});
-run(`MAPID='world';VW=800;VH=420;P.x=100;P.y=130;mode='play';camFree=false;
-scene=null;greenCamera=null;hatchCamera=null;bossScene=null;deflectCamera=null;revealing=false;
-devUnlocked=false;EmberRiding.skip();cam={x:-60,y:-10,z:2.2};cameraPresentation=null;cameraLogical=null;
-presentCamera(.016);openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});
-var beforeCamera={...cam};var goal=EmberConversationView.frame();presentCamera(.016);`);
-const before=run('beforeCamera'),goal=run('goal'),shown=run('({...cam})');
-assert(goal);assert(shown.z!==before.z&&shown.z!==goal.z,'First frame eases toward its target instead of jumping');
-run('restoreCameraTarget()');assert.deepEqual(run('({...cam})'),before,'Presentation never changes the gameplay camera');
-run(`var paintedFrames=0;drawWorld=()=>{paintedFrames++;};frameCore(1000);frameCore(1016);`);
-assert.equal(run('paintedFrames'),2,'NPC menus continue drawing throughout the opening animation');
-// Existing portrait renderer remains the sole owner of the active speaker.
-dom.element('say').getBoundingClientRect=()=>({left:12,top:480,width:776,height:110});
+// Conversations leave the gameplay camera alone, including authored scenes,
+// gift overlays, menu navigation and alternating dialogue portraits.
+run(`askShut();scene=null;sayNpc=null;sayOff();MAPID='world';VW=800;VH=420;
+P.x=100;P.y=130;mode='play';camFree=false;greenCamera=null;hatchCamera=null;
+bossScene=null;deflectCamera=null;revealing=false;devUnlocked=false;EmberRiding.skip();
+cam={x:-60,y:-10,z:2.2};cameraPresentation=null;cameraLogical=null;
+var beforeCamera={...cam};presentCamera(.016);
+openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});presentCamera(.016);`);
+const before=run('beforeCamera');
+assert.deepEqual(run('({...cam})'),before,'Opening a conversation never zooms or pans');
+assert.equal(dom.element('face').dataset.speaker,'Linna','The greeting uses the existing dialogue portrait');
+assert.equal(dom.element('face').className,'left');
+assert.equal(run('typeFull'),run('NPC_TOPIC_GREETINGS.Linna'));
+assert.equal(dom.element('say').dataset.advanceHint,'Choose a topic below');
+run('ask._profileOpen=true;askDraw();presentCamera(.016);');
+assert.deepEqual(run('({...cam})'),before,'Opening a profile never changes the camera');
 run(`askShut();portraitPackImages.set(portraitFor('Corin').pack,{src:'corin-test-portrait'});
 scene={lines:['Linna: A memory from the mill.','Corin: Tell me more.'],i:0,t:1,npcActor:{n:'Linna',x:140,y:130}};
-showScene();var npcFrame=EmberConversationView.frame();`);
+showScene();presentCamera(.016);`);
 assert.equal(dom.element('face').dataset.speaker,'Linna');
 assert.equal(dom.element('face').className,'left');
-assert(dom.element('sayname').classList.contains('right'),'NPC name remains opposite the left portrait');
-assert.equal(dom.element('face').style.display,'block');
-run('scene.i=1;showScene();var corinFrame=EmberConversationView.frame();');
+assert(dom.element('sayname').classList.contains('right'));
+run('scene.i=1;showScene();presentCamera(.016);');
 assert.equal(dom.element('face').dataset.speaker,'Corin');
 assert.equal(dom.element('face').className,'right');
-assert(dom.element('sayname').classList.contains('left'),'Corin’s name switches back to the left');
-assert.equal(dom.element('face').style.display,'block');
-assert.deepEqual(run('corinFrame'),run('npcFrame'),'Speaker changes never reframe the camera');
-run('var partner=scene.npcActor;scene=null;openNpcTopics(partner);EmberConversationView.frame();');
-assert.equal(dom.element('face').style.display,'none','Dialogue portrait is absent from topic menus');
+assert(dom.element('sayname').classList.contains('left'));
+assert.deepEqual(run('({...cam})'),before,'Switching speakers preserves the normal camera');
+run(`scene={telepathy:true,lines:['Aurelius: Corin.'],i:0,t:1};showScene();presentCamera(.016);`);
+assert.deepEqual(run('({...cam})'),before,'Aurelius’s introduction does not zoom');
+run(`scene={nanGifts:true,npcActor:{n:'Nan Ferrow',x:100,y:166},lines:['Nan Ferrow: Take this.'],i:0,t:1};
+showScene();presentCamera(.016);revealing=true;sayOff();presentCamera(.016);`);
+assert.deepEqual(run('({...cam})'),before,'Nan’s gifts do not change the camera');
+run('revealing=false;scene.silent=true;scene.npcActor.y+=80;presentCamera(.016);');
+assert.deepEqual(run('({...cam})'),before,'Nan’s walk-off does not move the camera');
+run('scene=null;sayOff();openNpcTopics({n:"Linna",x:140,y:130,d:["Hello"]});');
+assert.equal(dom.element('face').style.display,'block','A topic list keeps its greeting portrait above the dialogue');
 assert.equal(c.document.querySelectorAll('.conversationPortrait').length,0,'No paired portrait overlay is created');
-run('askShut();sayOff();EmberConversationView.frame()');assert.equal(run('EmberConversationView.active()'),false);
-
-// Authored introductions retain a close-up through narration and reward overlays.
-run(`scene={telepathy:true,conversationCamera:{},lines:['Aurelius: Corin.','Corin: Who said that?'],i:0,t:1};
-dragon.on=true;dragon.air=false;dragon.x=150;dragon.y=130;dragon.placed=MAPID;dragonOff=false;
-showScene();var introFrame=EmberConversationView.frame();`);
-assert(run('introFrame.z>Math.max(playZoom(),cam.z)'),'The introduction zooms in from the gameplay view');
-run('scene.i=1;showScene()');assert.deepEqual(run('EmberConversationView.frame()'),run('introFrame'));
-run(`scene={nanGifts:true,conversationCamera:{},npcActor:{n:'Nan Ferrow',x:100,y:166},lines:['Nan Ferrow: Take this.'],i:0,t:1};
-showScene();var giftFrame=EmberConversationView.frame();revealing=true;sayOff();`);
-assert.deepEqual(run('EmberConversationView.frame()'),run('giftFrame'),'An item reveal cannot release the camera');
-run('revealing=false;scene.silent=true;scene.npcActor.y+=80');
-assert.deepEqual(run('EmberConversationView.frame()'),run('giftFrame'),'The walk-off cannot follow Nan or reframe');
-run('scene=null;sayOff()');assert.equal(run('EmberConversationView.frame()'),null);
+run('askShut();presentCamera(.016)');
+assert(!dom.element('say').classList.contains('on'),'Goodbye dismisses the greeting');
+assert.deepEqual(run('({...cam})'),before,'Goodbye does not zoom out');
 assert.equal(run(`playerFacingText('Millwood, indoors (house26)')`),'Millwood, indoors');
 assert.equal(run(`playerFacingText('Visit house26')`),'Visit '+run('W.maps.house26.title'));
 run(`openNpcTopics({n:'Linna',x:140,y:130,d:['Hello']});ask.opts.push({n:'Visit house26',go:()=>{}});askDraw();`);
-assert(!rows.querySelectorAll('.deckTopic').some(n=>/house\d/i.test(n.getAttribute('aria-label'))),'Topic accessibility labels use place names too');
-
-console.log('PASS: full-width banner, profiles, safe Back/leave paths, camera fit in 60 viewport/body/animation cases, single alternating portrait, fixed speaker framing, and continuous menu frames.');
+assert(!rows.querySelectorAll('.deckTopic').some(n=>/house\d/i.test(n.getAttribute('aria-label'))));
+console.log('PASS: profiles, safe Back/leave paths, unique greetings, single alternating portrait, and normal camera throughout conversations and gifts.');

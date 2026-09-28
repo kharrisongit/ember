@@ -12,6 +12,15 @@ const select=name=>{c.selection=name;run('askPick=ask.opts.findIndex(o=>o.n===se
 const step=()=>run('if(scene)scene.t=1;EmberConversationFlow.advance();');
 const finish=()=>{for(let i=0;i<25&&run('!!scene||!!sayNpc');i++){assert(!run('ask?.replyChoices'),'Test must choose a reply explicitly');run('typeAll()');step();}};
 const tap=(target=canvas)=>{dom.dispatch(target,'pointerdown');dom.dispatch(target,'pointerup');dom.dispatch(target,'click');};
+const greetings=Object.fromEntries(fs.readFileSync('assets/dialogue/npc-greetings.tsv','utf8').trim().split('\n').map(row=>row.split('|')));
+assert.equal(Object.keys(greetings).length,144);
+assert.equal(new Set(Object.values(greetings)).size,144,'Every character has a unique greeting');
+assert.deepEqual(JSON.parse(run('JSON.stringify(NPC_TOPIC_GREETINGS)')),greetings);
+assert.equal(run('typeFull'),greetings.Hettie);
+assert.equal(run('typeWho'),'Hettie');assert(say.classList.contains('on'));
+tap(say);tap();assert.equal(run('typeFull'),greetings.Hettie,'Greeting stays until a topic is chosen');
+assert.equal(run('scene'),null,'A greeting never starts a quest scene');
+run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),greetings.Hettie);
 select('Your first herd');
 assert.equal(run('ask'),null,'Speech continues with no modal ask blocking its clock');
 assert.equal(box.style.display,'block');
@@ -62,6 +71,7 @@ run('hideReveal();EmberConversationFlow.tick()');assert.equal(run('ask.npcConver
 run("drawMerchantShop=()=>{document.getElementById('bagAsk').style.display='none';};askShut();person.sells=true;openNpcTopics(person)");select('Browse your supplies');
 assert(run('!!ask.shop'));run('askBack();EmberConversationFlow.tick()');assert.equal(run('ask.npcConversation'),'Hettie','B closes shopping and resumes the conversation');
 select('Goodbye');assert.equal(run('ask'),null);assert(!run('EmberConversationFlow.active()'));assert.equal(box.style.display,'none');
+assert(!say.classList.contains('on'),'Goodbye removes the default dialogue too');
 // Ordinary story dialogue gains tapping without creating a conversation panel.
 run(`playScene(['Corin: Wait for me.','Hettie: No running.'],{npcActor:person});`);
 tap();assert(run('typeDone()'));assert.equal(run('scene.i'),0);run('scene.t=1');tap();assert.equal(run('scene.i'),1);
@@ -77,6 +87,7 @@ for(const [name,reply]of Object.entries(source)){
  run(`askShut();scene=null;sayNpc=null;var actor={n:speaker,x:100,y:100,d:['Hello']};var authored=npcStoryTopics(actor).find(t=>t.reply);
  if(!authored)throw Error('Missing branch '+speaker);
  ask={quick:1,npcConversation:speaker,npcActor:actor,opts:[{n:'Goodbye'}]};askDraw();
+ if(typeWho!==speaker||typeFull!==NPC_TOPIC_GREETINGS[speaker])throw Error('Missing greeting '+speaker);
  EmberConversationFlow.take({n:authored.title,go:()=>EmberConversationFlow.playTopic(actor,authored)});typeAll();scene.t=1;EmberConversationFlow.advance();`);
  assert(run('ask?.replyChoices'),name+' gets reply choices');
  assert(run('ask.opts.some(o=>o.n===reply[0])'),name+' has their specific branch');
@@ -85,6 +96,8 @@ for(const [name,reply]of Object.entries(source)){
 }
 // Aurelius participates too, with distinct responses to personal questions.
 run(`askShut();scene=null;sayNpc=null;MAPID='world';dragon.air=false;P.act=null;openDragonConversation('dragons');`);
+assert.equal(run('typeFull'),greetings.Aurelius);
+assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius greets Corin through the bond');
 select('Why did you choose me?');
 for(let i=0;i<10&&!run('ask?.replyChoices');i++){run('typeAll();if(scene)scene.t=1');step();}
 assert(run('ask?.replyChoices'));assert(run('ask.opts.some(o=>/disappoint/.test(o.n))'));

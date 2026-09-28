@@ -1,5 +1,4 @@
-/* Conversation framing is a presentation layer: it never moves actors or changes
-   the logical gameplay camera. Story cinematics keep their own camera. */
+/* Character profiles share the dialogue cast; conversations use the normal gameplay camera. */
 (function(){
   const biographies={
     'Corin':['A boy from Millwood','Millwood','Raised by Nan Ferrow, Corin knows the village paths and the weight of an ordinary errand. Curiosity and stubborn kindness keep carrying him farther from home.'],
@@ -31,90 +30,5 @@
     return Object.fromEntries(Object.entries({name,role:data[0],home:data[1],bio:data[2],interests,memory:stories[0]?.[1]||''})
       .map(([key,value])=>[key,playerFacingText(value)]));
   }
-  // All inputs and outputs use canvas pixels; CSS viewport geometry is converted
-  // at the boundary. Fitting the complete bodies keeps heads and feet visible.
-  function framing(actors,safe,preferred){
-    const left=Math.min(...actors.map(a=>a.x-(a.width||28)/2));
-    const right=Math.max(...actors.map(a=>a.x+(a.width||28)/2));
-    const top=Math.min(...actors.map(a=>a.y-(a.height||48)));
-    const bottom=Math.max(...actors.map(a=>a.y+6));
-    const z=Math.max(.1,Math.min(preferred,(safe.right-safe.left)/Math.max(1,right-left+12),(safe.bottom-safe.top)/Math.max(1,bottom-top+12)));
-    return {z,x:(left+right)/2-(safe.left+safe.right)/2/z,y:(top+bottom)/2-(safe.top+safe.bottom)/2/z};
-  }
-  // Reserve both possible dialogue portrait positions. The single #face remains
-  // owned by showDialoguePortrait, so changing speakers never changes the camera.
-  function conversationFrame(actors,viewport,preferred){
-    const {width,height,panelTop,portraitSize,menu}=viewport;
-    const bottom=Math.min(height,panelTop)-16;
-    const middle={left:portraitSize+18,right:width-portraitSize-18,top:24,bottom};
-    if(menu)return framing(actors,{left:18,right:width-18,top:24,bottom},preferred);
-    const between=framing(actors,middle,preferred);
-    // On narrow phones there is more room above the portrait corners. Keep the
-    // pair horizontally centered there rather than shrinking them to fit a slit.
-    const above={left:18,right:width-18,top:24,bottom:bottom-portraitSize};
-    if(above.bottom<=above.top+48)return between;
-    const upper=framing(actors,above,preferred);
-    return upper.z>between.z+.01?upper:between;
-  }
-  let active=false,locked=null;
-  function sessionFrame(actors,viewport,zoom){
-    const safe={left:18,right:viewport.width-18,top:24,bottom:Math.min(viewport.height,viewport.panelTop)-16};
-    const fit=framing(actors,safe,zoom);
-    // Choose the close-up once. Fitting a newly opened box on every line was
-    // repeatedly changing the zoom and undoing the player's conversation view.
-    const cx=fit.x+(safe.left+safe.right)/2/fit.z;
-    const cy=fit.y+(safe.top+safe.bottom)/2/fit.z;
-    return {z:zoom,x:cx-(safe.left+safe.right)/2/zoom,y:cy-(safe.top+safe.bottom)/2/zoom};
-  }
-  function hide(){active=false;return null;}
-  function frame(){
-    const session=window.EmberConversationFlow?.cameraSession();
-    const owner=session||scene?.conversationCamera;
-    const geometry=innerWidth+':'+innerHeight+':'+VW+':'+VH;
-    if(!owner)locked=null;
-    if(owner&&locked?.owner===owner&&locked.map===MAPID&&locked.geometry===geometry&&mode==='play'&&!editing&&!atlasOpen){
-      active=true;return locked.target;
-    }
-    const menu=!!(ask?.npcConversation||ask?.dragonConversation);
-    const dialogue=sayEl.classList.contains('on');
-    if(mode!=='play'||editing||atlasOpen||(!menu&&!dialogue)||greenCamera||hatchCamera||bossScene||deflectCamera||fishing||
-       window.EmberArenaEntry?.holding()||window.EmberRiding?.holding()||scene?.offscreen||scene?.arriving||scene?.silent||scene?.hold||revealing)return hide();
-    let actor=ask?.npcActor||sayNpc||scene?.npcActor;
-    const telepathy=ask?.dragonConversation||scene?.telepathy;
-    if(telepathy)actor=dragonHere()&&dragon.on&&!dragon.air?dragon:null;
-    if(!actor&&scene?.who)actor=speakerNamed(scene.who);
-    if(!actor&&typeWho&&typeWho!=='Corin')actor=speakerNamed(typeWho);
-    // A voice from afar should not pull the camera through the map.
-    if(!actor||!Number.isFinite(actor.x)||Math.hypot(actor.x-P.x,actor.y-P.y)>220)return hide();
-    const name=actor===dragon?'Aurelius':actor.n;
-    if(!name||!portraitFor(name))return hide();
-    const canvas=cv.getBoundingClientRect(),panel=document.getElementById(dialogue?'say':'bagAsk').getBoundingClientRect();
-    if(!canvas.width||!canvas.height)return hide();
-    active=true;
-    const sx=VW/canvas.width,sy=VH/canvas.height;
-    const portraitSize=document.body.classList.contains('conversation-session')?Math.min(innerHeight<=520?76:144,Math.max(72,innerWidth*.2)):(innerHeight<=600?112:144);
-    const actors=[{x:P.x,y:P.y,width:28,height:40},
-      {x:actor.x,y:actor.y,width:actor===dragon?84:32,height:actor===dragon?62:48}];
-    if(session){
-      // Reserve the final parchment and speech space at entry, even while the
-      // panel grows. Topics, replies, profiles and speaker changes share this
-      // exact target until Goodbye (or a real viewport/map change).
-      const lineHeight=innerHeight<=520?74:innerWidth<=600?Math.min(144,Math.max(128,innerHeight*.16)):Math.min(132,Math.max(100,innerHeight*.14));
-      const viewport={width:VW,height:VH,panelTop:(innerHeight*.4-lineHeight-8-canvas.top)*sy};
-      const target=sessionFrame(actors,viewport,playZoom()*1.16);
-      locked={owner,map:MAPID,geometry,target};return target;
-    }
-    if(owner){
-      // Story conversations use a close-up too. Keep the same target through
-      // narration, alternating portraits, gift reveals and Nan's walk-off.
-      const zoom=Math.max(playZoom(),cam.z)*1.16,portrait=portraitSize*Math.max(sx,sy);
-      const span=Math.max(...actors.map(a=>a.x+a.width/2))-Math.min(...actors.map(a=>a.x-a.width/2));
-      const panelTop=(panel.top-canvas.top)*sy-(span*zoom>VW-2*(portrait+18)?portrait:0);
-      const target=sessionFrame(actors,{width:VW,height:VH,panelTop},zoom);
-      locked={owner,map:MAPID,geometry,target};return target;
-    }
-    return conversationFrame(actors,{width:VW,height:VH,panelTop:(panel.top-canvas.top)*sy,
-      portraitSize:portraitSize*Math.max(sx,sy),menu:menu&&!dialogue},Math.min(5.5,playZoom()*1.22));
-  }
-  window.EmberConversationView={frame,framing,conversationFrame,sessionFrame,profile,active:()=>active};
+  window.EmberConversationView={profile};
 })();
