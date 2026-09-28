@@ -52014,7 +52014,8 @@
     "5ee7d1eb-4838-40c0-9562-7cc6e3480487",
     "4d69824c-ee69-4f88-a68d-b3bf72c2a28a",
     "1ef89369-07cb-4592-a751-aeeb30806a40",
-    "4ec69443-8954-47e9-8b96-1c5600073bef"
+    "4ec69443-8954-47e9-8b96-1c5600073bef",
+    "a37ba746-9fdd-429d-9e78-f8b3360cfc42"
   ],
   "sessions": {
     "witchmoor": {
@@ -52138,10 +52139,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "c9a72d74-caca-4002-8f3b-41f37b1aa1eb",
+      "id": "6ade6617-1038-425f-85a6-205bf0d28665",
       "sequence": 1,
-      "baseHash": "4f7e0745-c4f6337d-391157",
-      "baseFingerprint": "e9cc8f27-b272ec3-741816",
+      "baseHash": "3eba4359-2e293c1b-394185",
+      "baseFingerprint": "8834d33a-f19f763c-742485",
       "base": {
         "build": {
           "kind": "build",
@@ -101950,6 +101951,214 @@
           "sprite": 896,
           "x": 12920,
           "y": 4048
+        },
+        "object-add:409da0fa-5215-49fa-be3b-2da7c8559633": {
+          "kind": "object-add",
+          "key": "409da0fa-5215-49fa-be3b-2da7c8559633",
+          "sprite": 39,
+          "x": 414,
+          "y": 266
+        },
+        "object-add:496e2a8a-e5c3-4dd5-b39f-94aba0b16b4a": {
+          "kind": "object-add",
+          "key": "496e2a8a-e5c3-4dd5-b39f-94aba0b16b4a",
+          "sprite": 39,
+          "x": 468,
+          "y": 242
+        },
+        "object-add:993e7c0a-c9df-41bb-8315-a25a6c6f5ab3": {
+          "kind": "object-add",
+          "key": "993e7c0a-c9df-41bb-8315-a25a6c6f5ab3",
+          "sprite": 39,
+          "x": 520,
+          "y": 240
+        },
+        "object-add:66f27ca2-7797-4e65-853f-b28209761c1c": {
+          "kind": "object-add",
+          "key": "66f27ca2-7797-4e65-853f-b28209761c1c",
+          "sprite": 39,
+          "x": 568,
+          "y": 265
+        },
+        "collision:52,39": {
+          "kind": "collision",
+          "key": "52,39",
+          "blocked": true
+        },
+        "collision:52,38": {
+          "kind": "collision",
+          "key": "52,38",
+          "blocked": true
+        },
+        "collision:52,37": {
+          "kind": "collision",
+          "key": "52,37",
+          "blocked": true
+        },
+        "collision:52,36": {
+          "kind": "collision",
+          "key": "52,36",
+          "blocked": true
+        },
+        "collision:52,35": {
+          "kind": "collision",
+          "key": "52,35",
+          "blocked": true
+        },
+        "collision:52,34": {
+          "kind": "collision",
+          "key": "52,34",
+          "blocked": true
+        },
+        "collision:51,34": {
+          "kind": "collision",
+          "key": "51,34",
+          "blocked": true
+        },
+        "collision:51,33": {
+          "kind": "collision",
+          "key": "51,33",
+          "blocked": true
+        },
+        "collision:69,39": {
+          "kind": "collision",
+          "key": "69,39",
+          "blocked": true
+        },
+        "collision:69,38": {
+          "kind": "collision",
+          "key": "69,38",
+          "blocked": true
+        },
+        "collision:69,37": {
+          "kind": "collision",
+          "key": "69,37",
+          "blocked": true
+        },
+        "collision:69,36": {
+          "kind": "collision",
+          "key": "69,36",
+          "blocked": true
+        },
+        "collision:69,35": {
+          "kind": "collision",
+          "key": "69,35",
+          "blocked": true
+        },
+        "collision:69,34": {
+          "kind": "collision",
+          "key": "69,34",
+          "blocked": true
+        },
+        "collision:69,33": {
+          "kind": "collision",
+          "key": "69,33",
+          "blocked": true
+        },
+        "collision:52,31": {
+          "kind": "collision",
+          "key": "52,31",
+          "blocked": true
+        },
+        "collision:53,30": {
+          "kind": "collision",
+          "key": "53,30",
+          "blocked": true
+        },
+        "collision:54,30": {
+          "kind": "collision",
+          "key": "54,30",
+          "blocked": true
+        },
+        "collision:54,29": {
+          "kind": "collision",
+          "key": "54,29",
+          "blocked": true
+        },
+        "collision:55,29": {
+          "kind": "collision",
+          "key": "55,29",
+          "blocked": true
+        },
+        "collision:56,29": {
+          "kind": "collision",
+          "key": "56,29",
+          "blocked": true
+        },
+        "collision:56,28": {
+          "kind": "collision",
+          "key": "56,28",
+          "blocked": true
+        },
+        "collision:59,28": {
+          "kind": "collision",
+          "key": "59,28",
+          "blocked": true
+        },
+        "collision:60,28": {
+          "kind": "collision",
+          "key": "60,28",
+          "blocked": true
+        },
+        "collision:61,28": {
+          "kind": "collision",
+          "key": "61,28",
+          "blocked": true
+        },
+        "collision:62,28": {
+          "kind": "collision",
+          "key": "62,28",
+          "blocked": true
+        },
+        "collision:63,28": {
+          "kind": "collision",
+          "key": "63,28",
+          "blocked": true
+        },
+        "collision:64,28": {
+          "kind": "collision",
+          "key": "64,28",
+          "blocked": true
+        },
+        "collision:65,28": {
+          "kind": "collision",
+          "key": "65,28",
+          "blocked": true
+        },
+        "collision:66,28": {
+          "kind": "collision",
+          "key": "66,28",
+          "blocked": true
+        },
+        "collision:67,29": {
+          "kind": "collision",
+          "key": "67,29",
+          "blocked": true
+        },
+        "collision:68,29": {
+          "kind": "collision",
+          "key": "68,29",
+          "blocked": true
+        },
+        "collision:69,29": {
+          "kind": "collision",
+          "key": "69,29",
+          "blocked": true
+        },
+        "collision:69,30": {
+          "kind": "collision",
+          "key": "69,30",
+          "blocked": true
+        },
+        "collision:70,30": {
+          "kind": "collision",
+          "key": "70,30",
+          "blocked": true
+        },
+        "collision:70,31": {
+          "kind": "collision",
+          "key": "70,31",
+          "blocked": true
         }
       },
       "resultHash": "3eba4359-2e293c1b-394185"
@@ -102097,6 +102306,65 @@
         }
       },
       "resultHash": "ab9fa0ae-1f504e1a-1689"
+    }
+  },
+  "audio": {
+    "sfx:coin": 0.9,
+    "sfx:roar": 0.6,
+    "sfx:distant": 0.79,
+    "sfx:wings": 1.39,
+    "sfx:breathing": 0.83,
+    "sfx:breathHit": 1.18,
+    "sfx:death": 1.3,
+    "sfx:pickup": 0.88,
+    "sfx:key": 0.89,
+    "music:lastDragonriderTitleBgm": 1.06,
+    "music:emberfellMillwoodBgm": 0.98
+  },
+  "audioReceipts": {
+    "sfx:coin": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 9
+    },
+    "sfx:roar": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 46
+    },
+    "sfx:distant": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 62
+    },
+    "sfx:wings": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 83
+    },
+    "sfx:breathing": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 97
+    },
+    "sfx:breathHit": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 105
+    },
+    "sfx:death": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 119
+    },
+    "sfx:pickup": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 129
+    },
+    "sfx:key": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 133
+    },
+    "music:lastDragonriderTitleBgm": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 187
+    },
+    "music:emberfellMillwoodBgm": {
+      "client": "7625bb28-86f9-46fb-a8b6-0a2bfd0abbed",
+      "sequence": 253
     }
   }
 }
