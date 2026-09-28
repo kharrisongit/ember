@@ -6011,13 +6011,23 @@ function greenEncounterFinished(){
   if(greenPhase==='sit'&&greenP>=GREEN_REST&&scene.t>=GREEN_REST)greenGone=true;
   return greenPhase==='gone';
 }
+function beginGreenEncounter(){
+  if(scene)return;
+  if(greenPhase==='off'){greenPhase='in';greenP=0;greenT=0;}
+  const i=greenPhase==='gone'?2:['sit','rise','depart'].includes(greenPhase)?1:0;
+  playScene(['Corin: What the…','Corin: Are…are you okay?','Corin: Hey! You forgot something!'],
+    {who:'Corin',greenEncounter:true,i,after:()=>{quest=Q.FLED;}});
+  const g=greenAt();faceCorinAt(g.x,g.y);
+}
 function greenFly(dt) {
   if (quest !== Q.ARMED || MAPID !== GREEN.map) {
     greenPhase = "off"; greenT = -1; greenP = 0; greenGone = false; window.EmberDragonSceneAudio?.phase("off"); return;
   }
   const g = greenAt();
   const d = Math.hypot(P.x - g.x, P.y - g.y) / TS;
-  if (greenPhase === "off" && d < 18) { greenPhase = "in"; greenP = 0; greenT = 0; }
+  // Begin when the landing spot is in the nearby clearing, so the arrival
+  // and Corin's reaction happen together instead of finishing offscreen.
+  if(greenPhase==='off'&&d<5&&!sceneHold()&&!sayNpc)beginGreenEncounter();
   if (greenPhase === "in") {
     greenP += dt / GREEN_IN;
     greenT = Math.min(1, greenP);
@@ -6244,9 +6254,9 @@ function stepDeflectCamera(dt) {
   if ((!P.act || P.act.kind !== "fall") && (settled || c.t > 2)) deflectCamera = null;
 }
 function lockHatchCamera(c, m, hs) {
-  // Portraits are hidden for this scene, so keep the normal playing zoom.
-  // Place the egg above the text box and hold this composition between lines.
-  return { x: hs.eggX, y: hs.eggY + VH * .1 / c.zoom, z: c.zoom };
+  // Portrait-free framing can bring the actors a little closer.
+  const z=c.zoom*1.12;
+  return { x: hs.eggX, y: hs.eggY + VH * .1 / z, z };
 }
 
 function stepHatchCamera(dt) {
@@ -6280,8 +6290,8 @@ function beginHatchScene(m) {
   royalBlackout(HATCH_LINES[0], () => {
     // Stage Corin west of Maddock for the north-then-west approach.
     // Use the open clearing west of the well, above the southern tree crowns.
-    m.x = (ELDER_WELL[0] - 5) * TS + TS / 2;
-    m.y = ELDER_WELL[1] * TS + TS;
+    m.x = (ELDER_WELL[0] - 3.5) * TS + TS / 2;
+    m.y = ELDER_WELL[1] * TS + TS * 1.5;
     m.home = [m.x, m.y]; m.goto = null; m.scriptWalking = false;
     P.x = m.x - TS * 3; P.y = m.y; P.act = null;
     clearPadInputs();
@@ -6297,6 +6307,7 @@ function beginHatchScene(m) {
     faceToward(m, ex, ey);
     dragon.on = false;
     hatchCamera.goal = lockHatchCamera(hatchCamera, m, hatchScene);
+    cam.z = hatchCamera.goal.z;
     cam.x = hatchCamera.goal.x - VW / cam.z / 2;
     cam.y = hatchCamera.goal.y - VH / cam.z / 2;
     clampCam(); rebuildSolid();
@@ -6385,7 +6396,10 @@ function stepHatchScene(dt) {
     }
   }
   if (scene.i >= 8) {
-    const lookAt = scene.i === 8 && m ? m : P;
+    // Five deliberate looks: Maddock, Corin, Maddock, Corin, Maddock.
+    // The next beat settles on Corin and starts the approach.
+    const lookBeat=Math.min(4,Math.max(0,Math.floor((scene.t-.3)/.6)));
+    const lookAt = scene.i === 8 && m && lookBeat%2===0 ? m : P;
     const targetDir = Math.abs(lookAt.x - hatchScene.dragonX) > Math.abs(lookAt.y - hatchScene.dragonY)
       ? (lookAt.x > hatchScene.dragonX ? "e" : "w")
       : (lookAt.y > hatchScene.dragonY ? "s" : "n");
@@ -6617,7 +6631,7 @@ function goBackIn(useHouseDoor) {
 function stepElder(dt=1/60) {
   if (!goingIn) return;
   const e = elder();
-  if (!e) { goingIn = false; hatchExit = false; return; }
+  if (!e) { goingIn = false; if(hatchExit)faceCorinAt(dragon.x,dragon.y); hatchExit = false; return; }
   if(e.houseWalk){
     const walk=e.houseWalk;
     if(!walk.path){walk.retry-=dt;if(walk.retry<=0){walk.path=maddockWalkPath(e,[walk.door.x,walk.door.y]);walk.retry=.5;}return;}
@@ -6632,7 +6646,7 @@ function stepElder(dt=1/60) {
     e.x=walk.door.x;e.y=walk.door.y-e.houseEntry*32;e.f='u';e.kf='u';e.flip=false;
     if(walk.t<.85)return;
     e.away=1;e.houseWalk=null;e.houseEntry=0;e.scriptWalking=false;
-    goingIn=false;hatchExit=false;return;
+    goingIn=false;if(hatchExit)faceCorinAt(dragon.x,dragon.y);hatchExit=false;return;
   }
   if (e.goto) faceToward(e, e.goto[0], e.goto[1]);
   const atDoor = Math.hypot(e.x - MAD_DOOR[0], e.y - MAD_DOOR[1]) < (hatchExit ? 5 : TS);
@@ -6642,6 +6656,7 @@ function stepElder(dt=1/60) {
   e.x = MAD_DOOR[0]; e.y = MAD_DOOR[1];
   e.away = 1;
   goingIn = false;
+  if(hatchExit)faceCorinAt(dragon.x,dragon.y);
   hatchExit = false;
 }
 function northShut() { return quest <= Q.ELDER && warnedNorth; }
@@ -6660,7 +6675,7 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
-  if(m.fatherCompassVisitor&&!nanGiftPending()&&!(scene?.nanGifts&&scene.npcActor===m))return false;
+  if(m.fatherCompassVisitor&&!m.nanDeparting&&!nanGiftPending()&&!(scene?.nanGifts&&scene.npcActor===m))return false;
   if(m.progressionWorker&&!journeyGateClosed(m.progressionWorker))return false;
   if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
   if (wonAll && /King Halvard/.test(m.n || "")) return false;
@@ -6694,6 +6709,12 @@ function stepWalkers(dt) {
   stepThornwellWelcome(dt);
   for (const m of npcs) {
     if(!npcHere(m))continue;
+    if(m.nanDeparting){
+      // Keep her visible and walking west until her whole sprite leaves view.
+      faceToward(m,m.x-32,m.y);m.x-=72*dt;m.scriptWalking=true;
+      if(m.x+24<cam.x){m.away=true;m.nanDeparting=false;m.scriptWalking=false;m.goto=null;}
+      continue;
+    }
     if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
     if(m.straightSceneWalk&&scene?.npcActor===m){
       if(fadeDir||fade>0||!m.goto)continue;
@@ -6816,11 +6837,12 @@ function advanceScene() {
   if (scene.hold || scene.silent) return;          /* animation owns this beat */
   if (!typeDone()) { globalThis.window?.EmberSfx?.ui?.(); typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
+  if(scene.greenEncounter&&scene.i<2)return; // Flight/rest timing owns these reactions.
   if(scene.nanGifts&&nanGiftBeat(scene.i))return;
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
-  /* The hatchling's two turns are staged beats, not skippable text taps. */
-  if (scene.hatch && scene.i === 8 && scene.t < 1.1) return;
+  /* The hatchling's look-around and choice are staged beats, not skippable text taps. */
+  if (scene.hatch && scene.i === 8 && scene.t < 3.3) return;
   if (scene.hatch && scene.i === 9 &&
       (scene.t < 1.1 || !hatchScene || !hatchScene.approachDone)) return;
   if(scene.hatch&&scene.i===10&&!hatchScene?.maddockArrived)return;
@@ -7120,7 +7142,7 @@ function stepQuest(dt) {
     quest = Q.ARMED;
   }
   if (quest === Q.ARMED && near(SPOT.north, 2.5)) {
-    playScene([], {silent:true,until:greenEncounterFinished,after:()=>{quest=Q.FLED;}});
+    beginGreenEncounter();
     return;
   }
   if (quest === Q.CARRY && MAPID === "world" && elder() && elder().away) {
@@ -7226,6 +7248,11 @@ function stepScene(dt) {
   }
   scene.t += dt;
   stepHatchScene(dt);
+  if(scene.greenEncounter){
+    if(scene.i===0&&greenPhase==='sit'){scene.i=1;scene.t=0;showScene();}
+    if(scene.i===1&&greenEncounterFinished()){scene.i=2;scene.t=0;showScene();}
+    return;
+  }
   if(scene.silent){
     if(!scene.until||scene.until()){
       const done=scene.after;scene=null;showScene();sendWalkerHome(true);if(done)done();

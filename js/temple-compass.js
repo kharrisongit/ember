@@ -276,7 +276,9 @@ function startNanFarewell(nan){
   faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
   playScene(fatherCompassGift(nan),
     {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
-      nan.straightSceneWalk=false;nan.scriptWalking=false;nan.goto=null;nan.away=true;
+      nan.straightSceneWalk=false;nan.goto=null;nan.nanDeparting=true;
+      nan.scriptWalking=true;nan.noTalk=true;
+      faceToward(nan,nan.x-32,nan.y);
     },hold:()=>{
       if(nan.goto)return false;
       nan.scriptWalking=false;

@@ -28,6 +28,15 @@ for(let i=0;i<60;i++){
  assert(c.actor.x>=previous&&c.actor.x-previous<=110/60+.001,'Nan walks east without teleporting');
 }
 assert.equal(c.actor.x,80);assert.equal(c.actor.goto,null);
+// Nan keeps walking after dialogue and disappears only beyond the west edge.
+run('scene=null;actor.nanDeparting=true;actor.scriptWalking=true;actor.noTalk=true;cam.x=0');
+assert(run('npcHere(actor)'),'Gift completion does not hide a departing Nan');
+for(let i=0;i<160&&!c.actor.away;i++){
+ const previous=c.actor.x;run('stepWalkers(1/60)');
+ assert.equal(c.actor.y,40);assert(Math.abs(previous-c.actor.x-72/60)<.001,'Steady westward walk-off');
+ if(c.actor.x+24>=0)assert(!c.actor.away,'Nan stays visible until her whole sprite exits');
+}
+assert(c.actor.away);assert.equal(c.actor.nanDeparting,false);
 // Walking actors face the route, even when Corin stands in another direction.
 c.stepHettie=()=>{};c.stepThornwellWelcome=()=>{};c.canNpcStand=()=>true;c.npcHere=()=>true;
 for(const name of ['Nan Ferrow','Elder Maddock']){

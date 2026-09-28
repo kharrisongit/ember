@@ -48,6 +48,7 @@ assert(c.npcs[0].away,'Nan has no visible waiting presence');c.P={x:31*16,y:429*
 assert.equal(c.npcs[0].stationary,false);assert(c.npcs[0].goto,'Nan walks to Corin');assert.equal(c.scene.hold(),false);
 const nan=c.npcs[0];[nan.x,nan.y]=nan.goto;nan.goto=null;assert.equal(c.scene.hold(),true);assert(Math.hypot(nan.x-c.P.x,nan.y-c.P.y)<=23);
 assert.equal(run('templeCompass.owned'),false,'gift waits for its dialogue line');c.nanGiftBeat(6);c.nanGiftBeat(12);assert.equal(run('templeCompass.owned'),true);
+const goodbye=[nan.x,nan.y];c.scene.after();assert.deepEqual([nan.x,nan.y],goodbye,'Goodbye never teleports Nan');assert.equal(nan.away,false);assert(nan.nanDeparting);
 c.scene=null;c.stepNanDeparture();assert.equal(c.scene,null,'Nan does not stop Corin twice');
 
 c.restoreFatherCompass();c.scene=null;c.mounted=true;c.dragon.air=true;c.P={x:nan.x+70,y:nan.y};

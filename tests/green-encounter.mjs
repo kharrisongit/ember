@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {context:c,run}=await loadEditorGame(process.cwd(),console,{furniture:false});
+const shown=[];c.showScene=()=>shown.push(run('scene?scene.lines[scene.i]:null'));
+c.typeDone=()=>true;c.window.EmberDragonSceneAudio={phase(){}};
+run("MAPID='world';quest=Q.ARMED;scene=null;P.x=GREEN.tx*TS+8;P.y=(GREEN.ty+4)*TS;greenFly(.01)");
+assert.equal(shown.at(-1),'Corin: What the…');
+run('scene.t=1;advanceScene()');assert.equal(run('scene.i'),0,'A cannot skip the flight reaction');
+run('greenFly(5.5);stepScene(.1)');assert.equal(run('greenPhase'),'crash');assert.equal(run('scene.i'),0);
+run('greenFly(1.1);stepScene(.1)');assert.equal(shown.at(-1),'Corin: Are…are you okay?');
+run('greenFly(4.9);stepScene(4.9)');assert.equal(run('greenGone'),false);
+run('greenFly(.2);stepScene(.2)');assert.equal(run('greenGone'),true);
+run('greenFly(.01);greenFly(1.2);stepScene(.1)');assert.equal(run('scene.i'),1);
+run('greenFly(2);stepScene(.1)');assert.equal(shown.at(-1),'Corin: Hey! You forgot something!');
+assert.equal(run('quest'),run('Q.ARMED'),'Egg quest waits for the final line');
+run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.equal(run('scene'),null);
+console.log('PASS: Corin reacts during flight, after impact, and after departure; pickup unlocks after his final line.');

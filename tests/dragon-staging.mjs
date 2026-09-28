@@ -8,7 +8,7 @@ const e={x:40,y:120,away:0},door={x:150,y:90,w:20,h:26};
 const c=vm.createContext({elder:()=>e,MD:{doors:[{to:'house22'}]},doorRect:()=>door,MAD_DOOR:[900,900],TS:16,
  canNpcStand:(x,y)=>!(x>=75&&x<=100&&y>=80&&y<=155),faceToward:(m,x,y)=>{m.f=y<m.y?'u':'d';},
  P:{x:40,y:160},cam:{x:12,y:90,z:2},VW:400,VH:300,MAPID:'world',clampCam(){},toast(){},
- dragon:{},Q:{DONE:9},quest:8,dragonIntroArmed:false});
+ faceCorinAt:(x,y)=>{c.P.lookAt=[x,y];},dragon:{},Q:{DONE:9},quest:8,dragonIntroArmed:false});
 const run=s=>vm.runInContext(s,c);
 run('let goingIn=false,hatchExit=false,camFree=true,hatchCamera={zoom:3,returnT:0},hatchScene={dragonX:40,dragonY:140};');
 run(section(p2,'function maddockDoor()','function northShut()'));
@@ -27,6 +27,9 @@ for(let i=0;i<1000&&!e.away;i++){
  if(!e.away){run('stepHatchCamera(1/60)');assert.equal(JSON.stringify(c.cam),camera,'Camera stays exactly fixed throughout the walk and entrance');}
 }
 assert(seenDoor&&entered&&e.away,'Maddock visibly walks into his house');
+assert.deepEqual(c.P.lookAt,[c.dragon.x,c.dragon.y],'Corin turns back to the dragon when Maddock is inside');
+const framing=c.lockHatchCamera({zoom:2},e,{eggX:100,eggY:100});
+assert.equal(framing.z,2.24,'Hatch camera zooms in twelve percent');
 assert.equal(run('hatchExit'),false);assert(run('hatchCamera'),'Camera waits until the entrance has finished');
 run('stepHatchCamera(.1)');assert(c.cam.z>2&&c.cam.z<3,'Normal zoom resumes smoothly after entering');
 for(let i=0;i<90;i++)run('stepHatchCamera(1/60)');assert.equal(run('hatchCamera'),null);assert.equal(c.cam.z,3);

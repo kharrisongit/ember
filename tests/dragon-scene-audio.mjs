@@ -21,7 +21,8 @@ active('distant')[0].onended();assert.deepEqual(musicEvents,['cut','reveal'],'Th
 const game=read('js/generated/game-part-2.js');
 run(game.slice(game.indexOf('const GREEN ='),game.indexOf('\nfunction followCam()')));
 run(game.slice(game.indexOf('function greenAt()'),game.indexOf('\nconst Q =')));
-c.quest=6;run('greenFly(.01)');await flush();assert.equal(active('wings').length,1);
+Object.assign(c,{scene:null,sayNpc:null,sceneHold:()=>!!c.scene,playScene:(lines,opts)=>{c.scene={lines,t:0,...opts};},faceCorinAt(){}});
+c.quest=6;run('greenFly(.01)');assert.equal(c.scene.lines[0],'Corin: What the…');await flush();assert.equal(active('wings').length,1);
 run('greenFly(2.5)');await flush();assert.equal(active('wings').length,1,'Arrival gives the wingbeats time to be heard');assert.equal(active('dragon-crash').length,0);
 run('greenFly(3.1)');await flush();assert.equal(active('wings').length,0);assert.equal(active('dragon-crash').length,1);
 run('greenFly(.2)');await flush();assert.equal(sources.filter(s=>s.buffer[0].includes('dragon-crash')).length,1,'Impact fires once');
