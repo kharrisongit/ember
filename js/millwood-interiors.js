@@ -2,8 +2,8 @@
 let houseSeatedSheet=null;
 async function prepareMillwoodInteriors() {
   if(!houseSeatedSheet){
-    const image=new Image();image.src='assets/interiors/house-seated.png?v=20260927-unique-cast';
-    await image.decode();houseSeatedSheet=refineSeatedPixels(image);
+    const image=new Image();image.src='assets/interiors/house-seated-v2.png?v=20260928-locked-idle';
+    await image.decode();image.spriteScale=2;image.pixelLocked=true;houseSeatedSheet=image;
   }
   await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
   await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
@@ -253,7 +253,7 @@ function prepareRemainingInteriorActors() {
 
 // Contact points are measured from opaque source pixels, including all idle frames.
 async function alignHouseTableSeats() {
-  const response=await fetch('assets/interiors/seat-contacts.json?v=20260927-unique-cast');
+  const response=await fetch('assets/interiors/seat-contacts.json?v=20260928-locked-idle');
   if(!response.ok)throw new Error('House seat contacts: '+response.status);
   const contacts=await response.json();
   for(const [id,map] of Object.entries(W.maps)) {

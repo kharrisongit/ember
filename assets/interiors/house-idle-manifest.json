@@ -1,0 +1,1146 @@
+[
+  {
+    "name": "Ada",
+    "map": "house00",
+    "sprite": "villager_seated_common_a6_1",
+    "row": 1,
+    "eyes": [
+      [
+        15,
+        21,
+        23,
+        30
+      ],
+      [
+        26,
+        21,
+        34,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 13.981801125703564,
+      "dx": -1,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Bren",
+    "map": "house01",
+    "sprite": "villager_seated_common_a6_4",
+    "row": 4,
+    "eyes": [
+      [
+        15,
+        18,
+        22,
+        27
+      ],
+      [
+        25,
+        18,
+        32,
+        26
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 31.508860759493672,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Berta",
+    "map": "house02",
+    "sprite": "villager_seated_common_c6_0",
+    "row": 12,
+    "eyes": [
+      [
+        16,
+        21,
+        22,
+        29
+      ],
+      [
+        26,
+        21,
+        33,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 24.28802588996764,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Fara",
+    "map": "house06",
+    "sprite": "villager_seated_unique_fara",
+    "row": 45,
+    "eyes": [
+      [
+        20,
+        19,
+        28,
+        27
+      ],
+      [
+        31,
+        19,
+        37,
+        28
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 62.83612662942272,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Hester",
+    "map": "house08",
+    "sprite": "villager_seated_coast_a4_1",
+    "row": 34,
+    "eyes": [
+      [
+        15,
+        22,
+        23,
+        31
+      ],
+      [
+        25,
+        22,
+        33,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 35.30258302583026,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Junia",
+    "map": "house10",
+    "sprite": "villager_seated_common_a6_2",
+    "row": 2,
+    "eyes": [
+      [
+        17,
+        22,
+        22,
+        30
+      ],
+      [
+        26,
+        21,
+        32,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 68.0531914893617,
+      "dx": 1,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Kellan",
+    "map": "house11",
+    "sprite": "villager_seated_unique_kellan",
+    "row": 46,
+    "eyes": [
+      [
+        15,
+        17,
+        21,
+        26
+      ],
+      [
+        26,
+        17,
+        32,
+        26
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 26.04889975550122,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Lysa",
+    "map": "house13",
+    "sprite": "villager_seated_common_b6_0",
+    "row": 6,
+    "eyes": [
+      [
+        15,
+        21,
+        21,
+        29
+      ],
+      [
+        25,
+        21,
+        32,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 25.276767676767676,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Cinder",
+    "map": "house15",
+    "sprite": "villager_seated_common_a6_5",
+    "row": 5,
+    "eyes": [
+      [
+        15,
+        19,
+        22,
+        27
+      ],
+      [
+        26,
+        19,
+        33,
+        27
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 33.36203522504892,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Warden",
+    "map": "house16",
+    "sprite": "villager_seated_common_b6_3",
+    "row": 9,
+    "eyes": [
+      [
+        14,
+        20,
+        23,
+        30
+      ],
+      [
+        25,
+        20,
+        34,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 19.128735632183908,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Ember",
+    "map": "house17",
+    "sprite": "villager_seated_common_b6_4",
+    "row": 10,
+    "eyes": [
+      [
+        15,
+        20,
+        22,
+        29
+      ],
+      [
+        26,
+        20,
+        34,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 42.38076923076923,
+      "dx": 0,
+      "dy": 2
+    }
+  },
+  {
+    "name": "Dagna",
+    "map": "house17",
+    "sprite": "villager_seated_common_b6_1",
+    "row": 7,
+    "eyes": [
+      [
+        15,
+        25,
+        22,
+        33
+      ],
+      [
+        25,
+        25,
+        32,
+        32
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 15.278030303030302,
+      "dx": 0,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Lode",
+    "map": "house18",
+    "sprite": "villager_seated_common_b6_5",
+    "row": 11,
+    "eyes": [
+      [
+        15,
+        19,
+        22,
+        28
+      ],
+      [
+        26,
+        19,
+        33,
+        28
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 20.9025,
+      "dx": 0,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Pike",
+    "map": "house19",
+    "sprite": "villager_seated_common_c6_2",
+    "row": 14,
+    "eyes": [
+      [
+        15,
+        19,
+        22,
+        29
+      ],
+      [
+        25,
+        19,
+        32,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 48.70117647058824,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Hallow",
+    "map": "house20",
+    "sprite": "villager_seated_common_c6_3",
+    "row": 15,
+    "eyes": [
+      [
+        15,
+        23,
+        21,
+        32
+      ],
+      [
+        26,
+        23,
+        32,
+        32
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 24.4675,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Quarrel",
+    "map": "house21",
+    "sprite": "villager_seated_common_c6_4",
+    "row": 16,
+    "eyes": [
+      [
+        14,
+        20,
+        21,
+        29
+      ],
+      [
+        25,
+        20,
+        33,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 57.67245657568238,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Flint",
+    "map": "house21",
+    "sprite": "villager_seated_common_c6_5",
+    "row": 17,
+    "eyes": [
+      [
+        15,
+        22,
+        21,
+        30
+      ],
+      [
+        26,
+        22,
+        32,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 22.687224669603523,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Osric",
+    "map": "house30",
+    "sprite": "villager_seated_unique_osric",
+    "row": 47,
+    "eyes": [
+      [
+        15,
+        21,
+        23,
+        30
+      ],
+      [
+        26,
+        21,
+        34,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 24.811529933481154,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Alder",
+    "map": "house31",
+    "sprite": "villager_seated_unique_alder",
+    "row": 48,
+    "eyes": [
+      [
+        14,
+        18,
+        21,
+        27
+      ],
+      [
+        25,
+        18,
+        33,
+        27
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 34.63497164461248,
+      "dx": 1,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Gwyneth",
+    "map": "house31",
+    "sprite": "villager_seated_unique_gwyneth",
+    "row": 49,
+    "eyes": [
+      [
+        15,
+        18,
+        21,
+        26
+      ],
+      [
+        25,
+        18,
+        32,
+        26
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 30.56338028169014,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Bors",
+    "map": "house32",
+    "sprite": "villager_seated_common_d6_1",
+    "row": 19,
+    "eyes": [
+      [
+        14,
+        18,
+        22,
+        26
+      ],
+      [
+        26,
+        18,
+        34,
+        27
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 36.502277039848195,
+      "dx": -1,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Kiln",
+    "map": "house32",
+    "sprite": "villager_seated_common_d6_2",
+    "row": 20,
+    "eyes": [
+      [
+        15,
+        22,
+        21,
+        30
+      ],
+      [
+        26,
+        22,
+        32,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 26.735763097949885,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Petra",
+    "map": "house33",
+    "sprite": "villager_seated_desert_a5_0",
+    "row": 24,
+    "eyes": [
+      [
+        14,
+        19,
+        22,
+        29
+      ],
+      [
+        26,
+        19,
+        34,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 20.355648535564853,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Raff",
+    "map": "house34",
+    "sprite": "villager_seated_desert_a5_3",
+    "row": 27,
+    "eyes": [
+      [
+        14,
+        19,
+        23,
+        30
+      ],
+      [
+        26,
+        19,
+        35,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 68.78720379146918,
+      "dx": 1,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Suri",
+    "map": "house35",
+    "sprite": "villager_seated_desert_a5_1",
+    "row": 25,
+    "eyes": [
+      [
+        14,
+        21,
+        21,
+        30
+      ],
+      [
+        25,
+        21,
+        32,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 25.894701986754967,
+      "dx": -1,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Tavin",
+    "map": "house36",
+    "sprite": "villager_seated_desert_a5_4",
+    "row": 28,
+    "eyes": [
+      [
+        14,
+        21,
+        21,
+        30
+      ],
+      [
+        25,
+        21,
+        32,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 22.029350104821802,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Una",
+    "map": "house38",
+    "sprite": "villager_seated_desert_a5_2",
+    "row": 26,
+    "eyes": [
+      [
+        14,
+        22,
+        21,
+        30
+      ],
+      [
+        26,
+        22,
+        33,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 50.081720430107524,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Vela",
+    "map": "house39",
+    "sprite": "villager_seated_desert_b4_0",
+    "row": 29,
+    "eyes": [
+      [
+        14,
+        22,
+        22,
+        31
+      ],
+      [
+        26,
+        22,
+        36,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 32.064456721915285,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Wystan",
+    "map": "house40",
+    "sprite": "villager_seated_desert_b4_2",
+    "row": 31,
+    "eyes": [
+      [
+        15,
+        21,
+        22,
+        31
+      ],
+      [
+        26,
+        21,
+        34,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 27.324055666003975,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Rania",
+    "map": "house41",
+    "sprite": "villager_seated_desert_b4_1",
+    "row": 30,
+    "eyes": [
+      [
+        15,
+        23,
+        23,
+        33
+      ],
+      [
+        27,
+        23,
+        35,
+        33
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 12.611854684512428,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Latif",
+    "map": "house41",
+    "sprite": "villager_seated_desert_b4_3",
+    "row": 32,
+    "eyes": [
+      [
+        15,
+        21,
+        22,
+        30
+      ],
+      [
+        26,
+        21,
+        33,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 17.01277372262774,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Yara",
+    "map": "house42",
+    "sprite": "villager_seated_coast_a4_2",
+    "row": 35,
+    "eyes": [
+      [
+        15,
+        19,
+        23,
+        28
+      ],
+      [
+        26,
+        19,
+        34,
+        28
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 37.06060606060606,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Bry",
+    "map": "house45",
+    "sprite": "villager_seated_coast_b3_2",
+    "row": 39,
+    "eyes": [
+      [
+        13,
+        21,
+        20,
+        31
+      ],
+      [
+        24,
+        21,
+        31,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 43.62177121771218,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Coral",
+    "map": "house45",
+    "sprite": "villager_seated_coast_b3_0",
+    "row": 37,
+    "eyes": [
+      [
+        14,
+        23,
+        20,
+        32
+      ],
+      [
+        24,
+        23,
+        31,
+        30
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 43.136131386861315,
+      "dx": -1,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Edda",
+    "map": "house46",
+    "sprite": "villager_seated_snow5_1",
+    "row": 41,
+    "eyes": [
+      [
+        15,
+        20,
+        22,
+        28
+      ],
+      [
+        25,
+        20,
+        33,
+        28
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 59.06969696969697,
+      "dx": 0,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Fennel",
+    "map": "house47",
+    "sprite": "villager_seated_snow5_3",
+    "row": 43,
+    "eyes": [
+      [
+        16,
+        18,
+        22,
+        26
+      ],
+      [
+        26,
+        18,
+        32,
+        26
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 32.217898832684824,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Bjorn",
+    "map": "house50",
+    "sprite": "villager_seated_snow5_4",
+    "row": 44,
+    "eyes": [
+      [
+        18,
+        20,
+        24,
+        27
+      ],
+      [
+        28,
+        20,
+        34,
+        27
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 42.599571734475376,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Cap",
+    "map": "house52",
+    "sprite": "villager_seated_common_a6_3",
+    "row": 3,
+    "eyes": [
+      [
+        15,
+        23,
+        22,
+        30
+      ],
+      [
+        26,
+        23,
+        34,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 34.2283185840708,
+      "dx": 0,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Ilsa",
+    "map": "house52",
+    "sprite": "villager_seated_common_a6_0",
+    "row": 0,
+    "eyes": [
+      [
+        14,
+        21,
+        21,
+        28
+      ],
+      [
+        26,
+        21,
+        34,
+        28
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 20.92275574112735,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Celia",
+    "map": "house02_bedroom",
+    "sprite": "villager_seated_common_b6_2",
+    "row": 8,
+    "eyes": [
+      [
+        15,
+        20,
+        23,
+        29
+      ],
+      [
+        26,
+        20,
+        34,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 55.384463894967176,
+      "dx": 0,
+      "dy": 1
+    }
+  },
+  {
+    "name": "Ivo",
+    "map": "house17_bedroom",
+    "sprite": "villager_seated_common_d6_4",
+    "row": 22,
+    "eyes": [
+      [
+        15,
+        22,
+        22,
+        31
+      ],
+      [
+        26,
+        22,
+        32,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 19.746331236897273,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Merrin",
+    "map": "house21_bedroom",
+    "sprite": "villager_seated_common_d6_5",
+    "row": 23,
+    "eyes": [
+      [
+        15,
+        19,
+        22,
+        27
+      ],
+      [
+        26,
+        19,
+        32,
+        27
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 16.108045977011493,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Zella",
+    "map": "house43_bedroom",
+    "sprite": "villager_seated_coast_b3_1",
+    "row": 38,
+    "eyes": [
+      [
+        15,
+        23,
+        23,
+        31
+      ],
+      [
+        26,
+        23,
+        34,
+        31
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 25.31135531135531,
+      "dx": 0,
+      "dy": 0
+    }
+  },
+  {
+    "name": "Iris",
+    "map": "house48_bedroom",
+    "sprite": "villager_seated_snow5_2",
+    "row": 42,
+    "eyes": [
+      [
+        16,
+        21,
+        23,
+        29
+      ],
+      [
+        25,
+        21,
+        32,
+        29
+      ]
+    ],
+    "breathTop": 34,
+    "registration": {
+      "score": 63.11598360655738,
+      "dx": 1,
+      "dy": 1
+    }
+  }
+]

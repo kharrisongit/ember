@@ -1045,17 +1045,17 @@ function arrangeNpcCast(){
   }
 }
 // Four authored poses: resting, breathing in, half blink and closed blink.
-// A brisk breath and readable blink keep the authored residents visibly alive.
+// Fixed-pixel faces, a gentle cloth inhale, and brief, staggered natural blinks.
 function villagerIdleFrame(o,t,frames){
   if(o.idleSeed===undefined){
     let seed=2166136261;
     for(const c of (o.n||'')+'|'+o.packSpr)seed=Math.imul(seed^c.charCodeAt(0),16777619);
     o.idleSeed=seed>>>0;
   }
-  const cycle=2.0+((o.idleSeed>>>8)%9)*0.05;
+  const cycle=4.4+((o.idleSeed>>>8)%9)*0.12;
   const phase=(o.idleSeed%997)/997*cycle;
-  const p=((t+phase)%cycle)/cycle;
-  const frame=p<0.16?0:p<0.48?1:p<0.78?0:p<0.82?2:p<0.89?3:p<0.93?2:0;
+  const p=(t+phase)%cycle;
+  const frame=p<0.8?0:p<1.9?1:p<cycle-0.25?0:p<cycle-0.18?2:p<cycle-0.07?3:2;
   return frame%frames;
 }
 function finishTownCast(){
@@ -1316,8 +1316,9 @@ function drawNpcFrame(o,s,frame,img){
   const clip=!o.marketVendor&&o.seatClipY!==undefined&&!o.goto&&!(o.seatSpr&&(scene||bossScene||hatchExit));
   if(clip){ctx.save();ctx.beginPath();ctx.rect(o.x-s[2]/2-1,o.y-s[3]-2,s[2]+2,Math.max(0,o.seatClipY-(o.y-s[3])+2));ctx.clip();}
   const scale=img?.spriteScale||1;
-  // Lift the shoulders two pixels on the inhale, with the feet/table edge fixed.
-  const height=s[3]+(/^villager_seated_/.test(o.packSpr||'')&&frame===1?2:0);
+  // New house poses already contain the tiny cloth movement. Never stretch
+  // their faces, eyelids, or table contact; keep legacy sheets compatible.
+  const height=s[3]+(/^villager_seated_/.test(o.packSpr||'')&&!img?.pixelLocked&&frame===1?2:0);
   if(o.houseEntry){ctx.save();const u=Math.max(0,(o.houseEntry-.3)/.7);ctx.globalAlpha=1-u*u*(3-2*u);}
   drawGameImage(ctx,img,(s[0]+frame*s[2])*scale,s[1]*scale,s[2]*scale,s[3]*scale,Math.round(o.x-s[2]/2),Math.round(o.y-height),s[2],height);
   if(o.houseEntry)ctx.restore();
