@@ -16,7 +16,7 @@ for(const [name,p] of Object.entries(profiles)){
  for(const text of p.halvard){assert(text.length>35);assert(!distinct.has(text),name+' repeats another opinion');distinct.add(text);}
  if(p.history){assert.equal(p.history.length,4);for(const text of [p.history[1],p.history[3]]){assert(!distinct.has(text),name+' repeats history');distinct.add(text);}}
 }
-run(`quest=Q.NOISE;templeCompass.owned=true;templeCompass.meatGiven=true;fishingPole=true;odoRodReferral=true;glassShield=true;smithUpgrade=true;charm.edge=true;brambleQuest=3;dragon.on=true;`);
+run(`quest=Q.NOISE;templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;fishingPole=true;odoRodReferral=true;glassShield=true;smithUpgrade=true;charm.edge=true;brambleQuest=3;dragon.on=true;`);
 // Normal journey: outside Millwood the egg has already hatched. Test the
 // companion both beside the speaker and waiting outside an interior.
 run(`quest=Q.DONE;dragonOff=false;`);

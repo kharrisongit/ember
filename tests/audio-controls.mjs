@@ -22,7 +22,12 @@ const input=html.match(/<input id="soundVolume"[^>]+>/)?.[0];assert(input);asser
 let move;
 const touch=vm.createContext({document:{addEventListener:(type,f)=>{if(type==='touchmove')move=f;}},lockEl:null,scrollerFor:()=>null});
 vm.runInContext(p2.slice(p2.indexOf('document.addEventListener("touchmove", e => {'),p2.indexOf('document.addEventListener("touchend", () => { lockEl')),touch);
-const e={cancelable:true,target:{closest:selector=>selector==='input[type="range"]'?{}:null},preventDefault(){this.prevented=true;}};
-move(e);assert(!e.prevented,'Safari can deliver the slider drag instead of the page swallowing it');
-e.target.closest=()=>null;move(e);assert(e.prevented,'Ordinary game touches keep their existing scroll protection');
+// closest accepts comma-separated selector lists, as the browser does.
+for(const selector of ['input[type="range"]','#cloudSaveDialog','#merchantShop']){
+ const target={closest:selectors=>selectors.split(',').some(s=>s.trim()===selector)?target:null};
+ const e={cancelable:true,target,preventDefault(){this.prevented=true;}};
+ move(e);assert(!e.prevented,selector+' retains its native touch gesture');
+}
+const e={cancelable:true,target:{closest:()=>null},preventDefault(){this.prevented=true;}};
+move(e);assert(e.prevented,'Ordinary game touches keep their existing scroll protection');
 console.log('PASS: native volume input updates audio, fill and percentage; mute restores the selected value; reopening synchronizes volume; touch drag is not swallowed by the game.');

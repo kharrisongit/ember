@@ -270,9 +270,16 @@ console.log('PASS: current published Build layout applies, repeated interior exi
 mode='play';editing=false;mounted=false;quest=Q.CARRY;dragon.on=false;
 const hatchElder=elder();hatchElder.away=0;
 for(const [dx,dy] of [[0,24],[24,0],[-24,0],[0,-24]]){
+ scene=null;hatchScene=null;hatchCamera=null;fade=0;fadeDir=0;pendingActorStage=null;revealing=false;cam.z=playZoom();
  hatchElder.x=ELDER_WELL[0]*TS+TS/2;hatchElder.y=ELDER_WELL[1]*TS+TS;hatchElder.goto=null;
  P.x=hatchElder.x+dx;P.y=hatchElder.y+dy;assert(canStand(P.x,P.y),'Corin can approach from this side');
- beginHatchScene(hatchElder);scene.i=3;scene.t=1;
+ beginHatchScene(hatchElder);
+ for(let i=0;i<10&&!scene;i++)useDoors(.05);
+ assert(scene&&scene.lines[0]===HATCH_LINES[0],'The approach starts with Maddock’s line over black');
+ typeAll();scene.t=1;advanceScene();
+ for(let i=0;i<10&&fadeDir;i++)useDoors(.05);
+ assert(scene?.hatch&&hatchScene,'Blackout stages the hatching before dialogue resumes');
+ scene.i=3;scene.t=1;
  for(let i=0;i<12;i++)stepHatchScene(.05);
  for(const [start,end]of [[hatchScene.p0,hatchScene.p1],[hatchScene.m0,hatchScene.m1]]){
   assert(Math.hypot(end[0]-start[0],end[1]-start[1])>=18,'Both characters visibly step away on the actual map');
@@ -284,14 +291,21 @@ for(const [dx,dy] of [[0,24],[24,0],[-24,0],[0,-24]]){
 for(let i=0;i<60;i++)stepHatchCamera(.05);
 scene=null;finishHatchScene();const exitCamera=JSON.stringify(cam),actualDoor=maddockDoor();
 for(let i=0;i<600&&!hatchElder.away;i++){
- const before=[hatchElder.x,hatchElder.y];stepWalkers(1/60);stepElder(1/60);
- assert(Math.hypot(hatchElder.x-before[0],hatchElder.y-before[1])<=52/60+.001,'No offscreen speedup or teleport during actual exit');
+ const before=[hatchElder.x,hatchElder.y];
+ const dir=hatchElder.f==='s'?(hatchElder.flip?'w':'e'):(hatchElder.f||'d');
+ const sp=SPR[hatchElder.packSpr+'_walk_'+dir]||SPR[hatchElder.packSpr+'_idle_d'];
+ const hw=(sp?.[2]||60)/2,height=sp?.[3]||60,left=Math.round(before[0]-hw),top=Math.round(before[1]-height);
+ const offscreen=left+hw*2<cam.x||left>cam.x+VW/cam.z||top+height<cam.y||top>cam.y+VH/cam.z;
+ stepWalkers(1/60);stepElder(1/60);
+ if(Math.hypot(hatchElder.x-before[0],hatchElder.y-before[1])>52/60+.001)
+  assert(hatchElder.away&&offscreen,'Returning home instantly is allowed only after the entire sprite leaves the view');
  if(!hatchElder.away){stepHatchCamera(1/60);assert.equal(JSON.stringify(cam),exitCamera);}
 }
 assert(hatchElder.away);assert.equal(hatchElder.x,actualDoor.x);assert.equal(hatchElder.y,actualDoor.y-32);
-assert(hatchCamera,'Normal zoom waits for the completed entrance');
+assert(!hatchExit,'Control returns as soon as Maddock leaves the screen');
+assert(hatchCamera,'The camera can now ease back from the held view');
 for(let i=0;i<90;i++)stepHatchCamera(1/60);assert.equal(hatchCamera,null);
-console.log('PASS: On the actual map, Corin and Maddock retreat from every approach; Maddock walks into his published doorway while the camera stays fixed.');
+console.log('PASS: On the actual map, Corin and Maddock retreat from every approach; Maddock walks out of view at normal speed, returns to his published doorway, and releases controls.');
 
 `);
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 const read = p => fs.readFileSync(new URL('../' + p, import.meta.url), 'utf8');
 const game = read('js/generated/game-part-2.js'), assets = read('js/generated/game-part-1.js');
 const W = JSON.parse(zlib.gunzipSync(Buffer.from(assets.match(/const W_GZ = "([^"]+)"/)[1], 'base64')));
-const button = { classList: { toggle(name, on) { button.on = on; } }, setAttribute(name, value) { button[name] = value; } };
+const button = { style: {}, classList: { toggle(name, on) { button.on = on; } }, setAttribute(name, value) { button[name] = value; } };
 let menu = true, draws = 0, circles = [], rotations = [];
 const ctx = Object.fromEntries(['save','restore','translate','fill','stroke','fillRect','beginPath','moveTo','lineTo','closePath'].map(name => [name, () => { draws++; }]));
 ctx.arc = (...args) => circles.push(args); ctx.rotate = angle => rotations.push(angle);
