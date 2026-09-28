@@ -51838,6 +51838,89 @@
         "y": 51,
         "originX": 128,
         "originY": 58
+      },
+      "actor:millwood:house22:1": {
+        "kind": "actor",
+        "key": "millwood:house22:1",
+        "identity": "itable0",
+        "x": 72,
+        "y": 112,
+        "originX": 73,
+        "originY": 165
+      },
+      "actor:millwood:house22:6": {
+        "kind": "actor",
+        "key": "millwood:house22:6",
+        "identity": "ichair0",
+        "x": 40,
+        "y": 96,
+        "originX": 38,
+        "originY": 174
+      },
+      "actor:millwood:house22:7": {
+        "kind": "actor",
+        "key": "millwood:house22:7",
+        "identity": "ichair1",
+        "deleted": true,
+        "x": 104,
+        "y": 176,
+        "originX": 104,
+        "originY": 174
+      },
+      "actor:millwood:house22:3": {
+        "kind": "actor",
+        "key": "millwood:house22:3",
+        "identity": "iplant3",
+        "x": 104,
+        "y": 208,
+        "originX": 215.5,
+        "originY": 167
+      },
+      "actor:millwood:house22:5": {
+        "kind": "actor",
+        "key": "millwood:house22:5",
+        "identity": "iplant1",
+        "x": 168,
+        "y": 208,
+        "originX": 211.5,
+        "originY": 206
+      },
+      "actor:millwood:house22:0": {
+        "kind": "actor",
+        "key": "millwood:house22:0",
+        "identity": "Furniture 12_280",
+        "x": 136,
+        "y": 192,
+        "originX": 119,
+        "originY": 198
+      },
+      "actor:millwood:house22:4": {
+        "kind": "actor",
+        "key": "millwood:house22:4",
+        "identity": "iplant2",
+        "deleted": true,
+        "x": 40,
+        "y": 128,
+        "originX": 32,
+        "originY": 130
+      },
+      "actor:millwood:house22:8": {
+        "kind": "actor",
+        "key": "millwood:house22:8",
+        "identity": "ifire1",
+        "x": 190,
+        "y": 73,
+        "originX": 196,
+        "originY": 80
+      },
+      "actor:millwood:house22:2": {
+        "kind": "actor",
+        "key": "millwood:house22:2",
+        "identity": "ishelf3",
+        "x": 46,
+        "y": 69,
+        "originX": 39,
+        "originY": 80
       }
     }
   },
@@ -51930,7 +52013,8 @@
     "69888e43-24c0-49ba-8704-f33a2601e17c",
     "5ee7d1eb-4838-40c0-9562-7cc6e3480487",
     "4d69824c-ee69-4f88-a68d-b3bf72c2a28a",
-    "1ef89369-07cb-4592-a751-aeeb30806a40"
+    "1ef89369-07cb-4592-a751-aeeb30806a40",
+    "4ec69443-8954-47e9-8b96-1c5600073bef"
   ],
   "sessions": {
     "witchmoor": {
@@ -101879,12 +101963,22 @@
       "resultHash": "f192aaa1-21b096d5-4870"
     },
     "house22": {
-      "id": "df923c9d-27b5-4c41-b224-68dee389f460",
+      "id": "44717cc3-1cd1-4e49-b81f-c38d8355e179",
       "sequence": 1,
-      "baseHash": "5465b825-5971e3-2",
-      "baseFingerprint": "f9402578-6b48059e-5138",
-      "base": {},
-      "resultHash": "1047d615-c398c7ef-153"
+      "baseHash": "1047d615-c398c7ef-153",
+      "baseFingerprint": "5af50105-67e0e71d-5138",
+      "base": {
+        "actor:maddock:dragon-painting": {
+          "kind": "actor",
+          "key": "maddock:dragon-painting",
+          "identity": "Dragon painting",
+          "x": 118,
+          "y": 51,
+          "originX": 128,
+          "originY": 58
+        }
+      },
+      "resultHash": "2cdc103b-a9c648a3-1406"
     },
     "house26": {
       "id": "724bcea8-d102-4617-ae1e-e87c8ceb46e8",
