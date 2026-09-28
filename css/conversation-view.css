@@ -9,14 +9,14 @@
 #bagAsk button:disabled{cursor:default;opacity:.45}
 
 /* Portraits sit over the outer corners of compact, full-width speech boxes. */
-.conversationStage,.conversationPlayer{--speech-height:clamp(92px,15dvh,146px);--chat-space:0px;--portrait-size:min(184px,18dvh,max(52px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)));container-type:size;position:relative;display:flex;align-items:flex-end;min-width:0;min-height:0;padding:14px max(20px,env(safe-area-inset-right)) 14px max(20px,env(safe-area-inset-left));box-sizing:border-box;overflow:hidden}
+.conversationStage,.conversationPlayer{--speech-paper:var(--conversation-paper,#f8ecd2);--speech-edge:var(--conversation-edge,#9e7c49);--speech-ink:var(--conversation-ink,#49301f);--speech-height:clamp(92px,15dvh,146px);--chat-space:0px;--portrait-size:min(184px,18dvh,max(52px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)));container-type:size;position:relative;display:flex;align-items:flex-end;min-width:0;min-height:0;padding:14px max(20px,env(safe-area-inset-right)) 14px max(20px,env(safe-area-inset-left));box-sizing:border-box;overflow:hidden;transition:filter calc(.24s / var(--conversation-motion-rate,1))}
 .conversationStage{padding-top:max(14px,env(safe-area-inset-top));grid-row:1;grid-column:1;border-bottom:3px double #a37b46;background:radial-gradient(ellipse at 8% 75%,#cfb27699,transparent 45%),repeating-linear-gradient(135deg,#a3804210 0 1px,transparent 1px 14px),#eddbb7}
 .conversationPlayer{grid-row:2;grid-column:1;background:linear-gradient(100deg,#f6e8cb,#e3cfac)}
 .conversationSpeaker{position:absolute;left:0;right:0;bottom:calc(100% - 2px);height:var(--portrait-size);min-width:0;display:flex;align-items:flex-end;gap:12px;pointer-events:none;z-index:3}
 .conversationPortrait{display:block;flex:0 0 var(--portrait-size);width:var(--portrait-size);height:var(--portrait-size);aspect-ratio:1;background-repeat:no-repeat;filter:drop-shadow(0 5px 5px #63452633);image-rendering:auto;transition:filter calc(.2s / var(--conversation-motion-rate,1))}
-.conversationSpeakerName{box-sizing:border-box;min-width:0;margin:0 0 4px auto;max-width:calc(100% - var(--portrait-size) - 12px);padding:7px 16px;border:2px solid #80582f;border-radius:6px;background:#f5e4be;color:#452b16;font:800 24px/1.15 var(--manuscript-serif);letter-spacing:.02em;overflow-wrap:anywhere;box-shadow:inset 0 0 0 1px #fff5da,0 3px 7px #48311a44;transition:background calc(.2s / var(--conversation-motion-rate,1)),border-color calc(.2s / var(--conversation-motion-rate,1))}
+.conversationSpeakerName{box-sizing:border-box;min-width:0;margin:0 16px 0 auto;max-width:calc(100% - var(--portrait-size) - 28px);padding:7px 16px 8px;border:2px solid var(--speech-edge);border-bottom:0;border-radius:9px 9px 0 0;background:var(--speech-paper);color:var(--speech-ink);font:800 24px/1.15 var(--manuscript-serif);letter-spacing:.02em;overflow-wrap:anywhere;transition:background calc(.2s / var(--conversation-motion-rate,1)),border-color calc(.2s / var(--conversation-motion-rate,1))}
 .conversationPlayer .conversationSpeaker{flex-direction:row-reverse}
-.conversationPlayer .conversationSpeakerName{margin-left:0;margin-right:auto;background:#deebe4;border-color:#567d75;color:#224e51}
+.conversationPlayer .conversationSpeakerName{margin-left:16px;margin-right:auto}
 .conversationPlayerBody{position:relative;display:flex;flex-direction:column;justify-content:flex-end;height:100%;width:100%;min-height:0;min-width:0}
 .conversationNpcSpeech,.conversationCorinSpeech{position:relative;flex:0 0 auto;width:100%;height:var(--speech-height);min-height:0;min-width:0}
 .conversationCorinSpeech{display:none}
@@ -29,18 +29,13 @@
 #bagAsk .conversationChat:active{background:#523c2c;transform:translateY(1px)}
 @keyframes conversationPaneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 body.conversation-session #bagAsk #face,body.conversation-session #bagAsk #sayname{display:none!important}
-body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{position:absolute;inset:0;left:0;right:0;top:0;bottom:0;max-height:none;width:auto;height:auto;margin:0;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;padding:18px 22px 36px;font:18px/1.5 var(--manuscript-serif);text-align:left;color:var(--manuscript-ink);background:var(--manuscript-paper);border:2px solid #a5804d;border-radius:5px 12px 12px 5px;box-shadow:inset 0 0 0 3px #faefd1,0 3px 10px #62401920;cursor:default;z-index:1;transition:border-color calc(.2s / var(--conversation-motion-rate,1)),box-shadow calc(.2s / var(--conversation-motion-rate,1))}
+/* The shared skin also overrides the legacy telepathy overlay. */
+body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{position:absolute;inset:0;left:0;right:0;top:0;bottom:0;max-height:none;width:auto;height:auto;margin:0;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;padding:18px 22px 36px;font:18px/1.5 var(--manuscript-serif);letter-spacing:.005em;overflow-wrap:break-word;text-align:left;color:var(--speech-ink)!important;background:var(--speech-paper)!important;border:2px solid var(--speech-edge);border-color:var(--speech-edge)!important;border-radius:10px!important;box-shadow:0 5px 16px #0c171b38!important;cursor:default;z-index:1;transition:border-color calc(.2s / var(--conversation-motion-rate,1)),box-shadow calc(.2s / var(--conversation-motion-rate,1))}
 body.conversation-session #bagAsk #say.on{display:block}
-body.conversation-session #bagAsk .conversationCorinSpeech #say,.conversationCorinEcho{border-radius:12px 5px 5px 12px}
-body.conversation-session #bagAsk #say[data-telepathy=true]{background:linear-gradient(120deg,#f3edcd,#e1e3c1);color:#394d44}
-body.conversation-session #say::after{display:none}
+body.conversation-session #say::before,body.conversation-session #say::after{display:none}
 .conversationNpcEcho[hidden],.conversationCorinEcho[hidden],.conversationAdvance[hidden]{display:none}
-body.conversation-session #bagAsk .is-speaking #say{border-color:#ad641f;box-shadow:inset 0 0 0 2px #f9dba1,0 0 0 2px #b9864b55,0 0 22px #d1963d33}
-#bagAsk .is-speaking .conversationSpeakerName{background:#603b1d;border-color:#e2b262;color:#fff3d0;box-shadow:inset 0 0 0 1px #fff1c033,0 3px 8px #48311a55}
-#bagAsk .conversationPlayer.is-speaking .conversationSpeakerName{background:#254f54;border-color:#a6c7b4;color:#fff6d9}
-#bagAsk .is-speaking .conversationSpeakerName::before{content:'●';display:inline-block;margin-right:7px;font-size:9px;color:#f9d47e;vertical-align:middle}
 #bagAsk .is-speaking .conversationPortrait{filter:drop-shadow(0 0 10px #d5a14a66)}
-.conversationAdvance{position:absolute;left:7px;right:7px;bottom:5px;z-index:4;display:flex;justify-content:center;align-items:center;gap:8px;min-height:22px;background:linear-gradient(transparent,#f2e3c6 35%);color:#74502b;font:700 11px/1.3 system-ui;pointer-events:none}
+.conversationAdvance{position:absolute;left:7px;right:7px;bottom:5px;z-index:4;display:flex;justify-content:center;align-items:center;gap:8px;min-height:22px;background:linear-gradient(transparent,var(--speech-paper) 35%);color:var(--speech-ink);font:700 11px/1.3 system-ui;pointer-events:none}
 .conversationAdvanceArrow{display:inline-block;font-size:12px;animation:conversationArrowBounce calc(.85s / var(--conversation-motion-rate,1)) ease-in-out infinite}
 @keyframes conversationArrowBounce{0%,100%{transform:translateY(-2px)}50%{transform:translateY(2px)}}
 /* Cutscenes retain tap-to-advance and a single alternating portrait. */
@@ -126,7 +121,7 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:1/3;grid
 @media(max-height:560px){
   #bagAsk.conversationTopics.journalDeck{grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto}
   .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));--speech-height:clamp(60px,18dvh,95px);--portrait-size:min(116px,22dvh,max(30px,calc(100cqh - var(--speech-height) - var(--chat-space) + 10px)))}
-  .conversationSpeakerName{font-size:18px;margin-bottom:4px;padding:4px 10px}
+  .conversationSpeakerName{font-size:18px;padding:4px 10px 5px}
   .conversationPlayer[data-mode=welcome]{--chat-space:38px}.conversationPlayer[data-mode=welcome] .conversationPlayerBody{gap:6px}
   #bagAsk .conversationChat{width:auto;max-width:100%;min-height:32px;padding:6px 12px;font-size:12px}
   body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{font-size:14px;line-height:1.4;padding:12px 14px 28px}
@@ -140,13 +135,12 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:1/3;grid
 .conversationStage{--portrait-size:min(300px,60cqw,max(52px,calc(100cqh - var(--speech-height) + 10px)))}
 @media(max-height:560px){.conversationStage{--portrait-size:min(210px,60cqw,max(30px,calc(100cqh - var(--speech-height) + 10px)))}}
 
-/* A bright breathing frame and moving voice bars identify the current speaker. */
-.conversationStage,.conversationPlayer{--voice-color:#9c571b;--voice-glow:#e7a73477;--voice-paper:#fff4d6}
-body.conversation-session #bagAsk .is-speaking #say{border:3px solid var(--voice-color);background:var(--voice-paper);animation:conversationSpeaking calc(1.45s / var(--conversation-motion-rate,1)) ease-in-out infinite}
-@keyframes conversationSpeaking{0%,100%{box-shadow:inset 0 0 0 2px #fff8e5,0 0 0 2px var(--voice-color),0 0 12px var(--voice-glow)}50%{box-shadow:inset 0 0 0 2px #fff8e5,0 0 0 4px var(--voice-color),0 0 30px var(--voice-glow)}}
-#bagAsk .is-speaking .conversationSpeakerName::before{content:'';font-size:inherit;width:.7em;height:.7em;border-left:3px solid currentColor;border-right:3px solid currentColor;background:linear-gradient(currentColor,currentColor) center/3px 100% no-repeat;box-sizing:border-box;color:#ffe09b;animation:conversationVoice calc(.65s / var(--conversation-motion-rate,1)) ease-in-out infinite alternate}
-@keyframes conversationVoice{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+/* A joined name tab shares the speech box's fill and edge. Only the active
+   speaker is highlighted; the listening lane is gently dimmed as a whole. */
+.conversationStage.is-speaking,.conversationPlayer.is-speaking{--speech-paper:var(--conversation-active-paper,#fff3db);--speech-edge:var(--conversation-active-edge,#dca84f)}
+body.conversation-session #bagAsk .is-speaking #say{box-shadow:0 0 18px var(--conversation-glow,#efbe6655),0 5px 16px #0c171b38!important}
+.conversationStage.is-listening,.conversationPlayer.is-listening{filter:brightness(.84) saturate(.88)}
 #bagAsk .conversationFooter .deckProfileToggle{margin-right:auto;white-space:normal;max-width:220px;text-align:left;min-height:44px}
 @media(max-width:600px){#bagAsk .conversationFooter .deckProfileToggle{max-width:140px;font-size:12px;padding:8px 10px}}
 @media(max-height:560px){#bagAsk .conversationFooter .deckProfileToggle{min-height:34px;font-size:12px;padding:6px 12px}}
-@media(prefers-reduced-motion:reduce){body.conversation-session #bagAsk .is-speaking #say,#bagAsk .is-speaking .conversationSpeakerName::before{animation:none!important}body.conversation-session #bagAsk .is-speaking #say{box-shadow:0 0 0 3px var(--voice-color),0 0 18px var(--voice-glow)}}
+@media(prefers-reduced-motion:reduce){.conversationStage,.conversationPlayer{transition:none!important}}

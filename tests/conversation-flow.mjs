@@ -51,6 +51,8 @@ assert.equal(box.querySelector('.conversationStage').dataset.phase,'listen');
 assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Tell me about your first herd.');
 assert(box.querySelector('.conversationStage').classList.contains('is-speaking'));
 assert(!player.classList.contains('is-speaking'));
+assert(player.classList.contains('is-listening'),'Corin’s panel dims while the NPC is speaking');
+assert(!box.querySelector('.conversationStage').classList.contains('is-listening'));
 assert(box.querySelector('.conversationStage').querySelector('.conversationAdvance').hidden);
 assert.equal(run('ask'),null,'Speech continues with no modal ask blocking its clock');
 assert.equal(box.style.display,'grid');
@@ -84,6 +86,8 @@ const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping 
 select('I would have offered it an apple.');assert.equal(run('typeWho'),'Corin');
 assert.match(run('typeFull'),/apple/);
 assert(player.classList.contains('is-speaking'));assert(!box.querySelector('.conversationStage').classList.contains('is-speaking'));
+assert(box.querySelector('.conversationStage').classList.contains('is-listening'),'The NPC panel dims when Corin takes a turn');
+assert(!player.classList.contains('is-listening'));
 assert.equal(say.parentNode,box.querySelector('.conversationCorinSpeech'),'Corin speaks in the lower lane');
 assert.equal(box.querySelector('.conversationPlayer').dataset.mode,'speech');
 assert(box.querySelector('.conversationNpcEcho').textContent.length>0,'The NPC’s last words stay above Corin’s response');
@@ -101,6 +105,7 @@ autoLine();assert.equal(run('ask'),null,'Extra reading time leaves the completed
 assert.equal(player.querySelector('.conversationCorinEcho').textContent,'I would have offered it an apple.');
 next();assert.equal(run('ask.npcConversation'),'Hettie');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'welcome');
+assert(!player.classList.contains('is-listening'));assert(!box.querySelector('.conversationStage').classList.contains('is-listening'),'Greeting panels regain full brightness');
 assert(!player.querySelector('.conversationSpeaker').hidden);assert(!box.querySelector('.conversationChat').hidden);
 assert.equal(player.querySelector('.conversationCorinEcho').textContent,responses.Hettie,'A completed topic restores Corin’s greeting');
 assert.equal(run('typeFull'),greetings.Hettie,'A completed topic restores the NPC greeting');
