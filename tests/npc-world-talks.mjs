@@ -33,7 +33,11 @@ for(const victory of [false,true]){
   assert.equal(opts.filter(o=>o.n===label).length,1,npc.n+' one political topic');
   assert(!opts.some(o=>['Life after Halvard','Another thing I meant to ask','A dragon on the road','How are things?'].includes(o.n)));
   opts.find(o=>o.n===label).go();
-  assert.equal(Array.from(spoken.lines,line=>line.slice(npc.n.length+2)).join(' '),profiles[npc.n].halvard[victory?1:0]);
+  const replyIndex=spoken.lines.findIndex(line=>line.startsWith('Corin: '));
+  assert(replyIndex>0,'The opinion offers a Corin reply');
+  assert.equal(Array.from(spoken.lines.slice(0,replyIndex),line=>line.slice(npc.n.length+2)).join(' '),profiles[npc.n].halvard[victory?1:0],'The authored opinion opens the exchange unchanged');
+  assert.equal(spoken.lines.length,replyIndex+2,'The NPC answers Corin before the exchange ends');
+  assert(spoken.lines.at(-1).startsWith(npc.n+': '));
   assert.equal(spoken.options.npcActor,npc,'Speaker survives choosing topic');
   const greeting=run('npcContextDialogue(actor,false)');assert.notDeepEqual(Array.from(greeting),Array.from(spoken.lines),'Politics do not duplicate Hello');
   if(profiles[npc.n].history){

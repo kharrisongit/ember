@@ -18,6 +18,8 @@ const c=vm.createContext({
   areaUnder:()=>place,document:{getElementById:()=>({appendChild(){}}),createElement:element,body:{appendChild(){}}}
 });
 const run=s=>vm.runInContext(s,c);
+c.window=c;
+run(read('js/conversation-branches.js'));
 run(part2.slice(part2.indexOf('const DRAGON_NAME ='),part2.indexOf('function finishHatchScene()')));
 run(read('js/dragon-dialogue.js'));
 const tick=(dt=.05)=>run(`stepDragonBanter(${dt})`);
