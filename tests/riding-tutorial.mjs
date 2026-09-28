@@ -25,7 +25,15 @@ check('setDragonAir(true)===false','New games cannot fly before the riding lesso
 for(const menu of ['airm','atkm']){run(`setOvl('${menu}')`);check('ovl===null','Locked menu cannot be opened: '+menu);}
 check("!EmberRiding.allowControl('btnL')&&!EmberRiding.allowControl('btnR')",'Both touch buttons are locked before the lesson');
 run('EmberRiding.entered(features.find(a=>a.id===208))');check("!EmberRiding.holding()",'The northern arena cannot start this tutorial');
-run('stepArena(.05)');check("EmberRiding.capture().phase==='gather'",'Entering the first arena starts the lesson');
+run('EmberRiding.stageEnemies(testRing)');
+check('foes.every(f=>f.ridingArena===11&&f.y<testRing.y*TS)','Enemies spawn at the north before entry');
+const waiting=run('JSON.stringify(foes.map(f=>[f.x,f.y]))');
+run('P.x-=200');
+for(let i=0;i<120;i++)run('stepFoes(.05)');
+assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y]))'),waiting,'Enemies remain north while the player is outside');
+run('P.x+=200;stepArena(.05)');
+assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y]))'),waiting,'Entering never teleports enemies');
+check("EmberRiding.capture().phase==='gather'",'Entering the first arena starts the lesson');
 check('foes.every(f=>f.y<testRing.y*TS)','All tutorial enemies start in the north');
 const before=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
 for(let i=0;i<6;i++)run('stepArena(.05);EmberRiding.step(.05);stepDragon(.05)');
@@ -41,7 +49,10 @@ finish();check("ovl==='airm'&&EmberRiding.capture().phase==='mount'",'Command me
 check("EmberRiding.allowedItem('airm',MENUS.airm.items()[0])",'Mount enabled');
 check("!EmberRiding.allowedItem('airm',MENUS.airm.items()[1])",'Cannot bypass Mount with Take off');
 run('setOvl(null)');check("ovl==='airm'",'Cancel cannot skip a required choice');
+c.reveals=[];run('showReveal=(...args)=>reveals.push(args)');
 dom.touch(dom.element('airRows').children[0]);check("mounted&&ovl===null&&EmberRiding.capture().phase==='dragonButton'",'Real Mount action advances to Dragon button');
+assert.equal(c.reveals.at(-1)[1],'CORIN TAKES THE REINS','Tutorial mount retains the normal mount popup');
+assert.match(c.reveals.at(-1)[0],/^corinride_.*idle_s$/);
 run("setOvl('itemm')");check('ovl===null','Wrong control cannot advance the lesson');
 dom.touch(dom.element('btnL'));check("scene.lines[0]==='Aurelius: What should I do?'",'Dragon asks for the attack');
 check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'A touch opens Fire immediately without an extra A press');

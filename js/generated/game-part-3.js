@@ -3587,7 +3587,7 @@ function refillRing(a) {
                 st: "idle", t: 0, dir: "d", flip: false, hurt: 0 });
     n++;
   }
-  if (n) { rebuildBuckets(); a._wave = 0; }
+  if (n) { globalThis.window?.EmberRiding?.stageEnemies(a); rebuildBuckets(); a._wave = 0; }
 }
 function stepArenas(dt) {
   for (const [k, v] of cooling) {
@@ -5533,7 +5533,10 @@ const MENUS = {
       tell: mounted ? "Slide down off its back."
                     : "Climb onto its shoulders and fly with it.",
       go: () => { const on = !mounted;
-              if(setMounted(on)===false)return; if(globalThis.window?.EmberRiding?.mountedAction(on))return; setOvl(null);
+              if(setMounted(on)===false)return;
+              const taught=globalThis.window?.EmberRiding?.mountedAction(on);
+              if(taught&&!on)return; // Dismount continues directly into the healing dialogue.
+              if(!taught)setOvl(null);
               showReveal(on ? "corinride_" + (smithUpgrade ? "armor_" : "sword_") + "idle_s" : "dr5_idle_s",
                          on ? "CORIN TAKES THE REINS" : "CORIN SLIDES DOWN", undefined, true);
               setTimeout(hideReveal, 1400); } },    { name: dragon.air ? "Land" : "Take off", blankWhenDisabled:true, dim:()=>!dragon.air&&(!dragonIntroDone||globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()||dragonTooHurtToFly()), el: "wing", art: dragon.air ? "land" : "takeoff",

@@ -8118,6 +8118,7 @@ function spawnFoes() {
     knightEncounter = null;
   }
   if(typeof spawnHuntingAnimals==='function')spawnHuntingAnimals();
+  globalThis.window?.EmberRiding?.stageEnemies();
 }
 function swordOverlaps(f) {
   const body = foeBodyProfile(f);
@@ -9900,7 +9901,7 @@ function stepFoes(dt) {
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
-    f._thinking = !f.huntingArena && f.st !== "dead" && thinks(f);
+    f._thinking = !f.huntingArena && f.st !== "dead" && !globalThis.window?.EmberRiding?.waitingEnemy(f) && thinks(f);
     if (f._thinking) live.push(f);
   }
   // Regular battle music begins when a hostile enemy/boss is actively engaged.

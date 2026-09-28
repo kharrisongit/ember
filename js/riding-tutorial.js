@@ -35,6 +35,29 @@
     rows.forEach((row,i)=>{row.classList.toggle('riding-target',i===pick);row.classList.toggle('on',i===pick);row.setAttribute('aria-disabled',String(i!==pick));});
     if(ovl==='itemm')rows[pick]?.scrollIntoView?.({block:'nearest'});
   }
+  function stageEnemies(ring){
+    if(MAPID!=='world')return;
+    ring ||= currentArenaFeatures().find(a=>a.id===FIRST_ARENA);
+    if(!ring||ring.id!==FIRST_ARENA)return;
+    const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
+    const north=[];
+    for(let y=cy-limit+12;y<=cy-32;y+=24)for(const offset of [-36,0,36,-54,54]){
+      const x=cx+offset;
+      if(Math.hypot(x-cx,y-cy)<limit&&dragonCanStand(x,y))north.push([x,y]);
+    }
+    if(!north.length)return;
+    const enemies=foes.filter(f=>f.st!=='dead'&&!f.ally&&!f.huntingArena&&
+      (f.ridingArena===FIRST_ARENA||Math.hypot(f.x/TS-ring.x,f.y/TS-ring.y)<ring.r+5));
+    enemies.forEach((foe,i)=>{
+      if(foe.ridingArena===FIRST_ARENA)return; // Entering must never relocate a visible foe.
+      [foe.x,foe.y]=north[i%north.length];foe.hx=foe.x;foe.hy=foe.y;
+      foe.ridingArena=FIRST_ARENA;foe.st='idle';foe.t=0;foe.dir='s';
+    });
+  }
+  function waitingEnemy(foe){
+    return MAPID==='world'&&foe.ridingArena===FIRST_ARENA&&
+      (arenaLock?.id!==FIRST_ARENA||holding());
+  }
   function entered(ring){
     if(done||phase||MAPID!=='world'||ring.id!==FIRST_ARENA||!hasDragon()||!dragonIntroDone)return;
     if(mounted)setMounted(false,true);
@@ -43,19 +66,7 @@
     dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
     const cx=ring.x*TS+TS/2,cy=ring.y*TS+TS/2,limit=(ring.r-1.5)*TS;
     const inRing=(x,y)=>Math.hypot(x-cx,y-cy)<limit;
-    const enemies=foes.filter(f=>f.st!=='dead'&&!f.ally&&Math.hypot(f.x/TS-ring.x,f.y/TS-ring.y)<ring.r+5);
-    const north=[];
-    for(let y=cy-32;y>=cy-limit+12;y-=24)for(const offset of [-36,0,36,-54,54]){
-      const x=cx+offset;
-      if(inRing(x,y)&&dragonCanStand(x,y))north.push([x,y]);
-    }
-    // Put this battle's enemies together in the north, away from the lesson.
-    enemies.forEach((foe,i)=>{
-      const spot=north[i%north.length];
-      if(spot){[foe.x,foe.y]=spot;foe.hx=foe.x;foe.hy=foe.y;}
-      foe.st='idle';foe.t=0;foe.dir='s';
-    });
-    rebuildBuckets();
+    stageEnemies(ring);
     let flyIn=false;
     const approach=(actor,x,y,clear)=>{
       let landing=null;
@@ -223,6 +234,6 @@
     }
   }
   function skip(){done=true;unlocked=true;resumeRecovery=false;moveTo('');}
-  window.EmberRiding={holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
+  window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,allowControl,action,key,blockPointer,capture,restore,skip,
     unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',blocksArenaEntry:()=>recoveryPhases.has(phase)};
 })();
