@@ -46,5 +46,8 @@ for(const m of Object.values(W.maps))for(const n of m.npcs||[]){
  assert.deepEqual([...new Set(frames)].sort(),[0,1,2,3]);
  assert(frames.filter(f=>f===3).length>=6,'Closed-eye blink is visible');
  assert(frames.filter(f=>f===1).length>=25,'Breathing pose has a readable hold');
+ let rest=0,longestRest=0;
+ for(const frame of frames){rest=frame===0?rest+1:0;longestRest=Math.max(longestRest,rest);}
+ assert(longestRest<=61,'Steady breathing must not pause between blink cycles');
 }
 console.log('PASS: natural idle cycles, visible closed-eye blinks and fixed face/table geometry.');

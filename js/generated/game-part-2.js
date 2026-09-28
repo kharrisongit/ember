@@ -1055,7 +1055,10 @@ function villagerIdleFrame(o,t,frames){
   const cycle=4.4+((o.idleSeed>>>8)%9)*0.12;
   const phase=(o.idleSeed%997)/997*cycle;
   const p=(t+phase)%cycle;
-  const frame=p<0.8?0:p<1.9?1:p<cycle-0.25?0:p<cycle-0.18?2:p<cycle-0.07?3:2;
+  // Breathing has its own steady two-second clock instead of waiting for
+  // the next blink cycle. Residents keep individual phases, not long pauses.
+  const breath=((t+phase)%2)<1?0:1;
+  const frame=p<cycle-0.25?breath:p<cycle-0.18?2:p<cycle-0.07?3:2;
   return frame%frames;
 }
 function finishTownCast(){

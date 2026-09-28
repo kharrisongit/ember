@@ -13,12 +13,14 @@ below the jaw by one source pixel; the blink reuses only the generated eyelid
 regions. Hair, face, glasses, clothing and baseline pixels outside those regions
 cannot drift. Pixel scaling uses nearest-neighbor sampling, with opaque sprite
 pixels and clear alpha outside the silhouette. Runtime scaling does not stretch
-the inhale frame. Breath cycles last 4.4–5.36 seconds with a 250 ms blink,
+the inhale frame. Breathing runs on an independent two-second cycle. Blinks last 250 ms every
+4.4–5.36 seconds,
 staggered by the resident's identity.
 
-The nine desert residents use continuous turban cloth around the head and lower
-face, with folded wraps and draped tails; the corrected prompts are in
-`house-idle-desert-revision-prompts.json`.
+The nine desert residents wear draped headcloths secured by a visible dark
+head ring, with their entire faces uncovered, matching the provided in-game
+screenshot. Current prompts are in `house-idle-open-face-prompts.json`; the
+earlier wrapped-face version is superseded.
 
 The existing house assignments, dialogue portraits, and table layering remain
 in place. Tavern, inn, school and the original Millwood cast use their existing
