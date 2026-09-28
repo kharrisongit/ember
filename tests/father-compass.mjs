@@ -68,9 +68,12 @@ for(const [x,y]of [[31,425],[28,429],[34,429],[31,432]]){
  c.P={x:x*16,y:y*16};c.stepNanDeparture();finishBlackout();assert(c.scene,'Plaza triggers farewell');
  assert((waiting.goto[0]-c.P.x)*(c.dragon.x-c.P.x)+(waiting.goto[1]-c.P.y)*(c.dragon.y-c.P.y)<0,'Dragon stands behind Corin, opposite Nan');
  assert(Math.hypot(c.dragon.x-c.P.x,c.dragon.y-c.P.y)>=40,'Dragon has room behind Corin');
- assert(Math.hypot(waiting.goto[0]-waiting.x,waiting.goto[1]-waiting.y)<90,'Nan has only a short approach');
+ assert(waiting.x<c.cam.x,'Nan starts beyond the west edge');
+ assert.equal(waiting.y,c.P.y,'Nan enters on Corin’s horizontal line');
+ assert.deepEqual(Array.from(waiting.goto),[c.P.x-22,c.P.y]);
+ assert.equal(c.scene.npcActor,waiting,'The scene retains Nan through the gifts');
 }
-console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza with a short walk.');
+console.log('PASS: town approaches and house stay free; Nan meets Corin in the central plaza in a straight line from offscreen west.');
 
 // Indoors or with the dragon away, Corin brings up what happened himself.
 c.npcSeesDragon=()=>false;

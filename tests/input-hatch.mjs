@@ -173,11 +173,11 @@ for(const [dx,dy] of [[0,40],[0,-40],[40,0],[-40,0]]){
   hr('{const swap=pendingActorStage;pendingActorStage=null;swap();}');
   assert.equal(h.scene.lines[0],'Maddock: Corin! What is that under your arm!');
   stages.push(JSON.stringify(hr('[P.x,P.y,m.x,m.y,hatchScene.eggX,hatchScene.eggY]')));
-  assert.equal(h.P.x,maddock.x-48);assert.equal(h.P.y,maddock.y);
+  assert.equal(h.P.x,maddock.x+48);assert.equal(h.P.y,maddock.y);
   h.scene.after();assert.equal(h.scene.i,1,'Opening line does not repeat after black');assert.equal(h.fadeDir,-1);
 }
 assert(stages.every(stage=>stage===stages[0]),'All four approaches stage identically');
-console.log('PASS: four approach angles wait for blackout, show the exact line, and place Corin west with identical egg spacing.');
+console.log('PASS: four approach angles wait for blackout, show the exact line, and place Corin east with identical egg spacing.');
 const drawHatch=section(p2,'  if (hatchScene && hatchScene.stage','  if (bell)');
 function hatchFrame(i,t){h.scene.i=i;h.scene.t=t;h.draw=[];hr('stepHatchScene(.016)');hr(drawHatch);return h.draw[0];}
 for(let i=0;i<3;i++)for(const t of [0,.5,30])assert.equal(hatchFrame(i,t),undefined,'Egg stays hidden throughout dialogue '+i);
@@ -189,8 +189,8 @@ assert.equal(hatchFrame(3,.6).y,landing);
 hr('advanceScene()');assert.equal(h.scene.i,3,'Rapid A cannot skip either backward step');
 const beforeRetreat=hr('[...hatchScene.p0,...hatchScene.m0]');
 hr('stepHatchScene(.55)');
-assert.equal(beforeRetreat[0]-h.P.x,24,'Corin steps away before the egg shakes');
-assert.equal(maddock.x-beforeRetreat[2],24,'Maddock steps away before the egg shakes');
+assert.equal(h.P.x-beforeRetreat[0],24,'Corin steps away before the egg shakes');
+assert.equal(beforeRetreat[2]-maddock.x,24,'Maddock steps away before the egg shakes');
 hr('advanceScene()');assert.equal(h.scene.i,4);
 for(const i of [4,5,6])assert.equal(hatchFrame(i,.1).y,landing,'Egg rests on ground for the remaining dialogue');
 assert.equal(hatchSounds,0,'Opening shakes precede the shell crack');
@@ -240,14 +240,21 @@ h.scene.t=3;hr('stepHatchScene(2)');assert(hr('hatchScene.approachDone'));
 hr('advanceScene()');assert.equal(h.scene.i,10);hr('stepHatchScene(.05)');assert(h.revealing);
 hr('stepHatchScene(.05)');assert(!hr('hatchScene.maddockPath'),'Maddock waits for the stone popup');
 h.revealing=false;
+const walkingDirections=[];
 for(let i=0;i<400&&!hr('hatchScene.maddockArrived');i++){
  const before=[maddock.x,maddock.y];h.scene.t+=.05;hr('stepHatchScene(.05)');
  assert(Math.hypot(maddock.x-before[0],maddock.y-before[1])<=4.501,'Approach walks without teleporting');
+ const dx=maddock.x-before[0],dy=maddock.y-before[1];
+ assert(dx===0||dy===0,'No diagonal detours');
+ assert(dx>=0&&dy<=0,'Only north and east movement');
+ const direction=dx>0?'east':dy<0?'north':null;
+ if(direction&&walkingDirections.at(-1)!==direction)walkingDirections.push(direction);
  if(Math.abs(maddock.x-hr('hatchScene.dragonX'))<8)assert(maddock.y<=hr('hatchScene.dragonY')-24,'Maddock crosses north of the dragon');
  assert(hr('Math.hypot(m.x-hatchScene.dragonX,m.y-hatchScene.dragonY)>=23.99'),'Path avoids the hatchling');
  hr('advanceScene()');if(!hr('hatchScene.maddockArrived'))assert.equal(h.scene.i,10,'Rapid A cannot skip the walk');
 }
 assert(hr('hatchScene.maddockArrived'));assert.equal(h.scene.i,11);
+assert.deepEqual(walkingDirections,['north','east'],'Exactly two straight legs');
 assert(Math.hypot(maddock.x-h.P.x,maddock.y-h.P.y)<=27,'Maddock talks beside Corin, clear of the dragon');
 assert.equal(maddock.y,h.P.y-26,'Maddock stops north of Corin');
 console.log('PASS: Maddock walks around the hatchling after the stone reveal; conversation waits for his face-to-face arrival.');

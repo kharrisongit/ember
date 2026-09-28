@@ -13,6 +13,21 @@ for(const to of path){
  from=to;
 }
 assert.deepEqual(Array.from(path.at(-1)),[96,48]);
+// Both gifts may be recorded while Nan still has dialogue to deliver.
+c.actor={n:'Nan Ferrow',fatherCompassVisitor:true,x:0,y:40,straightSceneWalk:true,goto:[80,40]};
+run("restoreFatherCompass({owned:true,meatGiven:false});scene={nanGifts:true,npcActor:actor}");
+assert(run('npcHere(actor)'),'Nan stays after the compass');
+run('templeCompass.meatGiven=true');
+assert(run('npcHere(actor)'),'Nan stays through the last dialogue after both gifts');
+run('scene=null');assert.equal(run('npcHere(actor)'),false,'Visitor hides only after the scene');
+c.stepHettie=()=>{};c.stepThornwellWelcome=()=>{};
+run("editing=false;MAPID='world';npcs=[actor];scene={nanGifts:true,npcActor:actor};fadeDir=0;fade=0;sayNpc=null;ask=null;P.x=102;P.y=40");
+for(let i=0;i<60;i++){
+ const previous=c.actor.x;run('stepWalkers(1/60)');
+ assert.equal(c.actor.y,40,'Nan never sidesteps');
+ assert(c.actor.x>=previous&&c.actor.x-previous<=110/60+.001,'Nan walks east without teleporting');
+}
+assert.equal(c.actor.x,80);assert.equal(c.actor.goto,null);
 // Walking actors face the route, even when Corin stands in another direction.
 c.stepHettie=()=>{};c.stepThornwellWelcome=()=>{};c.canNpcStand=()=>true;c.npcHere=()=>true;
 for(const name of ['Nan Ferrow','Elder Maddock']){

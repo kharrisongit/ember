@@ -281,21 +281,19 @@ function startNanFarewell(nan){
     refreshWingBtn();
     nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;
     nan.home=[nan.x,nan.y];
-    const dx=nan.x-P.x,dy=nan.y-P.y,d=Math.hypot(dx,dy)||1;
-    let target=[P.x+dx/d*22,P.y+dy/d*22];
-    if(!canNpcStand(...target,nan)){
-      for(let a=0;a<16;a++){
-        const p=[P.x+Math.cos(a*Math.PI/8)*22,P.y+Math.sin(a*Math.PI/8)*22];
-        if(canNpcStand(...p,nan)){target=p;break;}
-      }
-    }
-    const path=maddockWalkPath(nan,target)||[target];
+    const target=[P.x-22,P.y];
     placeDragonBehindCorin(target);
-    nan.goto=null;
-    faceCorinAt(nan.x,nan.y);
     cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;clampCam();
+    // Stage her just beyond the west screen edge while black. The entire
+    // approach shares Corin's Y; no diagonal route or collision sidesteps.
+    nan.x=Math.min(cam.x-24,target[0]-32);nan.y=P.y;
+    nan.goto=null;nan.straightSceneWalk=true;nan.away=false;
+    const path=[target];
+    faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
     playScene(fatherCompassGift(nan),
-      {who:'Nan Ferrow',nanGifts:true,i:templeCompass.owned?8:0,hold:()=>{
+      {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
+        nan.straightSceneWalk=false;nan.scriptWalking=false;nan.goto=null;nan.away=true;
+      },hold:()=>{
         // Nan starts walking after the picture has returned.
         if(fadeDir||fade>0)return false;
         if(!nan.goto&&path.length)nan.goto=path.shift();

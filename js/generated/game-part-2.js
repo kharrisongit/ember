@@ -6279,11 +6279,12 @@ function beginHatchScene(m) {
   m.goto = null;
   P.moving = false;
   royalBlackout(HATCH_LINES[0], () => {
-    // Stage the same west-to-east composition entirely behind the blackout.
+    // Stage Maddock west and Corin east for the north-then-east approach.
     m.x = ELDER_WELL[0] * TS + TS / 2;
-    m.y = ELDER_WELL[1] * TS + TS;
+    // Leave room south of the well for the straight northern walking lane.
+    m.y = ELDER_WELL[1] * TS + TS * 3;
     m.home = [m.x, m.y]; m.goto = null; m.scriptWalking = false;
-    P.x = m.x - TS * 3; P.y = m.y; P.act = null;
+    P.x = m.x + TS * 3; P.y = m.y; P.act = null;
     clearPadInputs();
     hatchCamera = { zoom: cam.z, returnT: 0 };
     camFree = true;
@@ -6366,26 +6367,11 @@ function stepHatchScene(dt) {
   }
   if(scene.i===10&&!revealing&&m&&!hatchScene.maddockArrived){
     if(!hatchScene.maddockPath){
-      // Keep his whole walk clear of the hatchling and Corin, then talk from
-      // Corin's north side. The silent stone beat owns this approach.
-      const clear=(x,y)=>canNpcStand(x,y,m)&&
-        Math.hypot(x-hatchScene.dragonX,y-hatchScene.dragonY)>=24&&Math.hypot(x-P.x,y-P.y)>=18;
-      for(const [dx,dy]of [[0,-26],[-12,-26],[12,-26]]){
-        const target=[P.x+dx,P.y+dy];
-        if(!clear(...target))continue;
-        // Cross above the dragon before approaching Corin; shortest-path alone
-        // can choose the long southern detour around the well.
-        const northY=Math.min(P.y-34,hatchScene.dragonY-40);
-        const waypoints=[[hatchScene.dragonX,northY],[P.x,northY],target];
-        let from=m,path=[];
-        for(const waypoint of waypoints){
-          const leg=maddockWalkPath(from,waypoint,(x,y)=>clear(x,y)&&y<=Math.max(m.y,P.y)+1&&
-            (Math.abs(x-hatchScene.dragonX)>8||y<=hatchScene.dragonY-24));
-          if(!leg){path=null;break;}
-          path.push(...leg);from={x:waypoint[0],y:waypoint[1]};
-        }
-        if(path){hatchScene.maddockPath=path;break;}
-      }
+      // The blackout places Corin east of Maddock. Use exactly two legs:
+      // one or two steps north, then east to Corin's column. The scene owns
+      // this movement; grid pathfinding must not add diagonal detours.
+      const northY=P.y-26;
+      hatchScene.maddockPath=[[m.x,northY],[P.x,northY]];
     }
     const path=hatchScene.maddockPath;
     if(path?.length){
@@ -6675,7 +6661,7 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
-  if(m.fatherCompassVisitor && templeCompass.owned)return false;
+  if(m.fatherCompassVisitor&&!nanGiftPending()&&!(scene?.nanGifts&&scene.npcActor===m))return false;
   if(m.progressionWorker&&!journeyGateClosed(m.progressionWorker))return false;
   if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
   if (wonAll && /King Halvard/.test(m.n || "")) return false;
@@ -6710,6 +6696,14 @@ function stepWalkers(dt) {
   for (const m of npcs) {
     if(!npcHere(m))continue;
     if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
+    if(m.straightSceneWalk&&scene?.npcActor===m){
+      if(fadeDir||fade>0||!m.goto)continue;
+      const [x,y]=m.goto,dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,110*dt);
+      faceToward(m,x,y);m.scriptWalking=d>0;
+      if(d<=step){m.x=x;m.y=y;m.goto=null;m.scriptWalking=false;}
+      else{m.x+=dx/d*step;m.y+=dy/d*step;}
+      continue;
+    }
     if(sayNpc===m||scene?.npcActor===m||(typeof ask!=='undefined'&&ask?.npcActor===m)){
       faceToward(m,P.x,P.y);continue;
     }
