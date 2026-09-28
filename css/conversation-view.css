@@ -147,3 +147,16 @@ body.conversation-session #bagAsk .is-speaking #say{box-shadow:0 0 18px var(--co
 @media(max-width:360px){#bagAsk .conversationStage .deckProfileToggle{min-height:40px;font-size:11px;padding:6px 8px}}
 @media(max-height:560px){#bagAsk .conversationStage .deckProfileToggle{top:0;min-height:34px;font-size:11px;padding:6px 12px}.conversationSpeakerName{margin-bottom:7px}}
 @media(prefers-reduced-motion:reduce){.conversationStage,.conversationPlayer{transition:none!important}.conversationStage::after,.conversationPlayer::after{animation:none!important;transform:none}.conversationStage.is-speaking::after,.conversationPlayer.is-speaking::after{opacity:.6}}
+
+/* Generated interface art. Filled nine-slice rendering preserves the corners
+   instead of cropping the frame or stretching its ornaments across the screen. */
+#bagAsk.conversationTopics.journalDeck .conversationStage,
+#bagAsk.conversationTopics.journalDeck .conversationPlayer{background:var(--town-dark,#102636);box-shadow:none}
+#bagAsk.conversationTopics.journalDeck .conversationStage::before,
+#bagAsk.conversationTopics.journalDeck .conversationPlayer::before{
+  content:'';position:absolute;inset:0;z-index:-2;pointer-events:none;
+  border:1px solid transparent;border-radius:0;opacity:1;background:none;box-shadow:none;
+  border-image-source:var(--conversation-panel);
+  border-image-slice:18% fill;border-image-width:clamp(28px,4vmin,44px);border-image-repeat:stretch;
+  animation:none;transform:none;
+}

@@ -1,16 +1,10 @@
-/* Aurelius: a shared inner sky, with dragon-scale patterns and bond light. */
-#bagAsk.conversationTopics.journalDeck.dragonTalk{--conversation-sign-paper:#203e50;--conversation-sign-ink:#fff1c1;--conversation-light:#9edab955;--conversation-paper:#1b3544;--conversation-edge:#92b09b;--conversation-ink:#f2ebd2;--conversation-active-paper:#284953;--conversation-active-edge:#e5d08d;--conversation-glow:#b5d9b755;--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
+/* Aurelius: an illustrated celestial panel, with separate animated bond light. */
+#bagAsk.conversationTopics.journalDeck.dragonTalk{--conversation-panel:url("../assets/conversation-panels/aurelius-v1.webp");--conversation-sign-paper:#203e50;--conversation-sign-ink:#fff1c1;--conversation-light:#9edab955;--conversation-paper:#1b3544;--conversation-edge:#92b09b;--conversation-ink:#f2ebd2;--conversation-active-paper:#284953;--conversation-active-edge:#e5d08d;--conversation-glow:#b5d9b755;--manuscript-ink:#f2ebcf;--manuscript-paper:#132d3c;background:#0b1c2c!important;color:#f2ebcf}
 #bagAsk.dragonTalk .deckEyebrow{color:#97c9bb}
 #bagAsk.dragonTalk .deckProfileToggle{background:#234b54;border-color:#819e89;color:#fff0bf}
 #bagAsk.dragonTalk .deckProfileToggle:hover,#bagAsk.dragonTalk .deckProfileToggle[aria-expanded=true]{background:#567166;border-color:#dbc987;color:#fff6d7}
-#bagAsk.dragonTalk .conversationStage{position:relative;isolation:isolate;background:radial-gradient(ellipse at 14% 65%,#447c7166,transparent 55%),radial-gradient(ellipse at 80% 0,#43568055,transparent 60%),#112a3b;border-bottom-color:#799a86}
-#bagAsk.dragonTalk .conversationStage::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 14% 70%,#719a6544,transparent 55%);animation:bondShimmer calc(7s / var(--conversation-motion-rate,1)) ease-in-out infinite alternate}
-@keyframes bondShimmer{from{opacity:.35;transform:translateY(3px)}to{opacity:.85;transform:translateY(-3px)}}
-#bagAsk.dragonTalk .conversationPlayer{background:radial-gradient(ellipse at 92% 45%,#375e6a77,transparent 55%),repeating-radial-gradient(ellipse at 100% 0,transparent 0 25px,#9fcdb90b 26px 27px,transparent 28px 49px),#102636}
-#bagAsk.dragonTalk .conversationSpeaker{isolation:isolate}
-#bagAsk.dragonTalk .conversationSpeaker::before{content:'';position:absolute;left:0;bottom:0;width:var(--portrait-size);height:var(--portrait-size);aspect-ratio:1;border:3px double #abc19466;border-radius:50%;background:radial-gradient(circle,#a7c58e2a,transparent 70%);box-shadow:0 0 26px #91c8aa22,inset 0 0 22px #94c7b122;z-index:-1;pointer-events:none}
+#bagAsk.dragonTalk .conversationStage{border-bottom-color:#799a86}
 #bagAsk.dragonTalk .conversationPortrait{filter:drop-shadow(0 0 12px #d8c27344)}
-#bagAsk.dragonTalk .conversationPlayer .conversationSpeaker::before{left:auto;right:0}
 #bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckTopic{background:linear-gradient(120deg,#203f50,#162e40)!important;color:#eeebcd!important;border-color:#587e81!important;border-left-color:#90b49c!important;border-radius:10px 3px 10px 3px!important;box-shadow:inset 0 1px #90b4a422,0 3px 8px #08172455}
 #bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckTopic[data-selected=true]{background:linear-gradient(120deg,#436363,#294b58)!important;border-color:#e4ca83!important;border-left-color:#ebd18a!important;box-shadow:inset 0 0 0 1px #cab77277,0 0 12px #dbc17c22}
 #bagAsk.dragonTalk .deckTopicIcon,#bagAsk.dragonTalk .deckTopicBadge{color:#dfc88b}
@@ -36,12 +30,10 @@
 #bagAsk.dragonTalk .deckProfileQuote .deckEyebrow{color:#e5cf95}
 #bagAsk.dragonTalk .conversationChat{background:linear-gradient(120deg,#537b70,#2a4a58);border-color:#b6bc88;color:#fff0b7;box-shadow:inset 0 1px #cbd39a55,0 0 15px #89bdad22}
 #bagAsk.dragonTalk .conversationChat:active{background:#1e3d4b}
-#bagAsk.dragonTalk .conversationPlayer[data-mode=replies]{background:radial-gradient(ellipse at 50% 0,#52608488,transparent 70%),#1d293f}
 #bagAsk.dragonTalk .deckReplyHeading{color:#f2e0b3;border-bottom-color:#9f9abd}
 #bagAsk.dragonTalk .deckReplyHeading .deckEyebrow{color:#b4c5e1}
 #bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckReply{background:linear-gradient(120deg,#33465e,#293a51)!important;border-color:#8597b5!important;color:#eef0db!important;box-shadow:0 3px 0 #081b2e55}
 #bagAsk.conversationTopics.journalDeck.dragonTalk #askRows>.deckReply[data-selected=true]{background:linear-gradient(120deg,#647b83,#48636d)!important;border-color:#f3dba3!important;color:#fff1c7!important;box-shadow:0 0 14px #d8cb9822}
-@media(prefers-reduced-motion:reduce){#bagAsk.dragonTalk .conversationStage::before{animation:none}}
 #bagAsk.dragonTalk .is-speaking .conversationPortrait{filter:drop-shadow(0 0 12px #bde0ae77)}
 
 body.conversation-session #bagAsk.dragonTalk #say,#bagAsk.dragonTalk .conversationNpcEcho,#bagAsk.dragonTalk .conversationCorinEcho{scrollbar-color:#91ab91 #142c3a}
