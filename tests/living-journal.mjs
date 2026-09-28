@@ -16,7 +16,7 @@ for(const n of cast){
 }
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;`);
 const rows=dom.element('askRows'),box=dom.element('bagAsk');box.append(rows);
-const click=b=>{assert(b,'Expected control');b.onclick({detail:1,stopPropagation(){}});};
+const click=b=>{assert(b,'Expected control');if((b.classList.contains('deckTopic')||b.classList.contains('deckTab'))&&run('EmberConversationFlow.welcoming()'))run('EmberConversationFlow.openChat()');b.onclick({detail:1,stopPropagation(){}});};
 const tab=label=>rows.querySelectorAll('.deckTab').find(b=>b.textContent===label);
 const cards=()=>rows.querySelectorAll('.deckTopic');
 const evt={preventDefault(){},stopPropagation(){}};
@@ -45,6 +45,8 @@ assert(!run(`discussedTopics.has('Aurelius:Emberfell and its history')`),'Openin
 assert(cards().some(b=>b.getAttribute('aria-label').startsWith('Can a map remember a place?')));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back','The secondary control handles folder navigation');
 click(box.querySelector('.conversationGoodbye'));assert.equal(run('ask.topicScope'),'root');
+assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');
+click(box.querySelector('.conversationGoodbye'));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 // Tracking is a saved preference; it must not grant the reward or reveal an unknown lead.
 run(`askShut();MAPID='world';P.x=30*TS;P.y=425*TS;odoRodReferral=true;fishingPole=false;atlasTrackedQuest='fishing';atlasBegin()`);

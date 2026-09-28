@@ -5110,7 +5110,7 @@ function askDraw() {
   updateTopicScrollHint();
 }
 function askStep(d) {
-  if (!ask || ask._profileOpen || ask._historyOpen) return;
+  if (!ask || ask._profileOpen || ask._historyOpen || globalThis.window?.EmberConversationFlow?.welcoming()) return;
   globalThis.window?.EmberSfx?.ui?.();
   if(ask.quantity){changePurchaseQuantity(-d);return;}
   const n = ask.opts.length;

@@ -16,7 +16,7 @@
   function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=playerFacingText(text);return e;}
   function back(){
     if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
-    if(ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
+    if(!window.EmberConversationFlow?.welcoming()&&ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
     return false;
   }
   function prompt(box,rows){
@@ -49,7 +49,10 @@
     const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'),node('small','conversationPlayerTurn','Your topics'));
     const body=node('div','conversationPlayerBody');
     const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'));
-    body.append(workspace,speech);player.append(body,identity);return player;
+    const chat=node('button','conversationChat','Chat');chat.type='button';
+    chat.onclick=e=>{e.stopPropagation();window.EmberConversationFlow.openChat();};
+    chat.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationFlow.openChat();}};
+    body.append(workspace,speech,chat);player.append(body,identity);return player;
   }
   function makeControls(){
     const footer=node('footer','conversationFooter');
@@ -75,6 +78,8 @@
     ask._topicDrawn=true;ask._deckLastFilter=filter;
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
     box.style.display='grid';box.style.width='100%';rows.replaceChildren();
+    rows.classList.toggle('replyMenu',!!ask.replyChoices);
+    rows.setAttribute('role','group');rows.setAttribute('aria-label',ask.replyChoices?'Choose Corin’s reply':'Conversation topics');
     const name=ask.npcConversation||'Aurelius';
     box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Conversation with '+name);
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
@@ -119,20 +124,28 @@
       b.onclick=e=>{e.stopPropagation();ask._deckFilter=key;askPick=ask.opts.findIndex(o=>visible(o,key));workspace.scrollTop=0;askDraw();};tabs.append(b);
     }
     if(!ask.replyChoices)rows.append(tabs);
-    else rows.append(node('p','deckReplyPrompt','What will Corin say?'));
+    else{
+      const heading=node('header','deckReplyHeading');heading.append(node('small','deckEyebrow','Corin’s reply'),node('h2','deckReplyPrompt','What do you say?'));rows.append(heading);
+    }
     const choices=ask.opts.map((o,i)=>({o,i})).filter(({o})=>visible(o,filter));
     if(!choices.some(({i})=>i===askPick))askPick=choices[0]?.i??0;
     let animated=0;
     for(const {o,i}of choices){
-      const cat=category(o),read=seen(o),b=node('button','deckTopic deckTopic-'+cat);
+      const cat=category(o),read=seen(o),b=node('button',ask.replyChoices?'deckReply':'deckTopic deckTopic-'+cat);
       b.type='button';b.dataset.askIndex=i;b.dataset.selected=String(i===askPick);b.setAttribute('aria-pressed',String(i===askPick));
       b.style.setProperty('--topic-delay',Math.min(animated++,7)*24+'ms');
-      const mark=node('span','deckTopicIcon');mark.innerHTML=symbol(cat);
-      const copy=node('span','deckTopicCopy');copy.append(node('strong','',o.n));
-      const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this topic'})[cat];
-      copy.append(node('small','',detail));
-      const badge=node('span','deckTopicBadge',ask.replyChoices?'↵':cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
-      badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
+      if(ask.replyChoices){
+        const number=node('span','deckReplyNumber',String(animated));number.setAttribute('aria-hidden','true');
+        const words=node('span','deckReplyWords',o.n);
+        b.append(number,words);
+      }else{
+        const mark=node('span','deckTopicIcon');mark.innerHTML=symbol(cat);
+        const copy=node('span','deckTopicCopy');copy.append(node('strong','',o.n));
+        const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this topic'})[cat];
+        copy.append(node('small','',detail));
+        const badge=node('span','deckTopicBadge',ask.replyChoices?'↵':cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
+        badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
+      }
       b.setAttribute('aria-label',playerFacingText(o.n)+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
       b.onclick=e=>{e.stopPropagation();if(box.moved)return;askPick=i;askTake();};
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};

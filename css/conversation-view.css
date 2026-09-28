@@ -1,5 +1,5 @@
 /* Topic conversations have two fixed sides. Story-only dialogue stays in-world. */
-#bagAsk.conversationTopics.journalDeck{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;max-width:none!important;min-width:0;box-sizing:border-box;z-index:10040!important;grid-template-columns:minmax(0,1fr);grid-template-rows:auto clamp(170px,32dvh,340px) minmax(0,1fr) auto;padding:0!important;border:0!important;border-radius:0!important;background:var(--manuscript-paper)!important;color:var(--manuscript-ink);overflow:hidden!important;scrollbar-gutter:auto;isolation:isolate;animation:conversationUnfold .48s cubic-bezier(.2,.7,.2,1) both}
+#bagAsk.conversationTopics.journalDeck{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;max-width:none!important;min-width:0;box-sizing:border-box;z-index:10040!important;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) minmax(0,1fr) auto;padding:0!important;border:0!important;border-radius:0!important;background:var(--manuscript-paper)!important;color:var(--manuscript-ink);overflow:hidden!important;scrollbar-gutter:auto;isolation:isolate;animation:conversationUnfold .48s cubic-bezier(.2,.7,.2,1) both}
 @keyframes conversationUnfold{from{clip-path:inset(100% 0 0);opacity:.65}to{clip-path:inset(0);opacity:1}}
 #bagAsk.conversationTopics.journalDeck>.deckHeader{grid-row:1;grid-column:1;position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:50px;margin:0!important;padding:max(6px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 6px max(14px,env(safe-area-inset-left))!important;box-sizing:border-box;border:0;border-bottom:3px double #9d7b48;background:var(--manuscript-paper)!important;box-shadow:0 4px 12px #51382020;color:var(--manuscript-ink)!important;text-shadow:none}
 #bagAsk .deckIdentity{display:flex;align-items:baseline;gap:12px;min-width:0;flex:1}
@@ -23,12 +23,18 @@
 .conversationPlayerBody,.conversationNpcSpeech,.conversationCorinSpeech{position:relative;min-height:0;min-width:0;overflow:hidden}
 .conversationPlayerBody{display:grid;grid-template-rows:minmax(0,1fr)}
 .conversationCorinSpeech{display:none}
-.conversationPlayer[data-mode=speech] .conversationCorinSpeech{display:block}
-.conversationPlayer[data-mode=speech] .conversationWorkspace{display:none}
+.conversationPlayer[data-mode=speech] .conversationCorinSpeech,.conversationPlayer[data-mode=welcome] .conversationCorinSpeech{display:block;animation:conversationPaneIn .22s ease-out}
+.conversationPlayer[data-mode=welcome] .conversationPlayerBody{grid-template-rows:minmax(0,1fr) auto;gap:10px}
+.conversationPlayer[data-mode=topics],.conversationPlayer[data-mode=replies]{grid-template-columns:minmax(0,1fr)}
+.conversationPlayer[data-mode=topics] .conversationWorkspace,.conversationPlayer[data-mode=replies] .conversationWorkspace{animation:conversationPaneIn .25s ease-out}
+.conversationPlayer .conversationWorkspace[hidden],.conversationPlayer .conversationSpeaker[hidden],.conversationChat[hidden]{display:none!important}
+#bagAsk .conversationChat{justify-self:start;max-width:100%;min-height:44px;padding:10px 22px;border:1px solid #94703f;border-radius:5px;background:linear-gradient(#8d6540,#644a31);color:#fff1cd;box-shadow:inset 0 1px #debd8177,0 3px 5px #6a492e22;font:700 15px/1.25 var(--manuscript-serif);cursor:pointer;touch-action:manipulation}
+#bagAsk .conversationChat:active{background:#523c2c;transform:translateY(1px)}
+@keyframes conversationPaneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 body.conversation-session #bagAsk #face,body.conversation-session #bagAsk #sayname{display:none!important}
 body.conversation-session #bagAsk #say,.conversationNpcEcho,.conversationCorinEcho{position:absolute;inset:0;left:0;right:0;top:0;bottom:0;max-height:none;width:auto;height:auto;margin:0;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-color:#98703f #ddc69c;padding:clamp(12px,2vw,24px);font:18px/1.5 var(--manuscript-serif);text-align:left;color:var(--manuscript-ink);background:var(--manuscript-paper);border:2px solid #a5804d;border-radius:4px 14px 14px 4px;box-shadow:inset 0 0 0 3px #faefd1,0 3px 10px #62401920;cursor:default;z-index:1}
 body.conversation-session #bagAsk #say.on{display:block}
-body.conversation-session #bagAsk .conversationCorinSpeech #say,.conversationCorinEcho{border-color:#7d8c75;border-radius:14px 4px 4px 14px;background:linear-gradient(120deg,#f7efda,#e5e6ca)}
+body.conversation-session #bagAsk .conversationCorinSpeech #say,.conversationCorinEcho{border-color:#a5804d;border-radius:14px 4px 4px 14px;background:var(--manuscript-paper)}
 body.conversation-session #bagAsk #say[data-telepathy=true]{background:linear-gradient(120deg,#f3edcd,#e1e3c1);color:#394d44}
 body.conversation-session #say::after{display:none}
 .conversationNpcEcho[hidden],.conversationCorinEcho[hidden]{display:none}
@@ -51,6 +57,18 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
 #bagAsk .deckTopicIcon,#bagAsk .deckTopicBadge{color:#8c6030}#bagAsk .deckTopicCopy small,#bagAsk .deckEmpty{color:#856642}
 #bagAsk.conversationTopics.journalDeck #topicScrollHint{background:linear-gradient(transparent,#eedcb9 70%);color:#6e4e2d}
 #bagAsk .deckReplyPrompt{grid-column:1/-1;margin:4px 0 8px;color:#684321;font:600 19px var(--manuscript-serif)}
+
+/* Replies are a single-column decision panel, distinct from the topic cards. */
+#bagAsk .conversationPlayer[data-mode=replies]{background:radial-gradient(ellipse at 50% 0,#e9ebd4,transparent 70%),#cdd8c0}
+#bagAsk.conversationTopics.journalDeck #askRows.replyMenu{display:flex;flex-direction:column;gap:12px;max-width:860px!important;margin:0 auto!important;padding:8px 5px 16px!important}
+#bagAsk .deckReplyHeading{padding:8px 12px 12px;border-bottom:3px double #95a387;color:#34524c}
+#bagAsk .deckReplyHeading .deckEyebrow{color:#60795c}
+#bagAsk .deckReplyPrompt{margin:5px 0 0;color:inherit;font:600 23px/1.2 var(--manuscript-serif)}
+#bagAsk.conversationTopics.journalDeck #askRows>.deckReply{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:16px;min-height:64px;width:100%;text-align:left;padding:12px 18px!important;border:1px solid #91a38b!important;border-radius:24px 24px 24px 5px!important;background:#f8f4df!important;color:#304f48!important;box-shadow:0 3px 0 #76927b33;font:600 17px/1.4 var(--manuscript-serif)!important;cursor:pointer;touch-action:pan-y;transition:background .15s,border-color .15s}
+#bagAsk.conversationTopics.journalDeck #askRows>.deckReply[data-selected=true]{background:#355d55!important;color:#fff5d7!important;border-color:#25493f!important;box-shadow:0 3px 0 #203f3833}
+#bagAsk .deckReplyNumber{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:1px solid currentColor;border-radius:50%;opacity:.75;font:600 13px system-ui}
+.deckReplyWords{flex:1;min-width:0;overflow-wrap:anywhere}
+@media(max-width:600px){#bagAsk.conversationTopics.journalDeck #askRows>.deckReply{font-size:15px!important;padding:12px!important;gap:10px}#bagAsk .deckReplyPrompt{font-size:20px}#bagAsk .conversationChat{width:100%;font-size:13px;padding:9px 12px}}
 
 /* The character record replaces both conversation lanes with a separate page. */
 .conversationDossier{grid-row:2/4;grid-column:1;padding:24px max(20px,env(safe-area-inset-right)) 30px max(20px,env(safe-area-inset-left));background:repeating-linear-gradient(0deg,#49635a0a 0 1px,transparent 1px 26px),#e1e5d5;animation:profileUnfold .25s ease-out}
@@ -105,7 +123,7 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
   #bagAsk .deckProfileHero{gap:14px;padding:14px}#bagAsk .deckProfileHero .conversationPortrait{flex-basis:120px;width:120px;height:120px}#bagAsk .deckProfile h2{font-size:23px}.deckProfileFacts{grid-template-columns:1fr;gap:4px;padding:14px}.deckProfileFacts dd{margin-bottom:10px}
 }
 @media(max-height:560px){
-  #bagAsk.conversationTopics.journalDeck{grid-template-rows:auto minmax(100px,32dvh) minmax(0,1fr) auto}
+  #bagAsk.conversationTopics.journalDeck{grid-template-rows:auto minmax(0,1fr) minmax(0,1fr) auto}
   #bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:44px;padding-top:4px!important;padding-bottom:4px!important}
   #bagAsk .deckName{font-size:17px;margin:0}#bagAsk .deckIdentity>.deckEyebrow{display:none}#bagAsk .deckProfileToggle{min-height:32px;padding:4px 12px}
   .conversationStage,.conversationPlayer{padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));gap:12px}.conversationStage{grid-template-columns:125px minmax(0,1fr)}.conversationPlayer{grid-template-columns:minmax(0,1fr) 125px}
@@ -114,4 +132,4 @@ body.conversation-session #reveal{position:relative;inset:auto;grid-row:2/4;grid
   #bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:64px}.conversationFooter{padding-top:5px;padding-bottom:max(5px,env(safe-area-inset-bottom))}.conversationSubject{font-size:12px}#bagAsk .conversationControl{width:52px;height:52px;font-size:11px}
   #bagAsk.conversationPrompt{bottom:12px!important}
 }
-@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk.conversationPrompt,.conversationDossier{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk.conversationPrompt,.conversationDossier,.conversationPlayer .conversationWorkspace,.conversationPlayer .conversationCorinSpeech{animation:none!important;transition:none!important}}

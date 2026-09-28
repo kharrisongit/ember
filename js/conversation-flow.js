@@ -18,12 +18,12 @@
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
-    const hint=session?(session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
+    const hint=session?(welcoming()?'Choose Chat to begin':session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
-      phase:ask?.replyChoices?'reply':isMenu(ask)?'explore':'listen',subject:session.subject,canLeave:canGoodbye(),backAvailable:needsBack()});
+      phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',subject:session.subject,canLeave:canGoodbye(),backAvailable:needsBack()});
   }
   function clearGreeting(){
     if(!session?.greeting)return;
@@ -51,8 +51,8 @@
     box().removeAttribute('aria-modal');box().removeAttribute('role');
   }
   function menu(menu){
-    if(!session)session={map:MAPID,menu,subject:'A moment to talk'};
-    if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation)session.subject='A moment to talk';
+    if(!session)session={map:MAPID,menu,browsing:false,subject:'A moment to talk'};
+    if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation){session.subject='A moment to talk';session.browsing=false;}
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
@@ -64,8 +64,8 @@
   function listening(selected){
     if(!session||ask)return;
     const el=box();el.classList.add('conversationListening');
-    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckTab'))button.disabled=true;
-    for(const row of el.querySelectorAll('.deckTopic')){
+    for(const button of el.querySelectorAll('.deckHeader button, .deckTopic, .deckReply, .deckTab'))button.disabled=true;
+    for(const row of el.querySelectorAll('.deckTopic, .deckReply')){
       const chosen=Number(row.dataset.askIndex)===selected;
       row.dataset.selected=String(chosen);row.setAttribute('aria-pressed',String(chosen));
     }
@@ -74,11 +74,13 @@
 
   function take(option){
     if(!isMenu(ask))return false;
+    if(welcoming()){openChat();return true;}
     const old=ask,selected=askPick;window.EmberSfx?.ui?.();
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
     if(!old.replyChoices&&!option.navigation)session.subject=option.n;
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
+    if(!option.navigation||old.replyChoices)session.browsing=false;
     clearGreeting();
     retained(()=>{askShut();option.go?.();});
     if(ask?.shop){
@@ -93,9 +95,13 @@
     // dialogue and item reveals first so their rewards/callbacks still run.
     return !!session&&!session.shopping&&!revealing&&!sayNpc&&(!scene||!!scene.conversationReplies);
   }
+  function welcoming(){return !!session&&!session.shopping&&isMenu(ask)&&!ask.replyChoices&&!session.browsing&&!ask._profileOpen;}
+  function openChat(){
+    if(!welcoming())return false;
+    session.browsing=true;window.EmberSfx?.ui?.();sync();return true;
+  }
   function needsBack(){
-    return !!session&&!session.shopping&&isMenu(ask)&&!!(ask._profileOpen||
-      ask._deckFilter&&ask._deckFilter!=='all'||ask.replyChoices||ask.back&&ask.topicScope!=='thornwell-audience');
+    return !!session&&!session.shopping&&isMenu(ask)&&!!(ask._profileOpen||ask.replyChoices||session.browsing);
   }
   function secondary(){
     if(needsBack()){askBack();sync();return true;}
@@ -109,6 +115,7 @@
   }
   function next(){
     if(!session||session.shopping)return false;
+    if(welcoming())return openChat();
     if(isMenu(ask)){askTake();return true;}
     return advance();
   }
@@ -126,7 +133,7 @@
       const done=scene?.after;scene=null;sayOff();retained(()=>{askShut();if(done)done();else restore();});
     }else if(ask?.back&&ask.topicScope!=='thornwell-audience'){
       const parent=ask.back;retained(()=>{askShut();parent();});
-    }
+    }else if(session.browsing){session.browsing=false;sync();}
     // Internal Back navigation never closes the root; the secondary control does.
     return true;
   }
@@ -183,6 +190,7 @@
     }
     if(!session||session.shopping)return false;
     const key=e.key.toLowerCase();
+    if(welcoming()&&key.startsWith('arrow')){e.preventDefault();return true;}
     if(!['a','enter',' ','b','escape'].includes(key))return false;
     e.preventDefault();
     if(!e.repeat){if(['b','escape'].includes(key))secondary();else next();}
@@ -226,5 +234,5 @@
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){if(session)next();else advance();}}});
-  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,needsBack,secondary,active:()=>!!session};
+  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,needsBack,secondary,welcoming,openChat,active:()=>!!session};
 })();

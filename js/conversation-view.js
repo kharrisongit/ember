@@ -57,7 +57,14 @@
     }
     const stage=room.querySelector('.conversationStage'),player=room.querySelector('.conversationPlayer');
     stage.dataset.speaker=corin?'corin':'npc';stage.dataset.phase=phase;
-    player.dataset.mode=phase==='listen'?'speech':'choices';
+    const playerMode=phase==='listen'?'speech':phase==='explore'?'topics':phase==='reply'?'replies':'welcome';
+    player.dataset.mode=playerMode;
+    const choosing=phase==='explore'||phase==='reply';
+    player.querySelector('.conversationWorkspace').hidden=!choosing;
+    player.querySelector('.conversationSpeaker').hidden=choosing;
+    const chat=player.querySelector('.conversationChat');chat.hidden=phase!=='welcome';
+    if(chat.textContent!=='Chat with '+partner)chat.textContent='Chat with '+partner;
+    chat.setAttribute('aria-label','Chat with '+partner);
     const target=room.querySelector(corin?'.conversationCorinSpeech':'.conversationNpcSpeech');
     if(sayEl.parentNode!==target){target.appendChild(sayEl);sayEl.scrollTop=0;}
     const npcPortrait=stage.querySelector('.conversationPortrait');
@@ -66,12 +73,12 @@
     const npcEcho=stage.querySelector('.conversationNpcEcho');
     npcEcho.hidden=speaking&&!corin;if(npcEcho.textContent!==lastNpc)npcEcho.textContent=lastNpc;
     const corinEcho=player.querySelector('.conversationCorinEcho');
-    corinEcho.hidden=speaking&&corin;const reply=lastCorin||'Listening…';if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
-    player.querySelector('.conversationPlayerTurn').textContent=phase==='reply'?'Your reply':phase==='explore'?'Your topics':corin?'Your words':'Listening';
+    corinEcho.hidden=speaking&&corin;const reply=phase==='welcome'?(typeof CORIN_TOPIC_GREETINGS!=='undefined'&&CORIN_TOPIC_GREETINGS[partner]||'Hello, '+partner+'. Have you a moment to talk?'):lastCorin||'I’m listening.';if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
+    player.querySelector('.conversationPlayerTurn').textContent=phase==='reply'?'Your reply':phase==='explore'?'Your topics':phase==='welcome'?'Your greeting':corin?'Your words':'Listening';
     const title=room.querySelector('.conversationSubject');
     if(title)title.textContent=playerFacingText(subject||'A moment to talk');
     const turn=room.querySelector('.conversationTurn');
-    if(turn)turn.textContent=ask?._profileOpen?'Character profile':phase==='reply'?'Choose Corin’s reply':phase==='explore'?'Choose a topic':canLeave?'Next line':'Finish this exchange before saying goodbye';
+    if(turn)turn.textContent=ask?._profileOpen?'Character profile':phase==='reply'?'Choose Corin’s reply':phase==='explore'?'Choose a topic':phase==='welcome'?'Chat when you’re ready':canLeave?'Next line':'Finish this exchange before saying goodbye';
     const secondary=room.querySelector('.conversationGoodbye'),label=backAvailable?'Back':'Goodbye';
     if(secondary.textContent!==label)secondary.textContent=label;
     secondary.setAttribute('aria-label',label);secondary.dataset.action=backAvailable?'back':'goodbye';

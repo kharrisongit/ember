@@ -60,13 +60,13 @@ for(const name of ['King Halvard','Serjeant Bram','Doran','Tolan']){
  assert(titles.length>=(name==='King Halvard'?6:3),name+' has distinct topics');
  for(const title of titles){
   c.topicTitle=title;
-  run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName));askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');tick(30);
+  run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');tick(30);
   if(run("ask?.topicScope!=='thornwell-audience'")){
    const replies=Array.from(run('ask.opts.filter(o=>o.go&&!o.navigation&&!o.head).map(o=>o.n)'));
    assert.equal(replies.length,3);
    for(const reply of replies){
     c.replyTitle=reply;
-    run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName));askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');tick(30);
+    run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');tick(30);
     run('askPick=ask.opts.findIndex(o=>o.n===replyTitle);askTake();');tick(30);choices++;
     assert.equal(run('ask.topicScope'),'thornwell-audience','Answer returns to the speaker’s topics');
    }
@@ -76,7 +76,7 @@ for(const name of ['King Halvard','Serjeant Bram','Doran','Tolan']){
 assert.equal(choices,12,'Four branching exchanges with three responses apiece');
 run(`thornwellRoyal.answers.tax='defiant';openThornwellAudience(thornwellKing());askBack();`);
 assert.equal(run('thornwellRoyal.stage'),3,'Back stays at the royal topic list');
-run(`askPick=ask.opts.findIndex(o=>o.n==='Ask leave to go');askTake();`);tick(30);
+run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='Ask leave to go');askTake();`);tick(30);
 assert.equal(run('thornwellRoyal.stage'),4,'Goodbye dismisses the audience safely');
 assert.equal(run('thornwellAudiencePending()'),false,'Dismissal unlocks the tavern exit');
 assert(spoken.some(s=>s.includes('finishing your thoughts aloud')),'Choices affect the dismissal');
