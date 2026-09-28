@@ -1,0 +1,76 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),console,{document:dom.document,furniture:false});
+const source=JSON.parse(fs.readFileSync('assets/dialogue/npc-extra-topics.json','utf8'));
+assert.deepEqual(JSON.parse(run('JSON.stringify(NPC_EXTRA_TOPICS)')),source,'Authored dialogue matches the shipped script');
+run(`for(const [id,m]of Object.entries(W.maps)){prepareHollybeckVillagers(m,id);prepareDialoguePortraitCast(m,id);}`);
+const cast=run(`Object.values(W.maps).flatMap(m=>m.npcs||[]).filter(n=>!n.pettable&&!n.noTalk&&!n.editorDeleted&&!n.publishedDeleted)`);
+for(const n of cast){
+ assert(source[n.n]?.length>=2,n.n+' has at least two authored additions');
+ c.actor=n;
+ assert.equal(run('npcExtraTopics(actor).length'),2);
+ const topics=run('npcExtraTopics(actor)');
+ for(const t of topics){assert.equal(t.lines.length,3);assert(t.lines[0].startsWith(n.n+': '));assert(t.lines[1].startsWith('Corin: '));}
+}
+run(`quest=Q.DONE;dragon.on=true;dragonOff=false;templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;`);
+const rows=dom.element('askRows'),box=dom.element('bagAsk');box.append(rows);
+const click=b=>{assert(b,'Expected control');b.onclick({detail:1,stopPropagation(){}});};
+const tab=label=>rows.querySelectorAll('.deckTab').find(b=>b.textContent===label);
+const cards=()=>rows.querySelectorAll('.deckTopic');
+const evt={preventDefault(){},stopPropagation(){}};
+c.faceToward=()=>{};
+let scene;c.playScene=(lines,options)=>{scene={lines,options};};
+run(`openNpcTopics({n:'Linna',x:0,y:0,d:['Hello']})`);
+assert(box.classList.contains('journalDeck'));
+click(tab('The realm'));
+assert(cards().every(b=>['world','greeting','leave'].includes(run('EmberConversationDeck.category(ask.opts['+b.dataset.askIndex+'])'))));
+const choice=cards().find(b=>b.getAttribute('aria-label').startsWith(source.Linna[1].title+' —'));
+const index=Number(choice.dataset.askIndex),title=run('ask.opts['+index+'].n');
+choice.onkeydown({...evt,key:'Enter'});
+assert.equal(run('ask'),null,'Choosing a topic exits the panel into its original callback');
+assert(scene.lines.length>=3);assert(scene.lines[0].startsWith('Linna:'));
+scene.options.after();
+assert.equal(run('ask._deckFilter'),'world','Returning from dialogue restores the category');
+assert(cards().find(b=>Number(b.dataset.askIndex)===index).getAttribute('aria-label').endsWith('discussed'));
+click(tab('Unheard'));
+assert(!cards().some(b=>b.getAttribute('aria-label').startsWith(title+' —')),'Unheard excludes the topic just played');
+for(let i=0;i<12;i++){run('askStep(1)');assert(cards().some(b=>Number(b.dataset.askIndex)===run('askPick')),'D-pad skips filtered choices');}
+run(`askShut();MAPID='world';dragonIntroDone=true;dragon.air=false;openDragonConversation('root')`);
+const chapter=cards().find(b=>b.getAttribute('aria-label').startsWith('Emberfell and its history'));
+click(chapter);
+assert.equal(run('ask.topicScope'),'history');
+assert(!run(`discussedTopics.has('Aurelius:Emberfell and its history')`),'Opening a chapter does not mark a story heard');
+assert(cards().some(b=>b.getAttribute('aria-label').startsWith('Can a map remember a place?')));
+assert(cards().some(b=>b.classList.contains('deckTopic-folder')),'Back remains accessible');
+// Tracking is a saved preference; it must not grant the reward or reveal an unknown lead.
+run(`askShut();MAPID='world';P.x=30*TS;P.y=425*TS;odoRodReferral=true;fishingPole=false;atlasTrackedQuest='fishing';atlasBegin()`);
+assert.equal(dom.element('atlasQuestTitle').textContent,'Calder’s spare rod');
+assert.equal(run('fishingPole'),false);
+assert.equal(run('atlasCurrentArea()'),'Millwood');
+const snapshot=JSON.parse(run('JSON.stringify(captureSave())'));
+assert.equal(snapshot.questJournal.tracked,'fishing');
+assert(!snapshot.questJournal.known.shield,'Unknown side quests are not leaked');
+c.savedJournal=snapshot.questJournal;
+run(`restoreQuestJournal(savedJournal);atlasBegin()`);
+assert.equal(run('atlasTrackedQuest'),'fishing');
+run('fishingPole=true;atlasBegin()');
+assert.equal(run('atlasTrackedQuest'),'main','Completing the tracked quest falls back to the main journey');
+assert(run(`atlasCompletedEntries().some(q=>q.id==='fishing')`));
+run('restoreQuestJournal(null)');
+assert.equal(run('Object.keys(atlasJournalKnown).length'),0,'Legacy saves and other slots reset journal memory');
+assert.equal(run('atlasTrackedQuest'),'main');
+run(`P.x=3374*TS;P.y=302*TS`);assert.equal(run('atlasCurrentArea()'),'Cinderhold Castle');
+run(`MAPID='cinderhold'`);assert.equal(run('atlasCurrentArea()'),'Cinderhold Castle');
+run(`MAPID='witchmoor'`);assert.equal(run('atlasCurrentArea()'),'Witchmoor');
+assert.deepEqual(Array.from(run(`atlasRouteBetween('Forgewick','Sandspire Temple')`)),['Forgewick','Route 3','The Oasis','Sandspire','Sandspire Temple']);
+// Taps on the far edge of a long label still pick that label; drags don't select.
+const view=dom.element('atlasViewport');view.setPointerCapture=()=>{};
+const place=dom.element('atlasPlaces').children.find(b=>b.getAttribute('aria-label')==='Explore Hollybeck Graveyard');
+const fire=(type,extra={})=>{for(const fn of view.listeners.get(type)||[])fn({type,button:0,pointerId:1,clientX:0,clientY:0,target:place,preventDefault(){},...extra});};
+run('atlasPan={x:0,y:0,z:1}');fire('pointerdown');fire('pointerup');
+assert.equal(run('ATLAS_LOCATIONS[atlasPick][0]'),'Hollybeck Graveyard');
+const picked=run('atlasPick');fire('pointerdown');fire('pointermove',{clientX:50});fire('pointerup',{clientX:50});
+assert.equal(run('atlasPick'),picked,'Panning does not choose a different destination');
+console.log(`PASS: ${Object.keys(source).length} authored NPC profiles, category/keyboard navigation, discussed state, story callbacks, journal persistence, completed quests, real area markers and map tap/drag separation.`);

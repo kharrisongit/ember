@@ -22,6 +22,7 @@ export function gameDom(){
     querySelectorAll(selector){return this.children.flatMap(c=>[...(c.matches(selector)?[c]:[]),...c.querySelectorAll(selector)]);}
     querySelector(selector){return this.querySelectorAll(selector)[0]||null;}
     setAttribute(k,v){this.attrs[k]=String(v);if(k==='id')this.id=v;}getAttribute(k){return this.attrs[k];}
+    removeAttribute(k){delete this.attrs[k];}
     addEventListener(type,fn){if(!this.listeners.has(type))this.listeners.set(type,[]);this.listeners.get(type).push(fn);}
     getContext(){return drawing;}getBoundingClientRect(){return {width:800,height:600,left:0,top:0};}
     pause(){}play(){return Promise.resolve();}load(){}scrollIntoView(){}focus(){}showModal(){this.open=true;}close(){this.open=false;}

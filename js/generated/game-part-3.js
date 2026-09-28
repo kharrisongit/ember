@@ -4976,6 +4976,7 @@ function refreshBag() {
 }
 let ask = null, askPick = 0;
 const discussedTopics=new Set(),topicMenuPositions=new Map();
+function topicMenuKey(){return (ask?.npcConversation||(ask?.dragonConversation?"Aurelius":""))+(ask?.topicScope?":"+ask.topicScope:"");}
 function topicMemoryKey(o){return (ask?.npcConversation||(ask?.dragonConversation?"Aurelius":""))+":"+o.n;}
 function updateTopicScrollHint() {
   const box=document.getElementById('bagAsk'),hint=document.getElementById('topicScrollHint');
@@ -4993,7 +4994,7 @@ function wireTopicScrollHint(box) {
 }
 function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();const back=ask?.back;askShut();if(back)back();}
 function askShut() {
-  if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(ask.npcConversation||'Aurelius',{name:ask.opts[askPick]?.n,scroll:document.getElementById('bagAsk')?.scrollTop||0});
+  if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:document.getElementById('bagAsk')?.scrollTop||0});
   hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
   ask = null;
@@ -5013,6 +5014,8 @@ function askDraw() {
   wireTopicScrollHint(el);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
+  if((ask.npcConversation||ask.dragonConversation)&&window.EmberConversationDeck){window.EmberConversationDeck.draw(el,rows);return;}
+  el.classList.remove("journalDeck");
   const returning=!ask._topicDrawn&&(ask.npcConversation||ask.dragonConversation)?topicMenuPositions.get(ask.npcConversation||'Aurelius'):null;
   if(returning){const index=ask.opts.findIndex(o=>!o.head&&o.n===returning.name);if(index>=0)askPick=index;}
   ask._topicDrawn=true;
@@ -5102,13 +5105,13 @@ function askStep(d) {
   let k = askPick;
   for (let i = 0; i < n; i++) {
     k = (k + d + n) % n;
-    if (!ask.opts[k].head) break;
+    if (!ask.opts[k].head && (!(ask.npcConversation||ask.dragonConversation)||!window.EmberConversationDeck||window.EmberConversationDeck.visible(ask.opts[k],ask._deckFilter||"all"))) break;
   }
   askPick = k;
   askDraw();
   const box=document.getElementById("bagAsk"), row=box.querySelector('[data-ask-index="'+askPick+'"]');
   if(row){const a=row.getBoundingClientRect(),b=box.getBoundingClientRect();
-    const heading=box.querySelector('.topicSpeaker'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+6;
+    const heading=box.querySelector('.topicSpeaker'),tabs=box.querySelector('.deckTabs'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+(tabs?tabs.getBoundingClientRect().height:0)+6;
     const bottom=b.bottom-(document.getElementById('topicScrollHint')?.hidden===false?24:6);
     if(a.top<top)box.scrollTop-=top-a.top;
     else if(a.bottom>bottom)box.scrollTop+=a.bottom-bottom;}
@@ -5123,7 +5126,7 @@ function askTake() {
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
   globalThis.window?.EmberSfx?.ui?.();
-  if((ask.npcConversation||ask.dragonConversation)&&o.go)discussedTopics.add(topicMemoryKey(o));
+  if((ask.npcConversation||ask.dragonConversation)&&o.go&&!o.navigation&&o.category!=="trade")discussedTopics.add(topicMemoryKey(o));
   const key = ask.key, quick = ask.quick;
   askShut();
   if (quick) { if (o.go) o.go(); return; }   /* the on-screen list does its own box */
@@ -5303,6 +5306,7 @@ function wireBagDrag(id = "bagLeft") {
     return e.clientY || 0;
   }
   left.addEventListener("touchstart", function (e) {
+    if(left.classList.contains("journalDeck"))return;
     on = true; y0 = yOf(e); top0 = left.scrollTop; left.moved = 0;
   }, { passive: true });
   left.addEventListener("touchmove", function (e) {
@@ -5876,7 +5880,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
-  quest, bagOwned:hasBag(), discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
@@ -5929,6 +5933,7 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}

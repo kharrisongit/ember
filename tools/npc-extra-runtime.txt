@@ -1,0 +1,22 @@
+function npcExtraTopics(n){
+  const authored=NPC_EXTRA_TOPICS[n.n];
+  const fallback=[
+    {title:'A quieter moment',category:'story',exchange:['It is pleasant to have a conversation that nobody needs to hurry.','Have I caught you at a good time?','For a moment, yes. Let us make something of it.']},
+    {title:'People on the road',category:'world',exchange:['Travelers bring the parts of the world we cannot see from our own doorstep.','Do you enjoy hearing about them?','I enjoy hearing what someone actually noticed. It need not be grand to be interesting.']}
+  ];
+  return (authored||fallback).map(t=>({title:t.title,category:t.category,
+    lines:[n.n+': '+t.exchange[0],'Corin: '+t.exchange[1],n.n+': '+t.exchange[2]]}));
+}
+function dragonExtraTopics(category){
+  const extra={
+    personal:[
+      ['quiet-company','Can we be quiet together?',['Corin: Do you mind when I run out of things to say?','Aurelius: No. I can enjoy your company without requiring a report from it.','Corin: I thought you might be listening for another question.','Aurelius: Sometimes I am listening to the wind. Sometimes to your very determined stomach.']],
+      ['small-discoveries','What surprised you today?',['Corin: With all those inherited memories, can an ordinary day still surprise you?','Aurelius: Knowing about warm stones did not prepare me for choosing a favorite one.','Corin: You have a favorite stone?','Aurelius: Temporarily. I remain open to evidence.']]
+    ],
+    history:[
+      ['maps-and-memory','Can a map remember a place?',['Corin: Dad carried this map before I was born. Do you think he saw the places I see?','Aurelius: Some of them. A map can preserve a name after the people using it have changed.','Corin: I wish he could tell me what to look for.','Aurelius: You can notice something of your own, then bring the story home to Nan.']],
+      ['ordinary-keepers','Who keeps the realm together?',['Corin: The histories make everything sound as though it happens because of kings.','Aurelius: Kings do not mend every roof or bring every traveler a bowl of supper.','Corin: Those things rarely make it into the books.','Aurelius: Then we should remember the people doing them. A realm needs more than a throne to remain a home.']]
+    ]
+  };
+  return extra[category]||[];
+}

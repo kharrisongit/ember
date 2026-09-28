@@ -65,6 +65,8 @@ jobs:
           node tests/ghost-following.mjs
           node tests/npc-conversations.mjs
           node tests/npc-world-talks.mjs
+          node tests/quest-map.mjs
+          node tests/living-journal.mjs
           node tests/npc-placement.mjs
           node tests/editor-source-compatibility.mjs
           node tests/editor-publish-race.mjs

@@ -1,0 +1,2862 @@
+{
+  "Hettie": [
+    {
+      "title": "The cleverest cow",
+      "category": "story",
+      "exchange": [
+        "The quiet one waits until I open the gate before making trouble.",
+        "What does she do?",
+        "Nothing until I look away. That is what makes her clever."
+      ]
+    },
+    {
+      "title": "A village breakfast",
+      "category": "world",
+      "exchange": [
+        "You can tell who rose early by the flour on their sleeves.",
+        "And who rose late?",
+        "They are the ones explaining why they are not hungry."
+      ]
+    }
+  ],
+  "Gwil": [
+    {
+      "title": "A crooked offcut",
+      "category": "story",
+      "exchange": [
+        "I keep the twisted pieces. They make the strongest little hooks.",
+        "Even the ugly ones?",
+        "Especially those. Straight wood has enough admirers."
+      ]
+    },
+    {
+      "title": "The mill at dusk",
+      "category": "world",
+      "exchange": [
+        "After the wheel stops, I listen for water beneath the boards.",
+        "Why then?",
+        "A loose joint makes a sound you cannot hear over a working mill."
+      ]
+    }
+  ],
+  "Odo": [
+    {
+      "title": "Calder as a boy",
+      "category": "story",
+      "exchange": [
+        "Calder counted every fish twice before carrying them home.",
+        "Was he proud of his catch?",
+        "He was worried one might get away between the bank and the door."
+      ]
+    },
+    {
+      "title": "The empty hook",
+      "category": "world",
+      "exchange": [
+        "Sometimes I cast without bait. It gives my hands a reason to be still.",
+        "Does anyone notice?",
+        "The fish, I expect. They have been very polite about it."
+      ]
+    }
+  ],
+  "Tolan": [
+    {
+      "title": "Keeping your boots",
+      "category": "story",
+      "exchange": [
+        "Flour got into these boots before mud ever did.",
+        "You kept your old pair?",
+        "A wage does not make a comfortable pair grow on trees."
+      ]
+    },
+    {
+      "title": "A guard's view",
+      "category": "world",
+      "exchange": [
+        "From a post, you see the same person pass twice and think you know their day.",
+        "Do you?",
+        "No. That is something I try to remember before asking questions."
+      ]
+    }
+  ],
+  "Serjeant Bram": [
+    {
+      "title": "Remembering names",
+      "category": "story",
+      "exchange": [
+        "I repeat a new recruit's name while checking the straps.",
+        "So you do not forget?",
+        "So the first time I say it is not when something has gone wrong."
+      ]
+    },
+    {
+      "title": "The end of a watch",
+      "category": "world",
+      "exchange": [
+        "I count people before I count equipment.",
+        "Even if something is missing?",
+        "A spear can wait until everyone is accounted for."
+      ]
+    }
+  ],
+  "Doran": [
+    {
+      "title": "The least heroic skill",
+      "category": "story",
+      "exchange": [
+        "I can rescue porridge from a pan without scraping the burnt part into it.",
+        "That sounds useful.",
+        "It has earned me more thanks than polishing this armor."
+      ]
+    },
+    {
+      "title": "Patrol weather",
+      "category": "world",
+      "exchange": [
+        "Rain finds the joint you thought was well covered.",
+        "Is there a trick to keeping dry?",
+        "There is a trick to packing dry socks. That is the one I know."
+      ]
+    }
+  ],
+  "Elder Maddock": [
+    {
+      "title": "What you kept",
+      "category": "story",
+      "exchange": [
+        "I still have the first map I ruined in the rain.",
+        "Can you read it?",
+        "Enough to remember that certainty can wash off paper."
+      ]
+    },
+    {
+      "title": "A useful question",
+      "category": "world",
+      "exchange": [
+        "When two travelers disagree about a road, ask when each walked it.",
+        "Which one is right?",
+        "They may both be. A flooded stream does not care what last summer's map says."
+      ]
+    }
+  ],
+  "Pip": [
+    {
+      "title": "A beetle's manners",
+      "category": "story",
+      "exchange": [
+        "My guest leaves its tiny tracks all over the underside of my cap.",
+        "Does that bother you?",
+        "Only when it brings friends without telling me."
+      ]
+    },
+    {
+      "title": "The sound after rain",
+      "category": "world",
+      "exchange": [
+        "Listen once the drops stop. The ground keeps drinking.",
+        "I cannot hear it.",
+        "Stand quietly a little longer. Even if you hear nothing, the rest is pleasant."
+      ]
+    }
+  ],
+  "Mycella": [
+    {
+      "title": "What roots remember",
+      "category": "story",
+      "exchange": [
+        "A root can find the place where an old tree stood long after the trunk is gone.",
+        "Does it miss the tree?",
+        "I do not know. Finding something is not the same as knowing why you sought it."
+      ]
+    },
+    {
+      "title": "The brightest morning",
+      "category": "world",
+      "exchange": [
+        "Sunlight through a red cap warms every face beneath it.",
+        "Do you have a favorite spot?",
+        "The one where someone has left room for me."
+      ]
+    }
+  ],
+  "Bolete": [
+    {
+      "title": "An inconvenient root",
+      "category": "story",
+      "exchange": [
+        "There is a root I move each morning. It insists the path is its bed.",
+        "Who wins?",
+        "Travelers, by daylight. The root takes the night shift."
+      ]
+    },
+    {
+      "title": "Walking gently",
+      "category": "world",
+      "exchange": [
+        "Small caps bend beneath a heavy step, then straighten if you give them time.",
+        "Should I stay on the path?",
+        "That would save us both some worrying."
+      ]
+    }
+  ],
+  "Truffle": [
+    {
+      "title": "The old den",
+      "category": "story",
+      "exchange": [
+        "The fox left a hollow in the moss. I have never quite filled it.",
+        "Are you waiting for it?",
+        "Perhaps I am leaving a comfortable place for the next visitor."
+      ]
+    },
+    {
+      "title": "Sheltering small things",
+      "category": "world",
+      "exchange": [
+        "The smallest caps lean toward anything that breaks the wind.",
+        "Even you?",
+        "I am large to someone. It is a good reason to stand carefully."
+      ]
+    }
+  ],
+  "The Shroom King": [
+    {
+      "title": "An uncomfortable crown",
+      "category": "story",
+      "exchange": [
+        "The crown catches on low branches. My dignity has suffered in several bushes.",
+        "Could you take it off?",
+        "I do. Nobody has yet mistaken me for less responsible."
+      ]
+    },
+    {
+      "title": "The quietest council",
+      "category": "world",
+      "exchange": [
+        "Sometimes everyone listens to the rain instead of speaking.",
+        "Does anything get decided?",
+        "Occasionally we realize the argument can wait until morning."
+      ]
+    }
+  ],
+  "Calder": [
+    {
+      "title": "A place by the fire",
+      "category": "story",
+      "exchange": [
+        "I leave one dry patch for whoever arrives last.",
+        "Even if nobody comes?",
+        "Then I have a dry patch and very little to complain about."
+      ]
+    },
+    {
+      "title": "Campfire stories",
+      "category": "world",
+      "exchange": [
+        "Travelers make a journey shorter when they tell it, and longer when they boast.",
+        "How do you tell the difference?",
+        "Ask what they ate. The truthful ones remember the disappointing meals."
+      ]
+    }
+  ],
+  "Prue": [
+    {
+      "title": "A stone that fits",
+      "category": "story",
+      "exchange": [
+        "I like the moment a stone settles without rocking.",
+        "It must feel finished.",
+        "It feels ready for the next stone. Building is mostly that."
+      ]
+    },
+    {
+      "title": "An old doorstep",
+      "category": "world",
+      "exchange": [
+        "Look at the hollow in a worn step. Years of people coming home made it.",
+        "Would you replace it?",
+        "Only when it stops carrying them safely."
+      ]
+    }
+  ],
+  "Toft": [
+    {
+      "title": "The sound of a lamp",
+      "category": "story",
+      "exchange": [
+        "I check a lamp's handle before I check how brightly it burns.",
+        "Why the handle?",
+        "A fine flame is no comfort if the lamp falls from your hand."
+      ]
+    },
+    {
+      "title": "Sharing a shift",
+      "category": "world",
+      "exchange": [
+        "Below ground, asking for help should be easier than pretending.",
+        "Was it easy for you?",
+        "No. I wish someone had told me it was allowed sooner."
+      ]
+    }
+  ],
+  "Linna": [
+    {
+      "title": "A folded blanket",
+      "category": "story",
+      "exchange": [
+        "A blanket looks grand folded neatly. It feels kinder spread over cold knees.",
+        "Maren taught you that?",
+        "She handed me one before I thought to ask."
+      ]
+    },
+    {
+      "title": "Market endings",
+      "category": "world",
+      "exchange": [
+        "The market smells different after the baskets empty.",
+        "How different?",
+        "More herbs, less bread. You can almost hear everyone planning supper."
+      ]
+    }
+  ],
+  "Wren": [
+    {
+      "title": "The blank label",
+      "category": "story",
+      "exchange": [
+        "Berta once handed me an empty jar and asked what was inside.",
+        "What did you say?",
+        "That I did not know. She said we could begin the lesson now."
+      ]
+    },
+    {
+      "title": "A patient garden",
+      "category": "world",
+      "exchange": [
+        "A plant can look unchanged for days while doing all its work underneath.",
+        "How do you keep waiting?",
+        "I water it, then find something else that needs doing."
+      ]
+    }
+  ],
+  "Bevan": [
+    {
+      "title": "The smallest apple",
+      "category": "story",
+      "exchange": [
+        "I used to hide the little apples at the bottom of the basket.",
+        "Why did you stop?",
+        "A child asked for one that would fit in her hand."
+      ]
+    },
+    {
+      "title": "A good neighbor",
+      "category": "world",
+      "exchange": [
+        "A borrowed spade ought to come home clean.",
+        "Even after a long day?",
+        "Especially then. The person lending it probably had one too."
+      ]
+    }
+  ],
+  "Isolde": [
+    {
+      "title": "A familiar bottle",
+      "category": "story",
+      "exchange": [
+        "I recognize my grandmother's bottle by the tiny chip beneath its neck.",
+        "You still use it?",
+        "For flowers now. Some things deserve an easier job."
+      ]
+    },
+    {
+      "title": "The last delivery",
+      "category": "world",
+      "exchange": [
+        "The last bottle always seems heavier than the first.",
+        "Do you charge more for it?",
+        "No. But I accept a place to sit while they find their coins."
+      ]
+    }
+  ],
+  "Nazim": [
+    {
+      "title": "The first bucket",
+      "category": "story",
+      "exchange": [
+        "I let the first bucket settle before I carry it in.",
+        "Does it change the water?",
+        "It gives me a moment to look at the stonework and remember who laid it."
+      ]
+    },
+    {
+      "title": "Shade at the well",
+      "category": "world",
+      "exchange": [
+        "People speak more softly when they reach the shade.",
+        "From being tired?",
+        "Sometimes. Sometimes relief makes less noise than worry."
+      ]
+    }
+  ],
+  "Halima": [
+    {
+      "title": "Tea without company",
+      "category": "story",
+      "exchange": [
+        "I still warm a second cup when I am alone.",
+        "Out of habit?",
+        "Out of hope. A habit need not be a bad thing."
+      ]
+    },
+    {
+      "title": "Packing spices",
+      "category": "world",
+      "exchange": [
+        "I wrap strong spices separately. Otherwise every meal tastes like the same journey.",
+        "Even through cloth?",
+        "A little scent travels farther than you would think."
+      ]
+    }
+  ],
+  "Tarek": [
+    {
+      "title": "An honest camel",
+      "category": "story",
+      "exchange": [
+        "A camel tells you plainly when it dislikes an idea.",
+        "That sounds difficult.",
+        "Less difficult than a person who agrees, then does the opposite."
+      ]
+    },
+    {
+      "title": "Listening for home",
+      "category": "world",
+      "exchange": [
+        "The bells sound different with sand beneath the feet and stone beneath them.",
+        "Can you tell where you are?",
+        "I can tell when the hard part of a walk has begun."
+      ]
+    }
+  ],
+  "Suhaila": [
+    {
+      "title": "The blue thread",
+      "category": "story",
+      "exchange": [
+        "My daughter leaves short blue threads all over the floor.",
+        "Do you mind sweeping them?",
+        "I find them in my pockets days later. Little pieces of her work."
+      ]
+    },
+    {
+      "title": "An evening seat",
+      "category": "world",
+      "exchange": [
+        "At the well, someone always moves a little to make room.",
+        "Even when it is crowded?",
+        "Especially then. Empty space is easy to share."
+      ]
+    }
+  ],
+  "Idris": [
+    {
+      "title": "Three ambitions",
+      "category": "story",
+      "exchange": [
+        "My sons argue over whether a ship could carry a whole orchestra.",
+        "Could it?",
+        "Certainly. Whether anyone would enjoy the voyage is another matter."
+      ]
+    },
+    {
+      "title": "A price remembered",
+      "category": "world",
+      "exchange": [
+        "People remember being embarrassed over a price longer than they remember the price.",
+        "So you bargain gently?",
+        "I try. We both have to walk through this market tomorrow."
+      ]
+    }
+  ],
+  "Rashida": [
+    {
+      "title": "The first clear bowl",
+      "category": "story",
+      "exchange": [
+        "My first good bowl was plain. I watched sunlight cross it until supper went cold.",
+        "You were proud.",
+        "I had made something that let the light through without getting in its way."
+      ]
+    },
+    {
+      "title": "Sand and glass",
+      "category": "world",
+      "exchange": [
+        "People see finished glass and forget how ordinary its beginning looked.",
+        "Is that the secret?",
+        "Heat, care, and starting again more often than you boast about."
+      ]
+    }
+  ],
+  "Bilal": [
+    {
+      "title": "A goat on the roof",
+      "category": "story",
+      "exchange": [
+        "Patience looked terribly pleased with the view.",
+        "How did you get her down?",
+        "I stopped telling her to. Curiosity did the rest."
+      ]
+    },
+    {
+      "title": "Naming the herd",
+      "category": "world",
+      "exchange": [
+        "Visitors think the goats all look alike until one steals their lunch.",
+        "Then they remember?",
+        "That particular goat becomes unforgettable."
+      ]
+    }
+  ],
+  "Sella": [
+    {
+      "title": "One more bowl",
+      "category": "story",
+      "exchange": [
+        "I can usually stretch the stew for another person.",
+        "Without making it thin?",
+        "Bread helps. So does not making them feel they arrived too late."
+      ]
+    },
+    {
+      "title": "The harbor smell",
+      "category": "world",
+      "exchange": [
+        "Some days I smell rain before the boats come into view.",
+        "Does that worry you?",
+        "It makes me put the kettle on. Worry ought to do something useful."
+      ]
+    }
+  ],
+  "Ovid": [
+    {
+      "title": "The unfinished note",
+      "category": "story",
+      "exchange": [
+        "There is one note in my tune that sounds like a dropped hammer.",
+        "An accident?",
+        "Originally. Now everyone waits for it."
+      ]
+    },
+    {
+      "title": "The street's rhythm",
+      "category": "world",
+      "exchange": [
+        "A cart, a shutter, a hammer: they almost keep time together.",
+        "Almost?",
+        "A town is allowed to improvise."
+      ]
+    }
+  ],
+  "Jamila": [
+    {
+      "title": "The lightest pack",
+      "category": "story",
+      "exchange": [
+        "I can tell a new traveler by how often they rearrange the same heavy bag.",
+        "What should they leave behind?",
+        "Usually the third thing they packed in case the first two failed."
+      ]
+    },
+    {
+      "title": "A familiar customer",
+      "category": "world",
+      "exchange": [
+        "Some people touch every jar before choosing the one they always buy.",
+        "Does that bother you?",
+        "No. A small choice can be the nicest part of a difficult day."
+      ]
+    }
+  ],
+  "Nerissa": [
+    {
+      "title": "A dry ledger",
+      "category": "story",
+      "exchange": [
+        "I keep the ledger high and the wiping cloth close.",
+        "Experience?",
+        "One wave taught me that numbers can float away surprisingly fast."
+      ]
+    },
+    {
+      "title": "The returning tide",
+      "category": "world",
+      "exchange": [
+        "The water covers the same stones differently each time.",
+        "Do you still watch it?",
+        "Knowing what happens next is not the same as being tired of it."
+      ]
+    }
+  ],
+  "Astrid": [
+    {
+      "title": "The spare spoon",
+      "category": "story",
+      "exchange": [
+        "I keep a spoon by the door for anyone too cold to explain themselves.",
+        "No questions first?",
+        "Warm hands make better answers."
+      ]
+    },
+    {
+      "title": "A winter sound",
+      "category": "world",
+      "exchange": [
+        "A knock sounds small under a heavy fall of snow.",
+        "Do you listen for it?",
+        "Always when the soup is on."
+      ]
+    }
+  ],
+  "Colm": [
+    {
+      "title": "Taking your time",
+      "category": "story",
+      "exchange": [
+        "I used to finish a meal before noticing whether it was good.",
+        "And now?",
+        "Now I can give the cook an honest compliment."
+      ]
+    },
+    {
+      "title": "A crowded silence",
+      "category": "world",
+      "exchange": [
+        "People can sit together without filling every pause.",
+        "Is that awkward?",
+        "Only if someone decides it must be."
+      ]
+    }
+  ],
+  "Tessa": [
+    {
+      "title": "A breath between notes",
+      "category": "story",
+      "exchange": [
+        "The breath before a tune matters. It tells people something is beginning.",
+        "Do they notice?",
+        "Their shoulders do, even when their ears have not caught up."
+      ]
+    },
+    {
+      "title": "The listener at the back",
+      "category": "world",
+      "exchange": [
+        "I try to leave a quiet phrase for whoever sits farthest away.",
+        "Why them?",
+        "They came to listen too."
+      ]
+    }
+  ],
+  "Rowan the Hunter": [
+    {
+      "title": "Bramble's good side",
+      "category": "story",
+      "exchange": [
+        "Bramble has a solemn face he wears whenever food disappears.",
+        "Does it fool you?",
+        "No. I admire the commitment."
+      ]
+    },
+    {
+      "title": "Reading a clearing",
+      "category": "world",
+      "exchange": [
+        "I look for what has been eaten before looking for what I might take.",
+        "Why?",
+        "The land has mouths to feed besides mine."
+      ]
+    }
+  ],
+  "Sverre": [
+    {
+      "title": "Dry mittens",
+      "category": "story",
+      "exchange": [
+        "My mother's spare mittens never matched, but they were always dry.",
+        "Did anyone complain?",
+        "Not after trying the alternative."
+      ]
+    },
+    {
+      "title": "Snow on a roof",
+      "category": "world",
+      "exchange": [
+        "Snow can make a house look peaceful while adding a great deal of weight.",
+        "What do you do?",
+        "Look up occasionally, even on a lovely morning."
+      ]
+    }
+  ],
+  "Runa": [
+    {
+      "title": "Stirring the pot",
+      "category": "story",
+      "exchange": [
+        "Astrid lets me taste before she adds the last pinch of seasoning.",
+        "Do you agree on it?",
+        "We agree that I should stop tasting once it is ready."
+      ]
+    },
+    {
+      "title": "The first puddle",
+      "category": "world",
+      "exchange": [
+        "After winter, I always step around the first puddle carefully.",
+        "And the second?",
+        "By the third I have accepted the mud."
+      ]
+    }
+  ],
+  "Eira": [
+    {
+      "title": "An honest label",
+      "category": "story",
+      "exchange": [
+        "I label the failed batches too.",
+        "Why keep the reminder?",
+        "So I do not improve the recipe in exactly the same unfortunate way twice."
+      ]
+    },
+    {
+      "title": "Autumn in a bottle",
+      "category": "world",
+      "exchange": [
+        "A dry autumn and a wet one leave different sweetness in the fruit.",
+        "Can everyone taste it?",
+        "They can enjoy it without naming it. That is enough."
+      ]
+    }
+  ],
+  "Fenton": [
+    {
+      "title": "The end of a tale",
+      "category": "story",
+      "exchange": [
+        "I used to save the most dangerous bit for last.",
+        "What do you save now?",
+        "The part where someone had put supper aside for me."
+      ]
+    },
+    {
+      "title": "A listener's kindness",
+      "category": "world",
+      "exchange": [
+        "A good listener knows when a traveler is leaving something out.",
+        "Do they ask?",
+        "Sometimes they simply pour another cup."
+      ]
+    }
+  ],
+  "Tallis": [
+    {
+      "title": "Starting together",
+      "category": "story",
+      "exchange": [
+        "Before a tune, I watch the other musician's hands.",
+        "Instead of their face?",
+        "Hands admit nerves sooner."
+      ]
+    },
+    {
+      "title": "A work song",
+      "category": "world",
+      "exchange": [
+        "A song should fit the work without making the work hurry.",
+        "Even at the forge?",
+        "Especially there. A rhyme is not worth a burned finger."
+      ]
+    }
+  ],
+  "Kip": [
+    {
+      "title": "A useful button",
+      "category": "story",
+      "exchange": [
+        "I still keep that brass button.",
+        "After all this time?",
+        "It reminds me to look down sometimes. Everybody stares at the horizon."
+      ]
+    },
+    {
+      "title": "The shore after a storm",
+      "category": "world",
+      "exchange": [
+        "The shore looks rearranged, like a room after a visitor.",
+        "Do you collect everything?",
+        "Only what I can carry without wishing I had left it there."
+      ]
+    }
+  ],
+  "Ada": [
+    {
+      "title": "Bramble's welcome",
+      "category": "story",
+      "exchange": [
+        "Bramble believes every visitor came specifically to see him.",
+        "Does Rowan mind?",
+        "Rowan is usually the second to be greeted in his own house."
+      ]
+    },
+    {
+      "title": "The empty chair",
+      "category": "world",
+      "exchange": [
+        "I mend things while I wait. It gives the waiting a shape.",
+        "Does it help?",
+        "There are fewer holes in the socks, at least."
+      ]
+    }
+  ],
+  "Bren": [
+    {
+      "title": "A penciled question",
+      "category": "story",
+      "exchange": [
+        "I write questions lightly now, so an answer has room to change them.",
+        "Does Elowen approve?",
+        "She says a question is not a failure in the copying."
+      ]
+    },
+    {
+      "title": "A tale's journey",
+      "category": "world",
+      "exchange": [
+        "A story changes a little each time someone carries it to the next town.",
+        "Does that make it false?",
+        "It makes asking where it began worthwhile."
+      ]
+    }
+  ],
+  "Berta": [
+    {
+      "title": "A student's mistake",
+      "category": "story",
+      "exchange": [
+        "Wren once corrected a label I had written in a hurry.",
+        "Were you annoyed?",
+        "Briefly. Then I was very glad I had taught her to check."
+      ]
+    },
+    {
+      "title": "An old routine",
+      "category": "world",
+      "exchange": [
+        "I still wake early even with no stall to open.",
+        "What do you do?",
+        "Enjoy a cup while it is hot. A surprisingly difficult skill to learn."
+      ]
+    }
+  ],
+  "Della": [
+    {
+      "title": "An unruly pot",
+      "category": "story",
+      "exchange": [
+        "The mint keeps finding ways over the rim.",
+        "Will you move it?",
+        "I suspect it would regard a larger pot as encouragement."
+      ]
+    },
+    {
+      "title": "Advice about Maelis",
+      "category": "world",
+      "exchange": [
+        "Ask Maelis what she actually does before repeating what someone says she does.",
+        "Is she easy to talk to?",
+        "She prefers a clear question to a frightened whisper."
+      ]
+    }
+  ],
+  "Ewan": [
+    {
+      "title": "The ordinary page",
+      "category": "story",
+      "exchange": [
+        "I would save a page of household accounts beside a royal speech.",
+        "Why both?",
+        "One tells you what was promised. The other may tell you what people could afford."
+      ]
+    },
+    {
+      "title": "A reader's mark",
+      "category": "world",
+      "exchange": [
+        "A stain on a page can mean someone cared enough to read over supper.",
+        "You do not mind the stain?",
+        "I mind people never opening the book more."
+      ]
+    }
+  ],
+  "Fara": [
+    {
+      "title": "A box of fragments",
+      "category": "story",
+      "exchange": [
+        "I sort scraps by what they might become, not what they used to be.",
+        "That sounds hopeful.",
+        "It sounds untidy to everyone else."
+      ]
+    },
+    {
+      "title": "A repaired cup",
+      "category": "world",
+      "exchange": [
+        "The repaired jug does not look new.",
+        "Does that disappoint you?",
+        "No. I remember who helped me carry the pieces."
+      ]
+    }
+  ],
+  "Garrick": [
+    {
+      "title": "The apprentice's pause",
+      "category": "story",
+      "exchange": [
+        "That apprentice hesitates less now.",
+        "Are you pleased?",
+        "I miss knowing exactly when to complain."
+      ]
+    },
+    {
+      "title": "The lunch silence",
+      "category": "world",
+      "exchange": [
+        "At midday the street seems to hold its breath.",
+        "Is it peaceful?",
+        "Until somebody drops a spoon and we all hear it."
+      ]
+    }
+  ],
+  "Hester": [
+    {
+      "title": "Starting a knot",
+      "category": "story",
+      "exchange": [
+        "I loosen the cord before I make a new knot.",
+        "Why loosen it first?",
+        "A knot made from an old tangle only hides the trouble."
+      ]
+    },
+    {
+      "title": "A net's shape",
+      "category": "world",
+      "exchange": [
+        "A net needs its empty spaces as much as its cord.",
+        "I never thought of that.",
+        "Most useful things are not solid all the way through."
+      ]
+    }
+  ],
+  "Junia": [
+    {
+      "title": "Counting coppers",
+      "category": "story",
+      "exchange": [
+        "I count my lamp money only once a week.",
+        "Would it not feel better every day?",
+        "It has an unfortunate habit of staying the same between repairs."
+      ]
+    },
+    {
+      "title": "An evening color",
+      "category": "world",
+      "exchange": [
+        "Amber light makes even a plain wall look welcoming.",
+        "Is that why you chose it?",
+        "I want to enjoy coming into my own room."
+      ]
+    }
+  ],
+  "Kellan": [
+    {
+      "title": "The rainy clock",
+      "category": "story",
+      "exchange": [
+        "I never fixed Father's clock.",
+        "Why not?",
+        "On rainy days it still gives me something familiar to blame."
+      ]
+    },
+    {
+      "title": "Keeping a promise",
+      "category": "world",
+      "exchange": [
+        "A clock can tell you that you are late. It cannot make you apologize.",
+        "Do you apologize often?",
+        "More punctually than I used to arrive."
+      ]
+    }
+  ],
+  "Lysa": [
+    {
+      "title": "A twig with wings",
+      "category": "story",
+      "exchange": [
+        "My newest bird has a recognizable beak.",
+        "Progress!",
+        "Yes. Now I need the rest of it to look less like a turnip."
+      ]
+    },
+    {
+      "title": "Choosing the imperfect one",
+      "category": "world",
+      "exchange": [
+        "The crooked glass bird catches light strangely.",
+        "In a good way?",
+        "In its own way. That was what I liked."
+      ]
+    }
+  ],
+  "Cinder": [
+    {
+      "title": "An ember carried",
+      "category": "story",
+      "exchange": [
+        "I once carried a warm coal to a neighbor in a little pot.",
+        "Did it last?",
+        "Long enough for their kindling. I felt absurdly proud of the journey."
+      ]
+    },
+    {
+      "title": "A hearth's company",
+      "category": "world",
+      "exchange": [
+        "People stop looking at the fire once the room warms.",
+        "Do you?",
+        "I like watching something do its work without needing a word from me."
+      ]
+    }
+  ],
+  "Warden": [
+    {
+      "title": "The squeaking wheel",
+      "category": "story",
+      "exchange": [
+        "I know exactly when that cart will turn into the lane.",
+        "From the squeak?",
+        "Yes. I could probably greet it with my eyes shut."
+      ]
+    },
+    {
+      "title": "Packing something extra",
+      "category": "world",
+      "exchange": [
+        "A small treat fits beside the practical food.",
+        "Does he notice?",
+        "The wrapping comes home folded carefully."
+      ]
+    }
+  ],
+  "Ember": [
+    {
+      "title": "The covered shelf",
+      "category": "story",
+      "exchange": [
+        "I lift the cloth when the rest of the room feels impossible.",
+        "Just to look?",
+        "To remember the dust has not claimed absolutely everything."
+      ]
+    },
+    {
+      "title": "A baker's patience",
+      "category": "world",
+      "exchange": [
+        "The baker still shakes my coat before I enter.",
+        "After the bread argument?",
+        "He does it with a smile. That almost makes it worse."
+      ]
+    }
+  ],
+  "Dagna": [
+    {
+      "title": "The unfinished chore",
+      "category": "story",
+      "exchange": [
+        "I left the polishing until morning yesterday.",
+        "Was that difficult?",
+        "I thought about it all evening. Today I am practicing thinking about something else."
+      ]
+    },
+    {
+      "title": "Fresh air's price",
+      "category": "world",
+      "exchange": [
+        "An open window brings dust, but it also brings voices from outside.",
+        "Is it worth opening?",
+        "Usually. A perfectly clean room can be very lonely."
+      ]
+    }
+  ],
+  "Lode": [
+    {
+      "title": "Sleeping through work",
+      "category": "story",
+      "exchange": [
+        "I can sleep through hammering and wake at an unfamiliar silence.",
+        "That sounds backwards.",
+        "Familiar noise tells you someone is still there."
+      ]
+    },
+    {
+      "title": "A careful shelf",
+      "category": "world",
+      "exchange": [
+        "I put folded cloth beneath the cup so it no longer rattles.",
+        "Does that help you sleep?",
+        "It helps the cup. I still listen for the forge."
+      ]
+    }
+  ],
+  "Pike": [
+    {
+      "title": "A folded cloth",
+      "category": "story",
+      "exchange": [
+        "I wrap an extra crust separately so it is easy to offer.",
+        "Without asking?",
+        "Without making a hungry person explain."
+      ]
+    },
+    {
+      "title": "The picnic place",
+      "category": "world",
+      "exchange": [
+        "I keep changing my mind about where that quiet picnic should be.",
+        "Have you found somewhere?",
+        "Not yet. Planning the basket is pleasant in the meantime."
+      ]
+    }
+  ],
+  "Hallow": [
+    {
+      "title": "The jar of screws",
+      "category": "story",
+      "exchange": [
+        "I have labeled the jar of failed hinge screws.",
+        "What does it say?",
+        "Evidence. It seemed the fairest description."
+      ]
+    },
+    {
+      "title": "A repair's first step",
+      "category": "world",
+      "exchange": [
+        "Before tightening anything, open and close it once.",
+        "To find the problem?",
+        "To make certain I am fixing the right one."
+      ]
+    }
+  ],
+  "Quarrel": [
+    {
+      "title": "A useful complaint",
+      "category": "story",
+      "exchange": [
+        "I complained about a loose step for a week, then brought my own hammer.",
+        "Why not begin there?",
+        "Because I enjoy being right as well as useful."
+      ]
+    },
+    {
+      "title": "A baker's truce",
+      "category": "world",
+      "exchange": [
+        "The baker and I can agree when a loaf is fresh.",
+        "Only then?",
+        "It is a respectable foundation for peace."
+      ]
+    }
+  ],
+  "Flint": [
+    {
+      "title": "The morning coal",
+      "category": "story",
+      "exchange": [
+        "A well-banked fire leaves a little warmth waiting for you.",
+        "Even after a cold night?",
+        "Especially welcome after a cold night."
+      ]
+    },
+    {
+      "title": "Hearing Quarrel",
+      "category": "world",
+      "exchange": [
+        "I listen for the thing underneath her complaints.",
+        "What is it usually?",
+        "Someone might get hurt. Or the bread costs too much. Both deserve a hearing."
+      ]
+    }
+  ],
+  "Winnie": [
+    {
+      "title": "A remembered laugh",
+      "category": "story",
+      "exchange": [
+        "Your mother's laugh always arrived before her explanation.",
+        "Was she often in trouble?",
+        "Often enough that the laugh became useful."
+      ]
+    },
+    {
+      "title": "An old friend's visit",
+      "category": "world",
+      "exchange": [
+        "Nan never arrives empty-handed, even when I insist.",
+        "What does she bring?",
+        "Usually news. Occasionally more bread than either of us needs."
+      ]
+    }
+  ],
+  "Ned": [
+    {
+      "title": "A worn strap",
+      "category": "story",
+      "exchange": [
+        "A pale line in leather deserves attention before it becomes a tear.",
+        "Can it be saved?",
+        "Sometimes. Looking early gives you the choice."
+      ]
+    },
+    {
+      "title": "A favor remembered",
+      "category": "world",
+      "exchange": [
+        "I could never pay your father for helping with the cart.",
+        "Did that bother you?",
+        "Until I found someone else who needed a hand."
+      ]
+    }
+  ],
+  "Nan Ferrow": [
+    {
+      "title": "Your muddy boots",
+      "category": "story",
+      "exchange": [
+        "You once tried hiding muddy boots under the clean laundry.",
+        "Did it work?",
+        "You were so pleased with the idea that you told me immediately."
+      ]
+    },
+    {
+      "title": "A place at home",
+      "category": "world",
+      "exchange": [
+        "I still set things where you can find them without asking.",
+        "Even while I am away?",
+        "Coming home should not require learning everything again."
+      ]
+    }
+  ],
+  "Joss": [
+    {
+      "title": "The second hook",
+      "category": "story",
+      "exchange": [
+        "That hook Tam made was the first thing here that felt like mine.",
+        "More than the room?",
+        "It said I was expected to come back."
+      ]
+    },
+    {
+      "title": "Packing for one winter",
+      "category": "world",
+      "exchange": [
+        "I packed as though a season had a fixed ending.",
+        "Does it not?",
+        "It does. Staying somewhere is another matter."
+      ]
+    }
+  ],
+  "Greta": [
+    {
+      "title": "A familiar latch",
+      "category": "story",
+      "exchange": [
+        "My hand reaches for the right place before I think about the door.",
+        "You could teach someone.",
+        "I have. They always try the handle first anyway."
+      ]
+    },
+    {
+      "title": "Washing in the sky",
+      "category": "world",
+      "exchange": [
+        "I judge a fine day by whether I can put the washing out.",
+        "Not by the warmth?",
+        "Warmth indoors is useful. Sunlight on a sheet is a pleasure."
+      ]
+    }
+  ],
+  "Osric": [
+    {
+      "title": "Reading aloud",
+      "category": "story",
+      "exchange": [
+        "I still catch myself pausing where my brother used to interrupt.",
+        "What did he ask?",
+        "Whether the hero had remembered to eat. A sensible concern."
+      ]
+    },
+    {
+      "title": "The cellar visitor",
+      "category": "world",
+      "exchange": [
+        "The traveler was disappointed by the cellar.",
+        "No lost kingdom?",
+        "A very respectable supply of ordinary things. He seemed ungrateful."
+      ]
+    }
+  ],
+  "Alder": [
+    {
+      "title": "Waiting at a hive",
+      "category": "story",
+      "exchange": [
+        "I keep my hands still before I begin.",
+        "Does that calm the bees?",
+        "It calms the beekeeper. The bees appreciate the improvement."
+      ]
+    },
+    {
+      "title": "Leaving enough honey",
+      "category": "world",
+      "exchange": [
+        "The hardest part of a good harvest is deciding what stays.",
+        "For the bees?",
+        "For the reason there will be another harvest."
+      ]
+    }
+  ],
+  "Gwyneth": [
+    {
+      "title": "A longer scarf",
+      "category": "story",
+      "exchange": [
+        "Alder says the scarf could go around him twice now.",
+        "Will you stop knitting?",
+        "I am considering whether three times would be excessive."
+      ]
+    },
+    {
+      "title": "The warm chair",
+      "category": "world",
+      "exchange": [
+        "I can tell when a guest is pretending not to be cold.",
+        "How?",
+        "They keep their hands tucked away instead of reaching for the cup."
+      ]
+    }
+  ],
+  "Bors": [
+    {
+      "title": "Even little weights",
+      "category": "story",
+      "exchange": [
+        "I weigh the loom weights together before sending them out.",
+        "They look identical.",
+        "Looking even and pulling evenly are different jobs."
+      ]
+    },
+    {
+      "title": "The dust at the door",
+      "category": "world",
+      "exchange": [
+        "I leave a brush where muddy boots are most likely to stop.",
+        "Does it work?",
+        "Better than putting it where I wish the boots would stop."
+      ]
+    }
+  ],
+  "Kiln": [
+    {
+      "title": "Opening the kiln",
+      "category": "story",
+      "exchange": [
+        "I still hold my breath at the first look inside.",
+        "Even now?",
+        "Experience tells you more things that might have gone wrong."
+      ]
+    },
+    {
+      "title": "The cracked bowl",
+      "category": "world",
+      "exchange": [
+        "An apprentice asked to throw away the old cracked bowls.",
+        "Did you let them?",
+        "No. They make useful warnings without raising their voices."
+      ]
+    }
+  ],
+  "Petra": [
+    {
+      "title": "A small detail",
+      "category": "story",
+      "exchange": [
+        "I trust a traveler's account more when they remember an ordinary kindness.",
+        "Why that detail?",
+        "It is harder to borrow convincingly than a grand adventure."
+      ]
+    },
+    {
+      "title": "Keeping letters",
+      "category": "world",
+      "exchange": [
+        "I arrange Mother's letters by the seasons she describes.",
+        "Not the dates?",
+        "Dates tell me when. Her garden tells me how it felt."
+      ]
+    }
+  ],
+  "Raff": [
+    {
+      "title": "The chair's shadow",
+      "category": "story",
+      "exchange": [
+        "The shadow reaches the chair before the worst heat does.",
+        "Your father's trick?",
+        "His quietest advice. I learned it by watching him move."
+      ]
+    },
+    {
+      "title": "Waiting until evening",
+      "category": "world",
+      "exchange": [
+        "A hard conversation is easier when nobody is hot and thirsty.",
+        "Does that solve it?",
+        "No. It removes two unnecessary arguments."
+      ]
+    }
+  ],
+  "Suri": [
+    {
+      "title": "A hidden seam",
+      "category": "story",
+      "exchange": [
+        "The best seam is one the traveler never has to think about.",
+        "Do they thank you for it?",
+        "Usually only when they have owned a worse one."
+      ]
+    },
+    {
+      "title": "A pocket in reach",
+      "category": "world",
+      "exchange": [
+        "I test a pocket while sitting as well as standing.",
+        "Why sitting?",
+        "Because roads include rests, and a coat ought to know that."
+      ]
+    }
+  ],
+  "Tavin": [
+    {
+      "title": "The clear doorway",
+      "category": "story",
+      "exchange": [
+        "I check the doorway before guests arrive.",
+        "For abandoned packs?",
+        "For anything that makes arriving feel like an obstacle."
+      ]
+    },
+    {
+      "title": "Water within reach",
+      "category": "world",
+      "exchange": [
+        "People relax once they know they need not ask for every small thing.",
+        "You notice that?",
+        "A good welcome is mostly noticing."
+      ]
+    }
+  ],
+  "Una": [
+    {
+      "title": "The missing towels",
+      "category": "story",
+      "exchange": [
+        "My sister finally returned one of the towels.",
+        "Only one?",
+        "It came wrapped around a gift. I may have lost the argument again."
+      ]
+    },
+    {
+      "title": "Seeds in a letter",
+      "category": "world",
+      "exchange": [
+        "Seeds make a letter feel heavier than it is.",
+        "With possibility?",
+        "And with my sister's certainty that I expect her to learn gardening."
+      ]
+    }
+  ],
+  "Vela": [
+    {
+      "title": "The hidden knot",
+      "category": "story",
+      "exchange": [
+        "I know where every wrong-colored knot is.",
+        "Can visitors find them?",
+        "Some try. Others enjoy the rug without inspecting its mistakes."
+      ]
+    },
+    {
+      "title": "A woven road",
+      "category": "world",
+      "exchange": [
+        "I can trace my family's route along the border without looking.",
+        "Even the wells?",
+        "Especially the wells. Those are the turns worth remembering."
+      ]
+    }
+  ],
+  "Wystan": [
+    {
+      "title": "Reading the figures",
+      "category": "story",
+      "exchange": [
+        "I read a bill again after the tea is finished.",
+        "A sensible habit.",
+        "An expensive lesson can at least become a useful habit."
+      ]
+    },
+    {
+      "title": "A returning customer",
+      "category": "world",
+      "exchange": [
+        "I like hearing what became of something I sold.",
+        "Even if they complain?",
+        "A complaint gives me a chance to do better. Silence does not."
+      ]
+    }
+  ],
+  "Rania": [
+    {
+      "title": "A chair outside",
+      "category": "story",
+      "exchange": [
+        "I carry out one extra chair before deciding who will visit.",
+        "Does someone always come?",
+        "Often enough that I keep doing it."
+      ]
+    },
+    {
+      "title": "Latif's repairs",
+      "category": "world",
+      "exchange": [
+        "Latif has become much better at fixing chairs.",
+        "Less explaining?",
+        "The explaining is still excellent. The chairs have caught up."
+      ]
+    }
+  ],
+  "Latif": [
+    {
+      "title": "Counting change",
+      "category": "story",
+      "exchange": [
+        "I still count a handful of coins twice.",
+        "Because of your mother?",
+        "Because once, the second count earned me an extra piece of fruit."
+      ]
+    },
+    {
+      "title": "Stories at sunset",
+      "category": "world",
+      "exchange": [
+        "By sunset a small event has acquired excellent dialogue.",
+        "Do you correct the storyteller?",
+        "Only if I was in it and they gave me the dullest line."
+      ]
+    }
+  ],
+  "Yara": [
+    {
+      "title": "The oiling day",
+      "category": "story",
+      "exchange": [
+        "I oil the hinges before they begin asking for it.",
+        "How do hinges ask?",
+        "Loudly, and just when everyone else is asleep."
+      ]
+    },
+    {
+      "title": "A dry inland night",
+      "category": "world",
+      "exchange": [
+        "Inland I kept waking to listen for waves.",
+        "And heard nothing?",
+        "Nothing familiar. Quiet can be surprisingly noisy in your head."
+      ]
+    }
+  ],
+  "Doryn": [
+    {
+      "title": "A gull's opinion",
+      "category": "story",
+      "exchange": [
+        "Gulls have very clear opinions about anyone carrying food.",
+        "Do you listen to them?",
+        "I keep my lunch covered. That is a form of listening."
+      ]
+    },
+    {
+      "title": "A view's price",
+      "category": "world",
+      "exchange": [
+        "People admire the sea through a window someone has to clean.",
+        "Is it still worth it?",
+        "Ask me after the glass dries."
+      ]
+    }
+  ],
+  "Bry": [
+    {
+      "title": "The soup audience",
+      "category": "story",
+      "exchange": [
+        "Everyone remembers the soup I dropped.",
+        "Does that bother you?",
+        "Only when I carry another bowl and they all become attentive."
+      ]
+    },
+    {
+      "title": "A practical doormat",
+      "category": "world",
+      "exchange": [
+        "The mat catches less water than I hoped.",
+        "Will you replace it?",
+        "No. It is doing its best against an entire sea."
+      ]
+    }
+  ],
+  "Coral": [
+    {
+      "title": "Light in the window",
+      "category": "story",
+      "exchange": [
+        "I clean the lamp glass before dusk.",
+        "So it shines farther?",
+        "So whoever sees it knows someone has been tending it."
+      ]
+    },
+    {
+      "title": "Mending that sail",
+      "category": "world",
+      "exchange": [
+        "I could make the patch almost invisible.",
+        "But he likes it crooked?",
+        "He likes knowing which boat is his in a crowded harbor. I can respect that."
+      ]
+    }
+  ],
+  "Edda": [
+    {
+      "title": "The table that waited",
+      "category": "story",
+      "exchange": [
+        "I still notice a dry ceiling every time I sit down.",
+        "More than the table?",
+        "The roof earned its place in my affections."
+      ]
+    },
+    {
+      "title": "One level chair",
+      "category": "world",
+      "exchange": [
+        "I have saved the rag from the old chair leg.",
+        "Why keep it?",
+        "I may need proof of how long I put up with it."
+      ]
+    }
+  ],
+  "Fennel": [
+    {
+      "title": "The evening latch",
+      "category": "story",
+      "exchange": [
+        "I check the latch once, then tell myself I have checked it.",
+        "Does that help?",
+        "It gives the worrying a smaller job."
+      ]
+    },
+    {
+      "title": "A name in the garden",
+      "category": "world",
+      "exchange": [
+        "The fennel grows whether I am brave or frightened.",
+        "Is that comforting?",
+        "Very. It never asks me to explain myself."
+      ]
+    }
+  ],
+  "Bjorn": [
+    {
+      "title": "A pot for tomorrow",
+      "category": "story",
+      "exchange": [
+        "I leave room in the pot when I begin.",
+        "For more broth?",
+        "For whoever turns out to be hungry before it is finished."
+      ]
+    },
+    {
+      "title": "Watching the table",
+      "category": "world",
+      "exchange": [
+        "I notice who says they have already eaten.",
+        "Do you believe them?",
+        "I offer a little anyway. Nobody has to make a speech about needing supper."
+      ]
+    }
+  ],
+  "Cap": [
+    {
+      "title": "A shaded corner",
+      "category": "story",
+      "exchange": [
+        "I move my seat to leave the moss in shade.",
+        "Even if the sun is pleasant?",
+        "The moss cannot move its own chair."
+      ]
+    },
+    {
+      "title": "A living store",
+      "category": "world",
+      "exchange": [
+        "A growing bed needs tending even when you are not hungry.",
+        "That is easy to forget.",
+        "Yes. Hunger is a poor time to begin being patient."
+      ]
+    }
+  ],
+  "Ilsa": [
+    {
+      "title": "A loop of grass",
+      "category": "story",
+      "exchange": [
+        "The children tie the promise loops themselves now.",
+        "Do they remember why?",
+        "They remind me. That is how I know the lesson worked."
+      ]
+    },
+    {
+      "title": "A season ahead",
+      "category": "world",
+      "exchange": [
+        "I try to picture next month's meal before taking today's shoots.",
+        "Does it make choosing harder?",
+        "It makes the choice belong to more than one hungry afternoon."
+      ]
+    }
+  ],
+  "Meriel": [
+    {
+      "title": "An undecided customer",
+      "category": "story",
+      "exchange": [
+        "A customer can spend an hour choosing a cup they will hold every morning.",
+        "Do you get impatient?",
+        "I think of all those mornings. It makes an hour seem reasonable."
+      ]
+    },
+    {
+      "title": "Turning the glass",
+      "category": "world",
+      "exchange": [
+        "I turn the display when the light changes.",
+        "To make it shine?",
+        "To let people see what they are buying, including the little uneven parts."
+      ]
+    }
+  ],
+  "Elin": [
+    {
+      "title": "A narrow sunbeam",
+      "category": "story",
+      "exchange": [
+        "The sun reaches my kitchen table for only a short while.",
+        "So you move the table?",
+        "Sometimes breakfast follows the light across the room."
+      ]
+    },
+    {
+      "title": "Something beautiful",
+      "category": "world",
+      "exchange": [
+        "I used to think a useful purchase had to look plain.",
+        "And the glass flower?",
+        "It gives me pleasure every morning. I am prepared to call that useful."
+      ]
+    }
+  ],
+  "Maelis": [
+    {
+      "title": "A grateful goose",
+      "category": "story",
+      "exchange": [
+        "The goose never thanked me when its wing healed.",
+        "Would you have expected it to?",
+        "No. People are the ones who make gratitude complicated."
+      ]
+    },
+    {
+      "title": "A clear question",
+      "category": "world",
+      "exchange": [
+        "Bring me what you actually saw, not what the village has decided it means.",
+        "Even if it sounds foolish?",
+        "Especially then. Embellishment is harder to work with than foolishness."
+      ]
+    }
+  ],
+  "Archivist Elowen": [
+    {
+      "title": "The quiet visitor",
+      "category": "story",
+      "exchange": [
+        "I notice who opens a book and then looks around before reading.",
+        "Why?",
+        "Sometimes they need to know they are allowed to ask the question inside it."
+      ]
+    },
+    {
+      "title": "A missing name",
+      "category": "world",
+      "exchange": [
+        "An empty space in a record is still evidence.",
+        "Of what?",
+        "That someone had a reason to make it empty."
+      ]
+    }
+  ],
+  "Mira": [
+    {
+      "title": "A careful drawing",
+      "category": "story",
+      "exchange": [
+        "I mark uncertain details lightly on my sketches.",
+        "So you can erase them?",
+        "So nobody mistakes my best guess for a measured wall."
+      ]
+    },
+    {
+      "title": "Letters from miners",
+      "category": "world",
+      "exchange": [
+        "A letter may describe supper beside an account of danger.",
+        "Does that make it less useful?",
+        "It makes the writer a person, which the official report often forgets."
+      ]
+    }
+  ],
+  "Oren": [
+    {
+      "title": "Closing the book",
+      "category": "story",
+      "exchange": [
+        "I put frightening accounts away before sunset now.",
+        "Does it stop the dreams?",
+        "Not always. It makes room for another thought before bed."
+      ]
+    },
+    {
+      "title": "Names on stones",
+      "category": "world",
+      "exchange": [
+        "I copy names carefully when I study the dead.",
+        "More carefully than the dates?",
+        "Both matter. A name is not simply a decoration above a number."
+      ]
+    }
+  ],
+  "Tamsin": [
+    {
+      "title": "The tree-door story",
+      "category": "story",
+      "exchange": [
+        "I have finally decided what is behind the door.",
+        "Will you tell me?",
+        "An ordinary kitchen. I want to know why that feels more surprising than a monster."
+      ]
+    },
+    {
+      "title": "The torn cushion",
+      "category": "world",
+      "exchange": [
+        "I repaired the cushion but left a small patch showing.",
+        "So you can recognize it?",
+        "So everyone else can too. I have defended that chair for years."
+      ]
+    }
+  ],
+  "Master Iven": [
+    {
+      "title": "A pupil's correction",
+      "category": "story",
+      "exchange": [
+        "The finest lesson sometimes begins with a pupil saying I have made a mistake.",
+        "You like that?",
+        "I like when they can show me why. That means they were thinking."
+      ]
+    },
+    {
+      "title": "Maps and people",
+      "category": "world",
+      "exchange": [
+        "A map marks towns neatly, but a town is never just its center.",
+        "What is missing?",
+        "Gardens, errands, and the reasons someone chooses to stay."
+      ]
+    }
+  ],
+  "Brin": [
+    {
+      "title": "Measuring a stair",
+      "category": "story",
+      "exchange": [
+        "I have drawn a little scale along the edge of my notebook.",
+        "For the temple steps?",
+        "For anything people insist is too large or too steep to describe properly."
+      ]
+    },
+    {
+      "title": "A doorway in a sketch",
+      "category": "world",
+      "exchange": [
+        "If two accounts disagree about a door, I draw both in light lines.",
+        "Until you visit?",
+        "Until evidence gives me a reason to darken one."
+      ]
+    }
+  ],
+  "Nell": [
+    {
+      "title": "Saying the whole name",
+      "category": "story",
+      "exchange": [
+        "I still take a breath before saying Halvard's name in class.",
+        "Are you afraid?",
+        "Sometimes. I say it anyway, at an ordinary volume."
+      ]
+    },
+    {
+      "title": "Who paid the price",
+      "category": "world",
+      "exchange": [
+        "I ask whose home a grand decision reached first.",
+        "Why the first home?",
+        "Because someone always lived where the official account begins."
+      ]
+    }
+  ],
+  "Sable": [
+    {
+      "title": "The copied mistake",
+      "category": "story",
+      "exchange": [
+        "A misspelling can show how one book borrowed from another.",
+        "An error can help?",
+        "If you notice it instead of copying it again."
+      ]
+    },
+    {
+      "title": "Changing your mind",
+      "category": "world",
+      "exchange": [
+        "I leave enough room in my notes to disagree with myself later.",
+        "Does that happen often?",
+        "Often enough to justify the paper."
+      ]
+    }
+  ],
+  "Pella": [
+    {
+      "title": "The globe's edge",
+      "category": "story",
+      "exchange": [
+        "I can turn the globe until the coast faces the window.",
+        "What do you imagine?",
+        "That the light on the paint is sunlight on actual water."
+      ]
+    },
+    {
+      "title": "A first journey",
+      "category": "world",
+      "exchange": [
+        "I do not need my first journey to be heroic.",
+        "What would you like?",
+        "To arrive, look around, and have enough time before coming home."
+      ]
+    }
+  ],
+  "Bess": [
+    {
+      "title": "The chipped cup",
+      "category": "story",
+      "exchange": [
+        "I keep the old chipped cup behind the counter.",
+        "For luck?",
+        "For measuring. It still holds exactly what it held before it looked impressive."
+      ]
+    },
+    {
+      "title": "A room settling down",
+      "category": "world",
+      "exchange": [
+        "I know the moment a noisy room becomes a comfortable one.",
+        "How?",
+        "People stop speaking over the person who has just arrived."
+      ]
+    }
+  ],
+  "Ronan": [
+    {
+      "title": "The late apple",
+      "category": "story",
+      "exchange": [
+        "I check the late-ripening tree even when everyone says it has failed.",
+        "Out of loyalty?",
+        "Out of experience. Patience is easier after you have tasted the reason."
+      ]
+    },
+    {
+      "title": "A clean barrel",
+      "category": "world",
+      "exchange": [
+        "Making good cider includes a great deal of cleaning nobody sings about.",
+        "Should Ovid write a verse?",
+        "Only if it helps with the scrubbing."
+      ]
+    }
+  ],
+  "Venn": [
+    {
+      "title": "A letter's weight",
+      "category": "story",
+      "exchange": [
+        "A folded page weighs almost nothing until you know someone is waiting for it.",
+        "Do you read them?",
+        "Only when I am asked. Carrying a story is different from owning it."
+      ]
+    },
+    {
+      "title": "Finding the reader",
+      "category": "world",
+      "exchange": [
+        "I learned to ask whether someone wants a letter read quietly.",
+        "Why quietly?",
+        "Not every piece of news belongs to the room."
+      ]
+    }
+  ],
+  "Hobb": [
+    {
+      "title": "The fourth leg",
+      "category": "story",
+      "exchange": [
+        "The fourth leg of my chair is finished.",
+        "Does it stand now?",
+        "After a fashion. I am investigating which fashion."
+      ]
+    },
+    {
+      "title": "Moving a table",
+      "category": "world",
+      "exchange": [
+        "Everyone carrying a table believes their end is the difficult one.",
+        "Which end is?",
+        "The one discovering the doorway is narrower than promised."
+      ]
+    }
+  ],
+  "Edric": [
+    {
+      "title": "The thing you left",
+      "category": "story",
+      "exchange": [
+        "I miss fewer things from my old heavy pack than I expected.",
+        "What do you miss most?",
+        "The confidence that carrying everything gave me. My shoulders do not miss it."
+      ]
+    },
+    {
+      "title": "A day without a story",
+      "category": "world",
+      "exchange": [
+        "An ordinary evening feels especially good after a troublesome road.",
+        "What makes it good?",
+        "Dry feet and nobody shouting my name."
+      ]
+    }
+  ],
+  "Dorr": [
+    {
+      "title": "A useful nap",
+      "category": "story",
+      "exchange": [
+        "I wake before a cup has gone completely cold.",
+        "How do you manage that?",
+        "Years of practice. I would not want to appear careless."
+      ]
+    },
+    {
+      "title": "The dawn habit",
+      "category": "world",
+      "exchange": [
+        "Sometimes I wake early and decide the wagons can unload themselves in my memory.",
+        "Can they?",
+        "Beautifully. They have had years to learn."
+      ]
+    }
+  ],
+  "Ser Anwen": [
+    {
+      "title": "A mended strap",
+      "category": "story",
+      "exchange": [
+        "I still check the stable straps when I visit.",
+        "Even after becoming a knight?",
+        "A title should not make your hands forget useful work."
+      ]
+    },
+    {
+      "title": "An oath in plain words",
+      "category": "world",
+      "exchange": [
+        "I prefer an oath a frightened person can understand.",
+        "Why them?",
+        "They are the ones who need to know what I promised."
+      ]
+    }
+  ],
+  "Grusk": [
+    {
+      "title": "Measuring doors",
+      "category": "story",
+      "exchange": [
+        "I still turn sideways near a narrow doorway, even without a barrel.",
+        "A habit?",
+        "My shoulder remembers the width of work."
+      ]
+    },
+    {
+      "title": "An honest deck",
+      "category": "world",
+      "exchange": [
+        "I count the cards before Dain begins explaining the rules.",
+        "Does he object?",
+        "He calls it a lack of trust. I call it arithmetic."
+      ]
+    }
+  ],
+  "Fen": [
+    {
+      "title": "The first step",
+      "category": "story",
+      "exchange": [
+        "I watch a new dancer's shoulders before their feet.",
+        "What do they tell you?",
+        "Whether they need a lesson or permission to enjoy themselves."
+      ]
+    },
+    {
+      "title": "Entering a room",
+      "category": "world",
+      "exchange": [
+        "I am getting better at looking for a familiar face instead of an exit.",
+        "Is that a change?",
+        "A small one that feels quite large from inside."
+      ]
+    }
+  ],
+  "Senn": [
+    {
+      "title": "A cheerful loss",
+      "category": "story",
+      "exchange": [
+        "I practice losing a small wager without spoiling everyone's evening.",
+        "Is that practice necessary?",
+        "Some people are astonishingly bad at it."
+      ]
+    },
+    {
+      "title": "The folded hand",
+      "category": "world",
+      "exchange": [
+        "Knowing when to fold means noticing the cards instead of your pride.",
+        "Can you separate them?",
+        "Not always. That is why I keep the wagers small."
+      ]
+    }
+  ],
+  "Dain": [
+    {
+      "title": "A swept floor",
+      "category": "story",
+      "exchange": [
+        "You learn a great deal about travelers from what falls out of their boots.",
+        "Useful for wagers?",
+        "Useful for sweeping. The wagers came later."
+      ]
+    },
+    {
+      "title": "Explaining the rules",
+      "category": "world",
+      "exchange": [
+        "Nyra insists I explain all the rules before we begin.",
+        "A terrible burden.",
+        "You understand my difficulties better than she does."
+      ]
+    }
+  ],
+  "Rusk": [
+    {
+      "title": "The piece of paper",
+      "category": "story",
+      "exchange": [
+        "I keep my daughter's address wrapped against rain.",
+        "You must know it by heart.",
+        "I do. Carrying it is for a different kind of remembering."
+      ]
+    },
+    {
+      "title": "A voice in fog",
+      "category": "world",
+      "exchange": [
+        "The man who talked through the pass kept me from feeling alone.",
+        "Did you thank him?",
+        "After we were through. I had spent the first half wishing he would stop."
+      ]
+    }
+  ],
+  "Linnet": [
+    {
+      "title": "A tune without words",
+      "category": "story",
+      "exchange": [
+        "Different people tell me the same tune reminds them of different homes.",
+        "Which is it about?",
+        "Whichever home they need to hear that evening."
+      ]
+    },
+    {
+      "title": "The remembered hum",
+      "category": "world",
+      "exchange": [
+        "I remember my grandmother's humming more clearly than most of her songs.",
+        "Why that?",
+        "She hummed when she was not trying to perform for anyone."
+      ]
+    }
+  ],
+  "Puck": [
+    {
+      "title": "Practicing quietly",
+      "category": "story",
+      "exchange": [
+        "I have learned to practice the difficult part more softly.",
+        "For Bess?",
+        "For everyone who has already heard me fail at it."
+      ]
+    },
+    {
+      "title": "A song of your own",
+      "category": "world",
+      "exchange": [
+        "It still feels strange when someone recognizes my tune.",
+        "Good strange?",
+        "Very. I try not to grin until they have finished listening."
+      ]
+    }
+  ],
+  "Vale": [
+    {
+      "title": "A hat in a doorway",
+      "category": "story",
+      "exchange": [
+        "I remove the hat before passing through narrow doors now.",
+        "Experience?",
+        "Architecture is an unforgiving critic of fashion."
+      ]
+    },
+    {
+      "title": "An unremarkable story",
+      "category": "world",
+      "exchange": [
+        "I would like to tell a story that makes nobody ask for another.",
+        "Could you?",
+        "I have had a very ordinary breakfast. I can describe it at length."
+      ]
+    }
+  ],
+  "Cerys": [
+    {
+      "title": "An honest question",
+      "category": "story",
+      "exchange": [
+        "My sister brings questions home that stay at the table through supper.",
+        "Do you answer them?",
+        "I add questions of my own. We eat before solving the world."
+      ]
+    },
+    {
+      "title": "Losing at cards",
+      "category": "world",
+      "exchange": [
+        "I now understand why I lose some hands.",
+        "Does that make it better?",
+        "It makes the other losses more irritatingly mysterious."
+      ]
+    }
+  ],
+  "Nyra": [
+    {
+      "title": "Watching the audience",
+      "category": "story",
+      "exchange": [
+        "A conjurer watches the audience as closely as the audience watches him.",
+        "For suspicion?",
+        "For the instant they begin enjoying themselves."
+      ]
+    },
+    {
+      "title": "A fair surprise",
+      "category": "world",
+      "exchange": [
+        "I like being surprised when nobody loses something important.",
+        "Even by Dain?",
+        "Dain could surprise me by dealing the same number of cards to everyone."
+      ]
+    }
+  ],
+  "Maren": [
+    {
+      "title": "A towel first",
+      "category": "story",
+      "exchange": [
+        "A wet traveler often apologizes before asking for a room.",
+        "What do you say?",
+        "That the floor has been wet before and survived."
+      ]
+    },
+    {
+      "title": "A well-made bed",
+      "category": "world",
+      "exchange": [
+        "I smooth the sheet where tired feet will find it.",
+        "Does anyone notice?",
+        "Comfort does not need to announce which small kindness made it."
+      ]
+    }
+  ],
+  "Dunstan": [
+    {
+      "title": "An honest fit",
+      "category": "story",
+      "exchange": [
+        "I would rather hear that the armor pinches before you leave the shop.",
+        "Even after all the work?",
+        "Especially then. Good work includes listening to the person wearing it."
+      ]
+    },
+    {
+      "title": "The blade above the bench",
+      "category": "world",
+      "exchange": [
+        "That bent first sword keeps me from claiming I was born knowing the trade.",
+        "Do apprentices ask about it?",
+        "The brave ones. I like them immediately."
+      ]
+    }
+  ],
+  "Sela": [
+    {
+      "title": "A held breath",
+      "category": "story",
+      "exchange": [
+        "People hold their breath when they watch hot glass take shape.",
+        "Do you?",
+        "I have work to do. I breathe and let them worry for me."
+      ]
+    },
+    {
+      "title": "A useful imperfection",
+      "category": "world",
+      "exchange": [
+        "A bubble can catch the light in a way a perfect pane never will.",
+        "So every mistake is useful?",
+        "No. Recognizing which ones are useful is part of learning."
+      ]
+    }
+  ],
+  "Tam": [
+    {
+      "title": "The old press",
+      "category": "story",
+      "exchange": [
+        "The press turns smoothly now, but Joss still pauses at the stubborn part.",
+        "Out of habit?",
+        "Out of respect for two afternoons with a wrench."
+      ]
+    },
+    {
+      "title": "Returning a kindness",
+      "category": "world",
+      "exchange": [
+        "Nan will not let me repay the soup.",
+        "What will you do?",
+        "Find a reason she ought to take something home. We are both stubborn."
+      ]
+    }
+  ],
+  "Celia": [
+    {
+      "title": "The last page",
+      "category": "story",
+      "exchange": [
+        "The blank page at the back of my notebook has become rather important.",
+        "Even with nothing on it?",
+        "It means I have not decided I am finished learning."
+      ]
+    },
+    {
+      "title": "The laundry list",
+      "category": "world",
+      "exchange": [
+        "I kept a copy of that ordinary list beside the battle account.",
+        "Why?",
+        "Somebody expected to have clothes worth washing after the fighting."
+      ]
+    }
+  ],
+  "Ivo": [
+    {
+      "title": "A box that closes",
+      "category": "story",
+      "exchange": [
+        "The lid now closes if you press the left corner first.",
+        "Does that count?",
+        "As progress, yes. As finished, Grandfather would have had opinions."
+      ]
+    },
+    {
+      "title": "Tools at rest",
+      "category": "world",
+      "exchange": [
+        "I clean the tools even on days I do not use them.",
+        "Why?",
+        "It keeps tomorrow's work from beginning with yesterday's neglect."
+      ]
+    }
+  ],
+  "Merrin": [
+    {
+      "title": "The spare place",
+      "category": "story",
+      "exchange": [
+        "I move the spare cup away from the table's edge before I sit.",
+        "Expecting company?",
+        "Making room for it. There is a difference."
+      ]
+    },
+    {
+      "title": "Watching the lane",
+      "category": "world",
+      "exchange": [
+        "Some footsteps make me look up before I know why.",
+        "Your brother's?",
+        "Sometimes only the way I remember them."
+      ]
+    }
+  ],
+  "Zella": [
+    {
+      "title": "The smallest hole",
+      "category": "story",
+      "exchange": [
+        "A little tear is easier to mend before you can put your hand through it.",
+        "That seems obvious.",
+        "Most useful lessons do, once somebody has taught them to you."
+      ]
+    },
+    {
+      "title": "A length of cord",
+      "category": "world",
+      "exchange": [
+        "I never cut the spare cord until I know how much is needed.",
+        "To save it?",
+        "To avoid discovering I was generous with the wrong end."
+      ]
+    }
+  ],
+  "Iris": [
+    {
+      "title": "Wood before weather",
+      "category": "story",
+      "exchange": [
+        "I bring the dry wood close while the door still opens easily.",
+        "Before the frost?",
+        "Before I can use the frost as an excuse for not doing it."
+      ]
+    },
+    {
+      "title": "A visitor's errand",
+      "category": "world",
+      "exchange": [
+        "I keep tea ready for neighbors with suspiciously small errands.",
+        "Do they know you know?",
+        "I hope they know they are welcome. That is the useful part."
+      ]
+    }
+  ],
+  "Alderic": [
+    {
+      "title": "A swept threshold",
+      "category": "story",
+      "exchange": [
+        "I sweep even when I expect no visitor.",
+        "For the temple?",
+        "For the person who may arrive while I expect nobody."
+      ]
+    },
+    {
+      "title": "The old carvings",
+      "category": "world",
+      "exchange": [
+        "Look at the hands in old rider carvings as carefully as the weapons.",
+        "What should I notice?",
+        "Whether they are reaching, holding, or helping. Those gestures survived too."
+      ]
+    }
+  ],
+  "King Halvard": [
+    {
+      "title": "The silent room",
+      "category": "story",
+      "exchange": [
+        "People used to interrupt me. Now they wait until I have finished.",
+        "Does that tell you they agree?",
+        "It tells me they have learned when to speak."
+      ]
+    },
+    {
+      "title": "What remains of trust",
+      "category": "world",
+      "exchange": [
+        "Trust cannot hold a kingdom together when everyone wants something different.",
+        "Can fear?",
+        "Fear has never failed to make itself understood."
+      ]
+    }
+  ],
+  "Cartwright Oswin": [
+    {
+      "title": "The spare peg",
+      "category": "story",
+      "exchange": [
+        "I always carry a spare peg for the wheel.",
+        "But the wheel still broke.",
+        "A spare peg is excellent protection against one very particular misfortune."
+      ]
+    },
+    {
+      "title": "A turn in the road",
+      "category": "world",
+      "exchange": [
+        "A cart makes you notice corners people on foot walk around without thinking.",
+        "Is that why you know the roads?",
+        "I know the corners. The roads connect them."
+      ]
+    }
+  ],
+  "Miner Marn": [
+    {
+      "title": "Another stone badger",
+      "category": "story",
+      "exchange": [
+        "I made a bird from a chip last night.",
+        "Did Nerik recognize it?",
+        "He said it was a badger looking upward. I kept it anyway."
+      ]
+    },
+    {
+      "title": "Listening to stone",
+      "category": "world",
+      "exchange": [
+        "A loose stone sometimes shifts before it falls.",
+        "Can you hear it?",
+        "If nobody is shouting over the person who noticed."
+      ]
+    }
+  ],
+  "Miner Nerik": [
+    {
+      "title": "The lamp at home",
+      "category": "story",
+      "exchange": [
+        "Mother still says the old lamp was perfectly good.",
+        "Does she use the new one?",
+        "Every evening. She is very consistent about both things."
+      ]
+    },
+    {
+      "title": "Two pairs of hands",
+      "category": "world",
+      "exchange": [
+        "Marn and I work faster when we agree which stone moves first.",
+        "Instead of both pulling?",
+        "Two people hurrying in different directions are just another obstacle."
+      ]
+    }
+  ],
+  "Snowbuilder Nessa": [
+    {
+      "title": "The loose hat",
+      "category": "story",
+      "exchange": [
+        "I leave the little snow figure's hat at a jaunty angle.",
+        "Why that angle?",
+        "It looks as though it has just thought of something."
+      ]
+    },
+    {
+      "title": "A thawing face",
+      "category": "world",
+      "exchange": [
+        "I do not mind when the snow faces begin to change.",
+        "After all the work?",
+        "A winter decoration is allowed to enjoy the spring."
+      ]
+    }
+  ],
+  "Orin": [
+    {
+      "title": "A place to pause",
+      "category": "story",
+      "exchange": [
+        "I like a spot where I can watch people arrive without blocking their way.",
+        "Why there?",
+        "A welcome should not become another thing to get past."
+      ]
+    },
+    {
+      "title": "Recognizing footsteps",
+      "category": "world",
+      "exchange": [
+        "Some neighbors have a pace I recognize before I see their faces.",
+        "Mine too?",
+        "Yours often sounds as though a question is pulling it along."
+      ]
+    }
+  ],
+  "Weft": [
+    {
+      "title": "A patient thread",
+      "category": "story",
+      "exchange": [
+        "I smooth a thread before trying to pass it through a narrow eye.",
+        "Does that help?",
+        "More than becoming cross with something thinner than a hair."
+      ]
+    },
+    {
+      "title": "A useful scrap",
+      "category": "world",
+      "exchange": [
+        "I save small pieces until I know what they can mend.",
+        "Do they pile up?",
+        "Everything has to earn its drawer eventually."
+      ]
+    }
+  ],
+  "Dorrick": [
+    {
+      "title": "A pause for supper",
+      "category": "story",
+      "exchange": [
+        "I try to put work down before the meal goes cold.",
+        "Try?",
+        "There is always one last thing. It has remarkable stamina."
+      ]
+    },
+    {
+      "title": "A sound repair",
+      "category": "world",
+      "exchange": [
+        "I trust something mended carefully more than something new that nobody has tested.",
+        "Why?",
+        "The repair tells me somebody noticed where it failed."
+      ]
+    }
+  ],
+  "Hask": [
+    {
+      "title": "An ordinary visit",
+      "category": "story",
+      "exchange": [
+        "It is pleasant when someone stops without needing an urgent favor.",
+        "Am I interrupting?",
+        "Only the usual thoughts. They can wait a moment."
+      ]
+    },
+    {
+      "title": "The familiar road",
+      "category": "world",
+      "exchange": [
+        "A familiar road changes slowly enough that you stop noticing.",
+        "What makes you notice?",
+        "Walking it beside someone seeing it for the first time."
+      ]
+    }
+  ],
+  "Garrow": [
+    {
+      "title": "A job finished",
+      "category": "story",
+      "exchange": [
+        "I like setting the tools in order after a job.",
+        "More than the work?",
+        "It is the part that tells my hands they may stop."
+      ]
+    },
+    {
+      "title": "A helpful question",
+      "category": "world",
+      "exchange": [
+        "Asking where to put something is more useful than guessing.",
+        "Even when the answer seems obvious?",
+        "Especially if somebody else has to find it later."
+      ]
+    }
+  ],
+  "Marek": [
+    {
+      "title": "An unhurried cup",
+      "category": "story",
+      "exchange": [
+        "I prefer a cup I can finish without standing up halfway through.",
+        "A rare luxury?",
+        "Common enough to forget it is pleasant."
+      ]
+    },
+    {
+      "title": "Recognizing a face",
+      "category": "world",
+      "exchange": [
+        "I remember people better than the things they bought.",
+        "Does that help with business?",
+        "It helps with being glad to see them again."
+      ]
+    }
+  ],
+  "Bregga": [
+    {
+      "title": "Preparing early",
+      "category": "story",
+      "exchange": [
+        "I put things within reach before the weather makes reaching difficult.",
+        "Does it save much trouble?",
+        "It makes a cold morning ask less of me."
+      ]
+    },
+    {
+      "title": "An open door",
+      "category": "world",
+      "exchange": [
+        "A doorway loses its warmth quickly when somebody stands there talking.",
+        "A hint for me?",
+        "An invitation to decide whether you are coming in."
+      ]
+    }
+  ],
+  "Torvald": [
+    {
+      "title": "A lamp's glass",
+      "category": "story",
+      "exchange": [
+        "A clean lamp glass gives the flame a fair chance.",
+        "Is that the first thing you check?",
+        "After checking that the person carrying it knows where they are going."
+      ]
+    },
+    {
+      "title": "Packing for darkness",
+      "category": "world",
+      "exchange": [
+        "I put things in the same pockets before going somewhere dark.",
+        "So you can find them?",
+        "So a small need does not become a long search."
+      ]
+    }
+  ],
+  "Ingrid": [
+    {
+      "title": "A winter routine",
+      "category": "story",
+      "exchange": [
+        "I check the latch before settling beside the warmth.",
+        "Every night?",
+        "Habits are useful when tiredness is trying to make decisions."
+      ]
+    },
+    {
+      "title": "A neighbor's window",
+      "category": "world",
+      "exchange": [
+        "A lit window can make a cold lane feel less empty.",
+        "Even if you do not go in?",
+        "Knowing someone is there can be enough."
+      ]
+    }
+  ],
+  "Sigrun": [
+    {
+      "title": "The spare wrapping",
+      "category": "story",
+      "exchange": [
+        "I keep a dry piece of cloth for unexpected weather.",
+        "Does it get used?",
+        "Often enough that unexpected is an optimistic word."
+      ]
+    },
+    {
+      "title": "Waiting out the cold",
+      "category": "world",
+      "exchange": [
+        "There is no shame in taking a little longer when the footing is poor.",
+        "Do people forget?",
+        "Usually the ones most eager to tell you how quickly they arrived."
+      ]
+    }
+  ],
+  "Asta": [
+    {
+      "title": "A comfortable seat",
+      "category": "story",
+      "exchange": [
+        "I choose a seat by how long I would happily remain in it.",
+        "Not by the view?",
+        "A fine view loses charm when your back begins complaining."
+      ]
+    },
+    {
+      "title": "An evening's company",
+      "category": "world",
+      "exchange": [
+        "A conversation need not become memorable to be worthwhile.",
+        "What makes it worthwhile?",
+        "Going home a little less alone than when you arrived."
+      ]
+    }
+  ]
+}

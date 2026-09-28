@@ -882,16 +882,16 @@ function openDragonConversation(category='root'){
   dismissDragonBanter();P.moving=false;P.act=null;dragon.moving=false;faceCorinAt(dragon.x,dragon.y);
   const speak=(lines,back=category)=>{askShut();playScene(typeof lines==='function'?lines():lines,{telepathy:true,after:()=>openDragonConversation(back)});};
   const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key])});
-  const general=category=>(DRAGON_GENERAL_TOPICS[category]||[]).map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
+  const general=category=>[...(DRAGON_GENERAL_TOPICS[category]||[]),...(typeof dragonExtraTopics==='function'?dragonExtraTopics(category):[])].map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
   const options={
     root:[
-      {n:'What we have seen together',go:()=>openDragonConversation('journey')},
-      {n:'Dragons and our bond',go:()=>openDragonConversation('dragons')},
-      {n:'Emberfell and its history',go:()=>openDragonConversation('history')},
+      {n:'What we have seen together',navigation:true,go:()=>openDragonConversation('journey')},
+      {n:'Dragons and our bond',navigation:true,go:()=>openDragonConversation('dragons')},
+      {n:'Emberfell and its history',navigation:true,go:()=>openDragonConversation('history')},
       {n:'What should we do next?',go:()=>speak(dragonCurrentQuest)},
-      ...(dragonSideQuestTopics().length?[{n:'Side quests and useful leads',go:()=>openDragonConversation('quests')}]:[]),
-      {n:'Travelling and fighting together',go:()=>openDragonConversation('travelling')},
-      {n:'You, me, and other mysteries',go:()=>openDragonConversation('personal')},
+      ...(dragonSideQuestTopics().length?[{n:'Side quests and useful leads',navigation:true,go:()=>openDragonConversation('quests')}]:[]),
+      {n:'Travelling and fighting together',navigation:true,go:()=>openDragonConversation('travelling')},
+      {n:'You, me, and other mysteries',navigation:true,go:()=>openDragonConversation('personal')},
       {n:'Let’s keep going',go:null}
     ],
     journey:dragonJourneyTopics().map(t=>({n:t.name,go:()=>speak(t.lines)})),
@@ -902,6 +902,7 @@ function openDragonConversation(category='root'){
     travelling:[topic('Riding and flying','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
   };
   if(!options[category])return;
-  ask={quick:1,dragonConversation:true,back:category==='root'?null:()=>openDragonConversation(),opts:[{n:DRAGON_NAME,head:true},...options[category],...(category==='root'?[]:[{n:'Back to our other questions',go:()=>openDragonConversation()}])]};
+  if(category==='history'||category==='quests')for(const o of options[category])o.category=category==='history'?'world':'lead';
+  ask={quick:1,dragonConversation:true,topicScope:category,back:category==='root'?null:()=>openDragonConversation(),opts:[{n:DRAGON_NAME,head:true},...options[category],...(category==='root'?[]:[{n:'Back to our other questions',navigation:true,go:()=>openDragonConversation()}])]};
   askPick=1;askDraw();
 }
