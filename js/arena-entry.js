@@ -217,14 +217,13 @@
     if(dragonHere())cast.push(dragon);
     const l=Math.min(...cast.map(f=>f.x-40)),r=Math.max(...cast.map(f=>f.x+40));
     const t=Math.min(...cast.map(f=>f.y-80)),b=Math.max(...cast.map(f=>f.y+8));
-    // Fit the visible sprites closely instead of reserving a large empty border.
-    const top=24,bottom=130,usable=Math.max(40,VH-top-bottom);
+    // The ready card now lives above the battle. Reserve its space even while
+    // the walls rise so its arrival never causes a second camera jump.
+    const top=Math.min(112,VH*.4),bottom=16,usable=Math.max(40,VH-top-bottom);
     const normal=cameraZoom||playZoom();
-    cam.z=Math.max(normal*.9,Math.min(normal,(VW-24)/(r-l),usable/(b-t)));
+    cam.z=Math.max(.1,Math.min(normal,(VW-24)/(r-l),usable/(b-t)));
     cam.x=(l+r)/2-VW/cam.z/2;
-    const enemies=pending.foes.filter(living);
-    const focus=enemies.length?(Math.min(...enemies.map(f=>f.y))+Math.max(...enemies.map(f=>f.y)))/2-32:(t+b)/2;
-    cam.y=focus-(VH<360?VH/2:top+usable/2)/cam.z;
+    cam.y=(t+b)/2-(top+usable/2)/cam.z;
   }
   popup.addEventListener('click',e=>{e.preventDefault();action();});
   window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,gather,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};

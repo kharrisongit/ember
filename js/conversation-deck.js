@@ -14,6 +14,11 @@
     return filter==='all'||filter==='new'&&!seen(o)||filter===cat;
   }
   function node(tag,cls,text){const e=document.createElement(tag);e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+  function back(){
+    if(ask?._profileOpen){ask._profileOpen=false;askDraw();return true;}
+    if(ask?._deckFilter&&ask._deckFilter!=='all'){ask._deckFilter='all';askDraw();return true;}
+    return false;
+  }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
     const memory=!ask._topicDrawn?topicMenuPositions.get(scope):null;
@@ -26,14 +31,41 @@
     const name=ask.npcConversation||'Aurelius';
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
-    const header=node('div','topicSpeaker deckHeader');
+    box.querySelector('.deckHeader')?.remove();box.querySelector('.deckProfile')?.remove();
+    const header=node('header','deckHeader');
+    const profileButton=node('button','deckProfileToggle');profileButton.type='button';
+    profileButton.setAttribute('aria-label','Character profile: '+name);
+    profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
+    profileButton.setAttribute('aria-controls','conversationProfile');
+    profileButton.onclick=()=>{ask._profileOpen=!ask._profileOpen;askDraw();};
     const portrait=node('span','journalPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
     const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
     identity.append(node('strong','deckName',name));
     const sub=node('span','deckProgressText',`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
     const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
-    const close=node('button','deckClose','×');close.type='button';close.setAttribute('aria-label','Close conversation');close.onclick=e=>{e.stopPropagation();askBack();};
-    header.append(portrait,identity,ring,close);rows.append(header);
+    identity.append(node('small','deckProfileHint',ask._profileOpen?'Close character profile ▴':'Character profile ▾'));
+    profileButton.append(portrait,identity,ring);
+    const controls=node('div','deckHeaderControls');
+    const parent=ask.back&&ask.topicScope!=='thornwell-audience';
+    if(ask._profileOpen||filter!=='all'||parent){
+      const previous=node('button','deckBack','‹ Back');previous.type='button';previous.setAttribute('aria-label','Back to previous topic list');
+      previous.onclick=e=>{e.stopPropagation();askBack();};controls.append(previous);
+    }
+    const close=node('button','deckClose','×');close.type='button';close.setAttribute('aria-label','Leave conversation');
+    close.onclick=e=>{e.stopPropagation();const leave=ask.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;askShut();if(leave)leave();};controls.append(close);
+    header.append(profileButton,controls);
+    const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
+    if(ask._profileOpen){
+      const info=window.EmberConversationView.profile(name,ask.npcActor);
+      profile.append(node('small','deckEyebrow',info.role),node('h2','',name),node('p','',info.bio));
+      const facts=node('dl','deckProfileFacts');
+      for(const [label,value]of [['Home',info.home],['Conversation',`${read} of ${topics.length} topics explored`],['Ask about',info.interests]]){facts.append(node('dt','',label),node('dd','',value));}
+      profile.append(facts);
+      if(info.memory){profile.append(node('small','deckEyebrow','In their own words'),node('blockquote','',info.memory));}
+    }
+    const hint=document.getElementById('topicScrollHint');
+    box.replaceChildren(header,profile,rows,...(hint?[hint]:[]));
+    box.classList.toggle('profileOpen',!!ask._profileOpen);
     const tabs=node('nav','deckTabs');tabs.setAttribute('aria-label','Conversation categories');
     for(const [key,label]of Object.entries(groups)){
       const count=topics.filter(o=>key==='all'||key==='new'&&!seen(o)||category(o)===key).length;
@@ -52,11 +84,11 @@
       b.style.setProperty('--topic-delay',Math.min(animated++,7)*24+'ms');
       const mark=node('span','deckTopicIcon');mark.innerHTML=symbol(cat);
       const copy=node('span','deckTopicCopy');copy.append(node('strong','',o.n));
-      const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this chapter'})[cat];
+      const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this topic'})[cat];
       copy.append(node('small','',detail));
       const badge=node('span','deckTopicBadge',cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
       badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
-      b.setAttribute('aria-label',o.n+(o.navigation?' — open chapter':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
+      b.setAttribute('aria-label',o.n+(o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
       b.onclick=e=>{e.stopPropagation();if(box.moved)return;askPick=i;askTake();};
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};
       rows.append(b);
@@ -64,5 +96,5 @@
     if(filter==='new'&&!topics.some(o=>!seen(o)))rows.append(node('p','deckEmpty','Every story here has been heard. Revisit a favorite, or see what the road brings next.'));
     box.scrollTop=oldScroll||0;updateTopicScrollHint();
   }
-  window.EmberConversationDeck={draw,visible,category};
+  window.EmberConversationDeck={draw,visible,category,back};
 })();

@@ -4076,9 +4076,10 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
-  if(ask?.shop||ask?.npcConversation){
+  if(ask?.shop||ask?.npcConversation||ask?.dragonConversation){
     if(ask.npcActor)faceToward(ask.npcActor,P.x,P.y);
-    if(ask.repaintWorld){drawWorld(tAcc,0);ask.repaintWorld=false;}
+    if(ask.npcConversation||ask.dragonConversation){tAcc+=dt;drawWorld(tAcc,dt);ask.repaintWorld=false;}
+    else if(ask.repaintWorld){drawWorld(tAcc,0);ask.repaintWorld=false;}
     return;
   }
   if(atlasOpen||fishing)stepDragonBanter(dt);
@@ -4994,7 +4995,7 @@ function wireTopicScrollHint(box) {
     observer.observe(box);observer.observe(document.getElementById('askRows'));
   }
 }
-function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();const back=ask?.back;askShut();if(back)back();}
+function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;const back=ask?.back;askShut();if(back)back();}
 function askShut() {
   if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:document.getElementById('bagAsk')?.scrollTop||0});
   hideMerchantShop();
@@ -5100,7 +5101,7 @@ function askDraw() {
   updateTopicScrollHint();
 }
 function askStep(d) {
-  if (!ask) return;
+  if (!ask || ask._profileOpen) return;
   globalThis.window?.EmberSfx?.ui?.();
   if(ask.quantity){changePurchaseQuantity(-d);return;}
   const n = ask.opts.length;
@@ -5113,7 +5114,7 @@ function askStep(d) {
   askDraw();
   const box=document.getElementById("bagAsk"), row=box.querySelector('[data-ask-index="'+askPick+'"]');
   if(row){const a=row.getBoundingClientRect(),b=box.getBoundingClientRect();
-    const heading=box.querySelector('.topicSpeaker'),tabs=box.querySelector('.deckTabs'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+(tabs?tabs.getBoundingClientRect().height:0)+6;
+    const heading=box.querySelector('.deckHeader,.topicSpeaker'),tabs=box.querySelector('.deckTabs'),top=b.top+(heading?heading.getBoundingClientRect().height:0)+(tabs?tabs.getBoundingClientRect().height:0)+6;
     const bottom=b.bottom-(document.getElementById('topicScrollHint')?.hidden===false?24:6);
     if(a.top<top)box.scrollTop-=top-a.top;
     else if(a.bottom>bottom)box.scrollTop+=a.bottom-bottom;}
@@ -5125,6 +5126,7 @@ const USE_SAID = {
 };
 function askTake() {
   if (!ask) return;
+  if(ask._profileOpen){window.EmberConversationDeck.back();return;}
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
   globalThis.window?.EmberSfx?.ui?.();

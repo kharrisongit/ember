@@ -3677,10 +3677,13 @@ function restoreCameraTarget(){
 }
 function presentCamera(dt){
   restoreCameraTarget();
+  const logical={...cam};
+  const conversation=globalThis.window?.EmberConversationView?.frame();
+  if(conversation)Object.assign(cam,conversation);
   const target={...cam},cx=cam.x+VW/cam.z/2,cy=cam.y+VH/cam.z/2;
   const old=cameraPresentation;
-  const cinematic=!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
-  const scripted=!mapGesturesAllowed()&&(cinematic||old?.cinematic||old?.settling);
+  const cinematic=!!conversation||!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
+  const scripted=(!!conversation||!mapGesturesAllowed())&&(cinematic||old?.cinematic||old?.settling);
   const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
   const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||Math.hypot(old.cx-cx,old.cy-cy)>.1||old.settling);
   if(zooming){
@@ -3691,6 +3694,7 @@ function presentCamera(dt){
     Object.assign(cam,{z,x:x-VW/z/2,y:y-VH/z/2});
     cameraPresentation={map:MAPID,mode,z,cx:x,cy:y,settling,cinematic};
   }else cameraPresentation={map:MAPID,mode,z:cam.z,cx,cy,settling:false,cinematic};
+  if(conversation)cameraLogical=logical;
 }
 
 function worldArtVisible(x,y,w,h,vw,vh){

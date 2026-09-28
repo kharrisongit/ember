@@ -7,13 +7,13 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 @keyframes ridingGuidePulse{50%{outline-offset:8px}}
 @media(prefers-reduced-motion:reduce){body.riding-guide :is(#atkm,#airm,#itemm) .row.riding-target,body.riding-guide #deck .riding-target{animation:none!important}}
 /* Combat teaching cards have their own silhouette, key cap, and accent. */
-#ridingHint.combat-prompt{top:auto;bottom:calc(var(--deck) + 22px);max-width:92vw;min-width:min(330px,86vw);padding:20px 28px 20px 72px;border:3px solid #ffe6a1;border-radius:18px 5px;background:linear-gradient(115deg,#243c48,#10202ddd);color:#fff5d9;font:800 clamp(20px,5vw,28px)/1.2 system-ui,sans-serif;letter-spacing:.02em;box-shadow:0 0 0 4px #10202d,0 8px 28px #0009,0 0 28px #f5ca6550;animation:combatPromptIn .25s ease-out}
+#ridingHint.combat-prompt{top:max(36px,calc(env(safe-area-inset-top) + 28px));bottom:auto;max-width:92vw;min-width:min(330px,86vw);padding:20px 28px 20px 72px;border:3px solid #ffe6a1;border-radius:18px 5px;background:linear-gradient(115deg,#243c48,#10202ddd);color:#fff5d9;font:800 clamp(20px,5vw,28px)/1.2 system-ui,sans-serif;letter-spacing:.02em;box-shadow:0 0 0 4px #10202d,0 8px 28px #0009,0 0 28px #f5ca6550;animation:combatPromptIn .25s ease-out}
 #ridingHint.combat-prompt:before{content:'A';position:absolute;left:18px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:38px;height:38px;border:2px solid currentColor;border-radius:50%;background:#ffe6a1;color:#182a38;font-size:24px;box-shadow:0 3px 0 #94713a}
 #ridingHint.combat-prompt:after{content:'SWORD • SWING';position:absolute;bottom:calc(100% + 3px);left:16px;padding:5px 12px;border-radius:6px 6px 0 0;background:#ffe6a1;color:#182a38;font:800 11px/1 system-ui,sans-serif;letter-spacing:.16em}
 #ridingHint.slash-prompt{border-color:#ffa56e;background:linear-gradient(115deg,#542936,#261624);color:#fff2e0;box-shadow:0 0 0 4px #261624,0 8px 28px #0009,0 0 30px #fb804650}
 #ridingHint.slash-prompt:before,#ridingHint.slash-prompt:after{background:#ffa56e;color:#361e2a}
 #ridingHint.slash-prompt:after{content:'DRAGON • SLASH'}
-#arenaReady{position:fixed;z-index:951;left:50%;bottom:calc(var(--deck) + 18px);transform:translateX(-50%);width:min(260px,74vw);padding:8px 14px;border:2px solid #ebc77a;border-radius:6px 22px;background:linear-gradient(140deg,#442936f5,#142834f5);color:#fff4d8;text-align:center;box-shadow:0 0 0 3px #101c26,0 8px 28px #0009;cursor:pointer;animation:combatPromptIn .25s ease-out}
+#arenaReady{position:fixed;z-index:951;left:50%;top:max(14px,env(safe-area-inset-top));bottom:auto;transform:translateX(-50%);width:min(260px,74vw);padding:8px 14px;border:2px solid #ebc77a;border-radius:6px 22px;background:linear-gradient(140deg,#442936f5,#142834f5);color:#fff4d8;text-align:center;box-shadow:0 0 0 3px #101c26,0 8px 28px #0009;cursor:pointer;animation:combatPromptIn .25s ease-out}
 #arenaReady[hidden]{display:none}
 #arenaReady span,#arenaReady strong{display:block}
 #arenaReady .battle-kicker{font:800 10px/1.2 system-ui,sans-serif;letter-spacing:.22em;color:#ebc77a}

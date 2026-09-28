@@ -1,12 +1,21 @@
 /* Generated inventory artwork shares the normal sprite pipeline, including shops and reveals. */
 // Image pages must start in separate 1024px atlas buckets.
 async function loadInventoryIcons() {
-  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag.svg',3003392]]) {
+  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392]]) {
   const image = new Image();
-  image.src = 'assets/inventory/'+file+'?v=20260926-all-items';
+  image.src = 'assets/inventory/'+file+'?v=20260928-painted-bag';
   await image.decode();
 
-  registerAtlasPage({img:image,x:0,y,w:image.width,h:image.height});
+  // Single-item art is sampled into the same 128px atlas cell as other rewards.
+  // Keep the high-resolution source intact for future inventory sizes.
+  let page=image;
+  if(file==='bag-painted.png'){
+    page=document.createElement('canvas');page.width=page.height=128;
+    const context=page.getContext('2d');context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+    const scale=128/Math.max(image.width,image.height),w=image.width*scale,h=image.height*scale;
+    context.drawImage(image,(128-w)/2,(128-h)/2,w,h);
+  }
+  registerAtlasPage({img:page,x:0,y,w:page.width,h:page.height});
   }
   registerInventorySprites();
 }

@@ -118,7 +118,7 @@
 #cloudSaveDialog .cloud-header{position:sticky;top:-18px;z-index:1;background:var(--dawn-paper);padding:12px 0;margin-bottom:12px}
 
 /* Conversations occupy the controller deck, leaving the world visible. */
-#bagAsk.conversationTopics{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;height:var(--deck)!important;max-height:none!important;box-sizing:border-box!important;border-radius:0!important;border:0!important;border-top:2px solid var(--dawn-edge)!important;z-index:60!important;overflow-y:auto!important;overscroll-behavior:contain;touch-action:pan-y;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 16px)!important;background:var(--dawn-paper)!important;box-shadow:0 -6px 22px #0005!important}
+#bagAsk.conversationTopics{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;height:var(--deck);max-height:none!important;box-sizing:border-box!important;border-radius:0!important;border:0!important;border-top:2px solid var(--dawn-edge)!important;z-index:60!important;overflow-y:auto!important;overscroll-behavior:contain;touch-action:pan-y;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 16px)!important;background:var(--dawn-paper)!important;box-shadow:0 -6px 22px #0005!important}
 #bagAsk.conversationTopics #askRows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 #bagAsk.conversationTopics .topicSpeaker{grid-column:1/-1}
 body.topics-open #deck,body.topics-open #deck *{pointer-events:none!important}

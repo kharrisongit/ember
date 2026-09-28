@@ -36,8 +36,8 @@ EmberArenaEntry.prepare();`);
  // Portrait and landscape framing keeps enemies in view without a distant zoom.
  for(const [w,h]of [[390,510],[844,250],[1280,680]]){
   c.size=[w,h];run('VW=size[0];VH=size[1];EmberArenaEntry.frameCamera()');
-  assert(run(`cam.z>Math.min(3,(VW-24)/(Math.max(P.x,...foes.map(f=>f.x))-Math.min(P.x,...foes.map(f=>f.x))+96),Math.max(40,VH-194)/(Math.max(P.y,...foes.map(f=>f.y))-Math.min(P.y,...foes.map(f=>f.y))+112))`),'Entry framing stays closer than the old padded view');
-  assert(run('cam.z>=2.7-1e-6'),'Arena pause pulls back at most 10 percent');
+  assert(run('cam.z>0&&cam.z<=3'),'Framing fits the fight without zooming past the normal camera');
+  assert(run('foes.every(f=>(f.y-80-cam.y)*cam.z>=Math.min(112,VH*.4)-.01&&(f.y+8-cam.y)*cam.z<=VH-16+.01)'),name+' full enemy sprites clear the top battle prompt');
   assert(run('foes.every(f=>(f.x-cam.x)*cam.z>=0&&(f.x-cam.x)*cam.z<=VW&&(f.y-32-cam.y)*cam.z>=0&&(f.y-32-cam.y)*cam.z<=VH)'),name+' enemies visible at '+w+'×'+h);
  }
  dom.touch(dom.element('act'));

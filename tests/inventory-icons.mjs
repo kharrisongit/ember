@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const pages=[];
-const c=vm.createContext({SPR:{},Image:class {width=512;height=512;async decode(){if(this.src.includes('rest'))this.height=768;if(this.src.match(/map-compass|bag\.svg/))this.width=this.height=128;}},registerAtlasPage:page=>pages.push(page)});
+const pages=[],samples=[];
+const document={createElement:()=>({width:0,height:0,getContext:()=>({drawImage:(...args)=>samples.push(args)})})};
+const c=vm.createContext({SPR:{},document,Image:class {width=512;height=512;async decode(){if(this.src.includes('rest'))this.height=768;if(this.src.includes('map-compass'))this.width=this.height=128;if(this.src.includes('bag-painted')){this.width=1300;this.height=1200;}}},registerAtlasPage:page=>pages.push(page)});
 // Exercise the real atlas lookup: two separate images cannot own the same
 // 1024px bucket even if their individual sprite rectangles do not overlap.
 const game=fs.readFileSync('js/generated/game-part-2.js','utf8');
@@ -12,6 +13,9 @@ c.registerAtlasPage=page=>{pages.push(page);register(page);};
 vm.runInContext(fs.readFileSync('js/inventory-icons.js','utf8'),c);
 await c.loadInventoryIcons();
 assert.equal(pages.length,4);
+assert.equal(samples.length,1,'The painted bag is sampled once into its own 128px page');
+assert.equal(samples[0][3],128);assert(samples[0][4]<128,'Bag proportions are preserved');
+assert.equal(pages[3].w,128);assert.equal(pages[3].h,128);
 const manifest=JSON.parse(fs.readFileSync('assets/inventory/manifest.json','utf8'));
 const initial=JSON.stringify(c.SPR);
 c.SPR={};c.registerInventorySprites();assert.equal(JSON.stringify(c.SPR),initial,'atlas inflation cannot discard inventory sprites');
