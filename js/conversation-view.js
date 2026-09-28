@@ -71,15 +71,15 @@
     if(!actor||!Number.isFinite(actor.x)||Math.hypot(actor.x-P.x,actor.y-P.y)>220)return hide();
     const name=actor===dragon?'Aurelius':actor.n;
     if(!name||!portraitFor(name))return hide();
-    const canvas=cv.getBoundingClientRect(),panel=document.getElementById(menu?'bagAsk':'say').getBoundingClientRect();
+    const canvas=cv.getBoundingClientRect(),panel=document.getElementById(dialogue?'say':'bagAsk').getBoundingClientRect();
     if(!canvas.width||!canvas.height)return hide();
     active=true;
     const sx=VW/canvas.width,sy=VH/canvas.height;
-    const portraitSize=innerHeight<=600?112:144;
+    const portraitSize=document.body.classList.contains('conversation-session')?Math.min(innerHeight<=520?76:144,Math.max(72,innerWidth*.2)):(innerHeight<=600?112:144);
     const actors=[{x:P.x,y:P.y,width:28,height:40},
       {x:actor.x,y:actor.y,width:actor===dragon?84:32,height:actor===dragon?62:48}];
     return conversationFrame(actors,{width:VW,height:VH,panelTop:(panel.top-canvas.top)*sy,
-      portraitSize:portraitSize*Math.max(sx,sy),menu},Math.min(5.5,playZoom()*1.22));
+      portraitSize:portraitSize*Math.max(sx,sy),menu:menu&&!dialogue},Math.min(5.5,playZoom()*1.22));
   }
   window.EmberConversationView={frame,framing,conversationFrame,profile,active:()=>active};
 })();

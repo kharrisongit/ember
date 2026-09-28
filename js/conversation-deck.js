@@ -23,7 +23,7 @@
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
     const memory=!ask._topicDrawn?topicMenuPositions.get(scope):null;
     if(memory){ask._deckFilter=memory.filter||'all';const i=ask.opts.findIndex(o=>!o.head&&o.n===memory.name);if(i>=0)askPick=i;}
-    const filter=ask._deckFilter||'all',enter=!ask._topicDrawn||ask._deckLastFilter!==filter;
+    const filter=ask.replyChoices?'all':ask._deckFilter||'all',enter=!ask._topicDrawn||ask._deckLastFilter!==filter;
     const oldScroll=memory?.scroll??box.scrollTop;
     ask._topicDrawn=true;ask._deckLastFilter=filter;
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
@@ -41,7 +41,7 @@
     const portrait=node('span','journalPortrait');portrait.setAttribute('aria-hidden','true');paintSmallPortrait(portrait,name);
     const identity=node('div','deckIdentity');identity.append(node('small','deckEyebrow',ask.dragonConversation?'A voice within · '+(ask.topicScope==='root'?'Aurelius':ask.topicScope||'Conversation'):'A moment to talk'));
     identity.append(node('strong','deckName',name));
-    const sub=node('span','deckProgressText',`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
+    const sub=node('span','deckProgressText',ask.replyChoices?'Choose Corin’s reply':`${Math.max(0,topics.length-read)} unheard · ${read} explored`);identity.append(sub);
     const ring=node('span','deckReadRing');ring.style.setProperty('--read',topics.length?read/topics.length*100+'%':'0%');ring.append(node('span','',`${read}/${topics.length}`));ring.setAttribute('aria-label',`${read} of ${topics.length} topics explored`);
     identity.append(node('span','deckProfileHint',ask._profileOpen?'Close profile ▴':'View profile ▾'));
     profileButton.title=ask._profileOpen?'Tap the banner to return to topics':'Tap the banner for biography and character details';
@@ -52,8 +52,8 @@
       const previous=node('button','deckBack','‹ Back');previous.type='button';previous.setAttribute('aria-label','Back to previous topic list');
       previous.onclick=e=>{e.stopPropagation();askBack();};controls.append(previous);
     }
-    const close=node('button','deckClose','×');close.type='button';close.setAttribute('aria-label','Leave conversation');
-    close.onclick=e=>{e.stopPropagation();const leave=ask.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;askShut();if(leave)leave();};controls.append(close);
+    const close=node('button','deckClose','Goodbye');close.type='button';close.setAttribute('aria-label','Leave conversation');
+    close.onclick=e=>{e.stopPropagation();if(ask.replyChoices){askBack();return;}if(window.EmberConversationFlow){window.EmberConversationFlow.goodbye();return;}const leave=ask.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;askShut();if(leave)leave();};if(!ask.replyChoices)controls.append(close);
     header.append(profileButton,controls);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
@@ -75,7 +75,8 @@
       b.append(node('span','deckTabCount',String(count)));
       b.onclick=e=>{e.stopPropagation();ask._deckFilter=key;askPick=ask.opts.findIndex(o=>visible(o,key));box.scrollTop=0;askDraw();};tabs.append(b);
     }
-    rows.append(tabs);
+    if(!ask.replyChoices)rows.append(tabs);
+    else rows.append(node('p','deckReplyPrompt','What will Corin say?'));
     const choices=ask.opts.map((o,i)=>({o,i})).filter(({o})=>visible(o,filter));
     if(!choices.some(({i})=>i===askPick))askPick=choices[0]?.i??0;
     let animated=0;
@@ -87,9 +88,9 @@
       const copy=node('span','deckTopicCopy');copy.append(node('strong','',o.n));
       const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this topic'})[cat];
       copy.append(node('small','',detail));
-      const badge=node('span','deckTopicBadge',cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
+      const badge=node('span','deckTopicBadge',ask.replyChoices?'↵':cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
       badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
-      b.setAttribute('aria-label',o.n+(o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
+      b.setAttribute('aria-label',o.n+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
       b.onclick=e=>{e.stopPropagation();if(box.moved)return;askPick=i;askTake();};
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};
       rows.append(b);

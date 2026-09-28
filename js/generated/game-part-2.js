@@ -4832,7 +4832,8 @@ addEventListener("keydown", e => {
   }
   if(globalThis.window?.EmberArenaEntry?.key(e))return;
   if(globalThis.window?.EmberRiding?.key(e))return;
-  if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
+  if(globalThis.window?.EmberConversationFlow?.key(e))return;
+  if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation||ask?.dragonConversation)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
     e.preventDefault();if(e.repeat)return;
     if(k==='b'||k==='escape')askBack();
     else if(k==='arrowleft'||k==='arrowright'){if(ask.quantity)changePurchaseQuantity(k==='arrowright'?1:-1);else askStep(k==='arrowright'?1:-1);}
@@ -5010,6 +5011,7 @@ function bindHold(id, onDown, onUp) {
 // A visible menu owns its touches. The deck-sized dragon menus cover every
 // controller; other menus still use the exposed D-pad, A and B to navigate.
 function blockCoveredGameInput(e) {
+  if(globalThis.window?.EmberConversationFlow?.input(e))return;
   if(globalThis.window?.EmberArenaEntry?.blockPointer(e))return;
   if(globalThis.window?.EmberRiding?.blockPointer(e))return;
   const target = e.target;
@@ -7489,6 +7491,7 @@ function showScene() {
   if(scene.hold||scene.arriving||scene.greenTextHidden||scene.silent||(scene.hatch&&scene.i>=5&&scene.i<=10)){
     sayOff();showFace(null);return;
   }
+  if(globalThis.window?.EmberConversationFlow?.beforeLine(scene))return;
   if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();
   const line = scene.waiting ? "..." :
     scene.lines[Math.min(scene.i, scene.lines.length - 1)];
@@ -7949,9 +7952,9 @@ function drawDark() {
   ctx.restore();
 }
 function drawKingDragon() {
-  if (lastFight) return;
-  const k = npcs && npcs.find(n => /Halvard/.test(n.n || ""));
-  if (!k || (typeof npcHere === "function" && !npcHere(k))) return;
+  if (lastFight || MAPID === "tavern") return;
+  const k = npcs && npcs.find(n => /Halvard/.test(n.n || "") && (typeof npcHere !== "function" || npcHere(n)));
+  if (!k) return;
   const dir = k.f === "w" ? "w" : k.f === "e" ? "e" : "s";
   const sp = SPR["kdnew_fly_" + dir] || SPR.kdnew_fly_s;
   if (!sp) return;
@@ -10832,7 +10835,7 @@ const faceEl = document.getElementById("face");
 const nameEl = document.getElementById("sayname");
 let shownFace = -1;
 function faceFor(who) { return typeof portraitFor==='function' ? (portraitFor(who)?.id ?? -1) : -1; }
-function sayOn() { setDialogueTone(!!scene?.telepathy); sayEl.classList.add("on"); sayEl.style.display = ""; }
+function sayOn() { setDialogueTone(!!scene?.telepathy); sayEl.classList.add("on"); sayEl.style.display = ""; globalThis.window?.EmberConversationFlow?.sync(); }
 function sayOff() {
   setDialogueTone(false);
   sayEl.classList.remove("on"); sayEl.style.display = "";
@@ -11492,6 +11495,7 @@ padBind();
   });
 }
 function actionButton() {
+  if(globalThis.window?.EmberConversationFlow?.active()&&globalThis.window?.EmberConversationFlow?.advance())return;
   if(window.EmberCloud?.isOpen())return;
   if(globalThis.window?.EmberArenaEntry?.action())return;
   if(globalThis.window?.EmberRiding?.action())return;
@@ -11518,6 +11522,7 @@ bindHold("btnB", () => {
   if (typeof ask !== "undefined" && ask) { askBack(); return; }
   if (typeof bagOpen !== "undefined" && bagOpen) { globalThis.window?.EmberSfx?.ui?.(); setBag(false); return; }
   if (typeof ovl !== "undefined" && ovl) { globalThis.window?.EmberSfx?.ui?.(); setOvl(null); return; }
+  if(globalThis.window?.EmberConversationFlow?.active())return;
   running = true;
   if (glassShield && inFight()) { glassShieldHeld = true; glassShieldWindowUntil = tAcc + GLASS_BLOCK_WINDOW; glassShieldPulse = Math.max(glassShieldPulse,.18); tryGlassShieldParry(); }
 }, () => { running = false; glassShieldHeld = false; });

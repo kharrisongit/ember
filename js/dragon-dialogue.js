@@ -889,8 +889,14 @@ function openDragonConversation(category='root'){
   if(!dragonCanConverse())return;
   rememberDragonConversationPlace();
   dismissDragonBanter();P.moving=false;P.act=null;dragon.moving=false;faceCorinAt(dragon.x,dragon.y);
-  const speak=(lines,back=category)=>{askShut();playScene(typeof lines==='function'?lines():lines,{telepathy:true,after:()=>openDragonConversation(back)});};
-  const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key])});
+  const replies={
+    consciousness:['Do you ever wish those memories would be quiet?','Sometimes. The old voices know many things, but none of them has lived this particular morning beside you. I want room to notice it for myself.'],
+    choosing:['What if I disappoint you?','Then we talk about it. Choosing a friend is not a promise that neither of us will make mistakes. I would rather you trusted me with the truth than tried to become somebody who never needs help.'],
+    heartstones:['I do not want power to change who we are.','Then keep asking what we mean to do with it. A new strength gives us another choice. It does not have to take the old ones away.'],
+    self:['You can want something that has nothing to do with me.','I know. And you can love your home without asking my permission. That is part of what makes travelling together a choice worth making.']
+  };
+  const speak=(lines,back=category,reply)=>{askShut();const spoken=typeof lines==='function'?lines():lines;playScene(spoken,{telepathy:true,after:()=>openDragonConversation(back),conversationReplies:{topic:{lines:spoken,reply},handled:new Set()}});};
+  const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key],category,replies[key])});
   const general=category=>[...(DRAGON_GENERAL_TOPICS[category]||[]),...(typeof dragonExtraTopics==='function'?dragonExtraTopics(category):[])].map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
   const options={
     root:[

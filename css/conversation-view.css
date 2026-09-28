@@ -37,8 +37,22 @@
 /* Dialogue keeps its original single portrait and opposite speaker nameplate.
    Topic menus contain only the small portrait inside their profile banner. */
 #face.left{left:0!important}#face.right{right:0!important}
-body.topics-open #face,body.topics-open #sayname{display:none!important}
+body.topics-open:not(.conversation-speaking) #face,body.topics-open:not(.conversation-speaking) #sayname{display:none!important}
 #bagAsk button:focus-visible{outline:2px solid #80512d;outline-offset:-3px}
 @media(max-width:420px){#bagAsk .deckReadRing{display:none}#bagAsk .deckName{font-size:19px}#bagAsk .deckProfileToggle{gap:8px;padding-right:4px}#bagAsk .deckHeaderControls{gap:4px;padding-right:6px}#bagAsk .journalPortrait{width:54px;height:62px;flex-basis:54px}#bagAsk .deckBack{padding:4px 6px}#bagAsk .deckIdentity .deckEyebrow{font-size:8px}}
 @media(max-height:520px){:root{--topic-height:60dvh}#bagAsk.conversationTopics.journalDeck>.deckHeader{min-height:80px}#bagAsk .deckProfileToggle{min-height:77px;padding-top:4px;padding-bottom:4px}#bagAsk .journalPortrait{width:48px;height:48px;flex-basis:48px}#bagAsk .deckName{font-size:18px}#bagAsk .deckIdentity .deckEyebrow{display:none}#bagAsk .deckTabs{top:80px;padding-top:5px;padding-bottom:5px}#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic{min-height:62px}}
 @media(prefers-reduced-motion:reduce){#bagAsk.conversationTopics.journalDeck,#bagAsk .deckProfile,#bagAsk .deckProfileHint{animation:none!important;transition:none!important}}
+
+/* Speech stays above the open parchment; only the active speaker is pictured. */
+body.conversation-session{--conversation-line-height:clamp(100px,14dvh,132px);--conversation-face-size:clamp(72px,20vw,144px)}
+body.conversation-session #say{bottom:calc(var(--topic-height) + 8px);height:var(--conversation-line-height);z-index:42;padding-bottom:22px;font-size:14px}
+body.conversation-session #face{bottom:calc(var(--topic-height) + var(--conversation-line-height));width:var(--conversation-face-size)!important;height:var(--conversation-face-size)!important;z-index:43}
+body.conversation-session #sayname{bottom:calc(var(--topic-height) + var(--conversation-line-height) + 8px);z-index:44}
+#say.on{cursor:pointer;pointer-events:auto;touch-action:manipulation}
+#say.on::after{content:attr(data-advance-hint);position:absolute;right:14px;bottom:5px;color:#886238;font:600 10px/1.2 system-ui;letter-spacing:.025em;pointer-events:none}
+#bagAsk .deckClose{font:600 12px var(--manuscript-serif)}
+#bagAsk .deckReplyPrompt{grid-column:1/-1;margin:14px 0 3px;color:#684321;font:600 18px var(--manuscript-serif)}
+#bagAsk.conversationListening .deckTopic{opacity:.44;cursor:default}
+#bagAsk.conversationListening .deckTabs,#bagAsk.conversationListening .deckReadRing{opacity:.5}
+#bagAsk .conversationContinue{display:block;width:calc(100% - 24px);margin:10px 12px;padding:12px;border:1px solid #9a703c;border-radius:5px;background:linear-gradient(#faf0d6,#e3c591);color:#59381f;font:600 15px var(--manuscript-serif);cursor:pointer;animation:profileUnfold .2s ease-out}
+@media(max-height:520px){body.conversation-session{--conversation-line-height:74px;--conversation-face-size:76px}body.conversation-session #say{font-size:12px;padding:7px 12px 19px}}

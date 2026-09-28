@@ -1,0 +1,93 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),console,{document:dom.document,furniture:false});
+const box=dom.element('bagAsk'),rows=dom.element('askRows'),say=dom.element('say'),canvas=dom.element('cv');box.append(rows);
+run(`MAPID='world';MD=W.maps.world;MW=MD.w;MH=MD.h;terr=new Uint8Array(MW*MH);mode='play';gameplayStarted=true;quest=Q.DONE;dragon.on=true;dragonOff=false;dragonIntroDone=true;
+thornwellRoyal.stage=7;faceToward=()=>{};dragonConversationReaction=()=>{};saveGame=()=>{};
+var person={n:'Hettie',x:100,y:100,d:['Hettie: A pleasant morning.']};
+P.x=100;P.y=130;openNpcTopics(person);`);
+const select=name=>{c.selection=name;run('askPick=ask.opts.findIndex(o=>o.n===selection);askTake();');};
+const step=()=>run('if(scene)scene.t=1;EmberConversationFlow.advance();');
+const finish=()=>{for(let i=0;i<25&&run('!!scene||!!sayNpc');i++){assert(!run('ask?.replyChoices'),'Test must choose a reply explicitly');run('typeAll()');step();}};
+const tap=(target=canvas)=>{dom.dispatch(target,'pointerdown');dom.dispatch(target,'pointerup');dom.dispatch(target,'click');};
+select('Your first herd');
+assert.equal(run('ask'),null,'Speech continues with no modal ask blocking its clock');
+assert.equal(box.style.display,'block');
+assert(run('document.body.classList.contains("topics-open")'));
+assert(run('document.body.classList.contains("conversation-speaking")'));
+assert(box.querySelectorAll('.deckTopic').every(b=>b.disabled));
+assert(box.querySelector('.conversationContinue'));
+assert(run('!typeDone()'));
+tap(say);assert(run('typeDone()'));assert.equal(run('scene.i'),0,'First tap only completes the text');
+run('scene.t=1');tap();assert(run('ask.replyChoices'),'Second tap offers Corin replies');
+assert.equal(box.style.display,'block');assert.equal(run('typeWho'),'Hettie','NPC’s line remains while choosing');
+assert(!rows.querySelector('.deckTabs'));assert(rows.querySelector('.deckReplyPrompt'));
+assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Original, authored alternative and other story paths');
+assert(!box.querySelector('.deckClose'),'Reply choices cannot bypass a pending exchange');
+const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping scenery never chooses a reply');
+select('I would have offered it an apple.');assert.equal(run('typeWho'),'Corin');
+assert.match(run('typeFull'),/apple/);assert.equal(box.style.display,'block');
+run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/spoiled/);
+finish();assert.equal(run('ask.npcConversation'),'Hettie');
+run('askBack()');assert.equal(run('ask.npcConversation'),'Hettie','Back at the root does not mean Goodbye');
+// Follow a different personal thread without dismissing/reopening the panel.
+select('Your first herd');run('typeAll();scene.t=1');step();
+select('Tell me about “A day off”.');assert.equal(run('typeWho'),'Corin');
+run('typeAll()');step();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/one morning/);
+run('typeAll();scene.t=1');step();assert(run('ask.replyChoices'));run('askBack()');
+assert.equal(run('ask.npcConversation'),'Hettie');assert.equal(run('scene'),null);
+// The actual pointer path rejects drags, multi-touch and synthetic click echoes.
+select('Your first herd');
+dom.dispatch(canvas,'pointerdown');dom.dispatch(canvas,'pointermove',{clientX:30});dom.dispatch(canvas,'pointerup',{clientX:30});dom.dispatch(canvas,'click');
+assert(run('!typeDone()'),'Drag never completes dialogue');
+dom.dispatch(canvas,'pointerdown');dom.dispatch(canvas,'pointerdown',{pointerId:2,isPrimary:false});dom.dispatch(canvas,'pointerup',{pointerId:2,isPrimary:false});dom.dispatch(canvas,'pointerup');
+assert(run('!typeDone()'),'Pinch never completes dialogue');
+const ui=dom.element('testButton');ui.tagName='BUTTON';dom.element('stage').append(ui);
+tap(ui);assert(run('!typeDone()'),'Unrelated controls do not advance speech through a stage ancestor');
+tap(say);assert(run('typeDone()'));assert.equal(run('scene.i'),0);
+run('scene.t=1');tap(say);run('askBack()');
+// Greeting completion returns to the same NPC; gifts are not bypassed.
+select('Hello!');assert(run('sayNpc===person'));
+tap(say);assert(run('typeDone()'));tap(say);
+assert.equal(run('ask.npcConversation'),'Hettie');
+run(`askShut();var gifted={n:'Sela',x:100,y:100,d:['Sela: Take care.']};glassShield=true;openNpcTopics(gifted);glassShield=false;`);
+select('Hello!');assert.equal(run('ask'),null);finish();
+assert(run('glassShield'));assert(run('revealing'));assert.equal(run('ask'),null,'Gift reveal finishes before topics return');
+run('hideReveal();EmberConversationFlow.tick()');assert.equal(run('ask.npcConversation'),'Sela');
+// A temporarily full-screen shop returns to the ongoing conversation.
+run("drawMerchantShop=()=>{document.getElementById('bagAsk').style.display='none';};askShut();person.sells=true;openNpcTopics(person)");select('Browse your supplies');
+assert(run('!!ask.shop'));run('askBack();EmberConversationFlow.tick()');assert.equal(run('ask.npcConversation'),'Hettie','B closes shopping and resumes the conversation');
+select('Goodbye');assert.equal(run('ask'),null);assert(!run('EmberConversationFlow.active()'));assert.equal(box.style.display,'none');
+// Ordinary story dialogue gains tapping without creating a conversation panel.
+run(`playScene(['Corin: Wait for me.','Hettie: No running.'],{npcActor:person});`);
+tap();assert(run('typeDone()'));assert.equal(run('scene.i'),0);run('scene.t=1');tap();assert.equal(run('scene.i'),1);
+run('scene.hold=()=>false;showScene()');tap();assert.equal(run('scene.i'),1,'Cinematic holds cannot be tapped past');
+run('scene=null;sayOff()');
+// Every cast member has an original and a distinct authored answer, including
+// the eleven villagers whose personal stories live in the expansion file.
+const source=Object.fromEntries(fs.readFileSync('assets/dialogue/npc-replies.tsv','utf8').trim().split('\n').map(l=>{const [n,...reply]=l.split('|');return[n,reply];}));
+assert.equal(Object.keys(source).length,143);
+assert.deepEqual(JSON.parse(run('JSON.stringify(NPC_REPLY_BRANCHES)')),source);
+for(const [name,reply]of Object.entries(source)){
+ c.speaker=name;c.reply=reply;
+ run(`askShut();scene=null;sayNpc=null;var actor={n:speaker,x:100,y:100,d:['Hello']};var authored=npcStoryTopics(actor).find(t=>t.reply);
+ if(!authored)throw Error('Missing branch '+speaker);
+ ask={quick:1,npcConversation:speaker,npcActor:actor,opts:[{n:'Goodbye'}]};askDraw();
+ EmberConversationFlow.take({n:authored.title,go:()=>EmberConversationFlow.playTopic(actor,authored)});typeAll();scene.t=1;EmberConversationFlow.advance();`);
+ assert(run('ask?.replyChoices'),name+' gets reply choices');
+ assert(run('ask.opts.some(o=>o.n===reply[0])'),name+' has their specific branch');
+ select(reply[0]);run('typeAll();scene.t=1');step();
+ assert.equal(run('typeFull'),reply[1],name+' responds to the selected words');
+}
+// Aurelius participates too, with distinct responses to personal questions.
+run(`askShut();scene=null;sayNpc=null;MAPID='world';dragon.air=false;P.act=null;openDragonConversation('dragons');`);
+select('Why did you choose me?');
+for(let i=0;i<10&&!run('ask?.replyChoices');i++){run('typeAll();if(scene)scene.t=1');step();}
+assert(run('ask?.replyChoices'));assert(run('ask.opts.some(o=>/disappoint/.test(o.n))'));
+select('What if I disappoint you?');run('typeAll();scene.t=1');step();assert.equal(run('typeWho'),'Aurelius');assert.match(run('typeFull'),/mistakes/);
+finish();assert.equal(run('ask.topicScope'),'dragons');
+// Changing area / loading another scene cannot resurrect an old conversation.
+run(`MAPID='house0';EmberConversationFlow.tick()`);assert(!run('EmberConversationFlow.active()'));assert.equal(run('ask'),null);
+console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 143 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');

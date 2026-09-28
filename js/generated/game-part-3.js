@@ -4066,6 +4066,7 @@ function updateDeckHealth(){
 }
 function frameCore(ms) {
   restoreCameraTarget();
+  globalThis.window?.EmberConversationFlow?.tick();
   if(window.EmberCloud?.isOpen()){last=ms;return;}
   if(window.__titleTransition){last=ms;drawWorld(tAcc,0);return;}
   if(window.EmberAttackAlign?.isOpen()){last=ms;return;}
@@ -4995,12 +4996,14 @@ function wireTopicScrollHint(box) {
     observer.observe(box);observer.observe(document.getElementById('askRows'));
   }
 }
-function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;const back=ask?.back;askShut();if(back)back();}
+function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;if(globalThis.window?.EmberConversationFlow?.back())return;const back=ask?.back;askShut();if(back)back();}
 function askShut() {
   if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:document.getElementById('bagAsk')?.scrollTop||0});
   hideMerchantShop();
   if(fishing&&fishing.phase==='prompt')endFishing();
   ask = null;
+  if(globalThis.window?.EmberConversationFlow?.preserve())return;
+  globalThis.window?.EmberConversationFlow?.shut();
   document.body.classList.remove("topics-open");
   const el = document.getElementById("bagAsk");
   if (el) el.style.display = "none";
@@ -5017,7 +5020,7 @@ function askDraw() {
   wireTopicScrollHint(el);
   if (!ask) { el.style.display = "none"; return; }
   el.style.display = "block";
-  if((ask.npcConversation||ask.dragonConversation)&&window.EmberConversationDeck){window.EmberConversationDeck.draw(el,rows);return;}
+  if((ask.npcConversation||ask.dragonConversation)&&window.EmberConversationDeck){window.EmberConversationDeck.draw(el,rows);globalThis.window?.EmberConversationFlow?.menu(ask);return;}
   el.classList.remove("journalDeck");
   const returning=!ask._topicDrawn&&(ask.npcConversation||ask.dragonConversation)?topicMenuPositions.get(ask.npcConversation||'Aurelius'):null;
   if(returning){const index=ask.opts.findIndex(o=>!o.head&&o.n===returning.name);if(index>=0)askPick=index;}
@@ -5129,6 +5132,7 @@ function askTake() {
   if(ask._profileOpen){window.EmberConversationDeck.back();return;}
   const o = ask.opts[askPick];
   if (!o || o.head) return;              /* a header does nothing */
+  if(globalThis.window?.EmberConversationFlow?.take(o))return;
   globalThis.window?.EmberSfx?.ui?.();
   if((ask.npcConversation||ask.dragonConversation)&&o.go&&!o.navigation&&o.category!=="trade")discussedTopics.add(topicMemoryKey(o));
   const key = ask.key, quick = ask.quick;

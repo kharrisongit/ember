@@ -50128,6 +50128,81 @@
         "kind": "collision",
         "key": "70,31",
         "blocked": true
+      },
+      "actor:actor:0:tavernpatio_anim_9": {
+        "kind": "actor",
+        "key": "actor:0:tavernpatio_anim_9",
+        "identity": "tavernpatio_anim_9",
+        "originX": 4000,
+        "originY": 1056,
+        "x": 4032,
+        "y": 1056
+      },
+      "actor:patio:7059:table:0": {
+        "kind": "actor",
+        "key": "patio:7059:table:0",
+        "identity": "tavern_patio_table_0",
+        "originX": 3846.5,
+        "originY": 1058,
+        "x": 3814.5,
+        "y": 1058
+      },
+      "actor:patio:7059:table:1": {
+        "kind": "actor",
+        "key": "patio:7059:table:1",
+        "identity": "tavern_patio_table_1",
+        "originX": 3878.5,
+        "originY": 1086,
+        "x": 3846.5,
+        "y": 1086
+      },
+      "actor:patio:7059:table:2": {
+        "kind": "actor",
+        "key": "patio:7059:table:2",
+        "identity": "tavern_patio_table_2",
+        "originX": 3958.5,
+        "originY": 1082,
+        "x": 3990.5,
+        "y": 1082
+      },
+      "actor:patio:7059:table:3": {
+        "kind": "actor",
+        "key": "patio:7059:table:3",
+        "identity": "tavern_patio_table_3",
+        "originX": 3990.5,
+        "originY": 1058,
+        "x": 4022.5,
+        "y": 1058
+      },
+      "actor:npc:Colm": {
+        "kind": "actor",
+        "key": "npc:Colm",
+        "identity": "Colm",
+        "originX": 4000,
+        "originY": 1048,
+        "x": 4032,
+        "y": 1048,
+        "independent": true
+      },
+      "actor:npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605": {
+        "kind": "actor",
+        "key": "npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605",
+        "identity": "tavern src Drinker2",
+        "originX": 3902,
+        "originY": 1079,
+        "x": 3870,
+        "y": 1079,
+        "independent": true
+      },
+      "actor:npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7": {
+        "kind": "actor",
+        "key": "npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7",
+        "identity": "tavern src Drinker1",
+        "originX": 3981,
+        "originY": 1079,
+        "x": 4013,
+        "y": 1079,
+        "independent": true
       }
     },
     "witchmoor": {

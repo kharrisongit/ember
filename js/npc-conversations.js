@@ -1992,11 +1992,16 @@ function npcStoryTopics(n){
   const finished=npcFinishedRoadwork(n);
   const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  if(!finished&&topics[0]&&typeof NPC_REPLY_BRANCHES!=='undefined')topics[0].reply=NPC_REPLY_BRANCHES[n.n];
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
   const visit=typeof thornwellVisitTopic==="function"&&thornwellVisitTopic(n);if(visit)topics.push(visit);
   topics.push(...npcWorldTopics(n).map(t=>({...t,category:"world"})));
-  if(typeof npcExtraTopics==="function")topics.push(...npcExtraTopics(n));
+  if(typeof npcExtraTopics==="function"){
+    const extra=npcExtraTopics(n);
+    if(!profile.length&&extra[0]&&typeof NPC_REPLY_BRANCHES!=="undefined")extra[0].reply=NPC_REPLY_BRANCHES[n.n];
+    topics.push(...extra);
+  }
   if(n.n==='Nan Ferrow'){
     topics.push({title:'What was Dad like?',lines:[
       'Nan Ferrow: Patient with a frightened animal. Hopeless with a tangled knot. He would sit there getting crosser while pretending he was perfectly calm.',
@@ -2032,7 +2037,8 @@ function openNpcTopics(n){
   const choose=topic=>{
     if(topic.go){topic.go();return;}
     const lines=topic.lines.map(line=>{const [who,words]=whoSays(n,line);return who?who+': '+words:words;});
-    playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
+    if(globalThis.window?.EmberConversationFlow)globalThis.window?.EmberConversationFlow.playTopic(n,{...topic,lines},npcStoryTopics(n).filter(t=>t.category!=="world"));
+    else playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},
     ...(brambleHint(n)?[{n:brambleHint(n).title,category:"lead",summary:"Ask about Bramble and his owner",go:()=>choose(brambleHint(n))}]:[]),

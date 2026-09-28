@@ -69,6 +69,7 @@ jobs:
           node tests/quest-map.mjs
           node tests/living-journal.mjs
           node tests/conversation-view.mjs
+          node tests/conversation-flow.mjs
           node tests/npc-placement.mjs
           node tests/editor-source-compatibility.mjs
           node tests/editor-publish-race.mjs

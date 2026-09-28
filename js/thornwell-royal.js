@@ -97,8 +97,8 @@ function stepThornwellDragon(dt){
 function thornwellRoyalActor(name,x,y){
   const king=name==='King Halvard';
   return {id:'thornwell-royal-'+name,n:name,x,y,px:x,py:y,t:0,f:'d',kf:'d',
-    thornwellRoyal:true,sceneReserved:true,stationary:false,noTalk:false,
-    ...(king?{body:'kg',seatSpr:MAPID==='tavern'?'king_seated':null}:{packSpr:'kn',packDirections:true,packWalk:true}),
+    thornwellRoyal:true,sceneReserved:true,stationary:true,noTalk:false,
+    ...(king?{body:'kg',seatSpr:MAPID==='tavern'?'king_seated':null}:{packSpr:'royal_intro_guard_'+(name==='Serjeant Bram'?'black':'white'),packDirections:false,packWalk:false,idleFps:6}),
     d:[name+': His Majesty is not finished here.'],loc:'Thornwell — Copper Cup'};
 }
 function syncThornwellRoyals(){
@@ -107,7 +107,7 @@ function syncThornwellRoyals(){
   if(npcs.some(n=>n.thornwellRoyal))return;
   // The northeast round table is unoccupied. Follow its published position
   // when the editor's extracted furniture is available.
-  const table=(MD.roomActors||[]).find(o=>o.editKey==='remaining:tavern:19');
+  const table=(MD.roomActors||[]).find(o=>o.editKey==='remaining:tavern:18');
   const dx=table?table.x-396:0,dy=table?table.y-187:0;
   for(const [i,pos]of [[396,170],[369,181],[426,181],[440,210]].entries())
     npcs.push(thornwellRoyalActor(THORNWELL_ROYALS[i],pos[0]+dx,pos[1]+dy));
@@ -164,7 +164,7 @@ function thornwellAudienceLines(actor,lines,after){thornwellScene(lines,after||(
 function thornwellAnswer(actor,key,question,options){
   thornwellAudienceLines(actor,question,()=>{
     const back=()=>openThornwellAudience(actor);
-    ask={quick:1,npcConversation:actor.n,npcActor:actor,topicScope:'thornwell-'+key,repaintWorld:true,back,
+    ask={quick:1,npcConversation:actor.n,npcActor:actor,topicScope:'thornwell-'+key,replyChoices:true,repaintWorld:true,back,
       opts:[{n:'Choose your words',head:true},...options.map(([title,value,lines])=>({n:title,category:'story',go:()=>{
         thornwellRoyal.answers[key]=value;saveGame();thornwellAudienceLines(actor,lines);
       }})),{n:'Let the subject drop',category:'leave',navigation:true,go:back}]};askPick=1;askDraw();
@@ -316,70 +316,49 @@ function thornwellDoorArrived(from){
 }
 function thornwellAudiencePending(){return MAPID==='tavern'&&brambleQuest>=2&&thornwellRoyal.stage>=1&&thornwellRoyal.stage<=3;}
 function thornwellDeparture(){
-  // Start at the actual exit destination, including published door edits.
   const exit=W.maps.tavern.doors.find(d=>d.to==='world');if(!exit)return;
   const origin=[exit.tx*TS+8,exit.ty*TS+TS];
-  const lead=thornwellRoyalActor('Serjeant Bram',...origin);
-  const forward=thornwellReachable(P,[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]]);
-  if(!forward)return;
-  npcs=npcs.filter(n=>!n.thornwellRoyal);
-  thornwellWalkPlayer(forward,()=>{
-    npcs.push(lead);
-    const approach=thornwellReachable(lead,[[P.x,P.y-14],[P.x,P.y-20],origin]);
-    thornwellMotion={kind:'guards',actors:[{actor:lead,path:approach,delay:0}],origin,t:0};
-    for(const [i,name]of ['Doran','Tolan'].entries()){
-      const actor=thornwellRoyalActor(name,...origin);actor.away=true;npcs.push(actor);
-      const path=thornwellReachable(actor,[[P.x+(i?18:-18),P.y-24],[origin[0]+(i?18:-18),origin[1]+8],origin]);
-      thornwellMotion.actors.push({actor,path,delay:.6+i*.6});
+  // The ceremonial escort has idle art only. Stage the entire party while
+  // black, just as in Millwood; never swap them for the Cinderhold fighters.
+  thornwellScene([]);thornwellMotion={kind:'blackout'};
+  pendingActorStage=()=>{
+    npcs=npcs.filter(n=>!n.thornwellRoyal);
+    const forward=[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]].find(p=>canStand(...p));
+    if(forward)[P.x,P.y]=forward;
+    for(const [i,name]of THORNWELL_ROYALS.entries()){
+      const offsets=[[0,8],[-28,28],[28,28],[48,8]];
+      const actor=thornwellRoyalActor(name,origin[0]+offsets[i][0],origin[1]+offsets[i][1]);
+      const spot=[[actor.x,actor.y],[actor.x,actor.y+16],[actor.x,actor.y-16],origin].find(p=>thornwellClear(...p,actor));
+      if(spot){[actor.x,actor.y]=spot;actor.px=actor.x;actor.py=actor.y;}
+      npcs.push(actor);
     }
-    thornwellScene([],()=>thornwellShove(origin));scene.silent=true;
-    scene.until=()=>thornwellMotion?.actors.every(a=>a.delay<=0&&!a.path?.length);showScene();
-  },'exit');
+    const king=thornwellKing();thornwellMotion=null;faceCorinAt(king.x,king.y);
+    thornwellScene([
+      'Serjeant Bram: Make way for royalty!',
+      'King Halvard: Come on, boys. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
+      'Doran: At last. A road with an end to it.'
+    ],thornwellRoyalExit,king);
+    scene.hold=()=>fade<=0;showScene();
+    // The normal fade controller reveals the newly staged group.
+  };
+  fadeDir=1;
 }
-function thornwellShove(origin){
-  thornwellMotion=null;
-  const bram=npcs.find(n=>n.thornwellRoyal&&n.n==='Serjeant Bram');
-  thornwellScene(['Serjeant Bram: Make way for royalty!'],()=>{
-    const stood=[P.x,P.y];
-    const path=thornwellReachable(P,[[P.x-28,P.y+8],[P.x+28,P.y+8],[P.x-24,P.y+24],[P.x+24,P.y+24]]);
-    const after=()=>{
-      const king=thornwellRoyalActor('King Halvard',...origin);npcs.push(king);
-      const path=thornwellReachable(king,[[origin[0],origin[1]+32],[origin[0]+16,origin[1]+32],origin])||[];
-      thornwellMotion={kind:'king-exit',actors:[{actor:king,path,delay:0}]};
-      thornwellScene([],()=>{
-        thornwellMotion=null;faceCorinAt(king.x,king.y);
-        thornwellScene([
-          'King Halvard: Come on, boys. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
-          'Doran: At last. A road with an end to it.',
-          'Tolan: Out of the way, boy.'
-        ],()=>thornwellMarchEast(king),king);
-      });scene.silent=true;scene.until=()=>thornwellMotion?.actors.every(a=>!a.path.length);showScene();
-    };
-    if(path){
-      pInv=Math.max(pInv,.8);shake=.18;thornwellWalkPlayer(path,after,'shove');
-      thornwellMotion.actors=[{actor:bram,path:thornwellPath(bram,stood)||[],delay:0}];
-    }
-    else after();
-  },bram);
-}
-function thornwellMarchEast(king){
-  const cast=npcs.filter(n=>n.thornwellRoyal);
-  const distance=Math.max(240,VW/cam.z/2+128),targets=[];
-  for(const dx of [distance,distance+64,distance-48])for(const dy of [32,64,0,112,-48,176,-112,240])targets.push([king.x+dx,king.y+dy]);
-  const route=thornwellReachable(king,targets);
-  // A published obstacle may require another route; keep the procession at a
-  // recoverable checkpoint and retry instead of snapping through it.
-  if(!route){thornwellMotion={kind:'retry-east',king,retry:1};thornwellScene([]);scene.silent=true;scene.until=()=>false;showScene();return;}
-  const actors=cast.map((actor,i)=>({actor,path:thornwellPath(actor,route[0])?.concat(route.slice(1)),delay:i*.6}));
-  if(actors.some(a=>!a.path)){thornwellMotion={kind:'retry-east',king,retry:1};thornwellScene([]);return;}
-  thornwellMotion={kind:'march',actors,t:0};
-  thornwellScene([],()=>{
-    npcs=npcs.filter(n=>!n.thornwellRoyal);thornwellMotion=null;thornwellRoyal.stage=6;
+function thornwellRoyalExit(){
+  thornwellMotion={kind:'blackout'};
+  royalBlackout('Out of my way, boy!',()=>{
+    // Change positions only under full black, with the same published collision
+    // checks used by ordinary movement. No knight plays a walking animation.
+    const aside=[[P.x-28,P.y+8],[P.x+28,P.y+8],[P.x-24,P.y+24],[P.x+24,P.y+24]].find(p=>canStand(...p));
+    if(aside)[P.x,P.y]=aside;
+    P.moving=false;npcs=npcs.filter(n=>!n.thornwellRoyal);
+  },()=>{
+    thornwellMotion=null;thornwellCheckpoint(6);
     thornwellScene([
       'Corin: Forgefalls. That is where Aurelius is waiting.',
       'Corin: If they find him… I have to get there. Now.'
     ],()=>{saveGame();toast('Find Aurelius beside the road below Forgefalls.');});
-  });scene.silent=true;scene.until=()=>thornwellMotion?.actors.every(a=>a.actor.away);showScene();
+    scene.hold=()=>fade<=0;showScene();
+  });
 }
 function thornwellForgefalls(){
   const mark=W.maps.world.features?.find(f=>f.kind==='landmark'&&f.label==='Forgefalls');
@@ -409,9 +388,7 @@ function stepThornwellRoyal(dt){
   syncThornwellRoyals();
   if(thornwellMotion){
     const motion=thornwellMotion;
-    if(motion.kind==='retry-east'){
-      motion.retry-=dt;if(motion.retry<=0)thornwellMarchEast(motion.king);return;
-    }
+    if(motion.kind==='blackout')return;
     if(motion.path)thornwellMove(P,motion.path,motion.kind==='shove'?180:82,dt);
     for(const item of motion.actors||[]){
       item.delay-=dt;if(item.delay>0)continue;
