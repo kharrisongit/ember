@@ -33,6 +33,17 @@ assert.equal(framing.z,2.24,'Hatch camera zooms in twelve percent');
 assert.equal(run('hatchExit'),false);assert(run('hatchCamera'),'Camera waits until the entrance has finished');
 run('stepHatchCamera(.1)');assert(c.cam.z>2&&c.cam.z<3,'Normal zoom resumes smoothly after entering');
 for(let i=0;i<90;i++)run('stepHatchCamera(1/60)');assert.equal(run('hatchCamera'),null);assert.equal(c.cam.z,3);
+// The stone reveal retains the wide view; the walk toward Corin tightens it.
+const conversation=c.lockHatchCamera({zoom:2},e,{eggX:100,eggY:100,maddockPath:[]});
+assert.equal(conversation.z,2.7);
+assert.equal(conversation.x,(c.P.x+e.x)/2);
+assert.equal(conversation.y,(c.P.y+e.y)/2-14+c.VH*.1/2.7);
+run('hatchScene={eggX:100,eggY:100,maddockPath:[]};hatchCamera={zoom:2,returnT:0};cam.z=2.24;cam.x=0;cam.y=0');
+run('stepHatchCamera(.05)');assert(c.cam.z>2.24&&c.cam.z<2.7,'Close-up eases in without a zoom snap');
+for(let i=0;i<180;i++)run('stepHatchCamera(1/60)');
+assert(Math.abs(c.cam.x+c.VW/c.cam.z/2-conversation.x)<.001,'Conversation settles centered on both actors');
+run('stepHatchCamera(.05)');
+assert(Math.abs(c.cam.z-2.7)<.00001,'Conversation keeps a stable tighter zoom');
 console.log('PASS: Maddock walks around obstacles into the edited doorway; the camera remains fixed until he enters, then returns to normal zoom.');
 
 let clear=()=>true,notices=[];

@@ -6254,6 +6254,12 @@ function stepDeflectCamera(dt) {
   if ((!P.act || P.act.kind !== "fall") && (settled || c.t > 2)) deflectCamera = null;
 }
 function lockHatchCamera(c, m, hs) {
+  if(hs.maddockPath&&m){
+    // Follow their midpoint during the approach, then hold the same framing
+    // through the conversation. Center their bodies above the dialogue box.
+    const z=c.zoom*1.35;
+    return {x:(P.x+m.x)/2,y:(P.y+m.y)/2-14+VH*.1/z,z};
+  }
   // Portrait-free framing can bring the actors a little closer.
   const z=c.zoom*1.12;
   return { x: hs.eggX, y: hs.eggY + VH * .1 / z, z };
@@ -6269,7 +6275,8 @@ function stepHatchCamera(dt) {
   const m = elder();
   let x = P.x, y = P.y, z = c.zoom;
   if (hatchScene) {
-    c.goal ||= lockHatchCamera(c, m, hatchScene);
+    if(hatchScene.maddockPath)c.goal=lockHatchCamera(c,m,hatchScene);
+    else c.goal ||= lockHatchCamera(c, m, hatchScene);
     ({ x, y, z } = c.goal);
   } else {
     c.returnT += dt;
@@ -6290,7 +6297,7 @@ function beginHatchScene(m) {
   royalBlackout(HATCH_LINES[0], () => {
     // Stage Corin west of Maddock for the north-then-west approach.
     // Use the open clearing west of the well, above the southern tree crowns.
-    m.x = (ELDER_WELL[0] - 3.5) * TS + TS / 2;
+    m.x = (ELDER_WELL[0] - 2.5) * TS + TS / 2;
     m.y = ELDER_WELL[1] * TS + TS * 1.5;
     m.home = [m.x, m.y]; m.goto = null; m.scriptWalking = false;
     P.x = m.x - TS * 3; P.y = m.y; P.act = null;
