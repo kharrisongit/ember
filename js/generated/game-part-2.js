@@ -8130,6 +8130,7 @@ function foeDir(dir, flip) {
   return dir === "s" ? (flip ? "w" : "e") : dir;
 }
 function spawnFoes() {
+  globalThis.window?.EmberArenaEntry?.reset();
   foes = []; turnHolder = null; turnT = 0; foeCool = 0;
   (MD.foes || []).forEach((f, idx) => {
     if(f.chestAmbush&&(!houseLootTaken.has(f.chestAmbush)||lootChestAnimations.has(f.chestAmbush)))return;
@@ -8743,6 +8744,7 @@ function talkTrialDemon() {
   ],{hold:false,after:()=>{const first=!cinderSeal;cinderSeal=true;saveGame();if(first)showReveal('it_cinderseal','Corin obtained the Cinderhold Seal!',3);}});
 }
 function clearTrialCombat() {
+  globalThis.window?.EmberArenaEntry?.reset();
   foes = []; bolts.length = 0; breath = null; hunt = null; claw = null;
   spell = null; risings = []; turnHolder = null; turnT = 0; foeCool = 0;
   lastFight = 0; bossScene = null; grief = null; risePend = null;

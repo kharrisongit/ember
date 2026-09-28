@@ -33,7 +33,12 @@ function huntingPointClear(b,x,y){
 }
 function spawnHuntingAnimals() {
   const rings=new Map(features.filter(a=>isHuntingArena(a)).map(a=>[a.id,a]));
-  foes=foes.filter(f=>!f.huntingArena||rings.get(f.huntingArena.id)?.encounter===f.kind);
+  // Keep the population stable during routine upkeep. Only remove a hunt
+  // animal when its clearing was deleted or changed to another species.
+  for(let i=foes.length-1;i>=0;i--){
+    const f=foes[i];
+    if(f.huntingArena&&rings.get(f.huntingArena.id)?.encounter!==f.kind)foes.splice(i,1);
+  }
   for(const a of rings.values())for(let slot=0;slot<HUNT_COUNT;slot++){
     const key=huntingKey(a,slot),existing=foes.find(f=>f.huntingKey===key);
     if(existing&&existing.st!=='dead'){existing.huntingArena=a;continue;}

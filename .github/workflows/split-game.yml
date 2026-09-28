@@ -39,6 +39,7 @@ jobs:
       - name: Check temple travel and combat
         run: |
           node tests/arena-entry.mjs
+          node tests/arena-entry-lifecycle.mjs
           node tests/sword-tutorial.mjs
           node tests/riding-tutorial.mjs
           node tests/town-music.mjs

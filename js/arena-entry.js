@@ -1,7 +1,7 @@
 /* A battle begins only after its entrance has closed and the player is ready. */
 (function(){
   'use strict';
-  let map=null,population=null,states=new Map(),owners=new WeakMap(),pending=null,engaged=null,cameraZoom=null;
+  let map=null,population=null,populationSize=-1,states=new Map(),owners=new WeakMap(),pending=null,engaged=null,cameraZoom=null;
   const popup=document.createElement('button');
   popup.id='arenaReady';popup.type='button';popup.hidden=true;
   popup.setAttribute('aria-label','It’s time to fight! Press A to begin');
@@ -19,13 +19,13 @@
     if(cameraZoom!==null){cam.z=cameraZoom;cameraZoom=null;camFree=false;followCam();}
   }
   function reset(){
-    finishView();pending=null;engaged=null;states=new Map();owners=new WeakMap();map=MAPID;population=foes;
+    finishView();pending=null;engaged=null;states=new Map();owners=new WeakMap();map=MAPID;population=null;populationSize=-1;
     window.EmberBattleMusic?.stop();
   }
-  function ensure(){if(map!==MAPID||population!==foes)reset();}
+  function ensure(){if(map!==MAPID)reset();}
   function state(a){
     let s=states.get(a.id);
-    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map()};states.set(a.id,s);}
+    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map(),retry:0};states.set(a.id,s);}
     return s;
   }
   function bounds(a){
@@ -39,18 +39,27 @@
   function belongs(a,f){
     return a.templeRoom?expandedTempleFoeInArena(a,f):Math.hypot((f.hx??f.x)/TS-a.x,(f.hy??f.y)/TS-a.y)<a.r+5;
   }
-  function register(){
-    ensure();const all=rings();
+  function register(force=false){
+    ensure();
+    // Wildlife upkeep may replace the array while retaining every combatant.
+    // Only map loads/spawnFoes reset an encounter; array identity never does.
+    if(!force&&population===foes&&populationSize===foes.length)return;
+    population=foes;populationSize=foes.length;
+    const all=rings(),present=new Set(foes);
+    for(const s of states.values()){
+      s.foes=s.foes.filter(f=>present.has(f));
+      for(const f of s.paths.keys())if(!present.has(f))s.paths.delete(f);
+    }
     for(const f of foes){
       if(!living(f)||owners.has(f))continue;
       const a=all.filter(a=>belongs(a,f)).sort((a,b)=>Math.hypot(f.x/TS-a.x,f.y/TS-a.y)-Math.hypot(f.x/TS-b.x,f.y/TS-b.y))[0];
-      if(!a)continue;
+      if(!a){owners.set(f,null);continue;}
       const s=state(a);s.foes.push(f);owners.set(f,s);s.dirty=true;
     }
   }
   function visible(f){return f.x>cam.x-48&&f.x<cam.x+VW/cam.z+48&&f.y>cam.y&&f.y<cam.y+VH/cam.z+80;}
   function stage(s){
-    if(s.phase!=='waiting'||tutorial(s.ring)||(arenaLock&&arenaLock.id!==s.ring.id))return;
+    if(s.phase!=='waiting'||tutorial(s.ring)||(arenaLock&&arenaLock.id!==s.ring.id)||s.retry>tAcc)return;
     const a=s.ring,b=bounds(a),side=sideOf(a),key=side.join(',');
     if(s.side===key&&!s.dirty)return;
     s.side=key;s.dirty=false;s.paths.clear();
@@ -61,7 +70,7 @@
       const inside=a.templeRoom?expandedTempleArenaContains(a,x,y,24):Math.hypot(x-b.x,y-b.y)<Math.min(b.rx,b.ry);
       if(inside&&canStand(x,y)&&Math.hypot(x-P.x,y-16-P.y)>=76)slots.push([x,y]);
     }
-    if(!slots.length){s.dirty=true;return;}
+    if(!slots.length){s.dirty=true;s.retry=tAcc+.5;return;}
     const used=[];
     for(const f of s.foes.filter(living)){
       if(f.storyKnight||f.trial||(lastFight&&(f.kind==='kdragon'||f.kind==='lich')))continue; // His authored approach and surrender own his position.
@@ -80,7 +89,7 @@
       f.dir=dy<0?'u':dy>0?'d':'s';f.flip=dx<0;
     }
   }
-  function prepare(a){register();for(const s of states.values())if(!a||s.ring.id===a.id)stage(s);}
+  function prepare(a){register(true);for(const s of states.values())if(!a||s.ring.id===a.id)stage(s);}
   function protectedEnemy(f){
     if(!living(f))return false;
     const s=owners.get(f);
@@ -125,7 +134,11 @@
     if(pending&&(!arenaLock||arenaLock.id!==pending.ring.id)){pending=null;finishView();window.EmberBattleMusic?.stop();}
     if(arenaLock&&!pending&&state(arenaLock).phase!=='active'&&!scene&&!bossScene)entered(arenaLock);
     for(const s of states.values()){
-      if(s.phase==='waiting')stage(s);
+      if(s.phase==='waiting'){
+        // Running past a distant arena must not launch collision/path searches.
+        const b=bounds(s.ring),reach=Math.max(240,Math.min(480,Math.max(VW,VH)/cam.z));
+        if(Math.abs(P.x-b.x)<b.rx+reach&&Math.abs(P.y-b.y)<b.ry+reach)stage(s);
+      }
       if(s.phase!=='active')walk(s,dt);
     }
     if(!pending)return;
