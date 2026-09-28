@@ -4193,6 +4193,7 @@ function useDoors(dt) {
       clampCam();
           bolts.length = 0;               /* nothing in flight follows you out */
       arrivedDoor = cameFrom;
+      if(typeof thornwellDoorArrived==="function")thornwellDoorArrived(cameFrom);
       const nm = W.maps[d.to].title;
       const insideTemple = MD.templeExpanded && W.maps[cameFrom]?.templeExpanded;
       if (insideTemple) { bannerName = null; lastArea = nm; }
@@ -4202,6 +4203,7 @@ function useDoors(dt) {
     return;
   }
   if(sceneHold()||sayNpc)return;
+  if(typeof thornwellAudiencePending==='function'&&thornwellAudiencePending())return;
   if (!P.moving) return;
   if (arriveT > 0) return;
   const movingDir = P.dir === "s" ? (P.flip ? "l" : "r") : P.dir;
@@ -5880,7 +5882,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
-  quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
+  quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
@@ -5954,6 +5956,7 @@ function loadGame(slot=activeSaveSlot) {
       !!(s.dragonIntroDone&&(s.map!=='world'||s.x>=80*TS||s.y>=404*TS||s.thornwellMet));
     dragon.introOrigin=null;
     thornwellMet=!!s.thornwellMet;brambleQuest=Number.isInteger(s.brambleQuest)?Math.max(0,Math.min(3,s.brambleQuest)):0;brambleMap="";brambleDeparture=null;thornwellArrival=null;thornwellReturn=null;
+    if(typeof restoreThornwellRoyal==="function")restoreThornwellRoyal(s.thornwellRoyal,s);
     knightEncounterDone=!!s.knightEncounterDone;knightEncounterPhase=knightEncounterDone?"done":"waiting";knightEncounter=null;
     for(const k in royalDefeated)delete royalDefeated[k];Object.assign(royalDefeated,s.royalDefeated||{});
     houseLootTaken.clear();for(const id of s.houseLootTaken||[])houseLootTaken.add(id);lootChestAnimations.clear();
@@ -6069,6 +6072,7 @@ function markKingCompleteForTest() {
   toast("King marked complete. Visit the witch and talk to the demon for the seal.");
 }
 tap(document.getElementById("bKingDone"), markKingCompleteForTest);
+tap(document.getElementById("bThornwellStory"), replayThornwellForTest);
 tap(document.getElementById("bNpcLineup"), showNpcLineup);
 tap(document.getElementById('bNpcType'),()=>changeNpcLineup(1));
 tap(document.getElementById('bNpcPrev'),()=>changeNpcLineup(0,-1));

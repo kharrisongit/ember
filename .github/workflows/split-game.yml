@@ -54,6 +54,7 @@ jobs:
           node tests/cutscene-walking.mjs
           node tests/green-encounter.mjs
           node tests/thornwell-followup.mjs
+          node tests/thornwell-royal.mjs
           node tests/tavern-patio.mjs
           node tests/bramble-departure.mjs
           node tests/temple-exit-triggers.mjs

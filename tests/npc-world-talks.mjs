@@ -53,7 +53,9 @@ for(const name of ['Pip','Mycella','Truffle','Orin','Hask','Bevan','Marek']){
  const lines=run('npcContextDialogue(actor,false)');assert(!lines.includes('Old'),name+' uses audited greeting');
  assert(!lines.some(l=>/hurt when I found|one from the field|Out, out|Keep it by the door/.test(l)),name+' no obsolete scene');
 }
-c.actor={n:'Linna',x:0,y:0,d:['Old'],dragonRumor:['duplicated line']};run("MAPID='house01'");
+c.actor={n:'Linna',x:0,y:0,d:['Old'],dragonRumor:['duplicated line']};run("MAPID='house01';thornwellRoyal.stage=1");
+assert.doesNotMatch(run('npcContextDialogue(actor,true).join(" ")'),/dragon|Aurelius|waiting outside/i);
+run('thornwellRoyal.stage=7');
 assert.match(run('npcContextDialogue(actor,true).join(" ")'),/waiting outside/);
 for(const [name,key] of [['Fen','twin'],['Rashida','brand'],['The Shroom King','spore']]){
  c.actor={n:name,charm:key,x:0,y:0,d:['Old'],dd:['Old']};run("wonAll=true;brambleQuest=1;MAPID='tavern';charm[actor.charm]=false;");

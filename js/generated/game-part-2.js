@@ -4454,7 +4454,7 @@ function drawWorld(t, dt) {
       continue;
     }
     if (!npcHere(o)) continue;
-    if(o.seatSpr&&!o.goto&&!scene&&!bossScene&&!hatchExit){
+    if(o.seatSpr&&!o.goto&&(!scene||o.thornwellRoyal)&&!bossScene&&!hatchExit){
       const s=SPR[o.seatSpr];if(s){drawNpcFrame(o,s,Math.floor(t*3)%s[4],sheetOf(s));continue;}
     }
     if (o.packSpr) {
@@ -5680,6 +5680,7 @@ function groundInjuredDragon(){
   dragon.air=false;dragon.tr=null;refreshWingBtn();
 }
 function setDragonAir(on) {
+  if(typeof thornwellDragonHidden==="function"&&thornwellDragonHidden()){toast("Aurelius is waiting at Forgefalls.");return false;}
   if(on&&globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()){toast("Aurelius stays beside you for now.");return false;}
   if(on&&dragonTooHurtToFly()){toast("Aurelius is too hurt to fly. Feed him meat or fish.");return false;}
   if(on&&!dragonIntroDone){toast("Aurelius stays beside you for now.");return false;}
@@ -5810,6 +5811,7 @@ function drawClaw() {
   }
 }
 function stepDragon(dt) {
+  if(typeof stepThornwellDragon==="function"&&stepThornwellDragon(dt))return;
   groundInjuredDragon();
   if(scene?.nanGifts){dragon.t+=dt;dragon.moving=false;return;}
   if(globalThis.window?.EmberRiding?.holding()){
@@ -6169,7 +6171,7 @@ function dragonAllowedInMap(id,map=W.maps[id]) {
   return id==='world'||id==='cinderhold'||!!map?.royal||!!map?.templeExpanded||
     /^(?:tp|sn|ds)[1-4]$/.test(id);
 }
-const dragonHere = () => !dragonOff && hasDragon() && dragonAllowedInMap(MAPID);
+const dragonHere = () => !dragonOff && hasDragon() && dragonAllowedInMap(MAPID) && !(typeof thornwellDragonHidden==="function"&&thornwellDragonHidden());
 
 let scene = null;
 let walker = null;
@@ -6784,7 +6786,9 @@ function stepWalkers(dt) {
   if(scene && scene.who === "Hettie") { const her=npcs.find(n=>n.n==="Hettie"); if(her) faceToward(her,P.x,P.y); }
   stepHettie();
   stepThornwellWelcome(dt);
+  if(typeof stepThornwellRoyal==="function")stepThornwellRoyal(dt);
   for (const m of npcs) {
+    if(m.thornwellRoyal)continue;
     if(!npcHere(m))continue;
     if(m.nanSceneAside){
       if(scene?.nanGifts||npcs.some(n=>n.nanDeparting)){
@@ -11002,6 +11006,8 @@ function brambleHint(n){
 }
 
 function npcContextDialogue(n, alt) {
+  const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);
+  if(quiet)return quiet;
   const finished=typeof npcFinishedRoadwork==='function'&&npcFinishedRoadwork(n);
   if(finished)return [n.n+': '+finished[2]];
   if (wonAll) return (typeof npcAuditedGreeting==='function'&&npcAuditedGreeting(n,alt)) || (alt && n.dv2) || n.dv || n.d;
@@ -11120,7 +11126,7 @@ function moveBrambleActor(n,path,speed,dt) {
 function tryBrambleReunion(n) {
   if(n.n!=="Rowan the Hunter"||MAPID!=="tavern"||brambleQuest!==1)return false;
   const dog=npcs.find(n=>n.pettable);
-  playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. I hear you have a dragon travelling with you.",
+  playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. Bramble usually brings back sticks. Today he has brought me a helpful stranger.",
     smithUpgrade?"Rowan: I see Dunstan has already worked on your blade. You chose well.":"Rowan: Take that sword to Dunstan, the blacksmith in Forgewick. He will give you a stronger blade for the road ahead.",
     "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,after:()=>{
       brambleQuest=2;
@@ -11205,11 +11211,12 @@ function stepThornwellWelcome(dt) {
     const nearby=bramblePath([dog.x,dog.y],[P.x+24,P.y]);if(!nearby)return;thornwellArrival={dog,path:nearby};
   }else{[dog.x,dog.y]=path[0];thornwellArrival={dog,path:path.slice(1)};}
   brambleQuest=1;thornwellMet=true;
-  playScene(["Corin: Oh! Hello there. Come here, boy.","Corin scratches the dog's ears. His tail wags furiously.","Corin: You have a collar. We'd better find your owner.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];}});
+  playScene(["Corin: Oh! Hello there. Come here, boy.","Corin scratches the dog's ears. His tail wags furiously.","Corin: You have a collar. We'd better find your owner.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];if(typeof beginThornwellDetour==="function")beginThornwellDetour();}});
 }
 function skipBrambleForTest(){
   if(scene?.bramble){scene=null;walker=null;sayOff();showFace(null);}
   if(sayNpc&&(sayNpc.pettable||sayNpc.n==='Rowan the Hunter')){sayNpc=null;sayOff();showFace(null);}
+  if(typeof skipThornwellRoyal==="function")skipThornwellRoyal();
   thornwellMet=true;brambleQuest=3;thornwellArrival=null;thornwellReturn=null;
   brambleDeparture=null;brambleTrail=[];brambleMap='';syncBrambleParty();
   P.moving=false;
@@ -11228,7 +11235,7 @@ function petCompanion(n) {
     if(wasDown){dragon.tr=null;dragon.air=false;dragon.moving=false;}
     showHeal('dragon');refreshWingBtn();
   }
-  toast(hasDragon()?"Bramble cheers you both up. Corin and Aurelius are fully healed!":"You scratch Bramble behind the ears. Full health restored!");
+  toast(hasDragon()&&!thornwellDragonHidden()?"Bramble cheers you both up. Corin and Aurelius are fully healed!":"You scratch Bramble behind the ears. Full health restored!");
   return true;
 }
 function drawPetHeart(n,t,sp) {
@@ -11399,6 +11406,7 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(best.thornwellRoyal&&openThornwellAudience(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
       startNanFarewell(best);return;
     }
@@ -11448,6 +11456,9 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         best.n + (npcSeesDragon(best)?": Nothing has. Take it with you. Even with a dragon beside you, you will want a steady light in those workings.":": Nothing has. Not once. Take it, Corin. You will need a steady light in the deep workings."),
         "Corin: I will keep it burning.",
         best.n + ": I think it will see to that on its own."];
+    }
+    else if(best.charm&&!charm[best.charm]&&typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(best)){
+      sayNpc.said=thornwellQuietGreeting(best);
     }
     else if(best.charm&&!charm[best.charm]&&typeof npcWorldProfile==='function'&&npcWorldProfile(best)?.gift){
       sayNpc.said=npcWorldProfile(best).gift.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line);

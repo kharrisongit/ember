@@ -1851,11 +1851,13 @@ const NPC_STORIES = {
 };
 
 function npcSeesDragon(n){
+  if(typeof thornwellKnowledgeHidden==="function"&&thornwellKnowledgeHidden(n))return false;
   return !!n&&hasDragon()&&dragonHere()&&dragon.on&&!n.pettable&&
     (mounted||Math.hypot(n.x-dragon.x,n.y-dragon.y)<192);
 }
 // Companion reactions belong to the contextual greeting, not a duplicate topic.
 function npcDragonConversation(n,alt=false){
+  const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);if(quiet)return quiet;
   if(wonAll&&npcSeesDragon(n))return n.dragonNear||n.dd2||n.dd||n.d;
   if(npcSeesDragon(n))return (alt&&n.dd2)||n.dd||n.dragonNear||n.d;
   return n.dragonRumor||n.d;
@@ -1917,6 +1919,10 @@ const LIBRARY_QUEST_HINTS={
     "Brin: The temple southeast of Forgewick holds Lightning. Sandspire's temple to the southeast holds Ice. The temple northeast of Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
 };
 function libraryQuestHint(n){
+  if(n.n==="Brin"&&typeof thornwellKnowledgeHidden==="function"&&thornwellKnowledgeHidden(n))return {title:"The old rider temples",lines:[
+    "Brin: The old rider temples hold three Heartstones. Our books associate them with Lightning, Ice and Shadow.",
+    "Corin: Where are these temples?",
+    "Brin: Southeast of Forgewick, southeast of Sandspire, and northeast of Hollybeck. That is what the old maps say. If you explore them, take care."]};
   const base=LIBRARY_QUEST_HINTS[n.n];if(!base)return null;
   if(n.n==='Mira'&&charm.lamp)return {title:'Using the Hollybeck Lantern',lines:[
     "Mira: You have Torvald's lantern now. Carry it as you explore the dark galleries; its light lets you see what ordinary lamps miss.",
@@ -1964,6 +1970,7 @@ function npcWorldTopics(n){
   return topics;
 }
 function npcAuditedGreeting(n,alt){
+  const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);if(quiet)return quiet;
   const p=npcWorldProfile(n);if(!p)return null;
   const spoken=lines=>lines?.map(line=>/^[^:]{1,21}: /.test(line)?line:n.n+': '+line)||null;
   if(wonAll)return spoken((alt&&p.greetings?.dv2)||p.greetings?.dv);
@@ -1987,6 +1994,7 @@ function npcStoryTopics(n){
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
+  const visit=typeof thornwellVisitTopic==="function"&&thornwellVisitTopic(n);if(visit)topics.push(visit);
   topics.push(...npcWorldTopics(n).map(t=>({...t,category:"world"})));
   if(typeof npcExtraTopics==="function")topics.push(...npcExtraTopics(n));
   if(n.n==='Nan Ferrow'){
@@ -2011,6 +2019,7 @@ function npcStoryTopics(n){
   return topics;
 }
 function openNpcTopics(n){
+  if(n.thornwellRoyal)return openThornwellAudience(n);
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
   if((!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;

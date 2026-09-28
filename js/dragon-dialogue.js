@@ -315,6 +315,7 @@ function paintDragonBanter(){
   dragonBanterPanel.hidden=false;
 }
 function stepDragonBanter(dt){
+  if(typeof thornwellDragonHidden==="function"&&thornwellDragonHidden()){quietDragonBanter();return;}
   dragonNpcCooldown=Math.max(0,dragonNpcCooldown-dt);
   const interrupted=sceneHold()||!!sayNpc||dragonCombatActive();
   if(interrupted){
@@ -719,9 +720,17 @@ const DRAGON_JOURNEY_TOPICS=[
     'Corin: Keep talking, then.',
     'Aurelius: I can do that. You may regret asking.'
   ]},
+  {id:'royal-visit',name:'Halvard at the Copper Cup',when:()=>typeof thornwellRoyal!=='undefined'&&thornwellRoyal.stage>=7&&thornwellRoyal.answers.visit==='yes',lines:()=>[
+    'Corin: I keep hearing him tell Bess to feed everyone else less.',
+    'Aurelius: And nobody stopped him?',
+    'Corin: His men were sitting there smiling. They made it sound ordinary.',
+    'Aurelius: You know it was not right. Keep hold of that.',
+    typeof thornwellRoyal!=='undefined'&&thornwellRoyal.answers.tax==='defiant'?'Corin: I argued with him. He threatened to send the collector. Bess would have paid for my words.':'Corin: I wanted to do more than stand there.',
+    'Aurelius: We will need more than brave words. But I would rather travel with someone who wants to help than someone who laughs at that table.'
+  ]},
   {id:'bramble',name:'After bringing Bramble home',when:()=>brambleQuest>=2,lines:()=>[
     'Corin: I keep thinking about Bramble when he saw Rowan.',
-    'Aurelius: He nearly pulled you off your feet.',
+    'Aurelius: Did he nearly pull you off your feet?',
     'Corin: I did not mind. It was good to know we had done something right.',
     'Aurelius: We should visit them again.',
     'Corin: You like him, do you not?',

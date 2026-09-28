@@ -17,6 +17,7 @@ function atlasMainObjective(){
  ];
  if(quest<Q.DONE)return o(...opening[quest]);
  if(wonAll)return o('A free Emberfell','Millwood','Return to your friends, or select an unfinished side quest below.');
+ const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();if(royal)return o(...royal);
  if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?'Ask about Bramble in Thornwell. Rowan the Hunter is in the Copper Cup tavern.':'Travel east through the camps to Thornwell and speak with the people you meet.');
  if(!smithUpgrade)return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.');
  if(!charm.edge)return o('Finish with Dunstan','Forgewick','Speak with Dunstan again about the gift that strengthens your blade.');
@@ -41,6 +42,8 @@ function atlasPlaceFor(map,n){
 }
 function atlasQuestOptions(){
  const out=[atlasMainObjective()],add=(...args)=>out.push(atlasObjective(...args));
+ const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
+ if(royal)add('thornwell-royals',...royal);
  if((dragonLearned('fishing')||odoRodReferral)&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.');
  if(dragonLearned('smith')&&!smithUpgrade)add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
@@ -97,6 +100,7 @@ function atlasQuestComplete(id){
  if(id==='main')return !!wonAll;
  if(id==='fishing')return !!fishingPole;
  if(id==='bramble')return brambleQuest>=2;
+ if(id==='thornwell-royals')return typeof thornwellRoyal!=='undefined'&&thornwellRoyal.stage>=7;
  if(id==='smith')return !!smithUpgrade;
  if(id==='shield')return !!glassShield;
  if(id==='graveyard')return !!charm.wake;
@@ -112,6 +116,7 @@ function atlasSyncJournal(){
 }
 function atlasQuestStages(q){
  if(q?.id==='main')return atlasMilestoneData();
+ if(q?.id==='thornwell-royals')return [['Return Bramble',brambleQuest>=3],['Endure the royal audience',thornwellRoyal.stage>=4],['Follow the royal party',thornwellRoyal.stage>=6],['Reunite at Forgefalls',thornwellRoyal.stage>=7]];
  if(q?.id==='bramble')return [['Meet Bramble',brambleQuest>=1],['Find his owner',dragonLearned('bramble-owner')||brambleQuest>=2],['Bring him home',brambleQuest>=2]];
  if(q?.id==='trials')return [['Receive the seal',!!cinderSeal],['Place the seal',!!trialSealPlaced],['Win the trial',atlasQuestComplete('trials')]];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
