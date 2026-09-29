@@ -21,7 +21,7 @@ assert.equal(scope.roads.find(r=>r.id===7).tree,'kt_tree_a','Attached hunting le
 assert.deepEqual(Array.from(scope.arenas,a=>a.id),[4,5,6,8],'Includes old spruce arenas and hunting clearings on the temple path');
 const plan=c.planBlossomLayout(scope.roads,scope.arenas,[]);
 for(const [region,xs,step] of [['oak',[21,23.5,26,34,36.5,39],64],
- ['forgewick-temple',[89,92.5,96,104,107.5,111],80]]){
+ ['forgewick-temple',[89,92.5,96,104,107.5,111],72]]){
  for(const x of xs){
  const row=c.planBlossomLayout(scope.roads,[],[]).filter(p=>p.region===region&&p.kind==='route'&&p.x===x&&p.y>=55&&p.y<=85).sort((a,b)=>a.y-b.y);
   assert(row.length>=5,'Every route band is filled');

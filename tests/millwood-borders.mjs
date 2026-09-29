@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const c=vm.createContext({Math,Set});
+const c=vm.createContext({Math,Set,MD:{scatter:[]}});
 vm.runInContext(fs.readFileSync('js/blossom-routes.js','utf8'),c);
 vm.runInContext(`
 var features=[
