@@ -43,12 +43,22 @@ for(const a of elements.values())if(!['emberfellMillwoodBgm','emberfellVillainBg
 await change('world','Emberfell',30,430);
 c.scene={lines:["Maddock: Halvard's knights patrol the road."]};sync();await advance();assert.equal(track('Villain').paused,true,'Mentioning knights is not a royal conversation');
 for(const name of ['Bram','Doran','Tolan',"King's Knight",'Royal Knight','Halvard']){
- c.scene={lines:[name+': Halt.','Corin: Let me pass.']};sync();await advance();assert.equal(track('Villain').paused,false,name+' conversation uses the King’s song');
+ c.scene={lines:[name+': Halt.','Corin: Let me pass.']};sync();await advance();assert.equal(track('Villain').paused,true,name+' alone does not trigger the King’s song');
  c.scene=null;sync();await advance();assert.equal(track('Villain').paused,true);assert.equal(track('Millwood').paused,false);
 }
-c.sayNpc={n:'Serjeant Bram'};sync();await advance();assert.equal(track('Villain').paused,false);c.sayNpc=null;sync();await advance();
+c.sayNpc={n:'Serjeant Bram'};sync();await advance();assert.equal(track('Villain').paused,true);c.sayNpc=null;sync();await advance();
 c.window.EmberKingMusic.start();await advance();assert.equal(track('Villain').paused,false);c.scene={lines:['Out of my way, boy!']};sync();await advance();assert.equal(track('Villain').paused,false,'Scripted royal cue spans the blackouts');
 c.scene=null;c.window.EmberKingMusic.stop();await advance();assert.equal(track('Millwood').paused,false);
+await change('tavern','The Copper Cup');
+for(const lines of [['King Halvard: Over here.'],['Serjeant Bram: Move.'],['Doran: Yes, sire.']]){
+ c.scene={lines,thornwellRoyal:true};sync();await advance();assert(track('Villain').paused);assert(!track('Tavern').paused,'The tavern song continues through royal dialogue');
+}
+c.window.EmberKingMusic.start();await advance();assert(track('Villain').paused,'A tavern scene cannot request the forest cue');
+c.scene=null;c.quest=c.Q.DONE;await change('world','Thornwell',245,70);
+c.scene={thornwellRoyal:true,lines:['King Halvard: Out of my way, boy!']};
+c.window.EmberKingMusic.start();await advance();assert(track('Villain').paused,'The royal departure in Thornwell keeps town music');
+c.scene=null;c.quest=0;
+
 c.lastFight=1;await change('cinderhold','Throne room');assert.equal(track('Villain').paused,false,'Final battle starts the theme even without prior dialogue');
 c.lastFight=2;sync();await advance();assert.equal(track('Villain').paused,false,'King’s second phase keeps the song');
 c.wonAll=true;sync();await advance();assert.equal(track('Cinderhold').paused,false,'Victory restores Cinderhold music');c.wonAll=false;c.lastFight=0;
@@ -74,7 +84,7 @@ for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Vi
  const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,['Villain','Millwood'].includes(name)?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }
-console.log('PASS: default music covers unassigned areas; actual royal speakers and both final battle phases get the King’s theme; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');
+console.log('PASS: default music covers unassigned areas; the initial forest cue and both final battle phases get the King’s theme; the tavern and royal departure keep local music; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');
 
 // The route music follows the entire authored network, including bends that
 // were far from the old endpoint-to-endpoint line. Town areas always win.
@@ -97,10 +107,10 @@ for(const name of ['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','H
 await routes.change('world','Northern Woods',30,350);assert(routes.track('Field').paused,'The original song remains in the Northern Woods');
 routes.c.features=[{id:12,kind:'route',road:'Route 2',pts:[[200,200],[200,240],[300,240]]}];
 await routes.change('world','Emberfell',200,230);assert(!routes.track('Field').paused,'Moved road geometry is used');
-routes.c.scene={lines:['Bram: Halt.']};routes.sync();await routes.advance();assert(!routes.track('Villain').paused);assert(routes.track('Field').paused);
-routes.c.scene=null;routes.sync();await routes.advance();assert(!routes.track('Field').paused,'Finishing a knight conversation returns to the route song');
+routes.c.scene={lines:['Bram: Halt.']};routes.c.window.EmberKingMusic.start();routes.sync();await routes.advance();assert(!routes.track('Villain').paused);assert(routes.track('Field').paused);
+routes.c.scene=null;routes.c.window.EmberKingMusic.stop();routes.sync();await routes.advance();assert(!routes.track('Field').paused,'Finishing a knight conversation returns to the route song');
 await routes.change('tp1','Forgewick Temple');assert(routes.track('Field').paused,'Entering a temple leaves route music');
-console.log(`PASS: The Field covers ${routeSamples} road segments, follows moved bends, yields to towns/interiors and royal conversations, and leaves Northern Woods on the original song.`);
+console.log(`PASS: The Field covers ${routeSamples} road segments, follows moved bends, yields to towns/interiors and the forest royal cue, and leaves Northern Woods on the original song.`);
 
 // Reproduce Safari's real constraint: setting media.volume has no effect.
 // Verify the connected gain graph's output, not the ignored media property.

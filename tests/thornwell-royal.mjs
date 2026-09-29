@@ -14,6 +14,7 @@ for(const [id,m]of Object.entries(W.maps)){prepareMarketNpcCast(m,id);prepareDia
 loadMap('tavern');brambleQuest=1;thornwellRoyal.stage=1;P.x=250;P.y=250;syncBrambleParty();syncThornwellRoyals();`);
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),4,'Royal party is visible during the handoff');
 assert.equal(run('thornwellKing().x'),396,'Royal table is the unoccupied northeast table, not Fen’s table');
+assert(run("tavernActorDepth(thornwellKing(),MD.roomActors)>tavernActorDepth(MD.roomActors.find(a=>a.editKey==='remaining:tavern:18'),MD.roomActors)"),'Seated king renders above the tabletop');
 assert(run(`npcs.filter(n=>n.thornwellRoyal&&n.n!=='King Halvard').every(n=>n.packSpr.startsWith('royal_intro_guard_')&&!n.packWalk&&!n.packDirections)`),'Ceremonial guard identities use idle art');
 run(`var dragonDraws=0;var originalDraw=drawGameImage;drawGameImage=()=>dragonDraws++;drawKingDragon();drawGameImage=originalDraw;`);
 assert.equal(run('dragonDraws'),0,'King’s dragon never renders inside the tavern');
@@ -76,7 +77,7 @@ for(const name of ['King Halvard','Serjeant Bram','Doran','Tolan']){
 assert.equal(choices,12,'Four branching exchanges with three responses apiece');
 run(`thornwellRoyal.answers.tax='defiant';openThornwellAudience(thornwellKing());askBack();`);
 assert.equal(run('thornwellRoyal.stage'),3,'Back stays at the royal topic list');
-run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='Ask leave to go');askTake();`);tick(30);
+run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='May I leave?');askTake();`);tick(30);
 assert.equal(run('thornwellRoyal.stage'),4,'Goodbye dismisses the audience safely');
 assert.equal(run('thornwellAudiencePending()'),false,'Dismissal unlocks the tavern exit');
 assert(spoken.some(s=>s.includes('finishing your thoughts aloud')),'Choices affect the dismissal');
@@ -114,7 +115,29 @@ assert(spoken.includes('Serjeant Bram: Make way for royalty!'));
 assert(spoken.includes('Out of my way, boy!'));
 assert(spoken.some(s=>s.includes('past Forgefalls and back to Cinderhold')));
 run('restoreThornwellRoyal(captureThornwellRoyal());');tick(5);assert.equal(run('thornwellRoyal.stage'),6,'Reloaded departure does not repeat');
-run(`const meeting=thornwellForgefalls();P.x=meeting.x;P.y=meeting.y;dragon.hp=4;`);tick(80);
+run(`const meeting=thornwellForgefalls();P.x=meeting.left-16;P.y=meeting.y;dragon.hp=4;`);tick(5);
+assert.equal(run('thornwellFlight'),null,'The riverbank does not trigger the reunion');
+run(`P.x=meeting.x;P.y=meeting.y;P.moving=true;padDx=1;VW=800;VH=600;cam.z=2.5;cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;`);tick(1);
+assert.equal(run('P.moving'),false,'Corin stops as the flight begins');
+assert.equal(run('padDx'),0,'Held touch input is cleared');
+assert(run('scene.silent&&dragon.air&&thornwellFlight.phase==="fly"'),'Flight owns input before dialogue');
+assert(run('dragon.x>cam.x+VW/cam.z+80'),'Aurelius starts fully off screen');
+const corinAt=Array.from(run('[P.x,P.y]'));
+let enteredView=false,landed=false;
+for(let i=0;i<300&&run('thornwellFlight?.phase!=="talk"');i++){
+ const previous=run('dragon.x');
+ run('keys.d=true;stepPlayer(1/30);advanceScene();stepScene(1/30);stepDragon(1/30)');
+ assert.deepEqual(Array.from(run('[P.x,P.y]')),corinAt,'Held keyboard input cannot move Corin during the flight');
+ assert(Math.abs(run('dragon.x')-previous)<=145/30+.001,'Aurelius flies continuously without teleporting');
+ enteredView ||= run('dragon.x<cam.x+VW/cam.z');
+ landed ||= run('dragon.tr?.kind==="down"');
+ assert.equal(run('thornwellRoyal.stage'),6,'The journey checkpoint waits for the reunion dialogue');
+}
+run('keys.d=false');
+assert(enteredView&&landed,'Visible flight is followed by the landing animation');
+assert.equal(run('thornwellFlight.phase'),'talk');assert.equal(run('dragon.air'),false);
+assert(run('dragon.x>=meeting.left&&dragon.x<=meeting.right&&dragon.y>=meeting.top&&dragon.y<=meeting.bottom'),'Aurelius lands on the bridge');
+tick(80);
 assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 assert.equal(run('dragon.hp'),4,'Reunion does not heal or reset dragon progress');
 assert(run("atlasQuestComplete('thornwell-royals')"));

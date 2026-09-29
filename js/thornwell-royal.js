@@ -65,7 +65,7 @@ function beginThornwellDetour(){
   thornwellScene([
     'Aurelius: That dog is going to introduce you to everyone in Thornwell. I would rather not be the second thing they notice.',
     'Corin: You want to go around?',
-    'Aurelius: I can fly low beyond the trees, well clear of the roofs. Return Bramble to his owner. I will meet you at Forgefalls, beside the road below the water.',
+    'Aurelius: I can fly low beyond the trees, well clear of the roofs. Return Bramble to his owner. I will meet you on the bridge at Forgefalls.',
     'Corin: No circling the town. And stay out of sight.',
     'Aurelius: Discreetly, Corin. I know what that means.',
     'Corin: I will see you at the falls.'
@@ -83,6 +83,23 @@ function stepThornwellDragon(dt){
     dragon.t+=dt;dragon.moving=false;
     if(thornwellFlight.phase==='talk')return true;
     if(dragon.tr){stepTransition(dt);return true;}
+    if(thornwellFlight.kind==='reunion'){
+      if(thornwellFlight.phase==='fly'){
+        const [x,y]=thornwellFlight.target,dx=x-dragon.x,dy=y-dragon.y;
+        const distance=Math.hypot(dx,dy),step=Math.min(distance,145*dt);
+        dragon.air=true;dragon.moving=true;dragon.dir=direction4(dx,dy,'w');
+        if(distance>0){dragon.x+=dx/distance*step;dragon.y+=dy/distance*step;}
+        faceCorinAt(dragon.x,dragon.y);
+        if(distance<=step){
+          dragon.moving=false;dragon.dir=P.x<dragon.x?'w':'e';
+          thornwellFlight.phase='land';startTransition('down',false);
+        }
+      }else if(thornwellFlight.phase==='land'){
+        thornwellFlight.phase='talk';dragon.air=false;dragon.moving=false;
+        faceCorinAt(dragon.x,dragon.y);
+      }
+      return true;
+    }
     if(thornwellFlight.kind==='depart'){
       dragon.air=true;dragon.dir='e';dragon.moving=true;
       dragon.x+=145*dt;dragon.y-=25*dt;thornwellFlight.distance+=145*dt;
@@ -196,7 +213,7 @@ function openThornwellAudience(actor){
     opts:[{n:actor.n,head:true},...topics,...THORNWELL_ROYALS.filter(name=>name!==actor.n).map(name=>({
       n:'Speak to '+name,navigation:true,category:'folder',summary:name==='King Halvard'?'Return to the king':'An armed man at the king’s table',
       go:()=>openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===name))
-    })),{n:thornwellRoyal.stage===3?'Ask leave to go':'Leave the table',category:'leave',navigation:true,go:back}]};
+    })),{n:thornwellRoyal.stage===3?'May I leave?':'Leave the table',category:'leave',navigation:true,go:back}]};
   askPick=1;askDraw();return true;
 }
 function thornwellKingTopics(n){
@@ -360,20 +377,36 @@ function thornwellRoyalExit(){
     thornwellScene([
       'Corin: Forgefalls. That is where Aurelius is waiting.',
       'Corin: If they find him… I have to get there. Now.'
-    ],()=>{saveGame();toast('Find Aurelius beside the road below Forgefalls.');});
+    ],()=>{saveGame();toast('Meet Aurelius on the bridge at Forgefalls.');});
     scene.hold=()=>fade<=0;showScene();
   });
 }
 function thornwellForgefalls(){
   const mark=W.maps.world.features?.find(f=>f.kind==='landmark'&&f.label==='Forgefalls');
-  return {x:(mark?.x??417)*TS,y:((mark?.y??328)+2)*TS};
+  const x=mark?.x??417,y=mark?.y??328;
+  const bridge=(W.maps.world.decks||[]).filter(d=>
+    Math.hypot((d.x0+d.x1)/2-x,(d.y0+d.y1)/2-y)<16)
+    .sort((a,b)=>Math.hypot((a.x0+a.x1)/2-x,(a.y0+a.y1)/2-y)-Math.hypot((b.x0+b.x1)/2-x,(b.y0+b.y1)/2-y))[0];
+  if(!bridge)return null;
+  return {x:(bridge.x0+bridge.x1+1)*TS/2,y:(bridge.y0+bridge.y1+1)*TS/2,
+    left:bridge.x0*TS+8,right:(bridge.x1+1)*TS-8,top:bridge.y0*TS+8,bottom:(bridge.y1+1)*TS-8};
 }
 function thornwellReunion(){
-  const near=thornwellReachable(P,[[P.x+42,P.y],[P.x-42,P.y],[P.x,P.y+42],[P.x,P.y-42]]);
-  if(!near)return;
-  const spot=near.at(-1);
-  thornwellFlight={kind:'reunion',phase:'talk'};dragon.x=spot[0];dragon.y=spot[1];dragon.air=false;dragon.tr=null;dragon.moving=false;
-  dragon.dir=P.x<dragon.x?'w':'e';faceCorinAt(dragon.x,dragon.y);
+  const bridge=thornwellForgefalls();
+  if(!bridge)return;
+  const spot=[[P.x+42,P.y],[P.x-42,P.y],[P.x,P.y+42],[P.x,P.y-42]].find(([x,y])=>
+    x>=bridge.left&&x<=bridge.right&&y>=bridge.top&&y<=bridge.bottom&&dragonCanStand(x,y));
+  if(!spot)return; // Wait for enough clear bridge deck to land beside Corin.
+  clearPadInputs();running=false;P.act=null;P.moving=false;
+  thornwellFlight={kind:'reunion',phase:'fly',target:spot};
+  // Enter from beyond both the current view and the camera's following view.
+  dragon.x=Math.max(cam.x+VW/cam.z,P.x+VW/cam.z/2,spot[0])+128;
+  dragon.y=spot[1];dragon.air=true;dragon.tr=null;dragon.moving=true;dragon.placed=MAPID;
+  dragon.dir='w';faceCorinAt(dragon.x,dragon.y);
+  thornwellScene([],thornwellReunionDialogue);
+  scene.until=()=>thornwellFlight?.phase==='talk';showScene();
+}
+function thornwellReunionDialogue(){
   thornwellScene([
     'Corin: Aurelius! Are you all right?',
     'Aurelius: Yes. Why are you looking at me as though I have fallen apart?',
@@ -407,7 +440,7 @@ function stepThornwellRoyal(dt){
   if(MAPID==='world'&&thornwellRoyal.stage===5){thornwellDeparture();return;}
   if(MAPID==='world'&&thornwellRoyal.stage===6){
     const falls=thornwellForgefalls();
-    if(Math.hypot(P.x-falls.x,P.y-falls.y)<224)thornwellReunion();
+    if(falls&&P.x>=falls.left&&P.x<=falls.right&&P.y>=falls.top&&P.y<=falls.bottom)thornwellReunion();
   }
 }
 function thornwellStoryObjective(){
@@ -417,7 +450,7 @@ function thornwellStoryObjective(){
   if(stage<=3)return ['The king’s summons','Thornwell','Return to the Copper Cup and speak with King Halvard and his knights at the corner table.'];
   if(stage===4)return ['Leave the Copper Cup','Thornwell','Halvard has dismissed you. Leave the tavern to continue toward Forgefalls.'];
   if(stage===5)return ['Make way for royalty','Thornwell','The royal party is leaving the Copper Cup. Wait for them to pass.'];
-  return ['Find Aurelius at Forgefalls','Forgefalls','Halvard’s men are heading past Forgefalls. Follow the road east from Thornwell, then south to the falls. Find Aurelius beside the road below the water.'];
+  return ['Find Aurelius at Forgefalls','Forgefalls','Halvard’s men are heading past Forgefalls. Follow the road east from Thornwell, then south to the falls. Meet Aurelius on the bridge at the falls.'];
 }
 function replayThornwellForTest(){
   if(!devUnlocked)return false;

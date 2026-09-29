@@ -13,6 +13,16 @@ for(const to of path){
  from=to;
 }
 assert.deepEqual(Array.from(path.at(-1)),[96,48]);
+// Hettie has already left before Corin returns, including an old save with
+// her still beside the entrance. Completing Nan's gifts cannot pop her back in.
+run(`MAPID='world';quest=Q.DONE;scene=null;restoreFatherCompass();
+var farmHettie={n:'Hettie',x:424,y:6672};npcs=[farmHettie];cam.x=350;cam.y=6580;cam.z=2.5;`);
+assert.equal(run('npcHere(farmHettie)'),false,'Hettie is absent even before the farewell begins');
+run('stepHettie();scene={nanGifts:true};templeCompass.owned=true;templeCompass.mapGiven=true;templeCompass.meatGiven=true;stepHettie()');
+assert.equal(run('npcHere(farmHettie)'),false,'Hettie stays absent during Nan’s final lines');
+run('scene=null;stepHettie()');assert.equal(run('npcHere(farmHettie)'),false,'Hettie cannot reappear in the current view');
+run('cam.x=2000;stepHettie()');assert(run('npcHere(farmHettie)'),'The farm routine resumes after Corin leaves');
+console.log('PASS: Hettie is already absent on the return with Aurelius and never walks through Nan’s farewell.');
 // Both gifts may be recorded while Nan still has dialogue to deliver.
 c.actor={n:'Nan Ferrow',fatherCompassVisitor:true,x:0,y:40,straightSceneWalk:true,goto:[80,40]};
 run("restoreFatherCompass({owned:true,meatGiven:false});scene={nanGifts:true,npcActor:actor}");

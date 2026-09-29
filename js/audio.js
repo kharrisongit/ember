@@ -187,17 +187,6 @@ let routeMusicIntroPlayed=false;
       [thornwellMode,thornwell],[inNamedArea('Sandspire'),sandspire],[lavaRouteMode,lavaRoute],[inSnowRoute(),snowRoute],[inDesertRoute(),desert],[fieldMode,field],[true,bgm]];
     return choices.find(([on,a])=>on&&hasSong(a))?.[1] || (hasSong(millwood)?millwood:null);
   };
-  const royalSpeaker=name=>/^(?:(?:King's|Royal|Black|White)\s+)?Knight\b|^(?:King )?Halvard$|^(?:Serjeant )?Bram$|^(?:Doran|Tolan)$/i.test(String(name||'').trim());
-  const royalConversation=()=>{
-    try{
-      if(typeof sayNpc!=='undefined'&&sayNpc&&royalSpeaker(sayNpc.n))return true;
-      if(typeof scene!=='undefined'&&scene){
-        if(royalSpeaker(scene.who))return true;
-        return (scene.lines||[]).some(line=>String(line).includes(':')&&royalSpeaker(String(line).split(':')[0]));
-      }
-    }catch(e){}
-    return false;
-  };
   const finalBattle=()=>{
     try{return MAPID==='cinderhold'&&!wonAll&&!!lastFight;}catch(e){return false;}
   };
@@ -359,9 +348,9 @@ let routeMusicIntroPlayed=false;
     try{if(mode!=='play'||quest<Q.NOISE||quest>Q.DONE){omenPlaying=false;omenHeard=false;}}catch(e){}
     if(omenPlaying){selectTrack(null);return;}
     // A loaded save or a map change cannot retain an old scripted royal cue.
-    try{if(kingMode&&(MAPID!==kingMap||wonAll))kingMode=false;}catch(e){}
+    try{if(kingMode&&(MAPID!==kingMap||wonAll||MAPID==='tavern'||(typeof scene!=='undefined'&&scene?.thornwellRoyal)))kingMode=false;}catch(e){}
     if(battleMode&&(battleMap!==MAPID||!gameplayStarted||(typeof deadShown!=='undefined'&&deadShown)))battleMode=false;
-    selectTrack((kingMode||royalConversation()||finalBattle())&&hasSong(villain)?villain:battleMode&&hasSong(battle)?battle:exploreTrack());
+    selectTrack((kingMode||finalBattle())&&hasSong(villain)?villain:battleMode&&hasSong(battle)?battle:exploreTrack());
   };
   window.EmberEndingMusic={start:()=>{endingMode=true;chooseMusic();},stop:()=>{endingMode=false;chooseMusic();}};
   window.EmberKingMusic={

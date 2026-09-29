@@ -12,7 +12,7 @@
     ask={quick:1,conversationPrompt:true,npcActor:actor,back:leave,opts:[{n:name,head:true},
       {n:'Talk',go:talk||(()=>telepathy?openDragonConversation():beginNpcTalk(actor))},
       ...(buy?[{n:'Buy supplies',go:()=>openMerchantShop(actor)}]:[]),
-      {n:leave?'Ask leave to go':'Leave',go:leave||null}]};
+      {n:leave?'May I leave?':'Leave',go:leave||null}]};
     askPick=1;askDraw();return true;
   }
   function sync(){

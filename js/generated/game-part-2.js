@@ -350,7 +350,7 @@ function tavernActorDepth(o,actors){
       if(seated)return Math.min(depth,seated.y-.5);
     }
   }
-  if(/^tavern_anim_/.test(o.spr||'')){
+  if(/^tavern_anim_/.test(o.spr||'')||(o.thornwellRoyal&&o.seatSpr)){
     const tables=actors.filter(a=>a.exactFurniture&&/table/.test(a.n||'')&&!a.editorDeleted&&
       Math.abs(o.x-a.x)<=a.extractedCanvas.width/2+12&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+28);
     return Math.max(depth,...tables.map(a=>(a.sy??a.y)+.5));
@@ -6756,6 +6756,7 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
+  if(m.n==="Hettie"&&hasDragon()&&(nanGiftPending()||m.nanSceneHidden))return false;
   if(m.fatherCompassVisitor&&!m.nanDeparting&&!nanGiftPending()&&!(scene?.nanGifts&&scene.npcActor===m))return false;
   if(m.progressionWorker&&!journeyGateClosed(m.progressionWorker))return false;
   if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
@@ -6778,9 +6779,15 @@ function beginHettieWalk(her) {
   her.arrived = true;
 }
 function stepHettie() {
-  if (MAPID !== "world" || quest < Q.KING || scene) return;
+  if (MAPID !== "world" || quest < Q.KING) return;
   const her = npcs.find(n => n.n === "Hettie");
-  if (her) beginHettieWalk(her);
+  if (!her) return;
+  // She has already left before Corin returns with Aurelius. Keep her out of
+  // the farewell, then resume her farm routine once it is outside the view.
+  if (hasDragon() && nanGiftPending()) her.nanSceneHidden = true;
+  if (scene) return;
+  if (her.nanSceneHidden && !nanGiftPending() && offScreen(her)) delete her.nanSceneHidden;
+  beginHettieWalk(her);
 }
 
 function stepWalkers(dt) {
@@ -6792,14 +6799,6 @@ function stepWalkers(dt) {
   for (const m of npcs) {
     if(m.thornwellRoyal)continue;
     if(!npcHere(m))continue;
-    if(m.nanSceneAside){
-      if(scene?.nanGifts||npcs.some(n=>n.nanDeparting)){
-        moveBrambleActor(m,m.nanSceneAside,90,dt);
-        m.scriptWalking=!!m.nanSceneAside.length;
-        continue;
-      }
-      delete m.nanSceneAside;m.scriptWalking=false;
-    }
     if(m.nanDeparting){
       // Return south the way she approached; hide only after her head exits.
       faceToward(m,m.x,m.y+32);m.y+=72*dt;m.scriptWalking=true;
