@@ -54,7 +54,16 @@ assert(c.hidden.has(1)&&c.hidden.has(5),'Old route planting, including trees in 
 assert([2,3,4,6].every(id=>!c.hidden.has(id)),'Distant trees, hollow, props and northern field are preserved');
 const planted=c.fobjs.filter(o=>o.borderRegion==='shroom');
 assert(planted.length>200&&planted.every(o=>o.s===0),'Every rebuilt Shroom Pass border uses its native tree');
-assert(planted.every(o=>!c.inClearing(o.x/16-.5,o.y/16-1)),'New trees never fill the clearings');
+assert(planted.every(o=>{
+ const x=o.x/16-.5,y=o.y/16-1;
+ return !(x>=18&&x<=42&&y>=9&&y<=33)&&!(x>=86&&x<=104&&y>=68&&y<=86);
+}),'New trees never fill the actual meadow or hollow clearing');
+for(const x of [26,34]) {
+ const row=planted.filter(o=>o.blossomKind==='route'&&o.blossomRow===0&&o.x/16-.5===x)
+   .map(o=>o.y/16-1).filter(y=>y<70).sort((a,b)=>a-b);
+ assert.equal(row[0],37.125,'The inner path row reaches the first spacing point below the meadow');
+ assert(row.slice(1).every((y,i)=>y-row[i]===66/16),'No gap remains between the meadow and the path rows');
+}
 assert(planted.every(o=>c.terr[Math.floor((o.y-1)/16)*c.MW+Math.floor(o.x/16)]===c.WALL),'Trunk collision cells match the pixel-aligned planting');
 const positions=JSON.stringify(c.fobjs.map(o=>[o.x,o.y,o.s,o.blossomRow]));
 vm.runInContext('rebuildBlossomRoutes(guards)',c);

@@ -163,13 +163,20 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
     !blossomInsideBox(x,y,blossomTownBox({...t,northInset:undefined}),-2));
   const atArena=(x,y)=>arenas.some(a=>Math.hypot(x-a.x,y-a.y)<(a.r||ARENA_R)+11);
-  const protectedPlace=(x,y)=>inClearing(x,y)||
+  const protectedPlace=(x,y,region)=>
+    (region==='shroom'?features.some(a=>{
+      if(!['area','town'].includes(a.kind)||a.wild)return false;
+      // The meadow's extra scatter buffer must not break the managed path
+      // rows. Keep its actual ground open and retain other clearing bounds.
+      const inset=a.meadow?0:(a.band||6);
+      return x>=a.x0+inset&&x<=a.x1-inset&&y>=a.y0+inset&&y<=a.y1-inset;
+    }):inClearing(x,y))||
     otherRings.some(f=>Math.hypot(x-f.x,y-f.y)<(f.r||ARENA_R)+3.5);
   const inBand=(x,y)=>atArena(x,y)||townBorder(x,y)||
     (!inTownArea(x,y)&&legs.some(r=>{
       const reach=Math.max(14,r.band)+r.half+2;
       // Clear old route trees out of the northern meadow's buffer too;
-      // the planting guard below still keeps that clearing open.
+      // managed rows connect to the meadow's actual edge.
       return (r.region==='shroom'||!protectedPlace(x,y))&&
         (r.minY===undefined||y>=r.minY)&&treeBorderInBounds(x,y,r.bounds)&&
         x>=Math.min(r.a[0],r.b[0])-reach&&x<=Math.max(r.a[0],r.b[0])+reach&&
@@ -214,7 +221,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const plan=planBlossomLayout(roads,arenas,towns,p=>{
     const nm=p.tree||'blo_big',sp=SPR[nm];if(NAME2I[nm]===undefined||!sp)return false;
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
-    if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y))return false;
+    if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y,p.region))return false;
     if(inTownArea(x,y)&&!townBorder(x,y))return false;
     if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||felled.has(k))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
