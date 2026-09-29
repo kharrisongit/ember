@@ -53272,6 +53272,15 @@
         "kind": "collision",
         "key": "51,21",
         "blocked": true
+      },
+      "actor:tavern:tavern_anim_13": {
+        "kind": "actor",
+        "key": "tavern:tavern_anim_13",
+        "identity": "tavern_anim_13",
+        "x": 392,
+        "y": 273,
+        "originX": 388,
+        "originY": 272
       }
     },
     "house22": {
@@ -53463,7 +53472,8 @@
     "a37ba746-9fdd-429d-9e78-f8b3360cfc42",
     "f5ca0524-1f58-49cd-b7c5-4296792ed887",
     "52fc0b6a-66e1-45a7-b420-30455725f34a",
-    "dabbe44e-fa67-4125-a329-65ca885464f3"
+    "dabbe44e-fa67-4125-a329-65ca885464f3",
+    "c960a88f-c548-4d37-bbdc-0e968a4a17d5"
   ],
   "sessions": {
     "witchmoor": {
@@ -104089,9 +104099,9 @@
       "resultHash": "84ef5094-7366084e-421105"
     },
     "tavern": {
-      "id": "2e94ec6a-9686-45f1-8b2a-a8099bc54c57",
+      "id": "33539aed-42d4-48f9-a2d8-0766bc292154",
       "sequence": 1,
-      "baseHash": "f192aaa1-21b096d5-4870",
+      "baseHash": "1ec3ecb9-c9748195-5278",
       "baseFingerprint": "12ba66a9-e44c03e1-30533",
       "base": {
         "collision:44,34": {
@@ -104448,9 +104458,39 @@
           "kind": "collision",
           "key": "49,19",
           "blocked": true
+        },
+        "collision:48,21": {
+          "kind": "collision",
+          "key": "48,21",
+          "blocked": true
+        },
+        "collision:49,21": {
+          "kind": "collision",
+          "key": "49,21",
+          "blocked": true
+        },
+        "collision:48,22": {
+          "kind": "collision",
+          "key": "48,22",
+          "blocked": true
+        },
+        "collision:49,22": {
+          "kind": "collision",
+          "key": "49,22",
+          "blocked": true
+        },
+        "collision:46,21": {
+          "kind": "collision",
+          "key": "46,21",
+          "blocked": true
+        },
+        "collision:51,21": {
+          "kind": "collision",
+          "key": "51,21",
+          "blocked": true
         }
       },
-      "resultHash": "1ec3ecb9-c9748195-5278"
+      "resultHash": "e2505097-92812ed5-5427"
     },
     "house22": {
       "id": "44717cc3-1cd1-4e49-b81f-c38d8355e179",
