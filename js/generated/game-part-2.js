@@ -358,7 +358,7 @@ function tavernActorDepth(o,actors){
   return depth;
 }
 function isPatioPatron(o){
-  return ['Merrin','Asta','Colm'].includes(o.n)||/^(pack_drinker|tavernpatio_anim_)/.test(o.packSpr||o.spr||'');
+  return ['Merrin','Asta','Colm'].includes(o.n)||/^(?:npc_single_)?(?:pack_drinker|tavernpatio_anim_|tavern_src_Drinker[12]$)/.test(o.packSpr||o.spr||'');
 }
 function patioPatronDepth(o,actors){
   const depth=o.sy??o.y;

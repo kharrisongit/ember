@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 const {run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:false});
 c.rebuildSolid=()=>{};c.scheduleEditorDraft=()=>{};
@@ -41,7 +42,8 @@ run(`const patioDepthMap=patioFixture();prepareTavernPatio(patioDepthMap,'world'
 const patioEater=W.maps.world.roomActors.find(a=>a.spr==='tavernpatio_anim_9');`);
 const tables=run('patioDepthMap.roomActors');
 for(const table of tables){
-  for(const person of [{n:'Merrin'},{n:'Asta'},{spr:'tavernpatio_anim_9'}]){
+  for(const person of [{n:'Merrin'},{n:'Asta'},{spr:'tavernpatio_anim_9'},
+    {packSpr:'tavern_src_Drinker1'},{packSpr:'tavern_src_Drinker2'}]){
     const patron={...person,x:table.x,y:table.y-12};
     assert(c.patioPatronDepth(patron,tables)>table.y,'Outdoor patron above both table and chair');
     const y=table.y;table.y+=8;
@@ -56,3 +58,23 @@ const eater=run('patioEater');assert(eater);
 assert(c.patioPatronDepth(eater,tables)>eater.y,'Actual outdoor eating animation clears its table');
 assert.equal(c.patioPatronDepth({x:tables[0].x,y:tables[0].y-12,n:'Corin'},tables),tables[0].y-12,'Player still walks behind furniture normally');
 console.log('PASS: outdoor tavern patrons and the authored eater sort above their tables/chairs, including moved and deleted furniture.');
+// Exercise the actual published drinkers, rather than only the old named cast.
+const saved=JSON.parse(fs.readFileSync('assets/editor-layouts.json','utf8')).maps.world;
+const patioOps=Object.fromEntries(Object.entries(saved).filter(([k,v])=>
+  v.kind==='npc-add'&&/^sprite:tavern_src_Drinker[12]$/.test(v.look||'')||
+  v.kind==='actor'&&(v.key.startsWith('patio:')||/tavern src Drinker[12]/.test(v.identity||''))));
+c.savedPatioOps=patioOps;
+run(`const savedPatio={objs:[],roomActors:Object.values(savedPatioOps)
+ .filter(op=>op.kind==='actor'&&op.key.startsWith('patio:'))
+ .map(op=>({spr:op.identity,x:op.x,y:op.y})),npcs:[],roomBlocks:[]};
+for(const op of Object.values(savedPatioOps))if(op.kind==='npc-add')npcCreatePlacement(savedPatio,op);
+applyPublishedEditorEntries(savedPatio,'world',Object.fromEntries(Object.entries(savedPatioOps)
+ .filter(([key,op])=>!op.key.startsWith('patio:'))));`);
+const drinkers=run('savedPatio.npcs');
+assert.equal(drinkers.length,2,'Both published drinkers are covered');
+for(const patron of drinkers){
+ const furniture=run('savedPatio.roomActors');
+ assert(c.isPatioPatron(patron),'Placed drinking sprite is recognized');
+ assert(c.patioPatronDepth(patron,furniture)>patron.y,'Actual saved drinker clears the nearby chair crop');
+}
+console.log('PASS: both published Drinker sprites sort above chairs at their saved patio positions.');
