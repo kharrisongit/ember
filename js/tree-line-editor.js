@@ -15,14 +15,14 @@ function planTreeLine(ax,ay,bx,by,neighbors,allowed,species){
   let step=1/Math.hypot(ux/(TS*3),uy/(TS*4));
   const nearby=neighbors.map(o=>({...o,along:(o.x-x0)*ux+(o.y-y0)*uy,
     across:Math.abs((o.x-x0)*uy-(o.y-y0)*ux)}))
-    .filter(o=>o.along>=-step*2&&o.along<=length+step*2&&o.across<TS*3.2);
+    .filter(o=>o.along>=-TS*14&&o.along<=length+TS*14&&o.across<TS*6.2);
   const rank=o=>o.across*8+Math.max(0,-o.along,o.along-length);
   const same=nearby.filter(o=>o.across<TS*.6).sort((a,b)=>rank(a)-rank(b));
   const beside=nearby.filter(o=>o.across>=TS*1.25).sort((a,b)=>rank(a)-rank(b));
   const anchor=same[0]||beside[0];
   if(anchor&&Math.max(Math.abs(ux),Math.abs(uy))>.97){
     const row=nearby.filter(o=>Math.abs(o.across-anchor.across)<TS*.6).sort((a,b)=>a.along-b.along);
-    const gaps=row.slice(1).map((o,i)=>o.along-row[i].along).filter(d=>d>=TS*2.5&&d<=TS*4.5).sort((a,b)=>a-b);
+    const gaps=row.slice(1).map((o,i)=>o.along-row[i].along).filter(d=>d>=TS*2.5&&d<=TS*7).sort((a,b)=>a-b);
     if(gaps.length)step=Math.round(gaps[Math.floor(gaps.length/2)]/TS)*TS;
   }
   const phase=anchor?anchor.along+(same.length?0:step/2):0;

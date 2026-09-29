@@ -1627,7 +1627,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   }
 
   {
-    const AVENUE = { blossom: "blo_big", desert: "cactus1", spruce: "spr_big" };
+    const AVENUE = { desert: "cactus1", spruce: "spr_big" };
     const placed = features.filter(f => isArea(f) && (f.place || f.label)
                                      && !sows(f.style));
     const townEdge = (x, y) => placed.some(
@@ -1806,7 +1806,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
             }
             if (d >= 1 && d <= OUT) note(x, y, d, vert, f.style);
           }
-      } else if (f.kind === "route") {
+      } else if (f.kind === "route" && f.style !== "blossom") {
         let drawnLo, drawnHi;
         if (f.drawn) {
           drawnLo = f.drawn[0]; drawnHi = f.drawn[1];
@@ -2389,7 +2389,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   const atForgefallsBend = p => forgefalls && p[0] > forgefalls.x &&
     p[0] <= forgefalls.x + 64 && Math.abs(p[1] - forgefalls.y) <= 4;
   for (const f of features) {
-    if (f.kind !== "route" || !sows(f.style)) continue;
+    if (f.kind !== "route" || !sows(f.style) || f.style === "blossom") continue;
     const off = (f.w >> 1) + 2;
     const sp0 = f.style === "swamp" ? SWAMP_VERGE_SAFE : STYLE_TREE[f.style];
     for (const [pa, pb] of routeLegs(f)) {
@@ -2441,6 +2441,8 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   repairArenaTreeEdges();
   extendStumpTreeLine();
   clearForgefallsCliffTrees();
+  rebuildBlossomRoutes({inTownArea,onBuilding});
+  if(!editorMapLoading)applyEditorPaint();
   chunks.clear();
   indexDecks();
   reindex();

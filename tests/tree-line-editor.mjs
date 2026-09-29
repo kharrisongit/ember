@@ -16,6 +16,10 @@ assert.equal(plan([10,10],[10,10]).length,0,'A tap cannot plant a stray tree');
 const vertical=plan([10,10],[10,26]);assert(vertical.every((p,i)=>!i||p.y-vertical[i-1].y===64));
 const tightVertical=plan([10,10],[10,25],[t(10,4),t(10,7),t(10,28)]);
 assert.deepEqual(tightVertical.map(p=>(p.y-16)/16),[10,13,16,19,22,25],'Infer the tighter spacing of authored vertical borders');
+const blossomGap=plan([12,10],[36,10],[t(6,10),t(42,10),t(48,10)]);
+assert.deepEqual(blossomGap.map(p=>(p.x-8)/16),[12,18,24,30,36],'Continue the wider blossom avenue spacing');
+const blossomBand=plan([12,15],[36,15],[t(12,10),t(18,10),t(24,10),t(30,10),t(36,10)]);
+assert.deepEqual(blossomBand.map(p=>(p.x-8)/16),[15,21,27,33],'Stagger against an adjacent blossom band five tiles away');
 const diagonal=plan([10,10],[22,22]);assert(diagonal.length>2);assert(diagonal.every(p=>p.y-p.x===8));
 
 // Use real draft and publication code with a small empty world fixture.
