@@ -64,4 +64,21 @@ assert(c.fobjs.every(o=>c.terr[Math.floor((o.y-1)/16)*c.MW+Math.floor(o.x/16)]==
 const positions=JSON.stringify(c.fobjs.map(o=>[o.x,o.y,o.blossomKind,o.blossomRow]));
 vm.runInContext('rebuildBlossomRoutes(guards)',c);
 assert.equal(JSON.stringify(c.fobjs.map(o=>[o.x,o.y,o.blossomKind,o.blossomRow])),positions);
-console.log('PASS: Millwood/Northern Woods scope, spruce borders, arena rings, Elder clearing, biome boundary and repeat rebuilds.');
+// Real upper-house dimensions used to reject two of the three northern rows.
+// A tiny rock below the roof must not remove a tree several tiles above it.
+vm.runInContext(`
+NAMES.push('house6','rock2');SPR.house6=[0,0,70,114];SPR.rock2=[0,0,11,8];
+DEFS[4]={c:[66,44]};DEFS[5]={c:[9,6]};
+objs.push(...[15,24,36].map((x,i)=>({id:10+i,s:4,x:x*16+8,y:415*16})),
+ {id:20,s:5,x:17*16+8,y:410*16},{id:21,s:0,x:20*16+8,y:410*16});
+guards.onBuilding=(px,py,sp)=>objs.filter(o=>o.s===4).some(o=>
+ Math.abs(o.x-px)<(70+sp[2])/2+2&&py>o.y-114-2&&py-sp[3]<o.y+2);
+rebuildBlossomRoutes(guards);
+`,c);
+assert(c.hidden.has(21),'Old irregular trees below the new northern border are replaced');
+assert(!c.hidden.has(20),'The garden rock remains');
+const roofRows=c.fobjs.filter(o=>o.blossomKind==='town'&&o.blossomFeature===2&&o.y/16-1<=406.5);
+for(let row=0;row<3;row++)assert(roofRows.some(o=>o.blossomRow===row&&o.y===(407.5-row*2)*16&&Math.abs(o.x-(15*16+8))<35),'Every staggered band fills the space behind the upper houses');
+assert(roofRows.every(o=>!c.guards.onBuilding(o.x,o.y,c.SPR.spr_big)),'Trees stay above the roofs');
+assert(roofRows.some(o=>o.x===15.5*16+8&&o.y===407.5*16),'A small rock cannot punch a gap into the inner tree line');
+console.log('PASS: Millwood/Northern Woods scope, spruce borders, roof clearance, complete northern bands, arena rings, Elder clearing, biome boundary and repeat rebuilds.');

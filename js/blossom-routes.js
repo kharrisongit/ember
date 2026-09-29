@@ -21,8 +21,8 @@ function blossomPoint(x,y,details) {
   return {x:Math.round(x*16)/16,y:Math.round(y*16)/16,...details};
 }
 function blossomTownBox(t,row=0) {
-  const inset=(t.band||6)-1-row*treeBorderSpacing(t).band;
-  return {left:t.x0+inset,right:t.x1-inset,top:t.y0+inset,bottom:t.y1-inset};
+  const outer=row*treeBorderSpacing(t).band,inset=(t.band||6)-1-outer;
+  return {left:t.x0+inset,right:t.x1-inset,top:t.y0+(t.northInset??((t.band||6)-1))-outer,bottom:t.y1-inset};
 }
 function blossomInsideBox(x,y,b,pad=0) {
   return x>b.left-pad&&x<b.right+pad&&y>b.top-pad&&y<b.bottom+pad;
@@ -114,7 +114,10 @@ function treeBorderScope(list,legsFor) {
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
     ((f.style==='blossom'&&f.label==='Coralmere')||
      (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
-    .map(f=>({...f,tree:f.style==='spruce'?'spr_big':'blo_big',region:f.style==='spruce'?'millwood':'blossom'}));
+    .map(f=>({...f,tree:f.style==='spruce'?'spr_big':'blo_big',region:f.style==='spruce'?'millwood':'blossom',
+      // Millwood's upper house roofs reach into the usual border. Shift the
+      // complete northern rows back, keeping the same stagger across roofs.
+      northInset:f.label==='Millwood'?2.5:undefined}));
   return {roads,arenas,towns,rings};
 }
 
@@ -126,7 +129,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const arenaIds=new Set(arenas.map(a=>a.id));
   const otherRings=rings.filter(f=>!arenaIds.has(f.id));
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
-    {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&!blossomInsideBox(x,y,blossomTownBox(t),-2));
+    {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
+    !blossomInsideBox(x,y,blossomTownBox({...t,northInset:undefined}),-2));
   const atArena=(x,y)=>arenas.some(a=>Math.hypot(x-a.x,y-a.y)<(a.r||ARENA_R)+11);
   const protectedPlace=(x,y)=>inClearing(x,y)||
     otherRings.some(f=>Math.hypot(x-f.x,y-f.y)<(f.r||ARENA_R)+3.5);
@@ -167,7 +171,15 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||felled.has(k))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
     if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
-    if(props.some(o=>Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3))return false;
+    const behindHouses=p.kind==='town'&&!p.vertical&&towns.some(t=>
+      t.id===p.source&&t.northInset!==undefined&&y===blossomTownBox(t,p.row).top);
+    if(props.some(o=>{
+      if(!behindHouses)return Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3;
+      // Small garden rocks below the border should not punch tree-sized holes
+      // above the roofs. Still leave space around each prop's actual artwork.
+      const q=SPR[NAMES[o.s]];
+      return Math.abs(o.x-px)<(sp[2]+q[2])/2+4&&py>o.y-q[3]-4&&py-sp[3]<o.y+4;
+    }))return false;
     if(npcs.some(n=>!n.editorDeleted&&Math.hypot(n.x-px,n.y-py)<TS*3))return false;
     return true;
   });
