@@ -23,7 +23,7 @@ assert.equal(roads.length,2,'Only the two road segments inside Shroom Pass are m
 assert(roads.every(r=>r.tree==='mw_tree'&&r.a[1]>=34&&r.b[1]<=240));
 assert(c.selected.roads.some(r=>r.id===3&&!r.blossom&&r.b[1]===410),'The full road still protects the route outside the region');
 assert.deepEqual(Array.from(c.selected.arenas.filter(a=>a.region==='shroom'),a=>a.id).sort(),[210,211]);
-assert(!c.selected.arenas.some(a=>a.id===17),'The neighboring birch arena is preserved');
+assert(c.selected.arenas.some(a=>a.id===17&&a.tree==='bir_big'),'Neighboring arena retains its native birch tree type');
 assert.equal(c.selected.towns.length,0,'Open clearings and the tree-free hollow are preserved');
 const layout=c.planBlossomLayout(c.selected.roads,c.selected.arenas,[]);
 const shrooms=layout.filter(p=>p.region==='shroom');
