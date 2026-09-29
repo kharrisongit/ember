@@ -23,7 +23,7 @@ function planTreeLine(ax,ay,bx,by,neighbors,allowed,species){
   if(anchor&&Math.max(Math.abs(ux),Math.abs(uy))>.97){
     const row=nearby.filter(o=>Math.abs(o.across-anchor.across)<TS*.6).sort((a,b)=>a.along-b.along);
     const gaps=row.slice(1).map((o,i)=>o.along-row[i].along).filter(d=>d>=TS*2.5&&d<=TS*7).sort((a,b)=>a-b);
-    if(gaps.length)step=Math.round(gaps[Math.floor(gaps.length/2)]/TS)*TS;
+    if(gaps.length)step=Math.round(gaps[Math.floor(gaps.length/2)]);
   }
   const phase=anchor?anchor.along+(same.length?0:step/2):0;
   const start=((phase%step)+step)%step,result=[];
