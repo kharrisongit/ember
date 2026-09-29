@@ -1,11 +1,12 @@
-/* Shared planting for blossom borders, Millwood and the Northern Woods.
-   Smaller spruce canopies need closer rows than the broad blossom trees. */
+/* Shared planting for blossom borders, Millwood, Northern Woods and Shroom Pass.
+   Match spacing to each region's native tree artwork. */
 const BLOSSOM_TREE_STEP = 91 / 16;
 const BLOSSOM_BAND_STEP = 3;
 const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
 function treeBorderSpacing(feature) {
+  if(feature.region==='shroom')return {step:66/16,band:2.5,clearance:3};
   // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
   // next canopy while keeping the staggered bands just two tiles apart.
   return feature.region==='millwood'
@@ -27,6 +28,17 @@ function blossomTownBox(t,row=0) {
 function blossomInsideBox(x,y,b,pad=0) {
   return x>b.left-pad&&x<b.right+pad&&y>b.top-pad&&y<b.bottom+pad;
 }
+function treeBorderInBounds(x,y,bounds) {
+  return !bounds||(x>=bounds.x0&&x<=bounds.x1&&y>=bounds.y0&&y<=bounds.y1);
+}
+function treeBorderClipRoad(r,bounds) {
+  const vertical=r.a[0]===r.b[0],axis=vertical?r.a[0]:r.a[1];
+  if(vertical?(axis<bounds.x0||axis>bounds.x1):(axis<bounds.y0||axis>bounds.y1))return null;
+  const i=vertical?1:0,lo=Math.max(Math.min(r.a[i],r.b[i]),vertical?bounds.y0:bounds.x0);
+  const hi=Math.min(Math.max(r.a[i],r.b[i]),vertical?bounds.y1:bounds.x1);
+  if(hi<=lo)return null;
+  return {...r,a:vertical?[axis,lo]:[lo,axis],b:vertical?[axis,hi]:[hi,axis],bounds};
+}
 function blossomRowValues(lo,hi,row,step=BLOSSOM_TREE_STEP) {
   const phase=row%2*step/2;
   const first=Math.ceil((lo-phase)/step);
@@ -44,6 +56,7 @@ function blossomRouteCandidates(roads,row) {
       const p=blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
         {row,vertical:vert,kind:'route',source:r.id,tree:r.tree,region:r.region});
       if(r.minY!==undefined&&p.y<r.minY)continue;
+      if(!treeBorderInBounds(p.x,p.y,r.bounds))continue;
       result.push(p);
     }
   }
@@ -104,22 +117,31 @@ function planBlossomRows(roads,allowed=()=>true) {
 
 function treeBorderScope(list,legsFor) {
   const woods=list.find(f=>f.label==='Northern Woods');
+  const shrooms=list.find(f=>f.wild&&f.style==='mystic'&&/shroom|spore/i.test(f.label||f.place||''));
   const millwood=list.find(f=>f.label==='Millwood');
   const inWoods=(x,y)=>woods&&x>=woods.x0&&x<=woods.x1&&y>=woods.y0&&y<=woods.y1;
   const nativeRoute=f=>f.style==='spruce'&&((millwood&&(f.joins||[]).includes('Millwood'))||
     (woods&&((f.joins||[]).includes('Elders Home')||legsFor(f).some(([a,b])=>inWoods(a[0],a[1])||inWoods(b[0],b[1])))));
   const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
     const native=nativeRoute(f),managed=f.style==='blossom'||native;
-    return legsFor(f).map(([a,b])=>({a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
+    return legsFor(f).flatMap(([a,b])=>{
+      const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
       blossom:managed,tree:native?'spr_big':'blo_big',region:native?'millwood':'blossom',
-      minY:native&&woods?woods.y0:undefined}));
+      minY:native&&woods?woods.y0:undefined};
+      // The original unstyled road spans both woods. Keep its full path as an
+      // obstacle, but only take ownership of planting inside Shroom Pass.
+      const clipped=shrooms&&(!f.style||f.style==='mystic')&&treeBorderClipRoad(road,shrooms);
+      return clipped?[road,{...clipped,blossom:true,tree:'mw_tree',region:'shroom'}]:[road];
+    });
   });
   const nativeRoads=roads.filter(r=>r.region==='millwood');
   const rings=list.filter(f=>f.kind==='arena'||f.kind==='camp');
   const nativeArena=f=>f.style==='spruce'&&(inWoods(f.x,f.y)||
     nativeRoads.some(r=>blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4));
-  const arenas=rings.filter(f=>f.style==='blossom'||nativeArena(f)).map(f=>({...f,
-    tree:nativeArena(f)?'spr_big':'blo_big',region:nativeArena(f)?'millwood':'blossom'}));
+  const shroomArena=f=>shrooms&&f.style==='mystic'&&treeBorderInBounds(f.x,f.y,shrooms);
+  const arenas=rings.filter(f=>f.style==='blossom'||nativeArena(f)||shroomArena(f)).map(f=>({...f,
+    tree:shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
+    region:shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
     ((f.style==='blossom'&&f.label==='Coralmere')||
      (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
@@ -144,9 +166,12 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const protectedPlace=(x,y)=>inClearing(x,y)||
     otherRings.some(f=>Math.hypot(x-f.x,y-f.y)<(f.r||ARENA_R)+3.5);
   const inBand=(x,y)=>atArena(x,y)||townBorder(x,y)||
-    (!protectedPlace(x,y)&&!inTownArea(x,y)&&legs.some(r=>{
+    (!inTownArea(x,y)&&legs.some(r=>{
       const reach=Math.max(14,r.band)+r.half+2;
-      return (r.minY===undefined||y>=r.minY)&&
+      // Clear old route trees out of the northern meadow's buffer too;
+      // the planting guard below still keeps that clearing open.
+      return (r.region==='shroom'||!protectedPlace(x,y))&&
+        (r.minY===undefined||y>=r.minY)&&treeBorderInBounds(x,y,r.bounds)&&
         x>=Math.min(r.a[0],r.b[0])-reach&&x<=Math.max(r.a[0],r.b[0])+reach&&
         y>=Math.min(r.a[1],r.b[1])-reach&&y<=Math.max(r.a[1],r.b[1])+reach;
     }));

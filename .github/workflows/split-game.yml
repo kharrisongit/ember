@@ -75,6 +75,7 @@ jobs:
           node tests/tree-line-editor.mjs
           node tests/blossom-routes.mjs
           node tests/millwood-borders.mjs
+          node tests/shroom-borders.mjs
           node tests/editor-source-compatibility.mjs
           node tests/editor-publish-race.mjs
           node tests/hunting-grounds.mjs
