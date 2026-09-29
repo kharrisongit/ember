@@ -8,7 +8,7 @@
   background:#d3c4a9;
   box-shadow:0 0 0 1px #9c9079,0 4px 12px #594a3326;
 }
-#dpad::after {box-shadow:inset 0 0 0 1px #fff8e966}
+#dpad::after {display:none}
 #dpad div[data-dx] {background:#f8edd8;color:#304f57}
 /* Broader thumb targets fill the unused corners inside the same pad. */
 #dpad div[data-dx="0"] {width:160%;justify-self:center}

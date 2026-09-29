@@ -103,6 +103,12 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
       [row===0?scenery:[],arenas.flatMap(a=>blossomArenaCandidates(a,row)),
        towns.flatMap(t=>blossomTownCandidates(t,row)),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
+      const owner=arenas.filter(a=>Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+11)
+        .sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0];
+      if(owner&&p.kind!=='scenery'){
+        p.tree=owner.northTree&&p.y<owner.y?owner.northTree:owner.tree;
+        p.region=owner.northTree&&p.y<owner.y?'birch':owner.region;
+      }
       const borderRow=p.roofBacking?0:row;
       if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
@@ -153,11 +159,13 @@ function treeBorderScope(list,legsFor) {
   const shroomArena=f=>shrooms&&f.style==='mystic'&&treeBorderInBounds(f.x,f.y,shrooms);
   const templeArena=f=>roads.some(r=>
     r.region==='forgewick-temple'&&blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4);
-  const oakArena=f=>f.style==='oak'||[13,14,15,17].includes(f.arenaNum);
+  const mysticArena=f=>[18,21].includes(f.arenaNum);
+  const oakArena=f=>!mysticArena(f)&&(f.style==='oak'||[13,14,15,17].includes(f.arenaNum));
   const birchArena=f=>f.style==='birch'&&!oakArena(f);
-  const arenas=rings.filter(f=>f.style==='blossom'||oakArena(f)||birchArena(f)||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
-    tree:oakArena(f)?'oak_big':templeArena(f)?'kt_tree_a':birchArena(f)?'bir_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
-    region:oakArena(f)?'oak':templeArena(f)?'forgewick-temple':birchArena(f)?'birch':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
+  const arenas=rings.filter(f=>f.style==='blossom'||mysticArena(f)||oakArena(f)||birchArena(f)||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
+    northTree:f.arenaNum===13?'bir_big':undefined,
+    tree:mysticArena(f)?'mw_tree':oakArena(f)?'oak_big':templeArena(f)?'kt_tree_a':birchArena(f)?'bir_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
+    region:mysticArena(f)?'shroom':oakArena(f)?'oak':templeArena(f)?'forgewick-temple':birchArena(f)?'birch':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
     ((f.style==='blossom'&&f.label==='Coralmere')||
      (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
@@ -173,6 +181,11 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const {roads,arenas,towns,rings}=treeBorderScope(features,routeLegs);
   const legs=roads.filter(r=>r.blossom);
   if(!legs.length&&!arenas.length&&!towns.length)return;
+  // Remove the abandoned prop cluster west of the second campsite.
+  const strayCampProp=o=>/^(campfire|rock\d|sh_rock)/.test(NAMES[o.s]||'')&&
+    o.x/TS>=295&&o.x/TS<=309&&o.y/TS>=167&&o.y/TS<=175;
+  for(const o of objs)if(strayCampProp(o))hidden.add(o.id);
+  fobjs=fobjs.filter(o=>!strayCampProp(o));
   const arenaIds=new Set(arenas.map(a=>a.id));
   const otherRings=rings.filter(f=>!arenaIds.has(f.id));
   const scenery=[];
@@ -182,23 +195,26 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   };
   // Read the complete mountain artwork, including the last eastern column.
   if(Array.isArray(MD.scatter)){
+    for(const belt of [{x0:679,x1:840,y0:118,y1:152,source:'mine'},
+      {x0:330,x1:520,y0:300,y1:334,source:'falls-mountain'}]){
     const columns=new Map();
     for(let i=0;i<MD.scatter.length;i+=3){
       if(!/^mtn/.test(NAMES[MD.scatter[i]]||''))continue;
       const x=MD.scatter[i+1]/TS-.5,y=MD.scatter[i+2]/TS;
-      if(x<679||x>840||y<118||y>152)continue;
+      if(x<belt.x0||x>belt.x1||y<belt.y0||y>belt.y1)continue;
       columns.set(x,Math.max(columns.get(x)||0,y));
     }
     const xs=[...columns.keys()].sort((a,b)=>a-b);
     if(xs.length)for(const x of blossomRowValues(xs[0],xs.at(-1),0,42/16)){
       const near=xs.reduce((a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a);
-      scenery.push(blossomPoint(x,columns.get(near),{row:0,kind:'scenery',source:'mine',tree:'oak_big',region:'oak'}));
+      scenery.push(blossomPoint(x,columns.get(near)+1,{row:0,kind:'scenery',source:belt.source,tree:'oak_big',region:'oak'}));
+    }
     }
   }
   const falls=features.find(f=>f.kind==='landmark'&&f.label==='Forgefalls');
   const cliff=falls&&objs.find(o=>NAMES[o.s]==='cliff_fall'&&Math.abs(o.x/TS-falls.x)<2&&Math.abs(o.y/TS-falls.y)<2);
   if(cliff&&SPR.cliff_fall)sceneryRow((cliff.x-SPR.cliff_fall[2]/2)/TS,
-    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS,'falls');
+    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS+2,'falls');
   const sceneryBand=(x,y)=>scenery.some(p=>Math.abs(p.x-x)<3&&Math.abs(p.y-y)<2.5);
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
@@ -264,7 +280,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
     if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y,p.region))return false;
     if(inTownArea(x,y)&&!townBorder(x,y)&&p.kind!=='scenery')return false;
-    if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||felled.has(k))return false;
+    if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||(p.kind!=='scenery'&&felled.has(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
     if(p.kind==='scenery'&&(MD.doors||[]).some(d=>{
       if(d.to!=='mine')return false;
@@ -278,7 +294,11 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(props.some(o=>{
       if(p.kind==='scenery'&&/^(mtn|cliff_fall)/.test(NAMES[o.s]||''))return false;
       if(p.roofBacking&&buildings.has(o))return false;
-      if(!behindHouses)return Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3;
+      if(!behindHouses){
+        const footprint=DEFS[o.s]?.c;
+        return Math.abs(o.x-px)<(Math.min(sp[2],TS)+(footprint?.[0]||TS))/2+2&&
+          py>o.y-(footprint?.[1]||TS)-4&&py<o.y+TS;
+      }
       // Small garden rocks below the border should not punch tree-sized holes
       // above the roofs. Still leave space around each prop's actual artwork.
       const q=SPR[NAMES[o.s]];
