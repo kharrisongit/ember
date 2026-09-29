@@ -13,6 +13,8 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 #ridingHint.slash-prompt{border-color:#ffa56e;background:linear-gradient(115deg,#542936,#261624);color:#fff2e0;box-shadow:0 0 0 4px #261624,0 8px 28px #0009,0 0 30px #fb804650}
 #ridingHint.slash-prompt:before,#ridingHint.slash-prompt:after{background:#ffa56e;color:#361e2a}
 #ridingHint.slash-prompt:after{content:'DRAGON • SLASH'}
+#ridingHint.dismissing{animation:none;opacity:0;transition:opacity .18s ease-out}
+@media(prefers-reduced-motion:reduce){#ridingHint.dismissing{transition:none}}
 #arenaReady{position:fixed;z-index:951;left:50%;top:max(14px,env(safe-area-inset-top));bottom:auto;transform:translateX(-50%);width:min(260px,74vw);padding:8px 14px;border:2px solid #ebc77a;border-radius:6px 22px;background:linear-gradient(140deg,#442936f5,#142834f5);color:#fff4d8;text-align:center;box-shadow:0 0 0 3px #101c26,0 8px 28px #0009;cursor:pointer;animation:combatPromptIn .25s ease-out}
 #arenaReady[hidden]{display:none}
 #arenaReady span,#arenaReady strong{display:block}

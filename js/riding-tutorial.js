@@ -10,7 +10,7 @@
   const corinRecoveryPhases=new Set(['corinRecovery','corinHealTalk','corinItemsButton','corinHeal','corinThanks']);
   const holding=()=>!!phase&&phase!=='battle'&&phase!=='swordBattle';
   const hint=document.createElement('div');hint.id='ridingHint';hint.hidden=true;hint.setAttribute('role','status');document.body.appendChild(hint);
-  const notice=text=>{hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
+  const notice=text=>{hint.classList.remove('dismissing');hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
     phase=next;clearHighlight();notice(text);hintTime=0;
@@ -240,6 +240,10 @@
     return id==='act'||(phase==='dragonButton'&&id==='btnL')||(['itemsButton','corinItemsButton'].includes(phase)&&id==='btnItems');
   }
   function action(){
+    // A still reaches the normal slash control; only its teaching card fades.
+    if(phase==='battle'&&hintTime>0&&!hint.classList.contains('dismissing')&&!scene&&!ovl&&!ask&&!bagOpen&&!revealing){
+      hintTime=Math.min(hintTime,.18);hint.classList.add('dismissing');
+    }
     if(!holding())return false;
     if(phase==='swordSwipe'){
       startAct('swing');
