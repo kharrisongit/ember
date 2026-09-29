@@ -53387,6 +53387,26 @@
         "originX": 192,
         "originY": 880
       }
+    },
+    "tp1_halls": {
+      "actor:actor:54:temple71_lever": {
+        "kind": "actor",
+        "key": "actor:54:temple71_lever",
+        "identity": "temple71_lever",
+        "x": 186,
+        "y": 973,
+        "originX": 192,
+        "originY": 896
+      },
+      "actor:actor:83:temple71_lever": {
+        "kind": "actor",
+        "key": "actor:83:temple71_lever",
+        "identity": "temple71_lever",
+        "x": 628,
+        "y": 271,
+        "originX": 640,
+        "originY": 192
+      }
     }
   },
   "applied": [
@@ -53485,7 +53505,8 @@
     "52fc0b6a-66e1-45a7-b420-30455725f34a",
     "dabbe44e-fa67-4125-a329-65ca885464f3",
     "c960a88f-c548-4d37-bbdc-0e968a4a17d5",
-    "d7a0276a-aaf2-423f-9efc-cbcfeaa47c53"
+    "d7a0276a-aaf2-423f-9efc-cbcfeaa47c53",
+    "552ba72a-c950-4233-9db1-ddae110831bc"
   ],
   "sessions": {
     "witchmoor": {
@@ -104647,6 +104668,14 @@
       "baseFingerprint": "fb43de5e-23d4b718-7372",
       "base": {},
       "resultHash": "9c7eae97-53c1398d-154"
+    },
+    "tp1_halls": {
+      "id": "7487abd1-6587-4d33-8a70-571c60ae05d5",
+      "sequence": 2,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "1fd411a6-9229c498-10278",
+      "base": {},
+      "resultHash": "7a7b4796-cbeb8c60-307"
     }
   },
   "audio": {
