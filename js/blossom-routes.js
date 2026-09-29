@@ -6,6 +6,8 @@ const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
 function treeBorderSpacing(feature) {
+  if(feature.region==='oak')return {step:64/16,band:2.5,clearance:3};
+  if(feature.region==='forgewick-temple')return {step:80/16,band:3.5,clearance:4};
   if(feature.region==='shroom')return {step:66/16,band:2.5,clearance:3};
   // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
   // next canopy while keeping the staggered bands just two tiles apart.
@@ -123,10 +125,13 @@ function treeBorderScope(list,legsFor) {
   const nativeRoute=f=>f.style==='spruce'&&((millwood&&(f.joins||[]).includes('Millwood'))||
     (woods&&((f.joins||[]).includes('Elders Home')||legsFor(f).some(([a,b])=>inWoods(a[0],a[1])||inWoods(b[0],b[1])))));
   const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
-    const native=nativeRoute(f),managed=f.style==='blossom'||native;
+    const native=nativeRoute(f),oak=f.style==='oak';
+    const temple=f.style==='temple'&&(f.joins||[]).includes('Forgewick Temple');
+    const managed=f.style==='blossom'||native||oak||temple;
     return legsFor(f).flatMap(([a,b])=>{
       const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
-      blossom:managed,tree:native?'spr_big':'blo_big',region:native?'millwood':'blossom',
+      blossom:managed,tree:temple?'kt_tree_a':oak?'oak_big':native?'spr_big':'blo_big',
+      region:temple?'forgewick-temple':oak?'oak':native?'millwood':'blossom',
       minY:native&&woods?woods.y0:undefined};
       // The original unstyled road spans both woods. Keep its full path as an
       // obstacle, but only take ownership of planting inside Shroom Pass.
@@ -139,9 +144,11 @@ function treeBorderScope(list,legsFor) {
   const nativeArena=f=>f.style==='spruce'&&(inWoods(f.x,f.y)||
     nativeRoads.some(r=>blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4));
   const shroomArena=f=>shrooms&&f.style==='mystic'&&treeBorderInBounds(f.x,f.y,shrooms);
-  const arenas=rings.filter(f=>f.style==='blossom'||nativeArena(f)||shroomArena(f)).map(f=>({...f,
-    tree:shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
-    region:shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
+  const templeArena=f=>(!f.style||f.style==='temple')&&roads.some(r=>
+    r.region==='forgewick-temple'&&blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4);
+  const arenas=rings.filter(f=>f.style==='blossom'||f.style==='oak'||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
+    tree:templeArena(f)?'kt_tree_a':f.style==='oak'?'oak_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
+    region:templeArena(f)?'forgewick-temple':f.style==='oak'?'oak':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
     ((f.style==='blossom'&&f.label==='Coralmere')||
      (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
