@@ -16,7 +16,10 @@
   };
   function finishView(){
     popup.hidden=true;
-    if(cameraZoom!==null){cam.z=cameraZoom;cameraZoom=null;camFree=false;followCam();}
+    if(cameraZoom!==null){
+      restoreCameraTarget();
+      cam.z=cameraZoom;cameraZoom=null;camFree=false;followCam();
+    }
   }
   function reset(){
     finishView();pending=null;engaged=null;states=new Map();owners=new WeakMap();map=MAPID;population=null;populationSize=-1;
@@ -147,7 +150,7 @@
     stage(s);pending=s;s.phase=window.EmberRiding?.holding()?'tutorial':'walls';
     clearPadInputs();for(const k in keys)keys[k]=0;running=false;P.moving=false;P.act=null;
     if(s.phase!=='tutorial'){hunt=null;breath=null;claw=null;setOvl(null);gatherCompanion(s);}
-    if(cameraZoom===null)cameraZoom=cam.z;
+    if(cameraZoom===null){restoreCameraTarget();cameraZoom=cam.z;}
   }
   function activate(a){
     const s=states.get(a?.id);if(!s)return;

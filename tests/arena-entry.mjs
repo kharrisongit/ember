@@ -40,7 +40,14 @@ EmberArenaEntry.prepare();`);
   assert(run('foes.every(f=>(f.y-80-cam.y)*cam.z>=Math.min(112,VH*.4)-.01&&(f.y+8-cam.y)*cam.z<=VH-16+.01)'),name+' full enemy sprites clear the top battle prompt');
   assert(run('foes.every(f=>(f.x-cam.x)*cam.z>=0&&(f.x-cam.x)*cam.z<=VW&&(f.y-32-cam.y)*cam.z>=0&&(f.y-32-cam.y)*cam.z<=VH)'),name+' enemies visible at '+w+'×'+h);
  }
+ // Reproduce a confirmation between two smoothed rendering frames.
+ run(`cameraLogical=null;cameraPresentation={map:MAPID,mode,z:3,
+ cx:P.x,cy:P.y,cinematic:false,settling:false};presentCamera(1/60);`);
+ assert(run('!!cameraLogical'),'A smoothed arena frame retains its logical target');
  dom.touch(dom.element('act'));
+ run('restoreCameraTarget()');
+ assert.equal(run('cam.z'),3,'The next frame cannot restore the old arena zoom');
+ assert(run('cam.x===P.x-VW/cam.z/2&&cam.y===P.y-VH/cam.z/2'),'Camera follows Corin again');
  assert(!run('EmberArenaEntry.holding()'),'One A starts the battle');
  assert(dom.element('arenaReady').hidden);assert.equal(run('P.act'),null,'Confirm is consumed, no accidental attack');
  assert(run('foes.every(f=>!EmberArenaEntry.protected(f))'),'All combat damage is enabled');
