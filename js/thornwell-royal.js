@@ -342,7 +342,7 @@ function thornwellDeparture(){
   // The ceremonial escort has idle art only. Stage the entire party while
   // black, just as in Millwood; never swap them for the Cinderhold fighters.
   thornwellScene([]);thornwellMotion={kind:'blackout'};
-  pendingActorStage=()=>{
+  royalBlackout('Serjeant Bram: Make way for royalty!',()=>{
     npcs=npcs.filter(n=>!n.thornwellRoyal);
     const forward=[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]].find(p=>canStand(...p));
     if(forward)[P.x,P.y]=forward;
@@ -353,16 +353,16 @@ function thornwellDeparture(){
       if(spot){[actor.x,actor.y]=spot;actor.px=actor.x;actor.py=actor.y;}
       npcs.push(actor);
     }
-    const king=thornwellKing();thornwellMotion=null;faceCorinAt(king.x,king.y);
+    const king=thornwellKing();faceCorinAt(king.x,king.y);
+  },()=>{
+    const king=thornwellKing();thornwellMotion=null;
     thornwellScene([
-      'Serjeant Bram: Make way for royalty!',
       'King Halvard: Come on, boys. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
       'Doran: At last. A road with an end to it.'
     ],thornwellRoyalExit,king);
     scene.hold=()=>fade<=0;showScene();
-    // The normal fade controller reveals the newly staged group.
-  };
-  fadeDir=1;
+    // Reveal the party only after Bram's announcement has been read in black.
+  });
 }
 function thornwellRoyalExit(){
   thornwellMotion={kind:'blackout'};
