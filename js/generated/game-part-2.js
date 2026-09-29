@@ -4723,6 +4723,7 @@ const WEATHER = [
   { map: "world", kind: "snow", x0: 2571, y0: 380, x1: 2880, y1: 599 },
   { map: "world", kind: "snow", x0: 2571, y0: 100, x1: 2880, y1: 380 },
   { map: "world", kind: "sand", road: "Temple Route 2", band: 26,
+    southOf: "Sandspire", routeOnly: true,
     notIn: [1499, 72, 1537, 118] },
 ];
 function nearRoad(name, x, y) {
@@ -4744,19 +4745,44 @@ let weatherTileKey = "", weatherTileValue = null;
 function weatherHere() {
   if (typeof MAPID !== "undefined" && MAPID !== "world") return null;
   const x = P.x / TS, y = P.y / TS;
-  const tileKey = MAPID + ":" + Math.floor(x) + "," + Math.floor(y);
+  const tileKey = MAPID + ":" + Math.floor(P.x) + "," + Math.floor(P.y);
   if (tileKey === weatherTileKey) return weatherTileValue;
   weatherTileKey = tileKey;
   for (const w of WEATHER) {
     if (w.road) {
       if (w.notIn && x >= w.notIn[0] && y >= w.notIn[1]
           && x <= w.notIn[2] && y <= w.notIn[3]) continue;
+      if(w.southOf){
+        const town=features.find(f=>f.label===w.southOf&&(f.kind==='area'||f.kind==='town'));
+        if(!town||y<=town.y1)continue;
+      }
+      if(w.routeOnly&&(nearRoad(w.road,x,y)>w.band||!onExclusiveWeatherRoad(w.road,x,y)))continue;
       if (nearRoad(w.road, x, y) <= w.band) return weatherTileValue = w;
       continue;
     }
     if (x >= w.x0 && x <= w.x1 && y >= w.y0 && y <= w.y1) return weatherTileValue = w;
   }
   return weatherTileValue = null;
+}
+function onExclusiveWeatherRoad(name,x,y){
+  let own=Infinity,other=Infinity,width=0;
+  for(const f of features){
+    if(f.kind!=='route')continue;
+    if(f.road!==name){
+      const points=f.pts||[[f.x0,f.y0],[f.x1,f.y1]];
+      if(points.every(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]))&&
+        (x<Math.min(...points.map(p=>p[0]))-4||x>Math.max(...points.map(p=>p[0]))+4||
+         y<Math.min(...points.map(p=>p[1]))-4||y>Math.max(...points.map(p=>p[1]))+4))continue;
+    }
+    for(const [a,b] of routeLegs(f)){
+      const dx=b[0]-a[0],dy=b[1]-a[1],len=dx*dx+dy*dy;
+      const t=len?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/len)):0;
+      const d=Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);
+      if(f.road===name){if(d<own){own=d;width=((f.w||5)>>1)+1;}}
+      else other=Math.min(other,d);
+    }
+  }
+  return own<=width&&own+.1<other;
 }
 let weatherFrameCanvas = null, weatherFrameCtx = null;
 let weatherFrameKind = "", weatherFrameAt = -1;

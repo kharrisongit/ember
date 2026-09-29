@@ -12,6 +12,7 @@ function treeBorderSpacing(feature) {
   if(feature.region==='forgewick-temple')return {step:72/16,band:3.5,clearance:4};
   if(feature.region==='shroom')return {step:66/16,band:2.5,clearance:3};
   if(feature.region==='dying')return {step:72/16,band:2.5,clearance:3};
+  if(feature.region==='desert')return {step:48/16,band:1.5,clearance:1.5};
   // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
   // next canopy while keeping the staggered bands just two tiles apart.
   return feature.region==='millwood'
@@ -60,7 +61,9 @@ function blossomRouteCandidates(roads,row) {
     for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row,spacing.step)) {
       const p=blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
         {row,vertical:vert,kind:'route',source:r.id,tree:r.tree,region:r.region});
+      p.transition=r.joinX!==undefined&&Math.abs(p.x-r.joinX)<14;
       if(r.minY!==undefined&&p.y<r.minY)continue;
+      if(r.minX!==undefined&&p.x<r.minX||r.maxX!==undefined&&p.x>=r.maxX)continue;
       if(!treeBorderInBounds(p.x,p.y,r.bounds))continue;
       result.push(p);
     }
@@ -110,7 +113,7 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
     // precede the outer bands, which cannot displace those clean borders.
     const groups=row===3?[towns.flatMap(t=>blossomTownCandidates(t,row))]:
       [row===0?scenery:[],arenas.flatMap(a=>blossomArenaCandidates(a,row)),
-       towns.flatMap(t=>blossomTownCandidates(t,row)),blossomRouteCandidates(roads,row)];
+       towns.flatMap(t=>blossomTownCandidates(t,row)),blossomDesertJoinCandidates(roads,row),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
       const owner=arenas.filter(a=>Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+11)
         .sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0];
@@ -118,7 +121,9 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
         p.tree=owner.northTree&&p.y<owner.y?owner.northTree:owner.tree;
         p.region=owner.northTree&&p.y<owner.y?'birch':owner.region;
       }
-      const borderRow=p.roofBacking?0:row;
+      // At this short offset join, preserve the outer rows across the bend.
+      // Physical road clearance and the spacing grid still keep it open.
+      const borderRow=p.roofBacking||p.transition?0:row;
       if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
         Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
@@ -130,6 +135,16 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
     }
   }
   return result;
+}
+function blossomDesertJoinCandidates(roads,row){
+  if(!roads.some(r=>r.joinX===1046&&r.region==='dying')||!roads.some(r=>r.joinX===1046&&r.region==='desert'))return [];
+  // The road rises two tiles here. Fill the south-side bend before the
+  // regular grids, so inner and middle bands turn instead of stopping short.
+  const points=row===0?[[1047,144],[1050,143]]:
+    row===1?[[1042.25,147.5],[1047,145.5],[1050,144.5]]:
+    row===2?[[1047,148]]:[];
+  return points.map(([x,y])=>blossomPoint(x,y,{row,kind:'route',source:x<1046?32:33,
+    tree:x<1046?'deadtree0':'cactus1',region:x<1046?'dying':'desert',transition:true}));
 }
 function planBlossomRows(roads,allowed=()=>true) {
   return planBlossomLayout(roads,[],[],allowed);
@@ -153,9 +168,11 @@ function treeBorderScope(list,legsFor) {
     const temple=templeRoute(f);
     const managed=f.style==='blossom'||native||oak||birch||temple||dying;
     return legsFor(f).flatMap(([a,b])=>{
+      const desert=f.id===33&&a[1]===138&&b[1]===138&&Math.min(a[0],b[0])===1047;
       const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
-      blossom:managed,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':dying?'deadtree0':'blo_big',
-      region:temple?'forgewick-temple':oak?'oak':birch?'birch':native?'millwood':dying?'dying':'blossom',
+      blossom:managed||desert,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':dying?'deadtree0':desert?'cactus1':'blo_big',
+      region:temple?'forgewick-temple':oak?'oak':birch?'birch':native?'millwood':dying?'dying':desert?'desert':'blossom',
+      minX:desert?1046:undefined,maxX:dying?1046:undefined,joinX:dying||desert?1046:undefined,
       minY:native&&woods?woods.y0:undefined};
       // The original unstyled road spans both woods. Keep its full path as an
       // obstacle, but only take ownership of planting inside Shroom Pass.
@@ -179,13 +196,14 @@ function treeBorderScope(list,legsFor) {
   const templeArena=f=>roads.some(r=>
     r.region==='forgewick-temple'&&blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4);
   // Published IDs survive hunting-area additions; display numbers do not.
-  const mysticArena=f=>[172,161].includes(f.id);
-  const oakArena=f=>!mysticArena(f)&&!templeArena(f)&&(f.style==='oak'||[175,177,178].includes(f.id));
+  const desertArena=f=>f.style==='desert'&&roads.some(r=>r.blossom&&r.region==='desert'&&
+    blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4);
+  const oakArena=f=>!templeArena(f)&&(f.style==='oak'||[175,177,178].includes(f.id));
   const birchArena=f=>f.style==='birch'&&!oakArena(f);
-  const arenas=rings.filter(f=>f.style==='blossom'||mysticArena(f)||oakArena(f)||birchArena(f)||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
+  const arenas=rings.filter(f=>f.style==='blossom'||desertArena(f)||oakArena(f)||birchArena(f)||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
     northTree:f.id===175?'bir_big':undefined,
-    tree:mysticArena(f)?'mw_tree':oakArena(f)?'oak_big':templeArena(f)?'kt_tree_a':birchArena(f)?'bir_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
-    region:mysticArena(f)?'shroom':oakArena(f)?'oak':templeArena(f)?'forgewick-temple':birchArena(f)?'birch':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
+    tree:desertArena(f)?'cactus1':oakArena(f)?'oak_big':templeArena(f)?'kt_tree_a':birchArena(f)?'bir_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
+    region:desertArena(f)?'desert':oakArena(f)?'oak':templeArena(f)?'forgewick-temple':birchArena(f)?'birch':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
     ((f.style==='blossom'&&f.label==='Coralmere')||
      (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
@@ -198,12 +216,19 @@ function treeBorderScope(list,legsFor) {
 
 function normalizeWesternTreeFeatures(list) {
   const styles={175:'birch',177:'oak',178:'oak',180:'temple',169:'temple',
-    170:'temple',171:'temple',172:'mystic',161:'mystic',9147:'birch'};
+    170:'temple',171:'temple',172:'temple',161:'desert',9147:'birch'};
   for(const f of list)if(f.kind==='arena'&&styles[f.id])f.style=styles[f.id];
+  const dying=list.find(f=>f.kind==='route'&&f.id===32),desert=list.find(f=>f.kind==='route'&&f.id===33);
+  const end=dying?.pts?.at(-1),start=desert?.pts?.[0];
+  if(end?.[0]===1045&&end[1]===140&&start?.[0]===1047&&start[1]===138){
+    dying.pts=dying.pts.concat([[1047,140],[1047,138]]);
+    dying.x1=1047;dying.y1=138;
+  }
 }
 
 function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   if(MAPID!=='world')return;
+  clearCrashFieldMushrooms();
   const {roads,arenas,towns,rings}=treeBorderScope(features,routeLegs);
   const legs=roads.filter(r=>r.blossom);
   if(!legs.length&&!arenas.length&&!towns.length)return;
@@ -297,7 +322,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
     if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y,p.region))return false;
     if(inTownArea(x,y)&&!townBorder(x,y)&&p.kind!=='scenery')return false;
-    if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||
+    const sandy=(p.region==='dying'||p.region==='desert')&&typeof SAND!=='undefined'&&terr[ty*MW+tx]===SAND;
+    if(!sandy&&![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||
       (typeof felledNew!=='undefined'&&felledNew.includes(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
     if(p.kind==='scenery'&&(MD.doors||[]).some(d=>{
@@ -332,4 +358,16 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical,borderRegion:p.region||'blossom'});
     terr[ty*MW+tx]=WALL;
   }
+}
+
+function clearCrashFieldMushrooms(){
+  if(MAPID!=='world')return;
+  const field=features.find(f=>f.kind==='area'&&f.label==='North Shroom Pass Field');
+  if(!field)return;
+  const removed=(s,px,py)=>/^sh_(big|wall|med|sml|fat|stalk|glow)/.test(NAMES[s]||'')&&
+    px/TS>=field.x0-8&&px/TS<=field.x1+8&&py/TS>=field.y0-9&&py/TS<=field.y1+12;
+  for(const o of objs)if(removed(o.s,o.x,o.y))hidden.add(o.id);
+  fobjs=fobjs.filter(o=>!removed(o.s,o.x,o.y));
+  for(const [prefix,arr] of [['s',typeof scat==='undefined'?[]:scat],['a',typeof sanm==='undefined'?[]:sanm]])
+    for(let i=0;i<arr.length;i+=3)if(removed(arr[i],arr[i+1],arr[i+2])&&typeof decorGone!=='undefined')decorGone.add(prefix+i);
 }

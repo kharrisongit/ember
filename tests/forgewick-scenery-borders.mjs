@@ -39,13 +39,14 @@ const selected=c.treeBorderScope([175,177,178].map((id,i)=>({id,arenaNum:i+50,ki
 assert(selected.arenas.every(a=>a.tree==='oak_big'),'Arenas 13, 15 and 17 remain oak');
 assert.equal(selected.arenas.length,3,'Old birch labels do not exclude the oak arenas');
 const mixed=c.treeBorderScope([{kind:'area',label:'Northern Woods',wild:true,x0:0,y0:0,x1:400,y1:200},
- ...[11,175,172,161].map((id,i)=>({id,kind:'arena',style:'spruce',x:100+i*60,y:100,r:6.3}))],()=>[]);
+ {kind:'area',wild:true,style:'mystic',label:'Shroom Pass',x0:180,y0:0,x1:400,y1:200},
+ ...[11,175,210,211].map((id,i)=>({id,kind:'arena',style:i>1?'mystic':'spruce',x:100+i*60,y:100,r:6.3}))],()=>[]);
 assert.equal(mixed.arenas.length,4,'All four corrected arenas participate');
 const typed=c.planBlossomLayout([],mixed.arenas,[]);
 for(const a of mixed.arenas){
  const trees=typed.filter(p=>p.source===a.id);
  assert(trees.length>10,'Arena has all border bands');
- assert(trees.every(p=>p.tree===(a.id===175?(p.y<100?'bir_big':'oak_big'):[172,161].includes(a.id)?'mw_tree':'spr_big')),'Arena owns its native border species independently of display numbers');
+ assert(trees.every(p=>p.tree===(a.id===175?(p.y<100?'bir_big':'oak_big'):[210,211].includes(a.id)?'mw_tree':'spr_big')),'Arena owns its native border species independently of display numbers');
 }
 const camp=c.planBlossomLayout([],[{id:15,kind:'camp',region:'birch',tree:'bir_big',x:249,y:245,r:6.3}],[]);
 for(const row of [0,1,2])assert.equal(camp.filter(p=>p.row===row&&p.y<240).length,3+row,'First campsite has a complete northern band');
