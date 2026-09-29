@@ -53376,6 +53376,17 @@
         "originX": 39,
         "originY": 80
       }
+    },
+    "tp1": {
+      "actor:actor:60:temple71_lever": {
+        "kind": "actor",
+        "key": "actor:60:temple71_lever",
+        "identity": "temple71_lever",
+        "x": 181,
+        "y": 962,
+        "originX": 192,
+        "originY": 880
+      }
     }
   },
   "applied": [
@@ -53473,7 +53484,8 @@
     "f5ca0524-1f58-49cd-b7c5-4296792ed887",
     "52fc0b6a-66e1-45a7-b420-30455725f34a",
     "dabbe44e-fa67-4125-a329-65ca885464f3",
-    "c960a88f-c548-4d37-bbdc-0e968a4a17d5"
+    "c960a88f-c548-4d37-bbdc-0e968a4a17d5",
+    "d7a0276a-aaf2-423f-9efc-cbcfeaa47c53"
   ],
   "sessions": {
     "witchmoor": {
@@ -104627,6 +104639,14 @@
         }
       },
       "resultHash": "ab9fa0ae-1f504e1a-1689"
+    },
+    "tp1": {
+      "id": "1729795c-4ac6-4f70-8ab7-3e12c69b24af",
+      "sequence": 1,
+      "baseHash": "5465b825-5971e3-2",
+      "baseFingerprint": "fb43de5e-23d4b718-7372",
+      "base": {},
+      "resultHash": "9c7eae97-53c1398d-154"
     }
   },
   "audio": {
