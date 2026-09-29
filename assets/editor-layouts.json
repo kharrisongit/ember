@@ -53402,8 +53402,8 @@
         "kind": "actor",
         "key": "actor:83:temple71_lever",
         "identity": "temple71_lever",
-        "x": 628,
-        "y": 271,
+        "x": 630,
+        "y": 270,
         "originX": 640,
         "originY": 192
       }
@@ -53506,7 +53506,8 @@
     "dabbe44e-fa67-4125-a329-65ca885464f3",
     "c960a88f-c548-4d37-bbdc-0e968a4a17d5",
     "d7a0276a-aaf2-423f-9efc-cbcfeaa47c53",
-    "552ba72a-c950-4233-9db1-ddae110831bc"
+    "552ba72a-c950-4233-9db1-ddae110831bc",
+    "5e0bf8a7-7d98-405f-9170-97c48281db1f"
   ],
   "sessions": {
     "witchmoor": {
@@ -104671,11 +104672,11 @@
     },
     "tp1_halls": {
       "id": "7487abd1-6587-4d33-8a70-571c60ae05d5",
-      "sequence": 2,
+      "sequence": 3,
       "baseHash": "5465b825-5971e3-2",
       "baseFingerprint": "1fd411a6-9229c498-10278",
       "base": {},
-      "resultHash": "7a7b4796-cbeb8c60-307"
+      "resultHash": "cf8ec218-9345e48-307"
     }
   },
   "audio": {
