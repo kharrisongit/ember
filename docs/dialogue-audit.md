@@ -1,3 +1,38 @@
+# Conversation rewrite — 29 September 2026
+
+The optional conversation rewrite is implemented, including all standard cast members, Aurelius, Nan's extended memories, royal audience topics, and the temporary royal-visit conversations.
+
+## Authored paths
+
+- 949 catalogued topics, with 1,018 explicitly written decision records and 2,320 Corin/NPC reply pairs. Every optional reply point offers three choices: a reviewed original plus two authored alternatives, or three authored questions following a political opening.
+- Removed keyword-selected reply pools, generic moral responses, generic fallback topics, and the unrelated first-story reply injection. The old `npc-replies` script is no longer loaded.
+- Each alternative is attached to a particular topic and decision. Dynamic Aurelius equipment and quest discussions use explicit state keys or exact decision text.
+- An alternative replaces its immediate answer block and preserves later conversation turns. The topic selection itself starts the exchange; opening questions are not redundantly offered again as response menus.
+- Corin's spoken choice automatically advances to the NPC answer. The final NPC answer remains until the player presses Next.
+
+`assets/dialogue/branches/` contains the ten authored sheets. `docs/dialogue-coverage.json` lists every decision and its source. These are explicit dialogue records, not generated prose.
+
+## Content review
+
+The standard story, extra-topic and political corpus was read and its alternative paths rewritten. Coherent original exchanges remain. Corrections include Sverre following a fence to shelter during a blizzard, Wren explaining past remedy lessons and garden work without pointing at unseen bottles, Isolde's delivery history, mismatched glass and carpentry stories, unsafe or unexplained workshop details, Ovid's occupation, and unsupported claims about archives and evidence.
+
+Objects that belong at home or in past events are described that way. The writing does not require a new bottle, rug, tool rack, crab, or other prop to appear beside a portrait. Aurelius's memories, hatching account, regional recollections, victory responses, equipment knowledge, and side-quest replies were reviewed for state and continuity. Required quest/gift sequences retain their existing callbacks and progress gates.
+
+## UI
+
+Chat is a plain rounded control with a slow border pulse while available. Nameplates use a flat translucent surface, clear serif text and one fine rule. The 28-pixel Profile control uses a short label and retains its full accessible name. Regional game-panel artwork, speaker lighting, dimming, slower animation rate and Aurelius's stars remain.
+
+## Verification
+
+- Coverage test: 1,051 distinct topic/state variants and 1,136 reply points, including pre/post victory, royal stages 1/5/7, equipment combinations and extended conversations. All have three distinct authored choices and following NPC answers; authored sheets match shipped data.
+- Playback test: actually selects an authored alternative for all 143 standard NPC names, checks the resulting answer, then follows Aurelius through an early alternative and all three subsequent decision points. It also checks automatic Corin advancement, final-Next reading time, Back, gifts, shopping and teardown.
+- NPC, world-talk, Aurelius, story, conversation-view and Thornwell royal progression suites pass. All 59 loaded scripts parse.
+- Browser check: 390×844, 320×568, 844×390 and 1024×1366; long names, 28-pixel Profile, disabled/active Chat cues and reduced motion. Hettie, Sverre and Aurelius screenshots were inspected. No browser script errors were observed.
+
+These checks cover dialogue data and routing broadly; they do not claim that every branch received a visual playthrough. The earlier audit below is retained as historical context.
+
+---
+
 # Dialogue revision — 27 September 2026
 
 Normal progression is the baseline: Corin can talk around Millwood before hatching; he reaches the wider world with Aurelius. Skip is a development shortcut. Indoor speakers can know about the dragon without seeing him in the room.

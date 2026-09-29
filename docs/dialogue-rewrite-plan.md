@@ -1,6 +1,6 @@
 # Conversation rewrite plan
 
-Prepared 28 September 2026 (America/Detroit). This is the plan for the next dedicated rewrite turn. No dialogue content or dialogue-routing code is changed by this update.
+Prepared 28 September 2026 (America/Detroit). Implemented 29 September 2026 UTC. This document preserves the original planning baseline; see dialogue-audit.md for the completed work and verification.
 
 ## Goal and scope
 

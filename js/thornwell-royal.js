@@ -40,13 +40,14 @@ function thornwellQuietGreeting(n){
 function thornwellVisitTopic(n){
   if(!thornwellKnowledgeHidden(n))return null;
   const after=thornwellRoyal.stage>=5;
+  const group=n.n==='Bess'?'host':n.n==='Rowan the Hunter'?'hunter':/Elowen|Iven|Sable|Celia|Bren|Ewan/.test(n.n)?'records':/Maren|Linna|Isolde|Wren|Oswin/.test(n.n)?'supplies':/Nell|Brin|Mira|Oren|Tamsin|Pella/.test(n.n)?'students':'neighbours';
   const first=n.n==='Bess'?'He took the corner table and ordered four suppers. When I named the price, his serjeant asked how much I valued my licence.':
-    n.n==='Rowan the Hunter'?'I heard armour scraping the floor as we left. I am glad Bramble was already with me.':
+    n.n==='Rowan the Hunter'?'His men have been searching around Thornwell. A hunter notices when strangers begin inspecting familiar ground.':
     /Elowen|Iven|Sable|Celia|Bren|Ewan/.test(n.n)?'The royal men asked which histories we teach. They seemed more troubled by the books than by anything on the road.':
     /Maren|Linna|Isolde|Wren|Oswin/.test(n.n)?'His men call it a royal visit. Those of us supplying the food have another name for it.':
     /Nell|Brin|Mira|Oren|Tamsin|Pella/.test(n.n)?'We were told not to ask the king any questions. Apparently that is the proper way to learn about him.':
     'People have been measuring every word since the royal party arrived. A quiet room is not always a happy one.';
-  return {title:after?'After the royal visit':'The king in Thornwell',category:'world',lines:[n.n+': '+first,
+  return {branchKey:'visit/'+group+'/'+(after?'after':'before'),title:after?'After the royal visit':'The king in Thornwell',category:'world',lines:[n.n+': '+first,
     'Corin: '+(after?'They have gone east.':'Does nobody tell him to stop?'),
     n.n+': '+(after?'Then let us hope they keep going. Take care on the road; a crown does not make its wearer kind.':'Not with three armed men waiting to teach us manners. Be careful in there.') ]};
 }

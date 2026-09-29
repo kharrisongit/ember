@@ -173,27 +173,26 @@
     sync();
   }
   function playTopic(actor,topic){
+    if(actor.thornwellRoyal)topic={...topic,branchKey:'royal/'+actor.n+'/'+topic.title};
     const after=()=>openNpcTopics(actor);
-    playScene(window.EmberConversationBranches.prepare(topic.lines,actor.n).map(line=>{const [who,words]=whoSays(actor,line);return who?who+': '+words:words;}),
+    playScene(window.EmberConversationBranches.prepare(topic.lines,actor.n,topic).map(line=>{const [who,words]=whoSays(actor,line);return who?who+': '+words:words;}),
       {who:actor.n,npcActor:actor,after,conversationReplies:{topic,handled:new Set()}});
   }
   function beforeLine(current){
     const book=current.conversationReplies,index=current.i;
-    if(!session||!book||book.handled.has(index)||!current.lines[index]?.startsWith('Corin: '))return false;
+    if(!session||!book||index===0||book.handled.has(index)||!current.lines[index]?.startsWith('Corin: '))return false;
     autoReply=null;book.handled.add(index);
     const spoken=current.lines[index].slice(7),previous=session.menu;
     const choose=(words,answer)=>()=>{
       if(scene!==current)return;
       if(answer){
-        current.lines=[...current.lines.slice(0,index),'Corin: '+words,...answer];
+        const next=current.lines.findIndex((line,i)=>i>index&&line.startsWith('Corin: '));
+        const end=next<0?current.lines.length:next;
+        current.lines.splice(index,end-index,'Corin: '+words,...answer);
       }
       current.t=0;showScene();
     };
     const options=[{n:spoken,summary:'Corin · Follow this thread',navigation:true,go:choose(spoken)}];
-    if(book.topic?.reply&&index===book.topic.lines.findIndex(l=>l.startsWith('Corin: '))){
-      const [words,answer]=book.topic.reply;
-      options.push({n:words,summary:'Corin · Another way to answer',navigation:true,go:choose(words,[(current.who||previous.npcConversation||'Aurelius')+': '+answer])});
-    }
     for(const [words,answer]of window.EmberConversationBranches.choices(current,index)){
       if(options.some(o=>o.n===words))continue;
       options.push({n:words,navigation:true,go:choose(words,[(current.who||previous.npcConversation||'Aurelius')+': '+answer])});

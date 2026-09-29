@@ -18,9 +18,9 @@
     ],
     "history": [
       "The old millwork",
-      "Look at the older repairs around Millwood. Different woods, different hands. People used what they could spare.",
+      "Older repairs in Millwood often used different kinds of timber. People brought what they could spare.",
       "Does that make them weaker?",
-      "Only if the work is poor. A town can be patched together and still stand soundly."
+      "Not if the wood is sound and the joints are suited to it. A careful repair need not match in color."
     ]
   },
   "Odo": {
@@ -391,8 +391,8 @@
   },
   "Ovid": {
     "halvard": [
-      "His officers demand supplies for the road and call payment a matter for another clerk. My landlord has never accepted that explanation.",
-      "There is a list of unpaid royal orders under my counter. I do not expect miracles, but I will not pretend it never happened."
+      "Royal celebrations always wanted music, but payment was supposedly another clerk's concern. A landlord does not accept applause in place of rent.",
+      "I kept notes of the performances the crown never paid for. I may never collect the money, but I will not pretend the work was a gift."
     ],
     "greetings": {
       "d": [
@@ -824,7 +824,7 @@
   },
   "Elin": {
     "halvard": [
-      "I have saved for that flower while the levy takes a little more each season. I resent how much of my life has been spent postponing small pleasures.",
+      "I have been saving for a glass flower while the levy takes a little more each season. I resent how often a small pleasure becomes something to postpone.",
       "Perhaps I will finally buy the flower. I do not need a grand monument to remember that life can become kinder."
     ]
   },

@@ -1,0 +1,6119 @@
+{
+  "date": "2026-09-29",
+  "cataloguedTopics": 949,
+  "authoredDecisionRecords": 1018,
+  "authoredReplyAnswerPairs": 2320,
+  "testedTopicStateVariants": 1051,
+  "testedReplyPoints": 1136,
+  "review": "All source story, extra and political topics read; alternatives written for explicit decisions. Original coherent exchanges retained; identified continuity and unseen-prop errors corrected. Automated checks establish structural coverage, not literary quality.",
+  "entries": [
+    {
+      "topic": "Hettie/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Hettie/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Gwil/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Odo/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Tolan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Serjeant Bram/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Doran/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Elder Maddock/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Pip/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Mycella/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bolete/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Truffle/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "The Shroom King/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Calder/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Prue/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Toft/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Linna/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Wren/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Bevan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/01-west.tsv"
+    },
+    {
+      "topic": "Isolde/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Isolde/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Isolde/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Isolde/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Isolde/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Isolde/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nazim/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Halima/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tarek/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Suhaila/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Idris/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rashida/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bilal/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sella/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ovid/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Jamila/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Nerissa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Astrid/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Colm/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tessa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Rowan the Hunter/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Sverre/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Runa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Eira/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Fenton/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Tallis/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Kip/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Ada/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/02-travellers.tsv"
+    },
+    {
+      "topic": "Bren/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Bren/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Bren/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Bren/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Bren/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Bren/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Berta/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Della/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ewan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Fara/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Garrick/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hester/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Junia/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Kellan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lysa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Cinder/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Warden/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ember/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Dagna/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Lode/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Pike/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Hallow/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Quarrel/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Flint/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Winnie/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Ned/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/03-homes.tsv"
+    },
+    {
+      "topic": "Joss/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Joss/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Joss/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Joss/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Joss/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Joss/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Greta/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Osric/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Alder/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Gwyneth/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bors/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Kiln/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Petra/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Raff/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Suri/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Tavin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Una/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Vela/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Wystan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Rania/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Latif/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Yara/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Doryn/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Bry/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Coral/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Edda/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/04-roads-and-desert.tsv"
+    },
+    {
+      "topic": "Fennel/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Fennel/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Fennel/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Fennel/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Fennel/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Fennel/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Bjorn/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Cap/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Ilsa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Meriel/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Elin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Maelis/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Archivist Elowen/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Mira/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Oren/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Tamsin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Master Iven/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Brin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Nell/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Sable/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/05-snow-school.tsv"
+    },
+    {
+      "topic": "Pella/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Pella/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Pella/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Pella/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Pella/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Pella/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Bess/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ronan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Venn/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Hobb/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Edric/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dorr/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Ser Anwen/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Grusk/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Fen/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Senn/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Dain/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Rusk/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Linnet/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Puck/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/06-copper-cup.tsv"
+    },
+    {
+      "topic": "Vale/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Vale/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Vale/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Vale/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Vale/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Vale/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cerys/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Nyra/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Maren/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Dunstan/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Sela/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Tam/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Celia/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Ivo/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Merrin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Zella/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Iris/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Alderic/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "King Halvard/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "King Halvard/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "King Halvard/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "King Halvard/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/07-crafts-keepers.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Cartwright Oswin/r",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Marn/r",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Miner Nerik/r",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/s0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/s1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Snowbuilder Nessa/r",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Orin/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Orin/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Orin/h",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Orin/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Orin/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Weft/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Weft/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Weft/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Weft/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Dorrick/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Dorrick/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Dorrick/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Dorrick/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Hask/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Hask/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Hask/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Hask/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Garrow/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Garrow/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Garrow/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Garrow/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Marek/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Marek/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Marek/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Marek/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Bregga/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Bregga/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Bregga/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Bregga/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Torvald/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Torvald/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Torvald/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Torvald/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Ingrid/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Ingrid/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Ingrid/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Ingrid/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Sigrun/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Sigrun/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Sigrun/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Sigrun/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Asta/e0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Asta/e1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Asta/w0",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Asta/w1",
+      "decision": "0",
+      "authoredAlternatives": 3,
+      "source": "assets/dialogue/branches/08-remaining-cast.tsv"
+    },
+    {
+      "topic": "Aurelius/long/consciousness",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/consciousness",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/consciousness",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/consciousness",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/choosing",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/choosing",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/choosing",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/choosing",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/heartstones",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/heartstones",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/heartstones",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/heartstones",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/wingfall",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/wingfall",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/wingfall",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/wingfall",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/land",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/land",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/land",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/land",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard-victory",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard-victory",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/halvard-victory",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/travelling",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/travelling",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/travelling",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/battle",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/battle",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/battle",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/care",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/care",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/care",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/self",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/self",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/self",
+      "decision": "2",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/long/self",
+      "decision": "3",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/roads",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/roads",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/riders",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/riders",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/ruins",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/ruins",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/accounts",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/accounts",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/absence",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/absence",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/maps-and-memory",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/history/ordinary-keepers",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/dreams",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/dreams",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/age",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/age",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/fear",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/fear",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/habits",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/habits",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/joke",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/joke",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/friendship",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/friendship",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/thoughts",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/thoughts",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/quiet-company",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/personal/small-discoveries",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/home",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/home",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/monsters",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/monsters",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/thornwell",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/thornwell",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/forgewick",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/forgewick",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/sandspire",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/sandspire",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/coralmere",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/coralmere",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/hollybeck",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/hollybeck",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/sporehollow",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/sporehollow",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/mountains",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/mountains",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/cinderhold",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/cinderhold",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/alderic",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/alderic",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/lightning",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/lightning",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/ice",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/ice",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/shadow",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/shadow",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/royal-visit",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/royal-visit",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/bramble",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/bramble",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/ward",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/ward",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/future",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/future",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/trials",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/journey/trials",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/quest",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/quest-victory",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/quest-victory",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/fishing",
+      "decision": "A little patience might save us some provisions.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/fishing",
+      "decision": "The fish do not always cooperate.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/fishing",
+      "decision": "You could offer to do the patient part.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/bramble",
+      "decision": "Better than guessing which way he came from.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/bramble",
+      "decision": "Bramble is unusually good company after a hard road.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/bramble",
+      "decision": "Are you jealous?",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/equipment",
+      "decision": "Sela’s Glass Shield is with us.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/equipment",
+      "decision": "Anything else?",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/lantern",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/graveyard",
+      "decision": "We should stay until the whole challenge is finished.",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/graveyard",
+      "decision": "So I can keep using my other charms?",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Aurelius/side/gifts",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/09-aurelius.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/0",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/0",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/1",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/1",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "Nan Ferrow/2",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/King Halvard/Why visit Thornwell yourself?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/King Halvard/Life at Cinderhold",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Serjeant Bram/Following orders",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Serjeant Bram/The roadblocks",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Serjeant Bram/What do you write in those reports?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Doran/Still hunting things that do not exist?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Doran/You laughed at Bess",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Doran/Did you search the whole town?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Tolan/Is this what being a knight means?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Tolan/Are you afraid of the king?",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Tolan/Are you afraid of the king?",
+      "decision": "1",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "royal/Tolan/The man waiting at the roadblock",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/host/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/host/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/hunter/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/hunter/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/records/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/records/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/supplies/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/supplies/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/students/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/students/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/neighbours/before",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    },
+    {
+      "topic": "visit/neighbours/after",
+      "decision": "0",
+      "authoredAlternatives": 2,
+      "source": "assets/dialogue/branches/10-family-and-court.tsv"
+    }
+  ]
+}

@@ -97,7 +97,7 @@
     const topics=ask.opts.filter(o=>!o.head&&o.go&&!o.navigation&&category(o)!=='trade');
     const read=topics.filter(seen).length;
     box.querySelector('.deckHeader')?.remove();box.querySelector('.deckProfile')?.remove();
-    const profileButton=node('button','deckProfileToggle','View Character Profile');profileButton.type='button';
+    const profileButton=node('button','deckProfileToggle','Profile');profileButton.type='button';
     profileButton.setAttribute('aria-label','Character profile: '+name);
     profileButton.setAttribute('aria-expanded',String(!!ask._profileOpen));
     profileButton.setAttribute('aria-controls','conversationProfile');

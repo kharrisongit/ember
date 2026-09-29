@@ -5,18 +5,18 @@ const NPC_EXTRA_TOPICS={
       "title": "The cleverest cow",
       "category": "story",
       "exchange": [
-        "The quiet one waits until I open the gate before making trouble.",
-        "What does she do?",
-        "Nothing until I look away. That is what makes her clever."
+        "One of our cows waits until I turn away from an open gate, then slips into the lane.",
+        "How do you stop her?",
+        "I close it before fetching the feed now. She still watches for a mistake."
       ]
     },
     {
       "title": "A village breakfast",
       "category": "world",
       "exchange": [
-        "You can tell who rose early by the flour on their sleeves.",
-        "And who rose late?",
-        "They are the ones explaining why they are not hungry."
+        "I often smell bread baking before the rest of Millwood has opened its shutters.",
+        "Who starts that early?",
+        "Anyone hoping to have breakfast ready when the household wakes. The bread does not bake itself."
       ]
     }
   ],
@@ -325,18 +325,18 @@ const NPC_EXTRA_TOPICS={
       "title": "The blank label",
       "category": "story",
       "exchange": [
-        "Berta once handed me an empty jar and asked what was inside.",
+        "Berta once set an unlabelled jar before me during a lesson. It looked empty, but I could smell something sharp inside.",
         "What did you say?",
-        "That I did not know. She said we could begin the lesson now."
+        "That I could not identify it. She said that was the correct answer until we had more evidence."
       ]
     },
     {
       "title": "A patient garden",
       "category": "world",
       "exchange": [
-        "A plant can look unchanged for days while doing all its work underneath.",
-        "How do you keep waiting?",
-        "I water it, then find something else that needs doing."
+        "At home I sometimes wait weeks for a cutting to show new growth. I have learned to check its condition before deciding it has failed.",
+        "What do you check?",
+        "The leaves, the stem, and whether the soil is too dry or too wet. Different plants need different conditions."
       ]
     }
   ],
@@ -385,9 +385,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The first bucket",
       "category": "story",
       "exchange": [
-        "I let the first bucket settle before I carry it in.",
-        "Does it change the water?",
-        "It gives me a moment to look at the stonework and remember who laid it."
+        "I check the well bucket before filling it. A loose fastening is easier to mend above the water than below it.",
+        "Did your father teach you that?",
+        "After I dropped one in. He helped retrieve it, then made me explain how it had come loose."
       ]
     },
     {
@@ -445,9 +445,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The blue thread",
       "category": "story",
       "exchange": [
-        "My daughter leaves short blue threads all over the floor.",
-        "Do you mind sweeping them?",
-        "I find them in my pockets days later. Little pieces of her work."
+        "When I visit my daughter's workroom, I often come home with short blue threads caught in my clothes.",
+        "Do you mind finding them?",
+        "Only when I have just finished brushing myself down. They remind me of the afternoon together."
       ]
     },
     {
@@ -654,9 +654,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The listener at the back",
       "category": "world",
       "exchange": [
-        "I try to leave a quiet phrase for whoever sits farthest away.",
-        "Why them?",
-        "They came to listen too."
+        "I check whether the people at the back can hear before choosing a softer passage.",
+        "How can you tell?",
+        "I ask someone, or watch for people straining to listen. Quiet music still has to reach them."
       ]
     }
   ],
@@ -694,9 +694,9 @@ const NPC_EXTRA_TOPICS={
       "title": "Snow on a roof",
       "category": "world",
       "exchange": [
-        "Snow can make a house look peaceful while adding a great deal of weight.",
-        "What do you do?",
-        "Look up occasionally, even on a lovely morning."
+        "After a heavy snowfall, I worry about the weight on older roofs. A peaceful-looking house can still need checking.",
+        "What do you look for?",
+        "New sagging or creaks. If something seems wrong, people should get clear and have the structure checked before climbing onto it."
       ]
     }
   ],
@@ -914,9 +914,9 @@ const NPC_EXTRA_TOPICS={
       "title": "A repaired cup",
       "category": "world",
       "exchange": [
-        "The repaired jug does not look new.",
+        "The ornament Sela made from Mother's broken jug still reminds me of the day I carried her the pieces.",
         "Does that disappoint you?",
-        "No. I remember who helped me carry the pieces."
+        "No. It looks different because it has a different purpose now. Mother likes the light it catches."
       ]
     }
   ],
@@ -985,9 +985,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The rainy clock",
       "category": "story",
       "exchange": [
-        "I never fixed Father's clock.",
-        "Why not?",
-        "On rainy days it still gives me something familiar to blame."
+        "Father's old clock is still in pieces. I kept every part together, which is more than I can say for my confidence as a clockmaker.",
+        "Will you try fixing it again?",
+        "I should ask someone who understands the mechanism before doing any more damage."
       ]
     },
     {
@@ -1045,9 +1045,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The squeaking wheel",
       "category": "story",
       "exchange": [
-        "I know exactly when that cart will turn into the lane.",
-        "From the squeak?",
-        "Yes. I could probably greet it with my eyes shut."
+        "Before my husband fixed his cart wheel, I could recognise its squeak from the next lane.",
+        "Did you miss the sound?",
+        "For a few evenings. A sound wheel matters more than my familiar warning that supper is due."
       ]
     },
     {
@@ -1145,9 +1145,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The jar of screws",
       "category": "story",
       "exchange": [
-        "I have labeled the jar of failed hinge screws.",
-        "What does it say?",
-        "Evidence. It seemed the fairest description."
+        "I labelled my jar of failed hinge screws after the third repair in a month.",
+        "What does the label say?",
+        "House repairs after blasting. A plain record is more useful than another argument about whether there was any damage."
       ]
     },
     {
@@ -1705,9 +1705,9 @@ const NPC_EXTRA_TOPICS={
       "title": "A pot for tomorrow",
       "category": "story",
       "exchange": [
-        "I leave room in the pot when I begin.",
-        "For more broth?",
-        "For whoever turns out to be hungry before it is finished."
+        "I plan the pot around the people expected for supper, with a little extra when supplies allow.",
+        "For late visitors?",
+        "Yes. I can stretch a meal sometimes, but I cannot feed another person with an empty ladle."
       ]
     },
     {
@@ -1794,9 +1794,9 @@ const NPC_EXTRA_TOPICS={
       "title": "Something beautiful",
       "category": "world",
       "exchange": [
-        "I used to think a useful purchase had to look plain.",
-        "And the glass flower?",
-        "It gives me pleasure every morning. I am prepared to call that useful."
+        "I used to think a useful purchase had to look plain. Now I wonder whether enjoying something each morning is useful too.",
+        "Are you thinking of the glass flower?",
+        "Yes. I have not bought it yet, but it has made me reconsider what I expect from a purchase."
       ]
     }
   ],
@@ -1834,9 +1834,9 @@ const NPC_EXTRA_TOPICS={
       "title": "A missing name",
       "category": "world",
       "exchange": [
-        "An empty space in a record is still evidence.",
-        "Of what?",
-        "That someone had a reason to make it empty."
+        "A gap in a record is worth investigating. It might be damage, an omission, or somebody deliberately removing a name.",
+        "How do you tell which?",
+        "Compare copies and inspect the page. The gap asks a question; it does not answer it for us."
       ]
     }
   ],
@@ -2005,9 +2005,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The chipped cup",
       "category": "story",
       "exchange": [
-        "I keep the old chipped cup behind the counter.",
-        "For luck?",
-        "For measuring. It still holds exactly what it held before it looked impressive."
+        "I retired a chipped cup from serving drinks and kept it for measuring dry supplies behind the counter.",
+        "Why keep that one?",
+        "I knew its capacity and it could still do that job safely. It was no longer suitable for someone's mouth."
       ]
     },
     {
@@ -2065,9 +2065,9 @@ const NPC_EXTRA_TOPICS={
       "title": "The fourth leg",
       "category": "story",
       "exchange": [
-        "The fourth leg of my chair is finished.",
-        "Does it stand now?",
-        "After a fashion. I am investigating which fashion."
+        "I have cut the fourth leg for the chair I am building at home. It still needs fitting and checking.",
+        "Will it stand evenly?",
+        "That is the next test. I am not inviting anyone to sit until the joints are sound."
       ]
     },
     {
@@ -2534,7 +2534,7 @@ const NPC_EXTRA_TOPICS={
       "title": "The old carvings",
       "category": "world",
       "exchange": [
-        "Look at the hands in old rider carvings as carefully as the weapons.",
+        "In the old rider carvings I have studied, the hands tell as much as the weapons.",
         "What should I notice?",
         "Whether they are reaching, holding, or helping. Those gestures survived too."
       ]
@@ -2863,11 +2863,7 @@ const NPC_EXTRA_TOPICS={
 };
 function npcExtraTopics(n){
   const authored=NPC_EXTRA_TOPICS[n.n];
-  const fallback=[
-    {title:'A quieter moment',category:'story',exchange:['It is pleasant to have a conversation that nobody needs to hurry.','Have I caught you at a good time?','For a moment, yes. Let us make something of it.']},
-    {title:'People on the road',category:'world',exchange:['Travelers bring the parts of the world we cannot see from our own doorstep.','Do you enjoy hearing about them?','I enjoy hearing what someone actually noticed. It need not be grand to be interesting.']}
-  ];
-  return (authored||fallback).map(t=>({title:t.title,category:t.category,
+  return (authored||[]).map(t=>({title:t.title,category:t.category,
     lines:[n.n+': '+t.exchange[0],'Corin: '+t.exchange[1],n.n+': '+t.exchange[2]]}));
 }
 function dragonExtraTopics(category){
@@ -2877,7 +2873,7 @@ function dragonExtraTopics(category){
       ['small-discoveries','What surprised you today?',['Corin: With all those inherited memories, can an ordinary day still surprise you?','Aurelius: Knowing about warm stones did not prepare me for choosing a favorite one.','Corin: You have a favorite stone?','Aurelius: Temporarily. I remain open to evidence.']]
     ],
     history:[
-      ['maps-and-memory','Can a map remember a place?',['Corin: Dad carried this map before I was born. Do you think he saw the places I see?','Aurelius: Some of them. A map can preserve a name after the people using it have changed.','Corin: I wish he could tell me what to look for.','Aurelius: You can notice something of your own, then bring the story home to Nan.']],
+      ['maps-and-memory','Can a map remember a place?',['Corin: Do you think Dad visited some of the places marked on our maps?','Aurelius: Perhaps. Nan may know more about his journeys than I do. A map records a place, not everyone who passed through it.','Corin: I wish he could tell me what to look for.','Aurelius: You can notice something of your own, then bring the story home to Nan.']],
       ['ordinary-keepers','Who keeps the realm together?',['Corin: The histories make everything sound as though it happens because of kings.','Aurelius: Kings do not mend every roof or bring every traveler a bowl of supper.','Corin: Those things rarely make it into the books.','Aurelius: Then we should remember the people doing them. A realm needs more than a throne to remain a home.']]
     ]
   };

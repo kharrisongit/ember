@@ -12,7 +12,7 @@ assert.equal(box.querySelector('.conversationChat').parentNode,box.querySelector
 assert.equal(box.dataset.conversationTheme,'thornwell');
 assert.equal(box.querySelector('.conversationStage').querySelector('.conversationSpeaker').parentNode,box.querySelector('.conversationNpcSpeech'),'NPC portrait attaches directly to its speech box');
 assert.equal(box.querySelector('.conversationPlayer').querySelector('.conversationSpeaker').parentNode,box.querySelector('.conversationCorinSpeech'),'Corin portrait attaches directly to his speech box');
-assert.equal(box.querySelector('.deckProfileToggle').textContent,'View Character Profile');
+assert.equal(box.querySelector('.deckProfileToggle').textContent,'Profile');
 assert(!box.querySelector('.deckHistoryToggle'));assert(!box.querySelector('.deckBack'));
 assert.equal(box.querySelector('.conversationNext').textContent,'Next');
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');

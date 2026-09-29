@@ -383,8 +383,8 @@ const DRAGON_LONG_TALKS={
   choosing:[
     'Corin: Maddock said dragons chose their riders. Why did you choose me?',
     'Aurelius: You found something you did not understand, and carried it to someone who might help. You did not break it open to see whether it was valuable.',
-    'Corin: It was an egg. I thought that would be rather cruel.',
-    'Aurelius: You say that as though everyone would agree. That is part of my answer.',
+    'Corin: I thought I had found a strange stone. Maddock knew more about it than I did.',
+    'Aurelius: You were curious without deciding that being able to break something gave you a reason to do it. I wanted to know you.',
     'Corin: Before this began, I was a miller’s son who had never led anyone anywhere.',
     'Aurelius: A rider is a companion, Corin. Not a person made taller by sitting above another living thing.',
     'Corin: And if I make the wrong choice?',
@@ -414,7 +414,7 @@ const DRAGON_LONG_TALKS={
     'Corin: But some of the old accounts survived.',
     'Aurelius: Thornwell’s school keeps histories. Ask questions there. Compare what people preserved with what they were ordered to repeat.',
     wonAll?'Corin: Now his rule has ended. We can make the truth easier to tell.':'Corin: He cannot have every copy, every song, every memory.',
-    'Aurelius: No. And we should protect those things as carefully as we protect each other.'
+    wonAll?'Aurelius: Yes. Keep the accounts available, including the ones that ask difficult questions about us.':'Aurelius: No. And we should protect those things as carefully as we protect each other.'
   ],
   land:()=>[
     'Corin: What does your memory tell you about Emberfell?',
@@ -445,7 +445,7 @@ const DRAGON_LONG_TALKS={
     'Corin: Do you hate him?',
     'Aurelius: I oppose what he does. I do not need hatred to know that people should be safe from him.',
     'Corin: I do not want to become someone who solves everything with a sword.',
-    'Aurelius: Keep asking that question. It is a good defence against becoming comfortable with power.'
+    'Aurelius: Keep that concern with you. Having strength does not make force the right answer to every problem.'
   ],
   travelling:[
     'Corin: Run me through travelling together again.',
@@ -557,18 +557,25 @@ function dragonSideQuest(topic){
   ];
   if(topic==='lantern')return charm.lamp?[
     'Corin: We have the Hollybeck Lantern now.',
-    'Aurelius: Carry it into the dark mine galleries. Its steady light lets you explore the deep workings.'
+    'Aurelius: Carry it into the dark mine galleries. Its steady light lets you explore the deep workings.',
+    'Corin: Does the light make the galleries safe?',
+    'Aurelius: It helps us see. It does not remove the creatures or bad footing.'
   ]:[
     'Corin: We heard about a way to see in the mines.',
-    'Aurelius: Torvald left his special lantern with Sverre in Hollybeck. Let us ask Sverre for it before we go deep underground.'
+    'Aurelius: Torvald left his special lantern with Sverre in Hollybeck. Let us ask Sverre for it before we go deep underground.',
+    'Corin: Does the light make the galleries safe?',
+    'Aurelius: It helps us see. It does not remove the creatures or bad footing.'
   ];
   if(topic==='graveyard')return charm.wake?[
     'Corin: We earned the Book of the Dead.',
-    'Aurelius: You can now summon two wraiths to fight beside us. You only need to carry the book; it does not use a charm slot.'
+    'Aurelius: You can now summon two wraiths to fight beside us. You only need to carry the book; it does not use a charm slot.',
+    'Corin: So I can keep using my other charms?',
+    'Aurelius: Yes. Carry the book and use Summon in battle; your equipped charms can stay as they are.'
   ]:[
     'Corin: How do we learn to summon allies?',
     'Aurelius: Defeat every wave of ghosts in the graveyard northwest of Hollybeck. The reward is the Book of the Dead, which lets you summon two wraiths in battle.',
-    'Corin: We should stay until the whole challenge is finished.'
+    'Corin: We should stay until the whole challenge is finished.',
+    'Aurelius: Yes. The book is the reward for completing all the waves, not merely the first fight.'
   ];
   const remaining=dragonGiftLeads().slice(0,3);
   return [
@@ -614,7 +621,7 @@ const DRAGON_JOURNEY_TOPICS=[
     'Corin: Probably. But that is not really what I mean. Everyone there is carrying on without me.',
     'Aurelius: Would you rather they stopped until we returned?',
     'Corin: No. I just wish I could see Nan put the lamp out tonight.',
-    'Aurelius: Tell me about her while we walk. I have only met her through your worry.'
+    'Aurelius: Tell me about her while we walk. I would like to know more about the ordinary evenings you miss.'
   ]},
   {id:'monsters',name:'Why the roads became dangerous',when:()=>true,lines:()=>[
     'Corin: Maddock remembers these roads before the monsters.',
@@ -627,7 +634,7 @@ const DRAGON_JOURNEY_TOPICS=[
   {id:'thornwell',name:'The people in Thornwell',when:()=>dragonKnowsPlace('Thornwell'),lines:()=>[
     'Corin: I used to think Thornwell was terribly far from home.',
     'Aurelius: And now?',
-    'Corin: Now that we have made it here, I want to look around. I would like to see the school.',
+    'Corin: Having reached Thornwell, I want to learn more about it. The school seems a good place to begin.',
     'Aurelius: You could ask the same question in every room and leave with a different answer.',
     'Corin: Would that help?',
     'Aurelius: I think I would enjoy finding out with you.'
@@ -641,11 +648,11 @@ const DRAGON_JOURNEY_TOPICS=[
     smithUpgrade?'Aurelius: I noticed you trying to explain them before he had asked.':'Aurelius: He may ask how the edge got that way. You have time to prepare your explanation.'
   ]},
   {id:'sandspire',name:'Crossing the desert',when:()=>dragonKnowsPlace('Sandspire'),lines:()=>[
-    'Corin: Sand has got into places I did not know my boots had.',
-    'Aurelius: There is some beneath my scales. I am trying to be dignified about it.',
-    'Corin: How is that going?',
-    'Aurelius: Badly. When we find shade, I need you to scratch just below my left wing.',
-    'Corin: We should ask how people here keep it out of their clothes.',
+    'Corin: Sandspire taught me how many places sand can hide in a boot.',
+    'Aurelius: It found its way beneath my scales too. I tried to be dignified about it.',
+    'Corin: How did that go?',
+    'Aurelius: Badly. I was much happier after finding shade and shaking some of it loose.',
+    'Corin: We should ask people in Sandspire how they keep it out of their clothes.',
     'Aurelius: Yes. Their cloth wraps suddenly seem much more sensible than scales.'
   ]},
   {id:'coralmere',name:'Seeing the sea',when:()=>dragonKnowsPlace('Coralmere'),lines:()=>[
@@ -657,12 +664,12 @@ const DRAGON_JOURNEY_TOPICS=[
     'Aurelius: I was only looking. They reached their own conclusions.'
   ]},
   {id:'hollybeck',name:'The cold in Hollybeck',when:()=>dragonKnowsPlace('Hollybeck'),lines:()=>[
-    'Corin: Everyone here seems to know when snow is coming.',
-    'Aurelius: They are watching the clouds while you are watching your feet.',
-    'Corin: My feet keep disappearing into it.',
+    'Corin: People in Hollybeck seemed to know when snow was coming.',
+    'Aurelius: They have practice reading the weather. You were rather occupied watching your feet.',
+    'Corin: My feet kept disappearing into the snow.',
     'Aurelius: Come close when we stop. I can keep you warm while you dry your gloves.',
     'Corin: You do not mind?',
-    'Aurelius: I would mind carrying a rider who had frozen to the saddle.'
+    'Aurelius: I would mind carrying a rider who had frozen to my back.'
   ]},
   {id:'sporehollow',name:'The mushroom village',when:()=>dragonKnowsPlace('Sporehollow'),lines:()=>[
     'Corin: I cannot tell whether the mushrooms are looking at me.',
@@ -673,10 +680,10 @@ const DRAGON_JOURNEY_TOPICS=[
     'Aurelius: That would be a thoughtful question.'
   ]},
   {id:'mountains',name:'Beyond the mountain pass',when:()=>dragonKnowsPlace('Ashcrag'),lines:()=>[
-    'Corin: Snow behind us, smoke ahead. I can hardly believe it is the same mountain.',
-    'Aurelius: Feel the air coming through the stone. There is heat below us.',
+    'Corin: The change from Frostcrag to Ashcrag surprised me. Snow on one side, smoke on the other.',
+    'Aurelius: The warmth rising through the stone was hard to miss. There is heat beneath that part of the range.',
     'Corin: And Cinderhold beyond it.',
-    wonAll?'Aurelius: We can take that road without wondering whether we will return.':'Aurelius: Yes. If you need to rest before we go farther, tell me.',
+    wonAll?'Aurelius: His rule has ended, though the road still deserves care.':'Aurelius: Yes. If you need to rest before we go farther, tell me.',
     'Corin: I would like a moment.',
     'Aurelius: Then we will have one.'
   ]},
@@ -709,14 +716,14 @@ const DRAGON_JOURNEY_TOPICS=[
     'Aurelius: The heartstone changes what I can draw on. It feels strange to me as well.',
     'Corin: Does it hurt?',
     'Aurelius: No. But the cold lingers at the back of my throat.',
-    'Corin: Would something warm help?',
-    'Aurelius: We could find out. You have made tea sound very inviting.'
+    'Corin: Should we pause until that feeling passes?',
+    'Aurelius: A short rest sounds welcome. I do not want every new power to become a reason to hurry.'
   ]},
   {id:'shadow',name:'The shadow heartstone',when:()=>breathHas.shadow,lines:()=>[
-    'Corin: That shadow frightens me more than the fire did.',
+    'Corin: The Shadow breath frightens me more than the fire did.',
     'Aurelius: What frightens you about it?',
-    'Corin: For a moment I could not see where you ended.',
-    'Aurelius: I was still beside you. Reach for my voice if it happens again.',
+    'Corin: The way it gathers around a target is difficult to follow.',
+    'Aurelius: Then we should practise with a clear space around the target. Listen for me if the effect makes it hard to follow the fight.',
     'Corin: Keep talking, then.',
     'Aurelius: I can do that. You may regret asking.'
   ]},
@@ -890,31 +897,25 @@ function openDragonConversation(category='root'){
   if(!dragonCanConverse())return;
   rememberDragonConversationPlace();
   dismissDragonBanter();P.moving=false;P.act=null;dragon.moving=false;faceCorinAt(dragon.x,dragon.y);
-  const replies={
-    consciousness:['Do you ever wish those memories would be quiet?','Sometimes. The old voices know many things, but none of them has lived this particular morning beside you. I want room to notice it for myself.'],
-    choosing:['What if I disappoint you?','Then we talk about it. Choosing a friend is not a promise that neither of us will make mistakes. I would rather you trusted me with the truth than tried to become somebody who never needs help.'],
-    heartstones:['I do not want power to change who we are.','Then keep asking what we mean to do with it. A new strength gives us another choice. It does not have to take the old ones away.'],
-    self:['You can want something that has nothing to do with me.','I know. And you can love your home without asking my permission. That is part of what makes travelling together a choice worth making.']
-  };
-  const speak=(lines,back=category,reply)=>{askShut();const spoken=window.EmberConversationBranches.prepare(typeof lines==='function'?lines():lines,'Aurelius');playScene(spoken,{telepathy:true,after:()=>openDragonConversation(back),conversationReplies:{topic:{lines:spoken,reply},handled:new Set()}});};
-  const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key],category,replies[key])});
-  const general=category=>[...(DRAGON_GENERAL_TOPICS[category]||[]),...(typeof dragonExtraTopics==='function'?dragonExtraTopics(category):[])].map(([id,name,lines])=>({n:name,go:()=>speak(lines)}));
+  const speak=(lines,branchKey,back=category)=>{askShut();const raw=typeof lines==='function'?lines():lines,topic={lines:raw,branchKey};const spoken=window.EmberConversationBranches.prepare(raw,'Aurelius',topic);playScene(spoken,{telepathy:true,after:()=>openDragonConversation(back),conversationReplies:{topic,handled:new Set()}});};
+  const topic=(name,key)=>({n:name,go:()=>speak(DRAGON_LONG_TALKS[key],'Aurelius/long/'+key+(key==='halvard'&&wonAll?'-victory':''))});
+  const general=group=>[...(DRAGON_GENERAL_TOPICS[group]||[]),...(typeof dragonExtraTopics==='function'?dragonExtraTopics(group):[])].map(([id,name,lines])=>({n:name,go:()=>speak(lines,'Aurelius/'+group+'/'+id)}));
   const options={
     root:[
       {n:'What we have seen together',navigation:true,go:()=>openDragonConversation('journey')},
       {n:'Dragons and our bond',navigation:true,go:()=>openDragonConversation('dragons')},
       {n:'Emberfell and its history',navigation:true,go:()=>openDragonConversation('history')},
-      {n:'What should we do next?',go:()=>speak(dragonCurrentQuest)},
+      {n:'What should we do next?',go:()=>speak(dragonCurrentQuest,'Aurelius/quest'+(wonAll?'-victory':''))},
       ...(dragonSideQuestTopics().length?[{n:'Side quests and useful leads',navigation:true,go:()=>openDragonConversation('quests')}]:[]),
       {n:'Travelling and fighting together',navigation:true,go:()=>openDragonConversation('travelling')},
       {n:'You, me, and other mysteries',navigation:true,go:()=>openDragonConversation('personal')},
       {n:'Let’s keep going',go:null}
     ],
-    journey:dragonJourneyTopics().map(t=>({n:t.name,go:()=>speak(t.lines)})),
+    journey:dragonJourneyTopics().map(t=>({n:t.name,go:()=>speak(t.lines,'Aurelius/journey/'+t.id)})),
     dragons:[topic('The shared dragon consciousness','consciousness'),topic('Why did you choose me?','choosing'),topic('The heartstones','heartstones')],
     personal:[topic('What do you want for yourself?','self'),...general('personal')],
     history:[...general('history'),topic('Wingfall and the seven riders','wingfall'),topic('The land and its people','land'),topic(wonAll?'Life after Halvard':'Why Halvard fears us','halvard')],
-    quests:dragonSideQuestTopics().map(t=>({n:t.name,go:()=>speak(()=>dragonSideQuest(t.id))})),
+    quests:dragonSideQuestTopics().map(t=>({n:t.name,go:()=>speak(()=>dragonSideQuest(t.id),'Aurelius/side/'+t.id)})),
     travelling:[topic('Riding and flying','travelling'),topic('Fighting as partners','battle'),topic('Food and recovery','care')]
   };
   if(!options[category])return;

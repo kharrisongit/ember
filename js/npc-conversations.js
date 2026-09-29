@@ -1,4 +1,4 @@
-/* Individually authored stories; source: assets/dialogue/npc-stories.tsv. */
+/* Generated story data from assets/dialogue/npc-stories.tsv; rebuild with tools/build-npc-stories.mjs. Runtime follows below. */
 const NPC_STORIES = {
   "Hettie": [
     [
@@ -17,9 +17,9 @@ const NPC_STORIES = {
   "Gwil": [
     [
       "Working with wood",
-      "My father taught me to leave a young tree beside every stump. I thought he was making extra work.",
+      "Father taught me to plant young trees to replace the ones we felled. As a boy, I thought he was adding chores.",
       "Was he?",
-      "The first ones I planted are taller than the mill now. He was leaving work for somebody else."
+      "Certainly. But those saplings are tall now. Somebody will have timber because he thought beyond his own working years."
     ],
     [
       "Hettie's farm",
@@ -227,15 +227,15 @@ const NPC_STORIES = {
   "Wren": [
     [
       "Learning remedies",
-      "Berta made me smell every jar before she let me read its label. I thought she was being difficult.",
-      "Was she?",
-      "One winter the labels all peeled off. Nobody missed a dose. I stopped complaining."
+      "When I learned remedies from Berta, she made me examine the leaves and smell each preparation before reading its label.",
+      "Why not read the label first?",
+      "She wanted me to recognise when the contents did not match. If we were uncertain, we set the jar aside and checked our records."
     ],
     [
       "The stubborn plant",
-      "That little cutting came from a garden abandoned years ago. It flowered the day after I had nearly given up on it.",
-      "What did you change?",
-      "I moved it into the shade. It did not need more attention. It needed the right attention."
+      "Years ago I took a cutting from an abandoned garden and tried to grow it at home. It struggled until I moved it out of the strongest sun.",
+      "What happened then?",
+      "New leaves appeared, and eventually it flowered. I had been giving a shade-loving plant far too much sun."
     ]
   ],
   "Bevan": [
@@ -297,9 +297,9 @@ const NPC_STORIES = {
   "Tarek": [
     [
       "That camel",
-      "The bad-tempered one carried me home with a broken ankle. Bit the man who tried to unload me too quickly.",
+      "Years ago, one of my camels carried me home after I broke an ankle. It even bit the man who tried to pull me down too quickly.",
       "You kept it?",
-      "Of course. Loyalty does not always have pleasant manners."
+      "Of course. I gave the man a warning and the camel a gentler unloading."
     ],
     [
       "Caravan bells",
@@ -339,9 +339,9 @@ const NPC_STORIES = {
   "Rashida": [
     [
       "Your first glass",
-      "A desert storm ruined my first batch. Fine grit blew straight into the cooling bowl.",
+      "A gust blew grit into a bowl I was shaping during a storm. The flawed surface caught the light in a way I liked.",
       "Did you throw it away?",
-      "No. It sparkled in the sun. I sold it as something I had meant to do and spent months learning how to do it again."
+      "I sold it as a decorative piece, with the flaw explained. Then I spent months learning to make that texture deliberately."
     ],
     [
       "Rival workshops",
@@ -479,9 +479,9 @@ const NPC_STORIES = {
   "Sverre": [
     [
       "Your first blizzard",
-      "I tied myself to a fence post and waited. Spent the night cursing the fool who put a fence so far from shelter.",
-      "Who was it?",
-      "Me, the summer before. I build them closer together now."
+      "My first blizzard caught me between Hollybeck and a timber shed. I followed a fence back to the shed, sheltered there, and waited for daylight.",
+      "Did anyone come looking for you?",
+      "The shed owner found me in the morning. Since then I turn back as soon as the landmarks start disappearing in snow."
     ],
     [
       "A warm welcome",
@@ -507,15 +507,15 @@ const NPC_STORIES = {
   "Eira": [
     [
       "The cider press",
-      "I inherited a press that leans left and a recipe that says a sensible amount of honey.",
+      "The cider press I inherited at home needed bracing before I could use it. The recipe was less helpful: it called for a sensible amount of honey.",
       "What is sensible?",
-      "That is what I am trying to find out. The bees have been very generous with advice and very stingy with honey."
+      "I keep measurements and taste each batch. Whoever wrote that recipe expected far too much agreement about sweetness."
     ],
     [
       "A new flavour",
-      "I keep a bottle from every good batch, labelled with the weather that autumn.",
-      "Why the weather?",
-      "Apples remember the rain. I like being able to taste a year after everyone has stopped talking about it."
+      "I store a sample from each good batch at home, with notes about that year's apples and weather.",
+      "Why record the weather?",
+      "It affects the fruit. Comparing the notes helps me understand why the same recipe tastes different another year."
     ]
   ],
   "Fenton": [
@@ -555,9 +555,9 @@ const NPC_STORIES = {
     ],
     [
       "The crab",
-      "It lives beneath the loose board. I put it back whenever somebody insists it is a problem.",
-      "Why keep it here?",
-      "It found the board before I did. That makes us neighbours, I think."
+      "I once found a crab sheltering under a loose board on the shore. Someone moved the board, so I set it back after they had gone.",
+      "Why bother?",
+      "The crab had found a dry hiding place. Nobody needed the board at the time."
     ]
   ],
   "Ada": [
@@ -569,9 +569,9 @@ const NPC_STORIES = {
     ],
     [
       "An empty house",
-      "I like a quiet house for about an hour. Then I start putting things where Rowan will trip over them if he comes home late.",
-      "To scold him?",
-      "To hear him come in. There are less foolish methods, but this one also gets the baskets moved."
+      "When Rowan used to come home late, I put a basket by the door so I would hear him move it. Once he nearly fell over it.",
+      "Did you stop doing that?",
+      "Yes. Now I leave a lamp and listen for the latch. Worry is no excuse to set a trap in your own hallway."
     ]
   ],
   "Bren": [
@@ -703,9 +703,9 @@ const NPC_STORIES = {
   "Lysa": [
     [
       "The crooked bird",
-      "I saved for that glass bird for months, then saw a perfect one at the same price.",
+      "I once saved for a crooked glass bird, then found a perfectly shaped one at the same price.",
       "Which did you choose?",
-      "The crooked one. It looks as though it has been listening to a very surprising story."
+      "The crooked one. Its tilted head looked curious, as though it had just heard something surprising."
     ],
     [
       "Making things",
@@ -731,9 +731,9 @@ const NPC_STORIES = {
   "Warden": [
     [
       "The evening carts",
-      "His cart has a wheel that squeaks on every third turn. I hear it long before his boots reach the step.",
-      "Why does he not mend it?",
-      "He did once. I worried all evening. He lets it squeak a little now."
+      "My husband brings his work cart home with a wheel that squeaks. I usually hear him turn into the lane before he reaches the door.",
+      "Has he tried mending it?",
+      "Yes. I wondered why he was late the first quiet evening. Now I listen for the latch instead."
     ],
     [
       "Packing supper",
@@ -779,9 +779,9 @@ const NPC_STORIES = {
     ],
     [
       "The cup by your bed",
-      "It was a wedding gift. The handle rattles against the wall when the heavy hammer starts.",
-      "Why not move it?",
-      "My wife says the house is playing our song. Neither of us can sing, so this is an improvement."
+      "My wife and I keep a cup we received as a wedding gift. The heavy hammer at the forge used to make it rattle on its shelf.",
+      "Did you move it?",
+      "We put a folded cloth underneath. We can hear the forge well enough without risking the cup."
     ]
   ],
   "Pike": [
@@ -801,9 +801,9 @@ const NPC_STORIES = {
   "Hallow": [
     [
       "The loose hinge",
-      "The mountain loosens it every month. I have kept the old screws in a jar as evidence.",
-      "Evidence for whom?",
-      "The mountain, should it ever agree to discuss compensation."
+      "Blasting at the mine shook a hinge loose often enough that I began keeping its worn screws in a jar at home.",
+      "Why keep the screws?",
+      "Evidence, if anyone claims the repairs cost us nothing. Also a reminder to check the frame, not keep replacing the same part."
     ],
     [
       "Your apprenticeship",
@@ -969,7 +969,7 @@ const NPC_STORIES = {
   "Kiln": [
     [
       "The expensive shelf",
-      "That shelf holds every bowl I heated too quickly. I keep them where apprentices can see them.",
+      "I keep a shelf of bowls I heated too quickly at my workshop. Apprentices can study the cracks.",
       "To warn them?",
       "To show them I am not scolding from a place of perfection. Also to discourage questions about my prices."
     ],
@@ -1059,7 +1059,7 @@ const NPC_STORIES = {
     ],
     [
       "The pattern you chose",
-      "This border follows the route my family took to reach Sandspire. Every turn stands for a well.",
+      "I wove a rug with a border following the route my family took to reach Sandspire. Every turn stands for a well.",
       "Does anyone recognise it?",
       "My aunt did. She sat down on the rug and began telling stories I had never heard."
     ]
@@ -1193,15 +1193,15 @@ const NPC_STORIES = {
   "Bjorn": [
     [
       "The second ladle",
-      "My father came home late from hauling timber. If the pot was empty, he said he had eaten already.",
+      "Father often came home after the rest of us had eaten. If the pot was empty, he claimed he had already had supper.",
       "Had he?",
-      "Usually not. I keep another ladle so nobody has to make that little lie in my house."
+      "Usually not. I set a portion aside for late arrivals now, so nobody has to tell that little lie."
     ],
     [
       "A proper broth",
-      "You need time more than meat. Bones, roots and a pot that has not forgotten yesterday.",
-      "Can a pot remember?",
-      "Mine does. It complains whenever I try a new recipe."
+      "For a good broth, I use the bones and vegetables available, give it time, and taste before adding more seasoning.",
+      "Is there a fixed recipe?",
+      "A starting point. Then I adjust it to what went into the pot, rather than pretending every batch began alike."
     ]
   ],
   "Cap": [
@@ -1249,9 +1249,9 @@ const NPC_STORIES = {
   "Elin": [
     [
       "The stained-glass flower",
-      "I came to replace a chipped cup. Then the light caught that flower, and my sensible errand abandoned me.",
+      "I came shopping for a replacement cup and found a stained-glass flower I liked. I keep thinking about how it would look at home.",
       "Will you buy it?",
-      "I may. A room can need something lovely without being able to explain the need."
+      "Perhaps, after the cup and the necessary expenses. I want to choose it without regretting the cost."
     ],
     [
       "Your own window",
@@ -1297,9 +1297,9 @@ const NPC_STORIES = {
     ],
     [
       "Your own journey",
-      "I want to see the places I write about. I have drawn the same mine entrance from four different descriptions.",
-      "Are they very different?",
-      "In one it faces the sunrise. In another it faces a tavern. I suspect I know which writer was thirstier."
+      "I want to visit the places I write about. Four descriptions of one mine entrance have given me four different sketches.",
+      "Are the writers contradicting one another?",
+      "Not necessarily. I need to know where each stood and what they were trying to describe before deciding that."
     ]
   ],
   "Oren": [
@@ -1375,9 +1375,9 @@ const NPC_STORIES = {
   "Sable": [
     [
       "Three versions",
-      "I laid three accounts of Wingfall side by side. The newest copied a spelling mistake from the oldest and changed everything around it.",
+      "I found the same unusual spelling mistake in two very different accounts of Wingfall. It suggests the newer writer used the older text, or a shared source.",
       "What did that tell you?",
-      "That the writer had read the truth before choosing another story."
+      "The accounts may not be independent. I need to trace that connection before treating them as two witnesses."
     ],
     [
       "Trusting a book",
@@ -1389,9 +1389,9 @@ const NPC_STORIES = {
   "Pella": [
     [
       "The globe",
-      "My father promised to show me the coast. When the roads grew dangerous, he bought this little globe instead.",
-      "Was that disappointing?",
-      "Yes. But he learned every place on it with me. He did what he could without pretending it was the same."
+      "Father once promised to take me to the coast. When the roads grew dangerous, he brought home a small globe and learned its place names with me.",
+      "Were you disappointed?",
+      "Yes. He listened without pretending the globe was the same as a journey. I was glad he spent the time with me."
     ],
     [
       "Your first destination",
@@ -1445,9 +1445,9 @@ const NPC_STORIES = {
   "Hobb": [
     [
       "That table",
-      "I helped carry this table through the door. We had to take the legs off and turn it three times.",
-      "You made it sound easier earlier.",
-      "That is the reward for surviving hard work. You get to tell it as though you were competent throughout."
+      "I helped Bess carry a table through the Copper Cup's door when she was arranging the room. We had to remove its legs first.",
+      "Did you measure the door beforehand?",
+      "Not properly. We measured it very carefully after the first attempt."
     ],
     [
       "Your unfinished project",
@@ -1507,9 +1507,9 @@ const NPC_STORIES = {
     ],
     [
       "Your old trade",
-      "I hauled barrels before my shoulder gave out. I still catch myself measuring doors with my eyes.",
-      "Could you fit a barrel through this one?",
-      "Three abreast. Do not tell Bess I have considered it."
+      "I hauled barrels before my shoulder made me stop. I still catch myself measuring doorways by eye.",
+      "Would you haul one now?",
+      "No. Knowing how to move a load does not make my shoulder fit to carry it."
     ]
   ],
   "Fen": [
@@ -1710,10 +1710,10 @@ const NPC_STORIES = {
   ],
   "Ivo": [
     [
-      "The tools above your bed",
-      "They belonged to my grandfather. I hung them there because I wanted to wake up remembering what he could make.",
-      "Even with the rattling?",
-      "Especially then. He was never a quiet man while he worked."
+      "Your inherited tools",
+      "My grandfather left me his tools. I keep them on a rack at home, where I can remember what he made.",
+      "Are they still useful?",
+      "Some are. I check the handles and edges before using them; the worn-out ones have earned their rest."
     ],
     [
       "Your first project",
@@ -1725,7 +1725,7 @@ const NPC_STORIES = {
   "Merrin": [
     [
       "Watching the road",
-      "My brother always arrived without sending word. I took this table so I could see him before he reached the door.",
+      "My brother always arrived without sending word. At home, I liked to sit by the window so I could see him before he reached the door.",
       "Does he still visit?",
       "When the roads allow it. I would rather watch a dull road than miss a familiar face."
     ],
@@ -1916,13 +1916,13 @@ const LIBRARY_QUEST_HINTS={
   Brin:{title:'Find the three elemental Heartstones',lines:[
     "Brin: Explore the old temples and claim their Heartstones to teach Aurelius new breath attacks.",
     "Corin: Which temples should we look for?",
-    "Brin: The temple southeast of Forgewick holds Lightning. Sandspire's temple to the southeast holds Ice. The temple northeast of Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
+    "Brin: The temple near Forgewick holds Lightning. Sandspire's temple holds Ice. The temple near Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
 };
 function libraryQuestHint(n){
   if(n.n==="Brin"&&typeof thornwellKnowledgeHidden==="function"&&thornwellKnowledgeHidden(n))return {title:"The old rider temples",lines:[
     "Brin: The old rider temples hold three Heartstones. Our books associate them with Lightning, Ice and Shadow.",
     "Corin: Where are these temples?",
-    "Brin: Southeast of Forgewick, southeast of Sandspire, and northeast of Hollybeck. That is what the old maps say. If you explore them, take care."]};
+    "Brin: Look for the temples near Forgewick, Sandspire, and Hollybeck. Those are the three named in our maps. If you explore them, take care."]};
   const base=LIBRARY_QUEST_HINTS[n.n];if(!base)return null;
   if(n.n==='Mira'&&charm.lamp)return {title:'Using the Hollybeck Lantern',lines:[
     "Mira: You have Torvald's lantern now. Carry it as you explore the dark galleries; its light lets you see what ordinary lamps miss.",
@@ -1992,14 +1992,12 @@ function npcStoryTopics(n){
   const finished=npcFinishedRoadwork(n);
   const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
-  if(!finished&&topics[0]&&typeof NPC_REPLY_BRANCHES!=='undefined')topics[0].reply=NPC_REPLY_BRANCHES[n.n];
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
   const visit=typeof thornwellVisitTopic==="function"&&thornwellVisitTopic(n);if(visit)topics.push(visit);
   topics.push(...npcWorldTopics(n).map(t=>({...t,category:"world"})));
   if(typeof npcExtraTopics==="function"){
     const extra=npcExtraTopics(n);
-    if(!profile.length&&extra[0]&&typeof NPC_REPLY_BRANCHES!=="undefined")extra[0].reply=NPC_REPLY_BRANCHES[n.n];
     topics.push(...extra);
   }
   if(n.n==='Nan Ferrow'){
