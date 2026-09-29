@@ -7212,12 +7212,12 @@ function stepQuest(dt) {
       after: () => { playScene([
         "Maddock: Hettie said you were bringing the eggs. Thank you.",
         "Maddock: Come down to the house. We can put that basket somewhere safe.",
-      ], { who: "Maddock", until: () => {
-        goBackIn();
-        return !!(elder() && elder().away);
-      }, after: () => {
-        warnedNorth = true;
-        gateRow = Math.floor((P.y - 1) / TS) - 1;
+      ], { who: "Maddock", after: () => {
+        goBackIn(true);
+        playScene([], { silent:true, until:()=>!!elder()?.away, after:()=>{
+          warnedNorth = true;
+          gateRow = Math.floor((P.y - 1) / TS) - 1;
+        } });
       } });
     } });
     comeOut(P.x + 14, P.y + 26);

@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:false});
+// Trigger the actual egg delivery warning, then finish its spoken lines.
+c.clearBridge=()=>{};c.stepDragonIntroduction=()=>false;
+c.canNpcStand=()=>true;
+run(`MAPID='world';MD={doors:[]};quest=Q.ELDER;warnedNorth=false;
+fadeDir=0;doorMotion=null;pendingDoor=null;pendingActorStage=null;
+P.x=SPOT.elder[0]*TS;P.y=(SPOT.elder[1]-5)*TS;
+npcs=[{n:'Elder Maddock',x:P.x+14,y:P.y+26,away:0,stationary:false}];
+stepQuest(1/60);
+npcs[0].goto=null;scene.arriving=false;scene.t=1;typeAll();advanceScene();
+scene.arriving=false;scene.t=1;typeAll();advanceScene();
+scene.t=1;typeAll();advanceScene();`);
+assert(run('scene.silent'),'Dialogue clears for the walk instead of showing ellipsis');
+assert(run('!!elder().houseWalk'),'Starts the house walk once after the dialogue');
+const start=run('[elder().x,elder().y]');
+run('stepElder(1/60)');
+assert.notDeepEqual(run('[elder().x,elder().y]'),start,'Maddock moves while the scene waits');
+for(let i=0;i<5000&&run('!!scene');i++)run('stepElder(1/60);stepScene(1/60);');
+assert(run('elder().away'),'Maddock enters the house');
+assert.equal(run('scene'),null,'The waiting scene finishes');
+assert(run('warnedNorth'),'The north warning completes');
+assert.equal(run('goingIn'),false);
+console.log('PASS: egg warning closes dialogue, walks Maddock home and restores control.');
