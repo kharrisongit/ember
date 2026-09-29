@@ -81,4 +81,15 @@ const roofRows=c.fobjs.filter(o=>o.blossomKind==='town'&&o.blossomFeature===2&&o
 for(let row=0;row<3;row++)assert(roofRows.some(o=>o.blossomRow===row&&o.y===(407.5-row*2)*16&&Math.abs(o.x-(15*16+8))<35),'Every staggered band fills the space behind the upper houses');
 assert(roofRows.every(o=>!c.guards.onBuilding(o.x,o.y,c.SPR.spr_big)),'Trees stay above the roofs');
 assert(roofRows.some(o=>o.x===15.5*16+8&&o.y===407.5*16),'A small rock cannot punch a gap into the inner tree line');
-console.log('PASS: Millwood/Northern Woods scope, spruce borders, roof clearance, complete northern bands, arena rings, Elder clearing, biome boundary and repeat rebuilds.');
+const fourth=c.fobjs.filter(o=>o.blossomRow===3);
+assert(fourth.length>=6&&fourth.every(o=>o.blossomKind==='town'&&o.blossomFeature===2&&o.y===409.5*16),'The fourth row is added only on the house-facing side of Millwood’s northern border');
+assert(fourth.some(o=>c.guards.onBuilding(o.x,o.y,c.SPR.spr_big)),'The fourth row tucks directly behind the roof artwork');
+for(const house of c.objs.filter(o=>o.s===4)) {
+ const behind=fourth.filter(o=>Math.abs(o.x-house.x)<(70+36)/2);
+ assert(behind.length,'Each upper house has trees immediately behind its roof');
+ assert(behind.every(o=>o.y<=house.y-114+32&&o.y<house.y),'Trees remain behind the roof top and draw below the house');
+}
+const finalPositions=JSON.stringify(c.fobjs.map(o=>[o.x,o.y,o.blossomRow]));
+vm.runInContext('rebuildBlossomRoutes(guards)',c);
+assert.equal(JSON.stringify(c.fobjs.map(o=>[o.x,o.y,o.blossomRow])),finalPositions,'Roof-backed trees remain stable on rebuild');
+console.log('PASS: Millwood/Northern Woods scope, spruce borders, four northern bands, trees behind roofs, arena rings, Elder clearing, biome boundary and repeat rebuilds.');

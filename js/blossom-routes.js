@@ -63,6 +63,13 @@ function blossomArenaCandidates(a,row) {
   });
 }
 function blossomTownCandidates(t,row) {
+  if(row===3) {
+    if(t.northInset===undefined)return [];
+    const b=blossomTownBox(t),spacing=treeBorderSpacing(t);
+    return blossomRowValues(b.left,b.right,row,spacing.step).map(x=>
+      blossomPoint(x,b.top+spacing.band,{row,vertical:false,kind:'town',source:t.id,
+        tree:t.tree,region:t.region,roofBacking:true}));
+  }
   const b=blossomTownBox(t,row),result=[],spacing=treeBorderSpacing(t);
   for(const x of blossomRowValues(b.left,b.right,row,spacing.step))for(const y of [b.top,b.bottom])
     result.push(blossomPoint(x,y,{row,vertical:false,kind:'town',source:t.id,tree:t.tree,region:t.region}));
@@ -72,16 +79,18 @@ function blossomTownCandidates(t,row) {
 }
 function planBlossomLayout(roads,arenas,towns,allowed=()=>true) {
   const result=[];
-  for(let row=0;row<3;row++) {
+  for(let row=0;row<4;row++) {
     // Arena and town borders own their junctions with routes. All inner rows
     // precede the outer bands, which cannot displace those clean borders.
-    const groups=[arenas.flatMap(a=>blossomArenaCandidates(a,row)),
-      towns.flatMap(t=>blossomTownCandidates(t,row)),blossomRouteCandidates(roads,row)];
+    const groups=row===3?[towns.flatMap(t=>blossomTownCandidates(t,row))]:
+      [arenas.flatMap(a=>blossomArenaCandidates(a,row)),
+       towns.flatMap(t=>blossomTownCandidates(t,row)),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
-      if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?row*treeBorderSpacing(r).band:0)-.04))continue;
+      const borderRow=p.roofBacking?0:row;
+      if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
-        Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+row*treeBorderSpacing(a).band-.04))continue;
-      if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,row))))continue;
+        Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
+      if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,borderRow))))continue;
       const clearance=treeBorderSpacing(p).clearance;
       if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<Math.max(clearance,treeBorderSpacing(q).clearance)-.04))continue;
       result.push(p);
@@ -162,6 +171,20 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       o.x>=Math.min(r.a[0],r.b[0])-30&&o.x<=Math.max(r.a[0],r.b[0])+30&&
       o.y>=Math.min(r.a[1],r.b[1])-30&&o.y<=Math.max(r.a[1],r.b[1])+30));
   const props=living.filter(o=>!tree(o)&&SPR[NAMES[o.s]]&&DEFS[o.s]?.c);
+  const buildings=new Set(living.filter(o=>SPR[NAMES[o.s]]&&
+    /^(house|sh_house|barn|shed|coop|windmill|silo|mill|tower|rt_|wt_)/.test(NAMES[o.s])));
+  const backsRoof=(px,py,sp)=>{
+    let overlaps=false;
+    for(const o of buildings) {
+      const q=SPR[NAMES[o.s]];
+      if(Math.abs(o.x-px)>=(sp[2]+q[2])/2+2||py<=o.y-q[3]-2||py-sp[3]>=o.y+2)continue;
+      overlaps=true;
+      // This extra row may tuck beneath the top of a roof, but stays north
+      // of the house body. Normal depth sorting draws the house over it.
+      if(py>o.y-q[3]+Math.min(TS*2,q[3]/3))return false;
+    }
+    return overlaps;
+  };
   const cell=p=>[Math.floor(p.x+.5),Math.floor(p.y+1-1/TS)];
   const plan=planBlossomLayout(roads,arenas,towns,p=>{
     const nm=p.tree||'blo_big',sp=SPR[nm];if(NAME2I[nm]===undefined||!sp)return false;
@@ -170,10 +193,12 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(inTownArea(x,y)&&!townBorder(x,y))return false;
     if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||felled.has(k))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
-    if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
-    const behindHouses=p.kind==='town'&&!p.vertical&&towns.some(t=>
+    if(onBuilding(px,py,sp)&&!(p.roofBacking&&backsRoof(px,py,sp)))return false;
+    if(neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
+    const behindHouses=p.roofBacking||p.kind==='town'&&!p.vertical&&towns.some(t=>
       t.id===p.source&&t.northInset!==undefined&&y===blossomTownBox(t,p.row).top);
     if(props.some(o=>{
+      if(p.roofBacking&&buildings.has(o))return false;
       if(!behindHouses)return Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3;
       // Small garden rocks below the border should not punch tree-sized holes
       // above the roofs. Still leave space around each prop's actual artwork.
