@@ -1,4 +1,4 @@
-/* One planting owner for blossom routes, arenas and Coralmere's town edge.
+/* Shared planting for blossom borders, Millwood and the Northern Woods.
    Keep positions on whole pixels: 91 px is about 5% closer than the old 96. */
 const BLOSSOM_TREE_STEP = 91 / 16;
 const BLOSSOM_BAND_STEP = 3;
@@ -33,9 +33,12 @@ function blossomRouteCandidates(roads,row) {
     const lo=Math.min(vert?r.a[1]:r.a[0],vert?r.b[1]:r.b[0]);
     const hi=Math.max(vert?r.a[1]:r.a[0],vert?r.b[1]:r.b[0]);
     const off=r.half+2+row*BLOSSOM_BAND_STEP;
-    for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row))
-      result.push(blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
-        {row,vertical:vert,kind:'route',source:r.id}));
+    for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row)) {
+      const p=blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
+        {row,vertical:vert,kind:'route',source:r.id,tree:r.tree,region:r.region});
+      if(r.minY!==undefined&&p.y<r.minY)continue;
+      result.push(p);
+    }
   }
   return result;
 }
@@ -49,15 +52,15 @@ function blossomArenaCandidates(a,row) {
   return Array.from({length:count},(_,i)=>{
     const angle=-Math.PI/2+(i+(row%2)/2)*2*Math.PI/count;
     return blossomPoint(a.x+Math.cos(angle)*radius,a.y+Math.sin(angle)*radius,
-      {row,kind:'arena',source:a.id});
+      {row,kind:'arena',source:a.id,tree:a.tree,region:a.region});
   });
 }
 function blossomTownCandidates(t,row) {
   const b=blossomTownBox(t,row),result=[];
   for(const x of blossomRowValues(b.left,b.right,row))for(const y of [b.top,b.bottom])
-    result.push(blossomPoint(x,y,{row,vertical:false,kind:'town',source:t.id}));
+    result.push(blossomPoint(x,y,{row,vertical:false,kind:'town',source:t.id,tree:t.tree,region:t.region}));
   for(const y of blossomRowValues(b.top,b.bottom,row))for(const x of [b.left,b.right])
-    result.push(blossomPoint(x,y,{row,vertical:true,kind:'town',source:t.id}));
+    result.push(blossomPoint(x,y,{row,vertical:true,kind:'town',source:t.id,tree:t.tree,region:t.region}));
   return result;
 }
 function planBlossomLayout(roads,arenas,towns,allowed=()=>true) {
@@ -82,16 +85,38 @@ function planBlossomRows(roads,allowed=()=>true) {
   return planBlossomLayout(roads,[],[],allowed);
 }
 
+function treeBorderScope(list,legsFor) {
+  const woods=list.find(f=>f.label==='Northern Woods');
+  const millwood=list.find(f=>f.label==='Millwood');
+  const inWoods=(x,y)=>woods&&x>=woods.x0&&x<=woods.x1&&y>=woods.y0&&y<=woods.y1;
+  const nativeRoute=f=>f.style==='spruce'&&((millwood&&(f.joins||[]).includes('Millwood'))||
+    (woods&&((f.joins||[]).includes('Elders Home')||legsFor(f).some(([a,b])=>inWoods(a[0],a[1])||inWoods(b[0],b[1])))));
+  const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
+    const native=nativeRoute(f),managed=f.style==='blossom'||native;
+    return legsFor(f).map(([a,b])=>({a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
+      blossom:managed,tree:native?'spr_big':'blo_big',region:native?'millwood':'blossom',
+      minY:native&&woods?woods.y0:undefined}));
+  });
+  const nativeRoads=roads.filter(r=>r.region==='millwood');
+  const rings=list.filter(f=>f.kind==='arena'||f.kind==='camp');
+  const nativeArena=f=>f.style==='spruce'&&(inWoods(f.x,f.y)||
+    nativeRoads.some(r=>blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4));
+  const arenas=rings.filter(f=>f.style==='blossom'||nativeArena(f)).map(f=>({...f,
+    tree:nativeArena(f)?'spr_big':'blo_big',region:nativeArena(f)?'millwood':'blossom'}));
+  const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
+    ((f.style==='blossom'&&f.label==='Coralmere')||
+     (f.style==='spruce'&&(f.label==='Millwood'||(woods&&f.label==='Elders Home')))))
+    .map(f=>({...f,tree:f.style==='spruce'?'spr_big':'blo_big',region:f.style==='spruce'?'millwood':'blossom'}));
+  return {roads,arenas,towns,rings};
+}
+
 function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   if(MAPID!=='world')return;
-  const roads=features.filter(f=>f.kind==='route').flatMap(f=>routeLegs(f).map(([a,b])=>
-    ({a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,blossom:f.style==='blossom'})));
+  const {roads,arenas,towns,rings}=treeBorderScope(features,routeLegs);
   const legs=roads.filter(r=>r.blossom);
-  const rings=features.filter(f=>f.kind==='arena'||f.kind==='camp');
-  const arenas=rings.filter(f=>f.style==='blossom');
-  const towns=features.filter(f=>['area','town'].includes(f.kind)&&f.style==='blossom'&&f.label==='Coralmere');
   if(!legs.length&&!arenas.length&&!towns.length)return;
-  const otherRings=rings.filter(f=>f.style!=='blossom');
+  const arenaIds=new Set(arenas.map(a=>a.id));
+  const otherRings=rings.filter(f=>!arenaIds.has(f.id));
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&!blossomInsideBox(x,y,blossomTownBox(t),-2));
   const atArena=(x,y)=>arenas.some(a=>Math.hypot(x-a.x,y-a.y)<(a.r||ARENA_R)+11);
@@ -100,7 +125,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const inBand=(x,y)=>atArena(x,y)||townBorder(x,y)||
     (!protectedPlace(x,y)&&!inTownArea(x,y)&&legs.some(r=>{
       const reach=Math.max(14,r.band)+r.half+2;
-      return x>=Math.min(r.a[0],r.b[0])-reach&&x<=Math.max(r.a[0],r.b[0])+reach&&
+      return (r.minY===undefined||y>=r.minY)&&
+        x>=Math.min(r.a[0],r.b[0])-reach&&x<=Math.max(r.a[0],r.b[0])+reach&&
         y>=Math.min(r.a[1],r.b[1])-reach&&y<=Math.max(r.a[1],r.b[1])+reach;
     }));
   const tree=o=>BLOSSOM_ROUTE_TREES.test(NAMES[o.s]||'');
@@ -124,9 +150,9 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       o.x>=Math.min(r.a[0],r.b[0])-30&&o.x<=Math.max(r.a[0],r.b[0])+30&&
       o.y>=Math.min(r.a[1],r.b[1])-30&&o.y<=Math.max(r.a[1],r.b[1])+30));
   const props=living.filter(o=>!tree(o)&&SPR[NAMES[o.s]]&&DEFS[o.s]?.c);
-  const si=NAME2I.blo_big,sp=SPR.blo_big;if(si===undefined||!sp)return;
   const cell=p=>[Math.floor(p.x+.5),Math.floor(p.y+1-1/TS)];
   const plan=planBlossomLayout(roads,arenas,towns,p=>{
+    const nm=p.tree||'blo_big',sp=SPR[nm];if(NAME2I[nm]===undefined||!sp)return false;
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
     if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y))return false;
     if(inTownArea(x,y)&&!townBorder(x,y))return false;
@@ -140,8 +166,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
   for(const p of plan) {
     const [tx,ty]=cell(p);
-    fobjs.push({id:id--,s:si,x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
-      blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical});
+    fobjs.push({id:id--,s:NAME2I[p.tree||'blo_big'],x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
+      blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical,borderRegion:p.region||'blossom'});
     terr[ty*MW+tx]=WALL;
   }
 }
