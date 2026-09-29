@@ -11,6 +11,7 @@ function treeBorderSpacing(feature) {
   if(feature.region==='birch')return {step:70/16,band:2,clearance:36/16};
   if(feature.region==='forgewick-temple')return {step:72/16,band:3.5,clearance:4};
   if(feature.region==='shroom')return {step:66/16,band:2.5,clearance:3};
+  if(feature.region==='dying')return {step:72/16,band:2.5,clearance:3};
   // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
   // next canopy while keeping the staggered bands just two tiles apart.
   return feature.region==='millwood'
@@ -96,6 +97,14 @@ function blossomTownCandidates(t,row) {
 }
 function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
   const result=[];
+  const occupied=new Map(),gridKey=(x,y)=>Math.floor(x/4)+','+Math.floor(y/4);
+  const crowded=(p,clearance)=>{
+    for(let y=Math.floor((p.y-4)/4);y<=Math.floor((p.y+4)/4);y++)
+      for(let x=Math.floor((p.x-4)/4);x<=Math.floor((p.x+4)/4);x++)
+        if((occupied.get(x+','+y)||[]).some(q=>Math.hypot(p.x-q.x,p.y-q.y)<
+          Math.max(clearance,treeBorderSpacing(q).clearance)-.04))return true;
+    return false;
+  };
   for(let row=0;row<4;row++) {
     // Arena and town borders own their junctions with routes. All inner rows
     // precede the outer bands, which cannot displace those clean borders.
@@ -115,8 +124,9 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
         Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
       if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,borderRow))))continue;
       const clearance=treeBorderSpacing(p).clearance;
-      if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<Math.max(clearance,treeBorderSpacing(q).clearance)-.04))continue;
+      if(!allowed(p)||crowded(p,clearance))continue;
       result.push(p);
+      const key=gridKey(p.x,p.y);if(!occupied.has(key))occupied.set(key,[]);occupied.get(key).push(p);
     }
   }
   return result;
@@ -126,6 +136,7 @@ function planBlossomRows(roads,allowed=()=>true) {
 }
 
 function treeBorderScope(list,legsFor) {
+  normalizeWesternTreeFeatures(list);
   const woods=list.find(f=>f.label==='Northern Woods');
   const shrooms=list.find(f=>f.wild&&f.style==='mystic'&&/shroom|spore/i.test(f.label||f.place||''));
   const millwood=list.find(f=>f.label==='Millwood');
@@ -138,17 +149,25 @@ function treeBorderScope(list,legsFor) {
     legsFor(f).some(([a,b])=>templeRoots.some(r=>
       blossomRoadDistance(...a,r)<6||blossomRoadDistance(...b,r)<6)));
   const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
-    const native=nativeRoute(f),oak=f.style==='oak',birch=f.style==='birch';
+    const native=nativeRoute(f),oak=f.style==='oak',birch=f.style==='birch',dying=f.id===32&&f.style==='dying';
     const temple=templeRoute(f);
-    const managed=f.style==='blossom'||native||oak||birch||temple;
+    const managed=f.style==='blossom'||native||oak||birch||temple||dying;
     return legsFor(f).flatMap(([a,b])=>{
       const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
-      blossom:managed,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':'blo_big',
-      region:temple?'forgewick-temple':oak?'oak':birch?'birch':native?'millwood':'blossom',
+      blossom:managed,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':dying?'deadtree0':'blo_big',
+      region:temple?'forgewick-temple':oak?'oak':birch?'birch':native?'millwood':dying?'dying':'blossom',
       minY:native&&woods?woods.y0:undefined};
       // The original unstyled road spans both woods. Keep its full path as an
       // obstacle, but only take ownership of planting inside Shroom Pass.
       const clipped=shrooms&&(!f.style||f.style==='mystic')&&treeBorderClipRoad(road,shrooms);
+      // The birch avenue ends at the arena at (412,119). The saved route
+      // continues as oak from there; use a single, explicit transition.
+      if(f.id===193&&a[0]===412&&b[0]===412&&Math.min(a[1],b[1])<119)
+        return [{...road,a:[412,Math.min(a[1],b[1])],b:[412,119],tree:'bir_big',region:'birch'},
+          {...road,a:[412,119],b:[412,Math.max(a[1],b[1])]}];
+      if(f.id===13&&a[0]===98&&b[0]===98&&Math.max(a[1],b[1])>=367)
+        return [{...road,a:[98,Math.min(a[1],b[1])],b:[98,336]},
+          {...road,a:[98,336],b:[98,Math.max(a[1],b[1])],tree:'spr_big',region:'millwood'}];
       return clipped?[road,{...clipped,blossom:true,tree:'mw_tree',region:'shroom'}]:[road];
     });
   });
@@ -159,11 +178,12 @@ function treeBorderScope(list,legsFor) {
   const shroomArena=f=>shrooms&&f.style==='mystic'&&treeBorderInBounds(f.x,f.y,shrooms);
   const templeArena=f=>roads.some(r=>
     r.region==='forgewick-temple'&&blossomRoadDistance(f.x,f.y,r)<(f.r||6)+4);
-  const mysticArena=f=>[18,21].includes(f.arenaNum);
-  const oakArena=f=>!mysticArena(f)&&(f.style==='oak'||[13,14,15,17].includes(f.arenaNum));
+  // Published IDs survive hunting-area additions; display numbers do not.
+  const mysticArena=f=>[172,161].includes(f.id);
+  const oakArena=f=>!mysticArena(f)&&!templeArena(f)&&(f.style==='oak'||[175,177,178].includes(f.id));
   const birchArena=f=>f.style==='birch'&&!oakArena(f);
   const arenas=rings.filter(f=>f.style==='blossom'||mysticArena(f)||oakArena(f)||birchArena(f)||templeArena(f)||nativeArena(f)||shroomArena(f)).map(f=>({...f,
-    northTree:f.arenaNum===13?'bir_big':undefined,
+    northTree:f.id===175?'bir_big':undefined,
     tree:mysticArena(f)?'mw_tree':oakArena(f)?'oak_big':templeArena(f)?'kt_tree_a':birchArena(f)?'bir_big':shroomArena(f)?'mw_tree':nativeArena(f)?'spr_big':'blo_big',
     region:mysticArena(f)?'shroom':oakArena(f)?'oak':templeArena(f)?'forgewick-temple':birchArena(f)?'birch':shroomArena(f)?'shroom':nativeArena(f)?'millwood':'blossom'}));
   const towns=list.filter(f=>['area','town'].includes(f.kind)&&!f.wild&&
@@ -174,6 +194,12 @@ function treeBorderScope(list,legsFor) {
       // complete northern rows back, keeping the same stagger across roofs.
       northInset:f.label==='Millwood'?2.5:undefined}));
   return {roads,arenas,towns,rings};
+}
+
+function normalizeWesternTreeFeatures(list) {
+  const styles={175:'birch',177:'oak',178:'oak',180:'temple',169:'temple',
+    170:'temple',171:'temple',172:'mystic',161:'mystic',9147:'birch'};
+  for(const f of list)if(f.kind==='arena'&&styles[f.id])f.style=styles[f.id];
 }
 
 function rebuildBlossomRoutes({inTownArea,onBuilding}) {
@@ -241,18 +267,9 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     }));
   const tree=o=>BLOSSOM_ROUTE_TREES.test(NAMES[o.s]||'');
   const replace=o=>tree(o)&&inBand(o.x/TS-.5,o.y/TS-1);
-  // Explicit tree-line strokes and moved trees remain editable after a rebuild
-  // or publication. Only old, untouched planting is replaced.
-  const edited=new Set(added.map(o=>o.id)),publishedTrees=new Set();
-  for(let layout=publishedEditorLayouts.maps.world;layout;layout=layout.build?.previous) {
-    for(const op of Object.values(layout)) {
-      if(op.kind==='object-add')publishedTrees.add([op.sprite,op.x,op.y].join(':'));
-      if(op.kind==='object'&&!op.deleted)edited.add(Number(op.key));
-    }
-  }
-  for(const o of objs)if(publishedTrees.has([o.s,o.x,o.y].join(':'))||
-    (ORIG[o.id]&&(o.x!==ORIG[o.id].x||o.y!==ORIG[o.id].y)))edited.add(o.id);
-  for(const o of objs)if(!edited.has(o.id)&&replace(o))hidden.add(o.id);
+  // Managed borders own their species and spacing, including trees inserted
+  // by old published Move/Add operations. Off-border trees stay authored.
+  for(const o of objs)if(replace(o))hidden.add(o.id);
   fobjs=fobjs.filter(o=>!replace(o));
   const living=objs.filter(o=>!hidden.has(o.id)&&!deleted.has(o.id)).concat(fobjs);
   const neighbors=living.filter(tree).map(o=>({x:o.x/TS-.5,y:o.y/TS-1})).filter(o=>
@@ -280,7 +297,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
     if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y,p.region))return false;
     if(inTownArea(x,y)&&!townBorder(x,y)&&p.kind!=='scenery')return false;
-    if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||(p.kind!=='scenery'&&felled.has(k)))return false;
+    if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||
+      (typeof felledNew!=='undefined'&&felledNew.includes(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
     if(p.kind==='scenery'&&(MD.doors||[]).some(d=>{
       if(d.to!=='mine')return false;

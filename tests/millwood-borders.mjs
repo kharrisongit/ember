@@ -23,7 +23,7 @@ var routeLegs=f=>f.pts.slice(1).map((b,i)=>[f.pts[i],b]);
 var selected=treeBorderScope(features,routeLegs);
 `,c);
 const ids=xs=>Array.from(new Set(xs.map(x=>x.id))).sort((a,b)=>a-b);
-assert.deepEqual(ids(c.selected.roads.filter(r=>r.blossom&&r.region==='millwood')),[5,12,212]);
+assert.deepEqual(ids(c.selected.roads.filter(r=>r.blossom&&r.region==='millwood')),[5,12,13,212]);
 assert.deepEqual(ids(c.selected.arenas),[11,208,209]);
 assert.deepEqual(ids(c.selected.towns),[2,4]);
 const plan=c.planBlossomLayout(c.selected.roads,c.selected.arenas,c.selected.towns).filter(p=>p.region==='millwood');

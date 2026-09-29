@@ -244,6 +244,9 @@ let lineTiles = new Set();
 
 function realizeFeatures() {
   if (MD.bg) { if(!editorMapLoading)applyEditorPaint(); rebuildSolid(); rebuildBuckets(); return; }
+  // Canonical border species must be resolved before any biome, route or
+  // arena pass reads stale styles restored by published or local edits.
+  if(MAPID==='world')normalizeWesternTreeFeatures(features);
 
   const townBoxes = features.filter(f => isArea(f) && !f.wild);
   const inTownArea = (x, y) => townBoxes.some(

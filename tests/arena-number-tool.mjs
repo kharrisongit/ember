@@ -24,7 +24,7 @@ const c=vm.createContext({console,document:{getElementById:id=>nodes.get(id)||nu
  cam:{x:300,y:100,z:.35},VW:800,VH:600,PXW:16000,PXH:8000,P:{x:0,y:0},
  cv:{getBoundingClientRect:()=>({left:50,top:80,width:400,height:300})},
  ctx:new Proxy({fillText:s=>texts.push(s)},{get:(o,k)=>o[k]||(()=>{})}),
- devOpen:false,editing:false,building:false,painting:false,travelling:false,doorEdit:false,collideView:false,
+ devOpen:false,editing:false,building:false,painting:false,travelling:false,doorEdit:false,collideView:false,buildTool:'arena',
  touches:new Map(),dragObj:null,dragMoved:false,pinchD:0,pinchZ:0,pinchMx:null,pinchMy:null,
  grabDrag:null,grabRect:null,devUnlocked:true,camFree:true,closeOthers(){},geometryEnd(){},
  setPaint(){},setBuild(){},setTravel(){},setDevTitle(){},refreshToolbar(){},playZoom:()=>2,

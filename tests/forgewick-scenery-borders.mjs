@@ -35,17 +35,17 @@ assert(!c.hidden.has(4),'Actual campsite props remain');
 const before=JSON.stringify(c.fobjs);
 vm.runInContext('rebuildBlossomRoutes(guards)',c);
 assert.equal(JSON.stringify(c.fobjs),before,'Repeated rebuilds preserve the scenery rows');
-const selected=c.treeBorderScope([13,15,17].map((n,i)=>({id:i,arenaNum:n,kind:'arena',style:'birch',x:100,y:100,r:6.3})),()=>[]);
+const selected=c.treeBorderScope([175,177,178].map((id,i)=>({id,arenaNum:i+50,kind:'arena',style:'birch',x:100,y:100,r:6.3})),()=>[]);
 assert(selected.arenas.every(a=>a.tree==='oak_big'),'Arenas 13, 15 and 17 remain oak');
 assert.equal(selected.arenas.length,3,'Old birch labels do not exclude the oak arenas');
 const mixed=c.treeBorderScope([{kind:'area',label:'Northern Woods',wild:true,x0:0,y0:0,x1:400,y1:200},
- ...[5,13,18,21].map((n,i)=>({id:i,arenaNum:n,kind:'arena',style:'spruce',x:100+i*60,y:100,r:6.3}))],()=>[]);
+ ...[11,175,172,161].map((id,i)=>({id,kind:'arena',style:'spruce',x:100+i*60,y:100,r:6.3}))],()=>[]);
 assert.equal(mixed.arenas.length,4,'All four corrected arenas participate');
 const typed=c.planBlossomLayout([],mixed.arenas,[]);
 for(const a of mixed.arenas){
  const trees=typed.filter(p=>p.source===a.id);
  assert(trees.length>10,'Arena has all border bands');
- assert(trees.every(p=>p.tree===(a.arenaNum===13?(p.y<100?'bir_big':'oak_big'):[18,21].includes(a.arenaNum)?'mw_tree':'spr_big')),'Arena owns its native border species');
+ assert(trees.every(p=>p.tree===(a.id===175?(p.y<100?'bir_big':'oak_big'):[172,161].includes(a.id)?'mw_tree':'spr_big')),'Arena owns its native border species independently of display numbers');
 }
 const camp=c.planBlossomLayout([],[{id:15,kind:'camp',region:'birch',tree:'bir_big',x:249,y:245,r:6.3}],[]);
 for(const row of [0,1,2])assert.equal(camp.filter(p=>p.row===row&&p.y<240).length,3+row,'First campsite has a complete northern band');
