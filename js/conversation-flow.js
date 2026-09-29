@@ -5,6 +5,7 @@
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave}={}){
+    if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
     const name=telepathy?'Aurelius':actor.n;
     if(actor){if(!telepathy){actor.goto=null;faceToward(actor,P.x,P.y);}faceCorinAt(actor.x,actor.y);}

@@ -228,3 +228,14 @@ assert.equal(run('ask.topicScope'),'dragons');
 // Changing area / loading another scene cannot resurrect an old conversation.
 run(`MAPID='house0';EmberConversationFlow.tick()`);assert(!run('EmberConversationFlow.active()'));assert.equal(run('ask'),null);
 console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 143 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
+run(`const showdownKing={n:'King Halvard',x:100,y:100};ask=null;`);
+for(const map of ['cinderhold','world']){
+ c.kingMap=map;run('MAPID=kingMap');
+ assert.equal(run('EmberConversationFlow.prompt(showdownKing)'),false,'King uses scripted dialogue outside the tavern');
+ assert.equal(run('openNpcTopics(showdownKing)'),false,'No expanded king topics outside the tavern');
+ assert.equal(run('ask'),null,'No conversation menu replaces the showdown');
+}
+run("MAPID='tavern'");
+assert.equal(run('EmberConversationFlow.prompt({...showdownKing,thornwellRoyal:true})'),true,'Tavern royal audience retains its prompt');
+run('askShut()');
+console.log('PASS: expanded king conversation is restricted to the tavern; final showdown remains scripted.');

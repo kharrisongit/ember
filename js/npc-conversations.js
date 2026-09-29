@@ -2022,10 +2022,11 @@ function npcStoryTopics(n){
   return topics;
 }
 function openNpcTopics(n){
+  if(n.n==='King Halvard'&&MAPID!=='tavern')return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
   if((!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
-  if(n.n==='King Halvard'&&MAPID!=='cinderhold')return false;
+  if(n.n==='King Halvard')return false;
   n.goto=null;n.arrived=true;n.scriptWalking=false;n.px=n.x;n.py=n.y;
   const directional=n.packSpr?.replace(/_idle_d$/,'');
   if(directional&&['d','u','e','w'].every(d=>SPR[directional+'_idle_'+d])){
