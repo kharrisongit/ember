@@ -34,12 +34,12 @@ assert(plan.filter(p=>p.kind==='route').every(p=>p.y>=241),'Spruce rows stop at 
 const straight=c.planBlossomLayout([{a:[30,50],b:[30,100],id:1,half:2,blossom:true,region:'millwood',tree:'spr_big'}],[],[]);
 for(const x of [22,24,26,34,36,38]) {
  const row=straight.filter(p=>p.x===x).sort((a,b)=>a.y-b.y);
- assert(row.length>18);
- assert(row.slice(1).every((p,i)=>(p.y-row[i].y)*16===42),'Inner and outer spruce lines all use close, even spacing');
- assert(row.every(p=>p.y*16%42===p.row%2*21),'Neighboring spruce bands keep a half-step stagger');
+ assert(row.length>12);
+ assert(row.slice(1).every((p,i)=>(p.y-row[i].y)*16===62),'Inner and outer spruce lines leave the 61px-tall artwork and trunks visible');
+ assert(row.every(p=>p.y*16%62===p.row%2*31),'Neighboring spruce bands keep a half-step stagger');
 }
 const innerArena=c.blossomArenaCandidates(c.selected.arenas[0],0);
-assert(innerArena.length>=20,'The inner arena ring uses the same close spruce spacing');
+assert(innerArena.length>=14,'The inner arena ring uses the same close spruce spacing');
 for(let i=0;i<plan.length;i++)assert(plan.slice(i+1).every(q=>Math.hypot(plan[i].x-q.x,plan[i].y-q.y)>=2.21),'Closer bands still leave distinct trunks at corners and entrances');
 vm.runInContext(`
 var MAPID='world',MW=150,MH=475,TS=16,GRASS=0,WALL=6,ARENA_R=6;

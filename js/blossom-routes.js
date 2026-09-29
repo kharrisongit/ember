@@ -6,8 +6,10 @@ const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
 function treeBorderSpacing(feature) {
+  // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
+  // next canopy while keeping the staggered bands just two tiles apart.
   return feature.region==='millwood'
-    ? {step:42/16,band:2,clearance:36/16}
+    ? {step:62/16,band:2,clearance:36/16}
     : {step:BLOSSOM_TREE_STEP,band:BLOSSOM_BAND_STEP,clearance:BLOSSOM_TREE_CLEARANCE};
 }
 function blossomRoadDistance(x,y,{a,b}) {
