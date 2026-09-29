@@ -8,7 +8,7 @@ const road=(a,b,blossom=true)=>({a,b,half:2,band:20,blossom});
 const straight=road([30,50],[120,50]);
 const plan=roads=>plain(c.planBlossomRows(roads));
 const rows=plan([straight]);
-for(const y of [36,41,46,54,59,64]) {
+for(const y of [40,43,46,54,57,60]) {
   const row=rows.filter(p=>p.y===y).sort((a,b)=>a.x-b.x);
   assert(row.length>10);
   assert(row.slice(1).every((p,i)=>p.x-row[i].x===6),'Every straight row has identical spacing');
@@ -22,10 +22,10 @@ assert.deepEqual(corners,plan([...bend].reverse()),'Feature order cannot change 
 for(let i=0;i<corners.length;i++) {
   const p=corners[i];
   assert(bend.every(r=>c.blossomRoadDistance(p.x,p.y,r)>=r.half+2-.01),'Crossing paths stay open');
-  assert(corners.slice(i+1).every(q=>Math.hypot(p.x-q.x,p.y-q.y)>=5),'Bends never stack neighboring bands');
+  assert(corners.slice(i+1).every(q=>Math.hypot(p.x-q.x,p.y-q.y)>=4),'Bends never stack neighboring bands');
 }
 const vertical=plan([road([50,30],[50,120])]);
-for(const x of [36,41,46,54,59,64]) {
+for(const x of [40,43,46,54,57,60]) {
   const row=vertical.filter(p=>p.x===x).sort((a,b)=>a.y-b.y);
   assert(row.slice(1).every((p,i)=>p.y-row[i].y===6),'Vertical avenues use the same spacing');
 }
@@ -57,4 +57,29 @@ for(const x of [60,66,72,84,90,114,120])assert(!planted().some(o=>o.x===x*16+8&&
 const coordinates=planted().map(({x,y,blossomRow})=>[x,y,blossomRow]);
 vm.runInContext('rebuildBlossomRoutes(guards)',c);
 assert.deepEqual(planted().map(({x,y,blossomRow})=>[x,y,blossomRow]),coordinates,'Rebuilding cannot accumulate duplicates');
-console.log('PASS: blossom spacing, half-step bands, vertical rows, bends, junctions, legacy cleanup and protected map edits.');
+// The real arena repair pass must not substitute winter trees for an explicitly
+// blossom arena, even when the broad biome test calls this location winter.
+const game=fs.readFileSync('js/generated/game-part-3.js','utf8');
+vm.runInContext(game.slice(game.indexOf('function repairArenaTreeEdges()'),game.indexOf('function clearForgefallsCliffTrees()')),c);
+vm.runInContext(`
+var MD={forest_style:'spruce'},DWATER=13,SEA=14,BRIDGE=5,DECK=15,COBBLE=2,PAVING2=8,MARBLE=9,TERRACE=10,ROADSAND=12;
+var STYLE_TREE={blossom:['blo_big','blo_med'],winter:'kt_tree_a'},inWinter=()=>true,sandRefuses=()=>false;
+NAMES.push('blo_med','kt_tree_a');NAME2I.blo_med=3;NAME2I.kt_tree_a=4;
+SPR.blo_med=[0,0,47,58];SPR.kt_tree_a=[0,0,48,64];
+var felledNew=[],blockTiles=[];objs=[];fobjs=[];hidden=new Set();terr.fill(GRASS);
+features=[{id:7,kind:'arena',style:'blossom',x:80,y:80,r:7.3}];
+repairArenaTreeEdges();
+`,c);
+assert(c.fobjs.length>15,'The arena ring is restored');
+assert(c.fobjs.every(o=>c.NAMES[o.s].startsWith('blo_')),'Blossom arenas never inherit winter trees');
+// The earlier ring pass also needs to accept a list of blossom sprite names;
+// looking up the whole list used to fall back to the nearest winter tree.
+vm.runInContext(`
+var noPlant=()=>false,isArea=()=>false,onBody=()=>false,inTown=()=>false,atOasis=()=>false,refusesTrunk=()=>false;
+var speciesNear=()=>NAME2I.kt_tree_a,baseTerr=null,SAND=11,DIRT=1;
+fobjs=[{id:-1,s:NAME2I.kt_tree_a,x:90*16+8,y:81*16}];terr.fill(GRASS);
+`,c);
+vm.runInContext(game.slice(game.indexOf('  {\n    const want = new Set(), band = new Set();'),game.indexOf('  {\n    const AVENUE =')),c);
+assert(c.fobjs.length>15);
+assert(c.fobjs.every(o=>c.NAMES[o.s].startsWith('blo_')),'The initial ring replaces wrong species and plants only blossom variants');
+console.log('PASS: closer blossom bands, even spacing, bends, junctions, protected edits and blossom arena species.');

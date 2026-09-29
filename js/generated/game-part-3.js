@@ -1597,8 +1597,10 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
         if (!want.has(k)) return false;
         const own = owner.get(k);
         if (!own) return true;
-        const wantSi = NAME2I[STYLE_TREE[own]];
-        return wantSi === undefined || o.s === wantSi;
+        const species = STYLE_TREE[own];
+        const wanted = (Array.isArray(species) ? species : [species])
+          .map(nm => NAME2I[nm]).filter(si => si !== undefined);
+        return !wanted.length || wanted.includes(o.s);
       });
       const here = new Set();
       for (const o of fobjs)
@@ -1611,8 +1613,12 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
         if (cur === DIRT || cur === COBBLE || cur === PAVING2 || cur === MARBLE || cur === TERRACE || cur === BRIDGE || cur === WATER)
           continue;
         const own = owner.get(k);
-        const si = (own && NAME2I[STYLE_TREE[own]] !== undefined)
-          ? NAME2I[STYLE_TREE[own]] : speciesNear(x, y);
+        // Blossom has multiple tree sizes. Resolve the list before looking up
+        // its sprite, otherwise this silently falls back to a nearby winter tree.
+        const species = STYLE_TREE[own];
+        const nm = Array.isArray(species)
+          ? species[(((x * 374761393) ^ (y * 668265263)) >>> 0) % species.length] : species;
+        const si = NAME2I[nm] !== undefined ? NAME2I[nm] : speciesNear(x, y);
         if (si === undefined || onBody(x, y)) continue;
         if (rockTiles.has(x + "," + y)) continue;     /* it is a cliff */
         if (!inTown(x, y) && !atOasis(x, y))
@@ -2484,7 +2490,8 @@ function repairArenaTreeEdges() {
   let nextId=Math.min(-1,...fobjs.map(o=>o.id).filter(Number.isFinite))-1;
   for(const a of rings) {
     const r=a.r||ARENA_R,rr=r+2.5;
-    const style=a.style==="volcano"||a.style==="desert"?a.style:
+    // Blossom arenas keep their authored species even inside the broad winter region.
+    const style=a.style==="volcano"||a.style==="desert"||a.style==="blossom"?a.style:
       inWinter(a.x,a.y)?"winter":(a.style||MD.forest_style||"spruce");
     const choices=style==="volcano"?["deadtree0","halfdead0"]:
       style==="swamp"?STYLE_TREE.swamp_safe:STYLE_TREE[style];

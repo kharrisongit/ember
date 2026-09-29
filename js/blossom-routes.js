@@ -1,7 +1,8 @@
 /* Blossom avenues have one planting pass. The old map trees and generic
    forest passes must not add a second, jittered row between these trees. */
 const BLOSSOM_TREE_STEP = 6;
-const BLOSSOM_BAND_STEP = 5;
+const BLOSSOM_BAND_STEP = 3;
+const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
 function blossomRoadDistance(x,y,{a,b}) {
@@ -32,7 +33,7 @@ function planBlossomRows(roads,allowed=()=>true) {
     }
     candidates.sort((a,b)=>a.y-b.y||a.x-b.x);
     for(const p of candidates) {
-      if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<5))continue;
+      if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<BLOSSOM_TREE_CLEARANCE))continue;
       result.push(p);
     }
   }
@@ -80,7 +81,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(x<1||y<1||x>=MW-1||y>=MH-1||protectedPlace(x,y))return false;
     if(![GRASS,WALL].includes(terr[y*MW+x])||rockTiles.has(k)||SCENE_WALL?.has(y*MW+x)||felled.has(k))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
-    if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<5))return false;
+    if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<BLOSSOM_TREE_CLEARANCE))return false;
     if(props.some(o=>Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3))return false;
     if(npcs.some(n=>!n.editorDeleted&&Math.hypot(n.x-px,n.y-py)<TS*3))return false;
     return true;
