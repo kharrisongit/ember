@@ -50203,6 +50203,408 @@
         "x": 4013,
         "y": 1079,
         "independent": true
+      },
+      "object-add:8ee716a6-ee8d-4b02-b888-43cbf17b51e9": {
+        "kind": "object-add",
+        "key": "8ee716a6-ee8d-4b02-b888-43cbf17b51e9",
+        "sprite": 0,
+        "x": 6856,
+        "y": 5248
+      },
+      "collision:843,656": {
+        "kind": "collision",
+        "key": "843,656",
+        "blocked": true
+      },
+      "collision:844,656": {
+        "kind": "collision",
+        "key": "844,656",
+        "blocked": true
+      },
+      "collision:845,656": {
+        "kind": "collision",
+        "key": "845,656",
+        "blocked": true
+      },
+      "collision:846,656": {
+        "kind": "collision",
+        "key": "846,656",
+        "blocked": true
+      },
+      "collision:847,656": {
+        "kind": "collision",
+        "key": "847,656",
+        "blocked": true
+      },
+      "collision:842,656": {
+        "kind": "collision",
+        "key": "842,656",
+        "blocked": true
+      },
+      "collision:848,656": {
+        "kind": "collision",
+        "key": "848,656",
+        "blocked": true
+      },
+      "collision:849,656": {
+        "kind": "collision",
+        "key": "849,656",
+        "blocked": true
+      },
+      "collision:850,656": {
+        "kind": "collision",
+        "key": "850,656",
+        "blocked": true
+      },
+      "collision:851,656": {
+        "kind": "collision",
+        "key": "851,656",
+        "blocked": true
+      },
+      "collision:852,656": {
+        "kind": "collision",
+        "key": "852,656",
+        "blocked": true
+      },
+      "collision:853,656": {
+        "kind": "collision",
+        "key": "853,656",
+        "blocked": true
+      },
+      "collision:854,656": {
+        "kind": "collision",
+        "key": "854,656",
+        "blocked": true
+      },
+      "collision:855,656": {
+        "kind": "collision",
+        "key": "855,656",
+        "blocked": true
+      },
+      "collision:856,656": {
+        "kind": "collision",
+        "key": "856,656",
+        "blocked": true
+      },
+      "collision:857,656": {
+        "kind": "collision",
+        "key": "857,656",
+        "blocked": true
+      },
+      "collision:858,656": {
+        "kind": "collision",
+        "key": "858,656",
+        "blocked": true
+      },
+      "collision:859,656": {
+        "kind": "collision",
+        "key": "859,656",
+        "blocked": true
+      },
+      "collision:860,656": {
+        "kind": "collision",
+        "key": "860,656",
+        "blocked": true
+      },
+      "collision:861,656": {
+        "kind": "collision",
+        "key": "861,656",
+        "blocked": true
+      },
+      "collision:862,656": {
+        "kind": "collision",
+        "key": "862,656",
+        "blocked": true
+      },
+      "collision:863,656": {
+        "kind": "collision",
+        "key": "863,656",
+        "blocked": true
+      },
+      "collision:864,656": {
+        "kind": "collision",
+        "key": "864,656",
+        "blocked": true
+      },
+      "collision:865,656": {
+        "kind": "collision",
+        "key": "865,656",
+        "blocked": true
+      },
+      "collision:866,656": {
+        "kind": "collision",
+        "key": "866,656",
+        "blocked": true
+      },
+      "collision:867,656": {
+        "kind": "collision",
+        "key": "867,656",
+        "blocked": true
+      },
+      "collision:868,656": {
+        "kind": "collision",
+        "key": "868,656",
+        "blocked": true
+      },
+      "collision:869,656": {
+        "kind": "collision",
+        "key": "869,656",
+        "blocked": true
+      },
+      "collision:870,656": {
+        "kind": "collision",
+        "key": "870,656",
+        "blocked": true
+      },
+      "collision:871,656": {
+        "kind": "collision",
+        "key": "871,656",
+        "blocked": true
+      },
+      "collision:806,656": {
+        "kind": "collision",
+        "key": "806,656",
+        "blocked": true
+      },
+      "collision:807,656": {
+        "kind": "collision",
+        "key": "807,656",
+        "blocked": true
+      },
+      "collision:808,656": {
+        "kind": "collision",
+        "key": "808,656",
+        "blocked": true
+      },
+      "collision:809,656": {
+        "kind": "collision",
+        "key": "809,656",
+        "blocked": true
+      },
+      "collision:810,656": {
+        "kind": "collision",
+        "key": "810,656",
+        "blocked": true
+      },
+      "collision:811,656": {
+        "kind": "collision",
+        "key": "811,656",
+        "blocked": true
+      },
+      "collision:812,656": {
+        "kind": "collision",
+        "key": "812,656",
+        "blocked": true
+      },
+      "collision:813,656": {
+        "kind": "collision",
+        "key": "813,656",
+        "blocked": true
+      },
+      "collision:814,656": {
+        "kind": "collision",
+        "key": "814,656",
+        "blocked": true
+      },
+      "collision:815,656": {
+        "kind": "collision",
+        "key": "815,656",
+        "blocked": true
+      },
+      "collision:816,656": {
+        "kind": "collision",
+        "key": "816,656",
+        "blocked": true
+      },
+      "collision:817,656": {
+        "kind": "collision",
+        "key": "817,656",
+        "blocked": true
+      },
+      "collision:818,656": {
+        "kind": "collision",
+        "key": "818,656",
+        "blocked": true
+      },
+      "collision:819,656": {
+        "kind": "collision",
+        "key": "819,656",
+        "blocked": true
+      },
+      "collision:820,656": {
+        "kind": "collision",
+        "key": "820,656",
+        "blocked": true
+      },
+      "collision:821,656": {
+        "kind": "collision",
+        "key": "821,656",
+        "blocked": true
+      },
+      "collision:822,656": {
+        "kind": "collision",
+        "key": "822,656",
+        "blocked": true
+      },
+      "collision:823,656": {
+        "kind": "collision",
+        "key": "823,656",
+        "blocked": true
+      },
+      "collision:824,656": {
+        "kind": "collision",
+        "key": "824,656",
+        "blocked": true
+      },
+      "collision:825,656": {
+        "kind": "collision",
+        "key": "825,656",
+        "blocked": true
+      },
+      "collision:790,656": {
+        "kind": "collision",
+        "key": "790,656",
+        "blocked": true
+      },
+      "collision:791,656": {
+        "kind": "collision",
+        "key": "791,656",
+        "blocked": true
+      },
+      "collision:792,656": {
+        "kind": "collision",
+        "key": "792,656",
+        "blocked": true
+      },
+      "collision:793,656": {
+        "kind": "collision",
+        "key": "793,656",
+        "blocked": true
+      },
+      "collision:794,656": {
+        "kind": "collision",
+        "key": "794,656",
+        "blocked": true
+      },
+      "collision:795,656": {
+        "kind": "collision",
+        "key": "795,656",
+        "blocked": true
+      },
+      "collision:796,656": {
+        "kind": "collision",
+        "key": "796,656",
+        "blocked": true
+      },
+      "collision:797,656": {
+        "kind": "collision",
+        "key": "797,656",
+        "blocked": true
+      },
+      "collision:798,655": {
+        "kind": "collision",
+        "key": "798,655",
+        "blocked": true
+      },
+      "collision:799,655": {
+        "kind": "collision",
+        "key": "799,655",
+        "blocked": true
+      },
+      "collision:800,655": {
+        "kind": "collision",
+        "key": "800,655",
+        "blocked": true
+      },
+      "collision:801,655": {
+        "kind": "collision",
+        "key": "801,655",
+        "blocked": true
+      },
+      "collision:802,655": {
+        "kind": "collision",
+        "key": "802,655",
+        "blocked": true
+      },
+      "collision:803,655": {
+        "kind": "collision",
+        "key": "803,655",
+        "blocked": true
+      },
+      "collision:804,655": {
+        "kind": "collision",
+        "key": "804,655",
+        "blocked": true
+      },
+      "collision:805,655": {
+        "kind": "collision",
+        "key": "805,655",
+        "blocked": true
+      },
+      "collision:806,655": {
+        "kind": "collision",
+        "key": "806,655",
+        "blocked": true
+      },
+      "collision:798,656": {
+        "kind": "collision",
+        "key": "798,656",
+        "blocked": true
+      },
+      "collision:799,657": {
+        "kind": "collision",
+        "key": "799,657",
+        "blocked": false
+      },
+      "collision:800,657": {
+        "kind": "collision",
+        "key": "800,657",
+        "blocked": false
+      },
+      "collision:801,656": {
+        "kind": "collision",
+        "key": "801,656",
+        "blocked": true
+      },
+      "collision:802,656": {
+        "kind": "collision",
+        "key": "802,656",
+        "blocked": true
+      },
+      "collision:803,656": {
+        "kind": "collision",
+        "key": "803,656",
+        "blocked": true
+      },
+      "collision:804,656": {
+        "kind": "collision",
+        "key": "804,656",
+        "blocked": true
+      },
+      "collision:805,656": {
+        "kind": "collision",
+        "key": "805,656",
+        "blocked": true
+      },
+      "collision:799,656": {
+        "kind": "collision",
+        "key": "799,656",
+        "blocked": true
+      },
+      "collision:800,656": {
+        "kind": "collision",
+        "key": "800,656",
+        "blocked": true
+      },
+      "collision:798,657": {
+        "kind": "collision",
+        "key": "798,657",
+        "blocked": false
+      },
+      "collision:801,657": {
+        "kind": "collision",
+        "key": "801,657",
+        "blocked": false
       }
     },
     "witchmoor": {
@@ -52090,7 +52492,8 @@
     "4d69824c-ee69-4f88-a68d-b3bf72c2a28a",
     "1ef89369-07cb-4592-a751-aeeb30806a40",
     "4ec69443-8954-47e9-8b96-1c5600073bef",
-    "a37ba746-9fdd-429d-9e78-f8b3360cfc42"
+    "a37ba746-9fdd-429d-9e78-f8b3360cfc42",
+    "f5ca0524-1f58-49cd-b7c5-4296792ed887"
   ],
   "sessions": {
     "witchmoor": {
@@ -52214,10 +52617,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "6ade6617-1038-425f-85a6-205bf0d28665",
+      "id": "136871c4-3fba-4572-90a6-974e830239be",
       "sequence": 1,
-      "baseHash": "3eba4359-2e293c1b-394185",
-      "baseFingerprint": "8834d33a-f19f763c-742485",
+      "baseHash": "ffb9ff1a-5e44a830-395574",
+      "baseFingerprint": "4b38db51-12576475-742485",
       "base": {
         "build": {
           "kind": "build",
@@ -102234,9 +102637,84 @@
           "kind": "collision",
           "key": "70,31",
           "blocked": true
+        },
+        "actor:actor:0:tavernpatio_anim_9": {
+          "kind": "actor",
+          "key": "actor:0:tavernpatio_anim_9",
+          "identity": "tavernpatio_anim_9",
+          "originX": 4000,
+          "originY": 1056,
+          "x": 4032,
+          "y": 1056
+        },
+        "actor:patio:7059:table:0": {
+          "kind": "actor",
+          "key": "patio:7059:table:0",
+          "identity": "tavern_patio_table_0",
+          "originX": 3846.5,
+          "originY": 1058,
+          "x": 3814.5,
+          "y": 1058
+        },
+        "actor:patio:7059:table:1": {
+          "kind": "actor",
+          "key": "patio:7059:table:1",
+          "identity": "tavern_patio_table_1",
+          "originX": 3878.5,
+          "originY": 1086,
+          "x": 3846.5,
+          "y": 1086
+        },
+        "actor:patio:7059:table:2": {
+          "kind": "actor",
+          "key": "patio:7059:table:2",
+          "identity": "tavern_patio_table_2",
+          "originX": 3958.5,
+          "originY": 1082,
+          "x": 3990.5,
+          "y": 1082
+        },
+        "actor:patio:7059:table:3": {
+          "kind": "actor",
+          "key": "patio:7059:table:3",
+          "identity": "tavern_patio_table_3",
+          "originX": 3990.5,
+          "originY": 1058,
+          "x": 4022.5,
+          "y": 1058
+        },
+        "actor:npc:Colm": {
+          "kind": "actor",
+          "key": "npc:Colm",
+          "identity": "Colm",
+          "originX": 4000,
+          "originY": 1048,
+          "x": 4032,
+          "y": 1048,
+          "independent": true
+        },
+        "actor:npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605": {
+          "kind": "actor",
+          "key": "npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605",
+          "identity": "tavern src Drinker2",
+          "originX": 3902,
+          "originY": 1079,
+          "x": 3870,
+          "y": 1079,
+          "independent": true
+        },
+        "actor:npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7": {
+          "kind": "actor",
+          "key": "npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7",
+          "identity": "tavern src Drinker1",
+          "originX": 3981,
+          "originY": 1079,
+          "x": 4013,
+          "y": 1079,
+          "independent": true
         }
       },
-      "resultHash": "3eba4359-2e293c1b-394185"
+      "resultHash": "dcdee9c8-b8ed3210-401412"
     },
     "tavern": {
       "id": "2b5ef6fd-11cc-49e8-adc8-3dd21e027401",
