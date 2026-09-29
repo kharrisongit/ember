@@ -1,0 +1,61 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {applyMoves} from '../tools/apply-editor-moves.mjs';
+const {run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:false});
+const plain=x=>JSON.parse(JSON.stringify(x));
+const plan=(a,b,trees=[])=>plain(c.planTreeLine(...a,...b,trees,()=>true,(_p,n)=>n?.s??1));
+const t=(x,y,s=1)=>({x:x*16+8,y:(y+1)*16,s});
+assert.deepEqual(plan([10,10],[22,10]),plan([22,10],[10,10]),'Stroke direction does not change spacing');
+const gap=plan([10,10],[22,10],[t(7,10,2),t(25,10,2)]);
+assert.deepEqual(gap.map(p=>(p.x-8)/16),[10,13,16,19,22],'Fill an existing row on its phase');
+assert(gap.every(p=>p.s===2),'Match nearby tree species');
+const stagger=plan([10,12],[22,12],[t(10,10),t(13,10),t(16,10),t(19,10),t(22,10)]);
+assert.deepEqual(stagger.map(p=>(p.x-8)/16),[11.5,14.5,17.5,20.5],'Adjacent rows are staggered by half a tree spacing');
+assert.equal(plan([10,10],[22,10],gap).length,0,'Drawing over a completed line never duplicates trees');
+assert.equal(plan([10,10],[10,10]).length,0,'A tap cannot plant a stray tree');
+const vertical=plan([10,10],[10,26]);assert(vertical.every((p,i)=>!i||p.y-vertical[i-1].y===64));
+const tightVertical=plan([10,10],[10,25],[t(10,4),t(10,7),t(10,28)]);
+assert.deepEqual(tightVertical.map(p=>(p.y-16)/16),[10,13,16,19,22,25],'Infer the tighter spacing of authored vertical borders');
+const diagonal=plan([10,10],[22,22]);assert(diagonal.length>2);assert(diagonal.every(p=>p.y-p.x===8));
+
+// Use real draft and publication code with a small empty world fixture.
+run(`
+MAPID='world';MW=80;MH=80;PXW=MW*TS;PXH=MH*TS;
+MD={w:MW,h:MH,objs:[],roomActors:[],npcs:[],roomBlocks:[],doors:[],scatter:[],sanim:[],features:[],terr:'0.6400',base_terr:'0.6400'};
+W.maps.world=MD;editorDraftBases.clear();editorPrepareMap('world',false);
+objs=[];ORIG=[];added=[];deleted=new Set();hidden=new Set();fobjs=[];npcs=[];features=[];featOrig=new Map();
+nextId=0;buildUndo=[];buildStyle='spruce';terr=new Uint8Array(6400);baseTerr=terr.slice();terrOrig=terr.slice();
+painted=new Map();felled=new Set();felledNew=[];scat=[];sanm=[];decorGone=new Set();decorDel=[];decorMoved=new Map();regionMoves=[];clearedBoxes=[];
+delete actorLayouts.world;delete npcEditorOps.world;delete geometryEdits.world;editorDraftReady=true;
+// Reindex is exercised elsewhere; avoid full-world collision work in this fixture.
+reindex=()=>{};scheduleEditorDraft=()=>{};
+commitTreeLine(10,10,28,10);saveEditorDraft();
+`);
+assert.equal(run('added.length'),7);
+const first=plain(run("EmberEditDrafts.store.get('world')"));
+assert.equal(first.operations.filter(o=>o.kind==='object-add').length,7,'Every tree uses the supported publish operation');
+assert(!first.operations.some(o=>o.kind==='build'),'A tree line does not replace world Build data');
+run('objs=[];added=[];editorRestoreMap(EmberEditDrafts.store.get("world").state)');
+assert.equal(run('added.length'),7,'Draft reload retains the whole line');
+const revision='a'.repeat(64);
+const layout=applyMoves({schema:1,maps:{},applied:[]},{schema:1,id:'44444444-4444-4444-8444-444444444444',map:'world',sourceRevision:revision,operations:first.operations},revision);
+c.treeTestLayout=layout.maps.world;
+run(`var publishedTrees={objs:[],roomActors:[],npcs:[]};applyPublishedEditorEntries(publishedTrees,'world',treeTestLayout)`);
+assert.equal(run('publishedTrees.objs.length'),21,'Published trees restore as seven ordinary objects');
+run('undoTreeLine(buildUndo.pop().ids);saveEditorDraft()');
+assert.equal(run('objs.length'),0);assert.equal(run('added.length'),0,'One undo removes exactly this stroke');
+assert(!run("EmberEditDrafts.store.get('world')")?.operations.some(o=>o.kind==='object-add'),'Undone trees cannot publish');
+
+run(`terr.fill(DIRT);treeLinePreviewCache=null`);assert.equal(run('treeLinePlan(10,10,28,10).length'),0,'Road tiles remain clear');
+run(`terr.fill(WATER);treeLinePreviewCache=null`);assert.equal(run('treeLinePlan(10,10,28,10).length'),0,'Water remains clear');
+run(`terr.fill(GRASS);features=[{id:1,kind:'route',x0:10,y0:10,x1:28,y1:10,w:5}];worldChanged();treeLinePreviewCache=null`);
+assert.equal(run('treeLinePlan(10,10,28,10).length'),0,'Route corridors stay clear even if their ground was painted grass');
+run(`features=[];MD.roomBlocks=[[0,0,600,600]];treeLinePreviewCache=null`);
+assert.equal(run('treeLinePlan(10,10,28,10).length'),0,'Furniture and building footprints remain clear');
+run(`MD.roomBlocks=[];MAPID='tavern';treeLinePreviewCache=null`);assert.equal(run('treeLinePlan(10,10,28,10).length'),0,'No trees indoors');
+run(`building=true;buildTool='trees';drawArmed=true;drawA=[10,10];drawB=[20,10];drawPts=[];
+touches.clear();mapTouchStart({identifier:1,clientX:10,clientY:10});mapTouchStart({identifier:2,clientX:20,clientY:20});`);
+assert.equal(run('drawA'),null,'Pinch-to-zoom cancels a pending stroke');
+run(`drawA=[10,10];drawB=[20,10];endTouch({type:'touchcancel',changedTouches:[],preventDefault(){}})`);
+assert.equal(run('drawA'),null,'A cancelled gesture never plants trees');
+console.log('PASS: tree row continuity, staggering, species, duplicate prevention, draft/publish roundtrip, atomic undo, protected terrain and gestures.');

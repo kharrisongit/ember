@@ -34,3 +34,25 @@ applyPublishedEditorEntries(reloaded,'world',newBuild);
 `);
 assert.equal(run('reloaded.w'),202);assert.equal(run('reloaded.roomActors.length'),4);
 console.log('PASS: legacy Build history loads before migration, and newer Build snapshots restore independent tables exactly once.');
+
+// Patio performers are separate from the indoor tavern actor set. The table
+// crops include their chairs, so each patron must sort above the whole crop.
+run(`const patioDepthMap=patioFixture();prepareTavernPatio(patioDepthMap,'world');
+const patioEater=W.maps.world.roomActors.find(a=>a.spr==='tavernpatio_anim_9');`);
+const tables=run('patioDepthMap.roomActors');
+for(const table of tables){
+  for(const person of [{n:'Merrin'},{n:'Asta'},{spr:'tavernpatio_anim_9'}]){
+    const patron={...person,x:table.x,y:table.y-12};
+    assert(c.patioPatronDepth(patron,tables)>table.y,'Outdoor patron above both table and chair');
+    const y=table.y;table.y+=8;
+    assert(c.patioPatronDepth(patron,tables)>table.y,'Moved furniture keeps correct depth');
+    table.editorDeleted=true;
+    assert.equal(c.patioPatronDepth(patron,[table]),patron.y,'Deleted table cannot affect depth');
+    table.editorDeleted=false;table.y=y;
+    assert.equal(c.patioPatronDepth({...patron,x:table.x+1000},tables),patron.y,'Moved-away patron regains normal depth');
+  }
+}
+const eater=run('patioEater');assert(eater);
+assert(c.patioPatronDepth(eater,tables)>eater.y,'Actual outdoor eating animation clears its table');
+assert.equal(c.patioPatronDepth({x:tables[0].x,y:tables[0].y-12,n:'Corin'},tables),tables[0].y-12,'Player still walks behind furniture normally');
+console.log('PASS: outdoor tavern patrons and the authored eater sort above their tables/chairs, including moved and deleted furniture.');

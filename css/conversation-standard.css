@@ -5,48 +5,48 @@
   --conversation-sign-paper:#503724;--conversation-sign-ink:#fff0cf;
   --conversation-glow:#edbf7155;--conversation-light:#e5b66366;
   --town-dark:#2d211b;--town-mid:#59432d;--town-accent:#cba272;--town-soft:#ead5ad;
-  --conversation-panel:url("../assets/conversation-panels/millwood-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/millwood-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/millwood-v1.webp");
   background:var(--town-dark)!important;
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=thornwell]{
   --conversation-paper:#f9e1cc;--conversation-active-paper:#fff0db;--conversation-edge:#b87866;--conversation-active-edge:#f2bf7a;--conversation-ink:#57302d;
   --conversation-sign-paper:#643c3e;--town-dark:#312b2a;--town-mid:#57433c;--town-accent:#d9a080;--town-soft:#efc5b0;--conversation-light:#e9aa7777;
-  --conversation-panel:url("../assets/conversation-panels/thornwell-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/thornwell-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/thornwell-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=forgewick]{
   --conversation-paper:#deded5;--conversation-active-paper:#f3eee0;--conversation-edge:#929994;--conversation-active-edge:#efb875;--conversation-ink:#303c40;
   --conversation-sign-paper:#38454b;--town-dark:#20292f;--town-mid:#465158;--town-accent:#c59770;--town-soft:#d1d6d1;--conversation-light:#e8a86c66;--conversation-glow:#efa65f55;
-  --conversation-panel:url("../assets/conversation-panels/forgewick-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/forgewick-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/forgewick-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=sandspire]{
   --conversation-paper:#f3d9a4;--conversation-active-paper:#ffe8b9;--conversation-edge:#b38b4c;--conversation-active-edge:#fbe09a;--conversation-ink:#574025;
   --conversation-sign-paper:#285352;--town-dark:#343531;--town-mid:#78603b;--town-accent:#dcb56a;--town-soft:#edd09a;--conversation-light:#f7ce6c77;
-  --conversation-panel:url("../assets/conversation-panels/sandspire-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/sandspire-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/sandspire-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=marsh]{
   --conversation-paper:#dde3be;--conversation-active-paper:#f0f0ce;--conversation-edge:#86966b;--conversation-active-edge:#d5da89;--conversation-ink:#374332;
   --conversation-sign-paper:#344b40;--town-dark:#152e2b;--town-mid:#365248;--town-accent:#a7b67a;--town-soft:#d0dbad;--conversation-light:#b9d78566;--conversation-glow:#c0dc7755;
-  --conversation-panel:url("../assets/conversation-panels/marsh-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/marsh-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/marsh-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=snow]{
   --conversation-paper:#e1eff2;--conversation-active-paper:#f5fbf9;--conversation-edge:#9ab6c1;--conversation-active-edge:#e5f6ff;--conversation-ink:#304959;
   --conversation-sign-paper:#385268;--town-dark:#253747;--town-mid:#47667c;--town-accent:#bbd9e1;--town-soft:#d9edf0;--conversation-light:#b4e9ff77;--conversation-glow:#c7ebff66;
-  --conversation-panel:url("../assets/conversation-panels/snow-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/snow-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/snow-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=coast]{
   --conversation-paper:#e0e9dc;--conversation-active-paper:#f1f4de;--conversation-edge:#85aaa8;--conversation-active-edge:#d1e7bb;--conversation-ink:#2e4d52;
   --conversation-sign-paper:#28535f;--town-dark:#18343f;--town-mid:#356574;--town-accent:#a8d3c7;--town-soft:#d1e7d5;--conversation-light:#8ed6d977;--conversation-glow:#a9e1d355;
-  --conversation-panel:url("../assets/conversation-panels/coast-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/coast-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/coast-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=shroom]{
   --conversation-paper:#ece0df;--conversation-active-paper:#faedde;--conversation-edge:#ac93a4;--conversation-active-edge:#eed69f;--conversation-ink:#4b3853;
   --conversation-sign-paper:#584159;--town-dark:#302639;--town-mid:#594561;--town-accent:#ccadca;--town-soft:#e0cbdc;--conversation-light:#d4a8e577;--conversation-glow:#dcbbeb55;
-  --conversation-panel:url("../assets/conversation-panels/shroom-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/shroom-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/shroom-v1.webp");
 }
 #bagAsk.conversationTopics.journalDeck[data-conversation-theme=cinderhold]{
   --conversation-paper:#e5dbd0;--conversation-active-paper:#f7ead7;--conversation-edge:#a78c79;--conversation-active-edge:#e4bc77;--conversation-ink:#473633;
   --conversation-sign-paper:#5e3238;--town-dark:#2d252b;--town-mid:#554148;--town-accent:#c5a67b;--town-soft:#ddc9b5;--conversation-light:#ecac7477;
-  --conversation-panel:url("../assets/conversation-panels/cinderhold-v1.webp");
+  --conversation-panel:url("../assets/conversation-panels/cinderhold-v1.webp");--conversation-name-sign:url("../assets/conversation-signs/cinderhold-v1.webp");
 }
 #bagAsk:not(.dragonTalk) .conversationStage,#bagAsk:not(.dragonTalk) .conversationPlayer{
   background:var(--town-dark);

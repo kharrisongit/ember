@@ -3178,6 +3178,7 @@ function commitFeature() {
   const [ax, ay] = drawA, [bx, by] = drawB;
   const bend = drawPts.slice();
   drawA = drawB = null; drawPts = [];
+  if (buildTool === "trees") {commitTreeLine(ax,ay,bx,by);return;}
   if (buildTool === "route") {
     if (bend.length > 1) {
       const path = bend.concat([[bx, by]]);
@@ -3376,6 +3377,12 @@ function buildTravel() {
 }
 
 function refreshBuild() {
+  for(const [id,tool] of [["tRoute","route"],["tTown","town"],["tTrees","trees"]])
+    document.getElementById(id).classList.toggle("on",buildTool===tool);
+  document.getElementById("bTrees").classList.toggle("on",building&&buildTool==="trees");
+  document.getElementById("bBuild").classList.toggle("on",building&&buildTool!=="trees");
+  document.getElementById("tStyle").style.display=buildTool==="trees"?"none":"";
+  document.getElementById("tKind").style.display=buildTool==="trees"?"none":"";
   const u = document.getElementById("tUndo");
   u.classList.toggle("off", buildUndo.length === 0);
   u.textContent = buildUndo.length ? "UNDO " + buildUndo.length : "UNDO";
@@ -3396,7 +3403,9 @@ function refreshBuild() {
   }
   document.getElementById("bHint").textContent = !drawArmed
     ? "PAN: drag to move, pinch to zoom -- tap PAN to start drawing"
-    : buildTool === "route"
+    : buildTool === "trees"
+      ? "TREE LINE: drag a straight line — matches nearby trees and staggers rows; avoids paths"
+      : buildTool === "route"
       ? "DRAWING a ROUTE -- it straightens itself"
       : "DRAWING a TOWN -- it squares itself up";
 }

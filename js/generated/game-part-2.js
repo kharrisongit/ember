@@ -357,6 +357,21 @@ function tavernActorDepth(o,actors){
   }
   return depth;
 }
+function isPatioPatron(o){
+  return ['Merrin','Asta','Colm'].includes(o.n)||/^(pack_drinker|tavernpatio_anim_)/.test(o.packSpr||o.spr||'');
+}
+function patioPatronDepth(o,actors){
+  const depth=o.sy??o.y;
+  if(!isPatioPatron(o)||o.editorDeleted)return depth;
+  let above=depth;
+  for(const a of actors){
+    if(a.editorDeleted||!/^tavern_patio_table_/.test(a.spr||''))continue;
+    const sp=SPR[a.spr];if(!sp)continue;
+    if(Math.abs(o.x-a.x)<=sp[2]/2+12&&o.y>=a.y-sp[3]-12&&o.y<=a.y+20)
+      above=Math.max(above,(a.sy??a.y)+.5);
+  }
+  return above;
+}
 function drawMarketActor(o,front,canopy=false){
   const sp=SPR[o.spr];if(!sp)return;
   const w=Math.round(sp[2]*1.1),h=Math.round(sp[3]*1.1)+10,foot=Math.min(42,sp[3]);
@@ -3877,7 +3892,7 @@ function drawWorld(t, dt) {
   if (bell) draw.push({ bell: true, x: bell.x, y: bell.y });
   const topOf = (o) => (o.s !== undefined && DEFS[o.s] && DEFS[o.s].t) ? 1 : 0;
   const isFab = (o) => o.s !== undefined && FABRIC.test(NAMES[o.s] || "");
-  const sortY = (o) => (/^house\d/.test(MAPID)&&o.exactFurniture) ? houseChairDepth(o,npcs) : (MAPID==='school'||MAPID==='school2') ? libraryActorDepth(o,MD.roomActors||[]) : MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
+  const sortY = (o) => (/^house\d/.test(MAPID)&&o.exactFurniture) ? houseChairDepth(o,npcs) : (MAPID==='school'||MAPID==='school2') ? libraryActorDepth(o,MD.roomActors||[]) : MAPID==='tavern' ? tavernActorDepth(o,MD.roomActors||[]) : MAPID==='world'&&isPatioPatron(o) ? patioPatronDepth(o,MD.roomActors||[]) : o.marketVendor ? marketVendorDepth(o,draw) : isFab(o) ? -1e9
                      : (o.sy !== undefined ? o.sy : o.y) + (o.wy || 0)
                      + ((o.s !== undefined && /^rc_sup1_/.test(NAMES[o.s])) ? 40 : 0)
                      + ((o.s !== undefined && DEFS[o.s] && DEFS[o.s].sy) ? DEFS[o.s].sy : 0);
@@ -4655,7 +4670,9 @@ function drawWorld(t, dt) {
     ctx.fillStyle = "#e8c48a";
     ctx.strokeStyle = "#2f6b34";
     ctx.lineWidth = 2 / z;
-    if (buildTool === "route") {
+    if (buildTool === "trees") {
+      drawTreeLinePreview(ax,ay,bx,by);
+    } else if (buildTool === "route") {
       const path = (drawPts.length > 1 ? drawPts.concat([[bx, by]])
                                        : [[ax, ay], [bx, by]]).map(p => p.slice());
       for (let i = 1; i < path.length; i++) {
@@ -5104,7 +5121,10 @@ cv.addEventListener("touchmove", e => {
 }, { passive: false });
 
 function endTouch(e) {
-  if(e.type==='touchcancel')for(const p of touches.values())p.arenaMoved=true;
+  if(e.type==='touchcancel'){
+    for(const p of touches.values())p.arenaMoved=true;
+    if(buildTool==='trees'){drawA=drawB=null;drawPts=[];}
+  }
   for (const t of e.changedTouches) mapTouchEnd(t);
   e.preventDefault();
 }
@@ -5179,6 +5199,7 @@ function mapTouchStart(t) {
   touches.set(t.identifier, { x: t.clientX, y: t.clientY, sx: t.clientX, sy: t.clientY,
     arenaTap:arenasShowing,arena:arenasShowing?pickArenaNumber(t.clientX,t.clientY):null });
   if (touches.size === 2) {
+    if(buildTool === "trees"){drawA=drawB=null;drawPts=[];}
     for(const p of touches.values())p.arenaMoved=true;
     if (typeof devUnlocked !== "undefined" && !devUnlocked) devUnlocked = true;
     const [a, b] = [...touches.values()];
@@ -11578,7 +11599,7 @@ function exitTools() {
 function activeTool() {
   if(arenasShowing)return 'ARENA NUMBERS';
   if (building) return arenaMode ? "ARENA" : areaMode ? "MOVE AREAS"
-                : (buildTool === "route" ? "ROUTE" : KINDS[areaKind].toUpperCase());
+                : (buildTool === "trees" ? "TREE LINE" : buildTool === "route" ? "ROUTE" : KINDS[areaKind].toUpperCase());
   if (painting) return "PAINT";
   if (editing) return "MOVE THINGS";
   return null;
@@ -11627,7 +11648,7 @@ tap(document.getElementById("tbDone"), exitTools);
 
 function soloTool(name) {
   for (const [id, on] of [["bEdit", editing],
-                          ["bPaint", painting], ["bBuild", building]])
+                          ["bPaint", painting], ["bBuild", building && buildTool !== "trees"], ["bTrees", building && buildTool === "trees"]])
     document.getElementById(id).classList.toggle("on", !!on);
   setDevTitle(name);
 }
@@ -12078,7 +12099,9 @@ tap(document.getElementById("aFit"), (...args) => fitArea(...args));
 tap(document.getElementById("tUndo"), () => {
   const act = buildUndo.pop();
   if (!act) { toast("nothing to undo"); return; }
-  if (act.kind === "add") {
+  if (act.kind === "trees") {
+    undoTreeLine(act.ids);
+  } else if (act.kind === "add") {
     const i = features.findIndex(f => f.id === act.id);
     if (i >= 0) {
       const f = features.splice(i, 1)[0];
