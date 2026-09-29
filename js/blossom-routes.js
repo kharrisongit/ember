@@ -1,10 +1,15 @@
 /* Shared planting for blossom borders, Millwood and the Northern Woods.
-   Keep positions on whole pixels: 91 px is about 5% closer than the old 96. */
+   Smaller spruce canopies need closer rows than the broad blossom trees. */
 const BLOSSOM_TREE_STEP = 91 / 16;
 const BLOSSOM_BAND_STEP = 3;
 const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
+function treeBorderSpacing(feature) {
+  return feature.region==='millwood'
+    ? {step:42/16,band:2,clearance:36/16}
+    : {step:BLOSSOM_TREE_STEP,band:BLOSSOM_BAND_STEP,clearance:BLOSSOM_TREE_CLEARANCE};
+}
 function blossomRoadDistance(x,y,{a,b}) {
   const dx=b[0]-a[0],dy=b[1]-a[1],l2=dx*dx+dy*dy;
   const t=l2?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/l2)):0;
@@ -14,17 +19,17 @@ function blossomPoint(x,y,details) {
   return {x:Math.round(x*16)/16,y:Math.round(y*16)/16,...details};
 }
 function blossomTownBox(t,row=0) {
-  const inset=(t.band||6)-1-row*BLOSSOM_BAND_STEP;
+  const inset=(t.band||6)-1-row*treeBorderSpacing(t).band;
   return {left:t.x0+inset,right:t.x1-inset,top:t.y0+inset,bottom:t.y1-inset};
 }
 function blossomInsideBox(x,y,b,pad=0) {
   return x>b.left-pad&&x<b.right+pad&&y>b.top-pad&&y<b.bottom+pad;
 }
-function blossomRowValues(lo,hi,row) {
-  const phase=row%2*BLOSSOM_TREE_STEP/2;
-  const first=Math.ceil((lo-phase)/BLOSSOM_TREE_STEP);
-  const last=Math.floor((hi-phase)/BLOSSOM_TREE_STEP);
-  return Array.from({length:Math.max(0,last-first+1)},(_,i)=>(first+i)*BLOSSOM_TREE_STEP+phase);
+function blossomRowValues(lo,hi,row,step=BLOSSOM_TREE_STEP) {
+  const phase=row%2*step/2;
+  const first=Math.ceil((lo-phase)/step);
+  const last=Math.floor((hi-phase)/step);
+  return Array.from({length:Math.max(0,last-first+1)},(_,i)=>(first+i)*step+phase);
 }
 function blossomRouteCandidates(roads,row) {
   const result=[];
@@ -32,8 +37,8 @@ function blossomRouteCandidates(roads,row) {
     const vert=r.a[0]===r.b[0],axis=vert?r.a[0]:r.a[1];
     const lo=Math.min(vert?r.a[1]:r.a[0],vert?r.b[1]:r.b[0]);
     const hi=Math.max(vert?r.a[1]:r.a[0],vert?r.b[1]:r.b[0]);
-    const off=r.half+2+row*BLOSSOM_BAND_STEP;
-    for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row)) {
+    const spacing=treeBorderSpacing(r),off=r.half+2+row*spacing.band;
+    for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row,spacing.step)) {
       const p=blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
         {row,vertical:vert,kind:'route',source:r.id,tree:r.tree,region:r.region});
       if(r.minY!==undefined&&p.y<r.minY)continue;
@@ -43,12 +48,12 @@ function blossomRouteCandidates(roads,row) {
   return result;
 }
 function blossomArenaCandidates(a,row) {
-  const innerRadius=(a.r||6)+2.5,radius=innerRadius+row*BLOSSOM_BAND_STEP;
+  const spacing=treeBorderSpacing(a),innerRadius=(a.r||6)+2.5,radius=innerRadius+row*spacing.band;
   // An even count gives both sides of the road matching gaps. Space the whole
   // circumference once rather than rounding every trunk onto crowded tiles.
   // Share the angular grid across bands so each middle-band tree sits between
   // two inner trees; changing the count per ring would realign and crowd them.
-  const count=Math.max(6,2*Math.floor(Math.PI*innerRadius/BLOSSOM_TREE_STEP));
+  const count=Math.max(6,2*Math.floor(Math.PI*innerRadius/spacing.step));
   return Array.from({length:count},(_,i)=>{
     const angle=-Math.PI/2+(i+(row%2)/2)*2*Math.PI/count;
     return blossomPoint(a.x+Math.cos(angle)*radius,a.y+Math.sin(angle)*radius,
@@ -56,10 +61,10 @@ function blossomArenaCandidates(a,row) {
   });
 }
 function blossomTownCandidates(t,row) {
-  const b=blossomTownBox(t,row),result=[];
-  for(const x of blossomRowValues(b.left,b.right,row))for(const y of [b.top,b.bottom])
+  const b=blossomTownBox(t,row),result=[],spacing=treeBorderSpacing(t);
+  for(const x of blossomRowValues(b.left,b.right,row,spacing.step))for(const y of [b.top,b.bottom])
     result.push(blossomPoint(x,y,{row,vertical:false,kind:'town',source:t.id,tree:t.tree,region:t.region}));
-  for(const y of blossomRowValues(b.top,b.bottom,row))for(const x of [b.left,b.right])
+  for(const y of blossomRowValues(b.top,b.bottom,row,spacing.step))for(const x of [b.left,b.right])
     result.push(blossomPoint(x,y,{row,vertical:true,kind:'town',source:t.id,tree:t.tree,region:t.region}));
   return result;
 }
@@ -71,11 +76,12 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true) {
     const groups=[arenas.flatMap(a=>blossomArenaCandidates(a,row)),
       towns.flatMap(t=>blossomTownCandidates(t,row)),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
-      if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?row*BLOSSOM_BAND_STEP:0)-.04))continue;
+      if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?row*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
-        Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+row*BLOSSOM_BAND_STEP-.04))continue;
+        Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+row*treeBorderSpacing(a).band-.04))continue;
       if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,row))))continue;
-      if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<BLOSSOM_TREE_CLEARANCE-.04))continue;
+      const clearance=treeBorderSpacing(p).clearance;
+      if(!allowed(p)||result.some(q=>Math.hypot(p.x-q.x,p.y-q.y)<Math.max(clearance,treeBorderSpacing(q).clearance)-.04))continue;
       result.push(p);
     }
   }
@@ -158,7 +164,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(inTownArea(x,y)&&!townBorder(x,y))return false;
     if(![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||felled.has(k))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
-    if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<BLOSSOM_TREE_CLEARANCE))return false;
+    if(onBuilding(px,py,sp)||neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
     if(props.some(o=>Math.abs(o.x-px)<TS*2&&Math.abs(o.y-py)<TS*3))return false;
     if(npcs.some(n=>!n.editorDeleted&&Math.hypot(n.x-px,n.y-py)<TS*3))return false;
     return true;
