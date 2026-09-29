@@ -50605,6 +50605,944 @@
         "kind": "collision",
         "key": "801,657",
         "blocked": false
+      },
+      "object-add:3269634d-4398-4d0c-bd19-806965d04497": {
+        "kind": "object-add",
+        "key": "3269634d-4398-4d0c-bd19-806965d04497",
+        "sprite": 0,
+        "x": 7528,
+        "y": 4896
+      },
+      "object-add:2f047769-d2b9-4041-8fae-7d90d0114486": {
+        "kind": "object-add",
+        "key": "2f047769-d2b9-4041-8fae-7d90d0114486",
+        "sprite": 0,
+        "x": 7528,
+        "y": 4960
+      },
+      "object-add:0cf597ca-9edb-41ec-ab4b-2b047f0acd2f": {
+        "kind": "object-add",
+        "key": "0cf597ca-9edb-41ec-ab4b-2b047f0acd2f",
+        "sprite": 0,
+        "x": 7528,
+        "y": 5024
+      },
+      "object-add:6f5d10b1-767f-4967-8f8b-7a0af5027d2b": {
+        "kind": "object-add",
+        "key": "6f5d10b1-767f-4967-8f8b-7a0af5027d2b",
+        "sprite": 0,
+        "x": 7528,
+        "y": 5088
+      },
+      "object-add:e5dfab94-ab3f-4b13-a71e-e1b4bbdc3471": {
+        "kind": "object-add",
+        "key": "e5dfab94-ab3f-4b13-a71e-e1b4bbdc3471",
+        "sprite": 0,
+        "x": 7528,
+        "y": 5152
+      },
+      "object-add:bbd65eba-f79a-4116-928c-a69eb9944c13": {
+        "kind": "object-add",
+        "key": "bbd65eba-f79a-4116-928c-a69eb9944c13",
+        "sprite": 0,
+        "x": 7288,
+        "y": 4944
+      },
+      "object-add:b2d42abc-9abf-4e49-baef-31bfe28eb619": {
+        "kind": "object-add",
+        "key": "b2d42abc-9abf-4e49-baef-31bfe28eb619",
+        "sprite": 0,
+        "x": 7288,
+        "y": 5008
+      },
+      "object-add:18049bba-4326-4411-b07e-5762d36321bb": {
+        "kind": "object-add",
+        "key": "18049bba-4326-4411-b07e-5762d36321bb",
+        "sprite": 0,
+        "x": 7288,
+        "y": 5072
+      },
+      "object-add:153c12c2-0315-4d9b-97e3-db8531123d9d": {
+        "kind": "object-add",
+        "key": "153c12c2-0315-4d9b-97e3-db8531123d9d",
+        "sprite": 0,
+        "x": 7288,
+        "y": 5136
+      },
+      "object-add:c2e4103a-80a9-460f-8dc1-4557e45e93b7": {
+        "kind": "object-add",
+        "key": "c2e4103a-80a9-460f-8dc1-4557e45e93b7",
+        "sprite": 0,
+        "x": 7240,
+        "y": 4864
+      },
+      "object-add:4aba12a9-7ebc-48db-a9a9-b9cb2fdcb336": {
+        "kind": "object-add",
+        "key": "4aba12a9-7ebc-48db-a9a9-b9cb2fdcb336",
+        "sprite": 0,
+        "x": 7240,
+        "y": 4928
+      },
+      "object-add:6716276c-e6ea-4f77-b87b-91fc8674696e": {
+        "kind": "object-add",
+        "key": "6716276c-e6ea-4f77-b87b-91fc8674696e",
+        "sprite": 0,
+        "x": 7240,
+        "y": 4992
+      },
+      "object-add:382f735f-ad08-4095-8041-ba03bf69a705": {
+        "kind": "object-add",
+        "key": "382f735f-ad08-4095-8041-ba03bf69a705",
+        "sprite": 0,
+        "x": 7240,
+        "y": 5056
+      },
+      "object-add:5e191c4a-e67a-4fc6-a850-d7e0115811b8": {
+        "kind": "object-add",
+        "key": "5e191c4a-e67a-4fc6-a850-d7e0115811b8",
+        "sprite": 0,
+        "x": 7240,
+        "y": 5120
+      },
+      "object-add:d2e695ae-b090-4939-881e-021f5edcb48c": {
+        "kind": "object-add",
+        "key": "d2e695ae-b090-4939-881e-021f5edcb48c",
+        "sprite": 0,
+        "x": 7576,
+        "y": 4800
+      },
+      "object-add:9b5dd279-b3c2-4af8-a295-47b3a9391673": {
+        "kind": "object-add",
+        "key": "9b5dd279-b3c2-4af8-a295-47b3a9391673",
+        "sprite": 0,
+        "x": 7576,
+        "y": 4864
+      },
+      "object-add:6a554fc3-6246-48f7-829d-7a5def21050f": {
+        "kind": "object-add",
+        "key": "6a554fc3-6246-48f7-829d-7a5def21050f",
+        "sprite": 0,
+        "x": 7576,
+        "y": 4928
+      },
+      "object-add:f255acb9-130d-4af4-a55a-a560ff3ddc05": {
+        "kind": "object-add",
+        "key": "f255acb9-130d-4af4-a55a-a560ff3ddc05",
+        "sprite": 0,
+        "x": 7576,
+        "y": 4992
+      },
+      "object-add:113dfc35-46f6-44d6-8895-c6e61f8fd631": {
+        "kind": "object-add",
+        "key": "113dfc35-46f6-44d6-8895-c6e61f8fd631",
+        "sprite": 0,
+        "x": 7576,
+        "y": 5056
+      },
+      "object-add:6a7ecea5-2891-462a-a2f3-626fb110b3a5": {
+        "kind": "object-add",
+        "key": "6a7ecea5-2891-462a-a2f3-626fb110b3a5",
+        "sprite": 0,
+        "x": 7576,
+        "y": 5120
+      },
+      "object-add:e21d6581-4aca-49a4-9850-583f1226c190": {
+        "kind": "object-add",
+        "key": "e21d6581-4aca-49a4-9850-583f1226c190",
+        "sprite": 0,
+        "x": 7576,
+        "y": 5184
+      },
+      "object-add:d29db284-38d9-4530-b7d8-f1b7d9640b8c": {
+        "kind": "object-add",
+        "key": "d29db284-38d9-4530-b7d8-f1b7d9640b8c",
+        "sprite": 0,
+        "x": 7515,
+        "y": 5314
+      },
+      "object-add:6d0b72a3-0f0d-418f-9cef-2c014129af81": {
+        "kind": "object-add",
+        "key": "6d0b72a3-0f0d-418f-9cef-2c014129af81",
+        "sprite": 0,
+        "x": 7522,
+        "y": 5250
+      },
+      "object-add:8e680186-969e-4e6c-8d74-29ee3b7bf5a1": {
+        "kind": "object-add",
+        "key": "8e680186-969e-4e6c-8d74-29ee3b7bf5a1",
+        "sprite": 0,
+        "x": 7562,
+        "y": 5311
+      },
+      "object-add:bd9ebf97-c42c-4d6f-990d-e2f29f7ada3b": {
+        "kind": "object-add",
+        "key": "bd9ebf97-c42c-4d6f-990d-e2f29f7ada3b",
+        "sprite": 0,
+        "x": 7570,
+        "y": 5248
+      },
+      "object-add:2495fad9-914c-4114-bcf7-68500593d494": {
+        "kind": "object-add",
+        "key": "2495fad9-914c-4114-bcf7-68500593d494",
+        "sprite": 0,
+        "x": 7208,
+        "y": 5136
+      },
+      "object-add:7e880d0b-d3ef-43bb-86b2-d990087a9662": {
+        "kind": "object-add",
+        "key": "7e880d0b-d3ef-43bb-86b2-d990087a9662",
+        "sprite": 0,
+        "x": 7608,
+        "y": 5328
+      },
+      "object-add:a9d15cf9-c8a6-49cb-97c3-1268a2803456": {
+        "kind": "object-add",
+        "key": "a9d15cf9-c8a6-49cb-97c3-1268a2803456",
+        "sprite": 0,
+        "x": 5832,
+        "y": 5187
+      },
+      "object-add:d752c270-c879-4c20-8a24-e2d69ba0cc0f": {
+        "kind": "object-add",
+        "key": "d752c270-c879-4c20-8a24-e2d69ba0cc0f",
+        "sprite": 0,
+        "x": 5832,
+        "y": 5251
+      },
+      "object-add:3f6950ad-8b47-4427-bdd6-0040da70c713": {
+        "kind": "object-add",
+        "key": "3f6950ad-8b47-4427-bdd6-0040da70c713",
+        "sprite": 0,
+        "x": 5784,
+        "y": 5094
+      },
+      "object-add:49497a28-8e62-4857-8642-8087be304fd6": {
+        "kind": "object-add",
+        "key": "49497a28-8e62-4857-8642-8087be304fd6",
+        "sprite": 0,
+        "x": 5788,
+        "y": 5158
+      },
+      "object-add:018eba30-5dc3-43ad-b796-0516b1a6bcb7": {
+        "kind": "object-add",
+        "key": "018eba30-5dc3-43ad-b796-0516b1a6bcb7",
+        "sprite": 0,
+        "x": 5792,
+        "y": 5221
+      },
+      "object-add:c50a9ddd-f70e-4bac-8257-d008553cdeac": {
+        "kind": "object-add",
+        "key": "c50a9ddd-f70e-4bac-8257-d008553cdeac",
+        "sprite": 0,
+        "x": 5796,
+        "y": 5285
+      },
+      "object-add:873cb1ee-c9e9-499c-b572-182d10505beb": {
+        "kind": "object-add",
+        "key": "873cb1ee-c9e9-499c-b572-182d10505beb",
+        "sprite": 0,
+        "x": 5799,
+        "y": 5349
+      },
+      "object-add:895719e0-8359-4da1-b868-3111a8d92089": {
+        "kind": "object-add",
+        "key": "895719e0-8359-4da1-b868-3111a8d92089",
+        "sprite": 0,
+        "x": 6749,
+        "y": 3430
+      },
+      "object-add:6a74c7eb-d45e-41e0-9c73-5bafb153ab03": {
+        "kind": "object-add",
+        "key": "6a74c7eb-d45e-41e0-9c73-5bafb153ab03",
+        "sprite": 0,
+        "x": 6751,
+        "y": 3558
+      },
+      "object-add:a416c9fd-d274-4e52-9a76-182974b14746": {
+        "kind": "object-add",
+        "key": "a416c9fd-d274-4e52-9a76-182974b14746",
+        "sprite": 0,
+        "x": 6752,
+        "y": 3622
+      },
+      "object-add:d1662d9d-6351-4b88-b5df-e9e4cde837b2": {
+        "kind": "object-add",
+        "key": "d1662d9d-6351-4b88-b5df-e9e4cde837b2",
+        "sprite": 0,
+        "x": 6753,
+        "y": 3686
+      },
+      "object-add:7999c120-3ee9-418d-b12c-9eb78b6bdf1c": {
+        "kind": "object-add",
+        "key": "7999c120-3ee9-418d-b12c-9eb78b6bdf1c",
+        "sprite": 0,
+        "x": 6754,
+        "y": 3750
+      },
+      "object-add:f9e34b73-0819-416b-8c13-ece6bb71a7f3": {
+        "kind": "object-add",
+        "key": "f9e34b73-0819-416b-8c13-ece6bb71a7f3",
+        "sprite": 0,
+        "x": 6755,
+        "y": 3814
+      },
+      "object-add:92fd8175-2725-47cb-bbfd-e735df60f919": {
+        "kind": "object-add",
+        "key": "92fd8175-2725-47cb-bbfd-e735df60f919",
+        "sprite": 0,
+        "x": 6756,
+        "y": 3878
+      },
+      "object-add:dda93adb-3275-4f16-8b3f-5640580e4a81": {
+        "kind": "object-add",
+        "key": "dda93adb-3275-4f16-8b3f-5640580e4a81",
+        "sprite": 0,
+        "x": 6757,
+        "y": 3942
+      },
+      "object-add:71ec20d3-5912-4b7d-8545-54dd367b2e7b": {
+        "kind": "object-add",
+        "key": "71ec20d3-5912-4b7d-8545-54dd367b2e7b",
+        "sprite": 0,
+        "x": 6758,
+        "y": 4006
+      },
+      "object-add:78ebe0ce-6fcd-4b8f-8dd6-6165e6fbabab": {
+        "kind": "object-add",
+        "key": "78ebe0ce-6fcd-4b8f-8dd6-6165e6fbabab",
+        "sprite": 0,
+        "x": 6759,
+        "y": 4070
+      },
+      "object-add:844882b3-73e6-474c-a99e-6dfc7a3b6978": {
+        "kind": "object-add",
+        "key": "844882b3-73e6-474c-a99e-6dfc7a3b6978",
+        "sprite": 0,
+        "x": 13588,
+        "y": 2368
+      },
+      "object-add:9f54a70c-5f02-4c2e-b39f-1fc5971ac609": {
+        "kind": "object-add",
+        "key": "9f54a70c-5f02-4c2e-b39f-1fc5971ac609",
+        "sprite": 0,
+        "x": 13636,
+        "y": 2368
+      },
+      "object-add:693fae44-54ee-4f88-8b93-e6bc60ebf528": {
+        "kind": "object-add",
+        "key": "693fae44-54ee-4f88-8b93-e6bc60ebf528",
+        "sprite": 0,
+        "x": 13684,
+        "y": 2368
+      },
+      "object-add:7c4c2e10-4e54-4794-88af-29b70eb72fd3": {
+        "kind": "object-add",
+        "key": "7c4c2e10-4e54-4794-88af-29b70eb72fd3",
+        "sprite": 0,
+        "x": 13732,
+        "y": 2368
+      },
+      "object-add:93c591a9-bbaf-4482-a409-c399c0f2e287": {
+        "kind": "object-add",
+        "key": "93c591a9-bbaf-4482-a409-c399c0f2e287",
+        "sprite": 0,
+        "x": 13780,
+        "y": 2368
+      },
+      "object-add:f47eb388-3228-4791-931e-7f9008927f9d": {
+        "kind": "object-add",
+        "key": "f47eb388-3228-4791-931e-7f9008927f9d",
+        "sprite": 0,
+        "x": 13828,
+        "y": 2368
+      },
+      "object-add:f6e65455-c864-44e1-b1b3-c9fe15cfa55a": {
+        "kind": "object-add",
+        "key": "f6e65455-c864-44e1-b1b3-c9fe15cfa55a",
+        "sprite": 0,
+        "x": 13876,
+        "y": 2368
+      },
+      "object-add:0670e0e8-4678-4ba7-be10-eaaa8423260b": {
+        "kind": "object-add",
+        "key": "0670e0e8-4678-4ba7-be10-eaaa8423260b",
+        "sprite": 0,
+        "x": 14239,
+        "y": 2400
+      },
+      "object-add:12119c26-6dea-4c95-aaa0-db218d4faeb0": {
+        "kind": "object-add",
+        "key": "12119c26-6dea-4c95-aaa0-db218d4faeb0",
+        "sprite": 0,
+        "x": 14335,
+        "y": 2400
+      },
+      "object-add:0e6991eb-26d3-498c-9e18-831760cff546": {
+        "kind": "object-add",
+        "key": "0e6991eb-26d3-498c-9e18-831760cff546",
+        "sprite": 0,
+        "x": 14479,
+        "y": 2400
+      },
+      "object-add:ae86c96d-f168-43b2-9526-c68030e67b0a": {
+        "kind": "object-add",
+        "key": "ae86c96d-f168-43b2-9526-c68030e67b0a",
+        "sprite": 0,
+        "x": 14527,
+        "y": 2400
+      },
+      "object-add:c4a10bb8-d055-46f1-b340-c62dac955928": {
+        "kind": "object-add",
+        "key": "c4a10bb8-d055-46f1-b340-c62dac955928",
+        "sprite": 0,
+        "x": 14575,
+        "y": 2400
+      },
+      "object-add:08894df1-147c-468c-a03f-78c13dcd51a5": {
+        "kind": "object-add",
+        "key": "08894df1-147c-468c-a03f-78c13dcd51a5",
+        "sprite": 0,
+        "x": 14671,
+        "y": 2400
+      },
+      "object-add:d3127ed9-5dc1-4304-9693-3a2e769017a1": {
+        "kind": "object-add",
+        "key": "d3127ed9-5dc1-4304-9693-3a2e769017a1",
+        "sprite": 0,
+        "x": 14719,
+        "y": 2400
+      },
+      "object-add:4a005d95-9178-4916-8167-adafda684bb2": {
+        "kind": "object-add",
+        "key": "4a005d95-9178-4916-8167-adafda684bb2",
+        "sprite": 0,
+        "x": 14767,
+        "y": 2400
+      },
+      "object-add:4457cbed-c0a2-465b-bf2b-2bcc33f0a625": {
+        "kind": "object-add",
+        "key": "4457cbed-c0a2-465b-bf2b-2bcc33f0a625",
+        "sprite": 0,
+        "x": 14815,
+        "y": 2400
+      },
+      "object-add:bf0e10a0-f78f-43ab-9ea4-6acbdb36e394": {
+        "kind": "object-add",
+        "key": "bf0e10a0-f78f-43ab-9ea4-6acbdb36e394",
+        "sprite": 0,
+        "x": 14863,
+        "y": 2400
+      },
+      "object-add:6d02d9da-9826-47f7-ab76-4071354983fe": {
+        "kind": "object-add",
+        "key": "6d02d9da-9826-47f7-ab76-4071354983fe",
+        "sprite": 0,
+        "x": 14911,
+        "y": 2400
+      },
+      "object-add:2e5b4a18-4cff-49db-b3e0-5df28411e054": {
+        "kind": "object-add",
+        "key": "2e5b4a18-4cff-49db-b3e0-5df28411e054",
+        "sprite": 0,
+        "x": 14959,
+        "y": 2400
+      },
+      "object-add:5d383061-7ef1-4597-afcd-44bec525b5ed": {
+        "kind": "object-add",
+        "key": "5d383061-7ef1-4597-afcd-44bec525b5ed",
+        "sprite": 0,
+        "x": 15007,
+        "y": 2400
+      },
+      "object-add:d918f98f-94c0-4d03-9363-a6228700c538": {
+        "kind": "object-add",
+        "key": "d918f98f-94c0-4d03-9363-a6228700c538",
+        "sprite": 0,
+        "x": 15103,
+        "y": 2400
+      },
+      "object-add:b4963eca-e8d1-42a7-b5ac-e67d91517500": {
+        "kind": "object-add",
+        "key": "b4963eca-e8d1-42a7-b5ac-e67d91517500",
+        "sprite": 0,
+        "x": 14811,
+        "y": 2355
+      },
+      "object-add:0144dca5-a5c5-4ac0-8640-4856e838cf01": {
+        "kind": "object-add",
+        "key": "0144dca5-a5c5-4ac0-8640-4856e838cf01",
+        "sprite": 0,
+        "x": 14859,
+        "y": 2362
+      },
+      "object-add:c8cc8304-86f6-46ef-b50b-b666052fddbd": {
+        "kind": "object-add",
+        "key": "c8cc8304-86f6-46ef-b50b-b666052fddbd",
+        "sprite": 0,
+        "x": 14906,
+        "y": 2370
+      },
+      "object-add:4b153f93-0322-4b28-a282-1b9e7e198367": {
+        "kind": "object-add",
+        "key": "4b153f93-0322-4b28-a282-1b9e7e198367",
+        "sprite": 0,
+        "x": 14954,
+        "y": 2377
+      },
+      "object-add:ad9c4610-7e3d-421a-b7fb-0c90d76fc57f": {
+        "kind": "object-add",
+        "key": "ad9c4610-7e3d-421a-b7fb-0c90d76fc57f",
+        "sprite": 0,
+        "x": 14762,
+        "y": 2384
+      },
+      "object-add:5093dc8a-950e-4130-96fe-6c653f4d3dee": {
+        "kind": "object-add",
+        "key": "5093dc8a-950e-4130-96fe-6c653f4d3dee",
+        "sprite": 0,
+        "x": 14810,
+        "y": 2380
+      },
+      "object-add:b9965195-cfa9-4eae-8616-b86bd18552b0": {
+        "kind": "object-add",
+        "key": "b9965195-cfa9-4eae-8616-b86bd18552b0",
+        "sprite": 0,
+        "x": 14857,
+        "y": 2376
+      },
+      "object-add:d6e8a9a9-5ee0-455c-b02c-05c1d1405799": {
+        "kind": "object-add",
+        "key": "d6e8a9a9-5ee0-455c-b02c-05c1d1405799",
+        "sprite": 0,
+        "x": 14905,
+        "y": 2372
+      },
+      "object-add:57388ec8-cc58-4e64-90a1-5b177a10e75e": {
+        "kind": "object-add",
+        "key": "57388ec8-cc58-4e64-90a1-5b177a10e75e",
+        "sprite": 0,
+        "x": 14455,
+        "y": 2368
+      },
+      "object-add:0321e331-9f91-4fa8-a692-a8b4589cb483": {
+        "kind": "object-add",
+        "key": "0321e331-9f91-4fa8-a692-a8b4589cb483",
+        "sprite": 0,
+        "x": 14503,
+        "y": 2368
+      },
+      "object-add:ea7686a1-68f3-461c-a038-4cf85c6de9f8": {
+        "kind": "object-add",
+        "key": "ea7686a1-68f3-461c-a038-4cf85c6de9f8",
+        "sprite": 0,
+        "x": 14551,
+        "y": 2368
+      },
+      "object-add:a5409224-2b5f-4910-848c-030a3ef65445": {
+        "kind": "object-add",
+        "key": "a5409224-2b5f-4910-848c-030a3ef65445",
+        "sprite": 0,
+        "x": 14599,
+        "y": 2368
+      },
+      "object-add:787948d9-f62e-4bd2-811c-0d0a7c87d094": {
+        "kind": "object-add",
+        "key": "787948d9-f62e-4bd2-811c-0d0a7c87d094",
+        "sprite": 0,
+        "x": 14359,
+        "y": 2368
+      },
+      "object-add:8e71f401-92e8-4c5b-866c-7feb9e7f7578": {
+        "kind": "object-add",
+        "key": "8e71f401-92e8-4c5b-866c-7feb9e7f7578",
+        "sprite": 0,
+        "x": 14198,
+        "y": 2371
+      },
+      "object-add:d37d3b7b-53cd-4f72-a432-19e3e9953f03": {
+        "kind": "object-add",
+        "key": "d37d3b7b-53cd-4f72-a432-19e3e9953f03",
+        "sprite": 0,
+        "x": 14143,
+        "y": 2416
+      },
+      "object-add:ea9226ed-f2fc-4767-a7a3-7ecb05189514": {
+        "kind": "object-add",
+        "key": "ea9226ed-f2fc-4767-a7a3-7ecb05189514",
+        "sprite": 0,
+        "x": 14191,
+        "y": 2415
+      },
+      "object-add:f8686ee6-3133-4bc9-a6ed-c643f585784d": {
+        "kind": "object-add",
+        "key": "f8686ee6-3133-4bc9-a6ed-c643f585784d",
+        "sprite": 0,
+        "x": 14239,
+        "y": 2414
+      },
+      "object-add:0e30e8bf-6038-408a-a088-78c6a90c022b": {
+        "kind": "object-add",
+        "key": "0e30e8bf-6038-408a-a088-78c6a90c022b",
+        "sprite": 0,
+        "x": 14287,
+        "y": 2414
+      },
+      "object-add:4cdcc6a1-9584-42b8-aa76-bdf5b722e47b": {
+        "kind": "object-add",
+        "key": "4cdcc6a1-9584-42b8-aa76-bdf5b722e47b",
+        "sprite": 0,
+        "x": 14335,
+        "y": 2413
+      },
+      "object-add:cbd51627-fcff-4c66-abd3-27d170646c4d": {
+        "kind": "object-add",
+        "key": "cbd51627-fcff-4c66-abd3-27d170646c4d",
+        "sprite": 0,
+        "x": 14383,
+        "y": 2412
+      },
+      "object-add:4c275d21-a8a2-405c-9039-0697775ac3ba": {
+        "kind": "object-add",
+        "key": "4c275d21-a8a2-405c-9039-0697775ac3ba",
+        "sprite": 0,
+        "x": 14431,
+        "y": 2411
+      },
+      "object-add:8cf6b917-0077-481c-9d9d-4fa39a1581fa": {
+        "kind": "object-add",
+        "key": "8cf6b917-0077-481c-9d9d-4fa39a1581fa",
+        "sprite": 0,
+        "x": 14479,
+        "y": 2411
+      },
+      "object-add:6ac9d5da-ea67-4db3-a322-8de1dc76a8de": {
+        "kind": "object-add",
+        "key": "6ac9d5da-ea67-4db3-a322-8de1dc76a8de",
+        "sprite": 0,
+        "x": 14527,
+        "y": 2410
+      },
+      "object-add:40379433-da03-491a-b19e-ed44f5bd1e05": {
+        "kind": "object-add",
+        "key": "40379433-da03-491a-b19e-ed44f5bd1e05",
+        "sprite": 0,
+        "x": 14575,
+        "y": 2409
+      },
+      "object-add:0495b1b4-f514-4817-b5db-d9fc5df77be7": {
+        "kind": "object-add",
+        "key": "0495b1b4-f514-4817-b5db-d9fc5df77be7",
+        "sprite": 0,
+        "x": 14671,
+        "y": 2408
+      },
+      "object-add:587d711a-edc5-457e-819b-310408f5be76": {
+        "kind": "object-add",
+        "key": "587d711a-edc5-457e-819b-310408f5be76",
+        "sprite": 0,
+        "x": 15007,
+        "y": 2403
+      },
+      "object-add:27ce0733-f827-4ace-a84d-e11c5ecbffea": {
+        "kind": "object-add",
+        "key": "27ce0733-f827-4ace-a84d-e11c5ecbffea",
+        "sprite": 0,
+        "x": 15103,
+        "y": 2401
+      },
+      "object-add:7f271d33-6795-499f-9913-9959225b406f": {
+        "kind": "object-add",
+        "key": "7f271d33-6795-499f-9913-9959225b406f",
+        "sprite": 1189,
+        "x": 15151,
+        "y": 2400
+      },
+      "object-add:a7f6d328-bda9-489a-890d-a7f0f6fd77e6": {
+        "kind": "object-add",
+        "key": "a7f6d328-bda9-489a-890d-a7f0f6fd77e6",
+        "sprite": 0,
+        "x": 13471,
+        "y": 2416
+      },
+      "object-add:d17de98b-fc6f-450e-804d-05105f091366": {
+        "kind": "object-add",
+        "key": "d17de98b-fc6f-450e-804d-05105f091366",
+        "sprite": 0,
+        "x": 13519,
+        "y": 2416
+      },
+      "object-add:b30f8d75-4a53-4877-bf7d-2e386e6cf1e9": {
+        "kind": "object-add",
+        "key": "b30f8d75-4a53-4877-bf7d-2e386e6cf1e9",
+        "sprite": 0,
+        "x": 13567,
+        "y": 2416
+      },
+      "object-add:d8f2e74e-fc84-4844-84ee-aafcd16f196d": {
+        "kind": "object-add",
+        "key": "d8f2e74e-fc84-4844-84ee-aafcd16f196d",
+        "sprite": 0,
+        "x": 13615,
+        "y": 2416
+      },
+      "object-add:275e93c3-52ea-4fa9-8de3-78ee59efea1f": {
+        "kind": "object-add",
+        "key": "275e93c3-52ea-4fa9-8de3-78ee59efea1f",
+        "sprite": 0,
+        "x": 13663,
+        "y": 2416
+      },
+      "object-add:24b8de55-834c-4c96-8bfc-128e0fbfc42d": {
+        "kind": "object-add",
+        "key": "24b8de55-834c-4c96-8bfc-128e0fbfc42d",
+        "sprite": 0,
+        "x": 13711,
+        "y": 2416
+      },
+      "object-add:b68a9800-44ac-47f5-94db-4055653b9e8b": {
+        "kind": "object-add",
+        "key": "b68a9800-44ac-47f5-94db-4055653b9e8b",
+        "sprite": 0,
+        "x": 13759,
+        "y": 2416
+      },
+      "object-add:8c308528-deda-486e-b652-0b0e3b97e535": {
+        "kind": "object-add",
+        "key": "8c308528-deda-486e-b652-0b0e3b97e535",
+        "sprite": 0,
+        "x": 13807,
+        "y": 2416
+      },
+      "object-add:70e5b0a2-841c-46cd-8e2c-80efe6dd9ccc": {
+        "kind": "object-add",
+        "key": "70e5b0a2-841c-46cd-8e2c-80efe6dd9ccc",
+        "sprite": 0,
+        "x": 13855,
+        "y": 2416
+      },
+      "object-add:b95e8023-3bd1-4552-a6d0-624caac67862": {
+        "kind": "object-add",
+        "key": "b95e8023-3bd1-4552-a6d0-624caac67862",
+        "sprite": 0,
+        "x": 13903,
+        "y": 2416
+      },
+      "object-add:b2088021-6b59-4fec-a163-ad8abc871759": {
+        "kind": "object-add",
+        "key": "b2088021-6b59-4fec-a163-ad8abc871759",
+        "sprite": 0,
+        "x": 13999,
+        "y": 2416
+      },
+      "object-add:b02e56c0-8cd8-46b9-b5ef-227bd2096da2": {
+        "kind": "object-add",
+        "key": "b02e56c0-8cd8-46b9-b5ef-227bd2096da2",
+        "sprite": 0,
+        "x": 14047,
+        "y": 2416
+      },
+      "object-add:24558a15-fa5b-4434-b7fa-d2d55e01a3b6": {
+        "kind": "object-add",
+        "key": "24558a15-fa5b-4434-b7fa-d2d55e01a3b6",
+        "sprite": 0,
+        "x": 14095,
+        "y": 2416
+      },
+      "object-add:f2a0e046-0795-467e-958a-ced9a7ac975e": {
+        "kind": "object-add",
+        "key": "f2a0e046-0795-467e-958a-ced9a7ac975e",
+        "sprite": 0,
+        "x": 13564,
+        "y": 2400
+      },
+      "object-add:2c5360d8-b55d-42b2-8816-9b6b6a67b865": {
+        "kind": "object-add",
+        "key": "2c5360d8-b55d-42b2-8816-9b6b6a67b865",
+        "sprite": 0,
+        "x": 13612,
+        "y": 2400
+      },
+      "object-add:674059d8-e470-418b-99f4-79c5137fdffb": {
+        "kind": "object-add",
+        "key": "674059d8-e470-418b-99f4-79c5137fdffb",
+        "sprite": 0,
+        "x": 13660,
+        "y": 2400
+      },
+      "object-add:03b79b79-5f32-4a3a-a931-a745158e8a7c": {
+        "kind": "object-add",
+        "key": "03b79b79-5f32-4a3a-a931-a745158e8a7c",
+        "sprite": 0,
+        "x": 14380,
+        "y": 2404
+      },
+      "object-add:438d89e3-d94a-4090-9e4b-9d231dbf91a2": {
+        "kind": "object-add",
+        "key": "438d89e3-d94a-4090-9e4b-9d231dbf91a2",
+        "sprite": 0,
+        "x": 14428,
+        "y": 2408
+      },
+      "object-add:ee6ba70b-6911-4424-a9fc-122e5b5a8584": {
+        "kind": "object-add",
+        "key": "ee6ba70b-6911-4424-a9fc-122e5b5a8584",
+        "sprite": 0,
+        "x": 14476,
+        "y": 2413
+      },
+      "object-add:daba7adc-f798-4a6e-adc5-6add6e5a9c3b": {
+        "kind": "object-add",
+        "key": "daba7adc-f798-4a6e-adc5-6add6e5a9c3b",
+        "sprite": 0,
+        "x": 14523,
+        "y": 2418
+      },
+      "object-add:4d1b6fcb-7da4-4481-85c4-fd7129a0ae53": {
+        "kind": "object-add",
+        "key": "4d1b6fcb-7da4-4481-85c4-fd7129a0ae53",
+        "sprite": 0,
+        "x": 14571,
+        "y": 2423
+      },
+      "object-add:b1e3fab3-8a68-4471-96c0-458c7e5865fc": {
+        "kind": "object-add",
+        "key": "b1e3fab3-8a68-4471-96c0-458c7e5865fc",
+        "sprite": 0,
+        "x": 14619,
+        "y": 2427
+      },
+      "object-add:7661dc92-d1d7-4c85-8183-dca65b38ffc6": {
+        "kind": "object-add",
+        "key": "7661dc92-d1d7-4c85-8183-dca65b38ffc6",
+        "sprite": 0,
+        "x": 14667,
+        "y": 2432
+      },
+      "object-add:7ef2f6ee-ecbc-42f5-b9d7-0ce04aa221b6": {
+        "kind": "object-add",
+        "key": "7ef2f6ee-ecbc-42f5-b9d7-0ce04aa221b6",
+        "sprite": 0,
+        "x": 14762,
+        "y": 2442
+      },
+      "object-add:8c470d76-bf92-404e-b693-5e69941ffbc2": {
+        "kind": "object-add",
+        "key": "8c470d76-bf92-404e-b693-5e69941ffbc2",
+        "sprite": 0,
+        "x": 14810,
+        "y": 2447
+      },
+      "object-add:2b851d4a-a73a-48e1-8fee-972161d2677b": {
+        "kind": "object-add",
+        "key": "2b851d4a-a73a-48e1-8fee-972161d2677b",
+        "sprite": 0,
+        "x": 14905,
+        "y": 2431
+      },
+      "object-add:506ba976-c06b-4de0-8772-398660817426": {
+        "kind": "object-add",
+        "key": "506ba976-c06b-4de0-8772-398660817426",
+        "sprite": 0,
+        "x": 14953,
+        "y": 2427
+      },
+      "object-add:d93e12ea-be4a-47df-9def-266e8699a3c4": {
+        "kind": "object-add",
+        "key": "d93e12ea-be4a-47df-9def-266e8699a3c4",
+        "sprite": 0,
+        "x": 15001,
+        "y": 2423
+      },
+      "object-add:41ceaa8e-fe55-43fc-a9cf-b544dccef57f": {
+        "kind": "object-add",
+        "key": "41ceaa8e-fe55-43fc-a9cf-b544dccef57f",
+        "sprite": 0,
+        "x": 15049,
+        "y": 2419
+      },
+      "object-add:e88f5af8-4ca9-4051-a3ab-1e38f1676176": {
+        "kind": "object-add",
+        "key": "e88f5af8-4ca9-4051-a3ab-1e38f1676176",
+        "sprite": 1189,
+        "x": 15645,
+        "y": 2368
+      },
+      "object-add:ccbfee69-e9df-4a8d-9d8d-acc32257b30e": {
+        "kind": "object-add",
+        "key": "ccbfee69-e9df-4a8d-9d8d-acc32257b30e",
+        "sprite": 1190,
+        "x": 15693,
+        "y": 2368
+      },
+      "object-add:27b57ebe-040f-40dc-92ac-a0ff5e74d3e8": {
+        "kind": "object-add",
+        "key": "27b57ebe-040f-40dc-92ac-a0ff5e74d3e8",
+        "sprite": 1189,
+        "x": 15741,
+        "y": 2368
+      },
+      "object-add:fdea7ffc-05fb-4132-a60f-e362f149df6a": {
+        "kind": "object-add",
+        "key": "fdea7ffc-05fb-4132-a60f-e362f149df6a",
+        "sprite": 1190,
+        "x": 15789,
+        "y": 2368
+      },
+      "object-add:fcfb36c1-79e1-4f39-bc75-295f4300b8ee": {
+        "kind": "object-add",
+        "key": "fcfb36c1-79e1-4f39-bc75-295f4300b8ee",
+        "sprite": 1190,
+        "x": 15837,
+        "y": 2368
+      },
+      "object-add:b9a14f59-840f-4ebe-bb95-de4acb32f962": {
+        "kind": "object-add",
+        "key": "b9a14f59-840f-4ebe-bb95-de4acb32f962",
+        "sprite": 1190,
+        "x": 15885,
+        "y": 2368
+      },
+      "object-add:489aa217-9a6a-4a96-bd44-d0303825c55c": {
+        "kind": "object-add",
+        "key": "489aa217-9a6a-4a96-bd44-d0303825c55c",
+        "sprite": 1189,
+        "x": 15644,
+        "y": 2130
+      },
+      "object-add:9499d8f2-a54e-4e67-b80b-22ed49e88d5d": {
+        "kind": "object-add",
+        "key": "9499d8f2-a54e-4e67-b80b-22ed49e88d5d",
+        "sprite": 1189,
+        "x": 15692,
+        "y": 2133
+      },
+      "object-add:575ac232-5402-4fe7-87b5-79a1b3b1b31b": {
+        "kind": "object-add",
+        "key": "575ac232-5402-4fe7-87b5-79a1b3b1b31b",
+        "sprite": 1189,
+        "x": 15740,
+        "y": 2135
+      },
+      "object-add:1a345d3a-bf3f-48da-9af8-3d6db7b5438d": {
+        "kind": "object-add",
+        "key": "1a345d3a-bf3f-48da-9af8-3d6db7b5438d",
+        "sprite": 1189,
+        "x": 15788,
+        "y": 2138
+      },
+      "object-add:2235c0ec-2479-4311-9ab8-76ec8d41d7f0": {
+        "kind": "object-add",
+        "key": "2235c0ec-2479-4311-9ab8-76ec8d41d7f0",
+        "sprite": 1189,
+        "x": 15836,
+        "y": 2141
+      },
+      "object-add:5f6a89d5-76ab-47fd-a5e0-56020c26f748": {
+        "kind": "object-add",
+        "key": "5f6a89d5-76ab-47fd-a5e0-56020c26f748",
+        "sprite": 1190,
+        "x": 15884,
+        "y": 2143
       }
     },
     "witchmoor": {
@@ -52524,7 +53462,8 @@
     "4ec69443-8954-47e9-8b96-1c5600073bef",
     "a37ba746-9fdd-429d-9e78-f8b3360cfc42",
     "f5ca0524-1f58-49cd-b7c5-4296792ed887",
-    "52fc0b6a-66e1-45a7-b420-30455725f34a"
+    "52fc0b6a-66e1-45a7-b420-30455725f34a",
+    "dabbe44e-fa67-4125-a329-65ca885464f3"
   ],
   "sessions": {
     "witchmoor": {
@@ -52648,10 +53587,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "136871c4-3fba-4572-90a6-974e830239be",
+      "id": "e1728544-5156-4601-a3a9-04d9da8af515",
       "sequence": 1,
-      "baseHash": "ffb9ff1a-5e44a830-395574",
-      "baseFingerprint": "4b38db51-12576475-742485",
+      "baseHash": "dcdee9c8-b8ed3210-401412",
+      "baseFingerprint": "266773d5-15fe490f-742497",
       "base": {
         "build": {
           "kind": "build",
@@ -102743,9 +103682,411 @@
           "x": 4013,
           "y": 1079,
           "independent": true
+        },
+        "object-add:8ee716a6-ee8d-4b02-b888-43cbf17b51e9": {
+          "kind": "object-add",
+          "key": "8ee716a6-ee8d-4b02-b888-43cbf17b51e9",
+          "sprite": 0,
+          "x": 6856,
+          "y": 5248
+        },
+        "collision:843,656": {
+          "kind": "collision",
+          "key": "843,656",
+          "blocked": true
+        },
+        "collision:844,656": {
+          "kind": "collision",
+          "key": "844,656",
+          "blocked": true
+        },
+        "collision:845,656": {
+          "kind": "collision",
+          "key": "845,656",
+          "blocked": true
+        },
+        "collision:846,656": {
+          "kind": "collision",
+          "key": "846,656",
+          "blocked": true
+        },
+        "collision:847,656": {
+          "kind": "collision",
+          "key": "847,656",
+          "blocked": true
+        },
+        "collision:842,656": {
+          "kind": "collision",
+          "key": "842,656",
+          "blocked": true
+        },
+        "collision:848,656": {
+          "kind": "collision",
+          "key": "848,656",
+          "blocked": true
+        },
+        "collision:849,656": {
+          "kind": "collision",
+          "key": "849,656",
+          "blocked": true
+        },
+        "collision:850,656": {
+          "kind": "collision",
+          "key": "850,656",
+          "blocked": true
+        },
+        "collision:851,656": {
+          "kind": "collision",
+          "key": "851,656",
+          "blocked": true
+        },
+        "collision:852,656": {
+          "kind": "collision",
+          "key": "852,656",
+          "blocked": true
+        },
+        "collision:853,656": {
+          "kind": "collision",
+          "key": "853,656",
+          "blocked": true
+        },
+        "collision:854,656": {
+          "kind": "collision",
+          "key": "854,656",
+          "blocked": true
+        },
+        "collision:855,656": {
+          "kind": "collision",
+          "key": "855,656",
+          "blocked": true
+        },
+        "collision:856,656": {
+          "kind": "collision",
+          "key": "856,656",
+          "blocked": true
+        },
+        "collision:857,656": {
+          "kind": "collision",
+          "key": "857,656",
+          "blocked": true
+        },
+        "collision:858,656": {
+          "kind": "collision",
+          "key": "858,656",
+          "blocked": true
+        },
+        "collision:859,656": {
+          "kind": "collision",
+          "key": "859,656",
+          "blocked": true
+        },
+        "collision:860,656": {
+          "kind": "collision",
+          "key": "860,656",
+          "blocked": true
+        },
+        "collision:861,656": {
+          "kind": "collision",
+          "key": "861,656",
+          "blocked": true
+        },
+        "collision:862,656": {
+          "kind": "collision",
+          "key": "862,656",
+          "blocked": true
+        },
+        "collision:863,656": {
+          "kind": "collision",
+          "key": "863,656",
+          "blocked": true
+        },
+        "collision:864,656": {
+          "kind": "collision",
+          "key": "864,656",
+          "blocked": true
+        },
+        "collision:865,656": {
+          "kind": "collision",
+          "key": "865,656",
+          "blocked": true
+        },
+        "collision:866,656": {
+          "kind": "collision",
+          "key": "866,656",
+          "blocked": true
+        },
+        "collision:867,656": {
+          "kind": "collision",
+          "key": "867,656",
+          "blocked": true
+        },
+        "collision:868,656": {
+          "kind": "collision",
+          "key": "868,656",
+          "blocked": true
+        },
+        "collision:869,656": {
+          "kind": "collision",
+          "key": "869,656",
+          "blocked": true
+        },
+        "collision:870,656": {
+          "kind": "collision",
+          "key": "870,656",
+          "blocked": true
+        },
+        "collision:871,656": {
+          "kind": "collision",
+          "key": "871,656",
+          "blocked": true
+        },
+        "collision:806,656": {
+          "kind": "collision",
+          "key": "806,656",
+          "blocked": true
+        },
+        "collision:807,656": {
+          "kind": "collision",
+          "key": "807,656",
+          "blocked": true
+        },
+        "collision:808,656": {
+          "kind": "collision",
+          "key": "808,656",
+          "blocked": true
+        },
+        "collision:809,656": {
+          "kind": "collision",
+          "key": "809,656",
+          "blocked": true
+        },
+        "collision:810,656": {
+          "kind": "collision",
+          "key": "810,656",
+          "blocked": true
+        },
+        "collision:811,656": {
+          "kind": "collision",
+          "key": "811,656",
+          "blocked": true
+        },
+        "collision:812,656": {
+          "kind": "collision",
+          "key": "812,656",
+          "blocked": true
+        },
+        "collision:813,656": {
+          "kind": "collision",
+          "key": "813,656",
+          "blocked": true
+        },
+        "collision:814,656": {
+          "kind": "collision",
+          "key": "814,656",
+          "blocked": true
+        },
+        "collision:815,656": {
+          "kind": "collision",
+          "key": "815,656",
+          "blocked": true
+        },
+        "collision:816,656": {
+          "kind": "collision",
+          "key": "816,656",
+          "blocked": true
+        },
+        "collision:817,656": {
+          "kind": "collision",
+          "key": "817,656",
+          "blocked": true
+        },
+        "collision:818,656": {
+          "kind": "collision",
+          "key": "818,656",
+          "blocked": true
+        },
+        "collision:819,656": {
+          "kind": "collision",
+          "key": "819,656",
+          "blocked": true
+        },
+        "collision:820,656": {
+          "kind": "collision",
+          "key": "820,656",
+          "blocked": true
+        },
+        "collision:821,656": {
+          "kind": "collision",
+          "key": "821,656",
+          "blocked": true
+        },
+        "collision:822,656": {
+          "kind": "collision",
+          "key": "822,656",
+          "blocked": true
+        },
+        "collision:823,656": {
+          "kind": "collision",
+          "key": "823,656",
+          "blocked": true
+        },
+        "collision:824,656": {
+          "kind": "collision",
+          "key": "824,656",
+          "blocked": true
+        },
+        "collision:825,656": {
+          "kind": "collision",
+          "key": "825,656",
+          "blocked": true
+        },
+        "collision:790,656": {
+          "kind": "collision",
+          "key": "790,656",
+          "blocked": true
+        },
+        "collision:791,656": {
+          "kind": "collision",
+          "key": "791,656",
+          "blocked": true
+        },
+        "collision:792,656": {
+          "kind": "collision",
+          "key": "792,656",
+          "blocked": true
+        },
+        "collision:793,656": {
+          "kind": "collision",
+          "key": "793,656",
+          "blocked": true
+        },
+        "collision:794,656": {
+          "kind": "collision",
+          "key": "794,656",
+          "blocked": true
+        },
+        "collision:795,656": {
+          "kind": "collision",
+          "key": "795,656",
+          "blocked": true
+        },
+        "collision:796,656": {
+          "kind": "collision",
+          "key": "796,656",
+          "blocked": true
+        },
+        "collision:797,656": {
+          "kind": "collision",
+          "key": "797,656",
+          "blocked": true
+        },
+        "collision:798,655": {
+          "kind": "collision",
+          "key": "798,655",
+          "blocked": true
+        },
+        "collision:799,655": {
+          "kind": "collision",
+          "key": "799,655",
+          "blocked": true
+        },
+        "collision:800,655": {
+          "kind": "collision",
+          "key": "800,655",
+          "blocked": true
+        },
+        "collision:801,655": {
+          "kind": "collision",
+          "key": "801,655",
+          "blocked": true
+        },
+        "collision:802,655": {
+          "kind": "collision",
+          "key": "802,655",
+          "blocked": true
+        },
+        "collision:803,655": {
+          "kind": "collision",
+          "key": "803,655",
+          "blocked": true
+        },
+        "collision:804,655": {
+          "kind": "collision",
+          "key": "804,655",
+          "blocked": true
+        },
+        "collision:805,655": {
+          "kind": "collision",
+          "key": "805,655",
+          "blocked": true
+        },
+        "collision:806,655": {
+          "kind": "collision",
+          "key": "806,655",
+          "blocked": true
+        },
+        "collision:798,656": {
+          "kind": "collision",
+          "key": "798,656",
+          "blocked": true
+        },
+        "collision:799,657": {
+          "kind": "collision",
+          "key": "799,657",
+          "blocked": false
+        },
+        "collision:800,657": {
+          "kind": "collision",
+          "key": "800,657",
+          "blocked": false
+        },
+        "collision:801,656": {
+          "kind": "collision",
+          "key": "801,656",
+          "blocked": true
+        },
+        "collision:802,656": {
+          "kind": "collision",
+          "key": "802,656",
+          "blocked": true
+        },
+        "collision:803,656": {
+          "kind": "collision",
+          "key": "803,656",
+          "blocked": true
+        },
+        "collision:804,656": {
+          "kind": "collision",
+          "key": "804,656",
+          "blocked": true
+        },
+        "collision:805,656": {
+          "kind": "collision",
+          "key": "805,656",
+          "blocked": true
+        },
+        "collision:799,656": {
+          "kind": "collision",
+          "key": "799,656",
+          "blocked": true
+        },
+        "collision:800,656": {
+          "kind": "collision",
+          "key": "800,656",
+          "blocked": true
+        },
+        "collision:798,657": {
+          "kind": "collision",
+          "key": "798,657",
+          "blocked": false
+        },
+        "collision:801,657": {
+          "kind": "collision",
+          "key": "801,657",
+          "blocked": false
         }
       },
-      "resultHash": "dcdee9c8-b8ed3210-401412"
+      "resultHash": "84ef5094-7366084e-421105"
     },
     "tavern": {
       "id": "2e94ec6a-9686-45f1-8b2a-a8099bc54c57",
