@@ -1,0 +1,221 @@
+{
+  "mode": "built-in image_gen; each portrait uses its generated sprite identity and Prue portrait style reference",
+  "portraits": [
+    {
+      "id": "tilda",
+      "name": "Tilda",
+      "town": "millwood",
+      "file": "tilda.webp",
+      "identityReference": "assets/sprites/regional/tilda.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Tilda, a resident of millwood. Character: adult olive-skinned woman, chestnut hair tucked into a sage-green cloth bonnet, russet wool bodice, cream long-sleeved blouse, moss-green skirt, brown boots; village wool spinner.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "emmet",
+      "name": "Emmet",
+      "town": "millwood",
+      "file": "emmet.webp",
+      "identityReference": "assets/sprites/regional/emmet.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Emmet, a resident of millwood. Character: young fair-skinned man, short curly auburn hair, olive-green waistcoat over cream linen shirt, brown trousers and work boots, no hat; orchard worker.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "lark",
+      "name": "Lark",
+      "town": "millwood",
+      "file": "lark.webp",
+      "identityReference": "assets/sprites/regional/lark.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Lark, a resident of millwood. Character: young adult dark-brown-skinned woman, black braid over one shoulder, sky-blue work dress, cream apron, brown boots, no hat; village baker's assistant.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "hal",
+      "name": "Hal",
+      "town": "millwood",
+      "file": "hal.webp",
+      "identityReference": "assets/sprites/regional/hal.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Hal, a resident of millwood. Character: older fair-skinned man with small grey beard, soft tan cap, warm brown wool vest, cream rolled-sleeve shirt, slate trousers, brown boots; retired miller.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "elric",
+      "name": "Elric",
+      "town": "thornwell",
+      "file": "elric.webp",
+      "identityReference": "assets/sprites/regional/elric.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Elric, a resident of thornwell. Character: adult brown-skinned man, short dark hair, burgundy knee-length wool scholar's tunic, navy hood resting on shoulders, brown trousers, soft boots, small brass clasp; town scribe.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "mara",
+      "name": "Mara",
+      "town": "thornwell",
+      "file": "mara.webp",
+      "identityReference": "assets/sprites/regional/mara.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Mara, a resident of thornwell. Character: adult fair-skinned woman, chestnut hair in bun, amber-brown long-sleeved dress, cream baker's apron, brown shoes, no hat; busy baker.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "kit",
+      "name": "Kit",
+      "town": "thornwell",
+      "file": "kit.webp",
+      "identityReference": "assets/sprites/regional/kit.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Kit, a resident of thornwell. Character: young adult olive-skinned man, short dark hair under soft rust-red cap, teal doublet, cream sleeves, charcoal trousers, brown boots; courier.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "mabel",
+      "name": "Mabel",
+      "town": "thornwell",
+      "file": "mabel.webp",
+      "identityReference": "assets/sprites/regional/mabel.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Mabel, a resident of thornwell. Character: older dark-brown-skinned woman, silver hair in neat bun, plum wool dress, pale gold shawl over shoulders, leather belt, brown shoes; cloth merchant.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "garran",
+      "name": "Garran",
+      "town": "forgewick",
+      "file": "garran.webp",
+      "identityReference": "assets/sprites/regional/garran.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Garran, a resident of forgewick. Character: stocky adult dark-brown-skinned man, closely cropped black hair and short beard, heavy copper-brown leather smith's apron over charcoal shirt, dark trousers, sturdy brown boots; forge worker.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "nessa",
+      "name": "Nessa",
+      "town": "forgewick",
+      "file": "nessa.webp",
+      "identityReference": "assets/sprites/regional/nessa.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Nessa, a resident of forgewick. Character: adult olive-skinned woman, black hair in high bun, teal long-sleeve tunic, amber leather work apron, dark trousers, brown boots, small brass goggles resting on head; glass apprentice.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "kerr",
+      "name": "Kerr",
+      "town": "forgewick",
+      "file": "kerr.webp",
+      "identityReference": "assets/sprites/regional/kerr.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Kerr, a resident of forgewick. Character: young fair-skinned man, short brown hair under dark charcoal cap, rust-orange work jacket, tan shirt, dark brown trousers and boots; coal porter.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "brigid",
+      "name": "Brigid",
+      "town": "forgewick",
+      "file": "brigid.webp",
+      "identityReference": "assets/sprites/regional/brigid.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Brigid, a resident of forgewick. Character: strong adult fair-skinned woman, auburn braid, forest-green tunic, short grey wool shoulder cape, brown leather belt, dark trousers, heavy boots; stone mason.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "farid",
+      "name": "Farid",
+      "town": "sandspire",
+      "file": "farid.webp",
+      "identityReference": "assets/sprites/regional/farid.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Farid, a resident of sandspire. Character: young medium-brown-skinned man, dark eyes and no beard, saffron cloth turban, cream long robe with warm ochre trim, brown sash and leather shoes; desert spice seller.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "samira",
+      "name": "Samira",
+      "town": "sandspire",
+      "file": "samira.webp",
+      "identityReference": "assets/sprites/regional/samira.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Samira, a resident of sandspire. Character: adult deep-brown-skinned woman, indigo headwrap covering all hair, turquoise long robe with restrained gold edging, cream sash, dark leather shoes; desert weaver.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "leila",
+      "name": "Leila",
+      "town": "sandspire",
+      "file": "leila.webp",
+      "identityReference": "assets/sprites/regional/leila.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Leila, a resident of sandspire. Character: adult olive-skinned woman, dark hair concealed by loose sand-beige headscarf, rust-red desert robe, teal sash, brown leather shoes; caravan accountant.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "zaid",
+      "name": "Zaid",
+      "town": "sandspire",
+      "file": "zaid.webp",
+      "identityReference": "assets/sprites/regional/zaid.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Zaid, a resident of sandspire. Character: older brown-skinned man with short white beard, brown wrapped cloth cap, cream robe, deep teal sash, brown shoes; desert water keeper.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "neri",
+      "name": "Neri",
+      "town": "coralmere",
+      "file": "neri.webp",
+      "identityReference": "assets/sprites/regional/neri.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Neri, a resident of coralmere. Character: adult dark-brown-skinned woman, long black braid, moss-green fisher's coat over cream shirt, dark navy trousers, brown boots; coastal net mender.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "finnick",
+      "name": "Finnick",
+      "town": "coralmere",
+      "file": "finnick.webp",
+      "identityReference": "assets/sprites/regional/finnick.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Finnick, a resident of coralmere. Character: young fair-skinned man, ginger hair under navy sailor's wool cap, cream shirt, blue waistcoat, rust-red neck scarf, dark trousers and brown boots; harbor runner.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "maris",
+      "name": "Maris",
+      "town": "coralmere",
+      "file": "maris.webp",
+      "identityReference": "assets/sprites/regional/maris.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Maris, a resident of coralmere. Character: adult medium-brown-skinned woman, wavy dark-brown shoulder-length hair, navy dress with coral-pink shawl, cream apron and brown boots; fishmarket cook.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "perrin",
+      "name": "Perrin",
+      "town": "coralmere",
+      "file": "perrin.webp",
+      "identityReference": "assets/sprites/regional/perrin.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Perrin, a resident of coralmere. Character: older fair-skinned man with grey beard, muted violet fisher's cap, navy wool vest over seafoam shirt, slate trousers, dark boots; retired boatwright.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "solveig",
+      "name": "Solveig",
+      "town": "hollybeck",
+      "file": "solveig.webp",
+      "identityReference": "assets/sprites/regional/solveig.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Solveig, a resident of hollybeck. Character: older fair-skinned woman, grey hair fully tucked under cream knitted cap, forest-green padded winter coat with connected cream shearling collar, rust-orange scarf, brown mittens and boots.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "nils",
+      "name": "Nils",
+      "town": "hollybeck",
+      "file": "nils.webp",
+      "identityReference": "assets/sprites/regional/nils.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Nils, a resident of hollybeck. Character: adult dark-brown-skinned man, short black hair beneath ochre knitted cap, burgundy padded winter coat with connected cream fur collar, charcoal scarf, brown gloves and boots.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "freya",
+      "name": "Freya",
+      "town": "hollybeck",
+      "file": "freya.webp",
+      "identityReference": "assets/sprites/regional/freya.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Freya, a resident of hollybeck. Character: young adult fair-skinned woman, red braid emerging below soft grey knitted cap, deep-teal padded winter coat with connected cream fur collar, red scarf, brown mittens and boots.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    },
+    {
+      "id": "oskar",
+      "name": "Oskar",
+      "town": "hollybeck",
+      "file": "oskar.webp",
+      "identityReference": "assets/sprites/regional/oskar.png",
+      "styleReference": "assets/portraits/prue.webp",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent dialogue portrait for the medieval fantasy game Emberfell.\nReference image 1 is this character's identity, clothing and colors from their animation sheet. Use ONLY its first, neutral south-facing pose for identity. Reference image 2 is the game's finished portrait art style, rendering quality and bust framing ONLY; do not copy her face, age, white hair or clothing.\nCreate ONE beautiful hand-painted RPG dialogue portrait of Oskar, a resident of hollybeck. Character: older olive-skinned man with small grey moustache, plum knitted cap, brown padded winter coat with connected cream fur collar, teal scarf, brown mittens and boots.\nTranslate the sprite into natural adult human proportions. Preserve the exact hairstyle, hat, skin tone, clothing layers, regional colors and accessories. Distinct believable face and the specified age; kind everyday townsfolk, no glamour styling. Head and upper torso including full shoulders, facing slightly toward the viewer's right. Match the warm, detailed painterly medieval realism of reference 2, with clear expressive eyes and careful cloth texture. Centered 1:1 square, entire head and shoulders inside canvas with safe margin. Neutral friendly expression, both eyes open, no extra people, weapons, text, labels, frames, landscape, background, cast shadow or vignette. Genuine transparent alpha outside the portrait."
+    }
+  ]
+}

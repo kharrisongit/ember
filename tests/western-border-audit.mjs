@@ -65,8 +65,8 @@ for(const [id,x,y,step,band] of [[193,412,142,4,2.5],[33,1400,218,3,1.5],[33,117
  }
 }
 const fallsFront=eastern.filter(o=>o.blossomFeature==='falls').sort((a,b)=>a.x-b.x);
-assert(fallsFront.length>=12&&fallsFront.every(o=>o.y===327*16&&o.sy>o.y),'Forgefalls has a complete foreground tree row after all passes');
+assert(fallsFront.length===10&&fallsFront.every(o=>o.y===328*16&&o.sy>o.y),'Forgefalls has both complete foreground banks one tile in front of the cliff after all passes');
 assert(fallsFront.slice(1).every((p,i)=>p.x-fallsFront[i].x===42||
- fallsFront[i].x<417.5*16&&p.x>417.5*16&&p.x-fallsFront[i].x===84),
- 'The Forgefalls foreground row is evenly spaced on both sides of the waterfall opening');
+ fallsFront[i].x<417.5*16&&p.x>417.5*16&&p.x-fallsFront[i].x===168),
+ 'The foreground row has even spacing and preserves the wider water/bridge opening ahead of the cliff');
 console.log('PASS: published oak/desert hunting T-junctions and the actual Forgefalls cliff-front row.');

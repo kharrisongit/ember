@@ -350,7 +350,8 @@ function tavernActorDepth(o,actors){
       if(seated)return Math.min(depth,seated.y-.5);
     }
   }
-  if(/^tavern_anim_/.test(o.spr||'')||(o.thornwellRoyal&&o.seatSpr)){
+  if(o.thornwellRoyal&&o.seatSpr)return o.sy??depth;
+  if(/^tavern_anim_/.test(o.spr||'')){
     const tables=actors.filter(a=>a.exactFurniture&&/table/.test(a.n||'')&&!a.editorDeleted&&
       Math.abs(o.x-a.x)<=a.extractedCanvas.width/2+12&&o.y>=a.y-a.extractedCanvas.height-8&&o.y<=a.y+28);
     return Math.max(depth,...tables.map(a=>(a.sy??a.y)+.5));
@@ -883,7 +884,8 @@ function arrangeNpcCast(){
   const seatIds=[1,2,6,8,11,12,13];
   for(const i of seatIds){const s=SPR['pack_pupil_'+i];SPR['seated_body_'+i]=[s[0],s[1],s[2],s[3]-9,s[4]];}
   for(const [name,source]of [['king_seated','kg_idle_d'],['maddock_seated','maddock_smith107_idle_d']]){
-    const s=SPR[source];SPR[name]=s.slice();SPR[name][3]=s[3]-7;
+    const s=SPR[source];SPR[name]=s.slice();
+    if(name!=='king_seated')SPR[name][3]=s[3]-7;
   }
   const usePack=(n,p,directions=false,walk=false)=>{
     n.packSpr=p;n.packDirections=directions;n.packWalk=walk;n.lookId=p;
@@ -2227,7 +2229,10 @@ function loadMap(id, fresh, discardDraft=false) {
 
     baseTerr = Uint8Array.from(MD.base_terr ? decodeRLE(MD.base_terr, MW * MH) : terr);
     features = (MD.features || []).map(f => ({ ...f }));
-    featOrig = new Map((MD.features || []).map(f => [f.id, JSON.stringify(f)]));
+    // Code-authored border repairs are the visible starting layout, not an
+    // unsent editor change. Keep MD's published anchors for server replay.
+    if(id==='world'&&typeof normalizeWesternTreeFeatures==='function')normalizeWesternTreeFeatures(features);
+    featOrig = new Map(features.map(f => [f.id, JSON.stringify(f)]));
     regionMoves = [];
     decorGone = new Set(MD.editorDeletedDecor||[]); decorDel = []; decorMoved = new Map();
     deckWet = null;                       /* rebuilt for the map being loaded */
@@ -2292,6 +2297,7 @@ function loadMap(id, fresh, discardDraft=false) {
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
+  if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
@@ -4497,7 +4503,7 @@ function drawWorld(t, dt) {
       if (sp) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
           : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
-        if(/^hollybeck_/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
+        if(/^(hollybeck_|regional_)/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){
@@ -8035,14 +8041,16 @@ function drawKingDragon() {
   if (lastFight || MAPID === "tavern") return;
   const k = npcs && npcs.find(n => /Halvard/.test(n.n || "") && (typeof npcHere !== "function" || npcHere(n)));
   if (!k) return;
-  const dir = k.f === "w" ? "w" : k.f === "e" ? "e" : "s";
+  const arrival=k.thornwellRoyal?thornwellRoyalDragon:null;
+  if(k.thornwellRoyal&&!arrival)return;
+  const dir = arrival?.dir||(k.f === "w" ? "w" : k.f === "e" ? "e" : "s");
   const sp = SPR["kdnew_fly_" + dir] || SPR.kdnew_fly_s;
   if (!sp) return;
   const side = (dir === "w") ? -1 : 1;
   const dw = Math.round(sp[2] * KING_DRAGON_DRAW_SCALE);
   const dh = Math.round(sp[3] * KING_DRAGON_DRAW_SCALE);
-  const px = k.x + side * 46 - dw / 2;
-  const py = k.y + 8 - dh;
+  const px = (arrival?.x??k.x + side * 46) - dw / 2;
+  const py = (arrival?.y??k.y + 8) - dh;
   const fr = Math.floor(tAcc * 3) % (sp[4] || 1);
   drawGameImage(ctx, sheetOf(sp), sp[0] + fr * sp[2], sp[1], sp[2], sp[3],
                 Math.round(px), Math.round(py), dw, dh);

@@ -11,11 +11,18 @@ const c=vm.createContext({scene:null,console,Map,Image:class {constructor(){imag
 c.window=c;
 const run=s=>vm.runInContext(s,c);
 run(read('assets/portraits/manifest.js'));
+run(read('js/regional-villagers.js'));
 run(read('js/dialogue-portraits.js'));
 assert.equal(scripts.length,8,'All portrait packs start loading before any conversation');
 const cast=JSON.parse(read('assets/portraits/cast.json'));
 assert.equal(new Set(cast.map(n=>n.name)).size,133);
 assert(cast.every(n=>run(`portraitFor(${JSON.stringify(n.name)})`)?.id===n.id));
+const newIds=new Set();
+for(const person of run('REGIONAL_VILLAGERS')){
+ const p=run(`portraitFor(${JSON.stringify(person.name)})`);
+ assert.match(p.src,new RegExp('regional/'+person.id+'\\.webp'));
+ assert(p.id>135&&!newIds.has(p.id));newIds.add(p.id);
+}
 for(let pack=1;pack<=8;pack++){
   run(read('assets/portraits/pack-'+pack+'.js'));
   const source=run(`portraitPackSources.get(${pack})`);

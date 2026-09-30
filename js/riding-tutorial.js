@@ -19,7 +19,7 @@
     if(!text)return;
     const slash=text==='Press A to Slash',sword=text==='Press A to Swing Your Sword';
     window.EmberEncounterCard.paint(hint,{title:text,kicker:slash?'DRAGON • SLASH':sword?'SWORD • SWING':'LEARN THE CONTROLS',
-      detail:slash?'Fire has a '+DRAGON_BREATH.fire.cool+' second cooldown. While it recharges, slash the foes in front of Aurelius.':sword?'Face your enemy and swing. Your first battle starts with you.':
+      detail:slash?'Fire has a '+DRAGON_BREATH.fire.cool+' second cooldown. While it recharges, slash the foes in front of Aurelius.':sword?'You cannot escape an arena battle. The walls stay up until you defeat every enemy. Face your foes and swing your sword.':
         /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control below when you are ready.',
       action:slash?'Press A to slash.':sword?'Press A to swipe.':'Press the highlighted button below.',key:slash||sword?'A':'↓',kind:slash?'dragon':'lesson',dismiss:slash||sword?'a':'control'});
   };
@@ -143,10 +143,8 @@
       if(demoPause>=.55){moveTo('battle','Press A to Slash');paint();saveGame();}
     }
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
-      window.EmberBattleMusic?.start();moveTo('swordTalk');
-      playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',hidePortrait:true,after:()=>{
-        moveTo('swordSwipe','Press A to Swing Your Sword');paint();
-      }});
+      window.EmberBattleMusic?.start();
+      moveTo('swordSwipe','Press A to Swing Your Sword');paint();
     }
     if(resumeRecovery&&!scene&&!revealing){resumeRecovery=false;beginRecovery();return;}
     if(resumeCorin&&!scene&&!revealing){resumeCorin=false;beginCorinRecovery();return;}

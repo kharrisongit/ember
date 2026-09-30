@@ -71,7 +71,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   for(const name of ['Sverre','Runa']){
    const n=npcs.find(n=>n.n===name);
    assert(n&&n.patrol&&n.packWalk&&n.packDirections&&!n.stationary,'Winter villager can walk: '+name);
-   for(const dir of ['d','u','e','w'])for(const action of ['walk','idle'])assert.equal(SPR[n.packSpr+'_'+action+'_'+dir][4],8,'Six motion frames plus closed and half-closed eyes in every direction and state');
+   for(const dir of ['d','u','e','w'])for(const action of ['walk','idle'])assert.equal(SPR[n.packSpr+'_'+action+'_'+dir][4],action==='walk'?6:4,'Six walking frames and four breathing/blinking idle states in every direction');
    assert(canNpcStand(n.x,n.y,n),'Winter villager starts on clear ground: '+name);
    assert(patrolRoute(n).length>1,'Winter villager has a clear walking route: '+name);
   }

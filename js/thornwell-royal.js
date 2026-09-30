@@ -3,7 +3,7 @@
    0: not met, 1: separated, 2: summoned, 3: audience, 4: dismissed,
    5: royal departure, 6: hurry to the falls, 7: reunited (or legacy complete). */
 let thornwellRoyal={stage:0,answers:{}};
-let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null;
+let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null,thornwellRoyalDragon=null;
 const THORNWELL_ROYALS=['King Halvard','Serjeant Bram'];
 const THORNWELL_RESIDENTS=new Set(['Orin','Linna','Isolde','Cartwright Oswin','Garrow','Wren','Merrin','Asta','Colm','Rowan the Hunter','Ada','Bren','Berta','Della','Ewan','Osric','Alder','Gwyneth','Archivist Elowen','Mira','Oren','Tamsin','Tessa','Master Iven','Brin','Bram','Nell','Sable','Pella','Bess','Ronan','Venn','Hobb','Edric','Dorr','Ser Anwen','Grusk','Fen','Senn','Dain','Rusk','Linnet','Puck','Pip','Vale','Cerys','Nyra','Maren','Celia']);
 function captureThornwellRoyal(){return {stage:thornwellRoyal.stage,answers:{...thornwellRoyal.answers}};}
@@ -12,7 +12,7 @@ function restoreThornwellRoyal(saved,legacy={}){
     legacy.wonAll||legacy.brambleQuest>=2?7:legacy.brambleQuest===1?1:0;
   thornwellRoyal={stage:stage===3?2:stage,answers:{}};
   for(const key of ['eggs','tax','riders','search','visit'])if(typeof saved?.answers?.[key]==='string')thornwellRoyal.answers[key]=saved.answers[key];
-  releaseThornwellSummonCamera();thornwellMotion=null;thornwellFlight=null;
+  releaseThornwellSummonCamera();thornwellMotion=null;thornwellFlight=null;thornwellRoyalDragon=null;
   if(scene?.thornwellRoyal){scene=null;walker=null;sayOff();showFace(null);}
   if(ask?.npcActor?.thornwellRoyal)askShut();
   npcs=npcs.filter(n=>!n.thornwellRoyal);
@@ -126,9 +126,10 @@ function syncThornwellRoyals(){
   // Keep the seated king at the north edge of the replacement square table,
   // following the editor's published position.
   const table=(MD.roomActors||[]).find(o=>o.editKey==='remaining:tavern:18');
-  const dx=table?table.x-396:0,dy=table?table.y-187:0;
-  for(const [i,pos]of [[396,169],[434,185]].entries())
-    npcs.push(thornwellRoyalActor(THORNWELL_ROYALS[i],pos[0]+dx,pos[1]+dy));
+  const x=table?.x??396,top=(table?.y??187)-(table?.extractedCanvas?.height??19);
+  const king=thornwellRoyalActor(THORNWELL_ROYALS[0],x,top+5);
+  king.seatClipY=top+2;king.sy=top-1;
+  npcs.push(king,thornwellRoyalActor(THORNWELL_ROYALS[1],x+38,top+17));
 }
 function thornwellKing(){return npcs.find(n=>n.thornwellRoyal&&n.n==='King Halvard');}
 function thornwellClear(x,y,actor){
@@ -327,13 +328,13 @@ function thornwellDeparture(){
   const origin=[exit.tx*TS+8,exit.ty*TS+TS];
   // The ceremonial escort has idle art only. Stage the entire party while
   // black, just as in Millwood; never swap them for the Cinderhold fighters.
-  thornwellScene([]);thornwellMotion={kind:'blackout'};
+  thornwellScene([]);thornwellMotion={kind:'blackout'};thornwellRoyalDragon=null;
   royalBlackout('Serjeant Bram: Make way for royalty!',()=>{
     npcs=npcs.filter(n=>!n.thornwellRoyal);
     const forward=[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]].find(p=>canStand(...p));
     if(forward)[P.x,P.y]=forward;
     for(const [i,name]of THORNWELL_ROYALS.entries()){
-      const offsets=[[0,8],[30,20]];
+      const offsets=[[0,8],[-30,20]];
       const actor=thornwellRoyalActor(name,origin[0]+offsets[i][0],origin[1]+offsets[i][1]);
       const spot=[[actor.x,actor.y],[actor.x,actor.y+16],[actor.x,actor.y-16],origin].find(p=>thornwellClear(...p,actor));
       if(spot){[actor.x,actor.y]=spot;actor.px=actor.x;actor.py=actor.y;}
@@ -343,21 +344,30 @@ function thornwellDeparture(){
   },()=>{
     const king=thornwellKing();thornwellMotion=null;
     thornwellScene([
-      'King Halvard: Come, Bram. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
-      'Serjeant Bram: As you command, sire.'
-    ],thornwellRoyalExit,king);
+      'King Halvard: Come, Bram. There’s no wild dragon here. We leave for Cinderhold by way of Forgefalls.',
+      'Serjeant Bram: Your mount is coming, sire.'
+    ],thornwellRoyalArrival,king);
     scene.hold=()=>fade<=0;showScene();
     // Reveal the party only after Bram's announcement has been read in black.
   });
+}
+function thornwellRoyalArrival(){
+  const king=thornwellKing();if(!king){thornwellRoyalExit();return;}
+  const target=[king.x+58,king.y+8],start=[Math.max(cam.x+VW/cam.z,target[0])+160,target[1]-72];
+  thornwellRoyalDragon={x:start[0],y:start[1],target,dir:'w',arrived:false};
+  thornwellMotion={kind:'dragonArrival',pause:0};
+  thornwellScene([]);scene.silent=true;
 }
 function thornwellRoyalExit(){
   thornwellMotion={kind:'blackout'};
   royalBlackout('Out of my way, boy!',()=>{
     // Change positions only under full black, with the same published collision
     // checks used by ordinary movement. No knight plays a walking animation.
-    const aside=[[P.x-28,P.y+8],[P.x+28,P.y+8],[P.x-24,P.y+24],[P.x+24,P.y+24]].find(p=>canStand(...p));
+    // Stay in the entrance lane, clear of Merrin's western patio table.
+    const safe=(x,y)=>canStand(x,y)&&npcs.every(n=>n.thornwellRoyal||n.editorDeleted||Math.hypot(n.x-x,n.y-y)>40);
+    const aside=[[P.x+8,P.y+12],[P.x,P.y+16],[P.x+16,P.y+16],[P.x,P.y]].find(p=>safe(...p));
     if(aside)[P.x,P.y]=aside;
-    P.moving=false;npcs=npcs.filter(n=>!n.thornwellRoyal);
+    P.moving=false;npcs=npcs.filter(n=>!n.thornwellRoyal);thornwellRoyalDragon=null;
   },()=>{
     thornwellMotion=null;thornwellCheckpoint(6);
     thornwellScene([
@@ -412,6 +422,17 @@ function stepThornwellRoyal(dt){
   if(thornwellMotion){
     const motion=thornwellMotion;
     if(motion.kind==='blackout')return;
+    if(motion.kind==='dragonArrival'){
+      const d=thornwellRoyalDragon;if(!d)return;
+      const dx=d.target[0]-d.x,dy=d.target[1]-d.y,dist=Math.hypot(dx,dy),step=Math.min(dist,125*dt);
+      if(dist>0){d.x+=dx/dist*step;d.y+=dy/dist*step;}
+      if(dist<=step){d.arrived=true;d.dir='s';motion.pause+=dt;}
+      if(motion.pause>=.7){
+        thornwellMotion=null;
+        thornwellScene(['King Halvard: At last. Stay out of our way, boy.','Serjeant Bram: Clear the road!'],thornwellRoyalExit,thornwellKing());
+      }
+      return;
+    }
     if(motion.path)thornwellMove(P,motion.path,motion.kind==='shove'?180:82,dt);
     if(motion.dog){
       const last=motion.trail.at(-1);

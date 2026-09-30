@@ -1,0 +1,42 @@
+/* The command parchment and elemental seal occupy the controller deck. */
+#airm,#atkm{--menu-gold:#b38a4c;--menu-ink:#493325;--menu-wax:#7e342d;
+ border-top:4px double var(--menu-gold)!important;
+ background:radial-gradient(ellipse at 50% 15%,#fff5d9,transparent 75%),repeating-linear-gradient(0deg,#9b714008 0 1px,transparent 1px 5px),linear-gradient(115deg,#d6bc89,#f0dfb8 45%,#d1b380)!important;
+ box-shadow:0 -5px 18px #26190e66,inset 0 0 0 5px #76543335!important;
+ animation:commandUnfurl .32s cubic-bezier(.2,.8,.3,1);isolation:isolate}
+#atkm{--menu-ink:#f3e2bb;--menu-wax:#d8b675;
+ background:radial-gradient(ellipse at 50% 55%,#79463155,transparent 60%),repeating-linear-gradient(45deg,#b99b6508 0 1px,transparent 1px 9px),linear-gradient(135deg,#302b33,#202c35 55%,#392a32)!important}
+#airm>b,#atkm>b{color:var(--menu-ink)!important;text-shadow:0 1px #0002!important}
+#airm>b::after,#atkm>b::after{letter-spacing:.12em!important}
+#airm::before{content:"✦";position:absolute;left:50%;top:48%;font:180px/1 Georgia,serif;color:#aa743a16;transform:translate(-50%,-50%);pointer-events:none;animation:commandSealGlow 3.6s ease-in-out infinite}
+#airm::after{content:"";position:absolute;inset:8px;z-index:-1;border:1px solid #99713e88;pointer-events:none}
+#atkm::before{border:2px dashed #caa56855;animation:dragonSealTurn 42s linear infinite}
+#atkm::after{border:1px solid #caa56866;box-shadow:0 0 22px #d6a36622,inset 0 0 20px #d6a36611;animation:commandSealGlow 3s ease-in-out infinite}
+#airm .row:nth-child(n),#atkm .row:nth-child(n){border:3px double #a68148!important;
+ background:radial-gradient(circle at 36% 23%,#fff7df,#e0c38f)!important;color:#493325!important;
+ box-shadow:inset 0 0 0 3px #71522b22,0 4px 0 #51372366,0 6px 12px #21130c33!important;
+ transition:background .18s,box-shadow .18s,filter .18s}
+#atkm .row:nth-child(n){border-color:var(--el,#c9a15c)!important;background:radial-gradient(circle at 35% 25%,#f9e7be,#be9b67)!important}
+#airm .row.on:nth-child(n),#atkm .row.on:nth-child(n){background:radial-gradient(circle at 35% 25%,#fff8dd,#e3ba71)!important;
+ box-shadow:inset 0 0 0 2px #fff5ca,0 0 0 2px #8b542d,0 0 18px #efc87966!important}
+#airm .row.on .actionIcon,#atkm .row.on .actionIcon{animation:commandIconLift 1.8s ease-in-out infinite}
+#atkm .row .actionIcon,#airm .row .actionIcon{width:30px!important;height:30px!important;flex-basis:30px!important;opacity:1;filter:brightness(.42) saturate(.8) drop-shadow(0 1px #fff2c677)}
+#airm .row.blank:nth-child(n){background:#bba88655!important;border-color:#b29a7399!important;box-shadow:inset 0 2px 7px #44301822!important}
+#airCloseBtn,#atkCloseBtn{border:2px double #a47d44!important;border-radius:4px!important;background:#6b332b!important;color:#fff0ca!important;box-shadow:0 2px 0 #301812!important;letter-spacing:.08em}
+#atkm .row.breathRefill .breathSecs{background:#532b27!important;color:#fff0c7!important}
+#atkm .attackSigil{opacity:.8}
+#atkm{--ability-size:clamp(60px,calc((var(--deck) - 36px)/3),78px)}
+#atkm .rows{top:44px!important;height:calc(100% - 72px)!important}
+#atkm .row:nth-child(n){width:var(--ability-size)!important;height:var(--ability-size)!important}
+#atkm .row:nth-child(1){width:calc(var(--ability-size)*.74)!important;height:calc(var(--ability-size)*.74)!important}
+#atkm .foot{left:12px!important;bottom:8px!important;width:32%!important;max-width:32%!important;min-width:0!important;transform:none!important;text-align:left!important;white-space:normal!important}
+@keyframes commandUnfurl{from{opacity:0;clip-path:inset(0 0 85% 0)}to{opacity:1;clip-path:inset(0)}}
+@keyframes dragonSealTurn{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes commandSealGlow{50%{opacity:.45}}
+@keyframes commandIconLift{50%{transform:translateY(-2px)}}
+@media(max-height:480px) and (min-width:600px){
+ #atkm .rows{display:flex!important;align-items:center!important;justify-content:center!important;gap:20px!important;top:36px!important;height:calc(100% - 70px)!important;width:min(90vw,600px)!important}
+ #atkm .row:nth-child(n){position:relative!important;left:auto!important;top:auto!important;transform:none!important;width:72px!important;height:72px!important;min-width:72px!important;flex:0 0 72px!important;margin:0!important}
+ #atkm .row.on:nth-child(n){transform:scale(1.04)!important}
+}
+@media(prefers-reduced-motion:reduce){#airm,#atkm,#airm::before,#atkm::before,#atkm::after,#airm .row.on .actionIcon,#atkm .row.on .actionIcon{animation:none!important}}

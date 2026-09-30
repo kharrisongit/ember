@@ -22,9 +22,45 @@ async function prepareMillwoodInteriors() {
   await prepareCastleArchitecture();
   prepareRemainingInteriorActors();
   prepareMaddockDiningFurniture();
+  restoreTavernFurniture();
   prepareRoyalDiningFurniture();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+
+function restoreTavernFurniture(){
+  const room=W.maps.tavern;if(!room||room._completeDiningFurniture)return;
+  const stool=room.roomActors.find(a=>a.editKey==='remaining:tavern:13');
+  const art=SPR.tavern_room;if(!stool?.extractedCanvas||!art)return;
+  room._completeDiningFurniture=true;
+  // Reuse the intact stool from the native tavern art. The earlier north-row
+  // crops only contained the seat because the table hid the rest of each stool.
+  for(const actor of room.roomActors.filter(a=>a.exactFurniture&&a.n==='stool')){
+    let [left,top,w,h]=actor.sourceRect;const canvas=stool.extractedCanvas;
+    const index=Number(actor.editKey.split(':').at(-1));
+    if(index>=7&&index<=12){top=164;actor.x=161.5+((index-7)%3)*18+(index>=10?120:0);}
+    if(index>=33&&index<=38){top=240;actor.x=161.5+((index-33)%3)*18+(index>=36?120:0);}
+    actor.extractedCanvas=canvas;actor.y=top+canvas.height;
+    actor.sourceRect=[actor.x-canvas.width/2,top,canvas.width,canvas.height];
+    actor.sy=Math.min(actor.sy??actor.y,top+h);
+  }
+  // The unoccupied native table exposes one complete front leg beside its
+  // stool. Retain that art and mirror it for the other side; preserve the
+  // original tabletop, cloth, bottles and card game in every existing crop.
+  const leg=document.createElement('canvas');leg.width=4;leg.height=7;
+  const lg=leg.getContext('2d',{willReadFrequently:true});
+  drawGameImage(lg,sheetOf(art),art[0]+321,art[1]+191,4,7,0,0,4,7);
+  const data=lg.getImageData(0,0,4,7);
+  for(let i=0;i<data.data.length;i+=4)if(data.data[i]>105||data.data[i+1]>75)data.data[i+3]=0;
+  lg.putImageData(data,0,0);
+  for(const actor of room.roomActors.filter(a=>a.exactFurniture&&a.n==='dining table')){
+    const old=actor.extractedCanvas,[left,top,w,h]=actor.sourceRect;
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h+6;
+    const g=canvas.getContext('2d');g.imageSmoothingEnabled=false;
+    g.drawImage(old,0,0);g.drawImage(leg,w-7,h-2);
+    g.save();g.translate(7,h-2);g.scale(-1,1);g.drawImage(leg,0,0);g.restore();
+    actor.extractedCanvas=canvas;actor.y+=6;actor.sourceRect=[left,top,w,h+6];
+  }
 }
 
 function prepareRoyalDiningFurniture(){

@@ -13,10 +13,10 @@ const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 for(const path of ['js/first-temple.js','js/sandspire-temple.js','js/hollybeck-temple.js','js/mountain-passage.js'])run(read(path));
 await run('prepareExpandedMountainPassage()');await run('prepareExpandedMountainPassage()');
-const plans=JSON.parse(read('assets/interiors/mountain-passage/layout.json')),holly=JSON.parse(read('assets/interiors/hollybeck-temple/layout.json'));
+const plans=JSON.parse(read('assets/interiors/mountain-passage/layout.json'));
 const maps=Object.entries(W.maps).filter(([,m])=>m.mountainPassage);
 const area=ps=>Object.values(ps).reduce((n,m)=>n+new Set(m.floors.flatMap(([l,t,r,b])=>Array.from({length:(r-l)/16*(b-t)/16},(_,i)=>[l+i%((r-l)/16)*16,t+Math.floor(i/((r-l)/16))*16].join(',')))).size,0);
-assert.equal(maps.length,20);assert.equal(area(plans),area(holly));assert.equal(maps.reduce((n,[,m])=>n+m.templePlan.chambers.length,0),89);
+assert.equal(maps.length,20);assert.equal(area(plans),8586,'Mountain Passage retains its authored size when temple rooms grow');assert.equal(maps.reduce((n,[,m])=>n+m.templePlan.chambers.length,0),89);
 const clear=(m,x,y,gate=false)=>[[x-6,y-12],[x+6,y-12],[x-6,y-1],[x+6,y-1]].every(([px,py])=>
  m.templeFloors.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&!m.roomBlocks.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&
  !(gate&&m.templePlan.gate&&px>=m.templePlan.gate[0]&&px<m.templePlan.gate[2]&&py>=m.templePlan.gate[1]&&py<m.templePlan.gate[3]));
@@ -71,7 +71,7 @@ c.P.y=768;run('stepExpandedTemple(1)');assert.equal(finale.templeGateOpen,0);
 c.bossGone['passage3:0']=true;run('stepExpandedTemple(1)');assert.equal(finale.templeGateOpen,1);run('spawnFoes()');assert.equal(c.foes.length,0,'original boss key still suppresses respawn');
 // Every trap family damages during its active phase; its own lever silences it.
 for(const [id,m]of maps)for(const h of m.templePlan.hazards){
- c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};
+ c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};
  m.templeClock=['arrow','cannon'].includes(h.type)?2.2:2;const before=c.hits,clock=m.templeClock;
  run('stepExpandedTemple(.1)');assert.equal(m.templeClock,clock+.1,'shared trap clock advances once');assert(c.hits>before,id+' '+h.type+' active damage');
  c.P={x:h.lever[0],y:h.lever[1]};assert(run('tryExpandedTempleLever()'));assert(run('expandedTrapDisabled('+JSON.stringify(h.id)+')'));
@@ -95,4 +95,4 @@ for(const id of ['passage','passage2','passage3']){
  saved={map:id,x:40,y:80,quest:1,templeLayoutVersion:2,breathHas:{}};assert(run('loadGame(1)'));
  assert.equal(c.birdMeat,0,'older saves default to no bird meat');assert.equal(c.foxMeat,0,'older saves default to no fox meat');assert.equal(c.deerMeat,0,'older saves default to no deer meat');assert.equal(c.hareMeat,0,'older saves default to no hare meat');assert.deepEqual([c.P.x,c.P.y],Array.from(W.maps[id].spawn));assert.equal(Object.keys(c.bossGone).length,0,'save slots do not share passage defeats');
 }
-console.log('PASS: 20 sections, 89 rooms, exact Hollybeck area, all doors/chests/levers/enemies reachable, all five traps active and disableable, two world mouths, original Ashfiend, plain exit chamber, reverse traversal and save migration.');
+console.log('PASS: 20 sections, 89 rooms, preserved passage area, all doors/chests/levers/enemies reachable, all five traps active and disableable, two world mouths, original Ashfiend, plain exit chamber, reverse traversal and save migration.');
