@@ -79,6 +79,7 @@ jobs:
           node tests/oak-temple-borders.mjs
           node tests/forgewick-scenery-borders.mjs
           node tests/desert-border-join.mjs
+          node tests/eastern-border-joins.mjs
           node tests/weather-crash-field.mjs
           node tests/western-border-audit.mjs
           node tests/editor-source-compatibility.mjs

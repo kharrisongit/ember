@@ -41,4 +41,20 @@ assert(west.length>=6&&west.every(o=>data.NAMES[o.s]==='oak_big'),'West oak edge
 assert(data.trees.filter(o=>o.blossomKind==='route'&&o.blossomFeature===32).every(o=>data.NAMES[o.s]==='deadtree0'),'Dying approach to the desert retains native trees');
 assert.equal(data.crashMushrooms,0,'Crash field mushroom square is absent after all passes');
 assert(data.sporeMushrooms>0,'Shroom-people square remains after all passes');
+const eastern=data.trees.map(o=>({...o,tx:o.x/16-.5,ty:o.y/16-1,name:data.NAMES[o.s]}));
+const byHunt=eastern.filter(o=>o.tx>=1390&&o.tx<=1405&&o.ty>=205&&o.ty<=230);
+assert(byHunt.length>=20&&byHunt.every(o=>o.name==='cactus1'),'No published temple trees survive north of arena 30 beside the hunting turnoff');
+for(const side of [-1,1])for(const row of [0,1,2]){
+ const line=eastern.filter(o=>o.blossomFeature===33&&o.blossomRow===row&&o.tx===1174+side*(4+row*1.5)&&o.ty>=138&&o.ty<=165).sort((a,b)=>a.ty-b.ty);
+ assert(line.length>=7&&line.every(o=>o.name==='cactus1'),'Every cactus band continues south from the bend above arena 25');
+ assert(line.slice(1).every((p,i)=>p.ty-line[i].ty<=3.01),'No final-map gaps in the north cactus connection');
+}
+for(const [left,right,seam,y] of [[44,45,1824,26],[45,46,1887,26],[58,61,2144,449]]){
+ for(const row of [0,1,2])for(const side of [-1,1]){
+  const band=id=>eastern.filter(o=>o.blossomFeature===id&&o.blossomRow===row&&Math.abs(o.tx-seam)<20&&Math.abs(o.ty-y)<12&&(o.ty-y)*side>0);
+  const a=band(left).sort((a,b)=>a.tx-b.tx).at(-1),b=band(right).sort((a,b)=>a.tx-b.tx)[0];
+  assert(a&&b&&Math.hypot(a.tx-b.tx,a.ty-b.ty)<=9,`Final map retains both sides of transition ${seam}, row ${row}, side ${side}`);
+ }
+}
 console.log(`PASS: 19 routes through the desert entrance, all ${Object.keys(expected).length+1} combat/hunting arenas, split transition, spruce approach, west oak edge and dying avenue after full published-map loading.`);
+console.log('PASS: eastern cactus bends and hunting turnoff, cactus/dead/blossom connection and blossom/swamp seam after all generation and saved-edit passes.');

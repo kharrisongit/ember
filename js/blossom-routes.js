@@ -1,4 +1,4 @@
-/* Shared planting for blossom borders, Millwood, Northern Woods and Shroom Pass.
+/* Shared planting for forest, cactus and biome-transition borders.
    Match spacing to each region's native tree artwork. */
 const BLOSSOM_TREE_STEP = 91 / 16;
 const BLOSSOM_BAND_STEP = 3;
@@ -13,6 +13,7 @@ function treeBorderSpacing(feature) {
   if(feature.region==='shroom')return {step:66/16,band:2.5,clearance:3};
   if(feature.region==='dying')return {step:72/16,band:2.5,clearance:3};
   if(feature.region==='desert')return {step:48/16,band:1.5,clearance:1.5};
+  if(feature.region==='swamp')return {step:72/16,band:2.5,clearance:3};
   // Spruce art is 61 opaque pixels tall; leave its trunk visible above the
   // next canopy while keeping the staggered bands just two tiles apart.
   return feature.region==='millwood'
@@ -61,7 +62,7 @@ function blossomRouteCandidates(roads,row) {
     for(const side of [-1,1])for(const v of blossomRowValues(lo-off,hi+off,row,spacing.step)) {
       const p=blossomPoint(vert?axis+side*off:v,vert?v:axis+side*off,
         {row,vertical:vert,kind:'route',source:r.id,tree:r.tree,region:r.region});
-      p.transition=r.joinX!==undefined&&Math.abs(p.x-r.joinX)<14;
+      p.transition=(r.joinXs||[r.joinX]).some(x=>x!==undefined&&Math.abs(p.x-x)<14);
       if(r.minY!==undefined&&p.y<r.minY)continue;
       if(r.minX!==undefined&&p.x<r.minX||r.maxX!==undefined&&p.x>=r.maxX)continue;
       if(!treeBorderInBounds(p.x,p.y,r.bounds))continue;
@@ -164,16 +165,28 @@ function treeBorderScope(list,legsFor) {
     legsFor(f).some(([a,b])=>templeRoots.some(r=>
       blossomRoadDistance(...a,r)<6||blossomRoadDistance(...b,r)<6)));
   const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
-    const native=nativeRoute(f),oak=f.style==='oak',birch=f.style==='birch',dying=f.id===32&&f.style==='dying';
+    const native=nativeRoute(f),oak=f.style==='oak',birch=f.style==='birch',dying=f.style==='dying';
     const temple=templeRoute(f);
-    const managed=f.style==='blossom'||native||oak||birch||temple||dying;
+    // Own the full main desert avenues and their hunting loops. Managing only
+    // the first horizontal leg left its north bend bare and let saved temple
+    // trees survive in the cactus line beside the eastern hunting turnoff.
+    const desert=f.style==='desert'&&[33,44,9160,9162,9166].includes(f.id);
+    const managed=f.style==='blossom'||native||oak||birch||temple||dying||desert;
     return legsFor(f).flatMap(([a,b])=>{
-      const desert=f.id===33&&a[1]===138&&b[1]===138&&Math.min(a[0],b[0])===1047;
       const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
-      blossom:managed||desert,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':dying?'deadtree0':desert?'cactus1':'blo_big',
+      blossom:managed,tree:temple?'kt_tree_a':oak?'oak_big':birch?'bir_big':native?'spr_big':dying?'deadtree0':desert?'cactus1':'blo_big',
       region:temple?'forgewick-temple':oak?'oak':birch?'birch':native?'millwood':dying?'dying':desert?'desert':'blossom',
-      minX:desert?1046:undefined,maxX:dying?1046:undefined,joinX:dying||desert?1046:undefined,
       minY:native&&woods?woods.y0:undefined};
+      const joins={32:{maxX:1046,joinX:1046},33:{minX:1046,joinX:1046},
+        44:{maxX:1824,joinX:1824},45:{minX:1824,maxX:1887,joinXs:[1824,1887]},
+        46:{minX:1887,joinX:1887},58:{maxX:2144,joinX:2144}};
+      Object.assign(road,joins[f.id]);
+      // Replant both sides of the blossom/swamp seam. Keep the rest of the
+      // swamp and the first ent arena's existing vegetation outside this scope.
+      if(f.id===61&&a[1]===449&&b[1]===449){
+        const entry=treeBorderClipRoad(road,{x0:2144,x1:2168,y0:428,y1:470});
+        if(entry)return [road,{...entry,blossom:true,tree:'sw_tree3_3',region:'swamp',minX:2144,joinX:2144}];
+      }
       // The original unstyled road spans both woods. Keep its full path as an
       // obstacle, but only take ownership of planting inside Shroom Pass.
       const clipped=shrooms&&(!f.style||f.style==='mystic')&&treeBorderClipRoad(road,shrooms);
@@ -223,6 +236,13 @@ function normalizeWesternTreeFeatures(list) {
   if(end?.[0]===1045&&end[1]===140&&start?.[0]===1047&&start[1]===138){
     dying.pts=dying.pts.concat([[1047,140],[1047,138]]);
     dying.x1=1047;dying.y1=138;
+  }
+  const blossoms=list.find(f=>f.kind==='route'&&f.id===58);
+  const blossomEnd=blossoms?.pts?.at(-1);
+  const swampStart=list.find(f=>f.kind==='route'&&f.id===61)?.pts?.[0];
+  if(blossomEnd?.[0]===2144&&blossomEnd[1]===450&&swampStart?.[0]===2143&&swampStart[1]===449){
+    blossoms.pts=blossoms.pts.slice(0,-1).concat([[2143,450],[2143,449]]);
+    blossoms.x1=2143;blossoms.y1=449;
   }
 }
 
@@ -322,7 +342,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const {x,y}=p,[tx,ty]=cell(p),k=tx+','+ty;
     if(tx<1||ty<1||tx>=MW-1||ty>=MH-1||protectedPlace(x,y,p.region))return false;
     if(inTownArea(x,y)&&!townBorder(x,y)&&p.kind!=='scenery')return false;
-    const sandy=(p.region==='dying'||p.region==='desert')&&typeof SAND!=='undefined'&&terr[ty*MW+tx]===SAND;
+    const sandy=(p.region==='dying'||p.region==='desert'||p.transition&&p.region==='blossom')&&
+      typeof SAND!=='undefined'&&terr[ty*MW+tx]===SAND;
     if(!sandy&&![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||
       (typeof felledNew!=='undefined'&&felledNew.includes(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
