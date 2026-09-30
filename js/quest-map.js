@@ -23,7 +23,7 @@ function atlasMainObjective(){
  if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.');
  if(!smithUpgrade)return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.');
  if(!charm.edge)return o('Finish with Dunstan','Forgewick','Speak with Dunstan again about the gift that strengthens your blade.');
- if(!glassShield)return o('Visit Sela','Forgewick','Ask the glassblower about her protective shield.');
+ if(!glassShield)return o('Visit Sela','Forgewick','Ask the glassblower about his protective shield.');
  if(!breathHas.lightning)return o('The Lightning Heartstone','Forgewick Temple','Explore the temple southeast of Forgewick and claim its Heartstone.');
  if(!breathHas.ice)return o('The Ice Heartstone','Sandspire Temple','Follow the road east to Sandspire. Explore its temple to the southeast.');
  if(!breathHas.shadow)return o('The Shadow Heartstone','Hollybeck Temple','Travel through Coralmere to Hollybeck. Follow the temple trail east and north.');
@@ -49,7 +49,7 @@ function atlasQuestOptions(){
  if((dragonLearned('fishing')||odoRodReferral)&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',atlasBrambleClue());
  if(dragonLearned('smith')&&!smithUpgrade)add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
- if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in the glass shop about her shield.');
+ if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in his workshop behind the glass shop about his shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','Unlock summoning: Book of the Dead','Hollybeck Graveyard','Defeat every wave of ghosts and claim the Book of the Dead to summon two allied wraiths in battle.');
  for(const {n,map} of dragonGiftLeads()){

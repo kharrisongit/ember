@@ -6,7 +6,7 @@ const game=read('js/generated/game-part-2.js');
 const npc={n:'Dunstan',x:200,y:174,talkX:212,talkY:180,school:true};
 const smithy={_remainingInterior:true,npcs:[npc],roomBlocks:[[176,90,224,110]],roomActors:[{spr:'smithy_anim_0',x:200,y:176},{spr:'smithy_anim_4',x:200,y:160},{spr:'smithy_anim_8',x:200,y:192,schoolArt:true,sceneReserved:true},{n:'forge',x:200,y:112,sy:112,exactFurniture:true,interiorFurniture:true,editKey:'forge',extractedCanvas:{width:54,height:80},moveBlocks:[]}]};
 const cellar={royal:true,npcs:[],cellarCaches:[{id:0,x:64,y:112,amount:10}],roomBlocks:[[44,92,84,112]],roomActors:[{spr:'dragon75_food1',x:64,y:112,schoolArt:true}]};
-const ctx=vm.createContext({W:{maps:{smithy,royal_cellar:cellar}},SPR:{smithy_anim_0:[0,0,100,100,4],smithy_anim_4:[0,0,48,64,8],smithy_anim_8:[0,0,48,60,6],dragon75_food1:[0,0,44,40,1]},window:{},NAMES:[],TS:16,actorLayouts:{},throneRoomImg:{naturalWidth:100,naturalHeight:160},MD:smithy,MAPID:'smithy',npcs:[{...npc}],PXW:400,PXH:352,rebuildSolid(){},mapDirty:false});
+const ctx=vm.createContext({W:{maps:{smithy,royal_cellar:cellar}},SPR:{smithy_anim_0:[0,0,100,100,4],smithy_anim_4:[0,0,48,64,8],smithy_anim_8:[0,0,48,60,6],dragon75_food1:[0,0,44,40,1]},window:{},NAMES:[],TS:16,actorLayouts:{},throneRoomImg:{naturalWidth:100,naturalHeight:160},MD:smithy,MAPID:'smithy',npcs:[{...npc}],PXW:400,PXH:352,rebuildSolid(){},scheduleEditorDraft(){},mapDirty:false});
 vm.runInContext(read('js/millwood-interiors.js'),ctx);
 vm.runInContext(game.slice(game.indexOf('function editorActorInfo('),game.indexOf('function pickEditorActor(')),ctx);
 vm.runInContext('prepareRemainingInteriorActors()',ctx);

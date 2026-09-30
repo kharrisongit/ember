@@ -1,0 +1,15 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-09-30",
+  "prompts": [
+    {
+      "output": "source/dunstan-work-idle.png",
+      "prompt": "Use case: style-transfer.\nAsset type: production pixel-art animation sprite sheet for Emberfell.\nInput image 1 is the EDIT TARGET: Dunstan's exact existing 42-frame smithing animation, numbered 0–41 in seven columns, six rows. Input image 2 is STYLE ONLY: the refined, charming, crisp pixel-art NPC style now used in the game.\nRedraw Dunstan in that NPC style, retaining his dark brown swept-back hair, short brown beard, bare muscular arms, navy smith apron, brown trousers and boots, and the same black iron anvil on wooden stump. Keep every frame's specific pose and hammer/sword action exactly as reference image 1, same order, same hammer heights and swings and sparks. His identity is not the capped old man in image 2.\nOutput one transparent square sprite sheet with EXACTLY SEVEN COLUMNS AND SEVEN ROWS on a regular equal-cell grid. First six rows are reference frames 0–41 in identical order. Final seventh row first FOUR cells: Dunstan standing at the SAME anvil, hammer resting down, looking toward player: relaxed eyes open, tiny breathing inhale, half-blink, closed blink. Last three cells empty transparent.\nFixed front slightly top-down RPG view, warm pixel palette, larger expressive head/face matching image2, hard pixel edges and carefully shaded pixel clusters, no painterly smoothing or antialiasing. Entire character and anvil fully contained with clear padding in every cell. Keep anvil identical size and position across ALL 46 frames, same scale/baseline in all cells. No scene backgrounds, no floor, no labels/numbers/grid lines/text/watermarks. True transparent alpha."
+    },
+    {
+      "output": "source/dunstan-finish.png",
+      "prompt": "Use case: style-transfer. Restyle the SEVEN EXACT POSES in input1 using the crisp charming pixel-art finish and brown-haired bearded blacksmith identity of input2. Input1 is the POSE target: four cells top row, three bottom row. Copy it literally, including eyes half-closed or open, working hands close to body, bending slightly over sword, then lowering hammer. This is a quiet finishing phase, not the hammer-swing phase. EVERY HAND STAYS LOW BELOW THE FACE. No raised arms. No sparks. No action trails. No new hammer swings. Preserve pose and silhouette of each input1 frame.\nOutput exactly 4 columns and 2 rows, last cell empty, TRUE transparent background, no labels. Repeated fixed black anvil on wood stump must be identical in all cells and exactly same scale/baseline, subject fully inside padded cells. Navy apron, bare arms, brown hair and beard, brown trousers and boots, warm skin, large expressive head, sharp deliberate pixel clusters, no smoothing, no photorealism. Match input2 art style while copying input1's 7 poses."
+    }
+  ],
+  "note": "The first source contains work poses 0–34 and four idles; the second supplies work poses 35–41. Runtime packing registers the silhouettes, keeps a common station, quantizes one shared palette and preserves the 42-frame 0.15s cadence."
+}

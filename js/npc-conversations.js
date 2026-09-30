@@ -634,8 +634,8 @@ const NPC_STORIES = {
     [
       "Broken glass",
       "I broke my mother's favourite jug and carried every piece to Sela wrapped in my apron.",
-      "Could she mend it?",
-      "She made the pieces into a little window ornament. Mother said it caught more light than the jug ever did."
+      "Could he mend it?",
+      "He made the pieces into a little window ornament. Mother said it caught more light than the jug ever did."
     ],
     [
       "Keeping scraps",
@@ -1221,7 +1221,7 @@ const NPC_STORIES = {
   "Meriel": [
     [
       "Selling glass",
-      "I broke a display cup on my first day. Sela asked whether I had cut myself before she asked which cup.",
+      "I broke a display cup on my first day. Sela asked whether I had cut myself before he asked which cup.",
       "Did you stay?",
       "I decided then that I wanted to. A person tells you a great deal by the first question they ask."
     ],

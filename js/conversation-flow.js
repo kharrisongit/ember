@@ -257,5 +257,5 @@
   for(const kind of ['pointermove','pointerup','pointercancel'])document.addEventListener(kind,input,{capture:true,passive:false});
   sayEl.setAttribute('role','button');sayEl.tabIndex=0;
   sayEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){if(session)next();else advance();}}});
-  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,needsBack,secondary,welcoming,openChat,active:()=>!!session};
+  window.EmberConversationFlow={prompt,menu,take,back,preserve,shut,tick,sync,playTopic,beforeLine,advance,next,input,key,goodbye,canGoodbye,needsBack,secondary,welcoming,openChat,active:()=>!!session,partner:()=>session?.map===MAPID&&!session.shopping?session.menu.npcActor?.n||session.menu.npcConversation:null};
 })();

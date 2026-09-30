@@ -113,7 +113,7 @@ const DRAGON_NPC_THOUGHTS={
   "Hettie":["She has decided you are coming home.", "I had better not disappoint her."],
   "Nan":["Her worry measures how much she loves you.", "That makes leaving harder."],
   "Maddock":["He carries more than he says aloud.", "The past must be heavy."],
-  "Sela":["She chose to make protection.", "I intend to use it well."],
+  "Sela":["He chose to make protection.", "I intend to use it well."],
   "Dunstan":["He trusts his hands over grand promises.", "So do I, wearing his armour."],
   "Toft":["Experience taught him to prepare.", "We should listen before going below."],
   "Maelis":["She measures words like ingredients.", "I hope we are not ingredients."],
@@ -551,7 +551,7 @@ function dragonSideQuest(topic){
     ...(smithUpgrade?['Aurelius: Dunstan has already strengthened your blade and armour. That work is done.']:
       dragonLearned('smith')?['Aurelius: We heard that Dunstan can work on your equipment. We should speak with him about Maddock’s blade.']:[]),
     ...(glassShield?['Corin: Sela’s Glass Shield is with us.','Aurelius: Hold B during battle to raise its field. A shield is useful only if you remember to use it.']:
-      dragonLearned('shield')?['Aurelius: Sela told us about her glasswork. Let us ask her about the protection it can offer.']:[]),
+      dragonLearned('shield')?['Aurelius: We heard that Sela makes a glass shield. We should ask him about its protection.']:[]),
     'Corin: Anything else?',
     'Aurelius: Keep talking to craftspeople and travellers. We will know more when we hear what they can offer.'
   ];

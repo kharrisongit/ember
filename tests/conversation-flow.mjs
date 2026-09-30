@@ -15,6 +15,7 @@ assert(!box.classList.contains('conversationTopics'));
 run('askBack()');assert.equal(run('ask'),null,'B cancels the invitation');
 run('EmberConversationFlow.prompt(person)');select('Talk');
 assert(run('EmberConversationFlow.active()'));
+assert.equal(run('EmberConversationFlow.partner()'),'Hettie','Session keeps the station actor while dialogue changes');
 assert.equal(box.getAttribute('aria-modal'),'true');
 assert.equal(say.parentNode,box.querySelector('.conversationNpcSpeech'),'NPC dialogue stays in the upper lane');
 const step=()=>run('if(scene)scene.t=1;EmberConversationFlow.advance();');
@@ -22,13 +23,14 @@ const finish=()=>{for(let i=0;i<25&&run('!!scene||!!sayNpc');i++){assert(!run('a
 const tap=(target=canvas)=>{dom.dispatch(target,'pointerdown');dom.dispatch(target,'pointerup');dom.dispatch(target,'click');};
 const next=()=>box.querySelector('.conversationNext').onclick({stopPropagation(){}});
 const greetings=Object.fromEntries(fs.readFileSync('assets/dialogue/npc-greetings.tsv','utf8').trim().split('\n').map(row=>row.split('|')));
-assert.equal(Object.keys(greetings).length,144);
-assert.equal(new Set(Object.values(greetings)).size,144,'Every character has a unique greeting');
+assert.equal(Object.keys(greetings).length,143);
+assert(!('Greta' in greetings),'Removed Greta is absent from the greeting cast');
+assert.equal(new Set(Object.values(greetings)).size,143,'Every character has a unique greeting');
 assert.deepEqual(JSON.parse(run('JSON.stringify(NPC_TOPIC_GREETINGS)')),greetings);
 const responses=Object.fromEntries(fs.readFileSync('assets/dialogue/corin-greetings.tsv','utf8').trim().split('\n').map(row=>row.split('|')));
 assert.deepEqual(JSON.parse(run('JSON.stringify(CORIN_TOPIC_GREETINGS)')),responses);
 assert.deepEqual(Object.keys(responses),Object.keys(greetings));
-assert.equal(new Set(Object.values(responses)).size,144);
+assert.equal(new Set(Object.values(responses)).size,143);
 const player=box.querySelector('.conversationPlayer'),chat=box.querySelector('.conversationChat');
 assert.equal(player.dataset.mode,'welcome');assert(!box.querySelector('.conversationContext'));assert(!rows.querySelector('.deckTabs'));
 assert.equal(chat.textContent,'Chat');assert(!chat.disabled);assert.equal(chat.parentNode,box.querySelector('.conversationFooter'));
@@ -73,6 +75,7 @@ next();assert(run('typeDone()'));assert.equal(run('scene.i'),0,'First A only com
 assert(!box.querySelector('.conversationStage').querySelector('.conversationAdvance').hidden,'Completed speech points to Next');
 run('scene.t=1');next();assert(run('ask.replyChoices'),'Second tap offers Corin replies');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'reply');
+assert.equal(run('EmberConversationFlow.partner()'),'Hettie','Reply choices preserve the conversation idle');
 assert(box.querySelector('.conversationStage').querySelector('.conversationAdvance').hidden,'Reply selection never asks the player to advance a line');
 assert.equal(box.style.display,'grid');assert.equal(run('typeWho'),'Hettie','NPC’s line remains while choosing');
 assert(!rows.querySelector('.deckTabs'));assert(rows.querySelector('.deckReplyPrompt'));
@@ -176,6 +179,7 @@ next();assert.equal(run('ask.npcConversation'),'Sela');
 run("drawMerchantShop=()=>{document.getElementById('bagAsk').style.display='none';};askShut();person.sells=true;openNpcTopics(person)");select('Browse your supplies');
 assert(run('!!ask.shop'));run('askBack();EmberConversationFlow.tick()');assert.equal(run('ask.npcConversation'),'Hettie','B closes shopping and resumes the conversation');
 select('Goodbye');assert.equal(run('ask'),null);assert(!run('EmberConversationFlow.active()'));assert.equal(box.style.display,'none');
+assert.equal(run('EmberConversationFlow.partner()'),null,'Goodbye releases the workshop animation');
 assert(!say.classList.contains('on'),'Goodbye removes the default dialogue too');
 assert.equal(say.parentNode,c.document.body,'Closing full conversation restores the cutscene dialogue overlay');
 assert.equal(dom.element('reveal').parentNode,c.document.body,'Gift overlay returns to its normal home too');
@@ -191,7 +195,7 @@ run('scene.hold=()=>false;showScene()');tap();assert.equal(run('scene.i'),1,'Cin
 run('scene=null;sayOff()');
 // Play a specifically authored alternative for every standard cast member.
 const names=JSON.parse(run("JSON.stringify(Object.keys(NPC_TOPIC_GREETINGS).filter(n=>n!=='Aurelius'))"));
-assert.equal(names.length,143);
+assert.equal(names.length,142);
 for(const name of names){
  c.speaker=name;
  run(`askShut();scene=null;sayNpc=null;var actor={n:speaker,x:100,y:100,d:['Hello']};var authored=npcStoryTopics(actor).find(t=>t.lines&&t.lines[1]?.startsWith('Corin: '));
@@ -227,7 +231,7 @@ assert.equal(laterChoices,3,'All three subsequent reply points survive an early 
 assert.equal(run('ask.topicScope'),'dragons');
 // Changing area / loading another scene cannot resurrect an old conversation.
 run(`MAPID='house0';EmberConversationFlow.tick()`);assert(!run('EmberConversationFlow.active()'));assert.equal(run('ask'),null);
-console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 143 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
+console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 142 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
 run(`const showdownKing={n:'King Halvard',x:100,y:100};ask=null;`);
 for(const map of ['cinderhold','world']){
  c.kingMap=map;run('MAPID=kingMap');

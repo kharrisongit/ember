@@ -914,7 +914,7 @@ const NPC_EXTRA_TOPICS={
       "title": "A repaired cup",
       "category": "world",
       "exchange": [
-        "The ornament Sela made from Mother's broken jug still reminds me of the day I carried her the pieces.",
+        "The ornament Sela made from Mother's broken jug still reminds me of the day I carried him the pieces.",
         "Does that disappoint you?",
         "No. It looks different because it has a different purpose now. Mother likes the light it catches."
       ]

@@ -1104,7 +1104,7 @@ function finishTownCast(){
     ['Coralmere',new Set(['villager_seated_coast_a4_0','villager_seated_coast_a4_3'])],
     ['Hollybeck',new Set(['villager_seated_snow5_0'])]
   ]);
-  const women=new Set(['Ada','Della','Fara','Hester','Junia','Lysa','Dagna','Gwyneth','Petra','Suri','Una','Vela','Rania','Yara','Coral','Edda','Ilsa','Elin','Maren','Sela','Celia','Zella','Iris','Asta','Tessa','Astrid','Nerissa']);
+  const women=new Set(['Ada','Della','Fara','Hester','Junia','Lysa','Dagna','Gwyneth','Petra','Suri','Una','Vela','Rania','Yara','Coral','Edda','Ilsa','Elin','Maren','Celia','Zella','Iris','Asta','Tessa','Astrid','Nerissa']);
   function seatedLook(n,id){
     const town=townOf(id,n),used=counts.get(town)||new Set();counts.set(town,used);
     const region=town==='Sandspire'?'desert':town==='Coralmere'?'coast':town==='Hollybeck'?'snow':'common';
@@ -2744,6 +2744,7 @@ async function loadAtlasPages() {
   await loadDockOriginalAssets();
   await loadRoyalAssets();
   await loadInventoryIcons();
+  await loadWorkshopCraftsmen();
 }
 
 
@@ -4068,6 +4069,7 @@ function drawWorld(t, dt) {
     }
     if (o.progressionProp) { drawJourneyProp(o,t); continue; }
     if (o.schoolArt) {
+      if(drawWorkshopCraftsman(o,t))continue;
       const sp = SPR[o.spr];
       let fr = o.stillFrame ?? (o.glassHatch ? glassHatchFrame() : Math.floor(t / 0.15) % sp[4]);
       if (o.royalDoor || o.smithDoor || /^(Doors|Animation_windows_doors)\.png$/.test(o.source || "")) {
@@ -11229,6 +11231,7 @@ function tryBrambleReunion(n) {
   faceToward(n,P.x,P.y);faceCorinAt(n.x,n.y);
   playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. Bramble usually brings back sticks. Today he has brought me a helpful stranger.",
     smithUpgrade?"Rowan: I see Dunstan has already worked on your blade. You chose well.":"Rowan: Take that sword to Dunstan, the blacksmith in Forgewick. He will give you a stronger blade for the road ahead.",
+    glassShield?"Rowan: That Glass Shield is Sela’s work. He knows how to keep a traveller safe.":"Rowan: While you are in Forgewick, visit Sela in his workshop behind the glass shop. Ask him about the Glass Shield—it can protect you on the road.",
     "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,npcActor:n,after:()=>{
       brambleQuest=2;
       const exit=MD.doors.find(d=>d.to==="world"),target=[exit.x*TS+8,exit.y*TS-8];

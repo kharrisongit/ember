@@ -79,6 +79,8 @@ jobs:
           node tests/living-journal.mjs
           node tests/conversation-view.mjs
           node tests/conversation-flow.mjs
+          node tests/workshop-craftsmen.mjs
+          node tests/remaining-interactions.mjs
           node tests/conversation-branches.mjs
           node tests/npc-placement.mjs
           node tests/regional-villagers.mjs

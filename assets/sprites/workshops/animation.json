@@ -1,0 +1,29 @@
+{
+  "cell": [
+    96,
+    96
+  ],
+  "draw": [
+    48,
+    48
+  ],
+  "workFrames": 42,
+  "frameSeconds": 0.15,
+  "idleFrames": 4,
+  "sources": {
+    "work": [
+      "dunstan-work-idle.png:0-34",
+      "dunstan-finish.png:0-6"
+    ],
+    "idle": "dunstan-work-idle.png:35-38"
+  },
+  "selaNativeIdleFrames": [
+    0,
+    1,
+    2,
+    3,
+    39,
+    40,
+    0
+  ]
+}
