@@ -3312,6 +3312,7 @@ function placesOf() {
     out.push({ name: md.title || id, kind: md.travel_kind || "Underground",
                map: id, x: (md.spawn[0] / TS) | 0, y: ((md.spawn[1] - 1) / TS) | 0 });
   }
+  if(W.maps.pyramid_entry)out.push({name:'Sunken Pyramid — Entrance',kind:'Dungeon',map:'world',x:1069,y:32});
   // Dev shortcuts go straight to each chest, including within the current map.
   const heartstoneTemples={lightning:'Forgewick',ice:'Sandspire',shadow:'Hollybeck'};
   for(const c of CHESTS)if(W.maps[c.map]&&heartstoneTemples[c.gift]){
@@ -4335,6 +4336,7 @@ function drawBossBlack() {
 }
 
 function stepPlayer(dt) {
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.holdPlayer(dt))return;
   if(atlasOpen)return;
   if (bossScene) return;
   if (hatchCamera) { P.moving = false; P.t += dt; return; }
@@ -5669,7 +5671,9 @@ function breathMenuTell(el, text) {
 }
 const ATTACKS = [
   { name: "Fire",      el: "fire", cd: 12,
-    tell: () => breathMenuTell("fire", "A heavy blast. 8 damage; 12 second cooldown.") },
+    tell: () => typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed()
+      ? "Burn the web, free Corin and Aurelius, and stun the queen. Ready."
+      : breathMenuTell("fire", "A heavy blast. 8 damage; 12 second cooldown.") },
   { name: "Lightning", el: "bolt", cd: 18,
     tell: () => breathMenuTell("bolt", "A crackling orb. 12 damage; 18 second cooldown.") },
   { name: "Shadow",    el: "shadow", cd: 24,
@@ -5943,7 +5947,7 @@ function captureSave(){return {
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
-  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
+  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
@@ -6025,7 +6029,7 @@ function loadGame(slot=activeSaveSlot) {
     elixirs=Math.max(0,s.elixirs|0);bombs=Math.max(0,s.bombs|0);dust=Math.max(0,s.dust|0);
     bells=Math.max(0,s.bells|0);marks=Math.max(0,s.marks|0);breaths=Math.max(0,s.breaths|0);
     stones=Math.max(0,s.stones|0);salts=Math.max(0,s.salts|0);
-    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))delete bossGone[id];
+    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     for(const m of Object.values(W.maps))if(m.templeExpanded){
       m.templeGateOpen=0;
@@ -6067,6 +6071,7 @@ function dismountSpot() {
   return null;
 }
 function setMounted(on, quiet = false) {
+  if(on&&typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed()){toast('Fire will burn through the web.');return false;}
   if(on&&globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()){toast("Aurelius has not offered you a ride yet.");return false;}
   if(on&&dragonTooHurtToFly()){toast("Aurelius needs food before he can carry you again.");return false;}
   if(fishing)return false;
@@ -6328,6 +6333,7 @@ setInterval(() => {
 }, 400);
 
 function clawNow() {
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed()){toast('Fire will burn through the web.');return;}
   if(globalThis.window?.EmberArenaEntry?.holding())return;
   if(fishing)return;
   if(devDragonPassive){toast("dragon attacks are disabled in dev tools");return;}

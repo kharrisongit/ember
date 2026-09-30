@@ -106,7 +106,7 @@ function expandedTempleArenas(){
     if(!occupants.length)return [];
     const [l,t,r,b]=room;
     return [{id:'temple-room:'+i,kind:'arena',templeRoom:room,templeMap:MAPID,
-      templeBoss:occupants.some(f=>/^(golem[1234]|devil|lich|knight)$/.test(f.k)),
+      templeBoss:occupants.some(f=>/^(golem[1234]|devil|lich|knight|spiderqueen)$/.test(f.k)),
       x:(l+r)/32,y:(t+b)/32,r:Math.max(r-l,b-t)/32}];
   });
 }

@@ -16,6 +16,7 @@ function applyPublishedEditorLayout(m,id) {
   if(typeof preparePublishedNpcPlacements==='function')preparePublishedNpcPlacements(m,id);
   m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];
   applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
+  if(id==='world'&&typeof DesertPyramid!=='undefined')DesertPyramid.installWorld(m);
   if(typeof finishTempleFixtures==='function')finishTempleFixtures(m);
 }
 function applyPublishedEditorEntries(m,id,layout,final=true) {

@@ -1651,6 +1651,7 @@ async function buildHouseFurnitureLayers(){
   await prepareExpandedSandspireTemple();
   await prepareExpandedHollybeckTemple();
   await prepareExpandedMountainPassage();
+  await DesertPyramid.prepare();
 }
 /* === end household furniture layering === */
 
@@ -2316,6 +2317,9 @@ function loadMap(id, fresh, discardDraft=false) {
   }
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
   if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
+  if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
+  if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
+  if(MD.pyramid)DesertPyramid.prepareSpiderArt();
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
@@ -3902,6 +3906,7 @@ function drawWorld(t, dt) {
   }
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
   if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.addToDraw(draw);
+  if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.addEffects(draw);
   // Chests are low props: Corin must remain visible while walking around them.
   // Hollybeck's lid also needs to draw in front of its skull pedestal.
   const hollybeckChest = MD.hollybeck && chestHere();
@@ -3929,6 +3934,7 @@ function drawWorld(t, dt) {
     /^(hb_stair_[es]$|rc_(ores|cavedec|ladder|floor|rails)|ifloor|iwall_)/.test(NAMES[o.s]);
   for (const f of foes) {
     if(f.huntingArena&&f.st==='dead'&&f.t>=1)continue;
+    if(f.kind==='spiderqueen'){draw.push({queenBoss:f,x:f.x,y:f.y,sy:SpiderQueenBoss.aboveWeb()?1e8+1:f.y-8});continue;}
     const P_ = ((FOE_BORROW[f.kind] || {})[
                   f.st === "swing" ? "atk" : (f.st === "dead" || f.st === "down" || f.st === "rise") ? "die"
                 : f.hurt > 0 ? "hurt" : ""])
@@ -4049,6 +4055,7 @@ function drawWorld(t, dt) {
 
   for (const o of draw) {
     if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
+    if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
     if(o.marketCanopy){drawMarketActor(o.marketCanopy,false,true);continue;}
     if(o.villageCanopy){drawVillageStand(o.villageCanopy,false,true);continue;}
     if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
@@ -4282,6 +4289,7 @@ function drawWorld(t, dt) {
         : f.storyKnight && f.st === "escape" ? Math.floor((f.storyT || f.t) * 10) % s2[4]
         : /^(?:(pl|lc|rp|dv|ent|bh|ms|gh|bs)[123]|bg|kn|kn3)_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
         : /^gn[123]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
+        : /^pyramid_mummy_/.test(o.nm) ? golemFrame(f,s2,o.nm,k,3)
         : /^gm[1234]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k)
         : f.st === "dead"
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
@@ -5704,6 +5712,7 @@ function dragonCanStand(x, y) {
 }
 function dragonAirborne() { return dragonHere() && dragon.air && !dragon.tr; }
 function dragonStep(dx, dy) {
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed())return;
   if (breath) return;
   moveCombatActor(dragon,dx,dy,dragonAirborne());
 }
@@ -5762,6 +5771,7 @@ function groundInjuredDragon(){
   dragon.air=false;dragon.tr=null;refreshWingBtn();
 }
 function setDragonAir(on) {
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed()){toast('Fire will burn through the web.');return false;}
   if(typeof thornwellDragonHidden==="function"&&thornwellDragonHidden()){toast("Aurelius is waiting at Forgefalls.");return false;}
   if(on&&globalThis.window?.EmberRiding&&!window.EmberRiding.unlocked()){toast("Aurelius stays beside you for now.");return false;}
   if(on&&dragonTooHurtToFly()){toast("Aurelius is too hurt to fly. Feed him meat or fish.");return false;}
@@ -5905,6 +5915,7 @@ function stepDragon(dt) {
   dragon.t += dt;
   if (dragon.hurt > 0) dragon.hurt -= dt;
   if (dragon.inv > 0) dragon.inv -= dt;
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.holdDragon())return;
   if (dragon.knockdown > 0) {
     dragon.knockdown = Math.max(0, dragon.knockdown - dt);
     dragon.moving = false; dragon.tr = null; breath = null; claw = null;
@@ -7840,6 +7851,7 @@ function breatheFire() {
     else if (breathWait() > 0) toast((DRAGON_BREATH[breathElementKey()]?.name || "breath") + " ready in " + breathWait().toFixed(1) + "s");
     return;
   }
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.commandBreath())return true;
   /* A commanded breath is a priority order, not something claws can defer.
      Keep an already-visible breath intact, but cancel a prior wind-up, claw
      recovery and retreat so the dragon immediately makes room to cast. */
@@ -7913,6 +7925,7 @@ function fireNow(dir, target = null) {
   const d = Math.hypot(dx, dy) || 1;
   Object.assign(breath, { x: m[0], y: m[1], vx: dx / d, vy: dy / d,
     distance: 0, hit: 0, impactT: 0, speed: el === "bolt" ? 300 : 200 });
+  if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.fireCast(el);
 }
 function stepHunt(dt) {
   if (!hunt) return;
@@ -7976,6 +7989,7 @@ function beamLength() {
 function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
+  if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-23,r:34};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};
@@ -8252,7 +8266,7 @@ function enemyMaxHp(kind, x, mapId = MAPID) {
   const base = (FOE[kind] || FOE.skeleton).hp;
   const late = mapId === "world"
     ? x >= ROUTE_2_HP_START_X
-    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_") || mapId.startsWith("sn_") || mapId.startsWith("passage_");
+    : POST_ROUTE_2_COMBAT_MAPS.has(mapId) || mapId.startsWith("ds_") || mapId.startsWith("sn_") || mapId.startsWith("passage_") || mapId.startsWith("pyramid_");
   return base * (late || mapId.startsWith("royal_") ? 2 : 1);
 }
 const FOE_ART = { treasuryknight:"kn3", royalguard:"kn", knight: "kn", devil1: "dv1", devil3: "dv3", skeleton1: "bs1", skeleton3: "bs3", mage1: "lc1", mage2: "lc2", shroomBrown: "ms1", eye2: "bh2", ent1: "ent1", ent2: "ent2", gnoll1: "gn1", gnoll3: "gn3", plant3: "pl3", reptile2: "rp2", reptile3: "rp3", reptile: "rp1", kdragon: "kd92", shroomRed: "ms2", shroomPurple: "ms3",
@@ -8273,6 +8287,8 @@ function bookOrder() {
   return met.concat(not);
 }
 const BESTIARY = [
+  {k:"mummy",n:"Pyramid Mummy",w:"the Sunken Pyramid",t:"Tattered bandages trail across the sandstone floors. These restless dead still patrol the burial chambers and strike anyone who disturbs them."},
+  {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a crushing stomp; at a distance, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. Command Fire to burn the web, free them both, and stun her."},
   {"k": "devil1", "n": "Cinder Bailiff", "w": "the demon's Cinderhold trials", "t": "Before the Wingfall, riders sealed bargains with burned handprints. The Cinder Bailiffs still collect those debts. Maelis has persuaded one that a fair contest counts as payment."},
   {"k": "devil3", "n": "Crownless Fiend", "w": "the demon's Cinderhold trials", "t": "Halvard promised this fiend a kingdom beneath his own. With the crown broken, it has come to claim the empty hall. The summoner permits it only a few minutes at a time."},
   {"k": "skeleton1", "n": "Oathbone Swordsman", "w": "the demon's Cinderhold trials", "t": "These were the temple guards who refused to leave their posts when the wings fell. Their shields have rotted away. Their orders have not."},
@@ -8461,7 +8477,7 @@ function kingDeflect(f, attacker) {
     toast(f.kind === "lich" ? "the lich's ward throws them back" : "the king dragon turns them aside");
   }
 }
-function heavyFoe(f){return !f.ally&&!f.trial&&/^(golem[1234]|devil[13]?|lich|knight|treasuryknight)$/.test(f.kind);}
+function heavyFoe(f){return !f.ally&&!f.trial&&/^(golem[1234]|devil[13]?|lich|knight|treasuryknight|spiderqueen)$/.test(f.kind);}
 function regularFoe(f) { return !f.ally && !f.trial && !BOSS_KIND.test(f.kind || "") && f.kind !== "kdragon"; }
 function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
   if (f.ally || f.trial) return;
@@ -8475,7 +8491,7 @@ function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
     f.pressureAt = tAcc;
     if (f.pressureHits < 3) return;
     f.pressureHits = 0;
-    if(/^(golem[1234]|devil[13]?|knight|treasuryknight)$/.test(f.kind)){
+    if(/^(golem[1234]|devil[13]?|knight|treasuryknight|spiderqueen)$/.test(f.kind)){
       f.retreat=0;f.st="wind";f.t=0;f.hit=0;beginEnemyWindup(f);return;
     }
     seconds = f.kind === "kdragon" ? .85 : .50;
@@ -9503,10 +9519,10 @@ function useDust() {
   toast("the dust goes up -- they cannot tell one another from him");
   return true;
 }
-const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|treasuryknight)$/;
+const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|treasuryknight|spiderqueen)$/;
 /* golems, the Ashfiend and the Lich stay dead once felled outside an arena;
    arena foes are meant to refill (see refillRing), these are not */
-const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight)$/;
+const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight|spiderqueen)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
   if(typeof dragonBossBanter==='function')dragonBossBanter(f,true);
@@ -10153,6 +10169,7 @@ function encounterCombatPaused(){
 function stepFoes(dt) {
   if(encounterCombatPaused())return;
   foeClock += dt;
+  if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.effects(dt);
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
@@ -10276,6 +10293,7 @@ function stepFoes(dt) {
     if (lastFight && MAPID === "cinderhold" &&
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
+    if(f.kind==='spiderqueen'){SpiderQueenBoss.step(f,dt);continue;}
     if(f.huntingArena){stepHuntingAnimal(f,dt);continue;}
     if(f.glassBlockHold>0){
       f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);
@@ -10870,6 +10888,7 @@ function drawHeartsCanvasLegacy() {
 let foesHeld = false;
 function stepCombat(dt) {
   if(encounterCombatPaused())return;
+  if(foesHeld&&typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
   stepTempleGates(dt);
   if (pInv > 0) pInv -= dt;
   stepKingShield(dt);
@@ -10900,6 +10919,7 @@ const ACT = {
   die:   { frames: 7, fps: 9, anim: "die", hold: true, then: showDeath },
 };
 function startAct(kind) {
+  if(kind==='swing'&&typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed())return;
   if (P.act || fadeDir !== 0) return;
   if (kind === "swing" && globalThis.window?.EmberRiding?.canSwipe?.() === false) return;
   if (kind === "swing" && hasSword()) globalThis.window?.EmberSfx?.sword();
