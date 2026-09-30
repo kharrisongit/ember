@@ -1390,6 +1390,11 @@ function reserveMillwoodCast(){
 }
 function restoreTavernCast(){
   const m=W.maps.tavern;
+  // The open south aisle ends at the last visible floor pixel, not a tile
+  // inside the room. Published/local door edits can still override this.
+  const exit=m.doors.find(d=>d.to==='world');
+  if(exit)Object.assign(exit,{x:15,y:21,dir:'d',explicitDir:true,edgeExit:true,
+    triggerRect:{x:144,y:335,w:208,h:9}});
   const rows=[
     ['Bess',9,240,128,240,150],['Ronan',6,208,144,224,148],
     ['Venn',7,80,176,64,190],['Hobb',8,160,184,144,168],
@@ -1731,7 +1736,7 @@ let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;if(typeof atlasJournalOpen!=='undefined'&&atlasJournalOpen){atlasTimer=Date.now()+260;atlasJournalMove(dy||dx);return;}const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
 function renderAtlas(){renderQuestAtlas()}
-function openAtlas(from='game'){if(!worldMapUnlocked())return;atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
+function openAtlas(from='game'){if(!worldMapUnlocked()||(typeof flightTravel!=='undefined'&&flightTravel))return;atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
 function closeAtlas(){if(typeof atlasSetJournal==='function')atlasSetJournal(false);atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
@@ -2133,6 +2138,7 @@ function loadMap(id, fresh, discardDraft=false) {
   editorDraftReady=false;editorMapLoading=true;
   if(typeof prepareEditorEntities==='function')prepareEditorEntities(W.maps[id],id);
   if(typeof prepareMarketNpcCast==='function')prepareMarketNpcCast(W.maps[id],id);
+  if(typeof prepareNanCooking==='function')prepareNanCooking(W.maps[id],id);
   prepareGlassShopInteractions(W.maps[id],id);
   applyPublishedEditorLayout(W.maps[id],id);
   const savedEditorState=editorPrepareMap(id,discardDraft);
@@ -2215,7 +2221,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
   npcs = MD.npcs.map((n, k) => ({
     editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,devLineupCategory:n.devLineupCategory,devLineupPage:n.devLineupPage,devLineupScale:n.devLineupScale,
-    id: "npc" + k, marketVendor:n.marketVendor, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
+    id: "npc" + k, nanCooking:n.nanCooking, marketVendor:n.marketVendor, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
     crown: n.crown, body: n.body, kf: "d", dd: n.dd, dm: n.dm, rod: n.rod,
     charm: n.charm,                 /* what this one hands over, if anything */
     sells: n.sells,                 /* a potion seller */
@@ -2435,7 +2441,7 @@ const peekTile = (x, y) => ({
 });
 function blockedByNpcBody(px, py) {
   return npcs.some(n => n!==npcCollisionActor && !npcCollisionEscape?.has(n) && (typeof npcHere !== "function" || npcHere(n)) && !n.leaving && !n.brambleCompanion &&
-    px >= n.x - 7 && px < n.x + 7 && py >= n.y - 8 && py < n.y);
+    px >= n.x - (n.nanCooking?15:7) && px < n.x + (n.nanCooking?15:7) && py >= n.y - (n.nanCooking?34:8) && py < n.y);
 }
 function blockedByNpcBuffer(px, py) {
   for (const n of npcs) {
@@ -2562,7 +2568,7 @@ function canStand(x, y) {
 }
 function movePlayer(dx, dy, dt) {
   if (sceneHold()) return;      /* held still while someone is talking */
-  const SP = running ? 190 : 118;     /* B is hold-to-run */
+  const SP = mounted&&dragonAirborne() ? (running?285:170) : (running?190:118);     /* B is hold-to-run */
   const nx = P.x + dx * SP * dt, ny = P.y + dy * SP * dt;
   // Ordinary temple doors only start opening when a movement crosses their threshold.
   if(MD?.templeContinuous&&dy&&Math.abs(P.x-160)<=10){
@@ -4032,7 +4038,8 @@ function drawWorld(t, dt) {
   const groundLayer = o => o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
-  draw.sort((a, b) => (groundLayer(a) - groundLayer(b))
+  draw.sort((a, b) => ((typeof flightTravel!=='undefined'&&flightTravel)?Number(a===P)-Number(b===P):0)
+                   || (groundLayer(a) - groundLayer(b))
                    || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
                    || (sortY(a) - sortY(b))
                    || ((underfoot(a) ? 0 : 1) - (underfoot(b) ? 0 : 1))
@@ -4461,7 +4468,7 @@ function drawWorld(t, dt) {
           const dw = Math.round(rs[2] * RS), dh = Math.round(rs[3] * RS);
           const RIDEDROP = 14;
           const lift = (dragon.air ? Math.round(Math.sin(P.t * 2.0) * 3) : 0)
-                     - RIDEDROP;
+                     - RIDEDROP + (typeof flightTravel!=='undefined'&&flightTravel?flightTravel.lift:0);
           const dx = Math.round(P.x - dw / 2), dy = Math.round(P.y - dh - lift);
           const sm0 = ctx.imageSmoothingEnabled;
           const sq0 = ctx.imageSmoothingQuality;
@@ -6359,9 +6366,9 @@ const HATCH_LINES = [
       "Maddock: He has chosen you, Corin. That is how a rider’s bond begins.",
       "Maddock: Halvard has spent fifty years making sure there would be no more riders. When he hears about this, he will come for you both.",
       "Corin: Then where can we go?",
-      "Maddock: You cannot hide from him forever. Sooner or later, you will have to face him at Cinderhold, his fortress in the far east.",
+      "Maddock: Neither of you will be safe while Halvard rules. We must overthrow the king. He holds Cinderhold, his fortress in the far east.",
       "Corin: I would not last a minute against his guards.",
-      "Maddock: That is why you start at the old rider temple near Forgewick. Learn what that stone is, and what the two of you can do together.",
+      "Maddock: Then grow stronger together. The riders left knowledge in the old temples. Perhaps your new companion will understand what we have forgotten.",
       "Corin: How do we get to Forgewick?",
       "Maddock: Forgewick is east of Thornwell. Follow the road through Thornwell and keep heading east. Ask for the old temple when you reach Forgewick.",
 ];
@@ -6630,12 +6637,18 @@ function stepDragonIntroduction(){
     'Corin: But you only just hatched. How do you already know how to talk?',
     'Aurelius: Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
     'Aurelius: My body is new. My mind did not begin empty. What we discover together will still be our own.',
-    'Corin: So you know where we are going?',
-    'Aurelius: That is your choice. Wherever you go, I will stay beside you.',
+    'Corin: Then do you think we can do what Maddock asked? Overthrow Halvard?',
+    'Aurelius: If we intend to follow Maddock’s plan, we will need the three temple Heartstones. Their power will help us face him together.',
+    'Corin: Like the stone I found in your shell?',
+    'Aurelius: Yes. That is the Heartstone of the Flame. The others will awaken more of my strength.',
+    'Aurelius: The Lightning Heartstone rests in Forgewick Temple, the Ice Heartstone in Sandspire Temple, and the Shadow Heartstone in Hollybeck Temple.',
+    'Aurelius: We must claim them in that order. First Lightning, then Ice, then Shadow. Each will prepare us for the next temple.',
+    'Corin: Three Heartstones, then the king. We start east, through Thornwell to Forgewick.',
+    'Aurelius: And whatever waits along that road, we face it together.',
     'Corin: Then we had better make a start.',
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
   ],{telepathy:true,after:()=>{
-    dragonIntroDone=true;dragonIntroArmed=false;saveGame();
+    dragonIntroDone=true;dragonIntroArmed=false;learnHeartstonePlan();saveGame();
   }});
   return true;
 }
@@ -6909,7 +6922,7 @@ function stepWalkers(dt) {
       continue;
     }
     if(sayNpc===m||(scene&&(scene.npcActor===m||walker===m)&&!scene.arriving)||(typeof ask!=='undefined'&&ask?.npcActor===m)){
-      faceToward(m,P.x,P.y);continue;
+      faceSceneSpeaker(m);continue;
     }
     if(m.houseWalk)continue;
     if(MAPID==='house22'&&m.n==='Elder Maddock'&&sayNpc!==m&&!scene&&!bossScene&&!m.goto){
@@ -6987,7 +7000,12 @@ function stepWalkers(dt) {
     m.y += dy / d * Math.min(sp, d);
     faceToward(m, m.goto[0], m.goto[1]);
   }
-  if (walker && scene && !walker.goto && !walker.scriptWalking) faceToward(walker, P.x, P.y);
+  if (walker && scene && !walker.goto && !walker.scriptWalking) faceSceneSpeaker(walker);
+}
+
+function faceSceneSpeaker(n){
+  const target=scene?.npcActor===n&&scene.faceTarget||P;
+  faceToward(n,target.x,target.y);
 }
 
 function faceCorinAt(x, y) {
@@ -7025,7 +7043,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!globalThis.window?.EmberEquipmentTutorial?.holding() || !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
+function sceneHold() { return !!(typeof flightTravel!=='undefined'&&flightTravel) || !!globalThis.window?.EmberEquipmentTutorial?.holding() || !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
@@ -11202,10 +11220,18 @@ function bramblePath(from,to) {
 }
 function moveBrambleActor(n,path,speed,dt) {
   n.scriptWalking=false;
-  if(!path?.length)return;
-  const [x,y]=path[0],d=Math.hypot(x-n.x,y-n.y),step=Math.min(d,speed*dt);faceToward(n,x,y);
-  n.scriptWalking=step>0;
-  if(d){n.x+=(x-n.x)/d*step;n.y+=(y-n.y)/d*step;}if(d<=step+.01)path.shift();
+  let remaining=speed*dt;
+  while(path?.length&&remaining>0){
+    const [x,y]=path[0],d=Math.hypot(x-n.x,y-n.y);
+    if(d<.001){path.shift();continue;}
+    const step=Math.min(d,remaining);faceToward(n,x,y);n.scriptWalking=true;
+    n.x+=(x-n.x)/d*step;n.y+=(y-n.y)/d*step;remaining-=step;
+    if(d<=step+.001)path.shift();
+  }
+}
+function brambleExitTarget(n){
+  const exit=MD.doors.find(d=>d.to==='world'),r=doorRect(exit);
+  return [Math.max(r.x+12,Math.min(r.x+r.w-12,n.x)),r.y+1];
 }
 function tryBrambleReunion(n) {
   if(n.n!=="Rowan the Hunter"||MAPID!=="tavern"||brambleQuest!==1)return false;
@@ -11216,14 +11242,24 @@ function tryBrambleReunion(n) {
     glassShield?"Rowan: That Glass Shield is Sela’s work. He knows how to keep a traveller safe.":"Rowan: While you are in Forgewick, visit Sela in his workshop behind the glass shop. Ask him about the Glass Shield—it can protect you on the road.",
     "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,npcActor:n,after:()=>{
       brambleQuest=2;
-      const exit=MD.doors.find(d=>d.to==="world"),target=[exit.x*TS+8,exit.y*TS-8];
+      const target=brambleExitTarget(n);
       brambleDeparture={phase:'south',hunter:n,dog,target,
-        path:bramblePath([n.x,n.y],[n.x,n.y+24])};
+        path:maddockWalkPath(n,[n.x,Math.min(n.y+56,target[1]-24)])};
+      if(dog)dog.scriptWalking=false;
       brambleTrail=[];
     }});return true;
 }
 function planBrambleDeparture(d){
   const dogStart=d.dog&&[d.dog.x,d.dog.y];
+  // Corin's forced approach leaves Bramble beside the clear south aisle.
+  // Let both walk straight out in their own lanes when there is room.
+  const direct=maddockWalkPath(d.hunter,d.target);
+  const dogPath=d.dog&&maddockWalkPath(d.dog,brambleExitTarget(d.dog));
+  d.retry=.5;
+  if(direct?.length===1&&dogPath?.length===1&&Math.abs(d.hunter.x-d.dog.x)>=24&&
+    d.target[0]===d.hunter.x&&dogPath[0][0]===d.dog.x){
+    d.path=direct;d.dogPath=dogPath;d.parallel=true;return true;
+  }
   // A dog already inside the waiting radius must not trap Rowan inside it.
   const clearance=dogStart?Math.min(28,Math.hypot(d.hunter.x-dogStart[0],d.hunter.y-dogStart[1])):0;
   const path=maddockWalkPath(d.hunter,d.target,(x,y)=>canNpcStand(x,y,d.hunter)&&
@@ -11237,12 +11273,13 @@ function stepThornwellWelcome(dt) {
   syncBrambleParty();
   if(brambleDeparture){
     const d=brambleDeparture;
-    if(d.phase==='calling')return;
+    if(d.phase==='calling'){d.hunter.scriptWalking=false;if(d.dog)d.dog.scriptWalking=false;return;}
     if(d.phase==='south'){
       moveBrambleActor(d.hunter,d.path,54,dt);
       if(!d.path?.length){
         d.hunter.scriptWalking=false;d.phase='calling';
-        playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,after:()=>{
+        if(d.dog)faceToward(d.hunter,d.dog.x,d.dog.y);
+        playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,faceTarget:d.dog,after:()=>{
           d.phase='leaving';
           // Give the waiting dog room before leading him toward the door.
           // Independent routes can otherwise send Rowan straight through him.
@@ -11254,6 +11291,12 @@ function stepThornwellWelcome(dt) {
     if(!d.path){
       d.retry=(d.retry||0)-dt;
       if(d.retry<=0)planBrambleDeparture(d);
+      return;
+    }
+    if(d.parallel){
+      moveBrambleActor(d.hunter,d.path,54,dt);moveBrambleActor(d.dog,d.dogPath,54,dt);
+      d.hunter.away=!d.path.length;d.dog.away=!d.dogPath.length;
+      if(d.hunter.away&&d.dog.away){npcs=npcs.filter(n=>!n.brambleCompanion);brambleDeparture=null;brambleQuest=3;}
       return;
     }
     if(d.path?.length){
@@ -11494,17 +11537,11 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
-    if(best.n==='Alderic'&&!dragonLearned('alderic-temples')){
-      heartKnown=true;
-      playScene([...best.d.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line),
-        'Corin: Where should we look for the other stones?',
-        'Alderic: The Ice Heartstone rests in Sandspire Temple. The Shadow Heartstone rests in Hollybeck Temple. Seek their halls when you are ready.'],{who:best.n,npcActor:best,after:()=>saveGame()});
-      return;
-    }
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
       startNanFarewell(best);return;
     }
+    if(!greetingOnly&&typeof nanCookingHere==='function'&&nanCookingHere(best)&&Date.now()>=nanElixirReadyAt){giveNanElixir(best);return;}
     if(best.n==='Hettie'&&quest<Q.NOISE){
       sayOff();showFace(null);faceToward(best,P.x,P.y);P.moving=false;
       playScene([hettieErrandReminder()],{who:best.n,npcActor:best});return;
@@ -11581,6 +11618,7 @@ padBind();
   });
 }
 function actionButton() {
+  if(typeof flightTravel!=='undefined'&&flightTravel){if(revealing)hideReveal();return;}
   if(globalThis.window?.EmberConversationFlow?.active()&&globalThis.window?.EmberConversationFlow?.advance())return;
   if(window.EmberCloud?.isOpen())return;
   if(globalThis.window?.EmberArenaEntry?.action())return;

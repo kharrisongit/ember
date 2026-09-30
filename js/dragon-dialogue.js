@@ -143,18 +143,23 @@ const DRAGON_REACTION_LINES={
 };
 function dragonStoryStage(){return wonAll?'victory':'journey';}
 function dragonLearned(key){
-  if(['temple:Sandspire','temple:Hollybeck'].includes(key)&&!dragonBanterSeen.has('learned:alderic-temples'))return false;
+  if(key==='king-plan')return dragonBanterSeen.has('learned:king-plan')||quest>=Q.DONE;
+  // Old saves that already heard the introduction receive the same plan.
+  if(key==='heartstone-plan'||key.startsWith('temple:'))return dragonIntroDone||dragonBanterSeen.has('learned:heartstone-plan');
   return dragonBanterSeen.has('learned:'+key);
 }
-// Learn from lines Corin actually sees, including conversations before hatching
-// and inside houses. Aurelius's own suggestions cannot unlock further leads.
+function learnHeartstonePlan(){
+  heartKnown=true;dragonBanterSeen.add('learned:heartstone-plan');
+  for(const town of ['Forgewick','Sandspire','Hollybeck'])dragonBanterSeen.add('learned:temple:'+town);
+}
+// The first conversation introduces the Heartstones as one plan. Optional
+// suggestions and other NPCs cannot discover them ahead of Aurelius.
 function rememberDragonKnowledge(who,text,persist=true){
   if(!text||who==='Aurelius')return;
   const before=dragonBanterSeen.size,words=String(text);
   const learn=key=>dragonBanterSeen.add('learned:'+key);
-  if(who==='Alderic'&&/Sandspire/.test(words)&&/Hollybeck/.test(words)&&/Heartstone/.test(words)){
-    learn('alderic-temples');learn('temple:Forgewick');learn('temple:Sandspire');learn('temple:Hollybeck');
-  }
+  if(who==='Alderic')learn('alderic');
+  if(/Maddock/.test(who)&&/overthrow|end.{0,12}rule/i.test(words))learn('king-plan');
   if(/\bBramble\b/i.test(words))learn('bramble');
   if(/demon|trials/i.test(words)&&/Maelis|Witchmoor/.test(who+' '+words))learn('trials');
   if(/\bRowan\b/i.test(words)&&/tavern|Copper Cup/i.test(words))learn('bramble-owner');
@@ -168,7 +173,6 @@ function rememberDragonKnowledge(who,text,persist=true){
   }
   if(/Torvald|Hollybeck Lantern/i.test(words)&&/lantern|light/i.test(words))learn('lantern');
   if(/graveyard|Book of the Dead/i.test(words)&&/ghost|wraith|summon/i.test(words))learn('graveyard');
-  if(/temple|heartstone/i.test(words))for(const town of ['Forgewick','Hollybeck','Sandspire'])if(words.toLowerCase().includes(town.toLowerCase()))learn('temple:'+town);
   if(persist&&before!==dragonBanterSeen.size)persistDragonBanterSeen();
 }
 function dragonGiftLeads(){
@@ -403,8 +407,8 @@ const DRAGON_LONG_TALKS={
     'Aurelius: A heartstone joins a rider’s intent to a dragon’s power. You carry it; I answer. It is a connection, not a leash.',
     'Corin: Then gathering them makes us stronger together?',
     'Aurelius: Yes. Fire was with us at the beginning. Lightning, shadow and ice each open another way to meet what lies ahead.',
-    heartKnown?'Corin: Alderic said the stones came from the first dragon.':'Corin: Maddock thought the old temples might have answers.',
-    heartKnown?'Aurelius: That account lives in our shared memory too. Something ancient was divided into powers that could be carried. The knowledge deserves care.':'Aurelius: Then we should listen to the keepers who have waited there. An inherited memory is no excuse to ignore a living witness.',
+    dragonLearned('alderic')?'Corin: Alderic said the stones came from the first dragon.':'Corin: Do your memories tell you where the Heartstones came from?',
+    'Aurelius: Our shared memory speaks of the first dragon. Its ancient power was divided into stones a rider could carry. The temple keepers have guarded that knowledge too.',
     'Corin: Could I order you to use them?',
     'Aurelius: You can ask. You should also listen. Power that cannot hear an answer becomes the sort of power we should never accept.',
     'Corin: I would rather have you than a collection of weapons.',
@@ -507,14 +511,14 @@ function dragonCurrentQuest(){
     'Corin: And the ordinary things?',
     'Aurelius: They matter as much as ever. Missing companions, a useful gift, a promise to return. A victory does not make those things smaller.'
   ];
-  const missing=[['lightning','Forgewick'],['shadow','Hollybeck'],['ice','Sandspire']].filter(([key])=>!breathHas[key]);
+  const missing=[['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']].filter(([key])=>!breathHas[key]);
   const knownTemples=missing.filter(([,town])=>dragonLearned('temple:'+town));
   return [
     'Corin: Help me put our next steps in order.',
     'Aurelius: Halvard threatens us and everyone living under his rule. Our goal is to reach Cinderhold ready to face him.',
     smithUpgrade?'Aurelius: Dunstan’s work has given you a stronger blade and armour. Keep supplies ready as well.':dragonLearned('smith')?'Aurelius: We heard that Dunstan can improve your equipment. Following up with him would be a sensible beginning.':'Aurelius: Keep food and supplies ready. We can ask the people we meet about the road ahead.',
     !missing.length?'Aurelius: Fire, lightning, shadow and ice are all with us now. The heartstones have given us the choices we came looking for.':
-      knownTemples.length?'Aurelius: We have heard about the old temples near '+knownTemples.map(([,town])=>town).join(', ')+'. We can follow those leads and learn what their keepers know.':
+      knownTemples.length?'Aurelius: The Heartstones we still need are in '+knownTemples.map(([,town])=>town).join(', ')+'. We should seek '+knownTemples[0][1]+' Temple next. Each stone prepares us for the next temple.':
       'Aurelius: Let us follow the road Maddock described and ask questions as we go. We still have much to learn together.',
     'Corin: Does that mean we must hurry?',
     'Aurelius: Prepare, then move with purpose. Ask people what they need, look through the side paths, and do not mistake being tired for being ready.'
@@ -701,7 +705,7 @@ const DRAGON_JOURNEY_TOPICS=[
     'Corin: You think I might hurt someone who does not deserve it?',
     'Aurelius: I think you would never forgive yourself. Let us be careful together.'
   ]},
-  {id:'alderic',name:'What Alderic told us',when:()=>heartKnown,lines:()=>[
+  {id:'alderic',name:'What Alderic told us',when:()=>dragonLearned('alderic'),lines:()=>[
     'Corin: Alderic spoke as though he had been waiting for us for years.',
     'Aurelius: He was waiting for a rider. I wonder how often he thought nobody would come.',
     'Corin: I wish I had known what to say.',

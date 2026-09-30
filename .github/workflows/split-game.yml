@@ -58,6 +58,7 @@ jobs:
           node tests/green-encounter.mjs
           node tests/thornwell-followup.mjs
           node tests/rowan-arrival.mjs
+          node tests/tavern-audience.mjs
           node tests/thornwell-royal.mjs
           node tests/tavern-patio.mjs
           node tests/bramble-departure.mjs
@@ -70,6 +71,8 @@ jobs:
           node tests/hollybeck-temple.mjs
           node tests/temple-compass.mjs
           node tests/father-compass.mjs
+          node tests/nan-cooking.mjs
+          node tests/flight-travel.mjs
           node tests/inventory-icons.mjs
           node tests/journey-gates.mjs
           node tests/ghost-following.mjs

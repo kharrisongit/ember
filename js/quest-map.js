@@ -2,10 +2,16 @@
 let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointers=new Map();
 let atlasGesture=null,atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
 let atlasJournalOpen=false,atlasSelectedQuest='main',atlasSelectedComplete=false;
-function atlasQuestKind(q){return q?.id==='main'||q?.id==='thornwell-royals'||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
+function atlasQuestKind(q){return ['main','bramble','smith','shield','thornwell-royals'].includes(q?.id)||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
+function atlasQuestTrackLock(q){
+ if(q?.id==='temple:Sandspire'&&!breathHas.lightning)return 'Complete Forgewick Temple and claim its Lightning Heartstone before tracking Sandspire Temple.';
+ if(q?.id==='temple:Hollybeck'&&!breathHas.ice)return 'Complete Sandspire Temple and claim its Ice Heartstone before tracking Hollybeck Temple.';
+ return '';
+}
+function atlasJournalAllowed(id){return ['main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
-function atlasMainObjective(){
+function atlasJourneyObjective(){
  const o=(title,place,detail,questId='main')=>({...atlasObjective('main',title,place,detail),questId});
  const opening=[
   ['Start the morning','Millwood','Leave home and speak with Hettie by the cows.'],
@@ -26,10 +32,15 @@ function atlasMainObjective(){
  if(smithUpgrade&&!charm.edge)return o('Finish with Dunstan','Forgewick','Finish your conversation with Dunstan.','smith');
  if(!glassShield&&dragonLearned('shield'))return o('Visit Sela','Forgewick','Ask the glassblower about his protective shield.','shield');
  for(const [key,town]of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']]){
-  if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Temple',town+' Temple','Explore the temple and follow up on what you have learned.','temple:'+town);
+  if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.','temple:'+town);
  }
  if(!breathHas.lightning||!breathHas.ice||!breathHas.shadow)return o('Ask about the road ahead',breathHas.lightning?'Forgewick Temple':'Forgewick',breathHas.lightning?'Speak with Alderic about what you found.':'Speak with the people of Forgewick and follow the leads they share.');
  return o('Face King Halvard','Cinderhold Castle','Cross the highlands through Frostcrag and Ashcrag, then follow the volcanic road to Cinderhold.');
+}
+function atlasMainObjective(){
+ if(!dragonLearned('king-plan')||wonAll)return atlasJourneyObjective();
+ return {...atlasObjective('main','Overthrow King Halvard','Cinderhold Castle',
+  dragonLearned('heartstone-plan')?'End the dragon hunter’s fifty-year rule. Strengthen Aurelius with the three temple Heartstones, then face Halvard at Cinderhold.':'Maddock believes we must end the dragon hunter’s fifty-year rule. Grow stronger together before facing Halvard at Cinderhold.'),questId:'main'};
 }
 function atlasPlaceFor(map,n){
  const title=map.title||'';
@@ -47,21 +58,15 @@ function atlasPlaceFor(map,n){
 function atlasQuestOptions(){
  const main=atlasMainObjective(),out=[main],seen=new Set([main.questId]),add=(id,...args)=>{if(!seen.has(id)){seen.add(id);out.push(atlasObjective(id,...args));}};
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
- // The royal story already owns the main objective while it is active.
- if((dragonLearned('fishing')||odoRodReferral)&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
+ if(royal&&brambleQuest>=2)add('thornwell-royals',...royal);
+ if(odoRodReferral&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',atlasBrambleClue());
  if(dragonLearned('smith')&&(!smithUpgrade||!charm.edge))add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
  if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in his workshop behind the glass shop about his shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Investigate the reports of restless spirits in the graveyard.');
- for(const {n,map} of dragonGiftLeads()){
-  if(n.charm==='lamp'&&dragonLearned('lantern'))continue;
-  if(n.charm==='wake'&&dragonLearned('graveyard'))continue;
-  const place=atlasPlaceFor(map,n);
-  if(place)add('gift:'+n.charm,n.n+'’s gift',place,'Return to '+n.n+' and finish the conversation about their gift.');
- }
  for(const [key,town] of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']])
-  if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Temple',town+' Temple','Explore the temple and follow up on what you have learned.');
+  if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.');
  if(dragonLearned('trials')&&!atlasQuestComplete('trials'))add('trials','The demon’s trials',cinderSeal?'Cinderhold Castle':'Witchmoor',!cinderSeal?'Return to Witchmoor and ask about the trials.':!trialSealPlaced?'Find where the Cinderhold Seal belongs.':'Return to the throne room to challenge the demon.');
  return out;
 }
@@ -135,7 +140,7 @@ function atlasMilestoneData(){return [
  ['A bond begins',quest>=Q.DONE],['Bramble home',brambleQuest>=2],
  ['Ready for the road',!!(smithUpgrade&&charm.edge&&glassShield)],
  ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
- ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasMainObjective().title,false]]);}
+ ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasJourneyObjective().title,false]]);}
 function atlasQuestComplete(id){
  if(id==='main')return !!wonAll;
  if(id==='fishing')return !!fishingPole;
@@ -152,7 +157,7 @@ function atlasQuestComplete(id){
 function atlasSyncJournal(){
  atlasQuests=[...new Map(atlasQuestOptions().map(q=>[q.id,q])).values()];
  for(const q of atlasQuests){const id=q.questId||q.id;if(id!=='main')atlasJournalKnown[id]={...q,id};}
- if(!atlasQuests.some(q=>q.id===atlasTrackedQuest))atlasTrackedQuest='main';
+ if(!atlasQuests.some(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q)))atlasTrackedQuest='main';
 }
 function atlasQuestStages(q){
  if(q?.id==='main')return atlasMilestoneData();
@@ -172,7 +177,7 @@ function atlasCompletedEntries(){
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
  return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
   const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];
- })).values()];
+ })).values()].filter(q=>atlasJournalAllowed(q.id));
 }
 function atlasCanonical(label){
  const aliases={'eldershome':'Elder’s Home','sporehollow':'Sporehollow','northshroompassfield':'Northern Shroom Field','cinderhold':'Cinderhold Castle'};
@@ -242,6 +247,7 @@ function atlasAction(){
 function atlasTrack(id){
  atlasSyncJournal();const q=atlasQuests.find(q=>q.id===id);
  if(!q||atlasQuestComplete(q.id))return false;
+ const lock=atlasQuestTrackLock(q);if(lock){document.getElementById('atlasQuestStatus').textContent=lock;toast(lock);return false;}
  templeCompass.cache=null;atlasTrackedQuest=q.id;atlasCompassTutorialSeen=true;
  if(typeof saveGame==='function')saveGame();
  // Tracking always resumes play, including when the map came from inventory.
@@ -273,6 +279,7 @@ function atlasDismissCompassTutorial(){
  atlasCompassTutorialSeen=true;tutorial.hidden=true;saveGame();return true;
 }
 function atlasBegin(){
+ if(typeof rememberFlightVisit==='function')rememberFlightVisit();
  window.EmberEncounterCard?.layout();
  document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
  atlasSyncJournal();atlasBuildPlaces();
@@ -321,9 +328,12 @@ function atlasRenderJournal(){
    if(current)steps.append(atlasElement('span','questStep current',active<0?'✓ Main journey complete':'◉ Current chapter: '+current[0]));
   }else for(const [i,[label,done]]of stages.entries())steps.append(atlasElement('span','questStep'+(done?' done':i===active?' current':''),(done?'✓ ':i===active?'◉ ':'○ ')+label));
  }
- const finished=atlasSelectedComplete||!!q&&atlasQuestComplete(q.id);
- $('atlasQuestStatus').textContent=finished?'✓ Quest complete':q?.id===atlasTrackedQuest?'◆ Currently tracked':'';
+ const finished=atlasSelectedComplete||!!q&&atlasQuestComplete(q.id),lock=!finished&&atlasQuestTrackLock(q);
+ $('atlasQuestStatus').textContent=finished?'✓ Quest complete':lock|| (q?.id===atlasTrackedQuest?'◆ Currently tracked':'');
  $('atlasFocus').hidden=finished||!q;$('atlasFocus').disabled=finished||!q;
+ // Keep locked controls tappable so mouse, touch and A all explain the prerequisite.
+ $('atlasFocus').setAttribute('aria-disabled',String(!!lock||finished||!q));
+ $('atlasFocus').setAttribute('aria-describedby','atlasQuestStatus');
  const milestones=$('atlasMilestones');milestones.replaceChildren();
  const all=atlasMilestoneData(),done=all.filter(x=>x[1]).length;
  milestones.append(atlasElement('small','',`JOURNEY MILESTONES · ${done} / ${all.length}`));
@@ -336,6 +346,7 @@ function atlasShowDetails(){
  $('atlasName').textContent=p[0];$('atlasText').textContent=p[3];
  const notes=ATLAS_PLACE_NOTES[p[0]]||['The roads of Emberfell',p[3]];
  $('atlasServices').replaceChildren(atlasElement('strong','',notes[0]));
+ if(typeof refreshFlightOption==='function')refreshFlightOption();
  $('atlasTrackedTitle').textContent=q?.title||'No quest tracked';
  $('atlasTrackedObjective').textContent=q?.detail||'Open Quests to choose your next objective.';
  $('atlasTrackedDestination').textContent=q?'◆ '+q.place:'';

@@ -9,7 +9,7 @@ const element=()=>({style:{},dataset:{},children:[],attributes:{},
  get textContent(){return this.children.length?this.children.map(el=>el.textContent||'').join(''):this.text||'';},
  set textContent(v){this.text=v;}});
 const c=vm.createContext({
-  TS:16,templeCompass:{owned:true},millwoodDepartureArea:()=>({x0:0,y0:404,x1:62,y1:453}),
+  TS:16,heartKnown:false,templeCompass:{owned:true},millwoodDepartureArea:()=>({x0:0,y0:404,x1:62,y1:453}),
   gameplayStarted:true,MAPID:'world',MD:{},P:{x:872,y:6050,dir:'d',moving:true},MAD_DOOR:[872,5984],
   dragon:{on:true,x:850,y:6050,moving:true,introOrigin:[872,6050]},hasDragon:()=>true,dragonHere:()=>c.MAPID==='world'||c.MAPID==='tp1',
   sceneHold:()=>!!pendingScene,hatchCamera:null,sayNpc:null,fadeDir:0,doorMotion:null,pendingDoor:null,editing:false,ovl:null,ride:false,arenaLock:null,
@@ -116,7 +116,7 @@ assert.equal(vm.runInContext('sceneHold()',lock),true,'topic menu pauses normal 
 // Leads unlock from conversations and progress, never from undiscovered NPC data.
 c.wonAll=false;c.brambleQuest=0;run('resetDragonBanter()');
 assert.deepEqual(Array.from(run('dragonSideQuestTopics().map(t=>t.id)')),[]);
-assert.doesNotMatch(run("dragonCurrentQuest().join(' ')"),/Dunstan|Sela|Sandspire|Hollybeck/);
+assert.doesNotMatch(run("dragonCurrentQuest().join(' ')"),/Dunstan|Sela/);
 for(const key of ['fishing','bramble','equipment','gifts'])assert.match(run("dragonSideQuest('"+key+"').join(' ')"),/No new leads yet/);
 c.odoRodReferral=true;
 assert.match(run("dragonSideQuest('fishing').join(' ')"),/grandson Calder/);
@@ -199,7 +199,7 @@ assert(topicIds().includes('sandspire'),'visited topics survive restoring save h
 run("resetDragonBanter(['place:Thornwell:journey'])");
 assert(topicIds().includes('thornwell'),'existing saves inherit their known places');
 c.heartKnown=true;c.breathHas.lightning=true;c.breathHas.ice=true;c.breathHas.shadow=true;
-c.brambleQuest=2;c.charm.ward=true;
+c.brambleQuest=2;c.charm.ward=true;run("rememberDragonKnowledge('Alderic','I kept this knowledge for a rider.',false)");
 for(const id of ['alderic','lightning','ice','shadow','bramble','ward'])assert(topicIds().includes(id),id);
 c.MAPID='royal_hall';assert(topicIds().includes('cinderhold'));
 c.wonAll=true;assert(!topicIds().includes('cinderhold'));assert(!topicIds().includes('home'));

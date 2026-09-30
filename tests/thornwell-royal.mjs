@@ -82,7 +82,7 @@ run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='May I
 assert.equal(run('thornwellRoyal.stage'),4,'Goodbye dismisses the audience safely');
 assert.equal(run('thornwellAudiencePending()'),false,'Dismissal unlocks the tavern exit');
 assert(spoken.some(s=>s.includes('finishing your thoughts aloud')),'Choices affect the dismissal');
-assert.equal(run('atlasMainObjective().title'),'Leave the Copper Cup');
+assert.equal(run('atlasJourneyObjective().title'),'Leave the Copper Cup');
 run('atlasSyncJournal();saveToSlot(3,true)');
 assert.equal(run('captureSave().thornwellRoyal.answers.tax'),'defiant');
 // Legacy saves past Bramble must not be pulled backwards into a new scene.
@@ -129,7 +129,7 @@ assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),0);
 assert.equal(run('thornwellRoyalDragon'),null);
 assert(run("npcs.filter(n=>n.editKey==='npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605').every(n=>Math.hypot(n.x-P.x,n.y-P.y)>40)"),'Departure keeps Corin away from the drinker');
 assert.equal(run('dragonHere()'),false,'Aurelius stays absent after the royal departure');
-assert.equal(run('atlasMainObjective().place'),'Forgefalls');
+assert.equal(run('atlasJourneyObjective().place'),'Forgefalls');
 assert(spoken.includes('Serjeant Bram: Make way for royalty!'));
 assert.equal(spoken.filter(s=>s==='Serjeant Bram: Make way for royalty!').length,1,'The announcement is not repeated after the reveal');
 assert(spoken.includes('Out of my way, boy!'));
@@ -169,7 +169,7 @@ run(`restoreThornwellRoyal({stage:0});brambleQuest=1;P.x=230*TS;P.y=100*TS;drago
 const xBefore=run('dragon.x');tick(900);
 assert.equal(run('thornwellRoyal.stage'),1);assert.equal(run('thornwellFlight'),null);
 assert(run('dragon.x')>xBefore+250);assert(run('hasDragon()'));assert.equal(run('dragonHere()'),false);
-assert.equal(run('atlasMainObjective().title'),'Find Bramble’s owner');
+assert.equal(run('atlasJourneyObjective().title'),'Find Bramble’s owner');
 run('skipBrambleForTest()');assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 run('devUnlocked=true');assert(run('replayThornwellForTest()'));assert.equal(run('thornwellRoyal.stage'),0);assert(run('brambleWelcomeInside()'));
 assert(run('welcomePath()'),'The replay position has a real approach even beside the town fence');

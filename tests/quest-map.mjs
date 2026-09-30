@@ -10,12 +10,12 @@ const charm={},breathHas={lightning:false,ice:false,shadow:false},learned=new Se
 const TS=16,W={maps:{world:{features:[]}}};function dragonLearned(k){return learned.has(k)}function dragonGiftLeads(){return gifts}`,c);
 vm.runInContext(source,c);
 for(let stage=0;stage<10;stage++){
- const q=vm.runInContext(`quest=${stage};atlasMainObjective()`,c);
+ const q=vm.runInContext(`quest=${stage};atlasJourneyObjective()`,c);
  assert(q.title&&q.detail&&q.place);
- assert(vm.runInContext(`ATLAS_LOCATIONS.some(p=>p[0]===atlasMainObjective().place)`,c));
+ assert(vm.runInContext(`ATLAS_LOCATIONS.some(p=>p[0]===atlasJourneyObjective().place)`,c));
 }
 assert.equal(vm.runInContext('atlasQuestOptions().length',c),1,'No undiscovered side quests leaked');
-vm.runInContext("learned.add('fishing')",c);
+vm.runInContext("learned.add('fishing');odoRodReferral=true",c);
 assert(vm.runInContext("atlasQuestOptions().some(q=>q.id==='fishing'&&q.place==='Route 1')",c));
 vm.runInContext('fishingPole=true',c);
 assert(!vm.runInContext("atlasQuestOptions().some(q=>q.id==='fishing')",c));
@@ -26,16 +26,16 @@ assert(!vm.runInContext("atlasQuestOptions().some(q=>(q.questId||q.id)==='brambl
 vm.runInContext("W.maps.world.title='Millwood Valley';W.maps.world.features=[{kind:'area',label:'Sandspire',x0:100,y0:20,x1:200,y1:80}]",c);
 assert.equal(vm.runInContext("atlasPlaceFor(W.maps.world,{x:1600,y:640})",c),'Sandspire','World title must not misplace every quest in Millwood');
 vm.runInContext('smithUpgrade=true;charm.edge=true;glassShield=true',c);
-assert.equal(vm.runInContext('atlasMainObjective().place',c),'Forgewick','Unheard temple destinations stay hidden');
+assert.equal(vm.runInContext('atlasJourneyObjective().place',c),'Forgewick','Unheard temple destinations stay hidden');
 assert(!vm.runInContext('atlasMilestoneData().some(([name,done])=>!done&&/Ice|Shadow|Halvard/.test(name))',c),'Milestones do not leak future chapters');
 vm.runInContext("learned.add('temple:Forgewick')",c);
-assert.equal(vm.runInContext('atlasMainObjective().place',c),'Forgewick Temple');
+assert.equal(vm.runInContext('atlasJourneyObjective().place',c),'Forgewick Temple');
 vm.runInContext("breathHas.lightning=true;learned.add('temple:Sandspire');learned.add('temple:Hollybeck')",c);
-assert.equal(vm.runInContext('atlasMainObjective().place',c),'Sandspire Temple');
+assert.equal(vm.runInContext('atlasJourneyObjective().place',c),'Sandspire Temple');
 vm.runInContext('breathHas.ice=true',c);
-assert.equal(vm.runInContext('atlasMainObjective().place',c),'Hollybeck Temple');
+assert.equal(vm.runInContext('atlasJourneyObjective().place',c),'Hollybeck Temple');
 vm.runInContext('breathHas.shadow=true',c);
-assert.equal(vm.runInContext('atlasMainObjective().place',c),'Cinderhold Castle');
+assert.equal(vm.runInContext('atlasJourneyObjective().place',c),'Cinderhold Castle');
 console.log('PASS: opening and journey destinations, learned-only side quests, completion removal and world gift locations.');
 
 vm.runInContext("learned.add('lantern');learned.add('graveyard')",c);

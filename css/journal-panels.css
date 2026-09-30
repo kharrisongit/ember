@@ -103,3 +103,7 @@
 @keyframes compassLessonButton{50%{box-shadow:0 2px 0 #452219,0 0 0 3px #b68a3d40}}
 @media(max-width:360px),(max-height:480px){#atlasCompassTutorial{padding:11px 13px}#atlasCompassTutorial strong{font-size:19px}#atlasCompassTutorial p{font-size:13px}}
 @media(prefers-reduced-motion:reduce){#atlasCompassTutorial,#atlasCompassTutorial::before,#worldAtlas #atlasCompassGotIt{animation:none!important}}
+
+.atlasFlight{display:flex;align-items:center;gap:12px;margin-top:12px}.atlasFlight button{flex:0 0 auto;min-height:40px;padding:8px 18px;border:1px solid #b89855;border-radius:7px;background:#314f47;color:#fff0cf;font:inherit;font-weight:700}.atlasFlight button:disabled{opacity:.45}.atlasFlight small{line-height:1.4;color:#a6967b}
+
+#atlasFocus[aria-disabled="true"]{background:#454641;color:#a8aaa3;border-color:#73766d;box-shadow:none;opacity:.65;cursor:help}

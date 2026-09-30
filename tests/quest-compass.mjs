@@ -24,7 +24,7 @@ for(const q of value('atlasQuestOptions()').filter(q=>['main','bramble','thornwe
 }
 run("rememberDragonKnowledge('Orin','Rowan is in the Copper Cup tavern.',false)");
 assert.equal(value("atlasQuestTarget({id:'bramble',place:'Thornwell'})").map,'tavern','A learned clue reveals the destination');
-assert.match(run('atlasMainObjective().detail'),/Rowan/);
+assert.match(run('atlasJourneyObjective().detail'),/Rowan/);
 run("brambleQuest=3;thornwellRoyal.stage=7;");
 run("atlasTrackedQuest='temple:Sandspire';breathHas.ice=true;");
 assert(value('compassSelectedTarget()'));assert.equal(run('atlasTrackedQuest'),'main','Completed target falls back to main quest');

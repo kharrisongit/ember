@@ -4,14 +4,16 @@
    5: royal departure, 6: hurry to the falls, 7: reunited (or legacy complete). */
 let thornwellRoyal={stage:0,answers:{}};
 let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null,thornwellRoyalDragon=null;
+let thornwellBartenderState=null;
 const THORNWELL_ROYALS=['King Halvard','Serjeant Bram'];
 const THORNWELL_RESIDENTS=new Set(['Orin','Linna','Isolde','Cartwright Oswin','Garrow','Wren','Merrin','Asta','Colm','Rowan the Hunter','Ada','Bren','Berta','Della','Ewan','Osric','Alder','Gwyneth','Archivist Elowen','Mira','Oren','Tamsin','Tessa','Master Iven','Brin','Bram','Nell','Sable','Pella','Bess','Ronan','Venn','Hobb','Edric','Dorr','Ser Anwen','Grusk','Fen','Senn','Dain','Rusk','Linnet','Puck','Pip','Vale','Cerys','Nyra','Maren','Celia']);
 function captureThornwellRoyal(){return {stage:thornwellRoyal.stage,answers:{...thornwellRoyal.answers}};}
 function restoreThornwellRoyal(saved,legacy={}){
+  restoreThornwellBartender();
   const stage=saved&&Number.isInteger(saved.stage)?Math.max(0,Math.min(7,saved.stage)):
     legacy.wonAll||legacy.brambleQuest>=2?7:legacy.brambleQuest===1?1:0;
   thornwellRoyal={stage:stage===3?2:stage,answers:{}};
-  for(const key of ['eggs','tax','riders','search','visit'])if(typeof saved?.answers?.[key]==='string')thornwellRoyal.answers[key]=saved.answers[key];
+  for(const key of ['eggs','tax','conquest','hunt','riders','search','visit'])if(typeof saved?.answers?.[key]==='string')thornwellRoyal.answers[key]=saved.answers[key];
   releaseThornwellSummonCamera();thornwellMotion=null;thornwellFlight=null;thornwellRoyalDragon=null;
   if(scene?.thornwellRoyal){scene=null;walker=null;sayOff();showFace(null);}
   if(ask?.npcActor?.thornwellRoyal)askShut();
@@ -166,11 +168,14 @@ function beginRowanReunion(){
   const path=thornwellReachable(P,[[rowan.x-28,rowan.y],[rowan.x+28,rowan.y],[rowan.x,rowan.y+28],[rowan.x,rowan.y-28]]);
   const trail=maddockWalkPath(dog,[P.x,P.y],(x,y)=>canNpcStand(x,y,dog));
   if(!path||!trail)return false;
+  const end=path.at(-1),dogSpot=[end[0],end[1]+28];
+  const dogTarget=canNpcStand(...dogSpot,dog)?dogSpot:null;
   faceToward(rowan,P.x,P.y);
   thornwellScene(['Rowan: Hey, over here!'],()=>{
     thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);faceToward(rowan,P.x,P.y);tryBrambleReunion(rowan);},'rowan');
     thornwellMotion.dog=dog;thornwellMotion.trail=trail;thornwellMotion.rowan=rowan;
-    scene.until=()=>!thornwellMotion?.path?.length&&Math.hypot(dog.x-P.x,dog.y-P.y)<=40;
+    thornwellMotion.dogTarget=dogTarget;
+    scene.until=()=>!thornwellMotion?.path?.length&&(dogTarget?thornwellMotion?.dogArrived:Math.hypot(dog.x-P.x,dog.y-P.y)<=40);
   },rowan);
   return true;
 }
@@ -182,10 +187,8 @@ function frameThornwellCamera(){
   if(!scene?.thornwellSummons){releaseThornwellSummonCamera();return;}
   const king=thornwellKing();if(!king)return;
   if(thornwellSummonZoom===null){restoreCameraTarget();thornwellSummonZoom=cam.z;}
-  const left=Math.min(P.x,king.x)-40,right=Math.max(P.x,king.x)+48;
-  const top=Math.min(P.y-48,king.y-58)-20,bottom=Math.max(P.y,king.y)+28;
-  cam.z=Math.min(thornwellSummonZoom,(VW-32)/(right-left),(VH-40)/(bottom-top));
-  cam.x=(left+right)/2-VW/cam.z/2;cam.y=(top+bottom)/2-VH/cam.z/2;clampCam();
+  cam.z=thornwellSummonZoom;
+  cam.x=king.x-VW/cam.z/2;cam.y=king.y-16-VH/cam.z/2;
 }
 function thornwellSummon(){
   const king=thornwellKing();if(!king)return;
@@ -201,19 +204,74 @@ function thornwellSummon(){
     faceCorinAt(king.x,king.y);thornwellRoyal.stage=3;thornwellRoyal.answers.visit='yes';
     thornwellScene([
       'King Halvard: Still running errands, then. A useful habit in a boy. Keep it.',
-      'King Halvard: Bess! More cider. And put the meal under service to the crown.',
-      'Bess: Those stores have to last us the week, sire.',
-      'King Halvard: Then serve smaller portions to everyone else. There. A king has solved your difficulty.',
-      'Serjeant Bram: Generous of you, sire.',
-      'King Halvard: Now, boy. Tell me what you have been doing with yourself.'
-    ],()=>{
-      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{greeted:true,talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
-      else openThornwellAudience(king);
-    },king);
+      'King Halvard: Bess. Come here. I have questions about your guests.'
+    ],()=>thornwellCallBartender(king),king);
   });},king);
   scene.thornwellSummons=true;
 }
 function thornwellAudienceLines(actor,lines,after){thornwellScene(lines,after||(()=>openThornwellAudience(actor)),actor);}
+function prepareBessWalkingArt(){
+  if(SPR.tavern_bess_walk_d)return;
+  // The counter actor contains only the visible head and shoulders. Give him
+  // the apron/boots and directional steps from the matching craftsman set.
+  for(const action of ['idle','walk'])for(const dir of ['d','u','e','w']){
+    const source=SPR['pack_smith_'+action+'_'+dir],key='tavern_bess_'+action+'_'+dir;
+    const strip=document.createElement('canvas');strip.width=source[4]*32;strip.height=32;
+    const g=strip.getContext('2d');g.imageSmoothingEnabled=false;
+    for(let frame=0;frame<source[4];frame++){
+      drawGameImage(g,sheetOf(source),source[0]+frame*source[2],source[1],source[2],source[3],frame*32+(32-source[2])/2,32-source[3],source[2],source[3]);
+      if(dir==='d'){
+        g.clearRect(frame*32,0,32,22);
+        const head=SPR.tavern_anim_9;
+        drawGameImage(g,sheetOf(head),head[0]+(frame%head[4])*head[2],head[1],head[2],22,frame*32,0,32,22);
+      }
+    }
+    animalSheets[key]=strip;SPR[key]=[0,0,32,32,source[4],key];
+  }
+}
+function thornwellBartenderWalk(bess,path,after){
+  thornwellMotion={kind:'bartender',actors:[{actor:bess,path,delay:0}]};
+  thornwellScene([],()=>{thornwellMotion=null;bess.scriptWalking=false;bess.moving=false;after();});
+  scene.until=()=>!path.length;
+}
+function restoreThornwellBartender(){
+  const state=thornwellBartenderState;if(!state)return;
+  Object.keys(state.actor).forEach(k=>delete state.actor[k]);Object.assign(state.actor,state.saved);
+  state.art.editorDeleted=false;thornwellBartenderState=null;
+}
+function thornwellCallBartender(king){
+  const prompt=()=>{
+    thornwellScene(['King Halvard: Now, boy. Tell me what you have been doing with yourself.'],()=>{
+      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{greeted:true,talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
+      else openThornwellAudience(king);
+    },king);
+  };
+  const bess=npcs.find(n=>n.n==='Bess'&&npcHere(n)),art=MD.roomActors.find(a=>a.spr==='tavern_anim_9'&&!a.editorDeleted);
+  if(!bess||!art){prompt();return;}
+  const home=[bess.x,bess.y],saved={...bess};
+  const counter=MD.roomBlocks.find(r=>home[0]>=r[0]&&home[0]<=r[2]&&home[1]>=r[1]&&home[1]<=r[3]);
+  const side=counter?[counter[2]+14,home[1]]:home;
+  const proxy={...bess,x:side[0],y:side[1]};
+  const route=thornwellReachable(proxy,[[king.x-36,king.y+24],[king.x-44,king.y+38],[king.x,king.y+44]]);
+  if(!route){prompt();return;}
+  const path=[...(counter?[side]:[]),...route],back=[...path.slice(0,-1).reverse().map(p=>p.slice()),home];
+  prepareBessWalkingArt();art.editorDeleted=true;
+  thornwellBartenderState={actor:bess,saved,art};
+  Object.assign(bess,{school:false,packSpr:'tavern_bess',packWalk:true,packDirections:true,stationary:true,px:bess.x,py:bess.y});
+  delete bess.talkX;delete bess.talkY;
+  thornwellBartenderWalk(bess,path,()=>{
+    faceToward(bess,king.x,king.y);
+    thornwellScene([
+      'King Halvard: Travellers talk when they drink. Has anyone spoken of a dragon in these woods?',
+      'Bess: Only rumours, Your Majesty. I have seen no dragon.',
+      'King Halvard: Then listen more carefully. Anyone sheltering one will answer to me. So will anyone who keeps their name from my men.',
+      'Bess: I understand, sire.',
+      'King Halvard: See that you do. Back to your counter.'
+    ],()=>thornwellBartenderWalk(bess,back,()=>{
+      restoreThornwellBartender();prompt();
+    }),king);
+  });
+}
 function thornwellAnswer(actor,key,question,options){
   thornwellAudienceLines(actor,question,()=>{
     const back=()=>openThornwellAudience(actor);
@@ -226,7 +284,7 @@ function thornwellAnswer(actor,key,question,options){
 function thornwellDismissAudience(){
   const king=thornwellKing();
   thornwellAudienceLines(king,[
-    thornwellRoyal.answers.tax==='defiant'||thornwellRoyal.answers.riders==='defiant'?
+    ['tax','conquest','hunt','riders'].some(key=>thornwellRoyal.answers[key]==='defiant')?
       'King Halvard: You have a troublesome habit of finishing your thoughts aloud. Lose it before we meet again.':
       'King Halvard: There. You may tell your village the king gave you his time. They should be grateful.',
     'King Halvard: Run along, egg boy. And if you hear anything unusual on the road, you will tell my men first.',
@@ -252,25 +310,26 @@ function openThornwellAudience(actor){
 function thornwellKingTopics(n){
   const topic=(title,summary,lines)=>({n:title,summary,category:'world',go:()=>window.EmberConversationFlow.playTopic(n,{title,lines})});
   return [
-    {n:'You remember the eggs?',category:'story',summary:'The king remembers an errand better than a name',go:()=>thornwellAnswer(n,'eggs',[
-      'King Halvard: Six eggs and a boy who insisted they had somewhere more important to be. Quite an impression.',
-      'Corin: They were for Elder Maddock.',
-      'King Halvard: And mine were questions from your king. Which mattered more?'
+    {n:'Fifty years on the throne',category:'story',summary:'The conquest Halvard calls his right to rule',go:()=>thornwellAnswer(n,'conquest',[
+      'Corin: You have ruled for fifty years?',
+      'King Halvard: Since Wingfall. I broke the other six riders, took the throne, and ended their quarrelling over how this kingdom should be governed.',
+      'Corin: By deciding for everyone yourself?',
+      'King Halvard: By being the one they could not stop.'
     ],[
-      ['I was trying to finish my errand.','careful',['Corin: I was trying to finish my errand.','King Halvard: A small duty. You will find mine take precedence.','Serjeant Bram: There is your lesson for the day.']],
-      ['Maddock was waiting for his food.','defiant',['Corin: Maddock was waiting for his food.','King Halvard: Then hunger taught him patience. A useful lesson at any age.','Corin: He had done nothing wrong.','King Halvard: Neither have you. Yet you are beginning to tire me.']],
-      ['Your questions, Your Majesty.','polite',['Corin: Your questions, Your Majesty.','King Halvard: Better. There is hope for the boy.','Serjeant Bram: A natural courtier, sire.','King Halvard: Let us not spoil him.']]
+      ['Taking a throne does not make it yours.','defiant',['Corin: Taking a throne does not make it yours.','King Halvard: Fifty years of obedience suggests otherwise. The men who disputed it had armies. What have you brought?','Corin: A question.','King Halvard: Then consider yourself fortunate that I have answered it.']],
+      ['What happened to the people who resisted?','question',['Corin: What happened to the people who resisted?','King Halvard: Their strongholds fell. Their followers learned to kneel. I did not leave a rival court for their children to rally around.','Corin: And you call that peace?','King Halvard: I call it a kingdom that still answers to me.']],
+      ['Most people alive never knew another ruler.','careful',['Corin: Most people alive never knew another ruler.','King Halvard: Precisely. Their parents learned the cost of rebellion. I prefer that their children inherit the lesson without requiring a demonstration.','Serjeant Bram: The patrols keep that lesson fresh, sire.']]
     ])},
-    {n:'Who pays for this meal?',category:'story',summary:'Bess’s stores become the crown’s tribute',go:()=>thornwellAnswer(n,'tax',[
-      'Corin: Will Bess be paid for feeding all of you?',
-      'King Halvard: She enjoys my protection. She has a roof, a licence and the privilege of serving me. Must I buy her gratitude too?'
+    {n:'The dragons you hunt',category:'story',summary:'Why a dragon rider orders other dragons killed',go:()=>thornwellAnswer(n,'hunt',[
+      'Corin: You ride a dragon yourself. Why send hunters after the others?',
+      'King Halvard: Because I know what a dragon and a rider can do. I will not permit some farmer’s son to find wings and imagine himself my equal.'
     ],[
-      ['She still has to buy the food.','defiant',['Corin: She still has to buy the food.','King Halvard: Then she will work harder. It is astonishing how often that solves a commoner’s problem.','Corin: And if there is nothing left?','King Halvard: Bram, make a note. Thornwell apparently has enough leisure to debate its obligations.','Serjeant Bram: I will remind the collector, sire.']],
-      ['Could you pay her this once?','plead',['Corin: Could you pay her this once?','King Halvard: You ask favours with somebody else’s purse. That is a dangerous habit.','King Halvard: No. Kindness is expensive when people begin to expect it.']],
-      ['Say nothing.','quiet',['Corin looks at Bess. She keeps wiping the same clean cup.','King Halvard: Good. You are learning when a matter does not concern you.','Corin: I heard you.']]
+      ['A dragon is not guilty of anything by being born.','defiant',['Corin: A dragon is not guilty of anything by being born.','King Halvard: Guilt is for trials. A hatchling becomes a weapon long before it learns what a trial is.','Corin: So you kill it before it can defend itself?','King Halvard: I remove the danger while the cost is small.']],
+      ['What happens if your hunters find an egg?','question',['Corin: What happens if your hunters find an egg?','King Halvard: They bring it to my officers under guard. No villager is to keep one, trade one, or attempt to hatch it.','Corin: What do your officers do with it?','King Halvard: Whatever I command. You need only remember whose property it is.']],
+      ['Are you afraid of another rider?','probe',['Corin: Are you afraid of another rider?','King Halvard: I killed the men who taught me to ride. Do not confuse caution with fear.','Corin: Then why keep hunting?','King Halvard: Because I intend to remain the last lesson an ambitious rider ever learns.']]
     ])},
     {n:'What are your men searching for?',category:'lead',summary:'Find out how much Halvard knows',go:()=>thornwellAnswer(n,'search',[
-      'King Halvard: Rumours. Wings over the trees. A noise in the northern woods. Peasants do enjoy frightening each other.',
+      'King Halvard: Wings over the trees. Broken branches in the northern woods. My hunters are following every report.',
       'Corin: Is that why you stopped us in Millwood?',
       'King Halvard: I ask the questions. Have you seen anything since?'
     ],[
@@ -280,21 +339,23 @@ function thornwellKingTopics(n){
     ])},
     {n:'The riders before Wingfall',category:'world',summary:'Hear the history the king wants remembered',go:()=>thornwellAnswer(n,'riders',[
       'Corin: The school has books about the seven riders.',
-      'King Halvard: Six traitors and one man willing to do what was necessary. I trust the books make that clear.'
+      'King Halvard: Six traitors and the man who defeated them fifty years ago. I trust the books make that clear.'
     ],[
       ['Some books call them protectors.','defiant',['Corin: Some books call them protectors.','King Halvard: Then somebody has been careless with the school’s shelves.','Corin: A book cannot threaten you.','King Halvard: A boy repeats a sentence. A village repeats the boy. Bram, you see why carelessness matters.','Serjeant Bram: Perfectly, sire.']],
-      ['What made them traitors?','question',['Corin: What made them traitors?','King Halvard: They disagreed with me when agreement was required.','Corin: That is all?','King Halvard: You say “all” as though obedience were a small thing.']],
+      ['What made them traitors?','question',['Corin: What made them traitors?','King Halvard: They would not place their dragons under my command. They thought our old oath mattered more than the realm I intended to build.','Corin: You turned against them because they refused you?','King Halvard: I gave them a choice. They chose to stand in my way.']],
       ['Listen without agreeing.','quiet',['King Halvard: Emberfell needs one will. One crown. I spared it the confusion of seven.','Corin says nothing. Halvard takes the silence for approval.']]
     ])},
-    topic('Why visit Thornwell yourself?','A royal inspection with a hungry entourage',[
-      'King Halvard: A seal on a letter is too easy to resent in private. A king at your table reminds you to smile.',
-      'Corin: People seem frightened.',
-      'King Halvard: Good. Fear travels faster than gratitude and costs considerably less.'
+    topic('Why lead the hunt yourself?','The king knows what his soldiers are looking for',[
+      'Corin: You have soldiers everywhere. Why come after these rumours yourself?',
+      'King Halvard: A patrol sees scorched bark and thinks someone lit a campfire. I know where a wounded dragon hides and how far one can fly before it must land.',
+      'Corin: You learned that as a rider.',
+      'King Halvard: And put it to better use as a king.'
     ]),
-    topic('Life at Cinderhold','The comfort bought with everyone else’s work',[
-      'King Halvard: Proper stone walls. Servants who understand a gesture. Wine that does not taste of fallen apples.',
-      'Corin: Then why drink Bess’s cider?',
-      'King Halvard: Because she has it, and I have asked for it. You do like making simple matters difficult.'
+    topic('People who shelter dragons','What the crown does to anyone who helps',[
+      'Corin: What if someone hides a dragon because it is hurt?',
+      'King Halvard: Then my men take the creature, and the person who hid it comes to Cinderhold in chains.',
+      'Corin: For helping something that needed them?',
+      'King Halvard: For choosing it over their king. I leave the empty house standing. The neighbours find it instructive.'
     ])
   ];
 }
@@ -439,10 +500,16 @@ function stepThornwellRoyal(dt){
     if(motion.path)thornwellMove(P,motion.path,motion.kind==='shove'?180:82,dt);
     if(motion.rowan)faceToward(motion.rowan,P.x,P.y);
     if(motion.dog){
+      if(!motion.path?.length&&motion.dogTarget){
+        if(!motion.dogArrival)motion.dogArrival=maddockWalkPath(motion.dog,motion.dogTarget);
+        moveBrambleActor(motion.dog,motion.dogArrival,70,dt);
+        motion.dogArrived=!!motion.dogArrival&&!motion.dogArrival.length;
+      }else{
       const last=motion.trail.at(-1);
       if(!last||Math.hypot(P.x-last[0],P.y-last[1])>=4)motion.trail.push([P.x,P.y]);
       const gap=Math.hypot(motion.dog.x-P.x,motion.dog.y-P.y);
       if(gap>28)moveBrambleActor(motion.dog,motion.trail,Math.min(90,(gap-28)/dt),dt);
+      }
     }
     for(const item of motion.actors||[]){
       item.delay-=dt;if(item.delay>0)continue;

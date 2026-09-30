@@ -60,7 +60,7 @@ assert.match(el('atlasObjective').textContent,/Received/);assert(el('atlasFocus'
 assert.equal(run("atlasTrack('fishing')"),false);assert.equal(run("atlasTrack('unknown')"),false);assert(run('atlasOpen'));
 run('actionButton()');assert(run('atlasOpen'),'A does not track a completed quest');
 run('atlasTimer=0;atlasMove(0,-1)');assert(!run('atlasSelectedComplete'),'D-pad selects another quest instead of moving the hidden map');
-run('actionButton()');assert(!run('atlasOpen'),'A tracks the selected active quest');
+run("atlasChooseQuest('temple:Forgewick');actionButton()");assert(!run('atlasOpen'),'A tracks the selected available quest');
 run('openAtlas();atlasOpenJournal();atlasBack()');assert(!run('atlasJournalOpen'));assert(run('atlasOpen'));
 run('atlasBack()');assert(!run('atlasOpen'),'B backs out of quests, then closes the map');
 run("openAtlas('bag');atlasOpenJournal()");click('atlasQuestsClose');assert(!run('atlasOpen'));assert(run('bagOpen'),'Ordinary close retains inventory return');

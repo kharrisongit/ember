@@ -2001,6 +2001,7 @@ function npcStoryTopics(n){
     topics.push(...extra);
   }
   if(n.n==='Nan Ferrow'){
+    if(typeof nanCookingHere==='function'&&nanCookingHere(n))topics.unshift({title:'Is another elixir ready?',go:()=>giveNanElixir(n)});
     topics.push({title:'What was Dad like?',lines:[
       'Nan Ferrow: Patient with a frightened animal. Hopeless with a tangled knot. He would sit there getting crosser while pretending he was perfectly calm.',
       'Corin: I do that.',

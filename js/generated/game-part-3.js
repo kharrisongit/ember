@@ -3927,6 +3927,7 @@ function checkArea() {
   const tile = MAPID + ":" + Math.floor(P.x / TS) + "," + Math.floor((P.y - 1) / TS);
   if (tile === lastAreaTile) return;
   lastAreaTile = tile;
+  if(typeof rememberFlightVisit==='function')rememberFlightVisit();
   const now = areaUnder(P.x, P.y);
   if (now !== lastArea) {
     lastArea = now;
@@ -4102,6 +4103,9 @@ function frameCore(ms) {
   stepFly(dt);
   stepHeal(dt);
   window.EmberEquipmentTutorial?.step();
+  if(typeof flightTravel!=='undefined'&&flightTravel){
+    tAcc+=dt;stepFlightTravel(dt);drawWorld(tAcc,dt);drawHearts();drawFade();return;
+  }
   if(ask?.shop||ask?.npcConversation||ask?.dragonConversation||ask?.conversationPrompt){
     if(ask.npcActor)faceToward(ask.npcActor,P.x,P.y);
     if(ask.npcConversation||ask.dragonConversation||ask.conversationPrompt){tAcc+=dt;drawWorld(tAcc,dt);ask.repaintWorld=false;}
@@ -4249,7 +4253,7 @@ function useDoors(dt) {
     // A north wall can stop the feet one movement step short of its trigger.
     // Accept that contact gap (up to a running frame at 20 fps), without moving
     // the doorway or extending south exits out of their visible recesses.
-    const contactOnly=MD.templeExpanded||(want==='d'&&(MD.royal||MAPID==='cinderhold'));
+    const contactOnly=candidate.edgeExit||MD.templeExpanded||(want==='d'&&(MD.royal||MAPID==='cinderhold'));
     const contactGap=MD.templeExpanded&&want==='u'?10:contactOnly||candidate.stairDown&&MD.royal?0:TS/2;
     if(gap>contactGap||gap<-(horizontal?r.w:r.h)-7)continue;
     const score = Math.abs(gap) + Math.abs(lateral - center) * 0.1;
@@ -5372,6 +5376,7 @@ function bagDragged() {
   return !!(left && left.moved);
 }
 function setBag(on) {
+  if(on&&typeof flightTravel!=='undefined'&&flightTravel)return;
   if(on&&(fishing||!hasBag()))return;
   if (!on) { bookOpen = false; askShut(); }      /* both shut with the pack */
   bagOpen = on;
@@ -5691,6 +5696,7 @@ function restoreInventoryPrompt(saved){
   document.getElementById('itemFullBtn').classList.remove('inventory-intro');
 }
 function setOvl(which) {
+  if(which&&typeof flightTravel!=='undefined'&&flightTravel)return;
   if(which==="itemm"&&!hasBag())return;
   if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
   if(which&&fishing)return;
@@ -5928,6 +5934,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  nanElixirReadyAt, flightVisits:typeof flightVisits!=='undefined'?flightVisits:{},
   inventoryPromptOpens,
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
@@ -5937,7 +5944,7 @@ function captureSave(){return {
   templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_])/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
-  map:MAPID, x:trial?160:P.x, y:trial?464:P.y, when:Date.now()
+  map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
 };}
 function saveToSlot(slot,quiet=false){
   try{
@@ -5992,6 +5999,8 @@ function loadGame(slot=activeSaveSlot) {
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
     chestAnim=null;
     restoreFatherCompass(s.fatherCompass);
+    restoreNanCooking(s.nanElixirReadyAt);
+    restoreFlightTravel(s.flightVisits,s.dragonBanterSeen||[]);
     if(typeof routeMusicIntroPlayed!=='undefined')routeMusicIntroPlayed=s.routeMusicIntroPlayed!==undefined?!!s.routeMusicIntroPlayed:!!(s.thornwellMet||s.x>=80*TS);
     for(const k in breathHas)breathHas[k]=k==='fire'||k==='slash'||!!s.breathHas?.[k];
     for(const map of Object.keys(chestOpen))delete chestOpen[map];
@@ -6001,7 +6010,7 @@ function loadGame(slot=activeSaveSlot) {
     dragon.down = dragon.hp <= 0; dragon.revive=0;dragon.inv=0;dragon.knockdown=0;
     boarMeat=Math.max(0,s.boarMeat|0);hareMeat=Math.max(0,s.hareMeat|0);deerMeat=Math.max(0,s.deerMeat|0);foxMeat=Math.max(0,s.foxMeat|0);birdMeat=Math.max(0,s.birdMeat|0);dragonFish=Math.max(0,s.dragonFish|0);fishingPole=!!s.fishingPole;odoRodReferral=!!s.odoRodReferral;fishing=null;
     resetDragonBanter(s.dragonBanterSeen||[]);
-    dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;
+    dragonIntroDone=!!s.dragonIntroDone;dragonIntroArmed=!!s.dragonIntroArmed;heartKnown=dragonIntroDone;
     if(typeof dragonJourneyEnded!=='undefined')dragonJourneyEnded=s.dragonJourneyEnded!==undefined?!!s.dragonJourneyEnded:
       !!(s.dragonIntroDone&&(s.map!=='world'||s.x>=80*TS||s.y>=404*TS||s.thornwellMet));
     dragon.introOrigin=null;
