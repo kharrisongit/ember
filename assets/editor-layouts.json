@@ -53298,7 +53298,7 @@
         "key": "millwood:house22:1",
         "identity": "itable0",
         "x": 72,
-        "y": 112,
+        "y": 128,
         "originX": 73,
         "originY": 165
       },
@@ -53306,8 +53306,8 @@
         "kind": "actor",
         "key": "millwood:house22:6",
         "identity": "ichair0",
-        "x": 40,
-        "y": 96,
+        "x": 71.5,
+        "y": 95,
         "originX": 38,
         "originY": 174
       },
@@ -53315,9 +53315,9 @@
         "kind": "actor",
         "key": "millwood:house22:7",
         "identity": "ichair1",
-        "deleted": true,
-        "x": 104,
-        "y": 176,
+        "deleted": false,
+        "x": 71.5,
+        "y": 128,
         "originX": 104,
         "originY": 174
       },

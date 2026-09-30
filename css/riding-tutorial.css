@@ -35,7 +35,7 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 @media(max-height:480px){#arenaReady,#ridingHint{padding:16px 25px;gap:9px}.encounter-emblem{width:70px;height:70px}.encounter-title{font-size:clamp(24px,4vw,40px)}.encounter-detail{font-size:13px}.encounter-action{padding:6px 18px}.encounter-action b{width:30px;height:30px;font-size:20px}.encounter-footnote{display:none}}
 :root[data-encounter-size="compact"] :is(#arenaReady,#ridingHint){padding:12px 18px;gap:8px}
 :root[data-encounter-size="compact"] .encounter-emblem{width:56px;height:56px}
-:root[data-encounter-size="compact"] .encounter-title{font-size:clamp(23px,5.8vw,34px)}
+:root[data-encounter-size="compact"] .encounter-title{font-size:clamp(21px,5.5vw,32px)}
 :root[data-encounter-size="compact"] .encounter-detail{font-size:13px;line-height:1.35}
 :root[data-encounter-size="compact"] .encounter-action{padding:6px 14px;font-size:13px}
 :root[data-encounter-size="compact"] .encounter-action b{width:30px;height:30px;font-size:20px}
@@ -48,3 +48,18 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 :root[data-encounter-size="tiny"] .encounter-action{padding:5px 12px;font-size:12px;gap:8px}
 :root[data-encounter-size="tiny"] .encounter-action b{width:26px;height:26px;font-size:18px}
 @media(prefers-reduced-motion:reduce){#arenaReady,#ridingHint,.encounter-emblem,.blade-left,.blade-right,body.riding-guide .riding-target{animation:none!important;transition:none!important}}
+/* Lessons read as a field guide; battle cards keep the dark crossed-sword stage. */
+#ridingHint,#ridingHint[data-kind="dragon"]{--gold:#315e60;--glow:#73a7a438;border-color:#7e9890;border-radius:18px;background:radial-gradient(ellipse at 50% 12%,#ffffff,transparent 62%),linear-gradient(150deg,#f4f0df,#e0ebdf);color:#24494c;box-shadow:inset 0 0 0 5px #fff9e6;cursor:default}
+#ridingHint .encounter-title{font-family:Georgia,serif;text-shadow:none}
+#ridingHint .encounter-detail{color:#435d58}
+#ridingHint .encounter-emblem{border:0;box-shadow:none;background:#fff8e6;animation:none}
+#ridingHint .encounter-action{background:#cbdccf;border-color:#93afa0;color:#24494c;box-shadow:none;border-radius:10px}
+#ridingHint .encounter-action b{background:#315e60;color:#fff5dc;box-shadow:0 3px 0 #1b3a3c}
+#ridingHint .encounter-footnote{color:#50665b}
+#arenaReady{cursor:default}
+:is(#arenaReady,#ridingHint) .encounter-footnote{display:block;margin-top:6px;font-size:11px;flex-shrink:0}
+.lesson-book{transform-origin:center;animation:lessonPage 2.8s ease-in-out infinite}
+@keyframes lessonPage{50%{transform:translateY(-3px) rotate(-3deg)}}
+@media(prefers-reduced-motion:reduce){.lesson-book{animation:none}}
+body:has(#ridingHint:not([hidden])) #ab{z-index:960!important}
+body:has(#ridingHint:not([hidden])) #act{pointer-events:auto!important}

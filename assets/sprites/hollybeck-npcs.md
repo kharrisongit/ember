@@ -1,59 +1,21 @@
 # Hollybeck winter residents
 
-Generated with the built-in imagegen tool, using the game's `market_citizen1`
-and `market_citizen3` walking sheets as style, scale and animation references.
+Sverre, Runa and Tobin use the same detailed pixel-art approach and idle clock as the indoor seated residents. Astrid, the chef, is unchanged. The retired outdoor residents remain removed by the published layout.
 
-Final assets:
+## Selected assets
 
-- `assets/sprites/hollybeck-sverre-walk.png`
-- `assets/sprites/hollybeck-sverre-idle.png`
-- `assets/sprites/hollybeck-runa-walk.png`
-- `assets/sprites/hollybeck-runa-idle.png`
+- `hollybeck-sverre-idle-v2.png` and `hollybeck-sverre-walk-v2.png`
+- `hollybeck-runa-idle-v2.png` and `hollybeck-runa-walk-v2.png`
+- `hollybeck-tobin-idle-v2.png` and `hollybeck-tobin-walk-v2.png`
 
-Each native PNG is 256 × 128 pixels: eight columns, four rows in south, north,
-east, west order. Each cell is 32 × 32. Artwork is approximately 15–19 pixels
-wide and 25–28 pixels tall, in line with the source villagers. Runtime crops
-are 24 × 30 with a shared foot anchor. The first six frames animate normally; the seventh holds closed eyes and the eighth half-closed eyes.
-Walking plays at 8 fps; breathing idles at 4 fps. Both states blink for
-260 ms every 3.8 seconds (half-closed → closed → half-closed → open), with an independent phase for each character. The renderer uses nearest-neighbor scaling.
+All sheets use 64×64 source cells, displayed at 32×32 with `spriteScale=2`, nearest-neighbor sampling and transparent backgrounds. Rows face south, north, east and west. Adults are 54 source pixels high; Tobin is 48. Feet share the source baseline at y=60. Back collars are continuous bands in every north-facing frame, with no front opening or lapels.
 
-## Final prompt set
+Idle sheets contain four columns: neutral, cloth inhale, half blink and closed blink. As with `house-seated-v2.png`, the neutral master fixes the face, hat, hair and boots. Only the cloth band rises one source pixel for breathing; only the eye area changes for blinking. Back-facing blink frames stay neutral. `villagerIdleFrame` supplies the same staggered breathing and blink timing as the indoor cast.
 
-Shared walking prompt: Edit the existing pixel sprite sheet. Preserve its coarse
-pixel grid, flat color clusters, dark navy outlines, head/body proportions,
-poses, positions, six columns and four rows. Change only clothing into heavy
-winter gear. Keep the 18 × 27 logical-pixel character scale and 32 × 32 cells.
-Use a thick snow jacket, scarf, gloves, boots and wool cap. No rendered lighting,
-texture, gradients, glow, scenery or shadows. Real transparent alpha.
+Walking sheets contain six alternating-leg poses per direction, played at 8 fps. Rows are packed from complete nontransparent source bands so hats and boots cannot be cut by nominal generation cell boundaries.
 
-Sverre: Navy-teal padded coat, brick-red scarf, dark teal plain cap and brown
-boots. Preserve the original character's face and hair colors.
+## Provenance and prompts
 
-Runa: Plum padded coat, mustard scarf, cream cap and brown boots. Follow-up
-edit: remove all visible hair in every frame, including side locks and hair
-behind the hat. Preserve her face, clothes, poses and pixel scale.
+Generated with the built-in image-generation tool. The indoor seated sprite sheet and existing resident identity references guided the redesign. `hollybeck-v2-prompts.json` contains the exact idle, back-collar correction and walking prompts and the selected output paths. `hollybeck-v2-packing.json` records source crops and scale factors. Legacy sheets remain in the repository for history and are no longer loaded for these three residents.
 
-Idle prompt, each character separately: Convert this exact walking character
-into a standing idle sheet. Six columns and four rows: front, back, right,
-left. Both boots together, feet firmly planted on a constant baseline, hands
-resting at the sides. Gentle six-frame breathing loop with a one-logical-pixel
-chest/head bob. No stepping, turning or gestures. Preserve identity, clothing,
-pixel size and palette. For Runa, retain the hat-only appearance with no hair.
-Real transparent alpha background.
-
-The selected sheets were exported to the native game grid with nearest-neighbor
-sampling and translated within each cell to align the feet. No smooth scaling
-is used. The dialogue and walking residents are installed by
-`js/hollybeck-villagers.js` with stable editor identities.
-
-Blink edit prompt, each sheet separately: Change only the eyes in column five
-of the front, right and left rows. Fully close every visible eye with a dark
-navy eyelid line; leave no white or pupil. Preserve every other pixel, pose,
-clothing detail and transparent background. The generated blink frame is
-packed after the six original motion frames so blinking has its own timing.
-
-Mid-blink edit prompt, each sheet separately: Change only the eyes in column
-five of the front, right and left rows. Cover the top half of each eye with
-a navy upper eyelid, leaving the bottom logical pixel row of eye white/pupil
-visible. Keep all other pixels, poses and transparency. Pack this half-closed
-frame after the closed-eye frame; use it on both sides of each blink.
+`js/hollybeck-villagers.js` registers the new art; the existing published identities, dialogue and patrol routes are preserved. Tobin's dialogue portrait is cropped from his new south-facing idle.

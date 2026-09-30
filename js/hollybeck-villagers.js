@@ -1,17 +1,19 @@
-/* Six motion frames, closed eyes, and half-closed eyes for a smooth timed blink. */
-for(const person of ['sverre','runa'])for(const action of ['walk','idle']){
-  for(const [row,dir]of ['d','u','e','w'].entries())DOCK_ORIGINAL_ASSETS.push({
-    name:`hollybeck_${person}_${action}_${dir}`,w:24,h:30,frames:8,
-    cellW:32,cellH:32,cropX:4,cropY:row*32+2,
-    src:`assets/sprites/hollybeck-${person}-${action}.png?v=20260925-snow-blink3`
-  });
+/* The same 2× source detail and four authored idle states as the house cast. */
+async function prepareHollybeckArt(){
+  if(SPR.hollybeck_sverre_idle_d)return;
+  for(const person of ['sverre','runa','tobin'])for(const action of ['idle','walk']){
+    const image=new Image();image.src=`assets/sprites/hollybeck-${person}-${action}-v2.png?v=20260930-house-style`;
+    await image.decode();const frames=action==='idle'?4:6;
+    for(const [row,dir]of ['d','u','e','w'].entries()){
+      const key=`hollybeck_${person}_${action}_${dir}`,strip=document.createElement('canvas');
+      strip.width=frames*64;strip.height=64;strip.spriteScale=2;strip.pixelLocked=true;
+      const g=strip.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(image,0,row*64,frames*64,64,0,0,frames*64,64);
+      animalSheets[key]=strip;SPR[key]=[0,0,32,32,frames,key];
+    }
+  }
 }
 function hollybeckNpcFrame(n,t,action){
-  // Blink timing is independent of footsteps; walking does not speed up blinking.
-  const phase=(t+(n.t||0))%3.8;
-  if(phase<.08||phase>=.18&&phase<.26)return 7;
-  if(phase<.18)return 6;
-  return Math.floor(t*(action==='walk'?8:(n.idleFps||4)))%6;
+  return action==='walk'?Math.floor(t*8)%6:villagerIdleFrame(n,t,4);
 }
 function prepareHollybeckVillagers(m,id){
   if(id!=='world')return;

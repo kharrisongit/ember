@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 for(const species of ['hare','boar','deer','fox','bird']){
-const c=vm.createContext({console,TS:16,MAPID:'world',MD:{foes:[],features:[],felled:['130,60','900,500'],felled_rle:'60:131-133|500:901'},
+const c=vm.createContext({console,TS:16,revealing:false,MAPID:'world',MD:{foes:[],features:[],felled:['130,60','900,500'],felled_rle:'60:131-133|500:901'},
  P:{x:2696,y:1080,act:null},foes:[],features:[],loot:[],FOE_ART:{},FOE:{},live:[],foeClock:0,wakeCool:0,turnT:0,turnHolder:null,foeCool:0,lastFight:0,
  isSolid:(x,y)=>x>2750&&y<1080,thinks:()=>true,targetFor(){throw Error('Hunting animals must not pursue combat targets');},
  houseLootTaken:new Set(),lootChestAnimations:new Map(),royalDefeated:{},wonAll:false,knightEncounterDone:true,bossGone:{},NO_RESPAWN:/^never$/,
@@ -29,7 +29,7 @@ run(section(game,'function dropGold(', 'function takeGold('));
 run(section(game,'function markBossGone(', 'function bossRing('));
 run(section(game,'function grabGold()', 'function drawLoot('));
 run(section(game,'function feedDragon(', 'let saintT ='));
-run(section(game,'function stepFoes(dt)', 'let pHp ='));
+run(section(game,'function encounterCombatPaused(', 'let pHp ='));
 run(section(part3,'function stepArena(', 'function arenaRim('));
 run(section(part3,'function arenaRim(', 'let lastAreaTile ='));
 run('installBirchHuntingRoute(MD);installBirchHuntingRoute(MD);features=MD.features;spawnFoes();');

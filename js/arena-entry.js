@@ -2,10 +2,10 @@
 (function(){
   'use strict';
   let map=null,population=null,populationSize=-1,states=new Map(),owners=new WeakMap(),pending=null,engaged=null,cameraZoom=null;
-  const popup=document.createElement('button');
-  popup.id='arenaReady';popup.type='button';popup.hidden=true;
+  const popup=document.createElement('section');
+  popup.id='arenaReady';popup.setAttribute('role','dialog');popup.hidden=true;
   popup.setAttribute('aria-label','It’s time to fight! Press A to begin');
-  window.EmberEncounterCard.paint(popup,{title:'It’s time to fight!',kicker:'ENCOUNTER READY',detail:'Your foes are waiting. The next move is yours.',action:'Press A or tap to begin',kind:'battle'});
+  window.EmberEncounterCard.paint(popup,{title:'It’s time to fight!',kicker:'ENCOUNTER READY',detail:'Your foes are waiting. The next move is yours.',action:'Defeat every foe to open the way.',key:'',kind:'battle'});
   document.body.appendChild(popup);
   const living=f=>f.st!=='dead'&&!f.ally&&!f.huntingArena;
   const holding=()=>!!pending&&pending.phase!=='tutorial';
@@ -270,6 +270,5 @@
     cam.x=(l+r)/2-VW/cam.z/2;
     cam.y=(t+b)/2-(top+usable/2)/cam.z;
   }
-  popup.addEventListener('click',e=>{e.preventDefault();action();});
   window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,gather,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};
 })();

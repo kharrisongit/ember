@@ -5,12 +5,11 @@
   const FIRST_ARENA=11;
   const SWORD_ARENA=208;
   let swordDone=false,corinHealDone=false,corinHit=false,corinStartHp=6,resumeCorin=false;
-  let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0,assembly=null;
+  let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const corinRecoveryPhases=new Set(['corinRecovery','corinHealTalk','corinItemsButton','corinHeal','corinThanks']);
-  const holding=()=>!!phase&&(phase!=='battle'||hintTime>0)&&phase!=='swordBattle';
-  const hint=document.createElement('button');hint.type='button';hint.id='ridingHint';hint.hidden=true;document.body.appendChild(hint);
-  hint.addEventListener('click',e=>{e.preventDefault();actionButton();});
+  const holding=()=>!!phase&&(phase!=='battle'||!!hint.dataset.instruction)&&phase!=='swordBattle';
+  const hint=document.createElement('section');hint.setAttribute('role','dialog');hint.id='ridingHint';hint.hidden=true;document.body.appendChild(hint);
   const notice=text=>{
     hint.classList.remove('dismissing');hint.hidden=!text;hint.dataset.instruction=text;
     hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');
@@ -18,12 +17,12 @@
     const slash=text==='Press A to Slash',sword=text==='Press A to Swing Your Sword';
     window.EmberEncounterCard.paint(hint,{title:text,kicker:slash?'DRAGON • SLASH':sword?'SWORD • SWING':'LEARN THE CONTROLS',
       detail:slash?'Strike together. Aurelius slashes the foes in front of him.':sword?'Face your enemy and swing. Your first battle starts with you.':
-        /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control. This card also performs that action.',
-      action:slash||sword?'Press A or tap to attack':'Press A or tap to try it',kind:slash?'dragon':'lesson'});
+        /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control below when you are ready.',
+      action:slash?'Press A to slash.':sword?'Press A to swipe.':'Press the highlighted button below.',key:slash||sword?'A':'↓',kind:slash?'dragon':'lesson'});
   };
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
-    phase=next;clearHighlight();notice(text);hintTime=0;
+    phase=next;clearHighlight();notice(text);
     document.body.classList.toggle('riding-guide',holding());
     if(holding()){clearPadInputs();for(const key in keys)keys[key]=0;running=false;P.moving=false;P.act=null;}
   }
@@ -149,7 +148,6 @@
         moveTo('mount','Choose Mount in COMMAND.');overlay('airm');
       });
     }
-    if(phase==='battle'&&hintTime>0){hintTime=Math.max(0,hintTime-dt);if(!hintTime)notice('');}
   }
   function mountedAction(on){
     if(phase==='mount'&&on){moveTo('dragonButton','Press the highlighted DRAGON button to choose an attack.');overlay(null);paint();return true;}
@@ -179,8 +177,7 @@
   function fired(element){
     if(phase!=='fire'||element!=='fire')return;
     if(scene?.ridingFirePrompt){scene=null;showScene();}
-    window.EmberArenaEntry?.activate(arenaLock);
-    moveTo('battle','Press A to Slash');hintTime=Infinity;overlay(null);saveGame();
+    moveTo('battle','Press A to Slash');overlay(null);saveGame();
   }
   function completed(ring){
     if(!corinHealDone&&phase==='swordBattle'&&ring?.id===SWORD_ARENA){beginCorinRecovery();return;}
@@ -252,16 +249,14 @@
     return id==='act'||(phase==='dragonButton'&&id==='btnL')||(['itemsButton','corinItemsButton'].includes(phase)&&id==='btnItems');
   }
   function action(){
-    // A still reaches the normal slash control; only its teaching card fades.
-    if(phase==='battle'&&hintTime>0&&!hint.classList.contains('dismissing')&&!scene&&!ovl&&!ask&&!bagOpen&&!revealing){
-      hintTime=0;notice('');document.body.classList.remove('riding-guide');
-    }
-    if(!holding())return false;
-    if(phase==='swordSwipe'){
-      startAct('swing');
-      if(P.act?.kind==='swing'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('swordBattle');saveGame();}
+    // Dismissal consumes this press. The next press performs the taught attack.
+    if(hint.dataset.instruction&&!scene&&!ask&&!bagOpen&&!revealing){
+      notice('');
+      if(phase==='battle'){window.EmberArenaEntry?.activate(arenaLock);document.body.classList.remove('riding-guide');}
+      else if(phase==='swordSwipe'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('swordBattle');saveGame();}
       return true;
     }
+    if(!holding())return false;
     if(phase==='fire'&&ovl==='atkm'){ovlTake();return true;}
     if(scene){advanceScene();return true;}
     if(phase==='dragonButton'){setOvl('atkm');return true;}

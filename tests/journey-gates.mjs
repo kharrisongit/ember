@@ -58,11 +58,11 @@ for(const camel of c.journeyGateProps().filter(o=>o.spr==='camel_sit')){
  c.breathHas.ice=true;assert(!c.progressionSolid(camel.x,camel.y-4),'Camel collision clears with the caravan');c.breathHas.ice=false;
 }
 assert(c.npcs.some(n=>n.progressionWorker==='sandspire'&&n.d.some(s=>s.includes('Sandspire Temple'))));
-const child=c.npcs.find(n=>n.progressionWorker==='hollybeck');assert.equal(child.n,'Tobin');assert.equal(child.packSpr,'journey_tobin');
+const child=c.npcs.find(n=>n.progressionWorker==='hollybeck');assert.equal(child.n,'Tobin');assert.equal(child.packSpr,'hollybeck_tobin');
 assert(child.packDirections&&child.packWalk&&!child.stationary&&child.patrolPoints.length>1);
-assert.equal(new Set(Array.from({length:6},(_,i)=>c.tobinNpcFrame(i/8,'walk'))).size,6);
+
 assert(!child.portraitAlias);assert(child.d.some(s=>s.includes('come back later')));
-assert(fs.existsSync('assets/props/sandspire-caravan.png'));for(const action of ['idle','walk'])assert(fs.existsSync('assets/sprites/hollybeck-tobin-'+action+'.png'));
+assert(fs.existsSync('assets/props/sandspire-caravan.png'));for(const action of ['idle','walk'])assert(fs.existsSync('assets/sprites/hollybeck-tobin-'+action+'-v2.png'));
 c.prepareJourneyGates();assert.equal(c.npcs.filter(n=>n.progressionWorker==='hollybeck').length,1);
 const wagon=c.journeyGateProps().find(o=>o.spr==='story_broken_wagon');draws.length=0;
 vm.runInContext('brokenWagonImage.complete=true;brokenWagonImage.naturalWidth=800;brokenWagonImage.naturalHeight=1280',c);

@@ -75,7 +75,7 @@
 @media(max-height:480px){#atlasCompassTutorial:not([hidden]){gap:12px;padding:18px}#atlasCompassTutorial:not([hidden]):before{width:52px;height:52px;font-size:40px}#atlasCompassTutorial strong{font-size:26px}#atlasCompassTutorial p{font-size:13px;margin:0}}
 @media(prefers-reduced-motion:reduce){#atlasCompassTutorial,#atlasCompassTutorial:before{animation:none!important}}
 
-:root[data-encounter-size="compact"] #atlasCompassTutorial:not([hidden]){padding:16px;gap:12px}
+:root[data-encounter-size="compact"] #atlasCompassTutorial:not([hidden]){padding:12px;gap:8px}
 :root[data-encounter-size="compact"] #atlasCompassTutorial:not([hidden]):before{width:48px;height:48px;font-size:38px;flex-shrink:0}
 :root[data-encounter-size="compact"] #atlasCompassTutorial strong{font-size:24px}
 :root[data-encounter-size="compact"] #atlasCompassTutorial p{font-size:13px;line-height:1.4;margin:0}
@@ -84,3 +84,9 @@
 :root[data-encounter-size="tiny"] #atlasCompassTutorial strong{font-size:20px}
 :root[data-encounter-size="tiny"] #atlasCompassTutorial p{font-size:12px;line-height:1.3;margin:0}
 :root:is([data-encounter-size="compact"],[data-encounter-size="tiny"]) #worldAtlas #atlasCompassGotIt{padding:8px 24px;font-size:14px!important}
+/* Map lessons share the field-guide palette used by the combat tutorials. */
+#atlasCompassTutorial:not([hidden]){border-color:#7e9890;border-radius:18px;background:radial-gradient(ellipse at 50% 12%,#fff,transparent 62%),linear-gradient(150deg,#f4f0df,#e0ebdf);color:#24494c;box-shadow:inset 0 0 0 5px #fff9e6}
+#atlasCompassTutorial:not([hidden]):before{color:#315e60;border-color:#93afa0;background:#fff8e6}
+#atlasCompassTutorial p{color:#435d58}
+#atlasCompassTutorial small{font:500 11px/1.4 system-ui;color:#50665b;flex-shrink:0}
+#worldAtlas #atlasCompassGotIt{background:#315e60;color:#fff5dc}

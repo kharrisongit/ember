@@ -22,32 +22,33 @@ requests.length=0;failures=0;
 await c.loadDockImage(src,10,'passage_rail');assert.equal(requests.length,1);
 console.log('PASS: embedded rail matches original PNG; external image failures retry with fresh URLs and report terminal errors.');
 
-// Check the new four-direction sheets through the actual atlas crop loader.
+// Load every high-detail strip through the production Hollybeck loader.
 {
- const crops=[],pages=[];
- const h=vm.createContext({DOCK_ORIGINAL_ASSETS:[],SPR:{wall78_sheet:[0,0]},WALL78_PIECES:[],
-  Image:class {set src(url){this.url=url;queueMicrotask(()=>this.onload());}},
-  setTimeout,clearTimeout,Date,registerAtlasPage:p=>pages.push(p),
+ const crops=[],sheets={};
+ const h=vm.createContext({SPR:{},animalSheets:sheets,
+  Image:class{set src(url){this.url=url;}async decode(){}},
   document:{createElement:()=>({getContext:()=>({drawImage:(img,...rect)=>{
    const png=fs.readFileSync(new URL('../'+img.url.split('?')[0],import.meta.url));
-   const [x,y,w,h]=rect;
-   assert(x>=0&&y>=0&&x+w<=png.readUInt32BE(16)&&y+h<=png.readUInt32BE(20),'Every frame crop stays inside its PNG');
+   const [x,y,w,height]=rect;
+   assert(x>=0&&y>=0&&x+w<=png.readUInt32BE(16)&&y+height<=png.readUInt32BE(20),'Every complete directional strip fits its PNG');
    crops.push([img.url,...rect]);
   }})})}});
+ vm.runInContext(code.slice(code.indexOf('function villagerIdleFrame('),code.indexOf('function finishTownCast(')),h);
  vm.runInContext(read('js/hollybeck-villagers.js'),h);
- vm.runInContext(code.slice(0,code.indexOf('// Gray stone')),h);
- await h.loadDockOriginalAssets();
- assert.equal(pages.length,16,'Two residents each have four walk and four idle strips');
- assert.equal(crops.length,128,'All 128 animation and blink frames load');
- for(const p of pages){assert.equal(p.w,192);assert.equal(p.h,30);}
- assert.equal(new Set(crops.map(c=>c[0])).size,4,'Standing idles use separate artwork from walking');
- for(const action of ['walk','idle']){
-  assert.equal(h.hollybeckNpcFrame({t:0},.04,action),7,'Half-closed eyes ease into blink');
-  assert.equal(h.hollybeckNpcFrame({t:0},.12,action),6,'Fully closed eyes in middle of blink');
-  assert.equal(h.hollybeckNpcFrame({t:0},.22,action),7,'Half-closed eyes ease out of blink');
-  assert.equal(h.hollybeckNpcFrame({t:0},3.92,action),6,'Blinks repeat in both animation states');
-  for(const t of [.3,.7,1.2,2.4,3.6])assert(h.hollybeckNpcFrame({t:0},t,action)<6,'Ordinary motion frames between blinks');
+ await h.prepareHollybeckArt();
+ assert.equal(Object.keys(sheets).length,24,'Three residents each load four idle and four walk directions');
+ assert.equal(crops.length,24);assert.equal(new Set(crops.map(c=>c[0])).size,6);
+ for(const [key,sheet]of Object.entries(sheets)){
+  assert.equal(sheet.width,key.includes('_idle_')?256:384);assert.equal(sheet.height,64);
+  assert.equal(sheet.spriteScale,2);assert.equal(sheet.pixelLocked,true);
  }
- assert.notEqual(h.hollybeckNpcFrame({t:1},.08,'idle'),6,'Residents blink at independent times');
- console.log('PASS: all 128 winter frames load; walking and idle blinks ease through half-closed, closed, half-closed and open eyes at the same speed.');
+ const n={n:'Runa',packSpr:'hollybeck_runa'},seen=new Set();
+ for(let t=0;t<12;t+=.01){
+  const frame=h.hollybeckNpcFrame(n,t,'idle');seen.add(frame);
+  assert.equal(frame,h.villagerIdleFrame(n,t,4),'Outdoor idle follows the indoor breathing and blinking clock');
+  assert.equal(h.hollybeckNpcFrame(n,t,'walk'),Math.floor(t*8)%6);
+ }
+ assert.equal(seen.size,4,'Breathing and both blink states occur');
+ await h.prepareHollybeckArt();assert.equal(crops.length,24,'Repeated preparation is idempotent');
+ console.log('PASS: all three winter residents load 2× directional art; six walking poses and the same authored idle timing as indoor NPCs.');
 }

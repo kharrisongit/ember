@@ -18,6 +18,13 @@ vm.runInContext('alignHouseTableSeats=async()=>{};refineSeatedPixels=image=>imag
 const game=read('js/generated/game-part-2.js');
 for(const [start,end] of [['function editorActorInfo(', 'function shiftActorData('],['function shiftActorData(', 'function pickEditorActor(']])vm.runInContext(game.slice(game.indexOf(start),game.indexOf(end)),ctx);
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
+for(const [index,name]of [[1,'dining table'],[6,'north chair'],[7,'south chair']]){
+ const actor=world.maps.house22.roomActors.find(a=>a.editKey==='millwood:house22:'+index);
+ const source=world.maps.house23.roomActors.find(a=>a.n===name);
+ assert.equal(actor.extractedCanvas,source.extractedCanvas,'Maddock uses the existing Millwood round dining set');
+ assert.deepEqual(actor.sourceRect.slice(2),source.sourceRect.slice(2),'Replacement keeps the authored furniture dimensions');
+}
+assert(!world.maps.house22.roomActors.some(a=>/^ichair[01]$/.test(a.spr||'')),'Legacy chairs are removed');
 assert.deepEqual(canvasCalls.slice(0,2),[[0,224,16,8],[208,224,16,8]]);
 assert.match(world.maps.royal_cellar._roomBaseCanvas.src,/royal-cellar\.png/);
 assert.equal(world.maps.royal_cellar.roomActors.filter(o=>/^dragon75_food/.test(o.spr)).length,8);
@@ -45,7 +52,9 @@ for(const [id,layout] of Object.entries(layouts)){
   o.moveBlocks.forEach((i,j)=>assert.deepEqual(map.roomBlocks[i],before[j]));count++;
  }
 }
-assert.equal(JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold'))),outside);
+const unchanged=JSON.parse(outside);
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>id in unchanged)))),unchanged,'Existing excluded maps stay unchanged');
+assert(world.maps.house26_bedroom2?._layeredFurniture,'The added hearth bedroom has its own furniture');
 await vm.runInContext('prepareMillwoodInteriors()',ctx);
 for(const [id,layout] of Object.entries(layouts))assert.equal(world.maps[id].roomActors.filter(o=>o.exactFurniture).length,layout.objects.length-(id==='royal_westhall'?1:0));
 console.log(`PASS: ${count} furniture objects across ${Object.keys(layouts).length} rooms; movement, collision, saved layouts, idempotence and excluded maps.`);

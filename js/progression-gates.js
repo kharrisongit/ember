@@ -16,31 +16,14 @@ const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
 const caravanSprite={source:[76,138,1390,746],width:96,height:52};
-const tobinSheets={};
-for(const action of ['idle','walk']){
-  const image=new Image();image.src='assets/sprites/hollybeck-tobin-'+action+'.png?v=20260930-animated';tobinSheets[action]=image;
-}
 let snowChildPortrait=null;
 async function prepareJourneyArt(){
-  if(SPR.journey_tobin_idle_d)return;
-  for(const [action,image]of Object.entries(tobinSheets)){
-    await image.decode();
-    for(const [row,dir]of ['d','u','e','w'].entries()){
-      const key='journey_tobin_'+action+'_'+dir;
-      const strip=document.createElement('canvas');strip.width=24*6;strip.height=30;
-      const g=strip.getContext('2d');g.imageSmoothingEnabled=false;
-      for(let frame=0;frame<6;frame++)g.drawImage(image,frame*32+4,row*32+2,24,30,frame*24,0,24,30);
-      animalSheets[key]=strip;SPR[key]=[0,0,24,30,6,key];
-    }
-  }
+  await prepareHollybeckArt();
+  if(snowChildPortrait)return;
   const face=document.createElement('canvas');face.width=96;face.height=112;
-  const f=face.getContext('2d');f.imageSmoothingEnabled=false;
-  f.drawImage(tobinSheets.idle,7,3,18,21,0,0,96,112);snowChildPortrait=face.toDataURL('image/png');
-}
-function tobinNpcFrame(t,action){
-  if(action==='walk')return Math.floor(t*8)%6;
-  if(t%3.8<.15)return 3;
-  return [0,1,2,4,5][Math.floor(t*4)%5];
+  const g=face.getContext('2d');g.imageSmoothingEnabled=false;
+  g.drawImage(animalSheets.hollybeck_tobin_idle_d,15,11,34,37,0,0,96,112);
+  snowChildPortrait=face.toDataURL('image/png');
 }
 // The camels lead from the south/front of the wagon, clear of the rock and houses.
 const caravanCamels=[[-6,42],[42,42],[6,70]];
@@ -93,7 +76,7 @@ function prepareJourneyGates(){
     "Caravanner Sami: Easy there! The caravan is staying put, and the camels aren't taking another step.",
     "Caravanner Sami: Something in Sandspire Temple has them spooked. Clear the temple and claim its Heartstone, and we'll get this wagon moving."
   ],'Bilal'));
-  const tobin=journeyWorker('Tobin','journey_tobin','hollybeck',hb.x-50,hb.y+8,[
+  const tobin=journeyWorker('Tobin','hollybeck_tobin','hollybeck',hb.x-50,hb.y+8,[
     "Tobin: I'm building snowmen! This one's the captain, and those are his snow guards.",
     "Tobin: I'm not finished yet, so you'll have to come back later. They still need noses!"
   ]);

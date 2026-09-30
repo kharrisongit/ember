@@ -4497,7 +4497,6 @@ function drawWorld(t, dt) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
           : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
         if(/^hollybeck_/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
-        if(o.packSpr==='journey_tobin')fr=tobinNpcFrame(t,action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){
@@ -5613,6 +5612,7 @@ function drawEnemyAttackTell(f,s2,fr,dx,dy,scale=1){
   ctx.restore();
 }
 function stepBolts(dt) {
+  if(encounterCombatPaused())return;
   if (glassShieldPulse > 0) glassShieldPulse = Math.max(0, glassShieldPulse - dt);
   if (foesHeld) return;
   if (bossScene) return;
@@ -5816,6 +5816,7 @@ const CLAW_REACH = 92;
 const CLAW = { every: 2.20, dmg: 0.5, life: 0.42, back: 0.80 };
 let claw = null, clawT = 0, linger = 0;
 function stepClaw(dt) {
+  if(encounterCombatPaused())return;
   if (bossScene) return;
   if (!claw) return;
   claw.t += dt;
@@ -7934,6 +7935,7 @@ function foeBodyProfile(f) {
   return { x: f.x, y: f.y - 16, r: 24 };
 }
 function stepBreath(dt) {
+  if(encounterCombatPaused())return;
   if (foesHeld) return;
   if (bossScene) return;
   if (dragonCombatPause > 0) dragonCombatPause = Math.max(0, dragonCombatPause - dt);
@@ -10087,7 +10089,11 @@ function kingDragonTarget(f) {
   }
   return { x: P.x, y: P.y, d: playerD, dragon: false };
 }
+function encounterCombatPaused(){
+  return revealing||globalThis.window?.EmberEncounterCard?.blocking()||globalThis.window?.EmberArenaEntry?.holding()||globalThis.window?.EmberRiding?.holding();
+}
 function stepFoes(dt) {
+  if(encounterCombatPaused())return;
   foeClock += dt;
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
@@ -10849,7 +10855,7 @@ function drawHeartsCanvasLegacy() {
 }
 let foesHeld = false;
 function stepCombat(dt) {
-  if(globalThis.window?.EmberArenaEntry?.holding()||globalThis.window?.EmberRiding?.holding()){for(const f of foes)if(f.st!=='dead')f.t+=dt;stepFall(dt);return;}
+  if(encounterCombatPaused())return;
   stepTempleGates(dt);
   stepFly(dt); // Cosmetic pickups keep moving even with foes disabled.
   if (pInv > 0) pInv -= dt;

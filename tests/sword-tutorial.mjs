@@ -39,9 +39,11 @@ assert(run('EmberRiding.holding()'));assert.equal(run('P.act'),null,'Dialogue di
 assert(dom.element('act').classList.contains('riding-target'));
 run('setOvl("itemm")');assert.equal(run('ovl'),null,'Other controls cannot bypass the tutorial');
 dom.touch(dom.element('act'));
-assert.equal(run('P.act.kind'),'swing','The prompted A press performs a real sword attack');
+assert.equal(run('P.act'),null,'Dismissing the lesson consumes A without an accidental attack');
 assert(!run('EmberRiding.holding()'));assert(run('EmberRiding.capture().swordDone'));
 assert(run('foes.every(f=>!EmberRiding.waitingEnemy(f))'),'Enemies activate immediately');
+dom.touch(dom.element('act'));
+assert.equal(run('P.act.kind'),'swing','The next A press performs the taught sword attack');
 run('P.act=null;startAct("swing")');assert.equal(run('P.act.kind'),'swing','Further sword attacks stay unlocked');
 run('stepFoes(.05)');assert(run('foes.some(f=>f._thinking)'),'Normal enemy AI resumes');
 run('pHp=pMax;pInv=0;foes[0].x=P.x;foes[0].y=P.y-16;P.act={kind:"swing",t:4,dir:"u",flip:false,dir8:"n"};swingHits()');

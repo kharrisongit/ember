@@ -21,8 +21,25 @@ async function prepareMillwoodInteriors() {
   prepareThroneGallery();
   await prepareCastleArchitecture();
   prepareRemainingInteriorActors();
+  prepareMaddockDiningFurniture();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+
+function prepareMaddockDiningFurniture(){
+  const room=W.maps.house22,source=W.maps.house23;
+  if(!room||!source||room._roundDining)return;
+  room._roundDining=true;
+  const replacements=[[1,'dining table',[-17,-25,17,-5]],[6,'north chair',[-4,-12,4,-1]],[7,'south chair',[-4,-12,4,-1]]];
+  for(const [index,name,bounds]of replacements){
+    const actor=room.roomActors.find(a=>a.editKey==='millwood:house22:'+index);
+    const original=source.roomActors.find(a=>a.n===name);if(!actor||!original)continue;
+    actor.extractedCanvas=original.extractedCanvas;
+    const [,,w,h]=original.sourceRect;actor.sourceRect=[actor.x-w/2,actor.y-h,w,h];
+    actor.sy=actor.y+(name==='dining table'?-9:0);
+    for(const block of actor.moveBlocks||[])room.roomBlocks[block]=bounds.map((v,i)=>v+(i%2?actor.y:actor.x));
+  }
+  room.roomActors=room.roomActors.filter(a=>!/^ichair[01]$/.test(a.spr||''));
 }
 
 // Double the sampling grid using neighbouring pixel colours, without blurring

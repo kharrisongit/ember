@@ -19,6 +19,8 @@ assert.deepEqual(musicEvents,['cut']);
 active('roar')[0].onended();assert.deepEqual(musicEvents,['cut'],'Music waits for the longer crash clip too');
 active('distant')[0].onended();assert.deepEqual(musicEvents,['cut','reveal'],'The music starts only after both sounds finish');
 const game=read('js/generated/game-part-2.js');
+c.revealing=false;
+run(game.slice(game.indexOf('function encounterCombatPaused('),game.indexOf('function stepFoes(')));
 run(game.slice(game.indexOf('const GREEN ='),game.indexOf('\nfunction followCam()')));
 run(game.slice(game.indexOf('function greenAt()'),game.indexOf('\nconst Q =')));
 Object.assign(c,{scene:null,sayNpc:null,sceneHold:()=>!!c.scene,playScene:(lines,opts)=>{c.scene={lines,t:0,...opts};},faceCorinAt(){}});

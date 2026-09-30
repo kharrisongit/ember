@@ -62,7 +62,12 @@ dom.touch(dom.element('atkRows').children[1]);check("EmberRiding.capture().phase
 assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Slash');
 assert(dom.element('ridingHint').classList.contains('slash-prompt'),'Slash has its own dragon combat card');
 check('!!breath&&!hunt&&!scene','Fire launches a projectile from the saddle and clears the prompt');
-dom.touch(dom.element('ridingHint'));check('!EmberRiding.holding()','The full-screen card performs the real Slash action and releases combat');
+const heldBattle=run('JSON.stringify({foes:foes.map(f=>[f.x,f.y,f.hp,f.t,f.st]),breath,dragonHp:dragon.hp})');
+dom.touch(dom.element('ridingHint'));check('EmberRiding.holding()','Tapping the lesson surface cannot start combat');
+for(let i=0;i<240;i++)run('EmberRiding.step(.05);stepFoes(.05);stepCombat(.05);stepBreath(.05);stepDragon(.05)');
+assert.equal(run('JSON.stringify({foes:foes.map(f=>[f.x,f.y,f.hp,f.t,f.st]),breath,dragonHp:dragon.hp})'),heldBattle,'Reading the lesson for twelve seconds freezes enemies, attack timers, health and fire');
+assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Slash','The lesson never expires on a timer');
+dom.touch(dom.element('act'));check('!EmberRiding.holding()&&!EmberEncounterCard.blocking()','The actual A control dismisses the lesson and releases combat');
 const beforeHit=run('foes.reduce((sum,f)=>sum+f.hp,0)');
 for(let i=0;i<30;i++)run('stepBreath(.05);stepDragon(.05)');
 assert(run('foes.reduce((sum,f)=>sum+f.hp,0)')<beforeHit,'The tutorial fire actually reaches and damages an enemy');
