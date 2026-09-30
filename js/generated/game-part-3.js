@@ -3358,6 +3358,7 @@ function buildTravel() {
   const list = document.getElementById("tvList");
   list.innerHTML = "";
   const places = placesOf();
+  if(typeof SpiderQueenDemo!=='undefined')places.unshift(SpiderQueenDemo.travelPlace());
   if (!places.length) {
     const d = document.createElement("div");
     d.className = "mini off";
@@ -4137,6 +4138,7 @@ function frameCore(ms) {
   stepBirds(dt);
   odoTurnsYouBack();
   stepShake(dt);
+  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.step(dt);
   greenFly(dt);
   stepWalkers(dt);
   stepElder(dt);

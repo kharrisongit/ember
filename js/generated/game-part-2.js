@@ -2315,6 +2315,7 @@ function loadMap(id, fresh, discardDraft=false) {
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
+  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
@@ -3900,6 +3901,7 @@ function drawWorld(t, dt) {
     draw.push({mooring:r,x:r[0],y:r[1],sy:Math.max(r[1],r[3])-4});
   }
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
+  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.addToDraw(draw);
   // Chests are low props: Corin must remain visible while walking around them.
   // Hollybeck's lid also needs to draw in front of its skull pedestal.
   const hollybeckChest = MD.hollybeck && chestHere();
@@ -4046,6 +4048,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
     if(o.marketCanopy){drawMarketActor(o.marketCanopy,false,true);continue;}
     if(o.villageCanopy){drawVillageStand(o.villageCanopy,false,true);continue;}
     if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
