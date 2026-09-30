@@ -51850,6 +51850,71 @@
         "y": 176,
         "originX": 76,
         "originY": 158
+      },
+      "collision:10,18": {
+        "kind": "collision",
+        "key": "10,18",
+        "blocked": false
+      },
+      "collision:10,19": {
+        "kind": "collision",
+        "key": "10,19",
+        "blocked": false
+      },
+      "collision:17,18": {
+        "kind": "collision",
+        "key": "17,18",
+        "blocked": false
+      },
+      "collision:17,19": {
+        "kind": "collision",
+        "key": "17,19",
+        "blocked": false
+      },
+      "collision:9,20": {
+        "kind": "collision",
+        "key": "9,20",
+        "blocked": true
+      },
+      "collision:9,21": {
+        "kind": "collision",
+        "key": "9,21",
+        "blocked": true
+      },
+      "collision:10,20": {
+        "kind": "collision",
+        "key": "10,20",
+        "blocked": true
+      },
+      "collision:10,21": {
+        "kind": "collision",
+        "key": "10,21",
+        "blocked": true
+      },
+      "collision:16,20": {
+        "kind": "collision",
+        "key": "16,20",
+        "blocked": true
+      },
+      "collision:16,21": {
+        "kind": "collision",
+        "key": "16,21",
+        "blocked": true
+      },
+      "collision:16,22": {
+        "kind": "collision",
+        "key": "16,22",
+        "blocked": true
+      },
+      "collision:17,20": {
+        "kind": "collision",
+        "key": "17,20",
+        "blocked": true
+      },
+      "collision:17,21": {
+        "kind": "collision",
+        "key": "17,21",
+        "blocked": true
       }
     },
     "school": {
@@ -53515,7 +53580,8 @@
     "552ba72a-c950-4233-9db1-ddae110831bc",
     "5e0bf8a7-7d98-405f-9170-97c48281db1f",
     "8114304f-d6d5-4463-a412-57626316b08e",
-    "28932b4f-c528-49c8-8830-f47ac48934c5"
+    "28932b4f-c528-49c8-8830-f47ac48934c5",
+    "76bc1ceb-2894-4c2f-a376-547e40736cfb"
   ],
   "sessions": {
     "witchmoor": {
@@ -53527,12 +53593,31 @@
       "resultHash": "66e574fa-d43d6fe4-3817"
     },
     "glasshouse": {
-      "id": "994f32dc-53f6-4aaa-a333-1368f0b6d47c",
+      "id": "3661c10c-944e-4bec-b4ff-b468ba61bdf3",
       "sequence": 1,
-      "baseHash": "5465b825-5971e3-2",
-      "baseFingerprint": "9ac016e0-5a4a28b0-4437",
-      "base": {},
-      "resultHash": "c9b5ecec-95a15a88-295"
+      "baseHash": "c9b5ecec-95a15a88-295",
+      "baseFingerprint": "4e306d9c-68591560-4461",
+      "base": {
+        "actor:remaining:glasshouse:7": {
+          "kind": "actor",
+          "key": "remaining:glasshouse:7",
+          "identity": "flower vase",
+          "x": 135,
+          "y": 176,
+          "originX": 133,
+          "originY": 158
+        },
+        "actor:remaining:glasshouse:6": {
+          "kind": "actor",
+          "key": "remaining:glasshouse:6",
+          "identity": "flower vase",
+          "x": 77,
+          "y": 176,
+          "originX": 76,
+          "originY": 158
+        }
+      },
+      "resultHash": "cfe2fd33-28a9eb99-1179"
     },
     "sn1": {
       "id": "e6a5ec58-502f-42b3-9e5f-8de95f8ae985",
