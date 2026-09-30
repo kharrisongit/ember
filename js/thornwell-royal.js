@@ -154,19 +154,22 @@ function thornwellMove(actor,path,speed,dt){
 }
 function thornwellWalkPlayer(path,after,kind='approach'){
   thornwellMotion={kind,path,after};
-  thornwellScene([],()=>{const done=thornwellMotion?.after;thornwellMotion=null;P.moving=false;if(done)done();});
+  thornwellScene([],()=>{const done=thornwellMotion?.after;thornwellMotion=null;P.moving=false;P.scriptWalking=false;if(done)done();});
   scene.silent=true;scene.until=()=>!thornwellMotion?.path?.length;showScene();
 }
 function beginRowanReunion(){
   if(MAPID!=='tavern'||brambleQuest!==1||sceneHold()||sayNpc||ask||doorMotion||fadeDir||fade>0)return false;
   const rowan=npcs.find(n=>n.n==='Rowan the Hunter'),dog=npcs.find(n=>n.pettable);
   if(!rowan||!dog)return false;
-  const path=thornwellReachable(P,[[rowan.x-32,rowan.y+28],[rowan.x+32,rowan.y+28],[rowan.x,rowan.y+40]]);
+  // Finish beside Rowan at speaking distance, rather than stopping diagonally
+  // below him. Try the other sides only when edited furniture blocks the seat.
+  const path=thornwellReachable(P,[[rowan.x-28,rowan.y],[rowan.x+28,rowan.y],[rowan.x,rowan.y+28],[rowan.x,rowan.y-28]]);
   const trail=maddockWalkPath(dog,[P.x,P.y],(x,y)=>canNpcStand(x,y,dog));
   if(!path||!trail)return false;
+  faceToward(rowan,P.x,P.y);
   thornwellScene(['Rowan: Hey, over here!'],()=>{
     thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);faceToward(rowan,P.x,P.y);tryBrambleReunion(rowan);},'rowan');
-    thornwellMotion.dog=dog;thornwellMotion.trail=trail;
+    thornwellMotion.dog=dog;thornwellMotion.trail=trail;thornwellMotion.rowan=rowan;
     scene.until=()=>!thornwellMotion?.path?.length&&Math.hypot(dog.x-P.x,dog.y-P.y)<=40;
   },rowan);
   return true;
@@ -434,6 +437,7 @@ function stepThornwellRoyal(dt){
       return;
     }
     if(motion.path)thornwellMove(P,motion.path,motion.kind==='shove'?180:82,dt);
+    if(motion.rowan)faceToward(motion.rowan,P.x,P.y);
     if(motion.dog){
       const last=motion.trail.at(-1);
       if(!last||Math.hypot(P.x-last[0],P.y-last[1])>=4)motion.trail.push([P.x,P.y]);

@@ -96,7 +96,8 @@ console.log(`PASS: ${residents.length} residents keep Aurelius secret; king and 
 console.log('Checking the published outdoor route…');
 run(`loadMap('world');const royalExit=W.maps.tavern.doors.find(d=>d.to==='world');P.x=royalExit.tx*TS+8;P.y=royalExit.ty*TS+TS;cam.x=P.x-200;cam.y=P.y-150;thornwellDoorArrived('tavern');`);
 assert.equal(run('thornwellRoyal.stage'),5);
-assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3846.5,3990.5,4022.5],'Published outdoor table positions preserve the entrance path');
+assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3830.5,3990.5,4022.5],'Published outdoor table positions preserve the entrance path');
+assert.deepEqual(Array.from(run(`{const n=npcs.find(n=>n.editKey==='npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605');[n.x,n.y]}`)),[3854,1095],'White-haired drinker is one tile west and south');
 assert(run(`canStand(3913,1068)&&canStand(3913,1080)`),'The actual entrance corridor stays walkable');
 const before=run('[P.x,P.y]');
 run('thornwellDeparture()');
@@ -126,7 +127,7 @@ assert.equal(run('thornwellRoyal.stage'),6,'All royals leave and unlock the urge
 assert.notDeepEqual(Array.from(run('[P.x,P.y]')),Array.from(before),'The player is physically moved aside');
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),0);
 assert.equal(run('thornwellRoyalDragon'),null);
-assert(run("npcs.filter(n=>n.n==='Merrin').every(n=>Math.hypot(n.x-P.x,n.y-P.y)>40)"),'Departure keeps Corin away from the drinker');
+assert(run("npcs.filter(n=>n.editKey==='npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605').every(n=>Math.hypot(n.x-P.x,n.y-P.y)>40)"),'Departure keeps Corin away from the drinker');
 assert.equal(run('dragonHere()'),false,'Aurelius stays absent after the royal departure');
 assert.equal(run('atlasMainObjective().place'),'Forgefalls');
 assert(spoken.includes('Serjeant Bram: Make way for royalty!'));

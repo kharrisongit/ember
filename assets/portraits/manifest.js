@@ -340,11 +340,6 @@ const DIALOGUE_PORTRAITS = {
     "pack": 4,
     "cell": 9
   },
-  "Greta": {
-    "id": 70,
-    "pack": 4,
-    "cell": 10
-  },
   "Osric": {
     "id": 71,
     "pack": 4,

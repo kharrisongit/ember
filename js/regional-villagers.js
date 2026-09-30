@@ -316,7 +316,7 @@ const REGIONAL_VILLAGERS=[
 async function prepareRegionalVillagerArt(){
   if(SPR.regional_tilda_idle_d)return;
   for(let start=0;start<REGIONAL_VILLAGERS.length;start+=4)await Promise.all(REGIONAL_VILLAGERS.slice(start,start+4).map(async person=>{
-    const image=new Image();image.src='assets/sprites/regional/'+person.id+'.png?v=20260930-regional-cast';await image.decode();
+    const image=new Image();image.src='assets/sprites/regional/'+person.id+'.png?v=20260930-complete-feet';await image.decode();
     for(const [action,baseRow,frames]of [['idle',0,4],['walk',4,6]])for(const [row,dir]of ['d','u','e','w'].entries()){
       const key='regional_'+person.id+'_'+action+'_'+dir,strip=document.createElement('canvas');
       strip.width=frames*64;strip.height=64;strip.spriteScale=2;strip.pixelLocked=true;
@@ -343,7 +343,10 @@ function settleRegionalVillagers(){
     // Later published editor moves belong to the user, including intentional staging.
     if(n.x!==person.home[0]||n.y!==person.home[1]){source.regionalPlaced=true;continue;}
     const town=features.find(f=>f.kind==='area'&&(f.label||f.place)===person.town);
+    // Leave room for a visible north/south stroll, not just a clear standing spot.
+    const canStroll=(x,y)=>[1,-1].some(dir=>[4,8,12,16,20,24].every(d=>canNpcStand(x,y+dir*d,n)));
     const clear=(x,y)=>x>(town.x0+3)*TS&&x<(town.x1-3)*TS&&y>(town.y0+3)*TS&&y<(town.y1-3)*TS&&canNpcStand(x,y,n)&&
+      canStroll(x,y)&&
       npcs.every(other=>other===n||other.editorDeleted||Math.hypot(x-other.x,y-other.y)>48)&&
       (MD.doors||[]).every(d=>Math.hypot(x-(d.x+.5)*TS,y-(d.y+1)*TS)>48);
     let spot=clear(n.x,n.y)?[n.x,n.y]:null;

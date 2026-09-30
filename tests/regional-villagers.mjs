@@ -24,7 +24,8 @@ for(const person of cast){
  const p=run(`(()=>{const n=npcs.find(n=>n.editKey==='npc:regional:'+person.id),s=MD.npcs.find(s=>s.editKey===n.editKey);
    return {name:n.n,x:n.x,y:n.y,placed:s.regionalPlaced,clear:canNpcStand(n.x,n.y,n),route:patrolRoute(n),vertical:northSouthPatrol(n),dialogue:n.d};})()`);
  assert(p.placed,person.name+' found a clear town location');assert(p.clear,person.name+' is outside solid art');
- assert(!p.vertical,'New residents have all four authored walking directions');
+ assert(p.vertical,person.name+' patrols only north and south');
+ assert(p.route.every(point=>point[0]===p.x),person.name+' never patrols east or west');
  assert(p.route.length>1,person.name+' has a usable patrol route');
  assert(p.dialogue[0].startsWith(person.name+':'),person.name+' has authored dialogue');
  placements.push(p);

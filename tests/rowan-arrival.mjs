@@ -6,18 +6,25 @@ run(`mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.
 loadMap('tavern');[P.x,P.y]=MD.spawn;brambleQuest=1;thornwellRoyal.stage=1;syncBrambleParty();syncThornwellRoyals();fadeDir=0;fade=0;doorMotion=null;scene=null;ask=null;sayNpc=null;
 var startAt=[P.x,P.y];stepThornwellRoyal(1/30);`);
 assert.match(run('scene?.lines[0]||""'),/^Rowan: Hey, over here!/ ,'Rowan stops the player automatically on arrival');
-run('var rowanStart=[npcs.find(n=>n.n==="Rowan the Hunter").x,npcs.find(n=>n.n==="Rowan the Hunter").y];scene.after()');assert.equal(run('thornwellMotion.kind'),'rowan');
+run('var rowan=npcs.find(n=>n.n==="Rowan the Hunter"),rowanStart=[rowan.x,rowan.y];scene.after();var approachEnd=thornwellMotion.path.at(-1).slice()');assert.equal(run('thornwellMotion.kind'),'rowan');
+assert(run('Math.hypot(approachEnd[0]-rowan.x,approachEnd[1]-rowan.y)<=28.01'),'Approach ends within speaking distance');
 assert.deepEqual(Array.from(run('[P.x,P.y]')),Array.from(run('startAt')),'No teleport to Rowan');
 let walked=false,kingCall=false,faced=false;
 for(let i=0;i<2400;i++){
  const prior=Array.from(run('[P.x,P.y]'));
- run(`stepScene(1/30);stepWalkers(1/30);stepDragon(1/30);`);
+ run(`if(scene?.silent)advanceScene();stepScene(1/30);stepWalkers(1/30);stepDragon(1/30);`);
  if(run('thornwellMotion?.kind==="rowan"')){
   assert.deepEqual(Array.from(run('[npcs.find(n=>n.n==="Rowan the Hunter").x,npcs.find(n=>n.n==="Rowan the Hunter").y]')),Array.from(run('rowanStart')),'Rowan stays at his tavern spot during the approach');
   const now=Array.from(run('[P.x,P.y]'));assert(Math.hypot(now[0]-prior[0],now[1]-prior[1])<=82/30+.01);walked||=now[0]!==prior[0]||now[1]!==prior[1];
+  const expected=run("Math.abs(P.x-rowan.x)>Math.abs(P.y-rowan.y)?(P.x<rowan.x?'w':'e'):(P.y<rowan.y?'u':'d')");
+  assert.equal(run('rowan.kf'),expected,'Rowan watches Corin throughout the approach');
  }
  if(run('scene?.npcActor?.n==="Rowan the Hunter"&&scene.lines[0]?.includes("Thank you")')){
-  const before=run('scene.npcActor.f');run('faceToward(scene.npcActor,P.x,P.y)');assert.equal(run('scene.npcActor.f'),before,'Rowan faces Corin throughout the conversation');faced=true;
+  assert.deepEqual(Array.from(run('[P.x,P.y]')),Array.from(run('approachEnd')),'Dialogue waits for the complete approach');
+  const expected=run("Math.abs(P.x-rowan.x)>Math.abs(P.y-rowan.y)?(P.x<rowan.x?'w':'e'):(P.y<rowan.y?'u':'d')");
+  assert.equal(run('rowan.kf'),expected,'Rowan faces Corin throughout every dialogue line');
+  assert.equal(run("rowan.f==='s'?(rowan.flip?'w':'e'):rowan.f"),expected,'Rendered sprite direction matches his facing');
+  assert.equal(run('P.moving||P.scriptWalking'),false,'Corin stops walking before talking');faced=true;
  }
  if(run('!!scene?.thornwellSummons')){kingCall=true;break;}
  run(`if(scene&&!scene.silent&&!scene.hold&&!scene.arriving){typeAll();scene.t=1;advanceScene();}`);

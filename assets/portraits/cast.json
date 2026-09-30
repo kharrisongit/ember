@@ -682,16 +682,6 @@
     "cell": 9
   },
   {
-    "name": "Greta",
-    "sprite": "greta_idle",
-    "maps": [
-      "mine"
-    ],
-    "id": 70,
-    "pack": 4,
-    "cell": 10
-  },
-  {
     "name": "Osric",
     "sprite": "villager_seated_unique_osric",
     "maps": [

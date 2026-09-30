@@ -17,40 +17,35 @@ for(const person of specs.filter(s=>s.generatedPath)){
   const input=document.createElement('canvas');input.width=im.width;input.height=im.height;
   const g=input.getContext('2d',{willReadFrequently:true});g.drawImage(im,0,0);
   const raw=g.getImageData(0,0,im.width,im.height).data;
-  const boxes=[];
-  for(let row=0;row<8;row++){
-   const line=[];
-   for(let col=0;col<(row<4?4:6);col++){
-    const x0=Math.floor(col*im.width/6),x1=Math.floor((col+1)*im.width/6);
-    const y0=Math.floor(row*im.height/8),y1=Math.floor((row+1)*im.height/8),cw=x1-x0,ch=y1-y0;
-    const seen=new Uint8Array(cw*ch);let largest=[];
-    // A few generated cells include a detached sliver of the next pose.
-    // Register the connected character, not that neighbouring frame fragment.
-    for(let oy=0;oy<ch;oy++)for(let ox=0;ox<cw;ox++){
-     const start=oy*cw+ox;if(seen[start]||raw[((y0+oy)*im.width+x0+ox)*4+3]<180)continue;
-     const component=[start];seen[start]=1;
-     for(let at=0;at<component.length;at++){
-      const q=component[at],qx=q%cw,qy=Math.floor(q/cw);
-      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
-       const nx=qx+dx,ny=qy+dy,n=ny*cw+nx;
-       if(nx<0||nx>=cw||ny<0||ny>=ch||seen[n]||raw[((y0+ny)*im.width+x0+nx)*4+3]<180)continue;
-       seen[n]=1;component.push(n);
-      }
-     }
-     if(component.length>largest.length)largest=component;
+  // Generated sheets have consistent pose order, but not exact grid gutters.
+  // Find each complete connected silhouette before arranging the runtime grid.
+  const width=im.width,height=im.height,seen=new Uint8Array(width*height),poses=[];
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+   const start=y*width+x;if(seen[start]||raw[start*4+3]<180)continue;
+   const component=[start];seen[start]=1;let l=x,t=y,r=x,b=y;
+   for(let at=0;at<component.length;at++){
+    const q=component[at],qx=q%width,qy=Math.floor(q/width);
+    l=Math.min(l,qx);r=Math.max(r,qx);t=Math.min(t,qy);b=Math.max(b,qy);
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+     const nx=qx+dx,ny=qy+dy,n=ny*width+nx;
+     if(nx<0||nx>=width||ny<0||ny>=height||seen[n]||raw[n*4+3]<180)continue;
+     seen[n]=1;component.push(n);
     }
-    if(largest.length<100)throw Error('Missing frame '+row+'/'+col);
-    const keep=new Set(largest);let l=im.width,t=im.height,r=-1,b=-1;
-    for(let oy=0;oy<ch;oy++)for(let ox=0;ox<cw;ox++){
-     const x=x0+ox,y=y0+oy;
-     if(!keep.has(oy*cw+ox)){raw[(y*im.width+x)*4+3]=0;continue;}
-     l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);
-    }
-    line.push([l,t,r-l+1,b-t+1]);
    }
-   boxes.push(line);
+   if(component.length>=1000)poses.push({box:[l,t,r-l+1,b-t+1],pixels:component});
   }
-  const isolated=new ImageData(raw,im.width,im.height);g.putImageData(isolated,0,0);
+  if(poses.length!==40)throw Error('Expected 40 complete poses, found '+poses.length);
+  poses.sort((a,b)=>a.box[1]-b.box[1]);
+  const boxes=[],ordered=[];let at=0;
+  for(let row=0;row<8;row++){
+   const count=row<4?4:6,line=poses.slice(at,at+count).sort((a,b)=>a.box[0]-b.box[0]);at+=count;
+   boxes.push(line.map(p=>p.box));ordered.push(...line);
+  }
+  // Isolate only the selected silhouettes, preserving every boot and hem pixel.
+  const kept=new Uint8Array(width*height);
+  for(const pose of ordered)for(const pixel of pose.pixels)kept[pixel]=1;
+  for(let i=0;i<kept.length;i++)if(!kept[i])raw[i*4+3]=0;
+  g.putImageData(new ImageData(raw,width,height),0,0);
   const scale=54/Math.max(...boxes.flat().map(b=>b[3]));
   const out=document.createElement('canvas');out.width=384;out.height=512;
   const ctx=out.getContext('2d',{willReadFrequently:true});ctx.imageSmoothingEnabled=false;

@@ -256,10 +256,6 @@ const NPC_REPLY_BRANCHES={
     "You could ask for the cups back.",
     "I could. But I like imagining her using them. Some things are easier to leave behind when you know they are wanted."
   ],
-  "Greta": [
-    "You could put a bell on a repaired door.",
-    "A sensible solution. I have been avoiding one of those for years. Now I shall have to think of a better excuse."
-  ],
   "Osric": [
     "The fellow with the sword might need a safe way home too.",
     "Exactly. I kept telling my brother they ought to travel together. He said that would make the story shorter."

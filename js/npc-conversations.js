@@ -896,20 +896,6 @@ const NPC_STORIES = {
       "Sometimes a place becomes home because somebody makes room before you ask."
     ]
   ],
-  "Greta": [
-    [
-      "The sticking door",
-      "I know exactly where to lift it. My mother did too. We have both put off mending it for years.",
-      "Why?",
-      "The scrape tells me someone has come in. Down here, an unexpected silence is worse than a noisy hinge."
-    ],
-    [
-      "A day above ground",
-      "I like hanging washing outside. The clothes come back smelling of a place with a sky.",
-      "Do you ever stay outside longer?",
-      "I sometimes find a second basket that does not strictly need washing."
-    ]
-  ],
   "Osric": [
     [
       "Books and danger",

@@ -50153,8 +50153,8 @@
         "identity": "tavern_patio_table_1",
         "originX": 3878.5,
         "originY": 1086,
-        "x": 3846.5,
-        "y": 1086
+        "x": 3830.5,
+        "y": 1102
       },
       "actor:patio:7059:table:2": {
         "kind": "actor",
@@ -50190,8 +50190,8 @@
         "identity": "tavern src Drinker2",
         "originX": 3902,
         "originY": 1079,
-        "x": 3870,
-        "y": 1079,
+        "x": 3854,
+        "y": 1095,
         "independent": true
       },
       "actor:npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7": {
