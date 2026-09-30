@@ -4,48 +4,49 @@
   let session=null,keeping=0,pointer=null,suppressClick=0,autoReply=null;
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
-  function prompt(actor,{dragon:telepathy=false,talk,leave}={}){
+  function prompt(actor,{dragon:telepathy=false,talk,leave,greeted=false}={}){
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
-    const name=telepathy?'Aurelius':actor.n;
+    const name=telepathy?'Aurelius':actor.n,map=MAPID;
     if(actor){if(!telepathy){actor.goto=null;faceToward(actor,P.x,P.y);}faceCorinAt(actor.x,actor.y);}
-    const buy=actor?.sells&&!(actor.charm&&!charm[actor.charm])&&!(actor.gift&&!breathHas[actor.gift]);
-    ask={quick:1,conversationPrompt:true,npcActor:actor,back:leave,opts:[{n:name,head:true},
-      {n:'Talk',go:talk||(()=>telepathy?openDragonConversation():beginNpcTalk(actor))},
-      ...(buy?[{n:'Buy supplies',go:()=>openMerchantShop(actor)}]:[]),
-      {n:leave?'May I leave?':'Leave',go:leave||null}]};
-    askPick=1;askDraw();return true;
+    const merchant=!!actor?.sells;
+    const invite=()=>{
+      if(MAPID!==map||mode!=='play')return;
+      ask={quick:1,conversationPrompt:true,npcActor:actor,back:leave,opts:[{n:name,head:true},
+        {n:'Talk',go:talk||(()=>telepathy?openDragonConversation():beginNpcTalk(actor))},
+        ...(merchant?[{n:'Purchase',go:()=>openMerchantShop(actor)}]:[]),
+        {n:'Maybe Another Time',go:leave||null}]};
+      askPick=1;askDraw();
+    };
+    // Greetings belong to the world, before either full-screen conversation
+    // or shopping. A merchant speaks once; other characters hear Corin reply.
+    if(greeted){invite();return true;}
+    const authored=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[name];
+    const fallback=actor?.d?.find(line=>!line.startsWith('Corin: '));
+    const line=authored||(fallback?whoSays(actor,fallback)[1]:'Hello, Corin.');
+    const reply=typeof CORIN_TOPIC_GREETINGS!=='undefined'&&CORIN_TOPIC_GREETINGS[name]||'Hello, '+name+'. Have you a moment to talk?';
+    playScene([name+': '+line,...(merchant?[]:['Corin: '+reply])],
+      {who:name,npcActor:actor,telepathy,conversationGreeting:true,after:invite});
+    return true;
   }
   function sync(){
     const speaking=sayEl.classList.contains('on');
     document.body.classList.toggle('conversation-speaking',!!session&&speaking&&!session.shopping);
-    const hint=session?(welcoming()?'Choose Chat to begin':session.greeting?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
+    const hint=session?(welcoming()?'Choose Chat to begin':session.browsing?'Choose a topic below':ask?.replyChoices?'Choose Corin’s reply below':'Next'):!typeDone()?'Tap to finish the line':'Tap to continue';
     sayEl.dataset.advanceHint=hint;
     sayEl.setAttribute('aria-label',hint);
     if(session&&!session.shopping)window.EmberConversationView?.update({
       partner:session.menu.npcConversation||'Aurelius',speaker:typeWho,
       phase:ask?.replyChoices?'reply':isMenu(ask)?session.browsing?'explore':'welcome':'listen',canLeave:canGoodbye(),backAvailable:needsBack(),automatic:!!autoReply});
   }
-  function clearGreeting(){
-    if(!session?.greeting)return;
-    const {name,line}=session.greeting;session.greeting=null;
-    if(typeWho===name&&typeFull===playerFacingText(line))sayOff();
-  }
-  function greet(menu){
+  function idle(menu){
     if(menu.replyChoices||scene||sayNpc)return;
-    if(session.exchanged){session.exchanged=false;session.browsing=false;session.greeting=null;window.EmberConversationView?.greeting();}
-    const name=menu.dragonConversation?'Aurelius':menu.npcConversation;
-    const actor=menu.npcActor;
-    const authored=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[name];
-    const fallback=actor?.d?.find(line=>!line.startsWith('Corin: '));
-    const line=authored||(fallback?whoSays(actor,fallback)[1]:name+' at your service. What would you like to ask?');
-    if(session.greeting?.name===name&&sayEl.classList.contains('on'))return;
-    session.greeting={name,line};
-    typeStart(name,line);typeAll();sayIsNarr=false;sayEl.classList.remove('narr');
-    showFace(name);sayOn();setDialogueTone(!!menu.dragonConversation);
+    if(session.exchanged){session.exchanged=false;session.browsing=false;}
+    window.EmberConversationView?.clearExchange();
+    sayOff();showFace(null);setDialogueTone(!!menu.dragonConversation);
   }
   function reset(){
-    clearGreeting();
+    if(!scene&&!sayNpc&&!revealing)sayOff();
     window.EmberConversationView?.release();
     session=null;pointer=null;autoReply=null;
     for(const cls of ['conversation-session','conversation-speaking','topics-open'])document.body.classList.remove(cls);
@@ -58,7 +59,7 @@
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
-    box().classList.remove('conversationListening');greet(menu);sync();
+    box().classList.remove('conversationListening');idle(menu);sync();
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
@@ -93,7 +94,6 @@
     }
     if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
     if(!option.navigation||old.replyChoices)session.browsing=false;
-    clearGreeting();
     retained(()=>{askShut();option.go?.();});
     if(old.replyChoices&&scene&&!ask){session.exchanged=true;autoReply={scene,index:scene.i,read:0,last:performance.now()};}
     if(ask?.shop){
@@ -158,7 +158,7 @@
     if(autoReply){
       const playback=autoReply,current=scene;
       const dt=Math.max(0,Math.min(50,now-playback.last));playback.last=now;
-      // The final answer stays on screen until Next returns to the greeting.
+      // The final answer stays on screen until Next returns to the blank conversation panels.
       if(current!==playback.scene||ask||!session||current.i>=current.lines.length-1)autoReply=null;
       else if(!document.hidden&&!window.EmberCloud?.isOpen()&&!revealing&&!current.hold&&!current.silent&&!current.arriving&&sayEl.classList.contains('on')){
         if(playback.index!==current.i){playback.index=current.i;playback.read=0;}

@@ -91,7 +91,8 @@ console.log('PASS: repeated topic selections preserve personal exchanges, genera
 
 // Check the rendered menu and its callbacks across the whole authored cast at
 // each story stage, rather than testing only the list of topic titles.
-Object.assign(c,{fishingPole:true,odoRodReferral:true,templeCompass:{owned:true,meatGiven:true},quest:5,brambleQuest:0});
+// This matrix checks repeat greetings after the scripted first meeting.
+Object.assign(c,{dragonLearned:()=>true,fishingPole:true,odoRodReferral:true,templeCompass:{owned:true,meatGiven:true},quest:5,brambleQuest:0});
 for(const hatched of [false,true])for(const victory of [false,true]){
  c.hatched=hatched;c.wonAll=victory;
  for(const [name,profile] of Object.entries(stories)){

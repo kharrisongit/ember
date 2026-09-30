@@ -26,7 +26,7 @@
       button.onclick=e=>{e.stopPropagation();askPick=i;askTake();};
       button.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat){askPick=i;askTake();}}};rows.appendChild(button);
     });
-    box.appendChild(node('small','conversationPromptHint','Choose an action · A to confirm · B to leave'));
+    box.appendChild(node('small','conversationPromptHint','A to select · B to close'));
   }
   function portrait(who){
     const image=node('span','conversationPortrait');image.setAttribute('aria-hidden','true');paintSmallPortrait(image,who);return image;

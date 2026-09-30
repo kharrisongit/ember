@@ -7,13 +7,26 @@ const box=dom.element('bagAsk'),rows=dom.element('askRows'),say=dom.element('say
 run(`MAPID='world';MD=W.maps.world;MW=MD.w;MH=MD.h;terr=new Uint8Array(MW*MH);mode='play';gameplayStarted=true;quest=Q.DONE;dragon.on=true;dragonOff=false;dragonIntroDone=true;
 thornwellRoyal.stage=7;faceToward=()=>{};dragonConversationReaction=()=>{};saveGame=()=>{};
 var person={n:'Hettie',x:100,y:100,d:['Hettie: A pleasant morning.']};
-P.x=100;P.y=130;EmberConversationFlow.prompt(person);`);
+P.x=100;P.y=120;P.dir='u';P.act=null;npcs=[person];EmberRiding.skip();actionButton();`);
 const select=name=>{if(run('EmberConversationFlow.welcoming()'))box.querySelector('.conversationChat').onclick({stopPropagation(){}});c.selection=name;run('askPick=ask.opts.findIndex(o=>o.n===selection);askTake();');};
-assert(run('ask.conversationPrompt'),'First interaction opens a small invitation');
-assert(!run('EmberConversationFlow.active()'),'No full-screen session before confirming Talk');
+const finishGreeting=()=>{for(let i=0;i<3&&run('!!scene?.conversationGreeting');i++)run('typeAll();scene.t=1;actionButton()');};
+assert(run('scene?.conversationGreeting'),'A starts an overworld greeting');
+assert.equal(run('ask'),null,'The invitation waits for the greeting exchange');
+assert.equal(run('typeWho'),'Hettie');assert.equal(run('typeFull'),run('NPC_TOPIC_GREETINGS.Hettie'));
+assert.equal(say.parentNode,c.document.body,'Greeting uses the overworld dialogue overlay');
+assert(!run('EmberConversationFlow.active()'),'No full-screen session during the greeting');
+run('actionButton()');assert(run('typeDone()'));assert.equal(run('scene.i'),0,'First A finishes typing');
+run('scene.t=1;actionButton()');assert.equal(run('typeWho'),'Corin');
+assert.equal(run('typeFull'),run('CORIN_TOPIC_GREETINGS.Hettie'));
+assert.equal(run('ask'),null,'Corin replies before choices appear');
+finishGreeting();assert(run('ask.conversationPrompt'),'The exchange ends at the small invitation');
+assert.deepEqual(JSON.parse(run('JSON.stringify(ask.opts.filter(o=>!o.head).map(o=>o.n))')),['Talk','Maybe Another Time']);
+assert(!say.classList.contains('on'),'Overworld greeting closes before the invitation');
 assert(!box.classList.contains('conversationTopics'));
 run('askBack()');assert.equal(run('ask'),null,'B cancels the invitation');
-run('EmberConversationFlow.prompt(person)');select('Talk');
+run('EmberConversationFlow.prompt(person)');finishGreeting();select('Maybe Another Time');
+assert.equal(run('ask'),null);assert.equal(run('scene'),null,'Declining returns directly to gameplay');
+run('EmberConversationFlow.prompt(person)');finishGreeting();select('Talk');
 assert(run('EmberConversationFlow.active()'));
 assert.equal(run('EmberConversationFlow.partner()'),'Hettie','Session keeps the station actor while dialogue changes');
 assert.equal(box.getAttribute('aria-modal'),'true');
@@ -23,18 +36,18 @@ const finish=()=>{for(let i=0;i<25&&run('!!scene||!!sayNpc');i++){assert(!run('a
 const tap=(target=canvas)=>{dom.dispatch(target,'pointerdown');dom.dispatch(target,'pointerup');dom.dispatch(target,'click');};
 const next=()=>box.querySelector('.conversationNext').onclick({stopPropagation(){}});
 const greetings=Object.fromEntries(fs.readFileSync('assets/dialogue/npc-greetings.tsv','utf8').trim().split('\n').map(row=>row.split('|')));
-assert.equal(Object.keys(greetings).length,143);
+assert.equal(Object.keys(greetings).length,144);
 assert(!('Greta' in greetings),'Removed Greta is absent from the greeting cast');
-assert.equal(new Set(Object.values(greetings)).size,143,'Every character has a unique greeting');
+assert.equal(new Set(Object.values(greetings)).size,144,'Every character has a unique greeting');
 assert.deepEqual(JSON.parse(run('JSON.stringify(NPC_TOPIC_GREETINGS)')),greetings);
 const responses=Object.fromEntries(fs.readFileSync('assets/dialogue/corin-greetings.tsv','utf8').trim().split('\n').map(row=>row.split('|')));
 assert.deepEqual(JSON.parse(run('JSON.stringify(CORIN_TOPIC_GREETINGS)')),responses);
 assert.deepEqual(Object.keys(responses),Object.keys(greetings));
-assert.equal(new Set(Object.values(responses)).size,143);
+assert.equal(new Set(Object.values(responses)).size,144);
 const player=box.querySelector('.conversationPlayer'),chat=box.querySelector('.conversationChat');
 assert.equal(player.dataset.mode,'welcome');assert(!box.querySelector('.conversationContext'));assert(!rows.querySelector('.deckTabs'));
 assert.equal(chat.textContent,'Chat');assert(!chat.disabled);assert.equal(chat.parentNode,box.querySelector('.conversationFooter'));
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,responses.Hettie);
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'','No automatic Corin greeting inside the panel');
 assert(player.querySelector('.conversationWorkspace').hidden);assert(!player.querySelector('.conversationSpeaker').hidden);
 const greetingPick=run('askPick');run('askStep(1)');assert.equal(run('askPick'),greetingPick,'Hidden topics cannot be navigated');
 next();assert.equal(player.dataset.mode,'topics','Next opens Chat without choosing an invisible topic');
@@ -43,11 +56,10 @@ assert(!player.querySelector('.conversationWorkspace').hidden);assert(chat.disab
 run('EmberConversationFlow.secondary()');assert.equal(player.dataset.mode,'welcome');
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 chat.onclick({stopPropagation(){}});assert.equal(player.dataset.mode,'topics');
-assert.equal(run('typeFull'),greetings.Hettie);
-assert.equal(run('typeWho'),'Hettie');assert(say.classList.contains('on'));
-tap(say);tap();assert.equal(run('typeFull'),greetings.Hettie,'Greeting stays until a topic is chosen');
+assert.equal(run('typeFull'),'');assert.equal(run('typeWho'),'');assert(!say.classList.contains('on'));
+tap(say);tap();assert.equal(run('typeFull'),'','Panels stay blank until a topic is chosen');
 assert.equal(run('scene'),null,'A greeting never starts a quest scene');
-run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),greetings.Hettie);
+run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),'');
 select('Your first herd');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'listen');
 assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Tell me about your first herd.');
@@ -110,8 +122,9 @@ next();assert.equal(run('ask.npcConversation'),'Hettie');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'welcome');
 assert(!player.classList.contains('is-listening'));assert(!box.querySelector('.conversationStage').classList.contains('is-listening'),'Greeting panels regain full brightness');
 assert(!player.querySelector('.conversationSpeaker').hidden);assert(!box.querySelector('.conversationChat').hidden);
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,responses.Hettie,'A completed topic restores Corin’s greeting');
-assert.equal(run('typeFull'),greetings.Hettie,'A completed topic restores the NPC greeting');
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'','A completed topic clears Corin’s box');
+assert.equal(box.querySelector('.conversationNpcEcho').textContent,'','A completed topic clears the NPC’s box');
+assert.equal(run('typeFull'),'','A completed topic never repeats the greeting');
 assert(!box.querySelector('.deckHistoryToggle'));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 box.querySelector('.conversationChat').onclick({stopPropagation(){}});
@@ -183,8 +196,11 @@ assert.equal(run('EmberConversationFlow.partner()'),null,'Goodbye releases the w
 assert(!say.classList.contains('on'),'Goodbye removes the default dialogue too');
 assert.equal(say.parentNode,c.document.body,'Closing full conversation restores the cutscene dialogue overlay');
 assert.equal(dom.element('reveal').parentNode,c.document.body,'Gift overlay returns to its normal home too');
-run('EmberConversationFlow.prompt(person)');assert(run("ask.opts.some(o=>o.n==='Buy supplies')"),'Merchants offer Talk and Buy before opening either full screen');
-select('Buy supplies');assert(run('!!ask.shop'));assert(!run('EmberConversationFlow.active()'));
+run('EmberConversationFlow.prompt(person)');
+assert.equal(run('scene.lines.length'),1,'Merchants give exactly one greeting line');
+assert.equal(run('typeWho'),'Hettie');assert.equal(run('ask'),null);
+finishGreeting();assert.deepEqual(JSON.parse(run('JSON.stringify(ask.opts.filter(o=>!o.head).map(o=>o.n))')),['Talk','Purchase','Maybe Another Time']);
+select('Purchase');assert(run('!!ask.shop'));assert(!run('EmberConversationFlow.active()'));
 run('askShut()');
 // Ordinary story dialogue gains tapping without creating a conversation panel.
 run(`playScene(['Corin: Wait for me.','Hettie: No running.'],{npcActor:person});`);
@@ -195,13 +211,13 @@ run('scene.hold=()=>false;showScene()');tap();assert.equal(run('scene.i'),1,'Cin
 run('scene=null;sayOff()');
 // Play a specifically authored alternative for every standard cast member.
 const names=JSON.parse(run("JSON.stringify(Object.keys(NPC_TOPIC_GREETINGS).filter(n=>n!=='Aurelius'))"));
-assert.equal(names.length,142);
+assert.equal(names.length,143);
 for(const name of names){
  c.speaker=name;
  run(`askShut();scene=null;sayNpc=null;var actor={n:speaker,x:100,y:100,d:['Hello']};var authored=npcStoryTopics(actor).find(t=>t.lines&&t.lines[1]?.startsWith('Corin: '));
  if(!authored)throw Error('Missing story '+speaker);
  ask={quick:1,npcConversation:speaker,npcActor:actor,opts:[{n:'Goodbye'}]};askDraw();
- if(typeWho!==speaker||typeFull!==NPC_TOPIC_GREETINGS[speaker])throw Error('Missing greeting '+speaker);
+ if(typeFull||typeWho||sayEl.classList.contains('on'))throw Error('Panel should start blank for '+speaker);
  EmberConversationFlow.openChat();EmberConversationFlow.take({n:authored.title,go:()=>EmberConversationFlow.playTopic(actor,authored)});typeAll();scene.t=1;EmberConversationFlow.advance();`);
  assert(run('ask?.replyChoices'),name+' gets reply choices');
  assert.equal(run('ask.opts.filter(o=>!o.head).length'),3);
@@ -211,9 +227,11 @@ for(const name of names){
 }
 // Aurelius participates too, with distinct responses to personal questions.
 run(`askShut();scene=null;sayNpc=null;MAPID='world';dragon.air=false;P.act=null;EmberConversationFlow.prompt(dragon,{dragon:true});`);
-assert(!run('EmberConversationFlow.active()'));select('Talk');select('Dragons and our bond');
-assert.equal(run('typeFull'),greetings.Aurelius);
-assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius greets Corin through the bond');
+assert(!run('EmberConversationFlow.active()'));assert.equal(run('typeFull'),greetings.Aurelius);
+assert.equal(dom.element('say').dataset.telepathy,'true','Overworld greeting uses the bond');
+finishGreeting();select('Talk');select('Dragons and our bond');
+assert.equal(run('typeFull'),'');
+assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius retains the bond theme between exchanges');
 select('Why did you choose me?');
 for(let i=0;i<10&&!run('ask?.replyChoices');i++){run('typeAll();if(scene)scene.t=1');step();}
 assert(run('ask?.replyChoices'));assert(run('ask.opts.some(o=>/trying to help/.test(o.n))'));
@@ -231,7 +249,7 @@ assert.equal(laterChoices,3,'All three subsequent reply points survive an early 
 assert.equal(run('ask.topicScope'),'dragons');
 // Changing area / loading another scene cannot resurrect an old conversation.
 run(`MAPID='house0';EmberConversationFlow.tick()`);assert(!run('EmberConversationFlow.active()'));assert.equal(run('ask'),null);
-console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 142 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
+console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 143 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
 run(`const showdownKing={n:'King Halvard',x:100,y:100};ask=null;`);
 for(const map of ['cinderhold','world']){
  c.kingMap=map;run('MAPID=kingMap');
@@ -241,5 +259,9 @@ for(const map of ['cinderhold','world']){
 }
 run("MAPID='tavern'");
 assert.equal(run('EmberConversationFlow.prompt({...showdownKing,thornwellRoyal:true})'),true,'Tavern royal audience retains its prompt');
-run('askShut()');
+run('scene=null;sayOff();askShut()');
+run('var dismissedAudience=false;EmberConversationFlow.prompt(showdownKing,{greeted:true,leave:()=>dismissedAudience=true})');
+assert.equal(run('scene'),null,'The scripted royal greeting is not repeated');
+assert(run('ask.conversationPrompt'),'The royal arrival leads directly to the invitation');
+select('Maybe Another Time');assert(run('dismissedAudience'),'Declining preserves the royal dismissal callback');
 console.log('PASS: expanded king conversation is restricted to the tavern; final showdown remains scripted.');

@@ -207,7 +207,7 @@ function thornwellSummon(){
       'Serjeant Bram: Generous of you, sire.',
       'King Halvard: Now, boy. Tell me what you have been doing with yourself.'
     ],()=>{
-      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
+      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{greeted:true,talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
       else openThornwellAudience(king);
     },king);
   });},king);
