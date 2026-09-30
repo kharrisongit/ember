@@ -18,7 +18,7 @@
     window.EmberEncounterCard.paint(hint,{title:text,kicker:slash?'DRAGON • SLASH':sword?'SWORD • SWING':'LEARN THE CONTROLS',
       detail:slash?'Strike together. Aurelius slashes the foes in front of him.':sword?'Face your enemy and swing. Your first battle starts with you.':
         /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control below when you are ready.',
-      action:slash?'Press A to slash.':sword?'Press A to swipe.':'Press the highlighted button below.',key:slash||sword?'A':'↓',kind:slash?'dragon':'lesson'});
+      action:slash?'Press A to slash.':sword?'Press A to swipe.':'Press the highlighted button below.',key:slash||sword?'A':'↓',kind:slash?'dragon':'lesson',dismiss:slash||sword?'a':'control'});
   };
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
@@ -38,7 +38,7 @@
     hint.hidden=!hint.dataset.instruction||!!scene||!!revealing;
     if(!holding())return;
     clearHighlight();
-    const control=phase==='swordSwipe'?'act':phase==='dragonButton'?'btnL':['itemsButton','corinItemsButton'].includes(phase)?'btnItems':null;
+    const control=phase==='swordSwipe'||phase==='battle'?'act':phase==='dragonButton'?'btnL':['itemsButton','corinItemsButton'].includes(phase)?'btnItems':null;
     if(control){document.getElementById(control)?.classList.add('riding-target');return;}
     if(!ovl||!MENUS[ovl])return;
     const menu=MENUS[ovl],items=menu.items(),rows=document.getElementById(menu.rows)?.querySelectorAll('.row')||[];
@@ -246,11 +246,14 @@
   function allowControl(id){
     if(!unlocked&&(id==='btnL'||id==='btnR'))return false;
     if(!holding())return true;
+    if(id==='act'&&!hint.hidden&&hint.dataset.dismiss==='control')return false;
     return id==='act'||(phase==='dragonButton'&&id==='btnL')||(['itemsButton','corinItemsButton'].includes(phase)&&id==='btnItems');
   }
   function action(){
     // Dismissal consumes this press. The next press performs the taught attack.
     if(hint.dataset.instruction&&!scene&&!ask&&!bagOpen&&!revealing){
+      // Menu lessons advance only when their highlighted control is used.
+      if(hint.dataset.dismiss==='control')return true;
       notice('');
       if(phase==='battle'){window.EmberArenaEntry?.activate(arenaLock);document.body.classList.remove('riding-guide');}
       else if(phase==='swordSwipe'){swordDone=true;window.EmberArenaEntry?.activate(arenaLock);moveTo('swordBattle');saveGame();}
@@ -266,6 +269,9 @@
   function key(event){
     if(!holding())return false;
     event.preventDefault();event.stopImmediatePropagation();
+    if(!hint.hidden&&hint.dataset.dismiss==='control'&&!event.repeat&&[' ','enter'].includes(event.key.toLowerCase())){
+      document.querySelector('.riding-target')?.click();return true;
+    }
     if(!event.repeat&&['a',' ','enter'].includes(event.key.toLowerCase()))actionButton();
     return true;
   }

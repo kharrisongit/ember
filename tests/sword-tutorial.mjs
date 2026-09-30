@@ -35,6 +35,7 @@ assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Enemies
 run('scene.t=1');dom.touch(dom.element('act'));
 assert.equal(run('scene'),null);assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Swing Your Sword');
 assert(dom.element('ridingHint').classList.contains('combat-prompt'),'Swipe uses the prominent combat card');
+assert.equal(dom.element('ridingHint').querySelector('.encounter-footnote').textContent,'Press A to dismiss');
 assert(run('EmberRiding.holding()'));assert.equal(run('P.act'),null,'Dialogue dismissal does not perform the swipe');
 assert(dom.element('act').classList.contains('riding-target'));
 run('setOvl("itemm")');assert.equal(run('ovl'),null,'Other controls cannot bypass the tutorial');

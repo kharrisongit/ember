@@ -90,3 +90,8 @@
 #atlasCompassTutorial p{color:#435d58}
 #atlasCompassTutorial small{font:500 11px/1.4 system-ui;color:#50665b;flex-shrink:0}
 #worldAtlas #atlasCompassGotIt{background:#315e60;color:#fff5dc}
+#atlasCompassTutorial:not([hidden]):before{animation:compassLessonNeedle 4s ease-in-out infinite}
+#worldAtlas #atlasCompassGotIt{animation:compassLessonButton 2.8s ease-in-out infinite;box-shadow:0 0 0 3px #f8edd8,0 0 0 5px #7e9890}
+@keyframes compassLessonNeedle{0%,100%{transform:rotate(-12deg)}45%{transform:rotate(18deg) scale(1.06)}70%{transform:rotate(-3deg)}}
+
+@keyframes compassLessonButton{50%{box-shadow:0 0 0 3px #f8edd8,0 0 0 7px #7e9890,0 0 20px #73a7a465}}

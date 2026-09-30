@@ -47,11 +47,19 @@ assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),before,'Enemies 
 check("scene.lines[0]==='Aurelius: Quick! Get on my back!'",'Correct opening line at full walls');
 const finish=()=>run('{const next=scene.after;scene=null;next?.();}');
 finish();check("ovl==='airm'&&EmberRiding.capture().phase==='mount'",'Command menu opens for Mount');
+assert.equal(dom.element('ridingHint').dataset.dismiss,'control');
+assert.equal(dom.element('ridingHint').querySelector('.encounter-footnote'),null,'Menu lessons have no A-dismiss footer');
+run('actionButton()');check("EmberRiding.capture().phase==='mount'&&!mounted",'A cannot skip the highlighted Mount control');
+assert(dom.element('ridingHint').dataset.instruction,'A leaves the menu lesson visible');
+check("!EmberRiding.allowControl('act')&&!EmberRiding.allowControl('btnB')",'A and B are unavailable during the menu lesson');
 check("EmberRiding.allowedItem('airm',MENUS.airm.items()[0])",'Mount enabled');
 check("!EmberRiding.allowedItem('airm',MENUS.airm.items()[1])",'Cannot bypass Mount with Take off');
 run('setOvl(null)');check("ovl==='airm'",'Cancel cannot skip a required choice');
 c.reveals=[];run('showReveal=(...args)=>reveals.push(args)');
 dom.touch(dom.element('airRows').children[0]);check("mounted&&ovl===null&&EmberRiding.capture().phase==='dragonButton'",'Real Mount action advances to Dragon button');
+assert.equal(dom.element('ridingHint').dataset.dismiss,'control');
+assert.equal(dom.element('ridingHint').querySelector('.encounter-footnote'),null);
+run('actionButton()');check("EmberRiding.capture().phase==='dragonButton'&&ovl===null",'A cannot substitute for the highlighted Dragon button');
 assert.equal(c.reveals.at(-1)[1],'CORIN TAKES THE REINS','Tutorial mount retains the normal mount popup');
 assert.match(c.reveals.at(-1)[0],/^corinride_.*idle_s$/);
 run("setOvl('itemm')");check('ovl===null','Wrong control cannot advance the lesson');
@@ -60,6 +68,8 @@ check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'A touch opens Fire i
 run('MENUS.atkm.pick=0;ovlTake()');check("EmberRiding.capture().phase==='fire'",'Slash cannot bypass Fire lesson');
 dom.touch(dom.element('atkRows').children[1]);check("EmberRiding.capture().phase==='battle'&&EmberRiding.holding()&&ovl===null",'Selecting Fire presents the full-screen Slash lesson before combat');
 assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Slash');
+assert.equal(dom.element('ridingHint').querySelector('.encounter-footnote').textContent,'Press A to dismiss');
+check("EmberRiding.allowControl('act')",'A becomes available for Slash dismissal');
 assert(dom.element('ridingHint').classList.contains('slash-prompt'),'Slash has its own dragon combat card');
 check('!!breath&&!hunt&&!scene','Fire launches a projectile from the saddle and clears the prompt');
 const heldBattle=run('JSON.stringify({foes:foes.map(f=>[f.x,f.y,f.hp,f.t,f.st]),breath,dragonHp:dragon.hp})');
@@ -85,6 +95,7 @@ finish();check("ovl==='airm'&&EmberRiding.capture().phase==='dismount'",'Dismoun
 run('MENUS.airm.pick=0;ovlTake()');check('!mounted','Real dismount gets Corin off the dragon');finish();
 check("EmberRiding.capture().phase==='itemsButton'",'Next highlights Items');
 dom.touch(dom.element('btnItems'));check("EmberRiding.capture().phase==='heal'",'Items opens the healing lesson');
+assert.equal(dom.element('ridingHint').querySelector('.encounter-footnote'),null,'Healing also dismisses through the highlighted item');
 run("MENUS.itemm.pick=MENUS.itemm.items().findIndex(it=>it.key==='hareMeat');ovlTake()");
 check("dragon.hp===20&&EmberRiding.capture().phase==='thanks'",'Real food restores HP before completion');finish();
 check('EmberRiding.capture().done&&!EmberRiding.holding()','Healing completes and releases all controls');

@@ -61,5 +61,42 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 .lesson-book{transform-origin:center;animation:lessonPage 2.8s ease-in-out infinite}
 @keyframes lessonPage{50%{transform:translateY(-3px) rotate(-3deg)}}
 @media(prefers-reduced-motion:reduce){.lesson-book{animation:none}}
-body:has(#ridingHint:not([hidden])) #ab{z-index:960!important}
-body:has(#ridingHint:not([hidden])) #act{pointer-events:auto!important}
+body:has(#ridingHint[data-dismiss="a"]:not([hidden])) #ab{z-index:960!important}
+body:has(#ridingHint[data-dismiss="a"]:not([hidden])) #act{pointer-events:auto!important}
+body:has(#ridingHint[data-dismiss="control"]:not([hidden])) #ab{visibility:hidden;pointer-events:none!important}
+/* A lively entrance, drifting magic and a repeating sword clash. Text stays still. */
+.encounter-atmosphere{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
+.encounter-card>:not(.encounter-atmosphere){position:relative;z-index:1}
+.encounter-atmosphere::before{content:'';position:absolute;inset:8%;border:1px solid currentColor;border-radius:50%;opacity:.06;transform:rotate(-20deg) scale(1.25,.85);animation:encounterHalo 14s linear infinite}
+.encounter-atmosphere i{position:absolute;left:var(--x);top:var(--y);width:5px;height:5px;background:var(--gold);border-radius:1px;opacity:0;animation:encounterMote 5s ease-in-out var(--delay) infinite}
+.encounter-atmosphere i:nth-child(3n){width:11px;height:11px;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+#arenaReady{animation:encounterArrival .5s cubic-bezier(.2,.8,.2,1) both}
+#ridingHint{animation:lessonArrival .5s cubic-bezier(.2,.8,.2,1) both}
+.encounter-kicker{animation:encounterReveal .4s .1s both}
+.encounter-title{animation:encounterReveal .45s .18s both}
+.encounter-detail{animation:encounterReveal .45s .26s both}
+.encounter-action{animation:encounterReveal .45s .34s both;overflow:hidden}
+.encounter-action::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 32%,#fff7 48%,transparent 64%);transform:translateX(-130%);animation:encounterShine 4.8s 1s ease-in-out infinite}
+.encounter-orbit{transform-origin:60px 60px;animation:encounterOrbit 18s linear infinite}
+#arenaReady .blade-left{animation:battleClashLeft 4.4s cubic-bezier(.2,.8,.2,1) infinite}
+#arenaReady .blade-right{animation:battleClashRight 4.4s cubic-bezier(.2,.8,.2,1) infinite}
+#arenaReady .encounter-emblem::after{content:'✦';position:absolute;color:#fff3ca;font:42px/1 Georgia;opacity:0;animation:battleSpark 4.4s ease-out infinite;pointer-events:none}
+#ridingHint .lesson-book{animation:lessonBookFloat 3.2s ease-in-out infinite}
+.lesson-spark{transform-box:fill-box;transform-origin:center;animation:lessonSparkle 2.4s ease-in-out infinite}
+#ridingHint[data-dismiss="control"] .encounter-action b{animation:lessonPoint 1.25s ease-in-out infinite}
+#ridingHint[data-dismiss="a"] .encounter-action b{animation:lessonKey 2s ease-in-out infinite}
+@keyframes encounterArrival{0%{opacity:0;transform:scale(.87)}65%{opacity:1;transform:scale(.99)}80%{transform:scale(.975)}100%{transform:none}}
+@keyframes lessonArrival{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes encounterReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes encounterMote{0%,100%{opacity:0;transform:translate(0,24px) rotate(0)}30%,65%{opacity:.24}90%{opacity:0;transform:translate(var(--drift),-32px) rotate(100deg)}}
+@keyframes encounterHalo{to{transform:rotate(340deg) scale(1.25,.85)}}
+@keyframes encounterOrbit{to{transform:rotate(360deg)}}
+@keyframes encounterShine{0%,60%,100%{transform:translateX(-130%)}80%,95%{transform:translateX(130%)}}
+@keyframes battleClashLeft{0%,100%{transform:none}8%{transform:translate(-7px,-7px) rotate(-17deg)}16%{transform:rotate(3deg)}21%,85%{transform:none}}
+@keyframes battleClashRight{0%,100%{transform:none}8%{transform:translate(7px,-7px) rotate(17deg)}16%{transform:rotate(-3deg)}21%,85%{transform:none}}
+@keyframes battleSpark{0%,12%,32%,100%{opacity:0;transform:scale(.35) rotate(-30deg)}17%{opacity:.85;transform:scale(1.2) rotate(0)}29%{opacity:0;transform:scale(1.7) rotate(25deg)}}
+@keyframes lessonBookFloat{0%,100%{transform:none}40%{transform:translateY(-4px) rotate(-4deg)}70%{transform:translateY(-2px) rotate(2deg)}}
+@keyframes lessonSparkle{0%,100%{transform:scale(.8) rotate(-8deg);opacity:.65}50%{transform:scale(1.2) rotate(12deg);opacity:1}}
+@keyframes lessonPoint{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
+@keyframes lessonKey{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.encounter-card,.encounter-card *,.encounter-card *::before,.encounter-card *::after{animation:none!important;transition:none!important}.encounter-atmosphere i{opacity:.15}}
