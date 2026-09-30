@@ -3725,7 +3725,7 @@ function presentCamera(dt){
   restoreCameraTarget();
   const target={...cam},cx=cam.x+VW/cam.z/2,cy=cam.y+VH/cam.z/2;
   const old=cameraPresentation;
-  const cinematic=!!scene?.thornwellSummons||!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
+  const cinematic=!!scene?.thornwellSummons||!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding()||(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.aboveWeb());
   const scripted=!mapGesturesAllowed()&&(cinematic||old?.cinematic||old?.settling);
   const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
   const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||Math.hypot(old.cx-cx,old.cy-cy)>.1||old.settling);
@@ -3750,6 +3750,7 @@ function drawWorld(t, dt) {
   frameGreenEncounter();
   if(typeof frameThornwellCamera==='function')frameThornwellCamera();
   globalThis.window?.EmberArenaEntry?.frameCamera();
+  if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.frameCamera();
   presentCamera(dt);
   const z = cam.z;
   const vw = VW / z, vh = VH / z;
@@ -4401,22 +4402,23 @@ function drawWorld(t, dt) {
           Math.round(P.x - sp[2] / 2 + (doorMotion.d.dir === "r" ? 12 : -12) * k), Math.round(P.y - sp[3] + corinFeetOffset() + 20 * k), sp[2], sp[3]);
         ctx.restore(); continue;
       }
-      if (P.act && !mounted) {
-        const sp = ACT[P.act.kind];
+      const playerAct=(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.playerPose())||P.act;
+      if (playerAct && !mounted) {
+        const sp = ACT[playerAct.kind];
         const base = (mounted ? (hasSword() ? "sm_" : "fm_") : corinKit()) + sp.anim + "_"
-                   + corinDirection(P.act);
+                   + corinDirection(playerAct);
         const s = SPR[base];
         if (s) {
-          const f = Math.min(s[4] - 1, Math.floor(P.act.t / sp.frames * s[4]));
+          const f = Math.min(s[4] - 1, Math.floor(playerAct.t / sp.frames * s[4]));
           const dx = Math.round(P.x - s[2] / 2), dy = Math.round(P.y - s[3] + corinFeetOffset());
           drawGameImage(ctx, corinSheet(), s[0] + f * s[2], s[1], s[2], s[3],
                         dx, dy, s[2], s[3]);
-          if (P.act.kind === "swing" && hasSword()) {
-            const k = P.act.t / ACT.swing.frames;
+          if (playerAct.kind === "swing" && hasSword()) {
+            const k = playerAct.t / ACT.swing.frames;
             if (k > 0.2 && k < 0.8) {
-              const d = corinDirection(P.act);
+              const d = corinDirection(playerAct);
               const tail = (d === "u" ? "u" : d === "d" ? "d" : "s");
-              const sl = (P.act.hot && SPR["fslash_" + tail])
+              const sl = (playerAct.hot && SPR["fslash_" + tail])
                          ? SPR["fslash_" + tail] : SPR["slash_" + tail];
               if (sl) {
                 const ax = d === "e" ? 14 : d === "w" ? -14 : 0;
@@ -6063,7 +6065,7 @@ function stepDragon(dt) {
 function dragonHealTint(){return dragon.healPulse>0?Math.sin((1-dragon.healPulse)*Math.PI*3)**2*.72:0;}
 function drawDragon() {
   if (!(dragonHere() && dragon.on)) return;
-  if (dragon.down || dragon.knockdown > 0) {
+  if (dragon.down || dragon.knockdown > 0 || (typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.webbed())) {
     const cellW = 121, cellH = 73;
     const west = dragon.faintDir === "w";
     if (!drawDragon.faintCanvas) drawDragon.faintCanvas = document.createElement("canvas");
@@ -7989,7 +7991,7 @@ function beamLength() {
 function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
-  if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-23,r:34};
+  if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-18,r:27};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};

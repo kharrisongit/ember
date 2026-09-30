@@ -3,6 +3,7 @@
 const SpiderQueenDemo = (() => {
   const BASE='assets/sprites/spider-queen/', VERSION='20260930-demo1';
   const CELL=128, HEIGHT=96, FOOT=90, ALPHA=180;
+  const SCALE=.8;
   const VECTORS={d:[0,1],u:[0,-1],e:[1,0],w:[-1,0]};
   const route=[[27*16,7.5*16],[34*16,7.5*16],[34*16,5.5*16],[27*16,5.5*16]];
   const actor={x:route[0][0],y:route[0][1],dir:'e',state:'idle',t:0,leg:0,triggered:false};
@@ -92,7 +93,7 @@ const SpiderQueenDemo = (() => {
   function enter(state){actor.state=state;actor.t=0;actor.triggered=false;}
   function mouth(){
     const v=VECTORS[actor.dir];
-    return {x:actor.x+v[0]*29,y:actor.y-47+v[1]*7};
+    return {x:actor.x+v[0]*29*SCALE,y:actor.y-47*SCALE+v[1]*7*SCALE};
   }
   function spit(){
     const v=VECTORS[actor.dir],m=mouth();
@@ -112,7 +113,7 @@ const SpiderQueenDemo = (() => {
     for(let i=splashes.length-1;i>=0;i--){splashes[i].t+=dt;if(splashes[i].t>=.5)splashes.splice(i,1);}
     const state=actor.state;
     if(state==='walk'){
-      const target=route[(actor.leg+1)%route.length],dx=target[0]-actor.x,dy=target[1]-actor.y,distance=Math.hypot(dx,dy),move=22*dt;
+      const target=route[(actor.leg+1)%route.length],dx=target[0]-actor.x,dy=target[1]-actor.y,distance=Math.hypot(dx,dy),move=32*dt;
       if(distance<=move){actor.x=target[0];actor.y=target[1];enter('pause');}
       else{actor.x+=dx/distance*move;actor.y+=dy/distance*move;}
     }else if(state==='idle'&&actor.t>=1.8)enter('walk');
@@ -139,7 +140,7 @@ const SpiderQueenDemo = (() => {
       const sequence={e:[0,0,1,1,4,5,6,7],w:[0,1,2,2,3,4,6,10],u:[0,1,2,2,3,4,6,11],d:[0,1,2,2,4,5,6,7]}[actor.dir];
       i=sequence[Math.min(7,Math.floor(actor.t/1.5*8))];
     }else if(action==='spit')i=Math.min(strip.length-1,Math.floor(actor.t/1.1*strip.length));
-    else i=Math.floor(actor.t*(action==='walk'?6:3))%strip.length;
+    else i=Math.floor(actor.t*(action==='walk'?9:3))%strip.length;
     return strip[Math.min(i,strip.length-1)];
   }
   function addToDraw(list){
@@ -154,12 +155,12 @@ const SpiderQueenDemo = (() => {
     ctx.save();ctx.imageSmoothingEnabled=false;
     if(o.spiderQueen){
       const image=pose();
-      ctx.fillStyle='rgba(12,10,23,.24)';ctx.beginPath();ctx.ellipse(Math.round(actor.x),Math.round(actor.y-7),35,9,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(12,10,23,.24)';ctx.beginPath();ctx.ellipse(Math.round(actor.x),Math.round(actor.y-6),28,7,0,0,Math.PI*2);ctx.fill();
       if(impact>0){
         const v=VECTORS[actor.dir],x=Math.round(actor.x+v[0]*28),y=Math.round(actor.y-6+v[1]*7);
         ctx.strokeStyle='#b49a70';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(x,y,14+(1-impact/.28)*9,4,0,0,Math.PI*2);ctx.stroke();
       }
-      drawPixelImage(ctx,image,0,0,CELL,HEIGHT,Math.round(actor.x-CELL/2),Math.round(actor.y-FOOT),CELL,HEIGHT);
+      drawPixelImage(ctx,image,0,0,CELL,HEIGHT,Math.round(actor.x-CELL*SCALE/2),Math.round(actor.y-FOOT*SCALE),Math.round(CELL*SCALE),Math.round(HEIGHT*SCALE));
     }else{
       const effect=o.spiderVenom||o.spiderSplash,strip=frames.venom[o.spiderVenom?effect.dir:'impact'];
       const index=o.spiderVenom?Math.floor(effect.t*10)%strip.length:Math.min(strip.length-1,Math.floor(effect.t/.5*strip.length));

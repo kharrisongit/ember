@@ -40,6 +40,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false @napi-rs/canvas@0.1.100 pngjs@7.0.0
           node tests/spider-queen-demo.mjs
+          node tests/spider-queen-web.mjs
           node tests/spider-queen-boss.mjs
           node tests/desert-pyramid.mjs
       - name: Check temple travel and combat

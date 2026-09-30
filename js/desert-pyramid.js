@@ -37,7 +37,7 @@ const DesertPyramid = (()=>{
     }
     FOE.mummy={hp:6,speed:23,sight:240,reach:25,ring:42,dmg:2,swingT:1.05,hitAt:.52,rest:1.1,groupRest:1.5,wind:.5};
     FOE_ART.mummy='pyramid_mummy';WORTH.mummy=10;
-    FOE.spiderqueen={hp:28,speed:29,sight:999,reach:56,ring:64,dmg:2,swingT:1.5,hitAt:.82,rest:.9,groupRest:1,wind:.45};
+    FOE.spiderqueen={hp:28,speed:44,sight:999,reach:48,ring:56,dmg:2,swingT:1.5,hitAt:.82,rest:.9,groupRest:1,wind:.45};
     WORTH.spiderqueen=65;
     for(const [id,plan]of Object.entries(plans)){
       const img=new Image();img.src=BASE+id+'.png?v='+VERSION;await img.decode();
@@ -105,7 +105,8 @@ const DesertPyramid = (()=>{
     rebuildBuckets();rebuildSolid();chunks.clear();
   }
   async function prepareSpiderArt(){
-    await SpiderQueenDemo.ensureArt();if(!SpiderQueenDemo.inspect().ready||SPR.pyramid_spider_idle_d)return;
+    await Promise.all([SpiderQueenDemo.ensureArt(),SpiderQueenWeb.ensureArt()]);
+    if(!SpiderQueenDemo.inspect().ready||SPR.pyramid_spider_idle_d)return;
     for(const dir of ['d','u','e','w']){
       const key='pyramid_spider_idle_'+dir,c=document.createElement('canvas');c.width=512;c.height=90;c.pixelLocked=true;
       const g=c.getContext('2d');g.imageSmoothingEnabled=false;

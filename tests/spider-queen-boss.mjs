@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
+await run('SpiderQueenWeb.ensureArt()');
 run(`const bossTestSystems={EmberArenaEntry,EmberRiding,EmberEncounterCard};
 window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEncounterCard=undefined;
-SpiderQueenDemo.inspect=()=>({ready:true});
-mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;dragonOff=true;devSafe=false;glassShield=false;
+SpiderQueenDemo.inspect=()=>({ready:true});SpiderQueenBoss.restore(true);
+mode='play';VW=800;VH=600;camFree=false;gameplayStarted=true;quest=Q.DONE;foesHeld=false;dragonOff=true;devSafe=false;glassShield=false;
 loadMap('pyramid_queen');scene=null;bossScene=null;P.x=224;P.y=248;
 Object.assign(foes[0],{x:224,y:204,st:'idle',t:0});pHp=6;pInv=0;P.act=null;`);
 const states=new Set();
@@ -34,9 +35,15 @@ run(`delete bossGone['pyramid_queen:0'];loadMap('pyramid_queen');scene=null;boss
 P.x=128;P.y=292;P.act=null;pHp=6;pMax=6;pInv=0;
 Object.assign(dragon,{on:true,down:false,x:312,y:292,placed:MAPID,air:false,knockdown:0,hp:40,maxHp:40,inv:0});
 Object.assign(foes[0],{x:224,y:160,st:'idle',t:0,webCool:0});breathCooldown.fire=11;`);
-for(let i=0;i<30;i++)run('stepCombat(.05)');
+for(let i=0;i<50;i++)run('stepCombat(.05)');
 assert(run('SpiderQueenBoss.webbed()'),'Room-wide cast traps both party members');
+assert.equal(run('dragon.x-P.x'),44,'Party lands side by side');assert.equal(run('P.y'),run('dragon.y'),'Shared capture area');
+assert(run('canStand(P.x,P.y)&&dragonCanStand(dragon.x,dragon.y)'), 'Both capture destinations are clear');
+assert(run('SpiderQueenBoss.playerPose()?.kind==="die"&&P.act===null&&!dragon.down&&dragon.knockdown===0'),'Lying poses do not kill, faint or disable Fire');
+const nets=JSON.parse(run('JSON.stringify(SpiderQueenBoss.inspect().web.nets)'));assert(new Set(nets.map(n=>n.w)).size>=6&&new Set(nets.map(n=>n.variant)).size===5,'Layered web scales and five silhouettes');
 assert.equal(run('breathWait("fire")'),0,'Escape Fire is available even after a recent cast');
+const zoomBeforeWeb=run('cam.z');run('SpiderQueenBoss.frameCamera();');
+assert(run('[P,dragon,foes[0]].every(a=>a.x>cam.x&&a.x<cam.x+VW/cam.z&&a.y-65>cam.y&&a.y<cam.y+VH/cam.z)'), 'Camera keeps both victims and the approaching queen in view');
 const anchors=run('JSON.stringify([P.x,P.y,dragon.x,dragon.y])');
 run('padDx=1;padDy=1;stepPlayer(.5);stepDragon(.5);dragonStep(90,90);');
 assert.equal(run('JSON.stringify([P.x,P.y,dragon.x,dragon.y])'),anchors,'Player input, following and direct dragon movement cannot escape');
@@ -45,9 +52,9 @@ assert.equal(run('setDragonAir(true)'),false,'Flight cannot bypass webs');
 run('P.act=null;startAct("swing");');assert.equal(run('P.act'),null,'Bound Corin cannot swing through webs');
 run('clawNow();');assert.equal(run('claw'),null,'Bound dragon cannot claw through webs');
 // A successful capture takes exactly one displayed heart from either actor.
-run('foes[0].x=P.x+36;foes[0].y=P.y;');
+run('foes[0].x=P.x-35;foes[0].y=P.y;');
 for(let i=0;i<25;i++)run('stepCombat(.05)');assert.equal(run('pHp'),5);
-run('foes[0].x=dragon.x+36;foes[0].y=dragon.y;');
+run('foes[0].x=dragon.x+35;foes[0].y=dragon.y;');
 for(let i=0;i<51;i++)run('stepCombat(.05)');
 assert(Math.abs(run('dragon.hp')-(40-40/6))<1e-8,'Dragon bite also removes exactly one of its six HUD hearts');
 const left=run('foes[0].x');run('breath={el:"ice",t:.1};ATTACKS.find(a=>a.el==="fire").go();');
@@ -56,9 +63,9 @@ assert.equal(run('SpiderQueenBoss.inspect().web.phase'),'burning');
 assert.equal(run('foes[0].queenStun'),3.5);assert.equal(run('breath.el'),'fire');
 assert.equal(run('hunt'),null,'Fire casts from the trapped position without walking toward queen');
 run('stepCombat(.5);');assert.equal(run('foes[0].x'),left,'Stunned queen cannot move');
-run('stepCombat(.6);');assert.equal(run('SpiderQueenBoss.inspect().web'),null,'Burn animation clears completely');
+run('stepCombat(1.1);');assert.equal(run('SpiderQueenBoss.inspect().web'),null,'Burn animation clears completely');assert.equal(run('cam.z'),zoomBeforeWeb,'Normal zoom returns after the web burns');
 for(let i=0;i<55;i++)run('stepCombat(.05)');assert.equal(run('foes[0].queenStun'),0,'Stun ends after its recovery window');
-run('breath=null;foes[0].webCool=0;');for(let i=0;i<30;i++)run('stepCombat(.05)');
+run('breath=null;foes[0].webCool=0;');for(let i=0;i<50;i++)run('stepCombat(.05)');
 assert(run('SpiderQueenBoss.webbed()'));run("loadMap('pyramid_entry')");assert(!run('SpiderQueenBoss.webbed()'),'Map changes cannot retain movement locks');
 console.log('PASS: room-wide web, both movement locks, no mount/flight/sword escape, exact full-heart bites, cooldown-safe Fire menu counter, burn/release, 3.5-second stun and reset.');
 // Exercise the actual encounter gate as well as the isolated combat states.
@@ -75,3 +82,31 @@ assert(run('SpiderQueenBoss.webbed()'),'Special works inside the real encounter 
 run('setFoesEnabled(false);stepCombat(.05);');
 assert.equal(run('SpiderQueenBoss.inspect().web'),null,'Disabling foes clears capture without leaving a stale web');
 console.log('PASS: real encounter readiness, activation, web capture, and developer pause cleanup.');
+
+// First capture teaches the counter through the real telepathic scene, once per save.
+run(`window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEncounterCard=undefined;
+setFoesEnabled(true);SpiderQueenBoss.restore(false);loadMap('pyramid_queen');devSafe=false;scene=null;P.act=null;pHp=6;
+P.x=224;P.y=260;Object.assign(dragon,{on:true,down:false,x:250,y:260,placed:MAPID,hp:40,maxHp:40});
+Object.assign(foes[0],{x:224,y:208,st:'idle',t:0,webCool:0});`);
+for(let i=0;i<50;i++)run('stepCombat(.05)');
+assert(run('scene?.telepathy&&scene.spiderWebLesson'),'First capture opens telepathy');
+assert(run('scene.lines.some(s=>s.startsWith("Corin:"))&&scene.lines.some(s=>s.startsWith("Aurelius:")&&s.includes("fire"))'),'Both characters discover fire');
+const waiting=run('JSON.stringify([foes[0].x,foes[0].y,pHp,dragon.hp,SpiderQueenBoss.inspect().web.t])');
+for(let i=0;i<100;i++)run('stepCombat(.05)');
+assert.equal(run('JSON.stringify([foes[0].x,foes[0].y,pHp,dragon.hp,SpiderQueenBoss.inspect().web.t])'),waiting,'Reading time does not consume the escape window');
+for(let i=0;i<5;i++)run('typeAll();scene.t=.3;advanceScene();');
+assert.equal(run('scene'),null);assert(run('SpiderQueenBoss.capture()'),'Lesson completes only after the exchange');
+assert(run('captureSave().spiderWebLesson'),'Lesson is included in normal save data');
+const startDistance=run('Math.min(Math.hypot(foes[0].x-P.x,foes[0].y-P.y),Math.hypot(foes[0].x-dragon.x,foes[0].y-dragon.y))');
+for(let i=0;i<100;i++)run('stepCombat(.05)');
+assert.equal(run('pHp'),6);assert.equal(run('dragon.hp'),40,'No bite during the first five seconds after the conversation');
+assert(run('Math.min(Math.hypot(foes[0].x-P.x,foes[0].y-P.y),Math.hypot(foes[0].x-dragon.x,foes[0].y-dragon.y))')<startDistance-30,'Her slow approach is visibly moving');
+run('ATTACKS.find(a=>a.el==="fire").go();');assert(!run('SpiderQueenBoss.webbed()'));assert.equal(run('SpiderQueenBoss.playerPose()'),null);
+run('breath=null;foes[0].queenStun=0;foes[0].webCool=0;');for(let i=0;i<50;i++)run('stepCombat(.05)');
+assert(run('SpiderQueenBoss.webbed()'));assert.equal(run('scene'),null,'Later captures do not repeat the exchange');
+run('SpiderQueenBoss.restore(false);');assert(!run('SpiderQueenBoss.capture()'),'A different legacy/new save can teach it again');
+console.log('PASS: paired safe landings, lying poses without death, varied web layers, first-capture telepathy, reading pause, saved lesson, visible six-second approach and repeat suppression.');
+
+run('SpiderQueenBoss.restore(true);saveToSlot(1,true);SpiderQueenBoss.restore(false);');assert(run('loadGame(1)'));assert(run('SpiderQueenBoss.capture()'),'Completed lesson restores from its save slot');
+run('localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),spiderWebLesson:false}));');assert(run('loadGame(2)'));assert(!run('SpiderQueenBoss.capture()'),'Switching saves resets the first-capture lesson correctly');
+console.log('PASS: camera framing/recovery and actual lesson persistence across save slots.');
