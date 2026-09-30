@@ -1,7 +1,11 @@
 # Workshop craftsmen
 
-Dunstan keeps his restyled face/body and the original 42-frame, 0.15-second
-smithing cadence. The station and every tool-contact/impact frame below the
+Dunstan keeps his restyled face/body and the original 0.15-second smithing
+cadence. Work repeats frames 3–26, the four uninterrupted hammer strokes.
+When conversation begins, he finishes the current strike, then uses frames
+27, 40 and 41 to put the hammer down before idling. Frames 0–2 pick it back up
+once on goodbye. The long rest is excluded from the working loop.
+The station and every tool-contact/impact frame below the
 anvil contact row are copied directly from the original `Smith_forge_full.png`
 (`smithy_anim_8` in the unpatched atlas). The bench front comes from the original
 smithy room crop, at its original seven-row overlap with the animation.

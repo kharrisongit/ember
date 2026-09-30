@@ -4019,7 +4019,8 @@ function drawWorld(t, dt) {
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
-  const groundLayer = o => o.marketCanopy || o.villageCanopy ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
+  // The smithy's plume is roof-height art, not a ground actor at its chimney y.
+  const groundLayer = o => o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.sort((a, b) => (groundLayer(a) - groundLayer(b))

@@ -45,7 +45,7 @@ function prepareDialoguePortraitCast(m,id) {
     }
   }
 }
-const PORTRAIT_FILES={Sverre:'hollybeck-sverre',Runa:'hollybeck-runa',Tobin:'hollybeck-tobin',Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
+const PORTRAIT_FILES={Dunstan:'dunstan','Elder Maddock':'maddock',Sverre:'hollybeck-sverre',Runa:'hollybeck-runa',Tobin:'hollybeck-tobin',Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
 for(const [index,person]of (typeof REGIONAL_VILLAGERS==='undefined'?[]:REGIONAL_VILLAGERS).entries()){
   PORTRAIT_FILES[person.name]='regional/'+person.id;
   FACE_OF[person.name]=160+index;

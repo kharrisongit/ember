@@ -1,0 +1,16 @@
+{
+  "tool": "built-in imagegen",
+  "date": "2026-09-30",
+  "portraits": [
+    {
+      "name": "Dunstan",
+      "path": "assets/portraits/dunstan.webp",
+      "prompt": "Use case: precise-object-edit. Asset type: transparent painted fantasy RPG dialogue portrait. Image 1 is the EDIT TARGET: existing Dunstan portrait. Image 2 is an IDENTITY REFERENCE ONLY: his current pixel NPC. Edit Image 1, changing ONLY his red/auburn hair and beard to the deep dark espresso brown of the NPC, nearly black in the shadows, with subtle neutral brown highlights. No red, copper or orange hair. Keep exactly the same face, age, rugged expression, skin tone, three-quarter pose facing right, hairstyle silhouette, leather clothing, apron, full shoulders and upper-arm framing, painted realism and transparency. One portrait, no text, no scenery, no border. Preserve clear transparent margins around the complete head and shoulders; do not crop the shoulders or top of hair. Output 1024x1024 transparent PNG."
+    },
+    {
+      "name": "Elder Maddock",
+      "path": "assets/portraits/maddock.webp",
+      "prompt": "Use case: precise-object-edit. Asset type: transparent painted fantasy RPG dialogue portrait. Image 1 is the EDIT TARGET: existing Elder Maddock portrait. Image 2 is an IDENTITY REFERENCE ONLY: the current pixel NPC from front, side and back, showing his long silver-grey hair tied into a ponytail. Edit Image 1 to give Maddock a clearly visible substantial silver-grey ponytail gathered at the nape with a simple dark tie, extending behind the neck toward shoulder length; show it outside the back-of-head contour on the viewer's left so the ponytail reads at small portrait size. Match the NPC's grey hair. Keep his exact face, age, warm brown skin, white beard, receding crown, expression, three-quarter pose facing right, leather apron, charcoal shirt, full shoulders and upper-arm framing, painted realism and transparency unchanged. Ponytail must be long enough to be recognizable, not a tiny tuft. One portrait, no text, no scenery, no border. Preserve transparent margins around entire hair and shoulders. Output 1024x1024 transparent PNG."
+    }
+  ]
+}

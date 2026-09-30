@@ -15,7 +15,7 @@ run(read('js/regional-villagers.js'));
 run(read('js/dialogue-portraits.js'));
 assert.equal(scripts.length,8,'All portrait packs start loading before any conversation');
 const cast=JSON.parse(read('assets/portraits/cast.json'));
-assert.equal(new Set(cast.map(n=>n.name)).size,133);
+assert.equal(new Set(cast.map(n=>n.name)).size,132);
 assert(cast.every(n=>run(`portraitFor(${JSON.stringify(n.name)})`)?.id===n.id));
 const newIds=new Set();
 for(const person of run('REGIONAL_VILLAGERS')){
@@ -46,6 +46,9 @@ run("showDialoguePortrait('Unknown traveller')");assert.equal(face.style.display
 assert.equal(run("portraitFor('Pip').id"),10);
 assert.equal(run("portraitFor('Puck').id"),119);
 assert.equal(run("portraitFor('Maddock').id"),9);
+assert.match(run("portraitFor('Dunstan').src"),/dunstan\.webp/);
+assert.match(run("portraitFor('Maddock').src"),/maddock\.webp/);
+assert.equal(run("portraitFor('Maddock').src"),run("portraitFor('Elder Maddock').src"));
 assert.equal(run("portraitFor('Bram').id"),run("portraitFor('Serjeant Bram').id"));
 // Renaming retains the identity addressed by old editor publications.
 c.map={npcs:[{n:'Tessa',d:['Tessa: Hello.','Corin: Hello.']}]};
@@ -75,7 +78,7 @@ assert.equal(run('typeDone()'),true);
 run("typeStart('Corin','Next conversation.');typeAll();showFace('Corin')");
 assert.equal(c.nameEl.textContent,'Corin');
 assert.equal(c.nameEl.className,'on left');
-console.log('PASS: all 133 cast portraits, unique names, valid image packs, exact aliases, delayed image cancellation, stable rename identities and mushroom-only village.');
+console.log('PASS: all current cast portraits, unique names, valid image packs, corrected smith/mentor overrides, exact aliases, delayed image cancellation and stable rename identities.');
 
 c.smithUpgrade=true;assert.equal(c.portraitFor("Corin").pack,8);c.smithUpgrade=false;assert.equal(c.portraitFor("Corin").pack,1);
 run(read("assets/portraits/pack-8.js"));assert(run("portraitPackSources.get(8).startsWith('data:image/webp;base64,')"));

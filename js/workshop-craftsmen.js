@@ -1,6 +1,7 @@
 /* Keep workshop props/editor identities in place while their owners stop to talk. */
 const WORKSHOP_CRAFTSMEN={
-  smithy_anim_8:{name:'Dunstan',map:'smithy',frames:42,idle:[0,1,0,2,3,2,0]},
+  smithy_anim_8:{name:'Dunstan',map:'smithy',frames:42,workStart:3,workEnd:27,
+    putDown:[27,40,41],pickUp:[0,1,2],idle:[0,1,0,2,3,2,0]},
   // These are Sela's authored resting/breathing/blinking poses, without the
   // furnace walk, blowing pipe or hot glass. His table stays in every frame.
   glassnew_anim_4:{name:'Sela',map:'glasswork',frames:45,idle:[0,1,2,3,39,40,0]}
@@ -39,13 +40,33 @@ function workshopAnimation(o,t,talking){
   const craft=WORKSHOP_CRAFTSMEN[o.spr];
   if(!craft)return null;
   let state=workshopAnimationState.get(o);
-  if(!state){state={talking,start:talking?t:0};workshopAnimationState.set(o,state);}
-  if(state.talking!==talking){state.talking=talking;state.start=t;}
+  if(!state){state={talking,start:talking?t:0,transition:talking?craft.putDown||[]:[]};workshopAnimationState.set(o,state);}
+  if(state.talking!==talking){
+    if(craft.putDown){
+      const frame=workshopWorkFrame(craft,state,Math.max(0,t-state.start));
+      // Finish the current six-frame strike before lowering the hammer. The
+      // long authored rest never interrupts the repeating hammer strokes.
+      const last=craft.workStart+Math.floor((frame-craft.workStart)/6)*6+5;
+      state.transition=talking ? (frame<craft.workStart
+        ? Array.from({length:frame+1},(_,i)=>frame-i)
+        : [...Array.from({length:last-frame+1},(_,i)=>frame+i),...craft.putDown]) : craft.pickUp;
+    }
+    state.talking=talking;state.start=t;
+  }
   const elapsed=Math.max(0,t-state.start);
-  if(!talking)return {action:'work',frame:Math.floor(elapsed/.15)%craft.frames};
+  if(!talking)return {action:'work',frame:workshopWorkFrame(craft,state,elapsed)};
+  const transition=state.transition||[],tick=Math.floor(elapsed/.15);
+  if(tick<transition.length)return {action:'work',frame:transition[tick]};
   // A long relaxed hold, a small breath, then a quick blink. No whole-body bob.
-  const phase=elapsed%3.6,ends=[1.5,2.4,3.05,3.15,3.25,3.35,3.6];
+  const phase=(elapsed-transition.length*.15)%3.6,ends=[1.5,2.4,3.05,3.15,3.25,3.35,3.6];
   return {action:'idle',frame:craft.idle[ends.findIndex(end=>phase<end)]};
+}
+function workshopWorkFrame(craft,state,elapsed){
+  const tick=Math.floor(elapsed/.15);
+  if(craft.workStart===undefined)return tick%craft.frames;
+  const pickup=state.transition||[];
+  if(tick<pickup.length)return pickup[tick];
+  return craft.workStart+(tick-pickup.length)%(craft.workEnd-craft.workStart);
 }
 function drawWorkshopCraftsman(o,t){
   const craft=WORKSHOP_CRAFTSMEN[o.spr];

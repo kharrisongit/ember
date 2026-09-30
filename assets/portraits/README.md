@@ -51,3 +51,9 @@ for Sverre, Runa and Tobin. Built-in imagegen used each current outdoor sprite
 as the identity/clothing reference and Prue's painted portrait as the style
 reference. Prompts and asset paths are in `hollybeck-revision-prompts.json`.
 Tobin now uses the same painted portrait renderer as the rest of the cast.
+
+September 30 smith/mentor corrections use `dunstan.webp` and `maddock.webp`.
+The built-in image tool edited the existing portraits using their current NPC
+sprites as references: Dunstan has dark brown hair/beard, and Maddock has a
+visible silver ponytail. Faces, clothing and painted style are preserved.
+Prompts are recorded in `smith-mentor-revision-prompts.json`.
