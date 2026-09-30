@@ -1,6 +1,16 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const c=vm.createContext({Image:class{},MAPID:'world',mode:'play',editing:false,wonAll:0,brambleQuest:0,breathHas:{},smithUpgrade:false,charm:{},glassShield:false,P:{x:0,y:0}});
 vm.runInContext(fs.readFileSync('js/progression-gates.js','utf8'),c);const gates=vm.runInContext('JOURNEY_GATES',c);
+const carts=c.journeyGateProps().filter(o=>o.spr==='story_mining_carts');
+assert.equal(carts.length,1,'Forgewick uses the generated cart barricade');
+assert(!c.journeyGateProps().some(o=>o.spr.startsWith('rp_carts_')||o.spr==='rc_cavedec_0_0'),'Old cart collage is removed');
+const draws=[];c.ctx={};c.drawGameImage=(...args)=>draws.push(args);
+vm.runInContext('miningCartsImage.complete=true;miningCartsImage.naturalWidth=887',c);
+c.drawJourneyProp(carts[0],0);
+const [dx,dy,dw,dh]=draws[0].slice(-4);
+assert.deepEqual([dx,dy,dw,dh],[gates.forgewick.x-32,gates.forgewick.y-72,64,128]);
+assert(gates.forgewick.rect[0]>=dx&&gates.forgewick.rect[1]>=dy&&gates.forgewick.rect[2]<=dx+dw&&gates.forgewick.rect[3]<=dy+dh,'Collision fits the visible barricade');
+assert(fs.existsSync('assets/props/forgewick-mine-carts.png'),'Generated sprite is packaged');
 for(const [key,g] of Object.entries(gates)){
  assert(c.journeyGateClosed(key));assert(c.progressionSolid(g.x,g.y));
  c.P.x=g.x-(key==='sandspire'?0:80);c.P.y=g.y+(key==='sandspire'?80:0);

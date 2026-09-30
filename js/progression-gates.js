@@ -2,7 +2,7 @@
 const JOURNEY_GATES = {
   thornwell:{x:320*16,y:100*16,rect:[320*16-40,100*16-72,320*16+40,100*16+56],open:()=>wonAll||brambleQuest>=2,
     inside:(x,y)=>x>=320*16},
-  forgewick:{x:815*16,y:140*16,rect:[815*16-17,140*16-62,815*16+18,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
+  forgewick:{x:815*16,y:140*16,rect:[815*16-28,140*16-72,815*16+28,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
     inside:(x,y)=>(x>=815*16&&y<220*16)||x>=1080*16},
   sandspire:{x:1518*16,y:73*16,rect:[1518*16-72,73*16-14,1518*16+72,73*16+14],open:()=>wonAll||breathHas.shadow,
     inside:(x,y)=>(x>=1490*16&&y<=73*16)||x>=1870*16},
@@ -11,6 +11,9 @@ const JOURNEY_GATES = {
 };
 const journeyWagon={spr:'story_broken_wagon',home:[12410,3374],scale:1,sourceId:null};
 const brokenWagonImage=new Image();brokenWagonImage.src='assets/props/broken-wagon.png?v=20260928-vertical';
+const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-mine-carts.png?v=20260929';
+// Crop only transparent padding at draw time; preserve the generated source artwork.
+const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 function progressionSolid(x,y){
   if(MAPID!=='world')return false;
@@ -69,14 +72,20 @@ function journeyGateProps(){
   if(!th.open())out.push(progressionProp(journeyWagon.spr,th.x,th.y+56,journeyWagon.scale));
 
   if(!fw.open()){
-    out.push(progressionProp('rp_carts_0_14_2',fw.x-2,fw.y-25,2),progressionProp('rp_carts_1_6_2',fw.x+3,fw.y+27,2));
-    for(const [dx,dy] of [[-5,-54],[8,-4],[-8,47],[11,56]])out.push(progressionProp('rc_cavedec_0_0',fw.x+dx,fw.y+dy,2));
+    out.push(progressionProp('story_mining_carts',fw.x,fw.y+56));
   }
   if(!ss.open())for(let i=-1;i<=1;i++)out.push(progressionProp('camel_sit',ss.x+i*46,ss.y+10,1,i+1));
   if(!hb.open())for(let i=-2;i<=2;i++)out.push(progressionProp('wf_snowman',hb.x+(i%2)*4,hb.y+i*25+6));
   return out;
 }
 function drawJourneyProp(o,t){
+  if(o.spr==='story_mining_carts'){
+    if(miningCartsImage.complete&&miningCartsImage.naturalWidth!==0){
+      const {source,width,height}=miningCartsSprite;
+      drawGameImage(ctx,miningCartsImage,...source,Math.round(o.x-width/2),Math.round(o.y-height),width,height);
+    }
+    return;
+  }
   if(o.spr==='story_broken_wagon'){
     if(brokenWagonImage.complete&&brokenWagonImage.naturalWidth!==0)
       drawGameImage(ctx,brokenWagonImage,0,0,brokenWagonImage.naturalWidth,brokenWagonImage.naturalHeight,Math.round(o.x-40),Math.round(o.y-128),80,128);
