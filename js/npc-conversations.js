@@ -1833,6 +1833,20 @@ const NPC_STORIES = {
       "And the little one?",
       "That one is still deciding who it wants to be. I have left its hat loose."
     ]
+  ],
+  "Edwin": [
+    [
+      "The hens",
+      "One hen waits until I count the flock, then slips behind my boots. I counted her three times yesterday.",
+      "How do you keep track?",
+      "Count the eggs instead. They are much less inclined to wander."
+    ],
+    [
+      "Working by the windmill",
+      "I listen to the sails while I mend the coop. A steady creak means the mill is keeping us company.",
+      "And when it goes quiet?",
+      "I stop and look up. Sometimes the wind has dropped. Sometimes someone needs a hand."
+    ]
   ]
 };
 

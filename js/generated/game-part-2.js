@@ -1208,6 +1208,16 @@ function finishTownCast(){
   }
 }
 let npcCollisionActor=null;
+let npcCollisionEscape=null;
+function npcStepClearsPlayer(n,x,y){
+  // Patrols yield a tile and a half ahead. Scripted approaches retain their
+  // closer talking distance. An already overlapping NPC may walk away.
+  const radius=n.patrol?TS*1.5:12,old=Math.hypot(n.x-P.x,n.y-P.y),next=Math.hypot(x-P.x,y-P.y);
+  const dx=x-n.x,dy=y-n.y,length=dx*dx+dy*dy;
+  if(old<radius&&next>old+.001&&(n.x-P.x)*dx+(n.y-P.y)*dy>=0)return true;
+  const along=length?Math.max(0,Math.min(1,((P.x-n.x)*dx+(P.y-n.y)*dy)/length)):0;
+  return Math.hypot(n.x+along*dx-P.x,n.y+along*dy-P.y)>=radius;
+}
 function canNpcStand(x,y,actor){
   const previous=npcCollisionActor;npcCollisionActor=actor;
   try{return ![[-5.5,-7],[5.5,-7],[-5.5,-1],[5.5,-1]].some(([dx,dy])=>isSolid(x+dx,y+dy,true));}
@@ -2424,13 +2434,14 @@ const peekTile = (x, y) => ({
   rock: rockTiles ? rockTiles.has(x + "," + y) : null,
 });
 function blockedByNpcBody(px, py) {
-  return npcs.some(n => n!==npcCollisionActor && (typeof npcHere !== "function" || npcHere(n)) && !n.goto && !n.leaving && !n.brambleCompanion &&
+  return npcs.some(n => n!==npcCollisionActor && !npcCollisionEscape?.has(n) && (typeof npcHere !== "function" || npcHere(n)) && !n.leaving && !n.brambleCompanion &&
     px >= n.x - 7 && px < n.x + 7 && py >= n.y - 8 && py < n.y);
 }
 function blockedByNpcBuffer(px, py) {
   for (const n of npcs) {
+    if(n===npcCollisionActor||npcCollisionEscape?.has(n)||n.brambleCompanion)continue;
     if (typeof npcHere === "function" && !npcHere(n)) continue;
-    if (n.goto || n.leaving) continue;
+    if (n.leaving) continue;
     // Anchor the half-tile clearance to the NPC's feet, not the next grid row.
     // Otherwise a south-facing NPC can block Corin beyond talking distance.
     if (px >= n.x - TS / 2 && px < n.x + TS / 2 &&
@@ -2538,18 +2549,16 @@ const P = { x: 0, y: 0, dir: "d", moving: false, t: 0, flip: false };
 const PC_W = 11, PC_H = 7;      // feet collision box
 function canStand(x, y) {
   const hw = PC_W / 2;
-  /* An NPC can turn after a conversation and place its directional buffer
-     around Corin.  If he is already inside it, let him leave; the buffer
-     starts blocking again as soon as his feet are clear. */
-  const escapingNpcBuffer =
-    blockedByNpcBuffer(P.x - hw, P.y - PC_H) ||
-    blockedByNpcBuffer(P.x + hw, P.y - PC_H) ||
-    blockedByNpcBuffer(P.x - hw, P.y - 1) ||
-    blockedByNpcBuffer(P.x + hw, P.y - 1);
-  return !(isSolid(x - hw, y - PC_H, escapingNpcBuffer) ||
-           isSolid(x + hw, y - PC_H, escapingNpcBuffer) ||
-           isSolid(x - hw, y - 1, escapingNpcBuffer) ||
-           isSolid(x + hw, y - 1, escapingNpcBuffer));
+  const previous=npcCollisionEscape;
+  // Ignore only bodies/buffers already touching Corin, and only while moving
+  // farther from that NPC. Terrain and every other NPC stay solid.
+  npcCollisionEscape=new Set(npcs.filter(n=>{
+    if(n.leaving||n.brambleCompanion||!npcHere(n))return false;
+    const touches=P.x+hw>=n.x-TS/2&&P.x-hw<n.x+TS/2&&P.y-1>=n.y-8&&P.y-PC_H<n.y+TS/2;
+    return touches&&(x-n.x)**2+(y-n.y)**2>(P.x-n.x)**2+(P.y-n.y)**2+.000001;
+  }));
+  try{return !(isSolid(x-hw,y-PC_H)||isSolid(x+hw,y-PC_H)||isSolid(x-hw,y-1)||isSolid(x+hw,y-1));}
+  finally{npcCollisionEscape=previous;}
 }
 function movePlayer(dx, dy, dt) {
   if (sceneHold()) return;      /* held still while someone is talking */
@@ -4509,7 +4518,7 @@ function drawWorld(t, dt) {
       if (sp) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
           : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
-        if(/^(hollybeck_|regional_)/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
+        if(/^(hollybeck_|regional_|farm_)/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){
@@ -6926,6 +6935,7 @@ function stepWalkers(dt) {
     const dx = m.goto[0] - m.x, dy = m.goto[1] - m.y;
     const d = Math.hypot(dx, dy);
     if (d < 2) {
+      if(!npcStepClearsPlayer(m,...m.goto)){m.stuck=0;continue;}
       m.x = m.goto[0]; m.y = m.goto[1]; m.goto = null;
       continue;
     }
@@ -6935,13 +6945,17 @@ function stepWalkers(dt) {
     const guard = /^(King Halvard|Serjeant Bram|Doran|Tolan)$/
                     .test(m.n || "");
     const straight = [dx / d * Math.min(sp, d), dy / d * Math.min(sp, d)];
+    if(!npcStepClearsPlayer(m,m.x+straight[0],m.y+straight[1])){
+      // Keep the same patrol destination and wait; never expire the wait into
+      // a teleport, reroute through Corin, or cancel this leg of the patrol.
+      m.stuck=0;continue;
+    }
     if (!m.patrol && !canNpcStand(m.x, m.y,m)) {
       m.x += straight[0]; m.y += straight[1];
       faceToward(m, m.goto[0], m.goto[1]);
       continue;
     }
-    const clear = (ax, ay) => !guard ||
-      Math.hypot(m.x + ax - P.x, m.y + ay - P.y) > 11;
+    const clear = (ax, ay) => npcStepClearsPlayer(m,m.x+ax,m.y+ay);
     const tryStep = (ax, ay) =>
       (canNpcStand(m.x + ax, m.y + ay,m) && clear(ax, ay)) ? [ax, ay] : null;
     const step = tryStep(straight[0], straight[1])
@@ -6958,8 +6972,10 @@ function stepWalkers(dt) {
       if (m.stuck > 1.5 && !guard) {
         if (m.patrol) { m.goto = null; m.stuck = 0; }
         else {
-          m.x = m.goto[0]; m.y = m.goto[1];
-          m.goto = null; m.stuck = 0;
+          if(npcStepClearsPlayer(m,...m.goto)&&canNpcStand(...m.goto,m)){
+            m.x = m.goto[0]; m.y = m.goto[1];m.goto = null;
+          }
+          m.stuck = 0;
         }
         continue;
       }
@@ -7009,7 +7025,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
+function sceneHold() { return !!globalThis.window?.EmberEquipmentTutorial?.holding() || !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
@@ -10017,6 +10033,7 @@ const CHARM_NOTE = {
 function giveCharm(which, line) {
   if (charm[which]) return false;
   charm[which] = true;
+  window.EmberEquipmentTutorial?.earned(which);
   playScene([line]);
   return true;
 }
@@ -10108,7 +10125,7 @@ function kingDragonTarget(f) {
   return { x: P.x, y: P.y, d: playerD, dragon: false };
 }
 function encounterCombatPaused(){
-  return revealing||globalThis.window?.EmberEncounterCard?.blocking()||globalThis.window?.EmberArenaEntry?.holding()||globalThis.window?.EmberRiding?.holding();
+  return globalThis.window?.EmberEquipmentTutorial?.holding()||revealing||globalThis.window?.EmberEncounterCard?.blocking()||globalThis.window?.EmberArenaEntry?.holding()||globalThis.window?.EmberRiding?.holding();
 }
 function stepFoes(dt) {
   if(encounterCombatPaused())return;
@@ -10875,7 +10892,6 @@ let foesHeld = false;
 function stepCombat(dt) {
   if(encounterCombatPaused())return;
   stepTempleGates(dt);
-  stepFly(dt); // Cosmetic pickups keep moving even with foes disabled.
   if (pInv > 0) pInv -= dt;
   stepKingShield(dt);
   if (bossScene) { stepRise(dt); stepBossScene(dt); return; }
@@ -10883,7 +10899,6 @@ function stepCombat(dt) {
   swingHits();
   stepFoes(dt);
   stepSpell(dt);
-  stepHeal(dt);
   stepRise(dt);
   stepDust(dt);
   stepGraves(dt);
@@ -11163,8 +11178,9 @@ let thornwellMet=false, thornwellArrival=null, thornwellReturn=null;
 let brambleQuest=0, brambleMap="", brambleTrail=[], brambleDeparture=null;
 function welcomePath() {
   // Bramble comes down the road from the east; route around local fences.
-  const px=Math.round(P.x/8)*8,py=Math.round(P.y/8)*8;
-  const starts=[[24,0],[24,24],[24,-24],[16,32],[16,-32],[8,24],[8,-24],[32,32],[32,-32]]
+  // End one tile from his actual feet, not at a loose nearby grid waypoint.
+  const px=P.x,py=P.y;
+  const starts=[[16,0],[0,16],[-16,0],[0,-16]]
     .map(([dx,dy])=>[px+dx,py+dy]).filter(p=>canStand(...p));
   if(!starts.length)return null;
   const stagingDistance=Math.max(80,Math.min(200,VW/cam.z/2+30));
@@ -11174,7 +11190,7 @@ function welcomePath() {
     if(dist>=stagingDistance&&cur.p[0]>=P.x+stagingDistance*.75&&cur.path.length>=8){best=cur.path;break;}
     for(const [dx,dy] of [[8,0],[0,8],[0,-8],[-8,0]]){
       const p=[cur.p[0]+dx,cur.p[1]+dy],k=p.join(',');
-      if(seen.has(k)||p[0]<P.x+8||Math.hypot(p[0]-P.x,p[1]-P.y)>stagingDistance+48||!canStand(...p))continue;
+      if(seen.has(k)||Math.hypot(p[0]-P.x,p[1]-P.y)<12||Math.hypot(p[0]-P.x,p[1]-P.y)>stagingDistance+48||!canStand(...p))continue;
       seen.add(k);q.push({p,path:cur.path.concat([p])});
     }
   }
@@ -11227,8 +11243,10 @@ function bramblePath(from,to) {
   if(!end)return null;const path=[];for(let p=end;p;p=seen.get(p.join(',')))path.push(p);return path.reverse();
 }
 function moveBrambleActor(n,path,speed,dt) {
+  n.scriptWalking=false;
   if(!path?.length)return;
   const [x,y]=path[0],d=Math.hypot(x-n.x,y-n.y),step=Math.min(d,speed*dt);faceToward(n,x,y);
+  n.scriptWalking=step>0;
   if(d){n.x+=(x-n.x)/d*step;n.y+=(y-n.y)/d*step;}if(d<=step+.01)path.shift();
 }
 function tryBrambleReunion(n) {
@@ -11265,7 +11283,7 @@ function stepThornwellWelcome(dt) {
     if(d.phase==='south'){
       moveBrambleActor(d.hunter,d.path,54,dt);
       if(!d.path?.length){
-        d.phase='calling';
+        d.hunter.scriptWalking=false;d.phase='calling';
         playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,after:()=>{
           d.phase='leaving';
           // Give the waiting dog room before leading him toward the door.
@@ -11295,7 +11313,7 @@ function stepThornwellWelcome(dt) {
   }
   if(thornwellArrival){
     const a=thornwellArrival;moveBrambleActor(a.dog,a.path,100,dt);
-    if(!a.path.length){thornwellArrival=null;petCompanion(a.dog);faceCorinAt(a.dog.x,a.dog.y);}
+    if(!a.path.length){a.dog.scriptWalking=false;thornwellArrival=null;petCompanion(a.dog);faceCorinAt(a.dog.x,a.dog.y);}
     return;
   }
   if(brambleQuest===1){
@@ -11472,6 +11490,7 @@ function interact() {
       if (giver.n !== "Dunstan" && giver.charm && !charm[giver.charm]) {
         const k = giver.charm;
         charm[k] = true;
+        window.EmberEquipmentTutorial?.earned(k);
         saveGame();
         const art = (SPR[CHARM_ART[k]] && CHARM_ART[k]) || CHARM_ICON[k];
         showReveal(art, CHARM_NOTE[k]);
@@ -11517,6 +11536,13 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(best.n==='Alderic'&&!dragonLearned('alderic-temples')){
+      heartKnown=true;
+      playScene([...best.d.map(line=>/^[^:]{1,21}: /.test(line)?line:best.n+': '+line),
+        'Corin: Where should we look for the other stones?',
+        'Alderic: The Ice Heartstone rests in Sandspire Temple. The Shadow Heartstone rests in Hollybeck Temple. Seek their halls when you are ready.'],{who:best.n,npcActor:best,after:()=>saveGame()});
+      return;
+    }
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
       startNanFarewell(best);return;

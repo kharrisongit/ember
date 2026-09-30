@@ -2839,6 +2839,26 @@ const NPC_EXTRA_TOPICS={
         "Going home a little less alone than when you arrived."
       ]
     }
+  ],
+  "Edwin": [
+    {
+      "title": "Keeping the feed dry",
+      "category": "story",
+      "exchange": [
+        "I raised the feed bin on bricks after the last flood. The hens inspected every brick before I was allowed to fill it.",
+        "Did they approve?",
+        "They ate breakfast without a complaint. That is the nearest they come to praise."
+      ]
+    },
+    {
+      "title": "Sharing the harvest",
+      "category": "world",
+      "exchange": [
+        "When a neighbour has a poor crop, we each put a little aside. Nobody keeps a list of who owes whom.",
+        "How do you know it is fair?",
+        "I remember the winter someone left a sack at my door. Now it is my turn to carry one."
+      ]
+    }
   ]
 };
 function npcExtraTopics(n){

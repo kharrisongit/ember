@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{furniture:false});
+await run('prepareFarmResidentArt();loadPublishedEditorLayouts()');
+run("prepareEditorEntities(W.maps.world,'world');prepareEditorEntities(W.maps.world,'world')");
+assert.equal(run("W.maps.world.npcs.filter(n=>n.editKey==='npc:farm:edwin').length"),1);
+for(const dir of ['d','u','e','w'])assert.equal(run(`SPR.farm_edwin_idle_${dir}[4]`),4);
+assert(fs.existsSync(run("portraitFor('Edwin').src").split('?')[0]));
+run("mode='play';quest=Q.DONE;thornwellRoyal.stage=7;brambleQuest=3;loadMap('world');");
+assert(run("(()=>{const n=npcs.find(n=>n.n==='Edwin');return n&&canNpcStand(n.x,n.y,n)})()"),'Edwin stands on clear ground in the published farm layout');
+assert(run("npcStoryTopics({n:'Edwin'}).length>=5"),'Farmer has personal stories, local topics and world dialogue');
+console.log('PASS: one farmer beside the coop and windmill, clear published placement, four directional idles, portrait and full conversation topics.');

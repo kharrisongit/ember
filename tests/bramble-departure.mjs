@@ -4,6 +4,11 @@ const {run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:fals
 await run('loadPublishedEditorLayouts()');
 run("quest=Q.DONE;brambleQuest=1;P.x=256;P.y=250;loadMap('tavern',true);syncBrambleParty()");
 const realClear=c.canNpcStand;
+run(`var animationHunter=brambleActor('Rowan the Hunter');animationHunter.stationary=true;
+  animationHunter.x=100;animationHunter.y=100;moveBrambleActor(animationHunter,[[108,100]],54,1/60);`);
+assert(run('animationHunter.packWalk&&animationHunter.scriptWalking&&animationHunter.x>100'),'Scripted departure selects walking frames even for Rowan’s stationary tavern actor');
+run('moveBrambleActor(animationHunter,[],54,1/60)');
+assert(!run('animationHunter.scriptWalking'),'Waiting returns Rowan to idle');
 for(const dogPosition of [[260,254],[264,248],[240,270],[296,230]]){
  c.dogPosition=dogPosition;
  run(`{scene=null;walker=null;brambleQuest=1;brambleDeparture=null;

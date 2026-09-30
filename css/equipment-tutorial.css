@@ -1,0 +1,5 @@
+#equipmentHint{position:fixed;left:50%;transform:translateX(-50%);width:min(90vw,460px);box-sizing:border-box;padding:10px 14px;border:2px solid #92774c;border-radius:10px;background:#f6ecd5;color:#314e51;font:600 13px/1.45 ui-monospace,monospace;text-align:center;z-index:110;pointer-events:none;box-shadow:0 3px 12px #251d1838}
+#equipmentHint[hidden]{display:none}
+.equipment-target{outline:3px solid #da9b32!important;outline-offset:3px;box-shadow:0 0 0 6px #f9e5a866!important}
+
+#bag #equipmentHint{position:static;transform:none;width:100%;margin:0;flex:0 0 auto;font-size:12px;padding:7px 10px}

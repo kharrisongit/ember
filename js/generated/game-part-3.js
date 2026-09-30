@@ -4098,6 +4098,10 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
+  // Reward effects finish while tutorial cards, dialogue and menus hold combat.
+  stepFly(dt);
+  stepHeal(dt);
+  window.EmberEquipmentTutorial?.step();
   if(ask?.shop||ask?.npcConversation||ask?.dragonConversation||ask?.conversationPrompt){
     if(ask.npcActor)faceToward(ask.npcActor,P.x,P.y);
     if(ask.npcConversation||ask.dragonConversation||ask.conversationPrompt){tAcc+=dt;drawWorld(tAcc,dt);ask.repaintWorld=false;}
@@ -4139,9 +4143,9 @@ function frameCore(ms) {
   if(globalThis.window?.EmberRiding?.demonstratingFire()||(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()))stepBreath(dt);
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
-  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())stepClaw(dt);
+  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()&&!globalThis.window?.EmberEquipmentTutorial?.holding())stepClaw(dt);
   stepAnims(dt);   /* one-shot animations run in the editor too */
-  if (mode === "play"&&!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()) stepBolts(dt);
+  if (mode === "play"&&!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()&&!globalThis.window?.EmberEquipmentTutorial?.holding()) stepBolts(dt);
   stepFerry(dt);
   stepDeflectCamera(dt);
   drawWorld(tAcc, dt);
@@ -4942,6 +4946,7 @@ function refreshBag() {
     const d = document.createElement("div");
     d.className = "slot" + (it ? "" : " empty") + (it && k === bagPick ? " on" : "");
     if (it) {
+      d.dataset.itemKey=it.key;
       const cv = document.createElement("canvas");
       cv.width = 46; cv.height = 46;
       d.appendChild(cv);
@@ -5656,8 +5661,6 @@ function breathMenuTell(el, text) {
   return text + (wait > 0 ? " Ready in " + wait.toFixed(1) + "s." : " Ready.");
 }
 const ATTACKS = [
-  { name: "Slash",     el: "claw",
-    tell: "A swipe of the claws. Close range." },
   { name: "Fire",      el: "fire", cd: 12,
     tell: () => breathMenuTell("fire", "A heavy blast. 8 damage; 12 second cooldown.") },
   { name: "Lightning", el: "bolt", cd: 18,
@@ -5667,10 +5670,9 @@ const ATTACKS = [
   { name: "Ice",       el: "ice", cd: 30,
     tell: () => breathMenuTell("ice", "The strongest breath. 20 damage; 30 second cooldown.") },
 ].map(a => Object.assign(a, {
-  dim: () => !breathHas[EL_BREATH[a.el]] || (a.el !== "claw" && (dragon.down || breathWait(a.el) > 0)),
+  dim: () => !breathHas[EL_BREATH[a.el]] || dragon.down || breathWait(a.el) > 0,
   go: () => { if (!breathHas[EL_BREATH[a.el]]) { toast("not unlocked yet"); return; }
               setOvl(null);
-              if (a.el === "claw") { clawNow(); return; }
               if (dragon.down) { toast("the dragon is hurt -- feed it first"); return; }
               const wait = breathWait(a.el);
               if (wait > 0) { toast((DRAGON_BREATH[a.el]?.name || "breath") + " ready in " + wait.toFixed(1) + "s"); return; }
@@ -5915,6 +5917,7 @@ function saveSummary(slot){
 }
 function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
+  equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
@@ -6018,6 +6021,7 @@ function loadGame(slot=activeSaveSlot) {
     globalThis.window?.EmberSfx?.stopDeath();
     const deathScreen=globalThis.document?.getElementById?.('dead');if(deathScreen)deathScreen.style.display='none';
     globalThis.window?.EmberRiding?.restore(s);
+    globalThis.window?.EmberEquipmentTutorial?.restore(s);
     cam.x=P.x;cam.y=P.y;clampCam();chunks.clear();toast("loaded slot "+slot);return true;
   } catch (e) { toast("could not load"); return false; }
 }
@@ -6097,6 +6101,7 @@ function markKingCompleteForTest() {
   quest = Math.max(quest, Q.DONE);
   dragonIntroDone=true;dragonIntroArmed=false;
   globalThis.window?.EmberRiding?.skip();
+  globalThis.window?.EmberEquipmentTutorial?.skip();
   glassShield = true;
   wonAll = 1;
   if (MAPID === "cinderhold") npcs = npcs.filter(n => !/Halvard/.test(n.n || ""));
@@ -6122,6 +6127,7 @@ tap(document.getElementById("bSkip"), () => {
   quest = Q.DONE;
   dragonIntroDone=true;dragonIntroArmed=false;
   globalThis.window?.EmberRiding?.skip();
+  globalThis.window?.EmberEquipmentTutorial?.skip();
   smithUpgrade = true;
   glassShield = true;
   dragon.on = true;

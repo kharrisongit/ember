@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:false,document:dom.document});
+run(`quest=Q.DONE;mode='play';gameplayStarted=true;MAPID='test';MD={};templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;
+  EmberRiding.skip();saveGame=()=>{};showReveal=()=>{revealing=true};
+  charm.spore=false;EmberEquipmentTutorial.restore({equipmentTutorial:{pending:false,done:false}});
+  sayNpc={n:'The Shroom King',charm:'spore',d:['A gift for you.'],said:['A gift for you.']};sayLine=0;typeAll();interact();`);
+assert(run('charm.spore&&EmberEquipmentTutorial.capture().pending'),'The real gift award queues the lesson');
+run('EmberEquipmentTutorial.step()');assert(!run('EmberEquipmentTutorial.holding()'),'Reward reveal finishes first');
+run('revealing=false;scene=null;ask=null;sayNpc=null;EmberEquipmentTutorial.step()');
+assert(dom.element('btnItems').classList.contains('equipment-target'));
+assert(run('sceneHold()&&encounterCombatPaused()'),'Teaching pauses movement and combat');
+dom.touch(dom.element('btnItems'));run('EmberEquipmentTutorial.step()');
+assert.equal(run('ovl'),'itemm');assert(dom.element('itemFullBtn').classList.contains('equipment-target'));
+dom.dispatch(dom.element('itemFullBtn'),'click');run('EmberEquipmentTutorial.step()');
+assert(run('bagOpen'));
+const spore=dom.element('bagRows').querySelectorAll('.slot').find(el=>el.dataset.itemKey==='spore');assert(spore);
+dom.dispatch(spore,'click');run('EmberEquipmentTutorial.step()');
+const equip=dom.element('bagDesc').querySelector('.equipBtn');assert(equip.classList.contains('equipment-target'));
+dom.dispatch(equip,'click');run('EmberEquipmentTutorial.step()');
+assert(run('worn.spore&&EmberEquipmentTutorial.capture().done&&!EmberEquipmentTutorial.holding()'));
+assert(dom.element('equipmentHint').hidden,'Equipping ends the lesson');
+run('worn.spore=false;EmberEquipmentTutorial.earned("spore");EmberEquipmentTutorial.step()');assert(!run('EmberEquipmentTutorial.holding()'),'Completed lessons never repeat');
+run('EmberEquipmentTutorial.restore({equipmentTutorial:{pending:true,done:false}});bagOpen=false;ovl=null;EmberEquipmentTutorial.step()');
+assert(run('EmberEquipmentTutorial.holding()'),'Pending lesson resumes after loading');
+run('EmberEquipmentTutorial.restore({});EmberEquipmentTutorial.step()');assert(!run('EmberEquipmentTutorial.holding()'),'Older saves already owning spore migrate without interruption');
+run('EmberEquipmentTutorial.restore({equipmentTutorial:{pending:true,done:false}});bagOpen=true;worn.edge=worn.ward=worn.brand=true;bagPick=bagHeld().findIndex(i=>i.charm==="spore");refreshBag();EmberEquipmentTutorial.step()');
+assert.match(dom.element('equipmentHint').textContent,/UNEQUIP/,'Full slots explain how to make room');
+console.log('PASS: real Shroom King reward, reveal ordering, Items → Full inventory → spore → Equip taps, completion, save migration and full charm slots.');
+
+// Exercise the real frame while a tutorial holds combat. Effects must advance
+// once per frame, including the conversation early-return path.
+for(const name of ['restoreCameraTarget','updateDeckHealth','stepNanDeparture','stepAct','stepPlayer','useDoors','checkArea','stepKnightEncounter','stepArena','warmAhead','stepScene','stepType','stepBirds','odoTurnsYouBack','stepShake','greenFly','stepWalkers','stepElder','stepHatchCamera','stepKingsMen','stepQuest','stepDragonBanter','stepDragon','noteDragonMotion','stepAnims','stepFerry','stepDeflectCamera','drawWorld','drawDark','drawCollide','drawDoorTriggers','drawHearts','drawTempleCompass','drawBanner','drawFade','drawBossBlack','drawArenaNumberOverlay','refreshHandle'])c[name]=()=>{};
+c.EmberConversationFlow.tick=()=>{};c.EmberArenaEntry.step=()=>{};c.EmberRiding.step=()=>{};c.EmberRiding.holding=()=>true;
+run('EmberEquipmentTutorial.skip();bagOpen=false;ask=null;scene=null;sayNpc=null;revealing=false;last=0;flying=[];flyGold(10,20,12);showHeal("potion");dragon.healPulse=1;foes=[{x:100,y:100,hp:6,t:7,st:"idle"}];');
+run('frameCore(50)');assert.equal(run('flying[0].t'),.05,'Coins advance exactly once');assert.equal(run('heal.t'),.05,'Healing advances exactly once');
+for(let i=2;i<=40;i++)run('frameCore('+i*50+')');
+assert(run('!flying.length&&!heal&&dragon.healPulse===0'),'All reward effects finish while the tutorial stays open');
+assert.equal(run('JSON.stringify(foes[0])'),'{"x":100,"y":100,"hp":6,"t":7,"st":"idle"}','Enemies stay paused');
+run('flyGold(10,20,12);showHeal("elixir");ask={npcConversation:"Edwin"};');
+for(let i=41;i<=80;i++)run('frameCore('+i*50+')');
+assert(run('!flying.length&&!heal'),'The conversation early return also lets effects finish');
+console.log('PASS: gold and healing finish during tutorials and dialogue without advancing combat.');

@@ -142,7 +142,8 @@ const NPC_TOPIC_GREETINGS={
   "Ingrid": "The latch is settled and so am I. Tell me what's on your mind.",
   "Sigrun": "Hello, Corin. You look as though a dry place and a kind word wouldn't hurt.",
   "Asta": "You've found me comfortable, Corin. A conversation would finish the arrangement.",
-  "Aurelius": "I am listening, Corin. What shall we wonder about together?"
+  "Aurelius": "I am listening, Corin. What shall we wonder about together?",
+  "Edwin": "Morning, Corin. The hens can manage without my supervision for a moment."
 };
 const CORIN_TOPIC_GREETINGS={
   "Hettie": "I’ll try not to keep you longer than the hens allow.",
@@ -287,5 +288,6 @@ const CORIN_TOPIC_GREETINGS={
   "Ingrid": "I’m glad I caught you at a settled moment.",
   "Sigrun": "Neither would hurt. Thank you for the welcome.",
   "Asta": "Then let’s not leave it unfinished.",
-  "Aurelius": "There’s always something new to wonder about with you. Where shall we begin?"
+  "Aurelius": "There’s always something new to wonder about with you. Where shall we begin?",
+  "Edwin": "I will keep an eye on the coop while we talk."
 };

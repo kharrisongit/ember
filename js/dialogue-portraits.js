@@ -45,7 +45,8 @@ function prepareDialoguePortraitCast(m,id) {
     }
   }
 }
-const PORTRAIT_FILES={Dunstan:'dunstan','Elder Maddock':'maddock',Sverre:'hollybeck-sverre',Runa:'hollybeck-runa',Tobin:'hollybeck-tobin',Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
+FACE_OF.Edwin=184;
+const PORTRAIT_FILES={Edwin:'edwin',Dunstan:'dunstan','Elder Maddock':'maddock',Sverre:'hollybeck-sverre',Runa:'hollybeck-runa',Tobin:'hollybeck-tobin',Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
 for(const [index,person]of (typeof REGIONAL_VILLAGERS==='undefined'?[]:REGIONAL_VILLAGERS).entries()){
   PORTRAIT_FILES[person.name]='regional/'+person.id;
   FACE_OF[person.name]=160+index;
@@ -83,7 +84,7 @@ function portraitFor(who) {
   const name=PORTRAIT_ALIASES[who]||who;
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   const portrait=DIALOGUE_PORTRAITS[name];
-  if(PORTRAIT_FILES[name])return {...(portrait||{id:FACE_OF[name]??(name==='Tobin'?135:134)}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260930-regional-cast'};
+  if(PORTRAIT_FILES[name])return {...(portrait||{id:FACE_OF[name]??(name==='Tobin'?135:134)}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260930-hatless-farmer'};
   return portrait||null;
 }
 function showDialoguePortrait(who) {
@@ -112,7 +113,7 @@ function showDialoguePortrait(who) {
 if(document.head?.appendChild){
   for(let pack=1;pack<=8;pack++)loadPortraitPack(pack);
   for(const file of Object.values(PORTRAIT_FILES)){
-    const img=new Image();img.src='assets/portraits/'+file+'.webp?v=20260930-regional-cast';
+    const img=new Image();img.src='assets/portraits/'+file+'.webp?v=20260930-hatless-farmer';
     portraitFileImages.set(file,img);
   }
 }

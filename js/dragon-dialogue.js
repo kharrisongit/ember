@@ -142,13 +142,19 @@ const DRAGON_REACTION_LINES={
   "home":["Everyone protects a world called home.", "Small does not mean unimportant."]
 };
 function dragonStoryStage(){return wonAll?'victory':'journey';}
-function dragonLearned(key){return dragonBanterSeen.has('learned:'+key);}
+function dragonLearned(key){
+  if(['temple:Sandspire','temple:Hollybeck'].includes(key)&&!dragonBanterSeen.has('learned:alderic-temples'))return false;
+  return dragonBanterSeen.has('learned:'+key);
+}
 // Learn from lines Corin actually sees, including conversations before hatching
 // and inside houses. Aurelius's own suggestions cannot unlock further leads.
 function rememberDragonKnowledge(who,text,persist=true){
   if(!text||who==='Aurelius')return;
   const before=dragonBanterSeen.size,words=String(text);
   const learn=key=>dragonBanterSeen.add('learned:'+key);
+  if(who==='Alderic'&&/Sandspire/.test(words)&&/Hollybeck/.test(words)&&/Heartstone/.test(words)){
+    learn('alderic-temples');learn('temple:Forgewick');learn('temple:Sandspire');learn('temple:Hollybeck');
+  }
   if(/\bBramble\b/i.test(words))learn('bramble');
   if(/demon|trials/i.test(words)&&/Maelis|Witchmoor/.test(who+' '+words))learn('trials');
   if(/\bRowan\b/i.test(words)&&/tavern|Copper Cup/i.test(words))learn('bramble-owner');

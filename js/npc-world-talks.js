@@ -1308,5 +1308,11 @@ const NPC_WORLD_TALKS = {
       "I came outside to study people and learned how quickly they change the subject when a patrol appears. That seems a poor recommendation for a king.",
       "I have begun writing down what people say without lowering their voices. It is a much livelier collection of notes."
     ]
+  },
+  "Edwin": {
+    "halvard": [
+      "The collectors weigh our grain carefully. I wish they were half as careful about leaving enough to feed us.",
+      "We can keep enough grain for the winter now. I would like the hens to appreciate how much worrying that saves me."
+    ]
   }
 };

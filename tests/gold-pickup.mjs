@@ -7,7 +7,7 @@ const c=vm.createContext({SPR:{it_coin:[0,0,12,12,1]},atlasImg:{},cam:{x:900,y:1
  cv:{getBoundingClientRect:()=>screen},window:{innerWidth:390,innerHeight:800,devicePixelRatio:3},
  document:{getElementById:()=>({getBoundingClientRect:()=>target}),createElement:()=>{created++;return layer={style:{},setAttribute(){},getContext:()=>g};},body:{appendChild(){}}},
  drawGameImage:(ctx,img,sx,sy,sw,sh,x,y,w,h)=>{assert.equal(ctx,g);draws.push({x:x+w/2,y:y+h/2});},
- updateDeckHealth(){},ovl:null,last:0,atlasOpen:true});
+ restoreCameraTarget(){},stepHeal(){},stepDragonBanter(){},updateDeckHealth(){},ask:null,fishing:false,ovl:null,last:0,atlasOpen:true});
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('let flying = [];'),game.indexOf('function grabGold()')));
 run(part3.slice(part3.indexOf('function frameCore(ms) {'),part3.indexOf('let doorCooldown =')));

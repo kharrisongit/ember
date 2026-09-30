@@ -5,7 +5,7 @@ function atlasQuestKind(q){return q?.id==='main'||q?.id==='thornwell-royals'||q?
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
 function atlasMainObjective(){
- const o=(title,place,detail)=>atlasObjective('main',title,place,detail);
+ const o=(title,place,detail,questId='main')=>({...atlasObjective('main',title,place,detail),questId});
  const opening=[
   ['Start the morning','Millwood','Leave home and speak with Hettie by the cows.'],
   ['Speak with Hettie','Millwood','Find Hettie by the cows near the mill.'],
@@ -19,14 +19,15 @@ function atlasMainObjective(){
  ];
  if(quest<Q.DONE)return o(...opening[quest]);
  if(wonAll)return o('A free Emberfell','Millwood','Return to your friends, or select an unfinished side quest below.');
- const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();if(royal)return o(...royal);
- if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.');
- if(!smithUpgrade)return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.');
- if(!charm.edge)return o('Finish with Dunstan','Forgewick','Speak with Dunstan again about the gift that strengthens your blade.');
- if(!glassShield)return o('Visit Sela','Forgewick','Ask the glassblower about his protective shield.');
- if(!breathHas.lightning)return o('The Lightning Heartstone','Forgewick Temple','Explore the temple southeast of Forgewick and claim its Heartstone.');
- if(!breathHas.ice)return o('The Ice Heartstone','Sandspire Temple','Follow the road east to Sandspire. Explore its temple to the southeast.');
- if(!breathHas.shadow)return o('The Shadow Heartstone','Hollybeck Temple','Travel through Coralmere to Hollybeck. Follow the temple trail east and north.');
+ const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();if(royal)return o(...royal,brambleQuest<2?'bramble':'thornwell-royals');
+ if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.',brambleQuest===1?'bramble':'main');
+ if(!smithUpgrade&&dragonLearned('smith'))return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.','smith');
+ if(smithUpgrade&&!charm.edge)return o('Finish with Dunstan','Forgewick','Finish your conversation with Dunstan.','smith');
+ if(!glassShield&&dragonLearned('shield'))return o('Visit Sela','Forgewick','Ask the glassblower about his protective shield.','shield');
+ for(const [key,town]of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']]){
+  if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Temple',town+' Temple','Explore the temple and follow up on what you have learned.','temple:'+town);
+ }
+ if(!breathHas.lightning||!breathHas.ice||!breathHas.shadow)return o('Ask about the road ahead',breathHas.lightning?'Forgewick Temple':'Forgewick',breathHas.lightning?'Speak with Alderic about what you found.':'Speak with the people of Forgewick and follow the leads they share.');
  return o('Face King Halvard','Cinderhold Castle','Cross the highlands through Frostcrag and Ashcrag, then follow the volcanic road to Cinderhold.');
 }
 function atlasPlaceFor(map,n){
@@ -43,23 +44,24 @@ function atlasPlaceFor(map,n){
  return null;
 }
 function atlasQuestOptions(){
- const out=[atlasMainObjective()],add=(...args)=>out.push(atlasObjective(...args));
+ const main=atlasMainObjective(),out=[main],seen=new Set([main.questId]),add=(id,...args)=>{if(!seen.has(id)){seen.add(id);out.push(atlasObjective(id,...args));}};
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
- if(royal)add('thornwell-royals',...royal);
+ // The royal story already owns the main objective while it is active.
  if((dragonLearned('fishing')||odoRodReferral)&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',atlasBrambleClue());
- if(dragonLearned('smith')&&!smithUpgrade)add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
+ if(dragonLearned('smith')&&(!smithUpgrade||!charm.edge))add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
  if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in his workshop behind the glass shop about his shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
- if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','Unlock summoning: Book of the Dead','Hollybeck Graveyard','Defeat every wave of ghosts and claim the Book of the Dead to summon two allied wraiths in battle.');
+ if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Investigate the reports of restless spirits in the graveyard.');
  for(const {n,map} of dragonGiftLeads()){
   if(n.charm==='lamp'&&dragonLearned('lantern'))continue;
+  if(n.charm==='wake'&&dragonLearned('graveyard'))continue;
   const place=atlasPlaceFor(map,n);
   if(place)add('gift:'+n.charm,n.n+'’s gift',place,'Return to '+n.n+' and finish the conversation about their gift.');
  }
  for(const [key,town] of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']])
-  if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Heartstone',town+' Temple','Explore the temple and claim the '+key+' Heartstone.');
- if(dragonLearned('trials'))add('trials','The demon’s trials',cinderSeal?'Cinderhold Castle':'Witchmoor',!cinderSeal?'Speak with the demon at Witchmoor after defeating Halvard.':!trialSealPlaced?'Place the Cinderhold Seal in the chamber adjoining the throne room.':'Return to the throne room to challenge the demon.');
+  if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Temple',town+' Temple','Explore the temple and follow up on what you have learned.');
+ if(dragonLearned('trials')&&!atlasQuestComplete('trials'))add('trials','The demon’s trials',cinderSeal?'Cinderhold Castle':'Witchmoor',!cinderSeal?'Return to Witchmoor and ask about the trials.':!trialSealPlaced?'Find where the Cinderhold Seal belongs.':'Return to the throne room to challenge the demon.');
  return out;
 }
 // Resolve the journal's destination in game coordinates, never in the
@@ -105,21 +107,21 @@ const ATLAS_CONNECTIONS=[
 ];
 const ATLAS_PLACE_NOTES={
  'Millwood':['Home & farm','Nan and Corin’s home, Hettie’s farm, and Odo by the water.'],
- 'Elder’s Home':['Maddock','The elder’s house and the clearing where Aurelius hatched.'],
- 'Northern Woods':['Opening journey','The northern trail, the sword lesson, and the dragon’s crash site.'],
+ 'Elder’s Home':['Maddock','The elder’s house beside the northern lane.'],
+ 'Northern Woods':['Northern trail','The woods north of Millwood.'],
  'Thornwell':['School · Tavern · Inn','Visit the school, tavern and inn, and ask the townspeople for local knowledge.'],
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
  'Forgewick':['Blacksmith · Glassblower','Dunstan works at the forge; Sela’s glasswork is nearby.'],
- 'Forgewick Temple':['Lightning Heartstone','An ancient rider temple southeast of Forgewick.'],
+ 'Forgewick Temple':['Ancient temple','An old stone hall southeast of Forgewick.'],
  'Sandspire':['Desert market','Caravans, shaded streets, water, and local supplies.'],
  'The Oasis':['Desert refuge','A green landmark southwest of Sandspire.'],
- 'Sandspire Temple':['Ice Heartstone','The winding temple trail leads southeast from Sandspire.'],
+ 'Sandspire Temple':['Ancient temple','The winding temple trail leads southeast from Sandspire.'],
  'Coralmere':['Harbor · Fish','A coastal town with blossom trees, fishing docks, and supplies for the road.'],
  'Witchmoor':['Maelis · Ferry','Maelis lives north of Dreadmarsh. Reach her side of the marsh by ferry.'],
  'Dreadmarsh':['Wetlands','The deep marsh lies south of Witchmoor.'],
- 'Hollybeck':['Winter village','A place to prepare before the highlands. Sverre carries Torvald’s lantern.'],
+ 'Hollybeck':['Winter village','A place to prepare before the highlands.'],
  'Hollybeck Graveyard':['Restless dead','The graveyard lies northwest of Hollybeck.'],
- 'Hollybeck Temple':['Shadow Heartstone','Follow the trail east and north from Hollybeck.'],
+ 'Hollybeck Temple':['Ancient temple','Follow the trail east and north from Hollybeck.'],
  'Frostcrag':['Mountain passage','The snowy western approach to the passage.'],
  'Ashcrag':['Volcanic approach','Beyond the mountain passage, the road bends toward the volcanic east.'],
  'Cinderhold Castle':['King Halvard’s fortress','The eastern end of the journey.'],
@@ -132,13 +134,13 @@ function atlasMilestoneData(){return [
  ['A bond begins',quest>=Q.DONE],['Bramble home',brambleQuest>=2],
  ['Ready for the road',!!(smithUpgrade&&charm.edge&&glassShield)],
  ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
- ];}
+ ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasMainObjective().title,false]]);}
 function atlasQuestComplete(id){
  if(id==='main')return !!wonAll;
  if(id==='fishing')return !!fishingPole;
  if(id==='bramble')return brambleQuest>=2;
  if(id==='thornwell-royals')return typeof thornwellRoyal!=='undefined'&&thornwellRoyal.stage>=7;
- if(id==='smith')return !!smithUpgrade;
+ if(id==='smith')return !!(smithUpgrade&&charm.edge);
  if(id==='shield')return !!glassShield;
  if(id==='graveyard')return !!charm.wake;
  if(id==='trials')return typeof trialWins!=='undefined'&&trialWins>0;
@@ -148,14 +150,14 @@ function atlasQuestComplete(id){
 }
 function atlasSyncJournal(){
  atlasQuests=[...new Map(atlasQuestOptions().map(q=>[q.id,q])).values()];
- for(const q of atlasQuests)if(q.id!=='main')atlasJournalKnown[q.id]={...q};
+ for(const q of atlasQuests){const id=q.questId||q.id;if(id!=='main')atlasJournalKnown[id]={...q,id};}
  if(!atlasQuests.some(q=>q.id===atlasTrackedQuest))atlasTrackedQuest='main';
 }
 function atlasQuestStages(q){
  if(q?.id==='main')return atlasMilestoneData();
- if(q?.id==='thornwell-royals')return [['Return Bramble',brambleQuest>=3],['Endure the royal audience',thornwellRoyal.stage>=4],['Follow the royal party',thornwellRoyal.stage>=6],['Reunite at Forgefalls',thornwellRoyal.stage>=7]];
+ if(q?.id==='thornwell-royals')return [['Return Bramble',brambleQuest>=3],...(thornwellRoyal.stage>=2?[['Answer the king’s summons',thornwellRoyal.stage>=4]]:[]),...(thornwellRoyal.stage>=5?[['Wait for the royal party',thornwellRoyal.stage>=6]]:[]),...(thornwellRoyal.stage>=6?[['Meet Aurelius at Forgefalls',thornwellRoyal.stage>=7]]:[])];
  if(q?.id==='bramble')return [['Meet Bramble',brambleQuest>=1],['Find his owner',dragonLearned('bramble-owner')||brambleQuest>=2],['Bring him home',brambleQuest>=2]];
- if(q?.id==='trials')return [['Receive the seal',!!cinderSeal],['Place the seal',!!trialSealPlaced],['Win the trial',atlasQuestComplete('trials')]];
+ if(q?.id==='trials')return [['Ask about the trials',!!cinderSeal],...(cinderSeal?[['Place the seal',!!trialSealPlaced]]:[]),...(trialSealPlaced?[['Win the trial',atlasQuestComplete('trials')]]:[])];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
 function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen};}
@@ -167,7 +169,9 @@ function atlasCompletedEntries(){
  const known={...atlasJournalKnown};
  const earned=[['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Forgewick','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
- return Object.values(known).filter(q=>atlasQuestComplete(q.id));
+ return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
+  const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];
+ })).values()];
 }
 function atlasCanonical(label){
  const aliases={'eldershome':'Elder’s Home','sporehollow':'Sporehollow','northshroompassfield':'Northern Shroom Field','cinderhold':'Cinderhold Castle'};

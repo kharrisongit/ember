@@ -40,6 +40,7 @@ const NPC_LINEUP_TYPES=[['walking','Walking'],['standing','Standing'],['seated',
 function prepareEditorEntities(m,id) {
   if(typeof prepareHollybeckVillagers==='function')prepareHollybeckVillagers(m,id);
   if(typeof prepareRegionalVillagers==='function')prepareRegionalVillagers(m,id);
+  prepareFarmResident(m,id);
   m.roomActors ||= [];
   const addChest=(kind,identity,x,y,spr)=>{
     const editKey='chest:'+kind+':'+identity;
