@@ -6,6 +6,8 @@ const c=vm.createContext({TS:16,revealing:false,MAPID:'passage3',MD:{},P:{x:100,
  hurtPlayer:n=>{c.playerHp-=n;c.landed++;},glassShieldDeflectFoe:()=>false,finishGlassShieldParry(){},hurtDragon(){},bolts:[],
  playerHp:6,landed:0,BOSS_KIND:/^(golem[1234]|devil|lich|ghost3?|knight|treasuryknight)$/});
 const run=s=>vm.runInContext(s,c);
+Object.assign(c,{dragon:{},arenaPass:false});
+run(fs.readFileSync(new URL('../js/combat-navigation.js',import.meta.url),'utf8'));
 run(game.slice(game.indexOf('const FOE = {'),game.indexOf('const FOE_ART =')));
 run(game.slice(game.indexOf('function heavyFoe('),game.indexOf('function swingHits()')));
 run(game.slice(game.indexOf('function beginEnemyWindup('),game.indexOf('function queueGlassShieldBlock(')));

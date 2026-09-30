@@ -109,6 +109,7 @@ jobs:
           node tests/overworld-published-return.cjs
           node tests/dock-loading.mjs
           node tests/mountain-passage.mjs
+          node tests/combat-navigation.mjs
           node tests/boss-pressure.mjs
           node tests/ferry-companion.mjs
           node tests/village-markets.mjs

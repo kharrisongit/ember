@@ -5695,9 +5695,7 @@ function dragonCanStand(x, y) {
 function dragonAirborne() { return dragonHere() && dragon.air && !dragon.tr; }
 function dragonStep(dx, dy) {
   if (breath) return;
-  if (dragonAirborne()) { dragon.x += dx; dragon.y += dy; return; }
-  if (dx && dragonCanStand(dragon.x + dx, dragon.y)) dragon.x += dx;
-  if (dy && dragonCanStand(dragon.x, dragon.y + dy)) dragon.y += dy;
+  moveCombatActor(dragon,dx,dy,dragonAirborne());
 }
 function dragonHover() { return dragonAirborne() ? 26 : 0; }
 function dragonBob() { return dragonAirborne() ? Math.sin(dragon.t * 2.2) * 3 : 0; }
@@ -5821,16 +5819,7 @@ let hunt = null, dragonCombatPause = 0, dragonRecall = false, dragonRecallT = 0;
 let dragonBossClaws = 0, dragonBreak = null;
 let kingShield = null;
 function moveDragonSafe(dx, dy) {
-  const distance = Math.hypot(dx, dy), steps = Math.max(1, Math.ceil(distance / 4));
-  const sx = dx / steps, sy = dy / steps;
-  for (let i = 0; i < steps; i++) {
-    const nx = Math.max(8, Math.min(PXW - 8, dragon.x + sx));
-    const ny = Math.max(12, Math.min(PXH - 8, dragon.y + sy));
-    let moved = false;
-    if (dragonCanStand(nx, dragon.y)) { dragon.x = nx; moved = true; }
-    if (dragonCanStand(dragon.x, ny)) { dragon.y = ny; moved = true; }
-    if (!moved) break;
-  }
+  return moveCombatActor(dragon,dx,dy,dragonAirborne());
 }
 const CLAW_GND = {"n":[0.4915,-0.2154],"e":[1.0715,0.5702],"s":[0.4801,1.3534],"w":[-0.0694,0.4814]};
 const CLAW_AIR = {"n":[0.4323,-0.2469],"e":[1.0284,0.5562],"s":[0.4587,1.3284],"w":[-0.0339,0.5755]};
@@ -5933,6 +5922,13 @@ function stepDragon(dt) {
       refreshWingBtn();
     }
   }
+  recoverCombatFooting(dragon,dragonAirborne());
+  const edgeGoal=combatEdgeTarget(dragon);
+  if(edgeGoal&&!hunt){
+    const dx=edgeGoal.x-dragon.x,dy=edgeGoal.y-dragon.y,d=Math.hypot(dx,dy)||1;
+    const step=Math.min(d,100*dt);
+    dragonStep(dx/d*step,dy/d*step);dragon.dir=direction4(dx,dy,dragon.dir);return;
+  }
   /* During the king-dragon phase, Corin taking off is an explicit recall:
      she breaks from the boss and catches him instead of crowding its claws. */
   const kingFoe = lastFight && MAPID === "cinderhold" &&
@@ -5973,32 +5969,36 @@ function stepDragon(dt) {
         const sp = dragonAirborne() ? 150 : 112;
         moveDragonSafe((dx / d) * sp * dt, (dy / d) * sp * dt);
       } else dragon.moving = false;
-      if (dragonBreak.t <= 0 && d >= 96) dragonBreak = null;
+      // A wall or pursuing boss cannot turn a short recovery into a permanent retreat.
+      if (dragonBreak.t <= 0) dragonBreak = null;
       if (dragonBreak) return;
     }
   }
   if (hunt) return;      /* it is off hunting; following him can wait */
-  let far = null, fd2 = -1;
+  let far = null, fd2 = Infinity;
   if (!foesHeld && !devDragonPassive && dragonCombatPause <= 0) {
     for (const f of foes) {
       if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
       const dx = f.x - P.x, dy = f.y - P.y, d2 = dx * dx + dy * dy;
-      if (d2 < 16900 && d2 > fd2) { fd2 = d2; far = f; }
+      if(combatArena(dragon)&&combatArena(f)!==combatArena(dragon))continue;
+      const score=Math.hypot(f.x-dragon.x,f.y-dragon.y)+Math.sqrt(d2)*.25;
+      if (d2 < 16900 && score < fd2) { fd2 = score; far = f; }
     }
   }
   if (!far && linger > 0) { linger -= dt; return; }
   if (far) {
     linger = 1.4;              /* it will hang here a moment once they are down */
-    const tx = far.x, ty = far.y - 22;
-    const dx = tx - dragon.x, dy = ty - dragon.y;
+    const point=combatAttackPoint(dragon,far,30);
+    const dx = point.x - dragon.x, dy = point.y - dragon.y;
     const d = Math.hypot(dx, dy);
-    dragon.dir = direction4(dx,dy,dragon.dir);
-    if (d > CLAW_REACH * 0.4) {
+    dragon.dir = direction4(far.x-dragon.x,far.y-dragon.y,dragon.dir);
+    clawT=Math.max(0,clawT-dt);
+    if (Math.hypot(far.x-dragon.x,far.y-dragon.y) > CLAW_REACH * 0.55) {
       const sp = Math.min(210, 60 + d * 2.2) * (dragonAirborne() ? 1 : 0.72);
-      dragonStep((dx / d) * sp * dt, (dy / d) * sp * dt);
+      if(d>.01){const step=Math.min(d,sp*dt);dragonStep(dx/d*step,dy/d*step);}
     } else {
       if (typeof mounted !== "undefined" && mounted) { clawT = 0; }
-      else { clawT -= dt; }
+      // Cooldown advances while approaching too, so backing up cannot freeze it.
       if (clawT <= 0 && !(typeof mounted !== "undefined" && mounted)) {
         clawT = CLAW.every;
         claw = { dir: dragon.dir, t: 0, x: dragon.x, y: dragon.y - 8 };
@@ -7830,6 +7830,7 @@ function breatheFire() {
   dragonCombatPause = 0;
   dragonRecall = false;
   dragonRecallT = 0;
+  dragonBreak = null;
   let best = null, bd = 1e9;
   for (const f of foes) {
     if (f.st === "dead" || f.ally || f.storyPassive || (globalThis.window?.EmberArenaEntry?.protected(f)&&!globalThis.window?.EmberRiding?.fireLessonTarget?.(f))) continue;
@@ -7917,22 +7918,23 @@ function stepHunt(dt) {
     if (hunt.t < 1.05) return;
     fireNow(aim, f); hunt = null; return;
   }
-  const ax = dragon.x - f.x, ay = dragon.y - f.y;
-  let side;
-  if (Math.abs(ax) > Math.abs(ay)) side = ax > 0 ? "e" : "w";
-  else side = ay > 0 ? "s" : "n";
-  const sx = side === "e" ? 88 : side === "w" ? -88 : 0;
-  const sy = side === "s" ? 88 : side === "n" ? -88 : 0;
-  const tx = f.x + sx, ty = f.y + sy + 10;
-  const dx = tx - dragon.x, dy = ty - dragon.y;
-  const d = Math.hypot(dx, dy);
-  const aim = side === "e" ? "w" : side === "w" ? "e" : side === "s" ? "n" : "s";
-  dragon.dir = aim;
-  if (d > 7) {
-    const sp = Math.min(260, 90 + d * 3) * (dragonAirborne() ? 1 : 0.72);
-    dragonStep((dx / d) * sp * dt, (dy / d) * sp * dt);
-    return;
+  const aim=direction4(f.x-dragon.x,f.y-dragon.y,dragon.dir);
+  dragon.dir=aim;
+  if(!mounted){
+    if(!hunt.point||Math.hypot(f.x-hunt.targetX,f.y-hunt.targetY)>16){
+      hunt.point=dragonBreathPoint(f);hunt.targetX=f.x;hunt.targetY=f.y;
+    }
+    const point=hunt.point;
+    if(point){
+      const dx=point.x-dragon.x,dy=point.y-dragon.y,d=Math.hypot(dx,dy);
+      if(d>7&&hunt.t<1.5){
+        const step=Math.min(d,Math.min(260,90+d*3)*(dragonAirborne()?1:.72)*dt);
+        dragonStep(dx/d*step,dy/d*step);return;
+      }
+    }
   }
+  // If scenery prevents the ideal stance, cast from the current legal spot.
+  // Never spend the whole command walking into a wall until it expires.
   fireNow(aim, f);
   hunt = null;
 }
@@ -8351,7 +8353,7 @@ function swordOverlaps(f) {
 }
 function deflectClearance(actor, angle, distance, isDragon) {
   let x = actor.x, y = actor.y, moved = 0;
-  const stand = isDragon ? dragonCanStand : canStand;
+  const stand = isDragon ? (x,y)=>combatCanStand(dragon,x,y,false) : canStand;
   for (let left = distance; left > .1; left -= 3) {
     const step = Math.min(3, left);
     const nx = x + Math.cos(angle) * step, ny = y + Math.sin(angle) * step;
@@ -10177,15 +10179,9 @@ function stepFoes(dt) {
         const rx=f.x-(f.retreatX === undefined ? P.x : f.retreatX);
         const ry=f.y-(f.retreatY === undefined ? P.y : f.retreatY);
         const rd=Math.hypot(rx,ry)||1, sp=Math.max(k2.speed||30,f.kind==="kdragon"?118:64)*dt*(f.glassRetreatBoost||1);
-        const nx=f.x+rx/rd*sp, ny=f.y+ry/rd*sp;
-        if(f.kind==="kdragon"){
-          const clear=(x,y)=>!isSolid(x,y)&&!isSolid(x-30,y)&&!isSolid(x+30,y)&&!isSolid(x,y-34);
-          const mx=clear(nx,f.y), my=clear(f.x,ny);
-          if(mx)f.x=nx; if(my)f.y=ny;
-          if(!mx&&!my)f.retreat=0;       /* never force the dragon through a wall */
-          f.dir8=direction4(rx,ry,f.dir8);
-        }
-        else { if(!isSolid(nx,f.y))f.x=nx; if(!isSolid(f.x,ny))f.y=ny; }
+        const moved=moveCombatActor(f,rx/rd*sp,ry/rd*sp);
+        if(moved<.01)f.retreat=0;
+        if(f.kind==='kdragon')f.dir8=direction4(rx,ry,f.dir8);
         f.st="walk"; f.cool=Math.max(f.cool||0,.28);
         if (f.retreat <= 0) f.glassRetreatBoost = 1;
         if (f.retreat <= 0 && f.pressureCounter) {
@@ -10249,12 +10245,7 @@ function stepFoes(dt) {
          while closing, then keeps flying down the hall until it is nearby. */
       if (d > chaseRange) {
         const sp = (k2.speed || 30) * 1.10 * dt;
-        const nx = f.x + (dx / d) * sp, ny = f.y + (dy / d) * sp;
-        if (f.kind === "kdragon") { f.x = nx; f.y = ny; }
-        else {
-          if (!isSolid(nx, f.y)) f.x = nx;
-          if (!isSolid(f.x, ny)) f.y = ny;
-        }
+        moveCombatActor(f,dx/d*sp,dy/d*sp);
         f.st = "walk";
       } else if (f.st !== "walk") f.st = "idle";
     }
@@ -10319,7 +10310,12 @@ function stepFoes(dt) {
     }
     const LEASH = f.ally ? 170 : (f.ring ? f.ring : 88);
     const away = Math.hypot(f.x - hx, f.y - hy);
-    if (f.ally) f.going = false;
+    const fightArena=combatArena(f);
+    recoverCombatFooting(f);
+    // The current attacker may close to melee range; idle orbiters and retreats
+    // yield to the inset. Otherwise a wall-hugging player could be untouchable.
+    const edgeGoal=(f.st==='idle'||f.st==='walk')&&(f!==turnHolder||f.retreat>0)?combatEdgeTarget(f):null;
+    if (f.ally || fightArena) f.going = false;
     else if (bell) f.going = false;       /* the bell is worth leaving home for */
     else if (away > LEASH) f.going = true;
     else if (away < LEASH * 0.35) f.going = false;
@@ -10331,7 +10327,8 @@ function stepFoes(dt) {
     const rd = Math.hypot(rdx, rdy) || 1;
     const retreatTgt = { x:f.x + rdx / rd * 68, y:f.y + rdy / rd * 68,
       d:68, isPlayer:false, retreat:true };
-    const tgt = retreating ? retreatTgt
+    const tgt = edgeGoal ? {x:edgeGoal.x,y:edgeGoal.y,d:Math.hypot(edgeGoal.x-f.x,edgeGoal.y-f.y),isPlayer:false,reposition:true}
+      : retreating ? retreatTgt
       : f.going ? { x: hx, y: hy, d: away, isPlayer: true, home: 1 }
       : targetFor(f);
     f.onDragon = !tgt.isPlayer;
@@ -10348,29 +10345,31 @@ function stepFoes(dt) {
     f.slot = (f.slot === undefined) ? foes.indexOf(f) : f.slot;
     const nLive = live.length || 1;
     const ang = (f.slot / nLive) * 6.2832 + f.t * 0.2;
-    const orbit = !(f.ally && tgt.follow) && !(f.mad > 0 && tgt.foe) && !tgt.toBell;
+    const orbit = !tgt.retreat && !tgt.home && !tgt.reposition && !(f.ally && tgt.follow) && !(f.mad > 0 && tgt.foe) && !tgt.toBell;
     const sx = (myTurn || !orbit) ? 0 : Math.cos(ang) * want;
     const sy = (myTurn || !orbit) ? 0 : Math.sin(ang) * want;
     if (f.st === "idle") {
       if (f.ally || f.mad > 0 || tgt.toBell || d < k.sight) { f.st = "walk"; f.t = 0; }
     } else if (f.st === "walk") {
       if (!f.ally && !(f.mad > 0) && !tgt.toBell && d > k.sight * 1.5) { f.st = "idle"; f.t = 0; }
-      else if (!tgt.retreat && !f.going && !tgt.toBell && d < k.reach &&
+      else if (!tgt.retreat && !tgt.reposition && !f.going && !tgt.toBell && d < k.reach &&
                (!P.act || P.act.kind === "swing") &&
                ((f.ally || f.mad > 0) ? !tgt.follow : (myTurn && foeCool <= 0)) &&
                facing(f, tgt)) {
         f.st = "wind"; f.t = 0; beginEnemyWindup(f);
       }
       else {
-        let tx = tgt.x + sx, ty = tgt.y + sy;
+        let goal=combatProject(f,tgt.x+sx,tgt.y+sy,myTurn?0:16);
+        let tx=goal.x,ty=goal.y;
         let rx = tx - f.x, ry = ty - f.y, rd = Math.hypot(rx, ry);
-        let stop = myTurn ? want : 6;
+        let stop = myTurn ? Math.max(3,want-Math.hypot(goal.x-tgt.x,goal.y-tgt.y)) : 6;
         if (f.mad > 0 && tgt.foe) stop = Math.max(6, k.reach - 6);
         if (tgt.toBell) stop = 14;          /* they crowd round it */
         if (f.ally && tgt.follow) stop = 8;      /* settle close to their trail position */
-        if (k.standoff && d < k.standoff - 12) {
-          rx = f.x - tgt.x; ry = f.y - tgt.y;
-          rd = Math.hypot(rx, ry) || 1; stop = 0;
+        if(tgt.reposition||tgt.retreat)stop=3;
+        if (k.standoff && !tgt.reposition && !tgt.retreat && !tgt.home && d < k.standoff - 12) {
+          goal=combatAttackPoint(f,tgt,k.standoff);
+          rx=goal.x-f.x;ry=goal.y-f.y;rd=Math.hypot(rx,ry);stop=3;
         }
         if (rd > stop) {
           let sp = k.speed * ((myTurn || (f.ally && tgt.foe) || (f.mad > 0 && tgt.foe)) ? 1 : 0.90);
@@ -10379,40 +10378,8 @@ function stepFoes(dt) {
           if (f.ally && !tgt.follow) sp = Math.max(sp, 150 + Math.min(120, rd * 1.2));
           const drift=f.ally&&tgt.follow?spiritFollowVelocity(f,rx,ry,rd,dt):null;
           const nx = drift?drift.x:f.x + (rx / rd) * sp * dt, ny = drift?drift.y:f.y + (ry / rd) * sp * dt;
-          if (f.halfW === undefined) {
-            const a = SPR[(FOE_ART[f.kind] || "sk") + "_idle_d"];
-            f.halfW = a ? Math.max(6, Math.min(15, Math.round(a[2] * 0.22))) : 7;
-          }
-          const halfW = f.halfW;
-          if (f.buf === undefined) {
-            const a = SPR[(FOE_ART[f.kind] || "sk") + "_idle_d"];
-            f.buf = a ? Math.min(2, Math.max(1, Math.round(a[3] / TS / 2))) : 1;
-          }
-          const legal = (X, Y, b) => {
-            if (isSolid(X - halfW, Y) || isSolid(X, Y) || isSolid(X + halfW, Y)) return false;
-            for (let t = 1; t <= b; t++)
-              if (isSolid(X - halfW, Y - t * TS) || isSolid(X, Y - t * TS) ||
-                  isSolid(X + halfW, Y - t * TS)) return false;
-            return true;
-          };
-          let freeX = true, freeY = true;
-          if (!f.ally) {
-            // Full footprint checks are the costliest part of a crowded fight.
-            // Stagger them across alternate frames; the cheap centre check on
-            // the in-between frame still prevents crossing a new wall.
-            const fullNav = ((Math.floor(foeClock * 60) + (f.slot || 0)) & 1) === 0 ||
-                            f._navFreeX === undefined;
-            if (fullNav) {
-              const stuck = !legal(f.x, f.y, f.buf);
-              const clear = (X, Y) => stuck ? !isSolid(X, Y) : legal(X, Y, f.buf);
-              f._navFreeX = clear(nx, f.y);
-              f._navFreeY = clear(f.x, ny);
-            }
-            freeX = f._navFreeX && !isSolid(nx, f.y);
-            freeY = f._navFreeY && !isSolid(f.x, ny);
-          }
-          if (freeX) f.x = nx;
-          if (freeY) f.y = ny;
+          if(f.ally){f.x=nx;f.y=ny;}
+          else moveCombatActor(f,nx-f.x,ny-f.y,false,myTurn&&!tgt.retreat&&!tgt.reposition?0:12);
           if (f.ally) {
             for (const q of foes) {
               if (q === f || !q.ally || q.st === "dead") continue;
@@ -10424,15 +10391,6 @@ function stepFoes(dt) {
                 const py2 = f.y + (oy2 / od2) * push;
                 if (!isSolid(px2, py2)) { f.x = px2; f.y = py2; }
               }
-            }
-          }
-          if (f.ring) {
-            const cx = f.cx === undefined ? hx : f.cx;
-            const cy = f.cy === undefined ? hy : f.cy;
-            const ox = f.x - cx, oy = f.y - cy, od = Math.hypot(ox, oy);
-            if (od > f.ring) {
-              const bx = cx + (ox / od) * f.ring, by = cy + (oy / od) * f.ring;
-              if (!isSolid(bx, by)) { f.x = bx; f.y = by; }
             }
           }
         }

@@ -7,6 +7,8 @@ const messages=[],c=vm.createContext({W,MD:m,MAPID:'world',SPR,TS:16,MW:m.w,terr
  P:{},dragon:{},dragonHere:()=>true,mounted:false,ride:null,objs:[],NAME2I:{},hidden:new Set(),rebuildBuckets(){},toast:s=>messages.push(s),playScene:lines=>messages.push(...lines),playerFacing4:()=>c.P.dir8,
  hunt:null,breath:null,claw:null,linger:0,refreshWingBtn(){},direction4:(x,y)=>Math.abs(x)>Math.abs(y)?x<0?'w':'e':y<0?'n':'s'});
 const run=s=>vm.runInContext(s,c);
+Object.assign(c,{PXW:m.w*16,PXH:m.h*16});
+run(read('js/combat-navigation.js'));
 run(game.slice(game.indexOf('function installFerrySigns()'),game.indexOf('function villageStandSize()')));
 run(game.slice(game.indexOf('function ferryOf()'),game.indexOf('function npcContextDialogue(')));
 run(game.slice(game.indexOf('function dragonAirborne()'),game.indexOf('function dragonHover()')));
