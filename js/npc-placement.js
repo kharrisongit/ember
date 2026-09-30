@@ -2,6 +2,12 @@
 const npcEditorOps={};
 // Keep placement UUIDs and editor names intact so existing GitHub moves still apply.
 const PLACED_NPC_DIALOGUE={
+  '914d2e11-0f0d-4da1-8909-26bb1caa7e07':{
+    loc:'Thornwell — the Copper Cup',bio:'A flute player performing beside the Copper Cup’s string player.',
+    d:['Tessa: A flute and strings make a fine pair. The Copper Cup gives us a good audience.'],
+    d2:['Tessa: I used to play in Forgewick’s square. It is pleasant to finish a tune without a hammer joining in.'],
+    dm:['Tessa: There is always someone here who knows the next verse.']
+  },
   'f30b6b62-a107-47b7-95ad-7cc27ab5c605':{
     d:['Eira: Thornwell cider. Apple, a little honey, and whatever the bees were complaining about.',
       'Corin: Is it good?', 'Eira: Ask me when I stop making that face.'],
