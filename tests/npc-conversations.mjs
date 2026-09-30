@@ -95,7 +95,11 @@ Object.assign(c,{fishingPole:true,odoRodReferral:true,templeCompass:{owned:true,
 for(const hatched of [false,true])for(const victory of [false,true]){
  c.hatched=hatched;c.wonAll=victory;
  for(const [name,profile] of Object.entries(stories)){
-  c.MAPID=name==='King Halvard'?'cinderhold':'world';
+  c.MAPID='world';
+  if(name==='King Halvard'){
+   assert(!c.openNpcTopics({n:name}),'King uses the scripted Thornwell audience, not the generic town menu');
+   continue;
+  }
   const npc={n:name,x:20,y:0,d:[name+': Morning.'],dd:[name+': Your companion is welcome.'],dv:[name+': Peace at last.']};
   assert(c.openNpcTopics(npc),name+' menu opens');
   const labels=c.ask.opts.map(o=>o.n);

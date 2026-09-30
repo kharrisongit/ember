@@ -4497,6 +4497,7 @@ function drawWorld(t, dt) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
           : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
         if(/^hollybeck_/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
+        if(o.packSpr==='journey_tobin')fr=tobinNpcFrame(t,action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){
@@ -11137,19 +11138,19 @@ function drawHettieCallout(n,sp) {
 let thornwellMet=false, thornwellArrival=null, thornwellReturn=null;
 let brambleQuest=0, brambleMap="", brambleTrail=[], brambleDeparture=null;
 function welcomePath() {
-  // Local, collision-checked staging along an approach into town.
+  // Bramble comes down the road from the east; route around local fences.
   const px=Math.round(P.x/8)*8,py=Math.round(P.y/8)*8;
-  const starts=[[24,0],[-24,0],[0,24],[0,-24],[24,24],[-24,24],[24,-24],[-24,-24]]
+  const starts=[[24,0],[24,24],[24,-24],[16,32],[16,-32],[8,24],[8,-24],[32,32],[32,-32]]
     .map(([dx,dy])=>[px+dx,py+dy]).filter(p=>canStand(...p));
   if(!starts.length)return null;
   const stagingDistance=Math.max(80,Math.min(200,VW/cam.z/2+30));
   const q=starts.map(p=>({p,path:[p]})),seen=new Set(starts.map(p=>p.join(',')));let best=null;
   for(let i=0;i<q.length&&i<3000;i++){
     const cur=q[i],dist=Math.hypot(cur.p[0]-P.x,cur.p[1]-P.y);
-    if(dist>=stagingDistance&&cur.path.length>=8){best=cur.path;break;}
+    if(dist>=stagingDistance&&cur.p[0]>=P.x+stagingDistance*.75&&cur.path.length>=8){best=cur.path;break;}
     for(const [dx,dy] of [[8,0],[0,8],[0,-8],[-8,0]]){
       const p=[cur.p[0]+dx,cur.p[1]+dy],k=p.join(',');
-      if(seen.has(k)||Math.hypot(p[0]-P.x,p[1]-P.y)>stagingDistance+48||!canStand(...p))continue;
+      if(seen.has(k)||p[0]<P.x+8||Math.hypot(p[0]-P.x,p[1]-P.y)>stagingDistance+48||!canStand(...p))continue;
       seen.add(k);q.push({p,path:cur.path.concat([p])});
     }
   }
@@ -11290,7 +11291,7 @@ function stepThornwellWelcome(dt) {
   if(brambleQuest!==0||MAPID!=="world"||mode!=="play"||editing||sceneHold()||sayNpc||doorMotion||ride||mounted)return;
   if(!brambleWelcomeInside())return;
   const dog=npcs.find(n=>n.pettable),path=welcomePath();if(!dog||!path)return;
-  if(Math.hypot(dog.x-P.x,dog.y-P.y)<150){
+  if(dog.x>P.x+24&&Math.hypot(dog.x-P.x,dog.y-P.y)<150){
     const nearby=bramblePath([dog.x,dog.y],path.at(-1));if(!nearby)return;thornwellArrival={dog,path:nearby};
   }else{[dog.x,dog.y]=path[0];thornwellArrival={dog,path:path.slice(1)};}
   brambleQuest=1;thornwellMet=true;
@@ -11575,7 +11576,7 @@ function actionButton() {
   if(globalThis.window?.EmberArenaEntry?.action())return;
   if(globalThis.window?.EmberRiding?.action())return;
   if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
-  if(atlasOpen)return;
+  if(atlasOpen){if(typeof atlasDismissCompassTutorial==='function')atlasDismissCompassTutorial();return;}
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}
   if (typeof BOOT !== "undefined" && BOOT.waiting) { BOOT.close(); return; }
   if (deadShown) { globalThis.window?.EmberSfx?.ui?.(); getUp(); return; }

@@ -16,23 +16,39 @@ const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
 const caravanSprite={source:[76,138,1390,746],width:96,height:52};
-const snowChildImage=new Image();snowChildImage.src='assets/sprites/hollybeck-snow-child.png?v=20260930';
+const tobinSheets={};
+for(const action of ['idle','walk']){
+  const image=new Image();image.src='assets/sprites/hollybeck-tobin-'+action+'.png?v=20260930-animated';tobinSheets[action]=image;
+}
 let snowChildPortrait=null;
 async function prepareJourneyArt(){
-  if(SPR.journey_snow_child)return;
-  await snowChildImage.decode();
-  const sprite=document.createElement('canvas');sprite.width=12;sprite.height=26;
-  const g=sprite.getContext('2d');g.imageSmoothingEnabled=false;
-  g.drawImage(snowChildImage,347,277,403,881,0,0,12,26);
-  animalSheets.journey_snow_child=sprite;SPR.journey_snow_child=[0,0,12,26,1,'journey_snow_child'];
+  if(SPR.journey_tobin_idle_d)return;
+  for(const [action,image]of Object.entries(tobinSheets)){
+    await image.decode();
+    for(const [row,dir]of ['d','u','e','w'].entries()){
+      const key='journey_tobin_'+action+'_'+dir;
+      const strip=document.createElement('canvas');strip.width=24*6;strip.height=30;
+      const g=strip.getContext('2d');g.imageSmoothingEnabled=false;
+      for(let frame=0;frame<6;frame++)g.drawImage(image,frame*32+4,row*32+2,24,30,frame*24,0,24,30);
+      animalSheets[key]=strip;SPR[key]=[0,0,24,30,6,key];
+    }
+  }
   const face=document.createElement('canvas');face.width=96;face.height=112;
   const f=face.getContext('2d');f.imageSmoothingEnabled=false;
-  f.drawImage(snowChildImage,347,277,403,540,6,0,84,112);
-  snowChildPortrait=face.toDataURL('image/png');
+  f.drawImage(tobinSheets.idle,7,3,18,21,0,0,96,112);snowChildPortrait=face.toDataURL('image/png');
 }
+function tobinNpcFrame(t,action){
+  if(action==='walk')return Math.floor(t*8)%6;
+  if(t%3.8<.15)return 3;
+  return [0,1,2,4,5][Math.floor(t*4)%5];
+}
+// The camels lead from the south/front of the wagon, clear of the rock and houses.
+const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 function progressionSolid(x,y){
   if(MAPID!=='world')return false;
+  const gate=JOURNEY_GATES.sandspire;
+  if(!gate.open()&&caravanCamels.some(([dx,dy])=>Math.abs(x-gate.x-dx)<21&&y>=gate.y+dy-10&&y<gate.y+dy))return true;
   return Object.values(JOURNEY_GATES).some(g=>!g.open()&&x>=g.rect[0]&&x<g.rect[2]&&y>=g.rect[1]&&y<g.rect[3]);
 }
 function progressionMoveAllowed(x,y){
@@ -73,14 +89,17 @@ function prepareJourneyGates(){
     'Miner Nerik: One stone at a time. Pull the wrong one and we start all over.',
     'Miner Nerik: We will have the carts shifted before long.'
   ]));
-  npcs.push(journeyWorker('Caravanner Sami','desert_trader1','sandspire',ss.x,ss.y+52,[
+  npcs.push(journeyWorker('Caravanner Sami','desert_trader1','sandspire',ss.x,ss.y+120,[
     "Caravanner Sami: Easy there! The caravan is staying put, and the camels aren't taking another step.",
     "Caravanner Sami: Something in Sandspire Temple has them spooked. Clear the temple and claim its Heartstone, and we'll get this wagon moving."
   ],'Bilal'));
-  npcs.push(journeyWorker('Tobin','journey_snow_child','hollybeck',hb.x-50,hb.y+8,[
+  const tobin=journeyWorker('Tobin','journey_tobin','hollybeck',hb.x-50,hb.y+8,[
     "Tobin: I'm building snowmen! This one's the captain, and those are his snow guards.",
     "Tobin: I'm not finished yet, so you'll have to come back later. They still need noses!"
-  ]));
+  ]);
+  Object.assign(tobin,{packDirections:true,packWalk:true,stationary:false,patrol:true,patrolSpeed:22,patrolRest:2200,idleFps:4,
+    patrolPoints:[[hb.x-50,hb.y+8],[hb.x-34,hb.y+8],[hb.x-34,hb.y-20],[hb.x-62,hb.y-20]]});
+  npcs.push(tobin);
 }
 function progressionProp(spr,x,y,scale=1,phase=0){return {progressionProp:true,spr,x,y,scale,phase};}
 function journeyGateProps(){
@@ -92,9 +111,9 @@ function journeyGateProps(){
     out.push(progressionProp('story_mining_carts',fw.x,fw.y+56,.85));
   }
   if(!ss.open()){
-    // Fit the 112px mountain opening; the old western camel crossed its rock edge.
+    // The wagon fills the mountain opening; its camels wait out front in the street.
     out.push(progressionProp('story_caravan',ss.x,ss.y+10));
-    for(const [i,dx,dy]of [[0,-24,-74],[1,24,-74],[2,0,-102]])
+    for(const [i,[dx,dy]]of caravanCamels.entries())
       out.push(progressionProp('camel_sit',ss.x+dx,ss.y+dy,1,i));
   }
   if(!hb.open())for(let i=-2;i<=2;i++)out.push(progressionProp('wf_snowman',hb.x+(i%2)*4,hb.y+i*25+6));

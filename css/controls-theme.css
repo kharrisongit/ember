@@ -1,4 +1,8 @@
 /* Dawn colors for the gameplay controls. */
+/* Short landscape screens keep the quick controls between the pad and A/B. */
+@media (orientation:landscape) and (max-height:520px) and (min-width:600px){
+  #actionStack{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
+}
 #deck {
   background:linear-gradient(180deg,#f1e5cf,#dfc9aa);
   border-top-color:#9b947e;

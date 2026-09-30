@@ -17,19 +17,46 @@
       ]
     },
     {
-      "file": "assets/sprites/hollybeck-snow-child.png",
+      "file": "assets/sprites/hollybeck-tobin-idle.png",
       "character": "Tobin",
-      "prompt": "Use case: stylized-concept. Asset type: one transparent pixel-art NPC sprite for a classic 2D top-down fantasy RPG with 16-pixel tiles. Primary request: a cheerful young boy building snowmen in a snowy medieval village. ONE full-body child standing, facing south toward the viewer, small boots close together, arms relaxed with one wool mitten holding a small snowball. Blue wool winter coat, warm rust-red knitted bobble hat, yellow scarf, brown boots, a few visible dark hair pixels, friendly face. Small child proportions with large head, clearly different from an adult woman. Classic SNES hand-pixelled sprite, crisp large pixel clusters, 24 pixels wide and 32 pixels tall worth of detail rendered at integer enlargement, dark muted outline, simple limited palette, readable eyes, subtle overhead RPG angle showing top of hat. Entire single figure centered and uncut with generous transparent margin. GENUINELY TRANSPARENT alpha background, no scenery, no ground, no glow or colored haze, no shadow beyond a small tight pixel shadow at feet. No text, no watermark, no frame, no sheet, no extra poses or characters. Must read well as a stationary 24 by 32 pixel character.",
-      "runtimeCrop": [
-        347,
-        277,
-        403,
-        881
+      "prompt": "Use case: stylized-concept. Asset type: production pixel-art IDLE animation sprite sheet for a 2D overhead fantasy RPG. The attached sheet is STYLE/GRID reference only: make a NEW male child named Tobin, not the adult shown. Match this reference's VERY COARSE genuine low-resolution pixel clusters, dark one-pixel outline, simple flat-color shading and three-quarter top-down view. Tobin wears a rust red wool bobble hat, simple blue winter coat, mustard scarf, brown mittens and boots, dark hair. Child proportions, about 17 logical pixels wide and 24 logical pixels tall, smaller than reference adult. No large anime eyes or long thin body. Exactly SIX EQUAL COLUMNS and FOUR EQUAL ROWS, 24 individual isolated full-body frames on genuine clear alpha transparency. Logical cells are 32x32; final sheet aspect ratio 3:2, 1536x1024, each logical pixel is an 8x8 hard square. Row 1 faces SOUTH toward viewer; row 2 NORTH/back only, no face; row 3 EAST/right profile; row 4 WEST/left profile. SIX-frame stationary idle loop in each row: boots planted, tiny chest/shoulder breathing movement and one-pixel head bob, scarf moving one pixel, frame 4 briefly blinks. Every frame stays centered in its own cell, bottom of boots at same logical y=29. Match character identity, colors and proportions in all 24 frames. Leave clear empty gutters between all characters; never touch adjacent cells. This must look like actual 32px game sprites enlarged nearest-neighbor, NOT a detailed illustration. No labels, no lines, no numbers, no scenery, no ground, no glow, no semi-transparent halo, no photoreal texture.",
+      "sourceGrid": [
+        6,
+        4
       ],
-      "displaySize": [
-        12,
-        26
-      ]
+      "nativeCell": [
+        32,
+        32
+      ],
+      "frames": 6,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west"
+      ],
+      "packing": "Alpha bounds, nearest-neighbor at 26px character height; 32px cells, feet at y=30. Runtime crops 24×30 from x=4,y=2 per cell."
+    },
+    {
+      "file": "assets/sprites/hollybeck-tobin-walk.png",
+      "character": "Tobin",
+      "prompt": "Use case: stylized-concept. Asset type: WALK animation sprite sheet for a top-down 2D pixel RPG. Image 1 is Tobin's character reference; preserve his identity, simple blue winter coat, mustard scarf, brown mittens/boots, rust-red bobble hat, dark hair, simple small eyes and child proportions EXACTLY. Image 2 is a game walking-sheet reference for how separate frames must ACTUALLY animate. Turn Tobin into a real SIX-FRAME WALK CYCLE in each of FOUR directions, not six identical idle images. EXACTLY 6 equal columns by 4 equal rows on genuinely transparent alpha, final aspect 3:2, 1536x1024. Each cell is one native 32x32 logical pixel cell enlarged with hard blocky square pixels. One character about 17 logical pixels wide and 24 high per cell. Row 1 SOUTH/front, row 2 NORTH/back (no face), row 3 EAST/right profile, row 4 WEST/left profile. Columns 1–6: left-foot contact with opposite arm forward, left-foot down, passing feet, right-foot contact with opposite arm forward, right-foot down, passing feet. Boots and trouser legs must clearly alternate and swing; arms counter-swing; head bobs one logical pixel on down poses, scarf trails. Right and left profile rows need clearly separated legs in contact poses. Keep whole bodies in each cell with a shared foot baseline and centered sprite anchors. Exact same character size and limited palette in every cell; no smooth gradients, no texture, no glow, no labels, no borders, no background, no ground shadow. Coarse actual 16-bit game pixels matching the supplied sprites, NOT illustration or concept art.",
+      "sourceGrid": [
+        6,
+        4
+      ],
+      "nativeCell": [
+        32,
+        32
+      ],
+      "frames": 6,
+      "directions": [
+        "south",
+        "north",
+        "east",
+        "west"
+      ],
+      "packing": "Alpha bounds, nearest-neighbor at 26px character height; 32px cells, feet at y=30. Runtime crops 24×30 from x=4,y=2 per cell."
     }
   ]
 }

@@ -45,17 +45,24 @@ assert(game.includes('if(progressionSolid(px,py))return "story";'),'Collision ov
 assert(game.includes('if(progressionSolid(px,py))return "roadworks";'),'Collision diagnostics identify roadworks');
 console.log('PASS: early hunting roads cross gate longitudes freely; actual roadblocks remain visible and enforced.');
 
-// Caravan artwork and every camel fit between the actual mountain edges.
+// The wagon fits the mountain opening; the camel team waits in front of it.
 c.breathHas={};c.npcs=[];c.prepareJourneyGates();
 const caravan=c.journeyGateProps().find(o=>o.spr==='story_caravan');assert(caravan);
-for(const o of c.journeyGateProps().filter(o=>o.spr==='camel_sit'||o.spr==='story_caravan')){
- const width=o.spr==='camel_sit'?48:96;
- assert(o.x-width/2>=24240&&o.x+width/2<=24352,'Caravan clears the published mountain opening');
+assert(caravan.x-48>=24240&&caravan.x+48<=24352);
+const houses=[[24200.5,1190,24263.5,1264],[24332.5,1232,24419.5,1344]];
+for(const camel of c.journeyGateProps().filter(o=>o.spr==='camel_sit')){
+ assert(camel.y-22>caravan.y,'Camels visibly lead in front of the wagon');
+ assert(camel.y-22>=1184,'Camels clear the mountain foot');
+ assert(houses.every(([x0,y0,x1,y1])=>camel.x+24<=x0||camel.x-24>=x1||camel.y<=y0||camel.y-22>=y1),'Camels clear nearby houses');
+ assert(c.progressionSolid(camel.x,camel.y-4),'Camel footprint is solid while blocking');
+ c.breathHas.ice=true;assert(!c.progressionSolid(camel.x,camel.y-4),'Camel collision clears with the caravan');c.breathHas.ice=false;
 }
 assert(c.npcs.some(n=>n.progressionWorker==='sandspire'&&n.d.some(s=>s.includes('Sandspire Temple'))));
-const child=c.npcs.find(n=>n.progressionWorker==='hollybeck');assert.equal(child.n,'Tobin');assert.equal(child.packSpr,'journey_snow_child');
+const child=c.npcs.find(n=>n.progressionWorker==='hollybeck');assert.equal(child.n,'Tobin');assert.equal(child.packSpr,'journey_tobin');
+assert(child.packDirections&&child.packWalk&&!child.stationary&&child.patrolPoints.length>1);
+assert.equal(new Set(Array.from({length:6},(_,i)=>c.tobinNpcFrame(i/8,'walk'))).size,6);
 assert(!child.portraitAlias);assert(child.d.some(s=>s.includes('come back later')));
-assert(fs.existsSync('assets/props/sandspire-caravan.png'));assert(fs.existsSync('assets/sprites/hollybeck-snow-child.png'));
+assert(fs.existsSync('assets/props/sandspire-caravan.png'));for(const action of ['idle','walk'])assert(fs.existsSync('assets/sprites/hollybeck-tobin-'+action+'.png'));
 c.prepareJourneyGates();assert.equal(c.npcs.filter(n=>n.progressionWorker==='hollybeck').length,1);
 const wagon=c.journeyGateProps().find(o=>o.spr==='story_broken_wagon');draws.length=0;
 vm.runInContext('brokenWagonImage.complete=true;brokenWagonImage.naturalWidth=800;brokenWagonImage.naturalHeight=1280',c);

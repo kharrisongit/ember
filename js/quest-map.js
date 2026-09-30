@@ -221,7 +221,13 @@ function atlasZoom(amount){
 function atlasShowWhole(){
  const view=document.getElementById('atlasViewport');atlasPan.z=Math.max(.22,Math.min(view.clientWidth/1536,view.clientHeight/512)*.97);atlasPan.x=0;atlasPan.y=0;atlasApplyPan();
 }
+function atlasDismissCompassTutorial(){
+ const tutorial=document.getElementById('atlasCompassTutorial');
+ if(tutorial.hidden)return false;
+ atlasCompassTutorialSeen=true;tutorial.hidden=true;saveGame();return true;
+}
 function atlasBegin(){
+ window.EmberEncounterCard?.layout();
  document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
  atlasSyncJournal();atlasBuildPlaces();
  const select=document.getElementById('atlasQuestSelect');select.replaceChildren();
@@ -294,7 +300,7 @@ function renderQuestAtlas(){
  atlasApplyPan();atlasShowDetails();
 }
 function bindQuestAtlas(){
- document.getElementById('atlasCompassGotIt').addEventListener('click',()=>{atlasCompassTutorialSeen=true;document.getElementById('atlasCompassTutorial').hidden=true;saveGame();});
+ document.getElementById('atlasCompassGotIt').addEventListener('click',atlasDismissCompassTutorial);
  const view=document.getElementById('atlasViewport'),surface=document.getElementById('atlasSurface');
  document.getElementById('atlasClose').addEventListener('click',closeAtlas);
  document.getElementById('atlasFocus').addEventListener('click',atlasFocusQuest);

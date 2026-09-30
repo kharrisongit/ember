@@ -13,6 +13,7 @@ run(`mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.
 for(const [id,m]of Object.entries(W.maps)){prepareMarketNpcCast(m,id);prepareDialoguePortraitCast(m,id)}
 loadMap('tavern');brambleQuest=1;thornwellRoyal.stage=1;P.x=250;P.y=250;syncBrambleParty();syncThornwellRoyals();`);
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),4,'Royal party is visible during the handoff');
+assert.equal(run('thornwellKing().y'),run("MD.roomActors.find(a=>a.editKey==='remaining:tavern:18').y-34"),'King sits at the north edge of the table');
 assert.equal(run('thornwellKing().x'),396,'Royal table is the unoccupied northeast table, not Fen’s table');
 assert(run("tavernActorDepth(thornwellKing(),MD.roomActors)>tavernActorDepth(MD.roomActors.find(a=>a.editKey==='remaining:tavern:18'),MD.roomActors)"),'Seated king renders above the tabletop');
 assert(run(`npcs.filter(n=>n.thornwellRoyal&&n.n!=='King Halvard').every(n=>n.packSpr.startsWith('royal_intro_guard_')&&!n.packWalk&&!n.packDirections)`),'Ceremonial guard identities use idle art');
@@ -95,7 +96,7 @@ console.log(`PASS: ${residents.length} residents keep Aurelius secret; four roya
 console.log('Checking the published outdoor route…');
 run(`loadMap('world');const royalExit=W.maps.tavern.doors.find(d=>d.to==='world');P.x=royalExit.tx*TS+8;P.y=royalExit.ty*TS+TS;cam.x=P.x-200;cam.y=P.y-150;thornwellDoorArrived('tavern');`);
 assert.equal(run('thornwellRoyal.stage'),5);
-assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3782.5,3990.5,4022.5],'Published outdoor table positions preserve the entrance path');
+assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3846.5,3990.5,4022.5],'Published outdoor table positions preserve the entrance path');
 assert(run(`canStand(3913,1068)&&canStand(3913,1080)`),'The actual entrance corridor stays walkable');
 const before=run('[P.x,P.y]');
 run('thornwellDeparture()');

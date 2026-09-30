@@ -31,10 +31,12 @@ for(const id of ['merchantShop','cloudSaveDialog']){
 }
 console.log('PASS: purchase and sign-in scrolling bypass the gameplay touch blocker.');
 // The first approach must still work with the town fence on Corin's right.
-c.canStand=(x,y)=>!(x>=120&&x<=136);
+c.canStand=(x,y)=>!(x>=120&&x<=136&&y>=64&&y<=136);
 run('P.x=100;P.y=100');
 const welcome=run('welcomePath()');
-assert(welcome?.length,'Bramble finds another side when the eastern approach is blocked');
+assert(welcome?.length,'Bramble routes around a fence on the eastern approach');
+assert(welcome[0][0]>100+60,'Bramble starts east of Corin');
+assert(welcome.every(p=>p[0]>=108),'Bramble stays on the eastern approach');
 assert(welcome.every(p=>c.canStand(...p)),'Every approach waypoint is on clear ground');
 assert(Math.hypot(welcome.at(-1)[0]-100,welcome.at(-1)[1]-100)<=36,'Bramble finishes beside Corin');
-console.log('PASS: Bramble approaches from another side when a fence blocks the usual arrival point.');
+console.log('PASS: Bramble approaches from the east and walks around local fences.');

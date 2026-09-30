@@ -127,7 +127,7 @@ function syncThornwellRoyals(){
   // when the editor's extracted furniture is available.
   const table=(MD.roomActors||[]).find(o=>o.editKey==='remaining:tavern:18');
   const dx=table?table.x-396:0,dy=table?table.y-187:0;
-  for(const [i,pos]of [[396,170],[369,181],[426,181],[440,210]].entries())
+  for(const [i,pos]of [[396,153],[369,181],[426,181],[440,210]].entries())
     npcs.push(thornwellRoyalActor(THORNWELL_ROYALS[i],pos[0]+dx,pos[1]+dy));
 }
 function thornwellKing(){return npcs.find(n=>n.thornwellRoyal&&n.n==='King Halvard');}
