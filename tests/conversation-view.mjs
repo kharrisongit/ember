@@ -46,7 +46,7 @@ click(box.querySelector('.deckProfileToggle'));assert(box.classList.contains('dr
 assert(box.querySelector('.deckProfileQuote').querySelector('blockquote'));
 click(box.querySelector('.conversationGoodbye'));
 assert(!rows.querySelectorAll('.deckTopic').some(n=>/chapter/i.test(n.getAttribute('aria-label'))));
-run(`askShut();thornwellRoyal.stage=3;var king={n:'King Halvard',thornwellRoyal:true,x:150,y:150};
+run(`askShut();MAPID='tavern';brambleQuest=3;thornwellRoyal.stage=3;var king={n:'King Halvard',thornwellRoyal:true,x:150,y:150};
 var dismissals=0;thornwellDismissAudience=()=>{dismissals++;};
 openThornwellAudience(king);EmberConversationFlow.openChat();`);
 assert.equal(run('dismissals'),0,'Opening topics does not dismiss the king');
