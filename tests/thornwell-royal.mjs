@@ -95,7 +95,7 @@ console.log(`PASS: ${residents.length} residents keep Aurelius secret; four roya
 console.log('Checking the published outdoor route…');
 run(`loadMap('world');const royalExit=W.maps.tavern.doors.find(d=>d.to==='world');P.x=royalExit.tx*TS+8;P.y=royalExit.ty*TS+TS;cam.x=P.x-200;cam.y=P.y-150;thornwellDoorArrived('tavern');`);
 assert.equal(run('thornwellRoyal.stage'),5);
-assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3846.5,3990.5,4022.5],'Outdoor tables are moved two tiles away from the entrance path');
+assert.deepEqual(Array.from(run(`MD.roomActors.filter(a=>/^tavern_patio_table_/.test(a.spr)).map(a=>a.x)`)),[3814.5,3782.5,3990.5,4022.5],'Published outdoor table positions preserve the entrance path');
 assert(run(`canStand(3913,1068)&&canStand(3913,1080)`),'The actual entrance corridor stays walkable');
 const before=run('[P.x,P.y]');
 run('thornwellDeparture()');

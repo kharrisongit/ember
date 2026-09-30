@@ -1,13 +1,13 @@
 /* Hollybeck: twenty sections with east/west switchbacks and the original skull chamber. */
 async function prepareExpandedHollybeckTemple(){
   if(W.maps.sn1.hollybeck)return;
-  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260924-sanctum2');
+  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260930-room-space');
   if(!response.ok)throw Error('Hollybeck temple layout could not load');
   const plans=await response.json(),old=W.maps.sn1,outside=old.doors.find(d=>d.to==='world');
   const chamberProps=old.roomActors.filter(o=>!o.editableWall&&o.y<512).map(o=>({...o}));
   const chamberBlocks=old.roomBlocks.filter(b=>b[1]<512).map(b=>b.slice());
   const images=await Promise.all(Object.keys(plans).map(async id=>{
-    const image=new Image();image.src='assets/interiors/hollybeck-temple/'+id+'.png?v=20260924-hollybeck1';
+    const image=new Image();image.src='assets/interiors/hollybeck-temple/'+id+'.png?v=20260930-room-space';
     await image.decode();return [id,image];
   }));
   for(const [id,image] of images){
@@ -102,7 +102,7 @@ function stepHollybeckTemple(dt){
 }
 function stepExpandedDragonHazards(dt){
   for(const a of MD.templeHazards){
-    const disabled=expandedTrapDisabled(a.hall),phase=(MD.templeClock+a.offset)%a.period;
+    const disabled=expandedTrapDisabled(a.hall),phase=(MD.templeClock*(a.type==='saw'?1.5:1)+a.offset)%a.period;
     if(a.type==='flame'){
       a.frame=disabled||phase<1.6||phase>=2.5?0:Math.min(8,1+Math.floor((phase-1.6)/.1));
       a.active=!disabled&&a.frame>=3&&a.frame<=6;
@@ -110,7 +110,7 @@ function stepExpandedDragonHazards(dt){
     }else{
       a.active=!disabled&&phase>=1.4&&phase<4.2;
       const prev=a.x;a.x=a.minX+12+(a.active?(a.maxX-a.minX-24)*Math.sin((phase-1.4)/2.8*Math.PI):0);
-      a.frame=a.active?Math.floor(MD.templeClock*12)%6:0;
+      a.frame=a.active?Math.floor(MD.templeClock*18)%6:0;
       if(a.active&&Math.abs(P.y-a.y)<12&&P.x>Math.min(prev,a.x)-11&&P.x<Math.max(prev,a.x)+11)hurtPlayer(1);
     }
   }

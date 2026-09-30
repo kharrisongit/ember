@@ -1628,6 +1628,7 @@ function cropForegroundMask(data,w,h){
   return fg;
 }
 async function buildHouseFurnitureLayers(){
+  await prepareJourneyArt();
   await prepareMillwoodInteriors();
   await prepareHouseLoot();
   await prepareExpandedFirstTemple();
@@ -3694,7 +3695,7 @@ function presentCamera(dt){
   restoreCameraTarget();
   const target={...cam},cx=cam.x+VW/cam.z/2,cy=cam.y+VH/cam.z/2;
   const old=cameraPresentation;
-  const cinematic=!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
+  const cinematic=!!scene?.thornwellSummons||!!greenCamera||!!hatchCamera||!!bossScene||!!globalThis.window?.EmberArenaEntry?.holding();
   const scripted=!mapGesturesAllowed()&&(cinematic||old?.cinematic||old?.settling);
   const reset=!old||old.map!==MAPID||old.mode!==mode||fade>=.99;
   const zooming=scripted&&!reset&&(Math.abs(old.z-cam.z)>.001||Math.hypot(old.cx-cx,old.cy-cy)>.1||old.settling);
@@ -3717,6 +3718,7 @@ function worldArtVisible(x,y,w,h,vw,vh){
 
 function drawWorld(t, dt) {
   frameGreenEncounter();
+  if(typeof frameThornwellCamera==='function')frameThornwellCamera();
   globalThis.window?.EmberArenaEntry?.frameCamera();
   presentCamera(dt);
   const z = cam.z;
@@ -6344,7 +6346,7 @@ let hatchScene = null;
 let hatchExit = false;
 let hatchCamera = null;
 let deflectCamera = null;
-function cameraOwnsView() { return !!greenCamera || !!globalThis.window?.EmberArenaEntry?.holding() || !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
+function cameraOwnsView() { return !!scene?.thornwellSummons || !!greenCamera || !!globalThis.window?.EmberArenaEntry?.holding() || !!hatchCamera || !!bossScene || !!deflectCamera || !!fishing; }
 function stepDeflectCamera(dt) {
   const c = deflectCamera;
   if (!c) return;
@@ -6803,7 +6805,6 @@ function faceToward(m, x, y) {
   m.kf = sideways ? (dx > 0 ? "e" : "w") : m.f;
 }
 function npcHere(m) {
-  if(m.n==="Hettie"&&hasDragon()&&(nanGiftPending()||m.nanSceneHidden))return false;
   if(m.fatherCompassVisitor&&!m.nanDeparting&&!nanGiftPending()&&!(scene?.nanGifts&&scene.npcActor===m))return false;
   if(m.progressionWorker&&!journeyGateClosed(m.progressionWorker))return false;
   if(m.editorDeleted||(m.devLineup&&(typeof npcLineupVisible!=='function'||!npcLineupVisible(m))))return false;
@@ -6829,11 +6830,31 @@ function stepHettie() {
   if (MAPID !== "world" || quest < Q.KING) return;
   const her = npcs.find(n => n.n === "Hettie");
   if (!her) return;
-  // She has already left before Corin returns with Aurelius. Keep her out of
-  // the farewell, then resume her farm routine once it is outside the view.
-  if (hasDragon() && nanGiftPending()) her.nanSceneHidden = true;
-  if (scene) return;
-  if (her.nanSceneHidden && !nanGiftPending() && offScreen(her)) delete her.nanSceneHidden;
+  delete her.nanSceneHidden;
+  const farewell=scene?.nanGifts||npcs.some(n=>n.nanDeparting);
+  if(farewell){
+    if(!her.nanSceneAside){her.nanSceneAside=true;her.nanResume=her.goto?.slice();her.goto=null;}
+    // Stay in view. Only step a short distance aside if she is inside the
+    // conversation; otherwise pause her farm route exactly where she is.
+    if(!her.goto&&her.nanAsideRoute?.length)her.goto=her.nanAsideRoute.shift();
+    const cast=[P,scene?.npcActor,dragon.on?dragon:null].filter(Boolean);
+    if(!her.goto&&cast.some(n=>Math.hypot(her.x-n.x,her.y-n.y)<64)){
+      for(const radius of [24,40,56,72]){
+        let target=null;
+        for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1],[-.7,-.7],[.7,-.7]]){
+          const x=her.x+dx*radius,y=her.y+dy*radius;
+          if(cast.every(n=>Math.hypot(x-n.x,y-n.y)>=72)&&canNpcStand(x,y,her)){
+            const path=maddockWalkPath(her,[x,y],(x,y)=>canNpcStand(x,y,her));
+            if(path){target=path;break;}
+          }
+        }
+        if(target){her.nanAsideRoute=target;her.goto=target.shift();break;}
+      }
+    }
+    return;
+  }
+  if(her.nanSceneAside){delete her.nanSceneAside;her.goto=her.nanResume||null;delete her.nanResume;delete her.nanAsideRoute;}
+  if(scene)return;
   beginHettieWalk(her);
 }
 
@@ -7545,7 +7566,6 @@ function showScene() {
     sayOff();showFace(null);return;
   }
   if(globalThis.window?.EmberConversationFlow?.beforeLine(scene))return;
-  if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();
   const line = scene.waiting ? "..." :
     scene.lines[Math.min(scene.i, scene.lines.length - 1)];
   const colon = line.indexOf(": ");
@@ -11149,7 +11169,8 @@ function placeBrambleBesideCorin(dog){
 }
 function brambleWelcomeInside(){
   const town=MD.regions?.find(r=>r.name==='Thornwell')||{x0:220,x1:320,y0:44,y1:150};
-  const inset=8;
+  const inset=2;
+  if(P.x>=(town.x0-4)*TS&&P.x<=(town.x0+inset)*TS&&Math.abs(P.y-112*TS)<=3*TS)return true;
   return P.x>=(town.x0+inset)*TS&&P.x<=(town.x1-inset)*TS&&P.y>=(town.y0+inset)*TS&&P.y<=(town.y1-inset)*TS;
 }
 function syncBrambleParty() {

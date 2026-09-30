@@ -1,0 +1,35 @@
+{
+  "generator": "Built-in image_gen",
+  "assets": [
+    {
+      "file": "assets/props/sandspire-caravan.png",
+      "prompt": "Use case: stylized-concept. Asset type: transparent pixel-art game prop for a 2D top-down fantasy RPG with 16-pixel ground tiles and 24–32 pixel characters. Generate ONE merchant caravan wagon for a desert town, stationary, no camels or people included. A compact wooden wagon with four wooden wheels, a warm cream canvas canopy, a few tied desert travel bundles, muted teal and rust trim. View from above and from the south at the classic Zelda/Stardew RPG three-quarter overhead angle; wagon's long axis left-to-right, wheels visible along lower side. Hand-pixelled 16-bit SNES style with bold readable clusters, about 96 pixels wide by 64 pixels high worth of detail, clean dark brown pixel outlines, restrained shaded colors; render at a larger integer scale if needed. Object alone centered with generous transparent margin, entire wagon visible, short shafts tucked close. Genuine transparent background. No floor, no sand, no backdrop, no text, no watermark, no frame, no grid, no characters, no photographic texture, no smooth gradients. Final object must read clearly when displayed at 96 by 64 game pixels.",
+      "refinement": "Keep the wagon unchanged; remove exterior haze and preserve clear alpha transparency.",
+      "runtimeCrop": [
+        76,
+        138,
+        1390,
+        746
+      ],
+      "displaySize": [
+        96,
+        52
+      ]
+    },
+    {
+      "file": "assets/sprites/hollybeck-snow-child.png",
+      "character": "Tobin",
+      "prompt": "Use case: stylized-concept. Asset type: one transparent pixel-art NPC sprite for a classic 2D top-down fantasy RPG with 16-pixel tiles. Primary request: a cheerful young boy building snowmen in a snowy medieval village. ONE full-body child standing, facing south toward the viewer, small boots close together, arms relaxed with one wool mitten holding a small snowball. Blue wool winter coat, warm rust-red knitted bobble hat, yellow scarf, brown boots, a few visible dark hair pixels, friendly face. Small child proportions with large head, clearly different from an adult woman. Classic SNES hand-pixelled sprite, crisp large pixel clusters, 24 pixels wide and 32 pixels tall worth of detail rendered at integer enlargement, dark muted outline, simple limited palette, readable eyes, subtle overhead RPG angle showing top of hat. Entire single figure centered and uncut with generous transparent margin. GENUINELY TRANSPARENT alpha background, no scenery, no ground, no glow or colored haze, no shadow beyond a small tight pixel shadow at feet. No text, no watermark, no frame, no sheet, no extra poses or characters. Must read well as a stationary 24 by 32 pixel character.",
+      "runtimeCrop": [
+        347,
+        277,
+        403,
+        881
+      ],
+      "displaySize": [
+        12,
+        26
+      ]
+    }
+  ]
+}

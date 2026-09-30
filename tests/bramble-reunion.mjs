@@ -7,7 +7,7 @@ assert.equal(run("W.maps.tavern.npcs.find(n=>n.n==='Fen').charm"),'twin');
 run("brambleQuest=1;MAPID='world';MD=W.maps.world;quest=Q.DONE;charm.twin=true;openNpcTopics(W.maps.world.npcs.find(n=>n.n==='Wren'))");
 assert.equal(run('ask.opts[1].n'),'Do you know Bramble?');run('ask.opts[1].go()');assert.match(run('scene.lines.join(" ")'),/Copper Cup/);
 run("sayNpc=null;scene=null;MAPID='tavern';MD=W.maps.tavern;brambleMap='tavern';npcs=[{n:'Rowan the Hunter',x:240,y:220,brambleCompanion:true},{n:'Bramble',pettable:true,x:220,y:212,brambleCompanion:true}]");
-c.canStand=()=>true; // Reunion sequencing is independent of the room collision grid.
+c.canStand=c.canNpcStand=()=>true; // Reunion sequencing is independent of the room collision grid.
 assert(run('tryBrambleReunion(npcs[0])'));run('scene.after();scene=null');
 const dog=run('npcs[1]'),start=[dog.x,dog.y];
 run("for(let i=0;i<120&&brambleDeparture.phase==='south';i++)stepThornwellWelcome(1/60)");

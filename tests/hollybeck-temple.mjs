@@ -39,7 +39,7 @@ run(game.slice(game.indexOf('function markBossGone(f) {'),game.indexOf('function
 const distances={},edges=new Set();let chests=0,empty=0,ambush=0,horizontal=0,seals=0,traps=0;
 for(const [id,m] of maps){
  assert.equal(m.travel,id==='sn1');assert(clear(m,...m.spawn));const p=m.templePlan;distances[id]=flood(m);
- if(id!=='sn_sanctum')assert(p.chambers.every(([l,t,r,b])=>r-l===128&&b-t===96),'compact rooms');
+ if(id!=='sn_sanctum')assert(p.chambers.every(([l,t,r,b])=>r-l===144&&b-t===112),'expanded ordinary rooms');
  horizontal+=p.floors.filter(([l,t,r,b])=>b-t===32&&r-l>=160).length;
  for(const a of m.roomActors.filter(a=>a.houseLoot)){
   chests++;if(a.houseLoot.ghost)ambush++;else if(a.houseLoot.gold===0)empty++;
@@ -74,7 +74,7 @@ for(const [i,b]of originalChamber.actors.entries()){
 }
 for(const [l,t,r,b]of originalChamber.blocks){
  const isChest=Math.abs((l+r)/2-(originalChest.x*16+8))<3&&Math.abs(b-(originalChest.y*16+16))<2&&r-l<32;
- const expected=isChest?[150,128,170,136]:[l,t-256,r,b-256];
+ const expected=isChest?[plan.sn_sanctum.heartstone[0]-10,plan.sn_sanctum.heartstone[1]-8,plan.sn_sanctum.heartstone[0]+10,plan.sn_sanctum.heartstone[1]]:[l,t-256,r,b-256];
  assert(sanctum.roomBlocks.some(box=>box.join(',')===expected.join(',')));
 }
 const heart=plan.sn_sanctum.heartstone;assert(!flood(sanctum,true).has([heart[0],heart[1]+32].join(',')));assert(flood(sanctum).has([heart[0],heart[1]+32].join(',')));
@@ -95,26 +95,11 @@ for(const [id,m] of maps)for(const a of m.roomActors.filter(a=>a.houseLoot)){
  }else assert.equal(notices,noticeCount+2);
 }
 for(const [id,m] of maps)for(const h of m.templePlan.hazards){
- c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};m.templeClock=2;
+ c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8/1.5;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};m.templeClock=2;
  const before=hits;run('stepExpandedTemple(0)');assert(hits>before,id+' '+h.type+' damages only while active');
  for(let i=0;i<100;i++){run('stepHollybeckTemple(.05)');assert(m.templeHazards.every(a=>a.x>=a.minX&&a.x<a.maxX),'saws stay inside corridor');}
  c.P={x:h.lever[0],y:h.lever[1]};assert(run('tryExpandedTempleLever()'));assert(run('expandedTrapDisabled('+JSON.stringify(h.id)+')'));
  run('stepHollybeckTemple(0)');assert(m.templeHazards.filter(a=>a.hall===h.id).every(a=>!a.active&&a.frame===0));
 }
-Object.assign(c,{quest:1,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,
- treasuryTaken:new Set(),dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,activeSaveSlot:1,migrateLegacySave(){},readSaveSlot:()=>saved,
- syncDragonVitality(){},hasSword:()=>true,loadMap(id){c.MAPID=W.maps[id].templeLegacy||id;c.MD=W.maps[c.MAPID];},cam:{},clampCam(){},chunks:{clear(){}},
- canStand:(x,y)=>clear(c.MD,x,y)});
-run(game.slice(game.indexOf('function recoverTempleArrival('),game.indexOf('function blockedByTempleGate(')));
-run(part3.slice(part3.indexOf('function captureSave()'),part3.indexOf('function saveToSlot(')));
-run(part3.slice(part3.indexOf('function loadGame('),part3.indexOf('let mounted =')));
-c.MAPID='sn_west';c.MD=W.maps.sn_west;c.P={x:c.MD.spawn[0],y:c.MD.spawn[1]};saved=JSON.parse(JSON.stringify(run('captureSave()')));
-assert.equal(saved.hollybeckLayoutVersion,1);assert(Object.keys(saved.templeDefeated).some(k=>k.startsWith('sn_')));assert.equal(saved.houseLootTaken.length,38);
-for(const k of Object.keys(c.bossGone))delete c.bossGone[k];run('houseLootTaken.clear()');assert(run('loadGame(1)'));assert.deepEqual(c.bossGone,saved.templeDefeated);assert.equal(run('houseLootTaken.size'),38);
-for(const map of ['sn1','sn4']){
- c.breathHas.shadow=true;run('chestOpen.sn_sanctum=true;chestAnim={c:CHESTS[1],t:0}');
- saved={map,x:160,y:1000,gold:0,quest:1,templeLayoutVersion:2,breathHas:{shadow:false}};
- assert(run('loadGame(2)'));assert.equal(c.MAPID,'sn1');assert.deepEqual([c.P.x,c.P.y],plan.sn1.spawn);
- assert.equal(run('houseLootTaken.size'),0);assert.equal(Object.keys(c.bossGone).length,0);assert(!c.breathHas.shadow);assert(!run('chestOpen.sn_sanctum'));assert.equal(run('chestAnim'),null);
-}
-console.log('PASS: 38 one-time chests, eight empty chests, eight delayed hostile ambushes, five guarded exits, two Frost Golems, all 29 trap levers, save persistence, slot isolation and legacy-save relocation.');
+// Actual serializer, old saves and slot isolation run in temple-save-load.mjs.
+console.log('PASS: 38 one-time chests, eight empty chests, eight delayed hostile ambushes, five guarded exits, two Frost Golems and all 29 trap levers.');

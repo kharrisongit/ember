@@ -25,6 +25,29 @@ function blossomRoadDistance(x,y,{a,b}) {
   const t=l2?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/l2)):0;
   return Math.hypot(x-a[0]-t*dx,y-a[1]-t*dy);
 }
+function blossomRoadJoinCaps(roads){
+  return roads.map(r=>{
+    const vertical=r.a[0]===r.b[0],axis=vertical?1:0,across=1-axis;
+    const direction=Math.sign(r.b[axis]-r.a[axis]),length=Math.abs(r.b[axis]-r.a[axis]);
+    const caps={...r,capAxis:axis,capDirection:direction};
+    for(const [end,p] of [['capStart',r.a],['capEnd',r.b]])for(const other of roads){
+      if(r.id===other.id||vertical===(other.a[0]===other.b[0]))continue;
+      // Only a T-junction: the endpoint meets the interior of another leg.
+      // Its clearance ends on that road's centreline, not across its far verge.
+      const lo=Math.min(other.a[across],other.b[across]),hi=Math.max(other.a[across],other.b[across]);
+      const join=other.a[axis];
+      if(p[across]<=lo+other.half+1||p[across]>=hi-other.half-1||Math.abs(p[axis]-join)>other.half+1)continue;
+      const at=(join-r.a[axis])*direction;
+      if(end==='capStart'&&Math.abs(at)<=other.half+1)caps.capStart=at;
+      if(end==='capEnd'&&Math.abs(at-length)<=other.half+1)caps.capEnd=at;
+    }
+    return caps;
+  });
+}
+function blossomWithinRoadCaps(x,y,r){
+  const along=((r.capAxis===0?x:y)-r.a[r.capAxis])*r.capDirection;
+  return !(r.capStart!==undefined&&along<r.capStart-.04||r.capEnd!==undefined&&along>r.capEnd+.04);
+}
 function blossomPoint(x,y,details) {
   return {x:Math.round(x*16)/16,y:Math.round(y*16)/16,...details};
 }
@@ -65,6 +88,7 @@ function blossomRouteCandidates(roads,row) {
       p.transition=(r.joinXs||[r.joinX]).some(x=>x!==undefined&&Math.abs(p.x-x)<14);
       if(r.minY!==undefined&&p.y<r.minY)continue;
       if(r.minX!==undefined&&p.x<r.minX||r.maxX!==undefined&&p.x>=r.maxX)continue;
+      if(!blossomWithinRoadCaps(p.x,p.y,r))continue;
       if(!treeBorderInBounds(p.x,p.y,r.bounds))continue;
       result.push(p);
     }
@@ -100,6 +124,7 @@ function blossomTownCandidates(t,row) {
   return result;
 }
 function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
+  roads=blossomRoadJoinCaps(roads);
   const result=[];
   const occupied=new Map(),gridKey=(x,y)=>Math.floor(x/4)+','+Math.floor(y/4);
   const crowded=(p,clearance)=>{
@@ -125,7 +150,7 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
       // At this short offset join, preserve the outer rows across the bend.
       // Physical road clearance and the spacing grid still keep it open.
       const borderRow=p.roofBacking||p.transition?0:row;
-      if(roads.some(r=>blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
+      if(roads.some(r=>blossomWithinRoadCaps(p.x,p.y,r)&&blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
         Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
       if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,borderRow))))continue;
@@ -167,10 +192,10 @@ function treeBorderScope(list,legsFor) {
   const roads=list.filter(f=>f.kind==='route').flatMap(f=>{
     const native=nativeRoute(f),oak=f.style==='oak',birch=f.style==='birch',dying=f.style==='dying';
     const temple=templeRoute(f);
-    // Own the full main desert avenues and their hunting loops. Managing only
+    // Own the full desert avenues and their hunting loops. Managing only
     // the first horizontal leg left its north bend bare and let saved temple
     // trees survive in the cactus line beside the eastern hunting turnoff.
-    const desert=f.style==='desert'&&[33,44,9160,9162,9166].includes(f.id);
+    const desert=f.style==='desert';
     const managed=f.style==='blossom'||native||oak||birch||temple||dying||desert;
     return legsFor(f).flatMap(([a,b])=>{
       const road={a,b,id:f.id,half:(f.w||5)>>1,band:f.band||20,
@@ -285,7 +310,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const falls=features.find(f=>f.kind==='landmark'&&f.label==='Forgefalls');
   const cliff=falls&&objs.find(o=>NAMES[o.s]==='cliff_fall'&&Math.abs(o.x/TS-falls.x)<2&&Math.abs(o.y/TS-falls.y)<2);
   if(cliff&&SPR.cliff_fall)sceneryRow((cliff.x-SPR.cliff_fall[2]/2)/TS,
-    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS+2,'falls');
+    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS-1,'falls');
   const sceneryBand=(x,y)=>scenery.some(p=>Math.abs(p.x-x)<3&&Math.abs(p.y-y)<2.5);
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
@@ -344,7 +369,10 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     if(inTownArea(x,y)&&!townBorder(x,y)&&p.kind!=='scenery')return false;
     const sandy=(p.region==='dying'||p.region==='desert'||p.transition&&p.region==='blossom')&&
       typeof SAND!=='undefined'&&terr[ty*MW+tx]===SAND;
-    if(!sandy&&![GRASS,WALL].includes(terr[ty*MW+tx])||rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx)||
+    // Forgefalls' road is directly below the cliff. Put this row at the
+    // existing rock edge, with its artwork in front, rather than in the road.
+    const cliffFoot=p.kind==='scenery'&&p.source==='falls'&&cliff&&(y+1)*TS===cliff.y;
+    if(!sandy&&![GRASS,WALL].includes(terr[ty*MW+tx])||!cliffFoot&&(rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx))||
       (typeof felledNew!=='undefined'&&felledNew.includes(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
     if(p.kind==='scenery'&&(MD.doors||[]).some(d=>{
@@ -376,7 +404,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   for(const p of plan) {
     const [tx,ty]=cell(p);
     fobjs.push({id:id--,s:NAME2I[p.tree||'blo_big'],x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
-      blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical,borderRegion:p.region||'blossom'});
+      blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical,borderRegion:p.region||'blossom',
+      ...(p.kind==='scenery'&&p.source==='falls'?{sy:cliff.y+1}: {})});
     terr[ty*MW+tx]=WALL;
   }
 }

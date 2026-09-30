@@ -23,7 +23,7 @@ assert.equal(Object.keys(plan).length,10);assert.equal(Object.values(plan).reduc
 let chests=0,empty=0,ambush=0,doors=0,west=0,east=0,trapCount=0;const distances={};
 for(const [id,p] of Object.entries(plan)){
  const m=W.maps[id];assert.equal(m.travel,id==='ds1');assert(clear(m,...m.spawn),id+' spawn');distances[id]=flood(m);
- if(id!=='ds_sanctum')assert(p.chambers.every(([l,t,r,b])=>r-l===128&&b-t===96));
+ if(id!=='ds_sanctum')assert(p.chambers.every(([l,t,r,b])=>r-l===144&&b-t===112));
  const n=p.chambers[0],far=p.chambers.at(-1);if(far[0]<n[0])west++;else if(far[0]>n[0])east++;
  for(const a of m.roomActors.filter(a=>a.houseLoot)){
   chests++;if(a.houseLoot.ghost)ambush++;else if(a.houseLoot.gold===0)empty++;
@@ -77,7 +77,7 @@ for(const [id,m] of Object.entries(W.maps))for(const a of m.roomActors?.filter(a
 }
 // Arrow/cannon hazards cannot act as invisible spikes, cross walls, or survive their lever.
 for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards||[]){
- c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};const before=hits;
+ c.MD=m;c.MAPID=id;c.foes=[];c.tAcc=2.8/1.5;c.P={x:(h.cross[0]+h.cross[1])/2,y:h.lines[0]};const before=hits;
  run('stepExpandedTemple(0)');assert.equal(hits-before,h.type==='spikes'?1:0);
  if(h.type!=='spikes'){
   m.templeClock=2.3;run('stepSandspireTemple(0)');assert(m.templeShots.some(s=>s.hall===h.id));
@@ -86,22 +86,8 @@ for(const [id,m] of Object.entries(W.maps))for(const h of m.templePlan?.hazards|
  c.P={x:h.lever[0],y:h.lever[1]};assert(run('tryExpandedTempleLever()'));assert(run('expandedTrapDisabled('+JSON.stringify(h.id)+')'));
  run('stepSandspireTemple(0)');assert(m.templeShots.every(s=>s.hall!==h.id));
 }
-// Save persistence and slot isolation use the actual game serializer/loader.
-Object.assign(c,{quest:1,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,
- treasuryTaken:new Set(),dragon:{hp:5,maxHp:5},fishingPole:false,trial:null,activeSaveSlot:1,migrateLegacySave(){},readSaveSlot:()=>saved,
- syncDragonVitality(){},hasSword:()=>true,loadMap(id){c.MAPID=id;c.MD=W.maps[id];},recoverTempleArrival(){},cam:{},clampCam(){},chunks:{clear(){}}});
-run(part3.slice(part3.indexOf('function captureSave()'),part3.indexOf('function saveToSlot(')));
-run(part3.slice(part3.indexOf('function loadGame('),part3.indexOf('let mounted =')));
-c.MAPID='ds_west';c.MD=W.maps.ds_west;c.P={x:544,y:1536};saved=JSON.parse(JSON.stringify(run('captureSave()')));
-assert.equal(saved.sandspireLayoutVersion,1);assert(Object.keys(saved.templeDefeated).some(k=>k.startsWith('ds_')));assert.equal(saved.houseLootTaken.length,3);
-for(const k of Object.keys(c.bossGone))delete c.bossGone[k];run('houseLootTaken.clear()');assert(run('loadGame(1)'));
-assert.deepEqual(c.bossGone,saved.templeDefeated);assert.equal(run('houseLootTaken.size'),3);
-// A different slot must discard an unfinished opening and another slot's claimed Heartstone.
-c.breathHas.ice=true;c.breathHas.shadow=true;c.chestOpen.ds_sanctum=true;c.chestOpen.sn1=true;c.chestAnim={c:{map:'ds_sanctum'},t:0,phase:'lid'};
-saved={map:'ds1',x:160,y:1000,gold:0,quest:1,templeLayoutVersion:2,breathHas:{ice:false,lightning:false}};
-assert(run('loadGame(2)'));assert.deepEqual([c.P.x,c.P.y],plan.ds1.spawn);assert.equal(run('houseLootTaken.size'),0);assert.equal(Object.keys(c.bossGone).length,0);
-assert.equal(c.chestAnim,null);assert.equal(c.chestOpen.ds_sanctum,false);assert(!c.chestOpen.sn1);assert.equal(c.breathHas.ice,false);assert.equal(c.breathHas.shadow,false);
-console.log('PASS: chamber seals, two Stone Golems guarding Ice Heartstone, three delayed one-time ghost ambushes, projectile bounds, all trap levers, actual save/load, old-save relocation and slot isolation.');
+// Actual serializer, old saves and slot isolation run in temple-save-load.mjs.
+console.log('PASS: temple combat, ghost ambushes, projectile bounds and trap levers.');
 // Retain the actual interior teleport entry and safe destination.
 run(game.slice(game.indexOf('function storyTeleport(id) {'),game.indexOf('const KING_DRAGON_SPR')));
 run(part3.slice(part3.indexOf('function placesOf() {'),part3.indexOf('function buildTravel() {')));

@@ -8,7 +8,7 @@ const c=vm.createContext({hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true
  toast(){},saveGame:()=>saves++,showReveal:(...args)=>reveal=args,playScene:(lines,opts)=>c.scene={lines,i:0,...opts}});
 const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
-c.stepFatherCompass();assert.equal(c.scene,undefined,'no reveal before Nan gives the compass');
+assert.equal(c.scene,undefined,'No automatic compass scene');
 assert.equal(c.nanGiftBeat(5),false);assert.equal(saves,0);
 assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_mapCompass');
 assert.equal(c.nanGiftBeat(6),false);assert.equal(saves,1,'Compass cannot duplicate');
@@ -18,28 +18,23 @@ assert.equal(c.nanGiftBeat(12),false);assert(c.worldMapUnlocked());assert.equal(
 assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,1,'Map is part of the same gift');
 assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
 assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');
-assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),false);
+assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),true);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
-for(const prop of ['fade','fadeDir','doorMotion','ovl','ask','bagOpen','editing','sayNpc']){
- c[prop]=1;c.stepFatherCompass();assert.equal(c.scene,undefined,prop+' defers reveal');c[prop]=0;
-}
-c.MD={mountainPassage:true};c.stepFatherCompass();assert.equal(c.scene,undefined);
-c.MD={templeExpanded:true,templePlan:{}};c.stepFatherCompass();assert.equal(c.scene.compassReveal,true);
-assert.match(c.scene.lines[0],/light/);assert.equal(c.scene.lines[1],'Corin: Thanks, Dad.');
-assert.equal(run('templeCompass.awakened'),false,'waits for Corin’s response');
-c.awakenFatherCompass();assert.equal(saves,3);c.scene=null;c.stepFatherCompass();assert.equal(c.scene,null,'only once');
-const saved=run('({owned:templeCompass.owned,awakened:templeCompass.awakened})');
-c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false,'old saves reset ownership');
-c.restoreFatherCompass(saved);assert.equal(run('templeCompass.awakened'),true,'new saves keep awakening');
-c.awakenFatherCompass();assert.equal(saves,3,'idempotent awakening');
-c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false,'awakening requires ownership');
+assert.equal(c.stepFatherCompass,undefined,'The first-temple glow dialogue is removed');
+c.restoreFatherCompass({owned:true,awakened:false});
+assert.equal(run('templeCompass.awakened'),true,'Existing dormant gifts immediately work');
+assert.equal(saves,2,'Migration does not replay a reveal or duplicate a gift');
+c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false);
+c.restoreFatherCompass({owned:true});assert.equal(run('templeCompass.awakened'),true);
+c.restoreFatherCompass({awakened:true});assert.equal(run('templeCompass.awakened'),false);
 const game=read('js/generated/game-part-2.js'),bag=read('js/generated/game-part-3.js');
-assert(game.includes('if (scene.compassReveal && scene.i >= 1) awakenFatherCompass();'));
+assert(!game.includes('scene.compassReveal'));
+assert(!read('js/temple-compass.js').includes('Thanks, Dad.'));
 assert(game.includes('if(scene.nanGifts&&nanGiftBeat(scene.i))return;'));
 assert(game.includes("best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()"));
 assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven}'));
-console.log('PASS: Nan’s heirloom, family history, dormant ownership, transition-safe first temple reveal, exact Corin response and save restoration.');
+console.log('PASS: Nan’s heirloom, family history, immediate guidance without a temple reveal and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,SPR:{},hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
  W:{maps:{house26:{npcs:[{n:'Nan Ferrow'}]}}},MD:{doors:[{to:'house26',x:13,y:420,triggerRect:{x:206,y:6721,w:20,h:29}},{to:'house24',x:23,y:413,triggerRect:{x:376,y:6615,w:16,h:22}},{to:'house25',x:35,y:413,triggerRect:{x:567,y:6612,w:19,h:27}}],features:[{kind:'area',label:'Millwood',x0:0,y0:404,x1:62,y1:453}]},P:{},revealing:false,scene:null,mounted:false,dragon:{air:false,tr:null,on:true},dragonHere:()=>true,dragonCanStand:()=>true,direction4:()=> 's',

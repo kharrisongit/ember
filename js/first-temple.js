@@ -1,11 +1,11 @@
 /* Branched first temple: authored floors also define collision and encounter bounds. */
 async function prepareExpandedFirstTemple(){
   if(W.maps.tp1.templeExpanded)return;
-  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260924-chests-statues1');
+  const response=await fetch('assets/interiors/first-temple/layout.json?v=20260930-room-space');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
   for(const id of Object.keys(layout)){
-    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260923-temple12-corners';
+    const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260930-room-space';
     await image.decode();images[id]=image;
   }
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
@@ -197,7 +197,7 @@ function expandedTempleSolid(x,y){
 function expandedTrapDisabled(id){return foesHeld||bossGone[MAPID+':spikes:'+id]||(MAPID==='tp1_halls'&&bossGone['tp1_halls:spikes']);}
 function expandedSpikeFrame(trap){
   if(expandedTrapDisabled(trap.id))return 0;
-  const phase=(tAcc+trap.phase)%4.8;
+  const phase=(tAcc*1.5+trap.phase)%4.8;
   return phase<2?0:phase<2.45?1:phase<2.65?2:phase<3.85?3:phase<4.1?4:5;
 }
 function stepExpandedTemple(dt){
@@ -221,4 +221,20 @@ function tryExpandedTempleLever(){
   const h=MD?.templePlan?.hazards?.find(h=>Math.hypot(P.x-h.lever[0],P.y-h.lever[1])<=28);
   if(!h)return false;
   bossGone[MAPID+':spikes:'+h.id]=true;saveGame();toast(MD.sandspire||MD.hollybeck||MD.mountainPassage?'The mechanisms fall silent. This hall is safe now.':'The hall spikes settle into the floor.');return true;
+}
+
+// Run after published actor moves: the lever's interaction point must follow
+// its visible actor, and every trap can be switched off from its own exit end.
+function finishTempleFixtures(map){
+  if(!map.templeExpanded||map.mountainPassage)return;
+  for(const h of map.templePlan.hazards||[]){
+    const lever=map.roomActors.find(a=>a.expandedLever===h.id);if(!lever)continue;
+    const mid=(h.cross[0]+h.cross[1])/2,first=Math.min(...h.lines);
+    const hall=map.templeFloors.filter(([l,t,r,b])=>l<=h.cross[0]&&r>=h.cross[1]&&t<=first&&b>=Math.max(...h.lines))
+      .sort((a,b)=>(a[2]-a[0])*(a[3]-a[1])-(b[2]-b[0])*(b[3]-b[1]))[0];
+    if(!hall)continue;
+    const valid=lever.x>=mid+16&&lever.x<=hall[2]-8&&lever.y>=hall[1]+8&&lever.y<=first-16;
+    if(!valid){lever.x=Math.min(mid+24,hall[2]-8);lever.y=Math.min(hall[1]+18,first-16);}
+    h.lever=[lever.x,lever.y];
+  }
 }

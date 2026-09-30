@@ -8,7 +8,7 @@ const draws=[];c.ctx={};c.drawGameImage=(...args)=>draws.push(args);
 vm.runInContext('miningCartsImage.complete=true;miningCartsImage.naturalWidth=887',c);
 c.drawJourneyProp(carts[0],0);
 const [dx,dy,dw,dh]=draws[0].slice(-4);
-assert.deepEqual([dx,dy,dw,dh],[gates.forgewick.x-32,gates.forgewick.y-72,64,128]);
+assert.deepEqual([dx,dy,dw,dh],[Math.round(gates.forgewick.x-27.2),Math.round(gates.forgewick.y+56-108.8),54.4,108.8]);
 assert(gates.forgewick.rect[0]>=dx&&gates.forgewick.rect[1]>=dy&&gates.forgewick.rect[2]<=dx+dw&&gates.forgewick.rect[3]<=dy+dh,'Collision fits the visible barricade');
 assert(fs.existsSync('assets/props/forgewick-mine-carts.png'),'Generated sprite is packaged');
 for(const [key,g] of Object.entries(gates)){
@@ -23,7 +23,7 @@ c.P.x=1515*16;c.P.y=114*16;assert(c.progressionMoveAllowed(1515*16,130*16),'Sand
 c.P.x=2720*16;c.P.y=198*16;assert(c.progressionMoveAllowed(2740*16,198*16),'Hollybeck temple approach stays open');
 c.brambleQuest=2;assert(gates.thornwell.open());c.breathHas.lightning=true;assert(!gates.forgewick.open(),'temple alone does not bypass required equipment');
 c.smithUpgrade=true;c.charm.edge=true;c.glassShield=true;assert(gates.forgewick.open());
-c.breathHas.shadow=true;c.breathHas.ice=true;for(const g of Object.values(gates))assert(!c.progressionSolid(g.x,g.y));
+c.breathHas.ice=true;assert(gates.sandspire.open(),'Sandspire clears after its Ice Heartstone');assert(!gates.hollybeck.open(),'Hollybeck waits for its own Shadow Heartstone');c.breathHas.shadow=true;for(const g of Object.values(gates))assert(!c.progressionSolid(g.x,g.y));
 assert.equal(c.journeyGateProps().length,0,'The repaired roadwork wagon leaves; market stalls stay in their own maps');
 c.MAPID='tp1';assert.equal(c.journeyGateProps().length,0);assert(c.progressionMoveAllowed(0,0));
 assert(fs.readFileSync('js/generated/game-part-2.js','utf8').includes('const HERD_Y = 415;'));
@@ -44,3 +44,20 @@ const game=fs.readFileSync('js/generated/game-part-2.js','utf8');
 assert(game.includes('if(progressionSolid(px,py))return "story";'),'Collision overlay uses a visible gate colour');
 assert(game.includes('if(progressionSolid(px,py))return "roadworks";'),'Collision diagnostics identify roadworks');
 console.log('PASS: early hunting roads cross gate longitudes freely; actual roadblocks remain visible and enforced.');
+
+// Caravan artwork and every camel fit between the actual mountain edges.
+c.breathHas={};c.npcs=[];c.prepareJourneyGates();
+const caravan=c.journeyGateProps().find(o=>o.spr==='story_caravan');assert(caravan);
+for(const o of c.journeyGateProps().filter(o=>o.spr==='camel_sit'||o.spr==='story_caravan')){
+ const width=o.spr==='camel_sit'?48:96;
+ assert(o.x-width/2>=24240&&o.x+width/2<=24352,'Caravan clears the published mountain opening');
+}
+assert(c.npcs.some(n=>n.progressionWorker==='sandspire'&&n.d.some(s=>s.includes('Sandspire Temple'))));
+const child=c.npcs.find(n=>n.progressionWorker==='hollybeck');assert.equal(child.n,'Tobin');assert.equal(child.packSpr,'journey_snow_child');
+assert(!child.portraitAlias);assert(child.d.some(s=>s.includes('come back later')));
+assert(fs.existsSync('assets/props/sandspire-caravan.png'));assert(fs.existsSync('assets/sprites/hollybeck-snow-child.png'));
+c.prepareJourneyGates();assert.equal(c.npcs.filter(n=>n.progressionWorker==='hollybeck').length,1);
+const wagon=c.journeyGateProps().find(o=>o.spr==='story_broken_wagon');draws.length=0;
+vm.runInContext('brokenWagonImage.complete=true;brokenWagonImage.naturalWidth=800;brokenWagonImage.naturalHeight=1280',c);
+c.drawJourneyProp(wagon,0);assert.deepEqual(draws[0].slice(-2),[68,108.8]);
+console.log('PASS: carts reduced 15%, caravan/camels clear the mountain, Sandspire explanation and unique child at the snowmen.');

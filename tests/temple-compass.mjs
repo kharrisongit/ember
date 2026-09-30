@@ -13,7 +13,7 @@ ctx.arc = (...args) => circles.push(args); ctx.rotate = angle => rotations.push(
 const c = vm.createContext({ W, TS:16, DIRT:0, terrRLE:()=>'', window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},
   WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
   fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}), Image:class { async decode() {} },
-  breathHas:{},chestOpen:{},ctx,gameplayStarted:true,mode:'play',editStamp:0,VW:390,VH:600,
+  breathHas:{},chestOpen:{},ctx,tAcc:0,atlasTrackedQuest:'main',gameplayStarted:true,mode:'play',editStamp:0,VW:390,VH:600,
   document:{getElementById:()=>button},setDev:on=>{menu=on;},toast(){} });
 const run = source => vm.runInContext(source, c);
 run(game.slice(game.indexOf('const CHESTS = ['), game.indexOf('function chestHere()')));
@@ -57,16 +57,17 @@ assert.equal(temples.length,35);assert(backwards>0);
 assert.equal(c.compassTempleRoute(W.maps,'world',chests),null);
 assert.equal(c.compassTempleRoute(W.maps,'passage',chests),null);
 
+c.compassSelectedTarget=()=>{const r=c.compassTempleRoute(W.maps,c.MAPID,chests);const chest=r?.chest||chests.find(c=>c.gift==='lightning');return {map:chest.map,x:chest.x*16+8,y:chest.y*16+40,heartstone:true};};
 // The inherited compass persists across temple maps and never draws
-// over boot/the overworld. Resizing keeps the badge in the game viewport corner.
+// over boot. It remains available outside temples. Resizing keeps the badge in the game viewport corner.
 Object.assign(c,{MAPID:'tp1',MD:W.maps.tp1,P:{x:W.maps.tp1.spawn[0],y:W.maps.tp1.spawn[1]}});
 c.drawTempleCompass();assert.equal(draws,0,'off by default');
-c.restoreFatherCompass({owned:true,awakened:false});c.drawTempleCompass();assert.equal(draws,0,'gift remains dormant');
+c.restoreFatherCompass({owned:true,awakened:false});c.drawTempleCompass();assert(draws>0,'The gift works immediately, including older dormant saves');
 c.restoreFatherCompass({owned:true,awakened:true});
 c.drawTempleCompass();assert(draws>0);assert.equal(circles.at(-1)[2],21);
 const cache=run('templeCompass.cache.field');c.drawTempleCompass();assert.equal(run('templeCompass.cache.field'),cache,'reuse field each frame');
 for (const [id,map] of [['world',W.maps.world],['passage',W.maps.passage]]) {
-  const before=draws;Object.assign(c,{MAPID:id,MD:map});c.drawTempleCompass();assert.equal(draws,before,id+' hides pointer');
+  const before=draws;Object.assign(c,{MAPID:id,MD:map});c.drawTempleCompass();assert(draws>before,id+' keeps the compass visible');
 }
 Object.assign(c,{MAPID:'sn_sanctum',MD:W.maps.sn_sanctum,P:fields.get('sn_sanctum').target});
 c.gameplayStarted=false;const before=draws;c.drawTempleCompass();assert.equal(draws,before);

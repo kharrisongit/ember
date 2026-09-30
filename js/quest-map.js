@@ -1,6 +1,7 @@
 /* The atlas follows saved story/knowledge state; it never advances a quest. */
 let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointers=new Map();
-let atlasGesture=null,atlasTab='quest',atlasJournalKnown={},atlasIgnoreClick=false;
+let atlasGesture=null,atlasTab='quest',atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
+function atlasQuestKind(q){return q?.id==='main'||q?.id==='thornwell-royals'||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasMainObjective(){
  const o=(title,place,detail)=>atlasObjective('main',title,place,detail);
@@ -59,6 +60,37 @@ function atlasQuestOptions(){
   if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Heartstone',town+' Temple','Explore the temple and claim the '+key+' Heartstone.');
  if(dragonLearned('trials'))add('trials','The demon’s trials',cinderSeal?'Cinderhold Castle':'Witchmoor',!cinderSeal?'Speak with the demon at Witchmoor after defeating Halvard.':!trialSealPlaced?'Place the Cinderhold Seal in the chamber adjoining the throne room.':'Return to the throne room to challenge the demon.');
  return out;
+}
+// Resolve the journal's destination in game coordinates, never in the
+// illustrated atlas's deliberately compressed picture coordinates.
+function atlasQuestTarget(q){
+ if(!q)return null;
+ const element={'Forgewick Temple':'lightning','Sandspire Temple':'ice','Hollybeck Temple':'shadow'}[q.place];
+ if(element){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
+ if(q.id==='bramble'||q.id==='main'&&/Return Bramble|Bramble.*owner/.test(q.title)){
+  const rowan=MAPID==='tavern'&&npcs.find(n=>n.n==='Rowan the Hunter');return {map:'tavern',x:rowan?.x??256,y:(rowan?.y??220)+32};
+ }
+ if((q.id==='main'||q.id==='thornwell-royals')&&/king’s summons/.test(q.title)){const king=typeof thornwellKing==='function'&&thornwellKing();return {map:'tavern',x:king?.x??396,y:(king?.y??170)+43};}
+ const named={fishing:'Calder',bramble:'Rowan the Hunter',smith:'Dunstan',shield:'Sela','gift:lamp':'Sverre'};
+ let name=named[q.id];
+ if(q.id==='main'){
+  if(/Dunstan/.test(q.title))name='Dunstan';
+  else if(/Sela/.test(q.title))name='Sela';
+  else if(/Bramble.*owner|Return Bramble/.test(q.title))name='Rowan the Hunter';
+ }
+ for(const [id,map] of Object.entries(W.maps)){
+  if(map.templeLegacy)continue;
+  const list=id===MAPID?npcs:map.npcs||[];
+  const n=list.find(n=>!n.away&&!n.editorDeleted&&(name?n.n===name:q.id.startsWith('gift:')&&n.charm===q.id.slice(5)));
+  if(n)return {map:id,x:n.x,y:n.y+32};
+ }
+ const world=W.maps.world,area=(world.features||[]).find(f=>f.kind==='area'&&atlasCanonical(f.label||f.place)===q.place);
+ if(area)return {map:'world',x:(area.x0+area.x1)/2*TS,y:(area.y0+area.y1)/2*TS};
+ const landmark=(world.features||[]).find(f=>atlasCanonical(f.label||f.place)===q.place);
+ if(landmark)return {map:'world',x:landmark.x*TS+8,y:landmark.y*TS+16};
+ const interior=Object.entries(W.maps).find(([id,map])=>id!=='world'&&!map.templeLegacy&&atlasPlaceFor(map)===q.place);
+ if(interior)return {map:interior[0],x:interior[1].spawn[0],y:interior[1].spawn[1]};
+ return null;
 }
 const ATLAS_CONNECTIONS=[
  ['Millwood','Elder’s Home','Northern Woods','Shroom Pass','Sporewood','Sporehollow','Northern Shroom Field'],
@@ -121,9 +153,9 @@ function atlasQuestStages(q){
  if(q?.id==='trials')return [['Receive the seal',!!cinderSeal],['Place the seal',!!trialSealPlaced],['Win the trial',atlasQuestComplete('trials')]];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
-function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown};}
+function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen};}
 function restoreQuestJournal(saved){
- atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasTab='quest';
+ atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasTab='quest';
  for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===q.place))atlasJournalKnown[id]={id,title:q.title,detail:q.detail,place:q.place};
 }
 function atlasCompletedEntries(){
@@ -171,7 +203,7 @@ function atlasSetTab(tab){
  document.querySelectorAll('[data-atlas-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.atlasTab===tab)));
  document.getElementById('atlasDetails').scrollTop=0;
 }
-function atlasTrack(id){atlasTrackedQuest=id;atlasSetTab('quest');atlasBegin();if(typeof saveGame==='function')saveGame();}
+function atlasTrack(id){templeCompass.cache=null;atlasTrackedQuest=id;atlasSetTab('quest');atlasBegin();if(typeof saveGame==='function')saveGame();}
 function atlasBuildPlaces(){
  const places=document.getElementById('atlasPlaces');places.replaceChildren();
  for(const [i,p]of ATLAS_LOCATIONS.entries()){
@@ -190,9 +222,10 @@ function atlasShowWhole(){
  const view=document.getElementById('atlasViewport');atlasPan.z=Math.max(.22,Math.min(view.clientWidth/1536,view.clientHeight/512)*.97);atlasPan.x=0;atlasPan.y=0;atlasApplyPan();
 }
 function atlasBegin(){
+ document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
  atlasSyncJournal();atlasBuildPlaces();
  const select=document.getElementById('atlasQuestSelect');select.replaceChildren();
- for(const q of atlasQuests){const opt=document.createElement('option');opt.value=q.id;opt.textContent=(q.id==='main'?'Main · ':'Side · ')+q.title;select.append(opt);}
+ for(const q of atlasQuests){const opt=document.createElement('option');opt.value=q.id;opt.textContent=(atlasQuestKind(q)==='main'?'Main · ':atlasQuestKind(q)==='trial'?'Trial · ':'Side · ')+q.title;select.append(opt);}
  select.value=atlasTrackedQuest;
  atlasPointers.clear();atlasGesture=null;
  atlasSetTab(atlasTab);
@@ -220,7 +253,7 @@ function atlasShowDetails(){
  $('atlasQuestCount').textContent=atlasQuests.length+' active · '+completed.length+' complete';
  $('atlasQuestTitle').textContent=q?.title||'The road ahead';
  $('atlasObjective').textContent=q?.detail||'';
- $('atlasQuestKind').textContent=q?.id==='main'?'MAIN JOURNEY':q?.id==='trials'?'REPEATABLE TRIAL':'SIDE QUEST';
+ $('atlasQuestKind').textContent=atlasQuestKind(q)==='main'?'MAIN QUEST':atlasQuestKind(q)==='trial'?'REPEATABLE TRIAL':'SIDE QUEST';
  $('atlasQuestDestination').textContent=q?'◆ '+q.place:'';
  const path=atlasRouteBetween(area,q?.place);
  const via=path.slice(1,-1).filter(x=>!/^Route/.test(x));
@@ -243,7 +276,7 @@ function atlasShowDetails(){
  const nearby=atlasQuests.filter(q=>q.place===p[0]);local.append(atlasElement('small','',nearby.length?'QUESTS IN THIS AREA':'No known active quests here'));
  for(const lead of nearby){const b=atlasElement('button','localQuest',lead.title+' →');b.type='button';b.onclick=()=>atlasTrack(lead.id);local.append(b);}
  const history=$('atlasCompletedPage');history.replaceChildren();
- if(!completed.length)history.append(atlasElement('p','journalEmpty','Your finished side quests will be recorded here as the journey unfolds.'));
+ if(!completed.length)history.append(atlasElement('p','journalEmpty','Your finished quests will be recorded here as the journey unfolds.'));
  for(const entry of completed){const b=atlasElement('button','completedQuest');b.type='button';b.append(atlasElement('strong','','✓ '+entry.title),atlasElement('small','',entry.place+' · Completed'));b.onclick=()=>{atlasPick=ATLAS_LOCATIONS.findIndex(p=>p[0]===entry.place);atlasSetTab('place');renderQuestAtlas();};history.append(b);}
  const you=$('atlasPlayerMarker'),where=ATLAS_LOCATIONS.find(p=>p[0]===area);you.hidden=!where;
  if(where){you.style.left=where[1]+'px';you.style.top=where[2]+'px';you.setAttribute('aria-label','Your current area: '+area);}
@@ -261,6 +294,7 @@ function renderQuestAtlas(){
  atlasApplyPan();atlasShowDetails();
 }
 function bindQuestAtlas(){
+ document.getElementById('atlasCompassGotIt').addEventListener('click',()=>{atlasCompassTutorialSeen=true;document.getElementById('atlasCompassTutorial').hidden=true;saveGame();});
  const view=document.getElementById('atlasViewport'),surface=document.getElementById('atlasSurface');
  document.getElementById('atlasClose').addEventListener('click',closeAtlas);
  document.getElementById('atlasFocus').addEventListener('click',atlasFocusQuest);

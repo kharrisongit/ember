@@ -58,3 +58,15 @@ for(const [left,right,seam,y] of [[44,45,1824,26],[45,46,1887,26],[58,61,2144,44
 }
 console.log(`PASS: 19 routes through the desert entrance, all ${Object.keys(expected).length+1} combat/hunting arenas, split transition, spruce approach, west oak edge and dying avenue after full published-map loading.`);
 console.log('PASS: eastern cactus bends and hunting turnoff, cactus/dead/blossom connection and blossom/swamp seam after all generation and saved-edit passes.');
+for(const [id,x,y,step,band] of [[193,412,142,4,2.5],[33,1400,218,3,1.5],[33,1174,209,3,1.5],[37,1600,249,3,1.5]]){
+ for(const row of [0,1,2]){
+  const line=eastern.filter(o=>o.blossomFeature===id&&o.blossomRow===row&&Math.abs(o.tx-(x-4-row*band))<.01&&Math.abs(o.ty-y)<=10).sort((a,b)=>a.ty-b.ty);
+  assert(line.length>=4&&line.slice(1).every((p,i)=>p.ty-line[i].ty<=step+.01),`Complete far verge at published hunting junction ${x},${y}, row ${row}`);
+ }
+}
+const fallsFront=eastern.filter(o=>o.blossomFeature==='falls').sort((a,b)=>a.x-b.x);
+assert(fallsFront.length>=12&&fallsFront.every(o=>o.y===327*16&&o.sy>o.y),'Forgefalls has a complete foreground tree row after all passes');
+assert(fallsFront.slice(1).every((p,i)=>p.x-fallsFront[i].x===42||
+ fallsFront[i].x<417.5*16&&p.x>417.5*16&&p.x-fallsFront[i].x===84),
+ 'The Forgefalls foreground row is evenly spaced on both sides of the waterfall opening');
+console.log('PASS: published oak/desert hunting T-junctions and the actual Forgefalls cliff-front row.');

@@ -33,7 +33,7 @@ run('startAct("swing")');assert.equal(run('P.act'),null,'Attacks stay locked dur
 for(let i=0;i<20;i++)run('stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),waiting,'Enemies wait through dialogue');
 run('scene.t=1');dom.touch(dom.element('act'));
-assert.equal(run('scene'),null);assert.equal(dom.element('ridingHint').textContent,'Press A to Swing Your Sword');
+assert.equal(run('scene'),null);assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Swing Your Sword');
 assert(dom.element('ridingHint').classList.contains('combat-prompt'),'Swipe uses the prominent combat card');
 assert(run('EmberRiding.holding()'));assert.equal(run('P.act'),null,'Dialogue dismissal does not perform the swipe');
 assert(dom.element('act').classList.contains('riding-target'));

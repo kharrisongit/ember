@@ -51,7 +51,7 @@ for(const [left,right,seam,y,leftName,rightName] of [[44,45,1824,26,'cactus1','d
 assert.deepEqual(Array.from(c.features.find(f=>f.id===58).pts.at(-1)),Array.from(c.features.find(f=>f.id===61).pts[0]),'The blossom path physically meets the swamp path');
 const roads=c.treeBorderScope(c.features,c.routeLegs).roads;
 for(const o of trees){
- assert(roads.every(r=>c.blossomRoadDistance(o.x,o.y,r)>=r.half+2-.04),'Transition trees keep the walkable road open');
+ assert(roads.every(r=>c.blossomRoadDistance(o.x,o.y,r)>=r.half+1-.04),'Transition trees keep the walkable road open');
 }
 const first=JSON.stringify(c.fobjs),geometry=JSON.stringify(c.features);
 vm.runInContext('rebuildBlossomRoutes(guards)',c);

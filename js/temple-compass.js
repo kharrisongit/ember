@@ -28,7 +28,7 @@ function fatherCompassGift(nan){
 }
 function restoreFatherCompass(saved) {
   templeCompass.owned = !!saved?.owned;
-  templeCompass.awakened = templeCompass.owned && !!saved?.awakened;
+  templeCompass.awakened = templeCompass.owned;
   // Earlier saves received the meat together with the compass.
   templeCompass.meatGiven = saved?.meatGiven === undefined ? templeCompass.owned : !!saved.meatGiven;
   // The map and compass are one gift, including saves between the old gift beats.
@@ -39,6 +39,7 @@ function restoreFatherCompass(saved) {
 function giveFatherCompass() {
   if(templeCompass.owned&&templeCompass.mapGiven)return;
   templeCompass.owned = true;
+  templeCompass.awakened = true;
   templeCompass.mapGiven = true;
   refreshMapControls();
   saveGame();
@@ -64,23 +65,6 @@ function nanGiftBeat(index){
   }
   return false;
 }
-function awakenFatherCompass() {
-  if (!templeCompass.owned || templeCompass.awakened) return;
-  templeCompass.awakened = true;
-  templeCompass.cache = null;
-  saveGame();
-}
-function stepFatherCompass() {
-  if (!templeCompass.owned || templeCompass.awakened || !gameplayStarted ||
-      mode !== 'play' || !compassTempleMap(MD) || sceneHold() || sayNpc ||
-      fadeDir !== 0 || fade > 0 || doorMotion || ovl || ask || bagOpen || editing || dying()) return;
-  playScene([
-    "Your father's compass grows warm in your pocket. A soft light shines through its face, and the needle begins to turn.",
-    "Corin: Thanks, Dad."
-  ], { compassReveal: true });
-}
-
-
 function compassTempleMap(map) {
   return !!(map?.templeExpanded && map.templePlan && !map.mountainPassage);
 }
@@ -211,19 +195,43 @@ function compassTempleGuide(field, player) {
   return { ...aim, arrived: false };
 }
 
+function compassQuestRoute(maps,start,target){
+ if(!target||!maps[start])return null;
+ if(start===target.map)return {...target,heartstone:true};
+ const queue=[{map:start,door:null}],seen=new Set([start]);
+ for(let i=0;i<queue.length;i++){
+  const step=queue[i];
+  for(const d of maps[step.map].doors||[]){
+   if(seen.has(d.to)||!maps[d.to]||maps[d.to].templeLegacy)continue;
+   const door=step.door||d;
+   if(d.to===target.map)return compassTempleTarget(maps[start],{door});
+   seen.add(d.to);queue.push({map:d.to,door});
+  }
+ }
+ return null;
+}
+function compassSelectedTarget(){
+ const options=atlasQuestOptions();
+ const selected=options.find(q=>q.id===atlasTrackedQuest)||options[0];
+ if(selected&&selected.id!==atlasTrackedQuest)atlasTrackedQuest=selected.id;
+ return atlasQuestTarget(selected);
+}
 function drawTempleCompass() {
-  if ((!templeCompass.owned || !templeCompass.awakened) || !gameplayStarted || mode !== 'play' || !compassTempleMap(MD)) return;
-  const key = MAPID + ':' + editStamp;
-  if (templeCompass.cache?.key !== key || templeCompass.cache.map !== MD) {
-    const route = compassTempleRoute(W.maps, MAPID, CHESTS);
-    templeCompass.cache = { key, map: MD, field: route ? compassTempleField(MD, compassTempleTarget(MD, route)) : null };
+  if (!templeCompass.owned || !gameplayStarted || mode !== 'play') return;
+  let cache=templeCompass.cache;
+  if(!cache||cache.map!==MD||cache.edit!==editStamp||cache.quest!==atlasTrackedQuest||tAcc>=cache.refresh){
+    const destination=compassSelectedTarget(),target=compassQuestRoute(W.maps,MAPID,destination);
+    const key=JSON.stringify(target);
+    const field=cache?.map===MD&&cache.edit===editStamp&&cache.key===key?cache.field:
+      target&&MD.templeExpanded?compassTempleField(MD,target):null;
+    cache=templeCompass.cache={map:MD,edit:editStamp,quest:atlasTrackedQuest,key,target,field,refresh:tAcc+.5};
   }
-  const cache = templeCompass.cache;
   if (cache.px !== P.x || cache.py !== P.y) {
-    cache.guide = compassTempleGuide(cache.field, P); cache.px = P.x; cache.py = P.y;
+    cache.guide=cache.field?compassTempleGuide(cache.field,P):cache.target&&{
+      ...cache.target,arrived:cache.target.heartstone&&Math.hypot(cache.target.x-P.x,cache.target.y-P.y)<24};
+    cache.px=P.x;cache.py=P.y;
   }
-  const guide = cache.guide;
-  if (!guide) return;
+  const guide=cache.guide||{x:P.x,y:P.y-1,inactive:true};
   const x = VW - 30, y = 30;
   ctx.save();
   ctx.translate(x, y);
@@ -236,7 +244,7 @@ function drawTempleCompass() {
     ctx.fillStyle = '#9cdac2'; ctx.moveTo(0,-10); ctx.lineTo(7,0); ctx.lineTo(0,10); ctx.lineTo(-7,0);
   } else {
     ctx.rotate(Math.atan2(guide.y - P.y, guide.x - P.x));
-    ctx.fillStyle = '#f2d28c'; ctx.moveTo(14,0); ctx.lineTo(-8,-7); ctx.lineTo(-4,0); ctx.lineTo(-8,7);
+    ctx.fillStyle = guide.inactive?'#796b57':'#f2d28c'; ctx.moveTo(14,0); ctx.lineTo(-8,-7); ctx.lineTo(-4,0); ctx.lineTo(-8,7);
   }
   ctx.closePath(); ctx.fill();
   ctx.restore();

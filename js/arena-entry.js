@@ -5,7 +5,7 @@
   const popup=document.createElement('button');
   popup.id='arenaReady';popup.type='button';popup.hidden=true;
   popup.setAttribute('aria-label','It’s time to fight! Press A to begin');
-  popup.innerHTML='<span class="battle-kicker">BATTLE READY</span><strong>It’s time to fight!</strong><span class="battle-confirm">Press <b>A</b> to begin</span>';
+  window.EmberEncounterCard.paint(popup,{title:'It’s time to fight!',kicker:'ENCOUNTER READY',detail:'Your foes are waiting. The next move is yours.',action:'Press A or tap to begin',kind:'battle'});
   document.body.appendChild(popup);
   const living=f=>f.st!=='dead'&&!f.ally&&!f.huntingArena;
   const holding=()=>!!pending&&pending.phase!=='tutorial';
@@ -28,16 +28,58 @@
   function ensure(){if(map!==MAPID)reset();}
   function state(a){
     let s=states.get(a.id);
-    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map(),retry:0};states.set(a.id,s);}
+    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map(),retry:0,route:approachRoute(a)};states.set(a.id,s);}
     return s;
   }
   function bounds(a){
     if(a.templeRoom){const [l,t,r,b]=a.templeRoom;return {x:(l+r)/2,y:(t+b)/2,rx:(r-l)/2-20,ry:(b-t)/2-20};}
-    return {x:a.x*TS+TS/2,y:a.y*TS+TS/2,rx:(a.r-1.5)*TS,ry:(a.r-1.5)*TS};
+    return {x:a.x*TS+TS/2,y:a.y*TS+TS/2,rx:((a.r||6.3)-1.5)*TS,ry:((a.r||6.3)-1.5)*TS};
   }
-  function sideOf(a){
+  function projectRoute(route,x,y){
+    let best=null,along=0;
+    for(const [a,b] of route.legs){
+      const dx=b[0]-a[0],dy=b[1]-a[1],length=Math.hypot(dx,dy);if(!length)continue;
+      const t=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(length*length)));
+      const distance=Math.hypot(x-a[0]-dx*t,y-a[1]-dy*t);
+      if(!best||distance<best.distance)best={distance,at:along+t*length};
+      along+=length;
+    }
+    return best;
+  }
+  function approachRoute(a){
+    if(a.templeRoom)return null;
+    let best=null;
+    for(const f of features){
+      if(f.kind!=='route')continue;
+      const route={legs:routeLegs(f)},p=projectRoute(route,a.x,a.y);
+      if(p&&p.distance<(a.r||6.3)&&(!best||p.distance<best.distance))best={...route,...p};
+    }
+    return best;
+  }
+  function routePoint(route,at){
+    for(const [a,b] of route.legs){
+      const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!length)continue;
+      if(at<=length){const t=Math.max(0,at)/length;return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+      at-=length;
+    }
+    return route.legs.at(-1)[1];
+  }
+  function sideOf(a,s){
     const b=bounds(a),dx=(P.x-b.x)/Math.max(1,b.rx),dy=(P.y-b.y)/Math.max(1,b.ry);
+    // Follow the actual avenue around bends while the player is still outside
+    // the arena. Nearby arrivals (including flying) use their physical side.
+    if(s.route&&Math.hypot(P.x-b.x,P.y-b.y)>((a.r||6.3)+2.5)*TS){
+      const p=projectRoute(s.route,(P.x-TS/2)/TS,(P.y-TS/2)/TS),sign=Math.sign(p.at-s.route.at);
+      if(sign){
+        const [x,y]=routePoint(s.route,s.route.at+sign*((a.r||6.3)+3)),rx=x-a.x,ry=y-a.y;
+        if(Math.hypot(rx,ry)>.1)return Math.abs(rx)>Math.abs(ry)?[Math.sign(rx),0]:[0,Math.sign(ry)];
+      }
+    }
     return Math.abs(dx)>Math.abs(dy)?[Math.sign(dx)||1,0]:[0,Math.sign(dy)||1];
+  }
+  function faceEntrance(s,f){
+    const [dx,dy]=s.side.split(',').map(Number);
+    f.dir=dy<0?'u':dy>0?'d':'s';f.flip=dx<0;
   }
   function belongs(a,f){
     return a.templeRoom?expandedTempleFoeInArena(a,f):Math.hypot((f.hx??f.x)/TS-a.x,(f.hy??f.y)/TS-a.y)<a.r+5;
@@ -63,15 +105,16 @@
   function visible(f){return f.x>cam.x-48&&f.x<cam.x+VW/cam.z+48&&f.y>cam.y&&f.y<cam.y+VH/cam.z+80;}
   function stage(s){
     if(s.phase!=='waiting'||tutorial(s.ring)||(arenaLock&&arenaLock.id!==s.ring.id)||s.retry>tAcc)return;
-    const a=s.ring,b=bounds(a),side=sideOf(a),key=side.join(',');
+    const a=s.ring,b=bounds(a),side=sideOf(a,s),key=side.join(',');
     if(s.side===key&&!s.dirty)return;
     s.side=key;s.dirty=false;s.paths.clear();
-    const [dx,dy]=side,depth=Math.min(24,(dx?b.rx:b.ry)*.22),slots=[];
-    // Compact rows just beyond the center, never on the far leash boundary.
+    const [dx,dy]=side,depth=Math.min((dx?b.rx:b.ry)*.68,(dx?b.rx:b.ry)-12),slots=[],seen=new Set();
+    // Line up at the opposite edge first, with additional ranks inward when
+    // needed. Keep the entire formation within the arena's clear floor.
     for(let row=0;row<5;row++)for(const across of [0,-32,32,-64,64,-96,96]){
-      const along=depth+row*24,x=b.x-dx*along-dy*across,y=b.y-dy*along+dx*across;
+      const along=Math.max(12,depth-row*28),x=b.x-dx*along-dy*across,y=b.y-dy*along+dx*across,key=x+','+y;
       const inside=a.templeRoom?expandedTempleArenaContains(a,x,y,24):Math.hypot(x-b.x,y-b.y)<Math.min(b.rx,b.ry);
-      if(inside&&canStand(x,y)&&Math.hypot(x-P.x,y-16-P.y)>=76)slots.push([x,y]);
+      if(!seen.has(key)&&inside&&canStand(x,y)&&Math.hypot(x-P.x,y-16-P.y)>=76){slots.push([x,y]);seen.add(key);}
     }
     if(!slots.length){s.dirty=true;s.retry=tAcc+.5;return;}
     const used=[];
@@ -84,12 +127,12 @@
         const route=maddockWalkPath(f,slot,canStand);
         if(route){target=slot;path=route;break;}
       }
-      if(!target)continue;
+      if(!target){s.dirty=true;s.retry=tAcc+.5;continue;}
       used.push(target);
       if(path)s.paths.set(f,path);
       else{[f.x,f.y]=target;f.hx=f.x;f.hy=f.y;}
       f.st='idle';f.t=0;f.retreat=0;f._hunt=null;
-      f.dir=dy<0?'u':dy>0?'d':'s';f.flip=dx<0;
+      faceEntrance(s,f);
     }
   }
   function prepare(a){register(true);for(const s of states.values())if(!a||s.ring.id===a.id)stage(s);}
@@ -173,7 +216,7 @@
         left-=step;
       }
       f.st=path.length?'walk':'idle';f.t+=dt;f.hx=f.x;f.hy=f.y;
-      if(!path.length)s.paths.delete(f);
+      if(!path.length){s.paths.delete(f);faceEntrance(s,f);}
     }
   }
   function step(dt){
@@ -220,9 +263,8 @@
     if(dragonHere())cast.push(dragon);
     const l=Math.min(...cast.map(f=>f.x-40)),r=Math.max(...cast.map(f=>f.x+40));
     const t=Math.min(...cast.map(f=>f.y-80)),b=Math.max(...cast.map(f=>f.y+8));
-    // The ready card now lives above the battle. Reserve its space even while
-    // the walls rise so its arrival never causes a second camera jump.
-    const top=Math.min(112,VH*.4),bottom=16,usable=Math.max(40,VH-top-bottom);
+    // The full-screen card no longer needs an entrance-dependent top margin.
+    const top=16,bottom=16,usable=Math.max(40,VH-top-bottom);
     const normal=cameraZoom||playZoom();
     cam.z=Math.max(.1,Math.min(normal,(VW-24)/(r-l),usable/(b-t)));
     cam.x=(l+r)/2-VW/cam.z/2;

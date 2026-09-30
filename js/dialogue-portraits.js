@@ -4,7 +4,7 @@ const PORTRAIT_ALIASES = {
   Bram:'Serjeant Bram', Maddock:'Elder Maddock', Elder:'Elder Maddock', Nan:'Nan Ferrow',
   Halvard:'King Halvard', King:'King Halvard', Rowan:'Rowan the Hunter',
   Iven:'Master Iven', Elowen:'Archivist Elowen', 'Shroom King':'The Shroom King',
-  Mattock:'Bors','Snowbuilder Nessa':'Runa',
+  Mattock:'Bors','Caravanner Sami':'Bilal',
   Dragon:'Aurelius', Knight:'Doran', 'Royal Guard':'Serjeant Bram'
 };
 const PORTRAIT_RENAMES = {
@@ -76,6 +76,7 @@ function loadPortraitPack(pack) {
 }
 function portraitFor(who) {
   if(!who)return null;
+  if(who==='Tobin'&&typeof snowChildPortrait==='string')return {id:135,src:snowChildPortrait};
   const name=PORTRAIT_ALIASES[who]||who;
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   const portrait=DIALOGUE_PORTRAITS[name];

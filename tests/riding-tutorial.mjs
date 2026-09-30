@@ -10,7 +10,7 @@ MAPID='world';MD=W.maps.world;features=MD.features;quest=Q.DONE;mode='play';game
 dragonIntroDone=true;dragon.on=true;dragon.maxHp=20;dragon.hp=20;dragon.down=false;dragon.knockdown=0;
 P.x=98*TS;P.y=352*TS;P.act=null;scene=null;revealing=false;
 canStand=()=>true;dragonCanStand=()=>true;dragonGround=()=>true;rebuildSolid=()=>{};rebuildBuckets=()=>{};clampCam=()=>{};
-MW=4000;MH=600;solid=new Uint8Array(MW*MH);blockedByNpcBody=()=>false;blockedByNpcBuffer=()=>false;
+MW=4000;MH=600;solid=new Uint8Array(MW*MH);terr=new Uint8Array(MW*MH);blockedByNpcBody=()=>false;blockedByNpcBuffer=()=>false;
 dragon.x=P.x-140;dragon.y=P.y;dragon.air=false;dragon.placed=MAPID;
 SPR.dr3_s=[0,0,128,96];
 stepChest=()=>{};stepHuntingGrounds=()=>{};saveGame=()=>{};showReveal=()=>{};showScene=()=>{};showHeal=()=>{};
@@ -58,10 +58,11 @@ run("setOvl('itemm')");check('ovl===null','Wrong control cannot advance the less
 dom.touch(dom.element('btnL'));check("scene.lines[0]==='Aurelius: What should I do?'",'Dragon asks for the attack');
 check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'A touch opens Fire immediately without an extra A press');
 run('MENUS.atkm.pick=0;ovlTake()');check("EmberRiding.capture().phase==='fire'",'Slash cannot bypass Fire lesson');
-dom.touch(dom.element('atkRows').children[1]);check("EmberRiding.capture().phase==='battle'&&!EmberRiding.holding()&&ovl===null",'Selecting real Fire releases combat');
-assert.equal(dom.element('ridingHint').textContent,'Press A to Slash');
+dom.touch(dom.element('atkRows').children[1]);check("EmberRiding.capture().phase==='battle'&&EmberRiding.holding()&&ovl===null",'Selecting Fire presents the full-screen Slash lesson before combat');
+assert.equal(dom.element('ridingHint').dataset.instruction,'Press A to Slash');
 assert(dom.element('ridingHint').classList.contains('slash-prompt'),'Slash has its own dragon combat card');
 check('!!breath&&!hunt&&!scene','Fire launches a projectile from the saddle and clears the prompt');
+dom.touch(dom.element('ridingHint'));check('!EmberRiding.holding()','The full-screen card performs the real Slash action and releases combat');
 const beforeHit=run('foes.reduce((sum,f)=>sum+f.hp,0)');
 for(let i=0;i<30;i++)run('stepBreath(.05);stepDragon(.05)');
 assert(run('foes.reduce((sum,f)=>sum+f.hp,0)')<beforeHit,'The tutorial fire actually reaches and damages an enemy');

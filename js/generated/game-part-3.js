@@ -4115,7 +4115,6 @@ function frameCore(ms) {
   globalThis.window?.EmberArenaEntry?.step(dt);
   globalThis.window?.EmberRiding?.step(dt);
   stepNanDeparture();
-  stepFatherCompass();
   if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
   stepScene(dt);
@@ -4576,7 +4575,7 @@ let heartKnown = false;
 const BAG = [
   { key:"bag",kind:"key",name:"Hettie’s Bag",tell:"Hettie gave you this sturdy bag for your errand. It keeps your supplies together.",has:hasBag,icon:()=>"inventory_bag" },
   { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
-    tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; the compass will guide you when you need it most.",
+    tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; choose a quest in the map and the compass will guide you there.",
     has: () => templeCompass.owned, icon: () => "inventory_mapCompass" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",

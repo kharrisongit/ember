@@ -8,9 +8,19 @@
   let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,hintTime=0,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const corinRecoveryPhases=new Set(['corinRecovery','corinHealTalk','corinItemsButton','corinHeal','corinThanks']);
-  const holding=()=>!!phase&&phase!=='battle'&&phase!=='swordBattle';
-  const hint=document.createElement('div');hint.id='ridingHint';hint.hidden=true;hint.setAttribute('role','status');document.body.appendChild(hint);
-  const notice=text=>{hint.classList.remove('dismissing');hint.textContent=text;hint.hidden=!text;hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');};
+  const holding=()=>!!phase&&(phase!=='battle'||hintTime>0)&&phase!=='swordBattle';
+  const hint=document.createElement('button');hint.type='button';hint.id='ridingHint';hint.hidden=true;document.body.appendChild(hint);
+  hint.addEventListener('click',e=>{e.preventDefault();actionButton();});
+  const notice=text=>{
+    hint.classList.remove('dismissing');hint.hidden=!text;hint.dataset.instruction=text;
+    hint.classList.toggle('combat-prompt',/^Press A to (Swing Your Sword|Slash)$/.test(text));hint.classList.toggle('slash-prompt',text==='Press A to Slash');
+    if(!text)return;
+    const slash=text==='Press A to Slash',sword=text==='Press A to Swing Your Sword';
+    window.EmberEncounterCard.paint(hint,{title:text,kicker:slash?'DRAGON • SLASH':sword?'SWORD • SWING':'LEARN THE CONTROLS',
+      detail:slash?'Strike together. Aurelius slashes the foes in front of him.':sword?'Face your enemy and swing. Your first battle starts with you.':
+        /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control. This card also performs that action.',
+      action:slash||sword?'Press A or tap to attack':'Press A or tap to try it',kind:slash?'dragon':'lesson'});
+  };
   function clearHighlight(){document.querySelectorAll('.riding-target').forEach(n=>n.classList.remove('riding-target'));}
   function moveTo(next,text=''){
     phase=next;clearHighlight();notice(text);hintTime=0;
@@ -26,6 +36,7 @@
     return menu==='itemm'&&((phase==='heal'&&item.key==='hareMeat')||(phase==='corinHeal'&&item.key==='potion'));
   }
   function paint(){
+    hint.hidden=!hint.dataset.instruction||!!scene||!!revealing;
     if(!holding())return;
     clearHighlight();
     const control=phase==='swordSwipe'?'act':phase==='dragonButton'?'btnL':['itemsButton','corinItemsButton'].includes(phase)?'btnItems':null;
@@ -123,6 +134,7 @@
   }
   function step(dt){
     if(!gameplayStarted||mode!=='play')return;
+    hint.hidden=!hint.dataset.instruction||!!scene||!!revealing;
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();moveTo('swordTalk');
       playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',hidePortrait:true,after:()=>{
@@ -168,7 +180,7 @@
     if(phase!=='fire'||element!=='fire')return;
     if(scene?.ridingFirePrompt){scene=null;showScene();}
     window.EmberArenaEntry?.activate(arenaLock);
-    moveTo('battle','Press A to Slash');hintTime=8;overlay(null);saveGame();
+    moveTo('battle','Press A to Slash');hintTime=Infinity;overlay(null);saveGame();
   }
   function completed(ring){
     if(!corinHealDone&&phase==='swordBattle'&&ring?.id===SWORD_ARENA){beginCorinRecovery();return;}
@@ -242,7 +254,7 @@
   function action(){
     // A still reaches the normal slash control; only its teaching card fades.
     if(phase==='battle'&&hintTime>0&&!hint.classList.contains('dismissing')&&!scene&&!ovl&&!ask&&!bagOpen&&!revealing){
-      hintTime=Math.min(hintTime,.18);hint.classList.add('dismissing');
+      hintTime=0;notice('');document.body.classList.remove('riding-guide');
     }
     if(!holding())return false;
     if(phase==='swordSwipe'){
@@ -264,7 +276,7 @@
   }
   function blockPointer(event){
     if(!holding())return false;
-    if(event.target?.closest?.('.riding-target,#act,#say'))return false;
+    if(event.target?.closest?.('.riding-target,#act,#say,#ridingHint'))return false;
     event.preventDefault();event.stopImmediatePropagation();return true;
   }
   function capture(){return {version:3,done,unlocked,phase,ringId,swordDone,corinHealDone,corinHit,corinStartHp};}

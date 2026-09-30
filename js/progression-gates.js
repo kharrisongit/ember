@@ -1,19 +1,35 @@
 /* Local roadworks change with story progress; temple approaches and return roads remain open. */
 const JOURNEY_GATES = {
-  thornwell:{x:320*16,y:100*16,rect:[320*16-40,100*16-72,320*16+40,100*16+56],open:()=>wonAll||brambleQuest>=2,
+  thornwell:{x:320*16,y:100*16,rect:[320*16-32,100*16-50,320*16+32,100*16+54],open:()=>wonAll||brambleQuest>=2,
     inside:(x,y)=>x>=320*16},
-  forgewick:{x:815*16,y:140*16,rect:[815*16-28,140*16-72,815*16+28,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
+  forgewick:{x:815*16,y:140*16,rect:[815*16-24,140*16-50,815*16+24,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
     inside:(x,y)=>(x>=815*16&&y<220*16)||x>=1080*16},
-  sandspire:{x:1518*16,y:73*16,rect:[1518*16-72,73*16-14,1518*16+72,73*16+14],open:()=>wonAll||breathHas.shadow,
+  sandspire:{x:1518*16+8,y:73*16,rect:[1518*16+8-46,73*16-14,1518*16+8+46,73*16+10],open:()=>wonAll||breathHas.ice,
     inside:(x,y)=>(x>=1490*16&&y<=73*16)||x>=1870*16},
-  hollybeck:{x:2727*16,y:215*16,rect:[2727*16-15,215*16-64,2727*16+15,215*16+56],open:()=>wonAll||breathHas.ice,
+  hollybeck:{x:2727*16,y:215*16,rect:[2727*16-15,215*16-64,2727*16+15,215*16+56],open:()=>wonAll||breathHas.shadow,
     inside:(x,y)=>(x>=2727*16&&y>=211*16)||x>=2840*16}
 };
-const journeyWagon={spr:'story_broken_wagon',home:[12410,3374],scale:1,sourceId:null};
+const journeyWagon={spr:'story_broken_wagon',home:[12410,3374],scale:.85,sourceId:null};
 const brokenWagonImage=new Image();brokenWagonImage.src='assets/props/broken-wagon.png?v=20260928-vertical';
 const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-mine-carts.png?v=20260929';
 // Crop only transparent padding at draw time; preserve the generated source artwork.
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
+const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
+const caravanSprite={source:[76,138,1390,746],width:96,height:52};
+const snowChildImage=new Image();snowChildImage.src='assets/sprites/hollybeck-snow-child.png?v=20260930';
+let snowChildPortrait=null;
+async function prepareJourneyArt(){
+  if(SPR.journey_snow_child)return;
+  await snowChildImage.decode();
+  const sprite=document.createElement('canvas');sprite.width=12;sprite.height=26;
+  const g=sprite.getContext('2d');g.imageSmoothingEnabled=false;
+  g.drawImage(snowChildImage,347,277,403,881,0,0,12,26);
+  animalSheets.journey_snow_child=sprite;SPR.journey_snow_child=[0,0,12,26,1,'journey_snow_child'];
+  const face=document.createElement('canvas');face.width=96;face.height=112;
+  const f=face.getContext('2d');f.imageSmoothingEnabled=false;
+  f.drawImage(snowChildImage,347,277,403,540,6,0,84,112);
+  snowChildPortrait=face.toDataURL('image/png');
+}
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 function progressionSolid(x,y){
   if(MAPID!=='world')return false;
@@ -44,7 +60,7 @@ function journeyWorker(name,sprite,key,x,y,lines,portrait){
 function prepareJourneyGates(){
   if(MAPID!=='world')return;
   if(npcs.some(n=>n.progressionWorker))return;
-  const th=JOURNEY_GATES.thornwell,fw=JOURNEY_GATES.forgewick,hb=JOURNEY_GATES.hollybeck;
+  const th=JOURNEY_GATES.thornwell,fw=JOURNEY_GATES.forgewick,ss=JOURNEY_GATES.sandspire,hb=JOURNEY_GATES.hollybeck;
   npcs.push(journeyWorker('Cartwright Oswin','market_citizen1_idle_d','thornwell',th.x-62,th.y-8,[
     'Cartwright Oswin: The wheel broke just as I was turning out of Thornwell. Could not have picked a worse spot.',
     "Cartwright Oswin: I'll have it fixed soon. Best give me a little room to work."
@@ -57,13 +73,14 @@ function prepareJourneyGates(){
     'Miner Nerik: One stone at a time. Pull the wrong one and we start all over.',
     'Miner Nerik: We will have the carts shifted before long.'
   ]));
-  npcs.push(journeyWorker('Snowbuilder Nessa','winter_npc_1','hollybeck',hb.x-50,hb.y+8,[
-    'Snowbuilder Nessa: I meant to build one. Then it looked lonely.',
-    'Snowbuilder Nessa: Now there is a whole family in the road. Let me finish their faces and I will move them to the square.'
-  ],'Runa'));
-  const winter=npcs.find(n=>n.n==='Runa');const builder=npcs.at(-1);
-  builder.f='s';builder.kf='e';
-  if(winter){for(const key of ['packSpr','packDirections','packWalk','sk','body','lookId','s'])if(winter[key]!==undefined)builder[key]=winter[key];}
+  npcs.push(journeyWorker('Caravanner Sami','desert_trader1','sandspire',ss.x,ss.y+52,[
+    "Caravanner Sami: Easy there! The caravan is staying put, and the camels aren't taking another step.",
+    "Caravanner Sami: Something in Sandspire Temple has them spooked. Clear the temple and claim its Heartstone, and we'll get this wagon moving."
+  ],'Bilal'));
+  npcs.push(journeyWorker('Tobin','journey_snow_child','hollybeck',hb.x-50,hb.y+8,[
+    "Tobin: I'm building snowmen! This one's the captain, and those are his snow guards.",
+    "Tobin: I'm not finished yet, so you'll have to come back later. They still need noses!"
+  ]));
 }
 function progressionProp(spr,x,y,scale=1,phase=0){return {progressionProp:true,spr,x,y,scale,phase};}
 function journeyGateProps(){
@@ -72,23 +89,36 @@ function journeyGateProps(){
   if(!th.open())out.push(progressionProp(journeyWagon.spr,th.x,th.y+56,journeyWagon.scale));
 
   if(!fw.open()){
-    out.push(progressionProp('story_mining_carts',fw.x,fw.y+56));
+    out.push(progressionProp('story_mining_carts',fw.x,fw.y+56,.85));
   }
-  if(!ss.open())for(let i=-1;i<=1;i++)out.push(progressionProp('camel_sit',ss.x+i*46,ss.y+10,1,i+1));
+  if(!ss.open()){
+    // Fit the 112px mountain opening; the old western camel crossed its rock edge.
+    out.push(progressionProp('story_caravan',ss.x,ss.y+10));
+    for(const [i,dx,dy]of [[0,-24,-74],[1,24,-74],[2,0,-102]])
+      out.push(progressionProp('camel_sit',ss.x+dx,ss.y+dy,1,i));
+  }
   if(!hb.open())for(let i=-2;i<=2;i++)out.push(progressionProp('wf_snowman',hb.x+(i%2)*4,hb.y+i*25+6));
   return out;
 }
 function drawJourneyProp(o,t){
   if(o.spr==='story_mining_carts'){
     if(miningCartsImage.complete&&miningCartsImage.naturalWidth!==0){
-      const {source,width,height}=miningCartsSprite;
+      const {source}=miningCartsSprite,width=miningCartsSprite.width*o.scale,height=miningCartsSprite.height*o.scale;
       drawGameImage(ctx,miningCartsImage,...source,Math.round(o.x-width/2),Math.round(o.y-height),width,height);
     }
     return;
   }
+  if(o.spr==='story_caravan'){
+    if(caravanImage.complete&&caravanImage.naturalWidth!==0){
+      const {source,width,height}=caravanSprite;
+      drawGameImage(ctx,caravanImage,...source,Math.round(o.x-width/2),Math.round(o.y-height),width,height);
+    }
+    return;
+  }
   if(o.spr==='story_broken_wagon'){
+    const width=80*o.scale,height=128*o.scale;
     if(brokenWagonImage.complete&&brokenWagonImage.naturalWidth!==0)
-      drawGameImage(ctx,brokenWagonImage,0,0,brokenWagonImage.naturalWidth,brokenWagonImage.naturalHeight,Math.round(o.x-40),Math.round(o.y-128),80,128);
+      drawGameImage(ctx,brokenWagonImage,0,0,brokenWagonImage.naturalWidth,brokenWagonImage.naturalHeight,Math.round(o.x-width/2),Math.round(o.y-height),width,height);
     return;
   }
   const s=SPR[o.spr];if(!s)return;

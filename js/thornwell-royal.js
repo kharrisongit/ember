@@ -3,7 +3,7 @@
    0: not met, 1: separated, 2: summoned, 3: audience, 4: dismissed,
    5: royal departure, 6: hurry to the falls, 7: reunited (or legacy complete). */
 let thornwellRoyal={stage:0,answers:{}};
-let thornwellMotion=null,thornwellFlight=null;
+let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null;
 const THORNWELL_ROYALS=['King Halvard','Serjeant Bram','Doran','Tolan'];
 const THORNWELL_RESIDENTS=new Set(['Orin','Linna','Isolde','Cartwright Oswin','Garrow','Wren','Merrin','Asta','Colm','Rowan the Hunter','Ada','Bren','Berta','Della','Ewan','Osric','Alder','Gwyneth','Archivist Elowen','Mira','Oren','Tamsin','Tessa','Master Iven','Brin','Bram','Nell','Sable','Pella','Bess','Ronan','Venn','Hobb','Edric','Dorr','Ser Anwen','Grusk','Fen','Senn','Dain','Rusk','Linnet','Puck','Pip','Vale','Cerys','Nyra','Maren','Celia']);
 function captureThornwellRoyal(){return {stage:thornwellRoyal.stage,answers:{...thornwellRoyal.answers}};}
@@ -12,7 +12,7 @@ function restoreThornwellRoyal(saved,legacy={}){
     legacy.wonAll||legacy.brambleQuest>=2?7:legacy.brambleQuest===1?1:0;
   thornwellRoyal={stage:stage===3?2:stage,answers:{}};
   for(const key of ['eggs','tax','riders','search','visit'])if(typeof saved?.answers?.[key]==='string')thornwellRoyal.answers[key]=saved.answers[key];
-  thornwellMotion=null;thornwellFlight=null;
+  releaseThornwellSummonCamera();thornwellMotion=null;thornwellFlight=null;
   if(scene?.thornwellRoyal){scene=null;walker=null;sayOff();showFace(null);}
   if(ask?.npcActor?.thornwellRoyal)askShut();
   npcs=npcs.filter(n=>!n.thornwellRoyal);
@@ -156,6 +156,33 @@ function thornwellWalkPlayer(path,after,kind='approach'){
   thornwellScene([],()=>{const done=thornwellMotion?.after;thornwellMotion=null;P.moving=false;if(done)done();});
   scene.silent=true;scene.until=()=>!thornwellMotion?.path?.length;showScene();
 }
+function beginRowanReunion(){
+  if(MAPID!=='tavern'||brambleQuest!==1||sceneHold()||sayNpc||ask||doorMotion||fadeDir||fade>0)return false;
+  const rowan=npcs.find(n=>n.n==='Rowan the Hunter'),dog=npcs.find(n=>n.pettable);
+  if(!rowan||!dog)return false;
+  const path=thornwellReachable(P,[[rowan.x-32,rowan.y+28],[rowan.x+32,rowan.y+28],[rowan.x,rowan.y+40]]);
+  const trail=maddockWalkPath(dog,[P.x,P.y],(x,y)=>canNpcStand(x,y,dog));
+  if(!path||!trail)return false;
+  thornwellScene(['Rowan: Bramble! There you are. Bring him over here, lad.'],()=>{
+    thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);tryBrambleReunion(rowan);},'rowan');
+    thornwellMotion.dog=dog;thornwellMotion.trail=trail;
+    scene.until=()=>!thornwellMotion?.path?.length&&Math.hypot(dog.x-P.x,dog.y-P.y)<=40;
+  },rowan);
+  return true;
+}
+function releaseThornwellSummonCamera(){
+  if(thornwellSummonZoom===null)return;
+  restoreCameraTarget();cam.z=thornwellSummonZoom;thornwellSummonZoom=null;followCam();clampCam();
+}
+function frameThornwellCamera(){
+  if(!scene?.thornwellSummons){releaseThornwellSummonCamera();return;}
+  const king=thornwellKing();if(!king)return;
+  if(thornwellSummonZoom===null){restoreCameraTarget();thornwellSummonZoom=cam.z;}
+  const left=Math.min(P.x,king.x)-40,right=Math.max(P.x,king.x)+48;
+  const top=Math.min(P.y-48,king.y-58)-20,bottom=Math.max(P.y,king.y)+28;
+  cam.z=Math.min(thornwellSummonZoom,(VW-32)/(right-left),(VH-40)/(bottom-top));
+  cam.x=(left+right)/2-VW/cam.z/2;cam.y=(top+bottom)/2-VH/cam.z/2;clampCam();
+}
 function thornwellSummon(){
   const king=thornwellKing();if(!king)return;
   const path=thornwellReachable(P,[[king.x-13,king.y+43],[king.x-32,king.y+38],[king.x+30,king.y+46],[king.x-48,king.y+30]]);
@@ -166,7 +193,7 @@ function thornwellSummon(){
     'Corin: Your Majesty.',
     'King Halvard: Over here. I dislike having to raise my voice to be obeyed.',
     'Serjeant Bram: You heard the king. Move.'
-  ],()=>thornwellWalkPlayer(path,()=>{
+  ],()=>{releaseThornwellSummonCamera();thornwellWalkPlayer(path,()=>{
     faceCorinAt(king.x,king.y);thornwellRoyal.stage=3;thornwellRoyal.answers.visit='yes';
     thornwellScene([
       'King Halvard: Still running errands, then. A useful habit in a boy. Keep it.',
@@ -179,7 +206,8 @@ function thornwellSummon(){
       if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
       else openThornwellAudience(king);
     },king);
-  }),king);
+  });},king);
+  scene.thornwellSummons=true;
 }
 function thornwellAudienceLines(actor,lines,after){thornwellScene(lines,after||(()=>openThornwellAudience(actor)),actor);}
 function thornwellAnswer(actor,key,question,options){
@@ -204,6 +232,7 @@ function thornwellDismissAudience(){
 }
 function openThornwellAudience(actor){
   if(!actor?.thornwellRoyal)return false;
+  if(brambleQuest<3){if(brambleQuest===1)beginRowanReunion();return true;}
   if(thornwellRoyal.stage<3){thornwellScene([actor.n+': His Majesty is eating. Finish your errand.'],null,actor);return true;}
   if(thornwellRoyal.stage>4)return false;
   sayNpc=null;sayOff();showFace(null);P.moving=false;
@@ -427,6 +456,12 @@ function stepThornwellRoyal(dt){
     const motion=thornwellMotion;
     if(motion.kind==='blackout')return;
     if(motion.path)thornwellMove(P,motion.path,motion.kind==='shove'?180:82,dt);
+    if(motion.dog){
+      const last=motion.trail.at(-1);
+      if(!last||Math.hypot(P.x-last[0],P.y-last[1])>=4)motion.trail.push([P.x,P.y]);
+      const gap=Math.hypot(motion.dog.x-P.x,motion.dog.y-P.y);
+      if(gap>28)moveBrambleActor(motion.dog,motion.trail,Math.min(90,(gap-28)/dt),dt);
+    }
     for(const item of motion.actors||[]){
       item.delay-=dt;if(item.delay>0)continue;
       item.actor.away=false;thornwellMove(item.actor,item.path,68,dt);
@@ -435,6 +470,7 @@ function stepThornwellRoyal(dt){
     return;
   }
   if(sceneHold()||sayNpc||ask||doorMotion||fadeDir||fade>0||ride||mounted)return;
+  if(MAPID==='tavern'&&brambleQuest===1){beginRowanReunion();return;}
   if(!thornwellRoyal.stage&&brambleQuest>=1&&brambleQuest<3){beginThornwellDetour();return;}
   if(MAPID==='tavern'&&brambleQuest===3&&thornwellRoyal.stage>=1&&thornwellRoyal.stage<=3){thornwellSummon();return;}
   if(MAPID==='world'&&thornwellRoyal.stage===5){thornwellDeparture();return;}

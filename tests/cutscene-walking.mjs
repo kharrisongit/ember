@@ -13,16 +13,18 @@ for(const to of path){
  from=to;
 }
 assert.deepEqual(Array.from(path.at(-1)),[96,48]);
-// Hettie has already left before Corin returns, including an old save with
-// her still beside the entrance. Completing Nan's gifts cannot pop her back in.
+// Hettie stays visible and pauses her ordinary farm route during Nan's scene.
 run(`MAPID='world';quest=Q.DONE;scene=null;restoreFatherCompass();
-var farmHettie={n:'Hettie',x:424,y:6672};npcs=[farmHettie];cam.x=350;cam.y=6580;cam.z=2.5;`);
-assert.equal(run('npcHere(farmHettie)'),false,'Hettie is absent even before the farewell begins');
-run('stepHettie();scene={nanGifts:true};templeCompass.owned=true;templeCompass.mapGiven=true;templeCompass.meatGiven=true;stepHettie()');
-assert.equal(run('npcHere(farmHettie)'),false,'Hettie stays absent during Nan’s final lines');
-run('scene=null;stepHettie()');assert.equal(run('npcHere(farmHettie)'),false,'Hettie cannot reappear in the current view');
-run('cam.x=2000;stepHettie()');assert(run('npcHere(farmHettie)'),'The farm routine resumes after Corin leaves');
-console.log('PASS: Hettie is already absent on the return with Aurelius and never walks through Nan’s farewell.');
+var farmHettie={n:'Hettie',x:424,y:6672,hettieDeparted:true,goto:[440,6700]};
+npcs=[farmHettie];P.x=520;P.y=6672;dragon.on=false;cam.x=350;cam.y=6580;cam.z=2.5;`);
+assert(run('npcHere(farmHettie)'),'Hettie is visible before the farewell');
+run('scene={nanGifts:true};stepHettie()');
+assert(run('npcHere(farmHettie)'));assert.equal(run('farmHettie.goto'),null);
+assert.deepEqual(Array.from(run('[farmHettie.x,farmHettie.y]')),[424,6672],'No forced trip off screen');
+run('templeCompass.owned=true;templeCompass.mapGiven=true;templeCompass.meatGiven=true;stepHettie()');
+assert(run('npcHere(farmHettie)'),'Hettie stays visible through all gift lines');
+run('scene=null;stepHettie()');assert(run('npcHere(farmHettie)'));assert.deepEqual(Array.from(run('farmHettie.goto')),[440,6700]);
+console.log('PASS: Hettie remains on screen, pauses clear of Nan, and immediately resumes her farm route.');
 // Both gifts may be recorded while Nan still has dialogue to deliver.
 c.actor={n:'Nan Ferrow',fatherCompassVisitor:true,x:0,y:40,straightSceneWalk:true,goto:[80,40]};
 run("restoreFatherCompass({owned:true,meatGiven:false});scene={nanGifts:true,npcActor:actor}");

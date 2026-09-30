@@ -40,6 +40,7 @@ jobs:
         run: |
           node tests/arena-entry.mjs
           node tests/arena-entry-lifecycle.mjs
+          node tests/arena-awareness-world.mjs
           node tests/sword-tutorial.mjs
           node tests/riding-tutorial.mjs
           node tests/town-music.mjs
@@ -54,11 +55,17 @@ jobs:
           node tests/cutscene-walking.mjs
           node tests/green-encounter.mjs
           node tests/thornwell-followup.mjs
+          node tests/rowan-arrival.mjs
           node tests/thornwell-royal.mjs
           node tests/tavern-patio.mjs
           node tests/bramble-departure.mjs
           node tests/temple-exit-triggers.mjs
           node tests/temple-arenas.mjs
+          node tests/temple-room-updates.mjs
+          node tests/temple-save-load.mjs
+          node tests/first-temple.mjs
+          node tests/sandspire-temple.mjs
+          node tests/hollybeck-temple.mjs
           node tests/temple-compass.mjs
           node tests/father-compass.mjs
           node tests/inventory-icons.mjs
@@ -67,6 +74,7 @@ jobs:
           node tests/npc-conversations.mjs
           node tests/npc-world-talks.mjs
           node tests/quest-map.mjs
+          node tests/quest-compass.mjs
           node tests/living-journal.mjs
           node tests/conversation-view.mjs
           node tests/conversation-flow.mjs
@@ -80,6 +88,7 @@ jobs:
           node tests/forgewick-scenery-borders.mjs
           node tests/desert-border-join.mjs
           node tests/eastern-border-joins.mjs
+          node tests/junction-borders.mjs
           node tests/weather-crash-field.mjs
           node tests/western-border-audit.mjs
           node tests/editor-source-compatibility.mjs

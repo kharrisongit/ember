@@ -18,6 +18,8 @@ foes=[0,1,2].map(i=>({kind:'plant1',x:testRing.x*TS+i*20,y:testRing.y*TS,hp:8,st
 EmberArenaEntry.prepare();`);
  assert(run('foes.every(f=>EmberArenaEntry.protected(f))'),name+' approach is protected');
  assert(run('foes.every(f=>(f.x-testRing.x*TS-8)*entry[0]+(f.y-testRing.y*TS-8)*entry[1]<0)'),name+' waits on opposite side');
+ assert(run('foes.every(f=>foeDir(f.dir,f.flip)===(entry[0]?(entry[0]<0?"w":"e"):entry[1]<0?"u":"d"))'),name+' formation faces the entrance');
+ assert(run('foes.every(f=>(f.x-testRing.x*TS-8)*entry[0]+(f.y-testRing.y*TS-8)*entry[1]<-(testRing.r-1.5)*TS*.5)'),name+' formation waits near the opposite edge');
  const before=run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))');
  run('stepFoes(.5)');assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),before,'No leash chasing');
  // Reproduce the original edge exploit by placing the sword exactly over a waiting target.
@@ -37,7 +39,7 @@ EmberArenaEntry.prepare();`);
  for(const [w,h]of [[390,510],[844,250],[1280,680]]){
   c.size=[w,h];run('VW=size[0];VH=size[1];EmberArenaEntry.frameCamera()');
   assert(run('cam.z>0&&cam.z<=3'),'Framing fits the fight without zooming past the normal camera');
-  assert(run('foes.every(f=>(f.y-80-cam.y)*cam.z>=Math.min(112,VH*.4)-.01&&(f.y+8-cam.y)*cam.z<=VH-16+.01)'),name+' full enemy sprites clear the top battle prompt');
+  assert(run('foes.every(f=>(f.y-80-cam.y)*cam.z>=16-.01&&(f.y+8-cam.y)*cam.z<=VH-16+.01)'),name+' full enemy sprites fit the encounter view');
   assert(run('foes.every(f=>(f.x-cam.x)*cam.z>=0&&(f.x-cam.x)*cam.z<=VW&&(f.y-32-cam.y)*cam.z>=0&&(f.y-32-cam.y)*cam.z<=VH)'),name+' enemies visible at '+w+'×'+h);
  }
  // Reproduce a confirmation between two smoothed rendering frames.
@@ -71,6 +73,7 @@ const previous=[foes[0].x,foes[0].y];EmberArenaEntry.prepare();`);
 assert(run('foes[0].x===previous[0]&&foes[0].y===previous[1]'),'Visible side changes never teleport');
 for(let i=0;i<100;i++)run('EmberArenaEntry.step(.05)');
 assert(run('foes[0].y>testRing.y*TS+8&&foes[0].st==="idle"'),'Formation finishes on new opposite side');
+assert.equal(run('foeDir(foes[0].dir,foes[0].flip)'),'u','A visible restaging finishes facing the entrance, not the last walking step');
 console.log('PASS: all four entry directions, protected approach, one-A battle start, visible phone framing, reverse respawns, consecration, and smooth visible restaging.');
 
 // Aurelius catches up during the pause, including a blocked ground route.
@@ -111,3 +114,16 @@ for(const [dx,dy]of [[0,1],[0,-1],[-1,0],[1,0]]){
  assert.equal(run('arenaLock'),null,'Cleared temple releases normally');
 }
 console.log('PASS: rectangular temple rooms pause, seal, confirm and clear from all four entry sides.');
+
+// Desert bends must stage for the next road entrance while the player is
+// still around the corner, rather than facing their straight-line position.
+run(`MAPID='world';MD=W.maps.world;features=[{id:29000,kind:'arena',x:140,y:100,r:6.3},
+ {id:29001,kind:'route',pts:[[100,100],[160,100],[160,40]],w:5}];
+currentArenaFeatures=()=>features.filter(f=>f.kind==='arena');arenaLock=null;cam.x=-100000;cam.y=-100000;
+P.x=160*TS+8;P.y=40*TS+8;foes=[0,1,2].map(i=>({kind:'reptile',x:140*TS+i*8,y:100*TS,hp:8,st:'idle',t:0}));
+EmberArenaEntry.reset();EmberArenaEntry.prepare();`);
+assert(run('foes.every(f=>f.x<140*TS+8&&foeDir(f.dir,f.flip)==="e")'),'A northward bend east of the arena uses its eastern entrance');
+assert.equal(run('new Set(foes.map(f=>f.x)).size'),1,'The entire three-enemy wave forms one line');
+run('P.x=100*TS+8;P.y=100*TS+8;EmberArenaEntry.prepare()');
+assert(run('foes.every(f=>f.x>140*TS+8&&foeDir(f.dir,f.flip)==="w")'),'Returning from the other route end reverses the formation');
+console.log('PASS: road-aware staging around a distant bend and a reversed three-enemy lineup.');
