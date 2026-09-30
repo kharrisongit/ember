@@ -5,6 +5,9 @@
   const FIRST_ARENA=11;
   const SWORD_ARENA=208;
   let swordDone=false,corinHealDone=false,corinHit=false,corinStartHp=6,resumeCorin=false;
+  let demoHit=false,demoPause=0;
+  const demonstratingFire=()=>phase==='fireDemo'&&!scene&&!revealing;
+  const fireLessonTarget=foe=>['fire','fireDemo'].includes(phase)&&MAPID==='world'&&mounted&&arenaLock?.id===FIRST_ARENA&&foe.ridingArena===FIRST_ARENA;
   let done=false,unlocked=false,phase='',ringId=null,internal=false,resumeRecovery=false,assembly=null;
   const recoveryPhases=new Set(['recovery','dismountTalk','dismount','healTalk','itemsButton','heal','thanks']);
   const corinRecoveryPhases=new Set(['corinRecovery','corinHealTalk','corinItemsButton','corinHeal','corinThanks']);
@@ -16,7 +19,7 @@
     if(!text)return;
     const slash=text==='Press A to Slash',sword=text==='Press A to Swing Your Sword';
     window.EmberEncounterCard.paint(hint,{title:text,kicker:slash?'DRAGON • SLASH':sword?'SWORD • SWING':'LEARN THE CONTROLS',
-      detail:slash?'Strike together. Aurelius slashes the foes in front of him.':sword?'Face your enemy and swing. Your first battle starts with you.':
+      detail:slash?'Fire has a '+DRAGON_BREATH.fire.cool+' second cooldown. While it recharges, slash the foes in front of Aurelius.':sword?'Face your enemy and swing. Your first battle starts with you.':
         /Hare Meat|Potion/.test(text)?'A little care gets you back into the fight.':/Mount|Dismount/.test(text)?'You and Aurelius make a team. Choose how to travel together.':'Use the highlighted control below when you are ready.',
       action:slash?'Press A to slash.':sword?'Press A to swipe.':'Press the highlighted button below.',key:slash||sword?'A':'↓',kind:slash?'dragon':'lesson',dismiss:slash||sword?'a':'control'});
   };
@@ -134,6 +137,11 @@
   function step(dt){
     if(!gameplayStarted||mode!=='play')return;
     hint.hidden=!hint.dataset.instruction||!!scene||!!revealing;
+    if(demonstratingFire()&&demoHit&&!breath){
+      demoPause+=dt;
+      // Leave the damaged enemy visible after the impact before covering play.
+      if(demoPause>=.55){moveTo('battle','Press A to Slash');paint();saveGame();}
+    }
     if(phase==='swordWalls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();moveTo('swordTalk');
       playScene(["Corin: What are these walls? I can’t escape! I have to fight!"],{who:'Corin',hidePortrait:true,after:()=>{
@@ -177,7 +185,7 @@
   function fired(element){
     if(phase!=='fire'||element!=='fire')return;
     if(scene?.ridingFirePrompt){scene=null;showScene();}
-    moveTo('battle','Press A to Slash');overlay(null);saveGame();
+    demoHit=false;demoPause=0;moveTo('fireDemo');overlay(null);saveGame();
   }
   function completed(ring){
     if(!corinHealDone&&phase==='swordBattle'&&ring?.id===SWORD_ARENA){beginCorinRecovery();return;}
@@ -282,7 +290,7 @@
   }
   function capture(){return {version:3,done,unlocked,phase,ringId,swordDone,corinHealDone,corinHit,corinStartHp};}
   function restore(saved){
-    clearHighlight();notice('');phase='';assembly=null;resumeRecovery=false;resumeCorin=false;document.body.classList.remove('riding-guide');
+    clearHighlight();notice('');phase='';assembly=null;demoHit=false;demoPause=0;resumeRecovery=false;resumeCorin=false;document.body.classList.remove('riding-guide');
     const data=saved.ridingTutorial;
     swordDone=data?.swordDone===undefined?(saved.quest>Q.ARMED||!!data?.done):!!data.swordDone;
     corinHealDone=data?.version===3?!!data.corinHealDone:swordDone;
@@ -317,7 +325,7 @@
     stageEnemies();
   }
   function skip(){swordDone=true;corinHealDone=true;done=true;unlocked=true;resumeRecovery=false;resumeCorin=false;moveTo('');}
-  window.EmberRiding={stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,swordContact,allowControl,action,key,blockPointer,capture,restore,skip,
+  window.EmberRiding={demonstratingFire,fireLessonTarget,fireHit:foe=>{if(phase==='fireDemo'&&fireLessonTarget(foe))demoHit=true;},stageEnemies,waitingEnemy,holding,step,gather,gathering:()=>phase==='gather',entered,completed,allowedItem,allowOverlay,opened,paint,mountedAction,fired,usedItem,swordContact,allowControl,action,key,blockPointer,capture,restore,skip,
     canSwipe:()=>swordDone||phase==='swordSwipe',
     unlocked:()=>unlocked,protectFirstBattle:()=>phase==='battle',protectSwordBattle:()=>phase==='swordBattle',blocksArenaEntry:()=>recoveryPhases.has(phase)||corinRecoveryPhases.has(phase)};
 })();

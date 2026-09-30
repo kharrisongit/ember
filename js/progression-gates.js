@@ -16,15 +16,7 @@ const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
 const caravanSprite={source:[76,138,1390,746],width:96,height:52};
-let snowChildPortrait=null;
-async function prepareJourneyArt(){
-  await prepareHollybeckArt();
-  if(snowChildPortrait)return;
-  const face=document.createElement('canvas');face.width=96;face.height=112;
-  const g=face.getContext('2d');g.imageSmoothingEnabled=false;
-  g.drawImage(animalSheets.hollybeck_tobin_idle_d,15,11,34,37,0,0,96,112);
-  snowChildPortrait=face.toDataURL('image/png');
-}
+async function prepareJourneyArt(){await prepareHollybeckArt();}
 // The camels lead from the south/front of the wagon, clear of the rock and houses.
 const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
@@ -81,7 +73,7 @@ function prepareJourneyGates(){
     "Tobin: I'm not finished yet, so you'll have to come back later. They still need noses!"
   ]);
   Object.assign(tobin,{packDirections:true,packWalk:true,stationary:false,patrol:true,patrolSpeed:22,patrolRest:2200,idleFps:4,
-    patrolPoints:[[hb.x-50,hb.y+8],[hb.x-34,hb.y+8],[hb.x-34,hb.y-20],[hb.x-62,hb.y-20]]});
+    patrolPoints:[[hb.x-50,hb.y+8],[hb.x-50,hb.y-20]]});
   npcs.push(tobin);
 }
 function progressionProp(spr,x,y,scale=1,phase=0){return {progressionProp:true,spr,x,y,scale,phase};}

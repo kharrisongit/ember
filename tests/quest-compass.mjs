@@ -16,7 +16,16 @@ for(const [id,name]of [['fishing','Calder'],['smith','Dunstan'],['shield','Sela'
  const t=value('atlasQuestTarget('+JSON.stringify({id,place:id==='fishing'?'Route 1':'Forgewick'})+')');assert(t,id+' has a destination');
  const n=value(`W.maps['${t.map}'].npcs.find(n=>n.n==='${name}')`);assert.equal(t.x,n.x);assert.equal(t.y,n.y+32);
 }
-assert.equal(value("atlasQuestTarget({id:'bramble',place:'Thornwell'})").map,'tavern');
+run("brambleQuest=1;thornwellRoyal.stage=1;");
+assert.equal(value("atlasQuestTarget({id:'bramble',place:'Thornwell'})").map,'world','Unknown owner points to town, not the tavern');
+for(const q of value('atlasQuestOptions()').filter(q=>['main','bramble','thornwell-royals'].includes(q.id))){
+ assert.doesNotMatch(q.detail,/Rowan|Copper Cup|tavern/i,'The journal does not reveal the owner');
+ assert.equal(value('atlasQuestTarget('+JSON.stringify(q)+')').map,'world');
+}
+run("rememberDragonKnowledge('Orin','Rowan is in the Copper Cup tavern.',false)");
+assert.equal(value("atlasQuestTarget({id:'bramble',place:'Thornwell'})").map,'tavern','A learned clue reveals the destination');
+assert.match(run('atlasMainObjective().detail'),/Rowan/);
+run("brambleQuest=3;thornwellRoyal.stage=7;");
 run("atlasTrackedQuest='temple:Sandspire';breathHas.ice=true;");
 assert(value('compassSelectedTarget()'));assert.equal(run('atlasTrackedQuest'),'main','Completed target falls back to main quest');
 run('atlasCompassTutorialSeen=true');const journal=value('captureQuestJournal()');run('restoreQuestJournal(null)');assert(!run('atlasCompassTutorialSeen'));

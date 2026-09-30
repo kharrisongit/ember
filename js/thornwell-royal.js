@@ -4,7 +4,7 @@
    5: royal departure, 6: hurry to the falls, 7: reunited (or legacy complete). */
 let thornwellRoyal={stage:0,answers:{}};
 let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null;
-const THORNWELL_ROYALS=['King Halvard','Serjeant Bram','Doran','Tolan'];
+const THORNWELL_ROYALS=['King Halvard','Serjeant Bram'];
 const THORNWELL_RESIDENTS=new Set(['Orin','Linna','Isolde','Cartwright Oswin','Garrow','Wren','Merrin','Asta','Colm','Rowan the Hunter','Ada','Bren','Berta','Della','Ewan','Osric','Alder','Gwyneth','Archivist Elowen','Mira','Oren','Tamsin','Tessa','Master Iven','Brin','Bram','Nell','Sable','Pella','Bess','Ronan','Venn','Hobb','Edric','Dorr','Ser Anwen','Grusk','Fen','Senn','Dain','Rusk','Linnet','Puck','Pip','Vale','Cerys','Nyra','Maren','Celia']);
 function captureThornwellRoyal(){return {stage:thornwellRoyal.stage,answers:{...thornwellRoyal.answers}};}
 function restoreThornwellRoyal(saved,legacy={}){
@@ -41,7 +41,7 @@ function thornwellVisitTopic(n){
   if(!thornwellKnowledgeHidden(n))return null;
   const after=thornwellRoyal.stage>=5;
   const group=n.n==='Bess'?'host':n.n==='Rowan the Hunter'?'hunter':/Elowen|Iven|Sable|Celia|Bren|Ewan/.test(n.n)?'records':/Maren|Linna|Isolde|Wren|Oswin/.test(n.n)?'supplies':/Nell|Brin|Mira|Oren|Tamsin|Pella/.test(n.n)?'students':'neighbours';
-  const first=n.n==='Bess'?'He took the corner table and ordered four suppers. When I named the price, his serjeant asked how much I valued my licence.':
+  const first=n.n==='Bess'?'He took the corner table and ordered two suppers. When I named the price, his serjeant asked how much I valued my licence.':
     n.n==='Rowan the Hunter'?'His men have been searching around Thornwell. A hunter notices when strangers begin inspecting familiar ground.':
     /Elowen|Iven|Sable|Celia|Bren|Ewan/.test(n.n)?'The royal men asked which histories we teach. They seemed more troubled by the books than by anything on the road.':
     /Maren|Linna|Isolde|Wren|Oswin/.test(n.n)?'His men call it a royal visit. Those of us supplying the food have another name for it.':
@@ -49,7 +49,7 @@ function thornwellVisitTopic(n){
     'People have been measuring every word since the royal party arrived. A quiet room is not always a happy one.';
   return {branchKey:'visit/'+group+'/'+(after?'after':'before'),title:after?'After the royal visit':'The king in Thornwell',category:'world',lines:[n.n+': '+first,
     'Corin: '+(after?'They have gone east.':'Does nobody tell him to stop?'),
-    n.n+': '+(after?'Then let us hope they keep going. Take care on the road; a crown does not make its wearer kind.':'Not with three armed men waiting to teach us manners. Be careful in there.') ]};
+    n.n+': '+(after?'Then let us hope they keep going. Take care on the road; a crown does not make its wearer kind.':'Not with the king’s knight waiting to teach us manners. Be careful in there.') ]};
 }
 function thornwellCheckpoint(stage){thornwellRoyal.stage=stage;saveGame();}
 function thornwellScene(lines,after,actor){
@@ -73,7 +73,7 @@ function beginThornwellDetour(){
     if(!thornwellFlight){saveGame();return;}
     thornwellFlight.phase='lift';dragon.dir='e';dragon.moving=false;
     startTransition('up',true);
-    thornwellScene([],()=>{saveGame();toast('Return Bramble to Rowan at the Copper Cup. Aurelius will wait at Forgefalls.');});
+    thornwellScene([],()=>{saveGame();toast('Find out who Bramble belongs to. Aurelius will wait at Forgefalls.');});
     scene.silent=true;scene.until=()=>!thornwellFlight;showScene();
   });
   saveGame();return true;
@@ -123,11 +123,11 @@ function syncThornwellRoyals(){
   const visible=MAPID==='tavern'&&thornwellRoyal.stage>=1&&thornwellRoyal.stage<=4&&!wonAll;
   if(!visible){if(MAPID!=='world'||thornwellRoyal.stage!==5)npcs=npcs.filter(n=>!n.thornwellRoyal);return;}
   if(npcs.some(n=>n.thornwellRoyal))return;
-  // The northeast round table is unoccupied. Follow its published position
-  // when the editor's extracted furniture is available.
+  // Keep the seated king at the north edge of the replacement square table,
+  // following the editor's published position.
   const table=(MD.roomActors||[]).find(o=>o.editKey==='remaining:tavern:18');
   const dx=table?table.x-396:0,dy=table?table.y-187:0;
-  for(const [i,pos]of [[396,153],[369,181],[426,181],[440,210]].entries())
+  for(const [i,pos]of [[396,169],[434,185]].entries())
     npcs.push(thornwellRoyalActor(THORNWELL_ROYALS[i],pos[0]+dx,pos[1]+dy));
 }
 function thornwellKing(){return npcs.find(n=>n.thornwellRoyal&&n.n==='King Halvard');}
@@ -163,8 +163,8 @@ function beginRowanReunion(){
   const path=thornwellReachable(P,[[rowan.x-32,rowan.y+28],[rowan.x+32,rowan.y+28],[rowan.x,rowan.y+40]]);
   const trail=maddockWalkPath(dog,[P.x,P.y],(x,y)=>canNpcStand(x,y,dog));
   if(!path||!trail)return false;
-  thornwellScene(['Rowan: Bramble! There you are. Bring him over here, lad.'],()=>{
-    thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);tryBrambleReunion(rowan);},'rowan');
+  thornwellScene(['Rowan: Hey, over here!'],()=>{
+    thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);faceToward(rowan,P.x,P.y);tryBrambleReunion(rowan);},'rowan');
     thornwellMotion.dog=dog;thornwellMotion.trail=trail;
     scene.until=()=>!thornwellMotion?.path?.length&&Math.hypot(dog.x-P.x,dog.y-P.y)<=40;
   },rowan);
@@ -200,7 +200,7 @@ function thornwellSummon(){
       'King Halvard: Bess! More cider. And put the meal under service to the crown.',
       'Bess: Those stores have to last us the week, sire.',
       'King Halvard: Then serve smaller portions to everyone else. There. A king has solved your difficulty.',
-      'Doran: Generous of you, sire.',
+      'Serjeant Bram: Generous of you, sire.',
       'King Halvard: Now, boy. Tell me what you have been doing with yourself.'
     ],()=>{
       if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
@@ -255,7 +255,7 @@ function thornwellKingTopics(n){
     ],[
       ['I was trying to finish my errand.','careful',['Corin: I was trying to finish my errand.','King Halvard: A small duty. You will find mine take precedence.','Serjeant Bram: There is your lesson for the day.']],
       ['Maddock was waiting for his food.','defiant',['Corin: Maddock was waiting for his food.','King Halvard: Then hunger taught him patience. A useful lesson at any age.','Corin: He had done nothing wrong.','King Halvard: Neither have you. Yet you are beginning to tire me.']],
-      ['Your questions, Your Majesty.','polite',['Corin: Your questions, Your Majesty.','King Halvard: Better. There is hope for the boy.','Doran: A natural courtier, sire.','King Halvard: Let us not spoil him.']]
+      ['Your questions, Your Majesty.','polite',['Corin: Your questions, Your Majesty.','King Halvard: Better. There is hope for the boy.','Serjeant Bram: A natural courtier, sire.','King Halvard: Let us not spoil him.']]
     ])},
     {n:'Who pays for this meal?',category:'story',summary:'Bess’s stores become the crown’s tribute',go:()=>thornwellAnswer(n,'tax',[
       'Corin: Will Bess be paid for feeding all of you?',
@@ -272,7 +272,7 @@ function thornwellKingTopics(n){
     ],[
       ['Only the dog I brought back.','dog',['Corin: Only the dog I brought back.','King Halvard: Then for once a creature has been returned to its proper owner.','King Halvard: Remember that. Anything of consequence in this realm belongs to the crown.']],
       ['What would you do if you found a dragon?','probe',['Corin: What would you do if you found one?','King Halvard: Put it beyond the reach of fools. A dragon is power, boy. Power requires a master.','Corin: And if it would not obey?','King Halvard: Then it would be of no use to me.']],
-      ['I have heard no reports in town.','careful',['Corin: I have heard no reports in town.','Doran: Nor have we, after all that walking.','King Halvard: You are paid to search, Doran, not to announce your failures.']]
+      ['I have heard no reports in town.','careful',['Corin: I have heard no reports in town.','Serjeant Bram: My patrol found nothing either, sire.','King Halvard: You are paid to search, Bram, not to announce your failures.']]
     ])},
     {n:'The riders before Wingfall',category:'world',summary:'Hear the history the king wants remembered',go:()=>thornwellAnswer(n,'riders',[
       'Corin: The school has books about the seven riders.',
@@ -314,49 +314,6 @@ function thornwellKnightTopics(n){
         'Corin: You make it sound like copying a shopping list.',
         'Serjeant Bram: A short list is easier on everyone. Do not add yourself.'
       ]]
-    ],
-    Doran:[
-      ['Still hunting things that do not exist?','Remind him of the road outside Millwood',[
-        'Corin: You said you had spent fifty years hunting something that did not exist.',
-        'Doran: The crown has. I have not been marching for fifty years. Feels like it, mind.',
-        'King Halvard: Is this an amusing conversation?',
-        'Doran: I was praising your persistence, sire.',
-        'Corin: That was quick.',
-        'Doran: It has to be.'
-      ]],
-      ['You laughed at Bess','A joke with someone else paying for it',[
-        'Corin: You thought it was funny when he refused to pay her.',
-        'Doran: A man laughs when his king makes a joke.',
-        'Corin: Was it a joke?',
-        'Doran: Eat at the right table, boy. You will worry less about the bill.'
-      ]],
-      ['Did you search the whole town?','A careless answer about the royal patrol',[
-        'Doran: Orchards. Yards. Stables. Tolan looked under a cart. Very thorough.',
-        'Corin: And you found nothing?',
-        'Doran: A hen that bit Bram. Best lead of the morning.',
-        'Serjeant Bram: Enough.',
-        'Doran: As you say.'
-      ]]
-    ],
-    Tolan:[
-      ['Is this what being a knight means?','The uniform and what he uses it for',[
-        'Tolan: Hot food, dry boots, and people moving when you tell them.',
-        'Corin: What about protecting them?',
-        'Tolan: From trouble. Usually begins when they stop moving.'
-      ]],
-      ['Are you afraid of the king?','A question he does not want overheard',[
-        'Tolan: Keep your voice down.',
-        'Corin: That answers it.',
-        'Tolan: I know which side of the table to stand on. Learn that and you might grow old.',
-        'Corin: At somebody else’s expense?',
-        'Tolan: Better theirs than mine.'
-      ]],
-      ['The man waiting at the roadblock','He remembers the people he delayed',[
-        'Corin: Back in Millwood, you kept people waiting as though their time meant nothing.',
-        'Tolan: To His Majesty, it did not.',
-        'Corin: I asked what it meant to you.',
-        'Tolan: I heard you. I chose my answer.'
-      ]]
     ]
   };
   return (data[n.n]||[]).map(([title,summary,lines])=>({n:title,summary,category:'story',go:()=>window.EmberConversationFlow.playTopic(n,{title,lines})}));
@@ -376,7 +333,7 @@ function thornwellDeparture(){
     const forward=[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]].find(p=>canStand(...p));
     if(forward)[P.x,P.y]=forward;
     for(const [i,name]of THORNWELL_ROYALS.entries()){
-      const offsets=[[0,8],[-28,28],[28,28],[48,8]];
+      const offsets=[[0,8],[30,20]];
       const actor=thornwellRoyalActor(name,origin[0]+offsets[i][0],origin[1]+offsets[i][1]);
       const spot=[[actor.x,actor.y],[actor.x,actor.y+16],[actor.x,actor.y-16],origin].find(p=>thornwellClear(...p,actor));
       if(spot){[actor.x,actor.y]=spot;actor.px=actor.x;actor.py=actor.y;}
@@ -386,8 +343,8 @@ function thornwellDeparture(){
   },()=>{
     const king=thornwellKing();thornwellMotion=null;
     thornwellScene([
-      'King Halvard: Come on, boys. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
-      'Doran: At last. A road with an end to it.'
+      'King Halvard: Come, Bram. There’s no dragon here. Let’s make our way past Forgefalls and back to Cinderhold.',
+      'Serjeant Bram: As you command, sire.'
     ],thornwellRoyalExit,king);
     scene.hold=()=>fade<=0;showScene();
     // Reveal the party only after Bram's announcement has been read in black.
@@ -439,8 +396,8 @@ function thornwellReunionDialogue(){
   thornwellScene([
     'Corin: Aurelius! Are you all right?',
     'Aurelius: Yes. Why are you looking at me as though I have fallen apart?',
-    'Corin: Halvard was in the tavern. He remembered me from Millwood. His men left just ahead of me. They said they were coming this way.',
-    'Aurelius: I saw them pass. Three knights and a king complaining about the road. I stayed behind the trees until they were gone.',
+    'Corin: Halvard was in the tavern. He remembered me from Millwood. He and Bram left just ahead of me. They said they were coming this way.',
+    'Aurelius: I saw them pass. One knight and a king complaining about the road. I stayed behind the trees until they were gone.',
     'Corin: He talked about dragons as though they were things he could take. I thought they might find you.',
     'Aurelius: They did not. And I have no intention of belonging to him.',
     'Corin: We need to be careful. In towns, on the road… everywhere his men might be watching.',
@@ -482,7 +439,7 @@ function stepThornwellRoyal(dt){
 function thornwellStoryObjective(){
   const stage=thornwellRoyal.stage;
   if(stage<1||stage>=7)return null;
-  if(stage===1&&brambleQuest<3)return ['Return Bramble quietly','Thornwell','Bring Bramble to Rowan at the Copper Cup. Aurelius is staying out of sight and will meet you at Forgefalls.'];
+  if(stage===1&&brambleQuest<3)return ['Find Bramble’s owner','Thornwell',brambleQuest>=2?'Wait for Bramble and his owner to leave together.':atlasBrambleClue()+' Aurelius is staying out of sight and will meet you at Forgefalls.'];
   if(stage<=3)return ['The king’s summons','Thornwell','Return to the Copper Cup and speak with King Halvard and his knights at the corner table.'];
   if(stage===4)return ['Leave the Copper Cup','Thornwell','Halvard has dismissed you. Leave the tavern to continue toward Forgefalls.'];
   if(stage===5)return ['Make way for royalty','Thornwell','The royal party is leaving the Copper Cup. Wait for them to pass.'];

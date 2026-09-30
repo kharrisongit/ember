@@ -28,6 +28,7 @@ for(const source of ['mine','falls','falls-mountain']){
  assert(row.slice(1).every((o,i)=>o.x-row[i].x===42),'Horizontal canopy spacing has no skipped trees');
  assert(row.every(o=>o.s===0),'Scenery rows use oak');
  if(source==='mine')assert(row.at(-1).x/16>815,'Mine row reaches the eastern mountain edge');
+ if(source==='falls')assert(row.every(o=>o.y===328*16),'Forgefalls trees stand a tile farther forward');
  if(source==='falls-mountain')assert(row[0].x/16<333&&row.at(-1).x/16>517,'Trees cover the whole Forgefalls mountain');
 }
 assert(c.hidden.has(2)&&c.hidden.has(3),'Stray campsite props are removed');

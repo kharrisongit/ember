@@ -12,8 +12,8 @@ const tick=(frames=1)=>run(`for(let i=0;i<${frames};i++){
 run(`mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.owned=true;templeCompass.meatGiven=true;
 for(const [id,m]of Object.entries(W.maps)){prepareMarketNpcCast(m,id);prepareDialoguePortraitCast(m,id)}
 loadMap('tavern');brambleQuest=1;thornwellRoyal.stage=1;P.x=250;P.y=250;syncBrambleParty();syncThornwellRoyals();`);
-assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),4,'Royal party is visible during the handoff');
-assert.equal(run('thornwellKing().y'),run("MD.roomActors.find(a=>a.editKey==='remaining:tavern:18').y-34"),'King sits at the north edge of the table');
+assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2,'Royal party is visible during the handoff');
+assert.equal(run('thornwellKing().y'),run("MD.roomActors.find(a=>a.editKey==='remaining:tavern:18').y-18"),'King sits at the north edge of the table');
 assert.equal(run('thornwellKing().x'),396,'Royal table is the unoccupied northeast table, not Fen’s table');
 assert(run("tavernActorDepth(thornwellKing(),MD.roomActors)>tavernActorDepth(MD.roomActors.find(a=>a.editKey==='remaining:tavern:18'),MD.roomActors)"),'Seated king renders above the tabletop');
 assert(run(`npcs.filter(n=>n.thornwellRoyal&&n.n!=='King Halvard').every(n=>n.packSpr.startsWith('royal_intro_guard_')&&!n.packWalk&&!n.packDirections)`),'Ceremonial guard identities use idle art');
@@ -42,7 +42,7 @@ run('thornwellRoyal.stage=1');
 run('saveToSlot(3,true);thornwellRoyal.stage=7');assert(run('loadGame(3)'));
 assert.equal(run('thornwellRoyal.stage'),1);assert.equal(run('dragonHere()'),false);
 run('syncBrambleParty();syncThornwellRoyals();');
-assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),4);
+assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2);
 run(`tryBrambleReunion(npcs.find(n=>n.n==='Rowan the Hunter'));`);
 tick(800);
 assert.equal(run('brambleQuest'),3,'Rowan and Bramble leave before the summons');
@@ -55,7 +55,7 @@ assert(run('Math.hypot(P.x-thornwellKing().x,P.y-thornwellKing().y)<55'),'Corin 
 assert(spoken.some(s=>s.includes('boy with the eggs')));
 assert(!spoken.some(s=>s.includes('hear you have a dragon')));
 let choices=0;
-for(const name of ['King Halvard','Serjeant Bram','Doran','Tolan']){
+for(const name of ['King Halvard','Serjeant Bram']){
  c.royalName=name;
  run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName))');
  const titles=Array.from(run('ask.opts.filter(o=>o.go&&!o.navigation&&!o.head).map(o=>o.n)'));
@@ -91,7 +91,7 @@ run('restoreThornwellRoyal(null,{brambleQuest:1})');assert.equal(run('thornwellR
 run('restoreThornwellRoyal({stage:3,answers:{tax:"defiant"}})');assert.equal(run('thornwellRoyal.stage'),2);
 assert.equal(run('thornwellRoyal.answers.tax'),'defiant');
 assert(run('loadGame(3)'));run('scene=null;ask=null;sayNpc=null;');
-console.log(`PASS: ${residents.length} residents keep Aurelius secret; four royals, 12 branches, forced approach, real save/load and legacy migration.`);
+console.log(`PASS: ${residents.length} residents keep Aurelius secret; king and one knight, 12 branches, forced approach, real save/load and legacy migration.`);
 // Use real published outdoor collision, exits and landmarks for all motion.
 console.log('Checking the published outdoor route…');
 run(`loadMap('world');const royalExit=W.maps.tavern.doors.find(d=>d.to==='world');P.x=royalExit.tx*TS+8;P.y=royalExit.ty*TS+TS;cam.x=P.x-200;cam.y=P.y-150;thornwellDoorArrived('tavern');`);
@@ -102,7 +102,7 @@ const before=run('[P.x,P.y]');
 run('thornwellDeparture()');
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),0,'Party does not appear before black');
 run('useDoors(2)');assert.equal(run('fade'),1);
-assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),4,'Party appears at full black');
+assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2,'Party appears at full black');
 assert.equal(run('fadeDir'),0,'The blackout waits for the knight’s announcement');
 assert.equal(run('scene.lines[0]'),'Serjeant Bram: Make way for royalty!');
 assert.equal(run('typeFull'),'Make way for royalty!','The announcement is visible during the blackout');
@@ -159,7 +159,7 @@ run(`restoreThornwellRoyal({stage:0});brambleQuest=1;P.x=230*TS;P.y=100*TS;drago
 const xBefore=run('dragon.x');tick(900);
 assert.equal(run('thornwellRoyal.stage'),1);assert.equal(run('thornwellFlight'),null);
 assert(run('dragon.x')>xBefore+250);assert(run('hasDragon()'));assert.equal(run('dragonHere()'),false);
-assert.equal(run('atlasMainObjective().title'),'Return Bramble quietly');
+assert.equal(run('atlasMainObjective().title'),'Find Bramble’s owner');
 run('skipBrambleForTest()');assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 run('devUnlocked=true');assert(run('replayThornwellForTest()'));assert.equal(run('thornwellRoyal.stage'),0);assert(run('brambleWelcomeInside()'));
 assert(run('welcomePath()'),'The replay position has a real approach even beside the town fence');

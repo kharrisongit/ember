@@ -45,3 +45,9 @@ Aurelius's individual `aurelius.webp` portrait was edited with built-in imagegen
 on September 28 to retain exactly two head horns, matching the sprite.
 His red scales, pale throat, wings, pose and painted portrait style are preserved.
 The edit prompt is recorded in `aurelius-two-horns-prompt.txt`.
+
+September 30 Hollybeck revisions use individual transparent 384px WebP portraits
+for Sverre, Runa and Tobin. Built-in imagegen used each current outdoor sprite
+as the identity/clothing reference and Prue's painted portrait as the style
+reference. Prompts and asset paths are in `hollybeck-revision-prompts.json`.
+Tobin now uses the same painted portrait renderer as the rest of the cast.

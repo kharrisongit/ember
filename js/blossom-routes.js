@@ -150,7 +150,8 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
       // At this short offset join, preserve the outer rows across the bend.
       // Physical road clearance and the spacing grid still keep it open.
       const borderRow=p.roofBacking||p.transition?0:row;
-      if(roads.some(r=>blossomWithinRoadCaps(p.x,p.y,r)&&blossomRoadDistance(p.x,p.y,r)<r.half+2+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
+      const roadMargin=p.kind==='scenery'&&p.source==='falls'?1:2;
+      if(roads.some(r=>blossomWithinRoadCaps(p.x,p.y,r)&&blossomRoadDistance(p.x,p.y,r)<r.half+roadMargin+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
       if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
         Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
       if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,borderRow))))continue;
@@ -310,7 +311,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const falls=features.find(f=>f.kind==='landmark'&&f.label==='Forgefalls');
   const cliff=falls&&objs.find(o=>NAMES[o.s]==='cliff_fall'&&Math.abs(o.x/TS-falls.x)<2&&Math.abs(o.y/TS-falls.y)<2);
   if(cliff&&SPR.cliff_fall)sceneryRow((cliff.x-SPR.cliff_fall[2]/2)/TS,
-    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS-1,'falls');
+    (cliff.x+SPR.cliff_fall[2]/2)/TS,cliff.y/TS,'falls');
   const sceneryBand=(x,y)=>scenery.some(p=>Math.abs(p.x-x)<3&&Math.abs(p.y-y)<2.5);
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
@@ -370,8 +371,8 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const sandy=(p.region==='dying'||p.region==='desert'||p.transition&&p.region==='blossom')&&
       typeof SAND!=='undefined'&&terr[ty*MW+tx]===SAND;
     // Forgefalls' road is directly below the cliff. Put this row at the
-    // existing rock edge, with its artwork in front, rather than in the road.
-    const cliffFoot=p.kind==='scenery'&&p.source==='falls'&&cliff&&(y+1)*TS===cliff.y;
+    // grass verge one tile ahead of the rock, keeping the road below open.
+    const cliffFoot=p.kind==='scenery'&&p.source==='falls'&&cliff&&(y+1)*TS===cliff.y+TS;
     if(!sandy&&![GRASS,WALL].includes(terr[ty*MW+tx])||!cliffFoot&&(rockTiles.has(k)||SCENE_WALL?.has(ty*MW+tx))||
       (typeof felledNew!=='undefined'&&felledNew.includes(k)))return false;
     const px=x*TS+TS/2,py=(y+1)*TS;
@@ -405,7 +406,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
     const [tx,ty]=cell(p);
     fobjs.push({id:id--,s:NAME2I[p.tree||'blo_big'],x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
       blossomRow:p.row,blossomKind:p.kind,blossomFeature:p.source,blossomVertical:p.vertical,borderRegion:p.region||'blossom',
-      ...(p.kind==='scenery'&&p.source==='falls'?{sy:cliff.y+1}: {})});
+      ...(p.kind==='scenery'&&p.source==='falls'?{sy:cliff.y+TS+1}: {})});
     terr[ty*MW+tx]=WALL;
   }
 }

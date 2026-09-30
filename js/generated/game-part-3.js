@@ -4136,7 +4136,7 @@ function frameCore(ms) {
   stepKingsMen(dt);
   stepQuest(dt);
   stepDragonBanter(dt);
-  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())stepBreath(dt);
+  if(globalThis.window?.EmberRiding?.demonstratingFire()||(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()))stepBreath(dt);
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
   if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())stepClaw(dt);

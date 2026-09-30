@@ -9,10 +9,10 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
  inset:auto;left:var(--encounter-left,12px);top:var(--encounter-top,12px);
  width:var(--encounter-width,calc(100% - 24px));height:var(--encounter-height,calc(100% - var(--deck) - 24px));max-width:none;margin:0;transform:none;padding:clamp(14px,4vh,40px) clamp(14px,4vw,52px);
  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,1.8vh,20px);
- overflow:auto;isolation:isolate;border:2px solid var(--gold);border-radius:28px 7px;
- background:radial-gradient(ellipse at 50% 25%,var(--glow),transparent 52%),linear-gradient(155deg,#263d49f7,#15252efc 48%,#362532fc);
+ overflow:auto;isolation:isolate;border:2px solid var(--gold);border-radius:5px;
+ background:radial-gradient(ellipse at 50% 25%,var(--glow),transparent 52%),repeating-linear-gradient(90deg,#d7a95806 0 2px,transparent 2px 8px),linear-gradient(155deg,#612a24fc,#301b1afc 48%,#491d20fc);
  color:#fff5dd;text-align:center;cursor:pointer;pointer-events:auto;touch-action:manipulation;
- box-shadow:inset 0 0 0 6px #0f1c24;
+ box-shadow:inset 0 0 0 5px #2a1918,inset 0 0 0 7px #c3945366;
  animation:encounterEnter .48s cubic-bezier(.16,1,.3,1) both;font-family:system-ui,sans-serif;
 }
 #arenaReady[hidden],#ridingHint[hidden]{display:none}
@@ -48,14 +48,20 @@ body.riding-guide :is(#airRows,#atkRows,#itemRows) .row:not(.riding-target){opac
 :root[data-encounter-size="tiny"] .encounter-action{padding:5px 12px;font-size:12px;gap:8px}
 :root[data-encounter-size="tiny"] .encounter-action b{width:26px;height:26px;font-size:18px}
 @media(prefers-reduced-motion:reduce){#arenaReady,#ridingHint,.encounter-emblem,.blade-left,.blade-right,body.riding-guide .riding-target{animation:none!important;transition:none!important}}
-/* Lessons read as a field guide; battle cards keep the dark crossed-sword stage. */
-#ridingHint,#ridingHint[data-kind="dragon"]{--gold:#315e60;--glow:#73a7a438;border-color:#7e9890;border-radius:18px;background:radial-gradient(ellipse at 50% 12%,#ffffff,transparent 62%),linear-gradient(150deg,#f4f0df,#e0ebdf);color:#24494c;box-shadow:inset 0 0 0 5px #fff9e6;cursor:default}
-#ridingHint .encounter-title{font-family:Georgia,serif;text-shadow:none}
-#ridingHint .encounter-detail{color:#435d58}
-#ridingHint .encounter-emblem{border:0;box-shadow:none;background:#fff8e6;animation:none}
-#ridingHint .encounter-action{background:#cbdccf;border-color:#93afa0;color:#24494c;box-shadow:none;border-radius:10px}
-#ridingHint .encounter-action b{background:#315e60;color:#fff5dc;box-shadow:0 3px 0 #1b3a3c}
-#ridingHint .encounter-footnote{color:#50665b}
+/* Illuminated parchment lessons contrast with the crimson battle standard. */
+#ridingHint,#ridingHint[data-kind="dragon"]{--gold:#8c3828;--glow:#b7823238;border:3px double #a37943;border-radius:4px;background:radial-gradient(ellipse at 50% 20%,#fff8df,transparent 70%),repeating-linear-gradient(0deg,#8764310a 0 1px,transparent 1px 4px),linear-gradient(150deg,#f8e9c5,#dbc18e);color:#583623;box-shadow:inset 0 0 0 5px #fff1cb,inset 0 0 0 7px #a3794366;cursor:default}
+#ridingHint .encounter-title{font-family:Palatino,'Palatino Linotype',Georgia,serif;text-shadow:0 1px #fff8df}
+#ridingHint .encounter-detail{color:#62472e;font-family:Georgia,serif}
+#ridingHint .encounter-emblem{border:0;box-shadow:none;background:transparent;animation:none}
+#ridingHint .encounter-action{background:#ead4a7;border:3px double #a37943;color:#583623;box-shadow:0 3px 0 #ba955c66;border-radius:3px;font-family:Georgia,serif}
+#ridingHint .encounter-action b{background:#8c3828;color:#fff0cb;border:2px solid #c58755;box-shadow:0 3px 0 #59231c}
+#ridingHint .encounter-footnote{color:#786046}
+#arenaReady .encounter-kicker{padding:7px 20px;border-top:1px solid #c69a57;border-bottom:1px solid #c69a57;color:#eaca92;font-family:Georgia,serif}
+#arenaReady .encounter-emblem{border:0;border-radius:0;background:transparent;box-shadow:none}
+#arenaReady .encounter-title{font-family:Palatino,'Palatino Linotype',Georgia,serif;color:#fff0cd}
+#arenaReady .encounter-detail{color:#e2cdb0;font-family:Georgia,serif}
+#arenaReady .encounter-action{border:3px double #c1975e;border-radius:3px;background:#7c3e2860;color:#fff0cd;font-family:Georgia,serif}
+#arenaReady .encounter-footnote{color:#dbbd94}
 #arenaReady{cursor:default}
 :is(#arenaReady,#ridingHint) .encounter-footnote{display:block;margin-top:6px;font-size:11px;flex-shrink:0}
 .lesson-book{transform-origin:center;animation:lessonPage 2.8s ease-in-out infinite}
@@ -67,7 +73,7 @@ body:has(#ridingHint[data-dismiss="control"]:not([hidden])) #ab{visibility:hidde
 /* A lively entrance, drifting magic and a repeating sword clash. Text stays still. */
 .encounter-atmosphere{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
 .encounter-card>:not(.encounter-atmosphere){position:relative;z-index:1}
-.encounter-atmosphere::before{content:'';position:absolute;inset:8%;border:1px solid currentColor;border-radius:50%;opacity:.06;transform:rotate(-20deg) scale(1.25,.85);animation:encounterHalo 14s linear infinite}
+.encounter-atmosphere::before{content:'';position:absolute;inset:13px;border:1px solid currentColor;border-radius:2px;opacity:.15}
 .encounter-atmosphere i{position:absolute;left:var(--x);top:var(--y);width:5px;height:5px;background:var(--gold);border-radius:1px;opacity:0;animation:encounterMote 5s ease-in-out var(--delay) infinite}
 .encounter-atmosphere i:nth-child(3n){width:11px;height:11px;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
 #arenaReady{animation:encounterArrival .5s cubic-bezier(.2,.8,.2,1) both}

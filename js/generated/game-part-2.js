@@ -1213,13 +1213,14 @@ function canNpcStand(x,y,actor){
   try{return ![[-5.5,-7],[5.5,-7],[-5.5,-1],[5.5,-1]].some(([dx,dy])=>isSolid(x+dx,y+dy,true));}
   finally{npcCollisionActor=previous;}
 }
+function northSouthPatrol(n){return /^hollybeck_/.test(n.packSpr||'');}
 function patrolRoute(n){
   const clear=(a,b)=>{const d=Math.hypot(b[0]-a[0],b[1]-a[1]),steps=Math.max(1,Math.ceil(d/4));
     for(let i=0;i<=steps;i++)if(!canNpcStand(a[0]+(b[0]-a[0])*i/steps,a[1]+(b[1]-a[1])*i/steps,n))return false;return true;};
-  if(n.patrolPoints&&n.patrolPoints.every((p,i,a)=>clear(p,a[(i+1)%a.length])))return n.patrolPoints;
-  const origin=[n.x,n.y],points=[origin],dirs=[[1,0],[0,1],[-1,0],[0,-1]],seed=n.routeSeed||0;
-  for(let i=0;i<4;i++){
-    const d=dirs[(i+seed)%4];let end=origin;
+  if(n.patrolPoints&&(!northSouthPatrol(n)||n.patrolPoints.every(p=>p[0]===n.x))&&n.patrolPoints.every((p,i,a)=>clear(p,a[(i+1)%a.length])))return n.patrolPoints;
+  const origin=[n.x,n.y],points=[origin],dirs=northSouthPatrol(n)?[[0,1],[0,-1]]:[[1,0],[0,1],[-1,0],[0,-1]],seed=n.routeSeed||0;
+  for(let i=0;i<dirs.length;i++){
+    const d=dirs[(i+seed)%dirs.length];let end=origin;
     for(let dist=8;dist<=48+(seed%4)*16;dist+=8){const p=[origin[0]+d[0]*dist,origin[1]+d[1]*dist];if(!clear(origin,p))break;end=p;}
     if(end!==origin){points.push(end,origin);if(points.length>=5)break;}
   }
@@ -6909,6 +6910,7 @@ function stepWalkers(dt) {
     }
     if (bossScene && m === bossScene.k) continue;
     if (!m.goto) continue;
+    if(northSouthPatrol(m)&&m.goto[0]!==m.x){m.goto=null;m.route=null;m.arrived=true;continue;}
     const dx = m.goto[0] - m.x, dy = m.goto[1] - m.y;
     const d = Math.hypot(dx, dy);
     if (d < 2) {
@@ -7033,7 +7035,7 @@ const KING_GATE_Y = 384;
 const KNIGHT_LINE = 386;
 const ROAD_MID = 30;
 function inRoadBand() {
-  return true;
+  return Math.abs(P.x / TS - ROAD_MID) <= 2;
 }
 function blockedByItem(x, y) {
   if (MAPID !== "world") return false;
@@ -7254,7 +7256,7 @@ function stepQuest(dt) {
     return;
   }
   if (quest === Q.ELDER && !warnedNorth &&
-      P.y < (SPOT.elder[1] - 3) * TS && P.y > (SPOT.elder[1] - 20) * TS &&
+      P.y < (SPOT.elder[1] - 5) * TS && P.y > (SPOT.elder[1] - 20) * TS &&
       inRoadBand()) {
     playScene(["Maddock: Corin, over here!"], {
       until: () => elderArrived(),
@@ -7802,7 +7804,7 @@ function breatheFire() {
   dragonRecallT = 0;
   let best = null, bd = 1e9;
   for (const f of foes) {
-    if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) continue;
+    if (f.st === "dead" || f.ally || f.storyPassive || (globalThis.window?.EmberArenaEntry?.protected(f)&&!globalThis.window?.EmberRiding?.fireLessonTarget?.(f))) continue;
     const d = Math.hypot(f.x - dragon.x, f.y - dragon.y);
     /* The king dragon may be across the arena: approach its firing distance
        instead of wasting the player command as a blind shot. */
@@ -7935,7 +7937,8 @@ function foeBodyProfile(f) {
   return { x: f.x, y: f.y - 16, r: 24 };
 }
 function stepBreath(dt) {
-  if(encounterCombatPaused())return;
+  const lessonFire=!!globalThis.window?.EmberRiding?.demonstratingFire?.();
+  if(encounterCombatPaused()&&!lessonFire)return;
   if (foesHeld) return;
   if (bossScene) return;
   if (dragonCombatPause > 0) dragonCombatPause = Math.max(0, dragonCombatPause - dt);
@@ -7960,7 +7963,7 @@ function stepBreath(dt) {
       if (isSolid(nx, ny)) { b.hit = 1; break; }
       b.x = nx; b.y = ny; b.distance += step; travel -= step;
       const f = foes.find(f => {
-        if (f.st === "dead" || f.ally || f.storyPassive || globalThis.window?.EmberArenaEntry?.protected(f)) return false;
+        if (f.st === "dead" || f.ally || f.storyPassive || (globalThis.window?.EmberArenaEntry?.protected(f)&&!(lessonFire&&globalThis.window?.EmberRiding?.fireLessonTarget?.(f)))) return false;
         const body = foeBodyProfile(f);
         return Math.hypot(body.x - b.x, body.y - b.y) < body.r;
       });
@@ -7972,6 +7975,7 @@ function stepBreath(dt) {
            Corin's attacks can finish it. */
         const damage = f.hp >= fullHp ? Math.min(power, Math.max(1, f.hp - 1)) : power;
         f.hp = Math.max(0, f.hp - damage); f.hurt = 0.35;
+        if(lessonFire)globalThis.window?.EmberRiding?.fireHit(f);
         globalThis.window?.EmberSfx?.breathHit();
         if (f.hp <= 0) {
           f.st = "dead"; f.t = 0;
@@ -11193,7 +11197,7 @@ function syncBrambleParty() {
   }else if(brambleQuest===1){
     const dog=brambleActor("Bramble");placeBrambleBesideCorin(dog);npcs.push(dog);
   }
-  if(MAPID==="tavern"&&brambleQuest<2){const hunter=brambleActor("Rowan the Hunter");hunter.x=256;hunter.y=220;npcs.push(hunter);}
+  if(MAPID==="tavern"&&brambleQuest<2){const hunter=brambleActor("Rowan the Hunter");Object.assign(hunter,{x:256,y:220,px:256,py:220,f:'w',kf:'w',stationary:true,sceneReserved:true,patrol:undefined,patrolPoints:undefined,loc:'Thornwell — Copper Cup'});npcs.push(hunter);}
 }
 function bramblePath(from,to) {
   const snap=p=>p.map(v=>Math.round(v/8)*8),a=snap(from),b=snap(to),q=[a],seen=new Map([[a.join(','),null]]);
@@ -11216,9 +11220,10 @@ function moveBrambleActor(n,path,speed,dt) {
 function tryBrambleReunion(n) {
   if(n.n!=="Rowan the Hunter"||MAPID!=="tavern"||brambleQuest!==1)return false;
   const dog=npcs.find(n=>n.pettable);
+  faceToward(n,P.x,P.y);faceCorinAt(n.x,n.y);
   playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. Bramble usually brings back sticks. Today he has brought me a helpful stranger.",
     smithUpgrade?"Rowan: I see Dunstan has already worked on your blade. You chose well.":"Rowan: Take that sword to Dunstan, the blacksmith in Forgewick. He will give you a stronger blade for the road ahead.",
-    "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,after:()=>{
+    "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,npcActor:n,after:()=>{
       brambleQuest=2;
       const exit=MD.doors.find(d=>d.to==="world"),target=[exit.x*TS+8,exit.y*TS-8];
       brambleDeparture={phase:'south',hunter:n,dog,target,

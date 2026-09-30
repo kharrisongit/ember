@@ -22,8 +22,24 @@ async function prepareMillwoodInteriors() {
   await prepareCastleArchitecture();
   prepareRemainingInteriorActors();
   prepareMaddockDiningFurniture();
+  prepareRoyalDiningFurniture();
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+
+function prepareRoyalDiningFurniture(){
+  const room=W.maps.tavern;
+  if(!room||room._royalSquareTable)return;
+  const table=room.roomActors.find(a=>a.editKey==='remaining:tavern:18');
+  const source=room.roomActors.find(a=>a.editKey==='remaining:tavern:20');
+  if(!table||!source)return;
+  room._royalSquareTable=true;
+  const [,,w,h]=source.sourceRect;
+  table.n='dining table';table.extractedCanvas=source.extractedCanvas;
+  table.sourceRect=[table.x-w/2,table.y-h,w,h];table.sy=table.y-1;
+  // The old round table had no collision rectangle of its own.
+  table.moveBlocks=[room.roomBlocks.length];
+  room.roomBlocks.push([table.x-w/2,table.y-h+6,table.x+w/2,table.y+2]);
 }
 
 function prepareMaddockDiningFurniture(){

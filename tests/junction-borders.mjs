@@ -34,7 +34,7 @@ rebuildBlossomRoutes(guards);
 `,c);
 const front=Array.from(c.fobjs).filter(o=>o.blossomFeature==='falls').sort((a,b)=>a.x-b.x);
 assert(front.length>=12,'The full Forgefalls cliff gets a single front row');
-assert(front.every(o=>o.y===327*16&&o.sy>c.objs[0].y),'Trees sit on the rock edge and draw in front of the cliff');
+assert(front.every(o=>o.y===328*16&&o.sy>c.objs[0].y),'Trees stand one tile in front of the cliff and render in front');
 assert(front.slice(1).every((o,i)=>o.x-front[i].x===42),'No missing trees in the single row');
 for(let x=401;x<=433;x++)for(let y=328;y<=332;y++)assert.equal(c.terr[y*c.MW+x],1,'The road below stays clear');
 const first=JSON.stringify(c.fobjs);vm.runInContext('rebuildBlossomRoutes(guards)',c);assert.equal(JSON.stringify(c.fobjs),first);

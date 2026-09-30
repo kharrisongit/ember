@@ -3,6 +3,7 @@ let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointe
 let atlasGesture=null,atlasTab='quest',atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
 function atlasQuestKind(q){return q?.id==='main'||q?.id==='thornwell-royals'||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
+function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
 function atlasMainObjective(){
  const o=(title,place,detail)=>atlasObjective('main',title,place,detail);
  const opening=[
@@ -19,7 +20,7 @@ function atlasMainObjective(){
  if(quest<Q.DONE)return o(...opening[quest]);
  if(wonAll)return o('A free Emberfell','Millwood','Return to your friends, or select an unfinished side quest below.');
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();if(royal)return o(...royal);
- if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?'Ask about Bramble in Thornwell. Rowan the Hunter is in the Copper Cup tavern.':'Travel east through the camps to Thornwell and speak with the people you meet.');
+ if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.');
  if(!smithUpgrade)return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.');
  if(!charm.edge)return o('Finish with Dunstan','Forgewick','Speak with Dunstan again about the gift that strengthens your blade.');
  if(!glassShield)return o('Visit Sela','Forgewick','Ask the glassblower about her protective shield.');
@@ -46,7 +47,7 @@ function atlasQuestOptions(){
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
  if(royal)add('thornwell-royals',...royal);
  if((dragonLearned('fishing')||odoRodReferral)&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
- if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.');
+ if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',atlasBrambleClue());
  if(dragonLearned('smith')&&!smithUpgrade)add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
  if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in the glass shop about her shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
@@ -67,7 +68,11 @@ function atlasQuestTarget(q){
  if(!q)return null;
  const element={'Forgewick Temple':'lightning','Sandspire Temple':'ice','Hollybeck Temple':'shadow'}[q.place];
  if(element){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
- if(q.id==='bramble'||q.id==='main'&&/Return Bramble|Bramble.*owner/.test(q.title)){
+ if(q.id==='bramble'||['main','thornwell-royals'].includes(q.id)&&/Return Bramble|Bramble.*owner/.test(q.title)){
+  if(!dragonLearned('bramble-owner')&&brambleQuest<2){
+   const town=W.maps.world.features.find(f=>f.kind==='area'&&atlasCanonical(f.label||f.place)==='Thornwell');
+   return town?{map:'world',x:(town.x0+town.x1)/2*TS,y:(town.y0+town.y1)/2*TS}:null;
+  }
   const rowan=MAPID==='tavern'&&npcs.find(n=>n.n==='Rowan the Hunter');return {map:'tavern',x:rowan?.x??256,y:(rowan?.y??220)+32};
  }
  if((q.id==='main'||q.id==='thornwell-royals')&&/king’s summons/.test(q.title)){const king=typeof thornwellKing==='function'&&thornwellKing();return {map:'tavern',x:king?.x??396,y:(king?.y??170)+43};}
@@ -102,7 +107,7 @@ const ATLAS_PLACE_NOTES={
  'Millwood':['Home & farm','Nan and Corin’s home, Hettie’s farm, and Odo by the water.'],
  'Elder’s Home':['Maddock','The elder’s house and the clearing where Aurelius hatched.'],
  'Northern Woods':['Opening journey','The northern trail, the sword lesson, and the dragon’s crash site.'],
- 'Thornwell':['School · Tavern · Inn','Ask at the school for local knowledge. Rowan the Hunter visits the Copper Cup.'],
+ 'Thornwell':['School · Tavern · Inn','Visit the school, tavern and inn, and ask the townspeople for local knowledge.'],
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
  'Forgewick':['Blacksmith · Glassblower','Dunstan works at the forge; Sela’s glasswork is nearby.'],
  'Forgewick Temple':['Lightning Heartstone','An ancient rider temple southeast of Forgewick.'],
@@ -303,7 +308,7 @@ function bindQuestAtlas(){
  document.getElementById('atlasCompassGotIt').addEventListener('click',atlasDismissCompassTutorial);
  const view=document.getElementById('atlasViewport'),surface=document.getElementById('atlasSurface');
  document.getElementById('atlasClose').addEventListener('click',closeAtlas);
- document.getElementById('atlasFocus').addEventListener('click',atlasFocusQuest);
+ document.getElementById('atlasFocus').addEventListener('click',()=>atlasTrack(document.getElementById('atlasQuestSelect').value));
  document.getElementById('atlasQuestSelect').addEventListener('change',e=>atlasTrack(e.target.value));
  document.querySelectorAll('[data-atlas-tab]').forEach(b=>b.addEventListener('click',()=>{atlasSetTab(b.dataset.atlasTab);atlasShowDetails();}));
  document.getElementById('atlasWhole').addEventListener('click',atlasShowWhole);
