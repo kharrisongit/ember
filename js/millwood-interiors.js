@@ -301,6 +301,7 @@ function prepareRemainingInteriorActors() {
     }
     const link=(parent,children)=>{if(parent)parent.interiorChildren=children.filter(a=>a&&a!==parent).map(a=>actors.indexOf(a));};
     if(id==='smithy') {
+      prepareDunstanStation(map);
       const forge=actors.find(a=>a.exactFurniture&&a.n==='forge');
       link(forge,[0,4,8].map(i=>actors.find(a=>a.spr==='smithy_anim_'+i)));
       const smith=actors.find(a=>a.spr==='smithy_anim_8');

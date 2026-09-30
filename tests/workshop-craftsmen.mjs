@@ -12,8 +12,9 @@ run(read('js/workshop-craftsmen.js'));await run('loadWorkshopCraftsmen()');
 run("var smith={spr:'smithy_anim_8',x:200.25,y:192.25},sela={spr:'glassnew_anim_4',x:160,y:176}");
 assert(run('drawWorkshopCraftsman(smith,.751)'));
 assert.equal(draw.at(-1)[2],5*96,'Original .15 second work cadence');
-assert.deepEqual(draw.at(-1).slice(-4),[176,144,48,48],'Original station footprint with integer pixels');
-assert.equal(run("workshopImages.work.src"),'assets/sprites/workshops/dunstan-work.png?v=20260930-craftsmen-idle');
+assert.deepEqual(draw.at(-1).slice(-4),[176,144,48,70],'Complete station drawn from the original worker anchor, including the bench front');
+assert.equal(draw.at(-1)[5],140,'Source frame includes the whole station, not just the upper 48px');
+assert.equal(run("workshopImages.work.src"),'assets/sprites/workshops/dunstan-work.png?v=20260930-complete-station');
 
 for(const state of ["sayNpc={n:'Dunstan'}", "scene={npcActor:{n:'Dunstan'}}", "scene={who:'Dunstan'}",
   "ask={npcActor:{n:'Dunstan'}}", "ask={npcConversation:'Dunstan'}", "window.EmberConversationFlow.partner=()=> 'Dunstan'"]){

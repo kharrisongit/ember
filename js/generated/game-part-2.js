@@ -1848,10 +1848,14 @@ function moveEditorActor(o,x,y,save=false) {
   rebuildSolid();mapDirty=true;return true;
 }
 function pickEditorActor(wx,wy) {
+  // Dunstan's bench front is part of the same movable station as his animation.
+  const station=(MD.roomActors||[]).find(o=>o.workshopStation&&!o.editorDeleted&&
+    wx>=o.x-18&&wx<=o.x+21&&wy>=o.y-16&&wy<=o.y+20);
+  if(station)return station;
   /* Exact extracted furniture gets first refusal. Its dedicated canvas is the visual
      object the user is touching, so do not let legacy room props intercept the drag. */
   const exactHits=[];
-  for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&o.extractedCanvas&&!o.editorDeleted){
+  for(const o of (MD.roomActors||[]))if(o.interiorFurniture&&o.extractedCanvas&&!o.editorDeleted&&!o.editorLocked){
     const w=o.extractedCanvas.width,h=o.extractedCanvas.height,left=o.x-w/2,top=o.y-h;
     if(wx>=left&&wx<=left+w&&wy>=top&&wy<=o.y)exactHits.push({o,area:w*h,dist:(wx-o.x)*(wx-o.x)+(wy-(top+h/2))*(wy-(top+h/2))});
   }
@@ -4041,6 +4045,7 @@ function drawWorld(t, dt) {
     if (o.heartstoneChest) { drawChest(); continue; }
     if (o.portalLayer) { drawRise(); drawSaintBuff(); continue; }
     if (o.school) continue; // Native school animation patches draw these seated characters.
+    if(o.workshopBase)continue;
     if(o.extractedCanvas){ctx.drawImage(o.extractedCanvas,o.x-o.extractedCanvas.width/2,o.y-o.extractedCanvas.height);continue;}
     if(o.roomBackgroundPatch){
       const {spr,rect:[sx,sy,w,h]}=o.roomBackgroundPatch,s=SPR[spr];

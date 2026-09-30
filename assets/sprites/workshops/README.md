@@ -1,25 +1,31 @@
 # Workshop craftsmen
 
-Dunstan's 42-frame smithing loop is restyled from the existing `smithy_anim_8`
-pose sequence, at the original 0.15 seconds per frame. The generated sources
-and built-in image-generation prompts are retained here. Runtime strips use
-96px cells drawn at the existing 48px workshop footprint, hard transparency,
-nearest-neighbour sampling and one shared 48-colour palette.
+Dunstan keeps his restyled face/body and the original 42-frame, 0.15-second
+smithing cadence. The station and every tool-contact/impact frame below the
+anvil contact row are copied directly from the original `Smith_forge_full.png`
+(`smithy_anim_8` in the unpatched atlas). The bench front comes from the original
+smithy room crop, at its original seven-row overlap with the animation.
 
-`dunstan-idle.png` contains rest, breath, half-blink and closed-blink poses.
-The head, anvil and feet stay fixed; only the apron/shoulders and eyelids change.
-The native actor key, station position, depth sorting, interaction anchors and
-editor attachment remain intact.
+`dunstan-work.png` has 42 cells; `dunstan-idle.png` has four. Cells are 96×140
+source pixels, drawn 48×70 with origin (24,48). The bench extends 20 world pixels
+below the old worker anchor, with two transparent padding rows. Raised hammer
+heads use neutral gray steel rather than the anvil's blue-black palette.
+No median station or colour-based tool extraction is used at the anvil join.
 
-Sela retains his existing glasswork art. Conversation uses native frames
-0, 1, 2, 3, 39 and 40 for resting, breathing and blinking behind his unchanged
-table. His 45-frame work loop resumes on goodbye.
+The actor renders the complete assembly once. The former independent bench
+retains its editor identity but is hidden and attached to the station. Collision
+covers the anvil/bench from offsets (-18,-16) to (21,20); it and the dialogue
+point follow editor moves. Clicking the bench selects the entire station.
 
-`js/workshop-craftsmen.js` holds both craftsmen at their stations during the
-greeting, dialogue, reply, topic and profile states. Leaving a conversation
-restarts work at frame zero instead of jumping to an arbitrary hammer strike
-or furnace position.
+The two `source/dunstan-upper-*.png` strips preserve the previously generated
+upper-body artwork before the native station is joined. The earlier generated
+source sheets and prompts remain here for provenance. This repair reuses those
+assets and the original game art; it does not regenerate the animation.
 
-Rebuild Dunstan with `python tools/pack-workshop-craftsmen.py` (Pillow, NumPy,
-SciPy). Check packed pixels with `python tests/workshop-art.py` and runtime
-transitions with `node tests/workshop-craftsmen.mjs`.
+Sela retains his native 45-frame glasswork loop. Conversation uses native frames
+0, 1, 2, 3, 39 and 40. Both craftsmen stay idle through greetings, dialogue,
+replies, topics and profiles, then resume work on goodbye.
+
+Rebuild with `python tools/pack-workshop-craftsmen.py` (Pillow and NumPy).
+Check with `python tests/workshop-art.py`, `node tests/workshop-craftsmen.mjs`,
+`node tests/workshop-station.mjs` and `node tests/remaining-interactions.mjs`.

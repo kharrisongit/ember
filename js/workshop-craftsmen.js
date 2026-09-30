@@ -10,9 +10,25 @@ const workshopImages={};
 async function loadWorkshopCraftsmen(){
   await Promise.all(['work','idle'].map(async action=>{
     const image=new Image();
-    image.src='assets/sprites/workshops/dunstan-'+action+'.png?v=20260930-craftsmen-idle';
+    image.src='assets/sprites/workshops/dunstan-'+action+'.png?v=20260930-complete-station';
     await image.decode();workshopImages[action]=image;
   }));
+}
+function prepareDunstanStation(map){
+  const actors=map.roomActors||[],smith=actors.find(a=>a.spr==='smithy_anim_8');
+  const bench=actors.find(a=>a.editKey==='remaining:smithy:16'||a.exactFurniture&&a.n==='workbench');
+  if(!smith||!bench||smith.workshopStation)return;
+  smith.workshopStation=true;
+  smith.sy=smith.y+20;
+  // One actor draws the full native assembly, including the bench front. Keep
+  // its original slot/anchor for saved layouts, but never draw a duplicate base.
+  bench.workshopBase=true;bench.editorLocked=true;
+  smith.interiorChildren=[...new Set([...(smith.interiorChildren||[]),actors.indexOf(bench)])];
+  const blocks=map.roomBlocks ||= [];
+  const index=(bench.moveBlocks||[])[0]??blocks.length;
+  for(const actor of actors)if(actor.moveBlocks)actor.moveBlocks=actor.moveBlocks.filter(i=>i!==index);
+  blocks[index]=[smith.x-18,smith.y-16,smith.x+21,smith.y+20];
+  (smith.moveBlocks ||= []).push(index);
 }
 function workshopIsTalking(name){
   return sayNpc?.n===name||scene?.npcActor?.n===name||scene?.who===name||
@@ -39,7 +55,7 @@ function drawWorkshopCraftsman(o,t){
   if(craft.name==='Dunstan'){
     const image=workshopImages[pose.action];
     if(!image)return false;
-    drawGameImage(ctx,image,pose.frame*96,0,96,96,Math.round(o.x-24),Math.round(o.y-48),48,48);
+    drawGameImage(ctx,image,pose.frame*96,0,96,140,Math.round(o.x-24),Math.round(o.y-48),48,70);
   }else{
     const sp=SPR[o.spr];
     drawGameImage(ctx,sheetOf(sp),sp[0]+pose.frame*sp[2],sp[1],sp[2],sp[3],
