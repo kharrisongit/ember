@@ -1729,10 +1729,10 @@ function geometryPatch(onlyMap=null){
 const ATLAS_LOCATIONS=[["Millwood",78,272,"Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."],["Elder’s Home",96,228,"Maddock’s house, north of Millwood."],["Northern Woods",104,192,"Woodland north of Millwood, leading toward the mushroom country."],["Sporewood",108,107,"The western mushroom woodland."],["Sporehollow",150,77,"A settlement among the giant mushrooms."],["Northern Shroom Field",102,68,"Mushroom fields at the northern edge of the woods."],["Shroom Pass",107,148,"The path between the northern woods and the mushroom country."],["Route 1",133.01,205.89,"The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."],["Thornwell",214,126,"A woodland town on the journey east."],["Forgefalls",322,249,"The falls southeast of Thornwell."],["Route 2",282.75,176.19,"The woodland road to Forgewick."],["Forgewick",423.0,158.91,"A town of craftspeople. Find the blacksmith, glassblower and market."],["Forgewick Temple",468,199,"The temple southeast of Forgewick, reached by the winding southern trail."],["Route 3",544.28,156.75,"The road from Forgewick into the desert."],["The Oasis",590.89,182.4,"A green refuge southwest of Sandspire, beside the desert road."],["Sandspire",686.18,100.05,"The desert city between Forgewick and Coralmere."],["Sandspire Temple",821.89,221.55,"The temple south-east of Sandspire."],["Route 4",812.4,62.79,"The desert route to the coast."],["Coralmere",855,329,"A coastal town with fishing docks and homes by the water."],["Route 5",990.6,291.21,"The route through the wetlands toward Hollybeck."],["Witchmoor",1068.15,236.67,"Maelis’s home in the marsh. The ferry begins at the mainland dock."],["Dreadmarsh",1101.98,318.75,"The deep marshes south of the road."],["Hollybeck Graveyard",1146.53,130.83,"The graveyard northwest of Hollybeck."],["Hollybeck",1175.4,159.99,"A town at the edge of the snowy highlands."],["Hollybeck Temple",1220.78,93.03,"The temple northeast of Hollybeck. Follow the winding trail east and north."],["Route 6",1235.21,191.31,"The mountain road north to Frostcrag."],["Frostcrag",1236.04,67.65,"A stronghold in the snowy mountains."],["Ashcrag",1267.39,64.95,"East of Frostcrag, beyond the mountain passage, before the volcanic road."],["Route 7",1373.81,178.35,"The final road through the volcanic country."],["Cinderhold Castle",1451.78,211.83,"The king’s fortress at the eastern end of Emberfell."]];
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
-function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
+function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;if(typeof atlasJournalOpen!=='undefined'&&atlasJournalOpen){atlasTimer=Date.now()+260;atlasJournalMove(dy||dx);return;}const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
 function renderAtlas(){renderQuestAtlas()}
 function openAtlas(from='game'){if(!worldMapUnlocked())return;atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
-function closeAtlas(){atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
+function closeAtlas(){if(typeof atlasSetJournal==='function')atlasSetJournal(false);atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
  tap(document.getElementById('bDoors'),()=>setGeometryTool(doorEdit?null:'door'));
@@ -1740,7 +1740,7 @@ function bindAtlasAndGeometry(){
  document.querySelectorAll('[data-collision]').forEach(b=>tap(b,()=>{collisionPaint=b.dataset.collision;document.querySelectorAll('[data-collision]').forEach(e=>e.classList.toggle('on',e===b))}));
  tap(document.getElementById('bagMap'),()=>openAtlas('bag'));
 
- addEventListener('keydown',e=>{if(!atlasOpen)return;const d={ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0],ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1]}[e.key];if(d){e.preventDefault();e.stopImmediatePropagation();atlasMove(...d)}else if(e.key==='Escape'||e.key==='b'){e.stopImmediatePropagation();closeAtlas()}},true);
+ addEventListener('keydown',e=>{if(!atlasOpen)return;const d={ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0],ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1]}[e.key];if(d){e.preventDefault();e.stopImmediatePropagation();atlasMove(...d)}else if(e.key==='Escape'||e.key==='b'){e.preventDefault();e.stopImmediatePropagation();atlasBack()}else if(e.key==='Enter'||e.key===' '){e.stopImmediatePropagation();if(e.target.closest?.('button')){if(e.repeat)e.preventDefault();return;}e.preventDefault();if(!e.repeat)atlasAction()}},true);
  addEventListener('resize',()=>{if(atlasOpen)renderAtlas()});
  cv.addEventListener('pointerdown',e=>{if(geometryPan||(!doorEdit&&!collideView))return;e.preventDefault();e.stopImmediatePropagation();cv.setPointerCapture(e.pointerId);geometryStart(e)},true);
  cv.addEventListener('pointermove',e=>{if(!geometryDrag)return;e.preventDefault();e.stopImmediatePropagation();geometryMove(e)},true);
@@ -11586,7 +11586,7 @@ function actionButton() {
   if(globalThis.window?.EmberArenaEntry?.action())return;
   if(globalThis.window?.EmberRiding?.action())return;
   if (!gameplayStarted) { if (gameplayReady) { globalThis.window?.EmberSfx?.ui?.(); BOOT.activate(); } return; }
-  if(atlasOpen){if(typeof atlasDismissCompassTutorial==='function')atlasDismissCompassTutorial();return;}
+  if(atlasOpen){if(typeof atlasAction==='function')atlasAction();return;}
   if(fishing&&fishing.phase!=='prompt'){fishingAction();return;}
   if (typeof BOOT !== "undefined" && BOOT.waiting) { BOOT.close(); return; }
   if (deadShown) { globalThis.window?.EmberSfx?.ui?.(); getUp(); return; }
@@ -11604,7 +11604,7 @@ bindHold("act", actionButton, null);
 bindHold("btnB", () => {
   if (!gameplayStarted) { if (gameplayReady && BOOT.loading) BOOT.back(); return; }
   if(fishing){askShut();endFishing();return;}
-  if(atlasOpen){globalThis.window?.EmberSfx?.ui?.();closeAtlas();return;}
+  if(atlasOpen){globalThis.window?.EmberSfx?.ui?.();atlasBack();return;}
   if (typeof ask !== "undefined" && ask) { askBack(); return; }
   if (typeof bagOpen !== "undefined" && bagOpen) { globalThis.window?.EmberSfx?.ui?.(); setBag(false); return; }
   if (typeof ovl !== "undefined" && ovl) { globalThis.window?.EmberSfx?.ui?.(); setOvl(null); return; }

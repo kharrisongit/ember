@@ -31,7 +31,7 @@
   background:#d8e2d5;border-color:var(--dawn-teal);
   box-shadow:inset 0 0 0 2px var(--dawn-teal);
 }
-#bagHead .chip:not(.gold),#bagHead #bagClose,#itemFullBtn,#itemCloseBtn,
+#bagHead .chip:not(.gold),#bagHead #bagClose,#itemCloseBtn,
 #atkCloseBtn,#airCloseBtn,#bag .equipBtn,#soundActions button {
   background:var(--dawn-paper)!important;color:var(--dawn-teal)!important;
   border-color:var(--dawn-edge)!important;box-shadow:inset 0 1px #fffaf0!important;
@@ -43,6 +43,18 @@
 #bagHead .chip:not(.gold):active {
   background:var(--dawn-teal)!important;color:#fff6e3!important;border-color:#29424a!important;
 }
+/* The full inventory is the primary bag action; utilities stay quiet. */
+#itemm #itemFullBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px!important;height:44px!important;min-width:0!important;padding:0 13px!important;background:linear-gradient(#426b67,#284b50)!important;color:#fff0ca!important;border:2px solid #b79153!important;border-radius:6px!important;font:700 13px/1.2 Georgia,serif!important;letter-spacing:.02em;white-space:nowrap;box-shadow:inset 0 1px #d5e5d144,0 2px 4px #213a3933!important}
+#itemFullBtn svg{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#itemm #itemFullBtn.inventory-intro{animation:inventoryInvitation 3.2s ease-in-out infinite}
+#itemm .utilityIcon,#bagHead .chip.utilityIcon{display:inline-flex;align-items:center;justify-content:center;width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;padding:9px!important;flex-shrink:0;border:1px solid transparent!important;background:transparent!important;color:#6c6959!important;box-shadow:none!important;border-radius:5px!important}
+#bagHead .chip.utilityIcon::before{display:none}
+.utilityIcon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#itemm .utilityIcon:hover,#bagHead .chip.utilityIcon:hover{background:#b6aa911c!important;border-color:#b6aa9155!important;color:#36565d!important}
+#itemm .utilityIcon:active,#bagHead .chip.utilityIcon:active{background:#d6d9c7!important;color:#29424a!important}
+@keyframes inventoryInvitation{0%,65%,100%{transform:none;filter:drop-shadow(0 0 1px #e3b76033)}12%,28%{transform:translateX(-2px) rotate(-1.5deg)}20%,36%{transform:translateX(2px) rotate(1.5deg)}45%{transform:none;filter:drop-shadow(0 0 7px #e8bb57)}}
+@media(max-width:360px){#itemm #itemFullBtn{font-size:11px!important;padding:0 9px!important;gap:5px}#itemFullBtn svg{width:17px;height:17px}}
+@media(prefers-reduced-motion:reduce){#itemm #itemFullBtn.inventory-intro{animation:none;filter:drop-shadow(0 0 4px #e8bb5788)}}
 /* Elemental borders and cooldown rings retain their attack-specific colors. */
 #atkm .row:nth-child(n),#airm .row:nth-child(n) {
   background:radial-gradient(circle at 38% 28%,#fffaf0,#e9d9bd)!important;

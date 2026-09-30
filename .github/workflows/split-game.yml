@@ -46,6 +46,7 @@ jobs:
           node tests/town-music.mjs
           node tests/audio-controls.mjs
           node tests/player-bag-menu.mjs
+          node tests/inventory-controls.mjs
           node tests/audio-mix.mjs
           node tests/dragon-scene-audio.mjs
           node tests/input-hatch.mjs
@@ -75,6 +76,7 @@ jobs:
           node tests/npc-conversations.mjs
           node tests/npc-world-talks.mjs
           node tests/quest-map.mjs
+          node tests/quest-journal.mjs
           node tests/quest-discovery.mjs
           node tests/equipment-tutorial.mjs
           node tests/npc-yielding.mjs

@@ -51,6 +51,9 @@ click(box.querySelector('.conversationGoodbye'));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 // Tracking is a saved preference; it must not grant the reward or reveal an unknown lead.
 run(`askShut();MAPID='world';P.x=30*TS;P.y=425*TS;odoRodReferral=true;fishingPole=false;atlasTrackedQuest='fishing';atlasBegin()`);
+assert.equal(dom.element('atlasName').textContent,'Millwood');
+assert.equal(dom.element('atlasTrackedTitle').textContent,'Calder’s spare rod');
+run('atlasOpenJournal()');
 assert.equal(dom.element('atlasQuestTitle').textContent,'Calder’s spare rod');
 assert.equal(run('fishingPole'),false);
 assert.equal(run('atlasCurrentArea()'),'Millwood');

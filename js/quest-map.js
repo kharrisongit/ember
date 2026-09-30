@@ -1,6 +1,7 @@
 /* The atlas follows saved story/knowledge state; it never advances a quest. */
 let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointers=new Map();
-let atlasGesture=null,atlasTab='quest',atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
+let atlasGesture=null,atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
+let atlasJournalOpen=false,atlasSelectedQuest='main',atlasSelectedComplete=false;
 function atlasQuestKind(q){return q?.id==='main'||q?.id==='thornwell-royals'||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
@@ -162,7 +163,7 @@ function atlasQuestStages(q){
 }
 function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen};}
 function restoreQuestJournal(saved){
- atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasTab='quest';
+ atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasJournalOpen=false;atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
  for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===q.place))atlasJournalKnown[id]={id,title:q.title,detail:q.detail,place:q.place};
 }
 function atlasCompletedEntries(){
@@ -206,18 +207,54 @@ function atlasRouteBetween(from,to){
  return [];
 }
 function atlasElement(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
-function atlasSetTab(tab){
- atlasTab=tab;
- for(const id of ['quest','place','completed'])document.getElementById('atlas'+id[0].toUpperCase()+id.slice(1)+'Page').hidden=id!==tab;
- document.querySelectorAll('[data-atlas-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.atlasTab===tab)));
- document.getElementById('atlasDetails').scrollTop=0;
+function atlasSetJournal(open){
+ atlasJournalOpen=open;
+ document.getElementById('atlasQuestsScreen').hidden=!open;
+ document.getElementById('atlasBody').hidden=open;
+ document.getElementById('atlasClose').parentNode.hidden=open;
 }
-function atlasTrack(id){templeCompass.cache=null;atlasTrackedQuest=id;atlasSetTab('quest');atlasBegin();if(typeof saveGame==='function')saveGame();}
+function atlasOpenJournal(){
+ atlasSyncJournal();atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
+ atlasSetJournal(true);atlasRenderJournal();
+ document.getElementById('atlasQuestList').scrollTop=0;
+ document.getElementById('atlasQuestsBack').focus();
+}
+function atlasBack(){
+ if(!atlasJournalOpen){closeAtlas();return;}
+ atlasSetJournal(false);atlasShowDetails();atlasApplyPan();
+ document.getElementById('atlasQuests').focus();
+}
+function atlasChooseQuest(id,completed=false){
+ atlasSelectedQuest=id;atlasSelectedComplete=completed;atlasRenderJournal();
+ document.getElementById('atlasQuestInfo').scrollTop=0;
+ document.querySelector('.atlasQuestEntry.selected')?.focus({preventScroll:true});
+}
+function atlasJournalEntries(){return [...atlasQuests.map(q=>({...q,completed:false})),...atlasCompletedEntries().map(q=>({...q,completed:true}))];}
+function atlasJournalMove(direction){
+ const entries=atlasJournalEntries(),index=entries.findIndex(q=>q.id===atlasSelectedQuest&&q.completed===atlasSelectedComplete);
+ const next=entries[Math.max(0,Math.min(entries.length-1,index+direction))];
+ if(next){atlasChooseQuest(next.id,next.completed);document.querySelector('.atlasQuestEntry.selected')?.scrollIntoView({block:'nearest'});}
+}
+function atlasAction(){
+ if(atlasJournalOpen){if(!atlasSelectedComplete)atlasTrack(atlasSelectedQuest);}
+ else if(!atlasDismissCompassTutorial())atlasOpenJournal();
+}
+function atlasTrack(id){
+ atlasSyncJournal();const q=atlasQuests.find(q=>q.id===id);
+ if(!q||atlasQuestComplete(q.id))return false;
+ templeCompass.cache=null;atlasTrackedQuest=q.id;atlasCompassTutorialSeen=true;
+ if(typeof saveGame==='function')saveGame();
+ // Tracking always resumes play, including when the map came from inventory.
+ atlasReturn='game';closeAtlas();
+ if(typeof compassCelebrateTracking==='function')compassCelebrateTracking();
+ toast('Tracking quest: '+q.title+' — follow the compass.');
+ return true;
+}
 function atlasBuildPlaces(){
  const places=document.getElementById('atlasPlaces');places.replaceChildren();
  for(const [i,p]of ATLAS_LOCATIONS.entries()){
   const b=atlasElement('button','atlasPlace'+(/^Route/.test(p[0])?' routePlace':['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Cinderhold Castle'].includes(p[0])?' townPlace':''),p[0]);b.type='button';b.style.left=p[1]+'px';b.style.top=p[2]+'px';b.dataset.placeIndex=i;
-  b.setAttribute('aria-label','Explore '+p[0]);b.onclick=e=>{e.stopPropagation();if(e.detail&&atlasIgnoreClick)return;atlasPick=i;atlasSetTab('place');atlasShowDetails();};places.append(b);
+  b.setAttribute('aria-label','Explore '+p[0]);b.onclick=e=>{e.stopPropagation();if(e.detail&&atlasIgnoreClick)return;atlasPick=i;atlasShowDetails();};places.append(b);
  }
  const point=name=>ATLAS_LOCATIONS.find(p=>p[0]===name);
  const paths=ATLAS_CONNECTIONS.map(route=>route.map(point).filter(Boolean).map((p,i)=>(i?'L':'M')+p[1]+','+p[2]).join(' '));
@@ -239,17 +276,9 @@ function atlasBegin(){
  window.EmberEncounterCard?.layout();
  document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
  atlasSyncJournal();atlasBuildPlaces();
- const select=document.getElementById('atlasQuestSelect');select.replaceChildren();
- for(const q of atlasQuests){const opt=document.createElement('option');opt.value=q.id;opt.textContent=(atlasQuestKind(q)==='main'?'Main · ':atlasQuestKind(q)==='trial'?'Trial · ':'Side · ')+q.title;select.append(opt);}
- select.value=atlasTrackedQuest;
  atlasPointers.clear();atlasGesture=null;
- atlasSetTab(atlasTab);
- atlasFocusQuest();
-}
-function atlasFocusQuest(){
- const q=atlasQuests.find(q=>q.id===atlasTrackedQuest)||atlasQuests[0];
- if(!q)return;
- const i=ATLAS_LOCATIONS.findIndex(p=>p[0]===q.place);if(i>=0)atlasPick=i;
+ atlasSetJournal(false);document.getElementById('atlasDetails').scrollTop=0;
+ const i=ATLAS_LOCATIONS.findIndex(p=>p[0]===atlasCurrentArea());atlasPick=i>=0?i:0;
  renderAtlas();
 }
 function atlasApplyPan(){
@@ -260,49 +289,68 @@ function atlasApplyPan(){
  s.style.setProperty('--map-label-scale',String(Math.min(2.5,Math.max(.5,1/z))));
  s.classList.toggle('mapOverview',z<1.05);
 }
-function atlasShowDetails(){
- const p=ATLAS_LOCATIONS[atlasPick],q=atlasQuests.find(q=>q.id===atlasTrackedQuest);
- document.getElementById('atlasName').textContent=p[0];
- document.getElementById('atlasText').textContent=p[3];
- const $=id=>document.getElementById(id),completed=atlasCompletedEntries(),area=atlasCurrentArea();
+function atlasRenderJournal(){
+ const $=id=>document.getElementById(id),completed=atlasCompletedEntries();
+ const list=atlasSelectedComplete?completed:atlasQuests;
+ let q=list.find(q=>q.id===atlasSelectedQuest);
+ if(!q){q=atlasQuests.find(q=>q.id===atlasTrackedQuest)||atlasQuests[0];atlasSelectedQuest=q?.id;atlasSelectedComplete=false;}
  $('atlasQuestCount').textContent=atlasQuests.length+' active · '+completed.length+' complete';
- $('atlasQuestTitle').textContent=q?.title||'The road ahead';
- $('atlasObjective').textContent=q?.detail||'';
- $('atlasQuestKind').textContent=atlasQuestKind(q)==='main'?'MAIN QUEST':atlasQuestKind(q)==='trial'?'REPEATABLE TRIAL':'SIDE QUEST';
+ for(const [id,entries,done]of [['atlasActiveQuests',atlasQuests,false],['atlasCompletedQuests',completed,true]]){
+  const root=$(id);root.replaceChildren();
+  if(!entries.length)root.append(atlasElement('p','journalEmpty',done?'No completed quests yet.':'No active quests.'));
+  for(const entry of entries){
+   const selected=entry.id===atlasSelectedQuest&&done===atlasSelectedComplete;
+   const tracked=!done&&entry.id===atlasTrackedQuest;
+   const button=atlasElement('button','atlasQuestEntry'+(selected?' selected':''));button.type='button';
+   button.dataset.questId=entry.id;button.dataset.completed=String(done);button.setAttribute('aria-pressed',String(selected));
+   button.append(atlasElement('strong','',entry.title),atlasElement('small','',done?'✓ Completed':tracked?'◆ Tracked':atlasQuestKind(entry)==='main'?'Main quest':atlasQuestKind(entry)==='trial'?'Trial':'Side quest'));
+   button.onclick=()=>atlasChooseQuest(entry.id,done);root.append(button);
+  }
+ }
+ $('atlasQuestTitle').textContent=q?.title||'Your journey';
+ $('atlasObjective').textContent=q?.detail||'Known quests will appear here as you explore.';
+ $('atlasQuestKind').textContent=atlasQuestKind(q)==='main'?'MAIN QUEST':atlasQuestKind(q)==='trial'?'TRIAL':'SIDE QUEST';
  $('atlasQuestDestination').textContent=q?'◆ '+q.place:'';
- const path=atlasRouteBetween(area,q?.place);
- const via=path.slice(1,-1).filter(x=>!/^Route/.test(x));
- $('atlasRouteHint').textContent=!area?'':area===q?.place?'You are in this area. Follow the objective above.':via.length?'From '+area+' · via '+via.slice(0,3).join(' → ')+(via.length>3?' → …':''):'From '+area+' · toward '+(q?.place||p[0]);
- const line=$('atlasTrackedRoute');if(line)line.setAttribute('d',path.map(name=>ATLAS_LOCATIONS.find(p=>p[0]===name)).filter(Boolean).map((p,i)=>(i?'L':'M')+p[1]+','+p[2]).join(' '));
+ const area=atlasCurrentArea(),path=atlasRouteBetween(area,q?.place),via=path.slice(1,-1).filter(x=>!/^Route/.test(x));
+ $('atlasRouteHint').textContent=atlasSelectedComplete||!q||!area?'':area===q.place?'You are in this area. Follow the objective above.':via.length?'From '+area+' · via '+via.slice(0,3).join(' → ')+(via.length>3?' → …':''):'From '+area+' · toward '+q.place;
  const steps=$('atlasQuestSteps');steps.replaceChildren();
- const stages=atlasQuestStages(q);
- const active=stages.findIndex(([,done])=>!done);
- if(q?.id==='main'){
-  const current=active<0?stages.at(-1):stages[active];
-  steps.append(atlasElement('span','questStep current',active<0?'✓ Main journey complete':'◉ Current chapter: '+current[0]));
- }else for(const [i,[label,done]]of stages.entries())steps.append(atlasElement('span','questStep'+(done?' done':i===active?' current':''),(done?'✓ ':i===active?'◉ ':'○ ')+label));
+ if(q&&!atlasSelectedComplete){
+  const stages=atlasQuestStages(q),active=stages.findIndex(([,done])=>!done);
+  if(q.id==='main'){
+   const current=active<0?stages.at(-1):stages[active];
+   if(current)steps.append(atlasElement('span','questStep current',active<0?'✓ Main journey complete':'◉ Current chapter: '+current[0]));
+  }else for(const [i,[label,done]]of stages.entries())steps.append(atlasElement('span','questStep'+(done?' done':i===active?' current':''),(done?'✓ ':i===active?'◉ ':'○ ')+label));
+ }
+ const finished=atlasSelectedComplete||!!q&&atlasQuestComplete(q.id);
+ $('atlasQuestStatus').textContent=finished?'✓ Quest complete':q?.id===atlasTrackedQuest?'◆ Currently tracked':'';
+ $('atlasFocus').hidden=finished||!q;$('atlasFocus').disabled=finished||!q;
  const milestones=$('atlasMilestones');milestones.replaceChildren();
  const all=atlasMilestoneData(),done=all.filter(x=>x[1]).length;
  milestones.append(atlasElement('small','',`JOURNEY MILESTONES · ${done} / ${all.length}`));
  const rail=atlasElement('div','milestoneRail');for(const [name,complete]of all){const dot=atlasElement('span',complete?'complete':'');dot.title=name;dot.setAttribute('aria-label',name+(complete?' complete':' ahead'));rail.append(dot);}milestones.append(rail);
+}
+function atlasShowDetails(){
+ const p=ATLAS_LOCATIONS[atlasPick],q=atlasQuests.find(q=>q.id===atlasTrackedQuest);
+ const $=id=>document.getElementById(id),area=atlasCurrentArea();
+ $('atlasAreaLabel').textContent=p[0]===area?'YOUR CURRENT AREA':'SELECTED AREA';
+ $('atlasName').textContent=p[0];$('atlasText').textContent=p[3];
  const notes=ATLAS_PLACE_NOTES[p[0]]||['The roads of Emberfell',p[3]];
- $('atlasServices').replaceChildren(atlasElement('strong','',notes[0]),atlasElement('p','',notes[1]));
- const local=$('atlasLocalQuests');local.replaceChildren();
- const nearby=atlasQuests.filter(q=>q.place===p[0]);local.append(atlasElement('small','',nearby.length?'QUESTS IN THIS AREA':'No known active quests here'));
- for(const lead of nearby){const b=atlasElement('button','localQuest',lead.title+' →');b.type='button';b.onclick=()=>atlasTrack(lead.id);local.append(b);}
- const history=$('atlasCompletedPage');history.replaceChildren();
- if(!completed.length)history.append(atlasElement('p','journalEmpty','Your finished quests will be recorded here as the journey unfolds.'));
- for(const entry of completed){const b=atlasElement('button','completedQuest');b.type='button';b.append(atlasElement('strong','','✓ '+entry.title),atlasElement('small','',entry.place+' · Completed'));b.onclick=()=>{atlasPick=ATLAS_LOCATIONS.findIndex(p=>p[0]===entry.place);atlasSetTab('place');renderQuestAtlas();};history.append(b);}
+ $('atlasServices').replaceChildren(atlasElement('strong','',notes[0]));
+ $('atlasTrackedTitle').textContent=q?.title||'No quest tracked';
+ $('atlasTrackedObjective').textContent=q?.detail||'Open Quests to choose your next objective.';
+ $('atlasTrackedDestination').textContent=q?'◆ '+q.place:'';
+ const path=atlasRouteBetween(area,q?.place),line=$('atlasTrackedRoute');
+ if(line)line.setAttribute('d',path.map(name=>ATLAS_LOCATIONS.find(p=>p[0]===name)).filter(Boolean).map((p,i)=>(i?'L':'M')+p[1]+','+p[2]).join(' '));
  const you=$('atlasPlayerMarker'),where=ATLAS_LOCATIONS.find(p=>p[0]===area);you.hidden=!where;
  if(where){you.style.left=where[1]+'px';you.style.top=where[2]+'px';you.setAttribute('aria-label','Your current area: '+area);}
  document.querySelectorAll('.atlasPlace').forEach(b=>b.classList.toggle('selected',Number(b.dataset.placeIndex)===atlasPick));
- const card=$('atlasQuestCard'),key=q?.id+':'+q?.title;if(card.dataset.questKey!==key){card.dataset.questKey=key;if(!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)card.animate?.([{opacity:.25,transform:'translateY(9px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});}
- document.getElementById('atlasDetails').classList.add('settled');
- const cursor=document.getElementById('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';
- const target=q&&ATLAS_LOCATIONS.find(p=>p[0]===q.place),marker=document.getElementById('atlasQuestMarker');
+ $('atlasDetails').classList.add('settled');
+ const cursor=$('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';
+ const target=q&&ATLAS_LOCATIONS.find(p=>p[0]===q.place),marker=$('atlasQuestMarker');
  marker.hidden=!target;if(target){marker.style.left=target[1]+'px';marker.style.top=target[2]+'px';marker.title=q.title;marker.setAttribute('aria-label',q.title+' at '+q.place);}
 }
 function renderQuestAtlas(){
+ if(atlasJournalOpen)return;
  const p=ATLAS_LOCATIONS[atlasPick],view=document.getElementById('atlasViewport');
  atlasPan.z=Math.max(1.2,Math.min(2.6,view.clientHeight/340));
  atlasPan.x=view.clientWidth/2-p[1]*atlasPan.z;atlasPan.y=view.clientHeight/2-p[2]*atlasPan.z;
@@ -312,11 +360,12 @@ function bindQuestAtlas(){
  document.getElementById('atlasCompassGotIt').addEventListener('click',atlasDismissCompassTutorial);
  const view=document.getElementById('atlasViewport'),surface=document.getElementById('atlasSurface');
  document.getElementById('atlasClose').addEventListener('click',closeAtlas);
- document.getElementById('atlasFocus').addEventListener('click',()=>atlasTrack(document.getElementById('atlasQuestSelect').value));
- document.getElementById('atlasQuestSelect').addEventListener('change',e=>atlasTrack(e.target.value));
- document.querySelectorAll('[data-atlas-tab]').forEach(b=>b.addEventListener('click',()=>{atlasSetTab(b.dataset.atlasTab);atlasShowDetails();}));
+ document.getElementById('atlasQuests').addEventListener('click',atlasOpenJournal);
+ document.getElementById('atlasQuestsBack').addEventListener('click',atlasBack);
+ document.getElementById('atlasQuestsClose').addEventListener('click',closeAtlas);
+ document.getElementById('atlasFocus').addEventListener('click',()=>{if(!atlasSelectedComplete)atlasTrack(atlasSelectedQuest);});
  document.getElementById('atlasWhole').addEventListener('click',atlasShowWhole);
- document.getElementById('atlasHere').addEventListener('click',()=>{const area=atlasCurrentArea(),i=ATLAS_LOCATIONS.findIndex(p=>p[0]===area);if(i>=0){atlasPick=i;atlasSetTab('place');renderQuestAtlas();}});
+ document.getElementById('atlasHere').addEventListener('click',()=>{const area=atlasCurrentArea(),i=ATLAS_LOCATIONS.findIndex(p=>p[0]===area);if(i>=0){atlasPick=i;renderQuestAtlas();}});
  document.getElementById('atlasZoomIn').addEventListener('click',()=>atlasZoom(1.3));
  document.getElementById('atlasZoomOut').addEventListener('click',()=>atlasZoom(1/1.3));
  for(const type of ['pointerdown','pointermove','pointerup'])document.getElementById('atlasMapTools').addEventListener(type,e=>e.stopPropagation());
@@ -341,7 +390,7 @@ function bindQuestAtlas(){
    const x=(a.x-atlasPan.x)/atlasPan.z,y=(a.y-atlasPan.y)/atlasPan.z;
    const picks=ATLAS_LOCATIONS.map((p,i)=>({i,d:Math.hypot(p[1]-x,p[2]-y)})).sort((a,b)=>a.d-b.d);
    const labeled=Number(g.placeIndex);
-   if(g.placeIndex!==undefined&&ATLAS_LOCATIONS[labeled]||picks[0].d*atlasPan.z<45){atlasPick=g.placeIndex!==undefined?labeled:picks[0].i;atlasSetTab('place');atlasShowDetails();}
+   if(g.placeIndex!==undefined&&ATLAS_LOCATIONS[labeled]||picks[0].d*atlasPan.z<45){atlasPick=g.placeIndex!==undefined?labeled:picks[0].i;atlasShowDetails();}
   }
   atlasPointers.delete(e.pointerId);resetGesture();if(atlasGesture)atlasGesture.moved=true;else surface.classList.remove('dragging');
  };

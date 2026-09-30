@@ -5685,10 +5685,22 @@ const EL_COLOUR = { claw: "#8b806c", fire: "#b65e45", ice: "#56859d",
                     potion: "#b65e45",    /* the flask: rust red */
                     elixir: "#bd913b", item: "#a18a66" };
 let ovl = null;
+let inventoryPromptOpens=0;
+function restoreInventoryPrompt(saved){
+  inventoryPromptOpens=Number.isFinite(saved?.inventoryPromptOpens)?Math.max(0,Math.min(10,Math.floor(saved.inventoryPromptOpens))):0;
+  document.getElementById('itemFullBtn').classList.remove('inventory-intro');
+}
 function setOvl(which) {
   if(which==="itemm"&&!hasBag())return;
   if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
   if(which&&fishing)return;
+  const firstOpen=which==='itemm'&&ovl!=='itemm';
+  const inventoryButton=document.getElementById('itemFullBtn');
+  if(which!=='itemm')inventoryButton.classList.remove('inventory-intro');
+  if(firstOpen){
+    inventoryButton.classList.toggle('inventory-intro',inventoryPromptOpens<10);
+    if(inventoryPromptOpens<10){inventoryPromptOpens++;saveGame();}
+  }
   for (const k in MENUS) {
     const el = document.getElementById(k);
     if (!el) continue;
@@ -5916,6 +5928,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  inventoryPromptOpens,
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
@@ -5972,6 +5985,7 @@ function loadGame(slot=activeSaveSlot) {
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
     if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
+    restoreInventoryPrompt(s);
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}

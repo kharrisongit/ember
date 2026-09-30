@@ -45,23 +45,51 @@
 #atlasMapTools{position:absolute;z-index:6;left:10px;top:10px;display:flex;gap:5px;padding:4px;background:#193c46cc;border:1px solid #f4e5c744;border-radius:10px;box-shadow:0 3px 10px #17353f50}
 #worldAtlas #atlasMapTools button{min-height:36px;min-width:34px;padding:5px 9px;background:#f7ebd5;color:#34565a;border:1px solid #d1ba91;border-radius:6px;font:600 11px system-ui}
 #atlasMapLegend{position:absolute;bottom:10px;left:10px;display:flex;gap:12px;padding:6px 10px;border-radius:15px;background:#163945d9;color:#f3e4c7;font:10px system-ui;pointer-events:none}#atlasMapLegend span:first-child{color:#c4e7e9}
-#atlasDetails{position:relative;max-height:43dvh;min-height:230px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y;background:radial-gradient(ellipse at 80% 0,#fffaf0,transparent 70%),#f3e7d0;border:0;border-top:3px double #b59668;padding:12px 16px max(12px,env(safe-area-inset-bottom));box-shadow:0 -7px 25px #132f4340;scrollbar-color:#6d8b82 #e6d7bb;scrollbar-width:thin}
-.journalHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.journalHeading small{display:block;font:700 8px system-ui!important;letter-spacing:.15em;color:#846241!important}#atlasDetails .journalHeading h2{font:600 20px/1.1 Georgia;color:#2c4e54;margin:4px 0 0}#atlasQuestCount{font:10px/1.4 system-ui;color:#6b766b;white-space:nowrap}
-#atlasTabs{display:flex;gap:5px;margin-bottom:10px;border-bottom:1px solid #bbab8a;padding-bottom:8px}#worldAtlas #atlasTabs button{flex:1;min-height:34px;padding:5px 8px;font:600 11px system-ui;border-radius:6px;border:1px solid transparent;background:transparent;color:#61726c}#worldAtlas #atlasTabs button[aria-pressed=true]{background:#345b60;color:#fdf0d8;border-color:#345b60;box-shadow:0 2px 4px #213d4320}
+#worldAtlas [hidden]{display:none!important}
+#atlasDetails{position:relative;width:100%;max-width:none;min-width:0;min-height:0;max-height:43dvh;flex-shrink:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;background:radial-gradient(ellipse at 80% 0,#fffaf0,transparent 70%),#f3e7d0;border:0;border-top:3px double #b59668;padding:14px max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));box-shadow:0 -7px 25px #132f4340;scrollbar-color:#6d8b82 #e6d7bb;scrollbar-width:thin}
+#atlasSummary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;max-width:1100px;margin:auto}
+.journalHeading{display:flex;align-items:center;gap:10px;margin-bottom:7px}.journalHeading small,#atlasTrackedInfo>small{display:block;font:700 9px/1.3 system-ui!important;letter-spacing:.13em;color:#846241!important}
+#atlasDetails .journalHeading h2{font:600 22px/1.15 Georgia;color:#2c4e54;margin:5px 0 0}
+#atlasDetails #atlasText,#atlasTrackedObjective{display:block;font:14px/1.45 Georgia;color:#50635d;margin:7px 0}
+#atlasServices strong{color:#95633d;font:600 12px/1.4 Georgia}
+#atlasTrackedInfo{min-width:0;border-left:1px solid #c7b28b;padding-left:20px}
+#atlasTrackedTitle{font:600 18px/1.2 Georgia;color:#294b51;margin:5px 0}
+#atlasTrackedDestination{display:block;font:11px/1.4 system-ui;color:#587367;margin:7px 0}
+#worldAtlas #atlasQuests,#worldAtlas #atlasFocus{min-height:44px;padding:10px 20px;background:#345b60;color:#fff2d8;border:1px solid #26474b;border-radius:5px;font:600 14px Georgia}
+#worldAtlas #atlasQuests{min-width:115px}
+.atlasHelp{display:block!important;text-align:center;font:9px system-ui!important;color:#7e8373!important;margin-top:10px}
 .srOnly{position:absolute!important;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;white-space:nowrap}
-.atlasQuestRow{margin:0 0 10px;gap:7px}#worldAtlas #atlasQuestSelect{font:13px Georgia;min-height:40px;border-radius:6px;background:#fff7e7;border-color:#bdab8d;padding:7px}#worldAtlas #atlasFocus{font:600 11px system-ui!important;border-radius:6px;border-color:#a98d65;color:#815134;background:#efddbc;min-height:40px}
-#atlasQuestCard{border:1px solid #bfad8c;border-left:3px solid #b77949;border-radius:4px 12px 12px 4px;background:linear-gradient(115deg,#fff8e8,#ede1c8);padding:11px 13px;box-shadow:0 2px 3px #c0ac8929}
-.atlasQuestMeta{display:flex;justify-content:space-between;gap:8px;font:700 8px/1.4 system-ui;letter-spacing:.09em;color:#926143}.atlasQuestMeta span:last-child{font-weight:600;letter-spacing:0;color:#587367;text-align:right}
-#atlasQuestTitle{margin:6px 0;font:600 20px/1.15 Georgia;color:#294b51}#atlasDetails #atlasObjective{font:14px/1.45 Georgia;font-weight:400;margin:5px 0 8px;color:#425851}#atlasDetails #atlasRouteHint{font:11px/1.4 system-ui;color:#75806b;margin:0 0 8px;padding-left:10px;border-left:2px solid #cfb889}
-#atlasQuestSteps{display:flex;gap:6px;flex-wrap:wrap}.questStep{font:10px/1.3 system-ui;color:#8a897a;border-radius:4px;padding:4px 6px;background:#e3d7be}.questStep.done{color:#426b5a;background:#dce5cf}.questStep.current{color:#855236;background:#ecdbb8}
-#atlasMilestones{margin:11px 0 6px}#atlasMilestones small{font:700 8px system-ui;color:#6c7567;letter-spacing:.1em}.milestoneRail{display:flex;gap:4px;margin-top:6px}.milestoneRail span{height:5px;border-radius:3px;background:#d6c7a8;flex:1;transition:background .3s}.milestoneRail .complete{background:linear-gradient(90deg,#476f64,#86a28a)}
-#atlasServices{padding:12px;border:1px solid #bdad8d;border-radius:8px;background:#fff4df;margin:10px 0}#atlasServices strong{color:#95633d;font:600 13px Georgia}#atlasDetails #atlasText,#atlasServices p{font:14px/1.5 Georgia;color:#50635d}#atlasLocalQuests{display:grid;gap:7px}#atlasLocalQuests small{font:11px system-ui}#worldAtlas .localQuest{text-align:left;background:#dde5d3;border-color:#9bab93;color:#365b56;font:600 13px Georgia;padding:10px;border-radius:7px}
-#atlasCompletedPage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#worldAtlas .completedQuest{display:flex;flex-direction:column;text-align:left;gap:5px;min-height:66px;padding:10px;background:#e2e8d8;border-color:#a6b298;color:#3d6559;border-radius:8px}#worldAtlas .completedQuest strong{font:600 13px Georgia}#worldAtlas .completedQuest small{font:10px system-ui;color:#6a7a66}.journalEmpty{grid-column:1/-1;font:italic 14px/1.5 Georgia;color:#6d786b}
-#atlasDetails [hidden]{display:none!important}.atlasHelp{display:block!important;text-align:center;font:9px system-ui!important;color:#7e8373!important;margin-top:10px}
+/* The journal replaces the map while open. Both columns scroll independently. */
+#atlasQuestsScreen{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;background:radial-gradient(ellipse at 80% 0,#fffaf0,transparent 70%),#f3e7d0;min-height:0}
+#worldAtlas #atlasQuestsScreen header{gap:14px}
+#worldAtlas #atlasQuestsBack,#worldAtlas #atlasQuestsClose{min-height:44px;background:#ffffff0a;color:#fff0d4;border:1px solid #abc2b56b;font:13px system-ui;white-space:nowrap}
+#atlasQuestsClose{margin-left:auto}
+#atlasJournalBody{display:grid;grid-template-columns:minmax(125px,32%) minmax(0,1fr);flex:1;min-height:0;max-width:1200px;width:100%;margin:auto}
+#atlasQuestList,#atlasQuestInfo{min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-color:#6d8b82 #e6d7bb;scrollbar-width:thin;padding:22px 20px max(22px,env(safe-area-inset-bottom))}
+#atlasQuestList{background:#e6dbc3;border-right:1px solid #bea982;padding-left:max(16px,env(safe-area-inset-left))}
+#atlasQuestInfo{padding-right:max(20px,env(safe-area-inset-right))}
+#atlasQuestList h2{font:700 11px system-ui;letter-spacing:.09em;text-transform:uppercase;color:#806545;margin:18px 0 8px}
+#atlasQuestCount{font:10px/1.5 system-ui;color:#6b766b}
+#atlasActiveQuests,#atlasCompletedQuests{display:grid;gap:7px}
+#worldAtlas .atlasQuestEntry{display:flex;flex-direction:column;gap:6px;width:100%;min-width:0;min-height:60px;padding:12px;text-align:left;border:1px solid #c2ad85;border-radius:5px;background:#f8edda;color:#395750;overflow-wrap:anywhere}
+#worldAtlas .atlasQuestEntry strong{font:600 15px/1.3 Georgia}
+#worldAtlas .atlasQuestEntry small{font:10px/1.3 system-ui;color:#6d7966}
+#worldAtlas .atlasQuestEntry.selected{background:#345b60;color:#fff1d6;border-color:#24454a;box-shadow:inset 3px 0 #dfbd78}
+#worldAtlas .atlasQuestEntry.selected small{color:#e2ddc4}
+#atlasQuestCard{border:1px solid #bfad8c;border-top:3px solid #b77949;border-radius:5px;background:linear-gradient(115deg,#fff8e8,#ede1c8);padding:24px;box-shadow:0 2px 3px #c0ac8929;overflow-wrap:anywhere}
+.atlasQuestMeta{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;font:700 10px/1.4 system-ui;letter-spacing:.08em;color:#926143}.atlasQuestMeta span:last-child{letter-spacing:0;color:#587367}
+#atlasQuestTitle{margin:18px 0 12px;font:600 30px/1.15 Georgia;color:#294b51}
+#atlasObjective{font:17px/1.6 Georgia;font-weight:400;margin:0 0 18px;color:#425851}
+#atlasRouteHint{font:12px/1.5 system-ui;color:#6a7866;margin:0 0 18px;padding-left:10px;border-left:2px solid #cfb889}
+#atlasRouteHint:empty{display:none}
+#atlasQuestSteps{display:flex;gap:7px;flex-direction:column;align-items:flex-start}.questStep{font:11px/1.4 system-ui;color:#7a796a;border-radius:4px;padding:6px 8px;background:#e3d7be}.questStep.done{color:#426b5a;background:#dce5cf}.questStep.current{color:#855236;background:#ecdbb8}
+#atlasQuestStatus{font:600 12px/1.4 system-ui;color:#526e5f;margin:20px 0 10px}
+#atlasQuestStatus:empty{margin:16px 0 0}
+#atlasMilestones{margin:20px 0 6px}#atlasMilestones small{font:700 9px system-ui;color:#6c7567;letter-spacing:.1em}.milestoneRail{display:flex;gap:4px;margin-top:8px}.milestoneRail span{height:5px;border-radius:3px;background:#d6c7a8;flex:1}.milestoneRail .complete{background:linear-gradient(90deg,#476f64,#86a28a)}
+.journalEmpty{font:italic 13px/1.5 Georgia;color:#6d786b}
 @keyframes mapJourneyFlow{to{stroke-dashoffset:-20}}@keyframes questBeacon{0%,100%{filter:drop-shadow(0 0 2px #fff0a6)}50%{filter:drop-shadow(0 0 8px #fff0a6)}}
-@media(min-width:760px){#atlasDetails{max-height:38dvh;padding-left:max(24px,calc((100vw - 1000px)/2));padding-right:max(24px,calc((100vw - 1000px)/2))}#atlasQuestPage{display:grid;grid-template-columns:minmax(180px,1fr) minmax(320px,2fr);column-gap:16px}.atlasQuestRow{align-self:start;flex-wrap:wrap}#atlasQuestCard{grid-column:2;grid-row:1/3}#atlasMilestones{grid-column:1}#atlasTabs{max-width:500px}#atlasCompletedPage{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:360px){#atlasDetails{padding:10px;max-height:47dvh}.journalHeading #atlasName{font-size:18px}#atlasQuestCount{font-size:9px}#atlasQuestTitle{font-size:18px}#atlasDetails #atlasObjective{font-size:13px}}
-@media(max-height:520px){#atlasDetails{min-height:130px;max-height:48dvh;padding:7px 12px}.journalHeading{margin-bottom:5px}#atlasTabs{margin-bottom:6px;padding-bottom:5px}.atlasHelp{display:none!important}#worldAtlas header{min-height:40px;padding:4px 12px}#atlasDetails #atlasText{display:block}#atlasQuestTitle{font-size:17px}}
+@media(max-width:600px){#atlasSummary{grid-template-columns:1fr;gap:12px}#atlasTrackedInfo{border-left:0;border-top:1px solid #c7b28b;padding:12px 0 0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px}#atlasTrackedInfo>small,#atlasTrackedTitle,#atlasTrackedObjective,#atlasTrackedDestination{grid-column:1}#worldAtlas #atlasQuests{grid-column:2;grid-row:1/5;align-self:center;min-width:82px;padding:10px 13px}#atlasTrackedTitle{font-size:17px}#atlasTrackedObjective{font-size:13px}#atlasJournalBody{grid-template-columns:minmax(118px,35%) minmax(0,1fr)}#atlasQuestList,#atlasQuestInfo{padding:14px 10px max(14px,env(safe-area-inset-bottom))}#atlasQuestCard{padding:14px}#atlasQuestTitle{font-size:23px;margin-top:12px}#atlasObjective{font-size:15px;line-height:1.5}#worldAtlas .atlasQuestEntry{padding:10px 8px}#worldAtlas .atlasQuestEntry strong{font-size:13px}#worldAtlas #atlasQuestsScreen header{gap:10px}}
+@media(max-height:520px){#atlasDetails{max-height:46dvh;padding-top:9px;padding-bottom:9px}#atlasSummary{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}#atlasTrackedInfo{display:block;border-top:0;border-left:1px solid #c7b28b;padding:0 0 0 16px}.atlasHelp{display:none!important}#atlasDetails .journalHeading h2{font-size:18px}#atlasDetails #atlasText,#atlasTrackedObjective{font-size:12px}#atlasQuestList,#atlasQuestInfo{padding-top:12px}#atlasQuestCard{padding:16px}#atlasQuestTitle{font-size:24px}#worldAtlas header{min-height:44px;padding-top:4px;padding-bottom:4px}}
 @media(prefers-reduced-motion:reduce){#worldAtlas *,#worldAtlas *::before{animation:none!important;transition:none!important}}
 
 /* Compass guidance belongs to the open journal, alongside the visible map. */

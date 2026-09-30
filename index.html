@@ -67,9 +67,9 @@
 </style>
 <link rel="stylesheet" href="css/title-screen.css?v=20260927-hatch-save-controls1">
 <link rel="stylesheet" href="css/controls-theme.css?v=20260930-game-view">
-<link rel="stylesheet" href="css/menu-theme.css?v=20260928-conversation-focus">
+<link rel="stylesheet" href="css/menu-theme.css?v=20260930-inventory-attention">
 <link rel="stylesheet" href="css/command-dragon-medieval.css?v=20260930-royal-cast">
-<link rel="stylesheet" href="css/journal-panels.css?v=20260930-tavern-lessons-portraits">
+<link rel="stylesheet" href="css/journal-panels.css?v=20260930-map-quest-journal">
 <link rel="stylesheet" href="css/riding-tutorial.css?v=20260930-tavern-lessons-portraits">
 <link rel="stylesheet" href="css/conversation-view.css?v=20260930-world-greetings">
 <link rel="stylesheet" href="css/conversation-standard.css?v=20260929-smart-trees-signs">
@@ -141,11 +141,13 @@
 <div id="geometryBar"><span id="geometryLabel"></span><span id="collisionBrushes"><button data-collision="block" class="on">Block</button><button data-collision="open">Open</button><button data-collision="reset">Restore</button></span><button id="geometryPan">PAN</button><button id="geometryCopy">COPY</button><button id="geometryDone">DONE</button></div>
 <div id="worldAtlas" role="dialog" aria-label="Map of Emberfell"><header><div><small>FATHER’S MAP &amp; COMPASS</small><b>EMBERFELL</b></div><button id="atlasClose" type="button" aria-label="Close map">Close ×</button></header>
 <div id="atlasBody"><div id="atlasViewport"><div id="atlasSurface"><img alt="Illustrated realm of Emberfell: western woodland, central desert, coast and marsh, snowy highlands and volcanic Cinderhold" src="assets/maps/emberfell-realm.webp?v=20260928" width="1536" height="512"><div id="atlasRoutes" aria-hidden="true"></div><div id="atlasPlaces"></div><span id="atlasCursor"></span><span id="atlasQuestMarker" role="img" hidden>◆</span><span id="atlasPlayerMarker" role="img" hidden>●</span></div><div id="atlasMapTools"><button id="atlasZoomOut" type="button" aria-label="Zoom out">−</button><button id="atlasZoomIn" type="button" aria-label="Zoom in">+</button><button id="atlasWhole" type="button">Whole realm</button><button id="atlasHere" type="button">My area</button></div><div id="atlasMapLegend"><span>● Your area</span><span>◆ Tracked quest</span></div></div>
-<aside id="atlasDetails" class="scrolls"><div class="journalHeading"><div><small>THE TRAVELER’S JOURNAL</small><h2 id="atlasName"></h2></div><span id="atlasQuestCount"></span></div>
-<aside id="atlasCompassTutorial" hidden aria-label="Compass tutorial"><strong>Let your compass guide you</strong><p>Choose a quest below and press Track quest. When you close the map, your compass guides you toward its next known destination. Return here whenever you want to track a different quest.</p><button id="atlasCompassGotIt" type="button">Got it</button></aside>
-<nav id="atlasTabs" aria-label="Map information"><button type="button" data-atlas-tab="quest" aria-pressed="true">Quest journal</button><button type="button" data-atlas-tab="place" aria-pressed="false">This place</button><button type="button" data-atlas-tab="completed" aria-pressed="false">Completed</button></nav>
-<div id="atlasQuestPage"><div class="atlasQuestRow"><label class="srOnly" for="atlasQuestSelect">Track quest</label><select id="atlasQuestSelect" aria-label="Quest to track"></select><button id="atlasFocus" type="button">Track quest ↗</button></div><article id="atlasQuestCard"><div class="atlasQuestMeta"><span id="atlasQuestKind"></span><span id="atlasQuestDestination"></span></div><h3 id="atlasQuestTitle"></h3><p id="atlasObjective" aria-live="polite"></p><p id="atlasRouteHint"></p><div id="atlasQuestSteps"></div></article><div id="atlasMilestones"></div></div>
-<div id="atlasPlacePage" hidden><p id="atlasText"></p><div id="atlasServices"></div><div id="atlasLocalQuests"></div></div><div id="atlasCompletedPage" hidden></div><small class="atlasHelp">Drag the map · Pinch or use + / − · Tap a named place</small></aside></div></div>
+<aside id="atlasDetails" class="scrolls"><div id="atlasSummary">
+<section id="atlasAreaInfo" aria-labelledby="atlasName"><div class="journalHeading"><div><small id="atlasAreaLabel">YOUR CURRENT AREA</small><h2 id="atlasName"></h2></div></div><p id="atlasText"></p><div id="atlasServices"></div></section>
+<section id="atlasTrackedInfo" aria-labelledby="atlasTrackedTitle"><small>TRACKED QUEST</small><h3 id="atlasTrackedTitle"></h3><p id="atlasTrackedObjective"></p><span id="atlasTrackedDestination"></span><button id="atlasQuests" type="button">Quests</button></section>
+</div><aside id="atlasCompassTutorial" hidden aria-label="Compass tutorial"><strong>Let your compass guide you</strong><p>Open Quests, choose a quest, then press Track quest. You’ll return to your journey, and the compass will light up and point the way.</p><button id="atlasCompassGotIt" type="button">Got it</button></aside><small class="atlasHelp">Drag the map · Pinch or use + / − · Tap a named place</small></aside></div>
+<section id="atlasQuestsScreen" hidden aria-label="Quest journal"><header><button id="atlasQuestsBack" type="button">‹ Map</button><div><small>THE TRAVELER’S JOURNAL</small><b>QUESTS</b></div><button id="atlasQuestsClose" type="button" aria-label="Close quests and map">Close ×</button></header>
+<div id="atlasJournalBody"><nav id="atlasQuestList" class="scrolls" aria-label="Quests"><span id="atlasQuestCount"></span><h2>Active</h2><div id="atlasActiveQuests"></div><h2>Completed</h2><div id="atlasCompletedQuests"></div></nav>
+<section id="atlasQuestInfo" class="scrolls" aria-labelledby="atlasQuestTitle" tabindex="0"><article id="atlasQuestCard"><div class="atlasQuestMeta"><span id="atlasQuestKind"></span><span id="atlasQuestDestination"></span></div><h3 id="atlasQuestTitle"></h3><p id="atlasObjective" aria-live="polite"></p><p id="atlasRouteHint"></p><div id="atlasQuestSteps"></div><p id="atlasQuestStatus" role="status"></p><button id="atlasFocus" type="button">Track quest</button></article><div id="atlasMilestones"></div></section></div></section></div>
 <div id="sound" class="ovl"><div id="soundPanel"><b>SOUND</b><label id="soundVolumeLabel" for="soundVolume">Overall volume <output id="soundPct" for="soundVolume">35%</output></label><input id="soundVolume" type="range" min="0" max="100" step="1" value="35" aria-label="Overall volume"><label class="soundMixLabel" for="soundMusic">Music <output id="soundMusicPct">100%</output></label><small id="soundSong"></small><input class="soundMixRange" id="soundMusic" type="range" min="0" max="100" value="100" aria-label="Current song volume"><label class="soundMixLabel" for="soundEffects">Effects <output id="soundEffectsPct">100%</output></label><input class="soundMixRange" id="soundEffects" type="range" min="0" max="100" value="100" aria-label="Sound effects volume"><button id="soundUiMute" type="button" aria-pressed="false">UI SOUND: ON</button><div id="soundActions"><button id="soundMute" type="button">MUTE</button><button id="soundClose" type="button">DONE</button></div><div class="foot" id="soundDesc">Drag the slider to adjust music volume.</div></div><div class="rows" id="soundRows"></div></div>
 <div id="savePrompt" class="ovl"><b>SAVE GAME</b><div class="rows" id="savePromptRows"></div><div class="foot" id="savePromptDesc"></div></div>
 <div id="saveSlots" class="ovl"><b>OVERWRITE SAVE</b><div class="rows" id="saveSlotRows"></div><div class="foot" id="saveSlotDesc"></div></div>
@@ -155,7 +157,7 @@
   <div class="foot" id="atkDesc"></div><button id="atkCloseBtn" type="button">CANCEL</button></div>
 <div id="airm" class="ovl"><b>FLIGHT</b><div class="rows" id="airRows"></div>
   <div class="foot" id="airDesc"></div><button id="airCloseBtn" type="button">CANCEL</button></div>
-<div id="itemm" class="ovl"><div id="itemQuickHead"><button id="itemFullBtn" type="button">FULL INVENTORY</button><span class="itemQuickSpacer"></span><button id="itemSaveBtn" type="button">SAVE</button><button id="itemMusicBtn" type="button">MUSIC</button><button id="itemCloseBtn" type="button" aria-label="Close items">×</button></div><div class="rows" id="itemRows"></div>
+<div id="itemm" class="ovl"><div id="itemQuickHead"><button id="itemFullBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 6V4h8v2M6 7h12l2 13H4L6 7Zm-1 5h14M10 10h4v5h-4Z"/></svg><span>Full Inventory</span></button><span class="itemQuickSpacer"></span><button id="itemSaveBtn" class="utilityIcon" type="button" aria-label="Save game" title="Save game"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 6H20V27H6c-2 0-3-2-3-4h13M7 6v17M20 24c0 2-1 3-3 3"/><path d="M13 21L27 4c2 6-1 13-8 15l-3-2M17 15l5 1M21 10l4 1M12 23l4-2"/></svg></button><button id="itemMusicBtn" class="utilityIcon" type="button" aria-label="Music" title="Music"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M3 12h15l9-6v18l-9-6H9c-6 0-6 8 0 8h9c4 0 4-7 0-7M3 10v4M28 5v20M11 9v10M15 9v10M9 9h4M13 9h4"/></svg></button><button id="itemCloseBtn" type="button" aria-label="Close items">×</button></div><div class="rows" id="itemRows"></div>
   <div class="foot" id="itemDesc"></div></div>
 <div id="bag" style="position:absolute;inset:0;z-index:8;display:none;
      background:#e8dfc8;color:#33302a;font:13px/1.5 ui-monospace,monospace;
@@ -164,8 +166,8 @@
     <b>INVENTORY</b>
     <span class="chips">
       <span id="bagGold" class="chip gold"><canvas id="bagCoin" width="34" height="34"></canvas><i></i></span>
-      <button id="bagSave" class="chip" type="button">SAVE</button>
-      <button id="bagMusic" class="chip" type="button">MUSIC</button>
+      <button id="bagSave" class="chip utilityIcon" type="button" aria-label="Save game" title="Save game"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7 6H20V27H6c-2 0-3-2-3-4h13M7 6v17M20 24c0 2-1 3-3 3"/><path d="M13 21L27 4c2 6-1 13-8 15l-3-2M17 15l5 1M21 10l4 1M12 23l4-2"/></svg></button>
+      <button id="bagMusic" class="chip utilityIcon" type="button" aria-label="Music" title="Music"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M3 12h15l9-6v18l-9-6H9c-6 0-6 8 0 8h9c4 0 4-7 0-7M3 10v4M28 5v20M11 9v10M15 9v10M9 9h4M13 9h4"/></svg></button>
       <button id="bagMap" class="chip" type="button" disabled aria-disabled="true">MAP</button>
       <span id="bagBook" class="chip book"><canvas id="bagBookIcon" width="30" height="30"></canvas><i>BESTIARY</i></span>
       <button id="bagClose" class="chip close" type="button" aria-label="Close inventory">×</button>
@@ -438,11 +440,11 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/ghost-following.js?v=20260927-spirit-palette1"></script>
 <script src="js/merchant-shop.js?v=20260927-thornwell-cast"></script>
 <script src="js/inventory-icons.js?v=20260928-conversation-focus"></script>
-<script src="js/temple-compass.js?v=20260930-journey-update"></script>
+<script src="js/temple-compass.js?v=20260930-map-quest-journal"></script>
 <script src="js/millwood-interiors.js?v=20260930-complete-station"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20260930-arena-ai"></script>
-<script src="js/generated/game-part-2.js?v=20260930-arena-ai" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20260930-map-quest-journal" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260928-stable-battles"></script>
 <script src="js/hollybeck-villagers.js?v=20260930-hollybeck-lessons"></script>
@@ -461,9 +463,9 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="assets/portraits/manifest.js?v=20260930-feet-mine-companion"></script>
 <script src="js/dialogue-portraits.js?v=20260930-farm-quests-tutorial"></script>
 <script src="js/thornwell-royal.js?v=20260930-world-greetings"></script>
-<script src="js/quest-map.js?v=20260930-farm-quests-tutorial"></script>
+<script src="js/quest-map.js?v=20260930-map-quest-journal"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20260930-farm-quests-tutorial" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20260930-inventory-attention" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script src="js/blossom-routes.js?v=20260930-tavern-lessons-portraits"></script>
 <script src="js/tree-line-editor.js?v=20260929-blossom-borders"></script>
 <script>

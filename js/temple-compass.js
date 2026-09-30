@@ -1,6 +1,24 @@
 /* Father’s compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
 const templeCompass = { owned: false, awakened: false, meatGiven: false, mapGiven: false, cache: null };
+let compassTrackingStarted=null,compassTrackingReduced=false;
+function compassCelebrateTracking(){
+  compassTrackingStarted=performance.now();
+  compassTrackingReduced=!!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+}
+function compassTrackingMotion(now){
+  const still={spin:0,wiggle:0,glow:0};
+  if(compassTrackingStarted===null)return still;
+  now??=performance.now();
+  const elapsed=Math.max(0,now-compassTrackingStarted),duration=compassTrackingReduced?1400:2800;
+  if(elapsed>=duration){compassTrackingStarted=null;return still;}
+  const fade=1-elapsed/duration,glow=fade*(.6+.4*Math.sin(Math.PI*elapsed/650)**2);
+  if(compassTrackingReduced)return {...still,glow:glow*.6};
+  // Two turns ease to the live bearing, then a damped wiggle settles it.
+  const turn=Math.min(1,elapsed/1600),settle=Math.max(0,(elapsed-1600)/1200);
+  const wiggle=Math.sin(settle*Math.PI*6)*(1-settle)**2;
+  return {spin:turn<1?Math.PI*4*(1-(1-turn)**3):wiggle*.38,wiggle:wiggle*.08,glow};
+}
 const FATHER_COMPASS_GIFT = [
   "Nan Ferrow: Corin... is that a dragon? Where did he come from?",
   "Corin: I found an egg in the woods. It hatched by Maddock's house.",
@@ -34,6 +52,7 @@ function restoreFatherCompass(saved) {
   // The map and compass are one gift, including saves between the old gift beats.
   templeCompass.mapGiven = templeCompass.owned;
   templeCompass.cache = null;
+  compassTrackingStarted = null;
   refreshMapControls();
 }
 function giveFatherCompass() {
@@ -232,18 +251,27 @@ function drawTempleCompass() {
     cache.px=P.x;cache.py=P.y;
   }
   const guide=cache.guide||{x:P.x,y:P.y-1,inactive:true};
+  const attention=compassTrackingMotion();
   const x = VW - 30, y = 30;
   ctx.save();
   ctx.translate(x, y);
+  ctx.rotate(attention.wiggle);
+  if(attention.glow){
+    ctx.shadowColor='#ffe6a0';ctx.shadowBlur=12*attention.glow;
+    ctx.strokeStyle='rgba(255,226,153,'+attention.glow+')';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,0,24,0,Math.PI*2);ctx.stroke();
+  }
   ctx.fillStyle = 'rgba(24,20,25,.88)'; ctx.strokeStyle = guide.arrived ? '#91c6ae' : '#a28a60'; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.arc(0, 0, 21, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.shadowBlur=0;
   ctx.fillStyle = '#796b57';
   for (const [tx, ty, w, h] of [[-1,-18,2,3],[-1,15,2,3],[-18,-1,3,2],[15,-1,3,2]]) ctx.fillRect(tx,ty,w,h);
   ctx.beginPath();
   if (guide.arrived) {
+    ctx.rotate(attention.spin);
     ctx.fillStyle = '#9cdac2'; ctx.moveTo(0,-10); ctx.lineTo(7,0); ctx.lineTo(0,10); ctx.lineTo(-7,0);
   } else {
-    ctx.rotate(Math.atan2(guide.y - P.y, guide.x - P.x));
+    ctx.rotate(Math.atan2(guide.y - P.y, guide.x - P.x)+attention.spin);
     ctx.fillStyle = guide.inactive?'#796b57':'#f2d28c'; ctx.moveTo(14,0); ctx.lineTo(-8,-7); ctx.lineTo(-4,0); ctx.lineTo(-8,7);
   }
   ctx.closePath(); ctx.fill();
