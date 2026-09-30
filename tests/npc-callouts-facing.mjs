@@ -1,11 +1,12 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const source=fs.readFileSync(new URL('../js/generated/game-part-2.js',import.meta.url),'utf8');
 const m={n:'Elder Maddock',x:128,y:100,stationary:true,packDirections:true,f:'u',kf:'u'};
-const c=vm.createContext({npcs:[m],P:{x:128,y:130},MAPID:'house22',sayNpc:m,editing:false,scene:null,bossScene:null,walker:null,
+const c=vm.createContext({TS:16,npcs:[m],P:{x:128,y:130},MAPID:'house22',sayNpc:m,editing:false,scene:null,bossScene:null,walker:null,
  stepHettie(){},stepThornwellWelcome(){},npcHere:()=>true,faceCorinAt(){}});
 const run=s=>vm.runInContext(s,c);
 run(source.slice(source.indexOf('function faceToward('),source.indexOf('function npcHere(')));
 run(source.slice(source.indexOf('function northSouthPatrol('),source.indexOf('function patrolRoute(')));
+run(source.slice(source.indexOf('function npcStepClearsPlayer('),source.indexOf('function canNpcStand(')));
 run(source.slice(source.indexOf('function stepWalkers('),source.indexOf('function faceCorinAt(')));
 for(const [x,y,kf]of [[128,130,'d'],[128,70,'u'],[98,100,'w'],[158,100,'e']]){
  c.P.x=x;c.P.y=y;run('faceToward(sayNpc,P.x,P.y);stepWalkers(.05)');assert.equal(m.kf,kf,'Maddock keeps facing the speaker '+kf);
