@@ -6368,7 +6368,7 @@ const HATCH_LINES = [
       "Corin: Then where can we go?",
       "Maddock: Neither of you will be safe while Halvard rules. We must overthrow the king. He holds Cinderhold, his fortress in the far east.",
       "Corin: I would not last a minute against his guards.",
-      "Maddock: Then grow stronger together. The riders left knowledge in the old temples. Perhaps your new companion will understand what we have forgotten.",
+      "Maddock: Then grow stronger together. Forgewick has craftsmen who can help. Perhaps your new companion remembers what the old riders knew.",
       "Corin: How do we get to Forgewick?",
       "Maddock: Forgewick is east of Thornwell. Follow the road through Thornwell and keep heading east. Ask for the old temple when you reach Forgewick.",
 ];
