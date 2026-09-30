@@ -1,6 +1,6 @@
 /* The authored desert detour and sandstone pyramid. */
 const DesertPyramid = (()=>{
-  const BASE='assets/interiors/desert-pyramid/', VERSION='20260930-pyramid1';
+  const BASE='assets/interiors/desert-pyramid/', VERSION='20260930-slam3';
   const X=1069*16+8,Y=30*16+16;
   const routes=[
     {id:9182,x0:1392,y0:93,x1:1294,y1:41,pts:[[1392,93],[1392,41],[1294,41]]},
@@ -8,6 +8,15 @@ const DesertPyramid = (()=>{
     {id:9184,x0:1177,y0:51,x1:1069,y1:30,pts:[[1177,51],[1129,51],[1129,83],[1082,83],[1069,83],[1069,30]]}
   ].map(f=>({...f,kind:'route',w:5,band:20,style:'desert',a0:null,a1:null}));
   let ready=false;
+  const stoneFrames=new Map();
+  function stoneFrame(name){
+    if(stoneFrames.has(name))return stoneFrames.get(name);
+    const s=SPR[name],c=document.createElement('canvas');c.width=s[2];c.height=s[3];c.pixelLocked=true;
+    const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+    drawGameImage(g,sheetOf(s),s[0],s[1],s[2],s[3],0,0,s[2],s[3]);
+    g.globalCompositeOperation='source-atop';g.fillStyle='rgba(38,24,29,.30)';g.fillRect(0,0,c.width,c.height);
+    stoneFrames.set(name,c);return c;
+  }
   async function sprite(name,file,w,h,frames=1){
     const img=new Image();img.src=BASE+file+'?v='+VERSION;await img.decode();img.pixelLocked=true;
     animalSheets[name]=img;SPR[name]=[0,0,w,h,frames,name];return img;
@@ -45,7 +54,7 @@ const DesertPyramid = (()=>{
       const m=W.maps[id]={w:width/16,h:height/16,ts:16,title:'Sunken Pyramid',pyramid:true,
         templeExpanded:true,templePlan:plan,templeFloors:plan.floors,templeGateOpen:0,
         travel:id==='pyramid_entry'||id==='pyramid_queen',travel_kind:id==='pyramid_queen'?'Boss':'Dungeon',
-        roomArt:'pyramid_tiles',_roomBaseCanvas:img,bg:'#21191b',floorbg:'#daa16e',spawn:plan.spawn,
+        roomArt:'pyramid_tiles',_roomBaseCanvas:img,bg:'#000000',floorbg:'#daa16e',spawn:plan.spawn,
         terr:terrRLE(Array(width*height/256).fill(DIRT)),objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{}};
       if(id==='pyramid_queen')m.title='Sunken Pyramid — Spider Queen';
       m.base_terr=m.terr;
@@ -115,5 +124,5 @@ const DesertPyramid = (()=>{
     }
     FOE_ART.spiderqueen='pyramid_spider';
   }
-  return {prepare,prepareSpiderArt,installWorld,clearForecourt,routes};
+  return {prepare,prepareSpiderArt,installWorld,clearForecourt,stoneFrame,routes};
 })();

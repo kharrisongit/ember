@@ -5948,7 +5948,7 @@ function captureSave(){return {
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
-  templeLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
+  templeLayoutVersion:2, pyramidLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
@@ -6041,6 +6041,7 @@ function loadGame(slot=activeSaveSlot) {
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;bagOwned=s.bagOwned===undefined?quest>=Q.EGGS:!!s.bagOwned;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
+    if(s.map==='pyramid_queen'&&s.pyramidLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.mountainPassage&&s.passageLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.hollybeck&&s.hollybeckLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}

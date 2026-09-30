@@ -1,6 +1,6 @@
 /* Combat uses the same four-direction poses as the north-field audition. */
 const SpiderQueenBoss=(()=>{
-  const shots=[],splashes=[];let map='',web=null,learned=false;
+  const shots=[],splashes=[],waves=[];let map='',web=null,learned=false;
   const SCALE=.8,WEB_CRAWL=19;
   const webbed=()=>!!web&&['gathering','trapped'].includes(web.phase)&&map===MAPID&&!foesHeld;
   const aboveWeb=()=>!!web&&map===MAPID&&!foesHeld;
@@ -12,7 +12,29 @@ const SpiderQueenBoss=(()=>{
     if(web&&map===MAPID&&web.cameraZoom){restoreCameraTarget();cam.z=web.cameraZoom;followCam();clampCam();}
     web=null;
   }
-  function reset(){shots.length=0;splashes.length=0;clearWeb();map=MAPID;}
+  function clearWaves(){for(const w of waves)finishGlassShieldParry(w.queen);waves.length=0;}
+  function reset(){shots.length=0;splashes.length=0;clearWaves();clearWeb();map=MAPID;}
+  const insideRoom=(f,x,y)=>!!f.expandedRoom&&x>=f.expandedRoom[0]&&y>=f.expandedRoom[1]&&x<=f.expandedRoom[2]&&y<=f.expandedRoom[3];
+  function roomThreat(){return !foesHeld&&!!MD?.pyramid&&foes.some(f=>f.kind==='spiderqueen'&&f.st!=='dead'&&insideRoom(f,P.x,P.y));}
+  function canBlockSlam(f){return f?.kind==='spiderqueen'&&f.st!=='dead'&&insideRoom(f,P.x,P.y)&&((f.queenAttack==='stomp'&&['wind','swing'].includes(f.st))||waves.some(w=>w.queen===f&&!w.hit));}
+  function slam(f){
+    const [l,t,r,b]=f.expandedRoom;
+    const maxRadius=Math.max(...[[l,t],[r,t],[l,b],[r,b]].map(([x,y])=>Math.hypot(x-f.x,y-f.y)))+16;
+    waves.push({queen:f,x:f.x,y:f.y,t:0,radius:0,maxRadius,hit:false});
+  }
+  function stepWaves(dt){
+    for(let i=waves.length-1;i>=0;i--){
+      const w=waves[i];
+      if(w.queen.st==='dead'){finishGlassShieldParry(w.queen);waves.splice(i,1);continue;}
+      w.t+=dt;w.radius=Math.min(w.maxRadius,w.maxRadius*w.t/1.05);
+      // One hit as the visible front reaches Corin. Running behind it cannot dodge it.
+      if(!w.hit&&insideRoom(w.queen,P.x,P.y)&&Math.hypot(P.x-w.x,P.y-w.y)<=w.radius+8){
+        w.hit=true;
+        if(!glassShieldDeflectFoe(w.queen))hurtPlayer(2);
+      }
+      if(w.t>=1.2){finishGlassShieldParry(w.queen);waves.splice(i,1);}
+    }
+  }
   function enter(f,state){f.st=state;f.t=0;f.hit=0;}
   function launch(f){
     const d=dir(f),v={d:[0,1],u:[0,-1],e:[1,0],w:[-1,0]}[d];
@@ -22,15 +44,16 @@ const SpiderQueenBoss=(()=>{
   }
   function step(f,dt){
     if(map!==MAPID)reset();
-    if(f.st==='dead'){if(f.t<dt*2){shots.length=0;clearWeb();}return;}
+    if(f.st==='dead'){if(f.t<dt*2){shots.length=0;clearWaves();clearWeb();}return;}
     if(!f._thinking||f.hold>0||!SpiderQueenDemo.inspect().ready)return;
     if(!seenFoe[f.kind])seenFoe[f.kind]=++seenCount;
     if(pause())return;
     f.hurt=Math.max(0,(f.hurt||0)-dt);
     if(f.queenStun>0){f.queenStun=Math.max(0,f.queenStun-dt);f.st='idle';f.t=0;return;}
     if(web&&web.queen===f&&web.phase!=='burning'){stepWebQueen(f,dt);return;}
+    if(waves.some(w=>w.queen===f)&&f.st!=='swing')return;
     f.webCool=(f.webCool??10)-dt;
-    if(f.webCool<=0&&SpiderQueenWeb.ready()&&dragonCombatHere()&&dragon.on&&!dragon.down){beginWeb(f);return;}
+    if(f.webCool<=0&&!waves.length&&SpiderQueenWeb.ready()&&dragonCombatHere()&&dragon.on&&!dragon.down){beginWeb(f);return;}
     f.venomCool=Math.max(0,(f.venomCool||0)-dt);f.attackCool=Math.max(0,(f.attackCool||0)-dt);
     const target=targetFor(f),dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy);
     if(f.glassBlockHold>0){f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);f.x=f.glassBlockAnchorX;f.y=f.glassBlockAnchorY;return;}
@@ -41,12 +64,9 @@ const SpiderQueenBoss=(()=>{
       if(!f.hit&&f.t>=(f.queenAttack==='spit'?.6:.82)){
         f.hit=1;
         if(f.queenAttack==='spit')launch(f);
-        else{
-          f.impact=.3;
-          if(d<=54){if(target.isDragon)hurtDragon(2);else if(target.isPlayer&&!glassShieldDeflectFoe(f))hurtPlayer(2);}
-        }
+        else slam(f);
       }
-      if(f.t>=(f.queenAttack==='spit'?1.1:1.5)){enter(f,'idle');f.attackCool=.8;}
+      if(f.t>=(f.queenAttack==='spit'?1.1:1.5)){if(!waves.some(w=>w.queen===f))finishGlassShieldParry(f);enter(f,'idle');f.attackCool=.8;}
       return;
     }
     setFace(f,dx,dy);
@@ -54,6 +74,7 @@ const SpiderQueenBoss=(()=>{
       f.queenAttack=d>=50?'spit':'stomp';
       f.aimX=target.x;f.aimY=target.y-(target.isDragon?14:10);
       if(f.queenAttack==='spit')f.venomCool=4.5;
+      else toast('Shockwave! Press B to block the ring.');
       enter(f,'wind');return;
     }
     if(d>40){
@@ -68,8 +89,8 @@ const SpiderQueenBoss=(()=>{
     if(pause())return;
     if(web?.phase==='burning'){web.t+=dt;if(web.t>=1.5)clearWeb();}
     const queen=foes.find(f=>f.kind==='spiderqueen'&&f.st!=='dead');
-    if(!queen){shots.length=0;clearWeb();}
-    for(const f of foes)if(f.impact>0)f.impact=Math.max(0,f.impact-dt);
+    if(!queen){shots.length=0;clearWaves();clearWeb();}
+    stepWaves(dt);
     const segment=(s,x,y,px,py)=>{const vx=s.x-x,vy=s.y-y,t=Math.max(0,Math.min(1,((px-x)*vx+(py-y)*vy)/(vx*vx+vy*vy||1)));return Math.hypot(px-x-vx*t,py-y-vy*t);};
     for(let i=shots.length-1;i>=0;i--){
       const s=shots[i],x=s.x,y=s.y;s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
@@ -219,20 +240,33 @@ const SpiderQueenBoss=(()=>{
     ctx.restore();
   }
   function frameCamera(){
-    if(!aboveWeb()||mode!=='play'||camFree)return;
+    if(!aboveWeb()||web.phase==='casting'||mode!=='play'||camFree)return;
     restoreCameraTarget();
-    const [l,t,r,b]=web.queen.expandedRoom;
-    cam.z=Math.min(web.cameraZoom,(VW-24)/(r-l+40),(VH-24)/(b-t+96));
-    cam.x=(l+r)/2-VW/cam.z/2;cam.y=(t+b)/2-24-VH/cam.z/2;
+    // Frame the three characters, not the chamber's empty corners. Tighten as she approaches.
+    const actors=[web.queen,P,dragon];
+    const l=Math.min(...actors.map(a=>a.x))-42,r=Math.max(...actors.map(a=>a.x))+42;
+    const t=Math.min(...actors.map(a=>a.y))-78,b=Math.max(...actors.map(a=>a.y))+24;
+    cam.z=Math.min(web.cameraZoom,(VW-24)/(r-l),(VH-24)/(b-t));
+    cam.x=(l+r)/2-VW/cam.z/2;cam.y=(t+b)/2-VH/cam.z/2;
   }
   function addEffects(list){
     if(map!==MAPID||!MD?.pyramid||foesHeld)return;
+    for(const w of waves)list.push({queenWave:w,x:w.x,y:w.y,sy:-1e7});
     if(web)list.push({queenWeb:true,x:0,y:0,sy:1e8});
     for(const s of shots)list.push({queenVenom:s,x:s.x,y:s.y,sy:s.y+48});
     for(const s of splashes)list.push({queenSplash:s,x:s.x,y:s.y});
   }
   function draw(o){
     if(o.queenWeb){drawWeb();return true;}
+    if(o.queenWave){
+      const w=o.queenWave,[l,t,r,b]=w.queen.expandedRoom;
+      ctx.save();ctx.beginPath();ctx.rect(l,t,r-l,b-t);ctx.clip();
+      ctx.globalAlpha=Math.min(1,Math.max(0,(1.2-w.t)/.22));
+      for(const [offset,width,color] of [[-10,8,'#c28c60'],[-4,4,'#e6ba80'],[0,2,'#fff0bc']]){
+        ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.arc(w.x,w.y,Math.max(0,w.radius+offset),0,Math.PI*2);ctx.stroke();
+      }
+      ctx.restore();return true;
+    }
     if(!o.queenBoss&&!o.queenVenom&&!o.queenSplash)return false;
     if(!SpiderQueenDemo.inspect().ready)return true;
     ctx.save();ctx.imageSmoothingEnabled=false;
@@ -243,7 +277,6 @@ const SpiderQueenBoss=(()=>{
       const frame=SpiderQueenDemo.frame(dir(f),action,f.t);
       if(f.st==='dead')ctx.globalAlpha=Math.max(0,1-f.t);
       ctx.fillStyle='rgba(20,9,25,.25)';ctx.beginPath();ctx.ellipse(f.x,f.y-6,28,7,0,0,Math.PI*2);ctx.fill();
-      if(f.impact>0){ctx.strokeStyle='#ecd4a4';ctx.beginPath();ctx.ellipse(f.x,f.y-6,34+(1-f.impact/.3)*8,10,0,0,Math.PI*2);ctx.stroke();}
       drawPixelImage(ctx,frame,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));
       if(f.queenStun>0){
         ctx.fillStyle='#ffe8a6';for(let i=0;i<3;i++){const angle=tAcc*3+i*Math.PI*2/3;ctx.fillRect(Math.round(f.x+Math.cos(angle)*16)-1,Math.round(f.y-58+Math.sin(angle)*4)-1,3,3);}
@@ -259,5 +292,5 @@ const SpiderQueenBoss=(()=>{
     }
     ctx.restore();return true;
   }
-  return {capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,commandBreath,fireCast,inspect:()=>({web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
+  return {capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,roomThreat,canBlockSlam,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,commandBreath,fireCast,inspect:()=>({waves:waves.map(({queen,...w})=>({...w})),web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
 })();

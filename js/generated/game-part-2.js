@@ -2862,6 +2862,7 @@ function sheetOf(s) {
 function blit(dst, name, frame, dx, dy) {
   const s = SPR[name];
   if (!s) throw new Error("unknown sprite " + name);
+  if(/^mtd_/.test(name)){drawGameImage(dst,DesertPyramid.stoneFrame(name),0,0,s[2],s[3],dx,dy,s[2],s[3]);return;}
   const f = frame % s[4];
   drawGameImage(dst, sheetOf(s), s[0] + f * s[2], s[1], s[2], s[3], dx, dy, s[2], s[3]);
 }
@@ -4104,6 +4105,7 @@ function drawWorld(t, dt) {
     if (o.schoolArt) {
       if(drawWorkshopCraftsman(o,t))continue;
       const sp = SPR[o.spr];
+      if(o.spr==='pyramid_exterior'){drawGameImage(ctx,DesertPyramid.stoneFrame(o.spr),0,0,sp[2],sp[3],o.x-sp[2]/2,o.y-sp[3],sp[2],sp[3]);continue;}
       let fr = o.stillFrame ?? (o.glassHatch ? glassHatchFrame() : Math.floor(t / 0.15) % sp[4]);
       if (o.royalDoor || o.smithDoor || /^(Doors|Animation_windows_doors)\.png$/.test(o.source || "")) {
         fr = 0;
@@ -5618,7 +5620,7 @@ function tryGlassShieldParry() {
     const k = FOE[f.kind] || {};
     const d = Math.hypot(P.x - f.x, P.y - f.y);
     const range = Math.max(72, (k.reach || 30) + 54);
-    if (d <= range && queueGlassShieldBlock(f)) caught = true;
+    if ((d <= range || SpiderQueenBoss.canBlockSlam(f)) && queueGlassShieldBlock(f)) caught = true;
   }
   return caught;
 }
@@ -8290,7 +8292,7 @@ function bookOrder() {
 }
 const BESTIARY = [
   {k:"mummy",n:"Pyramid Mummy",w:"the Sunken Pyramid",t:"Tattered bandages trail across the sandstone floors. These restless dead still patrol the burial chambers and strike anyone who disturbs them."},
-  {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a crushing stomp; at a distance, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. Command Fire to burn the web, free them both, and stun her."},
+  {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a stomp whose shockwave sweeps the whole room. Press B to block the ring; distance will not keep Corin safe. At range, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. Command Fire to burn the web, free them both, and stun her."},
   {"k": "devil1", "n": "Cinder Bailiff", "w": "the demon's Cinderhold trials", "t": "Before the Wingfall, riders sealed bargains with burned handprints. The Cinder Bailiffs still collect those debts. Maelis has persuaded one that a fair contest counts as payment."},
   {"k": "devil3", "n": "Crownless Fiend", "w": "the demon's Cinderhold trials", "t": "Halvard promised this fiend a kingdom beneath his own. With the crown broken, it has come to claim the empty hall. The summoner permits it only a few minutes at a time."},
   {"k": "skeleton1", "n": "Oathbone Swordsman", "w": "the demon's Cinderhold trials", "t": "These were the temple guards who refused to leave their posts when the wings fell. Their shields have rotted away. Their orders have not."},
@@ -10468,7 +10470,7 @@ function stepFoes(dt) {
   }
 }
 let pHp = 6, pMax = 6, pInv = 0;
-function inFight() { return foes.some(f => !f.ally && !f.storyPassive && f.st !== "dead" && Math.hypot(f.x - P.x, f.y - P.y) < 200); }
+function inFight() { return SpiderQueenBoss.roomThreat() || foes.some(f => !f.ally && !f.storyPassive && f.st !== "dead" && Math.hypot(f.x - P.x, f.y - P.y) < 200); }
 let devSafe = false;
 let dragonOff = false;
 let devDragonPassive = false;
