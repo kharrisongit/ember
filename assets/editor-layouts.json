@@ -51543,6 +51543,12 @@
         "sprite": 1190,
         "x": 15884,
         "y": 2143
+      },
+      "feature-delete:43,378": {
+        "kind": "feature-delete",
+        "key": "43,378",
+        "tx": 43,
+        "ty": 378
       }
     },
     "witchmoor": {
@@ -53508,7 +53514,8 @@
     "d7a0276a-aaf2-423f-9efc-cbcfeaa47c53",
     "552ba72a-c950-4233-9db1-ddae110831bc",
     "5e0bf8a7-7d98-405f-9170-97c48281db1f",
-    "8114304f-d6d5-4463-a412-57626316b08e"
+    "8114304f-d6d5-4463-a412-57626316b08e",
+    "28932b4f-c528-49c8-8830-f47ac48934c5"
   ],
   "sessions": {
     "witchmoor": {
@@ -53632,10 +53639,10 @@
       "resultHash": "780f48a5-193e5ff5-796"
     },
     "world": {
-      "id": "2c0d94d6-6ece-4167-8b46-8242a7248a98",
+      "id": "625d6a64-c51f-40ab-a716-f229fdd8d29a",
       "sequence": 1,
-      "baseHash": "84ef5094-7366084e-421105",
-      "baseFingerprint": "95865500-c871173c-744539",
+      "baseHash": "846dd498-7bf34dc6-421105",
+      "baseFingerprint": "3ec30423-b445925b-767786",
       "base": {
         "build": {
           "kind": "build",
@@ -103677,8 +103684,8 @@
           "identity": "tavern_patio_table_1",
           "originX": 3878.5,
           "originY": 1086,
-          "x": 3846.5,
-          "y": 1086
+          "x": 3830.5,
+          "y": 1102
         },
         "actor:patio:7059:table:2": {
           "kind": "actor",
@@ -103714,8 +103721,8 @@
           "identity": "tavern src Drinker2",
           "originX": 3902,
           "originY": 1079,
-          "x": 3870,
-          "y": 1079,
+          "x": 3854,
+          "y": 1095,
           "independent": true
         },
         "actor:npc:placed:4448128f-6fca-4e17-88f9-389ee42251f7": {
@@ -105069,7 +105076,7 @@
           "y": 2143
         }
       },
-      "resultHash": "84ef5094-7366084e-421105"
+      "resultHash": "a71a94f9-d0012785-421187"
     },
     "tavern": {
       "id": "33539aed-42d4-48f9-a2d8-0766bc292154",
