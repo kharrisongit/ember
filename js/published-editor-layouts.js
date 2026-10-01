@@ -24,6 +24,7 @@ function applyPublishedEditorLayout(m,id) {
   if(id==='world'&&typeof IceMoth!=='undefined')IceMoth.installWorld(m);
   // New oasis enemies follow every established enemy slot for save compatibility.
   if(id==='world'&&typeof SideRouteAdventures!=='undefined')SideRouteAdventures.installOasis(m);
+  if(id==='world'&&typeof DragonChapels!=='undefined')DragonChapels.installWorld(m);
   if(typeof finishTempleFixtures==='function')finishTempleFixtures(m);
 }
 function applyPublishedEditorEntries(m,id,layout,final=true) {

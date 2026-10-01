@@ -1658,6 +1658,7 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
     ['Hollybeck temple',prepareExpandedHollybeckTemple],
     ['Mountain passage',prepareExpandedMountainPassage],
     ['Desert pyramid',()=>DesertPyramid.prepare()],
+    ['Dragon chapels',()=>DragonChapels.prepare()],
     ['Frosthorn artwork',()=>Frosthorn.prepare()],
     ['Ice Moth artwork',()=>IceMoth.prepare()]
   ];
@@ -2349,6 +2350,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   if(!warmReturn){
     if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
     if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
+    if(typeof DragonChapels!=='undefined')DragonChapels.clearForecourt();
     if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
   }
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
@@ -2544,6 +2546,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false) => {
   if (solid[y * MW + x] === 1) return true;
   if (blockedByNpcBody(px, py)) return true;
   if (glassHatchBlocked(px,py)) return true;
+  if(typeof DragonChapels!=='undefined'&&DragonChapels.solidAt(px,py))return true;
   if (MD.roomBlocks && MD.roomBlocks.some(r => px >= r[0] && px < r[2] && py >= r[1] && py < r[3])) return true;
   if (!ignoreNpcBuffer && blockedByNpcBuffer(px, py)) return true;
   if (arenaFenceBlocks(px,py)) return true;
@@ -2612,7 +2615,7 @@ function canStand(x, y) {
 }
 function movePlayer(dx, dy, dt) {
   if (sceneHold()) return;      /* held still while someone is talking */
-  const SP = mounted&&dragonAirborne() ? (running?285:170) : (running?190:118);     /* B is hold-to-run */
+  const SP = mounted&&dragonAirborne() ? (running?DragonChapels.sprintSpeed():170) : (running?190:118);     /* B is hold-to-run */
   const nx = P.x + dx * SP * dt, ny = P.y + dy * SP * dt;
   // Ordinary temple doors only start opening when a movement crosses their threshold.
   if(MD?.templeContinuous&&dy&&Math.abs(P.x-160)<=10){
@@ -4118,6 +4121,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(DragonChapels.draw(o,t))continue;
     if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
     if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
     if(typeof Frosthorn!=='undefined'&&Frosthorn.draw(o))continue;
@@ -7000,7 +7004,7 @@ function stepWalkers(dt) {
       if(m.y-(sprite?.[3]||64)>bottom)finishNanDeparture(m);
       continue;
     }
-    if(scene?.hatch&&m===scene.npcActor&&m.scriptWalking)continue;
+    if((scene?.hatch&&m===scene.npcActor||m.packSpr==='chapel_priest')&&m.scriptWalking)continue;
     if(m.straightSceneWalk&&scene?.npcActor===m){
       if(fadeDir||fade>0||!m.goto)continue;
       const [x,y]=m.goto,dx=x-m.x,dy=y-m.y,d=Math.hypot(dx,dy),step=Math.min(d,110*dt);
@@ -11632,6 +11636,7 @@ function interact() {
     return;
   }
   const best=nearestTalkNpc();
+  if (best && DragonChapels.talk(best)) return;
   if (best && tryBrambleReunion(best)) return;
   if (best && petCompanion(best)) return;
   if (best && best.pettable) return;
@@ -11656,6 +11661,7 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(DragonChapels.talk(best))return;
     if(DesertAdventure.talk(best))return;
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
