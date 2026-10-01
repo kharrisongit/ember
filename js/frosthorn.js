@@ -2,10 +2,10 @@
 const Frosthorn=(()=>{
   const BASE='assets/sprites/frosthorn/',VERSION='20261001-frosthorn2';
   const REWARD='world:frosthorn:frostheart',CELL=128,HEIGHT=112,FOOT=104;
-  const arena={id:9361,kind:'arena',x:2545,y:25,r:12.6,style:'winter',sideRoute:'frosthorn',frosthorn:true};
+  const arena={id:9361,kind:'arena',x:2545,y:25,r:6.3,style:'winter',sideRoute:'frosthorn',frosthorn:true};
   const routes=[
     {id:9359,kind:'route',x0:2640,y0:141,x1:2649,y1:68,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2640,141],[2640,105],[2592,105],[2592,143],[2559,143],[2559,165],[2542,165],[2542,115],[2561,115],[2561,86],[2600,86],[2600,68],[2649,68]]},
-    {id:9360,kind:'route',x0:2647,y0:65,x1:2545,y1:37,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2647,65],[2657,65],[2657,37],[2581,37],[2581,57],[2545,57],[2545,37]]}
+    {id:9360,kind:'route',x0:2647,y0:65,x1:2545,y1:25,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2647,65],[2657,65],[2657,37],[2581,37],[2581,57],[2545,57],[2545,25]]}
   ];
   const frames={},spikes=[],waves=[];
   let loading=null,ready=false,failed=false,map='';
@@ -21,7 +21,8 @@ const Frosthorn=(()=>{
       const spec={...route,pts:route.pts.map(p=>p.slice()),sideRoute:'frosthorn',shortcut:true};
       if(old)Object.assign(old,spec);else m.features.push(spec);
     }
-    if(!m.features.some(f=>f.id===arena.id))m.features.push({...arena});
+    const existing=m.features.find(f=>f.id===arena.id);
+    if(existing)Object.assign(existing,arena);else m.features.push({...arena});
     if(!m.foes.some(f=>f.frosthorn))m.foes.push({k:'frosthorn',x:arena.x,y:arena.y-3,frosthorn:true});
   }
   function canvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
@@ -59,6 +60,8 @@ const Frosthorn=(()=>{
     f.frostAttack=attack;f.frostAim={x:target.x,y:target.y};
     face(f,target.x-f.x,target.y-f.y);enter(f,'wind');beginEnemyWindup(f);
     if(attack==='stomp'){
+      // Ground spikes must be dodged, so their tell is always unblockable.
+      f.unblockableAttack=true;f.glassParryQueued=false;
       const dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy)||1,points=[];
       for(let i=0;i<13;i++){
         const distance=38+i*24,x=f.x+dx/d*distance,y=f.y+dy/d*distance;
@@ -92,7 +95,7 @@ const Frosthorn=(()=>{
     if(f.st==='swing'){
       if(f.frostAttack==='headbutt'&&f.t<.24){const a=f.frostAim,dx=a.x-f.x,dy=a.y-f.y,d=Math.hypot(dx,dy)||1;moveCombatActor(f,dx/d*115*dt,dy/d*115*dt,false,0);}
       if(!f.hit&&f.t>=.16){f.hit=1;if(f.frostAttack!=='stomp')melee(f,f.frostAttack==='headbutt'?68:62);}
-      if(f.t>=.85){finishGlassShieldParry(f);enter(f,'idle');f.frostCool=.85;f.frostAttack=null;}
+      if(f.t>=.85){finishGlassShieldParry(f);enter(f,'idle');f.frostCool=.85;f.frostAttack=null;f.unblockableAttack=false;}
       return;
     }
     const target=targetFor(f),dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy);face(f,dx,dy);
@@ -141,7 +144,7 @@ const Frosthorn=(()=>{
       const f=o.frosthorn,frame=pose(f);
       if(f.st==='dead'&&f.t>2.4){ctx.restore();return true;}
       if(f.st==='dead')ctx.globalAlpha=Math.min(1,Math.max(0,(2.4-f.t)/.7));
-      drawPixelImage(ctx,frame,0,0,CELL,HEIGHT,Math.round(f.x-CELL/2),Math.round(f.y-FOOT),CELL,HEIGHT);
+      drawEnemyCombatFrame(f,frame,Math.round(f.x-CELL/2),Math.round(f.y-FOOT),CELL,HEIGHT);
       if(f.st!=='dead'){
         const y=Math.round(f.y-88);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);
         ctx.fillStyle='#a5eaff';ctx.fillRect(f.x-30,y+1,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);

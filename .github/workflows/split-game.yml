@@ -50,6 +50,8 @@ jobs:
         run: |
           npm install --no-save --package-lock=false @napi-rs/canvas@0.1.100 pngjs@7.0.0
           node tests/spider-queen-demo.mjs
+          node tests/winter-boss-feedback.mjs
+          node tests/ice-moth-projectiles.mjs
           node tests/spider-queen-web.mjs
           node tests/spider-queen-boss.mjs
           node tests/desert-pyramid.mjs

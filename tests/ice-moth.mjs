@@ -30,15 +30,15 @@ const report=JSON.parse(run(`JSON.stringify((()=>{
 })())`));
 console.log(JSON.stringify(report));
 assert.equal(report.badCount,0);assert.deepEqual(report.floor,[]);assert.deepEqual(report.snow,[]);assert.deepEqual(report.gate,[]);assert.deepEqual(report.empty,[]);assert.equal(report.bosses,1);
-assert.equal(run('features.find(f=>f.id===9367).r'),12.6);assert.equal(run('features.find(f=>f.id===9368).r'),6.3);
+assert.equal(run('features.find(f=>f.id===9367).r'),6.3);assert.equal(run('features.find(f=>f.id===9368).r'),6.3);
 assert(run('isSolid(2346*16+8,126*16+8)'),'The far end closes into a tree wall');
 run(`const mothTest=foes.find(f=>f.kind==='icemoth');
 P.x=2346*16+8;P.y=134*16+16;arenaLock=null;arenaT=0;refillRing(IceMoth.endpoint);stepArena(.05);`);
 assert.equal(run('arenaLock'),null,'The reserved endpoint stays peaceful and does not refill');
-run('P.y=177*16+16;stepArena(.05);');assert.equal(run('arenaLock?.id'),9367,'The midpoint arena starts the moth encounter');
+run('P.y=171*16+16;stepArena(.05);');assert.equal(run('arenaLock?.id'),9367,'The midpoint arena starts the moth encounter');
 run(`P.x=0;P.y=0;arenaLock=null;const mothHome=[mothTest.x,mothTest.y];stepCombat(.1);`);
 assert.equal(run('JSON.stringify([mothTest.x,mothTest.y])'),run('JSON.stringify(mothHome)'),'The boss waits in its own arena');
-function setup(x=0,y=160,sequence=0){
+function setup(x=0,y=88,sequence=0){
  run(`IceMoth.reset();scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;foesHeld=false;devSafe=false;glassShield=false;mounted=false;
  dragonOff=true;P.act=null;pHp=20;pMax=20;pInv=0;saintT=0;smithUpgrade=false;worn.ward=false;worn.twin=false;
  arenaLock=features.find(f=>f.id===9367);arenaT=1;
@@ -47,12 +47,12 @@ function setup(x=0,y=160,sequence=0){
 }
 const step=n=>{for(let i=0;i<n;i++)run('tAcc+=.05;stepCombat(.05)');};
 setup();step(1);assert.equal(run('mothTest.mothAttack'),'gust');assert.equal(run('IceMoth.inspect().shots.length'),0,'Windup has no projectile');
-const aim=run('JSON.stringify(mothTest.mothAim)');run('P.x+=100');step(24);
+const aim=run('JSON.stringify(mothTest.mothAim)');run('P.x+=30');step(24);
 assert.equal(run('JSON.stringify(mothTest.mothAim)'),aim,'Aim locks during the tell');
 assert.equal(run('IceMoth.inspect().shots.length'),1,'The frost gust launches');step(32);assert.equal(run('pHp'),20,'A sideways dodge avoids the gust');
 setup();step(56);assert.equal(run('pHp'),18,'The gust deals one hit');
-setup(0,160,1);step(28);assert.equal(run('mothTest.mothAttack'),'shards');assert.equal(run('IceMoth.inspect().shots.length'),3,'A volley has three separate crystals');step(26);assert.equal(run('pHp'),18,'A volley does not drain multiple hearts');
-for(const [x,y]of [[180,0],[-180,0],[0,-180],[0,180]]){
+setup(0,88,1);step(28);assert.equal(run('mothTest.mothAttack'),'shards');assert.equal(run('IceMoth.inspect().shots.length'),3,'A volley has three separate crystals');step(26);assert.equal(run('pHp'),18,'A volley does not drain multiple hearts');
+for(const [x,y]of [[88,0],[-88,0],[0,-88],[0,88]]){
  setup(x,y,1);step(28);
  assert.equal(run('IceMoth.inspect().shots.length'),3,'Projectiles survive launch in every direction');
  const s=JSON.parse(run('JSON.stringify(IceMoth.inspect().shots[1])'));
@@ -62,7 +62,7 @@ setup();step(26);const moving=run('JSON.stringify(IceMoth.inspect().shots)');
 run('scene={lines:[],i:0};IceMoth.effects(.5);');assert.equal(run('JSON.stringify(IceMoth.inspect().shots)'),moving,'Cutscenes pause projectiles');
 run('scene=null;foesHeld=true;stepCombat(.1);');assert.equal(run('IceMoth.inspect().shots.length'),0,'Foes toggle clears spells');
 setup(0,-1000);run('mothTest.mothCool=99;');step(150);
-assert(run('Math.hypot(mothTest.x-(2346*16+8),mothTest.y-(168*16+8))<=12.6*16-37.9'),'Flight cannot leave the arena');
+assert(run('Math.hypot(mothTest.x-(2346*16+8),mothTest.y-(168*16+8))<=6.3*16-37.9'),'Flight cannot leave the arena');
 setup();step(26);run(`mothTest.hp=0;mothTest.st='dead';mothTest.t=0;markBossGone(mothTest);`);
 assert(run('IceMoth.defeatedAlready()'));assert.equal(run('IceMoth.inspect().shots.length'),0);
 assert(run('saveToSlot(1,true)'));assert(run('readSaveSlot(1).houseLootTaken.includes("world:ice-moth:defeated")'));

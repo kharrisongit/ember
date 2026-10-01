@@ -1,3 +1,28 @@
+// Custom boss frames do not pass through the normal sprite-atlas renderer.
+// Tint their opaque pixels so damage and shield warnings remain just as clear.
+let enemyFeedbackCanvas=null;
+function drawEnemyCombatFrame(f,frame,x,y,width,height){
+  let color=null,amount=0;
+  if(f.st!=='dead'){
+    if(f.hurt>0){color='#ff3030';amount=.6+.25*(.5+.5*Math.cos(f.hurt*48));}
+    else if(f.st==='wind'){
+      color=glassAttackUnblockable(f)?'#ff8a24':'#ffe34d';
+      amount=.24+.58*(.5+.5*Math.sin(tAcc*24));
+    }
+  }
+  if(color){
+    if(!enemyFeedbackCanvas)enemyFeedbackCanvas=document.createElement('canvas');
+    const c=enemyFeedbackCanvas;
+    if(c.width!==width||c.height!==height){c.width=width;c.height=height;}
+    const g=c.getContext('2d');g.clearRect(0,0,width,height);
+    g.imageSmoothingEnabled=false;g.drawImage(frame,0,0,width,height);
+    g.globalCompositeOperation='source-atop';g.globalAlpha=amount;
+    g.fillStyle=color;g.fillRect(0,0,width,height);
+    g.globalCompositeOperation='source-over';g.globalAlpha=1;frame=c;
+  }
+  drawPixelImage(ctx,frame,0,0,width,height,x,y,width,height);
+}
+
 /* Shared combat navigation. AI goals, retreat and collision use the same arena
    inset; neither flight nor an old cached axis result can bypass a battle wall. */
 function combatArena(actor) {

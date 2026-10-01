@@ -2,7 +2,7 @@
 const IceMoth=(()=>{
   const BASE='assets/sprites/ice-moth/',VERSION='20261001-icemoth1';
   const CELL=144,HEIGHT=144,FOOT=112,FX=96,DEFEATED='world:ice-moth:defeated';
-  const arena={id:9367,kind:'arena',x:2346,y:168,r:12.6,style:'winter',sideRoute:'ice-moth',iceMoth:true};
+  const arena={id:9367,kind:'arena',x:2346,y:168,r:6.3,style:'winter',sideRoute:'ice-moth',iceMoth:true};
   const endpoint={id:9368,kind:'arena',x:2346,y:134,r:6.3,style:'winter',sideRoute:'ice-moth',iceMothEnd:true};
   const routes=[
     {id:9362,x0:2632,y0:186,x1:2543,y1:279,pts:[[2632,186],[2603,186],[2603,226],[2584,226],[2584,246],[2622,246],[2622,279],[2543,279]]},
@@ -58,16 +58,17 @@ const IceMoth=(()=>{
   function tell(f,target){
     f.mothSequence=(f.mothSequence||0)+1;f.mothAttack=f.mothSequence%2?'gust':'shards';
     f.mothAim={x:target.x,y:target.y,dragon:!!target.dragon};
-    f.unblockableAttack=false;face(f,target.x-f.x,target.y-f.y);enter(f,'wind');
+    face(f,target.x-f.x,target.y-f.y);enter(f,'wind');beginEnemyWindup(f);
   }
   function launch(f){
     const aim=f.mothAim,angle=Math.atan2(aim.y-f.y,aim.x-f.x),type=f.mothAttack;
-    const cast={playerHit:false,dragonHit:false},speed=type==='gust'?110:150;
+    const cast={playerHit:false,dragonHit:false,blockQueued:!!f.glassParryQueued},speed=type==='gust'?110:150;
+    f.glassParryQueued=false;
     const z={d:26,u:42,e:34,w:34}[direction(f)],distance=Math.hypot(aim.x-f.x,aim.y-f.y);
     for(const offset of type==='gust'?[0]:[-.28,0,.28]){
       const a=angle+offset;
       shots.push({owner:f,cast,type,x:f.x+Math.cos(a)*22,y:f.y+Math.sin(a)*22,
-        vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,angle:a,z,startZ:z,endZ:aim.dragon?14:10,distance:Math.max(50,distance-22),t:0});
+        vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,angle:a,z,startZ:z,endZ:aim.dragon?14:10,distance:Math.max(50,distance-22),t:0,unblockable:!!f.unblockableAttack});
     }
   }
   function step(f,dt){
@@ -83,7 +84,7 @@ const IceMoth=(()=>{
     }
     if(f.st==='swing'){
       if(!f.hit&&f.t>=.12){f.hit=1;launch(f);}
-      if(f.t>=.78){finishGlassShieldParry(f);enter(f,'idle');f.mothCool=1.7;f.mothAttack=null;}
+      if(f.t>=.78){finishGlassShieldParry(f);enter(f,'idle');f.mothCool=1.7;f.mothAttack=null;f.unblockableAttack=false;}
       return;
     }
     const target=targetFor(f),dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy)||1;
@@ -113,7 +114,13 @@ const IceMoth=(()=>{
         const x=s.x,y=s.y;s.x+=s.vx*dt/count;s.y+=s.vy*dt/count;
         const outside=Math.hypot(s.x-(arena.x*TS+8),s.y-(arena.y*TS+8))>arena.r*TS-8;
         if(outside||isSolid(s.x,s.y)){end=true;break;}
-        if(!s.cast.playerHit&&segmentDistance(x,y,s.x,s.y,P.x,P.y)<radius+6){s.cast.playerHit=true;hurtPlayer(2);end=true;}
+        if(!s.cast.playerHit&&segmentDistance(x,y,s.x,s.y,P.x,P.y)<radius+6){
+          s.cast.playerHit=true;
+          if(!mounted&&!s.unblockable&&(s.cast.blockQueued||glassShieldActive())){
+            glassShieldPulse=.42;glassGifStart=tAcc;globalThis.window?.EmberSfx?.block();
+          }else hurtPlayer(2);
+          end=true;
+        }
         else if(!mounted&&!s.cast.dragonHit&&dragonCombatHere()&&dragon.on&&!dragon.down&&segmentDistance(x,y,s.x,s.y,dragon.x,dragon.y)<radius+12){s.cast.dragonHit=true;hurtDragon(2);end=true;}
       }
       if(end||s.t>=3){bursts.push({type:s.type,x:s.x,y:s.y,z:s.z,angle:s.angle,t:0});shots.splice(i,1);}
@@ -145,7 +152,7 @@ const IceMoth=(()=>{
       const lift=f.st==='dead'?Math.max(0,10*(1-f.t/.65)):10+Math.sin(f.t*4)*1.5;
       if(f.st==='dead')ctx.globalAlpha=Math.min(1,Math.max(0,(2.5-f.t)/.6));
       ctx.fillStyle='rgba(20,42,70,.2)';ctx.beginPath();ctx.ellipse(f.x,f.y-2,18,5,0,0,Math.PI*2);ctx.fill();
-      drawPixelImage(ctx,pose(f),0,0,CELL,HEIGHT,Math.round(f.x-CELL/2),Math.round(f.y-FOOT-lift),CELL,HEIGHT);
+      drawEnemyCombatFrame(f,pose(f),Math.round(f.x-CELL/2),Math.round(f.y-FOOT-lift),CELL,HEIGHT);
       if(f.st!=='dead'){ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,f.y-91,62,5);ctx.fillStyle='#b9a6ff';ctx.fillRect(f.x-30,f.y-90,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);}
     }else if(o.mothTell){
       const f=o.mothTell,a=f.mothAim,angle=Math.atan2(a.y-f.y,a.x-f.x),length=Math.min(260,Math.hypot(a.x-f.x,a.y-f.y));

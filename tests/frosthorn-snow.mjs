@@ -9,7 +9,7 @@ features=[{...Frosthorn.arena}];terr=new Uint8Array(MW*MH);`);
 for(const terrain of ['GRASS','WALL']){
   run(`terr.fill(${terrain});`);
   for(let y=0;y<=55;y++)for(let x=2515;x<=2575;x++){
-    if(Math.hypot(x-2545,y-25)>30)continue;
+    if(Math.hypot(x-2545,y-25)>26)continue;
     assert(run(`snowGround(${x},${y})`),`${terrain} stays snowy at ${x},${y}`);
   }
 }

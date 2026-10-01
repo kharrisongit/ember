@@ -21,22 +21,22 @@ const report=JSON.parse(run(`JSON.stringify((()=>{
     samples++;if(!canStand(x,y))bad.push({route:route.id,x,y,why:whyBlocked(x,y-4)});}
   }
  }
- const floor=[];for(let dy=-11;dy<=11;dy++)for(let dx=-11;dx<=11;dx++)if(Math.hypot(dx,dy)<11){
+ const floor=[];for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++)if(Math.hypot(dx,dy)<5.3){
   const x=(2545+dx)*16+8,y=(25+dy)*16+16;if(!canStand(x,y))floor.push([dx,dy]);}
  const gate=[];for(let y=24;y<=40;y+=.25)if(!canStand(2545*16+8,y*16+16))gate.push(y);
  return {samples,bad:bad.slice(0,12),badCount:bad.length,floor,gate,bosses:foes.filter(f=>f.kind==='frosthorn').length};
 })())`));
 console.log(JSON.stringify(report));
 assert.equal(report.badCount,0,'Exact route centerlines stay walkable');
-assert.equal(report.floor.length,0,'Double-sized arena floor is clear');
+assert.equal(report.floor.length,0,'Normal-sized arena floor is clear');
 assert.equal(report.gate.length,0,'Route opens into arena');assert.equal(report.bosses,1);
-assert.equal(run('features.find(f=>f.id===9361).r'),12.6);
-run(`P.x=2545*16+8;P.y=34*16+16;arenaLock=null;arenaT=0;stepArena(.05);`);
+assert.equal(run('features.find(f=>f.id===9361).r'),6.3);
+run(`P.x=2545*16+8;P.y=28*16+16;arenaLock=null;arenaT=0;stepArena(.05);`);
 assert.equal(run('arenaLock?.id'),9361,'Existing arena system starts this battle');
 run(`const frostTest=foes.find(f=>f.kind==='frosthorn');
 P.x=0;P.y=0;arenaLock=null;const frostHome=[frostTest.x,frostTest.y];stepCombat(.1);`);
 assert.equal(run('JSON.stringify([frostTest.x,frostTest.y])'),run('JSON.stringify(frostHome)'),'Boss waits in his arena');
-function setup(x=0,y=145){
+function setup(x=0,y=65){
  run(`Frosthorn.reset();scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;foesHeld=false;devSafe=false;glassShield=false;mounted=false;
  P.act=null;pHp=20;pMax=20;pInv=0;saintT=0;smithUpgrade=false;worn.ward=false;worn.twin=false;
  arenaLock=features.find(f=>f.id===9361);arenaT=1;
@@ -45,10 +45,10 @@ function setup(x=0,y=145){
 }
 const step=n=>{for(let i=0;i<n;i++)run('tAcc+=.05;stepCombat(.05)');};
 setup();step(1);assert.equal(run('frostTest.frostAttack'),'stomp');
-assert(run('Frosthorn.inspect().waves[0].points.length>=6'),'Long range chain');
+assert(run('Frosthorn.inspect().waves[0].points.length>=2'),'Ice chain fits the smaller arena');
 assert.equal(run('pHp'),20,'Windup has no damage');
 const aim=run('JSON.stringify(Frosthorn.inspect().waves[0].points)');
-run('P.x+=78');step(10);
+run('P.x+=55');step(10);
 assert.equal(run('JSON.stringify(Frosthorn.inspect().waves[0].points)'),aim,'Ice line does not home after tell');
 step(35);assert.equal(run('pHp'),20,'Sideways dodge avoids the full line');
 setup();step(46);assert.equal(run('pHp'),18,'Standing in ice takes one hit per wave');
@@ -72,4 +72,4 @@ localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),houseLootTaken:
 assert(run('loadGame(2)'));assert(!run('Frosthorn.owned()'),'Different slot does not inherit relic');
 run(`MAPID='world';MD=W.maps.world;spawnFoes();`);assert(run('foes.some(f=>f.kind==="frosthorn")'),'Fresh save restores boss despite old numeric bossGone entry');
 assert(run('loadGame(1)'));assert(run('Frosthorn.owned()'));run("MAPID='world';MD=W.maps.world;spawnFoes();");assert(!run('foes.some(f=>f.kind==="frosthorn")'),'Save reload preserves relic and defeated boss');
-console.log('PASS: exact route, enlarged arena, entry, all three attacks, growing ice warning/dodge/single-hit, pause/cleanup, relic and save-slot persistence.');
+console.log('PASS: exact route, normal arena, entry, all three attacks, growing ice warning/dodge/single-hit, pause/cleanup, relic and save-slot persistence.');
