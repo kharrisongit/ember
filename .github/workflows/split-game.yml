@@ -57,6 +57,7 @@ jobs:
           node tests/desert-pyramid.mjs
           node tests/desert-adventure.mjs
           node tests/desert-vultures.mjs
+          node tests/arena-floor-render.mjs
           node tests/side-route-adventures.mjs
           node tests/side-route-borders.mjs
       - name: Check temple travel and combat

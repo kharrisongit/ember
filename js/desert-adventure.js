@@ -2,7 +2,7 @@
 const DesertAdventure=(()=>{
   const BASE='assets/interiors/desert-pyramid/',VERSION='20260930-desert4';
   const REWARD='pyramid_queen:emberheart';let source=null,ready=false;
-  let flightPaths=null,flightFeatures=null,flightCount=0;
+  let flightPaths=null,flightFeatures=null,flightCount=0,flightStamp=-1;
   const owned=()=>houseLootTaken.has(REWARD);
   const won=()=>!!bossGone['pyramid_queen:0'];
   const arenas=[
@@ -126,40 +126,92 @@ const DesertAdventure=(()=>{
     }
     blockTiles=blockTiles.filter(i=>!cleared.has(i));
   }
+  function vulturePaths(){
+    if(flightFeatures===features&&flightCount===features.length&&flightStamp===editStamp)return flightPaths;
+    flightFeatures=features;flightCount=features.length;flightStamp=editStamp;flightPaths=[];
+    const rings=features.filter(f=>f.kind==='arena'||f.kind==='camp');
+    let ordinal=0;
+    for(const f of features.filter(f=>f.kind==='route'&&f.style==='desert')){
+      for(const [leg,[a,b]]of routeLegs(f).entries()){
+        const slot=ordinal++;
+        if(slot%2)continue; // At most one bird on every other authored road leg.
+        const length=Math.hypot(b[0]-a[0],b[1]-a[1])*TS;
+        if(length<8*TS)continue;
+        const ax=a[0]*TS+8,ay=a[1]*TS+8,dx=(b[0]-a[0])*TS/length,dy=(b[1]-a[1])*TS/length;
+        let spans=[[3*TS,length-3*TS]];
+        // Subtract the whole arena plus room for wings, shadow and flight height.
+        // Both routine flights and startled escapes stay in this same safe span.
+        for(const ring of rings){
+          const rx=ring.x*TS+8-ax,ry=ring.y*TS+8-ay,r=((ring.r||ARENA_R)+5)*TS;
+          const along=rx*dx+ry*dy,across=rx*dy-ry*dx;
+          if(Math.abs(across)>=r)continue;
+          const reach=Math.sqrt(r*r-across*across),lo=along-reach,hi=along+reach;
+          spans=spans.flatMap(([s,e])=>hi<=s||lo>=e?[[s,e]]:[[s,Math.min(e,lo)],[Math.max(s,hi),e]].filter(([s,e])=>e>s));
+        }
+        const span=spans.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]))[0];
+        if(!span||span[1]-span[0]<2*TS)continue;
+        const home=(span[0]+span[1])/2,hx=ax+dx*home,hy=ay+dy*home;
+        if(flightPaths.some(p=>Math.hypot(p.hx-hx,p.hy-hy)<16*TS))continue;
+        flightPaths.push({id:f.id+':'+leg,route:f.id,leg,slot,ax,ay,dx,dy,lo:span[0],hi:span[1],home,hx,hy,phase:slot*17.31});
+      }
+    }
+    return flightPaths;
+  }
+  function vulturePose(p,t){
+    let distance=p.home,lift=0,alpha=1,flip=!!(p.slot%4),state;
+    if(p.flee){
+      const age=t-p.flee.time;
+      if(age>=1.8){
+        if(t<p.flee.time+30||Math.hypot(P.x-p.hx,P.y-p.hy)<200)return null;
+        p.flee=null;
+      }else{
+        state='flee';const u=Math.min(1,age/1.8);
+        distance=p.flee.from+(p.flee.to-p.flee.from)*(1-(1-u)*(1-u));
+        lift=p.flee.lift+(40-p.flee.lift)*Math.min(1,age*3);
+        alpha=Math.min(1,(1.8-age)/.6);flip=p.dx*(p.flee.to-p.flee.from)<0;
+      }
+    }
+    if(!state){
+      const cycle=(t+p.phase)%60;
+      state=cycle<22?'sit':cycle<40?'idle':'fly';
+      if(state==='fly'){
+        const u=(cycle-40)/20,reach=Math.min((p.hi-p.lo)/2,80);
+        distance=p.home+Math.sin(u*Math.PI*2)*reach;
+        lift=Math.sin(Math.PI*u)*28;
+        flip=p.dx*Math.cos(u*Math.PI*2)<0;
+      }
+    }
+    const gx=p.ax+p.dx*distance,gy=p.ay+p.dy*distance;
+    return {id:p.id,route:p.route,leg:p.leg,state,x:gx,y:gy-lift,gx,gy,lift,alpha,flip,phase:p.phase,distance};
+  }
   function vultures(t){
     if(MAPID!=='world')return [];
-    // Native ambient birds follow the authored road, including each bend.
-    // They live outside the procedural foliage layers that Build replaces.
-    if(flightFeatures!==features||flightCount!==features.length){
-      flightFeatures=features;flightCount=features.length;
-      flightPaths=features.filter(f=>f.kind==='route'&&f.style==='desert').map(f=>{
-        const legs=routeLegs(f).map(([a,b])=>({a,b,len:Math.hypot(b[0]-a[0],b[1]-a[1])*TS})).filter(l=>l.len>0);
-        const length=legs.reduce((n,l)=>n+l.len,0);
-        return {id:f.id,legs,length,count:Math.max(1,Math.ceil(length/480))};
-      }).filter(p=>p.length>0);
+    return vulturePaths().map(p=>vulturePose(p,t)).filter(Boolean);
+  }
+  function scareVultures(x,y,r=96,t=tAcc){
+    if(MAPID!=='world')return;
+    for(const p of vulturePaths()){
+      if(p.flee)continue;
+      const b=vulturePose(p,t);
+      if(!b||Math.min(Math.hypot(b.x-x,b.y-y),Math.hypot(b.gx-x,b.gy-y))>r)continue;
+      const threat=(x-p.ax)*p.dx+(y-p.ay)*p.dy;
+      let to=threat<b.distance?Math.min(p.hi,b.distance+200):Math.max(p.lo,b.distance-200);
+      // With nowhere to retreat along the road, rise vertically and disappear.
+      if(Math.abs(to-b.distance)<TS)to=b.distance;
+      p.flee={time:t,from:b.distance,to,lift:b.lift};
     }
-    const birds=[];
-    for(const p of flightPaths)for(let i=0;i<p.count;i++){
-      const phase=(p.id*.61803398875%1+i/p.count)*p.length*2;
-      const cycle=(t*24+phase)%(p.length*2),forward=cycle<p.length;
-      let distance=forward?cycle:p.length*2-cycle;
-      let leg=p.legs.at(-1);
-      for(const l of p.legs){leg=l;if(distance<=l.len)break;distance-=l.len;}
-      const u=Math.min(1,distance/leg.len),bob=Math.sin(t*1.3+i+p.id)*3;
-      birds.push({route:p.id,x:(leg.a[0]+(leg.b[0]-leg.a[0])*u)*TS+8,
-        y:(leg.a[1]+(leg.b[1]-leg.a[1])*u)*TS+8-28+bob,
-        flip:(leg.b[0]-leg.a[0])*(forward?1:-1)<0,phase:i+p.id});
-    }
-    return birds;
   }
   function drawVulture(b,t){
-    const s=SPR.vulture_fly;if(!s)return;
-    const frame=Math.floor(t*8+b.phase)%s[4];
-    ctx.save();ctx.translate(Math.round(b.x),Math.round(b.y));
-    // A small moving shadow separates the flying silhouette from the paving.
-    ctx.fillStyle='rgba(58,38,25,.16)';ctx.beginPath();ctx.ellipse(0,27,12,3,0,0,Math.PI*2);ctx.fill();
+    const flying=b.state==='fly'||b.state==='flee';
+    const s=SPR[flying||b.state==='sit'?'vulture_fly':'vulture'];if(!s)return;
+    // The flight strip also contains crouch/recovery poses. Loop only wing beats.
+    const frame=flying?[1,2,3,4,3,2][Math.floor(t*8+b.phase)%6]
+      :b.state==='sit'?0:Math.floor(t*3+b.phase)%s[4];
+    const breathe=b.state==='sit'&&Math.floor(t*2+b.phase)%8>=4?1:0;
+    ctx.save();ctx.globalAlpha=b.alpha;ctx.translate(Math.round(b.x),Math.round(b.y));
+    ctx.fillStyle='rgba(58,38,25,.16)';ctx.beginPath();ctx.ellipse(0,b.lift,10,3,0,0,Math.PI*2);ctx.fill();
     if(b.flip)ctx.scale(-1,1);
-    drawGameImage(ctx,sheetOf(s),s[0]+frame*s[2],s[1],s[2],s[3],-s[2]/2,-s[3]/2,s[2],s[3]);
+    drawGameImage(ctx,sheetOf(s),s[0]+frame*s[2],s[1],s[2],s[3],-s[2]/2,-s[3]+breathe,s[2],s[3]);
     ctx.restore();
   }
   function accept(from){if(source||owned())return false;source=from;atlasSyncJournal();atlasTrackedQuest='pyramid';saveGame();toast('Side quest: The Emberheart of the Sands');return true;}
@@ -177,5 +229,5 @@ const DesertAdventure=(()=>{
         ]};askPick=0;askDraw();
       });return true;
   }
-  return {prepare,installWorld,clearApproach,vultures,drawVulture,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
+  return {prepare,installWorld,clearApproach,vultures,drawVulture,scareVultures,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
 })();

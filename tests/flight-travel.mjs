@@ -28,16 +28,27 @@ assert.equal(run("flightUnavailable('Thornwell')"),'');
 assert(run("beginFlightTravel('Thornwell')"));assert.equal(run('flightTravel.phase'),'mount');assert(run('revealing'));
 assert(run('mounted'));assert(!run('atlasOpen'));assert(run('sceneHold()'));
 run('setBag(true);setOvl("airm");openAtlas()');assert(!run('bagOpen||ovl||atlasOpen'),'Menus cannot interrupt transit');
-let phases=new Set(),sawBlack=false,originSafe=false;
+let phases=new Set(),sawBlack=false,originSafe=false,sawLeft=false,sawRight=false,sawGroundedLanding=false;
 for(let i=0;i<1000&&run('!!flightTravel');i++){
- phases.add(run('flightTravel.phase'));run('stepFlightTravel(1/30)');
+ const before=value('[P.x,P.y,flightTravel.phase]');
+ phases.add(before[2]);run('stepFlightTravel(1/30)');
+ if(['out','in'].includes(before[2])){
+  assert(run('P.x')<=before[0],'Both horizontal flight passes face and travel left');
+  assert.equal(run('P.y'),before[1],'Cruising stays on the same horizontal line');
+  assert.equal(run('playerFacing4()'),'w');assert.equal(run('dragon.dir'),'w');
+ }
+ if(run("flightTravel?.phase==='fadeOut'")){assert(run('P.x<flightTravel.camera.x-64'));sawLeft=true;}
+ if(run("flightTravel?.phase==='fadeIn'")){assert(run('P.x>flightTravel.camera.x+VW/flightTravel.camera.z+64'));sawRight=true;}
+ if(run("flightTravel?.phase==='descend'"))assert(run("!dragon.tr&&dragon.air"),'Descent uses airborne art without landing dust');
+ if(run("dragon.tr?.kind==='down'")){assert.equal(run('flightTravel.lift'),0,'Dust frames only play at ground level');assert(!run('dragon.air'));sawGroundedLanding=true;}
+
  if(run('fade')===1)sawBlack=true;
  if(run("flightTravel?.phase==='in'")){
   const s=value('captureSave()');assert.deepEqual([s.x,s.y],[600,600],'Mid-flight saves retain the departure point');originSafe=true;
  }
 }
 assert(!run('flightTravel'),'Flight finishes');
-assert.deepEqual([...phases],['mount','takeoff','out','fadeOut','fadeIn','in','land']);assert(sawBlack&&originSafe);
+assert.deepEqual([...phases],['mount','takeoff','out','fadeOut','fadeIn','in','descend','land']);assert(sawBlack&&originSafe&&sawLeft&&sawRight&&sawGroundedLanding);
 assert.deepEqual(value('[P.x,P.y,dragon.x,dragon.y]'),[1280,600,1280,600]);
 assert(run('mounted&&!dragon.air&&!dragon.tr'));assert.equal(run('dragon.hp'),20);assert.match(notice,/Arrived at Thornwell/);
 assert.deepEqual([saves.at(-1).x,saves.at(-1).y],[1280,600]);

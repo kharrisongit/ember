@@ -3665,6 +3665,9 @@ if (t === COBBLE) { const _cb = TERRT.cb.mask[nmask(x, y, (a, b) => T(a, b) === 
     for (let y = ty0 - 1; y < ty0 + n + 1; y++) for (let x = tx0 - 1; x < tx0 + n + 1; x++) {
       if (x < 0 || y < 0 || x >= MW || y >= MH) continue;
       if (!self(x, y) || nmask(x, y, same) !== 0) continue;
+      // Arena paving has no grass corners. Desert sand was being mistaken
+      // for a grass edge here, producing four green patches at the center.
+      if (key === "gr" && onArenaFloor(x, y)) continue;
       if (typeof inSwamp === "function" && inSwamp(x, y)) continue;
       if (typeof inWinter === "function" && inWinter(x, y)) continue;
       for (let i = 0; i < diag.length; i++)
@@ -4037,7 +4040,7 @@ function drawWorld(t, dt) {
   }
   for(const v of DesertAdventure.vultures(t))
     if(v.x>cam.x-64&&v.x<cam.x+vw+64&&v.y>cam.y-64&&v.y<cam.y+vh+64)
-      draw.push({vulture:v,x:v.x,y:v.y,sy:1e8});
+      draw.push({vulture:v,x:v.x,y:v.y,sy:v.lift>2?1e8:v.gy});
   if (MAPID === "world" && birdsUp < 9)
     for (const b of BIRDS) {
       if (b.x > cam.x - 64 && b.x < cam.x + vw + 64 &&
@@ -5917,6 +5920,7 @@ function stepClaw(dt) {
   if(encounterCombatPaused())return;
   if (bossScene) return;
   if (!claw) return;
+  DesertAdventure.scareVultures(claw.x,claw.y,100);
   claw.t += dt;
   if (claw.t > CLAW.life) claw = null;
 }
@@ -8083,6 +8087,7 @@ function stepBreath(dt) {
   dragonFacingLocked = !!breath;
   if (!breath) return;
   const b = breath, previous = b.t;
+  DesertAdventure.scareVultures(b.x,b.y,100);
   b.t += dt;
   if (b.hit) {
     b.impactT += dt;
@@ -8599,6 +8604,7 @@ function swingHits() {
   a.hit = 1;
   const [dx,dy] = directionVector(playerFacing4(a));
   const tx = P.x + dx * 16, ty = P.y + dy * 16;
+  DesertAdventure.scareVultures(tx,ty,96);
   let landed=false,golemLanded=false;
   for (const f of foes) {
     if (f.st === "dead" || f.ally || globalThis.window?.EmberArenaEntry?.protected(f)) continue;      /* his own dead are not targets */

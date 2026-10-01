@@ -89,7 +89,7 @@ function beginFlightTravel(name){
   if(!alreadyMounted&&setMounted(true,true)===false)return false;
   hunt=null;breath=null;claw=null;dragonFacingLocked=false;dragon.tr=null;dragon.air=false;
   flightTravel={name,origin,destination,phase:alreadyMounted?'takeoff':'mount',time:0,lift:0,camera:{...cam}};
-  faceCorinAt(P.x,P.y-32);dragon.dir='n';P.moving=false;
+  faceCorinAt(P.x-32,P.y);dragon.dir='w';P.moving=false;
   const takeoff=()=>{if(!flightTravel)return;flightTravel.phase='takeoff';flightTravel.time=0;startTransition('up',true);};
   if(alreadyMounted)takeoff();
   else showReveal('corinride_'+(smithUpgrade?'armor_':'sword_')+'idle_s','CORIN TAKES THE REINS',undefined,true,takeoff);
@@ -103,22 +103,26 @@ function stepFlightTravel(dt){
     f.lift=Math.min(80,f.lift+80*dt);stepTransition(dt);
     if(!dragon.tr&&f.lift>=80){f.phase='out';P.moving=true;}
   }else if(f.phase==='out'){
-    P.y-=260*dt;
-    if(P.y-f.lift<f.camera.y-64){P.moving=false;f.phase='fadeOut';}
+    P.x-=260*dt;
+    if(P.x<f.camera.x-96){P.moving=false;f.phase='fadeOut';}
   }else if(f.phase==='fadeOut'){
     fade=Math.min(1,fade+dt*2.5);
     if(fade===1){
       [P.x,P.y]=f.destination;followCam();clampCam();f.camera={...cam};
-      P.y=f.camera.y-80;faceCorinAt(P.x,P.y+32);dragon.dir='s';dragon.air=true;
+      P.x=f.camera.x+VW/f.camera.z+96;faceCorinAt(P.x-32,P.y);dragon.dir='w';dragon.air=true;
       chunks.clear();f.phase='fadeIn';
     }
   }else if(f.phase==='fadeIn'){
     fade=Math.max(0,fade-dt*2.5);if(!fade){f.phase='in';P.moving=true;}
   }else if(f.phase==='in'){
-    P.y=Math.min(f.destination[1],P.y+260*dt);
-    if(P.y===f.destination[1]){P.moving=false;f.phase='land';startTransition('down',false);}
+    P.x=Math.max(f.destination[0],P.x-260*dt);
+    if(P.x===f.destination[0]){P.moving=false;f.phase='descend';}
+  }else if(f.phase==='descend'){
+    f.lift=Math.max(0,f.lift-80*dt);
+    // Landing art contains its own dust: play it only after reaching the ground.
+    if(!f.lift){dragon.air=false;f.phase='land';startTransition('down',false);}
   }else if(f.phase==='land'){
-    f.lift=Math.max(0,f.lift-80*dt);stepTransition(dt);
+    stepTransition(dt);
     if(!dragon.tr&&!f.lift){
       dragon.air=false;dragon.moving=false;dragon.placed=MAPID;P.moving=false;
       flightTravel=null;clearPadInputs();running=false;arriveT=.35;fade=0;fadeDir=0;
