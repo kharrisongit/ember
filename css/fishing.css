@@ -1,0 +1,22 @@
+.fishing-view{position:fixed;inset:0;z-index:25000;display:flex;flex-direction:column;background:#102e35;color:#f1e5c9;padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));box-sizing:border-box;touch-action:none;user-select:none;-webkit-user-select:none;font-family:Georgia,'Times New Roman',serif;overscroll-behavior:none}
+.fishing-view[hidden]{display:none}
+.fishing-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 2px 14px;flex-shrink:0}
+.fishing-eyebrow{font:10px/1.4 monospace;letter-spacing:2px;color:#aac8ba}
+.fishing-header h2{font-weight:normal;font-size:clamp(23px,3vw,36px);margin:5px 0 0}
+.fishing-leave{border:1px solid #65847a;background:#1c4045;color:#eee6d3;font:15px Georgia;padding:10px 17px;min-height:44px;border-radius:5px;cursor:pointer}
+.fishing-leave span{display:block;font:9px monospace;color:#aac8ba;margin-top:4px}
+.fishing-water{position:relative;flex:1;min-height:0;overflow:hidden;border:1px solid #65877a;border-radius:5px;box-shadow:0 6px 30px #0003}
+.fishing-water canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
+.fishing-scene-label{position:absolute;inset:0 0 auto;display:flex;justify-content:space-between;gap:10px;padding:13px 16px;background:linear-gradient(#102e35da,transparent);font:10px/1.5 monospace;letter-spacing:1.3px;color:#dedfc3;pointer-events:none}
+.fishing-stock{color:#bcd9c8;text-align:right}
+.fishing-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 2px 0;flex-shrink:0}
+.fishing-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fishing-status{font-size:clamp(17px,2vw,23px);font-weight:normal;color:#f5dca8}
+.fishing-hint{font:13px/1.45 system-ui,sans-serif;color:#bdcfc3}
+.fishing-action{flex-shrink:0;min-width:156px;min-height:66px;padding:12px 24px;border:1px solid #efcf90;border-bottom:4px solid #86754b;border-radius:5px;background:#e6c88d;color:#193a3e;font:600 19px Georgia;cursor:pointer;touch-action:none;-webkit-touch-callout:none}
+.fishing-action small{display:block;font:10px monospace;margin-top:6px;opacity:.7}
+.fishing-action[data-active=true]{background:#b6d1a3;transform:translateY(2px);border-bottom-width:2px}
+.fishing-action[data-bite=true]{background:#ffdea1;box-shadow:0 0 24px #eac78055}
+.fishing-view button:focus-visible{outline:3px solid #f9efd0;outline-offset:3px}
+@media(max-width:600px){.fishing-footer{flex-direction:column;align-items:stretch;gap:12px}.fishing-copy{text-align:center;min-height:58px;justify-content:center}.fishing-action{width:100%;min-height:66px}.fishing-header{padding-bottom:11px}.fishing-eyebrow{font-size:8px;letter-spacing:1.3px}.fishing-scene-label{font-size:8px;padding:11px 10px;letter-spacing:.7px}.fishing-leave{padding:8px 12px}}
+@media(max-height:500px) and (min-width:601px){.fishing-header{padding-bottom:8px}.fishing-header h2{font-size:22px;margin-top:0}.fishing-eyebrow{display:none}.fishing-footer{padding-top:8px}.fishing-action{min-height:50px;font-size:17px;padding:7px 18px}.fishing-action small{margin-top:2px}.fishing-status{font-size:17px}.fishing-hint{font-size:11px}.fishing-leave span{display:none}.fishing-leave{min-height:36px;padding:6px 14px}}

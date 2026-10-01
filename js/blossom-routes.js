@@ -123,7 +123,7 @@ function blossomTownCandidates(t,row) {
     result.push(blossomPoint(x,y,{row,vertical:true,kind:'town',source:t.id,tree:t.tree,region:t.region}));
   return result;
 }
-function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
+function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[],extraCandidates=()=>[]) {
   roads=blossomRoadJoinCaps(roads);
   const result=[];
   const occupied=new Map(),gridKey=(x,y)=>Math.floor(x/4)+','+Math.floor(y/4);
@@ -139,7 +139,7 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[]) {
     // precede the outer bands, which cannot displace those clean borders.
     const groups=row===3?[towns.flatMap(t=>blossomTownCandidates(t,row))]:
       [row===0?scenery:[],arenas.flatMap(a=>blossomArenaCandidates(a,row)),
-       towns.flatMap(t=>blossomTownCandidates(t,row)),blossomDesertJoinCandidates(roads,row),blossomRouteCandidates(roads,row)];
+       towns.flatMap(t=>blossomTownCandidates(t,row)),extraCandidates(row),blossomDesertJoinCandidates(roads,row),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
       const owner=arenas.filter(a=>Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+11)
         .sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0];

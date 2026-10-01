@@ -4780,7 +4780,7 @@ const BAG = [
     has: () => dragonFish > 0,
     icon: () => "inventory_dragonFish" },
   {key:'fishingPole',name:'Fishing Pole',kind:'key',has:()=>fishingPole,
-    tell:'A gift from Calder at the first camp on the road to Thornwell. He recommends the pools at Forgefalls. Face water and press A; stop the marker in the green arc to catch dragon-healing fish.',icon:()=> "inventory_fishingPole"},
+    tell:'A gift from Calder at the first camp on the road to Thornwell. He recommends the pools at Forgefalls. Face water and press A. Cast into the gold zone, hook the bite, then hold to reel and release during lunges. Fresh fish heals your dragon.',icon:()=> "inventory_fishingPole"},
   { key: "glassShield", name: "Glass Shield", kind: "key",
     tell: "Sela's clear-glass focus. Tap/hold B to raise a brief force field. Move with B held to run. Orange flashes warn of blockable attacks; red flashes warn of unblockable attacks.",
     has: () => glassShield,

@@ -84,7 +84,8 @@ var noPlant=()=>false,isArea=()=>false,onBody=()=>false,inTown=()=>false,atOasis
 var speciesNear=()=>NAME2I.kt_tree_a,baseTerr=null,SAND=11,DIRT=1;
 fobjs=[{id:-1,s:NAME2I.kt_tree_a,x:90*16+8,y:81*16}];terr.fill(GRASS);
 `,c);
-vm.runInContext(game.slice(game.indexOf('  {\n    const want = new Set(), band = new Set();'),game.indexOf('  {\n    const AVENUE =')),c);
+// World construction now yields between stages; execute the extracted stage as a generator.
+vm.runInContext('[...(function*(){'+game.slice(game.indexOf('  {\n    const want = new Set(), band = new Set();'),game.indexOf('  {\n    const AVENUE ='))+'})()]',c);
 assert(c.fobjs.length>15);
 assert(c.fobjs.every(o=>c.NAMES[o.s].startsWith('blo_')),'The initial ring replaces wrong species and plants only blossom variants');
 // Final planting owns the entire arena ring and town border, including the

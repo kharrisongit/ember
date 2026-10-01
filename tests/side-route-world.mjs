@@ -5,7 +5,7 @@ export function verifySideRoutes(run){
  run(`arenaLock=null;arenaT=0;scene=null;bossScene=null;ask=null;ovl=null;fadeDir=0;
  window.EmberRiding=undefined;window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;`);
  const report=JSON.parse(run(`JSON.stringify((()=>{
-  const routes=features.filter(f=>f.sideRoute&&f.kind==='route'),bad=[],chests=[],arenaFloor=[];let samples=0;
+  const routes=features.filter(f=>f.sideRoute===true&&f.kind==='route'),bad=[],chests=[],arenaFloor=[];let samples=0;
   for(const f of routes){
    const chest=MD.roomActors.find(a=>a.sideRoute===f.id);
    for(let i=1;i<f.pts.length;i++){
@@ -30,7 +30,7 @@ export function verifySideRoutes(run){
  assert.equal(report.arenaBad,0,'Arena interiors clear of procedural obstacles');
  assert.equal(report.holeCount,0,'Continuous solid boundaries survive the final terrain/collision pass');
  // Every authored fight activates with real enemies; chests grant gold + the item exactly once.
- const arenas=JSON.parse(run('JSON.stringify(features.filter(f=>f.kind==="arena"&&f.sideRoute))'));
+ const arenas=JSON.parse(run('JSON.stringify(features.filter(f=>f.kind==="arena"&&typeof f.sideRoute==="number"))'));
  for(const a of arenas){
   run(`arenaLock=null;foesHeld=false;P.x=${a.x*16+8};P.y=${a.y*16+16};stepArena(.05);`);
   assert.equal(run('arenaLock?.id'),a.id,'Side arena enters normal combat');assert(run('arenaFoesLeft(arenaLock)'));

@@ -4,10 +4,10 @@ import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const calls=[];let copies=0;
 const canvas={width:780,height:880};
-const g=new Proxy({setTransform(...a){calls.push(['transform',...a]);},drawImage(...a){calls.push(['image',...a]);},measureText(){return {width:1};}}, {get:(o,k)=>k in o?o[k]:()=>{}});
+const g=new Proxy({setTransform(...a){calls.push(['transform',...a]);},drawImage(...a){calls.push(['image',...a]);},measureText(){return {width:1};},createLinearGradient(){return {addColorStop(){}};},createRadialGradient(){return {addColorStop(){}};}}, {get:(o,k)=>k in o?o[k]:()=>{}});
 const c=vm.createContext({window:{},ctx:g,cv:canvas,VW:390,VH:440,DPR:2,
  document:{createElement:()=>({getContext:()=>({drawImage(){copies++;}})})},
- updateDeckHealth(){},drawHearts(){},drawWorld(){throw Error('Fishing must not re-enter world rendering');},drawDark(){throw Error('Backdrop already contains darkness');},
+ restoreCameraTarget(){},goldPickupCanvas:null,stepFly(){},stepHeal(){},ask:null,stepDragonBanter(){},updateDeckHealth(){},drawHearts(){},drawWorld(){throw Error('Fishing must not re-enter world rendering');},drawDark(){throw Error('Backdrop already contains darkness');},
  ovl:null,last:0,atlasOpen:false,tAcc:5,fishing:null,fishingPole:true,
  waterInReach:()=>true,fishingSafe:()=>true,fishingRegion:()=>({tier:1,reward:1,speed:2.4,halfWidth:.4}),
  clearPadInputs(){},keys:{},P:{},padDx:0,padDy:0,running:false,
@@ -22,7 +22,7 @@ const first=run('fishingBackdrop');
 run('startFishing()');assert.equal(run('fishingBackdrop'),first);
 for(let ms=116;ms<1600;ms+=16)run(`frameCore(${ms})`);
 assert.equal(copies,1,'frames do not recursively capture their own overlays');
-assert.equal(c.fishing.phase,'hook');
+assert.equal(c.fishing.phase,'aim');
 c.fishing.phase='result';c.fishing.resultAge=1;run('fishingAction()');
 assert.equal(run('fishingBackdrop'),first,'retry keeps the original world image');
 c.VW=844;c.VH=300;c.DPR=3;canvas.width=2532;canvas.height=900;calls.length=0;

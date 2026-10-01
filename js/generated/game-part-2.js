@@ -4983,9 +4983,11 @@ addEventListener("keydown", e => {
   if(typeof ask!=='undefined'&&ask&&(k==='arrowup'||k==='arrowdown'||k==='escape')){
     e.preventDefault();if(k==='escape'){if(!e.repeat)askBack();}else askStep(k==='arrowup'?-1:1);return;
   }
-  if (fishing && (k==='a'||k==='b'||k==='escape')) {
-    e.preventDefault(); if(!e.repeat){if(k==='a') actionButton();else {askShut();endFishing();}} return;
+  if (fishing && ['a',' ','b','escape','enter'].includes(k)) {
+    if([' ','enter'].includes(k)&&e.target?.closest?.('.fishing-leave'))return;
+    e.preventDefault(); if(!e.repeat){if(['a',' ','enter'].includes(k)) actionButton();else {askShut();endFishing();}} return;
   }
+  if(fishing&&fishing.phase!=='prompt')return;
   keys[k] = 1;
   if (k === "b") {
     running = true;
@@ -4995,6 +4997,7 @@ addEventListener("keydown", e => {
 });
 addEventListener("keyup", e => {
   const k=e.key.toLowerCase(); keys[k] = 0;
+  if(['a',' ','enter'].includes(k))fishingRelease();
   if(k === "b") { glassShieldHeld = false; running = false; }
 });
 
@@ -11491,6 +11494,7 @@ function fishingSafe(){
     !foes.some(f=>f.hp>0&&Math.hypot(f.x-P.x,f.y-P.y)<180);
 }
 function endFishing(){
+  closeFishingView();
   fishing=null;fishingBackdrop=null;running=false;P.moving=false;
   clearPadInputs();padDx=padDy=0;
   for(const k in keys)keys[k]=0;
@@ -11737,7 +11741,7 @@ function actionButton() {
   if (grabGold()) return;      /* gold underfoot comes first */
   interact();
 }
-bindHold("act", actionButton, null);
+bindHold("act", actionButton, fishingRelease);
 bindHold("btnB", () => {
   if (!gameplayStarted) { if (gameplayReady && BOOT.loading) BOOT.back(); return; }
   if(fishing){askShut();endFishing();return;}

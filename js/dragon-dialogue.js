@@ -531,7 +531,7 @@ function dragonSideQuest(topic){
   ];
   if(topic==='fishing')return fishingPole?[
     'Corin: How are our provisions looking?',
-    'Aurelius: Calder gave you his spare rod. Face water and press A to fish, then stop the marker in the green arc.',
+    'Aurelius: Calder gave you his spare rod. Face water and press A to fish. Cast, hook when the float dips, then hold to reel. Let the line run when the fish lunges.',
     'Corin: The fish do not always cooperate.',
     'Aurelius: They have a different opinion about supper. Keep the catch in our supplies and feed me through ITEMS when I need to recover.',
     'Corin: You could offer to do the patient part.',

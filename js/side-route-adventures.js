@@ -123,16 +123,61 @@ const SideRouteAdventures=(()=>{
     for(const [key,style]of candidates)if(!protectedAt(key%width,Math.floor(key/width)))walls.set(key,style);
     return {floor,walls,ends,paths,arenas};
   }
+  // Use the same pixel spacing and stagger as the main avenues. The border
+  // owns its full three rows, so earlier procedural passes cannot crowd it.
+  function borderPlan(all,width,height){
+    const regions={spruce:'millwood',birch:'birch',oak:'oak',temple:'forgewick-temple',
+      desert:'desert',blossom:'blossom',swamp:'swamp',winter:'millwood'};
+    const trees={spruce:'spr_big',birch:'bir_big',oak:'oak_big',temple:'kt_tree_a',
+      desert:'cactus1',blossom:'blo_big',swamp:'sw_tree3_3',winter:'wf_tree1'};
+    const describe=f=>({region:regions[f.style]||'millwood',tree:trees[f.style],style:f.style});
+    const paths=all.filter(f=>f.kind==='route'&&f.sideRoute);
+    const roads=all.filter(f=>f.kind==='route').flatMap(f=>routeLegs(f).map(([a,b])=>
+      ({a,b,id:f.id,half:(f.w||5)/2,blossom:!!f.sideRoute,...describe(f)})));
+    const rings=all.filter(f=>f.sideRoute&&f.kind==='arena').map(f=>({...f,...describe(f)}));
+    // A rounded grove encloses every chest, meeting both straight verges.
+    for(const f of paths.filter(f=>!f.shortcut))rings.push({id:'end:'+f.id,
+      x:f.pts.at(-1)[0],y:f.pts.at(-1)[1],r:4,...describe(f),
+      ...(f.style==='desert'?{tree:'deadtree0',region:'dying'}:{})});
+    const managed=blossomRoadJoinCaps(roads).filter(r=>r.blossom),scope=new Set();
+    const mark=(x0,y0,x1,y1,inside)=>{
+      for(let y=Math.max(0,Math.floor(y0));y<=Math.min(height-1,Math.ceil(y1));y++)
+        for(let x=Math.max(0,Math.floor(x0));x<=Math.min(width-1,Math.ceil(x1));x++)
+          if(inside(x,y))scope.add(y*width+x);
+    };
+    for(const r of managed){const pad=r.half+2+2*treeBorderSpacing(r).band+2;
+      mark(Math.min(r.a[0],r.b[0])-pad,Math.min(r.a[1],r.b[1])-pad,
+        Math.max(r.a[0],r.b[0])+pad,Math.max(r.a[1],r.b[1])+pad,
+        (x,y)=>blossomWithinRoadCaps(x,y,r)&&blossomRoadDistance(x,y,r)<=pad);}
+    for(const r of rings){const pad=r.r+2.5+2*treeBorderSpacing(r).band+2;
+      mark(r.x-pad,r.y-pad,r.x+pad,r.y+pad,(x,y)=>Math.hypot(x-r.x,y-r.y)<=pad);}
+    const clearings=all.filter(f=>!f.sideRoute&&(['town','area'].includes(f.kind)&&!f.wild||['arena','camp'].includes(f.kind)));
+    const allowed=p=>p.x>=0&&p.y>=0&&p.x<width&&p.y<height&&!clearings.some(f=>
+      f.x0!==undefined?p.x>=f.x0-1&&p.x<=f.x1+1&&p.y>=f.y0-1&&p.y<=f.y1+1:
+      Math.hypot(p.x-f.x,p.y-f.y)<(f.r||6.3)+2);
+    // Pin outer elbows first. The shared spacing filter removes near-duplicates
+    // from adjoining legs while preserving an actual tree at each exposed turn.
+    const corners=row=>paths.flatMap(f=>f.pts.slice(1,-1).flatMap((b,i)=>{
+      const a=f.pts[i],c=f.pts[i+2];
+      if((a[0]===b[0])===(b[0]===c[0]))return [];
+      const spec=describe(f),off=(f.w||5)/2+2+row*treeBorderSpacing(spec).band;
+      return [-1,1].flatMap(dx=>[-1,1].map(dy=>blossomPoint(b[0]+dx*off,b[1]+dy*off,
+        {row,kind:'route',source:f.id,corner:true,...spec})));
+    }));
+    const points=planBlossomLayout(roads,rings,[],allowed,[],corners);
+    return {points,scope};
+  }
   function finishWorld(rebuild=true){
     if(MAPID!=='world'||!features.some(f=>f.sideRoute))return;
-    const {floor,walls,ends,paths}=geometry(features,MW,MH);
+    const {floor,walls}=geometry(features,MW,MH);
+    const {points,scope}=borderPlan(features,MW,MH);
     // Repeatable after cache restores and Build: remove only our last border pass.
     fobjs=fobjs.filter(o=>!o.sideRouteWall);
     const debris=/^(oak_|bir_|spr_|fru_|mw_|kt_tree|kt_bush|blo_|sw_tree|sw_broken|wf_|cactus|drock|rock|palm|acacia|dacacia|deadtree|halfdead|deadbush|bush|fern|grass|mt|stump|log)/i;
     const obstructs=(s,x,y)=>{
       if(!debris.test(NAMES[s]||''))return false;
       const tx=Math.floor(x/TS),ty=Math.floor((y-1)/TS);
-      return floor.has(ty*MW+tx);
+      return floor.has(ty*MW+tx)||scope.has(ty*MW+tx);
     };
     for(const o of objs)if(obstructs(o.s,o.x,o.y))hidden.add(o.id);
     fobjs=fobjs.filter(o=>!obstructs(o.s,o.x,o.y));
@@ -150,36 +195,15 @@ const SideRouteAdventures=(()=>{
     for(const [key,style]of walls){terr[key]=style==='desert'?SAND:WALL;blocks.add(key);}
     blockTiles=[...blocks];
     let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
-    const standing=new Set(objs.filter(o=>!hidden.has(o.id)).concat(fobjs).filter(o=>debris.test(NAMES[o.s]||''))
-      .map(o=>Math.floor(o.x/TS)+','+Math.floor((o.y-1)/TS)));
-    // A two-tile setback keeps trunks out of the walkable floor. Staggered rows
-    // tie the caps into both verges, including the otherwise-open sandy biome.
-    for(const [key,style]of walls){
-      const x=key%MW,y=Math.floor(key/MW);
-      if((x+2*y)%3||standing.has(x+','+y))continue;
-      let close=false;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(floor.has((y+dy)*MW+x+dx))close=true;
-      if(close)continue;
-      const nearEnd=[...[-2,-1,0,1,2]].some(dy=>[-2,-1,0,1,2].some(dx=>ends.has((y+dy)*MW+x+dx)));
-      const pool=style==='swamp'?STYLE_TREE.swamp_safe:style==='desert'&&nearEnd?STYLE_TREE.dying:STYLE_TREE[style];
-      const names=Array.isArray(pool)?pool:[pool],name=names[hash2(x,y)%names.length],s=NAME2I[name];
-      if(s===undefined||!SPR[name])continue;
-      fobjs.push({id:id--,s,x:x*TS+TS/2,y:(y+1)*TS,feat:1,sideRouteWall:true});
-    }
-    // A close, continuous end row makes the stopping point visible as trees,
-    // not just a collision rim separated from the chest by open grass/sand.
-    for(const f of paths.filter(f=>!f.shortcut)){
-      const end=f.pts.at(-1),prev=f.pts.at(-2),len=Math.hypot(end[0]-prev[0],end[1]-prev[1]);
-      const dx=(end[0]-prev[0])/len,dy=(end[1]-prev[1])/len;
-      const pool=f.style==='desert'?STYLE_TREE.dying:f.style==='swamp'?STYLE_TREE.swamp_safe:STYLE_TREE[f.style];
-      const names=Array.isArray(pool)?pool:[pool];
-      for(let across=-5.4;across<=5.4;across+=1.8){
-        const x=Math.round(end[0]+dx*5-dy*across),y=Math.round(end[1]+dy*5+dx*across);
-        if(!walls.has(y*MW+x))continue;
-        const name=names[hash2(x,y)%names.length],s=NAME2I[name];if(s===undefined||!SPR[name])continue;
-        fobjs.push({id:id--,s,x:x*TS+TS/2,y:(y+1)*TS,feat:1,sideRouteWall:true});
-      }
+    for(const p of points){
+      // Snow uses its native white conifers, never the green temple substitute.
+      const pool=p.style==='winter'?STYLE_TREE.winter:p.tree;
+      const name=Array.isArray(pool)?pool[hash2(Math.round(p.x),Math.round(p.y))%pool.length]:pool;
+      const s=NAME2I[name];if(s===undefined||!SPR[name])continue;
+      fobjs.push({id:id--,s,x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
+        sideRouteWall:true,sideRouteRow:p.row,sideRouteCorner:!!p.corner});
     }
     if(rebuild){rebuildBuckets();rebuildSolid();chunks.clear();}
   }
-  return {installWorld,finishWorld,geometry,routes,encounters,moves};
+  return {installWorld,finishWorld,geometry,borderPlan,routes,encounters,moves};
 })();
