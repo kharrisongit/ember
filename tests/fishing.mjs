@@ -19,7 +19,7 @@ for(let tier=0;tier<6;tier++){
  }
  assert(c.fishing.caught,'Controlled fishing lands tier '+tier);assert.equal(c.fishing.bonus,1);
  const count=c.dragonFish;run('finishFishing(true)');assert.equal(c.dragonFish,count,'No duplicate rewards');
- run('fishingAction()');assert.equal(c.fishing.phase,'result');step(15);run('fishingAction()');assert.equal(c.fishing.phase,'aim');
+ run('fishingAction()');assert.equal(c.fishing.phase,'result');step(20);run('fishingAction()');assert.equal(c.fishing.phase,'result','Lift animation cannot be skipped by a trailing press');step(20);run('fishingAction()');assert.equal(c.fishing.phase,'aim');
 }
 assert.equal(saves,6);assert.equal(c.dragonFish,27);
 cast();step(50);assert.equal(c.fishing.phase,'result');assert(!c.fishing.caught);assert.match(c.fishing.reason,/bite/);

@@ -18,11 +18,12 @@ function openFishingView(){
   if(!fishingView){
     const el=document.createElement('section');el.hidden=true;el.id='fishingView';el.className='fishing-view';
     el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','Fishing');
-    el.innerHTML=`<header class="fishing-header"><div><span class="fishing-eyebrow">EMBERFELL · ANGLER'S REST</span><h2>Just one more cast.</h2></div><button type="button" class="fishing-leave" aria-label="Leave fishing">Leave <span>Esc / B</span></button></header><div class="fishing-water"><canvas aria-label="Looking down across the water with your fishing rod in the foreground"></canvas><div class="fishing-scene-label"><span class="fishing-phase">READY TO CAST</span><span class="fishing-stock"></span></div></div><footer class="fishing-footer"><div class="fishing-copy"><strong class="fishing-status" role="status" aria-live="polite"></strong><span class="fishing-hint"></span></div><button type="button" class="fishing-action"><span>Cast line</span><small>A / Space</small></button></footer>`;
+    el.innerHTML=`<header class="fishing-header"><div><span class="fishing-eyebrow">EMBERFELL · WATERSIDE PURSUITS</span><h2>The Angler’s Rest</h2></div><button type="button" class="fishing-leave" aria-label="Leave fishing">Leave <span>Esc / B</span></button></header><div class="fishing-water"><canvas aria-label="Looking down across the water with your fishing rod in the foreground"></canvas><div class="fishing-scene-label"><span class="fishing-phase">READY TO CAST</span><span class="fishing-stock"></span></div><aside class="fishing-catch-popup" hidden role="status" aria-live="polite" aria-atomic="true"><span class="fishing-catch-seal" aria-hidden="true">✦</span><span class="fishing-catch-kicker">A FINE CATCH</span><h3>Congratulations!</h3><p class="fishing-catch-message"></p><span class="fishing-catch-bonus"></span></aside></div><footer class="fishing-footer"><div class="fishing-copy"><strong class="fishing-status" role="status" aria-live="polite"></strong><span class="fishing-hint"></span></div><button type="button" class="fishing-action"><span>Cast line</span><small>A / Space</small></button></footer>`;
     document.body.appendChild(el);
     fishingView={el,canvas:el.querySelector('canvas'),action:el.querySelector('.fishing-action'),
       leave:el.querySelector('.fishing-leave'),status:el.querySelector('.fishing-status'),
-      hint:el.querySelector('.fishing-hint'),phase:el.querySelector('.fishing-phase'),stock:el.querySelector('.fishing-stock')};
+      hint:el.querySelector('.fishing-hint'),phase:el.querySelector('.fishing-phase'),stock:el.querySelector('.fishing-stock'),popup:el.querySelector('.fishing-catch-popup'),
+      catchMessage:el.querySelector('.fishing-catch-message'),catchBonus:el.querySelector('.fishing-catch-bonus')};
     const press=e=>{e.preventDefault();if(e.button!==undefined&&e.button!==0)return;
       fishingView.action.setPointerCapture?.(e.pointerId);fishingAction();};
     fishingView.action.addEventListener('pointerdown',press);
@@ -38,6 +39,8 @@ function openFishingView(){
       (document.activeElement===fishingView.action?fishingView.leave:fishingView.action).focus();});
   }
   if(fishingView.el.hidden){fishingView.previousFocus=document.activeElement;}
+  fishingView.popup.hidden=true;
+  fishingView.action.disabled=false;
   fishingView.el.hidden=false;
   fishingView.action.focus({preventScroll:true});
 }
@@ -63,6 +66,7 @@ function fishingBurst(f,color,count=16){
 }
 function finishFishing(caught,reason='The fish slipped away.'){
   const f=fishing;if(!f||f.phase==='result')return;
+  f.catchOrigin={x:f.fishX,y:f.fishY};f.catchAngle=-.4+Math.sin(f.age*3)*.6;
   f.caught=caught;f.phase='result';f.resultAge=0;f.held=false;f.assistReel=false;f.reason=reason;
   f.bonus=caught&&f.castQuality>.8&&f.hookQuality>.55&&f.peakTension<.86?1:0;
   if(caught){globalThis.window?.EmberSfx?.pickup();dragonFish+=f.reward+f.bonus;fishingBurst(f,'#ffe3a0',32);saveGame();}
@@ -105,7 +109,7 @@ function stepFishing(dt){
 }
 function fishingAction(){
   const f=fishing;if(!f||f.phase==='prompt')return;
-  if(f.phase==='result'){if(f.resultAge>=.7)startFishing();return;}
+  if(f.phase==='result'){if(f.resultAge>=(f.caught?1.9:.7))startFishing();return;}
   if(f.phase==='aim'){
     f.castQuality=Math.max(0,1-Math.abs(f.power-.72)/.3);f.castPower=f.power;
     f.phase='cast';f.elapsed=0;f.fishX=.5;f.fishY=.5-f.power*.25;return;
@@ -126,6 +130,7 @@ function fishingCopy(f){
   if(f.phase==='reel')return [f.surging?'Lunge! Let the line run':f.warning?'It’s about to lunge…':f.slack>3?'Don’t let it slip away!':'Bring it closer',
     f.requireRelease?'Lift your finger, then hold to reel.':f.slack>3?'Hold to reel — there’s too much slack.':f.surging?'Release to ease the tension.':f.warning?'Get ready to release.':'Hold to reel. Release when the fish lunges.',
     (f.held||f.assistReel)?'Reeling…':'Hold to reel',f.surging?'RELEASE · LUNGE':'REEL IN YOUR CATCH'];
+  if(f.phase==='result'&&f.caught&&f.resultAge<1.5)return ['Lifting your catch…','A worthy prize for a patient angler.','Landing fish…','A FINE CATCH'];
   return [f.caught?'A fine catch! +'+(f.reward+f.bonus)+' fish':'That one got away',
     f.caught?(f.bonus?'Flawless cast & control · +1 bonus fish':'Fresh fish restores '+DRAGON_FISH_HEAL+' dragon HP.'):f.reason,'Cast again',f.caught?'CATCH LANDED':'ANOTHER ONE AWAITS'];
 }
@@ -135,6 +140,14 @@ function drawFishing(){
   if(fishingView&&!fishingView.el.hidden){
     const v=fishingView;
     for(const [el,value]of [[v.status,copy[0]],[v.hint,copy[1]],[v.phase,copy[3]],[v.stock,'FISH IN BAG · '+dragonFish],[v.action.firstElementChild,copy[2]]])if(el.textContent!==value)el.textContent=value;
+    const celebrating=f.phase==='result'&&f.caught&&f.resultAge>=1.5;
+    const count=f.reward+(f.bonus||0);
+    const catchMessage='You caught '+(count===1?'a fish!':count+' fish!');
+    if(v.catchMessage.textContent!==catchMessage)v.catchMessage.textContent=catchMessage;
+    const bonus=f.bonus?'Perfect technique · +1 bonus fish':'Added to your bag · A feast for your dragon';
+    if(v.catchBonus.textContent!==bonus)v.catchBonus.textContent=bonus;
+    v.popup.hidden=!celebrating;
+    v.action.disabled=f.phase==='result'&&f.caught&&f.resultAge<1.9;
     v.action.dataset.active=(f.held||f.assistReel)?'true':'false';v.action.dataset.bite=f.phase==='hook'?'true':'false';
     v.action.setAttribute('aria-pressed',String(!!(f.held||f.assistReel)));
     const box=v.canvas.getBoundingClientRect(),dpr=Math.min(2,globalThis.devicePixelRatio||1);
@@ -156,12 +169,12 @@ function drawFishingWater(g,w,h,f){
   const ellipse=(x,y,rx,ry,c)=>{g.fillStyle=c;g.beginPath();g.ellipse(x,y,Math.max(0,rx),Math.max(0,ry),0,0,FISH_TAU);g.fill();};
   const text=(s,x,y,size,color='#e6f3df',align='center')=>{g.font=`600 ${size}px Georgia,serif`;g.textAlign=align;g.fillStyle=color;g.fillText(s,x,y);};
   // Broad pools of depth, small squared caustics, and translucent plant shadows.
-  const water=g.createLinearGradient(0,0,w*.3,h);water.addColorStop(0,'#163e47');water.addColorStop(.4,'#246b71');water.addColorStop(1,'#479584');
+  const water=g.createLinearGradient(0,0,w*.3,h);water.addColorStop(0,'#263d35');water.addColorStop(.4,'#486b56');water.addColorStop(1,'#78937a');
   g.fillStyle=water;g.fillRect(0,0,w,h);
   for(let i=0;i<9;i++){
     const x=((i*173)%641)/640*w,y=((i*131)%613)/640*h;
     const shade=g.createRadialGradient(x,y,0,x,y,(70+i%3*35)*unit);
-    shade.addColorStop(0,i%2?'#639c8720':'#0a34462b');shade.addColorStop(1,'#1c565e00');
+    shade.addColorStop(0,i%2?'#9baf7e20':'#1a30232b');shade.addColorStop(1,'#3c564000');
     g.fillStyle=shade;g.fillRect(0,0,w,h);
   }
   // Fractured reflections, with a fine bright edge drifting over a darker one.
@@ -217,11 +230,8 @@ function drawFishingWater(g,w,h,f){
     const tx=w*.5,ty=h*.32;g.globalAlpha=.55+.2*Math.sin(t*2);
     g.strokeStyle='#f6d48a';g.lineWidth=2*unit;g.setLineDash([5*unit,7*unit]);g.beginPath();g.ellipse(tx,ty,43*unit,22*unit,0,0,FISH_TAU);g.stroke();g.setLineDash([]);g.globalAlpha=1;
   }
-  if(active||caught){
-    const depth=caught?1:.72;
-    drawFishingFish(g,fx+8*unit,fy+17*unit,Math.max(.8,unit*1.8),-.4+Math.sin(t*3)*.6,t,caught?'catch':'water');
-    g.globalAlpha=depth;
-  }
+  if(active)drawFishingFish(g,fx+8*unit,fy+17*unit,Math.max(.8,unit*1.8),-.4+Math.sin(t*3)*.6,t,'water');
+  const trophy=caught?fishingCatchPose(w,h,unit,f):null;
   // Expanding ellipse ripples convey the angled overhead camera.
   if(f.phase!=='aim')for(let i=0;i<4;i++){
     const r=7+((t*(f.surging?32:17)+i*12)%48);g.globalAlpha=(1-(r-7)/48)*.5;
@@ -230,8 +240,10 @@ function drawFishingWater(g,w,h,f){
   }g.globalAlpha=1;
   // The handle enters from the SOUTH edge. The flexible rod points away from us.
   const bend=f.phase==='reel'?f.tension:0.12;
-  const baseX=w*.54,baseY=h+30*unit,tipX=w*.47+(fx-w*.5)*.35+bend*26*unit;
-  const tipY=h*.61+bend*35*unit;
+  const baseX=w*.54,baseY=h+30*unit;
+  const restX=w*.47+(fx-w*.5)*.35+bend*26*unit,restY=h*.61+bend*35*unit;
+  const tipX=trophy?restX+(trophy.tipX-restX)*trophy.lift:restX;
+  const tipY=trophy?restY+(trophy.tipY-restY)*trophy.lift:restY;
   const rodAt=q=>({x:baseX+(tipX-baseX)*q+Math.sin(q*Math.PI)*bend*26*unit,y:baseY+(tipY-baseY)*q});
   const rod=Array.from({length:19},(_,i)=>{const p=rodAt(i/18);return [p.x,p.y];});
   const cast=f.phase==='cast'?Math.min(1,f.elapsed/.7):1;
@@ -257,13 +269,34 @@ function drawFishingWater(g,w,h,f){
   for(let q=.01;q<.16;q+=.018){const p=rodAt(q);line([[p.x-5*unit,p.y],[p.x+5*unit,p.y-2*unit]],'#876b50',2*unit);}
   const reel=rodAt(.12);ellipse(reel.x+15*unit,reel.y,12*unit,15*unit,'#303f40');ellipse(reel.x+15*unit,reel.y-2*unit,8*unit,11*unit,'#ad9670');ellipse(reel.x+15*unit,reel.y-2*unit,4*unit,6*unit,'#e0c691');
   const spin=f.held?t*12:0;line([[reel.x+16*unit,reel.y],[reel.x+(26+Math.sin(spin)*5)*unit,reel.y+Math.cos(spin)*7*unit]],'#d5be89',3*unit);
+  if(trophy){
+    // The line ends at the fish's mouth throughout the lift and pendulum sway.
+    // Its shrinking water shadow and falling droplets separate it from the pool.
+    const shadow=trophy.surfaceY+14*unit;
+    g.globalAlpha=.24*(1-trophy.lift*.65);
+    ellipse(trophy.surfaceX,shadow,30*unit*(1-trophy.lift*.25),7*unit,'#203a2e');g.globalAlpha=1;
+    line([[tipX,tipY],[trophy.mouthX,trophy.mouthY]],'#f7e3ba',Math.max(1.2,unit));
+    const floatX=tipX+(trophy.mouthX-tipX)*.45,floatY=tipY+(trophy.mouthY-tipY)*.45;
+    ellipse(floatX,floatY,3*unit,5*unit,'#edd9a4');ellipse(floatX,floatY+2*unit,3*unit,2*unit,'#9f493c');
+    drawFishingFish(g,trophy.x,trophy.y,trophy.scale,trophy.angle,t*1.2,'catch');
+    g.strokeStyle='#d8c498';g.lineWidth=1.5*unit;g.beginPath();
+    g.arc(trophy.mouthX,trophy.mouthY+2*unit,3*unit,-Math.PI,Math.PI*.35);g.stroke();
+    if(f.resultAge<3.8)for(let i=0;i<7;i++){
+      const age=(f.resultAge*1.4+i*.19)%1;
+      const dx=Math.sin(i*4.1)*13*unit;
+      g.globalAlpha=(1-age)*.8;
+      ellipse(trophy.x+dx,trophy.y+age*70*unit,unit,2.5*unit,'#d0e2bd');
+    }g.globalAlpha=1;
+  }
   for(const p of f.particles){g.globalAlpha=Math.max(0,p.life/.8);rect(p.x*w,p.y*h,3*unit,3*unit,p.color);}g.globalAlpha=1;
   // Compact, readable gauges sit over the water; the scene remains the focus.
   const gw=Math.min(w-40,h<340?200:360),gx=h<340?24:(w-gw)/2,gy=h<340?52:60,fs=Math.max(11,Math.min(15,w/30));
-  const meter=(y,label,value,color)=>{rect(gx-12,y-23,gw+24,49,'#102f37e8');text(label,gx,y-6,fs,'#e1e6cc','left');
-    rect(gx,y+3,gw,7,'#355559');rect(gx,y+3,gw*Math.max(0,Math.min(1,value)),7,color);};
+  const meter=(y,label,value,color)=>{rect(gx-12,y-23,gw+24,49,'#2c241beF');g.strokeStyle='#a58a51';g.lineWidth=1;g.strokeRect(gx-12,y-23,gw+24,49);
+    for(const x of [gx-8,gx+gw+8])for(const yy of [y-19,y+22])rect(x,yy,2,2,'#d4b777');
+    text(label,gx,y-6,fs,'#e8d5aa','left');
+    rect(gx,y+3,gw,7,'#514636');rect(gx,y+3,gw*Math.max(0,Math.min(1,value)),7,color);};
   if(f.phase==='aim'){
-    meter(gy+12,'CAST DISTANCE',1,'#355559');rect(gx+gw*.62,gy+15,gw*.2,7,'#b4a463');rect(gx+gw*.68,gy+15,gw*.08,7,'#f1d087');
+    meter(gy+12,'CAST DISTANCE',1,'#514636');rect(gx+gw*.62,gy+15,gw*.2,7,'#b4a463');rect(gx+gw*.68,gy+15,gw*.08,7,'#f1d087');
     rect(gx+gw*f.power-2,gy+8,4,21,'#fff3cb');text('Tap in the gold',w/2,gy+56,fs,'#fff0c8');
   }else if(f.phase==='reel'){
     meter(gy,'CATCH  '+Math.round(f.progress*100)+'%',f.progress,'#b8d8a1');
@@ -272,13 +305,29 @@ function drawFishingWater(g,w,h,f){
     if(f.slack>3)text('LINE GOING SLACK',w/2,gy+100,fs,'#ffe1a1');
   }else if(f.phase==='hook'){
     meter(gy+12,'BITE!  TAP TO HOOK',1-f.elapsed/f.biteWindow,'#f7d991');
-  }else if(f.phase==='result'){
-    const y=h*.34;rect(w/2-gw/2-8,y-26,gw+16,104,'#102f37ed');
+  }else if(f.phase==='result'&&!f.caught){
+    const y=h*.34;rect(w/2-gw/2-8,y-26,gw+16,104,'#2c241bef');
     text(f.caught?'A FINE CATCH':'UNTIL NEXT TIME',w/2,y,fs+5,'#f4d8a0');
     text(f.caught?'+'+(f.reward+f.bonus)+' fresh fish':'There are more fish in the water.',w/2,y+28,fs+2);
     text(f.caught&&f.bonus?'Perfect technique · bonus fish':f.caught?'For a hungry dragon.':'Try another cast.',w/2,y+55,fs,'#a6c7bc');
   }
   g.restore();
+}
+// Mouth-anchored pose shared by the splash, lift, line, and hanging fish.
+function fishingCatchPose(w,h,unit,f){
+  const age=f.resultAge||0,q=Math.min(1,age/1.35),lift=1-Math.pow(1-q,3);
+  const origin=f.catchOrigin||{x:f.fishX,y:f.fishY};
+  const short=h<340,tipX=w*(short?.66:.46),tipY=h*(short?.16:.14);
+  const settle=Math.max(0,age-1.05),swing=Math.sin(settle*3.2)*.13*Math.exp(-settle*.16);
+  const scale=(1.8+.8*lift)*unit,startAngle=f.catchAngle??-.4;
+  const startX=origin.x*w+8*unit+Math.cos(startAngle)*20*1.8*unit;
+  const startY=origin.y*h+17*unit+Math.sin(startAngle)*20*1.8*unit;
+  const mouthX=startX+(w*(short?.75:.56)-startX)*lift+Math.sin(settle*3.2)*10*unit*lift;
+  const mouthY=startY+(h*(short?.31:.29)-startY)*lift;
+  const angle=startAngle+(-Math.PI/2-startAngle)*lift+swing*lift;
+  return {lift,tipX,tipY,mouthX,mouthY,angle,scale,
+    x:mouthX-Math.cos(angle)*20*scale,y:mouthY-Math.sin(angle)*20*scale,
+    surfaceX:origin.x*w,surfaceY:origin.y*h};
 }
 function drawFishingFish(g,x,y,scale,angle,t,kind){
   g.save();g.translate(x,y);g.rotate(angle);g.scale(scale,scale);
