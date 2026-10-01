@@ -32,7 +32,7 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  // Static area hooks used to bypass the retained-world optimization. Model
  // their collision work and cache eviction, including the Spider Queen demo.
  function repairArea(){if(MAPID==='world'){stats.repairs++;rebuildSolid();chunks.clear();}}
- const SpiderQueenDemo={prepareArea:repairArea},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){}};
+ const SpiderQueenDemo={prepareArea:repairArea},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){},installOasis(){}};
  function seedTreasuryGold(){}function stopTrial(){}function setPaint(on){painting=on}function refreshSel(){}
  function resetChunkWarm(){}function placeBirds(){stats.birds++}function openClearings(){}function beginHettieWalk(){}
  let arenasShowing=false;function closeArenaAnimalPicker(){}

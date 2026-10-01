@@ -99,6 +99,7 @@ jobs:
           node tests/nan-cooking.mjs
           node tests/flight-travel.mjs
           node tests/inventory-icons.mjs
+          node tests/soulwing-relic.mjs
           node tests/journey-gates.mjs
           node tests/ghost-following.mjs
           node tests/npc-conversations.mjs

@@ -10595,6 +10595,7 @@ function markSafe() {
 }
 function showDeath() {
   if (deadShown) return;
+  if (typeof IceMoth!=='undefined'&&IceMoth.revive()) return;
   deadShown = true;
   globalThis.window?.EmberSfx?.death();
   const lost = Math.floor(gold * 0.3);

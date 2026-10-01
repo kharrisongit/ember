@@ -2,6 +2,7 @@
 const IceMoth=(()=>{
   const BASE='assets/sprites/ice-moth/',VERSION='20261001-icemoth1';
   const CELL=144,HEIGHT=144,FOOT=112,FX=96,DEFEATED='world:ice-moth:defeated';
+  const REWARD='world:ice-moth:soulwing',SPENT='world:ice-moth:soulwing-spent';
   const arena={id:9367,kind:'arena',x:2346,y:168,r:6.8,style:'winter',sideRoute:'ice-moth',iceMoth:true};
   const endpoint={id:9368,kind:'arena',x:2346,y:134,r:6.3,style:'winter',sideRoute:'ice-moth',iceMothEnd:true};
   const routes=[
@@ -14,6 +15,8 @@ const IceMoth=(()=>{
   const frames={},effectsArt=[],shots=[],bursts=[];
   let loading=null,ready=false,map='';
   const defeatedAlready=()=>houseLootTaken.has(DEFEATED);
+  // Earlier saves that already defeated the moth receive its new reward too.
+  const owned=()=>(houseLootTaken.has(REWARD)||defeatedAlready())&&!houseLootTaken.has(SPENT);
   const paused=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const direction=f=>f.dir==='s'?(f.flip?'w':'e'):f.dir;
   const windTime=f=>f.mothAttack==='gust'?.9:1.05;
@@ -53,7 +56,22 @@ const IceMoth=(()=>{
     })();return loading;
   }
   function reset(){shots.length=0;bursts.length=0;map=MAPID;}
-  function defeated(){reset();if(defeatedAlready())return;houseLootTaken.add(DEFEATED);saveGame();}
+  function defeated(){
+    reset();if(defeatedAlready())return;
+    houseLootTaken.add(DEFEATED);houseLootTaken.add(REWARD);
+    toast('Soulwing Relic obtained! Aurelius can revive Corin once, right in battle.');
+    saveGame();
+  }
+  function revive(){
+    if(pHp>0||!dying()||!owned())return false;
+    // Consume before resuming play. Keep the arena, enemies, position and gold.
+    houseLootTaken.add(SPENT);
+    pHp=pMax;pInv=3;P.act=null;P.moving=false;deadShown=false;
+    clearPadInputs();running=false;
+    showHeal('elixir');
+    toast('Aurelius calls you back! Full health restored. Soulwing Relic spent.');
+    saveGame();return true;
+  }
   function enter(f,state){f.st=state;f.t=0;f.hit=0;}
   function tell(f,target){
     f.mothSequence=(f.mothSequence||0)+1;f.mothAttack=f.mothSequence%2?'gust':'shards';
@@ -169,7 +187,7 @@ const IceMoth=(()=>{
   }
   FOE.icemoth={hp:70,speed:48,sight:999,reach:180,ring:140,dmg:2,swingT:.78,hitAt:.12,rest:1.7,groupRest:1,wind:1};
   FOE_ART.icemoth='icemoth';WORTH.icemoth=100;
-  return {arena,endpoint,routes,installWorld,prepare,reset,defeated,defeatedAlready,step,effects,pose,addEffects,draw,
+  return {arena,endpoint,routes,installWorld,prepare,reset,defeated,defeatedAlready,owned,revive,rewardId:REWARD,spentId:SPENT,step,effects,pose,addEffects,draw,
     travelPlace:()=>({name:'Ice Moth — Winter Arena',kind:'Boss',map:'world',x:2346,y:182}),
     inspect:()=>({ready,shots:shots.map(({owner,cast,...s})=>({...s,playerHit:cast.playerHit,dragonHit:cast.dragonHit})),bursts:bursts.map(b=>({...b}))})};
 })();

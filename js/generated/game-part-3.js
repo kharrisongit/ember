@@ -4700,6 +4700,7 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
+  {key:"soulwing",kind:"key",name:"Soulwing Relic",tell:"Won by defeating the Ice Moth. If Corin falls, Aurelius restores him to full health right where he fell. The battle continues, with 3 seconds of protection. Activates automatically once, then is consumed. No equipment slot needed.",has:()=>IceMoth.owned(),icon:()=>"inventory_soulwing"},
   {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
   {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
   { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
@@ -6340,6 +6341,7 @@ tap(document.getElementById("bSkip"), () => {
   cinderSeal = true;
   houseLootTaken.add(DesertAdventure.rewardId);
   houseLootTaken.add(Frosthorn.rewardId);
+  houseLootTaken.add(IceMoth.rewardId);houseLootTaken.delete(IceMoth.spentId);
   dragon.on = true;
   dragon.placed = MAPID;
   dragon.air = !dragonGround(P.x - 24, P.y);

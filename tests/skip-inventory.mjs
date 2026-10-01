@@ -9,14 +9,14 @@ assert(missing().includes('fishingPole'));
 // Press the actual developer button, rather than duplicating its grant logic.
 dom.touch(dom.element('bSkip'));
 assert.deepEqual(missing(),[],'Skip grants every current usable/key/charm inventory item');
-for(const key of ['emberheart','frostheart'])assert.equal(run('BAG.find(i=>i.key==='+JSON.stringify(key)+').icon()'),'inventory_'+key,'Relics display their own artwork in the bag');
+for(const key of ['emberheart','frostheart','soulwing'])assert.equal(run('BAG.find(i=>i.key==='+JSON.stringify(key)+').icon()'),'inventory_'+key,'Relics display their own artwork in the bag');
 assert.equal(run('wonAll'),0,'Granting items does not mark the king defeated');
 assert.equal(run('trialSealPlaced'),false,'The seal is carried, not pre-placed');
 assert.equal(run('DesertAdventure.firePower("fire",8)'),10);
 assert.equal(run('Frosthorn.power("ice",8)'),10);
 const saved=JSON.parse(run('JSON.stringify(readSaveSlot(activeSaveSlot))'));
 assert(saved.fishingPole&&saved.cinderSeal,'New key items are saved');
-assert(saved.houseLootTaken.includes(run('DesertAdventure.rewardId'))&&saved.houseLootTaken.includes(run('Frosthorn.rewardId')),'Relics use their normal ownership records');
+assert(saved.houseLootTaken.includes(run('DesertAdventure.rewardId'))&&saved.houseLootTaken.includes(run('Frosthorn.rewardId'))&&saved.houseLootTaken.includes(run('IceMoth.rewardId')),'Relics use their normal ownership records');
 for(const key of ['boarMeat','hareMeat','deerMeat','foxMeat','birdMeat','dragonFish'])assert(saved[key]>=3,key+' available to feed Aurelius');
 assert(run('loadGame(activeSaveSlot)'),'Skip save loads');
 assert.deepEqual(missing(),[],'Every granted item survives a real save reload');
@@ -29,4 +29,4 @@ assert.deepEqual(missing(),[]);
 // An ordinary earlier save remains ordinary: Skip does not globally unlock items.
 run('fishingPole=false;cinderSeal=false;houseLootTaken.clear();saveToSlot(3,true);');
 assert(run('loadGame(3)'));assert(!run('fishingPole||cinderSeal||Frosthorn.owned()||DesertAdventure.owned()'));
-console.log('PASS: real Skip touch grants the full inventory, pole, both relics, all food and seal; save/reload, repeat grants, existing stacks, and normal-save isolation.');
+console.log('PASS: real Skip touch grants the full inventory, pole, all three relics, all food and seal; save/reload, repeat grants, existing stacks, and normal-save isolation.');

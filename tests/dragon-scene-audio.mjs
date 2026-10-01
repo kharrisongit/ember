@@ -94,7 +94,7 @@ c.mode='title';timers.forEach(f=>f());assert.equal(active('sword-swing').length,
 console.log('PASS: accepted sword attacks, successful melee/projectile blocks, ordinary loot, key rewards, game over, grouped pickups, interior playback, and independent dragon/gameplay cleanup.');
 
 c.mode='play';c.deadShown=false;
-Object.assign(c,{smithUpgrade:false,worn:{},seenFoe:{},seenCount:0,
+Object.assign(c,{smithUpgrade:false,worn:{},seenFoe:{},seenCount:0,DesertAdventure:{scareVultures(){},firePower:(el,power)=>power},Frosthorn:{power:(el,power)=>power},
  directionVector:()=>[0,1],foeBodyProfile:f=>({x:f.x,y:f.y,r:5}),swordOverlaps:()=>false,
  makeFoeRetreat(){},kingDeflect(){},dropGold(){},markBossGone(){}});
 run(game.slice(game.indexOf('function swingHits()'),game.indexOf('\nlet edgeCarry')));

@@ -3,7 +3,7 @@
 async function loadInventoryIcons() {
   for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['relics.webp',3004416]]) {
   const image = new Image();
-  image.src = 'assets/inventory/'+file+'?v=20261001-cinder-seal';
+  image.src = 'assets/inventory/'+file+'?v=20261001-soulwing';
   await image.decode();
 
   // Single-item art is sampled into the same 128px atlas cell as other rewards.
@@ -31,6 +31,7 @@ function registerInventorySprites() {
   SPR.inventory_emberheart=[0,3004416,128,128,1];
   SPR.inventory_frostheart=[128,3004416,128,128,1];
   SPR.inventory_cinderSeal=[256,3004416,128,128,1];
+  SPR.inventory_soulwing=[384,3004416,128,128,1];
   for (const [alias,key] of Object.entries({it_saint:'saint',it_res:'stone',it_salt:'salt',it_dust:'dust'}))
     SPR[alias] = SPR['inventory_'+key];
 }
