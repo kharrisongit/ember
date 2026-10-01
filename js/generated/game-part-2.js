@@ -1652,6 +1652,7 @@ async function buildHouseFurnitureLayers(){
   await prepareExpandedHollybeckTemple();
   await prepareExpandedMountainPassage();
   await DesertPyramid.prepare();
+  await Frosthorn.prepare();
 }
 /* === end household furniture layering === */
 
@@ -2320,6 +2321,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
   if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
+  if(typeof Frosthorn!=='undefined')Frosthorn.reset();
   if(MD.pyramid)DesertPyramid.prepareSpiderArt();
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
@@ -3910,6 +3912,7 @@ function drawWorld(t, dt) {
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
   if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.addToDraw(draw);
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.addEffects(draw);
+  if(typeof Frosthorn!=='undefined')Frosthorn.addEffects(draw);
   // Chests are low props: Corin must remain visible while walking around them.
   // Hollybeck's lid also needs to draw in front of its skull pedestal.
   const hollybeckChest = MD.hollybeck && chestHere();
@@ -3937,6 +3940,7 @@ function drawWorld(t, dt) {
     /^(hb_stair_[es]$|rc_(ores|cavedec|ladder|floor|rails)|ifloor|iwall_)/.test(NAMES[o.s]);
   for (const f of foes) {
     if(f.huntingArena&&f.st==='dead'&&f.t>=1)continue;
+    if(f.kind==='frosthorn'){draw.push({frosthorn:f,x:f.x,y:f.y,sy:f.y-8});continue;}
     if(f.kind==='spiderqueen'){draw.push({queenBoss:f,x:f.x,y:f.y,sy:SpiderQueenBoss.aboveWeb()?1e8+1:f.y-8});continue;}
     const P_ = ((FOE_BORROW[f.kind] || {})[
                   f.st === "swing" ? "atk" : (f.st === "dead" || f.st === "down" || f.st === "rise") ? "die"
@@ -4059,6 +4063,7 @@ function drawWorld(t, dt) {
   for (const o of draw) {
     if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
     if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
+    if(typeof Frosthorn!=='undefined'&&Frosthorn.draw(o))continue;
     if(o.marketCanopy){drawMarketActor(o.marketCanopy,false,true);continue;}
     if(o.villageCanopy){drawVillageStand(o.villageCanopy,false,true);continue;}
     if(o.marketActor||o.marketActorFront){drawMarketActor(o.marketActor||o.marketActorFront,!!o.marketActorFront);continue;}
@@ -7995,6 +8000,7 @@ function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
   if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-15,r:23};
+  if (f.kind === 'frosthorn') return {x:f.x,y:f.y-30,r:29};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};
@@ -8039,7 +8045,7 @@ function stepBreath(dt) {
       });
       if (f) {
         b.hit = 1;
-        const power = DesertAdventure.firePower(b.el,DRAGON_BREATH[b.el]?.damage || DRAGON_BREATH.fire.damage);
+        const power = Frosthorn.power(b.el,DesertAdventure.firePower(b.el,DRAGON_BREATH[b.el]?.damage || DRAGON_BREATH.fire.damage));
         const fullHp = (FOE[f.kind] || {}).hp || f.hp;
         /* A fresh enemy always survives the first blast; later blasts or
            Corin's attacks can finish it. */
@@ -8292,6 +8298,7 @@ function bookOrder() {
   return met.concat(not);
 }
 const BESTIARY = [
+  {k:"frosthorn",n:"Frosthorn",w:"the clearing at the end of the winding northern snow trail",t:"A huge white-furred beast with curling horns and red eyes. A raised foot marks a line of ice that erupts toward Corin: move sideways before the spikes grow. Watch his arm swipe and horn headbutt at close range. Defeating him grants the Frostheart Relic, strengthening Aurelius’s Ice breath by 25%."},
   {k:"mummy",n:"Pyramid Mummy",w:"the Sunken Pyramid",t:"Tattered bandages trail across the sandstone floors. These restless dead still patrol the burial chambers and strike anyone who disturbs them."},
   {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a stomp whose shockwave sweeps the whole room. Press B to block the ring; distance will not keep Corin safe. At range, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. After each bite she retreats, then starts a fresh slow approach. Command Fire to burn the web, free them both, and stun her."},
   {"k": "devil1", "n": "Cinder Bailiff", "w": "the demon's Cinderhold trials", "t": "Before the Wingfall, riders sealed bargains with burned handprints. The Cinder Bailiffs still collect those debts. Maelis has persuaded one that a fair contest counts as payment."},
@@ -8372,7 +8379,8 @@ function spawnFoes() {
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;
     if(kind==="royalguard" && (wonAll || royalDefeated[MAPID+":"+idx]))return;
     if (kind === "knight" && knightEncounterDone) return;
-    if ((MD.templeExpanded || NO_RESPAWN.test(kind)) && bossGone[MAPID + ":" + idx]) return;
+    if(kind==="frosthorn"&&Frosthorn.owned())return;
+    if (kind!=="frosthorn"&&(MD.templeExpanded || NO_RESPAWN.test(kind)) && bossGone[MAPID + ":" + idx]) return;
     const k = FOE[kind];
     if(MD.templeContinuous&&(bossGone[MAPID+':room:'+(idx<4?'ghost':'golem')]||(idx>=4&&bossGone[(MD.templeOldGolem||'tp3')+':'+(idx-4)])))return;
     const x = f.x * TS + 8, y = f.y * TS + 16;
@@ -8482,7 +8490,7 @@ function kingDeflect(f, attacker) {
     toast(f.kind === "lich" ? "the lich's ward throws them back" : "the king dragon turns them aside");
   }
 }
-function heavyFoe(f){return !f.ally&&!f.trial&&/^(golem[1234]|devil[13]?|lich|knight|treasuryknight|spiderqueen)$/.test(f.kind);}
+function heavyFoe(f){return !f.ally&&!f.trial&&/^(golem[1234]|devil[13]?|lich|knight|treasuryknight|spiderqueen|frosthorn)$/.test(f.kind);}
 function regularFoe(f) { return !f.ally && !f.trial && !BOSS_KIND.test(f.kind || "") && f.kind !== "kdragon"; }
 function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
   if (f.ally || f.trial) return;
@@ -8496,7 +8504,7 @@ function makeFoeRetreat(f, sourceX, sourceY, seconds = .68) {
     f.pressureAt = tAcc;
     if (f.pressureHits < 3) return;
     f.pressureHits = 0;
-    if(/^(golem[1234]|devil[13]?|knight|treasuryknight|spiderqueen)$/.test(f.kind)){
+    if(/^(golem[1234]|devil[13]?|knight|treasuryknight|spiderqueen|frosthorn)$/.test(f.kind)){
       f.retreat=0;f.st="wind";f.t=0;f.hit=0;beginEnemyWindup(f);return;
     }
     seconds = f.kind === "kdragon" ? .85 : .50;
@@ -9524,12 +9532,13 @@ function useDust() {
   toast("the dust goes up -- they cannot tell one another from him");
   return true;
 }
-const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|treasuryknight|spiderqueen)$/;
+const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|treasuryknight|spiderqueen|frosthorn)$/;
 /* golems, the Ashfiend and the Lich stay dead once felled outside an arena;
    arena foes are meant to refill (see refillRing), these are not */
-const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight|spiderqueen)$/;
+const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight|spiderqueen|frosthorn)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
+  if(f.kind==='frosthorn'&&!f.ally)Frosthorn.defeated(f);
   if(typeof dragonBossBanter==='function')dragonBossBanter(f,true);
   if(f.huntingArena&&typeof dropHuntedMeat==='function')dropHuntedMeat(f);
   if(f.chestAmbush){f.hold=0;f.emerge=1;}
@@ -10175,6 +10184,7 @@ function stepFoes(dt) {
   if(encounterCombatPaused())return;
   foeClock += dt;
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.effects(dt);
+  if(typeof Frosthorn!=='undefined')Frosthorn.effects(dt);
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
@@ -10299,6 +10309,7 @@ function stepFoes(dt) {
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
     if(f.kind==='spiderqueen'){SpiderQueenBoss.step(f,dt);continue;}
+    if(f.kind==='frosthorn'){Frosthorn.step(f,dt);continue;}
     if(f._thinking&&f.st!=='dead'&&/^(desert(?:archer|lancer)[12]|mummy)$/.test(f.kind)&&!seenFoe[f.kind])seenFoe[f.kind]=++seenCount;
     if(f.huntingArena){stepHuntingAnimal(f,dt);continue;}
     if(f.glassBlockHold>0){
@@ -10895,6 +10906,7 @@ let foesHeld = false;
 function stepCombat(dt) {
   if(encounterCombatPaused())return;
   if(foesHeld&&typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
+  if(foesHeld&&typeof Frosthorn!=='undefined')Frosthorn.reset();
   stepTempleGates(dt);
   if (pInv > 0) pInv -= dt;
   stepKingShield(dt);
