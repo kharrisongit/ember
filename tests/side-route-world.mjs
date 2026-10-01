@@ -22,7 +22,9 @@ export function verifySideRoutes(run){
   for(const a of features.filter(f=>f.sideRoute&&f.kind==='arena'))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)
    if(Math.hypot(dx,dy)<=a.r-1.7&&!canStand((a.x+dx)*16+8,(a.y+dy)*16+16))arenaFloor.push({id:a.id,x:a.x+dx,y:a.y+dy,stamp:stampedBy(a.x+dx,a.y+dy)});
   const g=SideRouteAdventures.geometry(features,MW,MH),holes=[];
-  const badPaving=[...g.floor].filter(([key,style])=>style==='desert'&&terr[key]!==PAVING2);
+  const oasis=features.find(f=>f.label==='The Oasis');
+  const grassJoin=key=>baseTerr[key]===GRASS&&key%MW>=oasis.x0-4&&key%MW<=oasis.x1+4&&Math.floor(key/MW)>=oasis.y0-4&&Math.floor(key/MW)<=oasis.y1+4;
+  const badPaving=[...g.floor].filter(([key,style])=>style==='desert'&&terr[key]!==(grassJoin(key)?GRASS:PAVING2));
   for(const [key]of g.walls){const x=key%MW,y=Math.floor(key/MW);if(!isSolid(x*16+8,y*16+8))holes.push([x,y]);}
   return {badPaving:badPaving.length,samples,bad:bad.slice(0,30),badCount:bad.length,chests,arenaFloor:arenaFloor.slice(0,20),arenaBad:arenaFloor.length,holes:holes.slice(0,20),holeCount:holes.length,walls:g.walls.size};
  })())`));
@@ -53,7 +55,7 @@ export function verifySideRoutes(run){
  const count=run('fobjs.filter(o=>o.sideRouteWall).length');run('SideRouteAdventures.finishWorld();');
  assert.equal(run('fobjs.filter(o=>o.sideRouteWall).length'),count,'Repeated repairs do not duplicate trees');
  run('foesHeld='+held);
- console.log('PASS: '+report.samples+' route samples; 46 active encounters; 28 reachable, once-only gold/item rewards; '+report.walls+' solid boundary tiles; stable repeated rebuild.');
+ console.log('PASS: '+report.samples+' route samples; 47 active encounters; 28 reachable, once-only gold/item rewards; '+report.walls+' solid boundary tiles; stable repeated rebuild.');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});

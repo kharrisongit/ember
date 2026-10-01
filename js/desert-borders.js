@@ -12,19 +12,17 @@ const DesertBorders=(()=>{
     if(oasis){
       // One 48px grid, including corners, eliminates the old overlapping palms.
       const left=oasis.x0-1,top=oasis.y0+1;
-      const right=left+Math.ceil((oasis.x1+1-left)/3)*3,bottom=top+Math.ceil((oasis.y1+1-top)/3)*3;
+      const right=left+Math.round((oasis.x1-left)/3)*3,bottom=top+Math.ceil((oasis.y1+1-top)/3)*3;
       palmBounds={left:left-7,right:right+7,top:top-7,bottom:bottom+7};
       const roads=all.filter(f=>f.kind==='route').flatMap(f=>routeLegs(f).map(([a,b])=>({a,b,half:(f.w||5)/2})));
       const gate=(x,y,margin)=>roads.some(r=>blossomRoadDistance(x,y,r)<=r.half+margin);
       const inBox=(x,y,pad)=>x>=left-pad&&x<=right+pad&&y>=top-pad&&y<=bottom+pad;
       mark(left-7,top-7,right+7,bottom+7,(x,y)=>inBox(x,y,7)&&!inBox(x,y,-4),
         (x,y)=>!inBox(x,y,-1)&&!gate(x,y,0));
-      for(let row=0;row<3;row++){
-        const l=left-row*3,r=right+row*3,t=top-row*3,b=bottom+row*3;
-        const add=(x,y)=>{if(!gate(x,y,2))points.push({x,y,row,tree:'palm0',border:'oasis'});};
-        for(let x=l;x<=r;x+=3){add(x,t);add(x,b);}
-        for(let y=t+3;y<b;y+=3){add(l,y);add(r,y);}
-      }
+      // The oasis has one palm band at the grass edge; road verges keep three.
+      const add=(x,y)=>{if(!gate(x,y,2))points.push({x,y,row:0,tree:'palm0',border:'oasis'});};
+      for(let x=left;x<=right;x+=3){add(x,top);add(x,bottom);}
+      for(let y=top+3;y<bottom;y+=3){add(left,y);add(right,y);}
     }
     const pyramid=actors.find(a=>a.editKey==='pyramid:exterior');
     if(pyramid){
@@ -57,7 +55,10 @@ const DesertBorders=(()=>{
       const x=key%MW,y=Math.floor(key/MW);
       if(terr[key]===WALL)terr[key]=SAND;
       SCENE_WALL?.delete(key);rockTiles.delete(x+','+y);
-      for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++)if(MD.collisionOverrides?.[(x*2+dx)+','+(y*2+dy)]===true)delete MD.collisionOverrides[(x*2+dx)+','+(y*2+dy)];
+      for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++){
+        const cell=(x*2+dx)+','+(y*2+dy);
+        if(MD.collisionOverrides&&(walls.has(key)||MD.collisionOverrides[cell]===true))delete MD.collisionOverrides[cell];
+      }
     }
     MD.fence=(MD.fence||[]).filter(([x,y])=>!scope.has(y*MW+x));
     for(const key of walls)blocks.add(key);

@@ -61,10 +61,9 @@ const SideRouteAdventures=(()=>{
   const oasisChests=[{x:1280,y:192,gold:135,item:'elixir'},{x:1300,y:192,gold:155,item:'bomb'}];
   function installOasis(m){
     // Append new encounters after existing foes so older saves keep their slots.
-    [[1256,229],[1323,230]].forEach(([x,y],i)=>{
-      const id=9326+i;
+    [[1256,229,9326],[1323,230,9327],[1290,195,9369]].forEach(([x,y,id],i)=>{
       if(!m.features.some(f=>f.id===id))m.features.push({id,kind:'arena',x,y,r:6.3,style:'desert',sideRoute:9198});
-      rosters.desert[i].forEach((k,j)=>{
+      rosters.desert[i%rosters.desert.length].forEach((k,j)=>{
         const key='9198:'+i+':'+j;
         if(!m.foes.some(f=>f.sideEncounter===key))m.foes.push({k,x:x+[-2,2,0][j],y:y+[-2,-2,2][j],sideEncounter:key});
       });
@@ -191,6 +190,11 @@ const SideRouteAdventures=(()=>{
     if(MAPID!=='world'||!features.some(f=>f.sideRoute))return;
     const {floor,walls}=geometry(features,MW,MH);
     const {points,scope}=borderPlan(features,MW,MH);
+    const oasis=features.find(f=>f.kind==='area'&&f.label==='The Oasis');
+    // Follow the original grass contour at both loop mouths, including its
+    // irregular fringe. The route still clears collision through the join.
+    const oasisGrass=key=>oasis&&baseTerr[key]===GRASS&&key%MW>=oasis.x0-4&&key%MW<=oasis.x1+4&&
+      Math.floor(key/MW)>=oasis.y0-4&&Math.floor(key/MW)<=oasis.y1+4;
     // Repeatable after cache restores and Build: remove only our last border pass.
     fobjs=fobjs.filter(o=>!o.sideRouteWall);
     const debris=/^(oak_|bir_|spr_|fru_|mw_|kt_tree|kt_bush|blo_|sw_tree|sw_broken|wf_|cactus|drock|rock|palm|acacia|dacacia|deadtree|halfdead|deadbush|bush|fern|grass|mt|stump|log)/i;
@@ -205,7 +209,7 @@ const SideRouteAdventures=(()=>{
       if(obstructs(arr[i],arr[i+1],arr[i+2]))decorGone.add(tag+i);
     for(const [key,style]of floor){
       // Desert chest lanes use the same stone paving as the main desert road.
-      terr[key]=style==='desert'?PAVING2:DIRT;
+      terr[key]=oasisGrass(key)?GRASS:style==='desert'?PAVING2:DIRT;
       // Old invisible boundary fences and 8px editor walls must open too.
       const tx=key%MW,ty=Math.floor(key/MW);
       for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++)if(MD.collisionOverrides?.[(tx*2+dx)+','+(ty*2+dy)]===true)delete MD.collisionOverrides[(tx*2+dx)+','+(ty*2+dy)];
@@ -213,7 +217,7 @@ const SideRouteAdventures=(()=>{
     }
     MD.fence=(MD.fence||[]).filter(([x,y])=>!floor.has(y*MW+x));
     const blocks=new Set(blockTiles.filter(k=>!floor.has(k)));
-    for(const [key,style]of walls){terr[key]=style==='desert'?SAND:WALL;blocks.add(key);}
+    for(const [key,style]of walls){terr[key]=oasisGrass(key)?GRASS:style==='desert'?SAND:WALL;blocks.add(key);}
     blockTiles=[...blocks];
     let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
     for(const p of points){
