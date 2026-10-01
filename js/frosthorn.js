@@ -2,7 +2,7 @@
 const Frosthorn=(()=>{
   const BASE='assets/sprites/frosthorn/',VERSION='20261001-frosthorn2';
   const REWARD='world:frosthorn:frostheart',CELL=128,HEIGHT=112,FOOT=104;
-  const arena={id:9361,kind:'arena',x:2545,y:25,r:6.3,style:'winter',sideRoute:'frosthorn',frosthorn:true};
+  const arena={id:9361,kind:'arena',x:2545,y:25,r:6.8,style:'winter',sideRoute:'frosthorn',frosthorn:true};
   const routes=[
     {id:9359,kind:'route',x0:2640,y0:141,x1:2649,y1:68,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2640,141],[2640,105],[2592,105],[2592,143],[2559,143],[2559,165],[2542,165],[2542,115],[2561,115],[2561,86],[2600,86],[2600,68],[2649,68]]},
     {id:9360,kind:'route',x0:2647,y0:65,x1:2545,y1:25,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2647,65],[2657,65],[2657,37],[2581,37],[2581,57],[2545,57],[2545,25]]}
@@ -144,9 +144,9 @@ const Frosthorn=(()=>{
       const f=o.frosthorn,frame=pose(f);
       if(f.st==='dead'&&f.t>2.4){ctx.restore();return true;}
       if(f.st==='dead')ctx.globalAlpha=Math.min(1,Math.max(0,(2.4-f.t)/.7));
-      drawEnemyCombatFrame(f,frame,Math.round(f.x-CELL/2),Math.round(f.y-FOOT),CELL,HEIGHT);
+      drawEnemyCombatFrame(f,frame,Math.round(f.x-CELL*WINTER_BOSS_SCALE/2),Math.round(f.y-FOOT*WINTER_BOSS_SCALE),CELL,HEIGHT,WINTER_BOSS_SCALE);
       if(f.st!=='dead'){
-        const y=Math.round(f.y-88);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);
+        const y=Math.round(f.y-88*WINTER_BOSS_SCALE);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);
         ctx.fillStyle='#a5eaff';ctx.fillRect(f.x-30,y+1,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);
       }
     }else{

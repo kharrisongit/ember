@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 export function verifySideRoutes(run){
+ const held=run('foesHeld');
  run(`arenaLock=null;arenaT=0;scene=null;bossScene=null;ask=null;ovl=null;fadeDir=0;
  window.EmberRiding=undefined;window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;`);
  const report=JSON.parse(run(`JSON.stringify((()=>{
@@ -21,10 +22,12 @@ export function verifySideRoutes(run){
   for(const a of features.filter(f=>f.sideRoute&&f.kind==='arena'))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)
    if(Math.hypot(dx,dy)<=a.r-1.7&&!canStand((a.x+dx)*16+8,(a.y+dy)*16+16))arenaFloor.push({id:a.id,x:a.x+dx,y:a.y+dy,stamp:stampedBy(a.x+dx,a.y+dy)});
   const g=SideRouteAdventures.geometry(features,MW,MH),holes=[];
+  const badPaving=[...g.floor].filter(([key,style])=>style==='desert'&&terr[key]!==PAVING2);
   for(const [key]of g.walls){const x=key%MW,y=Math.floor(key/MW);if(!isSolid(x*16+8,y*16+8))holes.push([x,y]);}
-  return {samples,bad:bad.slice(0,30),badCount:bad.length,chests,arenaFloor:arenaFloor.slice(0,20),arenaBad:arenaFloor.length,holes:holes.slice(0,20),holeCount:holes.length,walls:g.walls.size};
+  return {badPaving:badPaving.length,samples,bad:bad.slice(0,30),badCount:bad.length,chests,arenaFloor:arenaFloor.slice(0,20),arenaBad:arenaFloor.length,holes:holes.slice(0,20),holeCount:holes.length,walls:g.walls.size};
  })())`));
  console.log(JSON.stringify(report));
+ assert.equal(report.badPaving,0,'Desert chest lanes and arenas match the main stone paving');
  assert.equal(report.badCount,0,'Every route centerline remains traversable');
  assert(report.chests.every(c=>c.clear),'All 26 chests have clear south approaches');
  assert.equal(report.arenaBad,0,'Arena interiors clear of procedural obstacles');
@@ -49,6 +52,7 @@ export function verifySideRoutes(run){
  for(const c of chests)assert(saved.houseLootTaken.includes(c.houseLoot.id));
  const count=run('fobjs.filter(o=>o.sideRouteWall).length');run('SideRouteAdventures.finishWorld();');
  assert.equal(run('fobjs.filter(o=>o.sideRouteWall).length'),count,'Repeated repairs do not duplicate trees');
+ run('foesHeld='+held);
  console.log('PASS: '+report.samples+' route samples; 44 active encounters; 26 reachable, once-only gold/item rewards; '+report.walls+' solid boundary tiles; stable repeated rebuild.');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){

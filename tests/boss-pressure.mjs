@@ -1,6 +1,6 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const game=fs.readFileSync(new URL('../js/generated/game-part-2.js',import.meta.url),'utf8');
-const c=vm.createContext({TS:16,revealing:false,MAPID:'passage3',MD:{},P:{x:100,y:100,act:{kind:'swing'}},foes:[],live:[],foeClock:0,wakeCool:0,turnT:0,turnHolder:null,foeCool:0,tAcc:0,
+const c=vm.createContext({TS:16,PC_W:12,PC_H:7,foesHeld:false,mounted:false,revealing:false,MAPID:'passage3',MD:{},P:{x:100,y:100,act:{kind:'swing'}},foes:[],live:[],foeClock:0,wakeCool:0,turnT:0,turnHolder:null,foeCool:0,tAcc:0,
  lastFight:0,features:[],bell:null,SPR:{},FOE_ART:{},isSolid:()=>false,thinks:()=>true,facing:()=>true,
  targetFor:f=>({x:c.P.x,y:c.P.y,d:Math.hypot(c.P.x-f.x,c.P.y-f.y),isPlayer:true}),
  hurtPlayer:n=>{c.playerHp-=n;c.landed++;},glassShieldDeflectFoe:()=>false,finishGlassShieldParry(){},hurtDragon(){},bolts:[],

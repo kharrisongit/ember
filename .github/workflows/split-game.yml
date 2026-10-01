@@ -56,7 +56,9 @@ jobs:
           node tests/spider-queen-boss.mjs
           node tests/desert-pyramid.mjs
           node tests/desert-adventure.mjs
+          node tests/desert-vultures.mjs
           node tests/side-route-adventures.mjs
+          node tests/side-route-borders.mjs
       - name: Check temple travel and combat
         run: |
           node tests/arena-entry.mjs
@@ -137,6 +139,7 @@ jobs:
           node tests/dock-loading.mjs
           node tests/mountain-passage.mjs
           node tests/combat-navigation.mjs
+          node tests/monster-collision.mjs
           node tests/boss-pressure.mjs
           node tests/ferry-companion.mjs
           node tests/village-markets.mjs

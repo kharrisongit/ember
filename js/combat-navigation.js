@@ -1,7 +1,8 @@
 // Custom boss frames do not pass through the normal sprite-atlas renderer.
 // Tint their opaque pixels so damage and shield warnings remain just as clear.
+const WINTER_BOSS_SCALE=.85;
 let enemyFeedbackCanvas=null;
-function drawEnemyCombatFrame(f,frame,x,y,width,height){
+function drawEnemyCombatFrame(f,frame,x,y,width,height,scale=1){
   let color=null,amount=0;
   if(f.st!=='dead'){
     if(f.hurt>0){color='#ff3030';amount=.6+.25*(.5+.5*Math.cos(f.hurt*48));}
@@ -20,7 +21,7 @@ function drawEnemyCombatFrame(f,frame,x,y,width,height){
     g.fillStyle=color;g.fillRect(0,0,width,height);
     g.globalCompositeOperation='source-over';g.globalAlpha=1;frame=c;
   }
-  drawPixelImage(ctx,frame,0,0,width,height,x,y,width,height);
+  drawPixelImage(ctx,frame,0,0,width,height,x,y,Math.round(width*scale),Math.round(height*scale));
 }
 
 /* Shared combat navigation. AI goals, retreat and collision use the same arena
@@ -39,13 +40,62 @@ function combatArena(actor) {
 function combatFootprint(actor) {
   if (actor === dragon) return {w:4.5,h:5,pad:18};
   if (actor.kind === 'spiderqueen') return {w:20,h:9,pad:26};
-  if (actor.kind === 'frosthorn') return {w:19.55,h:10.2,pad:25.5};
-  if (actor.kind === 'icemoth') return {w:21,h:10,pad:38};
+  if (actor.kind === 'frosthorn') return {w:19.55*WINTER_BOSS_SCALE,h:10.2*WINTER_BOSS_SCALE,pad:25.5*WINTER_BOSS_SCALE};
+  if (actor.kind === 'icemoth') return {w:21*WINTER_BOSS_SCALE,h:10*WINTER_BOSS_SCALE,pad:38*WINTER_BOSS_SCALE};
   if (actor.kind === 'kdragon') return {w:30,h:34,pad:34};
   const art = SPR[(FOE_ART[actor.kind] || 'sk')+'_idle_d'];
   const w = actor.halfW ?? (art ? Math.max(6,Math.min(15,Math.round(art[2]*.22))) : 7);
   // The navigation body is the feet, not the transparent height of the sprite.
   return {w,h:8,pad:w+5};
+}
+// Dynamic body collision is separate from scenery: sprites, missiles and
+// scripted pathfinding can still pass behind the upper half of an enemy.
+function solidCombatFoe(f){
+  return !!f&&!!f.kind&&!f.ally&&!f.storyPassive&&f.st!=='dead'&&!(f.hp<=0);
+}
+function combatBody(actor){
+  if(actor===P)return {w:PC_W/2,h:PC_H};
+  const foot=combatFootprint(actor);
+  if(actor===dragon)return {w:foot.w,h:foot.h};
+  // Use the lower half, independent of transparent sprite-sheet padding.
+  const h=actor.kind==='frosthorn'?25.5*WINTER_BOSS_SCALE:
+    actor.kind==='icemoth'?30*WINTER_BOSS_SCALE:
+    actor.kind==='spiderqueen'?20:actor.kind==='kdragon'?34:
+    /^golem[1234]$/.test(actor.kind)?24:actor.huntingArena?12:16;
+  return {w:foot.w,h:Math.max(foot.h,h)};
+}
+function combatBodyBlocks(actor,x,y,other,sweep=true){
+  const a=combatBody(actor),b=combatBody(other);
+  // Expand the obstacle by the moving footprint and sweep its foot anchor.
+  const l=other.x-b.w-a.w,r=other.x+b.w+a.w;
+  const t=other.y-b.h,bt=other.y+a.h;
+  if(!sweep)return x>l&&x<r&&y>t&&y<bt;
+  if(Math.max(actor.x,x)<=l||Math.min(actor.x,x)>=r||Math.max(actor.y,y)<=t||Math.min(actor.y,y)>=bt)return false;
+  const dx=x-actor.x,dy=y-actor.y;
+  if(actor.x>l&&actor.x<r&&actor.y>t&&actor.y<bt){
+    // An old save, summon or knockback can start overlapped. Only outward
+    // movement is allowed; crossing the other body is still blocked.
+    const rx=(r-l)/2,ry=(bt-t)/2,ox=(actor.x-(l+r)/2)/rx,oy=(actor.y-(t+bt)/2)/ry;
+    const vx=dx/rx,vy=dy/ry;
+    return !(ox*vx+oy*vy>=0&&(ox+vx)**2+(oy+vy)**2>ox*ox+oy*oy+1e-9);
+  }
+  let enter=0,leave=1;
+  for(const [start,delta,low,high]of [[actor.x,dx,l,r],[actor.y,dy,t,bt]]){
+    if(Math.abs(delta)<1e-9){if(start<=low||start>=high)return false;continue;}
+    const a=(low-start)/delta,b=(high-start)/delta;
+    enter=Math.max(enter,Math.min(a,b));leave=Math.min(leave,Math.max(a,b));
+  }
+  return enter<leave&&leave>0&&enter<1;
+}
+function combatBodiesClear(actor,x,y,sweep=true){
+  if(typeof foes==='undefined'||foesHeld||typeof sceneHold==='function'&&sceneHold())return true;
+  if(actor===P||actor===dragon||actor.ally){
+    for(const f of foes)if(f!==actor&&solidCombatFoe(f)&&combatBodyBlocks(actor,x,y,f,sweep))return false;
+  }else if(solidCombatFoe(actor)){
+    if(combatBodyBlocks(actor,x,y,P,sweep))return false;
+    if(!mounted&&dragon.on&&!dragon.down&&dragon.placed===MAPID&&combatBodyBlocks(actor,x,y,dragon,sweep))return false;
+  }
+  return true;
 }
 function combatProject(actor, x, y, extra=0, arena=combatArena(actor)) {
   if (!arena) return {x,y};
@@ -69,19 +119,23 @@ function combatTerrainClear(actor,x,y,air=false) {
     return !isSolid(x-w,y-1)&&!isSolid(x+w,y-1)&&!isSolid(x-w,y-h)&&!isSolid(x+w,y-h)&&!isSolid(x,y-h/2);
   } finally { arenaPass=previous; }
 }
-function combatCanStand(actor,x,y,air=false) {
+function combatCanStand(actor,x,y,air=false,sweep=true) {
   const p=combatProject(actor,x,y);
-  return Math.hypot(p.x-x,p.y-y)<.01&&combatTerrainClear(actor,x,y,air);
+  return Math.hypot(p.x-x,p.y-y)<.01&&combatTerrainClear(actor,x,y,air)&&combatBodiesClear(actor,x,y,sweep);
 }
 function recoverCombatFooting(actor,air=false) {
-  if (!combatArena(actor) || combatCanStand(actor,actor.x,actor.y,air)) return false;
+  if (!combatArena(actor)) return false;
+  const projected=combatProject(actor,actor.x,actor.y);
+  // Body contact must never trigger a teleport. Repair only scenery/boundary
+  // overlaps, testing the destination independently of the invalid start.
+  if(Math.hypot(projected.x-actor.x,projected.y-actor.y)<.01&&combatTerrainClear(actor,actor.x,actor.y,air))return false;
   const base=combatProject(actor,actor.x,actor.y,4);
-  if (combatCanStand(actor,base.x,base.y,air)) { actor.x=base.x;actor.y=base.y;return true; }
+  if (combatCanStand(actor,base.x,base.y,air,false)) { actor.x=base.x;actor.y=base.y;return true; }
   // Only repair an already invalid position (old saves, wall activation or
   // knockback). Normal movement never teleports or drops footprint checks.
   for(let radius=4;radius<=64;radius+=4)for(let i=0;i<16;i++){
     const a=i*Math.PI/8,x=base.x+Math.cos(a)*radius,y=base.y+Math.sin(a)*radius;
-    if(combatCanStand(actor,x,y,air)){actor.x=x;actor.y=y;return true;}
+    if(combatCanStand(actor,x,y,air,false)){actor.x=x;actor.y=y;return true;}
   }
   return false;
 }

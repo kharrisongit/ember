@@ -17,6 +17,7 @@ for(const line of fs.readFileSync('tests/fixtures/side-routes-v3.patch','utf8').
 }
 assert.equal(new Set(data.features.map(f=>f.id)).size,data.features.length);
 assert(!data.foes.some(f=>/^desert(archer|lancer)/.test(f.k)),'No human desert combatants');
+assert(!data.foes.some(f=>f.k==='mummy'),'Mummies stay inside the pyramid');
 const routes=data.features.filter(f=>f.sideRoute===true&&f.kind==='route');
 assert.equal(routes.length,28);
 assert.deepEqual(routes.filter(f=>f.shortcut).map(f=>f.id),[9198,9203]);

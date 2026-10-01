@@ -2,7 +2,7 @@
 const IceMoth=(()=>{
   const BASE='assets/sprites/ice-moth/',VERSION='20261001-icemoth1';
   const CELL=144,HEIGHT=144,FOOT=112,FX=96,DEFEATED='world:ice-moth:defeated';
-  const arena={id:9367,kind:'arena',x:2346,y:168,r:6.3,style:'winter',sideRoute:'ice-moth',iceMoth:true};
+  const arena={id:9367,kind:'arena',x:2346,y:168,r:6.8,style:'winter',sideRoute:'ice-moth',iceMoth:true};
   const endpoint={id:9368,kind:'arena',x:2346,y:134,r:6.3,style:'winter',sideRoute:'ice-moth',iceMothEnd:true};
   const routes=[
     {id:9362,x0:2632,y0:186,x1:2543,y1:279,pts:[[2632,186],[2603,186],[2603,226],[2584,226],[2584,246],[2622,246],[2622,279],[2543,279]]},
@@ -64,11 +64,11 @@ const IceMoth=(()=>{
     const aim=f.mothAim,angle=Math.atan2(aim.y-f.y,aim.x-f.x),type=f.mothAttack;
     const cast={playerHit:false,dragonHit:false,blockQueued:!!f.glassParryQueued},speed=type==='gust'?110:150;
     f.glassParryQueued=false;
-    const z={d:26,u:42,e:34,w:34}[direction(f)],distance=Math.hypot(aim.x-f.x,aim.y-f.y);
+    const z={d:26,u:42,e:34,w:34}[direction(f)]*WINTER_BOSS_SCALE,distance=Math.hypot(aim.x-f.x,aim.y-f.y);
     for(const offset of type==='gust'?[0]:[-.28,0,.28]){
       const a=angle+offset;
-      shots.push({owner:f,cast,type,x:f.x+Math.cos(a)*22,y:f.y+Math.sin(a)*22,
-        vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,angle:a,z,startZ:z,endZ:aim.dragon?14:10,distance:Math.max(50,distance-22),t:0,unblockable:!!f.unblockableAttack});
+      shots.push({owner:f,cast,type,x:f.x+Math.cos(a)*22*WINTER_BOSS_SCALE,y:f.y+Math.sin(a)*22*WINTER_BOSS_SCALE,
+        vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,angle:a,z,startZ:z,endZ:aim.dragon?14:10,distance:Math.max(50,distance-22*WINTER_BOSS_SCALE),t:0,unblockable:!!f.unblockableAttack});
     }
   }
   function step(f,dt){
@@ -151,9 +151,9 @@ const IceMoth=(()=>{
       if(f.st==='dead'&&f.t>=2.5){ctx.restore();return true;}
       const lift=f.st==='dead'?Math.max(0,10*(1-f.t/.65)):10+Math.sin(f.t*4)*1.5;
       if(f.st==='dead')ctx.globalAlpha=Math.min(1,Math.max(0,(2.5-f.t)/.6));
-      ctx.fillStyle='rgba(20,42,70,.2)';ctx.beginPath();ctx.ellipse(f.x,f.y-2,18,5,0,0,Math.PI*2);ctx.fill();
-      drawEnemyCombatFrame(f,pose(f),Math.round(f.x-CELL/2),Math.round(f.y-FOOT-lift),CELL,HEIGHT);
-      if(f.st!=='dead'){ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,f.y-91,62,5);ctx.fillStyle='#b9a6ff';ctx.fillRect(f.x-30,f.y-90,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);}
+      ctx.fillStyle='rgba(20,42,70,.2)';ctx.beginPath();ctx.ellipse(f.x,f.y-2,18*WINTER_BOSS_SCALE,5*WINTER_BOSS_SCALE,0,0,Math.PI*2);ctx.fill();
+      drawEnemyCombatFrame(f,pose(f),Math.round(f.x-CELL*WINTER_BOSS_SCALE/2),Math.round(f.y-(FOOT+lift)*WINTER_BOSS_SCALE),CELL,HEIGHT,WINTER_BOSS_SCALE);
+      if(f.st!=='dead'){const y=Math.round(f.y-91*WINTER_BOSS_SCALE);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);ctx.fillStyle='#b9a6ff';ctx.fillRect(f.x-30,y+1,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);}
     }else if(o.mothTell){
       const f=o.mothTell,a=f.mothAim,angle=Math.atan2(a.y-f.y,a.x-f.x),length=Math.min(260,Math.hypot(a.x-f.x,a.y-f.y));
       ctx.strokeStyle='#a9edff';ctx.globalAlpha=.5;ctx.lineWidth=1;ctx.setLineDash([3,5]);

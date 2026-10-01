@@ -30,7 +30,7 @@ const report=JSON.parse(run(`JSON.stringify((()=>{
 })())`));
 console.log(JSON.stringify(report));
 assert.equal(report.badCount,0);assert.deepEqual(report.floor,[]);assert.deepEqual(report.snow,[]);assert.deepEqual(report.gate,[]);assert.deepEqual(report.empty,[]);assert.equal(report.bosses,1);
-assert.equal(run('features.find(f=>f.id===9367).r'),6.3);assert.equal(run('features.find(f=>f.id===9368).r'),6.3);
+assert.equal(run('features.find(f=>f.id===9367).r'),6.8);assert.equal(run('features.find(f=>f.id===9368).r'),6.3);
 assert(run('isSolid(2346*16+8,126*16+8)'),'The far end closes into a tree wall');
 run(`const mothTest=foes.find(f=>f.kind==='icemoth');
 P.x=2346*16+8;P.y=134*16+16;arenaLock=null;arenaT=0;refillRing(IceMoth.endpoint);stepArena(.05);`);
@@ -62,7 +62,7 @@ setup();step(26);const moving=run('JSON.stringify(IceMoth.inspect().shots)');
 run('scene={lines:[],i:0};IceMoth.effects(.5);');assert.equal(run('JSON.stringify(IceMoth.inspect().shots)'),moving,'Cutscenes pause projectiles');
 run('scene=null;foesHeld=true;stepCombat(.1);');assert.equal(run('IceMoth.inspect().shots.length'),0,'Foes toggle clears spells');
 setup(0,-1000);run('mothTest.mothCool=99;');step(150);
-assert(run('Math.hypot(mothTest.x-(2346*16+8),mothTest.y-(168*16+8))<=6.3*16-37.9'),'Flight cannot leave the arena');
+assert(run('Math.hypot(mothTest.x-(2346*16+8),mothTest.y-(168*16+8))<=6.8*16-38*.85+.1'),'Flight cannot leave the arena');
 setup();step(26);run(`mothTest.hp=0;mothTest.st='dead';mothTest.t=0;markBossGone(mothTest);`);
 assert(run('IceMoth.defeatedAlready()'));assert.equal(run('IceMoth.inspect().shots.length'),0);
 assert(run('saveToSlot(1,true)'));assert(run('readSaveSlot(1).houseLootTaken.includes("world:ice-moth:defeated")'));

@@ -10,6 +10,7 @@ for(const f of routes){
  const result=JSON.parse(run('JSON.stringify(SideRouteAdventures.borderPlan([route],3500,800).points)'));
  assert(result.length>40,'Three populated border rows for '+f.id);
  assert.deepEqual([...new Set(result.map(p=>p.row))].sort(),[0,1,2]);
+ if(f.style==='desert')assert(result.every(p=>p.tree==='cactus1'&&p.region==='desert'),'Desert verges and chest caps use native cacti');
  for(const p of result){
   assert(p.x>=0&&p.y>=0&&p.x<3500&&p.y<800);
   for(let i=1;i<f.pts.length;i++){

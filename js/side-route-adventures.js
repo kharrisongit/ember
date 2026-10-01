@@ -51,7 +51,7 @@ const SideRouteAdventures=(()=>{
   ];
   const rosters={spruce:[['plant1','plant1']],birch:[['plant1','plant2'],['plant1','plant1','plant2']],
     oak:[['plant2','plant2'],['plant2','plant3','plant2']],temple:[['plant2','plant3','plant2']],
-    desert:[['reptile','reptile2','mummy'],['mummy','mummy','reptile2']],
+    desert:[['reptile','reptile2','reptile'],['reptile2','reptile','reptile2']],
     blossom:[['reptile2','reptile3','ent1'],['ent1','ent1','reptile2']],
     swamp:[['ent1','ent1','ent2'],['ent2','ent2','ent']],winter:[['gnoll1','gnoll2','gnoll2'],['gnoll2','gnoll2','gnoll3']]};
   const rewards={spruce:[35,['potion','elixir']],birch:[55,['potion','elixir','dragonFish']],
@@ -137,8 +137,7 @@ const SideRouteAdventures=(()=>{
     const rings=all.filter(f=>f.sideRoute&&f.kind==='arena').map(f=>({...f,...describe(f)}));
     // A rounded grove encloses every chest, meeting both straight verges.
     for(const f of paths.filter(f=>!f.shortcut))rings.push({id:'end:'+f.id,
-      x:f.pts.at(-1)[0],y:f.pts.at(-1)[1],r:4,...describe(f),
-      ...(f.style==='desert'?{tree:'deadtree0',region:'dying'}:{})});
+      x:f.pts.at(-1)[0],y:f.pts.at(-1)[1],r:4,...describe(f)});
     const managed=blossomRoadJoinCaps(roads).filter(r=>r.blossom),scope=new Set();
     const mark=(x0,y0,x1,y1,inside)=>{
       for(let y=Math.max(0,Math.floor(y0));y<=Math.min(height-1,Math.ceil(y1));y++)
@@ -184,7 +183,8 @@ const SideRouteAdventures=(()=>{
     for(const [tag,arr]of [['s',scat],['a',sanm]])for(let i=0;i<arr.length;i+=3)
       if(obstructs(arr[i],arr[i+1],arr[i+2]))decorGone.add(tag+i);
     for(const [key,style]of floor){
-      terr[key]=style==='desert'?ROADSAND:DIRT;
+      // Desert chest lanes use the same stone paving as the main desert road.
+      terr[key]=style==='desert'?PAVING2:DIRT;
       // Old invisible boundary fences and 8px editor walls must open too.
       const tx=key%MW,ty=Math.floor(key/MW);
       for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++)if(MD.collisionOverrides?.[(tx*2+dx)+','+(ty*2+dy)]===true)delete MD.collisionOverrides[(tx*2+dx)+','+(ty*2+dy)];

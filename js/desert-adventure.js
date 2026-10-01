@@ -2,14 +2,15 @@
 const DesertAdventure=(()=>{
   const BASE='assets/interiors/desert-pyramid/',VERSION='20260930-desert4';
   const REWARD='pyramid_queen:emberheart';let source=null,ready=false;
+  let flightPaths=null,flightFeatures=null,flightCount=0;
   const owned=()=>houseLootTaken.has(REWARD);
   const won=()=>!!bossGone['pyramid_queen:0'];
   const arenas=[
-    [9220,1392,68,['mummy','mummy']],
-    [9221,1287,85,['mummy','mummy','mummy']],
-    [9222,1288,144,['mummy','mummy','mummy']],
-    [9223,1217,87,['mummy','mummy','mummy']],
-    [9224,1105,83,['mummy','mummy','mummy','mummy']]
+    [9220,1392,68,['reptile','reptile2']],
+    [9221,1287,85,['reptile','reptile2','reptile']],
+    [9222,1288,144,['reptile','reptile2','reptile']],
+    [9223,1217,87,['reptile','reptile2','reptile']],
+    [9224,1105,83,['reptile2','reptile','reptile2','reptile']]
   ];
   function prop(m,spr,x,y,{solid=false,floor=false,frame,...rest}={}){
     const a={spr,x,y,schoolArt:true,editKey:'desert:'+m.roomActors.length+':'+spr,...rest};
@@ -71,7 +72,7 @@ const DesertAdventure=(()=>{
     // Dry plants and stones form one border garden, rather than a display down the lanes.
     const dry=['dd_dead_tree','dd_half_tree','dd_bush0','dd_bush1','dd_cactus0','dd_cactus1','dd_cactus2','dd_rock0','dd_rock1','dd_rock2','dd_dead_fern','dd_dead_leaves'];
     dry.forEach((name,i)=>prop(m,name,64+(i%6)*48,712+Math.floor(i/6)*32,{frame:0,floor:/leaves/.test(name)}));
-    for(const [name,x,y,spr]of [['Caravaneer Dalia',400,640,'desert_trader1'],['Waterkeeper Nuri',568,272,'desert_trader2'],['Weaver Hanan',672,512,'desert_trader3']])m.npcs.push({n:name,x,y,packSpr:spr,desertNative:true,stationary:true,d:[name+': The reservoirs keep our caravans watered. The western road is less kind; take care among the burial guards.']});
+    for(const [name,x,y,spr]of [['Caravaneer Dalia',400,640,'desert_trader1'],['Waterkeeper Nuri',568,272,'desert_trader2'],['Weaver Hanan',672,512,'desert_trader3']])m.npcs.push({n:name,x,y,packSpr:spr,desertNative:true,stationary:true,d:[name+': The reservoirs keep our caravans watered. The western road is less kind; watch for the reptiles along the road.']});
   }
   function organizeTown(m){
     // Keep house/door anchors intact. Group supplies beside homes and the market,
@@ -125,14 +126,50 @@ const DesertAdventure=(()=>{
     }
     blockTiles=blockTiles.filter(i=>!cleared.has(i));
   }
+  function vultures(t){
+    if(MAPID!=='world')return [];
+    // Native ambient birds follow the authored road, including each bend.
+    // They live outside the procedural foliage layers that Build replaces.
+    if(flightFeatures!==features||flightCount!==features.length){
+      flightFeatures=features;flightCount=features.length;
+      flightPaths=features.filter(f=>f.kind==='route'&&f.style==='desert').map(f=>{
+        const legs=routeLegs(f).map(([a,b])=>({a,b,len:Math.hypot(b[0]-a[0],b[1]-a[1])*TS})).filter(l=>l.len>0);
+        const length=legs.reduce((n,l)=>n+l.len,0);
+        return {id:f.id,legs,length,count:Math.max(1,Math.ceil(length/480))};
+      }).filter(p=>p.length>0);
+    }
+    const birds=[];
+    for(const p of flightPaths)for(let i=0;i<p.count;i++){
+      const phase=(p.id*.61803398875%1+i/p.count)*p.length*2;
+      const cycle=(t*24+phase)%(p.length*2),forward=cycle<p.length;
+      let distance=forward?cycle:p.length*2-cycle;
+      let leg=p.legs.at(-1);
+      for(const l of p.legs){leg=l;if(distance<=l.len)break;distance-=l.len;}
+      const u=Math.min(1,distance/leg.len),bob=Math.sin(t*1.3+i+p.id)*3;
+      birds.push({route:p.id,x:(leg.a[0]+(leg.b[0]-leg.a[0])*u)*TS+8,
+        y:(leg.a[1]+(leg.b[1]-leg.a[1])*u)*TS+8-28+bob,
+        flip:(leg.b[0]-leg.a[0])*(forward?1:-1)>0,phase:i+p.id});
+    }
+    return birds;
+  }
+  function drawVulture(b,t){
+    const s=SPR.vulture_fly;if(!s)return;
+    const frame=Math.floor(t*8+b.phase)%s[4];
+    ctx.save();ctx.translate(Math.round(b.x),Math.round(b.y));
+    // A small moving shadow separates the flying silhouette from the paving.
+    ctx.fillStyle='rgba(58,38,25,.16)';ctx.beginPath();ctx.ellipse(0,27,12,3,0,0,Math.PI*2);ctx.fill();
+    if(b.flip)ctx.scale(-1,1);
+    drawGameImage(ctx,sheetOf(s),s[0]+frame*s[2],s[1],s[2],s[3],-s[2]/2,-s[3]/2,s[2],s[3]);
+    ctx.restore();
+  }
   function accept(from){if(source||owned())return false;source=from;atlasSyncJournal();atlasTrackedQuest='pyramid';saveGame();toast('Side quest: The Emberheart of the Sands');return true;}
   function talk(n){
     if(!['Scholar Ilyan','Sahir'].includes(n.n))return false;
     sayOff();P.moving=false;faceToward(n,P.x,P.y);if(n.goto)n.goto=null;
     const speak=(lines,after)=>playScene(lines.map(s=>n.n+': '+s),{who:n.n,npcActor:n,after});
     if(owned()){speak(['You recovered the Emberheart! Carry it with you and Aurelius’s Fire burns a quarter stronger. It needs no clasp or ritual.']);return true;}
-    if(source){speak([won()?'The guardian has fallen. Open the chest in her chamber to claim the Emberheart.':'The Sunken Pyramid lies at the end of the winding western desert road. Its burial guards still walk. Take Aurelius; the relic was made for dragon fire.']);return true;}
-    speak([n.n==='Scholar Ilyan'?'These old records describe an Emberheart hidden in a pyramid west of Sandspire.':'Caravans have stopped using the winding road west of Sandspire. The guards of the Sunken Pyramid have returned.',
+    if(source){speak([won()?'The guardian has fallen. Open the chest in her chamber to claim the Emberheart.':'The Sunken Pyramid lies at the end of the winding western desert road. Burial guards still walk inside its chambers. Take Aurelius; the relic was made for dragon fire.']);return true;}
+    speak([n.n==='Scholar Ilyan'?'These old records describe an Emberheart hidden in a pyramid west of Sandspire.':'Reptiles stalk the winding road west of Sandspire. Beyond them, the guards inside the Sunken Pyramid have returned.',
       'An Emberheart rests beyond those burial chambers. Simply carrying it strengthens a dragon’s Fire by a quarter. Would you and Aurelius seek it?'],()=>{
         ask={quick:1,npcActor:n,opts:[
           {n:'We’ll investigate the pyramid.',go:()=>{accept(n.n==='Scholar Ilyan'?'school':'sandspire');speak(['Follow the western desert detour to its end. Search the chambers, defeat their guardian, and open the treasure chest. I have marked the pyramid on your map.']);}},
@@ -140,5 +177,5 @@ const DesertAdventure=(()=>{
         ]};askPick=0;askDraw();
       });return true;
   }
-  return {prepare,installWorld,clearApproach,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
+  return {prepare,installWorld,clearApproach,vultures,drawVulture,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
 })();

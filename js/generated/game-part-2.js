@@ -2622,8 +2622,8 @@ function movePlayer(dx, dy, dt) {
     }
   }
 
-  if (dx && progressionMoveAllowed(nx,P.y) && canStand(nx, P.y)) P.x = nx;
-  if (dy && progressionMoveAllowed(P.x,ny) && !touchExpandedTempleDoor(P.x,ny,dy) && canStand(P.x, ny)) P.y = ny;
+  if (dx && progressionMoveAllowed(nx,P.y) && canStand(nx, P.y) && combatBodiesClear(P,nx,P.y)) P.x = nx;
+  if (dy && progressionMoveAllowed(P.x,ny) && !touchExpandedTempleDoor(P.x,ny,dy) && canStand(P.x, ny) && combatBodiesClear(P,P.x,ny)) P.y = ny;
   P.x = Math.max(8, Math.min(PXW - 8, P.x));
   P.y = Math.max(16, Math.min(PXH - 2, P.y));
 }
@@ -4035,6 +4035,9 @@ function drawWorld(t, dt) {
       }
     }
   }
+  for(const v of DesertAdventure.vultures(t))
+    if(v.x>cam.x-64&&v.x<cam.x+vw+64&&v.y>cam.y-64&&v.y<cam.y+vh+64)
+      draw.push({vulture:v,x:v.x,y:v.y,sy:1e8});
   if (MAPID === "world" && birdsUp < 9)
     for (const b of BIRDS) {
       if (b.x > cam.x - 64 && b.x < cam.x + vw + 64 &&
@@ -4273,6 +4276,7 @@ function drawWorld(t, dt) {
       }
       continue;
     }
+    if(o.vulture){DesertAdventure.drawVulture(o.vulture,t);continue;}
     if (o.bird) {
       const b = o.bird;
       if (b.nest && !birdsUp && SPR.nest1) {
@@ -8053,8 +8057,8 @@ function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
   if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-15,r:23};
-  if (f.kind === 'frosthorn') return {x:f.x,y:f.y-25.5,r:24.65};
-  if (f.kind === 'icemoth') return {x:f.x,y:f.y-30,r:23};
+  if (f.kind === 'frosthorn') return {x:f.x,y:f.y-25.5*WINTER_BOSS_SCALE,r:24.65*WINTER_BOSS_SCALE};
+  if (f.kind === 'icemoth') return {x:f.x,y:f.y-30*WINTER_BOSS_SCALE,r:23*WINTER_BOSS_SCALE};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};

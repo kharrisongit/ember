@@ -30,7 +30,7 @@ console.log(JSON.stringify(report));
 assert.equal(report.badCount,0,'Exact route centerlines stay walkable');
 assert.equal(report.floor.length,0,'Normal-sized arena floor is clear');
 assert.equal(report.gate.length,0,'Route opens into arena');assert.equal(report.bosses,1);
-assert.equal(run('features.find(f=>f.id===9361).r'),6.3);
+assert.equal(run('features.find(f=>f.id===9361).r'),6.8);
 run(`P.x=2545*16+8;P.y=28*16+16;arenaLock=null;arenaT=0;stepArena(.05);`);
 assert.equal(run('arenaLock?.id'),9361,'Existing arena system starts this battle');
 run(`const frostTest=foes.find(f=>f.kind==='frosthorn');

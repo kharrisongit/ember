@@ -44,7 +44,7 @@ assert(run('loadGame(2)'));assert(!run('DesertAdventure.owned()||DesertAdventure
 console.log('PASS: victory lock, old-save chest migration, one-time passive reward, real Fire damage, other elements and persistence.');
 const kinds=['mummy'];
 assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.foes.every(f=>f.k==="mummy"||f.k==="spiderqueen"))'));
-assert(run('W.maps.world.foes.filter(f=>f.desertEncounter).every(f=>f.k==="mummy")'));
+assert(run('W.maps.world.foes.filter(f=>f.desertEncounter).every(f=>/^reptile[23]?$/.test(f.k))'));
 assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.roomActors.every(a=>!/obelisk|rug/.test(a.spr)))'));
 assert(run('W.maps.sandspire_court.roomActors.filter(a=>/^dd_rug/.test(a.spr)).length===6'));
 assert(run('!BESTIARY.some(e=>/^desert(archer|lancer)/.test(e.k))'));
@@ -62,4 +62,4 @@ for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('
 assert.equal(Object.keys(usage).length,92);
 run("loadMap('sandspire_court');[P.x,P.y]=MD.spawn;");assert(run('canStand(P.x,P.y)'));
 assert(run('MD.doors[0].to==="world"&&W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
-console.log('PASS: five populated approach arenas, mummy-only burial guards, no pyramid rugs or obelisks, six town rugs, current bestiary, returnable caravan court.');
+console.log('PASS: five reptile approach arenas, mummies confined to the pyramid, no pyramid rugs or obelisks, six town rugs, current bestiary, returnable caravan court.');

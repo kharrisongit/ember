@@ -20,7 +20,7 @@ for(const [row,name,prop,kind]of [[0,'Frosthorn','frosthorn','frosthorn'],[1,'Ic
  const boss=vm.runInContext(name,c);await boss.prepare();
  const map={features:[{...boss.arena,r:12.6}],foes:[]};boss.installWorld(map);boss.installWorld(map);
  assert.equal(map.features.filter(a=>a.id===boss.arena.id).length,1,'No duplicated boss arena');
- assert.equal(map.features.find(a=>a.id===boss.arena.id).r,6.3,'Existing layouts adopt the normal radius');
+ assert.equal(map.features.find(a=>a.id===boss.arena.id).r,6.8,'Existing layouts adopt the slightly larger radius');
  const f={kind,x:90,y:160,hp:140,dir:'d',flip:false,st:'wind',t:.3,hurt:0,frostAttack:'swipe',mothAttack:'gust'};
  const renders=[];
  for(const [column,label,hurt,unblockable]of [[0,'Normal',0,false],[1,'Damage',.25,true],[2,'Blockable',0,false],[3,'Unblockable',0,true]]){
