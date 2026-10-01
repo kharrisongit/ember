@@ -1,24 +1,42 @@
 /* Authored source crops, never inferred from collision rectangles at runtime. */
 let houseSeatedSheet=null;
-async function prepareMillwoodInteriors() {
+async function prepareMillwoodInteriors(onProgress=()=>{}) {
+  onProgress('House furniture · Seated villagers');
   if(!houseSeatedSheet){
-    const image=new Image();image.src='assets/interiors/house-seated-v2.png?v=20260928-open-face-steady-breath';
-    await image.decode();image.spriteScale=2;image.pixelLocked=true;houseSeatedSheet=image;
+    const image=await loadStartupImage('assets/interiors/house-seated-v2.png?v=20261001-furniture1');
+    image.spriteScale=2;image.pixelLocked=true;houseSeatedSheet=image;
   }
-  await Promise.all([
-    prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/),
-    prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/),
-    prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/),
-    prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/),
-    prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/)
-  ]);
+  // Limit the large sheets retained while their room/furniture canvases are
+  // copied. Other startup artwork continues through the shared image queue.
+  const towns=[
+    ['millwood', /^house2[2-7](?:_bedroom2?)?$/],
+    ['thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/],
+    ['forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/],
+    ['sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/],
+    ['hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/]
+  ];
+  const active=new Set();let next=0;
+  const worker=async()=>{
+    while(next<towns.length){
+      const [town,houseIds]=towns[next++];active.add(town);
+      onProgress('House furniture · '+[...active].join(' + '));
+      try{await prepareTownHouseInteriors(town,houseIds);}
+      catch(error){
+        const failure=new Error(error?.message||String(error));failure.cause=error;
+        failure.startupStage='House furniture · '+town;throw failure;
+      }
+      active.delete(town);
+      if(active.size)onProgress('House furniture · '+[...active].join(' + '));
+    }
+  };
+  await Promise.all([worker(),worker()]);
   // The catch-all set must run after the town-specific rooms.
+  onProgress('House furniture · Shops and castle rooms');
   await prepareTownHouseInteriors('remaining', /./);
   prepareHearthBedrooms();
+  onProgress('House furniture · Castle artwork');
   if(W.maps.royal_cellar){
-    const backdrop=new Image();
-    backdrop.src='assets/interiors/royal-cellar.png?v=20260923-castle-audit2';
-    await backdrop.decode();
+    const backdrop=await loadStartupImage('assets/interiors/royal-cellar.png?v=20261001-furniture1');
     W.maps.royal_cellar._roomBaseCanvas=backdrop;
   }
   prepareThroneGallery();
@@ -27,6 +45,7 @@ async function prepareMillwoodInteriors() {
   prepareMaddockDiningFurniture();
   restoreTavernFurniture();
   prepareRoyalDiningFurniture();
+  onProgress('House furniture · Seating positions');
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
 }
@@ -134,7 +153,7 @@ function prepareThroneGallery(){
 async function prepareCastleArchitecture(){
   const hall=W.maps.royal_westhall,throne=W.maps.cinderhold;
   if(!hall?._roomBaseCanvas||!throne||throne._architectureReady)return;
-  const load=async name=>{const im=new Image();im.src='assets/interiors/'+name+'.png?v=20260923-castle-audit2';await im.decode();return im;};
+  const load=name=>loadStartupImage('assets/interiors/'+name+'.png?v=20261001-furniture1');
   const wall=await load('throne-door-wall'),doors=await load('throne-door-frames');
   SPR.royal_throne_door=[0,0,32,51,6];
   throne.roomActors ||= [];
@@ -187,12 +206,8 @@ function castleStoneFrame(o,sp,frame){
 }
 async function prepareTownHouseInteriors(town, houseIds) {
   const root = 'assets/interiors/'+town+'/';
-  const response = await fetch(root + 'layouts.json?v=20260923-all-interiors1');
-  if (!response.ok) throw new Error(town + ' layouts: ' + response.status);
-  const layouts = await response.json();
-  const sheet = new Image();
-  sheet.src = root + 'layers.png?v=' + (town==='thornwell'?'20260923-alder-square-table1':'20260923-all-interiors1');
-  await sheet.decode();
+  const layouts = await loadStartupJSON(root + 'layouts.json?v=20261001-furniture1');
+  const sheet = await loadStartupImage(root + 'layers.png?v=20261001-furniture1');
   const cut = ([x,y,w,h]) => {
     const canvas = document.createElement('canvas');
     canvas.width=w; canvas.height=h;
@@ -326,9 +341,7 @@ function prepareRemainingInteriorActors() {
 
 // Contact points are measured from opaque source pixels, including all idle frames.
 async function alignHouseTableSeats() {
-  const response=await fetch('assets/interiors/seat-contacts.json?v=20260928-open-face-steady-breath');
-  if(!response.ok)throw new Error('House seat contacts: '+response.status);
-  const contacts=await response.json();
+  const contacts=await loadStartupJSON('assets/interiors/seat-contacts.json?v=20261001-furniture1');
   for(const [id,map] of Object.entries(W.maps)) {
     if(!/^house\d/.test(id)||map._seatsAligned)continue;
     const residents=(map.npcs||[]).filter(n=>(n.seated||n.seatSpr||n.seatClipY!==undefined)&&contacts.poses[n.seatSpr||n.packSpr]);

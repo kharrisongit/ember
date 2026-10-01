@@ -40,6 +40,8 @@ jobs:
         run: |
           node tests/startup-loading.mjs
           node tests/startup-assets.mjs
+          node tests/furniture-loading.mjs
+          node tests/millwood-interiors.mjs
           node tests/boot-progress.mjs
           node tests/world-layout.mjs
           node tests/overworld-return.mjs

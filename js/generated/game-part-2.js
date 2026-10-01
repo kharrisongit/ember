@@ -1649,7 +1649,7 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
   const jobs=[
     ['Town artwork',async detail=>{
       await prepareJourneyArt(detail);detail('House furniture');
-      await prepareMillwoodInteriors();detail('House chests');
+      await prepareMillwoodInteriors(detail);detail('House chests');
       await prepareHouseLoot();
     }],
     ['Forgewick temple',prepareExpandedFirstTemple],
