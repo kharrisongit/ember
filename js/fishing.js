@@ -240,11 +240,13 @@ function drawFishingWater(g,w,h,f){
   }g.globalAlpha=1;
   // The handle enters from the SOUTH edge. The flexible rod points away from us.
   const bend=f.phase==='reel'?f.tension:0.12;
-  const baseX=w*.54,baseY=h+30*unit;
+  const lift=trophy?.lift||0;
+  const baseX=w*(.54+((h<340?.94:.88)-.54)*lift),baseY=h+30*unit;
   const restX=w*.47+(fx-w*.5)*.35+bend*26*unit,restY=h*.61+bend*35*unit;
   const tipX=trophy?restX+(trophy.tipX-restX)*trophy.lift:restX;
   const tipY=trophy?restY+(trophy.tipY-restY)*trophy.lift:restY;
-  const rodAt=q=>({x:baseX+(tipX-baseX)*q+Math.sin(q*Math.PI)*bend*26*unit,y:baseY+(tipY-baseY)*q});
+  // Lift the grip to the right and arch the shaft away from the hanging catch.
+  const rodAt=q=>({x:baseX+(tipX-baseX)*q+Math.sin(q*Math.PI)*(bend*26*unit+(h<340?.1:.14)*w*lift),y:baseY+(tipY-baseY)*q});
   const rod=Array.from({length:19},(_,i)=>{const p=rodAt(i/18);return [p.x,p.y];});
   const cast=f.phase==='cast'?Math.min(1,f.elapsed/.7):1;
   const bx=f.phase==='aim'?tipX+15*unit:tipX+(fx-tipX)*cast;
@@ -275,7 +277,8 @@ function drawFishingWater(g,w,h,f){
     const shadow=trophy.surfaceY+14*unit;
     g.globalAlpha=.24*(1-trophy.lift*.65);
     ellipse(trophy.surfaceX,shadow,30*unit*(1-trophy.lift*.25),7*unit,'#203a2e');g.globalAlpha=1;
-    line([[tipX,tipY],[trophy.mouthX,trophy.mouthY]],'#f7e3ba',Math.max(1.2,unit));
+    line([[tipX+unit,tipY],[trophy.mouthX+unit,trophy.mouthY]],'#20352a80',Math.max(2,unit*2.2));
+    line([[tipX,tipY],[trophy.mouthX,trophy.mouthY]],'#fff2ce',Math.max(1.4,unit*1.3));
     const floatX=tipX+(trophy.mouthX-tipX)*.45,floatY=tipY+(trophy.mouthY-tipY)*.45;
     ellipse(floatX,floatY,3*unit,5*unit,'#edd9a4');ellipse(floatX,floatY+2*unit,3*unit,2*unit,'#9f493c');
     drawFishingFish(g,trophy.x,trophy.y,trophy.scale,trophy.angle,t*1.2,'catch');
@@ -317,14 +320,16 @@ function drawFishingWater(g,w,h,f){
 function fishingCatchPose(w,h,unit,f){
   const age=f.resultAge||0,q=Math.min(1,age/1.35),lift=1-Math.pow(1-q,3);
   const origin=f.catchOrigin||{x:f.fishX,y:f.fishY};
-  const short=h<340,tipX=w*(short?.66:.46),tipY=h*(short?.16:.14);
-  const settle=Math.max(0,age-1.05),swing=Math.sin(settle*3.2)*.13*Math.exp(-settle*.16);
+  const short=h<340,tipX=w*(short?.69:.5),tipY=h*.13;
+  const settle=Math.max(0,age-1.05),swing=Math.sin(settle*3.2)*.10*Math.exp(-settle*.24);
   const scale=(1.8+.8*lift)*unit,startAngle=f.catchAngle??-.4;
   const startX=origin.x*w+8*unit+Math.cos(startAngle)*20*1.8*unit;
   const startY=origin.y*h+17*unit+Math.sin(startAngle)*20*1.8*unit;
-  const mouthX=startX+(w*(short?.75:.56)-startX)*lift+Math.sin(settle*3.2)*10*unit*lift;
-  const mouthY=startY+(h*(short?.31:.29)-startY)*lift;
-  const angle=startAngle+(-Math.PI/2-startAngle)*lift+swing*lift;
+  // Gravity keeps the hook beneath the tip. Mouth, body and line swing together.
+  const lineLength=h*(short?.15:.16);
+  const mouthX=startX+(tipX+Math.sin(swing)*lineLength-startX)*lift;
+  const mouthY=startY+(tipY+Math.cos(swing)*lineLength-startY)*lift;
+  const angle=startAngle+(-Math.PI/2-startAngle)*lift-swing*lift;
   return {lift,tipX,tipY,mouthX,mouthY,angle,scale,
     x:mouthX-Math.cos(angle)*20*scale,y:mouthY-Math.sin(angle)*20*scale,
     surfaceX:origin.x*w,surfaceY:origin.y*h};

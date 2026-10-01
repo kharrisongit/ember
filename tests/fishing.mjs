@@ -29,4 +29,13 @@ cast();hook();run('fishingAction()');step(15);const tension=c.fishing.tension;ru
 const age=c.fishing.age;run('stepFishing(60)');assert(c.fishing.age-age<=.051,'Suspension cannot fast-forward a fight');
 run('endFishing()');assert.equal(c.fishing,null);assert.equal(run('fishingBackdrop'),null);
 c.fishingSafe=()=>false;run('startFishing()');assert.equal(c.fishing,null);
+// A landed catch is attached mouth-first beneath the rod tip, including its sway.
+for(const [w,h] of [[352,532],[806,228],[986,540]])for(const age of [1.35,2,5]){
+ const unit=Math.max(.85,Math.min(w/640,h/640));
+ const pose=c.fishingCatchPose(w,h,unit,{resultAge:age,catchOrigin:{x:.5,y:.67},catchAngle:-.4});
+ assert(pose.mouthY>pose.tipY+25,'Visible hanging line below the raised tip');
+ assert(Math.abs(pose.mouthX-pose.tipX)<(pose.mouthY-pose.tipY)*.11,'Line hangs nearly vertically');
+ assert(Math.abs(pose.x+Math.cos(pose.angle)*20*pose.scale-pose.mouthX)<.001,'Hook stays on the fish mouth');
+ assert(Math.abs(pose.y+Math.sin(pose.angle)*20*pose.scale-pose.mouthY)<.001,'Fish hangs from its mouth');
+}
 console.log('PASS: six fishing regions, cast and hook input guards, live tension control, bonuses, single rewards, missed bites, line breaks, slack, retry, suspension and cancellation.');

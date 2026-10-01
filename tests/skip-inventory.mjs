@@ -9,6 +9,7 @@ assert(missing().includes('fishingPole'));
 // Press the actual developer button, rather than duplicating its grant logic.
 dom.touch(dom.element('bSkip'));
 assert.deepEqual(missing(),[],'Skip grants every current usable/key/charm inventory item');
+for(const key of ['emberheart','frostheart'])assert.equal(run('BAG.find(i=>i.key==='+JSON.stringify(key)+').icon()'),'inventory_'+key,'Relics display their own artwork in the bag');
 assert.equal(run('wonAll'),0,'Granting items does not mark the king defeated');
 assert.equal(run('trialSealPlaced'),false,'The seal is carried, not pre-placed');
 assert.equal(run('DesertAdventure.firePower("fire",8)'),10);

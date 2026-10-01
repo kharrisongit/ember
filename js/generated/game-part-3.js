@@ -4700,8 +4700,8 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
-  {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_hs_ice"},
-  {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_flame"},
+  {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
+  {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
   { key:"bag",kind:"key",name:"Hettie’s Bag",tell:"Hettie gave you this sturdy bag for your errand. It keeps your supplies together.",has:hasBag,icon:()=>"inventory_bag" },
   { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
     tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; choose a quest in the map and the compass will guide you there.",

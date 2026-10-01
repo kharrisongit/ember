@@ -1,9 +1,9 @@
 /* Generated inventory artwork shares the normal sprite pipeline, including shops and reveals. */
 // Image pages must start in separate 1024px atlas buckets.
 async function loadInventoryIcons() {
-  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392]]) {
+  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['relics.webp',3004416]]) {
   const image = new Image();
-  image.src = 'assets/inventory/'+file+'?v=20260928-painted-bag';
+  image.src = 'assets/inventory/'+file+'?v=20261001-original-relics';
   await image.decode();
 
   // Single-item art is sampled into the same 128px atlas cell as other rewards.
@@ -28,11 +28,13 @@ function registerInventorySprites() {
   remaining.forEach((key,i) => { SPR['inventory_'+key] = [(i%4)*cell,3001344+Math.floor(i/4)*cell,cell,cell,1]; });
   SPR.inventory_bag=[0,3003392,128,128,1];
   SPR.inventory_mapCompass=[0,3002368,128,128,1];
+  SPR.inventory_emberheart=[0,3004416,128,128,1];
+  SPR.inventory_frostheart=[128,3004416,128,128,1];
   for (const [alias,key] of Object.entries({it_saint:'saint',it_res:'stone',it_salt:'salt',it_dust:'dust'}))
     SPR[alias] = SPR['inventory_'+key];
 }
 
-function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392); }
+function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416); }
 
 // Resolve only UI art; world pickups retain their original sprite sizes.
 const INVENTORY_UI_ALIASES = {
