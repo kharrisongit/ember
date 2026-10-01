@@ -1,0 +1,10 @@
+{
+  "asset": "sandspire-glass-shop.webp",
+  "method": "Built-in image generation, then nearest-neighbor export to 192 × 208 game pixels",
+  "references": [
+    "Forgewick it_glass exterior",
+    "Sandspire dd_house sandstone buildings"
+  ],
+  "prompt": "Detailed orthographic pixel-art sandstone glass shop matching the game’s existing exterior, terraced parapet roofs, textured masonry, open central arched entrance, canvas awning and turquoise glassware display, panes in wooden crates, sand sacks, barrels, exterior glassmaking furnace and workbench; genuine transparent background. Final edit: remove the dangling bottle sign and bracket, replace with a small bronze goblet plaque fixed beside the entrance; make furnace and chimney mouths dark for live flame overlays. Preserve all other art and placement.",
+  "animation": "Original six-frame dfire flame art, cropped above the logs and rendered into furnace and chimney mouths at 8 fps with different phases."
+}

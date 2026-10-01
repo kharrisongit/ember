@@ -1,10 +1,11 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(p,'utf8');
-const c=vm.createContext({brambleHint:()=>null,hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
+const c=vm.createContext({DesertAdventure:{talk:()=>false},brambleHint:()=>null,hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
  templeCompass:{owned:false,meatGiven:false},nanGiftPending:()=>!c.templeCompass.owned||!c.templeCompass.meatGiven,glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
  canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});
 vm.runInContext(read('js/npc-world-talks.js'),c);
+vm.runInContext(read('js/sandspire-glassworks.js'),c);
 vm.runInContext(read('js/npc-conversations.js'),c);
 const stories=vm.runInContext('NPC_STORIES',c),cast=JSON.parse(read('assets/portraits/cast.json'));
 for(const n of cast.filter(n=>!['Corin','Aurelius','Bramble'].includes(n.name))){

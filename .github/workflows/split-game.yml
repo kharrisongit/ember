@@ -101,6 +101,7 @@ jobs:
           node tests/inventory-icons.mjs
           node tests/soulwing-relic.mjs
           node tests/boss-reward-chests.mjs
+          node tests/sandspire-glassworks.mjs
           node tests/journey-gates.mjs
           node tests/ghost-following.mjs
           node tests/npc-conversations.mjs

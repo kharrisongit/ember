@@ -24,7 +24,7 @@ const DesertAdventure=(()=>{
     Object.assign(SPR,await loadStartupJSON(BASE+'dressing.json?v='+VERSION));
     const school=W.maps.school2;
     if(!school.npcs.some(n=>n.n==='Scholar Ilyan'))school.npcs.push({n:'Scholar Ilyan',sk:'desert1',desertNative:true,stationary:true,x:200,y:136,f:'d',editKey:'pyramid:scholar',d:['The old desert records are incomplete.']});
-    dressPyramid();await court();ready=true;
+    dressPyramid();await court();await SandspireGlassworks.prepare();ready=true;
   }
   function dressPyramid(){
     const themes={
@@ -93,6 +93,7 @@ const DesertAdventure=(()=>{
     }
   }
   function installWorld(m){
+    SandspireGlassworks.installWorld(m);
     // The next editor patch uses 9185–9189 for routes. Migrate arena IDs only;
     // enemy keys and array slots remain stable for existing save files.
     for(const f of m.features)if(f.pyramidApproach&&f.id>=9185&&f.id<=9189)f.id+=35;

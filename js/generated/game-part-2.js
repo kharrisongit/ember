@@ -1091,7 +1091,8 @@ function finishTownCast(){
     const match=(n.loc||'').match(/Millwood|Thornwell|Forgewick|Sandspire|Coralmere|Hollybeck|Shroom Pass/);
     if(match)return match[0];
     if(['inn','school','school2','tavern'].includes(id))return 'Thornwell';
-    if(['smithy','glasswork','glasshouse','mine'].includes(id))return 'Forgewick';
+    if(['glasswork','glasshouse'].includes(id))return 'Sandspire';
+    if(['smithy','mine'].includes(id))return 'Forgewick';
     if(id==='world')return n.x<2000?'Millwood':n.x<7000?'Thornwell':n.x<18000?'Forgewick':n.x<29000?'Sandspire':n.x<38000?'Coralmere':'Hollybeck';
     return id;
   };
@@ -4166,6 +4167,7 @@ function drawWorld(t, dt) {
     }
     if (o.progressionProp) { drawJourneyProp(o,t); continue; }
     if (o.schoolArt) {
+      if(o.sandspireGlassShop){SandspireGlassworks.draw(o,t);continue;}
       if(drawWorkshopCraftsman(o,t))continue;
       const sp = SPR[o.spr];
       if(o.spr==='pyramid_exterior'){drawGameImage(ctx,DesertPyramid.stoneFrame(o.spr),0,0,sp[2],sp[3],o.x-sp[2]/2,o.y-sp[3],sp[2],sp[3]);continue;}
@@ -11355,7 +11357,7 @@ function tryBrambleReunion(n) {
   faceToward(n,P.x,P.y);faceCorinAt(n.x,n.y);
   playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. Bramble usually brings back sticks. Today he has brought me a helpful stranger.",
     smithUpgrade?"Rowan: I see Dunstan has already worked on your blade. You chose well.":"Rowan: Take that sword to Dunstan, the blacksmith in Forgewick. He will give you a stronger blade for the road ahead.",
-    glassShield?"Rowan: That Glass Shield is Sela’s work. He knows how to keep a traveller safe.":"Rowan: While you are in Forgewick, visit Sela in his workshop behind the glass shop. Ask him about the Glass Shield—it can protect you on the road.",
+    glassShield?"Rowan: That Glass Shield is Sela’s work. He knows how to keep a traveller safe.":"Rowan: Dunstan knows the craftspeople along this road. Ask him what else might help you before you leave Forgewick.",
     "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,npcActor:n,after:()=>{
       brambleQuest=2;
       const target=brambleExitTarget(n);
@@ -11597,7 +11599,7 @@ function interact() {
         showReveal('fishing_rod','Corin obtained a Fishing Pole! Face water and press A to fish.');
         return;
       }
-      if(giver.n==='Sela'&&!glassShield){
+      if(giver.n==='Sela'&&!glassShield&&dragonLearned('shield')){
         glassShield=true; saveGame();
         showReveal('inventory_glassShield','Corin obtained the Glass Shield! Hold B during battle to raise its force field.');
         return;
@@ -11681,8 +11683,10 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
       best.fishingRodGift=true;
       sayNpc.said=fishingRodDialogue('Calder',best);
     }
-    else if (best.n === "Sela" && !glassShield) {
-      sayNpc.said = [npcSeesDragon(best)?"Sela: A dragon at my shop. I've only ever seen them in coloured glass. Are you two travelling together?":"Sela: Corin, I've been working on something for travellers.",
+    else if (best.n === "Sela" && !glassShield && dragonLearned('shield')) {
+      sayNpc.said = ['Corin: Your brother Dunstan sent me. He said you had made a shield.',
+        'Sela: Did he? That is almost a compliment. He usually tells me glass is a poor substitute for steel.',
+        npcSeesDragon(best)?"Sela: A dragon at my shop. I've only ever seen them in coloured glass. Are you two travelling together?":"Sela: Corin, I've been working on something for travellers.",
         npcSeesDragon(best)?"Corin: We are. I could use some protection for the road.":"Corin: What is it?",
         "Sela: A shield, made from the clearest furnace glass I have.",
         "Sela: It is not meant to stop a blade by being harder than steel. The glass catches the force and throws it back.",
@@ -11698,7 +11702,11 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         npcSeesDragon(best)?"Dunstan: A dragon, and Maddock's old sword. You two look bound for a difficult road.":"Dunstan: That is Maddock's old blade. It has served you well.",
         "Corin: Can you improve it?",
         "Dunstan: I can. And you will need armour to match. Give me a moment.",
-        "There. A stronger edge, and armor to match."];
+        "There. A stronger edge, and armor to match.",
+        ...(!glassShield&&!dragonLearned('shield')?SandspireGlassworks.referralLines:[])];
+    }
+    else if(best.n==='Dunstan'&&!glassShield&&!dragonLearned('shield')){
+      sayNpc.said=SandspireGlassworks.referralLines.slice();
     }
     else if (best.charm === "lamp" && !charm.lamp) {
       sayNpc.said = [best.n + ": Torvald left this lantern with me before he went. Trimmed the wick himself.",

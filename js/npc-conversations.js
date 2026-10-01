@@ -1945,7 +1945,7 @@ function libraryQuestHint(n){
 
 function npcStoryGiftPending(n){
   return (n.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending())||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
-    (n.n==='Sela'&&!glassShield)||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge))||
+    (n.n==='Sela'&&!glassShield&&dragonLearned('shield'))||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge||(!glassShield&&!dragonLearned('shield'))))||
     (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
 }
 let hettieErrandReminderIndex=0;
@@ -1992,6 +1992,14 @@ function npcStoryTopics(n){
   const finished=npcFinishedRoadwork(n);
   const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  if(n.n==='Dunstan')topics.unshift({title:'Your brother’s glass shop',category:'lead',lines:SandspireGlassworks.referralLines});
+  if(n.n==='Sela'){
+    if(!dragonLearned('shield')&&!glassShield){const i=topics.findIndex(t=>t.title==="The shield's shape");if(i>=0)topics.splice(i,1);}
+    topics.unshift({title:'Your brother Dunstan',lines:[
+      'Sela: Dunstan is my brother. We learned our trades in Forgewick before I settled here in Sandspire.',
+      'Corin: Metal and glass. Quite different work.',
+      'Sela: The same arguments about keeping a furnace hot. He still sends me tools, and I send him glass. Neither of us admits who gets the better bargain.']});
+  }
   if(n.n==='Calder'&&!fishingPole&&odoRodReferral)topics.unshift({title:'Odo sent me for a fishing rod',go:()=>beginNpcTalk(n,true,true)});
   if(n.n==='Odo'&&!fishingPole)topics.unshift({title:'Where can I get a fishing rod?',go:()=>beginNpcTalk(n,true,true)});
   const visit=typeof thornwellVisitTopic==="function"&&thornwellVisitTopic(n);if(visit)topics.push(visit);

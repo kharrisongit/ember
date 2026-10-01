@@ -2,7 +2,7 @@
 const JOURNEY_GATES = {
   thornwell:{x:320*16,y:100*16,rect:[320*16-32,100*16-50,320*16+32,100*16+54],open:()=>wonAll||brambleQuest>=2,
     inside:(x,y)=>x>=320*16},
-  forgewick:{x:815*16,y:140*16,rect:[815*16-24,140*16-50,815*16+24,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge&&glassShield),
+  forgewick:{x:815*16,y:140*16,rect:[815*16-24,140*16-50,815*16+24,140*16+54],open:()=>wonAll||(breathHas.lightning&&smithUpgrade&&charm.edge),
     inside:(x,y)=>(x>=815*16&&y<220*16)||x>=1080*16},
   sandspire:{x:1518*16+8,y:73*16,rect:[1518*16+8-46,73*16-14,1518*16+8+46,73*16+10],open:()=>wonAll||breathHas.ice,
     inside:(x,y)=>(x>=1490*16&&y<=73*16)||x>=1870*16},
@@ -70,7 +70,7 @@ function prepareJourneyGates(){
   ],'Bevan'));
   npcs.push(journeyWorker('Miner Marn','npc_miner_mike_d','forgewick',fw.x-42,fw.y+29,[
     'Miner Marn: A cart tipped across the road and brought half the bank down with it. We are clearing it now.',
-    'Miner Marn: Dunstan and Sela can see to your gear while we finish here. Mind the old temple road, though.'
+    'Miner Marn: Dunstan can see to your gear while we finish here. Mind the old temple road, though.'
   ]));
   npcs.push(journeyWorker('Miner Nerik','npc_miner_mike_d','forgewick',fw.x-40,fw.y-31,[
     'Miner Nerik: One stone at a time. Pull the wrong one and we start all over.',

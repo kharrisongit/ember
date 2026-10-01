@@ -3693,7 +3693,7 @@ const PLACES = {
   "Shroom Pass":    { kind: "mystic", of: "the trail up to the mushroom folk" },
   "Sporehollow":    { kind: "mystic", of: "the mushroom folk's hollow" },
   "Thornwell":      { kind: "oak",    of: "the school village -- cider, bees, herbs" },
-  "Forgewick":      { kind: "birch",  of: "the mining town, its smithy and glassblower" },
+  "Forgewick":      { kind: "birch",  of: "the mining town and its smithy" },
   "Forgewick":        { kind: "temple", of: "the temple east, where Maddock sends him" },
 
   "Coralmere":  { kind: "coast",  of: "a seaside town" },

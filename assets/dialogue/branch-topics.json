@@ -169,7 +169,7 @@
   },
   "Aurelius/journey/ward": {
     "name": "Aurelius",
-    "title": "Maelis\u2019s gift"
+    "title": "Maelis’s gift"
   },
   "Aurelius/journey/future": {
     "name": "Aurelius",
@@ -177,7 +177,7 @@
   },
   "Aurelius/journey/trials": {
     "name": "Aurelius",
-    "title": "The keeper\u2019s challenge"
+    "title": "The keeper’s challenge"
   },
   "Aurelius/quest": {
     "name": "Aurelius",
@@ -318,5 +318,13 @@
   "visit/neighbours/after": {
     "name": "Royal visit",
     "title": "neighbours after"
+  },
+  "Dunstan/glass-brother": {
+    "name": "Dunstan",
+    "title": "Your brother’s glass shop"
+  },
+  "Sela/smith-brother": {
+    "name": "Sela",
+    "title": "Your brother Dunstan"
   }
 }

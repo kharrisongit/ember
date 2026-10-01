@@ -165,7 +165,7 @@ function rememberDragonKnowledge(who,text,persist=true){
   if(/\bRowan\b/i.test(words)&&/tavern|Copper Cup/i.test(words))learn('bramble-owner');
   if(/fishing|\brod\b|\bpole\b/i.test(words)&&/Odo|Calder/i.test(who+' '+words))learn('fishing');
   if(/Dunstan/i.test(who+' '+words)&&/blade|armour|armor|blacksmith|sword|smith/i.test(words))learn('smith');
-  if(/Sela/i.test(who+' '+words)&&/shield|glass|protect/i.test(words))learn('shield');
+  if(who==='Dunstan'&&/Sela/i.test(words)&&/shield|glass|protect/i.test(words))learn('shield');
   if(who&&who!=='Corin'&&/charm|amulet|ward|lantern/i.test(words)){
     learn('gift:'+who);
     for(const map of Object.values(W.maps))for(const n of map.npcs||[])

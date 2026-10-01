@@ -30,7 +30,7 @@ function atlasJourneyObjective(){
  if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.',brambleQuest===1?'bramble':'main');
  if(!smithUpgrade&&dragonLearned('smith'))return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.','smith');
  if(smithUpgrade&&!charm.edge)return o('Finish with Dunstan','Forgewick','Finish your conversation with Dunstan.','smith');
- if(!glassShield&&dragonLearned('shield'))return o('Visit Sela','Forgewick','Ask the glassblower about his protective shield.','shield');
+ if(!glassShield&&dragonLearned('shield')&&breathHas.lightning)return o('Visit Sela','Sandspire','Follow Dunstan’s referral to his brother’s shop in Sandspire’s caravan court.','shield');
  for(const [key,town]of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']]){
   if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.','temple:'+town);
  }
@@ -63,7 +63,7 @@ function atlasQuestOptions(){
  if(odoRodReferral&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
  if((dragonLearned('bramble')||brambleQuest===1)&&brambleQuest<2)add('bramble','Find Bramble’s person','Thornwell',atlasBrambleClue());
  if(dragonLearned('smith')&&(!smithUpgrade||!charm.edge))add('smith','Dunstan’s craftsmanship','Forgewick','Visit Dunstan at his forge to improve your sword and armour.');
- if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Forgewick','Speak to Sela in his workshop behind the glass shop about his shield.');
+ if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Sandspire','Dunstan’s brother Sela works behind the glass shop in Sandspire’s caravan court. Ask him about the Glass Shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Investigate the reports of restless spirits in the graveyard.');
  for(const [key,town] of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']])
@@ -120,9 +120,9 @@ const ATLAS_PLACE_NOTES={
  'Northern Woods':['Northern trail','The woods north of Millwood.'],
  'Thornwell':['School · Tavern · Inn','Visit the school, tavern and inn, and ask the townspeople for local knowledge.'],
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
- 'Forgewick':['Blacksmith · Glassblower','Dunstan works at the forge; Sela’s glasswork is nearby.'],
+ 'Forgewick':['Blacksmith','Dunstan works at the forge. Ask him about his brother’s glasswork in Sandspire.'],
  'Forgewick Temple':['Ancient temple','An old stone hall southeast of Forgewick.'],
- 'Sandspire':['Desert market','Caravans, shaded streets, water, and local supplies.'],
+ 'Sandspire':['Desert market · Glassblower','Sela’s glass shop stands in the caravan court, among the market, gardens and reservoirs.'],
  'The Oasis':['Desert refuge','A green landmark southwest of Sandspire.'],
  'Sandspire Temple':['Ancient temple','The winding temple trail leads southeast from Sandspire.'],
  'Coralmere':['Harbor · Fish','A coastal town with blossom trees, fishing docks, and supplies for the road.'],
@@ -178,7 +178,7 @@ function restoreQuestJournal(saved){
 }
 function atlasCompletedEntries(){
  const known={...atlasJournalKnown};
- const earned=[['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Forgewick','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
+ const earned=[['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Sandspire','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
  return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
   const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];

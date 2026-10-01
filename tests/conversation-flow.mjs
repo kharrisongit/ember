@@ -181,7 +181,7 @@ select('Hello!');assert(run('sayNpc===person'));
 assert(box.querySelector('.conversationGoodbye').disabled,'Required NPC exchanges finish before Goodbye');
 next();assert(run('typeDone()'));next();
 assert.equal(run('ask.npcConversation'),'Hettie');
-run(`askShut();var gifted={n:'Sela',x:100,y:100,d:['Sela: Take care.']};glassShield=true;openNpcTopics(gifted);glassShield=false;`);
+run(`askShut();var gifted={n:'Sela',x:100,y:100,d:['Sela: Take care.']};glassShield=true;openNpcTopics(gifted);glassShield=false;dragonBanterSeen.add('learned:shield');`);
 select('Hello!');assert.equal(run('ask'),null);finish();
 assert(run('glassShield'));assert(run('revealing'));
 assert.equal(dom.element('reveal').parentNode,box,'Gift reveal shares the conversation grid, leaving A accessible');

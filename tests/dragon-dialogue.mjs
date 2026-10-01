@@ -136,6 +136,8 @@ run("rememberDragonKnowledge('Maddock','Dunstan the blacksmith can strengthen yo
 assert.match(run("dragonSideQuest('equipment').join(' ')"),/Dunstan/);
 assert.doesNotMatch(run("dragonSideQuest('equipment').join(' ')"),/Sela/);
 run("rememberDragonKnowledge('Sela','My glass can protect you with a shield.')");
+assert.doesNotMatch(run("dragonSideQuest('equipment').join(' ')"),/Sela/,'Sela cannot unlock his own referral quest');
+run("rememberDragonKnowledge('Dunstan','My brother Sela keeps a glass shop in Sandspire and has made a shield.')");
 assert.match(run("dragonSideQuest('equipment').join(' ')"),/Sela/);
 c.learned=run('[...dragonBanterSeen]');run('resetDragonBanter(learned)');
 assert(run("dragonLearned('bramble-owner')&&dragonLearned('smith')&&dragonLearned('shield')"),'learned leads survive saves');
@@ -177,6 +179,7 @@ console.log('PASS: short bottom captions, unique wording across events and saves
 clear();c.ask=null;c.MAPID='world';c.wonAll=false;c.cinderSeal=false;c.P={x:872,y:6130,moving:false};c.dragon={on:false};
 c.document.getElementById=()=>({style:{},appendChild(){}});
 Object.assign(c,{tap:(el,fn)=>{c.pressSkip=fn;},skipBrambleForTest(){},Q:{DONE:9},kingsMen:()=>[],WORN_MAX:2,worn:{},
+ houseLootTaken:new Set(),DesertAdventure:{rewardId:'emberheart'},Frosthorn:{rewardId:'frostheart'},IceMoth:{rewardId:'soulwing',spentId:'soulwing-spent'},hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,
  dragonGround:()=>true,charm:{},breathHas:{fire:true},syncDragonVitality(){c.dragon.maxHp=5;},potions:0,elixirs:0,boarMeat:0,dragonFish:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,gold:0,
  BESTIARY:[],seenFoe:{},seenCount:0,rebuildBuckets(){},reindex(){},chunks:new Map(),toast(){},saveGame(){c.savedSkipIntro=run('dragonIntroDone');}});
 run('dragonIntroDone=false;dragonIntroArmed=true');

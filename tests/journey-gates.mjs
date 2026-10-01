@@ -22,7 +22,7 @@ c.P.x=810*16;c.P.y=251*16;assert(c.progressionMoveAllowed(850*16,251*16),'Forgew
 c.P.x=1515*16;c.P.y=114*16;assert(c.progressionMoveAllowed(1515*16,130*16),'Sandspire temple approach stays open');
 c.P.x=2720*16;c.P.y=198*16;assert(c.progressionMoveAllowed(2740*16,198*16),'Hollybeck temple approach stays open');
 c.brambleQuest=2;assert(gates.thornwell.open());c.breathHas.lightning=true;assert(!gates.forgewick.open(),'temple alone does not bypass required equipment');
-c.smithUpgrade=true;c.charm.edge=true;c.glassShield=true;assert(gates.forgewick.open());
+c.smithUpgrade=true;c.charm.edge=true;c.glassShield=false;assert(gates.forgewick.open(),'The Sandspire shield cannot lock the road out of Forgewick');
 c.breathHas.ice=true;assert(gates.sandspire.open(),'Sandspire clears after its Ice Heartstone');assert(!gates.hollybeck.open(),'Hollybeck waits for its own Shadow Heartstone');c.breathHas.shadow=true;for(const g of Object.values(gates))assert(!c.progressionSolid(g.x,g.y));
 assert.equal(c.journeyGateProps().length,0,'The repaired roadwork wagon leaves; market stalls stay in their own maps');
 c.MAPID='tp1';assert.equal(c.journeyGateProps().length,0);assert(c.progressionMoveAllowed(0,0));

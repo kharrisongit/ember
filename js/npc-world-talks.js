@@ -1065,9 +1065,9 @@ const NPC_WORLD_TALKS = {
     ],
     "history": [
       "How glassmaking took root",
-      "Furnaces brought workers together here. Some learned to shape metal; others learned what sand could become in the heat. Those trades share more than they admit.",
+      "Dunstan and I grew up around Forgewick’s furnaces. My brother took to metal. I came to Sandspire for the glassmaking sand and the caravan trade.",
       "Do smiths ever help you?",
-      "With tools and furnace fittings. Dunstan would be unbearable if I called that artistic collaboration."
+      "My brother sends tools and furnace fittings from Forgewick. I send him glass. Dunstan would be unbearable if I called that artistic collaboration."
     ]
   },
   "Tam": {

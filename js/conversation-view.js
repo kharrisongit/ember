@@ -1,6 +1,8 @@
 /* Character profiles share the dialogue cast; conversations use the normal gameplay camera. */
 (function(){
   const biographies={
+    'Dunstan':['Blacksmith','Forgewick','Dunstan strengthens travellers’ arms and armour in Forgewick. His brother Sela works glass in Sandspire; their rivalry has never stopped them sending each other useful tools and supplies.'],
+    'Sela':['Glassblower','Sandspire','Sela left Forgewick to work with Sandspire’s glassmaking sand and caravan trade. His brother Dunstan forges steel; Sela shapes glass into beautiful objects and protection for the road.'],
     'Corin':['A boy from Millwood','Millwood','Raised by Nan Ferrow, Corin knows the village paths and the weight of an ordinary errand. Curiosity and stubborn kindness keep carrying him farther from home.'],
     'Aurelius':['Dragon companion','The road with Corin','A young dragon with an old name and a keen sense of wonder. His bond with Corin lets them speak mind to mind; trust, food, and the mysteries of Emberfell give them plenty to discuss.'],
     'Hettie':['Farmer','Millwood','Hettie keeps the farm fed, the chores moving, and a watchful eye on Corin. Beneath her brisk instructions is the practical generosity that holds a village together.'],
@@ -39,7 +41,7 @@
     const found=entries.find(e=>e.n===actor)||entries.find(e=>e.n.n===name&&e.n.loc)||entries.find(e=>e.n.n===name);
     const map=found?.map||MAPID,source=actor||found?.n;
     const hometown=biographies[name]?.[1]||actor?.loc||found?.n.loc||'';
-    const mapTown={school:'Thornwell',school2:'Thornwell',tavern:'Thornwell',inn:'Thornwell',smithy:'Forgewick',glasswork:'Forgewick',glasshouse:'Forgewick',mine:'Forgewick'}[map];
+    const mapTown={school:'Thornwell',school2:'Thornwell',tavern:'Thornwell',inn:'Thornwell',smithy:'Forgewick',glasswork:'Sandspire',glasshouse:'Sandspire',mine:'Forgewick'}[map];
     const regions=[[/Millwood/i,'millwood'],[/Thornwell/i,'thornwell'],[/Forgewick|Forgefalls/i,'forgewick'],[/Sandspire/i,'sandspire'],[/Witchmoor|Dreadmarsh|swamp|marsh/i,'marsh'],[/Hollybeck|Frostcrag|snow/i,'snow'],[/Coralmere|coast/i,'coast'],[/Shroom|Sporehollow/i,'shroom'],[/Cinderhold|Ashcrag|king’s retinue/i,'cinderhold']];
     const match=place=>regions.find(([pattern])=>pattern.test(place||''))?.[1];
     const homeTheme=match(hometown)||match(mapTown)||match(W.maps[map]?.title)||match(map);
