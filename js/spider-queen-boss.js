@@ -1,8 +1,8 @@
 /* Combat uses the same four-direction poses as the north-field audition. */
 const SpiderQueenBoss=(()=>{
   const shots=[],splashes=[],waves=[];let map='',web=null,learned=false;
-  const SCALE=.8,WEB_CRAWL=19;let tellCanvas=null;
-  const webbed=()=>!!web&&['gathering','trapped'].includes(web.phase)&&map===MAPID&&!foesHeld;
+  const SCALE=.68,WEB_CRAWL=19;let tellCanvas=null;
+  const webbed=()=>!!web&&['gathering','trapped','retreating'].includes(web.phase)&&map===MAPID&&!foesHeld;
   const aboveWeb=()=>!!web&&map===MAPID&&!foesHeld;
   const pause=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const face=(x,y)=>Math.abs(x)>Math.abs(y)?x<0?'w':'e':y<0?'u':'d';
@@ -38,9 +38,12 @@ const SpiderQueenBoss=(()=>{
   function enter(f,state){f.st=state;f.t=0;f.hit=0;}
   function launch(f){
     const d=dir(f),v={d:[0,1],u:[0,-1],e:[1,0],w:[-1,0]}[d];
-    const x=f.x+v[0]*27*SCALE,y=f.y-47*SCALE+v[1]*7*SCALE;
+    // Collision follows the ground plane. The raised mouth is only a draw
+    // offset; testing it against floor walls used to swallow north-edge shots.
+    const x=f.x+v[0]*27*SCALE,y=f.y+v[1]*7*SCALE;
     const dx=f.aimX-x,dy=f.aimY-y,length=Math.hypot(dx,dy)||1;
-    shots.push({x,y,vx:dx/length*105,vy:dy/length*105,dir:face(dx,dy),t:0});
+    shots.push({x,y,z:47*SCALE,startZ:47*SCALE,endZ:f.aimDragon?14:10,length,
+      vx:dx/length*105,vy:dy/length*105,dir:face(dx,dy),t:0});
   }
   function step(f,dt){
     if(map!==MAPID)reset();
@@ -72,7 +75,7 @@ const SpiderQueenBoss=(()=>{
     setFace(f,dx,dy);
     if(f.attackCool<=0&&(d<50||f.venomCool<=0&&d<260)){
       f.queenAttack=d>=50?'spit':'stomp';
-      f.aimX=target.x;f.aimY=target.y-(target.isDragon?14:10);
+      f.aimX=target.x;f.aimY=target.y;f.aimDragon=!!target.isDragon;
       if(f.queenAttack==='spit')f.venomCool=4.5;
       else toast('Shockwave! Press B to block the ring.');
       enter(f,'wind');return;
@@ -94,11 +97,12 @@ const SpiderQueenBoss=(()=>{
     const segment=(s,x,y,px,py)=>{const vx=s.x-x,vy=s.y-y,t=Math.max(0,Math.min(1,((px-x)*vx+(py-y)*vy)/(vx*vx+vy*vy||1)));return Math.hypot(px-x-vx*t,py-y-vy*t);};
     for(let i=shots.length-1;i>=0;i--){
       const s=shots[i],x=s.x,y=s.y;s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      s.z=s.startZ+(s.endZ-s.startZ)*Math.min(1,s.t*105/s.length);
       let hit=false;
-      if(segment(s,x,y,P.x,P.y-10)<12){hurtPlayer(2);hit=true;}
-      else if(dragonCombatHere()&&dragon.on&&!dragon.down&&segment(s,x,y,dragon.x,dragon.y-14)<20){hurtDragon(2);hit=true;}
+      if(segment(s,x,y,P.x,P.y)<12){hurtPlayer(2);hit=true;}
+      else if(dragonCombatHere()&&dragon.on&&!dragon.down&&segment(s,x,y,dragon.x,dragon.y)<20){hurtDragon(2);hit=true;}
       if(hit||s.t>2.8||isSolid(s.x,s.y)){
-        splashes.push({x:s.x,y:s.y,t:0});shots.splice(i,1);
+        splashes.push({x:s.x,y:s.y-s.z,t:0});shots.splice(i,1);
       }
     }
     for(let i=splashes.length-1;i>=0;i--){splashes[i].t+=dt;if(splashes[i].t>=.5)splashes.splice(i,1);}
@@ -134,7 +138,7 @@ const SpiderQueenBoss=(()=>{
     const spot=candidates.sort((a,b)=>b.distance-a.distance)[0];
     web.fromPlayer=[P.x,P.y];web.fromDragon=[dragon.x,dragon.y];
     web.player=spot?.player||[P.x,P.y];web.dragon=spot?.dragon||[dragon.x,dragon.y];
-    web.phase='gathering';web.t=0;web.biteCool=1.2;
+    web.phase='gathering';web.t=0;web.biteCool=1.2;web.approachOrigin=[f.x,f.y];
     // Even a cast from the room's center leaves six visible seconds to counter.
     web.crawlSpeed=Math.min(WEB_CRAWL,Math.max(1,((spot?.distance||150)-36)/6));
     faceCorinAt(f.x,f.y);dragon.faintDir=f.x<web.dragon[0]?'w':'e';
@@ -154,6 +158,7 @@ const SpiderQueenBoss=(()=>{
     ],{telepathy:true,spiderWebLesson:true,after:()=>{
       if(web!==capture)return;learned=true;web.t=0;web.biteCool=1.2;
       toast('Open Dragon → Fire to burn the web and stun her.');
+      if(web.pendingFire)commandBreath('fire');
     }});
   }
   function bite(target){
@@ -176,13 +181,24 @@ const SpiderQueenBoss=(()=>{
       if(web.t>=.65){web.phase='trapped';web.t=0;teachFire();}
       return;
     }
+    if(web.phase==='retreating'){
+      // One bite per approach: visibly withdraw along the path she just used.
+      // The party stays pinned and Fire remains available throughout.
+      if(web.t<.45){f.st='swing';return;}
+      const [x,y]=web.approachOrigin,dx=x-f.x,dy=y-f.y,d=Math.hypot(dx,dy);
+      if(d>2){setFace(f,dx,dy);f.st='walk';const pace=Math.min(d,60*dt);moveCombatActor(f,dx/d*pace,dy/d*pace,false,0);return;}
+      web.phase='trapped';web.t=0;web.biteCool=1.2;
+      const distance=Math.min(Math.hypot(P.x-f.x,P.y-f.y),Math.hypot(dragon.x-f.x,dragon.y-f.y));
+      web.crawlSpeed=Math.min(WEB_CRAWL,Math.max(1,(distance-36)/6));
+      f.st='idle';f.t=0;return;
+    }
     web.biteCool=Math.max(0,web.biteCool-dt);
     const party=[P,...(dragonHere()&&dragon.on&&!dragon.down?[dragon]:[])].filter(a=>a!==P||pHp>0);
     if(!party.length){clearWeb();return;}
     const target=party.sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];
     const dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy);setFace(f,dx,dy);
     if(d>36){f.st='walk';moveCombatActor(f,dx/d*web.crawlSpeed*dt,dy/d*web.crawlSpeed*dt,false,0);}
-    else{f.st='swing';f.queenAttack='bite';if(web.biteCool<=0){bite(target);web.biteCool=2.5;f.t=0;}}
+    else{f.st='swing';f.queenAttack='bite';if(web.biteCool<=0){bite(target);web.phase='retreating';web.t=0;web.biteCool=0;f.t=0;}}
   }
   function holdPlayer(dt){
     if(!webbed())return false;placeBound(P,web.fromPlayer,web.player);P.moving=false;P.t+=dt;return true;
@@ -198,12 +214,18 @@ const SpiderQueenBoss=(()=>{
     if(!webbed()||pHp<=0)return null;
     return {kind:'die',t:web.phase==='gathering'?Math.min(ACT.die.frames-.01,web.t*14):ACT.die.frames-.01,dir:P.dir,flip:P.flip,dir8:playerFacing4()};
   }
-  function commandBreath(){
-    if(!webbed())return false;
-    if(scene?.spiderWebLesson)return true;
+  function escapeReady(element='fire'){
+    return element==='fire'&&webbed()&&dragon.on&&pHp>0&&!devDragonPassive;
+  }
+  function commandBreath(element=dragonEl){
+    if(!escapeReady(element))return false;
+    if(scene?.spiderWebLesson){web.pendingFire=true;return true;}
     if(web.phase==='gathering'){web.phase='trapped';web.t=0;holdPlayer(0);holdDragon();}
+    // A web escape is a priority Fire order, even after a bite or a queued
+    // attack. Do not let ordinary cooldown, knockdown or pathfinding eat it.
     hunt=null;claw=null;clawT=0;dragonBreak=null;dragonCombatPause=0;
-    if(dragonEl==='fire')breath=null;
+    dragonRecall=false;dragon.knockdown=0;breath=null;fishing=null;
+    dragonEl='fire';breathCooldown.fire=0;
     const f=web.queen,aim=direction4(f.x-dragon.x,f.y-dragon.y,dragon.dir);dragon.dir=aim;
     fireNow(aim,f);return true;
   }
@@ -253,7 +275,7 @@ const SpiderQueenBoss=(()=>{
     if(map!==MAPID||!MD?.pyramid||foesHeld)return;
     for(const w of waves)list.push({queenWave:w,x:w.x,y:w.y,sy:-1e7});
     if(web)list.push({queenWeb:true,x:0,y:0,sy:1e8});
-    for(const s of shots)list.push({queenVenom:s,x:s.x,y:s.y,sy:s.y+48});
+    for(const s of shots)list.push({queenVenom:s,x:s.x,y:s.y-s.z,sy:s.y+48});
     for(const s of splashes)list.push({queenSplash:s,x:s.x,y:s.y});
   }
   function draw(o){
@@ -276,7 +298,7 @@ const SpiderQueenBoss=(()=>{
       const action=f.st==='dead'||f.queenStun>0||f.hurt>0&&f.st!=='swing'?'hurt':f.st==='swing'?(['spit','web','bite'].includes(f.queenAttack)?'spit':'stomp'):f.st==='walk'?'walk':'idle';
       const frame=SpiderQueenDemo.frame(dir(f),action,f.t);
       if(f.st==='dead')ctx.globalAlpha=Math.max(0,1-f.t);
-      ctx.fillStyle='rgba(20,9,25,.25)';ctx.beginPath();ctx.ellipse(f.x,f.y-6,28,7,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(20,9,25,.25)';ctx.beginPath();ctx.ellipse(f.x,f.y-5,24,6,0,0,Math.PI*2);ctx.fill();
       drawPixelImage(ctx,frame,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));
       if(f.st==='wind'||web?.queen===f&&web.phase==='casting'){
         if(!tellCanvas){tellCanvas=document.createElement('canvas');tellCanvas.width=128;tellCanvas.height=96;}
@@ -286,18 +308,18 @@ const SpiderQueenBoss=(()=>{
         drawPixelImage(ctx,tellCanvas,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));ctx.restore();
       }
       if(f.queenStun>0){
-        ctx.fillStyle='#ffe8a6';for(let i=0;i<3;i++){const angle=tAcc*3+i*Math.PI*2/3;ctx.fillRect(Math.round(f.x+Math.cos(angle)*16)-1,Math.round(f.y-58+Math.sin(angle)*4)-1,3,3);}
+        ctx.fillStyle='#ffe8a6';for(let i=0;i<3;i++){const angle=tAcc*3+i*Math.PI*2/3;ctx.fillRect(Math.round(f.x+Math.cos(angle)*16)-1,Math.round(f.y-50+Math.sin(angle)*4)-1,3,3);}
       }
       if(f.st!=='dead'){
         const max=enemyMaxHp(f.kind,f.x),width=52;
-        ctx.fillStyle='#241c27';ctx.fillRect(Math.round(f.x-width/2)-1,Math.round(f.y-66),width+2,5);
-        ctx.fillStyle='#ad4767';ctx.fillRect(Math.round(f.x-width/2),Math.round(f.y-65),Math.round(width*Math.max(0,f.hp/max)),3);
+        ctx.fillStyle='#241c27';ctx.fillRect(Math.round(f.x-width/2)-1,Math.round(f.y-57),width+2,5);
+        ctx.fillStyle='#ad4767';ctx.fillRect(Math.round(f.x-width/2),Math.round(f.y-56),Math.round(width*Math.max(0,f.hp/max)),3);
       }
     }else{
       const s=o.queenVenom||o.queenSplash,frame=SpiderQueenDemo.venomFrame(o.queenVenom?s.dir:'impact',s.t);
-      drawPixelImage(ctx,frame,0,0,32,32,Math.round(s.x-16),Math.round(s.y-16),32,32);
+      drawPixelImage(ctx,frame,0,0,32,32,Math.round(s.x-16),Math.round(s.y-(o.queenVenom?s.z:0)-16),32,32);
     }
     ctx.restore();return true;
   }
-  return {capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,roomThreat,canBlockSlam,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,commandBreath,fireCast,inspect:()=>({waves:waves.map(({queen,...w})=>({...w})),web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
+  return {capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,roomThreat,canBlockSlam,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,escapeReady,commandBreath,fireCast,inspect:()=>({waves:waves.map(({queen,...w})=>({...w})),web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
 })();

@@ -2318,6 +2318,7 @@ function loadMap(id, fresh, discardDraft=false) {
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
   if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
   if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
+  if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
   if(MD.pyramid)DesertPyramid.prepareSpiderArt();
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
@@ -7825,7 +7826,7 @@ function dragonCombatHere() {
   return dragonHere() || (MAPID === "cinderhold" && dragon.on &&
     (mounted || lastFight || trial || foes.some(f => f.st !== "dead")));
 }
-function canBreathe() { return !devDragonPassive && !fishing && breathWait() <= 0 && dragonCombatHere() && dragon.on && !dragon.down && dragon.knockdown <= 0; }
+function canBreathe() { if(SpiderQueenBoss.escapeReady(dragonEl))return true;return !devDragonPassive && !fishing && breathWait() <= 0 && dragonCombatHere() && dragon.on && !dragon.down && dragon.knockdown <= 0; }
 
 let MOUTH = ATLAS.dragon_mouth ||
   {"n":[0.3889,0.1712],"e":[0.831,0.5322],"s":[0.3889,0.6124],"w":[0.1528,0.5347]};
@@ -7849,13 +7850,13 @@ function mouthOf(dir) {
 let dragonEl = "fire";        /* which breath the L-menu last chose */
 function breatheFire() {
   if(devDragonPassive){toast("dragon attacks are disabled in dev tools");return;}
+  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.commandBreath())return true;
   if (!canBreathe()) {
     if (dragon.down) toast("the dragon is hurt -- feed it first");
     else if (!dragonCombatHere()) toast("the dragon is not here");
     else if (breathWait() > 0) toast((DRAGON_BREATH[breathElementKey()]?.name || "breath") + " ready in " + breathWait().toFixed(1) + "s");
     return;
   }
-  if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.commandBreath())return true;
   /* A commanded breath is a priority order, not something claws can defer.
      Keep an already-visible breath intact, but cancel a prior wind-up, claw
      recovery and retreat so the dragon immediately makes room to cast. */
@@ -7993,7 +7994,7 @@ function beamLength() {
 function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
-  if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-18,r:27};
+  if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-15,r:23};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};
@@ -8291,12 +8292,8 @@ function bookOrder() {
   return met.concat(not);
 }
 const BESTIARY = [
-  {k:"desertarcher1",n:"Dune Archer",w:"the pyramid road and armoury",t:"Caravan bows now serve the burial guard. An orange flash warns of a shot; block the arrow or close the distance while the archer recovers."},
-  {k:"desertarcher2",n:"Sunveil Archer",w:"the western desert road and pyramid vaults",t:"These swift veteran bow guards protect the deeper vaults. Their stronger arrows punish a straight approach. Watch the attack flash and move between shots."},
-  {k:"desertlancer1",n:"Dune Spear Guard",w:"the pyramid road and guard chambers",t:"A long atgier keeps intruders beyond sword reach. The raised spear flashes before its thrust. Block, then step in during the recovery."},
-  {k:"desertlancer2",n:"Gilded Spear Guard",w:"the pyramid crypt and western approach",t:"The elite burial guard still patrols the sealed crypt. Faster feet and a heavier spear make its flashing wind-up the safest moment to prepare a block."},
   {k:"mummy",n:"Pyramid Mummy",w:"the Sunken Pyramid",t:"Tattered bandages trail across the sandstone floors. These restless dead still patrol the burial chambers and strike anyone who disturbs them."},
-  {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a stomp whose shockwave sweeps the whole room. Press B to block the ring; distance will not keep Corin safe. At range, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. Command Fire to burn the web, free them both, and stun her."},
+  {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a stomp whose shockwave sweeps the whole room. Press B to block the ring; distance will not keep Corin safe. At range, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. After each bite she retreats, then starts a fresh slow approach. Command Fire to burn the web, free them both, and stun her."},
   {"k": "devil1", "n": "Cinder Bailiff", "w": "the demon's Cinderhold trials", "t": "Before the Wingfall, riders sealed bargains with burned handprints. The Cinder Bailiffs still collect those debts. Maelis has persuaded one that a fair contest counts as payment."},
   {"k": "devil3", "n": "Crownless Fiend", "w": "the demon's Cinderhold trials", "t": "Halvard promised this fiend a kingdom beneath his own. With the crown broken, it has come to claim the empty hall. The summoner permits it only a few minutes at a time."},
   {"k": "skeleton1", "n": "Oathbone Swordsman", "w": "the demon's Cinderhold trials", "t": "These were the temple guards who refused to leave their posts when the wings fell. Their shields have rotted away. Their orders have not."},

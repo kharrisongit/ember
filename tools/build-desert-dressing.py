@@ -73,6 +73,8 @@ for file in usage:
  if file.startswith('Tiles/') and not usage[file]:usage[file]=['sandspire_court: native reservoir / garden tiles']
  if file.startswith('NPC/') and not usage[file]:usage[file]=['Sandspire: existing native townspeople and traders']
  if file.startswith('enemies/'):usage[file]=['Pyramid chambers and five approach arenas']
+ if 'Desert_Warrior' in file:usage[file]=['Unused: human combatants excluded from the desert adventure']
+ if 'Obelisk' in file:usage[file]=['Reserved for the temples; excluded from the pyramid and town']
  if file=='Temple/Desert_Temple.png':usage[file]=['World: pyramid exterior']
  if file=='Temple/Temple-House_Interior.png':usage[file]=['Pyramid: walls, floors, stairs, pillars and doorways']
 assert all(usage.values()),[k for k,v in usage.items() if not v]

@@ -87,10 +87,20 @@ run('clawNow();');assert.equal(run('claw'),null,'Bound dragon cannot claw throug
 // A successful capture takes exactly one displayed heart from either actor.
 run('foes[0].x=P.x-35;foes[0].y=P.y;');
 for(let i=0;i<25;i++)run('stepCombat(.05)');assert.equal(run('pHp'),5);
+assert.equal(run('SpiderQueenBoss.inspect().web.phase'),'retreating','Each bite starts a retreat');
+const bittenAt=run('Math.min(Math.hypot(foes[0].x-P.x,foes[0].y-P.y),Math.hypot(foes[0].x-dragon.x,foes[0].y-dragon.y))');
+for(let i=0;i<45;i++)run('stepDragon(.05);stepCombat(.05);');
+assert.equal(run('pHp'),5);assert.equal(run('dragon.hp'),40,'No repeat bite during retreat');
+assert(run('Math.min(Math.hypot(foes[0].x-P.x,foes[0].y-P.y),Math.hypot(foes[0].x-dragon.x,foes[0].y-dragon.y))')>bittenAt+20,'Retreat is visibly away from the pinned pair');
+for(let i=0;i<100&&run('SpiderQueenBoss.inspect().web.phase')==='retreating';i++)run('stepDragon(.05);stepCombat(.05);');
+assert.equal(run('SpiderQueenBoss.inspect().web.phase'),'trapped');
+for(let i=0;i<75;i++)run('stepDragon(.05);stepCombat(.05);');
+assert.equal(run('pHp'),5);assert.equal(run('dragon.hp'),40,'A new slow approach gives time for Fire');
 run('foes[0].x=dragon.x+35;foes[0].y=dragon.y;');
-for(let i=0;i<51;i++)run('stepCombat(.05)');
+run('stepCombat(.05)');
 assert(Math.abs(run('dragon.hp')-(40-40/6))<1e-8,'Dragon bite also removes exactly one of its six HUD hearts');
-const left=run('foes[0].x');run('breath={el:"ice",t:.1};ATTACKS.find(a=>a.el==="fire").go();');
+const left=run('foes[0].x');
+run('breath={el:"ice",t:.1};breathCooldown.fire=12;dragon.knockdown=1;ATTACKS.find(a=>a.el==="fire").go();');
 assert(!run('SpiderQueenBoss.webbed()'),'Real Fire menu action frees both actors');
 assert.equal(run('SpiderQueenBoss.inspect().web.phase'),'burning');
 assert.equal(run('foes[0].queenStun'),3.5);assert.equal(run('breath.el'),'fire');
@@ -100,7 +110,7 @@ run('stepCombat(1.1);');assert.equal(run('SpiderQueenBoss.inspect().web'),null,'
 for(let i=0;i<55;i++)run('stepCombat(.05)');assert.equal(run('foes[0].queenStun'),0,'Stun ends after its recovery window');
 run('breath=null;foes[0].webCool=0;');for(let i=0;i<50;i++)run('stepCombat(.05)');
 assert(run('SpiderQueenBoss.webbed()'));run("loadMap('pyramid_entry')");assert(!run('SpiderQueenBoss.webbed()'),'Map changes cannot retain movement locks');
-console.log('PASS: room-wide web, both movement locks, no mount/flight/sword escape, exact full-heart bites, cooldown-safe Fire menu counter, burn/release, 3.5-second stun and reset.');
+console.log('PASS: room-wide web, both movement locks, no mount/flight/sword escape, single-heart bite/retreat cycles, cooldown/knockdown-safe Fire menu counter, burn/release, 3.5-second stun and reset.');
 // Exercise the actual encounter gate as well as the isolated combat states.
 run(`Object.assign(window,bossTestSystems);EmberRiding.skip();devSafe=true;revealing=false;
 loadMap('pyramid_queen');P.x=168;P.y=200;P.act=null;dragon.x=195;dragon.y=200;dragon.placed=MAPID;
@@ -147,3 +157,14 @@ console.log('PASS: camera framing/recovery and actual lesson persistence across 
 run("localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),map:'pyramid_queen',x:384,y:316,pyramidLayoutVersion:1}));");
 assert(run('loadGame(2)'));assert(run('canStand(P.x,P.y)&&P.x===MD.spawn[0]&&P.y===MD.spawn[1]'),'Old boss-room saves load on safe floor after shrinking');
 console.log('PASS: old boss-room save migrates safely to the smaller chamber.');
+
+// Raised venom artwork must not collide with the wall behind its mouth.
+for(const [qx,qy,px,py]of [[80,108,224,148],[208,108,80,148],[144,108,144,208],[144,198,144,100]]){
+ run(`delete bossGone['pyramid_queen:0'];loadMap('pyramid_queen');scene=null;bossScene=null;ovl=null;fadeDir=0;foesHeld=false;devSafe=false;dragonOff=true;P.act=null;pHp=6;pInv=0;P.x=${px};P.y=${py};
+ Object.assign(foes[0],{x:${qx},y:${qy},st:'idle',t:0,webCool:1000,venomCool:0,attackCool:0,hold:0});`);
+ let visibleAge=0;
+ for(let i=0;i<64;i++){run('stepCombat(.05)');visibleAge=Math.max(visibleAge,run('Math.max(0,...SpiderQueenBoss.inspect().shots.map(s=>s.t))'));}
+ assert(visibleAge>=.3,'Venom survives its mouth and visibly travels at the room edge');
+ assert(run('pHp<6'),'Travelling venom damages its target '+[qx,qy,px,py].join(','));
+}
+console.log('PASS: visible, damaging venom in all four directions from room-edge positions.');

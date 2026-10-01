@@ -469,7 +469,7 @@
         ]
       ],
       [
-        "desertarcher2",
+        "mummy",
         192,
         208,
         [
@@ -582,7 +582,7 @@
     ],
     "enemies": [
       [
-        "desertlancer1",
+        "mummy",
         128,
         224,
         [
@@ -593,7 +593,7 @@
         ]
       ],
       [
-        "desertlancer1",
+        "mummy",
         224,
         240,
         [
@@ -604,7 +604,7 @@
         ]
       ],
       [
-        "desertarcher1",
+        "mummy",
         416,
         192,
         [
@@ -615,7 +615,7 @@
         ]
       ],
       [
-        "desertarcher1",
+        "mummy",
         528,
         224,
         [
@@ -731,7 +731,7 @@
         ]
       ],
       [
-        "desertlancer2",
+        "mummy",
         424,
         208,
         [
@@ -742,7 +742,7 @@
         ]
       ],
       [
-        "desertlancer2",
+        "mummy",
         528,
         256,
         [
@@ -837,7 +837,7 @@
     ],
     "enemies": [
       [
-        "desertarcher2",
+        "mummy",
         128,
         200,
         [
@@ -848,7 +848,7 @@
         ]
       ],
       [
-        "desertarcher2",
+        "mummy",
         224,
         224,
         [
@@ -859,7 +859,7 @@
         ]
       ],
       [
-        "desertlancer2",
+        "mummy",
         432,
         216,
         [

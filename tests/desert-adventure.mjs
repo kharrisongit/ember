@@ -42,7 +42,12 @@ assert(run('loadGame(1)'));assert(run('DesertAdventure.owned()'));assert.equal(r
 run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),houseLootTaken:[],pyramidQuest:null,templeDefeated:{}}));`);
 assert(run('loadGame(2)'));assert(!run('DesertAdventure.owned()||DesertAdventure.accepted()'));
 console.log('PASS: victory lock, old-save chest migration, one-time passive reward, real Fire damage, other elements and persistence.');
-const kinds=['mummy','desertarcher1','desertarcher2','desertlancer1','desertlancer2'];
+const kinds=['mummy'];
+assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.foes.every(f=>f.k==="mummy"||f.k==="spiderqueen"))'));
+assert(run('W.maps.world.foes.filter(f=>f.desertEncounter).every(f=>f.k==="mummy")'));
+assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.roomActors.every(a=>!/obelisk|rug/.test(a.spr)))'));
+assert(run('W.maps.sandspire_court.roomActors.filter(a=>/^dd_rug/.test(a.spr)).length===6'));
+assert(run('!BESTIARY.some(e=>/^desert(archer|lancer)/.test(e.k))'));
 for(const kind of kinds){
  assert(run(`FOE[${JSON.stringify(kind)}]&&BESTIARY.some(e=>e.k===${JSON.stringify(kind)})`));
  assert(run(`Object.values(W.maps).filter(m=>m.pyramid).some(m=>m.foes.some(f=>f.k===${JSON.stringify(kind)}))`));
@@ -57,12 +62,4 @@ for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('
 assert.equal(Object.keys(usage).length,92);
 run("loadMap('sandspire_court');[P.x,P.y]=MD.spawn;");assert(run('canStand(P.x,P.y)'));
 assert(run('MD.doors[0].to==="world"&&W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
-console.log('PASS: five populated approach arenas, all five desert enemy types and bestiary entries, 92 pack sources placed, returnable caravan court.');
-// Both bow guards fire real, damaging projectiles and enter the discovery list.
-for(const kind of ['desertarcher1','desertarcher2']){
- run(`loadMap('pyramid_armoury');scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;foesHeld=false;dragonOff=true;P.act=null;P.x=240;P.y=256;pHp=6;pInv=0;devSafe=true;
- foes=[{kind:${JSON.stringify(kind)},x:112,y:240,hx:112,hy:240,hp:20,st:'idle',t:0,dir:'s',flip:false,hurt:0,hold:0}];bolts.length=0;`);
- let shot=false;for(let i=0;i<130;i++){run('stepCombat(.05)');shot||=run('bolts.some(b=>b.art==="desert_arrow")');}
- assert(shot,kind+' fires an actual arrow');assert(run(`seenFoe[${JSON.stringify(kind)}]>0`));
-}
-console.log('PASS: both bow-guard variants attack through the normal projectile and bestiary-discovery systems.');
+console.log('PASS: five populated approach arenas, mummy-only burial guards, no pyramid rugs or obelisks, six town rugs, current bestiary, returnable caravan court.');

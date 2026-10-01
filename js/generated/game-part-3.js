@@ -2453,6 +2453,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   rebuildBlossomRoutes({inTownArea,onBuilding});
   if(!editorMapLoading)applyEditorPaint();
   chunks.clear();
+  if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld(false);
   indexDecks();
   reindex();
   refreshBuild();
@@ -5682,8 +5683,9 @@ const ATTACKS = [
   { name: "Ice",       el: "ice", cd: 30,
     tell: () => breathMenuTell("ice", "The strongest breath. 20 damage; 30 second cooldown.") },
 ].map(a => Object.assign(a, {
-  dim: () => !breathHas[EL_BREATH[a.el]] || dragon.down || breathWait(a.el) > 0,
-  go: () => { if (!breathHas[EL_BREATH[a.el]]) { toast("not unlocked yet"); return; }
+  dim: () => !SpiderQueenBoss.escapeReady(a.el)&&(!breathHas[EL_BREATH[a.el]] || dragon.down || breathWait(a.el) > 0),
+  go: () => { if(SpiderQueenBoss.escapeReady(a.el)){setOvl(null);dragonEl=a.el;SpiderQueenBoss.commandBreath(a.el);return;}
+              if (!breathHas[EL_BREATH[a.el]]) { toast("not unlocked yet"); return; }
               setOvl(null);
               if (dragon.down) { toast("the dragon is hurt -- feed it first"); return; }
               const wait = breathWait(a.el);
@@ -5740,6 +5742,7 @@ function refreshOvl() {
   items.forEach((it, k) => {
     const d = document.createElement("div");
     d.className = "row" + (k === M.pick ? " on" : "");
+    if (ovl === "atkm") d.dataset.element = it.el;
     if (ovl === "atkm" || ovl === "airm") {
       const n = items.length;
       const angle = (-Math.PI / 2) + (Math.PI * 2 * k / n);
@@ -5758,7 +5761,7 @@ function refreshOvl() {
       d.appendChild(ic);
     }
     if (ovl === "atkm" && it.el !== "claw" && it.cd) {
-      const wait = breathWait(it.el), ready = Math.max(0, Math.min(1, 1 - wait / it.cd));
+      const wait = SpiderQueenBoss.escapeReady(it.el) ? 0 : breathWait(it.el), ready = Math.max(0, Math.min(1, 1 - wait / it.cd));
       d.style.setProperty("--refill", (ready * 100).toFixed(1) + "%"); d.style.setProperty("--ring", (ready * 100).toFixed(1) + "%");
       d.classList.add("breathRefill");
       const fill = document.createElement("span");
@@ -5835,7 +5838,7 @@ function updateBreathRefills(){
   const items=M.items(), nodes=rows.querySelectorAll(".row");
   items.forEach((it,k)=>{
     if(it.el==="claw"||!it.cd||!nodes[k])return;
-    const d=nodes[k],wait=breathWait(it.el),ready=Math.max(0,Math.min(1,1-wait/it.cd));
+    const d=nodes[k],wait=SpiderQueenBoss.escapeReady(it.el)?0:breathWait(it.el),ready=Math.max(0,Math.min(1,1-wait/it.cd));
     d.style.setProperty("--refill",(ready*100).toFixed(1)+"%");d.style.setProperty("--ring",(ready*100).toFixed(1)+"%");
     d.style.opacity=(it.dim&&it.dim())?".42":"";
     let sec=d.querySelector(".breathSecs");

@@ -1,6 +1,6 @@
 /* The authored desert detour and sandstone pyramid. */
 const DesertPyramid = (()=>{
-  const BASE='assets/interiors/desert-pyramid/', VERSION='20260930-desert4';
+  const BASE='assets/interiors/desert-pyramid/', VERSION='20261001-sideroutes1';
   const X=1069*16+8,Y=30*16+16;
   const routes=[
     {id:9182,x0:1392,y0:93,x1:1294,y1:41,pts:[[1392,93],[1392,41],[1294,41]]},
@@ -26,7 +26,6 @@ const DesertPyramid = (()=>{
     const response=await fetch(BASE+'layout.json?v='+VERSION);if(!response.ok)throw Error('Pyramid layout could not load');
     const plans=await response.json();
     await sprite('pyramid_exterior','pyramid.png',128,128);
-    await sprite('pyramid_obelisk','obelisk.png',32,80);
     await sprite('pyramid_tiles','tiles.png',160,128);
     SPR.pyramid_pillar=[0,80,16,48,1,'pyramid_tiles'];SPR.pyramid_broken=[16,80,16,48,1,'pyramid_tiles'];
     await sprite('pyramid_pots','pots.png',16,16,5);
@@ -95,10 +94,6 @@ const DesertPyramid = (()=>{
     const block=m.roomBlocks.push([X-58,Y-108,X+58,Y-20])-1;
     const sides=[m.roomBlocks.push([X-58,Y-20,X-12,Y])-1,m.roomBlocks.push([X+12,Y-20,X+58,Y])-1];
     m.roomActors.push({spr:'pyramid_exterior',x:X,y:Y,sy:Y-20,schoolArt:true,stillFrame:0,moveBlocks:[block,...sides],editKey:'pyramid:exterior'});
-    for(const dx of [-72,72]){
-      const i=m.roomBlocks.push([X+dx-9,Y+20,X+dx+9,Y+32])-1;
-      m.roomActors.push({spr:'pyramid_obelisk',x:X+dx,y:Y+32,schoolArt:true,stillFrame:0,moveBlocks:[i],editKey:'pyramid:obelisk:'+dx});
-    }
     m.doors.push({x:(X-8)/16,y:(Y-16)/16,to:'pyramid_entry',tx:9.5,ty:33.5,dir:'u',explicitDir:true,triggerRect:{x:X-12,y:Y-15,w:24,h:12}});
     
     m.pyramidInstalled=true;

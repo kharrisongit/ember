@@ -111,19 +111,19 @@
     "sandspire_court: native reservoir / garden tiles"
   ],
   "enemies/Desert_Warrior_Bow_1.png": [
-    "Pyramid chambers and five approach arenas"
+    "Unused: human combatants excluded from the desert adventure"
   ],
   "enemies/Mummy.png": [
     "Pyramid chambers and five approach arenas"
   ],
   "enemies/Desert_Warrior_Atgier_1.png": [
-    "Pyramid chambers and five approach arenas"
+    "Unused: human combatants excluded from the desert adventure"
   ],
   "enemies/Desert_Warrior_Atgier_2.png": [
-    "Pyramid chambers and five approach arenas"
+    "Unused: human combatants excluded from the desert adventure"
   ],
   "enemies/Desert_Warrior_Bow_2.png": [
-    "Pyramid chambers and five approach arenas"
+    "Unused: human combatants excluded from the desert adventure"
   ],
   "Props/Dead_bush.png": [
     "dd_bush0",
@@ -230,19 +230,19 @@
     "dd_plant2"
   ],
   "Temple/Desert_Obelisk_Small_1.png": [
-    "dd_smallobelisk1"
+    "Reserved for the temples; excluded from the pyramid and town"
   ],
   "Temple/Desert_Obelisk_1.png": [
-    "dd_obelisk1"
+    "Reserved for the temples; excluded from the pyramid and town"
   ],
   "Temple/Desert_Temple.png": [
     "World: pyramid exterior"
   ],
   "Temple/Desert_Obelisk_2.png": [
-    "dd_obelisk2"
+    "Reserved for the temples; excluded from the pyramid and town"
   ],
   "Temple/Desert_Obelisk_Small_2.png": [
-    "dd_smallobelisk2"
+    "Reserved for the temples; excluded from the pyramid and town"
   ],
   "Temple/Temple-House_Interior.png": [
     "Pyramid: walls, floors, stairs, pillars and doorways"

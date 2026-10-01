@@ -40,14 +40,14 @@ for mid,room,kind,pts in [
  ('pyramid_queen',0,'spiderqueen',[(144,136)])]:
  for x,y in pts:p[mid]['enemies'].append([kind,x,y,p[mid]['chambers'][room]])
 for mid,room,kind,pts in [
- ('pyramid_armoury',0,'desertlancer1',[(128,224),(224,240)]),
- ('pyramid_armoury',1,'desertarcher1',[(416,192),(528,224)]),
+ ('pyramid_armoury',0,'mummy',[(128,224),(224,240)]),
+ ('pyramid_armoury',1,'mummy',[(416,192),(528,224)]),
  ('pyramid_crypt',0,'mummy',[(120,224),(224,272)]),
- ('pyramid_crypt',1,'desertlancer2',[(424,208),(528,256)]),
+ ('pyramid_crypt',1,'mummy',[(424,208),(528,256)]),
  ('pyramid_crypt',1,'mummy',[(472,288)]),
- ('pyramid_vault',0,'desertarcher2',[(128,200),(224,224)]),
- ('pyramid_vault',1,'desertlancer2',[(432,216)]),
- ('pyramid_depths',1,'desertarcher2',[(192,208)])]:
+ ('pyramid_vault',0,'mummy',[(128,200),(224,224)]),
+ ('pyramid_vault',1,'mummy',[(432,216)]),
+ ('pyramid_depths',1,'mummy',[(192,208)])]:
  for x,y in pts:p[mid]['enemies'].append([kind,x,y,p[mid]['chambers'][room]])
 for mid,ch in {'pyramid_entry':[[88,424,25,'potion']], 'pyramid_cache':[[72,104,90,'elixir'],[216,104,0,None]],'pyramid_halls':[[88,136,40,'dragonFish']], 'pyramid_depths':[[280,104,60,'potion']], 'pyramid_armoury':[[88,136,45,'potion']], 'pyramid_crypt':[[552,136,70,'elixir']], 'pyramid_vault':[[392,120,95,'dragonFish'],[552,120,60,'potion']], 'pyramid_queen':[[216,104,160,'emberheart']]}.items():p[mid]['chests']=ch
 p['pyramid_depths']['hazards']=[dict(id='pyramid-spikes',axis='y',cross=[168,216],lines=[288,320,352,384],lever=[256,240])]

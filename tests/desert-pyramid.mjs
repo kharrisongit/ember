@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {verifySideRoutes} from './side-route-world.mjs';
 const {run,context}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
 await run('loadPublishedEditorLayouts()');
 run("mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=true;loadMap('world');");
@@ -9,7 +10,7 @@ for(const f of routes)assert.equal(run(`JSON.stringify(features.find(f=>f.id===$
 const approach=JSON.parse(run('JSON.stringify(features.filter(f=>f.pyramidApproach))'));
 assert.equal(approach.length,5);
 for(const a of approach){
- assert(run(`MD.foes.filter(f=>f.desertEncounter?.startsWith('${a.id}:')).length>=2`),'Arena has its authored enemies');
+ assert(run(`MD.foes.filter(f=>f.desertEncounter?.startsWith('${a.id-35}:')).length>=2`),'Arena has its authored enemies');
  for(let y=-5;y<=5;y++)for(let x=-5;x<=5;x++)assert(run(`canStand(${(a.x+x)*16+8},${(a.y+y)*16+16})`),'Clear desert arena floor '+a.id);
 }
 const courtReturn=JSON.parse(run('JSON.stringify(W.maps.sandspire_court.doors[0])'));
@@ -32,6 +33,7 @@ for(const a of approach){
  assert(run('arenaFoesLeft(arenaLock)'),'Arena has live combatants');
 }
 run('arenaLock=null;arenaT=0;foesHeld=true;');
+verifySideRoutes(run);
 console.log('Five populated arenas and the supplied route are clear. Checking interiors.');
 let chambers=0,mummies=0,doors=0;
 for(const id of ids){
