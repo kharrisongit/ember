@@ -1,6 +1,6 @@
 /* The authored desert detour and sandstone pyramid. */
 const DesertPyramid = (()=>{
-  const BASE='assets/interiors/desert-pyramid/', VERSION='20260930-slam3';
+  const BASE='assets/interiors/desert-pyramid/', VERSION='20260930-desert4';
   const X=1069*16+8,Y=30*16+16;
   const routes=[
     {id:9182,x0:1392,y0:93,x1:1294,y1:41,pts:[[1392,93],[1392,41],[1294,41]]},
@@ -46,7 +46,7 @@ const DesertPyramid = (()=>{
     }
     FOE.mummy={hp:6,speed:23,sight:240,reach:25,ring:42,dmg:2,swingT:1.05,hitAt:.52,rest:1.1,groupRest:1.5,wind:.5};
     FOE_ART.mummy='pyramid_mummy';WORTH.mummy=10;
-    FOE.spiderqueen={hp:28,speed:44,sight:999,reach:48,ring:56,dmg:2,swingT:1.5,hitAt:.82,rest:.9,groupRest:1,wind:.45};
+    FOE.spiderqueen={hp:60,speed:44,sight:999,reach:48,ring:56,dmg:2,swingT:1.5,hitAt:.82,rest:.9,groupRest:1,wind:.45};
     WORTH.spiderqueen=65;
     for(const [id,plan]of Object.entries(plans)){
       const img=new Image();img.src=BASE+id+'.png?v='+VERSION;await img.decode();
@@ -64,7 +64,7 @@ const DesertPyramid = (()=>{
       for(const [i,[x,y,gold,item]]of plan.chests.entries()){
         const block=m.roomBlocks.push([x-14,y-12,x+14,y+10])-1;
         m.roomActors.push({spr:'temple71_chest',schoolArt:true,x,y,editKey:id+':loot:'+i,moveBlocks:[block],
-          houseLoot:{id:id+':loot:'+i,gold,item,templeReward:true}});
+          houseLoot:{id:item==='emberheart'?DesertAdventure.rewardId:id+':loot:'+i,gold,item,templeReward:true}});
       }
       for(const [j,[l,t,r,b]]of plan.chambers.entries()){
         for(const x of [l+32,r-32])m.roomActors.push({spr:'first_temple_torch',x,y:t+3,schoolArt:true});
@@ -83,10 +83,12 @@ const DesertPyramid = (()=>{
         h.lines.forEach((y,i)=>{for(let x=h.cross[0]+8;x<h.cross[1];x+=16)m.roomActors.push({spr:'temple71_spikes',x,y,sy:-100,schoolArt:true,expandedSpike:{id:h.id,phase:i*.55}});});
       }
     }
+    await DesertAdventure.prepare();
     ready=true;
   }
   function installWorld(m){
     if(!ready||m.pyramidInstalled)return;
+    DesertAdventure.installWorld(m);
     // After the published Build snapshot, before the editor captures its baseline.
     for(const f of routes){const i=m.features.findIndex(q=>q.id===f.id);const value=JSON.parse(JSON.stringify(f));if(i<0)m.features.push(value);}
     if(m.roomActors.some(a=>a.editKey==='pyramid:exterior')){m.pyramidInstalled=true;return;}
@@ -103,7 +105,7 @@ const DesertPyramid = (()=>{
   }
   function clearForecourt(){
     if(MAPID!=='world')return;
-    const inCourt=(x,y)=>x>X-100&&x<X+100&&y>Y-145&&y<Y+50;
+    const inCourt=(x,y)=>(x>X-100&&x<X+100&&y>Y-145&&y<Y+50)||(x>24552&&x<24616&&y>1512&&y<1600);
     const remove=(s,x,y)=>inCourt(x,y)&&/tree|cactus|rock|bush|fern|grass/i.test(NAMES[s]||'');
     for(const o of objs)if(remove(o.s,o.x,o.y))hidden.add(o.id);
     fobjs=fobjs.filter(o=>!remove(o.s,o.x,o.y));
@@ -111,6 +113,8 @@ const DesertPyramid = (()=>{
     for(let y=Math.floor((Y-144)/16);y<=Math.ceil((Y+48)/16);y++)for(let x=Math.floor((X-96)/16);x<=Math.ceil((X+96)/16);x++){
       terr[y*MW+x]=SAND;SCENE_WALL?.delete(y*MW+x);rockTiles.delete(x+','+y);
     }
+    for(let y=95;y<=99;y++)for(let x=1534;x<=1538;x++){terr[y*MW+x]=SAND;SCENE_WALL?.delete(y*MW+x);rockTiles.delete(x+','+y);}
+    DesertAdventure.clearApproach();
     rebuildBuckets();rebuildSolid();chunks.clear();
   }
   async function prepareSpiderArt(){

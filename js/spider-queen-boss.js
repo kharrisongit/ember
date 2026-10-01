@@ -1,7 +1,7 @@
 /* Combat uses the same four-direction poses as the north-field audition. */
 const SpiderQueenBoss=(()=>{
   const shots=[],splashes=[],waves=[];let map='',web=null,learned=false;
-  const SCALE=.8,WEB_CRAWL=19;
+  const SCALE=.8,WEB_CRAWL=19;let tellCanvas=null;
   const webbed=()=>!!web&&['gathering','trapped'].includes(web.phase)&&map===MAPID&&!foesHeld;
   const aboveWeb=()=>!!web&&map===MAPID&&!foesHeld;
   const pause=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
@@ -52,7 +52,7 @@ const SpiderQueenBoss=(()=>{
     if(f.queenStun>0){f.queenStun=Math.max(0,f.queenStun-dt);f.st='idle';f.t=0;return;}
     if(web&&web.queen===f&&web.phase!=='burning'){stepWebQueen(f,dt);return;}
     if(waves.some(w=>w.queen===f)&&f.st!=='swing')return;
-    f.webCool=(f.webCool??10)-dt;
+    f.webCool=(f.webCool??5)-dt;
     if(f.webCool<=0&&!waves.length&&SpiderQueenWeb.ready()&&dragonCombatHere()&&dragon.on&&!dragon.down){beginWeb(f);return;}
     f.venomCool=Math.max(0,(f.venomCool||0)-dt);f.attackCool=Math.max(0,(f.attackCool||0)-dt);
     const target=targetFor(f),dx=target.x-f.x,dy=target.y-f.y,d=Math.hypot(dx,dy);
@@ -104,7 +104,7 @@ const SpiderQueenBoss=(()=>{
     for(let i=splashes.length-1;i>=0;i--){splashes[i].t+=dt;if(splashes[i].t>=.5)splashes.splice(i,1);}
   }
   function beginWeb(f){
-    shots.length=0;f.queenAttack='web';enter(f,'swing');f.webCool=24;
+    shots.length=0;f.queenAttack='web';enter(f,'swing');f.webCool=9;
     restoreCameraTarget();
     web={queen:f,phase:'casting',t:0,biteCool:0,source:[f.x,f.y-40*SCALE],points:[],cameraZoom:cam.z};
     const [l,t,r,b]=f.expandedRoom;
@@ -136,7 +136,7 @@ const SpiderQueenBoss=(()=>{
     web.player=spot?.player||[P.x,P.y];web.dragon=spot?.dragon||[dragon.x,dragon.y];
     web.phase='gathering';web.t=0;web.biteCool=1.2;
     // Even a cast from the room's center leaves six visible seconds to counter.
-    web.crawlSpeed=Math.min(WEB_CRAWL,Math.max(4,((spot?.distance||150)-36)/6));
+    web.crawlSpeed=Math.min(WEB_CRAWL,Math.max(1,((spot?.distance||150)-36)/6));
     faceCorinAt(f.x,f.y);dragon.faintDir=f.x<web.dragon[0]?'w':'e';
     // Every web cast supplies its escape, even if Fire was just used.
     breathCooldown.fire=0;breathT=breathWait();
@@ -210,7 +210,7 @@ const SpiderQueenBoss=(()=>{
   function fireCast(element){
     if(!webbed()||element!=='fire')return;
     const f=web.queen;web.phase='burning';web.t=0;web.fire=[dragon.x,dragon.y-16];
-    f.queenStun=3.5;f.webCool=24;f.st='idle';f.t=0;f.hurt=.35;
+    f.queenStun=3.5;f.webCool=9;f.st='idle';f.t=0;f.hurt=.35;
     shots.length=0;toast('The web burns away! She is stunned—attack!');
   }
   function drawWeb(){
@@ -278,6 +278,13 @@ const SpiderQueenBoss=(()=>{
       if(f.st==='dead')ctx.globalAlpha=Math.max(0,1-f.t);
       ctx.fillStyle='rgba(20,9,25,.25)';ctx.beginPath();ctx.ellipse(f.x,f.y-6,28,7,0,0,Math.PI*2);ctx.fill();
       drawPixelImage(ctx,frame,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));
+      if(f.st==='wind'||web?.queen===f&&web.phase==='casting'){
+        if(!tellCanvas){tellCanvas=document.createElement('canvas');tellCanvas.width=128;tellCanvas.height=96;}
+        const g=tellCanvas.getContext('2d');g.clearRect(0,0,128,96);g.globalCompositeOperation='source-over';g.drawImage(frame,0,0);
+        g.globalCompositeOperation='source-in';g.fillStyle=web?.phase==='casting'?'#ff4242':'#ff9a22';g.fillRect(0,0,128,96);
+        ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.25+.5*(.5+.5*Math.sin(tAcc*24));
+        drawPixelImage(ctx,tellCanvas,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));ctx.restore();
+      }
       if(f.queenStun>0){
         ctx.fillStyle='#ffe8a6';for(let i=0;i<3;i++){const angle=tAcc*3+i*Math.PI*2/3;ctx.fillRect(Math.round(f.x+Math.cos(angle)*16)-1,Math.round(f.y-58+Math.sin(angle)*4)-1,3,3);}
       }

@@ -11,6 +11,7 @@ const CHEST_CONSUMABLES={
 };
 function chestConsumable(loot){
   // Keep empty and haunted chests intact, and preserve the early-town rewards.
+  if(loot.item==='emberheart')return null;
   if(loot.ghost||(!loot.gold&&!loot.item))return null;
   const home=W.maps[MAPID.split('_')[0]];
   const late=MD.templeExpanded||MD.royal||MAPID==='cinderhold'||
@@ -65,6 +66,7 @@ function tryHouseLootChest(){
   if(!actor)return false;
   const loot=actor.houseLoot;
   if(houseLootTaken.has(loot.id)){toast('This chest is empty.');return true;}
+  if(loot.item==='emberheart'&&!DesertAdventure.won()){toast('Defeat the Spider Queen to unseal this chest.');return true;}
   // Claim and grant together before saving, so repeat input cannot duplicate loot.
   houseLootTaken.add(loot.id);
   gold+=loot.gold;
@@ -73,6 +75,7 @@ function tryHouseLootChest(){
   if(loot.gold>0)flyGold(actor.x,actor.y,loot.gold);
   const rewards=[];
   if(loot.gold>0)rewards.push('+'+loot.gold+' gold');
+  if(loot.item==='emberheart'){rewards.push('Emberheart Relic · Fire damage +25% (always active)');atlasSyncJournal();}
   if(item)rewards.push('+1 '+item[0]);
   beginLootChestOpening(loot.id,rewards.join(' · ')||'This chest is empty.','it_coin',!!loot.ghost);
   saveGame();

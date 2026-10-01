@@ -1732,7 +1732,7 @@ function geometryPatch(onlyMap=null){
  return out;
 }
 // Illustrated atlas: directional focus moves among labelled destinations.
-const ATLAS_LOCATIONS=[["Millwood",78,272,"Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."],["Elder’s Home",96,228,"Maddock’s house, north of Millwood."],["Northern Woods",104,192,"Woodland north of Millwood, leading toward the mushroom country."],["Sporewood",108,107,"The western mushroom woodland."],["Sporehollow",150,77,"A settlement among the giant mushrooms."],["Northern Shroom Field",102,68,"Mushroom fields at the northern edge of the woods."],["Shroom Pass",107,148,"The path between the northern woods and the mushroom country."],["Route 1",133.01,205.89,"The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."],["Thornwell",214,126,"A woodland town on the journey east."],["Forgefalls",322,249,"The falls southeast of Thornwell."],["Route 2",282.75,176.19,"The woodland road to Forgewick."],["Forgewick",423.0,158.91,"A town of craftspeople. Find the blacksmith, glassblower and market."],["Forgewick Temple",468,199,"The temple southeast of Forgewick, reached by the winding southern trail."],["Route 3",544.28,156.75,"The road from Forgewick into the desert."],["The Oasis",590.89,182.4,"A green refuge southwest of Sandspire, beside the desert road."],["Sandspire",686.18,100.05,"The desert city between Forgewick and Coralmere."],["Sandspire Temple",821.89,221.55,"The temple south-east of Sandspire."],["Route 4",812.4,62.79,"The desert route to the coast."],["Coralmere",855,329,"A coastal town with fishing docks and homes by the water."],["Route 5",990.6,291.21,"The route through the wetlands toward Hollybeck."],["Witchmoor",1068.15,236.67,"Maelis’s home in the marsh. The ferry begins at the mainland dock."],["Dreadmarsh",1101.98,318.75,"The deep marshes south of the road."],["Hollybeck Graveyard",1146.53,130.83,"The graveyard northwest of Hollybeck."],["Hollybeck",1175.4,159.99,"A town at the edge of the snowy highlands."],["Hollybeck Temple",1220.78,93.03,"The temple northeast of Hollybeck. Follow the winding trail east and north."],["Route 6",1235.21,191.31,"The mountain road north to Frostcrag."],["Frostcrag",1236.04,67.65,"A stronghold in the snowy mountains."],["Ashcrag",1267.39,64.95,"East of Frostcrag, beyond the mountain passage, before the volcanic road."],["Route 7",1373.81,178.35,"The final road through the volcanic country."],["Cinderhold Castle",1451.78,211.83,"The king’s fortress at the eastern end of Emberfell."]];
+const ATLAS_LOCATIONS=[["Millwood",78,272,"Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."],["Elder’s Home",96,228,"Maddock’s house, north of Millwood."],["Northern Woods",104,192,"Woodland north of Millwood, leading toward the mushroom country."],["Sporewood",108,107,"The western mushroom woodland."],["Sporehollow",150,77,"A settlement among the giant mushrooms."],["Northern Shroom Field",102,68,"Mushroom fields at the northern edge of the woods."],["Shroom Pass",107,148,"The path between the northern woods and the mushroom country."],["Route 1",133.01,205.89,"The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."],["Thornwell",214,126,"A woodland town on the journey east."],["Forgefalls",322,249,"The falls southeast of Thornwell."],["Route 2",282.75,176.19,"The woodland road to Forgewick."],["Forgewick",423.0,158.91,"A town of craftspeople. Find the blacksmith, glassblower and market."],["Forgewick Temple",468,199,"The temple southeast of Forgewick, reached by the winding southern trail."],["Route 3",544.28,156.75,"The road from Forgewick into the desert."],["The Oasis",590.89,182.4,"A green refuge southwest of Sandspire, beside the desert road."],["Sandspire",686.18,100.05,"The desert city between Forgewick and Coralmere."],["Sandspire Temple",821.89,221.55,"The temple south-east of Sandspire."],["Route 4",812.4,62.79,"The desert route to the coast."],["Coralmere",855,329,"A coastal town with fishing docks and homes by the water."],["Route 5",990.6,291.21,"The route through the wetlands toward Hollybeck."],["Witchmoor",1068.15,236.67,"Maelis’s home in the marsh. The ferry begins at the mainland dock."],["Dreadmarsh",1101.98,318.75,"The deep marshes south of the road."],["Hollybeck Graveyard",1146.53,130.83,"The graveyard northwest of Hollybeck."],["Hollybeck",1175.4,159.99,"A town at the edge of the snowy highlands."],["Hollybeck Temple",1220.78,93.03,"The temple northeast of Hollybeck. Follow the winding trail east and north."],["Route 6",1235.21,191.31,"The mountain road north to Frostcrag."],["Frostcrag",1236.04,67.65,"A stronghold in the snowy mountains."],["Ashcrag",1267.39,64.95,"East of Frostcrag, beyond the mountain passage, before the volcanic road."],["Route 7",1373.81,178.35,"The final road through the volcanic country."],["Cinderhold Castle",1451.78,211.83,"The king’s fortress at the eastern end of Emberfell."],["Sunken Pyramid",576,65,"An optional expedition west of Sandspire. Its burial chambers shelter the Emberheart relic."]];
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;if(typeof atlasJournalOpen!=='undefined'&&atlasJournalOpen){atlasTimer=Date.now()+260;atlasJournalMove(dy||dx);return;}const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
@@ -4292,7 +4292,7 @@ function drawWorld(t, dt) {
         : f.storyKnight && f.st === "escape" ? Math.floor((f.storyT || f.t) * 10) % s2[4]
         : /^(?:(pl|lc|rp|dv|ent|bh|ms|gh|bs)[123]|bg|kn|kn3)_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
         : /^gn[123]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k, 4)
-        : /^pyramid_mummy_/.test(o.nm) ? golemFrame(f,s2,o.nm,k,3)
+        : /^pyramid_(mummy|archer[12]|lancer[12])_/.test(o.nm) ? golemFrame(f,s2,o.nm,k,3)
         : /^gm[1234]_/.test(o.nm) ? golemFrame(f, s2, o.nm, k)
         : f.st === "dead"
         ? Math.min(s2[4] - 1, Math.floor(f.t * 8))
@@ -4368,7 +4368,7 @@ function drawWorld(t, dt) {
       const fMaxHp = enemyMaxHp(f.kind, Number.isFinite(f.hx) ? f.hx : f.x);
       if (f.st !== "dead" && f.kind !== "kdragon" && !(f.storyKnight && f.storyPassive)) {
         const bw = f.kind === "treasuryknight" ? 32 : 18, bh = 3;
-        const bx = Math.round(f.x - bw / 2), by = dy + (/^golem[1234]$/.test(f.kind) ? foeVisibleTop82(s2,fr)-6 : ((f.kind === "royalguard" || f.kind === "treasuryknight") ? 12 : -5));
+        const bx = Math.round(f.x - bw / 2), by = dy + (/^golem[1234]$/.test(f.kind) ? foeVisibleTop82(s2,fr)-6 : (/^desertarcher[12]$/.test(f.kind)?15:/^desertlancer[12]$/.test(f.kind)?10:(f.kind === "royalguard" || f.kind === "treasuryknight") ? 12 : -5));
         ctx.fillStyle = "#1a1416";
         ctx.fillRect(bx - 1, by - 1, bw + 2, bh + 2);
         ctx.fillStyle = "#4a2b2b";
@@ -4382,7 +4382,7 @@ function drawWorld(t, dt) {
     if (o.bolt) {
       const s2 = SPR[o.nm];
       const fw = s2[2];
-      drawGameImage(ctx, atlasImg, s2[0] + o.fr * fw, s2[1], fw, s2[3],
+      drawGameImage(ctx, sheetOf(s2), s2[0] + o.fr * fw, s2[1], fw, s2[3],
                     Math.round(o.x - fw / 2), Math.round(o.y - s2[3] / 2), fw, s2[3]);
       continue;
     }
@@ -4390,7 +4390,7 @@ function drawWorld(t, dt) {
     if (o.anim) {
       const s2 = SPR[o.nm];
       const frame = /^wm_pot_/.test(o.nm) ? Math.floor(t * 8) % s2[4] : 0;
-      drawGameImage(ctx, atlasImg, s2[0] + frame * s2[2], s2[1], s2[2], s2[3],
+      drawGameImage(ctx, sheetOf(s2), s2[0] + frame * s2[2], s2[1], s2[2], s2[3],
                     Math.round(o.x - s2[2] / 2), Math.round(o.y - s2[3]), s2[2], s2[3]);
       continue;
     }
@@ -4637,7 +4637,7 @@ function drawWorld(t, dt) {
       }
       continue;
     }
-    const rawNm = NAMES[o.s], nm = typeof farmAnimalDrawName==='function' ? farmAnimalDrawName(rawNm,o) : rawNm;
+    const rawNm = NAMES[o.s], nm = DesertAdventure.houseSprite(o)||(typeof farmAnimalDrawName==='function' ? farmAnimalDrawName(rawNm,o) : rawNm);
     const s = SPR[nm], od = DEFS[o.s];
     if (!s) continue; // Old device-local edits may reference art removed by a later build.
     const chim = ATLAS.chimneys && ATLAS.chimneys[rawNm];
@@ -8038,7 +8038,7 @@ function stepBreath(dt) {
       });
       if (f) {
         b.hit = 1;
-        const power = DRAGON_BREATH[b.el]?.damage || DRAGON_BREATH.fire.damage;
+        const power = DesertAdventure.firePower(b.el,DRAGON_BREATH[b.el]?.damage || DRAGON_BREATH.fire.damage);
         const fullHp = (FOE[f.kind] || {}).hp || f.hp;
         /* A fresh enemy always survives the first blast; later blasts or
            Corin's attacks can finish it. */
@@ -8291,6 +8291,10 @@ function bookOrder() {
   return met.concat(not);
 }
 const BESTIARY = [
+  {k:"desertarcher1",n:"Dune Archer",w:"the pyramid road and armoury",t:"Caravan bows now serve the burial guard. An orange flash warns of a shot; block the arrow or close the distance while the archer recovers."},
+  {k:"desertarcher2",n:"Sunveil Archer",w:"the western desert road and pyramid vaults",t:"These swift veteran bow guards protect the deeper vaults. Their stronger arrows punish a straight approach. Watch the attack flash and move between shots."},
+  {k:"desertlancer1",n:"Dune Spear Guard",w:"the pyramid road and guard chambers",t:"A long atgier keeps intruders beyond sword reach. The raised spear flashes before its thrust. Block, then step in during the recovery."},
+  {k:"desertlancer2",n:"Gilded Spear Guard",w:"the pyramid crypt and western approach",t:"The elite burial guard still patrols the sealed crypt. Faster feet and a heavier spear make its flashing wind-up the safest moment to prepare a block."},
   {k:"mummy",n:"Pyramid Mummy",w:"the Sunken Pyramid",t:"Tattered bandages trail across the sandstone floors. These restless dead still patrol the burial chambers and strike anyone who disturbs them."},
   {k:"spiderqueen",n:"Spider Queen",w:"the deepest chamber of the Sunken Pyramid",t:"Raised forelegs warn of a stomp whose shockwave sweeps the whole room. Press B to block the ring; distance will not keep Corin safe. At range, she spits venom. Her room-wide web traps Corin and Aurelius while she crawls toward them for a bite worth one whole heart. Command Fire to burn the web, free them both, and stun her."},
   {"k": "devil1", "n": "Cinder Bailiff", "w": "the demon's Cinderhold trials", "t": "Before the Wingfall, riders sealed bargains with burned handprints. The Cinder Bailiffs still collect those debts. Maelis has persuaded one that a fair contest counts as payment."},
@@ -10298,6 +10302,7 @@ function stepFoes(dt) {
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
     if(f.kind==='spiderqueen'){SpiderQueenBoss.step(f,dt);continue;}
+    if(f._thinking&&f.st!=='dead'&&/^(desert(?:archer|lancer)[12]|mummy)$/.test(f.kind)&&!seenFoe[f.kind])seenFoe[f.kind]=++seenCount;
     if(f.huntingArena){stepHuntingAnimal(f,dt);continue;}
     if(f.glassBlockHold>0){
       f.glassBlockHold=Math.max(0,f.glassBlockHold-dt);
@@ -11564,6 +11569,7 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(DesertAdventure.talk(best))return;
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
       startNanFarewell(best);return;

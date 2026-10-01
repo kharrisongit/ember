@@ -19,7 +19,7 @@ assert(launched&&splash,'Venom launches and produces an impact');assert(run('pHp
 run(`Object.assign(foes[0],{x:168,y:162,st:'idle',t:0,hp:20});P.x=168;P.y=184;P.dir='u';P.act={kind:'swing',t:4,dir:'u',dir8:'n',hit:0};swingHits();`);
 assert(run('foes[0].hp<20&&foes[0].hurt>0'),'Sword damages the queen and triggers hurt art');
 run(`P.act=null;devSafe=true;pHp=6;Object.assign(foes[0],{st:'idle',t:0});arenaLock=expandedTempleArenas()[0];arenaT=1;`);
-for(const [x,y]of [[64,100],[272,100],[64,240],[272,240]]){
+for(const [x,y]of [[64,100],[224,100],[64,208],[224,208]]){
  run(`P.x=${x};P.y=${y};`);
  for(let i=0;i<300;i++)run('stepCombat(.05)');
  assert(run('combatCanStand(foes[0],foes[0].x,foes[0].y)'),'Queen remains inside walls when chasing corners');
@@ -36,36 +36,36 @@ function prepareSlam(x,y){
  P.x=${x};P.y=${y};P.act=null;pHp=6;pInv=0;tAcc=0;smithUpgrade=false;worn.ward=false;worn.twin=false;
  Object.assign(foes[0],{x:168,y:168,st:'swing',t:.8,queenAttack:'stomp',webCool:1000,hit:0,hold:0});stepCombat(.05);`);
 }
-for(const [x,y]of [[64,100],[272,100],[64,240],[272,240]]){
+for(const [x,y]of [[64,100],[224,100],[64,208],[224,208]]){
  prepareSlam(x,y);assert.equal(run('SpiderQueenBoss.inspect().waves.length'),1);
  assert.equal(run('pHp'),6,'Distant damage waits for the visible ring');
  for(let i=0;i<24;i++)run('tAcc+=.05;stepCombat(.05)');
  assert.equal(run('pHp'),4,'A corner cannot escape the full-room slam');
  assert.equal(run('SpiderQueenBoss.inspect().waves.length'),0,'Shockwave finishes cleanly');
 }
-prepareSlam(272,240);
+prepareSlam(224,208);
 run(`glassShield=true;Object.assign(foes[0],{x:81,y:108,st:'wind',t:0,hit:0});SpiderQueenBoss.reset();`);
 assert(run('inFight()'),'B stays in combat mode across the room');
 assert(run('tryGlassShieldParry()'),'A B press during windup queues a block at room-wide range');
 for(let i=0;i<52;i++)run('tAcc+=.05;stepCombat(.05)');
 assert.equal(run('pHp'),6,'Queued distant block prevents slam damage');assert(run('glassGifStart>0'),'Successful block plays existing shield feedback');
-prepareSlam(272,240);run('glassShield=true;glassShieldHeld=true;glassShieldWindowUntil=-1;');
+prepareSlam(224,208);run('glassShield=true;glassShieldHeld=true;glassShieldWindowUntil=-1;');
 for(let i=0;i<24;i++)run('tAcc+=.05;stepCombat(.05)');assert.equal(run('pHp'),4,'An expired held block does not grant immunity');
-prepareSlam(272,240);run('glassShield=true;');
-for(let i=0;i<12;i++)run('tAcc+=.05;stepCombat(.05)');
+prepareSlam(224,208);run('glassShield=true;');
+for(let i=0;i<5;i++)run('tAcc+=.05;stepCombat(.05)');
 run('glassShieldHeld=true;glassShieldWindowUntil=tAcc+GLASS_BLOCK_WINDOW;tryGlassShieldParry();');
-for(let i=0;i<12;i++)run('tAcc+=.05;stepCombat(.05)');assert.equal(run('pHp'),6,'Block after launch also stops the approaching ring');
-prepareSlam(272,240);run('scene={lines:[],i:0};');
+for(let i=0;i<19;i++)run('tAcc+=.05;stepCombat(.05)');assert.equal(run('pHp'),6,'Block after launch also stops the approaching ring');
+prepareSlam(224,208);run('scene={lines:[],i:0};');
 const pausedWave=run('JSON.stringify(SpiderQueenBoss.inspect().waves)');run('stepCombat(.5)');
 assert.equal(run('JSON.stringify(SpiderQueenBoss.inspect().waves)'),pausedWave,'Dialogue pauses the shockwave');
 run("scene=null;loadMap('pyramid_entry');");assert.equal(run('SpiderQueenBoss.inspect().waves.length'),0,'Changing rooms clears the slam');
-prepareSlam(272,240);run("foes[0].st='dead';stepCombat(.1)");assert.equal(run('SpiderQueenBoss.inspect().waves.length'),0,'Queen defeat clears the slam');
+prepareSlam(224,208);run("foes[0].st='dead';stepCombat(.1)");assert.equal(run('SpiderQueenBoss.inspect().waves.length'),0,'Queen defeat clears the slam');
 run('glassShield=false;glassShieldHeld=false;');
 console.log('PASS: room-wide slam in all corners, single hit, distant windup and post-launch B blocks, expired shield rejection, pause and cleanup.');
 // The special attack must be escapable through the actual Dragon → Fire action.
 run(`delete bossGone['pyramid_queen:0'];loadMap('pyramid_queen');scene=null;bossScene=null;ovl=null;fadeDir=0;foesHeld=false;devSafe=false;dragonOff=false;devDragonPassive=false;dragonIntroDone=true;dragonReady=true;
-P.x=103;P.y=226;P.act=null;pHp=6;pMax=6;pInv=0;
-Object.assign(dragon,{on:true,down:false,x:228,y:226,placed:MAPID,air:false,knockdown:0,hp:40,maxHp:40,inv:0});
+P.x=103;P.y=200;P.act=null;pHp=6;pMax=6;pInv=0;
+Object.assign(dragon,{on:true,down:false,x:228,y:200,placed:MAPID,air:false,knockdown:0,hp:40,maxHp:40,inv:0});
 Object.assign(foes[0],{x:168,y:135,st:'idle',t:0,webCool:0});breathCooldown.fire=11;cam.z=3.2;`);
 for(let i=0;i<50;i++)run('stepCombat(.05)');
 assert(run('SpiderQueenBoss.webbed()'),'Room-wide cast traps both party members');
@@ -75,7 +75,7 @@ assert(run('SpiderQueenBoss.playerPose()?.kind==="die"&&P.act===null&&!dragon.do
 const nets=JSON.parse(run('JSON.stringify(SpiderQueenBoss.inspect().web.nets)'));assert(new Set(nets.map(n=>n.w)).size>=6&&new Set(nets.map(n=>n.variant)).size===5,'Layered web scales and five silhouettes');
 assert.equal(run('breathWait("fire")'),0,'Escape Fire is available even after a recent cast');
 const zoomBeforeWeb=run('cam.z');run('SpiderQueenBoss.frameCamera();');
-assert(run('cam.z>Math.min(3.2,(VW-24)/(240+40),(VH-24)/(176+96))'),'Capture camera stays closer than a whole-room view');
+assert(run('cam.z>Math.min(3.2,(VW-24)/(192+40),(VH-24)/(144+96))'),'Capture camera stays closer than a whole-room view');
 assert(run('[P,dragon,foes[0]].every(a=>a.x>cam.x&&a.x<cam.x+VW/cam.z&&a.y-65>cam.y&&a.y<cam.y+VH/cam.z)'), 'Camera keeps both victims and the approaching queen in view');
 const anchors=run('JSON.stringify([P.x,P.y,dragon.x,dragon.y])');
 run('padDx=1;padDy=1;stepPlayer(.5);stepDragon(.5);dragonStep(90,90);');
@@ -103,7 +103,7 @@ assert(run('SpiderQueenBoss.webbed()'));run("loadMap('pyramid_entry')");assert(!
 console.log('PASS: room-wide web, both movement locks, no mount/flight/sword escape, exact full-heart bites, cooldown-safe Fire menu counter, burn/release, 3.5-second stun and reset.');
 // Exercise the actual encounter gate as well as the isolated combat states.
 run(`Object.assign(window,bossTestSystems);EmberRiding.skip();devSafe=true;revealing=false;
-loadMap('pyramid_queen');P.x=168;P.y=226;P.act=null;dragon.x=195;dragon.y=226;dragon.placed=MAPID;
+loadMap('pyramid_queen');P.x=168;P.y=200;P.act=null;dragon.x=195;dragon.y=200;dragon.placed=MAPID;
 EmberArenaEntry.prepare();stepArena(.05);`);
 for(let i=0;i<40;i++)run('tAcc+=.05;EmberArenaEntry.step(.05);stepDragon(.05);stepArena(.05);stepCombat(.05);');
 assert(run('EmberArenaEntry.holding()'),'Queen encounter waits for player readiness');

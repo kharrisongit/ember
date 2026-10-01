@@ -3,8 +3,18 @@ import {loadEditorGame} from '../tools/editor-game-context.mjs';
 const {run,context}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
 await run('loadPublishedEditorLayouts()');
 run("mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=true;loadMap('world');");
+console.log('World generated; checking road and arena access.');
 const routes=JSON.parse(run('JSON.stringify(DesertPyramid.routes)'));
 for(const f of routes)assert.equal(run(`JSON.stringify(features.find(f=>f.id===${f.id}))`),JSON.stringify(f),'Exact patch survives full world generation');
+const approach=JSON.parse(run('JSON.stringify(features.filter(f=>f.pyramidApproach))'));
+assert.equal(approach.length,5);
+for(const a of approach){
+ assert(run(`MD.foes.filter(f=>f.desertEncounter?.startsWith('${a.id}:')).length>=2`),'Arena has its authored enemies');
+ for(let y=-5;y<=5;y++)for(let x=-5;x<=5;x++)assert(run(`canStand(${(a.x+x)*16+8},${(a.y+y)*16+16})`),'Clear desert arena floor '+a.id);
+}
+const courtReturn=JSON.parse(run('JSON.stringify(W.maps.sandspire_court.doors[0])'));
+assert(run(`canStand(${courtReturn.tx*16+8},${courtReturn.ty*16+16})`),'Caravan court returns onto clear Sandspire ground');
+assert(run('canStand(24248,1592)'),'Sandspire quest giver can be approached');
 let blocked=0,samples=0;
 for(const f of routes)for(let i=1;i<f.pts.length;i++){
  const [a,b]=[f.pts[i-1],f.pts[i]],n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])*4);
@@ -15,6 +25,14 @@ for(const f of routes)for(let i=1;i<f.pts.length;i++){
 }
 assert.equal(blocked,0,'Entire supplied road centerline is walkable');
 const ids=JSON.parse(run('JSON.stringify(Object.keys(W.maps).filter(k=>k.startsWith("pyramid_")))'));
+run('foesHeld=false;window.EmberRiding=undefined;window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;scene=null;');
+for(const a of approach){
+ run(`arenaLock=null;P.x=${a.x*16+8};P.y=${a.y*16+16};stepArena(.05);`);
+ assert.equal(run('arenaLock?.id'),a.id,'Entering the approach clearing starts its battle');
+ assert(run('arenaFoesLeft(arenaLock)'),'Arena has live combatants');
+}
+run('arenaLock=null;arenaT=0;foesHeld=true;');
+console.log('Five populated arenas and the supplied route are clear. Checking interiors.');
 let chambers=0,mummies=0,doors=0;
 for(const id of ids){
  run(`loadMap('${id}');[P.x,P.y]=MD.spawn;`);
@@ -34,7 +52,7 @@ for(const id of ids){
  for(const a of m.actors.filter(a=>a.houseLoot))assert(q.some(([x,y])=>Math.abs(x-a.x)<9&&Math.abs(y-a.y-24)<9),id+' treasure reachable');
  for(const f of m.foes)assert(clear(f.x*16+8,f.y*16+16),id+' enemy on clear floor');
 }
-assert.equal(chambers,9);assert(mummies>=10);assert.equal(doors,9);
+assert.equal(chambers,15);assert(mummies>=10);assert.equal(doors,15);
 run("loadMap('pyramid_queen');[P.x,P.y]=MD.spawn;bossGone['pyramid_queen:0']=true;bossGone['pyramid_depths:spikes:pyramid-spikes']=true;houseLootTaken.add('pyramid_cache:loot:0');");
 assert(run('saveToSlot(1,true)'));
 assert(run("readSaveSlot(1).templeDefeated['pyramid_queen:0']"));

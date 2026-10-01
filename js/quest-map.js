@@ -8,7 +8,7 @@ function atlasQuestTrackLock(q){
  if(q?.id==='temple:Hollybeck'&&!breathHas.ice)return 'Complete Sandspire Temple and claim its Ice Heartstone before tracking Hollybeck Temple.';
  return '';
 }
-function atlasJournalAllowed(id){return ['main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
+function atlasJournalAllowed(id){return ['pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
 function atlasJourneyObjective(){
@@ -57,6 +57,7 @@ function atlasPlaceFor(map,n){
 }
 function atlasQuestOptions(){
  const main=atlasMainObjective(),out=[main],seen=new Set([main.questId]),add=(id,...args)=>{if(!seen.has(id)){seen.add(id);out.push(atlasObjective(id,...args));}};
+ if(DesertAdventure.accepted()&&!DesertAdventure.owned())add('pyramid','The Emberheart of the Sands','Sunken Pyramid',DesertAdventure.won()?'Open the chest in the guardian’s chamber. The relic permanently strengthens Aurelius’s Fire while carried.':'Follow the western desert detour, explore the Sunken Pyramid and defeat its guardian. Recover the Emberheart from the treasure chest.');
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
  if(royal&&brambleQuest>=2)add('thornwell-royals',...royal);
  if(odoRodReferral&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
@@ -74,6 +75,7 @@ function atlasQuestOptions(){
 // illustrated atlas's deliberately compressed picture coordinates.
 function atlasQuestTarget(q){
  if(!q)return null;
+ if(q.id==='pyramid')return DesertAdventure.won()?{map:'pyramid_queen',x:216,y:128}:{map:'pyramid_queen',x:144,y:160};
  const element={'Forgewick Temple':'lightning','Sandspire Temple':'ice','Hollybeck Temple':'shadow'}[q.place];
  if(element){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
  if(q.id==='bramble'||['main','thornwell-royals'].includes(q.id)&&/Return Bramble|Bramble.*owner/.test(q.title)){
@@ -108,6 +110,7 @@ function atlasQuestTarget(q){
 const ATLAS_CONNECTIONS=[
  ['Millwood','Elder’s Home','Northern Woods','Shroom Pass','Sporewood','Sporehollow','Northern Shroom Field'],
  ['Millwood','Route 1','Thornwell','Route 2','Forgewick','Route 3','The Oasis','Sandspire','Route 4','Coralmere','Route 5','Hollybeck','Route 6','Frostcrag','Ashcrag','Route 7','Cinderhold Castle'],
+ ['Sandspire','Sunken Pyramid'],
  ['Thornwell','Forgefalls'],['Forgewick','Forgewick Temple'],['Sandspire','Sandspire Temple'],
  ['Route 5','Witchmoor','Dreadmarsh'],['Hollybeck','Hollybeck Graveyard'],['Hollybeck','Hollybeck Temple']
 ];
@@ -142,6 +145,7 @@ function atlasMilestoneData(){return [
  ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
  ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasJourneyObjective().title,false]]);}
 function atlasQuestComplete(id){
+ if(id==='pyramid')return DesertAdventure.owned();
  if(id==='main')return !!wonAll;
  if(id==='fishing')return !!fishingPole;
  if(id==='bramble')return brambleQuest>=2;
@@ -160,6 +164,7 @@ function atlasSyncJournal(){
  if(!atlasQuests.some(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q)))atlasTrackedQuest='main';
 }
 function atlasQuestStages(q){
+ if(q?.id==='pyramid')return [['Accept the expedition',DesertAdventure.accepted()||DesertAdventure.owned()],['Defeat the pyramid guardian',DesertAdventure.won()],['Open the Emberheart chest',DesertAdventure.owned()]];
  if(q?.id==='main')return atlasMilestoneData();
  if(q?.id==='thornwell-royals')return [['Return Bramble',brambleQuest>=3],...(thornwellRoyal.stage>=2?[['Answer the king’s summons',thornwellRoyal.stage>=4]]:[]),...(thornwellRoyal.stage>=5?[['Wait for the royal party',thornwellRoyal.stage>=6]]:[]),...(thornwellRoyal.stage>=6?[['Meet Aurelius at Forgefalls',thornwellRoyal.stage>=7]]:[])];
  if(q?.id==='bramble')return [['Meet Bramble',brambleQuest>=1],['Find his owner',dragonLearned('bramble-owner')||brambleQuest>=2],['Bring him home',brambleQuest>=2]];
@@ -173,7 +178,7 @@ function restoreQuestJournal(saved){
 }
 function atlasCompletedEntries(){
  const known={...atlasJournalKnown};
- const earned=[['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Forgewick','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
+ const earned=[['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Forgewick','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
  return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
   const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];

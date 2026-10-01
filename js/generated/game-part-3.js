@@ -4585,6 +4585,7 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
+  {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_flame"},
   { key:"bag",kind:"key",name:"Hettie’s Bag",tell:"Hettie gave you this sturdy bag for your errand. It keeps your supplies together.",has:hasBag,icon:()=>"inventory_bag" },
   { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
     tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; choose a quest in the map and the compass will guide you there.",
@@ -5944,11 +5945,12 @@ function captureSave(){return {
   inventoryPromptOpens,
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
+  pyramidQuest:DesertAdventure.capture(),
   spiderWebLesson:typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
   charm:{...charm}, worn:{...worn},
-  templeLayoutVersion:2, pyramidLayoutVersion:2, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
+  templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
@@ -6000,6 +6002,7 @@ function loadGame(slot=activeSaveSlot) {
     activeSaveSlot=slot;
     if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
     restoreInventoryPrompt(s);
+    DesertAdventure.restore(s.pyramidQuest);
     if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.restore(s.spiderWebLesson);
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");
@@ -6041,7 +6044,7 @@ function loadGame(slot=activeSaveSlot) {
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;bagOwned=s.bagOwned===undefined?quest>=Q.EGGS:!!s.bagOwned;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
-    if(s.map==='pyramid_queen'&&s.pyramidLayoutVersion!==2){[s.x,s.y]=W.maps[s.map].spawn;}
+    if(s.map==='pyramid_queen'&&s.pyramidLayoutVersion!==3){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.mountainPassage&&s.passageLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.hollybeck&&s.hollybeckLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}

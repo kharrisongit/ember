@@ -1,0 +1,68 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
+run(`mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEncounterCard=undefined;
+DesertAdventure.installWorld(W.maps.world);loadMap('school2');scene=null;bossScene=null;fadeDir=0;`);
+function finish(){for(let i=0;run('!!scene')&&i<20;i++)run('typeAll();scene.t=.3;advanceScene();');assert(!run('!!scene'));}
+run(`beginNpcTalk(npcs.find(n=>n.n==='Scholar Ilyan'));`);finish();
+assert(run('ask.opts.some(o=>o.n.includes("investigate"))'),'School scholar actually offers the expedition');
+run('askPick=1;askTake();');finish();assert(!run('DesertAdventure.accepted()'),'Declining leaves quest available');
+run(`beginNpcTalk(npcs.find(n=>n.n==='Scholar Ilyan'));`);finish();run('askPick=0;askTake();');finish();
+assert.equal(run('DesertAdventure.capture()'),'school');
+assert.equal(run('atlasQuestKind(atlasQuestOptions().find(q=>q.id==="pyramid"))'),'side');
+assert(run('atlasJournalAllowed("pyramid")&&atlasTrackedQuest==="pyramid"'));
+assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="pyramid")).map'),'pyramid_queen');
+run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);finish();assert.equal(run('ask'),null,'Town giver does not offer a duplicate');
+assert.equal(run('DesertAdventure.capture()'),'school');
+run('saveToSlot(1,true);DesertAdventure.restore(null);');assert(run('loadGame(1)'));assert.equal(run('DesertAdventure.capture()'),'school');
+run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),pyramidQuest:null,houseLootTaken:[],templeDefeated:{}}));`);
+assert(run('loadGame(2)'));assert(!run('DesertAdventure.accepted()'));
+run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);finish();run('askPick=0;askTake();');finish();assert.equal(run('DesertAdventure.capture()'),'sandspire');
+assert(!run('DesertAdventure.accept("school")'),'Source remains whichever giver was accepted first');
+console.log('PASS: school and Sandspire offers, decline/reoffer, no duplicates, side-quest journal and save-slot isolation.');
+run(`loadMap('pyramid_queen');scene=null;bossScene=null;ovl=null;fadeDir=0;P.x=216;P.y=128;P.act=null;
+houseLootTaken.add('pyramid_queen:loot:0');const rewardGold=gold;tryHouseLootChest();`);
+assert(!run('DesertAdventure.owned()'));assert.equal(run('gold'),run('rewardGold'),'Chest remains locked before victory');
+run(`bossGone['pyramid_queen:0']=true;tryHouseLootChest();`);
+assert(run('DesertAdventure.owned()'),'Legacy ordinary chest claim cannot consume the new relic');
+assert.equal(run('gold-rewardGold'),160);
+assert(run('atlasQuestComplete("pyramid")&&atlasCompletedEntries().some(q=>q.id==="pyramid")'));
+assert(run('BAG.find(it=>it.key==="emberheart").has()&&!USABLE.emberheart'),'Relic is carried, not equipped or consumed');
+const savedGold=run('gold');run('tryHouseLootChest();');assert.equal(run('gold'),savedGold,'Reward grants once');
+function damage(el,owned){
+ run(`houseLootTaken.${owned?'add':'delete'}(DesertAdventure.rewardId);foes=[{kind:'spiderqueen',x:144,y:168,hp:100,st:'idle',t:0}];
+ breath={el:${JSON.stringify(el)},t:.2,x:120,y:152,vx:1,vy:0,distance:0,speed:160,hit:0,impactT:0};stepBreath(.05);`);
+ return 100-run('foes[0].hp');
+}
+assert.equal(damage('fire',true),damage('fire',false)*1.25,'Actual projectile damage receives exactly 25% Fire boost');
+assert.equal(damage('ice',true),damage('ice',false),'Other elements retain their damage');
+run(`houseLootTaken.add(DesertAdventure.rewardId);saveToSlot(1,true);houseLootTaken.clear();DesertAdventure.restore(null);`);
+assert(run('loadGame(1)'));assert(run('DesertAdventure.owned()'));assert.equal(run('DesertAdventure.capture()'),'sandspire');
+run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),houseLootTaken:[],pyramidQuest:null,templeDefeated:{}}));`);
+assert(run('loadGame(2)'));assert(!run('DesertAdventure.owned()||DesertAdventure.accepted()'));
+console.log('PASS: victory lock, old-save chest migration, one-time passive reward, real Fire damage, other elements and persistence.');
+const kinds=['mummy','desertarcher1','desertarcher2','desertlancer1','desertlancer2'];
+for(const kind of kinds){
+ assert(run(`FOE[${JSON.stringify(kind)}]&&BESTIARY.some(e=>e.k===${JSON.stringify(kind)})`));
+ assert(run(`Object.values(W.maps).filter(m=>m.pyramid).some(m=>m.foes.some(f=>f.k===${JSON.stringify(kind)}))`));
+ for(const action of ['idle','walk','atk','hurt','die'])for(const dir of ['d','u','e','w'])assert(run(`!!SPR[FOE_ART[${JSON.stringify(kind)}]+'_${action}_${dir}']`));
+}
+assert.equal(run('W.maps.world.features.filter(f=>f.pyramidApproach).length'),5);
+assert.equal(run('W.maps.world.foes.filter(f=>f.desertEncounter).length'),15);
+run('DesertAdventure.installWorld(W.maps.world);');assert.equal(run('W.maps.world.features.filter(f=>f.pyramidApproach).length'),5);
+const usage=JSON.parse(fs.readFileSync('assets/interiors/desert-pyramid/pack-usage.json','utf8'));
+const used=new Set(JSON.parse(run('JSON.stringify(Object.values(W.maps).flatMap(m=>[...(m.roomActors||[]).map(a=>a.spr),...Object.values(m.desertHouseSprites||{})]))')));
+for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('dd_'))assert(used.has(ref),'Native asset placed: '+ref);
+assert.equal(Object.keys(usage).length,92);
+run("loadMap('sandspire_court');[P.x,P.y]=MD.spawn;");assert(run('canStand(P.x,P.y)'));
+assert(run('MD.doors[0].to==="world"&&W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
+console.log('PASS: five populated approach arenas, all five desert enemy types and bestiary entries, 92 pack sources placed, returnable caravan court.');
+// Both bow guards fire real, damaging projectiles and enter the discovery list.
+for(const kind of ['desertarcher1','desertarcher2']){
+ run(`loadMap('pyramid_armoury');scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;foesHeld=false;dragonOff=true;P.act=null;P.x=240;P.y=256;pHp=6;pInv=0;devSafe=true;
+ foes=[{kind:${JSON.stringify(kind)},x:112,y:240,hx:112,hy:240,hp:20,st:'idle',t:0,dir:'s',flip:false,hurt:0,hold:0}];bolts.length=0;`);
+ let shot=false;for(let i=0;i<130;i++){run('stepCombat(.05)');shot||=run('bolts.some(b=>b.art==="desert_arrow")');}
+ assert(shot,kind+' fires an actual arrow');assert(run(`seenFoe[${JSON.stringify(kind)}]>0`));
+}
+console.log('PASS: both bow-guard variants attack through the normal projectile and bestiary-discovery systems.');
