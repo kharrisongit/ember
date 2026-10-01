@@ -5,7 +5,11 @@ await run('inflateAtlas()');await run('loadPublishedEditorLayouts()');
 run("applyPublishedEditorLayout(W.maps.world,'world');MAPID='world';features=W.maps.world.features;");
 const routes=JSON.parse(run("JSON.stringify(features.filter(f=>f.kind==='route'&&f.style==='desert'))"));
 const at=t=>JSON.parse(run(`JSON.stringify(DesertAdventure.vultures(${t}))`));
-const first=at(0);
+const first=at(0),next=at(.01);
+for(let i=0;i<first.length;i++){
+ const dx=next[i].x-first[i].x;
+ if(Math.abs(dx)>.001)assert.equal(first[i].flip,dx<0,'Native east-facing artwork faces its flight direction');
+}
 assert(first.length>routes.length,'Long roads carry several spaced birds');
 assert.deepEqual([...new Set(first.map(b=>b.route))].sort(),routes.map(r=>r.id).sort(),'Main, pyramid and chest roads all have vultures');
 for(const t of [1,10,60,300,1200]){

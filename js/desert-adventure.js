@@ -148,7 +148,7 @@ const DesertAdventure=(()=>{
       const u=Math.min(1,distance/leg.len),bob=Math.sin(t*1.3+i+p.id)*3;
       birds.push({route:p.id,x:(leg.a[0]+(leg.b[0]-leg.a[0])*u)*TS+8,
         y:(leg.a[1]+(leg.b[1]-leg.a[1])*u)*TS+8-28+bob,
-        flip:(leg.b[0]-leg.a[0])*(forward?1:-1)>0,phase:i+p.id});
+        flip:(leg.b[0]-leg.a[0])*(forward?1:-1)<0,phase:i+p.id});
     }
     return birds;
   }
