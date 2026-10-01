@@ -6,10 +6,10 @@ foesHeld=false;devSafe=false;saintT=0;mounted=false;smithUpgrade=false;worn.ward
 houseLootTaken.clear();pHp=pMax=6;pInv=0;P.act=null;deadShown=false;
 const soulwingItem=BAG.find(i=>i.key==='soulwing');`);
 assert(!run('soulwingItem.has()'));
-run(`markBossGone({kind:'icemoth',ally:false,st:'dead',hp:0,x:P.x,y:P.y});`);
+run(`IceMoth.defeated();houseLootTaken.add(IceMoth.rewardId);saveGame();`);
 assert(run('IceMoth.defeatedAlready()&&soulwingItem.has()'));
 assert.equal(run('soulwingItem.icon()'),'inventory_soulwing');
-assert(run('readSaveSlot(activeSaveSlot).houseLootTaken.includes(IceMoth.rewardId)'),'Victory saves the reward');
+assert(run('readSaveSlot(activeSaveSlot).houseLootTaken.includes(IceMoth.rewardId)'),'Collected reward is saved');
 run(`const soulwingArena={id:444,x:P.x/16,y:P.y/16,r:6.3};arenaLock=soulwingArena;arenaT=1;
 foes=[{kind:'plant1',hp:17,st:'walk',x:P.x+50,y:P.y,idx:91}];
 const soulwingFoes=foes,soulwingEnemy=foes[0];gold=321;
@@ -31,7 +31,9 @@ assert(run('loadGame(activeSaveSlot)'));assert(!run('soulwingItem.has()'),'Consu
 run('foesHeld=false;pInv=0;pHp=1;P.act=null;deadShown=false;hurtPlayer(99);stepAct(1);');
 assert(run('deadShown&&dying()'),'The next death uses the ordinary game-over flow');
 // An old victory save gets one charge without needing to respawn the boss.
-run(`houseLootTaken.clear();houseLootTaken.add('world:ice-moth:defeated');saveToSlot(2,true);`);
+run(`houseLootTaken.clear();houseLootTaken.add('world:ice-moth:defeated');
+const legacySoulwingSave=captureSave();delete legacySoulwingSave.bossRewardChests;
+localStorage.setItem(saveKey(2),JSON.stringify(legacySoulwingSave));`);
 assert(run('loadGame(2)&&soulwingItem.has()'));
 run('pHp=0;P.act={kind:"die"};showDeath();');assert(!run('soulwingItem.has()'));
 run('houseLootTaken.clear();saveToSlot(3,true);');

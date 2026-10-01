@@ -14,9 +14,8 @@ const IceMoth=(()=>{
   ].map(f=>({...f,kind:'route',w:5,band:20,style:'winter',a0:null,a1:null,sideRoute:'ice-moth',shortcut:true}));
   const frames={},effectsArt=[],shots=[],bursts=[];
   let loading=null,ready=false,map='';
-  const defeatedAlready=()=>houseLootTaken.has(DEFEATED);
-  // Earlier saves that already defeated the moth receive its new reward too.
-  const owned=()=>(houseLootTaken.has(REWARD)||defeatedAlready())&&!houseLootTaken.has(SPENT);
+  const defeatedAlready=()=>houseLootTaken.has(DEFEATED)||houseLootTaken.has(REWARD);
+  const owned=()=>houseLootTaken.has(REWARD)&&!houseLootTaken.has(SPENT);
   const paused=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const direction=f=>f.dir==='s'?(f.flip?'w':'e'):f.dir;
   const windTime=f=>f.mothAttack==='gust'?.9:1.05;
@@ -57,10 +56,7 @@ const IceMoth=(()=>{
   }
   function reset(){shots.length=0;bursts.length=0;map=MAPID;}
   function defeated(){
-    reset();if(defeatedAlready())return;
-    houseLootTaken.add(DEFEATED);houseLootTaken.add(REWARD);
-    toast('Soulwing Relic obtained! Aurelius can revive Corin once, right in battle.');
-    saveGame();
+    reset();houseLootTaken.add(DEFEATED);
   }
   function revive(){
     if(pHp>0||!dying()||!owned())return false;

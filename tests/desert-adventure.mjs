@@ -24,7 +24,10 @@ console.log('PASS: school and Sandspire offers, decline/reoffer, no duplicates, 
 run(`loadMap('pyramid_queen');scene=null;bossScene=null;ovl=null;fadeDir=0;P.x=216;P.y=128;P.act=null;
 houseLootTaken.add('pyramid_queen:loot:0');const rewardGold=gold;tryHouseLootChest();`);
 assert(!run('DesertAdventure.owned()'));assert.equal(run('gold'),run('rewardGold'),'Chest remains locked before victory');
-run(`bossGone['pyramid_queen:0']=true;tryHouseLootChest();`);
+assert(!run('MD.roomActors.some(a=>a.houseLoot?.item==="emberheart")'),'No preplaced Queen reward');
+run(`const queenRewardBoss=foes.find(f=>f.kind==='spiderqueen');
+Object.assign(queenRewardBoss,{x:176,y:184,hp:0,st:'dead',t:0});markBossGone(queenRewardBoss);
+stepFoes(1);P.x=176;P.y=184;tryHouseLootChest();`);
 assert(run('DesertAdventure.owned()'),'Legacy ordinary chest claim cannot consume the new relic');
 assert.equal(run('gold-rewardGold'),160);
 assert(run('atlasQuestComplete("pyramid")&&atlasCompletedEntries().some(q=>q.id==="pyramid")'));

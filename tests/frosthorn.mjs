@@ -61,6 +61,8 @@ const paused=run('JSON.stringify(Frosthorn.inspect().waves)');run('Frosthorn.eff
 run('scene=null;foesHeld=true;stepCombat(.1)');assert.equal(run('Frosthorn.inspect().waves.length'),0,'Foes toggle clears ice');
 setup();step(1);
 run(`frostTest.hp=0;frostTest.st='dead';frostTest.t=0;markBossGone(frostTest);`);
+assert(run('Frosthorn.defeatedAlready()&&!Frosthorn.owned()'),'Victory waits for chest collection');
+run('stepFoes(2.4);P.x=frostTest.x;P.y=frostTest.y;tryHouseLootChest();');
 assert(run('Frosthorn.owned()'));assert.equal(run('Frosthorn.power("ice",8)'),10);assert.equal(run('Frosthorn.power("fire",8)'),8);
 assert.equal(run('Frosthorn.inspect().waves.length'),0,'Death clears attack');
 assert(run('BAG.find(i=>i.key==="frostheart").has()'),'Reward appears in inventory');

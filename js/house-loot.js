@@ -11,7 +11,7 @@ const CHEST_CONSUMABLES={
 };
 function chestConsumable(loot){
   // Keep empty and haunted chests intact, and preserve the early-town rewards.
-  if(loot.item==='emberheart')return null;
+  if(['emberheart','frostheart','soulwing'].includes(loot.item))return null;
   if(loot.ghost||(!loot.gold&&!loot.item))return null;
   const home=W.maps[MAPID.split('_')[0]];
   const late=MD.templeExpanded||MD.royal||MAPID==='cinderhold'||
@@ -61,7 +61,8 @@ function houseLootFrame(actor){
 }
 function tryHouseLootChest(){
   const actor=(MD.roomActors||[]).filter(o=>!o.editorDeleted&&o.houseLoot&&
-    Math.abs(P.x-o.x)<26&&P.y>=o.y-4&&P.y<=o.y+32)
+    (o.houseLoot.bossReward?Math.hypot(P.x-o.x,P.y-o.y)<36:
+      Math.abs(P.x-o.x)<26&&P.y>=o.y-4&&P.y<=o.y+32))
     .sort((a,b)=>Math.hypot(P.x-a.x,P.y-a.y)-Math.hypot(P.x-b.x,P.y-b.y))[0];
   if(!actor)return false;
   const loot=actor.houseLoot;
@@ -76,6 +77,8 @@ function tryHouseLootChest(){
   const rewards=[];
   if(loot.gold>0)rewards.push('+'+loot.gold+' gold');
   if(loot.item==='emberheart'){rewards.push('Emberheart Relic · Fire damage +25% (always active)');atlasSyncJournal();}
+  if(loot.item==='frostheart')rewards.push('Frostheart Relic · Ice damage +25% (always active)');
+  if(loot.item==='soulwing')rewards.push('Soulwing Relic · Aurelius can revive Corin once, right in battle');
   if(item)rewards.push('+1 '+item[0]);
   beginLootChestOpening(loot.id,rewards.join(' · ')||'This chest is empty.','it_coin',!!loot.ghost);
   saveGame();

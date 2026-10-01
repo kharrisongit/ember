@@ -6115,6 +6115,7 @@ function captureSave(){return {
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
   equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
   pyramidQuest:DesertAdventure.capture(),
+  bossRewardChests:typeof BossRewardChests!=='undefined'?BossRewardChests.capture():undefined,
   spiderWebLesson:typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
@@ -6206,6 +6207,7 @@ function loadGame(slot=activeSaveSlot) {
     stones=Math.max(0,s.stones|0);salts=Math.max(0,s.salts|0);
     for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
+    if(typeof BossRewardChests!=='undefined')BossRewardChests.restore(s.bossRewardChests);
     for(const m of Object.values(W.maps))if(m.templeExpanded){
       m.templeGateOpen=0;
       if(m.sandspire||m.mountainPassage){m.templeClock=0;m.templeShots=[];for(const a of m.templeMachines){a.lastCycle=-1;a.frame=0;}for(const a of m.roomActors)if(a.sandspireExit)a.openT=0;}

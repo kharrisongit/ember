@@ -60,6 +60,7 @@ const DesertPyramid = (()=>{
         triggerRect:{x:d.x-14,y:d.dir==='u'?d.y-8:d.y+32,w:28,h:d.dir==='u'?8:16}});
       for(const [k,x,y,room]of plan.enemies)m.foes.push({k,x:(x-8)/16,y:(y-16)/16,expandedRoom:room});
       for(const [i,[x,y,gold,item]]of plan.chests.entries()){
+        if(item==='emberheart')continue; // The Queen now leaves this chest where she falls.
         const block=m.roomBlocks.push([x-14,y-12,x+14,y+10])-1;
         m.roomActors.push({spr:'temple71_chest',schoolArt:true,x,y,editKey:id+':loot:'+i,moveBlocks:[block],
           houseLoot:{id:item==='emberheart'?DesertAdventure.rewardId:id+':loot:'+i,gold,item,templeReward:true}});

@@ -2357,6 +2357,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   yield [.97, "Placing villagers and creatures"];
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
+  if(typeof BossRewardChests!=='undefined')BossRewardChests.sync();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
   closeArenaAnimalPicker();
@@ -8443,7 +8444,7 @@ function spawnFoes() {
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;
     if(kind==="royalguard" && (wonAll || royalDefeated[MAPID+":"+idx]))return;
     if (kind === "knight" && knightEncounterDone) return;
-    if(kind==="frosthorn"&&Frosthorn.owned())return;
+    if(kind==="frosthorn"&&Frosthorn.defeatedAlready())return;
     if(kind==="icemoth"&&IceMoth.defeatedAlready())return;
     if (kind!=="frosthorn"&&kind!=="icemoth"&&(MD.templeExpanded || NO_RESPAWN.test(kind)) && bossGone[MAPID + ":" + idx]) return;
     const k = FOE[kind];
@@ -9614,7 +9615,8 @@ function markBossGone(f) {
   if(f.kind==="royalguard" && f.idx!==undefined){royalDefeated[MAPID+":"+f.idx]=true;if(!foes.some(q=>q!==f&&q.kind==="royalguard"&&q.st!=="dead"))recoverStrandedDragon();}
   if (!f.ally && !f.storyKnight && f.idx !== undefined && (MD.templeExpanded || NO_RESPAWN.test(f.kind)))
     bossGone[MAPID + ":" + f.idx] = true;   /* stays down for good, however it died */
-  if(MD.templeExpanded&&!f.ally&&f.idx!==undefined)saveGame();
+  const rewardDrop=typeof BossRewardChests!=='undefined'&&BossRewardChests.defeated(f);
+  if(rewardDrop||(MD.templeExpanded&&!f.ally&&f.idx!==undefined))saveGame();
 }
 function bossRing(a) {
   if (!a) return false;
@@ -10377,6 +10379,7 @@ function stepFoes(dt) {
     if (lastFight && MAPID === "cinderhold" &&
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
+    if(f.st==='dead'&&typeof BossRewardChests!=='undefined')BossRewardChests.afterFade(f);
     if(f.kind==='spiderqueen'){SpiderQueenBoss.step(f,dt);continue;}
     if(f.kind==='frosthorn'){Frosthorn.step(f,dt);continue;}
     if(f.kind==='icemoth'){IceMoth.step(f,dt);continue;}

@@ -1,7 +1,7 @@
 /* Frosthorn's authored winter spur, approved artwork and optional boss fight. */
 const Frosthorn=(()=>{
   const BASE='assets/sprites/frosthorn/',VERSION='20261001-frosthorn2';
-  const REWARD='world:frosthorn:frostheart',CELL=128,HEIGHT=112,FOOT=104;
+  const REWARD='world:frosthorn:frostheart',DEFEATED='world:frosthorn:defeated',CELL=128,HEIGHT=112,FOOT=104;
   const arena={id:9361,kind:'arena',x:2545,y:25,r:6.8,style:'winter',sideRoute:'frosthorn',frosthorn:true};
   const routes=[
     {id:9359,kind:'route',x0:2640,y0:141,x1:2649,y1:68,w:5,band:20,style:'winter',a0:null,a1:null,pts:[[2640,141],[2640,105],[2592,105],[2592,143],[2559,143],[2559,165],[2542,165],[2542,115],[2561,115],[2561,86],[2600,86],[2600,68],[2649,68]]},
@@ -10,6 +10,7 @@ const Frosthorn=(()=>{
   const frames={},spikes=[],waves=[];
   let loading=null,ready=false,failed=false,map='';
   const owned=()=>houseLootTaken.has(REWARD);
+  const defeatedAlready=()=>owned()||houseLootTaken.has(DEFEATED);
   const paused=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const facing=f=>f.dir==='s'?(f.flip?'w':'e'):f.dir;
   function face(f,dx,dy){f.dir=Math.abs(dx)>Math.abs(dy)?'s':dy<0?'u':'d';f.flip=dx<0;}
@@ -50,10 +51,7 @@ const Frosthorn=(()=>{
   }
   function reset(){waves.length=0;map=MAPID;}
   function defeated(f){
-    reset();if(owned())return;
-    houseLootTaken.add(REWARD);
-    toast('Corin obtained the Frostheart Relic! Ice breath damage +25%.');
-    saveGame();
+    reset();houseLootTaken.add(DEFEATED);
   }
   function enter(f,state){f.st=state;f.t=0;f.hit=0;}
   function tell(f,attack,target){
@@ -161,7 +159,7 @@ const Frosthorn=(()=>{
   }
   FOE.frosthorn={hp:65,speed:43,sight:999,reach:62,ring:68,dmg:2,swingT:.85,hitAt:.16,rest:.85,groupRest:1,wind:.65};
   FOE_ART.frosthorn='frosthorn';WORTH.frosthorn=80;
-  return {routes,arena,installWorld,prepare,reset,owned,defeated,step,effects,addEffects,draw,pose,rewardId:REWARD,
+  return {routes,arena,installWorld,prepare,reset,owned,defeated,defeatedAlready,step,effects,addEffects,draw,pose,rewardId:REWARD,
     power:(el,power)=>el==='ice'&&owned()?power*1.25:power,
     travelPlace:()=>({name:'Frosthorn — Winter Arena',kind:'Boss',map:'world',x:2545,y:39}),
     inspect:()=>({ready,failed,waves:waves.map(({owner,...w})=>({...w,points:w.points.map(p=>({...p}))}))})};
