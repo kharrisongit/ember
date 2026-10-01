@@ -19,6 +19,7 @@ function applyPublishedEditorLayout(m,id) {
   if(id==='world'&&typeof DesertPyramid!=='undefined')DesertPyramid.installWorld(m);
   if(id==='world'&&typeof SideRouteAdventures!=='undefined')SideRouteAdventures.installWorld(m);
   if(id==='world'&&typeof Frosthorn!=='undefined')Frosthorn.installWorld(m);
+  if(id==='world'&&typeof IceMoth!=='undefined')IceMoth.installWorld(m);
   if(typeof finishTempleFixtures==='function')finishTempleFixtures(m);
 }
 function applyPublishedEditorEntries(m,id,layout,final=true) {

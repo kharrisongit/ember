@@ -15,6 +15,7 @@ function combatFootprint(actor) {
   if (actor === dragon) return {w:4.5,h:5,pad:18};
   if (actor.kind === 'spiderqueen') return {w:20,h:9,pad:26};
   if (actor.kind === 'frosthorn') return {w:19.55,h:10.2,pad:25.5};
+  if (actor.kind === 'icemoth') return {w:21,h:10,pad:38};
   if (actor.kind === 'kdragon') return {w:30,h:34,pad:34};
   const art = SPR[(FOE_ART[actor.kind] || 'sk')+'_idle_d'];
   const w = actor.halfW ?? (art ? Math.max(6,Math.min(15,Math.round(art[2]*.22))) : 7);

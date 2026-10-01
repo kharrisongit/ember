@@ -3362,6 +3362,7 @@ function buildTravel() {
   const places = placesOf();
   if(typeof SpiderQueenDemo!=='undefined')places.unshift(SpiderQueenDemo.travelPlace());
   if(typeof Frosthorn!=='undefined')places.unshift(Frosthorn.travelPlace());
+  if(typeof IceMoth!=='undefined')places.unshift(IceMoth.travelPlace(),{name:'Snow Trail — Empty Clearing',kind:'Clearing',map:'world',x:2346,y:134});
   if (!places.length) {
     const d = document.createElement("div");
     d.className = "mini off";
