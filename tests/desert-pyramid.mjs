@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 import {verifySideRoutes} from './side-route-world.mjs';
+import {verifyDesertBorders} from './desert-borders.mjs';
 const {run,context}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
 await run('loadPublishedEditorLayouts()');
 run("mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=true;loadMap('world');");
@@ -33,6 +34,7 @@ for(const a of approach){
  assert(run('arenaFoesLeft(arenaLock)'),'Arena has live combatants');
 }
 run('arenaLock=null;arenaT=0;foesHeld=true;');
+verifyDesertBorders(run);
 verifySideRoutes(run);
 console.log('Five populated arenas and the supplied route are clear. Checking interiors.');
 let chambers=0,mummies=0,doors=0;

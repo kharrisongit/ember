@@ -58,6 +58,25 @@ const SideRouteAdventures=(()=>{
     oak:[75,['elixir','bomb','dragonFish']],temple:[95,['bell','mark','saint']],
     desert:[115,['elixir','bomb','dust']],blossom:[135,['saint','stone','elixir']],
     swamp:[155,['salt','bell','mark']],winter:[180,['stone','saint','dust']]};
+  const oasisChests=[{x:1280,y:192,gold:135,item:'elixir'},{x:1300,y:192,gold:155,item:'bomb'}];
+  function installOasis(m){
+    // Append new encounters after existing foes so older saves keep their slots.
+    [[1256,229],[1323,230]].forEach(([x,y],i)=>{
+      const id=9326+i;
+      if(!m.features.some(f=>f.id===id))m.features.push({id,kind:'arena',x,y,r:6.3,style:'desert',sideRoute:9198});
+      rosters.desert[i].forEach((k,j)=>{
+        const key='9198:'+i+':'+j;
+        if(!m.foes.some(f=>f.sideEncounter===key))m.foes.push({k,x:x+[-2,2,0][j],y:y+[-2,-2,2][j],sideEncounter:key});
+      });
+    });
+    oasisChests.forEach((c,i)=>{
+      const key='world:side-route:9198:'+i;
+      if(m.roomActors.some(a=>a.houseLoot?.id===key))return;
+      const x=c.x*16+8,y=c.y*16+8,block=m.roomBlocks.push([x-14,y-10,x+14,y])-1;
+      m.roomActors.push({n:'chest',spr:'temple71_chest',schoolArt:true,x,y,editKey:'loot:'+key,moveBlocks:[block],sideRoute:9198,
+        houseLoot:{id:key,gold:c.gold,item:c.item}});
+    });
+  }
   function installWorld(m){
     if(m.sideRoutesInstalled)return;m.sideRoutesInstalled=true;
     m.features||=[];m.foes||=[];m.roomActors||=[];m.roomBlocks||=[];
@@ -106,6 +125,7 @@ const SideRouteAdventures=(()=>{
       if(!f.shortcut)disc(...pts.at(-1),4,f.style,true);
     }
     for(const a of arenas)disc(a.x,a.y,a.r+.4,a.style);
+    if(paths.some(f=>f.id===9198))for(const c of oasisChests)disc(c.x,c.y,4,'desert');
     // Cut openings wherever the authored path meets existing roads or clearings.
     // The two loops keep both mouths; true ends are enclosed by this same shell.
     const oldRoutes=all.filter(f=>f.kind==='route'&&!f.sideRoute).flatMap(f=>routeLegs(f).map(([a,b])=>({a,b,r:(f.w||5)/2+1.5})));
@@ -138,6 +158,7 @@ const SideRouteAdventures=(()=>{
     // A rounded grove encloses every chest, meeting both straight verges.
     for(const f of paths.filter(f=>!f.shortcut))rings.push({id:'end:'+f.id,
       x:f.pts.at(-1)[0],y:f.pts.at(-1)[1],r:4,...describe(f)});
+    if(paths.some(f=>f.id===9198))for(const [i,c]of oasisChests.entries())rings.push({id:'oasis-chest:'+i,x:c.x,y:c.y,r:4,...describe({style:'desert'})});
     const managed=blossomRoadJoinCaps(roads).filter(r=>r.blossom),scope=new Set();
     const mark=(x0,y0,x1,y1,inside)=>{
       for(let y=Math.max(0,Math.floor(y0));y<=Math.min(height-1,Math.ceil(y1));y++)
@@ -203,7 +224,8 @@ const SideRouteAdventures=(()=>{
       fobjs.push({id:id--,s,x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,
         sideRouteWall:true,sideRouteRow:p.row,sideRouteCorner:!!p.corner});
     }
+    DesertBorders.finishWorld();
     if(rebuild){rebuildBuckets();rebuildSolid();chunks.clear();}
   }
-  return {installWorld,finishWorld,geometry,borderPlan,routes,encounters,moves};
+  return {installWorld,installOasis,finishWorld,geometry,borderPlan,routes,encounters,moves,oasisChests};
 })();

@@ -134,7 +134,7 @@ const DesertAdventure=(()=>{
     for(const f of features.filter(f=>f.kind==='route'&&f.style==='desert')){
       for(const [leg,[a,b]]of routeLegs(f).entries()){
         const slot=ordinal++;
-        if(slot%2)continue; // At most one bird on every other authored road leg.
+        if(slot%6)continue; // Sparse wildlife: at most one bird per six authored road legs.
         const length=Math.hypot(b[0]-a[0],b[1]-a[1])*TS;
         if(length<8*TS)continue;
         const ax=a[0]*TS+8,ay=a[1]*TS+8,dx=(b[0]-a[0])*TS/length,dy=(b[1]-a[1])*TS/length;

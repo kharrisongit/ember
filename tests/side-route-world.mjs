@@ -17,7 +17,7 @@ export function verifySideRoutes(run){
      if(!canStand(x,y))bad.push({route:f.id,x,y,why:whyBlocked(x,y-4),stamp:stampedBy(Math.floor(x/16),Math.floor((y-4)/16))});
     }
    }
-   if(chest)chests.push({id:f.id,clear:canStand(chest.x,chest.y+24)});
+   for(const c of MD.roomActors.filter(a=>a.sideRoute===f.id))chests.push({id:f.id,clear:canStand(c.x,c.y+24)});
   }
   for(const a of features.filter(f=>f.sideRoute&&f.kind==='arena'))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)
    if(Math.hypot(dx,dy)<=a.r-1.7&&!canStand((a.x+dx)*16+8,(a.y+dy)*16+16))arenaFloor.push({id:a.id,x:a.x+dx,y:a.y+dy,stamp:stampedBy(a.x+dx,a.y+dy)});
@@ -29,7 +29,7 @@ export function verifySideRoutes(run){
  console.log(JSON.stringify(report));
  assert.equal(report.badPaving,0,'Desert chest lanes and arenas match the main stone paving');
  assert.equal(report.badCount,0,'Every route centerline remains traversable');
- assert(report.chests.every(c=>c.clear),'All 26 chests have clear south approaches');
+ assert(report.chests.every(c=>c.clear),'All 28 chests have clear south approaches');
  assert.equal(report.arenaBad,0,'Arena interiors clear of procedural obstacles');
  assert.equal(report.holeCount,0,'Continuous solid boundaries survive the final terrain/collision pass');
  // Every authored fight activates with real enemies; chests grant gold + the item exactly once.
@@ -53,7 +53,7 @@ export function verifySideRoutes(run){
  const count=run('fobjs.filter(o=>o.sideRouteWall).length');run('SideRouteAdventures.finishWorld();');
  assert.equal(run('fobjs.filter(o=>o.sideRouteWall).length'),count,'Repeated repairs do not duplicate trees');
  run('foesHeld='+held);
- console.log('PASS: '+report.samples+' route samples; 44 active encounters; 26 reachable, once-only gold/item rewards; '+report.walls+' solid boundary tiles; stable repeated rebuild.');
+ console.log('PASS: '+report.samples+' route samples; 46 active encounters; 28 reachable, once-only gold/item rewards; '+report.walls+' solid boundary tiles; stable repeated rebuild.');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});

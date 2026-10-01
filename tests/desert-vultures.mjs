@@ -13,14 +13,14 @@ for(const f of routes){
  const pts=f.pts||[[f.x0,f.y0],[f.x1,f.y1]];let length=0;
  for(let i=1;i<pts.length;i++){
   length+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1])*16;
-  if(legCount++%2===0)eligible.add(f.id+':'+(i-1));
+  if(legCount++%6===0)eligible.add(f.id+':'+(i-1));
  }
  oldCount+=Math.max(1,Math.ceil(length/480));
 }
-assert(first.length>0&&first.length<=Math.ceil(legCount/2));
-assert(first.length<oldCount/2,'Substantially fewer birds than the former 30-tile spacing');
+assert(first.length>0&&first.length<=Math.ceil(legCount/6));
+assert(first.length<=12,'Reduce the previous 34 birds by at least two thirds');
 assert.equal(new Set(first.map(b=>b.id)).size,first.length,'One bird per occupied leg');
-assert(first.every(b=>eligible.has(b.id)),'Only alternating authored legs are populated');
+assert(first.every(b=>eligible.has(b.id)),'Only one in six authored legs is populated');
 assert.deepEqual([...new Set(first.map(b=>b.state))].sort(),['fly','idle','sit']);
 const clearance=birds=>{
  for(const b of birds){

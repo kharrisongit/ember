@@ -23,8 +23,8 @@ assert.equal(routes.length,28);
 assert.deepEqual(routes.filter(f=>f.shortcut).map(f=>f.id),[9198,9203]);
 for(const f of routes){
  const arenas=data.features.filter(a=>a.kind==='arena'&&a.sideRoute===f.id),chests=data.actors.filter(a=>a.sideRoute===f.id);
- if(f.shortcut){assert.equal(arenas.length,0);assert.equal(chests.length,0);continue;}
- assert(arenas.length>=1&&arenas.length<=2);assert.equal(chests.length,1);
+ if(f.shortcut&&f.id!==9198){assert.equal(arenas.length,0);assert.equal(chests.length,0);continue;}
+ assert(arenas.length>=1&&arenas.length<=2);assert.equal(chests.length,f.id===9198?2:1);
  assert(chests[0].houseLoot.gold>0);assert(run(`!!CHEST_CONSUMABLES[${JSON.stringify(chests[0].houseLoot.item)}]`));
  for(const a of arenas){
   const enemies=data.foes.filter(e=>e.sideEncounter&&Math.hypot(e.x-a.x,e.y-a.y)<a.r);
@@ -32,10 +32,18 @@ for(const f of routes){
   for(const e of enemies)assert(run(`!!FOE[${JSON.stringify(e.k)}]`),'Existing combat family '+e.k);
  }
 }
+assert(data.foes.slice(-6).every(f=>f.sideEncounter?.startsWith('9198:')),'New oasis foes append after all saved enemy slots');
+const joins=JSON.parse(run(`JSON.stringify((()=>{
+ const m=W.maps.world,g=SideRouteAdventures.geometry(m.features,m.w,m.h),p=DesertBorders.plan(m.features,m.roomActors,m.w,m.h);
+ return {blockedFloor:[...g.floor.keys()].filter(k=>p.walls.has(k)).length,
+  openedWalls:[...g.walls.keys()].filter(k=>p.scope.has(k)&&!p.walls.has(k)).length};
+})())`));
+assert.equal(joins.blockedFloor,0,'Palm borders preserve route and arena floors');
+assert.equal(joins.openedWalls,0,'Palm borders join the route walls without escape gaps');
 // Reinstallation and the old pyramid arena IDs must not shift any saved foe slots.
 const before=run('JSON.stringify(W.maps.world.foes)');
-run('for(const f of W.maps.world.features)if(f.pyramidApproach)f.id-=35;DesertAdventure.installWorld(W.maps.world);SideRouteAdventures.installWorld(W.maps.world);');
+run('for(const f of W.maps.world.features)if(f.pyramidApproach)f.id-=35;DesertAdventure.installWorld(W.maps.world);SideRouteAdventures.installWorld(W.maps.world);SideRouteAdventures.installOasis(W.maps.world);');
 assert.equal(run('JSON.stringify(W.maps.world.foes)'),before);
 assert.equal(run('W.maps.world.features.filter(f=>f.pyramidApproach&&f.id>=9220&&f.id<=9224).length'),5);
 assert.equal(run('new Set(W.maps.world.features.map(f=>f.id)).size'),data.features.length);
-console.log('PASS: exact 28 routes / 16 object moves; 26 rewards, 44 populated arenas, two clear shortcuts, stable pyramid encounters and repeatable installation.');
+console.log('PASS: exact 28 routes / 16 object moves; 28 rewards, 46 populated arenas, open shortcut entrances, stable pyramid encounters and repeatable installation.');
