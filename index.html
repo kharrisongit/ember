@@ -119,13 +119,16 @@
       <span class="titleWord titleDragonrider" aria-hidden="true">DRAGONRIDER</span>
     </h1>
   </div>
-  <div id="bootLabel" style="font-size:13px;letter-spacing:.18em;opacity:.85;
-       color:#e8dcc0">LOADING</div>
-  <div id="bootBar" style="width:min(62vw,320px);height:7px;border:1px solid #5a4326;
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 14px">
+    <div id="bootLabel" style="font-size:13px;letter-spacing:.18em;opacity:.85;
+         color:#e8dcc0">LOADING <span id="bootPercent" style="color:#f0c060;font-variant-numeric:tabular-nums;letter-spacing:.04em">0%</span></div>
+    <div id="bootTime" style="font-size:12px;opacity:.72;font-variant-numeric:tabular-nums">0.0s elapsed</div>
+  </div>
+  <div id="bootBar" role="progressbar" aria-label="Game loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:min(62vw,320px);height:7px;border:1px solid #5a4326;
        background:#1b120c;overflow:hidden">
     <div id="bootFill" style="width:0%;height:100%;background:#f0c060;
          transition:width .18s linear"></div></div>
-  <div id="bootMsg" style="opacity:.72;font-size:12px;min-height:1.2em">waking the embers</div>
+  <div id="bootMsg" role="status" style="opacity:.72;font-size:12px;min-height:2.4em;max-width:min(84vw,440px)">waking the embers</div>
   <div id="bootHint" style="opacity:.5;font-size:11px;min-height:1.2em"></div>
   <button id="bootBegin" type="button" hidden>Press A to Begin</button>
   <div id="bootBtns" style="display:none">
@@ -446,7 +449,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/millwood-interiors.js?v=20261001-loading1"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20261001-icemoth1"></script>
-<script src="js/generated/game-part-2.js?v=20261001-world-layout2" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20261001-progress3" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260928-stable-battles"></script>
 <script src="js/hollybeck-villagers.js?v=20260930-hollybeck-lessons"></script>
@@ -468,7 +471,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/quest-map.js?v=20260930-desert4"></script>
 <script src="js/flight-travel.js?v=20260930-journey-flight"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20261001-world-layout2" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20261001-progress3" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script src="js/blossom-routes.js?v=20261001-world-layout2"></script>
 <script src="js/tree-line-editor.js?v=20260929-blossom-borders"></script>
 <script>

@@ -310,6 +310,10 @@ function inClearing(x, y) {
 let lineTiles = new Set();
 
 function realizeFeatures() {
+  for (const stage of realizeFeatureSteps()) {}
+}
+function* realizeFeatureSteps() {
+  yield [.12, "Mapping terrain and biomes"];
   if (MD.bg) { if(!editorMapLoading)applyEditorPaint(); rebuildSolid(); rebuildBuckets(); return; }
   // Canonical border species must be resolved before any biome, route or
   // arena pass reads stale styles restored by published or local edits.
@@ -485,6 +489,7 @@ function realizeFeatures() {
                        .map(f => [f.x, f.y, (f.r || 6) + 1]);
   townBoxList = features.filter(f => isArea(f) && (f.place || f.label))
                         .map(f => [f.x0, f.y0, f.x1, f.y1]);
+  yield [.22, "Carving roads and clearings"];
   const put = (x, y, v) => {
     if (x < 0 || y < 0 || x >= MW || y >= MH) return;
     if (baseTerr && baseTerr[y * MW + x] === SAND &&
@@ -644,6 +649,7 @@ function realizeFeatures() {
       }
   }
 
+  yield [.32, "Planting forests"];
   const taken = new Set();
   for (const o of objs) {
     if (hidden.has(o.id)) continue;
@@ -942,6 +948,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
                   : (MD.forest_style || "spruce"));
     }
 
+  yield [.43, "Planting grass and flowers"];
   fsanim = (MD.fsanim || []).filter((_, i) =>
     i % 3 !== 0 ? false : /^dtuft/.test(NAMES[MD.fsanim[i]] || "")
   ).flatMap((_, i) => []);
@@ -1050,6 +1057,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
     }
     if (cut) fsanim = keep;
   }
+  yield [.52, "Finishing forest edges"];
   if (MD.mystic_above !== undefined) {
     const wantN = NAME2I[STYLE_TREE[MD.mystic_style || "mystic"]];
     const wantS = NAME2I[STYLE_TREE[MD.forest_style || "spruce"]];
@@ -1707,6 +1715,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
     }
   }
 
+  yield [.64, "Lining roads and arenas"];
   {
     const AVENUE = { desert: "cactus1", spruce: "spr_big" };
     const placed = features.filter(f => isArea(f) && (f.place || f.label)
@@ -2119,6 +2128,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
       }
     }
   }
+  yield [.73, "Clearing paths and scenery"];
   if (typeof inVolcano === "function") {
     const VOLC_KEEP = new RegExp("^(" + PLACED + ")");
     const sweep = (tx, ty, s) =>
@@ -2527,6 +2537,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
     }
   }
 
+  yield [.83, "Aligning town and route borders"];
   if(!editorMapLoading)applyEditorPaint();
   repairArenaTreeEdges();
   extendStumpTreeLine();
@@ -2535,6 +2546,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   if(!editorMapLoading)applyEditorPaint();
   chunks.clear();
   if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld(false);
+  yield [.89, "Building map collisions"];
   indexDecks();
   reindex();
   refreshBuild();
@@ -4467,22 +4479,33 @@ function stepPlayer(dt) {
 
 atlasImg.onload = async () => {
   if (!W) {
-    try { BOOT.step(12, "unpacking the world"); } catch (e) {}
+    try { BOOT.step(42, "Unpacking world data"); } catch (e) {}
     inflateWorld().then(() => atlasImg.onload())
-                  .catch((e) => { window.__boot = "INFLATE FAILED: " + e; });
+                  .catch((e) => { window.__boot = "INFLATE FAILED: " + e; BOOT.fail(e); });
     return;
   }
   const step = (m) => { try { window.__boot = (window.__boot || "") + m + "\n"; } catch (e) {} };
   try {
     step("atlas loaded " + atlasImg.width + "x" + atlasImg.height);
-    try { BOOT.step(45, "laying out the world"); } catch (e) {}
+    BOOT.step(45, "Loading towns, temples and creatures");
     try { buildSkinTones(); step("skin tones built"); }
     catch (e) { step("skin tones failed: " + e); }
     step("world inflated, " + W.names.length + " names");
+    const assetGroups={areas:{done:0,total:1,pending:['Town interiors']},
+      animals:{done:0,total:1,pending:['Animal sprites']},
+      layouts:{done:0,total:1,pending:['Published map changes']}};
+    const assetProgress=(key,done,total,pending)=>{
+      assetGroups[key]={done,total,pending};
+      const groups=Object.values(assetGroups),left=groups.flatMap(g=>g.pending);
+      const count=groups.reduce((n,g)=>n+g.done,0),all=groups.reduce((n,g)=>n+g.total,0);
+      BOOT.step(45+15*count/all,left.length?'Loading '+left.slice(0,2).join(' + ')+
+        (left.length>2?' + '+(left.length-2)+' more':''):'Artwork and map changes ready');
+    };
     await Promise.all([
-      buildHouseFurnitureLayers().then(() => step("furniture layers " + (window.__houseFurnitureCount||0))),
-      loadAnimalSprites(),
-      loadPublishedEditorLayouts()
+      buildHouseFurnitureLayers((...args)=>assetProgress('areas',...args))
+        .then(() => step("furniture layers " + (window.__houseFurnitureCount||0))),
+      loadAnimalSprites().then(()=>assetProgress('animals',1,1,[])),
+      loadPublishedEditorLayouts().then(()=>assetProgress('layouts',1,1,[]))
     ]);
     resize();            step("resize ok, canvas " + cv.width + "x" + cv.height);
     if (!cv.width || !cv.height) {
@@ -4499,16 +4522,15 @@ atlasImg.onload = async () => {
       };
       setTimeout(again, 100);
     }
-    loadMap(W.start);    step("loadMap ok, " + MW + "x" + MH + " tiles");
+    await BOOT.map(W.start,false,60,64,"Starting area");
+    step("loadMap ok, " + MW + "x" + MH + " tiles");
     P.x = MD.spawn[0]; P.y = MD.spawn[1];
     step("spawn " + P.x + "," + P.y);
     step("objs " + objs.length + " fobjs " + fobjs.length);
-    requestAnimationFrame(frame);
-    step("first frame requested");
-    (async () => {
+    await (async () => {
       try {
       await new Promise(r => setTimeout(r, 24));   /* let the bar paint */
-      try { BOOT.step(62, "warming the ground"); } catch (e) {}
+      try { BOOT.step(64, "Drawing starting-area ground"); } catch (e) {}
       try {
         const cx0 = Math.floor(P.x / CHUNK), cy0 = Math.floor(P.y / CHUNK);
         let warmed = 0;
@@ -4516,18 +4538,17 @@ atlasImg.onload = async () => {
           for (let dx = -1; dx <= 1; dx++) {
             try { getChunk(cx0 + dx, cy0 + dy); warmed++; } catch (e) {}
           }
-          BOOT.step(62 + warmed, "warming the ground");
+          BOOT.step(64 + warmed/3, "Drawing starting-area ground ("+warmed+"/9)");
           await new Promise(r => setTimeout(r, 0));
         }
         step("warmed " + warmed + " ground chunks");
       } catch (e) { step("chunk warm failed: " + e); }
       // loadMap already prepared collision. Only warm the visible ground here.
-      BOOT.step(74, "waking the world");
       try {
         const here = MAPID;
         const out = (MD.doors || []).find(d => d.to === "world");
         if (out) {
-          loadMap("world", true);
+          await BOOT.map("world",true,70,92,"Overworld");
           const wx = out.tx * TS, wy = out.ty * TS;
           const cx1 = Math.floor(wx / CHUNK), cy1 = Math.floor(wy / CHUNK);
           let n2 = 0;
@@ -4535,21 +4556,25 @@ atlasImg.onload = async () => {
             for (let dx = -1; dx <= 1; dx++) {
               try { getChunk(cx1 + dx, cy1 + dy); n2++; } catch (e) {}
             }
-            BOOT.step(78 + n2, "waking the world");
+            BOOT.step(92 + n2/3, "Drawing overworld ground ("+n2+"/9)");
             await new Promise(r => setTimeout(r, 0));
           }
           step("warmed " + n2 + " chunks outside the door");
-          loadMap(here, true);          /* back indoors, as if nothing happened */
+          await BOOT.map(here,true,96,98,"Starting area");
         }
-      } catch (e) { step("outdoor warm failed: " + e); }
+      } catch (e) { step("outdoor warm failed: " + e); throw e; }
+      // Do not draw or step the game while a staged map is only half-built.
+      requestAnimationFrame(frame);
+      step("first frame requested");
       await new Promise(r => setTimeout(r, 24));   /* let the bar paint */
-      try { BOOT.step(90, "drawing the map"); } catch (e) {}
+      try { BOOT.step(99, "Drawing the map"); } catch (e) {}
       await new Promise(r => setTimeout(r, 24));   /* let the bar paint */
       try { bootBind(); BOOT.ready(); } catch (e) {}
-      } catch (e) { step("boot tail threw: " + (e && (e.stack || e.message))); }
+      } catch (e) { step("boot tail threw: " + (e && (e.stack || e.message))); throw e; }
     })();
   } catch (e) {
     step("THREW: " + (e && (e.stack || e.message)));
+    BOOT.fail(e);
   }
   setTimeout(() => {
     if (window.__firstFrame) return;      /* it drew: nothing to report */
@@ -4563,7 +4588,7 @@ atlasImg.onload = async () => {
     (document.body || document.documentElement).appendChild(d);
   }, 20000);
 };
-atlasImg.onerror = (err) => { document.body.innerHTML = "<p style='color:#fff;padding:20px'>atlas failed to load<br><span style='font-size:12px;color:#aaa;'>" + (err && err.message || "Unknown error details") + "</span></p>"; };
+atlasImg.onerror = (err) => { BOOT.fail(err || new Error("Artwork could not load")); };
 atlasImg.onerror.debug = true;
 // Core image downloads can begin now, but preparation also uses the classic
 // scripts below this one (regional cast and the newest bosses). Cached images
@@ -4571,7 +4596,10 @@ atlasImg.onerror.debug = true;
 const gameScriptsReady = document.readyState === 'loading'
   ? new Promise(resolve => document.addEventListener('DOMContentLoaded',resolve,{once:true}))
   : Promise.resolve();
-Promise.all([loadAtlasPages(),gameScriptsReady]).then(() => atlasImg.onload()).catch((err) => atlasImg.onerror(err));
+Promise.all([loadAtlasPages((done,total,label)=>{
+  // The first report may arrive before this classic script reaches BOOT.
+  try { BOOT.step(9+33*done/total,label); } catch(e) {}
+}),gameScriptsReady]).then(() => atlasImg.onload()).catch((err) => atlasImg.onerror(err));
 
 window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_GZ, applyWorld, W, SPR, DEFS, NAMES, P, loadMap, buildPatch, fitZoom, overviewZoom,
                get NAMES2(){return NAMES;}, get W2(){return W;}, movePlayer, canStand,
@@ -5519,10 +5547,31 @@ const WM_ABOUT = {
 };
 const BOOT = {
   at: 0, timer: 0, loading: false, loadPick: 0, transitioning: false, menuOpen: false, menuPick: 0,
+  clock: 0, finishedAt: null, failed: false, message: "waking the embers", stages: [],
   pause(ms) { return new Promise(resolve=>setTimeout(resolve,ms)); },
+  time() {
+    // performance.now() includes navigation, script downloads and parsing,
+    // even before the game code was ready to start this display timer.
+    const seconds=Math.round(Math.max(0,(BOOT.finishedAt??performance.now())/1000)*10)/10;
+    const minutes=Math.floor(seconds/60);
+    const duration=(minutes?minutes+'m ':'')+(seconds%60).toFixed(1)+'s';
+    const t=document.getElementById('bootTime');
+    if(t)t.textContent=BOOT.finishedAt===null?duration+' elapsed':
+      (BOOT.failed?'Stopped after ':'Loaded in ')+duration;
+  },
+  startClock() {
+    BOOT.time();
+    if(!BOOT.clock&&BOOT.finishedAt===null)BOOT.clock=setInterval(()=>BOOT.time(),250);
+  },
   paint() {
     const f = document.getElementById("bootFill");
     if (f) f.style.width = BOOT.at.toFixed(1) + "%";
+    const pct=Math.floor(BOOT.at);
+    const counter=document.getElementById('bootPercent');
+    if(counter)counter.textContent=pct+'%';
+    const bar=document.getElementById('bootBar');
+    if(bar)bar.setAttribute('aria-valuenow',String(pct));
+    BOOT.time();
   },
   say(msg) {
     const m = document.getElementById("bootMsg");
@@ -5542,9 +5591,33 @@ const BOOT = {
       }, 16);
     });
   },
-  step(pct, msg) { BOOT.at=Math.max(BOOT.at,Math.min(100,pct));BOOT.paint();BOOT.say(msg); },
+  step(pct, msg) {
+    if(BOOT.failed||pct<BOOT.at)return;
+    BOOT.at=Math.min(100,pct);BOOT.message=msg||BOOT.message;
+    BOOT.paint();BOOT.say(msg);
+    BOOT.stages.push({percent:BOOT.at,stage:BOOT.message,elapsed:performance.now()});
+  },
+  async map(id,fresh,from,to,label) {
+    for(const [fraction,stage] of loadMapSteps(id,fresh,false,true)){
+      BOOT.step(from+(to-from)*fraction,label+' · '+stage);
+      // Let the browser paint before continuing CPU-heavy world generation.
+      await BOOT.pause(24);
+    }
+  },
+  fail(error) {
+    if(BOOT.failed)return;
+    BOOT.failed=true;BOOT.finishedAt=performance.now();
+    if(BOOT.clock)clearInterval(BOOT.clock);BOOT.clock=0;
+    BOOT.time();BOOT.say('Loading stopped: '+BOOT.message);
+    const hint=document.getElementById('bootHint');
+    if(hint)hint.textContent='Please reload to try again.';
+    console.error('Startup failed during '+BOOT.message,error);
+  },
   waiting: false,
   async ready() {
+    if(BOOT.failed)return;
+    BOOT.finishedAt=performance.now();
+    if(BOOT.clock)clearInterval(BOOT.clock);BOOT.clock=0;
     BOOT.at=100;BOOT.paint();BOOT.waiting=true;gameplayReady=true;
     BOOT.menuOpen=false;BOOT.loading=false;
     document.body.classList.add("boot-ready");
@@ -5691,7 +5764,7 @@ const BOOT = {
     BOOT.showMenu();
   },
 };
-function bootStart() { try { BOOT.step(9, "waking the embers"); } catch (e) {} }
+function bootStart() { try { BOOT.startClock();BOOT.step(9, "waking the embers"); } catch (e) {} }
 bootStart();
 
 function bootBind() {

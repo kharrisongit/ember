@@ -1643,19 +1643,30 @@ function cropForegroundMask(data,w,h){
   const fg=new Uint8Array(w*h);for(let i=0;i<fg.length;i++)fg[i]=bg[i]?0:1;
   return fg;
 }
-async function buildHouseFurnitureLayers(){
+async function buildHouseFurnitureLayers(onProgress=()=>{}){
   // Independent areas can fetch/decode together. Household loot still waits
   // for furniture so it can replace the old decorative chest cutouts.
-  await Promise.all([
-    prepareJourneyArt().then(prepareMillwoodInteriors).then(prepareHouseLoot),
-    prepareExpandedFirstTemple(),
-    prepareExpandedSandspireTemple(),
-    prepareExpandedHollybeckTemple(),
-    prepareExpandedMountainPassage(),
-    DesertPyramid.prepare(),
-    Frosthorn.prepare(),
-    IceMoth.prepare()
-  ]);
+  const jobs=[
+    ['Town artwork',async detail=>{
+      await prepareJourneyArt();detail('House furniture');
+      await prepareMillwoodInteriors();detail('House chests');
+      await prepareHouseLoot();
+    }],
+    ['Forgewick temple',prepareExpandedFirstTemple],
+    ['Sandspire temple',prepareExpandedSandspireTemple],
+    ['Hollybeck temple',prepareExpandedHollybeckTemple],
+    ['Mountain passage',prepareExpandedMountainPassage],
+    ['Desert pyramid',()=>DesertPyramid.prepare()],
+    ['Frosthorn artwork',()=>Frosthorn.prepare()],
+    ['Ice Moth artwork',()=>IceMoth.prepare()]
+  ];
+  const pending=new Map(jobs.map(([name])=>[name,name]));
+  const report=()=>onProgress(jobs.length-pending.size,jobs.length,[...pending.values()]);
+  report();
+  await Promise.all(jobs.map(async([name,load])=>{
+    await load(detail=>{pending.set(name,detail);report();});
+    pending.delete(name);report();
+  }));
 }
 /* === end household furniture layering === */
 
@@ -2136,6 +2147,12 @@ function prepareGlassShopInteractions(map,id){
 }
 
 function loadMap(id, fresh, discardDraft=false) {
+  // Gameplay/editor callers stay synchronous. Startup alone pauses between
+  // these same stages so the loading percentage and timer can repaint.
+  for (const stage of loadMapSteps(id, fresh, discardDraft)) {}
+}
+function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
+  yield [0, "Reading map data"];
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
   if(!W.maps[id])throw new Error('no such map: '+id);
   const leavingDraft=typeof saveEditorDraft==='function'?saveEditorDraft():null;
@@ -2281,6 +2298,7 @@ function loadMap(id, fresh, discardDraft=false) {
     for (const [fx, fy, kind] of (MD.deckfix || []))
       deckFix.set(fy * MW + fx, kind);
 
+    yield [.08, "Restoring map changes"];
     editorRestoreMap(savedEditorState);
     buildGround();
     if (features.length) {
@@ -2295,7 +2313,7 @@ function loadMap(id, fresh, discardDraft=false) {
         hidden = new Set(cached.hidden);
         reindex();
       } else {
-        realizeFeatures();
+        if(progressive)yield* realizeFeatureSteps();else realizeFeatures();
         realizedCache.set(MAPID, {
           stamp: editStamp, terr: terr.slice(),
           fobjs: fobjs.map(o => ({ ...o })), fsanim: fsanim.slice(),
@@ -2319,6 +2337,7 @@ function loadMap(id, fresh, discardDraft=false) {
     const her = npcs.find(n => n.n === "Hettie");
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
+  yield [.92, "Preparing entrances and paths"];
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
   // The retained world already includes these static repairs. Repeating them
   // rebuilds all collision/buckets and throws away the warmed ground images.
@@ -2331,12 +2350,14 @@ function loadMap(id, fresh, discardDraft=false) {
   if(typeof Frosthorn!=='undefined')Frosthorn.reset();
   if(typeof IceMoth!=='undefined')IceMoth.reset();
   if(MD.pyramid)DesertPyramid.prepareSpiderArt();
+  yield [.97, "Placing villagers and creatures"];
   if(typeof settleRegionalVillagers==='function')settleRegionalVillagers();
   spawnFoes();
   dragon.placed = null;   /* it will be set at his shoulder next frame */
   refreshSel();
   closeArenaAnimalPicker();
   if(arenasShowing)buildArenaList();
+  yield [1, "Map ready"];
 }
 
 let lavaNear = null;
@@ -2740,9 +2761,12 @@ function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
       (right - x) * dw / sw, (bottom - y) * dh / sh);
   }
 }
-async function loadAtlasPages() {
+async function loadAtlasPages(onProgress=()=>{}) {
   // Limit simultaneous decodes to avoid a large startup memory spike.
-  let next = 0;
+  let next = 0, completed = 0, pages = 0;
+  const total = ATLAS_PAGES.length + ATLAS_PATCHES.length + 7;
+  const report = label => onProgress(completed, total, label);
+  report("Loading sprite sheets");
   async function worker() {
     while (next < ATLAS_PAGES.length) {
       const idx = next++;
@@ -2757,12 +2781,17 @@ async function loadAtlasPages() {
         img.src = src;
       });
       registerAtlasPage({ img: MOUNTED_KEY_Y.has(y) ? decodeMountedMatte(img, w, h) : img, x, y, w, h });
+      completed++;pages++;
+      report("Loading sprite sheets ("+pages+"/"+ATLAS_PAGES.length+")");
     }
   }
   await Promise.all([worker(), worker(), worker()]);
+  report("Loading story artwork");
   if (knightStoryImg.decode) await knightStoryImg.decode();
+  completed++;
   /* Register patches deterministically after every original page. */
   for (let i = 0; i < ATLAS_PATCHES.length; i++) {
+    report("Loading character details ("+(i+1)+"/"+ATLAS_PATCHES.length+")");
     const [x, y, w, h, src] = ATLAS_PATCHES[i];
     const img = new Image();
     await new Promise((resolve, reject) => {
@@ -2774,11 +2803,18 @@ async function loadAtlasPages() {
       img.src = src;
     });
     registerAtlasPage({ img, x, y, w, h });
+    completed++;
   }
-  await Promise.all([
-    prepareGreenScene(), loadDesertNpcAssets(), loadDockOriginalAssets(),
-    loadRoyalAssets(), loadInventoryIcons(), loadWorkshopCraftsmen()
-  ]);
+  const jobs=[['Story scenes',prepareGreenScene],['Desert villagers',loadDesertNpcAssets],
+    ['Buildings and interiors',loadDockOriginalAssets],['Royal artwork',loadRoyalAssets],
+    ['Item icons',loadInventoryIcons],['Workshop villagers',loadWorkshopCraftsmen]];
+  const pending=new Set(jobs.map(([name])=>name));
+  const detail=()=>report('Loading '+[...pending].slice(0,2).join(' + ')+(pending.size>2?' + '+(pending.size-2)+' more':''));
+  detail();
+  await Promise.all(jobs.map(async([name,load])=>{
+    await load();completed++;pending.delete(name);
+    if(pending.size)detail();else report('Artwork loaded');
+  }));
 }
 
 
