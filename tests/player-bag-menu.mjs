@@ -4,11 +4,11 @@ const {run,context:c}=await loadEditorGame(process.cwd(),console,{furniture:fals
 run('quest=Q.ERRAND;bagOwned=false;ovl=null;setOvl("itemm")');assert.equal(run('ovl'),null);
 c.showReveal=(sprite,caption)=>{c.gift={sprite,caption};};
 run('quest=Q.EGGS;receiveErrandBag()');assert(run('hasBag()'));assert.equal(c.gift.sprite,'inventory_bag');
-assert(run('BAG.find(i=>i.key==="bag").has()'));assert.equal(run('captureSave().bagOwned'),true);
+assert(!run('BAG.some(i=>i.key==="bag")'),'Hettie’s bag unlocks inventory without occupying an item slot');assert.equal(run('captureSave().bagOwned'),true);
 run('bagOwned=false;quest=Q.DONE');assert(run('hasBag()'),'Dev skip and later quest progress retain access');
 run('BOOT.latestSave=()=>2;BOOT.showMenu()');assert.equal(run('BOOT.menuOrder[0]'),'bootContinue');
 run('BOOT.latestSave=()=>0;BOOT.showMenu()');assert.equal(run('BOOT.menuOrder[0]'),'bootNew');
 let chosen='';run('gameplayReady=true;BOOT.menuOpen=true;BOOT.loading=false;BOOT.menuPick=0;BOOT.menuOrder=["bootContinue","bootNew","bootLoad"]');
 run('BOOT.continueGame=()=>{globalThis.choice="continue"};BOOT.close=()=>{globalThis.choice="new"};BOOT.activate()');assert.equal(c.choice,'continue');
 run('BOOT.menuPick=1;BOOT.activate()');assert.equal(c.choice,'new');
-console.log('PASS: Hettie’s bag unlock/reveal/key item/save data, later progress compatibility, title ordering and A activation.');
+console.log('PASS: Hettie’s bag unlock/reveal/save data without an inventory item, later progress compatibility, title ordering and A activation.');

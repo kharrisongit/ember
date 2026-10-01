@@ -8987,9 +8987,10 @@ function drawTrialPedestal() {
     ctx.strokeStyle = "#d678ff"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.ellipse(x, y - 24, 13, 7, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.globalAlpha = 1;
-    const seal = SPR.it_cinderseal;
+    const seal = SPR.inventory_cinderSeal;
+    ctx.imageSmoothingEnabled = true;
     if (seal) drawGameImage(ctx, sheetOf(seal), seal[0], seal[1], seal[2], seal[3],
-      Math.round(x - seal[2] / 2), Math.round(y - 18 - seal[3]), seal[2], seal[3]);
+      Math.round(x - 12), Math.round(y - 42), 24, 24);
   }
   ctx.restore();
 }
