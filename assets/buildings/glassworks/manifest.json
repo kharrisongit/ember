@@ -1,0 +1,62 @@
+{
+  "description": "Sandspire glassworks: clean building shell and six independently generated exterior object sprites.",
+  "method": "ImageGen edits using the prior Sandspire glass shop exterior as a style reference, with transparent backgrounds. Strong alpha bounds plus source padding cropped and resized with nearest-neighbor sampling; lossless WebP native exports preserve transparent edges. Each prop is its own game actor. The covered oven is generated complete; its fire is animated in the renderer.",
+  "assets": [
+    {
+      "path": "building.webp",
+      "size": [
+        192,
+        208
+      ],
+      "prompt": "Precise edit. Make a CLEAN BUILDING-ONLY sprite from this glass shop. Keep the exact sandstone architecture, roof terraces, chimney, arched entrance, wall lanterns, small flush goblet plaque, warm fine pixel-art texture, scale, view and canvas framing. REMOVE ALL freestanding outdoor details: the entire little roofed oven on the left, workbench and tools, left barrels and sacks, the entire canvas awning and its supporting posts on the right, glassware stand and loose glassware, every crate and every sand sack. Reconstruct the complete sandstone walls and wall base that these objects hid. The shop building itself must be complete and freestanding, no cutouts or holes except the open arched entrance and dark chimney mouth. Keep the chimney unlit; real fire is drawn by the game. The exterior props will be individually generated and placed later. Nothing attached outside the building footprint except existing wall lamps and plaque. Truly transparent background, no ground tile or shadow platform, no labels, no additional structures. Output ONE building only; keep its position and size on the canvas."
+    },
+    {
+      "path": "oven.webp",
+      "size": [
+        64,
+        72
+      ],
+      "prompt": "Regenerate ONLY the little outdoor glassmaking oven from the lower-left of the reference as ONE COMPLETE FREESTANDING OBJECT SPRITE. Match its detailed warm sandstone, dark gray masonry and terracotta tiled timber shelter, fine crisp RPG pixel art, square-on orthographic front view with a little top visible. Crucially reconstruct the ENTIRE gabled shelter roof, including a continuous ridge, BOTH roof slopes, all tiles and overhanging eaves; nothing is cut off, interrupted or hidden by another building. Place a compact rounded stone furnace with a dark arched firing mouth under that complete shelter, a short chimney terminating below the shelter ridge, and complete timber posts on both sides supporting the cover. Empty dark furnace mouth, NO flames or embers: a live flame animation will be added by the game. NO house, NO workshop table, NO bottles, barrels, crates or sacks. ONLY the covered oven. Full object centered with transparent padding on all four sides, genuinely transparent background. Consistent logical sprite proportions roughly 64 pixels wide by 80 tall when scaled for the game, finer detailed pixel-art rendering."
+    },
+    {
+      "path": "stall.webp",
+      "size": [
+        64,
+        72
+      ],
+      "prompt": "Regenerate ONLY the outdoor glassware display stall under the cream canvas awning on the RIGHT of the reference as ONE COMPLETE FREESTANDING OBJECT SPRITE, independent of any house. Fine crisp detailed RPG pixel art matching the reference's warm brown timber, cream weathered canvas and sparkling turquoise glass. Front-facing orthographic view, a little tabletop and roof visible, not isometric. Reconstruct the complete four timber legs/posts, entire cream awning roof and scalloped edges, wooden counter with a small assortment of finished turquoise glass jugs and bottles on top. Entire object including canopy top and back edge visible, ample transparent padding all sides. No building wall behind it; no sign; no crates, sacks or barrels underneath/beside it, those are separate props. Transparent openings beneath counter, genuine transparent background, no platform or ground tile, no text. One stall only. Logical sprite approximately 64 pixels wide by 72 tall at game scale."
+    },
+    {
+      "path": "workbench.webp",
+      "size": [
+        48,
+        32
+      ],
+      "prompt": "Regenerate a single standalone prop from this glass shop, matching its fine crisp detailed RPG pixel art, warm brown wood, sandstone tones and turquoise glass. Square-on front-facing orthographic game view with a little top surface visible, not isometric. Genuinely transparent background. Center the COMPLETE object with ample padding all four sides, nothing clipped, no labels, no ground tile, no unrelated props, no building walls. ONLY a sturdy glassblower's wooden workbench with all four complete legs and a lower shelf, steel blowpipe, pair of tongs, a small shallow bowl and one small turquoise bottle lying on the work surface. Keep the tabletop mostly clear. Do not include the oven, roof, awning, barrels, crates, or sacks. One coherent independent workbench sprite. Intended game footprint approximately 48 pixels wide by 32 tall."
+    },
+    {
+      "path": "crate.webp",
+      "size": [
+        26,
+        26
+      ],
+      "prompt": "Regenerate a single standalone prop from this glass shop, matching its fine crisp detailed RPG pixel art, warm brown wood, sandstone tones and turquoise glass. Square-on front-facing orthographic game view with a little top surface visible, not isometric. Genuinely transparent background. Center the COMPLETE object with ample padding all four sides, nothing clipped, no labels, no ground tile, no unrelated props, no building walls. ONLY a single low wooden shipping crate with three upright turquoise glass panes nested inside, showing clean glints on their exposed upper edges and a little straw padding. Do not include extra crates, canopy, table, barrel, sacks or loose separate items. One complete crate sprite intended approximately 24 logical pixels wide by 24 tall."
+    },
+    {
+      "path": "barrel.webp",
+      "size": [
+        20,
+        34
+      ],
+      "prompt": "Regenerate a single standalone prop from this glass shop, matching its fine crisp detailed RPG pixel art, warm brown wood, sandstone tones and turquoise glass. Square-on front-facing orthographic game view with a little top surface visible, not isometric. Genuinely transparent background. Center the COMPLETE object with ample padding all four sides, nothing clipped, no labels, no ground tile, no unrelated props, no building walls. ONLY one sturdy open wooden coopered barrel with dark iron bands, holding a few long turquoise glass rods standing upright. Complete bottom and full tops of rods. No table, roof, sacks or surrounding objects. One complete barrel sprite intended approximately 20 logical pixels wide by 30 tall."
+    },
+    {
+      "path": "sand.webp",
+      "size": [
+        24,
+        24
+      ],
+      "prompt": "Regenerate a single standalone prop from this glass shop, matching its fine crisp detailed RPG pixel art, warm brown wood, sandstone tones and turquoise glass. Square-on front-facing orthographic game view with a little top surface visible, not isometric. Genuinely transparent background. Center the COMPLETE object with ample padding all four sides, nothing clipped, no labels, no ground tile, no unrelated props, no building walls. ONLY one bulging burlap sack of pale glassmaking sand, top folded open so a small mound of granular pale sand is visible. Warm cream/tan woven fabric, loose folded rim, weighty rounded base, detailed crisp pixel shading. No spilled sand on the ground, no barrel, crate or second sack. One complete sack sprite intended approximately 22 logical pixels wide by 24 tall."
+    }
+  ]
+}

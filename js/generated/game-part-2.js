@@ -4167,7 +4167,7 @@ function drawWorld(t, dt) {
     }
     if (o.progressionProp) { drawJourneyProp(o,t); continue; }
     if (o.schoolArt) {
-      if(o.sandspireGlassShop){SandspireGlassworks.draw(o,t);continue;}
+      if(o.sandspireGlassShop||o.sandspireGlassProp){SandspireGlassworks.draw(o,t);continue;}
       if(drawWorkshopCraftsman(o,t))continue;
       const sp = SPR[o.spr];
       if(o.spr==='pyramid_exterior'){drawGameImage(ctx,DesertPyramid.stoneFrame(o.spr),0,0,sp[2],sp[3],o.x-sp[2]/2,o.y-sp[3],sp[2],sp[3]);continue;}
