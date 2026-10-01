@@ -8,7 +8,7 @@ const require=createRequire(import.meta.url);
 const {createCanvas,loadImage}=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/@napi-rs/canvas':'@napi-rs/canvas');
 const sharp=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/sharp':'sharp');
 const input=process.argv[2];if(!input)throw Error('Supply the source-sheet directory');
-const output='assets/sprites/frosthorn/',CELL=128,HEIGHT=112,FOOT=104;
+const output='assets/sprites/frosthorn/',CELL=128,HEIGHT=112,FOOT=104,MODEL_SCALE=.85;
 const document={createElement:()=>createCanvas(1,1)};
 const manifest=JSON.parse(fs.readFileSync(output+'frames.json','utf8'));
   function canvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
@@ -50,15 +50,23 @@ const manifest=JSON.parse(fs.readFileSync(output+'frames.json','utf8'));
   function pack(c,scale,w=CELL,h=HEIGHT,foot=FOOT){
     const out=canvas(w,h),g=out.getContext('2d');g.imageSmoothingEnabled=false;
     const dw=Math.round(c.width*scale),dh=Math.round(c.height*scale);
+    if(dw>w-8||dh>foot-8)throw Error(`Sprite exceeds safe cell bounds: ${dw}x${dh} in ${w}x${h}`);
     g.drawImage(c,0,0,c.width,c.height,Math.round((w-dw)/2),foot-dh,dw,dh);
     return hardAlpha(out);
   }
 
 for(const name of ['south','east','north']){
  const source=await loadImage(path.join(input,name+'.png'));
- const scale=88/manifest[name][0].map(b=>b[3]).sort((a,b)=>a-b)[2];
+ const scale=88*MODEL_SCALE/manifest[name][0].map(b=>b[3]).sort((a,b)=>a-b)[2];
+ const repair=manifest.repairs?.[name],repairSource=repair?await loadImage(output+repair.source):null;
  const atlas=canvas(CELL*6,HEIGHT*7),g=atlas.getContext('2d');
- for(let row=0;row<7;row++)for(let col=0;col<6;col++)g.drawImage(pack(cell(source,row,col,7,manifest[name][row][col]),scale),col*CELL,row*HEIGHT);
+ for(let row=0;row<7;row++)for(let col=0;col<6;col++){
+   const box=repair?.frames[row+','+col];
+   // Repaired poses are isolated in their own padded source cells. Keep the
+   // same body scale as the approved idle/walk frames, including the 15% reduction.
+   const frame=box?pack(cell(repairSource,0,0,2,box),scale*repair.originalHeight/repair.sourceHeight):pack(cell(source,row,col,7,manifest[name][row][col]),scale);
+   g.drawImage(frame,col*CELL,row*HEIGHT);
+ }
  await sharp(atlas.toBuffer('image/png')).png({palette:true,colours:32,dither:0}).toFile(output+name+'-packed.png');
 }
 const ice=await loadImage(path.join(input,'ice-spikes.png')),atlas=canvas(72*6,72*2),g=atlas.getContext('2d');

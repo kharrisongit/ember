@@ -8000,7 +8000,7 @@ function foeBodyProfile(f) {
   /* Foes are foot-anchored. The king dragon's new art is much wider and
      taller than the original sprite, so its hurt area must match the body. */
   if (f.kind === 'spiderqueen') return {x:f.x,y:f.y-15,r:23};
-  if (f.kind === 'frosthorn') return {x:f.x,y:f.y-30,r:29};
+  if (f.kind === 'frosthorn') return {x:f.x,y:f.y-25.5,r:24.65};
   if (f.kind === 'hare') return {x:f.x,y:f.y-10,r:10};
   if (f.kind === 'bird') return {x:f.x,y:f.y-8,r:9};
   if (f.kind === 'fox') return {x:f.x,y:f.y-10,r:10};
@@ -12740,6 +12740,11 @@ function inWinter(x, y) {
         if (along >= lo && along <= hi &&
             Math.abs(across - (vert ? a[0] : a[1])) <= reach) return true;
       }
+    } else if (f.kind === "arena") {
+      // Circular winter clearings need their own snowy verge. A route's snow
+      // band stops short of the north trees on larger, offset boss arenas.
+      const reach = (f.r || 6.3) + (f.band || 20);
+      if ((x-f.x)**2 + (y-f.y)**2 <= reach**2) return true;
     } else if (f.x0 !== undefined &&
                x >= f.x0 && x <= f.x1 && y >= f.y0 && y <= f.y1) return true;
   }

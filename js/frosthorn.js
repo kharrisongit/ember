@@ -1,6 +1,6 @@
 /* Frosthorn's authored winter spur, approved artwork and optional boss fight. */
 const Frosthorn=(()=>{
-  const BASE='assets/sprites/frosthorn/',VERSION='20261001-frosthorn1';
+  const BASE='assets/sprites/frosthorn/',VERSION='20261001-frosthorn2';
   const REWARD='world:frosthorn:frostheart',CELL=128,HEIGHT=112,FOOT=104;
   const arena={id:9361,kind:'arena',x:2545,y:25,r:12.6,style:'winter',sideRoute:'frosthorn',frosthorn:true};
   const routes=[
@@ -143,7 +143,7 @@ const Frosthorn=(()=>{
       if(f.st==='dead')ctx.globalAlpha=Math.min(1,Math.max(0,(2.4-f.t)/.7));
       drawPixelImage(ctx,frame,0,0,CELL,HEIGHT,Math.round(f.x-CELL/2),Math.round(f.y-FOOT),CELL,HEIGHT);
       if(f.st!=='dead'){
-        const y=Math.round(f.y-101);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);
+        const y=Math.round(f.y-88);ctx.fillStyle='#182c40';ctx.fillRect(f.x-31,y,62,5);
         ctx.fillStyle='#a5eaff';ctx.fillRect(f.x-30,y+1,60*Math.max(0,f.hp/enemyMaxHp(f.kind,f.x)),3);
       }
     }else{
