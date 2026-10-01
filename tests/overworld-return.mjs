@@ -28,7 +28,11 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  let mounted=false,breath=null,breathT=0;
  let editing=false,building=false,painting=false,doorEdit=false,collideView=false,quest=0,Q={KING:99},dragon={},foes=[];
  let GRASS=0,DIRT=1,COBBLE=2,FARM=3,WATER=4,BRIDGE=5,WALL=6,DECK=15,DWATER=7,SEA=12,POOL_T=11,VLAVA=18,CELL=256;
- let TCHAR={0:'g',1:'d',4:'w'},stats={generate:0,solid:0,lava:0,ground:0,foes:0,birds:0};
+ let TCHAR={0:'g',1:'d',4:'w'},stats={generate:0,solid:0,lava:0,ground:0,foes:0,birds:0,repairs:0};
+ // Static area hooks used to bypass the retained-world optimization. Model
+ // their collision work and cache eviction, including the Spider Queen demo.
+ function repairArea(){if(MAPID==='world'){stats.repairs++;rebuildSolid();chunks.clear();}}
+ const SpiderQueenDemo={prepareArea:repairArea},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){}};
  function seedTreasuryGold(){}function stopTrial(){}function setPaint(on){painting=on}function refreshSel(){}
  function resetChunkWarm(){}function placeBirds(){stats.birds++}function openClearings(){}function beginHettieWalk(){}
  let arenasShowing=false;function closeArenaAnimalPicker(){}
@@ -59,7 +63,8 @@ run(`const originalSolid=rebuildSolid,originalLava=rebuildLavaNear;
  if(terr[2]!==4||terrOrig[2]!==0||solid[0]!==1)throw Error('Terrain, paint baseline or collision changed');
  if(npcs[0].x!==npcStart||foes[0].hp!==10)throw Error('Dynamic actors were not reset');
 `);
-for(const key of ['generate','solid','lava','ground'])assert.equal(c.after[key],c.before[key],key+' must not run on a warm return');
+for(const key of ['generate','solid','lava','ground','repairs'])assert.equal(c.after[key],c.before[key],key+' must not run on a warm return');
+assert.equal(c.before.repairs,3,'A cold world still applies all three static area repairs');
 assert.equal(c.after.foes,c.before.foes+1);assert.equal(c.after.birds,c.before.birds+1);
 run(`saveEditorDraft();globalThis.saved=EmberEditDrafts.store.get('world');loadMap('room');loadMap('world');saveEditorDraft();`);
 assert.equal(run("JSON.stringify(EmberEditDrafts.store.get('world').operations)"),JSON.stringify(c.saved.operations),'repeat visits preserve publishable edits');

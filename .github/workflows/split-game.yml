@@ -36,6 +36,11 @@ jobs:
           node-version: '22'
       - name: Check the scripts loaded by the game
         run: node tools/check-game-scripts.mjs
+      - name: Check startup and retained overworld performance
+        run: |
+          node tests/startup-loading.mjs
+          node tests/overworld-return.mjs
+          node tests/loading-world.mjs
       - name: Check the pyramid and Spider Queen
         run: |
           npm install --no-save --package-lock=false @napi-rs/canvas@0.1.100 pngjs@7.0.0

@@ -1,7 +1,9 @@
 let publishedEditorLayouts = {schema:1,maps:{},applied:[]};
 const publishedEditorMaps = new WeakSet();
 async function loadPublishedEditorLayouts() {
-  const response=await fetch('assets/editor-layouts.json?v='+Date.now());
+  // Revalidate the same URL so unchanged published layouts can use HTTP 304,
+  // while newly sent editor changes are still checked on every launch.
+  const response=await fetch('assets/editor-layouts.json',{cache:'no-cache'});
   if(!response.ok)throw Error('Published editor moves could not load. Refresh to retry.');
   const data=await response.json();
   if(data.schema!==1||!data.maps||!Array.isArray(data.applied))throw Error('Invalid published editor moves');

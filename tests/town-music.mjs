@@ -81,7 +81,7 @@ await change('inn','Thornwell Inn');assert.equal(track('Thornwell').paused,false
 await change('house22','Millwood — Maddock’s House');assert.equal(track('Millwood').paused,false);assert(track('Thornwell').paused);
 const muted=setup('0');muted.listeners.pointerdown();await muted.advance();assert([...muted.elements.values()].every(a=>a.paused),'Saved mute survives reload');
 for(const [name,path,max]of [['Millwood','millwood-rustic-town.m4a',850000],['Villain','kings-villain-theme.m4a',900000],['Field','intertown-field.m4a',7500000],['Thornwell','thornwell-shop.m4a',1600000]]){
- const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,['Villain','Millwood'].includes(name)?/preload="auto"/:/preload="none"/);assert(tag.includes('assets/audio/'+path));
+ const tag=html.match(new RegExp('<audio id="emberfell'+name+'Bgm"[^>]+>'))?.[0];assert(tag);assert.match(tag,/\bloop\b/);assert.match(tag,/preload="none"/);assert(tag.includes('assets/audio/'+path));
  const music=fs.readFileSync(new URL('../assets/audio/'+path,import.meta.url));assert.equal(music.toString('ascii',4,8),'ftyp');assert(music.length<max);
 }
 console.log('PASS: default music covers unassigned areas; the initial forest cue and both final battle phases get the King’s theme; the tavern and royal departure keep local music; empty tracks never play; buffer-aware fades, repeated taps, volume changes, interrupted fades, mute, saved volume and Thornwell’s installed song work.');

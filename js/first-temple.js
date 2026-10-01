@@ -4,10 +4,10 @@ async function prepareExpandedFirstTemple(){
   const response=await fetch('assets/interiors/first-temple/layout.json?v=20260930-room-space');
   if(!response.ok)throw Error('First temple layout could not load');
   const layout=await response.json(),images={};
-  for(const id of Object.keys(layout)){
+  await Promise.all(Object.keys(layout).map(async id=>{
     const image=new Image();image.src='assets/interiors/first-temple/'+id+'.png?v=20260930-room-space';
     await image.decode();images[id]=image;
-  }
+  }));
   const old=W.maps.tp1,outside=old.doors.find(d=>d.to==='world'),alderic=old.npcs.find(n=>n.n==='Alderic');
   for(const [id,plan] of Object.entries(layout)){
     const [width,height]=plan.size;

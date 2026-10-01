@@ -4398,7 +4398,11 @@ atlasImg.onload = async () => {
     try { buildSkinTones(); step("skin tones built"); }
     catch (e) { step("skin tones failed: " + e); }
     step("world inflated, " + W.names.length + " names");
-    try { await buildHouseFurnitureLayers(); step("furniture layers " + (window.__houseFurnitureCount||0)); } catch(e) { step("furniture layers failed: " + e); }
+    await Promise.all([
+      buildHouseFurnitureLayers().then(() => step("furniture layers " + (window.__houseFurnitureCount||0))),
+      loadAnimalSprites(),
+      loadPublishedEditorLayouts()
+    ]);
     resize();            step("resize ok, canvas " + cv.width + "x" + cv.height);
     if (!cv.width || !cv.height) {
       let tries = 0;
@@ -4414,8 +4418,6 @@ atlasImg.onload = async () => {
       };
       setTimeout(again, 100);
     }
-    await loadAnimalSprites();
-    await loadPublishedEditorLayouts();
     loadMap(W.start);    step("loadMap ok, " + MW + "x" + MH + " tiles");
     P.x = MD.spawn[0]; P.y = MD.spawn[1];
     step("spawn " + P.x + "," + P.y);
@@ -4424,7 +4426,6 @@ atlasImg.onload = async () => {
     step("first frame requested");
     (async () => {
       try {
-        await BOOT.to(26, 700, "warming the ground");
       await new Promise(r => setTimeout(r, 24));   /* let the bar paint */
       try { BOOT.step(62, "warming the ground"); } catch (e) {}
       try {
@@ -4439,15 +4440,13 @@ atlasImg.onload = async () => {
         }
         step("warmed " + warmed + " ground chunks");
       } catch (e) { step("chunk warm failed: " + e); }
-      try { rebuildSolid(); step("collision built"); }
-      catch (e) { step("collision failed: " + e); }
-      await BOOT.to(58, 800, "waking the world");
+      // loadMap already prepared collision. Only warm the visible ground here.
+      BOOT.step(74, "waking the world");
       try {
         const here = MAPID;
         const out = (MD.doors || []).find(d => d.to === "world");
         if (out) {
           loadMap("world", true);
-          buildGround();
           const wx = out.tx * TS, wy = out.ty * TS;
           const cx1 = Math.floor(wx / CHUNK), cy1 = Math.floor(wy / CHUNK);
           let n2 = 0;
@@ -4458,10 +4457,8 @@ atlasImg.onload = async () => {
             BOOT.step(78 + n2, "waking the world");
             await new Promise(r => setTimeout(r, 0));
           }
-          rebuildSolid();
           step("warmed " + n2 + " chunks outside the door");
           loadMap(here, true);          /* back indoors, as if nothing happened */
-          buildGround();
         }
       } catch (e) { step("outdoor warm failed: " + e); }
       await new Promise(r => setTimeout(r, 24));   /* let the bar paint */
@@ -4487,7 +4484,13 @@ atlasImg.onload = async () => {
 };
 atlasImg.onerror = (err) => { document.body.innerHTML = "<p style='color:#fff;padding:20px'>atlas failed to load<br><span style='font-size:12px;color:#aaa;'>" + (err && err.message || "Unknown error details") + "</span></p>"; };
 atlasImg.onerror.debug = true;
-loadAtlasPages().then(() => atlasImg.onload()).catch((err) => atlasImg.onerror(err));
+// Core image downloads can begin now, but preparation also uses the classic
+// scripts below this one (regional cast and the newest bosses). Cached images
+// must not let startup overtake those scripts on a slower connection.
+const gameScriptsReady = document.readyState === 'loading'
+  ? new Promise(resolve => document.addEventListener('DOMContentLoaded',resolve,{once:true}))
+  : Promise.resolve();
+Promise.all([loadAtlasPages(),gameScriptsReady]).then(() => atlasImg.onload()).catch((err) => atlasImg.onerror(err));
 
 window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_GZ, applyWorld, W, SPR, DEFS, NAMES, P, loadMap, buildPatch, fitZoom, overviewZoom,
                get NAMES2(){return NAMES;}, get W2(){return W;}, movePlayer, canStand,
@@ -5458,7 +5461,7 @@ const BOOT = {
       }, 16);
     });
   },
-  step(pct, msg) { BOOT.say(msg); },
+  step(pct, msg) { BOOT.at=Math.max(BOOT.at,Math.min(100,pct));BOOT.paint();BOOT.say(msg); },
   waiting: false,
   async ready() {
     BOOT.at=100;BOOT.paint();BOOT.waiting=true;gameplayReady=true;
@@ -5607,7 +5610,7 @@ const BOOT = {
     BOOT.showMenu();
   },
 };
-function bootStart() { try { BOOT.to(9, 450, "waking the embers"); } catch (e) {} }
+function bootStart() { try { BOOT.step(9, "waking the embers"); } catch (e) {} }
 bootStart();
 
 function bootBind() {

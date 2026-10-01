@@ -16,7 +16,7 @@ const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
 const caravanSprite={source:[76,138,1390,746],width:96,height:52};
-async function prepareJourneyArt(){await prepareHollybeckArt();await prepareRegionalVillagerArt();await prepareFarmResidentArt();await prepareNanCookingArt();}
+async function prepareJourneyArt(){await Promise.all([prepareHollybeckArt(),prepareRegionalVillagerArt(),prepareFarmResidentArt(),prepareNanCookingArt()]);}
 // The camels lead from the south/front of the wagon, clear of the rock and houses.
 const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}

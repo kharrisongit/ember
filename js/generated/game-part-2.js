@@ -1644,16 +1644,18 @@ function cropForegroundMask(data,w,h){
   return fg;
 }
 async function buildHouseFurnitureLayers(){
-  await prepareJourneyArt();
-  await prepareMillwoodInteriors();
-  await prepareHouseLoot();
-  await prepareExpandedFirstTemple();
-  await prepareExpandedSandspireTemple();
-  await prepareExpandedHollybeckTemple();
-  await prepareExpandedMountainPassage();
-  await DesertPyramid.prepare();
-  await Frosthorn.prepare();
-  await IceMoth.prepare();
+  // Independent areas can fetch/decode together. Household loot still waits
+  // for furniture so it can replace the old decorative chest cutouts.
+  await Promise.all([
+    prepareJourneyArt().then(prepareMillwoodInteriors).then(prepareHouseLoot),
+    prepareExpandedFirstTemple(),
+    prepareExpandedSandspireTemple(),
+    prepareExpandedHollybeckTemple(),
+    prepareExpandedMountainPassage(),
+    DesertPyramid.prepare(),
+    Frosthorn.prepare(),
+    IceMoth.prepare()
+  ]);
 }
 /* === end household furniture layering === */
 
@@ -2318,9 +2320,13 @@ function loadMap(id, fresh, discardDraft=false) {
     if (her) { beginHettieWalk(her); her.x = her.home[0]; her.y = her.home[1]; her.goto = null; }
   }
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
-  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
-  if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
-  if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
+  // The retained world already includes these static repairs. Repeating them
+  // rebuilds all collision/buckets and throws away the warmed ground images.
+  if(!warmReturn){
+    if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
+    if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
+    if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
+  }
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
   if(typeof Frosthorn!=='undefined')Frosthorn.reset();
   if(typeof IceMoth!=='undefined')IceMoth.reset();
@@ -2768,12 +2774,10 @@ async function loadAtlasPages() {
     });
     registerAtlasPage({ img, x, y, w, h });
   }
-  await prepareGreenScene();
-  await loadDesertNpcAssets();
-  await loadDockOriginalAssets();
-  await loadRoyalAssets();
-  await loadInventoryIcons();
-  await loadWorkshopCraftsmen();
+  await Promise.all([
+    prepareGreenScene(), loadDesertNpcAssets(), loadDockOriginalAssets(),
+    loadRoyalAssets(), loadInventoryIcons(), loadWorkshopCraftsmen()
+  ]);
 }
 
 

@@ -5,11 +5,14 @@ async function prepareMillwoodInteriors() {
     const image=new Image();image.src='assets/interiors/house-seated-v2.png?v=20260928-open-face-steady-breath';
     await image.decode();image.spriteScale=2;image.pixelLocked=true;houseSeatedSheet=image;
   }
-  await prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/);
-  await prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/);
-  await prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/);
-  await prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/);
-  await prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/);
+  await Promise.all([
+    prepareTownHouseInteriors('millwood', /^house2[2-7](?:_bedroom2?)?$/),
+    prepareTownHouseInteriors('thornwell', /^house(?:0[0-5]|3[01])(?:_bedroom2?)?$/),
+    prepareTownHouseInteriors('forgewick', /^house(?:0[679]|1[0-9]|2[01]|32)(?:_bedroom2?)?$/),
+    prepareTownHouseInteriors('sandspire', /^house(?:3[3-9]|4[01])(?:_bedroom2?)?$/),
+    prepareTownHouseInteriors('hollybeck', /^house(?:4[6-9]|50)(?:_bedroom2?)?$/)
+  ]);
+  // The catch-all set must run after the town-specific rooms.
   await prepareTownHouseInteriors('remaining', /./);
   prepareHearthBedrooms();
   if(W.maps.royal_cellar){
