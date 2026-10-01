@@ -316,7 +316,7 @@ const REGIONAL_VILLAGERS=[
 async function prepareRegionalVillagerArt(){
   if(SPR.regional_tilda_idle_d)return;
   for(let start=0;start<REGIONAL_VILLAGERS.length;start+=4)await Promise.all(REGIONAL_VILLAGERS.slice(start,start+4).map(async person=>{
-    const image=new Image();image.src='assets/sprites/regional/'+person.id+'.png?v=20260930-complete-feet';await image.decode();
+    const image=await loadStartupImage('assets/sprites/regional/'+person.id+'.png?v=20260930-complete-feet');
     for(const [action,baseRow,frames]of [['idle',0,4],['walk',4,6]])for(const [row,dir]of ['d','u','e','w'].entries()){
       const key='regional_'+person.id+'_'+action+'_'+dir,strip=document.createElement('canvas');
       strip.width=frames*64;strip.height=64;strip.spriteScale=2;strip.pixelLocked=true;

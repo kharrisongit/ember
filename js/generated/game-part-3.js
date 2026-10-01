@@ -5560,6 +5560,8 @@ const BOOT = {
       (BOOT.failed?'Stopped after ':'Loaded in ')+duration;
   },
   startClock() {
+    const screen=document.getElementById('boot');
+    if(screen)screen.dataset.startupState='loading';
     BOOT.time();
     if(!BOOT.clock&&BOOT.finishedAt===null)BOOT.clock=setInterval(()=>BOOT.time(),250);
   },
@@ -5608,9 +5610,11 @@ const BOOT = {
     if(BOOT.failed)return;
     BOOT.failed=true;BOOT.finishedAt=performance.now();
     if(BOOT.clock)clearInterval(BOOT.clock);BOOT.clock=0;
-    BOOT.time();BOOT.say('Loading stopped: '+BOOT.message);
+    const screen=document.getElementById('boot');
+    if(screen)screen.dataset.startupState='failed';
+    BOOT.time();BOOT.say('Loading stopped: '+(error?.startupStage||BOOT.message));
     const hint=document.getElementById('bootHint');
-    if(hint)hint.textContent='Please reload to try again.';
+    if(hint)hint.textContent=(error?.message?error.message+'. ':'')+'Please reload to try again.';
     console.error('Startup failed during '+BOOT.message,error);
   },
   waiting: false,
@@ -5619,6 +5623,8 @@ const BOOT = {
     BOOT.finishedAt=performance.now();
     if(BOOT.clock)clearInterval(BOOT.clock);BOOT.clock=0;
     BOOT.at=100;BOOT.paint();BOOT.waiting=true;gameplayReady=true;
+    const screen=document.getElementById('boot');
+    if(screen)screen.dataset.startupState='ready';
     BOOT.menuOpen=false;BOOT.loading=false;
     document.body.classList.add("boot-ready");
     document.getElementById("bootMsg").textContent="";

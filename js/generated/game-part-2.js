@@ -1648,7 +1648,7 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
   // for furniture so it can replace the old decorative chest cutouts.
   const jobs=[
     ['Town artwork',async detail=>{
-      await prepareJourneyArt();detail('House furniture');
+      await prepareJourneyArt(detail);detail('House furniture');
       await prepareMillwoodInteriors();detail('House chests');
       await prepareHouseLoot();
     }],
@@ -1664,7 +1664,11 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
   const report=()=>onProgress(jobs.length-pending.size,jobs.length,[...pending.values()]);
   report();
   await Promise.all(jobs.map(async([name,load])=>{
-    await load(detail=>{pending.set(name,detail);report();});
+    try{await load(detail=>{if(detail)pending.set(name,detail);report();});}
+    catch(error){
+      const failure=new Error(error?.message||String(error));failure.cause=error;
+      failure.startupStage=error?.startupStage||pending.get(name);throw failure;
+    }
     pending.delete(name);report();
   }));
 }

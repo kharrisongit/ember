@@ -26,7 +26,8 @@ console.log('PASS: embedded rail matches original PNG; external image failures r
 {
  const crops=[],sheets={};
  const h=vm.createContext({SPR:{},animalSheets:sheets,
-  Image:class{set src(url){this.url=url;}async decode(){}},
+  setTimeout,clearTimeout,Date,
+  Image:class{set src(url){this.url=url;if(url)queueMicrotask(()=>this.onload());}},
   document:{createElement:()=>({getContext:()=>({drawImage:(img,...rect)=>{
    const png=fs.readFileSync(new URL('../'+img.url.split('?')[0],import.meta.url));
    const [x,y,w,height]=rect;
@@ -34,6 +35,7 @@ console.log('PASS: embedded rail matches original PNG; external image failures r
    crops.push([img.url,...rect]);
   }})})}});
  vm.runInContext(code.slice(code.indexOf('function villagerIdleFrame('),code.indexOf('function finishTownCast(')),h);
+ vm.runInContext(read('js/startup-assets.js'),h);
  vm.runInContext(read('js/hollybeck-villagers.js'),h);
  await h.prepareHollybeckArt();
  assert.equal(Object.keys(sheets).length,24,'Three residents each load four idle and four walk directions');

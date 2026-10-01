@@ -1,7 +1,7 @@
 /* Edwin tends the coop beside Millwood's windmill. Authored cast and dialogue. */
 async function prepareFarmResidentArt(){
   if(SPR.farm_edwin_idle_d)return;
-  const image=new Image();image.src='assets/sprites/farm/edwin.png?v=20260930-farm';await image.decode();
+  const image=await loadStartupImage('assets/sprites/farm/edwin.png?v=20260930-farm');
   for(const [row,dir]of ['d','u','e','w'].entries()){
     const key='farm_edwin_idle_'+dir,strip=document.createElement('canvas');
     strip.width=256;strip.height=64;strip.spriteScale=2;strip.pixelLocked=true;

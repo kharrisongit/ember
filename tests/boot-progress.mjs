@@ -7,7 +7,7 @@ const boot=source.slice(source.indexOf('const BOOT = {'),source.indexOf('functio
 let now=4250,clockId=0;
 const clocks=new Map(),pauses=[],events=[],nodes=new Map();
 const node=id=>{
-  if(!nodes.has(id))nodes.set(id,{style:{},attributes:{},setAttribute(k,v){this.attributes[k]=v;}});
+  if(!nodes.has(id))nodes.set(id,{style:{},dataset:{},attributes:{},setAttribute(k,v){this.attributes[k]=v;}});
   return nodes.get(id);
 };
 const c=vm.createContext({performance:{now:()=>now},console:{error(){}},gameplayReady:false,
@@ -25,6 +25,7 @@ const run=code=>vm.runInContext(code,c);
 run(boot);
 run('BOOT.startClock();BOOT.startClock();');
 assert.equal(clocks.size,1,'Only one elapsed-time clock runs');
+assert.equal(node('boot').dataset.startupState,'loading');
 assert.equal(node('bootTime').textContent,'4.3s elapsed','Includes time before game code started');
 const map=run("BOOT.map('world',true,70,92,'Overworld')");
 assert.deepEqual(events,['read'],'Heavy map work waits until its stage has painted');
@@ -51,6 +52,7 @@ now=59996;run('BOOT.time();');
 assert.equal(node('bootTime').textContent,'1m 0.0s elapsed','Minute rollover never displays 60 seconds');
 now=73420;await run('BOOT.ready();');
 assert.equal(run('gameplayReady'),true);assert.equal(clocks.size,0);
+assert.equal(node('boot').dataset.startupState,'ready');
 assert.equal(node('bootTime').textContent,'Loaded in 1m 13.4s');
 assert.equal(node('bootBegin').hidden,false);
 assert.equal(node('bootBar').style.display,'none');
@@ -65,4 +67,9 @@ assert.equal(node('bootPercent').textContent,'54%');
 assert.equal(node('bootMsg').textContent,'Loading stopped: Loading Ice Moth artwork');
 assert.equal(node('bootTime').textContent,'Stopped after 1m 35.0s');
 assert.match(node('bootHint').textContent,/reload/);
+assert.match(node('bootHint').textContent,/network error/,'The actual failure is visible without developer tools');
+assert.equal(node('boot').dataset.startupState,'failed');
+run('BOOT.failed=false;BOOT.fail(Object.assign(new Error("assets/pyramid.png: image request failed after 3 attempts"),{startupStage:"Desert pyramid"}));');
+assert.equal(node('bootMsg').textContent,'Loading stopped: Desert pyramid');
+assert.match(node('bootHint').textContent,/assets\/pyramid\.png/,'The failing task and exact file replace the ambiguous pending-task list');
 console.log('PASS: percentage and accessible progress match completed stages, staged maps yield before work, real elapsed time includes startup and pauses, completion freezes the timer, and failures retain diagnostics.');

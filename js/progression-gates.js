@@ -16,7 +16,19 @@ const miningCartsImage=new Image();miningCartsImage.src='assets/props/forgewick-
 const miningCartsSprite={source:[17,23,830,1693],width:64,height:128};
 const caravanImage=new Image();caravanImage.src='assets/props/sandspire-caravan.png?v=20260930';
 const caravanSprite={source:[76,138,1390,746],width:96,height:52};
-async function prepareJourneyArt(){await Promise.all([prepareHollybeckArt(),prepareRegionalVillagerArt(),prepareFarmResidentArt(),prepareNanCookingArt()]);}
+async function prepareJourneyArt(onProgress=()=>{}){
+  const jobs=[['Hollybeck villagers',prepareHollybeckArt],['Regional villagers',prepareRegionalVillagerArt],
+    ['Edwin artwork',prepareFarmResidentArt],['Nan artwork',prepareNanCookingArt]];
+  const pending=new Set(jobs.map(([name])=>name));
+  const report=()=>onProgress([...pending].slice(0,2).join(' + ')+(pending.size>2?' + '+(pending.size-2)+' more':''));
+  report();
+  await Promise.all(jobs.map(async([name,load])=>{
+    try{await load();}catch(error){
+      const failure=new Error(error?.message||String(error));failure.cause=error;failure.startupStage=name;throw failure;
+    }
+    pending.delete(name);report();
+  }));
+}
 // The camels lead from the south/front of the wagon, clear of the rock and houses.
 const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}

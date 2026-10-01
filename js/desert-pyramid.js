@@ -18,13 +18,12 @@ const DesertPyramid = (()=>{
     stoneFrames.set(name,c);return c;
   }
   async function sprite(name,file,w,h,frames=1){
-    const img=new Image();img.src=BASE+file+'?v='+VERSION;await img.decode();img.pixelLocked=true;
+    const img=await loadStartupImage(BASE+file+'?v='+VERSION);img.pixelLocked=true;
     animalSheets[name]=img;SPR[name]=[0,0,w,h,frames,name];return img;
   }
   async function prepare(){
     if(ready)return;
-    const response=await fetch(BASE+'layout.json?v='+VERSION);if(!response.ok)throw Error('Pyramid layout could not load');
-    const plans=await response.json();
+    const plans=await loadStartupJSON(BASE+'layout.json?v='+VERSION);
     await sprite('pyramid_exterior','pyramid.png',128,128);
     await sprite('pyramid_tiles','tiles.png',160,128);
     SPR.pyramid_pillar=[0,80,16,48,1,'pyramid_tiles'];SPR.pyramid_broken=[16,80,16,48,1,'pyramid_tiles'];
@@ -48,7 +47,7 @@ const DesertPyramid = (()=>{
     FOE.spiderqueen={hp:60,speed:44,sight:999,reach:48,ring:56,dmg:2,swingT:1.5,hitAt:.82,rest:.9,groupRest:1,wind:.45};
     WORTH.spiderqueen=65;
     for(const [id,plan]of Object.entries(plans)){
-      const img=new Image();img.src=BASE+id+'.png?v='+VERSION;await img.decode();
+      const img=await loadStartupImage(BASE+id+'.png?v='+VERSION);
       const [width,height]=plan.size;
       const m=W.maps[id]={w:width/16,h:height/16,ts:16,title:'Sunken Pyramid',pyramid:true,
         templeExpanded:true,templePlan:plan,templeFloors:plan.floors,templeGateOpen:0,

@@ -19,8 +19,8 @@ const DesertAdventure=(()=>{
   }
   async function prepare(){
     if(ready)return;
-    const img=new Image();img.src=BASE+'dressing.png?v='+VERSION;await img.decode();img.pixelLocked=true;animalSheets.desert_dressing=img;
-    const response=await fetch(BASE+'dressing.json?v='+VERSION);if(!response.ok)throw Error('Desert props could not load');Object.assign(SPR,await response.json());
+    const img=await loadStartupImage(BASE+'dressing.png?v='+VERSION);img.pixelLocked=true;animalSheets.desert_dressing=img;
+    Object.assign(SPR,await loadStartupJSON(BASE+'dressing.json?v='+VERSION));
     const school=W.maps.school2;
     if(!school.npcs.some(n=>n.n==='Scholar Ilyan'))school.npcs.push({n:'Scholar Ilyan',sk:'desert1',desertNative:true,stationary:true,x:200,y:136,f:'d',editKey:'pyramid:scholar',d:['The old desert records are incomplete.']});
     dressPyramid();await court();ready=true;
@@ -44,7 +44,7 @@ const DesertAdventure=(()=>{
     }
   }
   async function court(){
-    const img=new Image();img.src=BASE+'sandspire_court.png?v='+VERSION;await img.decode();img.pixelLocked=true;
+    const img=await loadStartupImage(BASE+'sandspire_court.png?v='+VERSION);img.pixelLocked=true;
     const floors=[[32,48,928,768]],m=W.maps.sandspire_court={w:60,h:50,ts:16,title:'Sandspire — Caravan Court',templeExpanded:true,caravanCourt:true,templePlan:{chambers:[],floors,hazards:[]},templeFloors:floors,templeGateOpen:0,roomArt:'pyramid_tiles',_roomBaseCanvas:img,bg:'#000000',floorbg:'#daa16e',spawn:[480,728],terr:terrRLE(Array(3000).fill(SAND)),objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{}};
     m.base_terr=m.terr;
     m.doors.push({x:29.5,y:46,to:'world',tx:1536,ty:97,dir:'d',explicitDir:true,triggerRect:{x:464,y:746,w:32,h:20}});

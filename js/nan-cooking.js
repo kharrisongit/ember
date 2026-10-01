@@ -3,7 +3,7 @@
 let nanElixirReadyAt=0;
 async function prepareNanCookingArt(){
   if(SPR.nan_cooking)return;
-  const data=window.NAN_COOKING_DATA,image=new Image();image.src=data.image;await image.decode();
+  const data=window.NAN_COOKING_DATA,image=await loadStartupImage(data.image,'Nan cooking artwork');
   animalSheets.nan_cooking=image;SPR.nan_cooking=[0,0,data.width,data.height,data.frames,'nan_cooking'];
 }
 function restoreNanCooking(saved){nanElixirReadyAt=Number.isFinite(saved)&&saved>0?saved:0;}

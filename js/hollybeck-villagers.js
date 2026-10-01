@@ -2,8 +2,8 @@
 async function prepareHollybeckArt(){
   if(SPR.hollybeck_sverre_idle_d)return;
   for(const person of ['sverre','runa','tobin'])for(const action of ['idle','walk']){
-    const image=new Image();image.src=`assets/sprites/hollybeck-${person}-${action}-v2.png?v=20260930-house-style`;
-    await image.decode();const frames=action==='idle'?4:6;
+    const image=await loadStartupImage(`assets/sprites/hollybeck-${person}-${action}-v2.png?v=20260930-house-style`);
+    const frames=action==='idle'?4:6;
     for(const [row,dir]of ['d','u','e','w'].entries()){
       const key=`hollybeck_${person}_${action}_${dir}`,strip=document.createElement('canvas');
       strip.width=frames*64;strip.height=64;strip.spriteScale=2;strip.pixelLocked=true;

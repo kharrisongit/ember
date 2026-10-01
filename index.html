@@ -129,7 +129,7 @@
     <div id="bootFill" style="width:0%;height:100%;background:#f0c060;
          transition:width .18s linear"></div></div>
   <div id="bootMsg" role="status" style="opacity:.72;font-size:12px;min-height:2.4em;max-width:min(84vw,440px)">waking the embers</div>
-  <div id="bootHint" style="opacity:.5;font-size:11px;min-height:1.2em"></div>
+  <div id="bootHint" style="opacity:.5;font-size:11px;min-height:1.2em;max-width:min(84vw,440px);overflow-wrap:anywhere"></div>
   <button id="bootBegin" type="button" hidden>Press A to Begin</button>
   <div id="bootBtns" style="display:none">
     <button id="bootNew" type="button">Start New Game</button>
@@ -383,12 +383,12 @@
   });
   window.addEventListener("load", function () {
     setTimeout(function () {
-      if (window.__firstFrame) return;
+      if (window.__firstFrame || ["loading","failed"].includes(document.getElementById("boot")?.dataset.startupState)) return;
       try {
         const c = document.getElementById("cv");
         if (c && c.width && c.height) {
           setTimeout(function () {
-            if (window.__firstFrame) return;
+            if (window.__firstFrame || ["loading","failed"].includes(document.getElementById("boot")?.dataset.startupState)) return;
             show("EMBERFELL: NEVER DREW A FRAME",
                  "boot trace:\n" + (window.__boot || "(no trace)"));
           }, 5000);
@@ -439,22 +439,23 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/editor-build-data.js?v=20260925-build-ground"></script>
 <script src="js/editor-drafts.js?v=20260925-fresh-publish1"></script>
 <script src="js/published-editor-layouts.js?v=20261001-loading1"></script>
-<script src="js/progression-gates.js?v=20261001-loading1"></script>
+<script src="js/startup-assets.js?v=20261001-recovery1"></script>
+<script src="js/progression-gates.js?v=20261001-recovery1"></script>
 <script src="js/ghost-following.js?v=20260927-spirit-palette1"></script>
 <script src="js/merchant-shop.js?v=20260927-thornwell-cast"></script>
 <script src="js/inventory-icons.js?v=20260928-conversation-focus"></script>
 <script src="js/temple-compass.js?v=20260930-map-quest-journal"></script>
 <script src="assets/nan-cooking.js?v=20260930-journey-flight"></script>
-<script src="js/nan-cooking.js?v=20260930-journey-flight"></script>
+<script src="js/nan-cooking.js?v=20261001-recovery1"></script>
 <script src="js/millwood-interiors.js?v=20261001-loading1"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20261001-icemoth1"></script>
-<script src="js/generated/game-part-2.js?v=20261001-progress3" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20261001-recovery1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20260928-stable-battles"></script>
-<script src="js/hollybeck-villagers.js?v=20260930-hollybeck-lessons"></script>
+<script src="js/hollybeck-villagers.js?v=20261001-recovery1"></script>
 <script src="js/workshop-craftsmen.js?v=20260930-smith-smoke-portraits"></script>
-<script src="js/regional-villagers.js?v=20260930-feet-mine-companion"></script>
+<script src="js/regional-villagers.js?v=20261001-recovery1"></script>
 <script src="js/market-npcs.js?v=20260925-winter-market5"></script>
 <script src="js/editor-entities.js?v=20260930-farm-quests-tutorial"></script>
 <script src="js/npc-placement.js?v=20260930-tessa-tavern"></script>
@@ -471,7 +472,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/quest-map.js?v=20260930-desert4"></script>
 <script src="js/flight-travel.js?v=20260930-journey-flight"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20261001-progress3" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/generated/game-part-3.js?v=20261001-recovery1" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script src="js/blossom-routes.js?v=20261001-world-layout2"></script>
 <script src="js/tree-line-editor.js?v=20260929-blossom-borders"></script>
 <script>
@@ -506,12 +507,12 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/encounter-cards.js?v=20260930-tavern-lessons-portraits"></script>
 <script src="js/arena-entry.js?v=20260930-hollybeck-lessons"></script>
 <script src="js/conversation-branch-data.js?v=20260930-farm-quests-tutorial"></script>
-<script src="js/farm-resident.js?v=20260930-farm"></script>
+<script src="js/farm-resident.js?v=20261001-recovery1"></script>
 <script src="js/equipment-tutorial.js?v=20260930-equipment"></script>
 <script src="js/spider-queen-demo.js?v=20260930-web2"></script>
-<script src="js/desert-adventure.js?v=20261001-sideroutes1"></script>
+<script src="js/desert-adventure.js?v=20261001-recovery1"></script>
 <script src="js/side-route-adventures.js?v=20261001-sideroutes1"></script>
-<script src="js/desert-pyramid.js?v=20261001-sideroutes1"></script>
+<script src="js/desert-pyramid.js?v=20261001-recovery1"></script>
 <script src="js/spider-queen-web.js?v=20260930-web2"></script>
 <script src="js/spider-queen-boss.js?v=20261001-sideroutes1"></script>
 <script src="js/frosthorn.js?v=20261001-frosthorn2"></script>
