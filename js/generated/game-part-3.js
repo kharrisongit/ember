@@ -6176,7 +6176,8 @@ function loadGame(slot=activeSaveSlot) {
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}
-    wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal && !!wonAll; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal; trialWins = s.trialWins || 0;
+    // Skip can grant the seal before the king is defeated. Trial access still requires wonAll.
+    wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal&&!!wonAll; trialWins = s.trialWins || 0;
     chestAnim=null;
     restoreFatherCompass(s.fatherCompass);
     restoreNanCooking(s.nanElixirReadyAt);
@@ -6333,8 +6334,13 @@ tap(document.getElementById("bSkip"), () => {
   dragonIntroDone=true;dragonIntroArmed=false;
   globalThis.window?.EmberRiding?.skip();
   globalThis.window?.EmberEquipmentTutorial?.skip();
+  bagOwned = true;
   smithUpgrade = true;
   glassShield = true;
+  fishingPole = true;
+  cinderSeal = true;
+  houseLootTaken.add(DesertAdventure.rewardId);
+  houseLootTaken.add(Frosthorn.rewardId);
   dragon.on = true;
   dragon.placed = MAPID;
   dragon.air = !dragonGround(P.x - 24, P.y);
@@ -6350,6 +6356,10 @@ tap(document.getElementById("bSkip"), () => {
   if (potions < 5) potions = 5;
   if (elixirs < 3) elixirs = 3;
   if (boarMeat < 3) boarMeat = 3;
+  if (hareMeat < 3) hareMeat = 3;
+  if (deerMeat < 3) deerMeat = 3;
+  if (foxMeat < 3) foxMeat = 3;
+  if (birdMeat < 3) birdMeat = 3;
   if (dragonFish < 3) dragonFish = 3;
   if (bombs < 3) bombs = 3;
   if (dust < 3) dust = 3;
@@ -6366,7 +6376,7 @@ tap(document.getElementById("bSkip"), () => {
   if (typeof refreshBag === "function" && typeof bagOpen !== "undefined" && bagOpen)
     refreshBag();
   saveGame();
-  toast("Everything granted. Aurelius can talk; Hunter and Bramble completed.");
+  toast("All items granted, including the fishing pole and relics. Hunter and Bramble completed.");
 });
 
 let bothHeldSince = -1, lHeld = false, rHeld = false;
