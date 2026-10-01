@@ -12,11 +12,11 @@ const names=['prepareJourneyArt','prepareMillwoodInteriors','prepareHouseLoot','
   'prepareExpandedSandspireTemple','prepareExpandedHollybeckTemple','prepareExpandedMountainPassage'];
 const c=vm.createContext(Object.fromEntries(names.map(n=>[n,pending(n)])));
 const areaProgress=[];c.report=(done,total,left)=>areaProgress.push({done,total,left:Array.from(left)});
-for(const name of ['DesertPyramid','Frosthorn','IceMoth'])c[name]={prepare:pending(name)};
+for(const name of ['DesertPyramid','DragonChapels','Frosthorn','IceMoth'])c[name]={prepare:pending(name)};
 vm.runInContext(section(p2,'async function buildHouseFurnitureLayers(','/* === end household furniture layering'),c);
 let complete=false;const preparation=vm.runInContext('buildHouseFurnitureLayers(report)',c).then(()=>complete=true);
-assert.equal(started.length,8,'Independent area requests start without serial network waits');
-assert.equal(areaProgress[0].total,8);assert.equal(areaProgress[0].done,0);
+assert.equal(started.length,9,'Independent area requests start without serial network waits');
+assert.equal(areaProgress[0].total,9);assert.equal(areaProgress[0].done,0);
 assert(!started.includes('prepareMillwoodInteriors')&&!started.includes('prepareHouseLoot'));
 release.get('prepareJourneyArt')();await new Promise(setImmediate);
 assert(started.includes('prepareMillwoodInteriors'));assert(!started.includes('prepareHouseLoot'));
@@ -27,9 +27,9 @@ assert(started.includes('prepareHouseLoot'),'Chests are prepared after furniture
 for(const [name,resolve]of release)if(name!=='IceMoth')resolve();
 for(let i=0;i<5;i++)await Promise.resolve();
 assert(!complete,'Readiness still waits for every asset group');
-assert.deepEqual(areaProgress.at(-1),{done:7,total:8,left:['Ice Moth artwork']},'A slow remaining asset is named explicitly');
+assert.deepEqual(areaProgress.at(-1),{done:8,total:9,left:['Ice Moth artwork']},'A slow remaining asset is named explicitly');
 release.get('IceMoth')();await preparation;assert(complete);
-assert.deepEqual(areaProgress.at(-1),{done:8,total:8,left:[]});
+assert.deepEqual(areaProgress.at(-1),{done:9,total:9,left:[]});
 
 // Atlas progress counts registered pages and finished groups, while preserving
 // the three-worker decode bound and deterministic patch ordering.
