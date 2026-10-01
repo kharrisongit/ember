@@ -2545,13 +2545,14 @@ function rebuildBuckets() {
   buckets = new Array(CW * CH); for (let i = 0; i < buckets.length; i++) buckets[i] = [];
   sbuckets = new Array(CW * CH); for (let i = 0; i < sbuckets.length; i++) sbuckets[i] = [];
   const sa = sanm.concat(fsanim);
+  const winterAt = createBiomeQuery("winter");
   for (let i = 0; i < sa.length; i += 3) {
     if (i < sanm.length && decorGone.has("a" + i)) continue;
     const x = sa[i + 1], y = sa[i + 2];
     if (typeof inWinter === "function") {
       const nm = NAMES[sa[i]] || "";
       if (/(agrass|dtuft|tuft|weed|flower|fern|clover|grass|sw_tuft|swg|bloom|petal)/i.test(nm) &&
-          inWinter(Math.floor(x / TS), Math.floor((y - 1) / TS))) continue;
+          winterAt(Math.floor(x / TS), Math.floor((y - 1) / TS))) continue;
     }
     const cx = Math.min(CW - 1, Math.max(0, Math.floor(x / CELL)));
     const cy = Math.min(CH - 1, Math.max(0, Math.floor(y / CELL)));
@@ -3042,7 +3043,7 @@ function inSwamp(x, y) {
   for (const f of F) {
     if (f.kind !== "route" || f.style !== "swamp") continue;
     const reach = (f.band || 20) + ((f.w || 5) >> 1) + 2;
-    for (const [pa, pb] of routeLegs(f)) {
+    for (const [pa, pb] of readRouteLegs(f)) {
       const vx = pb[0] - pa[0], vy = pb[1] - pa[1];
       const len2 = vx * vx + vy * vy;
       let t = len2 ? ((x - pa[0]) * vx + (y - pa[1]) * vy) / len2 : 0;
@@ -12748,7 +12749,7 @@ function inWinter(x, y) {
     if (f.style !== "winter") continue;
     if (f.kind === "route") {
       const reach = (f.band || 20) + ((f.w || 5) >> 1) + 2;
-      for (const [a, b] of routeLegs(f)) {
+      for (const [a, b] of readRouteLegs(f)) {
         const vert = a[0] === b[0];
         const lo = (vert ? Math.min(a[1], b[1]) : Math.min(a[0], b[0])) - reach;
         const hi = (vert ? Math.max(a[1], b[1]) : Math.max(a[0], b[0])) + reach;

@@ -331,10 +331,10 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       const reach=Math.max(14,r.band)+r.half+2;
       // Clear old route trees out of the northern meadow's buffer too;
       // managed rows connect to the meadow's actual edge.
-      return (r.region==='shroom'||!protectedPlace(x,y))&&
-        (r.minY===undefined||y>=r.minY)&&treeBorderInBounds(x,y,r.bounds)&&
+      return (r.minY===undefined||y>=r.minY)&&treeBorderInBounds(x,y,r.bounds)&&
         x>=Math.min(r.a[0],r.b[0])-reach&&x<=Math.max(r.a[0],r.b[0])+reach&&
-        y>=Math.min(r.a[1],r.b[1])-reach&&y<=Math.max(r.a[1],r.b[1])+reach;
+        y>=Math.min(r.a[1],r.b[1])-reach&&y<=Math.max(r.a[1],r.b[1])+reach&&
+        (r.region==='shroom'||!protectedPlace(x,y));
     }));
   const tree=o=>BLOSSOM_ROUTE_TREES.test(NAMES[o.s]||'');
   const replace=o=>tree(o)&&inBand(o.x/TS-.5,o.y/TS-1);

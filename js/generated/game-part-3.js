@@ -27,7 +27,7 @@ function inVolcano(x, y) {
     if (f.style !== "volcano") continue;
     if (f.kind === "route") {
       const reach = (f.band || 20) + ((f.w || 5) >> 1) + 2;
-      for (const [a, b] of routeLegs(f)) {
+      for (const [a, b] of readRouteLegs(f)) {
         const vert = a[0] === b[0];
         const lo = (vert ? Math.min(a[1], b[1]) : Math.min(a[0], b[0])) - reach;
         const hi = (vert ? Math.max(a[1], b[1]) : Math.max(a[0], b[0])) + reach;
@@ -172,14 +172,18 @@ function findPath(a, b, blocks, corridors) {
 
 const _legCache = new Map();
 function routeLegs(f) {
+  // Editor callers may reshape their copy. Biome membership only reads legs
+  // and must not allocate a fresh path for every scenery tile.
+  return readRouteLegs(f).map(([a, b]) => [[a[0], a[1]], [b[0], b[1]]]);
+}
+function readRouteLegs(f) {
   const ck = f.id + ":" + editStamp;
-  const copy = ls => ls.map(([a, b]) => [[a[0], a[1]], [b[0], b[1]]]);
   const hit = _legCache.get(ck);
-  if (hit) return copy(hit);
+  if (hit) return hit;
   const res = _routeLegs(f);
   if (_legCache.size > 4096) _legCache.clear();
   _legCache.set(ck, res);
-  return copy(res);
+  return res;
 }
 function _routeLegs(f) {
   if (f.pts && f.pts.length >= 2) {
@@ -225,6 +229,69 @@ function _routeLegs(f) {
   return legs.filter(([x, y]) => x[0] !== y[0] || x[1] !== y[1]);
 }
 
+// Snapshot biome boundaries for one synchronous layout/index pass. The small
+// spatial grid limits each tile to nearby shapes. Callers discard the query
+// afterwards, so moving a route, editing its style or changing maps cannot
+// leave a persistent biome cache behind.
+function createBiomeQuery(style) {
+  const F = (typeof features !== "undefined" && features.length) ? features : MD.features;
+  const rows = new Map(), cell = 64;
+  const add = (x0, y0, x1, y1, contains) => {
+    const shape = {x0, y0, x1, y1, contains};
+    for (let cy = Math.floor(y0 / cell); cy <= Math.floor(y1 / cell); cy++) {
+      let row = rows.get(cy);
+      if (!row) rows.set(cy, row = new Map());
+      for (let cx = Math.floor(x0 / cell); cx <= Math.floor(x1 / cell); cx++) {
+        let bucket = row.get(cx);
+        if (!bucket) row.set(cx, bucket = []);
+        bucket.push(shape);
+      }
+    }
+  };
+  if (F) {
+    for (const f of F) {
+      if (f.style !== style) continue;
+      if (f.kind === "route") {
+        const reach = (f.band || 20) + ((f.w || 5) >> 1) + 2;
+        for (const [a, b] of readRouteLegs(f)) {
+          if (style === "swamp") {
+            const ax = a[0], ay = a[1], vx = b[0] - ax, vy = b[1] - ay;
+            const len2 = vx * vx + vy * vy;
+            add(Math.min(ax, b[0]) - reach, Math.min(ay, b[1]) - reach,
+                Math.max(ax, b[0]) + reach, Math.max(ay, b[1]) + reach, (x, y) => {
+              let t = len2 ? ((x - ax) * vx + (y - ay) * vy) / len2 : 0;
+              t = t < 0 ? 0 : t > 1 ? 1 : t;
+              const dx = x - (ax + t * vx), dy = y - (ay + t * vy);
+              return dx * dx + dy * dy <= reach * reach;
+            });
+          } else if (a[0] === b[0]) {
+            add(a[0] - reach, Math.min(a[1], b[1]) - reach,
+                a[0] + reach, Math.max(a[1], b[1]) + reach);
+          } else {
+            add(Math.min(a[0], b[0]) - reach, a[1] - reach,
+                Math.max(a[0], b[0]) + reach, a[1] + reach);
+          }
+        }
+      } else if (style === "winter" && f.kind === "arena") {
+        const x = f.x, y = f.y, reach = (f.r || 6.3) + (f.band || 20);
+        add(x - reach, y - reach, x + reach, y + reach,
+            (px, py) => (px - x) ** 2 + (py - y) ** 2 <= reach ** 2);
+      } else if (style !== "swamp" && f.x0 !== undefined) {
+        add(f.x0, f.y0, f.x1, f.y1);
+      }
+    }
+    for (const r of MD[style + "_regions"] || []) add(r[0], r[1], r[2], r[3]);
+  }
+  return (x, y) => {
+    const shapes = rows.get(Math.floor(y / cell))?.get(Math.floor(x / cell));
+    if (!shapes) return false;
+    for (const s of shapes)
+      if (x >= s.x0 && y >= s.y0 && x <= s.x1 && y <= s.y1 &&
+          (!s.contains || s.contains(x, y))) return true;
+    return false;
+  };
+}
+
 function inClearing(x, y) {
   for (const a of features) {
     if (!isArea(a)) continue;
@@ -247,6 +314,10 @@ function realizeFeatures() {
   // Canonical border species must be resolved before any biome, route or
   // arena pass reads stale styles restored by published or local edits.
   if(MAPID==='world')normalizeWesternTreeFeatures(features);
+
+  const inWinter = createBiomeQuery("winter"), inSwamp = createBiomeQuery("swamp");
+  const volcanoRegion = createBiomeQuery("volcano");
+  const inVolcano = (x, y) => onLava(x, y) || volcanoRegion(x, y);
 
   const townBoxes = features.filter(f => isArea(f) && !f.wild);
   const inTownArea = (x, y) => townBoxes.some(
@@ -883,6 +954,11 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
     fsanim = keepD;
   }
   const TUFTS3 = ["agrass1", "agrass2", "agrass3"];
+  // The atlas does not change while the world is laid out. Choose these pools
+  // once instead of scanning every sprite name for each flower we plant.
+  const FLOWERS = NAMES.filter(n => n && /^aflower/.test(n));
+  const northF = FLOWERS.filter(n => !/_w$/.test(n));
+  const southF = FLOWERS.filter(n => /_w$/.test(n));
   for (const f of features) {
     if (!isArea(f) || f.carve === false) continue;
     for (let y = f.y0; y <= f.y1; y++) for (let x = f.x0; x <= f.x1; x++) {
@@ -914,9 +990,8 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
         if (NAME2I[pn] !== undefined) si = NAME2I[pn];
       }
       else {
-        const FL = NAMES.filter(n => n && /^aflower/.test(n));
         const pool = (MD.mystic_above !== undefined && y <= MD.mystic_above)
-                     ? FL.filter(n => !/_w$/.test(n)) : FL.filter(n => /_w$/.test(n));
+                     ? northF : southF;
         if (pool.length)
           si = NAME2I[pool[((hsh >> 13) % pool.length + pool.length) % pool.length]];
       }
@@ -927,9 +1002,6 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   }
 
   {
-    const FLOWERS = NAMES.filter(n => n && /^aflower/.test(n));
-    const northF = FLOWERS.filter(n => !/_w$/.test(n));
-    const southF = FLOWERS.filter(n => /_w$/.test(n));
     const line = MD.mystic_above;
     for (const f of features) {
       if (f.kind !== "route") continue;
@@ -1650,6 +1722,16 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
         legs.push([pa[0], pa[1], pb[0], pb[1], h, f.style]);
     }
     if (legs.length) {
+      // Replacing a tree used to filter the entire forest for every avenue
+      // tile. Index the existing trees once, then compact in the same order.
+      const treesAt = new Map(), removed = new Set();
+      for (let i = 0; i < fobjs.length; i++) {
+        const o = fobjs[i];
+        if (!/^(spr_|oak_|bir_|fru_|mw_|sh_|blo_|kt_)/.test(NAMES[o.s] || "")) continue;
+        const k = Math.floor(o.x / TS) + "," + Math.floor((o.y - 1) / TS);
+        if (!treesAt.has(k)) treesAt.set(k, []);
+        treesAt.get(k).push(i);
+      }
       const taken = new Set();
       for (const o of objs.concat(fobjs)) {
         const nm = NAMES[o.s] || "";
@@ -1700,14 +1782,13 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
             const k = x + "," + y;
             if (taken.has(k)) continue;
             taken.add(k);
-            fobjs = fobjs.filter(o =>
-              !(Math.floor(o.x / TS) === x && Math.floor((o.y - 1) / TS) === y
-                && /^(spr_|oak_|bir_|fru_|mw_|sh_|blo_|kt_)/.test(NAMES[o.s] || "")));
-            fobjs.push({ id: -1 - fobjs.length, s: si,
+            for (const i of treesAt.get(k) || []) removed.add(i);
+            fobjs.push({ id: -1 - (fobjs.length - removed.size), s: si,
                          x: x * TS + TS / 2, y: y * TS + TS, feat: 1 });
           }
         }
       }
+      fobjs = fobjs.filter((_, i) => !removed.has(i));
     }
   }
 

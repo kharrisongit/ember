@@ -39,6 +39,7 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  function spawnFoes(){stats.foes++;foes=[{hp:10}]}
  function indexScatter(){scatterChunks=new Map()}function indexDecks(){deckPlank=new Map();deckCover=new Set()}
  function buildGround(){stats.ground++;rebuildLavaNear();chunks.clear();indexScatter();indexDecks()}
+ function createBiomeQuery(){return ()=>false}
  function realizeFeatures(){stats.generate++;fobjs=[{id:-1,s:0,x:80,y:80}];reindex()}
 `);
 run(game.slice(game.indexOf('function dragonAllowedInMap('),game.indexOf('const dragonHere =')));
