@@ -220,7 +220,7 @@ const MillwoodShroomDialogue=(()=>{
           ['Were you there with her?', 'Whenever I could be. I did not have her stamina, but she always came back to sit with me between tunes.'],
           ['I would like to see her that happy.', 'She still has happy days, love. You might ask what she would enjoy doing instead of deciding it must all be in the past.']),
         t('Do you remember my mother?', 'Very well. She brought me flowers with the roots still attached, worried they would not live if she cut them. I used to find a pot before she reached the door.',
-          ['Nan remembers those flowers too.', 'She does? Then I am glad we have both kept that little piece of her. There was often soil on Nan’s doorstep as well as mine.'],
+          ['I would like to ask Nan about that.', 'Do. There was often soil on her doorstep as well as mine. She may remember where your mother found the flowers.'],
           ['What did you like most about her?', 'She noticed when someone was left out. She would draw them into a conversation without making a performance of it.'],
           ['May I ask about her again sometime?', 'Whenever you like. You need not fit all your questions into one visit.']),
         t('What should I tell Nan about my travels?', 'Tell her about the people who are kind to you. She will want to picture you having company and a place to rest.',
@@ -290,7 +290,7 @@ const MillwoodShroomDialogue=(()=>{
         ['What makes you reluctant to travel?', 'The danger on the roads, and the uncertainty of meeting his patrols. There is always a reason to put the visit off another week.'],
         ['Do you blame him for all of that?', 'For the patrols, yes. For the monsters, I blame him for taking obedience more seriously than protecting the people who use those roads.']),
       peace:t('After Halvard’s defeat', 'I think I should visit Thornwell before I invent another reason to delay. I would like to take Tam with me.',
-        ['And retrieve your cups?', 'Only if our friend offers them. After this long I may need to bring a new set as a thank-you.'],
+        ['Is there someone you want to see?', 'An old friend kept some cups for me when I left Thornwell. I would like to thank them, and find out how their life has changed.'],
         ['Will you come back to Millwood?', 'Yes. A visit to where I used to live does not change where I want to come home.'])
     },
     'Tam':{
@@ -313,7 +313,7 @@ const MillwoodShroomDialogue=(()=>{
       ],
       dragon:t('Everyone has so many questions about him.', 'I can imagine. Seeing a dragon makes people curious, but you are allowed to be tired of explaining the same thing.',
         ['I do want people to understand him.', 'Then take one conversation at a time. You do not have to become an expert before you can tell someone to give him space.'],
-        ['Sometimes I want to talk about something else.', 'Then we shall. Joss has supplied me with several stories about that press, and only some make him look competent.']),
+        ['Sometimes I want to talk about something else.', 'Then we shall. Joss and I make cider together. I can tell you about his attempts to repair our apple press, if you would like a change of subject.']),
       politics:t('King Halvard', 'I resent having to plan ordinary work around what the crown might demand next. It makes a good harvest feel uncertain before we even bring it in.',
         ['How do you plan at all?', 'We keep what we can and help our neighbours. It is easier when people tell one another honestly what they need.'],
         ['Does he know people live like this?', 'He receives what he takes. I do not know whether he ever thinks about the people left counting what remains.']),

@@ -23,4 +23,5 @@ assert(!clean.some(c=>/^gr_ic/.test(c.n)),'No false grass corners on an arena fl
 assert(clean.some(c=>c.n==='cb2_c'),'Existing desert paving remains visible');
 run("features[0].style='birch';baseTerr.fill(GRASS);for(let i=0;i<terr.length;i++)terr[i]=terr[i]===PAVING2?DIRT:GRASS;");
 assert(!render().some(c=>/^gr_ic/.test(c.n)),'Forest arena centers also stay clear');
+assert(context.calls.some(c=>/^gr_ic/.test(c.n)),'Forest arena edges retain their rounded grass corners');
 console.log('PASS: reproduced four phantom grass patches; desert and forest arena centers now render clear paving/soil.');

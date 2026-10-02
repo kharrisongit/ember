@@ -14,7 +14,7 @@ function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble
 function atlasJourneyObjective(){
  const o=(title,place,detail,questId='main')=>({...atlasObjective('main',title,place,detail),questId});
  const opening=[
-  ['Start the morning','Millwood','Leave home and speak with Hettie by the cows.'],
+  [templeCompass.mapGiven?'Speak with Hettie':'Talk to Nan','Millwood',templeCompass.mapGiven?'Leave home and find Hettie by the cows near the mill.':'Leave your bedroom and speak with Nan before heading outside.'],
   ['Speak with Hettie','Millwood','Find Hettie by the cows near the mill.'],
   ['Collect six eggs','Millwood','Pick up the basket of eggs at the coop behind the mill.'],
   ['Take the eggs to Maddock','Elder’s Home','Follow the northern lane. Speak to the guards blocking the road.'],

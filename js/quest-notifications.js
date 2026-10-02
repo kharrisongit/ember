@@ -34,7 +34,7 @@
   }
   function tick(now=performance.now()){
     const dt=lastTick===null?0:Math.max(0,now-lastTick);lastTick=now;
-    if(!gameplayStarted||mode!=='play'||BOOT.waiting||document.hidden||window.EmberCloud?.isOpen()||window.__titleTransition){hidden();return;}
+    if(!gameplayStarted||!worldMapUnlocked()||mode!=='play'||BOOT.waiting||document.hidden||window.EmberCloud?.isOpen()||window.__titleTransition){hidden();return;}
     if(now>=nextScan){scan();nextScan=now+400;}
     // It is a passive notice: dialogue keeps typing, choices remain usable,
     // and no dismissal or focus change is required, even in a conversation.

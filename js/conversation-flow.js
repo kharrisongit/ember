@@ -21,14 +21,15 @@
     // Greetings belong to the world, before either full-screen conversation
     // or shopping. A merchant speaks once; other characters hear Corin reply.
     if(greeted){invite();return true;}
-    const author=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor))?ThornwellDialogue:
+    const author=(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(actor))?ForgewickDialogue:
+      (typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor))?ThornwellDialogue:
       (typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(actor))?MillwoodShroomDialogue:null;
     const regional=!!author;
     // Required introductions already own these early story beats. In
     // particular, Nan must not discover the dragon twice before her gift.
     if(regional&&((name==='Nan Ferrow'&&(!hasDragon()||nanGiftPending()))||
       (name==='Hettie'&&quest<Q.NOISE))){beginNpcTalk(actor);return true;}
-    const introduction=regional&&author.introduction(actor);
+    const introduction=regional?author.introduction(actor):NpcContextAudit.introduction(actor);
     if(introduction){
       playScene(introduction.lines,{who:name,npcActor:actor,conversationGreeting:true,
         after:()=>{introduction.done();invite();}});

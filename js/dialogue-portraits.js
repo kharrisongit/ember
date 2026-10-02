@@ -120,7 +120,7 @@ if(document.head?.appendChild){
 
 // Small telepathy portraits reuse the same cast and decoded atlas as dialogue.
 function paintSmallPortrait(el,who){
-  const portrait=portraitFor(who);el.dataset.speaker=who;el.style.backgroundImage='none';
+  const portrait=portraitFor(who);el.dataset.speaker=who;el.dataset.missing=String(!portrait);el.style.backgroundImage='none';
   if(!portrait)return;
   const paint=source=>{
     if(!source||el.dataset.speaker!==who)return;

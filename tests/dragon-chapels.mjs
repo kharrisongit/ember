@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
-const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom();
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error},{document:dom.document});
 const value=s=>JSON.parse(run('JSON.stringify('+s+')'));
 run(`mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;dragonOff=true;dragonIntroDone=true;
 window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;window.EmberRiding=undefined;
@@ -47,10 +49,13 @@ run(`DragonChapels.restore(false);dragonOff=false;dragon.on=true;dragon.air=fals
 P.x=176;P.y=216;stepDragon(.05);`);
 assert(run('dragonHere()&&Number.isFinite(dragon.x)&&Number.isFinite(dragon.y)'),'Aurelius enters Forgewick chapel');
 assert(!run('atlasQuestOptions().some(q=>q.id==="desert-church")'),'Secret lead stays hidden before Edrin');
-run('DragonChapels.talk(npcs.find(n=>n.n==="Brother Edrin"));');
+run(`EmberFriendship.restore({tutorialSeen:true});globalThis.edrin=npcs.find(n=>n.n==='Brother Edrin');
+EmberConversationFlow.prompt(edrin);for(let i=0;i<10&&scene;i++){typeAll();scene.t=1;advanceScene();}
+askPick=1;askTake();EmberConversationFlow.openChat();
+askPick=ask.opts.findIndex(o=>o.questUnlock);askTake();`);
 assert(!run('DragonChapels.capture()'),'Forgewick preacher cannot grant blessing');
-assert(run('scene.lines.some(s=>s.includes("My brother Cael"))&&scene.lines.some(s=>s.includes("forbids"))'));
-run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=.3;advanceScene();}');
+assert(run('scene.lines.some(s=>s.includes("My brother Cael"))&&scene.lines.some(s=>s.includes("Halvard’s ban"))'));
+run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=1;if(ask?.replyChoices){askPick=1;askTake();}else EmberConversationFlow.advance();}');
 assert(run('DragonChapels.known()&&!DragonChapels.found()'),'Finishing Edrin’s account unlocks the lead');
 assert.equal(run('atlasTrackedQuest'),'desert-church');
 assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="desert-church")).map'),'desert_chapel');
@@ -58,8 +63,9 @@ run('saveToSlot(1,true);DragonChapels.restore(false);');assert(run('loadGame(1)&
 run(`globalThis.reachableGuests=new Set();for(let y=90;y<238;y+=2)for(let x=46;x<306;x+=2){
  if(!canStand(x,y))continue;P.x=x;P.y=y;const n=nearestTalkNpc();if(n)reachableGuests.add(n.n);}`);
 assert(run('npcs.every(n=>reachableGuests.has(n.n))'),'Every preacher and congregant has a reachable interaction');
-run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;DragonChapels.talk(n);
- if(!scene?.lines.includes(n.d[0]))throw Error('Missing individual dialogue: '+n.n);}`);
+run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;askShut();
+ if(DragonChapels.talk(n)||!openNpcTopics(n)||ask.npcConversation!==n.n)throw Error('Missing full conversation: '+n.n);
+ if(EmberFriendship.status().total!==5)throw Error('Missing friendship topics: '+n.n);}`);
 run("scene=null;loadMap('desert_chapel');P.x=176;P.y=216;DragonChapels.step(.05);stepDragon(.05);");
 assert(run('dragonHere()'),'Aurelius enters the desert church');
 assert(run('atlasQuestComplete("desert-church")&&atlasCompletedEntries().some(q=>q.id==="desert-church")'),'Finding the church completes the journal quest');

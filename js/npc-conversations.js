@@ -296,7 +296,7 @@ const NPC_STORIES = {
   ],
   "Tarek": [
     [
-      "That camel",
+      "A loyal camel",
       "Years ago, one of my camels carried me home after I broke an ankle. It even bit the man who tried to pull me down too quickly.",
       "You kept it?",
       "Of course. I gave the man a warning and the camel a gentler unloading."
@@ -311,7 +311,7 @@ const NPC_STORIES = {
   "Suhaila": [
     [
       "Your daughter's loom",
-      "She weaves little blue birds into the borders. Says a blanket should promise somewhere cooler.",
+      "My daughter weaves blankets with little blue birds along the borders. She says they should promise somewhere cooler.",
       "Do you weave too?",
       "Not since my hands stiffened. I choose the thread and pretend not to notice when she changes the colours."
     ],
@@ -325,7 +325,7 @@ const NPC_STORIES = {
   "Idris": [
     [
       "Your three sons",
-      "The eldest wants ships, the middle wants music, and the youngest wants whatever the middle wants.",
+      "I have three sons. The eldest wants to work on ships, the middle wants to play music, and the youngest wants whatever the middle wants.",
       "Do you want them to stay?",
       "I want them to come back with stories. Staying is only one way to keep a family close."
     ],
@@ -367,7 +367,7 @@ const NPC_STORIES = {
   "Sella": [
     [
       "Your stew",
-      "My mother thickened it with whatever the boats had failed to sell. I learned to cook by asking why nobody wanted a fish.",
+      "My mother made fish stew with whatever the boats had failed to sell. I learned to cook by asking why nobody wanted a fish.",
       "What was the answer?",
       "Usually that it looked ugly. A terrible reason to waste supper."
     ],
@@ -667,7 +667,7 @@ const NPC_STORIES = {
     ],
     [
       "A knot to remember",
-      "There is one knot I make exactly as she did. Slightly crooked, always sound.",
+      "My grandmother taught me to mend nets. There is one knot I still make exactly as she did: slightly crooked, always sound.",
       "Have you taught anyone?",
       "Three neighbours and a boy who only wanted to tie his sister's door shut. I made him untie it first."
     ]
@@ -983,7 +983,7 @@ const NPC_STORIES = {
   "Raff": [
     [
       "The shutters",
-      "I learned to close them by watching where the sun hit my father's chair. He never owned a clock.",
+      "I learned when to close our shutters by watching where the sun hit my father’s chair. He never owned a clock.",
       "Did he need one?",
       "Only when somebody tried to make him work through the hottest part of the day."
     ],
@@ -1031,7 +1031,7 @@ const NPC_STORIES = {
     ],
     [
       "The next parcel",
-      "I am sending a little packet of seeds. She says nothing grows in her yard.",
+      "My sister lives away from Sandspire. I am sending her seeds because she says nothing grows in her yard.",
       "Do you believe her?",
       "I believe she has not tried these yet. Sisters are allowed to be stubborn on one another's behalf."
     ]
@@ -1073,7 +1073,7 @@ const NPC_STORIES = {
     ],
     [
       "Meeting Latif",
-      "He offered to help mend a chair and spent the afternoon explaining how he would do it.",
+      "My husband Latif and I met when he offered to mend a chair. He spent the afternoon explaining how he would do it.",
       "Did he mend it?",
       "I did, while he talked. He brought tea the next day. We found our arrangement."
     ]
@@ -1095,7 +1095,7 @@ const NPC_STORIES = {
   "Yara": [
     [
       "The salt on the hinges",
-      "I oil them every week. My father said the sea takes a house apart one little piece at a time.",
+      "I oil our door hinges every week. My father said the sea takes a house apart one little piece at a time.",
       "Can you stop it?",
       "You can keep it busy with the bits you can replace."
     ],
@@ -1123,7 +1123,7 @@ const NPC_STORIES = {
   "Bry": [
     [
       "The damp step",
-      "I slipped on it carrying a bowl of soup. Saved the bowl, lost the soup, acquired an audience.",
+      "I once slipped on our wet doorstep while carrying soup. I saved the bowl, lost the soup, and acquired an audience.",
       "Did anybody help?",
       "Coral brought a cloth. Everyone else brought advice. We had enough advice to dry the whole street."
     ],
@@ -1165,7 +1165,7 @@ const NPC_STORIES = {
   "Fennel": [
     [
       "Closing the back door",
-      "I lost a whole night's sleep after leaving it open once. Nothing came in except leaves.",
+      "I once left our back door open after dark. Nothing came in except leaves, but I lay awake worrying until I got up to check.",
       "Why the worry, then?",
       "Because I could not see beyond the dark. A latch is a little promise you can make yourself."
     ],
@@ -1242,7 +1242,7 @@ const NPC_STORIES = {
     [
       "Your own window",
       "My kitchen gets a narrow strip of morning sun. I keep moving the table to catch it.",
-      "Would the flower help?",
+      "Would coloured glass change the light?",
       "It would turn that strip blue and green. Breakfast could look like a different place."
     ]
   ],
@@ -1731,7 +1731,7 @@ const NPC_STORIES = {
     ],
     [
       "The spare cord",
-      "I carry it even when I am not fishing. It has mended straps, tied parcels and rescued a child's toy from a drain.",
+      "I carry spare cord even when I am not fishing. It has mended straps, tied parcels and rescued a child’s toy from a drain.",
       "An eventful piece of string.",
       "More useful than half the advice I have been given, and easier to keep in a pocket."
     ]
@@ -1948,6 +1948,8 @@ function libraryQuestHint(n){
 }
 
 function npcStoryGiftPending(n){
+  // Forgewick services are explicit topics; gifts do not hide the town’s conversations.
+  if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(n))return false;
   return (n.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending())||(canCamperGiveFishingPole(n)&&!odoRodReferral)||(n.n==='Odo'&&!fishingPole&&!odoRodReferral)||
     (n.n==='Sela'&&!glassShield&&dragonLearned('shield'))||(n.n==='Dunstan'&&hasSword()&&(!smithUpgrade||!charm.edge||(!glassShield&&!dragonLearned('shield'))))||
     (n.charm&&!charm[n.charm])||(n.gift&&!breathHas[n.gift]);
@@ -1978,10 +1980,13 @@ function npcWorldTopics(n){
   return topics;
 }
 function npcAuditedGreeting(n,alt){
+  const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.context(n);if(forgewick)return forgewick;
   const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.context(n);
   if(authored)return authored;
   const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);if(quiet)return quiet;
+  const grounded=NpcContextAudit.context(n);
+  if(grounded&&!(n.charm&&!charm[n.charm])&&!(n.gift&&!breathHas[n.gift]))return grounded;
   const p=npcWorldProfile(n);if(!p)return null;
   const spoken=lines=>lines?.map(line=>/^[^:]{1,21}: /.test(line)?line:n.n+': '+line)||null;
   if(wonAll)return spoken((alt&&p.greetings?.dv2)||p.greetings?.dv);
@@ -1997,6 +2002,7 @@ function npcAuditedGreeting(n,alt){
   return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
 }
 function npcStoryTopics(n){
+  const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.topics(n);if(forgewick)return forgewick;
   const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.topics(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.topics(n);
   if(authored)return authored;
@@ -2048,7 +2054,7 @@ function openNpcTopics(n){
   if(n.n==='King Halvard'&&MAPID!=='tavern')return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
-  const regional=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(n))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(n));
+  const regional=(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(n))||(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(n))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(n));
   if((!regional&&!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(regional&&!npcStoryTopics(n).length)return false;
   if(n.n==='King Halvard')return false;

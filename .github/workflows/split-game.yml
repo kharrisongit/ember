@@ -38,6 +38,8 @@ jobs:
         run: node tools/check-game-scripts.mjs
       - name: Check authored town conversations and quest notifications
         run: |
+          node tests/opening-castle-regressions.mjs
+          node tests/forgewick-dialogue.mjs
           node tests/thornwell-dialogue.mjs
           node tests/quest-notifications.mjs
           node tests/millwood-shroom-dialogue.mjs

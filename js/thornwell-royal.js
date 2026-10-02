@@ -4,12 +4,10 @@
    5: royal departure, 6: hurry to the falls, 7: reunited (or legacy complete). */
 let thornwellRoyal={stage:0,answers:{}};
 let thornwellMotion=null,thornwellFlight=null,thornwellSummonZoom=null,thornwellRoyalDragon=null;
-let thornwellBartenderState=null;
 const THORNWELL_ROYALS=['King Halvard','Serjeant Bram'];
 const THORNWELL_RESIDENTS=new Set(['Orin','Linna','Isolde','Cartwright Oswin','Garrow','Wren','Merrin','Asta','Colm','Rowan the Hunter','Ada','Bren','Berta','Della','Ewan','Osric','Alder','Gwyneth','Archivist Elowen','Mira','Oren','Tamsin','Tessa','Master Iven','Brin','Bram','Nell','Sable','Pella','Bess','Ronan','Venn','Hobb','Edric','Dorr','Ser Anwen','Grusk','Fen','Senn','Dain','Rusk','Linnet','Puck','Pip','Vale','Cerys','Nyra','Maren','Celia']);
 function captureThornwellRoyal(){return {stage:thornwellRoyal.stage,answers:{...thornwellRoyal.answers}};}
 function restoreThornwellRoyal(saved,legacy={}){
-  restoreThornwellBartender();
   const stage=saved&&Number.isInteger(saved.stage)?Math.max(0,Math.min(7,saved.stage)):
     legacy.wonAll||legacy.brambleQuest>=2?7:legacy.brambleQuest===1?1:0;
   thornwellRoyal={stage:stage===3?2:stage,answers:{}};
@@ -206,73 +204,17 @@ function thornwellSummon(){
     thornwellScene([
       'King Halvard: Your name, boy. I remember the errand better than the introduction.',
       'Corin: Corin, from Millwood. I brought a lost dog back to its owner.',
-      'King Halvard: A useful morning, then. Bess, a moment. There is something I want to establish before we continue.'
-    ],()=>thornwellCallBartender(king),king);
+      'King Halvard: A useful morning, then. My officers are investigating reports of a dragon landing in the woods north of Millwood. People have become much too eager to keep their discoveries to themselves.',
+      'Corin: What do you want me to do?',
+      'King Halvard: Report anything you hear to my officers. Now, you may ask your questions. I will decide which deserve an answer.'
+    ],()=>thornwellInviteAudience(king),king);
   });},king);
   scene.thornwellSummons=true;
 }
 function thornwellAudienceLines(actor,lines,after){thornwellScene(lines,after||(()=>openThornwellAudience(actor)),actor);}
-function prepareBessWalkingArt(){
-  if(SPR.tavern_bess_walk_d)return;
-  // The counter actor contains only the visible head and shoulders. Give him
-  // the apron/boots and directional steps from the matching craftsman set.
-  for(const action of ['idle','walk'])for(const dir of ['d','u','e','w']){
-    const source=SPR['pack_smith_'+action+'_'+dir],key='tavern_bess_'+action+'_'+dir;
-    const strip=document.createElement('canvas');strip.width=source[4]*32;strip.height=32;
-    const g=strip.getContext('2d');g.imageSmoothingEnabled=false;
-    for(let frame=0;frame<source[4];frame++){
-      drawGameImage(g,sheetOf(source),source[0]+frame*source[2],source[1],source[2],source[3],frame*32+(32-source[2])/2,32-source[3],source[2],source[3]);
-      if(dir==='d'){
-        g.clearRect(frame*32,0,32,22);
-        const head=SPR.tavern_anim_9;
-        drawGameImage(g,sheetOf(head),head[0]+(frame%head[4])*head[2],head[1],head[2],22,frame*32,0,32,22);
-      }
-    }
-    animalSheets[key]=strip;SPR[key]=[0,0,32,32,source[4],key];
-  }
-}
-function thornwellBartenderWalk(bess,path,after){
-  thornwellMotion={kind:'bartender',actors:[{actor:bess,path,delay:0}]};
-  thornwellScene([],()=>{thornwellMotion=null;bess.scriptWalking=false;bess.moving=false;after();});
-  scene.until=()=>!path.length;
-}
-function restoreThornwellBartender(){
-  const state=thornwellBartenderState;if(!state)return;
-  Object.keys(state.actor).forEach(k=>delete state.actor[k]);Object.assign(state.actor,state.saved);
-  state.art.editorDeleted=false;thornwellBartenderState=null;
-}
-function thornwellCallBartender(king){
-  const prompt=()=>{
-    thornwellScene(['King Halvard: Now, Corin. You may ask your questions. I will decide which deserve an answer.'],()=>{
-      if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{greeted:true,talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
-      else openThornwellAudience(king);
-    },king);
-  };
-  const bess=npcs.find(n=>n.n==='Bess'&&npcHere(n)),art=MD.roomActors.find(a=>a.spr==='tavern_anim_9'&&!a.editorDeleted);
-  if(!bess||!art){prompt();return;}
-  const home=[bess.x,bess.y],saved={...bess};
-  const counter=MD.roomBlocks.find(r=>home[0]>=r[0]&&home[0]<=r[2]&&home[1]>=r[1]&&home[1]<=r[3]);
-  const side=counter?[counter[2]+14,home[1]]:home;
-  const proxy={...bess,x:side[0],y:side[1]};
-  const route=thornwellReachable(proxy,[[king.x-36,king.y+24],[king.x-44,king.y+38],[king.x,king.y+44]]);
-  if(!route){prompt();return;}
-  const path=[...(counter?[side]:[]),...route],back=[...path.slice(0,-1).reverse().map(p=>p.slice()),home];
-  prepareBessWalkingArt();art.editorDeleted=true;
-  thornwellBartenderState={actor:bess,saved,art};
-  Object.assign(bess,{school:false,packSpr:'tavern_bess',packWalk:true,packDirections:true,stationary:true,px:bess.x,py:bess.y});
-  delete bess.talkX;delete bess.talkY;
-  thornwellBartenderWalk(bess,path,()=>{
-    faceToward(bess,king.x,king.y);
-    thornwellScene([
-      'King Halvard: Bess, my officers are following reports from the northern woods. Has a guest described a dragon landing there?',
-      'Bess: I have heard people guessing, sire. No guest has given me an account I could vouch for.',
-      'King Halvard: You are not required to judge the account. You are required to remember the speaker’s name and tell Bram.',
-      'Bess: I understand what you are asking.',
-      'King Halvard: Good. You may return to your work.'
-    ],()=>thornwellBartenderWalk(bess,back,()=>{
-      restoreThornwellBartender();prompt();
-    }),king);
-  });
+function thornwellInviteAudience(king){
+  if(globalThis.window?.EmberConversationFlow)window.EmberConversationFlow.prompt(king,{greeted:true,talk:()=>openThornwellAudience(king),leave:thornwellDismissAudience});
+  else openThornwellAudience(king);
 }
 function thornwellAnswer(actor,key,question,options){
   thornwellAudienceLines(actor,question,()=>{
@@ -400,7 +342,7 @@ function thornwellReunionDialogue(){
     'Aurelius: I stayed under cover, as we agreed. What happened in Thornwell?',
     'Corin: Halvard was at the Copper Cup. He recognised me from the egg errand and called me over. He is searching for signs of a dragon in the northern woods.',
     'Aurelius: Did he learn anything about us?',
-    'Corin: I did not tell him. Bess had no sighting to report. Then he left by this road, and I thought he might find you waiting.',
+    'Corin: I did not tell him. He ordered me to report any dragon sightings to his officers. Then he left by this road, and I thought he might find you waiting.',
     'Aurelius: I saw his party pass and kept still until they were gone. He did not see me.',
     'Corin: I kept wanting to hurry. It was difficult to sit there and listen to him talk about hunting dragons.',
     'Aurelius: You got away without leading him to me. I am grateful you trusted me to keep our agreement.',

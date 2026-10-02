@@ -7,6 +7,10 @@ const run=s=>vm.runInContext(s,c);
 const routes=JSON.parse(run('JSON.stringify(SideRouteAdventures.routes)'));
 for(const f of routes){
  c.route=f;
+ if(!f.shortcut){
+  const connected=run(`(()=>{const g=SideRouteAdventures.geometry([route],3500,800);return [...g.ends].every(k=>[-3500,3500,-1,1].filter(d=>g.floor.has(k+d)).length>=2);})()`);
+  assert(connected,'Chest clearing has no single-tile dirt tips: '+f.id);
+ }
  const result=JSON.parse(run('JSON.stringify(SideRouteAdventures.borderPlan([route],3500,800).points)'));
  assert(result.length>40,'Three populated border rows for '+f.id);
  assert.deepEqual([...new Set(result.map(p=>p.row))].sort(),[0,1,2]);

@@ -191,14 +191,18 @@ const DesertAdventure=(()=>{
     if(!['Scholar Ilyan','Sahir'].includes(n.n))return false;
     if(n.n==='Scholar Ilyan'&&typeof ThornwellDialogue!=='undefined')return false; // The school scholar uses the full, context-aware conversation.
     sayOff();P.moving=false;faceToward(n,P.x,P.y);if(n.goto)n.goto=null;
-    const speak=(lines,after)=>playScene(lines.map(s=>n.n+': '+s),{who:n.n,npcActor:n,after});
+    const speak=(lines,after)=>{
+      const intro=typeof NpcContextAudit!=='undefined'?NpcContextAudit.introduction(n):null;
+      playScene([...(intro?.first?intro.lines:[]),...lines.map(s=>n.n+': '+s)],
+        {who:n.n,npcActor:n,after:()=>{if(intro?.first)intro.done();after?.();}});
+    };
     if(owned()){speak(['You recovered the Emberheart! Carry it with you and Aurelius’s Fire burns a quarter stronger. It needs no clasp or ritual.']);return true;}
     if(source){speak([won()?'The guardian has fallen. Open the chest in her chamber to claim the Emberheart.':'The Sunken Pyramid lies at the end of the winding western desert road. Burial guards still walk inside its chambers. Take Aurelius; the relic was made for dragon fire.']);return true;}
     speak([n.n==='Scholar Ilyan'?'These old records describe an Emberheart hidden in a pyramid west of Sandspire.':'Reptiles stalk the winding road west of Sandspire. Beyond them, the guards inside the Sunken Pyramid have returned.',
       'An Emberheart rests beyond those burial chambers. Simply carrying it strengthens a dragon’s Fire by a quarter. Would you and Aurelius seek it?'],()=>{
         ask={quick:1,npcActor:n,opts:[
           {n:'We’ll investigate the pyramid.',go:()=>{accept(n.n==='Scholar Ilyan'?'school':'sandspire');speak(['Follow the western desert detour to its end. Search the chambers, defeat their guardian, and open the treasure chest. I have marked the pyramid on your map.']);}},
-          {n:'Not right now.',go:()=>speak(['The record will be here when you are ready.'])}
+          {n:'Not right now.',go:()=>speak(['Ask me again when you are ready. It is a dangerous journey; take time to prepare.'])}
         ]};askPick=0;askDraw();
       });return true;
   }

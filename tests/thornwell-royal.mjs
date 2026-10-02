@@ -45,7 +45,10 @@ assert.equal(run('thornwellRoyal.stage'),1);assert.equal(run('dragonHere()'),fal
 run('syncBrambleParty();syncThornwellRoyals();');
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2);
 run(`tryBrambleReunion(npcs.find(n=>n.n==='Rowan the Hunter'));`);
+const bartenderBefore=run("JSON.stringify(npcs.find(n=>n.n==='Bess'))");
 tick(800);
+assert.equal(run("JSON.stringify(npcs.find(n=>n.n==='Bess'))"),bartenderBefore,'The audience never changes Bess’s position or walking art');
+assert(!spoken.some(s=>s.startsWith('Bess:')),'The bartender has no part in the king’s summons');
 assert.equal(run('brambleQuest'),3,'Rowan and Bramble leave before the summons');
 assert.equal(run('thornwellRoyal.stage'),3);
 assert(run('thornwellAudiencePending()'),'The exit waits for the mandatory audience');

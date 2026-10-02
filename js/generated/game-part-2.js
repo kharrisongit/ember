@@ -2527,7 +2527,7 @@ const whyBlocked = (px, py) => {
 const isSolid = (px, py, ignoreNpcBuffer = false) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return true;
-  if(progressionSolid(px,py))return true;
+  if(progressionSolid(px,py)||nanMorningSolid(px,py))return true;
   const override=collisionOverride(px,py);if(override!==undefined)return override;
   if (MAPID === "witchmoor" && wonAll && px >= 184 && px < 213 && py >= 282 && py < 311) return true;
   const wallEdit=editedTempleWallCollision(px,py);if(wallEdit===true)return true;
@@ -3663,7 +3663,7 @@ if (t === COBBLE) { const _cb = TERRT.cb.mask[nmask(x, y, (a, b) => T(a, b) === 
       if (!self(x, y) || nmask(x, y, same) !== 0) continue;
       // Arena paving has no grass corners. Desert sand was being mistaken
       // for a grass edge here, producing four green patches at the center.
-      if (key === "gr" && onArenaFloor(x, y)) continue;
+      if (key === "gr" && onArenaFloor(x, y) && inDesert(x, y)) continue;
       if (typeof inSwamp === "function" && inSwamp(x, y)) continue;
       if (typeof inWinter === "function" && inWinter(x, y)) continue;
       for (let i = 0; i < diag.length; i++)
@@ -6308,7 +6308,6 @@ const Q = { ABED: 0, ERRAND: 1, EGGS: 2, KING: 3, ELDER: 4, NOISE: 5,
 let quest = Q.ABED;
 let bagOwned=false;
 function hasBag(){return bagOwned||quest>Q.EGGS;}
-function receiveErrandBag(){bagOwned=true;showReveal("inventory_bag", "Hettie gave Corin a Bag!",2.5,true);}
 const hasSword = () => quest >= Q.ARMED;
 let smithUpgrade = false;
 let glassShield = false, glassShieldHeld = false, glassShieldPulse = 0;
@@ -7135,6 +7134,7 @@ function advanceScene() {
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if(scene.greenEncounter&&scene.i<2)return; // Flight/rest timing owns these reactions.
+  if(scene.nanMorning&&scene.i===0&&giveMorningSupplies())return;
   if(scene.nanGifts&&nanGiftBeat(scene.i))return;
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
@@ -7322,10 +7322,10 @@ function questTalk() {
     playScene([
       "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
       "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
-      "Hettie: Here, take this bag. It will keep your things together on the way.",
+      "Hettie: You brought a bag. Good — keep the eggs together, and mind them on the lane.",
       "Hettie: The coop is behind the mill. I should have the "
         + "cows out of your way by the time you have the basket.",
-    ], { who: "Hettie", after:receiveErrandBag });
+    ], { who: "Hettie" });
     return true;
   }
   if (quest === Q.CARRY && MAPID === "world" && nearNpc("Maddock")) {
@@ -9151,12 +9151,31 @@ function stepTrial(dt) {
 
 function startLastFight() {
   if (wonAll || lastFight || MAPID !== "cinderhold") return;
+  // Accepting this confrontation starts combat even after a dev traversal
+  // with FOES paused. A visible boss health bar must mean an active fight.
+  if(foesHeld)setFoesEnabled(true);
+  clearPadInputs();P.act=null;P.moving=false;
   lastFight = 1;
   const k = npcs && npcs.find(n => /Halvard/.test(n.n || ""));
   const kx = k ? k.x : P.x, ky = k ? k.y : P.y - 60;
-  foes.push({ kind: "kdragon", x: kx + 40, y: ky + 16, hx: kx + 40, hy: ky + 16,
-              st: "idle", t: 0, hp: enemyMaxHp("kdragon", kx + 40), dir: "d", flip: false,
-              hurt: 0, ring: 0, chaseDelay: 0.75 });
+  const boss={kind:"kdragon",x:kx+40,y:ky+16,hx:kx+40,hy:ky+16,
+    st:"idle",t:0,hp:enemyMaxHp("kdragon",kx+40),dir:"d",flip:false,hurt:0,ring:0,chaseDelay:.75};
+  // The large footprint can overlap a statue or Corin when the audience was
+  // approached from the side. Find clear floor before activating its AI.
+  const spots=[];
+  for(let y=Math.max(112,ky+16);y<=Math.min(PXH-48,ky+200);y+=8)
+    for(let x=48;x<=PXW-48;x+=8){
+      if(!combatCanStand(boss,x,y,false,false))continue;
+      // A clear point above a statue can still trap this wide body. Reserve
+      // its approach into the hall, not just its first animation frame.
+      let approach=true;
+      for(let ay=y;ay<=Math.min(PXH-48,y+112);ay+=4)
+        if(!combatTerrainClear(boss,x,ay)){approach=false;break;}
+      spots.push({x,y,d:Math.hypot(x-boss.x,y-boss.y)+(approach?0:1000)});
+    }
+  const spot=spots.sort((a,b)=>a.d-b.d)[0];
+  if(spot){boss.x=boss.hx=spot.x;boss.y=boss.hy=spot.y;}
+  foes.push(boss);
   rebuildBuckets();
   toast("It comes down off the steps and lifts both heads.");
 }
@@ -11208,6 +11227,7 @@ function drawFerry(g) {
   g.restore();
 }
 function brambleHint(n){
+  if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(n))return null;
   if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(n))return ThornwellDialogue.bramble(n);
   if(brambleQuest!==1||n.pettable||n.n==='Rowan the Hunter')return null;
   const profile=typeof npcWorldProfile==='function'&&npcWorldProfile(n);
@@ -11219,6 +11239,13 @@ function brambleHint(n){
 }
 
 function npcContextDialogue(n, alt) {
+  if(n.n==='King Halvard'&&MAPID==='cinderhold'&&!wonAll)return [
+    'King Halvard: So you have brought the dragon to Cinderhold. You could have given him to me before all this trouble.',
+    'Corin: Aurelius is not something I can give away. We came to end what you have done to these towns.',
+    'King Halvard: You believe reaching my hall makes you my equal. My dragon has survived battles you cannot imagine.',
+    'Corin: Then we will face him together. We are not leaving you in control of the roads.'
+  ];
+  const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.context(n);if(forgewick)return forgewick;
   const local=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(local)return local;
   const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);
   if(quiet)return quiet;
@@ -11238,7 +11265,7 @@ function npcContextDialogue(n, alt) {
 function finishSmithUpgrade() {
   const whetstone = () => {
     if (charm.edge) return;
-    playScene(["Dunstan: You'll need this too."], { who: "Dunstan", after: () => {
+    playScene(["Dunstan: Take this Whetstone charm as well. Equip it in your Bag when you want stronger sword blows."], { who: "Dunstan", after: () => {
       if (charm.edge) return;
       charm.edge = true;
       showReveal(SPR.it_edge ? "it_edge" : CHARM_ICON.edge,
@@ -11657,6 +11684,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     if(DragonChapels.talk(best))return;
     if(DesertAdventure.talk(best))return;
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
+    if(best.n==='Nan Ferrow'&&startNanMorning(best))return;
     if(best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()){
       startNanFarewell(best);return;
     }
@@ -11674,7 +11702,9 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
+    const forgewickService=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.service(best);
+    if(forgewickService)sayNpc.said=forgewickService;
+    else if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
       sayNpc.said=fishingRodDialogue('Odo',best);
       odoRodReferral=true;saveGame();
     }
@@ -11704,7 +11734,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
         "There. A stronger edge, and armor to match.",
         ...(!glassShield&&!dragonLearned('shield')?SandspireGlassworks.referralLines:[])];
     }
-    else if(best.n==='Dunstan'&&!glassShield&&!dragonLearned('shield')){
+    else if(best.n==='Dunstan'&&!glassShield&&!dragonLearned('shield')&&!(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(best))){
       sayNpc.said=SandspireGlassworks.referralLines.slice();
     }
     else if (best.charm === "lamp" && !charm.lamp) {

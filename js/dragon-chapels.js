@@ -14,29 +14,12 @@ const DragonChapels=(()=>{
   let plan,ready=false,blessed=false,known=false,found=false,ritual=null,graveSource=null,graveObjects=[];
   const sprintSpeed=()=>blessed?285:228; // 285 × .8; walking and ordinary flight keep their speeds.
   function restore(value,state){blessed=value===true;known=state?.known===true||blessed;found=state?.found===true||blessed;ritual=null;}
-  const guestLines=[
-    ['Brother Oswin','We have prayed quietly for so long. Thank you for letting us see a dragon beside a friend again.'],
-    ['Brother Ansel','Corin, keeping faith with Aurelius takes courage. Both of you have a welcome here.'],
-    ['Mara Bell','I hid my mother’s dragon carving when the soldiers came. Thank you for being braver than I was.'],
-    ['Teren Vale','They told us a dragon would turn on anyone who came near. Aurelius looks at you as if you are his whole family.'],
-    ['Nessa Flint','My little brother asks whether the old riders were real. Now I can tell him I have met one. Thank you, Corin.'],
-    ['Orris Reed','I was frightened when I heard wings outside. I am glad you came through that door together.'],
-    ['Elva Moss','Aurelius, you need not lower your head here. Corin, thank you for bringing him somewhere he is welcome.'],
-    ['Brennor Ash','I have spent years keeping my opinions to myself. Seeing you stand beside him makes that harder. In a good way.'],
-    ['Sera Penn','I used to leave an empty place in my prayers for the dragons. It is good to finally have a name. Aurelius.'],
-    ['Halen Birch','The king can order us to look away. He cannot make us forget what we have seen. Thank you for trusting us.'],
-    ['Iria Dawn','You must get so many frightened looks on the road. I hope ours are kinder. We are glad you are both here.'],
-    ['Davin Rook','I could never have walked into town with a dragon. You did. Thank you for showing the rest of us it can be done.'],
-    ['Mina Thorne','My grandmother said dragons remembered a kindness. I hope Aurelius remembers this room as one.'],
-    ['Perrin Clay','Corin, there is a difference between hearing that someone is brave and seeing them choose it. Thank you.'],
-    ['Brother Orenfold','We had to carry the statues out ourselves. Seeing a living dragon here means more than stone ever could.'],
-    ['Brother Selwyn','Aurelius, may these walls give you a little peace. Corin, thank you for staying at his side.']
-  ];
+  const guestNames=["Brother Oswin", "Brother Ansel", "Mara Bell", "Teren Vale", "Nessa Flint", "Orris Reed", "Elva Moss", "Brennor Ash", "Sera Penn", "Halen Birch", "Iria Dawn", "Davin Rook", "Mina Thorne", "Perrin Clay", "Brother Orenfold", "Brother Selwyn"];
   const isGuest=n=>/^chapel_(parishioners|monks)/.test(n?.packSpr||'');
   function learnChurch(){
     if(known)return;known=true;atlasSyncJournal();
     if(!found)atlasTrackedQuest='desert-church';
-    saveGame();toast(found?'Brother Cael is Edrin’s brother.':'Quest discovered: The Secret Dragon Church');
+    saveGame();
   }
   async function prepare(){
     if(ready)return;
@@ -64,7 +47,7 @@ const DragonChapels=(()=>{
           a.spr='chapel_statues1';a.x=source.x<176?128:224;a.chapelMirror=source.x<176;
         }
         if(a.congregation){
-          const [name,line]=guestLines[guestIndex++];
+          const name=guestNames[guestIndex++],line=ForgewickDialogue.cast[name].hello;
           // Bring the pack's stray bottom-row sitter onto the last visible pew.
           if(a.y>224){a.x=128;a.y=224;}
           const monk=a.layer.startsWith('Monks');
@@ -197,37 +180,21 @@ const DragonChapels=(()=>{
     return true;
   }
   function talk(n){
-    if(isGuest(n)){
-      ask=null;sayNpc=null;clearPadInputs();running=false;P.act=null;
-      const lines=hasDragon()&&dragonIntroDone?[...n.d,'Corin: Thank you. We will look after each other.']:
-        [n.n+': You are welcome to rest here. Brother Edrin always leaves the door open.'];
-      playScene(lines,{who:n.n,npcActor:n});return true;
-    }
+    if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(n))return false;
+    if(isGuest(n)||MAPID==='forgewick_chapel')return false;
     if(n?.packSpr!=='chapel_priest')return false;
     ask=null;sayNpc=null;clearPadInputs();running=false;P.act=null;
-    if(MAPID==='forgewick_chapel'){
-      playScene([
-        dragonHere()?'Brother Edrin: Come in, both of you. You have friends here.':'Brother Edrin: Come in, Corin. You have friends here.',
-        'Corin: The wall behind your stand looks empty. Was something there?',
-        wonAll?'Brother Edrin: A dragon window. Halvard forbade us to gather in their worship. We are still putting right what his soldiers took.':
-          'Brother Edrin: A dragon window. King Halvard forbids us to gather and worship dragons. His soldiers made us remove it, and the statues too.',
-        'Corin: But people still come?',
-        'Brother Edrin: For company. For courage. We are careful about what we say when the door is open.',
-        'Brother Edrin: My brother Cael keeps a secret church in the desert. They still worship dragons there, whatever the king decrees.',
-        'Corin: How do we find him?',
-        'Brother Edrin: Beyond Sandspire, take the winding path south from the eastern desert road. Follow it west through the dunes to the church crowned by a dragon.',
-        'Brother Edrin: Tell him Edrin sent you. He remembers a blessing for a dragon and rider.'] ,{who:n.n,npcActor:n,after:learnChurch});return true;
-    }
     if(blessed){playScene(['Brother Cael: The blessing is already with you, Corin. You do not need to earn it twice.',
       'Brother Cael: Hold your sprint control while riding Aurelius in flight. Trust his wings, and let him carry you.'],{who:n.n,npcActor:n});return true;}
-    if(!hasDragon()||!dragonIntroDone){playScene(['Brother Cael: I keep this chapel for the day a dragon and rider return together.',
+    if(!hasDragon()||!dragonIntroDone){playScene(['Brother Cael: Welcome. I am Brother Cael. I keep this chapel for the day a dragon and rider return together.',
       'Brother Cael: Until then, you are welcome to rest here.'],{who:n.n,npcActor:n});return true;}
-    playScene(['Brother Cael: I heard wings over the roof. After all these years, I thought I was imagining them.',
-      'Corin: His name is Aurelius. Is that statue outside watching over this place?',
-      'Brother Cael: It has kept vigil longer than I have. The old riders came here to ask for a clear sky and a safe return.',
+    const intro=NpcContextAudit.introduction(n);
+    playScene([...(intro?.first?intro.lines:[]),
+      'Corin: Why are there dragon statues in this chapel?',
+      'Brother Cael: They honour the dragons who carried the old riders. Those riders came here to ask for a clear sky and a safe return.',
       'Corin: Could you give us that blessing?',
       'Brother Cael: Gladly. Stand here a moment. Your bond will carry it to him.'],
-      {who:n.n,npcActor:n,after:()=>beginBlessing(n)});
+      {who:n.n,npcActor:n,after:()=>{if(intro?.first)intro.done();beginBlessing(n);}});
     return true;
   }
   function beginBlessing(n){
@@ -254,5 +221,5 @@ const DragonChapels=(()=>{
     saveGame();window.EmberSfx?.keyItem?.();
   }
   return {prepare,installWorld,clearForecourt,solidAt,draw,talk,step,beginBlessing,frame,sprintSpeed,routes,moves,approaches,
-    graveSprite,isGuest,known:()=>known,found:()=>found,capture:()=>blessed,captureQuest:()=>({known,found}),restore,inspect:()=>({ready,blessed,known,found,ritual:ritual?.phase||null,location:[X,Y]})};
+    graveSprite,isGuest,learnChurch,known:()=>known,found:()=>found,capture:()=>blessed,captureQuest:()=>({known,found}),restore,inspect:()=>({ready,blessed,known,found,ritual:ritual?.phase||null,location:[X,Y]})};
 })();

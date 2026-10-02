@@ -38,4 +38,7 @@ assert(text(dom.element('bagAsk')).includes('Quest lead'));
 run('EmberQuestNotifications.restore({version:1,seen:[],pending:[]});DesertAdventure.accept("school");EmberQuestNotifications.scan()');
 c.saved=JSON.parse(run('JSON.stringify(captureQuestJournal())'));
 run('restoreQuestJournal(saved);EmberQuestNotifications.tick(20000)');assert(!notice.hidden);assert(text(notice).some(s=>s.includes('more')||s.includes('Emberheart')));
+run('EmberQuestNotifications.restore({version:1,seen:[],pending:[]});templeCompass.mapGiven=false;EmberQuestNotifications.scan();EmberQuestNotifications.tick(21000)');
+assert(notice.hidden,'No Map instruction before Nan gives the Map');assert(state().pending.length>0,'Unannounced discoveries remain queued');
+run('templeCompass.mapGiven=true;EmberQuestNotifications.tick(21500)');assert(!notice.hidden,'Queued quest notice appears once the Map is available');
 console.log('PASS: passive in-conversation notice, automatic fade, grouped discovery, persistence and old-save migration, no stage/reload duplicates, and state-aware New quest/Quest lead topic labels.');

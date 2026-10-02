@@ -5,6 +5,9 @@
   let people=Object.create(null),tutorialSeen=false,legacy=[],activeName='',activeActor=null;
   const catalogues=new Map();
   function id(name,title){
+    // Context-only title corrections preserve existing friendship credit.
+    if(name==='Tarek'&&title==='A loyal camel')title='That camel';
+    if(name==='Coral'&&title==='Mending a sail')title='Mending that sail';
     if(['King Halvard','After Halvard’s defeat'].includes(title))return 'world-halvard';
     if(name==='Aurelius'){
       if(['Why Halvard fears us','Life after Halvard'].includes(title))return 'world-halvard';
@@ -27,7 +30,9 @@
     let rows=[];
     const add=(title,available=true,topicId)=>rows.push({id:topicId||id(name,title),title:playerFacingText(title),available});
     const regional=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(actor);
-    if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor)){
+    if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(actor)){
+      for(const t of ForgewickDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
+    }else if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor)){
       for(const t of ThornwellDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
     }else if(actor?.thornwellRoyal&&typeof ThornwellAudienceDialogue!=='undefined'){
       for(const t of ThornwellAudienceDialogue.rows(actor))add(t.title,true,t.friendshipId);

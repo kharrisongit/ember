@@ -504,7 +504,7 @@
       "title": "A goat on the roof",
       "category": "story",
       "exchange": [
-        "Patience looked terribly pleased with the view.",
+        "One of my goats, Patience, once climbed onto our roof. She looked terribly pleased with the view.",
         "How did you get her down?",
         "I stopped telling her to. Curiosity did the rest."
       ]
@@ -784,7 +784,7 @@
       "title": "A useful button",
       "category": "story",
       "exchange": [
-        "I still keep that brass button.",
+        "I found a brass button with a ship stamped on it when I was little. I still keep it.",
         "After all this time?",
         "It reminds me to look down sometimes. Everybody stares at the horizon."
       ]
@@ -1404,9 +1404,9 @@
       "title": "The chair's shadow",
       "category": "story",
       "exchange": [
-        "The shadow reaches the chair before the worst heat does.",
-        "Your father's trick?",
-        "His quietest advice. I learned it by watching him move."
+        "My father moved his chair with the shade each afternoon. I learned to close the shutters before the sun reached his favourite place.",
+        "Did he teach you to do that?",
+        "Mostly by letting me watch. I still think of him when I catch myself checking the same patch of sunlight."
       ]
     },
     {
@@ -1464,7 +1464,7 @@
       "title": "The missing towels",
       "category": "story",
       "exchange": [
-        "My sister finally returned one of the towels.",
+        "My sister moved away with three of my towels wrapped around her teacup. She finally sent one back.",
         "Only one?",
         "It came wrapped around a gift. I may have lost the argument again."
       ]
@@ -1473,9 +1473,9 @@
       "title": "Seeds in a letter",
       "category": "world",
       "exchange": [
-        "Seeds make a letter feel heavier than it is.",
-        "With possibility?",
-        "And with my sister's certainty that I expect her to learn gardening."
+        "I like putting a few seeds in letters to my sister. It gives us something to compare once they grow.",
+        "Do you grow the same things?",
+        "We try. Her yard gets less sun, so she usually writes back explaining why mine have an unfair advantage."
       ]
     }
   ],
@@ -1484,7 +1484,7 @@
       "title": "The hidden knot",
       "category": "story",
       "exchange": [
-        "I know where every wrong-colored knot is.",
+        "When I finish weaving a rug, I remember every knot whose colour was not quite what I intended.",
         "Can visitors find them?",
         "Some try. Others enjoy the rug without inspecting its mistakes."
       ]
@@ -1493,9 +1493,9 @@
       "title": "A woven road",
       "category": "world",
       "exchange": [
-        "I can trace my family's route along the border without looking.",
-        "Even the wells?",
-        "Especially the wells. Those are the turns worth remembering."
+        "I wove my family’s journey to Sandspire into a rug border. I can trace its turns without looking.",
+        "Do you include the places they stopped?",
+        "Especially the wells. My aunt remembers the relief of reaching each one."
       ]
     }
   ],
@@ -1533,7 +1533,7 @@
       "title": "Latif's repairs",
       "category": "world",
       "exchange": [
-        "Latif has become much better at fixing chairs.",
+        "My husband Latif loves explaining repairs. When we met, he spent more time talking than fixing my chair. These days he gets both done.",
         "Less explaining?",
         "The explaining is still excellent. The chairs have caught up."
       ]
@@ -1544,9 +1544,9 @@
       "title": "Counting change",
       "category": "story",
       "exchange": [
-        "I still count a handful of coins twice.",
-        "Because of your mother?",
-        "Because once, the second count earned me an extra piece of fruit."
+        "My mother taught me sums with her market change. She gave me fruit if the second count caught a mistake, so I still count twice.",
+        "Did she always know the right total?",
+        "Almost always. I was absurdly pleased the first time I found a mistake she had missed."
       ]
     },
     {
@@ -1604,7 +1604,7 @@
       "title": "The soup audience",
       "category": "story",
       "exchange": [
-        "Everyone remembers the soup I dropped.",
+        "I dropped a bowl of soup outside once, in full view of several neighbours. They remember it better than anything I have cooked successfully.",
         "Does that bother you?",
         "Only when I carry another bowl and they all become attentive."
       ]
@@ -1613,7 +1613,7 @@
       "title": "A practical doormat",
       "category": "world",
       "exchange": [
-        "The mat catches less water than I hoped.",
+        "I bought a doormat to keep the wet from our boots out of the house. It catches less water than I hoped.",
         "Will you replace it?",
         "No. It is doing its best against an entire sea."
       ]
@@ -1624,16 +1624,16 @@
       "title": "Light in the window",
       "category": "story",
       "exchange": [
-        "I clean the lamp glass before dusk.",
+        "I keep a lamp in my window when my husband is out fishing. I clean its glass before dusk.",
         "So it shines farther?",
         "So whoever sees it knows someone has been tending it."
       ]
     },
     {
-      "title": "Mending that sail",
+      "title": "Mending a sail",
       "category": "world",
       "exchange": [
-        "I could make the patch almost invisible.",
+        "My husband recognises his boat by a crooked patch on its sail. I could mend it almost invisibly, but he asks me not to.",
         "But he likes it crooked?",
         "He likes knowing which boat is his in a crowded harbor. I can respect that."
       ]
@@ -1644,18 +1644,18 @@
       "title": "The table that waited",
       "category": "story",
       "exchange": [
-        "I still notice a dry ceiling every time I sit down.",
-        "More than the table?",
-        "The roof earned its place in my affections."
+        "I once spent my savings for a table on repairing a leaking roof. Since then I notice a dry ceiling every time I sit down.",
+        "More than the furniture?",
+        "A dry room makes even a meal eaten from a crate rather comfortable."
       ]
     },
     {
       "title": "One level chair",
       "category": "world",
       "exchange": [
-        "I have saved the rag from the old chair leg.",
-        "Why keep it?",
-        "I may need proof of how long I put up with it."
+        "I keep a folded rag under the short leg of my chair. It steadies the chair while I save for a replacement.",
+        "Will you keep the rag afterwards?",
+        "I may. It has done more to improve supper than several expensive purchases."
       ]
     }
   ],
@@ -1773,9 +1773,9 @@
       "title": "Something beautiful",
       "category": "world",
       "exchange": [
-        "I used to think a useful purchase had to look plain. Now I wonder whether enjoying something each morning is useful too.",
-        "Are you thinking of the glass flower?",
-        "Yes. I have not bought it yet, but it has made me reconsider what I expect from a purchase."
+        "I saw a stained-glass flower while shopping for a cup. I used to think useful purchases had to be plain, but I keep imagining that flower in my kitchen.",
+        "Would enjoying it every morning make it useful?",
+        "I think so. I still need to pay for the necessities first, but pleasure can be part of choosing something."
       ]
     }
   ],
@@ -1784,9 +1784,9 @@
       "title": "A grateful goose",
       "category": "story",
       "exchange": [
-        "The goose never thanked me when its wing healed.",
-        "Would you have expected it to?",
-        "No. People are the ones who make gratitude complicated."
+        "One of the first creatures I treated was a goose with a broken wing. It bit me daily and flew away as soon as it could.",
+        "Did you mind getting no thanks?",
+        "No. Being well enough to leave was the result I wanted. The biting, I could have done without."
       ]
     },
     {

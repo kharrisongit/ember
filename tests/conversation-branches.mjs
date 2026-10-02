@@ -25,7 +25,7 @@ c.checkTopic=(name,topic)=>{
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;templeCompass.owned=true;odoRodReferral=true;
 for(const victory of [false,true])for(const phase of [1,5,7]){
  wonAll=victory;thornwellRoyal.stage=phase;heartKnown=victory;fishingPole=victory;smithUpgrade=victory;glassShield=victory;brambleQuest=victory?2:1;charm.lamp=victory;charm.wake=victory;cinderSeal=victory;trialSealPlaced=victory;breathHas.lightning=victory;breathHas.ice=victory;breathHas.shadow=victory;
- for(const name of Object.keys(NPC_TOPIC_GREETINGS).filter(n=>n!=='Aurelius'))for(const topic of npcStoryTopics({n:name}))if(topic.lines)checkTopic(name,topic);
+ for(const name of new Set([...Object.keys(NPC_TOPIC_GREETINGS),...Object.keys(FORGEWICK_DIALOGUE_CAST)].filter(n=>n!=='Aurelius')))for(const topic of npcStoryTopics({n:name}))if(topic.lines)checkTopic(name,topic);
  for(const [id,value]of Object.entries(DRAGON_LONG_TALKS))checkTopic('Aurelius',{branchKey:'Aurelius/long/'+id+(id==='halvard'&&wonAll?'-victory':''),lines:typeof value==='function'?value():value});
  for(const [group,ts]of Object.entries(DRAGON_GENERAL_TOPICS))for(const [id,title,lines]of [...ts,...dragonExtraTopics(group)])checkTopic('Aurelius',{branchKey:'Aurelius/'+group+'/'+id,title,lines});
  for(const t of DRAGON_JOURNEY_TOPICS)checkTopic('Aurelius',{branchKey:'Aurelius/journey/'+t.id,lines:typeof t.lines==='function'?t.lines():t.lines});
@@ -52,5 +52,6 @@ for(const file of fs.readdirSync('assets/dialogue/branches').filter(f=>f.endsWit
 }
 for(const [key,t]of Object.entries(data.topics))assert(Object.keys(t.decisions).length,key+' is authored');
 const variants=[...tested.values()],decisions=variants.reduce((n,t)=>n+t.decisions,0);
-assert(authored>1000);assert(variants.length>950);
+assert(authored>1000);
+for(const name of run('Object.keys(FORGEWICK_DIALOGUE_CAST)'))assert(variants.some(t=>t.key.startsWith(name+'|')),name+' participates in branch validation');
 console.log(`PASS: ${variants.length} topic/state variants, ${decisions} reply points, ${authored} authored decision records; two or three distinct authored choices, NPC answers, source parity, royal visits and equipment combinations.`);

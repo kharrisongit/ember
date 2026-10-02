@@ -4362,6 +4362,7 @@ function useDoors(dt) {
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("Talk to Nan before you go.");return;}
   if(!foesHeld&&arenaLock?.templeRoom&&arenaLock.templeMap===MAPID&&arenaT>0)return;
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
@@ -4370,6 +4371,7 @@ function useDoors(dt) {
   beginDoorEntry(d);
 }
 function beginDoorEntry(d){
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("Talk to Nan before you go.");return;}
   globalThis.window?.EmberSfx?.door?.();
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
   if (animated) {
@@ -4549,7 +4551,8 @@ atlasImg.onload = async () => {
       // loadMap already prepared collision. Only warm the visible ground here.
       try {
         const here = MAPID;
-        const out = (MD.doors || []).find(d => d.to === "world");
+        const out = (MD.doors || []).find(d => d.to === "world") ||
+          (MD.doors || []).flatMap(d=>W.maps?.[d.to]?.doors||[]).find(d=>d.to==='world');
         if (out) {
           await BOOT.map("world",true,70,92,"Overworld");
           const wx = out.tx * TS, wy = out.ty * TS;
@@ -4706,9 +4709,12 @@ const BAG = [
   {key:"soulwing",kind:"key",name:"Soulwing Relic",tell:"Won by defeating the Ice Moth. If Corin falls, Aurelius restores him to full health right where he fell. The battle continues, with 3 seconds of protection. Activates automatically once, then is consumed. No equipment slot needed.",has:()=>IceMoth.owned(),icon:()=>"inventory_soulwing"},
   {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
   {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
-  { key: "fatherCompass", kind: "key", name: "Father's Map & Compass",
-    tell: "Your father's map and compass, entrusted to you by Nan. Open MAP to find your way; choose a quest in the map and the compass will guide you there.",
-    has: () => templeCompass.owned, icon: () => "inventory_mapCompass" },
+  { key: "worldMap", kind: "key", name: "Map of Emberfell",
+    tell: "Nan’s map. Open MAP and its Quest List to review your errands and choose a destination.",
+    has: () => templeCompass.mapGiven, icon: () => "inventory_mapCompass" },
+  { key: "fatherCompass", kind: "key", name: "Father's Compass",
+    tell: "Your father’s compass, entrusted to you by Nan. Choose a quest in MAP and its needle will guide you there.",
+    has: () => templeCompass.owned, icon: () => "inventory_compass" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",
     has: () => breathHas.lightning,
@@ -5707,6 +5713,7 @@ const BOOT = {
     clearPadInputs();document.body.classList.add("game-started");
     if(shade)shade.hidden=true;
     window.EmberTitleAudio?.finish();
+    startMorning();
   },
   activate() {
     if(!BOOT.menuOpen){BOOT.begin();return;}
@@ -6125,7 +6132,7 @@ function captureSave(){return {
   bossRewardChests:typeof BossRewardChests!=='undefined'?BossRewardChests.capture():undefined,
   spiderWebLesson:typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven},
+  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
@@ -6189,7 +6196,9 @@ function loadGame(slot=activeSaveSlot) {
     // Skip can grant the seal before the king is defeated. Trial access still requires wonAll.
     wonAll = s.wonAll ? 1 : 0; cinderSeal = !!s.cinderSeal; trialSealPlaced=!!s.trialSealPlaced&&cinderSeal&&!!wonAll; trialWins = s.trialWins || 0;
     chestAnim=null;
-    restoreFatherCompass(s.fatherCompass);
+    restoreFatherCompass({...s.fatherCompass,
+      mapGiven:s.fatherCompass?.mapGiven??(s.quest>Q.ABED||!!s.fatherCompass?.owned),
+      morningSpoken:s.fatherCompass?.morningSpoken??true});
     restoreNanCooking(s.nanElixirReadyAt);
     restoreFlightTravel(s.flightVisits,s.dragonBanterSeen||[]);
     if(typeof routeMusicIntroPlayed!=='undefined')routeMusicIntroPlayed=s.routeMusicIntroPlayed!==undefined?!!s.routeMusicIntroPlayed:!!(s.thornwellMet||s.x>=80*TS);
@@ -6335,6 +6344,7 @@ tap(document.getElementById('bNpcPrev'),()=>changeNpcLineup(0,-1));
 tap(document.getElementById('bNpcNext'),()=>changeNpcLineup(0,1));
 tap(document.getElementById('bNpcClose'),closeNpcLineup);
 tap(document.getElementById("bSkip"), () => {
+  setFoesEnabled(true);
   skipBrambleForTest();
   if (typeof restoreFatherCompass === "function") restoreFatherCompass({owned:true,awakened:false});
   devItemTest = true;

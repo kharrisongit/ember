@@ -22,7 +22,7 @@
   };
   function profile(who,actor){
     const name=PORTRAIT_ALIASES[who]||who;
-    const authored=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.dossier(name,actor))||(typeof ThornwellAudienceDialogue!=='undefined'&&ThornwellAudienceDialogue.dossier(name,actor))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.dossier(name,actor));
+    const authored=(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.dossier(name,actor))||(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.dossier(name,actor))||(typeof ThornwellAudienceDialogue!=='undefined'&&ThornwellAudienceDialogue.dossier(name,actor))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.dossier(name,actor));
     if(authored)return Object.fromEntries(Object.entries(authored).map(([key,value])=>[key,playerFacingText(value)]));
     const records=Object.values(W.maps).flatMap(m=>m.npcs||[]);
     const source=records.find(n=>n.n===name&&n.loc)||records.find(n=>n.n===name)||actor;
@@ -37,6 +37,7 @@
   // Prefer the actual actor, then their authored home, so visitors and duplicate
   // names keep the right region even when Corin meets them away from home.
   function theme(who,actor){
+    if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(actor))return 'forgewick';
     const name=PORTRAIT_ALIASES[who]||who;
     if(name==='Aurelius')return 'aurelius';
     const entries=Object.entries(W.maps).flatMap(([map,m])=>(m.npcs||[]).map(n=>({map,n})));

@@ -121,10 +121,10 @@ const SideRouteAdventures=(()=>{
         const a=pts[i-1],b=pts[i],len=Math.hypot(b[0]-a[0],b[1]-a[1]);
         for(let s=0;s<=Math.ceil(len);s++){const t=Math.min(1,s/(len||1));disc(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,(f.w||5)/2,f.style);}
       }
-      if(!f.shortcut)disc(...pts.at(-1),4,f.style,true);
+      if(!f.shortcut)disc(...pts.at(-1),4.5,f.style,true);
     }
     for(const a of arenas)disc(a.x,a.y,a.r+.4,a.style);
-    if(paths.some(f=>f.id===9198))for(const c of oasisChests)disc(c.x,c.y,4,'desert');
+    if(paths.some(f=>f.id===9198))for(const c of oasisChests)disc(c.x,c.y,4.5,'desert');
     // Cut openings wherever the authored path meets existing roads or clearings.
     // The two loops keep both mouths; true ends are enclosed by this same shell.
     const oldRoutes=all.filter(f=>f.kind==='route'&&!f.sideRoute).flatMap(f=>routeLegs(f).map(([a,b])=>({a,b,r:(f.w||5)/2+1.5})));

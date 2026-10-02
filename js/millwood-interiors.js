@@ -143,23 +143,46 @@ function refineSeatedPixels(image){
 function prepareThroneGallery(){
   const throne=W.maps.cinderhold,seal=W.maps.royal_seal,sp=SPR.throne_wall;
   if(!throne||!seal||!sp||throne._galleryReady)return;
-  const make=(w=26)=>{const c=document.createElement('canvas');c.width=w;c.height=31;return c;};
+  const make=()=>{const c=document.createElement('canvas');c.width=21;c.height=26;return c;};
   const painting=make();
-  drawGameImage(painting.getContext('2d'),atlasImg,sp[0]+280,sp[1]+10,26,31,0,0,26,31);
+  drawGameImage(painting.getContext('2d'),atlasImg,sp[0]+281,sp[1]+13,21,26,0,0,21,26);
   (seal.roomActors ||= []).push({n:'Royal painting',x:112,y:52,sy:52,extractedCanvas:painting,editKey:'royal:relocated-painting',editorMovable:true});
+  // Keep the painting's frame only; the old crop carried pieces of the
+  // throne wall's columns and cornice into the seal room.
+  const base=seal._roomBaseCanvas,room=SPR[seal.roomArt];
+  if(base&&room)drawGameImage(base.getContext('2d'),atlasImg,room[0],room[1],room[2],64,0,0,room[2],64);
+  const chair=throne.roomActors?.find(a=>a.throneRoomAsset);
+  if(chair){const i=throne.roomBlocks.push([chair.x-16,chair.y-22,chair.x+16,chair.y])-1;chair.moveBlocks=[i];}
   throne._galleryReady=true;
+}
+
+// Assemble regular wall bays from the castle's native art. The old throne
+// strip spliced narrow bays together, then overlaid a mismatched door patch.
+function repairCastleNorthWall(){
+  const source=SPR.royal_room_seal,old=SPR.throne_wall;if(!source||!old)return;
+  const c=document.createElement('canvas');c.width=328;c.height=51;
+  const g=c.getContext('2d');g.imageSmoothingEnabled=false;
+  for(let x=0;x<c.width;x++)drawGameImage(g,atlasImg,source[0]+32,source[1]+16,1,48,x,0,1,48);
+  for(let x=0;x<c.width;x+=8)drawGameImage(g,atlasImg,source[0]+24,source[1]+16,8,5,x,0,8,5);
+  for(const x of [0,64,128,192,256,316])drawGameImage(g,atlasImg,source[0]+8,source[1]+16,12,48,x,0,12,48);
+  for(const [x,sx]of [[28,121],[92,153],[156,281]])drawGameImage(g,atlasImg,old[0]+sx,old[1]+13,21,26,x,13,21,26);
+  // The doorway frame owns its columns and threshold; leave a dark opening
+  // behind every animation frame, with no old painting showing through.
+  g.fillStyle='#19121b';g.fillRect(284,15,24,33);
+  animalSheets.castle_north_wall=c;SPR.throne_wall=[0,0,328,51,1,'castle_north_wall'];
 }
 
 async function prepareCastleArchitecture(){
   const hall=W.maps.royal_westhall,throne=W.maps.cinderhold;
   if(!hall?._roomBaseCanvas||!throne||throne._architectureReady)return;
   const load=name=>loadStartupImage('assets/interiors/'+name+'.png?v=20261001-furniture1');
-  const wall=await load('throne-door-wall'),doors=await load('throne-door-frames');
+  const doors=await load('throne-door-frames');
+  repairCastleNorthWall();
   SPR.royal_throne_door=[0,0,32,51,6];
   throne.roomActors ||= [];
   const throneDoor=throne.roomActors.find(a=>a.royalDoor);
   if(throneDoor){throneDoor.spr='royal_throne_door';throneDoor.doorImage=doors;}
-  throne.roomActors.push({x:308,y:64,sy:65,extractedCanvas:wall,throneWallRepair:true,editorLocked:true});
+  throne.roomActors=throne.roomActors.filter(a=>!a.throneWallRepair);
   // The larder entrance occupies the old picture's wall bay. Preserve the
   // picture on the larder's clear north wall instead of drawing it under a door.
   const picture=hall.roomActors.find(a=>a.exactFurniture&&a.n==='painting'&&a.sourceRect?.[0]===224);
@@ -376,6 +399,7 @@ function prepareHearthBedrooms(){
   const home=W.maps.house26,corin=W.maps.house26_bedroom;
   if(!home||!corin||W.maps.house26_bedroom2)return;
   corin.title="Millwood — Corin's bedroom";
+  corin.spawn=[130,108];W.start="house26_bedroom";
   const nan={...corin,title:"Millwood — Nan's bedroom",spawn:[104,176],
     npcs:[],objs:[],scatter:[],sanim:[],fobjs:[],features:[],regions:[],places:[],
     roomBlocks:corin.roomBlocks.map(b=>b.slice()),

@@ -10,10 +10,10 @@ const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
 assert.equal(c.scene,undefined,'No automatic compass scene');
 assert.equal(c.nanGiftBeat(5),false);assert.equal(saves,0);
-assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_mapCompass');
+assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_compass');
 assert.equal(c.nanGiftBeat(6),false);assert.equal(saves,1,'Compass cannot duplicate');
 assert.equal(c.nanGiftBeat(11),false);assert.equal(c.hareMeat,0,'Meat waits for Nan’s own line');
-assert(c.worldMapUnlocked(),'The combined gift immediately unlocks the map');
+assert(c.worldMapUnlocked(),'Legacy saves that missed the morning Map also recover access');
 assert.equal(c.nanGiftBeat(12),false);assert(c.worldMapUnlocked());assert.equal(c.hareMeat,0);
 assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,1,'Map is part of the same gift');
 assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
@@ -33,7 +33,7 @@ assert(!game.includes('scene.compassReveal'));
 assert(!read('js/temple-compass.js').includes('Thanks, Dad.'));
 assert(game.includes('if(scene.nanGifts&&nanGiftBeat(scene.i))return;'));
 assert(game.includes("best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()"));
-assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven}'));
+assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken}'));
 console.log('PASS: Nan’s heirloom, family history, immediate guidance without a temple reveal and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,SPR:{},hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
@@ -101,7 +101,7 @@ console.log('PASS: gifts have separate dialogue beats and icons, dragon stays be
 
 // A save between compass and map resumes without losing or repeating gifts.
 c.restoreFatherCompass({owned:true,meatGiven:false,mapGiven:false});
-assert(c.worldMapUnlocked(),'Partial legacy gifts gain the combined map');assert(c.nanGiftPending());
+assert(c.worldMapUnlocked(),'Partial legacy gifts keep Map access');assert(c.nanGiftPending());
 assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),false);
 assert(c.worldMapUnlocked());assert.equal(c.nanGiftBeat(12),false);
 c.restoreFatherCompass({owned:true,meatGiven:true});assert(c.worldMapUnlocked(),'Legacy gift saves keep map access');
@@ -112,4 +112,4 @@ c.document={getElementById:id=>buttons.get(id)};
 c.restoreFatherCompass();c.refreshMapControls();
 assert.equal(buttons.get('btnMapQuick').textContent,'');assert(buttons.get('btnMapQuick').disabled);
 c.giveFatherCompass();assert.equal(buttons.get('btnMapQuick').textContent,'MAP');assert(!buttons.get('btnMapQuick').disabled);
-console.log('PASS: the combined map and compass uses one reveal, migrates partial saves, and keeps MAP blank until received.');
+console.log('PASS: Compass grants migrate partial saves, and MAP stays blank until a Map is owned.');
