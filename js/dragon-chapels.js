@@ -1,5 +1,5 @@
 /* Two chapels share the pack's authored interior; only the desert has the
-   dragon statue and the permanent mounted-flight blessing. */
+   interior dragon statues and the permanent mounted-flight blessing. */
 const DragonChapels=(()=>{
   const BASE='assets/interiors/chapel/',VERSION='20261002-chapels2';
   const X=1486*16+8,Y=347*16+16;
@@ -91,6 +91,7 @@ const DragonChapels=(()=>{
     }
     const blocks=[[X-55,Y-130,X+55,Y-20],[X-55,Y-20,X-14,Y],[X+14,Y-20,X+55,Y]];
     for(const a of plan.exterior){
+      if(a.layer==='Wings'||a.layer==='Dragon_body_head')continue;
       const actor={...a,x:X+a.x,y:Y+a.y,sy:Y-18+(a.layer==='Wings'?-.3:a.layer==='House'?0:.1),schoolArt:true,chapelArt:true,editKey:'desert:'+a.spr};
       if(a.spirit)actor.stillFrame=0;
       if(a.layer==='House')actor.moveBlocks=blocks.map(b=>m.roomBlocks.push(b)-1);

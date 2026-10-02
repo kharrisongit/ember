@@ -12,7 +12,8 @@ run(`applyPublishedEditorLayout(W.maps.world,'world');loadMap('desert_chapel');
 scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;doorMotion=null;`);
 assert.equal(run('npcs.length'),1,'Desert chapel has only its preacher');
 assert(!run('MD.roomActors.some(a=>a.congregation)'));
-assert.equal(run('W.maps.world.roomActors.filter(a=>a.spirit&&a.chapelArt).length'),4);
+assert.equal(run('W.maps.world.roomActors.filter(a=>a.spirit&&a.chapelArt).length'),0,'The desert church has no rooftop dragon');
+assert.equal(run("W.maps.world.roomActors.filter(a=>a.editKey==='desert:chapel_ext_house0').length"),1,'The church building remains installed');
 assert.equal(run('W.maps.world.doors.filter(d=>d.to==="desert_chapel").length'),1);
 for(const route of value('DragonChapels.routes'))assert.deepEqual(value(`W.maps.world.features.find(f=>f.id===${route.id})`),route,'Exact authored path');
 for(const [id,x,y]of value('DragonChapels.moves'))assert.deepEqual(value(`W.maps.world.objs.slice(${id*3+1},${id*3+3})`),[x,y]);
@@ -101,12 +102,7 @@ for(const [id,x,y]of value('DragonChapels.approaches')){
  assert.equal(run('arenaLock?.id'),id,'Church encounter starts');assert(run('arenaFoesLeft(arenaLock)'),'Encounter has living enemies');
 }
 run('arenaLock=null;arenaT=0;');
-assert(run(`MD.roomActors.filter(a=>a.spirit&&a.chapelArt).every(a=>a.stillFrame===0)`));
-assert(run(`(()=>{const old=drawGameImage,calls=[];try{drawGameImage=(...a)=>calls.push(a.slice(2));
- for(const o of MD.roomActors.filter(a=>a.spirit&&a.chapelArt)){
-  calls.length=0;DragonChapels.draw(o,0);DragonChapels.draw(o,1.7);
-  if(JSON.stringify(calls[0])!==JSON.stringify(calls[1]))return false;
- }return true;}finally{drawGameImage=old;}})()`),'The actual dragon drawing stays identical over time');
+assert(!run("MD.roomActors.some(a=>a.chapelArt&&/Wings|Dragon_body_head/.test(a.layer))"),'The fully loaded world keeps the church roof clear');
 assert(run(`placesOf().some(p=>p.map==='world'&&/Desert Church/.test(p.name)&&canStand(p.x*16+8,p.y*16+16))`),'Dev teleport has a safe outdoor Desert Church destination');
 assert(run(`placesOf().some(p=>p.map==='desert_chapel')`),'Dev tools also include the chapel interior');
 for(const to of ['desert_chapel','forgewick_chapel']){

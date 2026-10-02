@@ -1,0 +1,46 @@
+Use case: illustration-story. Create ONE fully finished, high-resolution fantasy RPG world map. NATIVE OUTPUT 3840 x 1280 pixels if available, very wide 3:1 panorama. Recompose the supplied map to make REAL SPACE for the temples and towns, with crisp individually recognizable animals. Do NOT paste flat sprites onto scenery. Paint EVERY structure into the same miniature isometric illustration, grounded on its own land, consistent scale/perspective/shadows, connected by natural paths. Use image 1 for the world/art style and image 2 for ACTUAL architecture and recognizable animals. Rebuild cleanly at high resolution rather than blurring or tracing the last image.
+
+NONNEGOTIABLE: THREE large, clearly recognizable ancient temples, all painted into spacious dedicated grounds. All three must exist in the output. Forgewick temple green stone/moss; Sandspire temple warm sandy stone; Hollybeck temple icy pale stone. Match the ACTUAL THREE TEMPLE REFERENCES in image 2: low triangular entrance pediment, ruined open back roof, compact pair of seated front-facing dragon statues with vertical folded wings on left/right plinths, broad rounded courtyard with low columns, front AND side stairs. No giant spread-wing fantasy dragons. Keep their stonework, courtyards and stairs grounded in the SAME perspective and light as the rest of the illustration. No sprite-like pasted rectangle, no sharp cutout edges, no buildings or trees underneath temple footprints. Every temple stands in a clearing larger than itself, with breathing room around all sides and a walking path to its entrance.
+
+GEOGRAPHY, west to east, all regions continue north–south:
+x0–10% Millwood/northern woods; x10–13% AUTUMN ORANGE WHITE-BARK BIRCH belt; x13–22% Thornwell; x22–27% green round-crowned OAK woodland + Forgefalls; x27–40% Forgewick; x40–44% wide empty grassy rocky buffer; x44–64% expanded DESERT; x64–73% grassy pink BLOSSOM / Coralmere strip; x73–79% SWAMP; x79–93% expanded SNOW; x93–100% LAVA.
+These are natural soft biome edges, not hard geometric columns. Paths wind through the landscape.
+
+WEST:
+• Millwood residential farming hamlet at x1–9%,y64–93, 5 small cozy cottages. Its OWN very visible standalone GRAIN WINDMILL with tall narrow TIMBER tower, red gabled cap and FOUR LARGE clearly defined wooden lattice sails, matching image 2. Place mill at x5%,y72%, separate from cottages and free of tree obstruction. It MUST be unmistakably a windmill, not a house with tiny props. Mill beside a field of golden standing wheat planted directly in flat soil, no platform or hay slab. Two COWS in nearby green fenced paddock, each a distinct cream-and-brown quadruped with four legs, head, ears, muzzle, tail and separate body. They should be small but crisply identifiable. No orchard in Millwood.
+• Giant solid flat-top stump WITHOUT a door in forest at x4%,y8%. Mushroom village x4%,y30%. Woodland between village and Millwood.
+• A full-height belt of white birches with AUTUMN ORANGE leaves separates Millwood from Thornwell, x10–13%. Orange, copper and russet, never lime/yellow-green.
+• Thornwell compact group of 4–5 small houses PLUS school, tavern and inn, x14–21%,y22–43, well NORTH of Millwood. School/tavern/inn closely resemble the native architecture in reference 2, scaled to town. Its one fenced APPLE ORCHARD at x15–21%,y48–63 is immediately SOUTH of and connected to Thornwell by a short gate/lane. Keep orchard visibly belonging to Thornwell. The birch belt stays between orchard and Millwood.
+• Broad round-crowned GREEN OAKS x22–27% separate Thornwell/its orchard from Forgewick. A distinct tall waterfall drops vertically off a rocky cliff at x24.5%,y25%, feeds river south. ONE wooden bridge at x24.5%,y50%, visibly in FRONT OF/BELOW waterfall. Main road passes from Millwood through Thornwell to bridge then enters Forgewick TOWN.
+
+FORGEWICK:
+• Biggest town by far, 16–18 small residential buildings plus forge, chapel and conspicuous bustling MARKET SQUARE with colorful stalls, x28–39%,y17–47. Must visually dwarf Thornwell and Sandspire in overall town size. Mine mouth and timber cart rails x32%,y7%.
+• Two well-drawn distinct BROWN HORSES, visible heads/ears/necks, four legs and tails, in spacious fenced grass pasture x30–38%,y51–65. Avoid fused legs or blobs.
+• Green Forgewick temple centered (34%,84%), dedicated clear grounds x28–40%,y69–96. Temple architecture occupies x30–38%,y75–91, with mossy temple forecourt/stone stairs and a natural walking trail north to Forgewick. It is a separate southern destination. Bridge MUST lead to Forgewick town, not directly to temple.
+• x40–44% stays EMPTY rocky grassland buffer with only a road. Forgewick and Sandspire roofs must not approach or overlap.
+
+EXPANDED DESERT x44–64%:
+• Pyramid x48.5%,y11%; TWO clearly drawn VULTURES perched separately on distant rock outcrops, with dark feathered wings/bodies, bald red heads, hooked beaks; no indistinct smears or generic flying blobs.
+• Dry sandstone Sandspire town x47–61%,y23–41. Fewer houses than Forgewick, market awnings, NO WATER IN TOWN. TWO distinct ochre CAMELS in front at y45%, each with clear long neck, head, two humps, four separated legs and tail, like reference animal. Clean recognizable silhouettes, no crowd.
+• ONE small separate palm OASIS centered (47.5%,57%); water only here in desert.
+• SANDSPIRE TEMPLE clearly visible centered (57.5%,66%). Broad open sandy temple grounds x52–63%,y49–84, large enough to hold its entire courtyard and staircases with empty sand around all sides. Actual temple structure x54–61%,y58–77. A path from Sandspire leads south to temple entrance. The temple must NOT overlap oasis, church, dunes, pink blossoms or Coralmere houses. Move terrain away to accommodate the temple, do not put temple on top of scenery.
+• Simple white desert CHURCH with red roofs centered (47.5%,85%), well southwest of the temple, NO dragon/statue on its roof. Separate paths and clear space between church and temple.
+
+CORALMERE x64–73%:
+Grass and dense pink blossom trees around a winding north–south trail all the way from top to town at x65–72%,y76–89. Brown timber roofs, lots of blossoms, a small lighthouse. No sand beneath houses. Bottom blue harbor, ONE coherent pier system attached to shore with all planks connected; two simple rowboats without poles/masts. Keep Coralmere east of desert temple with a visible grassy buffer.
+
+SWAMP x73–79%:
+Full-height dark teal marsh, crooked bare wetland trees, boardwalks, purple-roof witch stilt house x76%,y76%.
+
+EXPANDED SNOW x79–93%:
+• Frosthorn clearing x82%,y10%, a BIG recognizable horned skull with two massive horns. Natural snow clearing, no obelisk ring.
+• Small EMPTY ice-crystal arena x81.5%,y33%. Ice spikes and circular floor, NO moth creature.
+• Exactly ONE Frostcrag cave mouth x89.5%,y10%, north of temple.
+• HOLLYBECK/SNOW TEMPLE centered x89%,y49%, roomy dedicated snowy clearing x85–92.5%,y31–66. The full icy temple including courtyard and stairs occupies x86–92%,y39–58. Paint it at same perspective as the land, not a flat sticker. REMOVE trees/mountains from its ground, add a soft snow approach trail and coherent stonework shadows. Keep separate from the ice arena and graveyard.
+• Graveyard x81.5%,y57%, six distinct upright headstones in orderly fenced rows, no blobs.
+• Hollybeck town x80–88%,y74–94, a group of native-looking dark timber steep A-frame gold-window houses. One nicely shaped three-snowball snowman, coal eyes, carrot nose. Town stays south and west of snow temple.
+
+LAVA x93–100%:
+Black charcoal volcanic mountains, bright flowing orange lava, one Ashcrag cave x97%,y19% and dark Cinderhold castle x97%,y57%. No snowy trees here.
+
+CRITICAL QUALITY CHECK BEFORE OUTPUT: count THREE fully integrated temples, ONE unmistakable standalone windmill with four sails, TWO anatomically clear cows, TWO horses, TWO camels, TWO recognizable vultures. Orchard directly below Thornwell, orange birches separate Millwood; oaks separate Thornwell from Forgewick; Forgewick is largest; a real gap before Sandspire; temple grounds have actual space. All subjects painted as ONE cohesive complete image. NO labels, text, UI, symbols, border, diagrams or overlay sprites. Prioritize these concrete details over random dense decoration.
