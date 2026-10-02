@@ -2,6 +2,28 @@
    Keep authored positions and stable object/scatter IDs for saves and editors. */
 const SHROOM_SCENERY = /^sh_(big|wall|med|sml|fat|stalk|glow)/;
 
+// Explicit editor additions outrank automatic Shroom Pass border planting.
+// Keep their stable slots and current (possibly moved) coordinates, including
+// additions inside Build snapshots and unsent additions in the current session.
+let shroomPlacedTreeIds=new Set();
+function isShroomEntranceTree(o){
+  if(MAPID!=='world'||!shroomPlacedTreeIds.has(o.id)||NAMES[o.s]!=='mw_tree')return false;
+  const area=features.find(f=>f.kind==='area'&&f.label==='Shroom Pass');
+  return area&&o.x/TS>=area.x0&&o.x/TS<=area.x1&&o.y/TS>=area.y0&&o.y/TS<=area.y1;
+}
+function restoreShroomEntranceTrees(){
+  if(MAPID!=='world')return;
+  shroomPlacedTreeIds=new Set([...(MD.editorPlacedObjectIds||[]),
+    ...(typeof added==='undefined'?[]:added.map(o=>o.id))]);
+  const occupied=new Set();
+  for(const o of objs){
+    if(!isShroomEntranceTree(o)||deleted.has(o.id))continue;
+    const key=o.x+','+o.y;
+    if(occupied.has(key))hidden.add(o.id);
+    else {occupied.add(key);hidden.delete(o.id);}
+  }
+}
+
 function planShroomThinning(items, sprites, names, area, tileSize=16) {
   const mushrooms=[], buckets=new Map(), removed=new Set(), cellSize=64;
   function add(item) {
@@ -51,6 +73,13 @@ function thinShroomPass() {
   if(MAPID!=='world')return;
   const area=features.find(f=>f.kind==='area'&&f.label==='Shroom Pass');
   if(!area)return;
+  // A foreground mushroom must not cover the small lookout on the grass.
+  const lookouts=npcs.filter(n=>n.shroomLookout&&!n.editorDeleted);
+  for(const o of objs){
+    const name=NAMES[o.s]||'',sp=SPR[name];
+    if(!sp||!SHROOM_SCENERY.test(name))continue;
+    if(lookouts.some(n=>o.y>=n.y&&o.y-sp[3]<n.y&&Math.abs(o.x-n.x)<(sp[2]+14)/2))hidden.add(o.id);
+  }
   const items=[];
   for(const o of objs)if(!hidden.has(o.id)&&!deleted.has(o.id))items.push({...o,key:'o'+o.id});
   for(const o of fobjs)items.push({...o,key:'f'+o.id});

@@ -275,6 +275,7 @@ function normalizeWesternTreeFeatures(list) {
 function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   if(MAPID!=='world')return;
   clearCrashFieldMushrooms();
+  if(typeof restoreShroomEntranceTrees==='function')restoreShroomEntranceTrees();
   const {roads,arenas,towns,rings}=treeBorderScope(features,routeLegs);
   const legs=roads.filter(r=>r.blossom);
   if(!legs.length&&!arenas.length&&!towns.length)return;
@@ -337,7 +338,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
         (r.region==='shroom'||!protectedPlace(x,y));
     }));
   const tree=o=>BLOSSOM_ROUTE_TREES.test(NAMES[o.s]||'');
-  const replace=o=>tree(o)&&inBand(o.x/TS-.5,o.y/TS-1);
+  const replace=o=>tree(o)&&!(typeof isShroomEntranceTree==='function'&&isShroomEntranceTree(o))&&inBand(o.x/TS-.5,o.y/TS-1);
   // Managed borders own their species and spacing, including trees inserted
   // by old published Move/Add operations. Off-border trees stay authored.
   for(const o of objs)if(replace(o))hidden.add(o.id);

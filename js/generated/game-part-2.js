@@ -2251,6 +2251,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   seedTreasuryGold();
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
   npcs = MD.npcs.map((n, k) => ({
+    shroomLookout:n.shroomLookout,mainPathLookout:n.mainPathLookout,portraitAlias:n.portraitAlias,
     editKey:n.editKey,editorDeleted:n.editorDeleted,devLineup:n.devLineup,devLineupCategory:n.devLineupCategory,devLineupPage:n.devLineupPage,devLineupScale:n.devLineupScale,
     id: "npc" + k, nanCooking:n.nanCooking, marketVendor:n.marketVendor, pettable: n.pettable, sy: n.sy, idleFps: n.idleFps, packSpr: n.packSpr, packDirections: n.packDirections, packWalk: n.packWalk, school: n.school, stationary: n.stationary, talkX: n.talkX, talkY: n.talkY, s: n.s, sk: n.sk, x: n.x, y: n.y, n: n.n, d: n.d,
     crown: n.crown, body: n.body, kf: "d", dd: n.dd, dm: n.dm, rod: n.rod,

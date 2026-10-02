@@ -16,7 +16,7 @@ function applyPublishedEditorLayout(m,id) {
   // Preserve the pre-existing authored placement of the world room exterior.
   if(id==='world'&&m.roomActors?.[24]?.spr==='rt_ext2')shiftActorData(m,m.roomActors[24],15330,4328,true);
   if(typeof preparePublishedNpcPlacements==='function')preparePublishedNpcPlacements(m,id);
-  m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];
+  m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];m.editorPlacedObjectIds=[];
   applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
   if(id==='world'&&typeof DesertPyramid!=='undefined')DesertPyramid.installWorld(m);
   if(id==='world'&&typeof SideRouteAdventures!=='undefined')SideRouteAdventures.installWorld(m);
@@ -34,15 +34,23 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
     // Old Build snapshots predate independent patio tables. Migrate only when
     // the next snapshot was authored with the new table entities.
     if(EmberBuildData.hash(EmberBuildData.snapshot(m))!==layout.build.before&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id);
+    const oldObjectLength=(m.objs||[]).length;
     Object.assign(m,EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build));
+    // Build snapshots also carry manually appended trees. Track their stable
+    // slots outside snapshot data so old Build fingerprints stay valid.
+    for(let i=oldObjectLength;i<m.objs.length;i+=3)(m.editorPlacedObjectIds||=[]).push(i/3);
   }
+  if(final&&typeof prepareShroomLookoutData==='function')prepareShroomLookoutData(m,id);
   // This reward chest was deliberately retired from Corin’s starting room.
   // Keep historical submission receipts, but never restore its old placement.
   const all=Object.values(layout).filter(op=>op.kind!=='build'&&!(id==='house26_bedroom'&&op.kind==='actor'&&op.key==='loot:house26_bedroom:chest'));
   // Append in publication order and retain these slots even after deletion.
   // Future moves/deletions use their stable ordinary-object indices.
   m.objs ||= [];
-  for(const op of all)if(op.kind==='object-add')m.objs.push(op.sprite,op.x,op.y);
+  for(const op of all)if(op.kind==='object-add'){
+    (m.editorPlacedObjectIds||=[]).push(m.objs.length/3);
+    m.objs.push(op.sprite,op.x,op.y);
+  }
   if((final||all.some(op=>op.kind==='actor'&&op.key?.startsWith('patio:')))&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id,all);
   const paint=new Map((m.editorPublishedPaint||[]).map(op=>[op.index,op]));
   for(const op of all)if(op.kind==='paint')paint.set(op.index,op);
