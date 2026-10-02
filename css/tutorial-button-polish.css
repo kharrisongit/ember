@@ -20,3 +20,19 @@
 @media(max-height:640px){#reveal.kit-help #revealCap{padding:12px 16px}#reveal.kit-help .lesson-art{width:40px;height:40px}#reveal.kit-help #revealCap strong{font-size:21px;margin-bottom:10px}#reveal.kit-help #revealCap .lesson-row{margin:5px 0;padding-top:7px;padding-bottom:7px}}
 
 #reveal.kit-help #revealArt{display:none!important}
+
+/* Size to the playable area, including short phone viewports above the controls. */
+#reveal.kit-help{container-type:size;gap:0!important;padding:10px!important;overflow:hidden}
+#reveal.kit-help #revealCap{box-sizing:border-box!important;flex:0 1 auto;min-height:0;max-height:100%!important;overflow:auto!important;overscroll-behavior:contain;touch-action:pan-y;width:min(100%,380px)!important;padding:16px!important}
+#reveal.kit-help #revealCap strong{font-size:22px;margin-bottom:10px}
+#reveal.kit-help #revealCap .lesson-row{box-sizing:border-box;min-height:0;padding:8px 8px 8px 51px;margin:6px 0;font-size:12px;line-height:1.35}
+#reveal.kit-help .lesson-art{width:48px;height:48px;margin-bottom:5px}
+#reveal.kit-help .lesson-continue{position:sticky;bottom:0;min-height:44px;margin-top:10px;font-size:13px;z-index:2}
+@container(max-height:450px){
+ #reveal.kit-help #revealCap{padding:10px!important}
+ #reveal.kit-help #revealCap .lesson-kicker{font-size:9px;margin-bottom:5px}
+ #reveal.kit-help #revealCap strong{font-size:19px;margin-bottom:7px}
+ #reveal.kit-help .lesson-art{width:34px;height:34px}
+ #reveal.kit-help #revealCap .lesson-row{font-size:11px;padding-top:6px;padding-bottom:6px;margin:4px 0}
+}
+#reveal:not(.kit-help) #revealArt{max-width:50%;max-height:45%;object-fit:contain}

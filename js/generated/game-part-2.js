@@ -2564,7 +2564,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false, navigation = false) => {
         y >= fieldGate && y <= fieldGate + 5) return true;
   }
   if (fenceAt && fenceAt.has(y * MW + x)) return true;
-  if (blockedByGuard(x, y)) return true;
+  if (!navigation && blockedByGuard(x, y)) return true;
   if (odoShuts(x, y)) return true;
   if (blockedByItem(x, y)) return true;
   return blockedByHerd(x, y);
@@ -7248,6 +7248,11 @@ function itemAt(px, py) {
   for (const it of (MAPID==='house26_bedroom'?[...ITEMS,...morningDeskItems()]:ITEMS)) {
     if ((it.map || "world") !== MAPID) continue;
     if (!itemHere(it) || !it.took) continue;
+    if(it.deskPickup&&it.pickupBounds){
+      const b=it.pickupBounds,dx=Math.max(b.left-px,0,px-b.right),dy=Math.max(b.top-(py-5),0,(py-5)-b.bottom);
+      if(Math.hypot(dx,dy)<=22)return it;
+      continue;
+    }
     if (Math.hypot(px / TS - it.tx, (py - 1) / TS - it.ty) < 2.2) return it;
   }
   return null;

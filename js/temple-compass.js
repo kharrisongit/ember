@@ -111,7 +111,7 @@ function morningDeskItems(){
   const x=desk?.x??65,y=(desk?.y??161)-10,sy=(desk?.sy??desk?.y??161)+1;
   return [
     {key:'travelGear',spr:'inventory_travelGear',x,y,width:24,took:'Corin picked up his Travel Gear.',owned:()=>!morningSuppliesPending()}
-  ].map(it=>({...it,sy,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true}));
+  ].map(it=>({...it,sy,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true,pickupBounds:{left:x-24,right:x+24,top:y-12,bottom:y+18}}));
 }
 function drawMorningSupplyGlint(o,t){
   if(!o.item.deskPickup)return;
@@ -123,8 +123,8 @@ function drawMorningSupplyGlint(o,t){
 }
 function morningKitArt(){return 'inventory_travelGear';}
 function showMorningHelp(titleText,rows){
-  showReveal(morningKitArt(),titleText,1,true,()=>revEl.classList.remove('kit-help'));
-  revEl.classList.add('kit-help');revCap.replaceChildren();
+  showReveal(morningKitArt(),titleText,1,true,()=>{revEl.classList.remove('kit-help');revArt.style.setProperty('display','');});
+  revEl.classList.add('kit-help');revArt.style.setProperty('display','none','important');revCap.replaceChildren();
   const intro=document.createElement('small');intro.className='lesson-kicker';intro.textContent=titleText==='Move & Interact'?'YOUR FIRST STEPS':'READY FOR THE ROAD';revCap.appendChild(intro);
   if(titleText==='Your Travel Gear'){
     const art=document.createElement('img');art.className='lesson-art';art.alt='';art.src='assets/inventory/travel-gear.webp';revCap.appendChild(art);
