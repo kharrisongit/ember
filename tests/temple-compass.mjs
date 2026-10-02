@@ -66,6 +66,8 @@ c.restoreFatherCompass({owned:true,awakened:false});c.drawTempleCompass();assert
 c.restoreFatherCompass({owned:true,awakened:true});
 c.drawTempleCompass();assert(draws>0);assert.equal(circles.at(-1)[2],21);
 const cache=run('templeCompass.cache.field');c.drawTempleCompass();assert.equal(run('templeCompass.cache.field'),cache,'reuse field each frame');
+// This fixture tests temple routing; world routing has its own collision fixture.
+c.compassWalkGuide=cache=>cache.target;
 for (const [id,map] of [['world',W.maps.world],['passage',W.maps.passage]]) {
   const before=draws;Object.assign(c,{MAPID:id,MD:map});c.drawTempleCompass();assert(draws>before,id+' keeps the compass visible');
 }
