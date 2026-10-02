@@ -1960,76 +1960,67 @@ const kingDragonImg = new Image();
 kingDragonImg.src = KING_DRAGON_IMG_SRC;
 const kingDragonDeathImg = new Image();
 kingDragonDeathImg.src = window.EMBER_MEDIA.kingDragonDeathSrc;
-/* Dedicated high-detail art for the wounded green dragon in the north-field
-   egg scene. Rows are normalized below into flight, impact, wounded,
-   then its strained takeoff.  It is intentionally separate from Corin's dragon. */
+/* Adult dragon art belongs only to the egg-arrival scene. Keep it independent
+   of Aurelius' facing and sprite sheet. Both sources have real transparency. */
 const greenSceneImg = document.createElement("canvas");
 const greenSceneSource = new Image();
-greenSceneSource.src = window.EMBER_MEDIA.greenSceneSourceSrc;
-/* Each supplied pose is cropped and placed on this shared baseline at startup.
-   That prevents transparent padding from making the crash slide across tiles. */
+greenSceneSource.src = "assets/dragons/wounded-green-v2.png";
+const greenDustImg = document.createElement("canvas");
+const greenDustSource = new Image();
+greenDustSource.src = "assets/dragons/crash-dust-v2.png";
 const GREEN_SCENE_CEL_W = 128, GREEN_SCENE_CEL_H = 112, GREEN_SCENE_DRAW = 96;
-// The supplied sheet has 6 flight, 6 crash, 5 resting and 6 takeoff poses,
-// with unequal spacing. Keep explicit source rectangles, not a guessed grid.
-// Its top row never raises the wings fully. Flight slot 2 borrows the clean
-// raised-wing takeoff pose so every flap has a visible upstroke.
-const GREEN_SCENE_RECTS = [
-  [[0,0,256,225],[280,0,265,225],[761,719,282,218],[789,0,248,225],[1038,0,242,225],[1280,0,256,225]],
-  [[0,231,193,220],[196,243,243,246],[439,293,265,240],[704,321,301,215],[1005,370,270,165],[1277,409,259,126]],
-  [[0,539,285,178],[290,539,266,178],[558,539,303,178],[866,539,299,178],[1177,539,359,178]],
-  [[0,838,283,163],[285,784,269,211],[483,733,352,268],[761,719,282,283],[974,733,299,229],[1286,720,250,226]]
+// Measured crops include the complete wing/tail, even when the source pose
+// crosses a nominal grid line. Coordinates after the crop are its anchor.
+const GREEN_SCENE_POSES = [
+  [13,34,242,203,107,172], [270,89,260,150,366,172],
+  [530,121,242,153,626,172], [772,128,250,117,874,172],
+  [1031,60,245,175,1126,172], [1282,33,244,201,1378,172],
+  [12,269,244,233,108,427], [268,300,245,205,365,437],
+  [517,329,255,180,618,448], [778,367,247,149,873,494],
+  [1025,349,252,167,1126,494], [1292,362,234,154,1385,494],
+  [13,585,242,155,104,719], [268,584,246,156,361,719],
+  [526,579,241,161,621,719], [778,586,245,154,873,719],
+  [1033,585,245,155,1128,719], [1289,585,235,155,1375,719],
+  [12,836,243,150,104,965], [272,815,246,166,362,965],
+  [524,755,249,221,620,906], [771,766,252,201,875,890],
+  [1022,825,256,115,1126,881], [1285,755,241,198,1378,880]
 ];
-// Anchor flight at the shoulder, not the bottom of the wing. The supplied
-// poses have different wing heights; bottom alignment makes the body jump.
-const GREEN_FLIGHT_ANCHORS = [[110,90],[390,115],[862,863],[896,129],[1138,94],[1390,146]];
-// A few takeoff silhouettes interleave horizontally in the source sheet.
-// Polygon crop boundaries exclude the neighboring pose without repainting it.
-const GREEN_SCENE_MASKS = {
-  // Isolate the raised pose from its takeoff dust and the next dragon's head.
-  '0:2': [[780,719],[1043,719],[1043,748],[977,772],[953,821],[969,893],[999,902],[999,937],[972,937],[965,915],[910,909],[899,918],[905,932],[887,935],[870,929],[867,918],[862,931],[843,931],[829,909],[817,892],[799,878],[780,885],[761,877],[768,823]],
-  '3:1': [[285,1000],[285,910],[329,876],[343,825],[381,782],[406,809],[417,882],[450,904],[484,917],[554,939],[554,1000]],
-  '3:2': [[483,756],[757,733],[758,840],[767,899],[835,961],[835,1002],[551,1002],[552,938],[523,909],[483,893]],
-  '3:3': [[780,719],[1043,719],[1043,748],[977,772],[953,821],[969,893],[993,935],[1043,981],[1043,1005],[827,1005],[827,952],[790,920],[761,877],[768,823]],
-  '3:4': [[974,779],[1015,748],[1273,748],[1273,962],[1055,962],[1055,901],[1010,849]],
-  '1:4': [[1005,450],[1060,409],[1190,364],[1275,364],[1275,535],[1005,535]]
-};
+// Reuse identical endpoint poses across phases. The takeoff power stroke uses
+// the fully lowered flight wings, so lift has a real downstroke before recovery.
+const GREEN_SCENE_FRAMES = [
+  [0,1,2,3,4,5], [6,7,8,9,12,12], [12,13,14,15,16,17], [12,19,20,2,22,0]
+];
+const GREEN_SCENE_ANCHORS = [
+  [[56,64],[56,64],[56,64],[56,64],[56,64],[56,64]],
+  [[56,73],[56,79],[56,85],[56,100],[56,100],[56,100]],
+  [[56,100],[56,100],[56,100],[56,100],[56,100],[56,100]],
+  [[56,100],[56,100],[56,82],[56,70],[56,68],[56,64]]
+];
+const GREEN_DUST_CEL_W = 192, GREEN_DUST_CEL_H = 128, GREEN_DUST_DRAW = 144;
 async function prepareGreenScene() {
-  await greenSceneSource.decode();
-  const source = document.createElement("canvas");
-  source.width = greenSceneSource.naturalWidth; source.height = greenSceneSource.naturalHeight;
-  const g = source.getContext("2d", { willReadFrequently: true });
-  g.drawImage(greenSceneSource, 0, 0);
-  const pixels = g.getImageData(0, 0, source.width, source.height), rgba = pixels.data;
-  // Runtime white-matte removal keeps the original JPEG embedded and avoids
-  // white rectangles in the field. Feather only near-white neutral pixels.
-  for (let i = 0; i < rgba.length; i += 4) {
-    const lo = Math.min(rgba[i], rgba[i+1], rgba[i+2]);
-    const hi = Math.max(rgba[i], rgba[i+1], rgba[i+2]);
-    if (lo > 220 && hi - lo < 24) rgba[i+3] = Math.round(255 * Math.max(0, (247-lo)/27));
-  }
-  g.putImageData(pixels, 0, 0);
+  await Promise.all([greenSceneSource.decode(), greenDustSource.decode()]);
   greenSceneImg.width = GREEN_SCENE_CEL_W * 6;
   greenSceneImg.height = GREEN_SCENE_CEL_H * 4;
   const out = greenSceneImg.getContext("2d");
   out.imageSmoothingEnabled = true; out.imageSmoothingQuality = "high";
-  for (let row = 0; row < GREEN_SCENE_RECTS.length; row++) {
-    for (let frame = 0; frame < 6; frame++) {
-      const rects = GREEN_SCENE_RECTS[row];
-      const [x,y,w,h] = rects[Math.min(frame, rects.length-1)];
-      const scale = .32, dw = w * scale, dh = h * scale;
-      const anchor = row === 0 ? GREEN_FLIGHT_ANCHORS[frame] : null;
-      const dx = frame * GREEN_SCENE_CEL_W + (anchor ? 58-(anchor[0]-x)*scale : (GREEN_SCENE_CEL_W-dw)/2);
-      const dy = row * GREEN_SCENE_CEL_H + (anchor ? 64-(anchor[1]-y)*scale : GREEN_SCENE_CEL_H-6-dh);
-      out.save();
-      const mask = GREEN_SCENE_MASKS[row + ':' + frame];
-      if (mask) {
-        out.beginPath();
-        mask.forEach(([px,py], i) => out[i ? 'lineTo' : 'moveTo'](dx+(px-x)*scale,dy+(py-y)*scale));
-        out.closePath(); out.clip();
-      }
-      out.drawImage(source, x,y,w,h, dx,dy,dw,dh);
-      out.restore();
-    }
+  for (let row = 0; row < 4; row++) for (let frame = 0; frame < 6; frame++) {
+    const [x,y,w,h,ax,ay] = GREEN_SCENE_POSES[GREEN_SCENE_FRAMES[row][frame]];
+    const [tx,ty] = GREEN_SCENE_ANCHORS[row][frame], scale = .38;
+    out.drawImage(greenSceneSource, x,y,w,h,
+      frame*GREEN_SCENE_CEL_W+tx-(ax-x)*scale,
+      row*GREEN_SCENE_CEL_H+ty-(ay-y)*scale, w*scale,h*scale);
+  }
+  // Dust is packed separately and anchored at the impact point, never at an
+  // airborne dragon offset. It can settle naturally during the breathing beat.
+  greenDustImg.width = GREEN_DUST_CEL_W * 6;
+  greenDustImg.height = GREEN_DUST_CEL_H;
+  const dust = greenDustImg.getContext("2d");
+  dust.imageSmoothingEnabled = true; dust.imageSmoothingQuality = "high";
+  for (let frame = 0; frame < 6; frame++) {
+    const x = (frame%3)*512, y = frame<3 ? 140 : 648;
+    const h = frame<3 ? 400 : 320, base = frame<3 ? 520 : 944;
+    dust.drawImage(greenDustSource, x,y,512,h,
+      frame*GREEN_DUST_CEL_W+96-256*.24, 122-(base-y)*.24, 512*.24,h*.24);
   }
 }
 const faintDragonImg = new Image();
@@ -4322,33 +4313,7 @@ function drawWorld(t, dt) {
       continue;
     }
     if (o.green) {
-      const row = greenPhase === "crash" ? 1
-        : greenPhase === "sit" ? 2
-        : greenPhase === "rise" ? 3 : 0;
-      /* The art frames vary more than a resting, injured dragon should. Hold
-         the anchored pose and use only a one-pixel chest pulse—no skating. */
-      const f = greenPhase === "sit" ? 0
-        : greenPhase === "crash" ? Math.min(5, Math.floor(greenP * 6))
-        : greenPhase === "rise" ? Math.min(5, Math.floor(greenP * 6))
-        : greenFlightFrame();
-      const off = greenOffset() || [0, 0];
-      const w2 = GREEN_SCENE_DRAW, h2 = w2 * GREEN_SCENE_CEL_H / GREEN_SCENE_CEL_W;
-      const ddx = Math.round(o.x - w2 / 2 + off[0]);
-      const ddy = Math.round(o.y - h2 + off[1]);
-      const breathe = greenPhase === "sit" && Math.floor(performance.now() / 650) % 2 ? 2 : 0;
-      const drawH = h2 - breathe;
-      ctx.save();
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      if (dragonFlip(dragon.dir)) {
-        ctx.translate(ddx + w2, ddy); ctx.scale(-1, 1);
-        drawGameImage(ctx, greenSceneImg, f * GREEN_SCENE_CEL_W, row * GREEN_SCENE_CEL_H,
-                      GREEN_SCENE_CEL_W, GREEN_SCENE_CEL_H, 0, h2 - drawH, w2, drawH);
-      } else {
-        drawGameImage(ctx, greenSceneImg, f * GREEN_SCENE_CEL_W, row * GREEN_SCENE_CEL_H,
-                      GREEN_SCENE_CEL_W, GREEN_SCENE_CEL_H, ddx, ddy + h2 - drawH, w2, drawH);
-      }
-      ctx.restore();
+      drawGreenScene(o.x, o.y);
       continue;
     }
     if (o.foe) {
@@ -6212,12 +6177,40 @@ const GREEN = { map: "world", tx: 30, ty: 19, fps: 7, scale: 1 };
 let greenPhase = "off", greenT = -1, greenP = 0, greenGone = false;
 let greenCamera = null;
 const GREEN_IN = 5.5, GREEN_CRASH = 1.1, GREEN_REST = 5, GREEN_RISE = 1.2, GREEN_DEPART = 2;
-// Down -> half-raised -> fully raised -> down, with readable peak poses.
-// Use scene time for both the arrival and departure flights.
-const GREEN_WING_CYCLE = [0,4,2,2,4,0];
+// Authored full wingbeat: raised, power stroke, lowered, recovery, raised.
+const GREEN_WING_CYCLE = [0,1,2,3,4,5];
 function greenFlightFrame(){
   const elapsed=greenP*(greenPhase==='in'?GREEN_IN:GREEN_DEPART);
   return GREEN_WING_CYCLE[Math.floor(elapsed*GREEN.fps)%GREEN_WING_CYCLE.length];
+}
+function greenSceneFrame(){
+  if(greenPhase==='sit')return [2,Math.floor(greenP*4)%6];
+  if(greenPhase==='crash'||greenPhase==='rise')return [greenPhase==='crash'?1:3,Math.min(5,Math.floor(greenP*6))];
+  return [0,greenFlightFrame()];
+}
+function greenDustFrame(){
+  // Impact -> expansion -> settling, once per landing. Starts with the crash
+  // cue and finishes early in the five-second rest; never follows takeoff.
+  const age=greenPhase==='crash'?greenP*GREEN_CRASH:greenPhase==='sit'?GREEN_CRASH+greenP:-1;
+  if(age<0||age>=2)return -1;
+  return age<.12?0:age<.30?1:age<.60?2:age<1?3:age<1.45?4:5;
+}
+function drawGreenScene(x,y){
+  const [row,frame]=greenSceneFrame(),off=greenOffset();
+  if(!off||greenPhase==='gone')return;
+  const w=GREEN_SCENE_DRAW,h=w*GREEN_SCENE_CEL_H/GREEN_SCENE_CEL_W;
+  ctx.save();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  const dust=greenDustFrame();
+  if(dust>=0){
+    const dw=GREEN_DUST_DRAW,dh=dw*GREEN_DUST_CEL_H/GREEN_DUST_CEL_W;
+    drawGameImage(ctx,greenDustImg,dust*GREEN_DUST_CEL_W,0,GREEN_DUST_CEL_W,GREEN_DUST_CEL_H,
+      Math.round(x-dw/2),Math.round(y-dh),dw,dh);
+  }
+  // The approach and departure both travel left. Do not mirror this adult
+  // based on the companion's unrelated direction, or stretch its breathing.
+  drawGameImage(ctx,greenSceneImg,frame*GREEN_SCENE_CEL_W,row*GREEN_SCENE_CEL_H,
+    GREEN_SCENE_CEL_W,GREEN_SCENE_CEL_H,Math.round(x-w/2+off[0]),Math.round(y-h+off[1]),w,h);
+  ctx.restore();
 }
 function greenEncounterFinished(){
   // A late approach must still leave a full breathing beat to witness.
@@ -6268,8 +6261,7 @@ function greenFly(dt) {
     if (greenGone) { greenPhase = "rise"; greenP = 0; }
   } else if (greenPhase === "rise") {
     greenP += dt / GREEN_RISE;
-    /* The dusty lift happens at the stump. Only then switch to the clean
-       overhead flight frames, so the dirt never travels with the dragon. */
+    /* The final takeoff pose matches the first departure flight frame. */
     if (greenP >= 1) { greenPhase = "depart"; greenP = 0; }
   } else if (greenPhase === "depart") {
     greenP += dt / GREEN_DEPART;
