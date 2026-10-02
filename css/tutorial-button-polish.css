@@ -1,0 +1,20 @@
+/* Readable parchment lessons and tactile utility controls. */
+#reveal.kit-help{background:#182a2de8;padding:16px;box-sizing:border-box;backdrop-filter:blur(3px)}
+#reveal.kit-help #revealCap{width:100%;max-width:410px;max-height:100%;padding:22px 20px 18px;border:3px double #a9844f;border-radius:16px;background:radial-gradient(ellipse at top,#fff8e6,#ecddbd);color:#384b4b;box-shadow:0 16px 48px #0006,inset 0 0 0 5px #fff7df;font:14px/1.45 system-ui,sans-serif;text-shadow:none;letter-spacing:0}
+#reveal.kit-help #revealCap .lesson-kicker{margin:0 0 8px;font:700 10px/1.3 ui-monospace,monospace;letter-spacing:.18em;color:#8a6337}
+#reveal.kit-help .lesson-art{display:block;width:66px;height:66px;object-fit:contain;margin:0 auto 8px;filter:drop-shadow(0 3px 2px #65472722)}
+#reveal.kit-help #revealCap strong{font:700 25px/1.15 Georgia,serif;color:#304f55;margin-bottom:16px}
+#reveal.kit-help #revealCap .lesson-row{position:relative;min-height:34px;margin:8px 0;padding:10px 10px 10px 56px;border:1px solid #b7a47c66;border-radius:9px;background:#fffaf080;font-size:13px;text-align:left}
+.lesson-row::before{content:attr(data-control);position:absolute;left:9px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:36px;min-height:32px;border-radius:8px;background:#365b60;color:#fff5d9;font:700 10px/1 ui-monospace,monospace;box-shadow:0 2px 0 #1e3c42}
+.lesson-row[data-control="Compass"]::before{content:"N ↑"}.lesson-row[data-control="Try it"]::before{content:"→";background:#95613b}.lesson-row[data-control="Move"]::before{content:"✥";font-size:24px}
+#reveal .lesson-continue{display:block;width:100%;min-height:46px;margin:16px 0 0;border:1px solid #203f44;border-radius:9px;background:linear-gradient(#466e71,#305358);color:#fff3d6;box-shadow:0 3px 0 #203c40,inset 0 1px #ffffff40;font:700 14px/1.2 system-ui,sans-serif;cursor:pointer}
+#itemm .utilityIcon,#bagHead .chip.utilityIcon{width:auto!important;min-width:62px!important;min-height:44px!important;height:44px!important;padding:5px 9px!important;gap:5px;border:1px solid #9b8763!important;border-radius:8px!important;background:linear-gradient(#fff7e0,#e4d1aa)!important;color:#36565d!important;box-shadow:inset 0 1px #fffdf4,0 3px 0 #9e8d6c!important;font:700 10px/1 system-ui,sans-serif!important;letter-spacing:0!important;cursor:pointer}
+.utilityIcon svg{width:20px;height:20px;stroke-width:1.8;flex-shrink:0}
+#itemm .utilityIcon:hover,#bagHead .chip.utilityIcon:hover{background:#fff4d6!important;color:#223f46!important}
+#itemm .utilityIcon:active,#bagHead .chip.utilityIcon:active,#reveal .lesson-continue:active{transform:translateY(2px);box-shadow:inset 0 1px 3px #63492733!important}
+.utilityIcon:focus-visible,.lesson-continue:focus-visible{outline:3px solid #b77a32;outline-offset:3px}
+#airm .row:nth-child(n) .actionIcon,#atkm .row:nth-child(n) .actionIcon{filter:drop-shadow(0 1px 0 #fff8)!important;opacity:1!important;animation:none!important}
+#airm .row:nth-child(n) .actionIcon{width:34px!important;height:34px!important;flex-basis:34px!important}
+#airm .row>span:not(.dot){font-weight:700!important;letter-spacing:.01em!important}
+@media(max-width:420px){#itemm>#itemQuickHead{gap:5px!important}#itemm .utilityIcon{flex-direction:column;gap:2px;min-width:46px!important;padding:4px 6px!important}#itemm #itemFullBtn{font-size:10px!important}#bagHead .chips{flex-wrap:wrap;gap:7px}#bagHead .chip.utilityIcon{min-width:59px!important;padding:5px 7px!important}}
+@media(max-height:640px){#reveal.kit-help #revealCap{padding:12px 16px}#reveal.kit-help .lesson-art{width:40px;height:40px}#reveal.kit-help #revealCap strong{font-size:21px;margin-bottom:10px}#reveal.kit-help #revealCap .lesson-row{margin:5px 0;padding-top:7px;padding-bottom:7px}}

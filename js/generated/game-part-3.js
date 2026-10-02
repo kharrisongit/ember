@@ -5990,7 +5990,7 @@ function refreshOvl() {
 }
 function appendActionIcon(row,key){
   const icon=document.createElement("img");icon.className="actionIcon";icon.alt="";
-  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v="+(["mount","dismount","takeoff"].includes(key)?"20260928-rider-flight":"20260926-subtle2");
+  icon.setAttribute("aria-hidden","true");icon.src="assets/icons/"+key+".svg?v="+"20261002-clear-icons";
   row.appendChild(icon);
 }
 function paintCommandRow(row,it){
