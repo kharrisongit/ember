@@ -115,7 +115,7 @@ const ATLAS_REVEAL_FOOTPRINTS={
  'Sunken Pyramid':[[730,15],[812,8],[856,49],[840,105],[769,112],[728,82]],
  'Desert Church':[[675,366],[740,355],[767,404],[759,453],[703,469],[663,437]]
 };
-let atlasCloudArt=null,atlasCloudReady=false;
+let atlasCloudArt=null,atlasCloudReady=false,atlasSilhouetteArt=null,atlasSilhouetteReady=false;
 function atlasRevealAll(){
   for(const p of ATLAS_LOCATIONS)atlasDiscovered.add(p[0]);
   for(const name of Object.keys(ATLAS_BOSS_PLACES))atlasEncounteredBosses.add(name);
@@ -123,7 +123,7 @@ function atlasRevealAll(){
   if(typeof atlasOpen!=='undefined'&&atlasOpen){atlasBuildPlaces();atlasRenderFog();atlasShowDetails();}
 }
 function atlasRenderFog(){
-  const signature=[...atlasDiscovered].sort().join('|')+':'+atlasCloudReady;
+  const signature=[...atlasDiscovered].sort().join('|')+':'+atlasCloudReady+':'+atlasSilhouetteReady;
   if(atlasFogLayer&&signature===atlasFogSignature)return;
   if(!atlasFogLayer){
     atlasFogLayer=document.createElement('canvas');atlasFogLayer.id='atlasFog';
@@ -136,10 +136,21 @@ function atlasRenderFog(){
     atlasCloudArt.onload=()=>{atlasCloudReady=true;atlasRenderFog();};
     atlasCloudArt.src='assets/maps/realm-clouds-v1.webp';
   }
+  if(!atlasSilhouetteArt){
+    atlasSilhouetteArt=new Image();
+    atlasSilhouetteArt.onload=()=>{atlasSilhouetteReady=true;atlasRenderFog();};
+    atlasSilhouetteArt.src=document.querySelector('#atlasSurface img')?.src||'assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity';
+  }
   const g=atlasFogLayer.getContext('2d');g.clearRect(0,0,1536,512);
   if(ATLAS_LOCATIONS.every(p=>atlasPlaceKnown(p[0])))return;
   if(atlasCloudReady)g.drawImage(atlasCloudArt,0,0,1536,512);
   else {g.fillStyle='#ccd7dc';g.fillRect(0,0,1536,512);}
+  // A soft monochrome impression preserves the geography beneath the clouds.
+  // Bake it into the cached fog: no live filters or extra work while panning.
+  if(atlasSilhouetteReady){
+    g.save();g.globalAlpha=.56;g.filter='grayscale(1) blur(1.1px) contrast(.85)';
+    g.drawImage(atlasSilhouetteArt,0,0,1536,512);g.restore();
+  }
   const mask=document.createElement('canvas');mask.width=1536;mask.height=512;
   const mg=mask.getContext('2d');mg.fillStyle='#000';mg.shadowColor='#000';mg.shadowBlur=12;
   const cells=atlasDiscoveryCells();
