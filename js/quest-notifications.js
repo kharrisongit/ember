@@ -1,5 +1,5 @@
-/* New journal entries announce themselves once. Discovery can happen inside
-   speech; the brief, passive notice also appears over conversations. */
+/* Keep journal notification save compatibility. New objectives progress silently;
+   only an explicit non-default tracking selection produces a notice. */
 (function(){
   let seen=new Set(),pending=[],seedOnNextScan=false,card=null,current=[],nextScan=0;
   const noticeKey=q=>{
@@ -17,9 +17,9 @@
       for(const q of atlasCompletedEntries()){const key=noticeKey(q);if(key)seen.add(key);}
       seedOnNextScan=false;return;
     }
-    for(const [key,q]of entries)if(!seen.has(key)){seen.add(key);pending.push(q);}
+    for(const [key,q]of entries)if(!seen.has(key)){seen.add(key);}
     // A lead completed before returning to gameplay no longer needs an alert.
-    pending=pending.filter(q=>!atlasQuestComplete(q.id));
+    pending=[];hidden();current=[];
   }
   let elapsed=0,lastTick=null;
   function hidden(){if(card)card.hidden=true;}
@@ -51,7 +51,7 @@
     hidden();current=[];elapsed=0;lastTick=null;nextScan=0;pending=[];
     seen=new Set((Array.isArray(saved?.seen)?saved.seen:[]).filter(k=>typeof k==='string'&&k.length<150));
     seedOnNextScan=!saved||saved.version!==1;
-    for(const q of Array.isArray(saved?.pending)?saved.pending:[])if(q&&typeof q.key==='string'&&typeof q.id==='string'&&typeof q.title==='string'&&typeof q.detail==='string'&&seen.has(q.key)&&!pending.some(p=>p.key===q.key))pending.push({...q});
+    for(const q of Array.isArray(saved?.pending)?saved.pending:[])if(q&&typeof q.key==='string'&&typeof q.id==='string'&&typeof q.title==='string'&&typeof q.detail==='string'&&seen.has(q.key)&&!pending.some(p=>p.key===q.key))seen.add(q.key);
   }
   window.EmberQuestNotifications={scan,tick,capture,restore};
 })();

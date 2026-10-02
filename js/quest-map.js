@@ -38,11 +38,7 @@ function atlasJourneyObjective(){
  if(!breathHas.lightning||!breathHas.ice||!breathHas.shadow)return o('Ask about the road ahead',breathHas.lightning?'Forgewick Temple':'Forgewick',breathHas.lightning?'Speak with Alderic about what you found.':'Speak with the people of Forgewick and follow the leads they share.');
  return o('Face King Halvard','Cinderhold Castle','Cross the highlands through Frostcrag and Ashcrag, then follow the volcanic road to Cinderhold.');
 }
-function atlasMainObjective(){
- if(!dragonLearned('king-plan')||wonAll)return atlasJourneyObjective();
- return {...atlasObjective('main','Overthrow King Halvard','Cinderhold Castle',
-  dragonLearned('heartstone-plan')?'End the dragon hunter’s fifty-year rule. Strengthen Aurelius with the three temple Heartstones, then face Halvard at Cinderhold.':'Maddock believes we must end the dragon hunter’s fifty-year rule. Grow stronger together before facing Halvard at Cinderhold.'),questId:'main'};
-}
+function atlasMainObjective(){return atlasJourneyObjective();}
 function atlasPlaceFor(map,n){
  const title=map.title||'';
  const named=ATLAS_LOCATIONS.filter(p=>title.includes(p[0])).sort((a,b)=>b[0].length-a[0].length)[0];
@@ -75,23 +71,66 @@ function atlasQuestOptions(){
 }
 // Resolve the journal's destination in game coordinates, never in the
 // illustrated atlas's deliberately compressed picture coordinates.
+function atlasNpcTarget(names,preferred){
+ const order=[MAPID,...Object.keys(W.maps).filter(id=>id!==MAPID)];
+ for(const id of order){
+  if(preferred&&id!==preferred)continue;
+  const map=W.maps[id];if(map.templeLegacy)continue;
+  const actor=(id===MAPID?npcs:map.npcs||[]).find(n=>names.includes(n.n)&&!n.away&&!n.editorDeleted);
+  if(actor)return {map:id,x:actor.x,y:actor.y};
+ }
+ return null;
+}
+function atlasOpeningTarget(){
+ const spot=name=>({map:'world',x:SPOT[name][0]*TS,y:SPOT[name][1]*TS});
+ const item=key=>{const it=ITEMS.find(i=>i.key===key);return {map:it.map||'world',x:it.tx*TS+8,y:it.ty*TS+16};};
+ switch(quest){
+  case Q.ABED:
+   if(morningSuppliesPending()){const it=morningDeskItems()[0];return {map:it.map,x:it.x,y:it.y+16};}
+   if(!templeCompass.morningMet)return atlasNpcTarget(['Nan Ferrow'],'house26');
+   return atlasNpcTarget(['Hettie'],'world');
+  case Q.ERRAND:return atlasNpcTarget(['Hettie'],'world');
+  case Q.EGGS:return item('eggs');
+  case Q.KING:return atlasNpcTarget([...ROAD_GUARDS],'world')||spot('king');
+  case Q.ELDER:return atlasNpcTarget(['Maddock','Elder Maddock'],'house22');
+  case Q.NOISE:return spot('path');
+  case Q.ARMED:return spot('north');
+  case Q.FLED:return item('egg');
+  case Q.CARRY:return atlasNpcTarget(['Elder Maddock'],'world')||{map:'world',x:ELDER_WELL[0]*TS,y:ELDER_WELL[1]*TS};
+ }
+ return null;
+}
 function atlasQuestTarget(q){
  if(!q)return null;
+ if(q.id==='main'){
+  if(quest<Q.DONE)return atlasOpeningTarget();
+  q=atlasJourneyObjective();
+ }
+ if(q.id==='trials')return !cinderSeal?{map:'witchmoor',x:196,y:304}:!trialSealPlaced?{map:'cinderhold',x:TRIAL_PEDESTAL.x,y:TRIAL_PEDESTAL.y+24}:{map:'cinderhold',...THRONE_DEMON};
+ if(q.id==='graveyard'){const a=W.maps.world.features.find(f=>f.id===207);if(a)return {map:'world',x:a.x*TS,y:a.y*TS};}
+ if(['main','thornwell-royals'].includes(q.id)){
+  if(/Leave the Copper Cup|Make way for royalty/.test(q.title)){const d=W.maps.tavern.doors.find(d=>d.to==='world');if(d)return {map:'world',x:d.tx*TS+8,y:d.ty*TS+16};}
+  if(/Aurelius at Forgefalls/.test(q.title)){const p=thornwellForgefalls();if(p)return {map:'world',x:p.x,y:p.y};}
+  if(/Face King Halvard/.test(q.title))return atlasNpcTarget(['King Halvard'],'cinderhold');
+  if(/A free Emberfell/.test(q.title))return atlasNpcTarget(['Nan Ferrow'],'house26');
+  if(/Ask about the road ahead/.test(q.title))return breathHas.lightning?atlasNpcTarget(['Alderic','Aldric']):atlasNpcTarget(['Dunstan']);
+ }
  if(q.id==='desert-church')return {map:'desert_chapel',x:176,y:216};
  if(q.id==='pyramid')return DesertAdventure.won()?{map:'pyramid_queen',x:216,y:128}:{map:'pyramid_queen',x:144,y:160};
  const element={'Forgewick Temple':'lightning','Sandspire Temple':'ice','Hollybeck Temple':'shadow'}[q.place];
- if(element){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
+ if(element&&q.title!=='Ask about the road ahead'){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
  if(q.id==='bramble'||['main','thornwell-royals'].includes(q.id)&&/Return Bramble|Bramble.*owner/.test(q.title)){
   if(!dragonLearned('bramble-owner')&&brambleQuest<2){
    const town=W.maps.world.features.find(f=>f.kind==='area'&&atlasCanonical(f.label||f.place)==='Thornwell');
    return town?{map:'world',x:(town.x0+town.x1)/2*TS,y:(town.y0+town.y1)/2*TS}:null;
   }
-  const rowan=MAPID==='tavern'&&npcs.find(n=>n.n==='Rowan the Hunter');return {map:'tavern',x:rowan?.x??256,y:(rowan?.y??220)+32};
+  const rowan=MAPID==='tavern'&&npcs.find(n=>n.n==='Rowan the Hunter');return {map:'tavern',x:rowan?.x??256,y:(rowan?.y??220)};
  }
- if((q.id==='main'||q.id==='thornwell-royals')&&/king’s summons/.test(q.title)){const king=typeof thornwellKing==='function'&&thornwellKing();return {map:'tavern',x:king?.x??396,y:(king?.y??170)+43};}
+ if((q.id==='main'||q.id==='thornwell-royals')&&/king’s summons/.test(q.title)){const king=typeof thornwellKing==='function'&&thornwellKing();return {map:'tavern',x:king?.x??396,y:(king?.y??170)};}
  const named={fishing:'Calder',bramble:'Rowan the Hunter',smith:'Dunstan',shield:'Sela','gift:lamp':'Sverre'};
  let name=named[q.id];
  if(q.id==='main'){
+  if(q.questId&&named[q.questId])name=named[q.questId];
   if(/Hettie/.test(q.title))name='Hettie';
   else if(/Dunstan/.test(q.title))name='Dunstan';
   else if(/Sela/.test(q.title))name='Sela';
@@ -101,7 +140,7 @@ function atlasQuestTarget(q){
   if(map.templeLegacy)continue;
   const list=id===MAPID?npcs:map.npcs||[];
   const n=list.find(n=>!n.away&&!n.editorDeleted&&(name?n.n===name:q.id.startsWith('gift:')&&n.charm===q.id.slice(5)));
-  if(n)return {map:id,x:n.x,y:n.y+32};
+  if(n)return {map:id,x:n.x,y:n.y};
  }
  const world=W.maps.world,area=(world.features||[]).find(f=>f.kind==='area'&&atlasCanonical(f.label||f.place)===q.place);
  if(area)return {map:'world',x:(area.x0+area.x1)/2*TS,y:(area.y0+area.y1)/2*TS};
@@ -272,12 +311,15 @@ function atlasTrack(id){
  atlasSyncJournal();const q=atlasQuests.find(q=>q.id===id);
  if(!q||atlasQuestComplete(q.id))return false;
  const lock=atlasQuestTrackLock(q);if(lock){document.getElementById('atlasQuestStatus').textContent=lock;toast(lock);return false;}
- templeCompass.cache=null;atlasTrackedQuest=q.id;atlasCompassTutorialSeen=true;
+ const isDefault=q.id==='main'||q.id===atlasJourneyObjective().questId;
+ templeCompass.cache=null;atlasTrackedQuest=isDefault?'main':q.id;atlasCompassTutorialSeen=true;
  if(typeof saveGame==='function')saveGame();
  // Tracking always resumes play, including when the map came from inventory.
  atlasReturn='game';closeAtlas();
- if(typeof compassCelebrateTracking==='function')compassCelebrateTracking();
- toast('Tracking: '+q.title);
+ if(!isDefault){
+  if(typeof compassCelebrateTracking==='function')compassCelebrateTracking();
+  toast('Tracking: '+q.title);
+ }
  const compassRect=cv.getBoundingClientRect();
  toastEl.classList.add('compass-safe');
  toastEl.style.setProperty('--compass-notice-top',(compassRect.top+compassRect.height/VH*64)+'px');

@@ -148,7 +148,7 @@ function atlasRenderFog(){
   // A soft monochrome impression preserves the geography beneath the clouds.
   // Bake it into the cached fog: no live filters or extra work while panning.
   if(atlasSilhouetteReady){
-    g.save();g.globalAlpha=.56;g.filter='grayscale(1) blur(1.1px) contrast(.85)';
+    g.save();g.globalAlpha=.23;g.filter='grayscale(1) blur(2.4px) contrast(.7)';
     g.drawImage(atlasSilhouetteArt,0,0,1536,512);g.restore();
   }
   const mask=document.createElement('canvas');mask.width=1536;mask.height=512;

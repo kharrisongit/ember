@@ -6529,7 +6529,7 @@ setInterval(() => {
     if (n.patrolFrom !== undefined && quest < n.patrolFrom) continue;
     if (n.restUntil === undefined) n.restUntil = 0;
     if (n.arrived === undefined) n.arrived = true;
-    if (n.arrived) { n.restUntil = now + (n.patrolRest || PATROL_REST); n.arrived = false; }
+    if (n.arrived) { n.restUntil = now + npcPatrolRest(n); n.arrived = false; }
     if (now < n.restUntil) continue;      /* still standing about */
     if (!n.desertNative) {
       if (!n.route) n.route = patrolRoute(n);

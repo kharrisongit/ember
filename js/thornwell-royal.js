@@ -74,7 +74,7 @@ function beginThornwellDetour(){
     if(!thornwellFlight){saveGame();return;}
     thornwellFlight.phase='lift';dragon.dir='e';dragon.moving=false;
     startTransition('up',true);
-    thornwellScene([],()=>{saveGame();toast('Find out who Bramble belongs to. Aurelius will wait at Forgefalls.');});
+    thornwellScene([],()=>{saveGame();});
     scene.silent=true;scene.until=()=>!thornwellFlight;showScene();
   });
   saveGame();return true;
@@ -234,7 +234,7 @@ function thornwellDismissAudience(){
     'Corin: May I continue my journey, Your Majesty?',
     'King Halvard: Yes. If you hear a report of a dragon, give it to my officers before turning it into a village tale.',
     'Serjeant Bram: You are dismissed. Leave the king room to finish his visit.'
-  ],()=>{thornwellCheckpoint(4);toast('Leave the Copper Cup, then meet Aurelius at Forgefalls.');});
+  ],()=>{thornwellCheckpoint(4);});
 }
 function openThornwellAudience(actor){
   if(!actor?.thornwellRoyal)return false;
@@ -307,7 +307,7 @@ function thornwellRoyalExit(){
     thornwellScene([
       'Corin: They are taking the road to Forgefalls. I told Aurelius to wait near that bridge.',
       'Corin: He knows to stay hidden, but I need to reach him before they do.'
-    ],()=>{saveGame();toast('Meet Aurelius on the bridge at Forgefalls.');});
+    ],()=>{saveGame();});
     scene.hold=()=>fade<=0;showScene();
   });
 }

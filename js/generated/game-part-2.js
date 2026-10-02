@@ -358,6 +358,17 @@ function tavernActorDepth(o,actors){
   }
   return depth;
 }
+function npcMotionSeed(o){
+  if(o.motionSeed!==undefined)return o.motionSeed;
+  let seed=2166136261;
+  for(const c of String(o.editKey||o.n||o.id||((o.spr||o.packSpr)+'|'+o.x+'|'+o.y)))seed=Math.imul(seed^c.charCodeAt(0),16777619);
+  return o.motionSeed=seed>>>0;
+}
+function npcMotionTime(o,t){const seed=npcMotionSeed(o);return t*(.91+(seed%181)/1000)+(seed%10007)/317;}
+function npcPatrolRest(n){
+  const seed=npcMotionSeed(n),cycle=n.patrolCycle=(n.patrolCycle||0)+1;
+  return (n.patrolRest||5000)*(.78+((seed>>>8)%401)/1000)+((seed+Math.imul(cycle,1597))>>>0)%2600;
+}
 function isPatioPatron(o){
   return ['Merrin','Asta','Colm'].includes(o.n)||/^(?:npc_single_)?(?:pack_drinker|tavernpatio_anim_|tavern_src_Drinker[12]$)/.test(o.packSpr||o.spr||'');
 }
@@ -4170,7 +4181,7 @@ function drawWorld(t, dt) {
       if(drawWorkshopCraftsman(o,t))continue;
       const sp = SPR[o.spr];
       if(o.spr==='pyramid_exterior'){drawGameImage(ctx,DesertPyramid.stoneFrame(o.spr),0,0,sp[2],sp[3],o.x-sp[2]/2,o.y-sp[3],sp[2],sp[3]);continue;}
-      let fr = o.stillFrame ?? (o.glassHatch ? glassHatchFrame() : Math.floor(t / 0.15) % sp[4]);
+      let fr = o.stillFrame ?? (o.glassHatch ? glassHatchFrame() : Math.floor((isPatioPatron(o)||/^tavern_anim_/.test(o.spr||'')?npcMotionTime(o,t):t) / 0.15) % sp[4]);
       if (o.royalDoor || o.smithDoor || /^(Doors|Animation_windows_doors)\.png$/.test(o.source || "")) {
         fr = 0;
         if (doorMotion && doorMotion.map === MAPID && !doorMotion.d.stairDown &&
@@ -4556,7 +4567,7 @@ function drawWorld(t, dt) {
     }
     if (!npcHere(o)) continue;
     if(o.seatSpr&&!o.goto&&(!scene||o.thornwellRoyal)&&!bossScene&&!hatchExit){
-      const s=SPR[o.seatSpr];if(s){drawNpcFrame(o,s,Math.floor(t*3)%s[4],sheetOf(s));continue;}
+      const s=SPR[o.seatSpr];if(s){drawNpcFrame(o,s,Math.floor(npcMotionTime(o,t)*3)%s[4],sheetOf(s));continue;}
     }
     if (o.packSpr) {
       let direction = o.stationary && !o.packDirections ? "d" : o.f === "s" ? (o.flip ? "w" : "e") : (o.f || "d");
@@ -4579,8 +4590,8 @@ function drawWorld(t, dt) {
         : SPR[o.packSpr];
       if (sp) {
         let fr = action==='idle'&&o.idleFrame!==undefined ? Math.min(o.idleFrame,sp[4]-1)
-          : Math.floor(t * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
-        if(/^(hollybeck_|regional_|farm_)/.test(o.packSpr))fr=hollybeckNpcFrame(o,t,action);
+          : Math.floor(npcMotionTime(o,t) * (action === "walk" ? 8 : (o.idleFps || 5))) % sp[4];
+        if(/^(hollybeck_|regional_|farm_)/.test(o.packSpr))fr=hollybeckNpcFrame(o,npcMotionTime(o,t),action);
         if(/^villager_seated_/.test(o.packSpr))fr=villagerIdleFrame(o,t,sp[4]);
         if(odoGesture)fr=Math.floor((speaking?reactionAge:t%9-7)*6)%sp[4];
         if(o.n==='Liora'){
@@ -7060,7 +7071,7 @@ function stepWalkers(dt) {
     }
     const onScreen = m.x > cam.x && m.x < cam.x + VW / cam.z &&
                      m.y > cam.y && m.y < cam.y + VH / cam.z;
-    const sp = (m.hurry ? (onScreen ? 78 : 260) : (m.patrolSpeed || 44)) * dt;
+    const sp = (m.hurry ? (onScreen ? 78 : 260) : (m.patrolSpeed || 44)) * (m.patrol&&!m.scriptWalking&&!scene?.npcActor?(.9+(npcMotionSeed(m)%201)/1000):1) * dt;
     const guard = /^(King Halvard|Serjeant Bram|Doran|Tolan)$/
                     .test(m.n || "");
     const straight = [dx / d * Math.min(sp, d), dy / d * Math.min(sp, d)];
