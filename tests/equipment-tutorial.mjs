@@ -13,6 +13,7 @@ assert(dom.element('btnItems').classList.contains('equipment-target'));
 assert(run('sceneHold()&&encounterCombatPaused()'),'Teaching pauses movement and combat');
 dom.touch(dom.element('btnItems'));run('EmberEquipmentTutorial.step()');
 assert.equal(run('ovl'),'itemm');assert(dom.element('itemFullBtn').classList.contains('equipment-target'));
+assert(!dom.element('itemFullBtn').classList.contains('inventory-intro'),'Full Inventory does not wiggle during the equipment lesson');
 dom.dispatch(dom.element('itemFullBtn'),'click');run('EmberEquipmentTutorial.step()');
 assert(run('bagOpen'));
 const spore=dom.element('bagRows').querySelectorAll('.slot').find(el=>el.dataset.itemKey==='spore');assert(spore);

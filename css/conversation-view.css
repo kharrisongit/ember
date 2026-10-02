@@ -172,9 +172,11 @@ body.conversation-session #bagAsk .is-speaking #say{box-shadow:0 0 18px var(--co
 #bagAsk.conversationTopics.journalDeck .conversationStage .deckProfileToggle{background:#17272bcc;border:1px solid var(--conversation-edge);border-radius:5px;color:var(--town-soft,#d3e0d4);box-shadow:inset 0 1px #ffffff12,0 1px 3px #0004}
 #bagAsk.conversationTopics.journalDeck .conversationStage .deckProfileToggle:hover,#bagAsk.conversationTopics.journalDeck .conversationStage .deckProfileToggle:focus-visible{background:#24393bcc;border-color:var(--conversation-edge);color:#fff3d8}
 
-/* Chat fills Corin's empty bubble; the bottom bar has three stable columns. */
-#bagAsk.conversationTopics.journalDeck .conversationCorinSpeech .conversationChat{position:absolute;inset:0;z-index:2;display:grid;place-items:center;width:100%;height:100%;max-width:none;min-width:0;min-height:0;box-sizing:border-box;padding:14px;border:2px solid var(--speech-edge);border-radius:10px;background:var(--speech-paper);color:var(--speech-ink);font:700 clamp(22px,4vw,34px)/1.2 var(--manuscript-serif);animation:none;box-shadow:0 5px 16px #0c171b38}
-#bagAsk.conversationTopics.journalDeck .conversationCorinSpeech .conversationChat:hover{filter:brightness(1.08);background:var(--speech-paper)}
+/* A distinct, comfortably sized button sits inside Corin's speech bubble. */
+#bagAsk.conversationTopics.journalDeck .conversationCorinSpeech .conversationChat{position:relative;inset:auto;z-index:2;display:grid;place-items:center;flex:0 0 auto;width:min(78%,270px);height:auto;max-width:270px;min-width:0;min-height:48px;box-sizing:border-box;margin:16px auto;padding:12px 22px;border:2px solid #ad8952;border-radius:9px;background:linear-gradient(#38565a,#253f45);color:#fff0ce;font:700 clamp(17px,3vw,23px)/1.2 var(--manuscript-serif);animation:none;box-shadow:inset 0 1px #fff3,0 3px 0 #172e33,0 4px 9px #0c171b30}
+#bagAsk.conversationTopics.journalDeck .conversationCorinSpeech .conversationChat:hover{filter:brightness(1.1);background:#38565a}
+#bagAsk.conversationTopics.journalDeck .conversationCorinSpeech .conversationChat:active{transform:translateY(2px);box-shadow:inset 0 1px #fff2,0 1px 0 #172e33}
+
 #bagAsk .conversationFooter{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px}
 #bagAsk .conversationFooter .deckProfileToggle{justify-self:start;min-width:0;min-height:44px;max-width:100%;padding:8px 14px;font-size:14px}
 #bagAsk .conversationAB{justify-self:center;gap:10px}

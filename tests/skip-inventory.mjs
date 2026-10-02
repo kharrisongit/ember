@@ -9,6 +9,7 @@ assert(missing().includes('fishingPole'));
 // Press the actual developer button, rather than duplicating its grant logic.
 dom.touch(dom.element('bSkip'));
 assert.deepEqual(missing(),[],'Skip grants every current usable/key/charm inventory item');
+assert(run('ATLAS_LOCATIONS.every(p=>atlasPlaceKnown(p[0]))'),'Skip reveals the entire atlas');
 for(const key of ['emberheart','frostheart','soulwing'])assert.equal(run('BAG.find(i=>i.key==='+JSON.stringify(key)+').icon()'),'inventory_'+key,'Relics display their own artwork in the bag');
 assert.equal(run('wonAll'),0,'Granting items does not mark the king defeated');
 assert.equal(run('trialSealPlaced'),false,'The seal is carried, not pre-placed');
@@ -20,6 +21,7 @@ assert(saved.houseLootTaken.includes(run('DesertAdventure.rewardId'))&&saved.hou
 for(const key of ['boarMeat','hareMeat','deerMeat','foxMeat','birdMeat','dragonFish'])assert(saved[key]>=3,key+' available to feed Aurelius');
 assert(run('loadGame(activeSaveSlot)'),'Skip save loads');
 assert.deepEqual(missing(),[],'Every granted item survives a real save reload');
+assert(run('ATLAS_LOCATIONS.every(p=>atlasPlaceKnown(p[0]))'),'Full map discovery survives save reload');
 // Existing supplies are never reduced, and pressing Skip again is repeatable.
 run('potions=42;hareMeat=37;deerMeat=26;foxMeat=15;birdMeat=9;dragonFish=11;gold=999;');
 const before=run('JSON.stringify([potions,hareMeat,deerMeat,foxMeat,birdMeat,dragonFish,gold,houseLootTaken.size])');

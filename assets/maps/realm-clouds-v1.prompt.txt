@@ -1,0 +1,3 @@
+Generated with the built-in image generation tool, 2026-10-02.
+
+Use case: stylized-concept. Opaque fog-of-war texture for The Last Dragonrider fantasy world map. Wide 3:1 landscape, full-bleed continuous cloud carpet viewed from above. Refined storybook painting, warm ivory highlights and cool desaturated slate-blue shadow valleys. Varied interlocking organic clouds, subtle texture and gentle contrast. No gaps, horizon, sky, terrain, buildings, text or frames. Avoid vector circles, concentric rings, cartoon outlines and harsh shadows. The runtime clears authored geographic footprints on a cached canvas; no generated terrain or labels.

@@ -5894,8 +5894,9 @@ function setOvl(which) {
   const inventoryButton=document.getElementById('itemFullBtn');
   if(which!=='itemm')inventoryButton.classList.remove('inventory-intro');
   if(firstOpen){
-    inventoryButton.classList.toggle('inventory-intro',inventoryPromptOpens<10);
-    if(inventoryPromptOpens<10){inventoryPromptOpens++;saveGame();}
+    const tutorial=window.EmberRiding?.holding()||window.EmberEquipmentTutorial?.holding();
+    inventoryButton.classList.toggle('inventory-intro',!tutorial&&inventoryPromptOpens<10);
+    if(!tutorial&&inventoryPromptOpens<10){inventoryPromptOpens++;saveGame();}
   }
   for (const k in MENUS) {
     const el = document.getElementById(k);
@@ -6397,6 +6398,7 @@ tap(document.getElementById("bSkip"), () => {
   if (salts < 3) salts = 3;
   if (gold < 500) gold = 500;
   for (const e of BESTIARY) if (!seenFoe[e.k]) seenFoe[e.k] = ++seenCount;
+  atlasRevealAll();
   rebuildBuckets();
   if (typeof refreshWingBtn === "function") refreshWingBtn();
   reindex(); chunks.clear();

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{furniture:false});
+await run('loadPublishedEditorLayouts()');run("applyPublishedEditorLayout(W.maps.world,'world');");
+assert(!run('W.maps.world.features.some(f=>f.id===9186||f.sideRoute===9186)'),'West route and arena are retired');
+assert.equal(run("W.maps.world.features.filter(f=>f.kind==='arena'&&f.sideRoute===9185).length"),1,'One east-route arena');
+assert(run("W.maps.world.foes.filter(f=>f.sideEncounter?.startsWith('9186:')).every(f=>f.retiredEncounter)"),'Retired enemies retain their save slots');
+assert(run("W.maps.world.foes.some(f=>f.sideEncounter?.startsWith('9187:')&&!f.retiredEncounter)"),'Next route stays active');
+assert(run("W.maps.world.roomActors.filter(a=>a.sideRoute===9186).every(a=>a.editorDeleted&&a.moveBlocks.every(i=>W.maps.world.roomBlocks[i].every(v=>v===-99999)))"),'Chest and collision are retired together');
+const before=run('JSON.stringify(W.maps.world.foes)');run('SideRouteAdventures.installWorld(W.maps.world)');assert.equal(run('JSON.stringify(W.maps.world.foes)'),before);
+run("MAPID='world';quest=Q.ABED");assert(run('blockedByHerd(30,HERD_Y)'));assert(!run('blockedByHerd(15,HERD_Y)||blockedByHerd(40,HERD_Y)'),'Cow barrier does not reach house fronts');
+console.log('PASS: west spur removal, one east fight, stable foe slots, chest collision removal and narrow cattle gate.');

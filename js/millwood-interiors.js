@@ -46,6 +46,8 @@ async function prepareMillwoodInteriors(onProgress=()=>{}) {
   restoreTavernFurniture();
   prepareRoyalDiningFurniture();
   prepareCorinWritingDesk();
+  prepareFurnitureShades();
+  prepareCorinBed();
   onProgress('House furniture · Seating positions');
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
@@ -62,6 +64,68 @@ function prepareCorinWritingDesk(){
   const w=desk.extractedCanvas.width,h=desk.extractedCanvas.height;
   desk.sourceRect=[desk.x-w/2,desk.y-h,w,h];
   for(const i of desk.moveBlocks)room.roomBlocks[i]=[desk.x-w/2+2,desk.y-h+4,desk.x+w/2-2,desk.y-2];
+}
+
+// Palette swaps are prepared once, retaining every pixel, alpha and editor anchor.
+const FURNITURE_WOOD_SOURCE=['3f2832','bf6f4a','e69c69','e6b084','f6ca9f','eedcbe'];
+const FURNITURE_WOOD_SHADES=[
+  ['2f1e20','4d302f','623d39','704c3f','7d5944','a07b58'], // walnut, matching Corin's desk
+  ['39292a','694536','87563b','a16f48','b68a5d','d4b382'], // warm chestnut
+  ['30302e','4c5145','666b56','82836a','9d9d7a','c2bb96']  // weathered oak
+];
+const FURNITURE_RUG_SOURCE=['4f4c71','775c9d','454962'];
+const FURNITURE_RUG_SHADES=[
+  ['355a62','83a89b','293f4e'], // deep teal and sage embroidery
+  ['75424a','b27d79','4f303f'], // wine and muted rose
+  ['475778','8299b0','303b58'], // blue slate and silver
+  ['536347','9ca27b','364637']  // moss and linen
+];
+function furniturePaletteCanvas(source,from,to){
+  const c=document.createElement('canvas');c.width=source.width;c.height=source.height;
+  const g=c.getContext('2d',{willReadFrequently:true});g.drawImage(source,0,0);
+  const pixels=g.getImageData(0,0,c.width,c.height),map=new Map(from.map((hex,i)=>[parseInt(hex,16),parseInt(to[i],16)]));
+  let changed=false;
+  for(let i=0;i<pixels.data.length;i+=4){
+    const p=pixels.data,key=p[i]*65536+p[i+1]*256+p[i+2],v=map.get(key);
+    if(v===undefined||!p[i+3])continue;changed=true;p[i]=v>>16;p[i+1]=(v>>8)&255;p[i+2]=v&255;
+  }
+  if(!changed)return source;
+  g.putImageData(pixels,0,0);return c;
+}
+function prepareFurnitureShades(){
+  for(const [id,room]of Object.entries(W.maps)){
+    if(room._furnitureShades||!room._millwoodLayers)continue;room._furnitureShades=true;
+    const seed=Array.from(id).reduce((n,c)=>n+c.charCodeAt(0),0);
+    for(const a of room.roomActors||[]){
+      if(!a.extractedCanvas)continue;
+      if(/^i(?:table|chair)\d+$/.test(a.n)){
+        const shade=id==='house26_bedroom'?0:seed%FURNITURE_WOOD_SHADES.length;
+        a.extractedCanvas=furniturePaletteCanvas(a.extractedCanvas,FURNITURE_WOOD_SOURCE,FURNITURE_WOOD_SHADES[shade]);
+        a.furnitureShade=['walnut','chestnut','weathered oak'][shade];
+      }else if(/rug/.test(a.n)){
+        const shade=seed%FURNITURE_RUG_SHADES.length;
+        a.extractedCanvas=furniturePaletteCanvas(a.extractedCanvas,FURNITURE_RUG_SOURCE,FURNITURE_RUG_SHADES[shade]);
+        a.furnitureShade=['teal','wine','slate','moss'][shade];
+      }
+    }
+  }
+  // Cover standalone/editor versions of every light-wood table and chair too.
+  for(const [name,sp]of Object.entries(SPR))if(/^i(?:table|chair)\d+$/.test(name)&&!sp.furnitureShade){
+    const c=document.createElement('canvas');c.width=sp[2]*sp[4];c.height=sp[3];
+    drawGameImage(c.getContext('2d'),sheetOf(sp),sp[0],sp[1],c.width,c.height,0,0,c.width,c.height);
+    const key='furniture-shade:'+name,index=Number(name.match(/\d+$/)[0])%3;
+    animalSheets[key]=furniturePaletteCanvas(c,FURNITURE_WOOD_SOURCE,FURNITURE_WOOD_SHADES[index]);
+    SPR[name]=Object.assign([0,0,sp[2],sp[3],sp[4],key],{furnitureShade:true});
+  }
+}
+function prepareCorinBed(){
+  const room=W.maps.house26_bedroom,bed=room?.roomActors.find(a=>a.n==='ibed3');
+  const source=W.maps.house00_bedroom?.roomActors.find(a=>a.n==='ibed5');
+  if(!bed||!source?.extractedCanvas)return;
+  bed.extractedCanvas=source.extractedCanvas;bed.bedVariant='blue single';
+  const w=bed.extractedCanvas.width,h=bed.extractedCanvas.height;
+  bed.sourceRect=[bed.x-w/2,bed.y-h,w,h];
+  for(const i of bed.moveBlocks)room.roomBlocks[i]=[bed.x-w/2+1,bed.y-h+4,bed.x+w/2-1,bed.y-1];
 }
 
 function restoreTavernFurniture(){

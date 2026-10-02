@@ -101,6 +101,16 @@ const SideRouteAdventures=(()=>{
     }
     // These are stable ordinary-object slots from the supplied editor patch.
     for(const [id,x,y]of moves){m.objs[id*3+1]=x;m.objs[id*3+2]=y;}
+    // Retire the west woods spur after allocating its historical slots. Later
+    // enemies keep their save IDs, and old chest/editor records remain valid.
+    m.features=m.features.filter(f=>f.id!==9186&&f.sideRoute!==9186);
+    for(const f of m.foes)if(f.sideEncounter?.startsWith('9186:'))f.retiredEncounter=true;
+    for(const a of m.roomActors)if(a.sideRoute===9186){
+      a.editorDeleted=a.publishedDeleted=true;
+      for(const i of a.moveBlocks||[])m.roomBlocks[i]=[-99999,-99999,-99999,-99999];
+    }
+    // The east woods chest lane has one fight, with its original stable ID.
+    m.features=m.features.filter(f=>f.sideRoute!==9185||f.kind!=='arena'||f.id===9300);
   }
   function structuredRoute(f){return {...f,pts:f.pts.map(p=>p.slice())};}
   function segmentDistance(x,y,a,b){

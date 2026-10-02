@@ -90,24 +90,66 @@ function atlasDiscoveryCells(){
     return cell;
   });
 }
+
+// These outlines follow the illustration, rather than slicing buildings at the
+// halfway point between labels. All pixels inside a known place stay clear.
+const ATLAS_REVEAL_FOOTPRINTS={
+ 'Millwood':[[0,303],[64,300],[121,307],[165,334],[174,423],[182,470],[173,512],[0,512]],
+ 'Elder’s Home':[[0,299],[72,296],[95,320],[86,378],[0,382]],
+ 'Thornwell':[[183,96],[254,84],[354,111],[376,177],[365,263],[332,304],[234,304],[193,277],[174,198]],
+ 'Forgefalls':[[364,76],[421,76],[427,184],[438,211],[443,283],[370,288],[360,228]],
+ 'Forgewick':[[430,102],[514,79],[574,105],[645,137],[682,211],[670,266],[648,338],[470,348],[443,283],[429,233]],
+ 'Forgewick Temple':[[447,372],[562,365],[626,407],[614,469],[557,491],[460,482],[430,444]],
+ 'Sandspire':[[711,118],[820,106],[900,123],[932,204],[915,253],[855,278],[745,270],[705,215]],
+ 'The Oasis':[[705,280],[760,268],[814,280],[837,311],[818,345],[757,350],[710,325]],
+ 'Sandspire Temple':[[820,297],[893,281],[958,306],[980,372],[942,425],[852,434],[816,391]],
+ 'Coralmere':[[898,393],[948,373],[1061,375],[1119,386],[1148,442],[1134,478],[997,502],[927,480],[892,454]],
+ 'Hollybeck':[[1240,351],[1302,337],[1370,344],[1403,401],[1405,512],[1236,512],[1223,438]],
+ 'Hollybeck Temple':[[1301,182],[1384,180],[1410,223],[1403,277],[1356,300],[1284,267]],
+ 'Hollybeck Graveyard':[[1215,261],[1299,260],[1325,300],[1302,337],[1222,335],[1205,297]],
+ 'Frosthorn':[[1167,9],[1242,7],[1272,41],[1260,99],[1201,105],[1162,74]],
+ 'Ice Moth':[[1183,113],[1251,109],[1289,143],[1291,186],[1259,216],[1191,211],[1168,166]],
+ 'Frostcrag':[[1270,0],[1405,0],[1413,99],[1351,136],[1272,102]],
+ 'Ashcrag':[[1408,25],[1536,27],[1536,169],[1462,165],[1412,130]],
+ 'Cinderhold Castle':[[1435,203],[1536,195],[1536,362],[1422,362],[1410,283]],
+ 'Sunken Pyramid':[[730,15],[812,8],[856,49],[840,105],[769,112],[728,82]],
+ 'Desert Church':[[675,366],[740,355],[767,404],[759,453],[703,469],[663,437]]
+};
+let atlasCloudArt=null,atlasCloudReady=false;
+function atlasRevealAll(){
+  for(const p of ATLAS_LOCATIONS)atlasDiscovered.add(p[0]);
+  for(const name of Object.keys(ATLAS_BOSS_PLACES))atlasEncounteredBosses.add(name);
+  atlasFogSignature='';
+  if(typeof atlasOpen!=='undefined'&&atlasOpen){atlasBuildPlaces();atlasRenderFog();atlasShowDetails();}
+}
 function atlasRenderFog(){
-  const signature=[...atlasDiscovered].sort().join('|');
+  const signature=[...atlasDiscovered].sort().join('|')+':'+atlasCloudReady;
   if(atlasFogLayer&&signature===atlasFogSignature)return;
-  if(!atlasFogLayer){atlasFogLayer=document.createElement('div');atlasFogLayer.id='atlasFog';atlasFogLayer.setAttribute('aria-hidden','true');document.getElementById('atlasSurface').appendChild(atlasFogLayer);}
+  if(!atlasFogLayer){
+    atlasFogLayer=document.createElement('canvas');atlasFogLayer.id='atlasFog';
+    atlasFogLayer.width=1536;atlasFogLayer.height=512;
+    atlasFogLayer.setAttribute('aria-hidden','true');document.getElementById('atlasSurface').appendChild(atlasFogLayer);
+  }
   atlasFogSignature=signature;
+  if(!atlasCloudArt){
+    atlasCloudArt=new Image();
+    atlasCloudArt.onload=()=>{atlasCloudReady=true;atlasRenderFog();};
+    atlasCloudArt.src='assets/maps/realm-clouds-v1.webp';
+  }
+  const g=atlasFogLayer.getContext('2d');g.clearRect(0,0,1536,512);
+  if(ATLAS_LOCATIONS.every(p=>atlasPlaceKnown(p[0])))return;
+  if(atlasCloudReady)g.drawImage(atlasCloudArt,0,0,1536,512);
+  else {g.fillStyle='#ccd7dc';g.fillRect(0,0,1536,512);}
+  const mask=document.createElement('canvas');mask.width=1536;mask.height=512;
+  const mg=mask.getContext('2d');mg.fillStyle='#000';mg.shadowColor='#000';mg.shadowBlur=12;
   const cells=atlasDiscoveryCells();
-  const holes=ATLAS_LOCATIONS.map((p,i)=>atlasPlaceKnown(p[0])?`<polygon points="${cells[i].map(v=>v.map(n=>n.toFixed(1)).join(',')).join(' ')}"/>`:'').join('');
-  // Deterministic overlapping billows span the whole map, avoiding tiled seams.
-  const billows=Array.from({length:200},(_,i)=>{
-    const noise=n=>{const v=Math.sin(n*12.9898+78.233)*43758.5453;return v-Math.floor(v);};
-    const x=noise(i+1)*1640-52,y=noise(i+317)*620-54;
-    return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${42+i*17%57}" ry="${25+i*13%29}" fill="url(#atlasCloudLight)"/>`;
-  }).join('');
-  // Blur only the cloud edge; the remaining cloud bank is fully opaque.
-  atlasFogLayer.innerHTML=`<svg viewBox="0 0 1536 512" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="atlasFogEdge" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter>
-      <mask id="atlasFogMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="512"><rect width="1536" height="512" fill="white"/><g fill="black" filter="url(#atlasFogEdge)">${holes}</g></mask>
-      <radialGradient id="atlasCloudLight" cx="50%" cy="45%" r="52%"><stop stop-color="#fff9ed"/><stop offset=".35" stop-color="#eaece8"/><stop offset=".7" stop-color="#d4dce0" stop-opacity=".8"/><stop offset="1" stop-color="#b3c1cd" stop-opacity="0"/></radialGradient>
-    </defs><g mask="url(#atlasFogMask)"><rect width="1536" height="512" fill="#a8b8c7"/>${billows}</g></svg>`;
+  ATLAS_LOCATIONS.forEach((p,i)=>{
+    if(!atlasPlaceKnown(p[0]))return;
+    const polygon=ATLAS_REVEAL_FOOTPRINTS[p[0]]||cells[i];
+    if(!polygon.length)return;
+    mg.beginPath();polygon.forEach(([x,y],j)=>j?mg.lineTo(x,y):mg.moveTo(x,y));mg.closePath();mg.fill();
+  });
+  // Rasterize once per discovery change. No live SVG mask/filter is repainted
+  // while dragging. Solid interiors clear fully; feathering extends outward.
+  g.globalCompositeOperation='destination-out';g.drawImage(mask,0,0);g.globalCompositeOperation='source-over';
 }

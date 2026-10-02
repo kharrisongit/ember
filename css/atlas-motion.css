@@ -41,3 +41,11 @@
 @keyframes atlasLavaHeat{50%{opacity:.32;stroke-width:10}}
 @keyframes atlasEmber{0%{opacity:0;transform:scale(.3)}20%{opacity:.85;transform:scale(1)}55%,100%{opacity:0;transform:translate(1px,-5px) scale(.25)}}
 @media(prefers-reduced-motion:reduce){#atlasAnimation{display:none}}
+
+/* Panning composites cached artwork; animated scenery rests during gestures. */
+#atlasFog{width:100%;height:100%}
+#atlasSurface{will-change:transform;backface-visibility:hidden}
+#atlasViewport{contain:layout paint;overscroll-behavior:contain}
+#atlasAnimation.active.interacting *{animation-play-state:paused!important}
+#atlasSurface.dragging #atlasAnimation *{animation-play-state:paused!important}
+#atlasSurface.dragging .atlasPlace{transition:none!important}

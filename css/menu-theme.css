@@ -167,3 +167,7 @@ body.topics-open #deck,body.topics-open #deck *{pointer-events:none!important}
 .soundMixLabel,.soundMixLabel output{color:var(--dawn-ink)}
 #soundSong{color:var(--dawn-muted)}
 #soundUiMute{background:#e6dbc4;color:var(--dawn-ink);border-color:var(--dawn-edge)}
+
+body.riding-guide #itemm #itemFullBtn.inventory-intro,
+body:has(#equipmentHint:not([hidden])) #itemm #itemFullBtn.inventory-intro,
+#itemm #itemFullBtn.equipment-target{animation:none!important;transform:none!important}

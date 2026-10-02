@@ -124,11 +124,11 @@ function drawMorningSupplyGlint(o,t){
   ctx.fillRect(x-2,y,5,1);ctx.fillRect(x,y-2,1,5);ctx.restore();
 }
 function takeMorningSupply(it){
-  if(it.owned())return;
-  if(it.key==='morningBag')bagOwned=true;
-  if(it.key==='morningMap')templeCompass.mapGiven=true;
-  if(it.key==='morningCompass'){templeCompass.owned=true;templeCompass.awakened=true;}
-  refreshMapControls();refreshHandle();saveGame();showReveal(it.spr,it.took,1,true);
+  if(!it.deskPickup||!morningSuppliesPending())return;
+  bagOwned=true;templeCompass.mapGiven=true;
+  templeCompass.owned=true;templeCompass.awakened=true;
+  refreshMapControls();refreshHandle();saveGame();
+  showReveal('inventory_bag',"Corin picked up his Bag, Map and Father's Compass.",1,true);
 }
 function nanMorningDoorBlocked(d){return MAPID==='house26_bedroom'&&d?.to==='house26'&&morningSuppliesPending();}
 function nanMorningSolid(x,y){
@@ -295,6 +295,100 @@ function compassSelectedTarget(){
  if(selected&&selected.id!==atlasTrackedQuest)atlasTrackedQuest=selected.id;
  return atlasQuestTarget(selected);
 }
+// Incremental A* follows actual walkable ground, including authored bends and
+// editor collision. Work is time-sliced so a distant destination cannot stall
+// gameplay. The completed route is reused as Corin walks along it.
+function compassWalkClear(x,y){
+  const old=arenaPass;arenaPass=true;
+  try{return [[-5.5,-7],[5.5,-7],[-5.5,-1],[5.5,-1]].every(([dx,dy])=>!isSolid(x+dx,y+dy,true,true));}
+  finally{arenaPass=old;}
+}
+function compassWalkVisible(a,b){
+  const count=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/4));
+  for(let i=1;i<=count;i++)if(!compassWalkClear(a.x+(b.x-a.x)*i/count,a.y+(b.y-a.y)*i/count))return false;
+  return true;
+}
+function compassWalkSearch(player,target){
+  const step=MAPID==='world'?16:8,cols=Math.ceil(PXW/step),rows=Math.ceil(PXH/step);
+  const point=k=>({x:k%cols*step+step/2,y:Math.floor(k/cols)*step+step});
+  const key=p=>Math.max(0,Math.min(rows-1,Math.round((p.y-step)/step)))*cols+Math.max(0,Math.min(cols-1,Math.round((p.x-step/2)/step)));
+  const samples=new Map(),stride=PXW+1;
+  const sample=p=>{const k=p.y*stride+p.x;if(!samples.has(k))samples.set(k,compassWalkClear(p.x,p.y));return samples.get(k);};
+  const visible=(a,b)=>{const n=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/4));
+    for(let i=1;i<=n;i++)if(!sample({x:a.x+(b.x-a.x)*i/n,y:a.y+(b.y-a.y)*i/n}))return false;return true;};
+  const clear=k=>sample(point(k));
+  const near=(p,visible=false)=>{
+    const base=key(p),cx=base%cols,cy=Math.floor(base/cols),candidates=[];
+    for(let y=Math.max(0,cy-4);y<=Math.min(rows-1,cy+4);y++)for(let x=Math.max(0,cx-4);x<=Math.min(cols-1,cx+4);x++){
+      const k=y*cols+x,q=point(k);candidates.push({k,q,d:Math.hypot(q.x-p.x,q.y-p.y)});
+    }
+    candidates.sort((a,b)=>a.d-b.d);
+    return candidates.find(v=>clear(v.k)&&(!visible||compassWalkVisible(p,v.q)))?.k;
+  };
+  const start=near(player,true),goal=near(target);
+  if(start===undefined||goal===undefined)return {failed:true,path:[],start:{...player}};
+  const gx=goal%cols,gy=Math.floor(goal/cols),heap=[];
+  const heuristic=k=>(Math.abs(k%cols-gx)+Math.abs(Math.floor(k/cols)-gy))*1.15;
+  function push(k,cost){
+    const item={k,cost,score:cost+heuristic(k)},n=heap.push(item)-1;let i=n;
+    while(i){const parent=(i-1)>>1;if(heap[parent].score<=item.score)break;heap[i]=heap[parent];i=parent;}heap[i]=item;
+  }
+  function pop(){
+    const top=heap[0],last=heap.pop();if(heap.length){let i=0;
+      while(i*2+1<heap.length){let child=i*2+1;if(child+1<heap.length&&heap[child+1].score<heap[child].score)child++;
+        if(last.score<=heap[child].score)break;heap[i]=heap[child];i=child;}heap[i]=last;
+    }return top;
+  }
+  const nav={start:{...player},target,point,cols,rows,clear,visible,heap,push,pop,goal,
+    costs:new Map([[start,0]]),previous:new Map([[start,-1]]),closed:new Set(),path:null,cursor:0,failed:false};
+  push(start,0);return nav;
+}
+function compassWalkAdvance(nav){
+  if(!nav||nav.path||nav.failed)return;
+  const until=performance.now()+2;
+  for(let count=0;count<220&&performance.now()<until;count++){
+    const item=nav.pop();if(!item){nav.failed=true;return;}
+    const {k,cost}=item;if(nav.closed.has(k)||cost!==nav.costs.get(k))continue;
+    if(k===nav.goal){
+      const path=[];for(let at=k;at!==-1;at=nav.previous.get(at))path.push(nav.point(at));path.reverse();
+      if(compassWalkVisible(path.at(-1),nav.target))path.push(nav.target);
+      nav.path=path;return;
+    }
+    nav.closed.add(k);
+    if(nav.closed.size>180000){nav.failed=true;return;}
+    const x=k%nav.cols,y=Math.floor(k/nav.cols);
+    for(const [dx,dy]of [[1,0],[0,1],[-1,0],[0,-1]]){
+      const nx=x+dx,ny=y+dy,next=ny*nav.cols+nx;
+      if(nx<0||ny<0||nx>=nav.cols||ny>=nav.rows||nav.closed.has(next)||cost+1>=(nav.costs.get(next)??Infinity)||!nav.clear(next))continue;
+      if(!nav.visible(nav.point(k),nav.point(next)))continue;
+      nav.costs.set(next,cost+1);nav.previous.set(next,k);nav.push(next,cost+1);
+    }
+  }
+}
+function compassWalkGuide(cache,player){
+  const target=cache.target;if(!target)return null;
+  if(Math.hypot(target.x-player.x,target.y-player.y)<144&&compassWalkVisible(player,target))
+    return {...target,arrived:target.heartstone&&Math.hypot(target.x-player.x,target.y-player.y)<24};
+  let nav=cache.navigation;
+  if(!nav||nav.failed&&tAcc>cache.retry||!nav.path&&Math.hypot(player.x-nav.start.x,player.y-nav.start.y)>2048){
+    nav=cache.navigation=compassWalkSearch(player,target);cache.retry=tAcc+2;
+  }
+  compassWalkAdvance(nav);
+  if(!nav.path)return null;
+  let nearest=-1,distance=Infinity;
+  const end=nav.located?Math.min(nav.path.length,nav.cursor+32):nav.path.length;
+  for(let i=Math.max(0,nav.cursor-8);i<end;i++){
+    const p=nav.path[i],d=Math.hypot(p.x-player.x,p.y-player.y);
+    if(d<=96&&d<distance&&compassWalkVisible(player,p)){nearest=i;distance=d;}
+  }
+  if(nearest<0||distance>96){cache.navigation=null;return null;}
+  nav.cursor=nearest;nav.located=true;let aim=nav.path[nearest];
+  for(let i=nearest+1;i<Math.min(nav.path.length,nearest+9);i++){
+    if(!compassWalkVisible(player,nav.path[i]))break;aim=nav.path[i];
+  }
+  return {...aim,arrived:false};
+}
+
 function drawTempleCompass() {
   if (!templeCompass.owned || !gameplayStarted || mode !== 'play') return;
   let cache=templeCompass.cache;
@@ -303,11 +397,11 @@ function drawTempleCompass() {
     const key=JSON.stringify(target);
     const field=cache?.map===MD&&cache.edit===editStamp&&cache.key===key?cache.field:
       target&&MD.templeExpanded?compassTempleField(MD,target):null;
-    cache=templeCompass.cache={map:MD,edit:editStamp,quest:atlasTrackedQuest,key,target,field,refresh:tAcc+.5};
+    const navigation=cache?.map===MD&&cache.edit===editStamp&&cache.key===key?cache.navigation:null;
+    cache=templeCompass.cache={map:MD,edit:editStamp,quest:atlasTrackedQuest,key,target,field,navigation,retry:cache?.retry||0,refresh:tAcc+.5};
   }
-  if (cache.px !== P.x || cache.py !== P.y) {
-    cache.guide=cache.field?compassTempleGuide(cache.field,P):cache.target&&{
-      ...cache.target,arrived:cache.target.heartstone&&Math.hypot(cache.target.x-P.x,cache.target.y-P.y)<24};
+  if (!cache.field || cache.px !== P.x || cache.py !== P.y) {
+    cache.guide=cache.field?compassTempleGuide(cache.field,P):compassWalkGuide(cache,P);
     cache.px=P.x;cache.py=P.y;
   }
   const guide=cache.guide||{x:P.x,y:P.y-1,inactive:true};

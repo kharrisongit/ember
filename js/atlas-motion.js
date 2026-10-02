@@ -1,6 +1,6 @@
 /* The full downloadable illustration stays intact; this layer only animates scenery. */
 const EmberAtlasMotion=(()=>{
-  let layer;
+  let layer,gestureTimer;
   const wave=(x,y,w,i)=>`<path class="atlas-water-wave" style="--delay:-${(i*.73)%7}s;--speed:${4+i%4}s" d="M${x} ${y}q${w/4} -2 ${w/2} 0t${w/2} 0"/>`;
   const art='assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity';
   const texture=cls=>`<image class="${cls}" href="${art}" width="1536" height="512"/>`;
@@ -52,5 +52,9 @@ const EmberAtlasMotion=(()=>{
   }
   function start(){if(!layer)build();layer.classList.add('active');}
   function stop(){layer?.classList.remove('active');}
-  return {start,stop};
+  function gesture(active){
+    clearTimeout(gestureTimer);layer?.classList.toggle('interacting',active);
+    if(active)gestureTimer=setTimeout(()=>layer?.classList.remove('interacting'),180);
+  }
+  return {start,stop,gesture};
 })();

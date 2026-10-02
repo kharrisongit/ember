@@ -2526,7 +2526,7 @@ const whyBlocked = (px, py) => {
   if (blockedByHerd(x, y)) return "herd";
   return "not blocked";
 };
-const isSolid = (px, py, ignoreNpcBuffer = false) => {
+const isSolid = (px, py, ignoreNpcBuffer = false, navigation = false) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return true;
   if(progressionSolid(px,py)||nanMorningSolid(px,py)||greenNorthBlocked(px,py))return true;
@@ -2537,7 +2537,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false) => {
   if (expandedTempleSolid(px,py) || blockedByTempleGate(px,py)) return true;
   if (blockedByTrialPedestal(px, py)) return true;
   if (solid[y * MW + x] === 1) return true;
-  if (blockedByNpcBody(px, py)) return true;
+  if (!navigation && blockedByNpcBody(px, py)) return true;
   if (glassHatchBlocked(px,py)) return true;
   if(typeof DragonChapels!=='undefined'&&DragonChapels.solidAt(px,py))return true;
   if (MD.roomBlocks && MD.roomBlocks.some(r => px >= r[0] && px < r[2] && py >= r[1] && py < r[3])) return true;
@@ -7212,7 +7212,7 @@ const GATE_X0 = 26, GATE_X1 = 33;
 const HERD = [[28, "farm_calf_w"], [30, "farm_calf_w"], [32, "farm_calf_e"]];
 const herdHere = () => quest < Q.KING;
 function blockedByHerd(x, y) {
-  if (x > 120) return false;
+  if (x < GATE_X0 || x > GATE_X1) return false;
   if (!herdHere() || MAPID !== "world" || y !== HERD_Y) return false;
   return true;
 }
@@ -8470,6 +8470,7 @@ function spawnFoes() {
   globalThis.window?.EmberArenaEntry?.reset();
   foes = []; turnHolder = null; turnT = 0; foeCool = 0;
   (MD.foes || []).forEach((f, idx) => {
+    if(f.retiredEncounter)return;
     if(f.chestAmbush&&(!houseLootTaken.has(f.chestAmbush)||lootChestAnimations.has(f.chestAmbush)))return;
     const kind = FOE[f.k] ? f.k : "skeleton";
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;

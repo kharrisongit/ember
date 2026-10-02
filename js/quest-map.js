@@ -1,5 +1,6 @@
 /* The atlas follows saved story/knowledge state; it never advances a quest. */
 let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointers=new Map();
+let atlasPanFrame=0,atlasPanScale=null,atlasViewBounds=null;
 let atlasGesture=null,atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
 let atlasJournalOpen=false,atlasSelectedQuest='main',atlasSelectedComplete=false;
 function atlasQuestKind(q){return ['main','bramble','smith','shield','thornwell-royals'].includes(q?.id)||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
@@ -307,26 +308,37 @@ function atlasShowWhole(){
 function atlasDismissCompassTutorial(){
  const tutorial=document.getElementById('atlasCompassTutorial');
  if(tutorial.hidden)return false;
- atlasCompassTutorialSeen=true;tutorial.hidden=true;saveGame();return true;
+ atlasCompassTutorialSeen=true;tutorial.hidden=true;
+ document.getElementById('atlasBody').inert=false;document.getElementById('atlasClose').focus?.();saveGame();return true;
 }
 function atlasBegin(){
  EmberAtlasMotion.start();
  if(typeof rememberFlightVisit==='function')rememberFlightVisit();
  window.EmberEncounterCard?.layout();
- document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
+ const tutorial=document.getElementById('atlasCompassTutorial');
+ document.getElementById('worldAtlas').appendChild(tutorial);tutorial.hidden=atlasCompassTutorialSeen;
+ document.getElementById('atlasBody').inert=!atlasCompassTutorialSeen;
+ if(!atlasCompassTutorialSeen)document.getElementById('atlasCompassGotIt').focus?.();
+ atlasViewBounds=null;
  atlasSyncJournal();atlasBuildPlaces();atlasRenderFog();
  atlasPointers.clear();atlasGesture=null;atlasExpandDetails(false);
  atlasSetJournal(false);document.getElementById('atlasDetails').scrollTop=0;
  const i=ATLAS_LOCATIONS.findIndex(p=>p[0]===atlasCurrentArea()&&atlasPlaceKnown(p[0]));atlasPick=i>=0?i:0;
  renderAtlas();
 }
+function atlasSchedulePan(){
+ if(!atlasPanFrame)atlasPanFrame=requestAnimationFrame(()=>{atlasPanFrame=0;atlasApplyPan();});
+}
 function atlasApplyPan(){
  const view=document.getElementById('atlasViewport'),s=document.getElementById('atlasSurface'),z=atlasPan.z;
  const limit=(v,extent,size)=>extent<=size?(size-extent)/2:Math.max(size-extent,Math.min(0,v));
- atlasPan.x=limit(atlasPan.x,1536*z,view.clientWidth);atlasPan.y=limit(atlasPan.y,512*z,view.clientHeight);
- s.style.transform=`translate(${atlasPan.x}px,${atlasPan.y}px) scale(${z})`;
- s.style.setProperty('--map-label-scale',String(Math.min(2.5,Math.max(.5,1/z))));
- s.classList.toggle('mapOverview',z<1.05);
+ const bounds=atlasViewBounds||view.getBoundingClientRect();
+ atlasPan.x=limit(atlasPan.x,1536*z,bounds.width);atlasPan.y=limit(atlasPan.y,512*z,bounds.height);
+ s.style.transform=`translate3d(${atlasPan.x}px,${atlasPan.y}px,0) scale(${z})`;
+ if(atlasPanScale!==z){atlasPanScale=z;
+  s.style.setProperty('--map-label-scale',String(Math.min(2.5,Math.max(.5,1/z))));
+  s.classList.toggle('mapOverview',z<1.05);
+ }
 }
 function atlasRenderJournal(){
  const $=id=>document.getElementById(id),completed=atlasCompletedEntries();
@@ -418,16 +430,16 @@ function bindQuestAtlas(){
   atlasGesture=a.length>1?{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),...{panX:atlasPan.x,panY:atlasPan.y,z:atlasPan.z},moved:true}:
    a.length?{x:a[0].x,y:a[0].y,panX:atlasPan.x,panY:atlasPan.y,z:atlasPan.z,moved:false}:null;
  };
- view.addEventListener('pointerdown',e=>{if(e.button>0)return;atlasIgnoreClick=false;e.preventDefault();view.setPointerCapture(e.pointerId);const r=view.getBoundingClientRect();atlasPointers.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});surface.classList.add('dragging');resetGesture();atlasGesture.placeIndex=e.target.closest?.('.atlasPlace')?.dataset.placeIndex;});
+ view.addEventListener('pointerdown',e=>{if(e.button>0)return;atlasIgnoreClick=false;e.preventDefault();view.setPointerCapture(e.pointerId);const r=atlasViewBounds||(atlasViewBounds=view.getBoundingClientRect());atlasPointers.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});surface.classList.add('dragging');EmberAtlasMotion.gesture(true);resetGesture();atlasGesture.placeIndex=e.target.closest?.('.atlasPlace')?.dataset.placeIndex;});
  view.addEventListener('pointermove',e=>{
-  if(!atlasPointers.has(e.pointerId)||!atlasGesture)return;e.preventDefault();const r=view.getBoundingClientRect();atlasPointers.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});
+  if(!atlasPointers.has(e.pointerId)||!atlasGesture)return;e.preventDefault();const r=atlasViewBounds||(atlasViewBounds=view.getBoundingClientRect());atlasPointers.set(e.pointerId,{x:e.clientX-r.left,y:e.clientY-r.top});
   const a=[...atlasPointers.values()],g=atlasGesture;
   if(a.length>1){
    const x=(a[0].x+a[1].x)/2,y=(a[0].y+a[1].y)/2,z=Math.max(.22,Math.min(4,g.z*Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)/Math.max(1,g.d)));
    atlasPan={x:x-(g.x-g.panX)*z/g.z,y:y-(g.y-g.panY)*z/g.z,z};
   }else{const dx=a[0].x-g.x,dy=a[0].y-g.y;if(Math.hypot(dx,dy)>6)g.moved=true;atlasPan.x=g.panX+dx;atlasPan.y=g.panY+dy;}
   if(g.moved||a.length>1)atlasExpandDetails(false);
-  atlasApplyPan();
+  atlasSchedulePan();
  });
  const end=e=>{
   const a=atlasPointers.get(e.pointerId),g=atlasGesture;atlasIgnoreClick=!!g?.moved||e.type==='pointercancel';
@@ -437,9 +449,9 @@ function bindQuestAtlas(){
    const labeled=Number(g.placeIndex);
    if(g.placeIndex!==undefined&&atlasPlaceKnown(ATLAS_LOCATIONS[labeled]?.[0])||picks[0]?.d*atlasPan.z<45){atlasSelectPlace(g.placeIndex!==undefined?labeled:picks[0].i);}
   }
-  atlasPointers.delete(e.pointerId);resetGesture();if(atlasGesture)atlasGesture.moved=true;else surface.classList.remove('dragging');
+  atlasPointers.delete(e.pointerId);resetGesture();if(atlasGesture)atlasGesture.moved=true;else {surface.classList.remove('dragging');atlasViewBounds=null;EmberAtlasMotion.gesture(false);}
  };
  view.addEventListener('pointerup',end);view.addEventListener('pointercancel',end);
- view.addEventListener('wheel',e=>{e.preventDefault();atlasExpandDetails(false);const r=view.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,old=atlasPan.z,z=Math.max(.22,Math.min(4,old*Math.exp(-e.deltaY*.001)));atlasPan={x:x-(x-atlasPan.x)*z/old,y:y-(y-atlasPan.y)*z/old,z};atlasApplyPan();},{passive:false});
+ view.addEventListener('wheel',e=>{e.preventDefault();atlasExpandDetails(false);const r=view.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,old=atlasPan.z,z=Math.max(.22,Math.min(4,old*Math.exp(-e.deltaY*.001)));atlasPan={x:x-(x-atlasPan.x)*z/old,y:y-(y-atlasPan.y)*z/old,z};EmberAtlasMotion.gesture(true);atlasSchedulePan();},{passive:false});
 }
 bindQuestAtlas();
