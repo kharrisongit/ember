@@ -11,6 +11,9 @@ for(const [name,key] of [['The Shroom King','spore'],['Fen','twin'],['Maelis','w
  run('scene=null;ask=null;sayNpc=null;EmberConversationFlow.prompt(actor)');
  assert(run('sayNpc===actor'),name+' starts gift dialogue without Talk');
  assert.equal(run('ask'),null);
+ assert.match(run('actor.said[0]'),/^(The Shroom King|Fen|Maelis|Rashida|Sverre): /);
+ assert.match(run('actor.said.at(-1)'),/Here, take this .+\. It is yours\./);
+ assert.equal(rewards,['spore','twin','ward','brand','lamp'].indexOf(key),'No reward before the greeting and offer finish');
  for(let i=0;i<30&&run('!!sayNpc');i++)run('typeAll();interact()');
  assert(run(`charm.${key}`),name+' awards the item after greeting');
  const before=rewards;run('beginNpcTalk(actor,true)');

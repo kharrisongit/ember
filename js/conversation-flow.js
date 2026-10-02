@@ -13,7 +13,17 @@
     if(!telepathy&&(npcStoryGiftPending(actor)||
       (actor.n!=='Dunstan'&&actor.charm&&!charm[actor.charm])||
       (actor.gift&&!breathHas[actor.gift])||canCamperGiveFishingPole(actor))){
-      beginNpcTalk(actor,true,canCamperGiveFishingPole(actor));return true;
+      beginNpcTalk(actor,true,canCamperGiveFishingPole(actor));
+      if(sayNpc===actor){
+        const greeting=typeof NPC_TOPIC_GREETINGS!=='undefined'&&NPC_TOPIC_GREETINGS[actor.n]||'Hello, Corin. It is good to see you.';
+        const gift=actor.charm&&!charm[actor.charm]?CHARM_NOTE[actor.charm]?.replace(/^Corin obtained (?:the )?/, '').replace(/!$/, ''):
+          actor.gift&&!breathHas[actor.gift]?actor.gift+' Heartstone':null;
+        actor.said=[actor.n+': '+greeting,...actor.said,
+          ...(gift?[actor.n+': Here, take this '+gift+'. It is yours.']:[])];
+        const [who,words]=whoSays(actor,actor.said[0]);
+        typeStart(who,words);showFace(who);typePaint();
+      }
+      return true;
     }
     const name=telepathy?'Aurelius':actor.n,map=MAPID;
     if(actor){if(!telepathy){actor.goto=null;faceToward(actor,P.x,P.y);}faceCorinAt(actor.x,actor.y);}
