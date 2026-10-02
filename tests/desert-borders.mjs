@@ -7,7 +7,9 @@ export function verifyDesertBorders(run){
     const plan=DesertBorders.plan(features,MD.roomActors,MW,MH);
     const palms=fobjs.filter(o=>o.desertBorder==='oasis');
     const missing=[...plan.walls].filter(k=>!isSolid((k%MW)*16+8,Math.floor(k/MW)*16+8));
-    const openings=[[1275,242],[1297,242],[1287,262]].map(([x,y])=>canStand(x*16+8,y*16+16));
+    const hadIce=breathHas.ice;breathHas.ice=true; // Test scenery with the existing north story gate open.
+    const openings=[[1275,242],[1297,242],[1287,262],[1500,95],[1518,73],[1515,118]].map(([x,y])=>canStand(x*16+8,y*16+16));
+    breathHas.ice=hadIce;
     const pyramid=MD.roomActors.find(a=>a.editKey==='pyramid:exterior'),cx=(pyramid.x-8)/16,cy=pyramid.y/16;
     const queue=[[cx,cy+4]],seen=new Set();let escape=false;
     for(let i=0;i<queue.length;i++){
@@ -24,7 +26,7 @@ export function verifyDesertBorders(run){
       entrance:canStand(pyramid.x,pyramid.y),behind:canStand(pyramid.x,pyramid.y-144)};
   })())`));
   assert.equal(report.missing,0,'All authored border tiles are solid');
-  assert(report.openings.every(Boolean),'Both oasis loop mouths and the south entrance stay open');
+  assert(report.openings.every(Boolean),'All three oasis and all three Sandspire entrances stay open');
   assert(report.entrance,'Pyramid door is reachable');assert(!report.behind,'Rear cactus cap is solid');
   assert(!report.escape,'No path around the pyramid into the open map');
   assert.equal(report.duplicateTrees,0);
@@ -36,7 +38,7 @@ export function verifyDesertBorders(run){
   const before=run('JSON.stringify(fobjs.filter(o=>o.desertBorder).map(({id,...o})=>o))');
   run('DesertBorders.finishWorld();rebuildBuckets();rebuildSolid();');
   assert.equal(run('JSON.stringify(fobjs.filter(o=>o.desertBorder).map(({id,...o})=>o))'),before,'Repeatable border repair');
-  console.log('PASS: single oasis palm band, intact grass joins, three open entrances, solid pyramid rear and repeatable borders.');
+  console.log('PASS: single oasis palm band, intact grass joins, six open entrances, solid pyramid rear and repeatable borders.');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});

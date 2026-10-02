@@ -8,7 +8,7 @@ function atlasQuestTrackLock(q){
  if(q?.id==='temple:Hollybeck'&&!breathHas.ice)return 'Complete Sandspire Temple and claim its Ice Heartstone before tracking Hollybeck Temple.';
  return '';
 }
-function atlasJournalAllowed(id){return ['pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
+function atlasJournalAllowed(id){return ['desert-church','pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
 function atlasJourneyObjective(){
@@ -57,6 +57,7 @@ function atlasPlaceFor(map,n){
 }
 function atlasQuestOptions(){
  const main=atlasMainObjective(),out=[main],seen=new Set([main.questId]),add=(id,...args)=>{if(!seen.has(id)){seen.add(id);out.push(atlasObjective(id,...args));}};
+ if(DragonChapels.known()&&!DragonChapels.found())add('desert-church','The Secret Dragon Church','Sandspire','Brother Edrin’s brother Cael keeps a secret church beyond Sandspire. Follow the winding path south from the eastern desert road, then west through the dunes.');
  if(DesertAdventure.accepted()&&!DesertAdventure.owned())add('pyramid','The Emberheart of the Sands','Sunken Pyramid',DesertAdventure.won()?'Open the chest in the guardian’s chamber. The relic permanently strengthens Aurelius’s Fire while carried.':'Follow the western desert detour, explore the Sunken Pyramid and defeat its guardian. Recover the Emberheart from the treasure chest.');
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
  if(royal&&brambleQuest>=2)add('thornwell-royals',...royal);
@@ -75,6 +76,7 @@ function atlasQuestOptions(){
 // illustrated atlas's deliberately compressed picture coordinates.
 function atlasQuestTarget(q){
  if(!q)return null;
+ if(q.id==='desert-church')return {map:'desert_chapel',x:176,y:216};
  if(q.id==='pyramid')return DesertAdventure.won()?{map:'pyramid_queen',x:216,y:128}:{map:'pyramid_queen',x:144,y:160};
  const element={'Forgewick Temple':'lightning','Sandspire Temple':'ice','Hollybeck Temple':'shadow'}[q.place];
  if(element){const c=CHESTS.find(c=>c.gift===element);if(c)return {map:c.map,x:c.x*TS+TS/2,y:c.y*TS+TS+24,heartstone:true};}
@@ -122,7 +124,7 @@ const ATLAS_PLACE_NOTES={
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
  'Forgewick':['Blacksmith','Dunstan works at the forge. Ask him about his brother’s glasswork in Sandspire.'],
  'Forgewick Temple':['Ancient temple','An old stone hall southeast of Forgewick.'],
- 'Sandspire':['Desert market · Glassblower','Sela’s glass shop stands in the northwest corner of town, beside his outdoor furnace.'],
+ 'Sandspire':['Desert market · Glassblower','Sela’s glass shop stands in the northwest corner of town, with the tall chimney and coloured windows.'],
  'The Oasis':['Desert refuge','A green landmark southwest of Sandspire.'],
  'Sandspire Temple':['Ancient temple','The winding temple trail leads southeast from Sandspire.'],
  'Coralmere':['Harbor · Fish','A coastal town with blossom trees, fishing docks, and supplies for the road.'],
@@ -145,6 +147,7 @@ function atlasMilestoneData(){return [
  ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
  ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasJourneyObjective().title,false]]);}
 function atlasQuestComplete(id){
+ if(id==='desert-church')return DragonChapels.known()&&DragonChapels.found();
  if(id==='pyramid')return DesertAdventure.owned();
  if(id==='main')return !!wonAll;
  if(id==='fishing')return !!fishingPole;
@@ -164,6 +167,7 @@ function atlasSyncJournal(){
  if(!atlasQuests.some(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q)))atlasTrackedQuest='main';
 }
 function atlasQuestStages(q){
+ if(q?.id==='desert-church')return [['Hear Brother Edrin’s secret',DragonChapels.known()],['Find the desert church',DragonChapels.found()]];
  if(q?.id==='pyramid')return [['Accept the expedition',DesertAdventure.accepted()||DesertAdventure.owned()],['Defeat the pyramid guardian',DesertAdventure.won()],['Open the Emberheart chest',DesertAdventure.owned()]];
  if(q?.id==='main')return atlasMilestoneData();
  if(q?.id==='thornwell-royals')return [['Return Bramble',brambleQuest>=3],...(thornwellRoyal.stage>=2?[['Answer the king’s summons',thornwellRoyal.stage>=4]]:[]),...(thornwellRoyal.stage>=5?[['Wait for the royal party',thornwellRoyal.stage>=6]]:[]),...(thornwellRoyal.stage>=6?[['Meet Aurelius at Forgefalls',thornwellRoyal.stage>=7]]:[])];
@@ -178,7 +182,7 @@ function restoreQuestJournal(saved){
 }
 function atlasCompletedEntries(){
  const known={...atlasJournalKnown};
- const earned=[['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Sandspire','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
+ const earned=[['desert-church','The Secret Dragon Church','Sandspire','Found Brother Cael’s secret church beyond the dunes, where dragon worship endures.'],['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Sandspire','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
  return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
   const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];

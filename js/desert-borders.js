@@ -24,26 +24,51 @@ const DesertBorders=(()=>{
       for(let x=left;x<=right;x+=3){add(x,top);add(x,bottom);}
       for(let y=top+3;y<bottom;y+=3){add(left,y);add(right,y);}
     }
-    const pyramid=actors.find(a=>a.editKey==='pyramid:exterior');
-    if(pyramid){
-      const x=(pyramid.x-8)/16,y=pyramid.y/16;
-      // A continuous cactus cap joins the road verges and closes the rear exit.
-      mark(x-11,y-15,x+11,y+7,(tx,ty)=>ty<=y-7||Math.abs(tx-x)>=6,
-        (tx,ty)=>ty<=y-7||Math.abs(tx-x)>=6);
-      for(let row=0;row<3;row++){
-        const offset=6+row*1.5,top=y-9-row*1.5;
-        for(let tx=x-offset;tx<=x+offset;tx+=3)points.push({x:tx,y:top,row,tree:'cactus1',border:'pyramid'});
-        for(let ty=top+3;ty<=y+6;ty+=3)for(const tx of [x-offset,x+offset])points.push({x:tx,y:ty,row,tree:'cactus1',border:'pyramid'});
+    // Extend each road's three staggered cactus rows right to the settlement edge.
+    // Own the short join so procedural clipping cannot leave a walk-through gap.
+    const town=all.find(f=>f.kind==='area'&&f.label==='Sandspire');
+    const joins=[];
+    if(town)joins.push({axis:'x',edge:town.x0-1,dir:-1,center:95,border:'sandspire-entry'},
+      {axis:'y',edge:town.y0-1,dir:-1,center:1518,border:'sandspire-entry'},
+      {axis:'y',edge:town.y1+2,dir:1,center:1515,border:'sandspire-entry'});
+    if(oasis)joins.push({axis:'x',edge:oasis.x0-1,dir:-1,center:242,border:'oasis-entry'},
+      {axis:'x',edge:oasis.x1+1,dir:1,center:242,border:'oasis-entry'},
+      {axis:'y',edge:oasis.y1+2,dir:1,center:1287,border:'oasis-entry'});
+    for(const j of joins){
+      const end=j.edge+j.dir*12,lo=Math.min(j.edge,end),hi=Math.max(j.edge,end);
+      const box=j.axis==='x'?[lo,j.center-10,hi,j.center+10]:[j.center-10,lo,j.center+10,hi];
+      mark(...box,()=>true,(x,y)=>Math.abs((j.axis==='x'?y:x)-j.center)>=3);
+      for(let row=0;row<3;row++)for(let step=0;step<=12;step+=3)for(const side of [-1,1]){
+        const along=j.edge+j.dir*step,across=j.center+side*(4.5+row*1.5);
+        points.push({x:j.axis==='x'?along:across,y:j.axis==='x'?across:along,row,tree:'cactus1',border:j.border});
       }
     }
-    return {scope,walls,points,palmBounds};
+    const shrines=[
+      {actor:actors.find(a=>a.editKey==='pyramid:exterior'),rear:7,border:'pyramid'},
+      {actor:actors.find(a=>a.editKey==='desert:chapel_ext_house0'),rear:14,border:'church'}
+    ];
+    for(const {actor,rear,border}of shrines){
+      if(!actor)continue;
+      const x=(actor.x-8)/16,y=actor.y/16;
+      // Both buildings use the same three staggered cactus rows and solid cap.
+      // The taller church gets more room behind its roof and dragon statue.
+      mark(x-11,y-rear-8,x+11,y+7,(tx,ty)=>ty<=y-rear||Math.abs(tx-x)>=6,
+        (tx,ty)=>ty<=y-rear||Math.abs(tx-x)>=6);
+      for(let row=0;row<3;row++){
+        const offset=6+row*1.5,top=y-rear-2-row*1.5;
+        for(let tx=x-offset;tx<=x+offset;tx+=3)points.push({x:tx,y:top,row,tree:'cactus1',border});
+        for(let ty=top+3;ty<=y+6;ty+=3)for(const tx of [x-offset,x+offset])points.push({x:tx,y:ty,row,tree:'cactus1',border});
+      }
+    }
+    return {scope,walls,points,palmBounds,oasis};
   }
   function finishWorld(){
     if(MAPID!=='world')return;
-    const {scope,walls,points,palmBounds}=plan(features,MD.roomActors||[],MW,MH);
+    const {scope,walls,points,palmBounds,oasis}=plan(features,MD.roomActors||[],MW,MH);
     const debris=/^(oak_|bir_|spr_|fru_|mw_|kt_tree|kt_bush|blo_|sw_tree|wf_|cactus|drock|rock|palm|acacia|dacacia|deadtree|halfdead|deadbush|bush|fern|grass|mt|stump|log)/i;
     const inside=(s,x,y)=>{
       const name=NAMES[s]||'',tx=Math.floor(x/TS),ty=Math.floor((y-1)/TS);
+      if(/^cactus/.test(name)&&oasis&&tx>=oasis.x0&&tx<=oasis.x1&&ty>=oasis.y0&&ty<=oasis.y1)return true;
       if(/^palm/.test(name)&&palmBounds&&tx>=palmBounds.left&&tx<=palmBounds.right&&ty>=palmBounds.top&&ty<=palmBounds.bottom)return true;
       return debris.test(name)&&scope.has(ty*MW+tx);
     };

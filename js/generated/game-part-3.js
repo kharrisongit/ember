@@ -6118,6 +6118,7 @@ function captureSave(){return {
   equipmentTutorial:globalThis.window?.EmberEquipmentTutorial?.capture(),
   pyramidQuest:DesertAdventure.capture(),
   skyBlessing:DragonChapels.capture(),
+  desertChurchQuest:DragonChapels.captureQuest(),
   bossRewardChests:typeof BossRewardChests!=='undefined'?BossRewardChests.capture():undefined,
   spiderWebLesson:typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
@@ -6176,7 +6177,7 @@ function loadGame(slot=activeSaveSlot) {
     if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
     restoreInventoryPrompt(s);
     DesertAdventure.restore(s.pyramidQuest);
-    DragonChapels.restore(s.skyBlessing);
+    DragonChapels.restore(s.skyBlessing,s.desertChurchQuest);
     if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.restore(s.spiderWebLesson);
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
     if (trial) stopTrial("");

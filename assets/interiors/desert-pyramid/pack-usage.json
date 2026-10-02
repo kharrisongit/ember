@@ -180,9 +180,9 @@
     "dd_pots4"
   ],
   "Props/Cactus.png": [
-    "dd_cactus0",
-    "dd_cactus1",
-    "dd_cactus2"
+    "Available atlas sprite: dd_cactus0",
+    "Available atlas sprite: dd_cactus1",
+    "Available atlas sprite: dd_cactus2"
   ],
   "Props/Desert_Grass_Props.png": [
     "Available atlas sprite: dd_grassprop0",

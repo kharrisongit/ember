@@ -73,6 +73,9 @@ const DesertAdventure=(()=>{
     }
     if(m.npcs.some(n=>n.n==='Sahir'))return;
     organizeTown(m);
+    // These grey Forgewick lamps were accidentally placed outside Sandspire's south wall.
+    for(let i=0;i<m.objs.length;i+=3)if(W.names[m.objs[i]]==='lamp_grey'&&m.objs[i+1]>=24000&&m.objs[i+1]<=24600&&m.objs[i+2]>=1872&&m.objs[i+2]<=1936)
+      (m.editorDeletedObjects||=[]).push(i/3);
     m.npcs.push({n:'Sahir',sk:'desert3',desertNative:true,stationary:true,x:24248,y:1568,f:'d',editKey:'pyramid:sahir',d:['The pyramid road has grown dangerous.']});
     // The pack's nine complementary house colours preserve the original door positions.
     m.desertHouseSprites={};

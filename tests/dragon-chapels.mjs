@@ -16,7 +16,10 @@ for(const route of value('DragonChapels.routes'))assert.deepEqual(value(`W.maps.
 for(const [id,x,y]of value('DragonChapels.moves'))assert.deepEqual(value(`W.maps.world.objs.slice(${id*3+1},${id*3+3})`),[x,y]);
 for(let y=216;y>=139;y--)assert(run(`canStand(176,${y})`),'Central aisle to preacher is walkable at '+y);
 assert(run('canStand(176,225)'),'South exit threshold is reachable');
-assert(!run('canStand(128,157)'),'Pews have collision');
+assert(!run('MD.roomActors.some(a=>a.layer==="benches")'),'No desert pews');
+assert.deepEqual(value('MD.roomActors.filter(a=>a.layer==="Statues").map(a=>[a.spr,a.x,!!a.chapelMirror])'),
+ [['chapel_statues1',128,true],['chapel_statues1',224,false]],'Two mirrored dragon statues beside the runner');
+assert(!run('canStand(128,170)'),'Dragon statues have collision');
 assert(!run('canStand(40,160)'),'Outer wall has collision');
 run('P.x=176;P.y=139;');assert.equal(run('nearestTalkNpc()?.n'),'Brother Cael','Talk from across the altar');
 const priest=value('npcs[0]');assert.equal(priest.packSpr,'chapel_priest');
@@ -25,21 +28,44 @@ assert(run('scene.lines.some(s=>s.includes("Aurelius"))'));
 assert.equal(run('DragonChapels.sprintSpeed()'),228);
 run(`scene=null;DragonChapels.beginBlessing(skyPriest);`);
 assert(run('sceneHold()'),'Ritual holds player input');
-run('for(let i=0;i<200;i++)DragonChapels.step(.05);');
+run('for(let i=0;i<200;i++){DragonChapels.step(.05);if(skyPriest.x!==176||skyPriest.y!==112||skyPriest.scriptWalking)throw Error("Preacher moved during blessing");}');
 assert(run('DragonChapels.capture()'),'Completing casting grants blessing');
 assert.equal(run('DragonChapels.sprintSpeed()'),285);
 assert(run('readSaveSlot(activeSaveSlot).skyBlessing'),'Blessing is immediately saved');
-assert.deepEqual(value('[skyPriest.x,skyPriest.y]'),[176,112],'Preacher returns behind altar');
+assert.deepEqual(value('[skyPriest.x,skyPriest.y]'),[176,112],'Preacher remains behind altar');
 assert(!run('DragonChapels.beginBlessing(skyPriest)'),'No duplicate ritual');
 run('scene=null;saveToSlot(1,true);DragonChapels.restore(false);');
 assert(run('loadGame(1)&&DragonChapels.capture()'),'Actual save/load retains blessing');
 run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),skyBlessing:undefined}));scene=null;`);
 assert(run('loadGame(2)&&!DragonChapels.capture()'),'Legacy/other slots do not inherit blessing');
 run(`loadMap('forgewick_chapel');scene=null;P.x=176;P.y=139;`);
-assert(run('MD.roomActors.filter(a=>a.congregation).length>=15'),'Populated pews and all four monks');
-assert(!run('MD.roomActors.some(a=>a.spirit)'));
-run('DragonChapels.talk(npcs[0]);');assert(!run('DragonChapels.capture()'),'Forgewick preacher cannot grant blessing');
-assert(run('scene.lines.some(s=>s.includes("Brother Cael"))'));
+assert.equal(run('npcs.filter(DragonChapels.isGuest).length'),16,'Every congregant is a real speaking NPC');
+assert(!run('MD.roomActors.some(a=>a.spirit||a.layer==="Statues")'),'Forgewick has no dragon statues');
+assert(run('MD._roomBaseCanvas.src.includes("forgewick-interior.png")'),'Forgewick has its own bare-wall background');
+assert(run('MD.roomActors.some(a=>a.layer==="benches")'),'Forgewick retains its pews');
+run(`DragonChapels.restore(false);dragonOff=false;dragon.on=true;dragon.air=false;dragon.down=false;
+P.x=176;P.y=216;stepDragon(.05);`);
+assert(run('dragonHere()&&Number.isFinite(dragon.x)&&Number.isFinite(dragon.y)'),'Aurelius enters Forgewick chapel');
+assert(!run('atlasQuestOptions().some(q=>q.id==="desert-church")'),'Secret lead stays hidden before Edrin');
+run('DragonChapels.talk(npcs.find(n=>n.n==="Brother Edrin"));');
+assert(!run('DragonChapels.capture()'),'Forgewick preacher cannot grant blessing');
+assert(run('scene.lines.some(s=>s.includes("My brother Cael"))&&scene.lines.some(s=>s.includes("forbids"))'));
+run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=.3;advanceScene();}');
+assert(run('DragonChapels.known()&&!DragonChapels.found()'),'Finishing Edrin’s account unlocks the lead');
+assert.equal(run('atlasTrackedQuest'),'desert-church');
+assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="desert-church")).map'),'desert_chapel');
+run('saveToSlot(1,true);DragonChapels.restore(false);');assert(run('loadGame(1)&&DragonChapels.known()'),'Quest lead persists');
+run(`globalThis.reachableGuests=new Set();for(let y=90;y<238;y+=2)for(let x=46;x<306;x+=2){
+ if(!canStand(x,y))continue;P.x=x;P.y=y;const n=nearestTalkNpc();if(n)reachableGuests.add(n.n);}`);
+assert(run('npcs.every(n=>reachableGuests.has(n.n))'),'Every preacher and congregant has a reachable interaction');
+run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;DragonChapels.talk(n);
+ if(!scene?.lines.includes(n.d[0]))throw Error('Missing individual dialogue: '+n.n);}`);
+run("scene=null;loadMap('desert_chapel');P.x=176;P.y=216;DragonChapels.step(.05);stepDragon(.05);");
+assert(run('dragonHere()'),'Aurelius enters the desert church');
+assert(run('atlasQuestComplete("desert-church")&&atlasCompletedEntries().some(q=>q.id==="desert-church")'),'Finding the church completes the journal quest');
+run('saveToSlot(1,true);DragonChapels.restore(false);');assert(run('loadGame(1)&&DragonChapels.found()'),'Discovery persists');
+run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),map:'forgewick_chapel',x:176,y:216,skyBlessing:false,desertChurchQuest:undefined,questJournal:undefined}));`);
+assert(run('loadGame(2)&&!DragonChapels.known()&&!DragonChapels.found()'),'Other and legacy slots do not inherit the lead');
 for(const [name,count]of [['chapel_altar0',3],['chapel_statues0',3],['chapel_candelabra0',3],['chapel_parishioners10',12],['chapel_monks0',12],['chapel_priest_speech',12],['chapel_priest_spell',18]]){
  const frames=new Set();for(let i=0;i<600;i++)frames.add(run(`DragonChapels.frame('${name}',${i*.01})`));
  assert.equal(frames.size,count,'Full animation for '+name);
@@ -53,11 +79,22 @@ assert(run('objs.filter(o=>DragonChapels.graveSprite(o)&&!hidden.has(o.id)&&!del
  'Every visible Hollybeck grave blocks walking');
 assert(run(`(()=>{const r=12,x0=2634,y0=152;for(let y=y0-r;y<=y0+r;y++)for(let x=x0-r;x<=x0+r;x++)
  if(Math.hypot(x-x0,y-y0)<=r+.5&&terr[y*MW+x]!==DIRT)return false;return true;})()`),'Entire graveyard clearing is dirt, including its old paved strip');
-assert(run('MD.roomActors.filter(a=>a.chapelCactus).every(a=>!canStand(a.x,a.y))'),'All cactus border segments have collision');
-assert(run(`(()=>{const [x,y]=DragonChapels.inspect().location;
- for(let dx=-160;dx<=160;dx++)if(!isSolid(x+dx,y-230))return false;
- for(let dy=-224;dy<=64;dy++)if(!isSolid(x-160,y+dy)||!isSolid(x+160,y+dy))return false;
- return canStand(x,y+32)&&canStand(x,y+64);})()`),'No gaps behind or beside the church; the southern entrance remains open');
+assert(run('fobjs.filter(o=>o.desertBorder==="church").length>30'),'Church has the pyramid-style cactus surround');
+assert.deepEqual(value('[...new Set(fobjs.filter(o=>o.desertBorder==="church").map(o=>o.borderRow))].sort()'),[0,1,2],'Three staggered cactus rows');
+assert(run(`(()=>{const plan=DesertBorders.plan(features,MD.roomActors,MW,MH);return [...plan.walls].every(k=>isSolid(k%MW*16+8,Math.floor(k/MW)*16+8));})()`),'All authored cactus boundary cells block walking');
+assert(run(`(()=>{const [x,y]=DragonChapels.inspect().location;return canStand(x,y+32)&&canStand(x,y+64)&&!canStand(x,y-240);})()`),'Church rear is closed and entrance remains clear');
+assert(run('!fobjs.some(o=>/^cactus/.test(NAMES[o.s])&&o.x>=1275*16&&o.x<1300*16&&o.y>236*16&&o.y<=260*16)'),
+ 'No loose cacti in the oasis grass');
+assert(run('!objs.some(o=>NAMES[o.s]==="lamp_grey"&&o.x>=24000&&o.x<=24600&&o.y>=1872&&o.y<=1936&&!hidden.has(o.id)&&!deleted.has(o.id))'),
+ 'No Forgewick lampposts along Sandspire south wall');
+assert.equal(run('features.filter(f=>f.churchApproach).length'),5,'Five church-route arenas');
+assert.equal(run('MD.foes.filter(f=>f.churchEncounter).length'),15,'All five arenas have enemies');
+for(const [id,x,y]of value('DragonChapels.approaches')){
+ for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)assert(run(`canStand(${(x+dx)*16+8},${(y+dy)*16+16})`),'Clear church arena '+id);
+ run(`scene=null;bossScene=null;arenaLock=null;arenaT=0;P.x=${x*16+8};P.y=${y*16+16};stepArena(.05);`);
+ assert.equal(run('arenaLock?.id'),id,'Church encounter starts');assert(run('arenaFoesLeft(arenaLock)'),'Encounter has living enemies');
+}
+run('arenaLock=null;arenaT=0;');
 assert(run(`MD.roomActors.filter(a=>a.spirit&&a.chapelArt).every(a=>a.stillFrame===0)`));
 assert(run(`(()=>{const old=drawGameImage,calls=[];try{drawGameImage=(...a)=>calls.push(a.slice(2));
  for(const o of MD.roomActors.filter(a=>a.spirit&&a.chapelArt)){
@@ -84,4 +121,4 @@ P.x=2400;P.y=2400;P.act=null;keys.ArrowRight=true;running=true;padDx=padDy=0;`);
 run('DragonChapels.restore(false);movePlayer(1,0,.1);');assert(Math.abs(run('P.x')-2422.8)<.001);
 run('DragonChapels.restore(true);movePlayer(1,0,.1);');assert(Math.abs(run('P.x')-2451.3)<.001);
 run('running=false;movePlayer(1,0,.1);');assert(Math.abs(run('P.x')-2468.3)<.001);
-console.log('PASS: both chapel layouts, exact route and object moves, interior collision/interaction, statue, cactus enclosure, dev teleport, grave collision/dirt, full interior animation cycles, blessing ceremony, autosave/load and slot isolation, 228→285 flying sprint with 170 cruise unchanged.');
+console.log('PASS: distinct chapel layouts, all congregation dialogue, saved secret-church quest, five arenas, exact route and object moves, interior collision/interaction, statue, cactus enclosure, dev teleport, grave collision/dirt, full interior animation cycles, blessing ceremony, autosave/load and slot isolation, 228→285 flying sprint with 170 cruise unchanged.');

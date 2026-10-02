@@ -59,7 +59,7 @@ for file in usage:
  if file=='Temple/Desert_Temple.png':usage[file]=['World: pyramid exterior']
  if file=='Temple/Temple-House_Interior.png':usage[file]=['Pyramid: walls, floors, stairs, pillars and doorways']
 assert all(usage.values()),[k for k,v in usage.items() if not v]
-placed=['dd_bones0', 'dd_bones1', 'dd_bones2', 'dd_bones3', 'dd_cactus0', 'dd_cactus1', 'dd_cactus2', 'dd_campfire', 'dd_dead_fern', 'dd_dead_leaves', 'dd_fern', 'dd_firepit', 'dd_flies', 'dd_gold0', 'dd_gold1', 'dd_gold2', 'dd_house11', 'dd_house12', 'dd_house13', 'dd_house21', 'dd_house22', 'dd_house31', 'dd_house32', 'dd_house41', 'dd_house42', 'dd_ladder', 'dd_mat', 'dd_mummy', 'dd_plant0', 'dd_plant1', 'dd_plant2', 'dd_pots0', 'dd_pots1', 'dd_pots2', 'dd_pots3', 'dd_pots4', 'dd_rug1', 'dd_scarabBlack', 'dd_scarabBrown', 'dd_scarabGreen', 'dd_scarabYellow', 'dd_smallpalm1', 'dd_watersack']
+placed=['dd_bones0', 'dd_bones1', 'dd_bones2', 'dd_bones3', 'dd_campfire', 'dd_dead_fern', 'dd_dead_leaves', 'dd_fern', 'dd_firepit', 'dd_flies', 'dd_gold0', 'dd_gold1', 'dd_gold2', 'dd_house11', 'dd_house12', 'dd_house13', 'dd_house21', 'dd_house22', 'dd_house31', 'dd_house32', 'dd_house41', 'dd_house42', 'dd_ladder', 'dd_mat', 'dd_mummy', 'dd_plant0', 'dd_plant1', 'dd_plant2', 'dd_pots0', 'dd_pots1', 'dd_pots2', 'dd_pots3', 'dd_pots4', 'dd_rug1', 'dd_scarabBlack', 'dd_scarabBrown', 'dd_scarabGreen', 'dd_scarabYellow', 'dd_smallpalm1', 'dd_watersack']
 for file,refs in usage.items():
  usage[file]=[ref if not ref.startswith('dd_') or ref in placed else 'Available atlas sprite: '+ref for ref in refs]
 (out/'pack-usage.json').write_text(json.dumps(usage,indent=2)+'\n')

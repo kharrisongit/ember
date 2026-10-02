@@ -1,21 +1,14 @@
 /* Sela's desert storefront; the existing shop and workshop stay intact. */
 const SandspireGlassworks=(()=>{
   const SCALE=.5,X=24096,Y=1384,ENTRY_X=X-4,ENTRY_Y=Y-11;
-  const props=[
-    {id:'oven',n:'Covered glass furnace',w:64,h:72,x:392,y:440,block:[-22,-30,22,-3]},
-    {id:'stall',n:'Glassware display stall',w:64,h:72,x:554,y:446,block:[-26,-15,26,-1]},
-    {id:'workbench',n:'Glassblower’s workbench',w:48,h:32,x:392,y:476,block:[-23,-14,23,-1]},
-    {id:'crate',n:'Crate of glass panes',w:26,h:26,x:555,y:477,block:[-12,-12,12,0]},
-    {id:'barrel',n:'Barrel of glass rods',w:20,h:34,x:430,y:447,block:[-9,-12,9,0]},
-    {id:'sand',n:'Sack of glassmaking sand',w:24,h:24,x:438,y:477,block:[-10,-9,10,0]}];
   const referralLines=[
     'Dunstan: My brother Sela keeps a glass shop in Sandspire. He has made a shield that could help you on the road.',
     'Corin: A glass shield? Wouldn’t it shatter?',
     'Dunstan: His glass does more than keep the wind out. I trust his work, even if I will never hear the end of saying so.',
-    'Dunstan: His shop is in the northwest corner of Sandspire, beside the outdoor furnace. You’ll find him through the back.',
+    'Dunstan: His shop is in the northwest corner of Sandspire. Look for the tall chimney. You’ll find him through the back.',
     'Corin: I’ll go and see him.'];
   async function prepare(){
-    await Promise.all([{id:'building',w:192,h:208},...props].map(async({id,w,h})=>{
+    await Promise.all([{id:'building',w:192,h:208}].map(async({id,w,h})=>{
       const key=id==='building'?'sandspire_glass_shop':'sandspire_glass_'+id;
       const img=await loadStartupImage('assets/buildings/glassworks/'+id+'.webp?v=20261001-props');
       // Resample once with nearest-neighbour pixels so drawing and editor bounds agree.
@@ -49,13 +42,6 @@ const SandspireGlassworks=(()=>{
       editKey:'sandspire:glass-shop',sandspireGlassShop:true,moveBlocks});
     m.doors.push({x:(ENTRY_X-8)/16,y:(ENTRY_Y-16)/16,to:'glasshouse',tx:6,ty:9,
       dir:'u',explicitDir:true,triggerRect:{x:ENTRY_X-8,y:ENTRY_Y-4,w:16,h:10}});
-    // Keep each scaled prop independently movable, including its collision.
-    for(const {id,n,x:oldX,y:oldY,block}of props){
-      const x=X+(oldX-480)*SCALE,y=Y+(oldY-432)*SCALE;
-      const [l,t,r,b]=block.map(v=>v*SCALE),moveBlocks=[m.roomBlocks.push([x+l,y+t,x+r,y+b])-1];
-      m.roomActors.push({spr:'sandspire_glass_'+id,n,x,y,schoolArt:true,
-        editKey:'sandspire:glass-'+id,sandspireGlassProp:id,moveBlocks});
-    }
 
   }
   const fireFrame=(t,offset=0)=>(Math.floor(t*8)+offset)%6;
@@ -64,8 +50,7 @@ const SandspireGlassworks=(()=>{
     drawGameImage(ctx,sheetOf(sprite),sprite[0],sprite[1],w,h,x,y,w,h);
     // Reuse the game's six actual flame frames, cropped above their logs.
     // Each opening has its own phase; the building and furnace stone stay still.
-    const openings=actor.sandspireGlassShop?[[134,24,15,6,3]]:
-      actor.sandspireGlassProp==='oven'?[[26,50,13,12,0]]:[];
+    const openings=actor.sandspireGlassShop?[[134,24,15,6,3]]:[];
     for(const [dx,dy,w,h,phase]of openings){
       const frame=fireFrame(t,phase);
       drawGameImage(ctx,sheetOf(fire),fire[0]+frame*fire[2]+4,fire[1],8,9,x+dx*SCALE,y+dy*SCALE,w*SCALE,h*SCALE);

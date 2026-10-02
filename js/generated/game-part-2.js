@@ -6342,7 +6342,7 @@ function clearBridge() {
 }
 const indoors = () => MAPID !== 'world';
 function dragonAllowedInMap(id,map=W.maps[id]) {
-  return id==='world'||id==='cinderhold'||!!map?.royal||!!map?.templeExpanded||
+  return id==='world'||id==='cinderhold'||!!map?.royal||!!map?.chapel||!!map?.templeExpanded||
     /^(?:mine\d*|(?:tp|sn|ds)[1-4])$/.test(id);
 }
 const dragonHere = () => !dragonOff && hasDragon() && dragonAllowedInMap(MAPID) && !(typeof thornwellDragonHidden==="function"&&thornwellDragonHidden());

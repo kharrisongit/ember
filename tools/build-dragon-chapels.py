@@ -70,6 +70,14 @@ static={'Floor1','Floor2','Carpet','Walls','Windows','Icons'}
 for name,cells in layers:
  if name in static:base.alpha_composite(draw(sets,cells,bounds))
 base.save(OUT/'interior.png')
+# Halvard's ban left the central wall bare in Forgewick. Preserve the native
+# plaster and framing beneath the dragon window, and the ordinary side windows.
+forgewick=Image.new('RGBA',(352,272))
+for name,cells in layers:
+ if name not in static:continue
+ if name=='Windows':cells=[c for c in cells if not -2<=c[0]<2]
+ forgewick.alpha_composite(draw(sets,cells,bounds))
+forgewick.save(OUT/'forgewick-interior.png')
 for name,cells in layers:
  if name in static or name=='Priest':continue
  # Every pew is one depth-sorted row. Other objects follow connected source tiles.

@@ -7,23 +7,11 @@ window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;window.Embe
 loadMap('world');
 scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;doorMotion=null;`);
 assert.equal(run('MD.roomActors.filter(a=>a.sandspireGlassShop).length'),1);
-assert.equal(run('MD.roomActors.filter(a=>a.sandspireGlassProp).length'),6,'Six separately generated exterior objects');
-assert(run(`(()=>{const props=MD.roomActors.filter(a=>a.sandspireGlassProp);
- return new Set(props.map(a=>a.spr)).size===6&&new Set(props.map(a=>a.editKey)).size===6&&
- props.every(a=>a.moveBlocks.length===1&&!a.interiorChildren?.length);})()`),'Props have independent art, editor identities and collision');
-assert(run(`(()=>{const oven=MD.roomActors.find(a=>a.sandspireGlassProp==='oven'),x=oven.x,y=oven.y;
- const others=JSON.stringify(MD.roomActors.filter(a=>a!==oven)),doors=JSON.stringify(MD.doors);
- const box=MD.roomBlocks[oven.moveBlocks[0]].slice(),draw=drawGameImage,calls=[];
- try{drawGameImage=(...args)=>calls.push(args.slice(-4));SandspireGlassworks.draw(oven,0);
-  const before=calls.pop();moveEditorActor(oven,x-16,y+8);SandspireGlassworks.draw(oven,0);
-  const after=calls.pop(),moved=MD.roomBlocks[oven.moveBlocks[0]];
-  return after[0]===before[0]-16&&after[1]===before[1]+8&&moved[0]===box[0]-16&&moved[1]===box[1]+8&&
-   JSON.stringify(MD.roomActors.filter(a=>a!==oven))===others&&JSON.stringify(MD.doors)===doors;
- }finally{drawGameImage=draw;moveEditorActor(oven,x,y);}})()`),'Moving the oven moves its fire and collision without moving the shop, door or other props');
+assert.equal(run('MD.roomActors.filter(a=>a.sandspireGlassProp).length'),0,'Outdoor glass shop props removed');
 assert.equal(run('W.maps.world.doors.filter(d=>d.to==="glasshouse").length'),1);
 assert(!run('W.maps.sandspire_court||W.maps.world.doors.some(d=>d.to==="sandspire_court")'),'The unwanted interior and entrance are removed');
 assert.equal(run('SPR.sandspire_glass_shop[2]'),96);assert.equal(run('SPR.sandspire_glass_shop[3]'),104);
-assert.equal(run('SPR.sandspire_glass_oven[2]'),32);
+
 assert(!run('MD.roomActors.some(a=>a.editKey?.startsWith("oasis:waterfall"))'),'The added waterfall and cliff are removed');
 assert(run('W.maps.world.roomActors.filter(a=>/^glassout_/.test(a.spr)).every(a=>a.editorDeleted)'));
 assert(run('W.maps.world.editorDeletedObjects.includes(W.maps.world.objs.findIndex((s,i)=>i%3===0&&W.names[s]==="it_glass")/3)'));
@@ -69,4 +57,4 @@ assert(run('glassShield'),'Sela gives the shield after the referral conversation
 assert(run('atlasQuestComplete("shield")'));
 run('glassShield=false;smithUpgrade=true;charm.edge=true;breathHas.lightning=true;');
 assert(run('JOURNEY_GATES.forgewick.open()'),'Players can reach Sandspire before receiving its shield');
-console.log('PASS: independent exterior props, moving oven fire and collision, half-size original-town storefront, clear entry/return paths, unchanged interiors, six flame frames, retired-map migration, referral, save/load and shield reward.');
+console.log('PASS: bare glass shop exterior, half-size original-town storefront, clear entry/return paths, unchanged interiors, six flame frames, retired-map migration, referral, save/load and shield reward.');
