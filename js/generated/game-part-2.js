@@ -2337,7 +2337,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   }
   yield [.92, "Preparing entrances and paths"];
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
-  prepareShroomLookout();
+  if(typeof prepareShroomLookout==='function')prepareShroomLookout();
   // The retained world already includes these static repairs. Repeating them
   // rebuilds all collision/buckets and throws away the warmed ground images.
   if(!warmReturn){
