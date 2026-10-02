@@ -52914,8 +52914,8 @@
         "kind": "actor",
         "key": "millwood:house26_bedroom:3",
         "identity": "ibed3",
-        "x": 130,
-        "y": 76,
+        "x": 156,
+        "y": 85,
         "originX": 44.5,
         "originY": 84
       },
@@ -52956,6 +52956,15 @@
         "y": 181,
         "originX": 30,
         "originY": 181
+      },
+      "actor:millwood:house26_bedroom:5": {
+        "kind": "actor",
+        "key": "millwood:house26_bedroom:5",
+        "identity": "wardrobe",
+        "x": 40,
+        "y": 78,
+        "originX": 92.5,
+        "originY": 78
       }
     },
     "tavern": {
@@ -53591,7 +53600,8 @@
     "8114304f-d6d5-4463-a412-57626316b08e",
     "28932b4f-c528-49c8-8830-f47ac48934c5",
     "76bc1ceb-2894-4c2f-a376-547e40736cfb",
-    "f2bb2ca6-ae48-4399-bbb4-9b70e45b37ec"
+    "f2bb2ca6-ae48-4399-bbb4-9b70e45b37ec",
+    "ae922efa-7599-4d81-b858-7c525af8e22d"
   ],
   "sessions": {
     "witchmoor": {
@@ -53726,12 +53736,60 @@
       "resultHash": "200c3974-b477d64c-985"
     },
     "house26_bedroom": {
-      "id": "667330eb-9ae8-4933-bf31-4efbb82e7ea7",
+      "id": "92ee3614-991d-4763-8a0f-be0c0ce52d63",
       "sequence": 1,
-      "baseHash": "5465b825-5971e3-2",
-      "baseFingerprint": "de8b39ee-22f60060-2097",
-      "base": {},
-      "resultHash": "780f48a5-193e5ff5-796"
+      "baseHash": "780f48a5-193e5ff5-796",
+      "baseFingerprint": "fb5a6b4f-db87d5b3-2070",
+      "base": {
+        "actor:millwood:house26_bedroom:3": {
+          "kind": "actor",
+          "key": "millwood:house26_bedroom:3",
+          "identity": "ibed3",
+          "x": 130,
+          "y": 76,
+          "originX": 44.5,
+          "originY": 84
+        },
+        "actor:loot:house26_bedroom:chest": {
+          "kind": "actor",
+          "key": "loot:house26_bedroom:chest",
+          "identity": "temple71_chest",
+          "x": 158,
+          "y": 73,
+          "originX": 160,
+          "originY": 88
+        },
+        "actor:millwood:house26_bedroom:4": {
+          "kind": "actor",
+          "key": "millwood:house26_bedroom:4",
+          "identity": "Furniture 86_2",
+          "deleted": true,
+          "x": 61,
+          "y": 81,
+          "originX": 135.5,
+          "originY": 169
+        },
+        "actor:millwood:house26_bedroom:2": {
+          "kind": "actor",
+          "key": "millwood:house26_bedroom:2",
+          "identity": "ichair4",
+          "x": 65,
+          "y": 138,
+          "originX": 86,
+          "originY": 181
+        },
+        "actor:millwood:house26_bedroom:1": {
+          "kind": "actor",
+          "key": "millwood:house26_bedroom:1",
+          "identity": "ichair0",
+          "deleted": true,
+          "x": 30,
+          "y": 181,
+          "originX": 30,
+          "originY": 181
+        }
+      },
+      "resultHash": "8eafd47a-eca5836e-947"
     },
     "world": {
       "id": "625d6a64-c51f-40ab-a716-f229fdd8d29a",
