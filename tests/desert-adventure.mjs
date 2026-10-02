@@ -49,7 +49,8 @@ const kinds=['mummy'];
 assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.foes.every(f=>f.k==="mummy"||f.k==="spiderqueen"))'));
 assert(run('W.maps.world.foes.filter(f=>f.desertEncounter).every(f=>/^reptile[23]?$/.test(f.k))'));
 assert(run('Object.values(W.maps).filter(m=>m.pyramid).every(m=>m.roomActors.every(a=>!/obelisk|rug/.test(a.spr)))'));
-assert(run('W.maps.sandspire_court.roomActors.filter(a=>/^dd_rug/.test(a.spr)).length===6'));
+assert(!run('W.maps.sandspire_court'));
+assert(run('W.maps.world.roomActors.some(a=>a.spr==="dd_rug1")'),'Original town furnishings remain');
 assert(run('!BESTIARY.some(e=>/^desert(archer|lancer)/.test(e.k))'));
 for(const kind of kinds){
  assert(run(`FOE[${JSON.stringify(kind)}]&&BESTIARY.some(e=>e.k===${JSON.stringify(kind)})`));
@@ -60,9 +61,10 @@ assert.equal(run('W.maps.world.features.filter(f=>f.pyramidApproach).length'),5)
 assert.equal(run('W.maps.world.foes.filter(f=>f.desertEncounter).length'),15);
 run('DesertAdventure.installWorld(W.maps.world);');assert.equal(run('W.maps.world.features.filter(f=>f.pyramidApproach).length'),5);
 const usage=JSON.parse(fs.readFileSync('assets/interiors/desert-pyramid/pack-usage.json','utf8'));
+run('DragonChapels.installWorld(W.maps.world);');
 const used=new Set(JSON.parse(run('JSON.stringify(Object.values(W.maps).flatMap(m=>[...(m.roomActors||[]).map(a=>a.spr),...Object.values(m.desertHouseSprites||{})]))')));
 for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('dd_'))assert(used.has(ref),'Native asset placed: '+ref);
 assert.equal(Object.keys(usage).length,92);
-run("loadMap('sandspire_court');[P.x,P.y]=MD.spawn;");assert(run('canStand(P.x,P.y)'));
-assert(run('MD.doors[0].to==="world"&&W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
-console.log('PASS: five reptile approach arenas, mummies confined to the pyramid, no pyramid rugs or obelisks, six town rugs, current bestiary, returnable caravan court.');
+assert(!run('W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
+assert.equal(run('W.maps.world.roomActors.filter(a=>a.spr==="dd_fall1").length'),1);
+console.log('PASS: five reptile approach arenas, mummies confined to the pyramid, no pyramid rugs or obelisks, original town preserved, current bestiary, one waterfall in the oasis.');

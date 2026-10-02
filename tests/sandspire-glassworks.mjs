@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
+await run('loadPublishedEditorLayouts()');
 run(`mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;dragonOff=true;
 window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;window.EmberRiding=undefined;
-DesertAdventure.installWorld(W.maps.world);loadMap('sandspire_court');
+loadMap('world');
 scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;doorMotion=null;`);
 assert.equal(run('MD.roomActors.filter(a=>a.sandspireGlassShop).length'),1);
 assert.equal(run('MD.roomActors.filter(a=>a.sandspireGlassProp).length'),6,'Six separately generated exterior objects');
@@ -19,26 +20,36 @@ assert(run(`(()=>{const oven=MD.roomActors.find(a=>a.sandspireGlassProp==='oven'
   return after[0]===before[0]-16&&after[1]===before[1]+8&&moved[0]===box[0]-16&&moved[1]===box[1]+8&&
    JSON.stringify(MD.roomActors.filter(a=>a!==oven))===others&&JSON.stringify(MD.doors)===doors;
  }finally{drawGameImage=draw;moveEditorActor(oven,x,y);}})()`),'Moving the oven moves its fire and collision without moving the shop, door or other props');
-assert(!run('W.maps.world.doors.some(d=>d.to==="glasshouse")'));
+assert.equal(run('W.maps.world.doors.filter(d=>d.to==="glasshouse").length'),1);
+assert(!run('W.maps.sandspire_court||W.maps.world.doors.some(d=>d.to==="sandspire_court")'),'The unwanted interior and entrance are removed');
+assert.equal(run('SPR.sandspire_glass_shop[2]'),96);assert.equal(run('SPR.sandspire_glass_shop[3]'),104);
+assert.equal(run('SPR.sandspire_glass_oven[2]'),32);
+assert.equal(run('MD.roomActors.filter(a=>a.spr==="dd_fall1").length'),1);
+assert(run('MD.roomActors.filter(a=>a.editKey?.startsWith("oasis:waterfall")).every(a=>a.x>20400&&a.x<20800&&a.y>3776&&a.y<4144)'),
+ 'The single transferred waterfall is in the original oasis, not Sandspire');
 assert(run('W.maps.world.roomActors.filter(a=>/^glassout_/.test(a.spr)).every(a=>a.editorDeleted)'));
 assert(run('W.maps.world.editorDeletedObjects.includes(W.maps.world.objs.findIndex((s,i)=>i%3===0&&W.names[s]==="it_glass")/3)'));
 assert.equal(run('W.maps.glasshouse.title'),'Sandspire — Glass Shop');
 assert.equal(run('W.maps.glasswork.title'),'Sandspire — Glassblowing Workshop');
 assert(run('W.maps.glasshouse.doors.some(d=>d.to==="glasswork")&&W.maps.glasswork.doors.some(d=>d.to==="glasshouse")'),'Existing interior connection is retained');
-assert(run('canStand(472,410)&&canStand(472,442)'),'Doorway and return landing are clear');
-assert(!run('canStand(480,380)'),'The new building has solid walls');
-assert(run(`(()=>{const q=[[480,728]],seen=new Set(['480,728']);for(let i=0;i<q.length;i++){
- const [x,y]=q[i];if(Math.abs(x-472)<9&&Math.abs(y-442)<9)return true;
+assert(run('canStand(24092,1373)&&canStand(24092,1397)'),'Doorway and return landing are clear');
+assert(!run('canStand(24096,1350)'),'The new building has solid walls');
+assert(run(`(()=>{const q=[[24048,1552]],seen=new Set(['24048,1552']);for(let i=0;i<q.length;i++){
+ const [x,y]=q[i];if(Math.abs(x-24092)<9&&Math.abs(y-1397)<9)return true;
  for(const [nx,ny]of [[x-8,y],[x+8,y],[x,y-8],[x,y+8]]){
-  const key=nx+','+ny;if(nx<32||nx>928||ny<48||ny>760||seen.has(key)||!canStand(nx,ny))continue;
-  seen.add(key);q.push([nx,ny]);}}return false;})()`),'The court entrance has a walkable route to the shop');
-run(`const shopDoor=MD.doors.find(d=>d.to==='glasshouse');P.x=472;P.y=410;P.dir='u';P.moving=true;arriveT=0;useDoors(0);`);
+  const key=nx+','+ny;if(nx<24032||nx>24560||ny<1200||ny>1860||seen.has(key)||!canStand(nx,ny))continue;
+  seen.add(key);q.push([nx,ny]);}}return false;})()`),'The original town entrance has a walkable route to the shop');
+run(`const shopDoor=MD.doors.find(d=>d.to==='glasshouse');P.x=24092;P.y=1373;P.dir='u';P.moving=true;arriveT=0;useDoors(0);`);
 assert(run('doorMotion?.d===shopDoor||pendingDoor===shopDoor'),'The visible threshold triggers the actual shop door');
 run(`doorMotion=null;pendingDoor=shopDoor;fadeDir=1;fade=1;useDoors(0);fadeDir=0;scene=null;bossScene=null;`);
 assert.equal(run('MAPID'),'glasshouse');
-run(`const shopExit=MD.doors.find(d=>d.to==='sandspire_court');pendingDoor=shopExit;fadeDir=1;fade=1;useDoors(0);fadeDir=0;`);
-assert.equal(run('MAPID'),'sandspire_court');assert(run('canStand(P.x,P.y)'));
+run(`const shopExit=MD.doors.find(d=>d.to==='world');pendingDoor=shopExit;fadeDir=1;fade=1;useDoors(0);fadeDir=0;`);
+assert.equal(run('MAPID'),'world');assert(run('canStand(P.x,P.y)'));
 assert.equal(new Set(Array.from({length:6},(_,i)=>run(`SandspireGlassworks.fireFrame(${i/8})`))).size,6,'Six changing flame frames');
+
+run(`localStorage.setItem(saveKey(3),JSON.stringify({...captureSave(),map:'sandspire_court',x:480,y:728}));`);
+assert(run('loadGame(3)'),'A save in the retired map loads successfully');
+assert.equal(run('MAPID'),'world');assert(run('canStand(P.x,P.y)&&P.x===24092&&P.y===1416'),'Legacy saves return to clear ground by the original town shop');
 
 run(`loadMap('glasswork');glassShield=false;dragonBanterSeen.delete('learned:shield');
 scene=null;bossScene=null;ask=null;ovl=null;fadeDir=0;P.act=null;
@@ -60,4 +71,4 @@ assert(run('glassShield'),'Sela gives the shield after the referral conversation
 assert(run('atlasQuestComplete("shield")'));
 run('glassShield=false;smithUpgrade=true;charm.edge=true;breathHas.lightning=true;');
 assert(run('JOURNEY_GATES.forgewick.open()'),'Players can reach Sandspire before receiving its shield');
-console.log('PASS: independent exterior props, moving oven fire and collision, court storefront, clear entry/return paths, unchanged interiors, six flame frames, referral, save/load and shield reward.');
+console.log('PASS: independent exterior props, moving oven fire and collision, half-size original-town storefront and oasis waterfall, clear entry/return paths, unchanged interiors, six flame frames, retired-map migration, referral, save/load and shield reward.');

@@ -1,5 +1,5 @@
 /* Two chapels share the pack's authored interior; only the desert has the
-   dragon spirit and the permanent mounted-flight blessing. */
+   dragon statue and the permanent mounted-flight blessing. */
 const DragonChapels=(()=>{
   const BASE='assets/interiors/chapel/',VERSION='20261001-chapels1';
   const X=1486*16+8,Y=347*16+16;
@@ -10,7 +10,7 @@ const DragonChapels=(()=>{
     [9373,[[1564,411],[1564,385],[1513,385],[1497,385],[1497,372],[1486,372],[1486,347]]]
   ].map(([id,pts])=>({id,kind:'route',x0:pts[0][0],y0:pts[0][1],x1:pts.at(-1)[0],y1:pts.at(-1)[1],pts,w:5,band:20,style:'desert',a0:null,a1:null}));
   const moves=[[7257,27864,3920],[7258,27830,3920],[7259,27864,3936],[7260,27992,3936],[7261,28021,3936],[7262,27992,3952],[7263,27864,3968],[7264,28023,3968],[7265,27864,3984],[7266,27829,3984],[7267,27864,4000],[7268,27992,4000],[7269,28025,4000],[7270,27864,4016],[7271,27992,4016],[7272,27831,4016],[7273,27864,4032],[7274,27992,4032],[7275,28021,4032],[7276,27864,4048],[7277,27992,4048],[7278,27830,4048],[7279,27864,4064],[7280,27992,4064],[7281,28024,4064],[7282,27864,4080],[7283,27992,4080],[7284,27834,4080],[7285,27864,4096]];
-  let plan,ready=false,blessed=false,ritual=null;
+  let plan,ready=false,blessed=false,ritual=null,graveSource=null,graveObjects=[];
   const sprintSpeed=()=>blessed?285:228; // 285 × .8; walking and ordinary flight keep their speeds.
   function restore(value){blessed=value===true;ritual=null;}
   async function prepare(){
@@ -24,7 +24,7 @@ const DragonChapels=(()=>{
       ['desert_chapel',true,'Desert — Chapel of the Sky','Brother Cael'],
       ['forgewick_chapel',false,'Forgewick — Dragon Church','Brother Edrin']
     ]){
-      const map=W.maps[id]={w:22,h:17,ts:16,title,chapel:true,desertChapel:desert,
+      const map=W.maps[id]={w:22,h:17,ts:16,title,chapel:true,desertChapel:desert,travel:desert,travel_kind:'Church',
         roomArt:'chapel_altar0',_roomBaseCanvas:base,bg:'#2e2928',floorbg:'#7e93a7',spawn:[176,216],
         terr:terrRLE(Array(22*17).fill(DIRT)),objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],foes:[],
         npcs:[],roomActors:[],roomBlocks:[],doors:[],collisionOverrides:{}};
@@ -61,9 +61,21 @@ const DragonChapels=(()=>{
     const blocks=[[X-55,Y-130,X+55,Y-20],[X-55,Y-20,X-14,Y],[X+14,Y-20,X+55,Y]];
     for(const a of plan.exterior){
       const actor={...a,x:X+a.x,y:Y+a.y,sy:Y-18+(a.layer==='Wings'?-.3:a.layer==='House'?0:.1),schoolArt:true,chapelArt:true,editKey:'desert:'+a.spr};
+      if(a.spirit)actor.stillFrame=0;
       if(a.layer==='House')actor.moveBlocks=blocks.map(b=>m.roomBlocks.push(b)-1);
       m.roomActors.push(actor);
     }
+    // A closed cactus border joins the forecourt to the existing narrow trail.
+    // Every segment is solid; only the five-tile southern path stays open.
+    const cactus=(x,y)=>{
+      const i=m.roomActors.length;
+      m.roomActors.push({spr:'dd_cactus'+(i%3),x,y,schoolArt:true,stillFrame:0,
+        chapelCactus:true,editKey:'desert:chapel-cactus:'+x+':'+y,
+        moveBlocks:[m.roomBlocks.push([x-8,y-12,x+8,y+4])-1]});
+    };
+    for(let dx=-160;dx<=160;dx+=16)cactus(X+dx,Y-224);
+    for(let dy=-208;dy<=64;dy+=16){cactus(X-160,Y+dy);cactus(X+160,Y+dy);}
+    for(let dx=-144;dx<=144;dx+=16)if(Math.abs(dx)>=48)cactus(X+dx,Y+64);
     const door={x:(X-8)/16,y:(Y-16)/16,to:'desert_chapel',tx:10.5,ty:12.5,dir:'u',explicitDir:true,triggerRect:{x:X-12,y:Y-17,w:24,h:15}};
     m.doors.push(door);
     Object.assign(W.maps.desert_chapel.doors[0],{tx:(X-8)/16,ty:(Y+24-16)/16});
@@ -87,9 +99,25 @@ const DragonChapels=(()=>{
     for(let y=Math.floor((Y-236)/16);y<=Math.ceil((Y+48)/16);y++)for(let x=Math.floor((X-152)/16);x<=Math.ceil((X+152)/16);x++){
       terr[y*MW+x]=SAND;SCENE_WALL?.delete(y*MW+x);rockTiles.delete(x+','+y);
     }
+    finishGraveyard();
     rebuildBuckets();rebuildSolid();chunks.clear();
   }
-  function solidAt(x,y){return !!MD.chapel&&!plan.floors.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b);}
+  function finishGraveyard(){
+    const yard=features.find(f=>f.label==='Hollybeck Graveyard');if(!yard)return;
+    // The snow-country arena preserved an old cobbled strip through this clearing.
+    // Replace its floor, keeping the surrounding forest and encounter intact.
+    const r=features.find(f=>f.kind==='arena'&&f.x===yard.x&&f.y===yard.y)?.r||12;
+    for(let y=yard.y-r-1;y<=yard.y+r+1;y++)for(let x=yard.x-r-1;x<=yard.x+r+1;x++)
+      if(Math.hypot(x-yard.x,y-yard.y)<=r+.5)terr[y*MW+x]=DIRT;
+  }
+  function solidAt(x,y){
+    if(MD.chapel)return !plan.floors.some(([l,t,r,b])=>x>=l&&x<r&&y>=t&&y<b);
+    if(MAPID!=='world'||x<41900||x>42400||y<2200||y>2650)return false;
+    // Test live objects so editor moves/deletions and save-state removals stay in sync.
+    if(graveSource!==objs){graveSource=objs;graveObjects=objs.filter(o=>/^wf_grave[123]$/.test(NAMES[o.s]||''));}
+    return graveObjects.some(o=>!hidden.has(o.id)&&!deleted.has(o.id)&&graveSprite(o)&&
+      x>=o.x-12&&x<o.x+12&&y>=o.y-32&&y<o.y);
+  }
   function frame(name,time){
     const ds=plan.sprites[name].durations,total=ds.reduce((a,b)=>a+b,0);let tick=((time*1000)%total+total)%total;
     for(let i=0;i<ds.length;i++){if(tick<ds[i])return i;tick-=ds[i];}return 0;
@@ -112,7 +140,7 @@ const DragonChapels=(()=>{
       else name=(sayNpc===o||scene?.npcActor===o)&&!ritual?'chapel_priest_speech':'chapel_priest_idle_d';
     }
     const s=SPR[name];if(!s)return false;
-    const f=frame(name,time);
+    const f=o.stillFrame??frame(name,time);
     const bottom=o.y;
     drawGameImage(ctx,sheetOf(s),s[0]+f*s[2],s[1],s[2],s[3],Math.round(o.x-s[2]/2),Math.round(bottom-s[3]),s[2],s[3]);
     if(name==='chapel_priest_cast'){
@@ -136,7 +164,7 @@ const DragonChapels=(()=>{
     if(!hasDragon()||!dragonIntroDone){playScene(['Brother Cael: I keep this chapel for the day a dragon and rider return together.',
       'Brother Cael: Until then, you are welcome to rest here.'],{who:n.n,npcActor:n});return true;}
     playScene(['Brother Cael: I heard wings over the roof. After all these years, I thought I was imagining them.',
-      'Corin: His name is Aurelius. Is that spirit outside watching over this place?',
+      'Corin: His name is Aurelius. Is that statue outside watching over this place?',
       'Brother Cael: It has kept vigil longer than I have. The old riders came here to ask for a clear sky and a safe return.',
       'Corin: Could you give us that blessing?',
       'Brother Cael: Gladly. Stand here a moment. Your bond will carry it to him.'],

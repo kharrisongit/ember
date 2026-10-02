@@ -14,8 +14,8 @@ for(const a of approach){
  assert(run(`MD.foes.filter(f=>f.desertEncounter?.startsWith('${a.id-35}:')).length>=2`),'Arena has its authored enemies');
  for(let y=-5;y<=5;y++)for(let x=-5;x<=5;x++)assert(run(`canStand(${(a.x+x)*16+8},${(a.y+y)*16+16})`),'Clear desert arena floor '+a.id);
 }
-const courtReturn=JSON.parse(run('JSON.stringify(W.maps.sandspire_court.doors[0])'));
-assert(run(`canStand(${courtReturn.tx*16+8},${courtReturn.ty*16+16})`),'Caravan court returns onto clear Sandspire ground');
+const courtReturn=JSON.parse(run('JSON.stringify(W.maps.glasshouse.doors.find(d=>d.to==="world"))'));
+assert(run(`canStand(${courtReturn.tx*16+8},${courtReturn.ty*16+16})`),'Glass shop returns onto clear original Sandspire ground');
 assert(run('canStand(24248,1592)'),'Sandspire quest giver can be approached');
 let blocked=0,samples=0;
 for(const f of routes)for(let i=1;i<f.pts.length;i++){

@@ -1922,7 +1922,7 @@ function pickEditorActor(wx,wy) {
 }
 function storyTeleport(id) {
   return id.startsWith("royal_") || /^(mine\d*|passage\d*|tp\d|sn\d|ds\d)$/.test(id)||
-    ['house22','house26','smithy','glasshouse','glasswork','school','school2','witchmoor','cinderhold','tavern','inn'].includes(id);
+    ['house22','house26','smithy','glasshouse','glasswork','school','school2','witchmoor','cinderhold','tavern','inn','desert_chapel'].includes(id);
 }
 const KING_DRAGON_SPR = {
   kdnew_idle_s:[0,0,176,176,1,3], kdnew_idle_n:[0,176,176,176,1,3],

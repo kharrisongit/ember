@@ -1,5 +1,5 @@
-"""Pack native desert props and author a caravan court; retain source-pixel scale."""
-from PIL import Image,ImageDraw
+"""Pack native desert props and reuse one waterfall cliff in the oasis; retain source-pixel scale."""
+from PIL import Image
 from pathlib import Path
 import json,sys,shutil
 root=Path(__file__).resolve().parents[1];src=Path(sys.argv[1]);out=root/'assets/interiors/desert-pyramid'
@@ -47,36 +47,33 @@ for im in strips:atlas.alpha_composite(im,(0,y));y+=im.height
 atlas.save(out/'dressing.png',optimize=True)
 (out/'dressing.json').write_text(json.dumps(entries,separators=(',',':'))+'\n')
 for role,file in [('archer1','Bow_1'),('archer2','Bow_2'),('lancer1','Atgier_1'),('lancer2','Atgier_2')]:shutil.copyfile(src/f'enemies/Desert_Warrior_{file}.png',out/(role+'.png'))
-# Broad sandstone lanes, stepped reservoirs, and planted shaded courtyards.
-w,h=960,800;im=Image.new('RGBA',(w,h),'#000000');sand=Image.open(src/'Tiles/Desert_Cliff_Tiles_1.png').convert('RGBA').crop((144,80,160,96))
-for y in range(48,768,16):
- for x in range(32,928,16):im.alpha_composite(sand,(x,y))
-d=ImageDraw.Draw(im);d.rectangle((25,41,934,774),outline='#452f26',width=3);d.rectangle((28,44,931,771),outline='#e5ad77',width=4)
-def nine(file,box,target):
- sh=Image.open(src/file).convert('RGBA');l,t,r,b=target;sx,sy=box
- for y in range(t,b,16):
-  for x in range(l,r,16):
-   cx=0 if x==l else 32 if x==r-16 else 16;cy=0 if y==t else 32 if y==b-16 else 16
-   im.alpha_composite(sh.crop((sx+cx,sy+cy,sx+cx+16,sy+cy+16)),(x,y))
-for i,x in enumerate([208,432,656],1):
- nine(f'Tiles/Desert_Cliff_Tiles_{i}.png',(16,16),(x,64,x+144,144))
- nine(f'Tiles/Desert_Water_Tiles_{i}.png',(48,0),(x,144,x+144,240))
- nine(f'Tiles/Desert_Beach_Tiles_{i}.png',(0,0),(x+16,176,x+128,224))
- # A native bridge crosses each ornamental reservoir.
- bridge=Image.open(src/'Tiles/Desert_Bridge.png').convert('RGBA').crop((0,0,96,64));im.alpha_composite(bridge,(x+24,188))
-for x,y in [(208,320),(592,320),(208,528),(592,528)]:nine('Tiles/Desert_Grass.png',(0,0),(x,y,x+144,y+112))
-im.save(out/'sandspire_court.png',optimize=True)
+# Retain one native cliff beneath the animated oasis cascade; no extra town map.
+im=Image.new('RGBA',(144,80))
+sh=Image.open(src/'Tiles/Desert_Cliff_Tiles_1.png').convert('RGBA')
+sand=sh.crop((144,80,160,96))
+for y in range(0,80,16):
+ for x in range(0,144,16):im.alpha_composite(sand,(x,y))
+for y in range(0,80,16):
+ for x in range(0,144,16):
+  cx=0 if x==0 else 32 if x==128 else 16
+  cy=0 if y==0 else 32 if y==64 else 16
+  im.alpha_composite(sh.crop((16+cx,16+cy,32+cx,32+cy)),(x,y))
+im.save(out/'oasis-waterfall-cliff.png',optimize=True)
 # Audit maps every pack source to an actual material, sprite, enemy, or existing NPC.
 usage={str(p.relative_to(src)):[] for p in src.rglob('*.png')}
 for name,file in sources.items():usage[file].append(name)
 for file in usage:
- if file.startswith('Tiles/') and not usage[file]:usage[file]=['sandspire_court: native reservoir / garden tiles']
+ if file.startswith('Tiles/') and not usage[file]:usage[file]=['Available native terrain tiles; the extra town interior was removed']
  if file.startswith('NPC/') and not usage[file]:usage[file]=['Sandspire: existing native townspeople and traders']
  if file.startswith('enemies/'):usage[file]=['Pyramid chambers and five approach arenas']
  if 'Desert_Warrior' in file:usage[file]=['Unused: human combatants excluded from the desert adventure']
  if 'Obelisk' in file:usage[file]=['Reserved for the temples; excluded from the pyramid and town']
  if file=='Temple/Desert_Temple.png':usage[file]=['World: pyramid exterior']
  if file=='Temple/Temple-House_Interior.png':usage[file]=['Pyramid: walls, floors, stairs, pillars and doorways']
+usage['Tiles/Desert_Cliff_Tiles_1.png']=['The Oasis: cliff beneath the animated waterfall']
 assert all(usage.values()),[k for k,v in usage.items() if not v]
+placed=['dd_bones0', 'dd_bones1', 'dd_bones2', 'dd_bones3', 'dd_cactus0', 'dd_cactus1', 'dd_cactus2', 'dd_campfire', 'dd_dead_fern', 'dd_dead_leaves', 'dd_fall1', 'dd_fern', 'dd_firepit', 'dd_flies', 'dd_foam', 'dd_gold0', 'dd_gold1', 'dd_gold2', 'dd_house11', 'dd_house12', 'dd_house13', 'dd_house21', 'dd_house22', 'dd_house31', 'dd_house32', 'dd_house41', 'dd_house42', 'dd_ladder', 'dd_mat', 'dd_mummy', 'dd_plant0', 'dd_plant1', 'dd_plant2', 'dd_pots0', 'dd_pots1', 'dd_pots2', 'dd_pots3', 'dd_pots4', 'dd_rug1', 'dd_scarabBlack', 'dd_scarabBrown', 'dd_scarabGreen', 'dd_scarabYellow', 'dd_smallpalm1', 'dd_watersack']
+for file,refs in usage.items():
+ usage[file]=[ref if not ref.startswith('dd_') or ref in placed else 'Available atlas sprite: '+ref for ref in refs]
 (out/'pack-usage.json').write_text(json.dumps(usage,indent=2)+'\n')
 print(f'{len(entries)} native prop strips; {len(usage)} pack sources mapped.')

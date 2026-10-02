@@ -3,22 +3,22 @@
     "dd_house12"
   ],
   "Houses/Desert_House_3.3.png": [
-    "dd_house33"
+    "Available atlas sprite: dd_house33"
   ],
   "Houses/Desert_House_1.1.png": [
     "dd_house11"
   ],
   "Houses/Pergola.png": [
-    "dd_pergola"
+    "Available atlas sprite: dd_pergola"
   ],
   "Houses/Desert_House_2.4.png": [
-    "dd_house24"
+    "Available atlas sprite: dd_house24"
   ],
   "Houses/Desert_House_2.3.png": [
-    "dd_house23"
+    "Available atlas sprite: dd_house23"
   ],
   "Houses/Desert_House_4.3.png": [
-    "dd_house43"
+    "Available atlas sprite: dd_house43"
   ],
   "Houses/Desert_House_4.1.png": [
     "dd_house41"
@@ -27,10 +27,10 @@
     "dd_house31"
   ],
   "Houses/Desert_House_4.4.png": [
-    "dd_house44"
+    "Available atlas sprite: dd_house44"
   ],
   "Houses/Desert_House_3.4.png": [
-    "dd_house34"
+    "Available atlas sprite: dd_house34"
   ],
   "Houses/Desert_House_3.2.png": [
     "dd_house32"
@@ -48,7 +48,7 @@
     "dd_house13"
   ],
   "Houses/Desert_House_1.4.png": [
-    "dd_house14"
+    "Available atlas sprite: dd_house14"
   ],
   "NPC/Desert_Person_4.png": [
     "Sandspire: existing native townspeople and traders"
@@ -66,16 +66,16 @@
     "Sandspire: existing native townspeople and traders"
   ],
   "Tiles/Desert_Beach_Tiles_3.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Cliff_Tiles_2.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Cliff_Waterfall_3.png": [
-    "dd_fall3"
+    "Available atlas sprite: dd_fall3"
   ],
   "Tiles/Desert_Water_Tiles_1.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Water_Foam_Animation.png": [
     "dd_foam"
@@ -84,31 +84,31 @@
     "dd_fall1"
   ],
   "Tiles/Desert_Water_Tiles_3.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Water_Tiles_2.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Cliff_Tiles_1.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "The Oasis: cliff beneath the animated waterfall"
   ],
   "Tiles/Desert_Grass.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Bridge.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Beach_Tiles_1.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Beach_Tiles_2.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Cliff_Waterfall_2.png": [
-    "dd_fall2"
+    "Available atlas sprite: dd_fall2"
   ],
   "Tiles/Desert_Cliff_Tiles_3.png": [
-    "sandspire_court: native reservoir / garden tiles"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "enemies/Desert_Warrior_Bow_1.png": [
     "Unused: human combatants excluded from the desert adventure"
@@ -126,36 +126,36 @@
     "Unused: human combatants excluded from the desert adventure"
   ],
   "Props/Dead_bush.png": [
-    "dd_bush0",
-    "dd_bush1"
+    "Available atlas sprite: dd_bush0",
+    "Available atlas sprite: dd_bush1"
   ],
   "Props/Palm_Tree_1.png": [
-    "dd_palm0",
-    "dd_palm1"
+    "Available atlas sprite: dd_palm0",
+    "Available atlas sprite: dd_palm1"
   ],
   "Props/Fallen_Palm_Leaves.png": [
-    "dd_leaves"
+    "Available atlas sprite: dd_leaves"
   ],
   "Props/Desert_Campfire.png": [
     "dd_campfire"
   ],
   "Props/Dead_tree.png": [
-    "dd_dead_tree"
+    "Available atlas sprite: dd_dead_tree"
   ],
   "Props/Acacia_Tree.png": [
-    "dd_acacia0",
-    "dd_acacia1"
+    "Available atlas sprite: dd_acacia0",
+    "Available atlas sprite: dd_acacia1"
   ],
   "Props/Desert_Rocks.png": [
-    "dd_rock0",
-    "dd_rock1",
-    "dd_rock2"
+    "Available atlas sprite: dd_rock0",
+    "Available atlas sprite: dd_rock1",
+    "Available atlas sprite: dd_rock2"
   ],
   "Props/Desert_Fern.png": [
     "dd_fern"
   ],
   "Props/HalfDead_tree.png": [
-    "dd_half_tree"
+    "Available atlas sprite: dd_half_tree"
   ],
   "Props/Fire_Pit.png": [
     "dd_firepit"
@@ -164,7 +164,7 @@
     "dd_mat"
   ],
   "Props/Desert_Fencewall.png": [
-    "dd_fence0"
+    "Available atlas sprite: dd_fence0"
   ],
   "Props/mummy.png": [
     "dd_mummy"
@@ -185,17 +185,17 @@
     "dd_cactus2"
   ],
   "Props/Desert_Grass_Props.png": [
-    "dd_grassprop0",
-    "dd_grassprop1",
-    "dd_grassprop2"
+    "Available atlas sprite: dd_grassprop0",
+    "Available atlas sprite: dd_grassprop1",
+    "Available atlas sprite: dd_grassprop2"
   ],
   "Props/Desert_Rugs.png": [
-    "dd_rug0",
+    "Available atlas sprite: dd_rug0",
     "dd_rug1",
-    "dd_rug2",
-    "dd_rug3",
-    "dd_rug4",
-    "dd_rug5"
+    "Available atlas sprite: dd_rug2",
+    "Available atlas sprite: dd_rug3",
+    "Available atlas sprite: dd_rug4",
+    "Available atlas sprite: dd_rug5"
   ],
   "Props/Golden_Pots.png": [
     "dd_gold0",
@@ -218,7 +218,7 @@
     "dd_bones3"
   ],
   "Props/Palm_Tree_2.png": [
-    "dd_smallpalm0",
+    "Available atlas sprite: dd_smallpalm0",
     "dd_smallpalm1"
   ],
   "Props/Desert_Fern_Dead.png": [
@@ -254,7 +254,7 @@
     "Sandspire: existing native townspeople and traders"
   ],
   "NPC/Traders/Desert_Trader_Camp.png": [
-    "dd_camp"
+    "Available atlas sprite: dd_camp"
   ],
   "NPC/Traders/Desert_Trader_2.png": [
     "Sandspire: existing native townspeople and traders"
@@ -272,33 +272,33 @@
     "dd_scarabYellow"
   ],
   "Animals/Vulture/Vulture_4.png": [
-    "dd_vulture4"
+    "Available atlas sprite: dd_vulture4"
   ],
   "Animals/Vulture/Vulture_1.png": [
-    "dd_vulture1"
+    "Available atlas sprite: dd_vulture1"
   ],
   "Animals/Vulture/Vulture_2.png": [
-    "dd_vulture2"
+    "Available atlas sprite: dd_vulture2"
   ],
   "Animals/Vulture/Vulture_3.png": [
-    "dd_vulture3"
+    "Available atlas sprite: dd_vulture3"
   ],
   "Animals/Camel/Camel_1.png": [
-    "dd_camel1"
+    "Available atlas sprite: dd_camel1"
   ],
   "Animals/Camel/Camel_3.png": [
-    "dd_camel3"
+    "Available atlas sprite: dd_camel3"
   ],
   "Animals/Camel/Camel_2.png": [
-    "dd_camel2"
+    "Available atlas sprite: dd_camel2"
   ],
   "Props/Outdoor_Decor_Animations/Desert_Grass_1_Anim.png": [
-    "dd_grass1"
+    "Available atlas sprite: dd_grass1"
   ],
   "Props/Outdoor_Decor_Animations/Desert_Grass_3_Anim.png": [
-    "dd_grass3"
+    "Available atlas sprite: dd_grass3"
   ],
   "Props/Outdoor_Decor_Animations/Desert_Grass_2_Anim.png": [
-    "dd_grass2"
+    "Available atlas sprite: dd_grass2"
   ]
 }

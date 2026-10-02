@@ -1,6 +1,6 @@
 /* Sela's desert storefront; the existing shop and workshop stay intact. */
 const SandspireGlassworks=(()=>{
-  const X=480,Y=432,ENTRY_X=472,ENTRY_Y=410;
+  const SCALE=.5,X=24096,Y=1384,ENTRY_X=X-4,ENTRY_Y=Y-11;
   const props=[
     {id:'oven',n:'Covered glass furnace',w:64,h:72,x:392,y:440,block:[-22,-30,22,-3]},
     {id:'stall',n:'Glassware display stall',w:64,h:72,x:554,y:446,block:[-26,-15,26,-1]},
@@ -12,44 +12,26 @@ const SandspireGlassworks=(()=>{
     'Dunstan: My brother Sela keeps a glass shop in Sandspire. He has made a shield that could help you on the road.',
     'Corin: A glass shield? Wouldn’t it shatter?',
     'Dunstan: His glass does more than keep the wind out. I trust his work, even if I will never hear the end of saying so.',
-    'Dunstan: His shop is in the middle of Sandspire’s caravan court, beside the outdoor furnace. You’ll find him through the back.',
+    'Dunstan: His shop is in the northwest corner of Sandspire, beside the outdoor furnace. You’ll find him through the back.',
     'Corin: I’ll go and see him.'];
   async function prepare(){
     await Promise.all([{id:'building',w:192,h:208},...props].map(async({id,w,h})=>{
       const key=id==='building'?'sandspire_glass_shop':'sandspire_glass_'+id;
       const img=await loadStartupImage('assets/buildings/glassworks/'+id+'.webp?v=20261001-props');
-      img.pixelLocked=true;animalSheets[key]=img;SPR[key]=[0,0,w,h,1,key];
+      // Resample once with nearest-neighbour pixels so drawing and editor bounds agree.
+      const small=document.createElement('canvas');small.width=w*SCALE;small.height=h*SCALE;
+      const g=small.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(img,0,0,small.width,small.height);
+      small.pixelLocked=true;animalSheets[key]=small;SPR[key]=[0,0,small.width,small.height,1,key];
     }));
-    const court=W.maps.sandspire_court;
-    if(!court.roomActors.some(a=>a.sandspireGlassShop)){
-      // Replace the court's central decorative house, keeping its clear lanes.
-      const house=court.roomActors.find(a=>a.spr==='dd_house44'&&a.x===X&&a.y===Y);
-      if(house){house.editorDeleted=true;for(const index of house.moveBlocks||[])court.roomBlocks[index]=[-99999,-99999,-99999,-99999];}
-      const blocks=[[X-68,Y-171,X+72,ENTRY_Y-15],
-        [X-74,ENTRY_Y-15,ENTRY_X-18,ENTRY_Y+5],
-        [ENTRY_X+18,ENTRY_Y-15,X+72,ENTRY_Y+5]];
-      const moveBlocks=blocks.map(box=>court.roomBlocks.push(box)-1);
-      court.roomActors.push({spr:'sandspire_glass_shop',x:X,y:Y,schoolArt:true,
-        editKey:'sandspire:glass-shop',sandspireGlassShop:true,moveBlocks});
-      court.doors.push({x:(ENTRY_X-8)/16,y:(ENTRY_Y-16)/16,to:'glasshouse',tx:6,ty:9,
-        dir:'u',explicitDir:true,triggerRect:{x:ENTRY_X-12,y:ENTRY_Y-8,w:24,h:14}});
-    }
-    // Separate actors and collision boxes let the editor move each prop on its own.
-    for(const {id,n,x,y,block}of props){
-      if(court.roomActors.some(a=>a.editKey==='sandspire:glass-'+id))continue;
-      const [l,t,r,b]=block,moveBlocks=[court.roomBlocks.push([x+l,y+t,x+r,y+b])-1];
-      court.roomActors.push({spr:'sandspire_glass_'+id,n,x,y,schoolArt:true,
-        editKey:'sandspire:glass-'+id,sandspireGlassProp:id,moveBlocks});
-    }
     W.maps.glasshouse.title='Sandspire — Glass Shop';
     W.maps.glasswork.title='Sandspire — Glassblowing Workshop';
     const exit=W.maps.glasshouse.doors.find(d=>d.to==='world'||d.to==='sandspire_court');
-    Object.assign(exit,{to:'sandspire_court',tx:(ENTRY_X-8)/16,ty:(ENTRY_Y+32-16)/16});
+    Object.assign(exit,{to:'world',tx:(ENTRY_X-8)/16,ty:(ENTRY_Y+24-16)/16});
   }
   function installWorld(m){
     if(m.sandspireGlassMoved)return;
     m.sandspireGlassMoved=true;
-    m.doors=m.doors.filter(d=>d.to!=='glasshouse');
+    m.doors=m.doors.filter(d=>d.to!=='glasshouse'&&d.to!=='sandspire_court');
     for(let i=0;i<m.objs.length;i+=3)if(W.names[m.objs[i]]==='it_glass'){
       const id=i/3;if(!(m.editorDeletedObjects||=[]).includes(id))m.editorDeletedObjects.push(id);
     }
@@ -59,6 +41,22 @@ const SandspireGlassworks=(()=>{
       const [l,t,r,b]=m.roomBlocks[i];
       if(l>=12376&&r<=12568&&t>=2160&&b<=2368)m.roomBlocks[i]=[-99999,-99999,-99999,-99999];
     }
+    const blocks=[[X-34,Y-86,X+36,ENTRY_Y-8],
+      [X-37,ENTRY_Y-8,ENTRY_X-9,ENTRY_Y+3],
+      [ENTRY_X+9,ENTRY_Y-8,X+36,ENTRY_Y+3]];
+    const moveBlocks=blocks.map(box=>m.roomBlocks.push(box)-1);
+    m.roomActors.push({spr:'sandspire_glass_shop',x:X,y:Y,schoolArt:true,
+      editKey:'sandspire:glass-shop',sandspireGlassShop:true,moveBlocks});
+    m.doors.push({x:(ENTRY_X-8)/16,y:(ENTRY_Y-16)/16,to:'glasshouse',tx:6,ty:9,
+      dir:'u',explicitDir:true,triggerRect:{x:ENTRY_X-8,y:ENTRY_Y-4,w:16,h:10}});
+    // Keep each scaled prop independently movable, including its collision.
+    for(const {id,n,x:oldX,y:oldY,block}of props){
+      const x=X+(oldX-480)*SCALE,y=Y+(oldY-432)*SCALE;
+      const [l,t,r,b]=block.map(v=>v*SCALE),moveBlocks=[m.roomBlocks.push([x+l,y+t,x+r,y+b])-1];
+      m.roomActors.push({spr:'sandspire_glass_'+id,n,x,y,schoolArt:true,
+        editKey:'sandspire:glass-'+id,sandspireGlassProp:id,moveBlocks});
+    }
+
   }
   const fireFrame=(t,offset=0)=>(Math.floor(t*8)+offset)%6;
   function draw(actor,t){
@@ -70,7 +68,7 @@ const SandspireGlassworks=(()=>{
       actor.sandspireGlassProp==='oven'?[[26,50,13,12,0]]:[];
     for(const [dx,dy,w,h,phase]of openings){
       const frame=fireFrame(t,phase);
-      drawGameImage(ctx,sheetOf(fire),fire[0]+frame*fire[2]+4,fire[1],8,9,x+dx,y+dy,w,h);
+      drawGameImage(ctx,sheetOf(fire),fire[0]+frame*fire[2]+4,fire[1],8,9,x+dx*SCALE,y+dy*SCALE,w*SCALE,h*SCALE);
     }
   }
   return {prepare,installWorld,referralLines,draw,fireFrame};

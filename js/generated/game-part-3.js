@@ -3406,6 +3406,7 @@ function placesOf() {
     out.push({ name: md.title || id, kind: md.travel_kind || "Underground",
                map: id, x: (md.spawn[0] / TS) | 0, y: ((md.spawn[1] - 1) / TS) | 0 });
   }
+  if(W.maps.desert_chapel)out.push({name:'Desert Church — Chapel of the Sky',kind:'Church',map:'world',x:1486,y:349});
   if(W.maps.pyramid_entry)out.push({name:'Sunken Pyramid — Entrance',kind:'Dungeon',map:'world',x:1069,y:32});
   // Dev shortcuts go straight to each chest, including within the current map.
   const heartstoneTemples={lightning:'Forgewick',ice:'Sandspire',shadow:'Hollybeck'};
@@ -6219,6 +6220,7 @@ function loadGame(slot=activeSaveSlot) {
     }
     treasuryTaken.clear();for(const id of s.treasuryTaken||[])treasuryTaken.add(id);if(Number.isFinite(s.gold))gold=Math.max(0,s.gold);
     quest=s.quest;bagOwned=s.bagOwned===undefined?quest>=Q.EGGS:!!s.bagOwned;smithUpgrade=!!s.smithUpgrade&&hasSword();glassShield=!!s.glassShield;glassShieldHeld=false;
+    if(s.map==='sandspire_court'){s.map='world';s.x=24092;s.y=1416;}
     if(s.map==='pyramid_queen'&&s.pyramidLayoutVersion!==3){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.sandspire&&s.sandspireLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}
     if(W.maps[s.map]?.mountainPassage&&s.passageLayoutVersion!==1){[s.x,s.y]=W.maps[s.map].spawn;}

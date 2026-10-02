@@ -1,6 +1,6 @@
-/* Shared optional pyramid quest, native desert cast, and caravan-court dressing. */
+/* Shared optional pyramid quest, native desert cast, and original Sandspire town dressing. */
 const DesertAdventure=(()=>{
-  const BASE='assets/interiors/desert-pyramid/',VERSION='20260930-desert4';
+  const BASE='assets/interiors/desert-pyramid/',VERSION='20261001-town5';
   const REWARD='pyramid_queen:emberheart';let source=null,ready=false;
   let flightPaths=null,flightFeatures=null,flightCount=0,flightStamp=-1;
   const owned=()=>houseLootTaken.has(REWARD);
@@ -24,7 +24,9 @@ const DesertAdventure=(()=>{
     Object.assign(SPR,await loadStartupJSON(BASE+'dressing.json?v='+VERSION));
     const school=W.maps.school2;
     if(!school.npcs.some(n=>n.n==='Scholar Ilyan'))school.npcs.push({n:'Scholar Ilyan',sk:'desert1',desertNative:true,stationary:true,x:200,y:136,f:'d',editKey:'pyramid:scholar',d:['The old desert records are incomplete.']});
-    dressPyramid();await court();await SandspireGlassworks.prepare();ready=true;
+    const basin=await loadStartupImage(BASE+'oasis-waterfall-cliff.png?v='+VERSION);basin.pixelLocked=true;
+    animalSheets.oasis_waterfall=basin;SPR.dd_waterfall_cliff=[0,0,144,80,1,'oasis_waterfall'];
+    dressPyramid();await SandspireGlassworks.prepare();ready=true;
   }
   function dressPyramid(){
     const themes={
@@ -44,35 +46,13 @@ const DesertAdventure=(()=>{
       });
     }
   }
-  async function court(){
-    const img=await loadStartupImage(BASE+'sandspire_court.png?v='+VERSION);img.pixelLocked=true;
-    const floors=[[32,48,928,768]],m=W.maps.sandspire_court={w:60,h:50,ts:16,title:'Sandspire — Caravan Court',templeExpanded:true,caravanCourt:true,templePlan:{chambers:[],floors,hazards:[]},templeFloors:floors,templeGateOpen:0,roomArt:'pyramid_tiles',_roomBaseCanvas:img,bg:'#000000',floorbg:'#daa16e',spawn:[480,728],terr:terrRLE(Array(3000).fill(SAND)),objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{}};
-    m.base_terr=m.terr;
-    m.doors.push({x:29.5,y:46,to:'world',tx:1536,ty:97,dir:'d',explicitDir:true,triggerRect:{x:464,y:746,w:32,h:20}});
-    const houses=[['43',112,224],['14',96,432],['23',96,656],['24',864,224],['33',864,432],['34',864,656],['44',480,432]];
-    for(const [name,x,y]of houses){const a=prop(m,'dd_house'+name,x,y,{frame:0});const s=SPR[a.spr];a.moveBlocks=[m.roomBlocks.push([x-s[2]/2+4,y-s[3]+12,x+s[2]/2-4,y-12])-1];}
-    for(const [i,x]of [208,432,656].entries()){
-      m.roomBlocks.push([x,64,x+144,184],[x,224,x+144,240],[x,184,x+24,224],[x+120,184,x+144,224]);
-      prop(m,'dd_fall'+(i+1),x+72,160,{sy:160});prop(m,'dd_foam',x+72,182,{floor:true});
-    }
-    // Market on the cross-street; camels and shade in the southeast stable.
-    // Keep the central entrance-to-reservoir promenade free of furnishings.
-    prop(m,'dd_camp',416,608);prop(m,'dd_pergola',816,752,{frame:0});
-    for(let i=1;i<=3;i++)prop(m,'dd_camel'+i,736+(i-1)*64,704);
-    for(let i=0;i<5;i++)prop(m,'dd_fence0',720+i*40,744,{frame:0});
-    [[224,480],[288,480],[352,480],[608,480],[672,480],[736,480]].forEach(([x,y],i)=>prop(m,'dd_rug'+i,x,y,{floor:true,frame:0}));
-    for(let i=1;i<=4;i++)prop(m,'dd_vulture'+i,i%2?96:864,i<3?288:496);
-    const gardens=[
-      ['dd_palm0',244,380],['dd_smallpalm0',316,380],['dd_fern',272,408],['dd_plant0',320,416],
-      ['dd_palm1',628,380],['dd_smallpalm1',700,380],['dd_plant1',624,416],['dd_plant2',696,416],
-      ['dd_acacia0',280,604],['dd_grass1',232,624],['dd_grassprop0',312,624],['dd_leaves',272,632],
-      ['dd_acacia1',664,604],['dd_grass2',624,624],['dd_grass3',704,624],['dd_grassprop1',640,640],['dd_grassprop2',688,640]
-    ];
-    for(const [name,x,y]of gardens)prop(m,name,x,y,{floor:/leaves|grassprop/.test(name),frame:/palm|acacia/.test(name)?0:undefined});
-    // Dry plants and stones form one border garden, rather than a display down the lanes.
-    const dry=['dd_dead_tree','dd_half_tree','dd_bush0','dd_bush1','dd_cactus0','dd_cactus1','dd_cactus2','dd_rock0','dd_rock1','dd_rock2','dd_dead_fern','dd_dead_leaves'];
-    dry.forEach((name,i)=>prop(m,name,64+(i%6)*48,712+Math.floor(i/6)*32,{frame:0,floor:/leaves/.test(name)}));
-    for(const [name,x,y,spr]of [['Caravaneer Dalia',400,640,'desert_trader1'],['Waterkeeper Nuri',568,272,'desert_trader2'],['Weaver Hanan',672,512,'desert_trader3']])m.npcs.push({n:name,x,y,packSpr:spr,desertNative:true,stationary:true,d:[name+': The reservoirs keep our caravans watered. The western road is less kind; watch for the reptiles along the road.']});
+  function oasisWaterfall(m){
+    // One cascade from the retired court now feeds the original oasis pool.
+    const x=20504,y=3840;
+    const cliff=prop(m,'dd_waterfall_cliff',x+72,y+80,{sy:-10001,frame:0,editKey:'oasis:waterfall-cliff'});
+    cliff.moveBlocks=[m.roomBlocks.push([x,y,x+144,y+80])-1];
+    prop(m,'dd_fall1',x+72,y+96,{editKey:'oasis:waterfall'});
+    prop(m,'dd_foam',x+72,y+118,{floor:true,editKey:'oasis:waterfall-foam'});
   }
   function organizeTown(m){
     // Keep house/door anchors intact. Group supplies beside homes and the market,
@@ -110,12 +90,15 @@ const DesertAdventure=(()=>{
       const index=m.objs.findIndex((s,i)=>i%3===0&&m.objs[i+1]===x&&m.objs[i+2]===y&&/^dhouse/.test(W.names[s]||''));
       if(index>=0)m.desertHouseSprites[index/3]='dd_house'+name;
     }
-    prop(m,'dd_pergola',24584,1552,{frame:0});
-    m.doors.push({x:1536,y:96,to:'sandspire_court',tx:29.5,ty:44.5,dir:'u',explicitDir:true,triggerRect:{x:24570,y:1537,w:28,h:12}});
-    for(const [name,x,y]of [['dd_plant0',24144,1360],['dd_plant1',24144,1536],['dd_plant2',24432,1712],['dd_fern',24168,1712],['dd_smallpalm1',24464,1552],['dd_rug1',24248,1584]])prop(m,name,x,y,{floor:/rug/.test(name),frame:0});
+    oasisWaterfall(m);
+    for(const [name,x,y]of [['dd_plant0',24160,1416],['dd_plant1',24144,1536],['dd_plant2',24432,1712],['dd_fern',24168,1712],['dd_smallpalm1',24464,1552],['dd_rug1',24248,1584]])prop(m,name,x,y,{floor:/rug/.test(name),frame:0});
   }
   function clearApproach(){
     if(MAPID!=='world')return;
+    const inFalls=(s,x,y)=>x>=20496&&x<=20664&&y>=3832&&y<=3944&&/tree|palm|acacia|cact|rock|bush|fern|grass/i.test(NAMES[s]||'');
+    for(const o of objs)if(inFalls(o.s,o.x,o.y))hidden.add(o.id);
+    fobjs=fobjs.filter(o=>!inFalls(o.s,o.x,o.y));
+    for(const [tag,arr]of [['s',scat],['a',sanm]])for(let i=0;i<arr.length;i+=3)if(inFalls(arr[i],arr[i+1],arr[i+2]))decorGone.add(tag+i);
     const inside=(x,y,pad=1)=>arenas.some(([,ax,ay])=>Math.hypot(x/16-ax,(y-8)/16-ay)<=8+pad);
     const debris=(s,x,y)=>inside(x,y)&&/tree|cactus|cact|rock|bush|fern|grass|^mt|^halfdead|^palm|^dacacia/i.test(NAMES[s]||'');
     for(const o of objs)if(debris(o.s,o.x,o.y))hidden.add(o.id);
