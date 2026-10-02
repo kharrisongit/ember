@@ -1863,6 +1863,8 @@ function npcDragonConversation(n,alt=false){
   return n.dragonRumor||n.d;
 }
 function fishingRodDialogue(name,n){
+  const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.rod(n);
+  if(authored)return authored;
   const visible=npcSeesDragon(n);
   if(name==='Odo'){
     if(odoRodReferral)return [
@@ -1958,7 +1960,11 @@ function hettieErrandReminder(){
   ];
   return lines[hettieErrandReminderIndex++%lines.length];
 }
-function npcWorldProfile(n){return typeof NPC_WORLD_TALKS==='undefined'?null:NPC_WORLD_TALKS[n.n]||null;}
+function npcWorldProfile(n){
+  const base=typeof NPC_WORLD_TALKS==='undefined'?null:NPC_WORLD_TALKS[n.n]||null;
+  const gift=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.gift(n);
+  return gift?{...base,gift}:base;
+}
 function npcFinishedRoadwork(n){
   const row=npcWorldProfile(n)?.roadwork;
   return row&&typeof JOURNEY_GATES!=='undefined'&&JOURNEY_GATES[row[0]]?.open()?row:null;
@@ -1970,6 +1976,8 @@ function npcWorldTopics(n){
   return topics;
 }
 function npcAuditedGreeting(n,alt){
+  const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.context(n);
+  if(authored)return authored;
   const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);if(quiet)return quiet;
   const p=npcWorldProfile(n);if(!p)return null;
   const spoken=lines=>lines?.map(line=>/^[^:]{1,21}: /.test(line)?line:n.n+': '+line)||null;
@@ -1986,6 +1994,8 @@ function npcAuditedGreeting(n,alt){
   return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
 }
 function npcStoryTopics(n){
+  const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.topics(n);
+  if(authored)return authored;
   if(n.n==='Hettie'&&quest<Q.NOISE)return [];
   if(n.n==='Nan Ferrow'&&!hasDragon())return [];
   const profile=NPC_STORIES[n.n]||[];
@@ -2034,7 +2044,9 @@ function openNpcTopics(n){
   if(n.n==='King Halvard'&&MAPID!=='tavern')return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
-  if((!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
+  const regional=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(n);
+  if((!regional&&!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
+  if(regional&&!npcStoryTopics(n).length)return false;
   if(n.n==='King Halvard')return false;
   n.goto=null;n.arrived=true;n.scriptWalking=false;n.px=n.x;n.py=n.y;
   const directional=n.packSpr?.replace(/_idle_d$/,'');
@@ -2050,7 +2062,7 @@ function openNpcTopics(n){
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},
     ...(brambleHint(n)?[{n:brambleHint(n).title,category:"lead",summary:"Ask about Bramble and his owner",go:()=>choose(brambleHint(n))}]:[]),
-    {n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),category:libraryQuestHint(n)?'lead':'greeting',go:()=>beginNpcTalk(n,true)},
+    ...(!regional?[{n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),category:libraryQuestHint(n)?'lead':'greeting',go:()=>beginNpcTalk(n,true)}]:[]),
     ...npcStoryTopics(n).map(topic=>({n:topic.title,category:topic.category||(topic.go?"lead":"story"),summary:topic.summary,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',category:'trade',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;

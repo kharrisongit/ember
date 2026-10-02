@@ -12,12 +12,12 @@ const select=name=>{if(run('EmberConversationFlow.welcoming()'))box.querySelecto
 const finishGreeting=()=>{for(let i=0;i<3&&run('!!scene?.conversationGreeting');i++)run('typeAll();scene.t=1;actionButton()');};
 assert(run('scene?.conversationGreeting'),'A starts an overworld greeting');
 assert.equal(run('ask'),null,'The invitation waits for the greeting exchange');
-assert.equal(run('typeWho'),'Hettie');assert.equal(run('typeFull'),run('NPC_TOPIC_GREETINGS.Hettie'));
+assert.equal(run('typeWho'),'Hettie');assert.equal(run('typeFull'),run('MillwoodShroomDialogue.cast.Hettie.first[0]'));
 assert.equal(say.parentNode,c.document.body,'Greeting uses the overworld dialogue overlay');
 assert(!run('EmberConversationFlow.active()'),'No full-screen session during the greeting');
 run('actionButton()');assert(run('typeDone()'));assert.equal(run('scene.i'),0,'First A finishes typing');
 run('scene.t=1;actionButton()');assert.equal(run('typeWho'),'Corin');
-assert.equal(run('typeFull'),run('CORIN_TOPIC_GREETINGS.Hettie'));
+assert.equal(run('typeFull'),run('MillwoodShroomDialogue.cast.Hettie.first[1]'));
 assert.equal(run('ask'),null,'Corin replies before choices appear');
 finishGreeting();assert(run('ask.conversationPrompt'),'The exchange ends at the small invitation');
 assert.deepEqual(JSON.parse(run('JSON.stringify(ask.opts.filter(o=>!o.head).map(o=>o.n))')),['Talk','Maybe Another Time']);
@@ -60,9 +60,9 @@ assert.equal(run('typeFull'),'');assert.equal(run('typeWho'),'');assert(!say.cla
 tap(say);tap();assert.equal(run('typeFull'),'','Panels stay blank until a topic is chosen');
 assert.equal(run('scene'),null,'A greeting never starts a quest scene');
 run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),'');
-select('Your first herd');
+select('How did you start keeping cattle?');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'listen');
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Tell me about your first herd.');
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'How did you start keeping cattle?');
 assert(box.querySelector('.conversationStage').classList.contains('is-speaking'));
 assert(!player.classList.contains('is-speaking'));
 assert(player.classList.contains('is-listening'),'Corin’s panel dims while the NPC is speaking');
@@ -98,8 +98,8 @@ assert.equal(run('ask.opts.filter(o=>!o.head).length'),3,'Three replies stay wit
 assert(box.querySelector('.conversationGoodbye'),'B remains available while choosing an optional reply');
 assert.equal(box.querySelector('.conversationPlayer').dataset.mode,'replies');
 const waiting=run('scene.i');tap();assert.equal(run('scene.i'),waiting,'Tapping scenery never chooses a reply');
-select('Did your aunt want her back?');assert.equal(run('typeWho'),'Corin');
-assert.match(run('typeFull'),/aunt/);
+select('Was she as stubborn as our cattle?');assert.equal(run('typeWho'),'Corin');
+assert.match(run('typeFull'),/stubborn/);
 assert(player.classList.contains('is-speaking'));assert(!box.querySelector('.conversationStage').classList.contains('is-speaking'));
 assert(box.querySelector('.conversationStage').classList.contains('is-listening'),'The NPC panel dims when Corin takes a turn');
 assert(!player.classList.contains('is-listening'));
@@ -111,13 +111,13 @@ assert(!box.querySelector('.deckReadRing'),'Reply cards do not display a meaning
 assert.equal(rows.querySelectorAll('.deckReply').find(n=>n.dataset.selected==='true').dataset.askIndex,3,'The selected reply remains highlighted while it is spoken');assert.equal(box.style.display,'grid');
 const autoLine=()=>run(`typeAll();var autoNow=performance.now();for(var frame=0;frame<120;frame++){if(scene)scene.t+=.05;EmberConversationFlow.tick(autoNow+frame*50);}`);
 assert(box.querySelector('.conversationPlayer').querySelector('.conversationAdvance').hidden,'Automatic exchanges do not request Next');
-autoLine();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/visited/);
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Did your aunt want her back?','Corin’s actual reply remains while the NPC answers');
+autoLine();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/expert/);
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Was she as stubborn as our cattle?','Corin’s actual reply remains while the NPC answers');
 autoLine();assert.equal(run('ask'),null,'The final NPC answer never times out to the greeting');
-assert.match(run('typeFull'),/visited/);
+assert.match(run('typeFull'),/expert/);
 assert(!box.querySelector('.conversationStage').querySelector('.conversationAdvance').hidden,'The final answer asks the player to press Next');
 autoLine();assert.equal(run('ask'),null,'Extra reading time leaves the completed exchange visible');
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Did your aunt want her back?');
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Was she as stubborn as our cattle?');
 next();assert.equal(run('ask.npcConversation'),'Hettie');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'welcome');
 assert(!player.classList.contains('is-listening'));assert(!box.querySelector('.conversationStage').classList.contains('is-listening'),'Greeting panels regain full brightness');
@@ -147,27 +147,27 @@ assert.equal(run('lockEl'),dossier);
 assert(!dom.dispatch(dossier,'touchmove',{cancelable:true,touches:[{clientX:10,clientY:100}]}).defaultPrevented);
 dom.dispatch(dossier,'touchend');run('askBack()');
 // The secondary control returns from replies, then becomes Goodbye at the root.
-select('Your first herd');next();run('scene.t=1');next();assert(run('ask.replyChoices'));
+select('How did you start keeping cattle?');next();run('scene.t=1');next();assert(run('ask.replyChoices'));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');
 run("EmberConversationFlow.key({key:'b',preventDefault(){}})");
 assert(run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Goodbye');
 run("EmberConversationFlow.key({key:'b',preventDefault(){}})");
 assert(!run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
-run('openNpcTopics(person)');select('Your first herd');
+run('openNpcTopics(person)');select('How did you start keeping cattle?');
 box.querySelector('.conversationGoodbye').onclick({stopPropagation(){}});
 assert(!run('EmberConversationFlow.active()'));assert.equal(run('scene'),null);
 run('openNpcTopics(person)');
 // Every reply remains on this topic, including later topics without bespoke branches.
-select('A day off');run('typeAll();scene.t=1');step();
+select('Do you ever take a day off?');run('typeAll();scene.t=1');step();
 assert.equal(run('ask.opts.filter(o=>!o.head).length'),3);
 assert(!run('ask.opts.some(o=>/another question|Tell me about “/.test(o.n))'));
-select('What would you do first?');assert.equal(run('typeWho'),'Corin');
+select('What would you do with a whole free morning?');assert.equal(run('typeWho'),'Corin');
 autoLine();assert.equal(run('typeWho'),'Hettie');assert.match(run('typeFull'),/breakfast/);
 autoLine();assert.equal(run('ask'),null,'Other reply branches also wait at the final answer');
 next();assert.equal(run('ask.npcConversation'),'Hettie');assert.equal(run('scene'),null);
 // The actual pointer path rejects drags, multi-touch and synthetic click echoes.
-select('Your first herd');
+select('How did you start keeping cattle?');
 dom.dispatch(canvas,'pointerdown');dom.dispatch(canvas,'pointermove',{clientX:30});dom.dispatch(canvas,'pointerup',{clientX:30});dom.dispatch(canvas,'click');
 assert(run('!typeDone()'),'Drag never completes dialogue');
 dom.dispatch(canvas,'pointerdown');dom.dispatch(canvas,'pointerdown',{pointerId:2,isPrimary:false});dom.dispatch(canvas,'pointerup',{pointerId:2,isPrimary:false});dom.dispatch(canvas,'pointerup');
@@ -176,11 +176,9 @@ const ui=dom.element('testButton');ui.tagName='BUTTON';dom.element('stage').appe
 tap(ui);assert(run('!typeDone()'),'Unrelated controls do not advance speech through a stage ancestor');
 next();assert(run('typeDone()'));assert.equal(run('scene.i'),0);
 run('scene.t=1');next();run('askBack()');
-// Greeting completion returns to the same NPC; gifts are not bypassed.
-select('Hello!');assert(run('sayNpc===person'));
-assert(box.querySelector('.conversationGoodbye').disabled,'Required NPC exchanges finish before Goodbye');
-next();assert(run('typeDone()'));next();
-assert.equal(run('ask.npcConversation'),'Hettie');
+// Regional greetings happen once in the world; no second Hello repeats them.
+assert(!run("ask.opts.some(o=>o.n==='Hello!')"));
+// Other casts retain their greeting/gift entry, including reward locks.
 run(`askShut();var gifted={n:'Sela',x:100,y:100,d:['Sela: Take care.']};glassShield=true;openNpcTopics(gifted);glassShield=false;dragonBanterSeen.add('learned:shield');`);
 select('Hello!');assert.equal(run('ask'),null);finish();
 assert(run('glassShield'));assert(run('revealing'));
@@ -220,7 +218,7 @@ for(const name of names){
  if(typeFull||typeWho||sayEl.classList.contains('on'))throw Error('Panel should start blank for '+speaker);
  EmberConversationFlow.openChat();EmberConversationFlow.take({n:authored.title,go:()=>EmberConversationFlow.playTopic(actor,authored)});typeAll();scene.t=1;EmberConversationFlow.advance();`);
  assert(run('ask?.replyChoices'),name+' gets reply choices');
- assert.equal(run('ask.opts.filter(o=>!o.head).length'),3);
+ assert(run('ask.opts.filter(o=>!o.head).length>=2&&ask.opts.filter(o=>!o.head).length<=3'));
  const reply=JSON.parse(run('JSON.stringify(EmberConversationBranches.choices(scene,scene.i)[0])'));
  select(reply[0]);run('typeAll();scene.t=1');step();
  assert.equal(run('typeFull'),reply[1],name+' answers the selected question');

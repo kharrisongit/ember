@@ -25,7 +25,7 @@ let spoken=null;c.playScene=(lines,options)=>{spoken={lines,options};};c.askDraw
 for(const victory of [false,true]){
  c.victory= victory;run('wonAll=victory');
  for(const npc of cast){
-  if(npc.n==='King Halvard')continue;
+  if(npc.n==='King Halvard'||run('MillwoodShroomDialogue.cast')[npc.n])continue; // Covered exhaustively by millwood-shroom-dialogue.mjs.
   c.actor=npc;run(`MAPID='world';if(actor.charm)charm[actor.charm]=true;if(actor.gift)breathHas[actor.gift]=true;dragon.x=actor.x;dragon.y=actor.y;`);
   assert(run('openNpcTopics(actor)'),npc.n+' menu');
   const opts=run('ask.opts');

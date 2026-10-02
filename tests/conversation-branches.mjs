@@ -16,7 +16,7 @@ c.checkTopic=(name,topic)=>{
  const key=topic.branchKey||name+'|'+topic.title;
  if(result.points.length&&!result.record)bad.push(key+': missing topic');
  for(const p of result.points){
-  if(new Set([p.line.slice(7),...p.alternatives.map(a=>a[0])]).size<3)bad.push(key+' @'+p.index+': missing alternatives');
+  if(new Set([p.line.slice(7),...p.alternatives.map(a=>a[0])]).size<(topic.authoredBranches?2:3))bad.push(key+' @'+p.index+': missing alternatives');
   if(!p.answer||p.answer.startsWith('Corin: '))bad.push(key+' @'+p.index+': no NPC answer');
   if(p.alternatives.some(([q,a])=>!q.trim()||!a.trim()))bad.push(key+': empty response');
  }
@@ -53,4 +53,4 @@ for(const file of fs.readdirSync('assets/dialogue/branches').filter(f=>f.endsWit
 for(const [key,t]of Object.entries(data.topics))assert(Object.keys(t.decisions).length,key+' is authored');
 const variants=[...tested.values()],decisions=variants.reduce((n,t)=>n+t.decisions,0);
 assert(authored>1000);assert(variants.length>950);
-console.log(`PASS: ${variants.length} topic/state variants, ${decisions} reply points, ${authored} authored decision records; three distinct authored choices, NPC answers, source parity, royal visits and equipment combinations.`);
+console.log(`PASS: ${variants.length} topic/state variants, ${decisions} reply points, ${authored} authored decision records; two or three distinct authored choices, NPC answers, source parity, royal visits and equipment combinations.`);

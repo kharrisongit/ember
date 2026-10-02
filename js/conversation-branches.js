@@ -2,6 +2,7 @@
    matching, generic moral endings or automatic first-story reply injection. */
 (function(){
   function record(name,topic={}){
+    if(topic.authoredBranches)return topic.authoredBranches;
     const key=topic.branchKey||CONVERSATION_BRANCH_DATA.aliases[name+'|'+topic.title];
     return key?CONVERSATION_BRANCH_DATA.topics[key]:null;
   }
