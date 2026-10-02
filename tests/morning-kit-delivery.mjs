@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{document:dom.document,furniture:false});
+run('registerInventorySprites();bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false;scene=null;sayNpc=null;');
+c.saveGame=()=>{};c.drawGameImage=()=>{};
+run('takeMorningSupply(morningDeskItems()[0])');
+assert(run('revealing'));assert(run('!!SPR.morning_kit_reveal'));assert.match(run('revCap.textContent'),/Bag, Map and Father's Compass/);
+run('hideReveal()');assert(run('revealing'));assert(dom.element('reveal').classList.contains('kit-help'));
+assert.match([...dom.element('revealCap').children].map(n=>n.textContent).join(' '),/directional pad/);assert.match([...dom.element('revealCap').children].map(n=>n.textContent).join(' '),/next story objective automatically/);
+run('hideReveal()');assert(!run('revealing'));assert(!dom.element('reveal').classList.contains('kit-help'));
+run("MAPID='world';MD=W.maps.world;npcs=MD.npcs;quest=Q.KING;atlasTrackedQuest='main';");
+const before=run('JSON.stringify(compassSelectedTarget())');assert.equal(run('compassSelectedTarget().map'),'house22');
+run('dismissRoadGuards()');assert.equal(run('JSON.stringify(compassSelectedTarget())'),before,'King scene removing guards keeps the delivery target');
+run('quest=Q.ELDER');assert.equal(run('JSON.stringify(compassSelectedTarget())'),before,'Finishing king scene keeps the same destination');
+console.log('PASS: combined pickup, controls popup after dismissal, and continuous Maddock delivery targeting across king scene.');

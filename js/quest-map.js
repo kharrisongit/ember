@@ -91,7 +91,7 @@ function atlasOpeningTarget(){
    return atlasNpcTarget(['Hettie'],'world');
   case Q.ERRAND:return atlasNpcTarget(['Hettie'],'world');
   case Q.EGGS:return item('eggs');
-  case Q.KING:return atlasNpcTarget([...ROAD_GUARDS],'world')||spot('king');
+  case Q.KING:return atlasNpcTarget(['Maddock','Elder Maddock'],'house22');
   case Q.ELDER:return atlasNpcTarget(['Maddock','Elder Maddock'],'house22');
   case Q.NOISE:return spot('path');
   case Q.ARMED:return spot('north');

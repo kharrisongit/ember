@@ -143,3 +143,9 @@
 #worldAtlas .atlasPlace.tracked-place::after{content:' ◆';font-size:9px;color:#a87529;text-shadow:none}
 #atlasCursor{width:9px;height:9px;border-width:1px;box-shadow:0 0 0 1px #755239;transform:translate(-50%,-50%) scale(var(--map-label-scale))}
 #atlasPlayerMarker{font-size:9px;transform:translate(-50%,-50%) scale(var(--map-label-scale))}
+
+#reveal.kit-help #revealArt{display:none}
+#reveal.kit-help #revealCap{box-sizing:border-box;width:calc(100% - 28px);max-width:440px;max-height:90%;overflow:auto;font-size:14px;letter-spacing:0;text-align:left;line-height:1.4}
+#reveal.kit-help #revealCap strong{display:block;text-align:center;font-size:20px;margin-bottom:12px}
+#reveal.kit-help #revealCap p{margin:8px 0}
+#reveal.kit-help #revealCap small{display:block;text-align:center;margin-top:12px}

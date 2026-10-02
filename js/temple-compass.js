@@ -123,12 +123,37 @@ function drawMorningSupplyGlint(o,t){
   const x=Math.round(o.x+o.item.width*.25),y=Math.round(o.y-o.item.width*.7);
   ctx.fillRect(x-2,y,5,1);ctx.fillRect(x,y-2,1,5);ctx.restore();
 }
+function morningKitArt(){
+  const key='morning_kit_reveal';
+  if(SPR[key])return key;
+  const canvas=document.createElement('canvas');canvas.width=288;canvas.height=108;
+  const g=canvas.getContext('2d');g.imageSmoothingEnabled=true;
+  ['inventory_bag','inventory_mapCompass','inventory_compass'].forEach((name,i)=>{
+    const sp=SPR[name];if(sp)drawGameImage(g,sheetOf(sp),sp[0],sp[1],sp[2],sp[3],i*96,6,96,96);
+  });
+  animalSheets[key]=canvas;SPR[key]=[0,0,288,108,1,key];return key;
+}
+function showMorningKitHelp(){
+  showReveal(morningKitArt(),'Your adventure kit',1,true,()=>revEl.classList.remove('kit-help'));
+  revEl.classList.add('kit-help');
+  revCap.replaceChildren();
+  const title=document.createElement('strong');title.textContent='Your adventure kit';revCap.appendChild(title);
+  for(const [label,text] of [
+    ['Move','Use the directional pad.'],
+    ['A','Talk, pick up items, and continue dialogue.'],
+    ['B','Hold to run; use it to go back in menus.'],
+    ['Bag','Open Bag for items, equipment, and Full inventory.'],
+    ['Map','Open Map to see discovered places and choose a quest.'],
+    ['Compass','The needle follows the path to your next story objective automatically. Choose another quest on the Map to change it.']
+  ]){const row=document.createElement('p');row.textContent=label+' — '+text;revCap.appendChild(row);}
+  const end=document.createElement('small');end.textContent='Press A or tap to continue';revCap.appendChild(end);
+}
 function takeMorningSupply(it){
   if(!it.deskPickup||!morningSuppliesPending())return;
   bagOwned=true;templeCompass.mapGiven=true;
   templeCompass.owned=true;templeCompass.awakened=true;
   refreshMapControls();refreshHandle();saveGame();
-  showReveal('inventory_bag',"Corin picked up his Bag, Map and Father's Compass.",1,true);
+  showReveal(morningKitArt(),"Corin picked up his Bag, Map and Father's Compass.",1,true,showMorningKitHelp);
 }
 function nanMorningDoorBlocked(d){return MAPID==='house26_bedroom'&&d?.to==='house26'&&morningSuppliesPending();}
 function nanMorningSolid(x,y){
@@ -404,7 +429,7 @@ function drawTempleCompass() {
     cache.guide=cache.field?compassTempleGuide(cache.field,P):compassWalkGuide(cache,P);
     cache.px=P.x;cache.py=P.y;
   }
-  const guide=cache.guide||{x:P.x,y:P.y-1,inactive:true};
+  const guide=cache.guide||(cache.target?{...cache.target,arrived:false}:{x:P.x,y:P.y-1,inactive:true});
   const attention=compassTrackingMotion();
   const x = VW - 30, y = 30;
   ctx.save();

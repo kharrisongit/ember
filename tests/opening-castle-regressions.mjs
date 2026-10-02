@@ -13,7 +13,7 @@ for(const key of ['morningBag','morningMap','morningCompass']){
  run('bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false');
  c.pickupKey=key;
  assert(run(`(()=>{const it=morningDeskItems().find(i=>i.key===pickupKey);for(let y=it.y;y<it.y+42;y+=2)for(let x=it.x-28;x<it.x+28;x+=2)if(canStand(x,y)&&itemAt(x,y)?.key===pickupKey){P.x=x;P.y=y;return true;}return false;})()`),'Supply can be reached from a walkable floor');
- run('interact()');assert(run('revealing'));run('hideReveal()');
+ run('interact()');assert(run('revealing'));run('hideReveal();hideReveal()');
  assert(run('morningDeskItems().every(i=>i.owned())'),'Any desk item collects all three supplies');
  assert(!run('itemHere(morningDeskItems().find(i=>i.key===pickupKey))'),'Picked supply disappears');
 }

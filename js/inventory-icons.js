@@ -36,7 +36,7 @@ function registerInventorySprites() {
     SPR[alias] = SPR['inventory_'+key];
 }
 
-function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416); }
+function isInventorySprite(sprite) { return !!sprite && (sprite[5]==='morning_kit_reveal' || (sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416); }
 
 // Resolve only UI art; world pickups retain their original sprite sizes.
 const INVENTORY_UI_ALIASES = {
