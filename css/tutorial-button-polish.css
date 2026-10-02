@@ -18,3 +18,5 @@
 #airm .row>span:not(.dot){font-weight:700!important;letter-spacing:.01em!important}
 @media(max-width:420px){#itemm>#itemQuickHead{gap:5px!important}#itemm .utilityIcon{flex-direction:column;gap:2px;min-width:46px!important;padding:4px 6px!important}#itemm #itemFullBtn{font-size:10px!important}#bagHead .chips{flex-wrap:wrap;gap:7px}#bagHead .chip.utilityIcon{min-width:59px!important;padding:5px 7px!important}}
 @media(max-height:640px){#reveal.kit-help #revealCap{padding:12px 16px}#reveal.kit-help .lesson-art{width:40px;height:40px}#reveal.kit-help #revealCap strong{font-size:21px;margin-bottom:10px}#reveal.kit-help #revealCap .lesson-row{margin:5px 0;padding-top:7px;padding-bottom:7px}}
+
+#reveal.kit-help #revealArt{display:none!important}

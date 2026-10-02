@@ -126,7 +126,9 @@ function showMorningHelp(titleText,rows){
   showReveal(morningKitArt(),titleText,1,true,()=>revEl.classList.remove('kit-help'));
   revEl.classList.add('kit-help');revCap.replaceChildren();
   const intro=document.createElement('small');intro.className='lesson-kicker';intro.textContent=titleText==='Move & Interact'?'YOUR FIRST STEPS':'READY FOR THE ROAD';revCap.appendChild(intro);
-  const art=document.createElement('img');art.className='lesson-art';art.alt='';art.src=titleText==='Move & Interact'?'assets/icons/move.svg':'assets/inventory/travel-gear.webp';revCap.appendChild(art);
+  if(titleText==='Your Travel Gear'){
+    const art=document.createElement('img');art.className='lesson-art';art.alt='';art.src='assets/inventory/travel-gear.webp';revCap.appendChild(art);
+  }
   const title=document.createElement('strong');title.textContent=titleText;revCap.appendChild(title);
   for(const [label,text] of rows){const row=document.createElement('p');row.className='lesson-row';row.dataset.control=label;row.textContent=label+' — '+text;revCap.appendChild(row);}
   const end=document.createElement('button');end.type='button';end.className='lesson-continue';end.textContent=titleText==='Move & Interact'?'Let’s go  ·  A':'Ready to explore  ·  A';end.addEventListener('click',event=>{event.stopPropagation();hideReveal();});revCap.appendChild(end);
