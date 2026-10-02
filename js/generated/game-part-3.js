@@ -4364,7 +4364,7 @@ function useDoors(dt) {
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
-  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My bag, map and compass are still on the desk.");return;}
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My Travel Gear is still on the desk.");return;}
   if(!foesHeld&&arenaLock?.templeRoom&&arenaLock.templeMap===MAPID&&arenaT>0)return;
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
@@ -4373,7 +4373,7 @@ function useDoors(dt) {
   beginDoorEntry(d);
 }
 function beginDoorEntry(d){
-  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My bag, map and compass are still on the desk.");return;}
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My Travel Gear is still on the desk.");return;}
   globalThis.window?.EmberSfx?.door?.();
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
   if (animated) {
@@ -4711,12 +4711,9 @@ const BAG = [
   {key:"soulwing",kind:"key",name:"Soulwing Relic",tell:"Won by defeating the Ice Moth. If Corin falls, Aurelius restores him to full health right where he fell. The battle continues, with 3 seconds of protection. Activates automatically once, then is consumed. No equipment slot needed.",has:()=>IceMoth.owned(),icon:()=>"inventory_soulwing"},
   {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
   {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
-  { key: "worldMap", kind: "key", name: "Map of Emberfell",
-    tell: "Nan’s map. Open MAP and its Quest List to review your errands and choose a destination.",
-    has: () => templeCompass.mapGiven, icon: () => "inventory_mapCompass" },
-  { key: "fatherCompass", kind: "key", name: "Father's Compass",
-    tell: "Your father’s compass, entrusted to you by Nan. Choose a quest in MAP and its needle will guide you there.",
-    has: () => templeCompass.owned, icon: () => "inventory_compass" },
+  { key: "travelGear", kind: "key", name: "Travel Gear",
+    tell: "Your bag, Nan’s map, and your father’s compass, packed together for the road. BAG holds your items and equipment. MAP shows discovered places and quests. The compass automatically guides you along the path to your next story objective; select another quest on the Map to change it.",
+    has: () => bagOwned || templeCompass.mapGiven || templeCompass.owned, icon: () => "inventory_travelGear" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",
     has: () => breathHas.lightning,

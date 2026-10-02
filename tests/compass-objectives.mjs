@@ -4,7 +4,7 @@ const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{fur
 const value=s=>JSON.parse(run('JSON.stringify('+s+')'));
 run("prepareHollybeckVillagers(W.maps.world,'world');MAPID='world';MD=W.maps.world;npcs=MD.npcs;atlasTrackedQuest='main';templeCompass.morningMet=true;bagOwned=true;templeCompass.mapGiven=true;templeCompass.owned=true;");
 const target=()=>value('compassSelectedTarget()');
-for(const [stage,expected] of [['ABED','world'],['ERRAND','world'],['EGGS','world'],['KING','house22'],['ELDER','house22'],['NOISE','world'],['ARMED','world'],['FLED','world'],['CARRY','world']]){
+for(const [stage,expected] of [['ABED','world'],['ERRAND','world'],['EGGS','world'],['KING','world'],['ELDER','house22'],['NOISE','world'],['ARMED','world'],['FLED','world'],['CARRY','world']]){
  run('quest=Q.'+stage);const t=target();assert(t&&Number.isFinite(t.x)&&Number.isFinite(t.y),stage);assert.equal(t.map,expected,stage);
 }
 run('quest=Q.EGGS');let t=target();assert.equal(t.x,run("ITEMS.find(i=>i.key==='eggs').tx*TS+8"));assert.equal(t.y,run("ITEMS.find(i=>i.key==='eggs').ty*TS+16"));

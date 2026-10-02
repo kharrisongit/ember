@@ -2564,7 +2564,7 @@ const isSolid = (px, py, ignoreNpcBuffer = false, navigation = false) => {
         y >= fieldGate && y <= fieldGate + 5) return true;
   }
   if (fenceAt && fenceAt.has(y * MW + x)) return true;
-  if (!navigation && blockedByGuard(x, y)) return true;
+  if (blockedByGuard(x, y)) return true;
   if (odoShuts(x, y)) return true;
   if (blockedByItem(x, y)) return true;
   return blockedByHerd(x, y);

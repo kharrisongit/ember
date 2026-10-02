@@ -56,8 +56,7 @@ for(const name of ['Spider Queen','Frosthorn']){
 // and follow it when the editor moves the actor.
 run("var desk=W.maps.house26_bedroom.roomActors.find(a=>a.morningDesk);var supplies=morningDeskItems()");
 assert.equal(run('desk.extractedCanvas.width'),48);assert(run('supplies.every(i=>i.sy>desk.sy)'));
-assert(run('supplies[0].x+supplies[0].width/2<supplies[1].x-supplies[1].width/2'));
-assert(run('supplies[1].x+supplies[1].width/2<supplies[2].x-supplies[2].width/2'));
+assert.equal(run('supplies.length'),1,'Travel Gear is a single desk item');
 run('var firstX=supplies[0].x;shiftActorData(W.maps.house26_bedroom,desk,desk.x+16,desk.y,true)');
 assert.equal(run('morningDeskItems()[0].x-firstX'),16);
 console.log('PASS: cloud discovery, NPC referral, actual visits, hidden selection, flight isolation, save migration, boss/reward spoiler gates and visible movable desk pickups.');

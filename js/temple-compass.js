@@ -62,10 +62,10 @@ function giveFatherCompass() {
   templeCompass.owned = true;
   templeCompass.awakened = true;
   // Also repair older saves that reached this gift without the morning Map.
-  templeCompass.mapGiven = true;
+  templeCompass.mapGiven = true;bagOwned=true;
   refreshMapControls();
   saveGame();
-  showReveal('inventory_compass', "Corin received Father's Compass.");
+  showReveal('inventory_travelGear', 'Corin received his Travel Gear.');
 }
 function worldMapUnlocked(){return templeCompass.mapGiven;}
 function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gameplayStarted){
@@ -84,7 +84,7 @@ function morningSuppliesPending(){return !bagOwned || !templeCompass.mapGiven ||
 function startMorning(){
   if(quest!==Q.ABED||templeCompass.morningSpoken)return;
   templeCompass.morningSpoken=true;
-  playScene(['Corin: Good morning, Millwood! My bag, map and compass are on the desk. I should take them before I head out.']);
+  playScene(['Corin: Good morning, Millwood! My Travel Gear is on the desk. I should take it before I head out.']);
 }
 function startNanMorning(nan){
   if(hasDragon()||!nanMorningPending())return false;
@@ -110,9 +110,7 @@ function morningDeskItems(){
   const desk=W.maps.house26_bedroom?.roomActors?.find(a=>a.morningDesk||a.n==='itable1');
   const x=desk?.x??65,y=(desk?.y??161)-10,sy=(desk?.sy??desk?.y??161)+1;
   return [
-    {key:'morningBag',spr:'inventory_bag',x:x-16,y,width:15,took:'Corin picked up his Bag.',owned:()=>bagOwned},
-    {key:'morningMap',spr:'inventory_mapCompass',x,y:y-1,width:16,took:'Corin picked up the Map of Emberfell.',owned:()=>templeCompass.mapGiven},
-    {key:'morningCompass',spr:'inventory_compass',x:x+17,y,width:11,took:"Corin picked up Father's Compass.",owned:()=>templeCompass.owned}
+    {key:'travelGear',spr:'inventory_travelGear',x,y,width:24,took:'Corin picked up his Travel Gear.',owned:()=>!morningSuppliesPending()}
   ].map(it=>({...it,sy,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true}));
 }
 function drawMorningSupplyGlint(o,t){
@@ -123,21 +121,12 @@ function drawMorningSupplyGlint(o,t){
   const x=Math.round(o.x+o.item.width*.25),y=Math.round(o.y-o.item.width*.7);
   ctx.fillRect(x-2,y,5,1);ctx.fillRect(x,y-2,1,5);ctx.restore();
 }
-function morningKitArt(){
-  const key='morning_kit_reveal';
-  if(SPR[key])return key;
-  const canvas=document.createElement('canvas');canvas.width=288;canvas.height=108;
-  const g=canvas.getContext('2d');g.imageSmoothingEnabled=true;
-  ['inventory_bag','inventory_mapCompass','inventory_compass'].forEach((name,i)=>{
-    const sp=SPR[name];if(sp)drawGameImage(g,sheetOf(sp),sp[0],sp[1],sp[2],sp[3],i*96,6,96,96);
-  });
-  animalSheets[key]=canvas;SPR[key]=[0,0,288,108,1,key];return key;
-}
+function morningKitArt(){return 'inventory_travelGear';}
 function showMorningKitHelp(){
-  showReveal(morningKitArt(),'Your adventure kit',1,true,()=>revEl.classList.remove('kit-help'));
+  showReveal(morningKitArt(),'Your Travel Gear',1,true,()=>revEl.classList.remove('kit-help'));
   revEl.classList.add('kit-help');
   revCap.replaceChildren();
-  const title=document.createElement('strong');title.textContent='Your adventure kit';revCap.appendChild(title);
+  const title=document.createElement('strong');title.textContent='Your Travel Gear';revCap.appendChild(title);
   for(const [label,text] of [
     ['Move','Use the directional pad.'],
     ['A','Talk, pick up items, and continue dialogue.'],
@@ -153,7 +142,7 @@ function takeMorningSupply(it){
   bagOwned=true;templeCompass.mapGiven=true;
   templeCompass.owned=true;templeCompass.awakened=true;
   refreshMapControls();refreshHandle();saveGame();
-  showReveal(morningKitArt(),"Corin picked up his Bag, Map and Father's Compass.",1,true,showMorningKitHelp);
+  showReveal(morningKitArt(),"Corin picked up his Travel Gear.",1,true,showMorningKitHelp);
 }
 function nanMorningDoorBlocked(d){return MAPID==='house26_bedroom'&&d?.to==='house26'&&morningSuppliesPending();}
 function nanMorningSolid(x,y){

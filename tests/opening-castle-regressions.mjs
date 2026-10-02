@@ -5,11 +5,11 @@ const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),{log(){},
 await run('loadPublishedEditorLayouts()');
 run(`mode='play';gameplayStarted=true;quest=Q.ABED;bagOwned=false;restoreFatherCompass({});EmberRiding.skip();EmberEquipmentTutorial.skip();loadMap(W.start);[P.x,P.y]=MD.spawn;`);
 assert.equal(run('MAPID'),'house26_bedroom');assert(run('canStand(P.x,P.y)'));
-run('startMorning()');assert.match(run('scene.lines[0]'),/bag, map and compass are on the desk/);
+run('startMorning()');assert.match(run('scene.lines[0]'),/Travel Gear is on the desk/);
 run(`scene=null;var exit=MD.doors.find(d=>d.to==='house26');beginDoorEntry(exit);`);
 assert.equal(run('doorMotion'),null,'Bedroom exit waits for the desk supplies');
 assert(run('morningSuppliesPending()'));
-for(const key of ['morningBag','morningMap','morningCompass']){
+for(const key of ['travelGear']){
  run('bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false');
  c.pickupKey=key;
  assert(run(`(()=>{const it=morningDeskItems().find(i=>i.key===pickupKey);for(let y=it.y;y<it.y+42;y+=2)for(let x=it.x-28;x<it.x+28;x+=2)if(canStand(x,y)&&itemAt(x,y)?.key===pickupKey){P.x=x;P.y=y;return true;}return false;})()`),'Supply can be reached from a walkable floor');

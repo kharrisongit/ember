@@ -5,10 +5,13 @@ const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),{log(){},
 run('registerInventorySprites();bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false;scene=null;sayNpc=null;');
 c.saveGame=()=>{};c.drawGameImage=()=>{};
 run('takeMorningSupply(morningDeskItems()[0])');
-assert(run('revealing'));assert(run('!!SPR.morning_kit_reveal'));assert.match(run('revCap.textContent'),/Bag, Map and Father's Compass/);
+assert(run('revealing'));assert(run('!!SPR.inventory_travelGear'));assert.match(run('revCap.textContent'),/Travel Gear/);
 run('hideReveal()');assert(run('revealing'));assert(dom.element('reveal').classList.contains('kit-help'));
 assert.match([...dom.element('revealCap').children].map(n=>n.textContent).join(' '),/directional pad/);assert.match([...dom.element('revealCap').children].map(n=>n.textContent).join(' '),/next story objective automatically/);
-run('hideReveal()');assert(!run('revealing'));assert(!dom.element('reveal').classList.contains('kit-help'));
+run('hideReveal()');assert(!run('revealing'));
+assert.equal(run("BAG.filter(i=>['worldMap','fatherCompass','travelGear'].includes(i.key)).length"),1);
+assert.equal(run("BAG.find(i=>i.key==='travelGear').has()"),true);
+assert.equal(run('morningDeskItems().length'),1);assert(!dom.element('reveal').classList.contains('kit-help'));
 run("MAPID='world';MD=W.maps.world;npcs=MD.npcs;quest=Q.KING;atlasTrackedQuest='main';");
 const before=run('JSON.stringify(compassSelectedTarget())');assert.equal(run('compassSelectedTarget().map'),'house22');
 run('dismissRoadGuards()');assert.equal(run('JSON.stringify(compassSelectedTarget())'),before,'King scene removing guards keeps the delivery target');
