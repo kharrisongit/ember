@@ -168,9 +168,15 @@
       else if(session.topicReadKey)saveGame();
       session.friendshipTopic=null;session.topicReadKey=null;
     }
+    const farewellNpc=session?.menu?.npcActor;
     callback??=session?.menu?.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;
     if(scene?.conversationReplies){scene=null;sayOff();}
-    askShut();if(callback)callback();return true;
+    askShut();if(callback)callback();
+    if(farewellNpc?.n==='Nan Ferrow')playScene([
+      'Corin: I’ll be off then, Nan.',
+      'Nan Ferrow: Take care, love. Stop by sometime and I’ll whip you up something special.'
+    ],{who:farewellNpc.n,npcActor:farewellNpc});
+    return true;
   }
   function next(){
     if(window.EmberConversationPanels?.isOpen())return window.EmberConversationPanels.close();

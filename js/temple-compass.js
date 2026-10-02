@@ -36,7 +36,7 @@ const FATHER_COMPASS_GIFT = [
   "Corin: I will. Thank you.",
   "Nan Ferrow: Oh, and take this for your new friend, in case he gets hungry.",
   "Corin: Thank you, Nan. I think he will appreciate that.",
-  "Nan Ferrow: Good. Both of you. Take care of each other, love."
+  "Nan Ferrow: Good. Both of you. Take care of each other, love. Stop by sometime and I’ll whip you up something special."
 ];
 function fatherCompassGift(nan){
   if(npcSeesDragon(nan))return FATHER_COMPASS_GIFT.slice();
