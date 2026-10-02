@@ -32,13 +32,26 @@ async function prepareJourneyArt(onProgress=()=>{}){
 // The camels lead from the south/front of the wagon, clear of the rock and houses.
 const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
+let swordReturnNoticeAt=-Infinity;
+function swordReturnWall(x,y){
+  return MAPID==='world'&&!editing&&quest>=Q.ARMED&&quest<Q.DONE&&x<80*TS&&y>=404*TS&&y<405*TS;
+}
+function swordReturnMoveAllowed(x,y){
+  if(MAPID!=='world'||editing||quest<Q.ARMED||quest>=Q.DONE||y<=P.y)return true;
+  if(x>=80*TS||P.y>=405*TS||y<404*TS)return true;
+  const now=performance.now();
+  if(now-swordReturnNoticeAt>2500){swordReturnNoticeAt=now;toast('there’s no going back now');}
+  return false;
+}
 function progressionSolid(x,y){
+  if(swordReturnWall(x,y))return true;
   if(MAPID!=='world')return false;
   const gate=JOURNEY_GATES.sandspire;
   if(!gate.open()&&caravanCamels.some(([dx,dy])=>Math.abs(x-gate.x-dx)<21&&y>=gate.y+dy-10&&y<gate.y+dy))return true;
   return Object.values(JOURNEY_GATES).some(g=>!g.open()&&x>=g.rect[0]&&x<g.rect[2]&&y>=g.rect[1]&&y<g.rect[3]);
 }
 function progressionMoveAllowed(x,y){
+  if(!swordReturnMoveAllowed(x,y))return false;
   if(MAPID!=='world'||editing||mode!=='play')return true;
   return Object.values(JOURNEY_GATES).every(g=>{
     if(g.open()||g.inside(P.x,P.y)||!g.inside(x,y))return true;

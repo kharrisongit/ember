@@ -12,9 +12,11 @@ async function prepareFarmResidentArt(){
 function prepareFarmResident(map,id){
   if(id!=='world')return;
   const woodcutter=map.npcs.find(n=>n.n==='Gwil');
-  if(woodcutter&&!woodcutter.farmSpaceCleared){
-    Object.assign(woodcutter,{x:520,y:6480,patrolPoints:[[520,6480],[520,6432]],goto:null,patrolFrom:undefined,farmSpaceCleared:true,loc:'Millwood — northern lane'});
+  if(woodcutter&&woodcutter.townPlacementVersion!==2){
+    Object.assign(woodcutter,{x:584,y:6960,patrolPoints:[[584,6960],[584,6928]],route:null,leg:0,goto:null,patrolFrom:undefined,townPlacementVersion:2,loc:'Millwood — village square'});
   }
+  const tilda=map.npcs.find(n=>n.n==='Tilda');
+  if(tilda&&tilda.townPlacementVersion!==2)Object.assign(tilda,{x:536,y:6784,patrolPoints:[[536,6784],[536,6808]],route:null,leg:0,goto:null,regionalPlaced:true,townPlacementVersion:2});
   const farmer=map.npcs.find(n=>n.editKey==='npc:farm:edwin');
   if(farmer){Object.assign(farmer,{x:338,y:6992,goto:null,patrol:false,stationary:true});return;}
   map.npcs.push({n:'Edwin',editKey:'npc:farm:edwin',x:338,y:6992,packSpr:'farm_edwin',packDirections:true,packWalk:false,

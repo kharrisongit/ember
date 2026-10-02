@@ -5,8 +5,8 @@ const REGIONAL_VILLAGERS=[
     "name": "Tilda",
     "town": "Millwood",
     "home": [
-      296,
-      6928
+      536,
+      6784
     ],
     "lines": [
       "Wool remembers a hurried hand. Pull too hard and you spend the afternoon untangling it.",

@@ -7,6 +7,6 @@ assert.equal(new Set(values('actors.map(n=>npcMotionTime(n,10))')).size,5);
 assert.equal(new Set(values('actors.map(n=>npcPatrolRest(n))')).size,5);
 const first=values('actors.map(n=>npcPatrolRest(n))');assert.notDeepEqual(values('actors.map(n=>npcPatrolRest(n))'),first,'Pauses vary from lap to lap');
 run("prepareFarmResident(W.maps.world,'world');prepareFarmResident(W.maps.world,'world')");
-assert.equal(run("W.maps.world.npcs.filter(n=>n.x<600&&n.y>6800).map(n=>n.n).join(',')"),'Edwin');
+assert.equal(run("W.maps.world.npcs.filter(n=>n.x<440&&n.y>6800).map(n=>n.n).join(',')"),'Edwin');
 assert(run("Math.hypot(W.maps.world.npcs.find(n=>n.n==='Edwin').x-184,W.maps.world.npcs.find(n=>n.n==='Edwin').y-6896)>160"));
 console.log('PASS: independent animation clocks, per-resident and per-lap pauses, and clear egg access.');

@@ -139,7 +139,7 @@ function atlasRenderFog(){
   if(!atlasSilhouetteArt){
     atlasSilhouetteArt=new Image();
     atlasSilhouetteArt.onload=()=>{atlasSilhouetteReady=true;atlasRenderFog();};
-    atlasSilhouetteArt.src='assets/maps/location-shadows-v1.webp';
+    atlasSilhouetteArt.src='assets/maps/realm-landmark-silhouettes-v1.webp';
   }
   const g=atlasFogLayer.getContext('2d');g.clearRect(0,0,1536,512);
   if(ATLAS_LOCATIONS.every(p=>atlasPlaceKnown(p[0])))return;
@@ -148,17 +148,8 @@ function atlasRenderFog(){
   // Opaque cloud artwork hides every unrevealed map pixel. Separate generated
   // black silhouettes hint at destinations without exposing the underlying art.
   if(atlasSilhouetteReady){
-    const types={'Millwood':0,'Elder’s Home':1,'Northern Woods':2,'Sporewood':3,'Sporehollow':3,'Northern Shroom Field':3,'Shroom Pass':3,
-      'Thornwell':0,'Forgefalls':5,'Forgewick':6,'Sandspire':8,'The Oasis':9,'Coralmere':0,'Witchmoor':1,'Dreadmarsh':2,
-      'Hollybeck':0,'Hollybeck Graveyard':7,'Frostcrag':10,'Ashcrag':10,'Cinderhold Castle':11,'Sunken Pyramid':7,'Desert Church':7,
-      'Spider Queen':10,'Frosthorn':10,'Ice Moth':10};
-    const cw=atlasSilhouetteArt.width/4,ch=atlasSilhouetteArt.height/3;
-    g.save();g.globalAlpha=.34;
-    for(const p of ATLAS_LOCATIONS){
-      if(atlasPlaceKnown(p[0]))continue;
-      const index=types[p[0]]??(p[0].includes('Temple')?7:4),size=/^Route/.test(p[0])?34:60;
-      g.drawImage(atlasSilhouetteArt,index%4*cw,Math.floor(index/4)*ch,cw,ch,p[1]-size/2,p[2]-size/2,size,size);
-    }
+    g.save();g.globalAlpha=.4;
+    g.drawImage(atlasSilhouetteArt,0,0,1536,512);
     g.restore();
   }
   const mask=document.createElement('canvas');mask.width=1536;mask.height=512;
