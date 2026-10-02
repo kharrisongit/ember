@@ -15,7 +15,7 @@ const canvas=()=>({width:0,height:0,getContext(){return {drawImage(img,sx,sy,w,h
  assert(sx>=0&&sy>=0&&sx+w<=img.width&&sy+h<=img.height,'animation crops stay in sheet');
  draws.push({img,sx,sy,w,h,dx,dy,dw,dh});
  }}}});
-const c=vm.createContext({SPR:{},FOE_ATTACK_OFFSETS:{},Image,document:{createElement:canvas},W:world});
+const c=vm.createContext({drawMorningSupplyGlint(){},SPR:{},FOE_ATTACK_OFFSETS:{},Image,document:{createElement:canvas},W:world});
 const run=s=>vm.runInContext(s,c);
 run(read('js/animal-sprites.js'));run('registerAnimalSprites()');await run('loadAnimalSprites()');
 assert.equal(files.length,27);assert.equal(files.filter(p=>p.includes('Deer')).length,5);

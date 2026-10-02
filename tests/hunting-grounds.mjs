@@ -11,7 +11,7 @@ const c=vm.createContext({console,TS:16,revealing:false,MAPID:'world',MD:{foes:[
  enemyMaxHp:()=>3,saveGame(){c.saved=(c.saved||0)+1},toast:s=>{c.message=s},flyGold(){},treasuryGuarding:()=>false,
  boarMeat:0,hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,dragonFish:0,gold:50,graves:null,BOSS_KIND:/^never$/,WORTH:{},GOLD_DROP_MULTIPLIER:1.8,
  directionVector:()=>[0,-1],playerFacing4:()=> 'n',PC_W:16,PC_H:18,seenFoe:{},seenCount:0,smithUpgrade:false,worn:{},pHp:6,pMax:6,
- makeFoeRetreat(){},devSafe:false,devItemTest:false,dragon:{hp:1,maxHp:8,down:false,x:0,y:0},BOAR_MEAT_HEAL:4,DRAGON_FISH_HEAL:4,
+ DesertAdventure:{scareVultures(){}},makeFoeRetreat(){},devSafe:false,devItemTest:false,dragon:{hp:1,maxHp:8,down:false,x:0,y:0},BOAR_MEAT_HEAL:4,DRAGON_FISH_HEAL:4,
  hasDragon:()=>true,dragonHere:()=>true,syncDragonVitality(){},showHeal(){},
  foesHeld:false,trial:null,arenaLock:null,arenaT:0,arenaGoing:false,falling:null,cooling:new Map(),holy:new Set(),stepChest(){},
  currentArenaFeatures:()=>c.features.filter(f=>f.kind==='arena'),ringKey:a=>'world:'+a.id,

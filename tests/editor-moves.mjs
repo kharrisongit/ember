@@ -391,6 +391,9 @@ console.log('PASS: repeated Build, Doors and Collision sends replace their earli
  function entities(){
   const g=gameContext();g.c.SPR=sprites;
   g.run(game.slice(game.indexOf('function registerKnightStorySprites('),game.indexOf('const SPR_HANDLER')));g.run('registerKnightStorySprites()');
+  // Farm population is exercised by the full-game placement tests.
+  g.c.prepareFarmResident=()=>{};
+  g.run(game.slice(game.indexOf('function npcMotionSeed('),game.indexOf('function isPatioPatron(')));
   g.run(read('js/editor-entities.js'));
   g.run(game.slice(game.indexOf('function npcHere('),game.indexOf('function beginHettieWalk(')));
   g.run(game.slice(game.indexOf('function pickEditorActor('),game.indexOf('function storyTeleport(')));
