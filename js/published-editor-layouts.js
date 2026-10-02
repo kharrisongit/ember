@@ -36,7 +36,9 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
     if(EmberBuildData.hash(EmberBuildData.snapshot(m))!==layout.build.before&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id);
     Object.assign(m,EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build));
   }
-  const all=Object.values(layout).filter(op=>op.kind!=='build');
+  // This reward chest was deliberately retired from Corin’s starting room.
+  // Keep historical submission receipts, but never restore its old placement.
+  const all=Object.values(layout).filter(op=>op.kind!=='build'&&!(id==='house26_bedroom'&&op.kind==='actor'&&op.key==='loot:house26_bedroom:chest'));
   // Append in publication order and retain these slots even after deletion.
   // Future moves/deletions use their stable ordinary-object indices.
   m.objs ||= [];
