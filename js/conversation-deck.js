@@ -47,7 +47,7 @@
     const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'));
     const body=node('div','conversationPlayerBody');
     const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'),advanceCue());
-    speech.append(identity);body.append(workspace,speech);player.append(body);return player;
+    speech.append(identity,makeChat());body.append(workspace,speech);player.append(body);return player;
   }
   function makeStars(){
     const sky=node('div','conversationStars');sky.setAttribute('aria-hidden','true');
@@ -58,12 +58,15 @@
     }
     return sky;
   }
-  function makeControls(){
-    const footer=node('footer','conversationFooter');
-    const chat=node('button','conversationChat','Chat');chat.type='button';
+  function makeChat(){
+    const chat=node('button','conversationChat','Press To Chat');chat.type='button';
     chat.setAttribute('aria-controls','askRows');
     chat.onclick=e=>{e.stopPropagation();window.EmberConversationFlow.openChat();};
     chat.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationFlow.openChat();}};
+    return chat;
+  }
+  function makeControls(profileButton){
+    const footer=node('footer','conversationFooter');
     const controls=node('div','conversationAB');
     for(const [label,cls,action]of [['Goodbye','conversationGoodbye',()=>window.EmberConversationFlow.secondary()],['Next','conversationNext',()=>window.EmberConversationFlow.next()]]){
       const button=node('button','conversationControl '+cls,label);button.type='button';button.setAttribute('aria-label',label);
@@ -71,7 +74,12 @@
       button.onkeydown=e=>{if(['Enter',' ','a','b'].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();if(!e.repeat){if(e.key.toLowerCase()==='b')window.EmberConversationFlow.secondary();else if(e.key.toLowerCase()==='a')window.EmberConversationFlow.next();else action();}}};
       controls.append(button);
     }
-    footer.append(chat,controls);return footer;
+    const friend=node('button','conversationFriendship');friend.type='button';
+    const meter=node('progress','friendshipProgress');meter.max=100;meter.value=0;meter.setAttribute('aria-hidden','true');
+    friend.append(node('strong','','Friendship'),meter,node('small','friendshipMeterLabel','Lv. 1 · 0%'));
+    friend.onclick=e=>{e.stopPropagation();window.EmberConversationPanels.open('friendship');};
+    friend.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)window.EmberConversationPanels.open('friendship');}};
+    footer.append(profileButton,controls,friend);return footer;
   }
   function draw(box,rows){
     const scope=typeof topicMenuKey==='function'?topicMenuKey():ask.npcConversation||'Aurelius';
@@ -104,7 +112,6 @@
     profileButton.onclick=e=>{e?.stopPropagation();if(!ask)return;ask._profileOpen=!ask._profileOpen;askDraw();};
     profileButton.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();if(!e.repeat)profileButton.onclick();}};
     stage.querySelector('.deckProfileToggle')?.remove();
-    stage.querySelector('.conversationSpeaker').append(profileButton);
     const profile=node('section','deckProfile');profile.id='conversationProfile';profile.hidden=!ask._profileOpen;
     if(ask._profileOpen){
       const info=window.EmberConversationView.profile(name,ask.npcActor);
@@ -122,7 +129,7 @@
     const hint=document.getElementById('topicScrollHint');
     workspace.replaceChildren(rows,...(hint?[hint]:[]));
     const dossier=node('div','conversationDossier scrolls');dossier.hidden=!ask._profileOpen;dossier.append(profile);
-    box.replaceChildren(stage,player,dossier,makeControls());window.EmberConversationView?.mount(box);
+    box.replaceChildren(stage,player,dossier,makeControls(profileButton));window.EmberConversationView?.mount(box);
     if(!workspace.scrollWired){workspace.scrollWired=true;workspace.addEventListener('scroll',updateTopicScrollHint,{passive:true});}
     box.classList.toggle('profileOpen',!!ask._profileOpen);
     if(ask.replyChoices){

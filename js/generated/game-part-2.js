@@ -7684,11 +7684,13 @@ function typeDone() { return typed >= typeFull.length; }
 function typeAll() { typed = typeFull.length; typePaint(); }
 function typePaint() {
   sayEl.innerHTML = esc(typeFull.slice(0, Math.floor(typed)));
+  if(window.EmberConversationFlow?.active())sayEl.scrollTop=sayEl.scrollHeight;
   nameEl.textContent = typeWho || "";
   const faceLeft = (faceEl.className || "left").indexOf("right") < 0;
   nameEl.className = (typeWho ? "on " : "") + (faceLeft ? "right" : "left");
 }
 function stepType(dt) {
+  if(window.EmberConversationPanels?.isOpen())return;
   if (typed >= typeFull.length) return;
   typed = Math.min(typeFull.length, typed + TYPE_CPS * dt);
   typePaint();

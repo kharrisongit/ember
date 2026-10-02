@@ -53,10 +53,11 @@
   function idle(menu){
     if(menu.replyChoices||scene||sayNpc)return;
     if(session.exchanged){session.exchanged=false;session.browsing=false;}
-    window.EmberConversationView?.clearExchange();
+    window.EmberConversationView?.clearCorin();
     sayOff();showFace(null);setDialogueTone(!!menu.dragonConversation);
   }
   function reset(){
+    window.EmberConversationPanels?.close(false);
     if(!scene&&!sayNpc&&!revealing)sayOff();
     window.EmberConversationView?.release();
     session=null;pointer=null;autoReply=null;
@@ -65,12 +66,15 @@
     box().removeAttribute('aria-modal');box().removeAttribute('role');
   }
   function menu(menu){
+    const first=!session;
+    window.EmberFriendship?.register(menu);
     if(!session)session={map:MAPID,menu,browsing:false,exchanged:false};
     if(!menu.replyChoices&&session.menu.npcConversation!==menu.npcConversation){session.exchanged=false;session.browsing=false;}
     if(!menu.replyChoices)session.menu=menu;
     session.shopping=false;
     document.body.classList.add('conversation-session');
     box().classList.remove('conversationListening');idle(menu);sync();
+    if(first&&window.EmberFriendship?.needsTutorial())window.EmberConversationPanels?.open('tutorial');
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
   function shut(){if(session?.shopping)return;reset();}
@@ -94,6 +98,7 @@
     return 'Tell me about '+title.replace(/^(The|A|An|Your|Our|My)\b/,word=>word.toLowerCase())+'.';
   }
   function take(option){
+    if(window.EmberConversationPanels?.isOpen())return true;
     if(!isMenu(ask))return false;
     if(welcoming()){openChat();return true;}
     autoReply=null;
@@ -101,9 +106,9 @@
     const leave=!option.go||(old.topicScope==='thornwell-audience'&&option.category==='leave');
     if(leave){goodbye(option.go);return true;}
     if(!old.replyChoices&&!option.navigation&&option.category!=='trade'){
-      session.exchanged=true;window.EmberConversationView?.beginTopic(openingQuestion(option));
+      session.exchanged=true;session.topicReadKey=topicMemoryKey(option);session.friendshipTopic=window.EmberFriendship?.start(old,option);
+      window.EmberConversationView?.beginTopic(openingQuestion(option));
     }
-    if(option.category!=='trade'&&!option.navigation&&!old.replyChoices)discussedTopics.add(topicMemoryKey(option));
     if(!option.navigation||old.replyChoices)session.browsing=false;
     retained(()=>{askShut();option.go?.();});
     if(old.replyChoices&&scene&&!ask){session.exchanged=true;autoReply={scene,index:scene.i,read:0,last:performance.now()};}
@@ -121,23 +126,33 @@
   }
   function welcoming(){return !!session&&!session.shopping&&isMenu(ask)&&!ask.replyChoices&&!session.browsing&&!ask._profileOpen;}
   function openChat(){
-    if(!welcoming())return false;
+    if(window.EmberConversationPanels?.isOpen()||!welcoming())return false;
     session.browsing=true;window.EmberSfx?.ui?.();sync();return true;
   }
   function needsBack(){
     return !!session&&!session.shopping&&isMenu(ask)&&!!(ask._profileOpen||ask.replyChoices||session.browsing);
   }
   function secondary(){
+    if(window.EmberConversationPanels?.isOpen())return window.EmberConversationPanels.close();
     if(needsBack()){askBack();sync();return true;}
     return goodbye();
   }
   function goodbye(callback){
     if(!canGoodbye())return false;
+    // Leaving after the final answer has fully appeared still finishes the
+    // topic; leaving mid-exchange or backing out of a choice does not.
+    if(scene?.conversationReplies&&scene.i===scene.lines.length-1&&typeDone()){
+      if(session.topicReadKey)discussedTopics.add(session.topicReadKey);
+      if(session.friendshipTopic)window.EmberFriendship?.complete(session.friendshipTopic);
+      else if(session.topicReadKey)saveGame();
+      session.friendshipTopic=null;session.topicReadKey=null;
+    }
     callback??=session?.menu?.npcActor?.thornwellRoyal&&thornwellRoyal.stage===3?thornwellDismissAudience:null;
     if(scene?.conversationReplies){scene=null;sayOff();}
     askShut();if(callback)callback();return true;
   }
   function next(){
+    if(window.EmberConversationPanels?.isOpen())return window.EmberConversationPanels.close();
     if(!session||session.shopping)return false;
     if(welcoming())return openChat();
     if(isMenu(ask)){askTake();return true;}
@@ -154,6 +169,7 @@
   function back(){
     autoReply=null;
     if(!session||session.shopping)return false;
+    session.friendshipTopic=null;session.topicReadKey=null;
     if(ask?.replyChoices){
       const done=scene?.after;scene=null;sayOff();retained(()=>{askShut();if(done)done();else restore();});
     }else if(ask?.back&&ask.topicScope!=='thornwell-audience'){
@@ -169,9 +185,9 @@
     if(autoReply){
       const playback=autoReply,current=scene;
       const dt=Math.max(0,Math.min(50,now-playback.last));playback.last=now;
-      // The final answer stays on screen until Next returns to the blank conversation panels.
+      // The final answer stays on screen; Next restores Chat beneath that answer.
       if(current!==playback.scene||ask||!session||current.i>=current.lines.length-1)autoReply=null;
-      else if(!document.hidden&&!window.EmberCloud?.isOpen()&&!revealing&&!current.hold&&!current.silent&&!current.arriving&&sayEl.classList.contains('on')){
+      else if(!document.hidden&&!window.EmberConversationPanels?.isOpen()&&!window.EmberCloud?.isOpen()&&!revealing&&!current.hold&&!current.silent&&!current.arriving&&sayEl.classList.contains('on')){
         if(playback.index!==current.i){playback.index=current.i;playback.read=0;}
         if(typeDone()){
           playback.read+=dt;
@@ -216,6 +232,7 @@
       opts:[{n:'What will Corin say?',head:true},...options]};askPick=1;askDraw();sync();return true;
   }
   function key(e){
+    if(window.EmberConversationPanels?.isOpen())return window.EmberConversationPanels.key(e);
     if(session&&!session.shopping&&e.key==='Tab'){
       const focusable=[...box().querySelectorAll('button, [tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);
       if(focusable.length){const i=focusable.indexOf(document.activeElement);e.preventDefault();focusable[(i+(e.shiftKey?-1:1)+focusable.length)%focusable.length].focus();}
@@ -232,8 +249,17 @@
   function advance(){
     if(window.EmberCloud?.isOpen()||atlasOpen||bagOpen||ovl||editing)return false;
     if(ask?.replyChoices||isMenu(ask)||!sayEl.classList.contains('on')&&!revealing)return false;
+    if(window.EmberConversationPanels?.isOpen())return false;
     sync(); // Capture the completed line before the next speaker replaces it.
+    const current=scene,finished=!!(current&&current.i===current.lines.length-1&&typeDone()&&current.t>=.2&&!current.hold&&!current.silent&&!current.arriving&&!revealing);
+    const credit=finished?session?.friendshipTopic:null,readKey=finished?session?.topicReadKey:null;
     if(scene||revealing)advanceScene();else if(sayNpc)interact();else return false;
+    if(finished&&scene!==current){
+      if(readKey)discussedTopics.add(readKey);
+      if(session){session.friendshipTopic=null;session.topicReadKey=null;}
+      if(credit)window.EmberFriendship?.complete(credit);else if(readKey)saveGame();
+      sync();
+    }
     tick();return true;
   }
   function candidate(target){

@@ -76,7 +76,7 @@
     if(!room)return;
     if(partnerName!==partner){lastNpc='';lastCorin='';partnerName=partner;npcName=partner;}
     const idle=phase==='welcome'||phase==='explore';
-    if(idle){lastNpc='';lastCorin='';npcName=partner;}
+    if(idle){lastCorin='';npcName=partner;}
     const speaking=!idle&&sayEl.classList.contains('on'),corin=speaker==='Corin';
     if(speaking){
       const words=typeFull.slice(0,Math.floor(typed));
@@ -90,7 +90,8 @@
     player.querySelector('.conversationWorkspace').hidden=!choosing;
     player.querySelector('.conversationSpeaker').hidden=choosing;
     const chat=room.querySelector('.conversationChat');
-    chat.disabled=phase!=='welcome'||!!ask?._profileOpen;
+    chat.hidden=phase!=='welcome'||!!ask?._profileOpen;
+    chat.disabled=chat.hidden;
     chat.setAttribute('aria-expanded',String(phase==='explore'&&!ask?._profileOpen));
     chat.setAttribute('aria-label','Chat with '+partner);
     const target=room.querySelector(corin?'.conversationCorinSpeech':'.conversationNpcSpeech');
@@ -98,10 +99,12 @@
     const npcPortrait=stage.querySelector('.conversationPortrait');
     if(npcPortrait.dataset.speaker!==npcName)paintSmallPortrait(npcPortrait,npcName);
     stage.querySelector('.conversationSpeakerName').textContent=npcName;
-    const npcEcho=stage.querySelector('.conversationNpcEcho');
+    const npcEcho=stage.querySelector('.conversationNpcEcho'),echoWasHidden=npcEcho.hidden;
     npcEcho.hidden=speaking&&!corin;if(npcEcho.textContent!==lastNpc)npcEcho.textContent=lastNpc;
+    if(npcEcho.textContent!==npcEcho._lastScrollText||echoWasHidden&&!npcEcho.hidden){npcEcho.scrollTop=npcEcho.scrollHeight;npcEcho._lastScrollText=npcEcho.textContent;}
     const corinEcho=player.querySelector('.conversationCorinEcho');
-    corinEcho.hidden=speaking&&corin;const reply=lastCorin;if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
+    corinEcho.hidden=phase==='welcome'||speaking&&corin;const reply=lastCorin;if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
+    if(speaking&&(sayEl._scrollLine!==typeFull||sayEl._scrollLength!==Math.floor(typed))){sayEl.scrollTop=sayEl.scrollHeight;sayEl._scrollLine=typeFull;sayEl._scrollLength=Math.floor(typed);}
     const active=phase==='listen'&&speaking&&!revealing&&!ask?._profileOpen;
     const ready=active&&!automatic&&typeDone()&&!scene?.hold;
     for(const [lane,isCorin]of [[stage,false],[player,true]]){
@@ -116,8 +119,11 @@
     secondary.setAttribute('aria-label',label);secondary.dataset.action=backAvailable?'back':'goodbye';
     secondary.disabled=!backAvailable&&!canLeave;
     room.querySelector('.conversationNext').disabled=phase==='listen'&&!speaking&&!revealing;
+    const friend=room.querySelector('.conversationFriendship');
+    if(friend&&window.EmberFriendship){const s=window.EmberFriendship.status(partner);friend.querySelector('progress').value=s.percent;friend.querySelector('.friendshipMeterLabel').textContent='Lv. '+s.level+' · '+s.percent+'%';friend.setAttribute('aria-label','Friendship with '+partner+': '+s.percent+' percent. Open friendship overview');}
   }
   function clearExchange(){lastNpc='';lastCorin='';}
+  function clearCorin(){lastCorin='';}
   function beginTopic(question){lastCorin=playerFacingText(question);}
-  window.EmberConversationView={profile,theme,mount,release,update,beginTopic,clearExchange};
+  window.EmberConversationView={profile,theme,mount,release,update,beginTopic,clearExchange,clearCorin};
 })();

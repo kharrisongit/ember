@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 import {gameDom} from './helpers-game-dom.mjs';
 const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),console,{document:dom.document,furniture:false});
+run('EmberFriendship.restore({tutorialSeen:true})');
 const json=code=>JSON.parse(run(`JSON.stringify(${code})`));
 const reset=()=>run(`askShut();scene=null;sayNpc=null;revealing=null;wonAll=false;MAPID='world';MD=W.maps.world;
  MW=MD.w;MH=MD.h;terr=new Uint8Array(MW*MH);mode='play';gameplayStarted=true;quest=Q.DONE;

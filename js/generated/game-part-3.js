@@ -5149,7 +5149,7 @@ function wireTopicScrollHint(box) {
     observer.observe(box);observer.observe(document.getElementById('askRows'));
   }
 }
-function askBack(){if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;if(globalThis.window?.EmberConversationFlow?.back())return;const back=ask?.back;askShut();if(back)back();}
+function askBack(){if(window.EmberConversationPanels?.isOpen()){window.EmberConversationPanels.close();return;}if(ask)globalThis.window?.EmberSfx?.ui?.();if(window.EmberConversationDeck?.back())return;if(globalThis.window?.EmberConversationFlow?.back())return;const back=ask?.back;askShut();if(back)back();}
 function askShut() {
   if(ask?.npcConversation||ask?.dragonConversation)topicMenuPositions.set(topicMenuKey(),{name:ask.opts[askPick]?.n,filter:ask._deckFilter||'all',scroll:topicScrollViewport()?.scrollTop||0});
   hideMerchantShop();
@@ -5262,6 +5262,7 @@ function askDraw() {
   updateTopicScrollHint();
 }
 function askStep(d) {
+  if(window.EmberConversationPanels?.isOpen())return;
   if (!ask || ask._profileOpen || ask._historyOpen || globalThis.window?.EmberConversationFlow?.welcoming()) return;
   globalThis.window?.EmberSfx?.ui?.();
   if(ask.quantity){changePurchaseQuantity(-d);return;}
@@ -6112,6 +6113,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  friendship:window.EmberFriendship?.capture(),
   nanElixirReadyAt, flightVisits:typeof flightVisits!=='undefined'?flightVisits:{},
   inventoryPromptOpens,
   ridingTutorial:globalThis.window?.EmberRiding?.capture(),
@@ -6180,6 +6182,7 @@ function loadGame(slot=activeSaveSlot) {
     DragonChapels.restore(s.skyBlessing,s.desertChurchQuest);
     if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.restore(s.spiderWebLesson);
     discussedTopics.clear();for(const key of s.discussedTopics||[])if(typeof key==="string")discussedTopics.add(key);topicMenuPositions.clear();
+    window.EmberFriendship?.restore(s.friendship);
     if (trial) stopTrial("");
     for(const k in charm){charm[k]=!!s.charm?.[k];worn[k]=charm[k]&&!!s.worn?.[k];}
     // Skip can grant the seal before the king is defeated. Trial access still requires wonAll.

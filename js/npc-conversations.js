@@ -2063,7 +2063,7 @@ function openNpcTopics(n){
   ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},
     ...(brambleHint(n)?[{n:brambleHint(n).title,category:"lead",summary:"Ask about Bramble and his owner",go:()=>choose(brambleHint(n))}]:[]),
     ...(!regional?[{n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),category:libraryQuestHint(n)?'lead':'greeting',go:()=>beginNpcTalk(n,true)}]:[]),
-    ...npcStoryTopics(n).map(topic=>({n:topic.title,category:topic.category||(topic.go?"lead":"story"),summary:topic.summary,go:()=>choose(topic)}))]};
+    ...npcStoryTopics(n).map(topic=>({n:topic.title,category:topic.category||(topic.go?"lead":"story"),summary:topic.summary,friendship:!!topic.lines&&topic.friendship!==false,friendshipId:topic.friendshipId,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',category:'trade',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;
 }

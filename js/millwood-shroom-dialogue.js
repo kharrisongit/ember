@@ -741,29 +741,30 @@ const MillwoodShroomDialogue=(()=>{
     return {title:row.title,category,lines:[n.n+': '+row.first,'Corin: '+row.replies[0][0],n.n+': '+row.replies[0][1]],
       authoredBranches:{decisions:{0:row.replies.slice(1)}}};
   }
-  function topics(n){
+  function topics(n,{all=false}={}){
     const p=profile(n);if(!p)return null;
-    if(n.n==='Nan Ferrow'&&!hasDragon()||n.n==='Hettie'&&quest<Q.NOISE)return [];
+    if(!all&&(n.n==='Nan Ferrow'&&!hasDragon()||n.n==='Hettie'&&quest<Q.NOISE))return [];
     const rows=p.topics.filter(row=>{
+      if(all)return true;
       if(n.n==='Hettie'&&row.title==='Will you manage the farm without me?')return hasDragon();
       if(n.n==='Elder Maddock'&&['Why have the roads become so dangerous?','What happened at Wingfall?'].includes(row.title))return quest>=Q.NOISE;
       return true;
     });
     const result=rows.map(row=>topic(n,row));
-    if(hasDragon())result.push(topic(n,p.dragon));
+    if(all||hasDragon())result.push(topic(n,p.dragon));
     // The name and telepathy are not known until Aurelius introduces himself.
-    if(hasDragon()&&dragonIntroDone&&['Nan Ferrow','Elder Maddock'].includes(n.n))result.push(topic(n,t('He told me his name is Aurelius.',
+    if((all||hasDragon()&&dragonIntroDone)&&['Nan Ferrow','Elder Maddock'].includes(n.n))result.push(topic(n,t('He told me his name is Aurelius.',
       n.n==='Nan Ferrow'?'Aurelius. That is a lovely name. When you say he told you, do you mean he spoke?':'Aurelius. Tell me what happened when he gave you that name.',
       ['I heard him in my thoughts, as clearly as I hear you.',n.n==='Nan Ferrow'?'Then I am glad he can tell you what he needs. I cannot hear him, love; you will have to tell me what you want to share.':'The old accounts describe a bond between rider and dragon. Yours is becoming something you can experience for yourself. I cannot hear what passes between you.'],
       ['It surprised me. I had not known what to expect.',n.n==='Nan Ferrow'?'I should think it did. You can be pleased to hear him and still need time to get used to it.':'Understandably. Let him explain his own experience as well. A story about other riders cannot replace a conversation with him.'])));
     if(n.n==='Nan Ferrow'){
-      if(templeCompass.owned)result.push(topic(n,t('Did Dad use this compass?', 'He carried it even on walks he knew. He liked knowing where home lay, though he sometimes pretended he was checking a more important direction.',
+      if(all||templeCompass.owned)result.push(topic(n,t('Did Dad use this compass?', 'He carried it even on walks he knew. He liked knowing where home lay, though he sometimes pretended he was checking a more important direction.',
         ['I wish he could tell me where he went.', 'So do I, love. I can tell you the journeys I remember, and you can bring me stories of your own.'],
         ['I will look after it.', 'I am glad it means something to you. But look after yourself first. Your father would want you home more than he would want a perfect compass.'])));
       if(nanCookingHere(n))result.unshift({title:Date.now()>=nanElixirReadyAt?'Is an elixir ready?':'How is the next elixir coming along?',category:'lead',go:()=>giveNanElixir(n)});
     }
     if(n.n==='Elder Maddock'){
-      if(hasSword())result.unshift(topic(n,t('The sword you gave me', 'It belonged to my father. I kept the blade cared for because I hoped it could still protect someone. I would prefer you never needed it, but the roads are dangerous.',
+      if(all||hasSword())result.unshift(topic(n,t('The sword you gave me', 'It belonged to my father. I kept the blade cared for because I hoped it could still protect someone. I would prefer you never needed it, but the roads are dangerous.',
         ['I am still not confident using it.', 'Pay attention to an enemy’s movements and give yourself room. If you are overwhelmed, retreat and prepare. Confidence should follow practice, not replace it.'],
         ['Do you want it back when this is over?', 'Keep it while you need it. I would be happier to see you safely home than to have the sword hanging here unused.'],
         ['Thank you for trusting me with it.', 'You are welcome, Corin. You can honour that trust by taking care of yourself, not by looking for reasons to draw it.'])));
@@ -781,17 +782,24 @@ const MillwoodShroomDialogue=(()=>{
     }
     if(n.n==='Odo'){
       if(!fishingPole)result.unshift({title:odoRodReferral?'Where is Calder’s camp again?':'Where can I get a fishing rod?',category:'lead',go:()=>beginNpcTalk(n,true,true)});
-      else result.unshift(topic(n,t('I have a fishing rod now.', 'Good. A rod is far more useful by the water than left as somebody’s spare. I hope it serves you well.',
+      if(all||fishingPole)result.unshift(topic(n,t('I have a fishing rod now.', 'Good. A rod is far more useful by the water than left as somebody’s spare. I hope it serves you well.',
         ['Thank you for helping me get started.', 'You are welcome. Come and tell me how you get on; an old fisherman can still enjoy somebody else’s catch.'],
         ['Where would you suggest trying it?', 'The pools at Forgefalls, southeast of Thornwell. Look for quieter water beside the current and keep your feet somewhere safe.']), 'lead'));
     }
-    if(n.n==='The Shroom King'&&charm.spore)result.unshift(topic(n,t('How do I use the Spore of the deep ring?', 'Equip the spore as a charm from your Bag. While you wear it, defeating an enemy restores one heart to you, up to your usual maximum.',
+    if(n.n==='The Shroom King'&&(all||charm.spore))result.unshift(topic(n,t('How do I use the Spore of the deep ring?', 'Equip the spore as a charm from your Bag. While you wear it, defeating an enemy restores one heart to you, up to your usual maximum.',
       ['Does simply carrying it help?', 'No. It must be equipped to work. Check your charms before entering a dangerous place.'],
       ['Does it heal my dragon as well?', 'No, it restores your strength. You must still tend your companion and carry the food he needs.'],
       ['Does it replace bringing medicine?', 'No. It helps after a victory; it does not promise that you will survive the fight. Keep medicine for when you need healing sooner.']), 'lead'));
     // Political questions may be asked at any stage, but do not reveal
     // Maddock's rider history before his compulsory account of Wingfall.
-    if(n.n!=='Elder Maddock'||quest>=Q.NOISE)result.push(topic(n,wonAll?p.peace:p.politics,'world'));
+    if(all||n.n!=='Elder Maddock'||quest>=Q.NOISE)result.push(topic(n,wonAll?p.peace:p.politics,'world'));
+    if(typeof MillwoodFriendshipTopics!=='undefined')for(const row of MillwoodFriendshipTopics.rows[n.n]||[]){
+      if(all||MillwoodFriendshipTopics.available(row))result.push({...topic(n,row),friendshipId:row.id});
+    }
+    // Repeatable supplies and changing route reminders are practical services.
+    // They remain useful without becoming repeatable friendship points.
+    for(const row of result)if(!row.lines||['Where should we go next?','We found all three temple Heartstones.'].includes(row.title))row.friendship=false;
+    if(all){const open=new Set(topics(n).map(row=>row.title));for(const row of result)row.available=open.has(row.title);}
     return result;
   }
   function gift(n){
