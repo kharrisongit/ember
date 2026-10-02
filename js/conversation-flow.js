@@ -8,6 +8,13 @@
     if(!telepathy&&talkShroomLookout(actor))return true;
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
+    // Unclaimed gifts are the greeting, before optional Talk or shopping.
+    // Use the existing dialogue and completion callback so grants stay once-only.
+    if(!telepathy&&(npcStoryGiftPending(actor)||
+      (actor.n!=='Dunstan'&&actor.charm&&!charm[actor.charm])||
+      (actor.gift&&!breathHas[actor.gift])||canCamperGiveFishingPole(actor))){
+      beginNpcTalk(actor,true,canCamperGiveFishingPole(actor));return true;
+    }
     const name=telepathy?'Aurelius':actor.n,map=MAPID;
     if(actor){if(!telepathy){actor.goto=null;faceToward(actor,P.x,P.y);}faceCorinAt(actor.x,actor.y);}
     const merchant=!!actor?.sells;
