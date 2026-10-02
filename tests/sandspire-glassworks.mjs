@@ -24,9 +24,7 @@ assert.equal(run('W.maps.world.doors.filter(d=>d.to==="glasshouse").length'),1);
 assert(!run('W.maps.sandspire_court||W.maps.world.doors.some(d=>d.to==="sandspire_court")'),'The unwanted interior and entrance are removed');
 assert.equal(run('SPR.sandspire_glass_shop[2]'),96);assert.equal(run('SPR.sandspire_glass_shop[3]'),104);
 assert.equal(run('SPR.sandspire_glass_oven[2]'),32);
-assert.equal(run('MD.roomActors.filter(a=>a.spr==="dd_fall1").length'),1);
-assert(run('MD.roomActors.filter(a=>a.editKey?.startsWith("oasis:waterfall")).every(a=>a.x>20400&&a.x<20800&&a.y>3776&&a.y<4144)'),
- 'The single transferred waterfall is in the original oasis, not Sandspire');
+assert(!run('MD.roomActors.some(a=>a.editKey?.startsWith("oasis:waterfall"))'),'The added waterfall and cliff are removed');
 assert(run('W.maps.world.roomActors.filter(a=>/^glassout_/.test(a.spr)).every(a=>a.editorDeleted)'));
 assert(run('W.maps.world.editorDeletedObjects.includes(W.maps.world.objs.findIndex((s,i)=>i%3===0&&W.names[s]==="it_glass")/3)'));
 assert.equal(run('W.maps.glasshouse.title'),'Sandspire — Glass Shop');
@@ -71,4 +69,4 @@ assert(run('glassShield'),'Sela gives the shield after the referral conversation
 assert(run('atlasQuestComplete("shield")'));
 run('glassShield=false;smithUpgrade=true;charm.edge=true;breathHas.lightning=true;');
 assert(run('JOURNEY_GATES.forgewick.open()'),'Players can reach Sandspire before receiving its shield');
-console.log('PASS: independent exterior props, moving oven fire and collision, half-size original-town storefront and oasis waterfall, clear entry/return paths, unchanged interiors, six flame frames, retired-map migration, referral, save/load and shield reward.');
+console.log('PASS: independent exterior props, moving oven fire and collision, half-size original-town storefront, clear entry/return paths, unchanged interiors, six flame frames, retired-map migration, referral, save/load and shield reward.');

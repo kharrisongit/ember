@@ -78,10 +78,10 @@
     "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Water_Foam_Animation.png": [
-    "dd_foam"
+    "Available atlas sprite: dd_foam"
   ],
   "Tiles/Desert_Cliff_Waterfall_1.png": [
-    "dd_fall1"
+    "Available atlas sprite: dd_fall1"
   ],
   "Tiles/Desert_Water_Tiles_3.png": [
     "Available native terrain tiles; the extra town interior was removed"
@@ -90,7 +90,7 @@
     "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Cliff_Tiles_1.png": [
-    "The Oasis: cliff beneath the animated waterfall"
+    "Available native terrain tiles; the extra town interior was removed"
   ],
   "Tiles/Desert_Grass.png": [
     "Available native terrain tiles; the extra town interior was removed"

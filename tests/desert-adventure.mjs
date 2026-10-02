@@ -66,5 +66,5 @@ const used=new Set(JSON.parse(run('JSON.stringify(Object.values(W.maps).flatMap(
 for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('dd_'))assert(used.has(ref),'Native asset placed: '+ref);
 assert.equal(Object.keys(usage).length,92);
 assert(!run('W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
-assert.equal(run('W.maps.world.roomActors.filter(a=>a.spr==="dd_fall1").length'),1);
-console.log('PASS: five reptile approach arenas, mummies confined to the pyramid, no pyramid rugs or obelisks, original town preserved, current bestiary, one waterfall in the oasis.');
+assert.equal(run('W.maps.world.roomActors.filter(a=>a.spr==="dd_fall1").length'),0);
+console.log('PASS: five reptile approach arenas, mummies confined to the pyramid, no pyramid rugs or obelisks, original town preserved, current bestiary, no added oasis waterfall.');

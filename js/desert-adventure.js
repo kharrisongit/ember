@@ -24,8 +24,6 @@ const DesertAdventure=(()=>{
     Object.assign(SPR,await loadStartupJSON(BASE+'dressing.json?v='+VERSION));
     const school=W.maps.school2;
     if(!school.npcs.some(n=>n.n==='Scholar Ilyan'))school.npcs.push({n:'Scholar Ilyan',sk:'desert1',desertNative:true,stationary:true,x:200,y:136,f:'d',editKey:'pyramid:scholar',d:['The old desert records are incomplete.']});
-    const basin=await loadStartupImage(BASE+'oasis-waterfall-cliff.png?v='+VERSION);basin.pixelLocked=true;
-    animalSheets.oasis_waterfall=basin;SPR.dd_waterfall_cliff=[0,0,144,80,1,'oasis_waterfall'];
     dressPyramid();await SandspireGlassworks.prepare();ready=true;
   }
   function dressPyramid(){
@@ -45,14 +43,6 @@ const DesertAdventure=(()=>{
         names.forEach((name,i)=>{const [x,y]=name==='dd_ladder'?[r-48,t+4]:spots[i];prop(m,name,x,y,{floor:/rug|bones|mat|leaves|scarab/.test(name)});});
       });
     }
-  }
-  function oasisWaterfall(m){
-    // One cascade from the retired court now feeds the original oasis pool.
-    const x=20504,y=3840;
-    const cliff=prop(m,'dd_waterfall_cliff',x+72,y+80,{sy:-10001,frame:0,editKey:'oasis:waterfall-cliff'});
-    cliff.moveBlocks=[m.roomBlocks.push([x,y,x+144,y+80])-1];
-    prop(m,'dd_fall1',x+72,y+96,{editKey:'oasis:waterfall'});
-    prop(m,'dd_foam',x+72,y+118,{floor:true,editKey:'oasis:waterfall-foam'});
   }
   function organizeTown(m){
     // Keep house/door anchors intact. Group supplies beside homes and the market,
@@ -90,15 +80,10 @@ const DesertAdventure=(()=>{
       const index=m.objs.findIndex((s,i)=>i%3===0&&m.objs[i+1]===x&&m.objs[i+2]===y&&/^dhouse/.test(W.names[s]||''));
       if(index>=0)m.desertHouseSprites[index/3]='dd_house'+name;
     }
-    oasisWaterfall(m);
     for(const [name,x,y]of [['dd_plant0',24160,1416],['dd_plant1',24144,1536],['dd_plant2',24432,1712],['dd_fern',24168,1712],['dd_smallpalm1',24464,1552],['dd_rug1',24248,1584]])prop(m,name,x,y,{floor:/rug/.test(name),frame:0});
   }
   function clearApproach(){
     if(MAPID!=='world')return;
-    const inFalls=(s,x,y)=>x>=20496&&x<=20664&&y>=3832&&y<=3944&&/tree|palm|acacia|cact|rock|bush|fern|grass/i.test(NAMES[s]||'');
-    for(const o of objs)if(inFalls(o.s,o.x,o.y))hidden.add(o.id);
-    fobjs=fobjs.filter(o=>!inFalls(o.s,o.x,o.y));
-    for(const [tag,arr]of [['s',scat],['a',sanm]])for(let i=0;i<arr.length;i+=3)if(inFalls(arr[i],arr[i+1],arr[i+2]))decorGone.add(tag+i);
     const inside=(x,y,pad=1)=>arenas.some(([,ax,ay])=>Math.hypot(x/16-ax,(y-8)/16-ay)<=8+pad);
     const debris=(s,x,y)=>inside(x,y)&&/tree|cactus|cact|rock|bush|fern|grass|^mt|^halfdead|^palm|^dacacia/i.test(NAMES[s]||'');
     for(const o of objs)if(debris(o.s,o.x,o.y))hidden.add(o.id);
