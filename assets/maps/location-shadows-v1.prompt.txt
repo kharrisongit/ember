@@ -1,0 +1,1 @@
+Built-in imagegen; transparent 4-column x 3-row black silhouette sprite sheet. Rows: village, cottage, evergreen forest, mushroom grove; camp, waterfall, city, temple; desert town, oasis, mountains, castle. Solid black contours without internal details or labels. Used as undiscovered-location hints on the original opaque generated realm-clouds-v1.webp.

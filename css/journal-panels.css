@@ -138,3 +138,8 @@
 .atlasLessonCard{box-sizing:border-box;width:min(100%,440px);max-height:100%;overflow:auto;overscroll-behavior:contain;padding:26px;border:3px double #98713e;border-radius:12px;background:linear-gradient(110deg,#fff0cc,#ead5a8);box-shadow:0 14px 48px #0007;animation:lessonArrival .25s ease-out both}
 #worldAtlas #atlasCompassGotIt{min-height:44px;display:block;margin:18px auto 0;animation:none}
 @media(max-height:420px){#worldAtlas>#atlasCompassTutorial{padding:12px}.atlasLessonCard{padding:16px}}
+
+/* Keep quest and selection marks beside the label, clear of the artwork. */
+#worldAtlas .atlasPlace.tracked-place::after{content:' ◆';font-size:9px;color:#a87529;text-shadow:none}
+#atlasCursor{width:9px;height:9px;border-width:1px;box-shadow:0 0 0 1px #755239;transform:translate(-50%,-50%) scale(var(--map-label-scale))}
+#atlasPlayerMarker{font-size:9px;transform:translate(-50%,-50%) scale(var(--map-label-scale))}

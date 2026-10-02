@@ -442,11 +442,11 @@ function atlasShowDetails(){
  if(line){let connected=false;line.setAttribute('d',path.map(name=>{if(!atlasPlaceKnown(name)){connected=false;return '';}const p=ATLAS_LOCATIONS.find(p=>p[0]===name);if(!p)return '';const segment=(connected?'L':'M')+p[1]+','+p[2];connected=true;return segment;}).join(' '));}
  const you=$('atlasPlayerMarker'),where=ATLAS_LOCATIONS.find(p=>p[0]===area&&atlasPlaceKnown(p[0]));you.hidden=!where;
  if(where){you.style.left=where[1]+'px';you.style.top=where[2]+'px';you.setAttribute('aria-label','Your current area: '+atlasDisplayName(area));}
- document.querySelectorAll('.atlasPlace').forEach(b=>b.classList.toggle('selected',Number(b.dataset.placeIndex)===atlasPick));
+ document.querySelectorAll('.atlasPlace').forEach(b=>{b.classList.toggle('selected',Number(b.dataset.placeIndex)===atlasPick);b.classList.toggle('tracked-place',ATLAS_LOCATIONS[Number(b.dataset.placeIndex)]?.[0]===q?.place);});
  $('atlasDetails').classList.add('settled');
  const cursor=$('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';
  const target=q&&atlasPlaceKnown(q.place)&&ATLAS_LOCATIONS.find(p=>p[0]===q.place),marker=$('atlasQuestMarker');
- marker.hidden=!target;if(target){marker.style.left=target[1]+'px';marker.style.top=target[2]+'px';marker.title=q.title;marker.setAttribute('aria-label',q.title+' at '+q.place);}
+ marker.hidden=true;if(target){marker.style.left=target[1]+'px';marker.style.top=target[2]+'px';marker.title=q.title;marker.setAttribute('aria-label',q.title+' at '+q.place);}
 }
 function renderQuestAtlas(){
  if(atlasJournalOpen)return;
