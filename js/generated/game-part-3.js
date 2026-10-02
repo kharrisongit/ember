@@ -2546,6 +2546,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   if(!editorMapLoading)applyEditorPaint();
   chunks.clear();
   if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld(false);
+  if(typeof thinShroomPass==='function')thinShroomPass();
   yield [.89, "Building map collisions"];
   indexDecks();
   reindex();
@@ -6506,22 +6507,9 @@ function buildVariant(n) {
 }
 function buildSkinTones() { /* built lazily now; nothing to do up front */ }
 const DESERT_LOOK = /^desert\d/;
-const shroomContrastSheets=new Map();
-function greenShroomSheet(sp){
-  if(shroomContrastSheets.has(sp))return shroomContrastSheets.get(sp);
-  const canvas=document.createElement('canvas');canvas.width=sp[0]+sp[2]*(sp[4]||1);canvas.height=sp[3];
-  const g=canvas.getContext('2d',{willReadFrequently:true});
-  drawGameImage(g,atlasImg,0,sp[1],canvas.width,canvas.height,0,0,canvas.width,canvas.height);
-  const data=g.getImageData(0,0,canvas.width,canvas.height),px=data.data;
-  // Violet caps retain their original shading, outlines, faces and animation.
-  for(let i=0;i<px.length;i+=4)if(px[i+3]&&px[i+1]>px[i]+8&&px[i+1]>px[i+2]+5){
-    const green=px[i+1];px[i]=Math.min(255,green*.94+20);px[i+1]=green*.48+20;px[i+2]=Math.min(255,green*1.18+15);
-  }
-  g.putImageData(data,0,0);
-  const sheet={img:canvas,dy:sp[1]};shroomContrastSheets.set(sp,sheet);return sheet;
-}
 function npcSheetFor(o, s) {
-  if(o.sk==='shroom_green')return greenShroomSheet(s);
+  // The source atlas now contains the restored violet Shroomling frames.
+  if(o.sk==='shroom_green')return null;
   let t = o.tone | 0;
   if (!o.desertNative && DESERT_LOOK.test(o.sk || "") && t !== 1) t = DESERT_VARIANT;
   if (!t || t >= VARIANTS.length) return null;

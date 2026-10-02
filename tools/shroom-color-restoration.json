@@ -1,0 +1,2687 @@
+{
+  "archive_sha256": "52d5cd3f32f54e7c5a9aa57df8fdf45688d02c54d959437686b60343523c6e3a",
+  "restorations": [
+    {
+      "sprite": "sh_house0",
+      "frame": 0,
+      "atlas_box": [
+        491,
+        1172,
+        551,
+        1239
+      ],
+      "source": "Shroomlinng_House_1.png",
+      "source_box": [
+        10,
+        13,
+        70,
+        80
+      ],
+      "before_sha256": "c13590f5889ab91098100b46d47f607a470a0869a4a4f7d977ca10df444c7b5b"
+    },
+    {
+      "sprite": "sh_house3",
+      "frame": 0,
+      "atlas_box": [
+        1711,
+        1308,
+        1756,
+        1372
+      ],
+      "source": "Shroomlinng_House_3.5.png",
+      "source_box": [
+        3,
+        0,
+        48,
+        64
+      ],
+      "before_sha256": "98f7d4a49631a3bad18f27d6b5880533d11a617be6b66130bdfa01153066b3c7"
+    },
+    {
+      "sprite": "sh_house1",
+      "frame": 0,
+      "atlas_box": [
+        1943,
+        2033,
+        1986,
+        2082
+      ],
+      "source": "Shroomlinng_House_2.png",
+      "source_box": [
+        3,
+        15,
+        46,
+        64
+      ],
+      "before_sha256": "0a03a1ddb5176eacd9454481cccf97c3dc82a2b1614bf2c087aaa562130d9be0"
+    },
+    {
+      "sprite": "sh_big_blue0",
+      "frame": 0,
+      "atlas_box": [
+        1051,
+        2134,
+        1083,
+        2181
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        0,
+        1,
+        32,
+        48
+      ],
+      "before_sha256": "30febd3d6b0a11b0bdb56f39dddb132767ce756a275e3031dec2293c4bad06b7"
+    },
+    {
+      "sprite": "sh_big_blue2",
+      "frame": 0,
+      "atlas_box": [
+        1084,
+        2134,
+        1116,
+        2181
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        64,
+        1,
+        96,
+        48
+      ],
+      "before_sha256": "67133058b264f2f13a992d154059c7426cc6c8c5d582c8d9366391a908e20e31"
+    },
+    {
+      "sprite": "sh_wall_blue0",
+      "frame": 0,
+      "atlas_box": [
+        1117,
+        2134,
+        1149,
+        2181
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        0,
+        1,
+        32,
+        48
+      ],
+      "before_sha256": "30febd3d6b0a11b0bdb56f39dddb132767ce756a275e3031dec2293c4bad06b7"
+    },
+    {
+      "sprite": "sh_wall_blue2",
+      "frame": 0,
+      "atlas_box": [
+        1150,
+        2134,
+        1182,
+        2181
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        64,
+        1,
+        96,
+        48
+      ],
+      "before_sha256": "67133058b264f2f13a992d154059c7426cc6c8c5d582c8d9366391a908e20e31"
+    },
+    {
+      "sprite": "sh_big_purple2",
+      "frame": 0,
+      "atlas_box": [
+        533,
+        2182,
+        562,
+        2228
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        65,
+        2,
+        94,
+        48
+      ],
+      "before_sha256": "ec11ff6dc1b43336a3cf7484c6c3084caa28232cb7a7ee268d2f53a57e8437a7"
+    },
+    {
+      "sprite": "sh_wall_purple2",
+      "frame": 0,
+      "atlas_box": [
+        563,
+        2182,
+        592,
+        2228
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        65,
+        2,
+        94,
+        48
+      ],
+      "before_sha256": "ec11ff6dc1b43336a3cf7484c6c3084caa28232cb7a7ee268d2f53a57e8437a7"
+    },
+    {
+      "sprite": "sh_big_purple0",
+      "frame": 0,
+      "atlas_box": [
+        593,
+        2182,
+        621,
+        2228
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        2,
+        2,
+        30,
+        48
+      ],
+      "before_sha256": "f3a0bc8543366549c120dfb01bcb5400bb961ec50552ae3e809af825297e5d78"
+    },
+    {
+      "sprite": "sh_wall_purple0",
+      "frame": 0,
+      "atlas_box": [
+        622,
+        2182,
+        650,
+        2228
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        2,
+        2,
+        30,
+        48
+      ],
+      "before_sha256": "f3a0bc8543366549c120dfb01bcb5400bb961ec50552ae3e809af825297e5d78"
+    },
+    {
+      "sprite": "sh_big_purple1",
+      "frame": 0,
+      "atlas_box": [
+        379,
+        2229,
+        407,
+        2274
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        34,
+        3,
+        62,
+        48
+      ],
+      "before_sha256": "d547ec527d43567685e09fced4f6cb29929c961fc1eb5830825690f37d2f6242"
+    },
+    {
+      "sprite": "sh_big_purple3",
+      "frame": 0,
+      "atlas_box": [
+        408,
+        2229,
+        436,
+        2274
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        98,
+        3,
+        126,
+        48
+      ],
+      "before_sha256": "6e15a5ba68ba2509df93c4df703060bf11810bac2a13e2bb8838a1c53fafc3b3"
+    },
+    {
+      "sprite": "sh_wall_purple1",
+      "frame": 0,
+      "atlas_box": [
+        437,
+        2229,
+        465,
+        2274
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        34,
+        3,
+        62,
+        48
+      ],
+      "before_sha256": "d547ec527d43567685e09fced4f6cb29929c961fc1eb5830825690f37d2f6242"
+    },
+    {
+      "sprite": "sh_wall_purple3",
+      "frame": 0,
+      "atlas_box": [
+        466,
+        2229,
+        494,
+        2274
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        98,
+        3,
+        126,
+        48
+      ],
+      "before_sha256": "6e15a5ba68ba2509df93c4df703060bf11810bac2a13e2bb8838a1c53fafc3b3"
+    },
+    {
+      "sprite": "sh_big_brown0",
+      "frame": 0,
+      "atlas_box": [
+        276,
+        2495,
+        307,
+        2535
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        1,
+        8,
+        32,
+        48
+      ],
+      "before_sha256": "5bcd77c0fda09f67b07c2df2c1025a616e4010ba6a4de0072db0c4f3d7abfb98"
+    },
+    {
+      "sprite": "sh_big_brown2",
+      "frame": 0,
+      "atlas_box": [
+        308,
+        2495,
+        339,
+        2535
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        65,
+        8,
+        96,
+        48
+      ],
+      "before_sha256": "9ec6bcbdab14ababd6e48060575cb07bc32ece2464663003d9887241faf3e84c"
+    },
+    {
+      "sprite": "sh_wall_brown0",
+      "frame": 0,
+      "atlas_box": [
+        340,
+        2495,
+        371,
+        2535
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        1,
+        8,
+        32,
+        48
+      ],
+      "before_sha256": "5bcd77c0fda09f67b07c2df2c1025a616e4010ba6a4de0072db0c4f3d7abfb98"
+    },
+    {
+      "sprite": "sh_wall_brown2",
+      "frame": 0,
+      "atlas_box": [
+        372,
+        2495,
+        403,
+        2535
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        65,
+        8,
+        96,
+        48
+      ],
+      "before_sha256": "9ec6bcbdab14ababd6e48060575cb07bc32ece2464663003d9887241faf3e84c"
+    },
+    {
+      "sprite": "sh_big_red0",
+      "frame": 0,
+      "atlas_box": [
+        1053,
+        2694,
+        1081,
+        2731
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        2,
+        11,
+        30,
+        48
+      ],
+      "before_sha256": "228b384796b330387948d7a3eb94105168810c0fc2e322e697d0ff64cdd13457"
+    },
+    {
+      "sprite": "sh_big_red2",
+      "frame": 0,
+      "atlas_box": [
+        1082,
+        2694,
+        1110,
+        2731
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        66,
+        11,
+        94,
+        48
+      ],
+      "before_sha256": "28dff9e5c366103876124aeb5d733ebf337cd6c78baa8959a6429fdc0554177d"
+    },
+    {
+      "sprite": "sh_wall_red0",
+      "frame": 0,
+      "atlas_box": [
+        1111,
+        2694,
+        1139,
+        2731
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        2,
+        11,
+        30,
+        48
+      ],
+      "before_sha256": "228b384796b330387948d7a3eb94105168810c0fc2e322e697d0ff64cdd13457"
+    },
+    {
+      "sprite": "sh_wall_red2",
+      "frame": 0,
+      "atlas_box": [
+        1140,
+        2694,
+        1168,
+        2731
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        66,
+        11,
+        94,
+        48
+      ],
+      "before_sha256": "28dff9e5c366103876124aeb5d733ebf337cd6c78baa8959a6429fdc0554177d"
+    },
+    {
+      "sprite": "sh_alive_sml",
+      "frame": 0,
+      "atlas_box": [
+        996,
+        3090,
+        1028,
+        3123
+      ],
+      "source": "Small_Alive_Shroomling.png",
+      "source_box": [
+        0,
+        14,
+        32,
+        47
+      ],
+      "before_sha256": "70a32d824a6e63a2dbd1ba94f1b95d4937b49700c29bc4a7a1da2354beaa70ad"
+    },
+    {
+      "sprite": "sh_alive_sml",
+      "frame": 1,
+      "atlas_box": [
+        1028,
+        3090,
+        1060,
+        3123
+      ],
+      "source": "Small_Alive_Shroomling.png",
+      "source_box": [
+        32,
+        14,
+        64,
+        47
+      ],
+      "before_sha256": "8e23870dac1d2b74082755346c7f5455117d60643324ecf4d5d3b3199538da0c"
+    },
+    {
+      "sprite": "sh_alive_sml",
+      "frame": 2,
+      "atlas_box": [
+        1060,
+        3090,
+        1092,
+        3123
+      ],
+      "source": "Small_Alive_Shroomling.png",
+      "source_box": [
+        64,
+        14,
+        96,
+        47
+      ],
+      "before_sha256": "d16c2f77ba5ff3b85f1e35c5e8b8e3dba9adef591da86b97a7757f7a0d21cb07"
+    },
+    {
+      "sprite": "sh_alive_sml",
+      "frame": 3,
+      "atlas_box": [
+        1092,
+        3090,
+        1124,
+        3123
+      ],
+      "source": "Small_Alive_Shroomling.png",
+      "source_box": [
+        96,
+        14,
+        128,
+        47
+      ],
+      "before_sha256": "a94101db25b3e63a43297f1fa6474b7da20525d62410113a46d9d66560c29c20"
+    },
+    {
+      "sprite": "sh_big_green0",
+      "frame": 0,
+      "atlas_box": [
+        647,
+        3190,
+        680,
+        3221
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        7,
+        1,
+        40,
+        32
+      ],
+      "before_sha256": "9f787d0987912bd66a44624dd8bb016f26cf1cdc641c2c22dcce8a891bb41b41"
+    },
+    {
+      "sprite": "sh_big_green2",
+      "frame": 0,
+      "atlas_box": [
+        681,
+        3190,
+        714,
+        3221
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        87,
+        1,
+        120,
+        32
+      ],
+      "before_sha256": "4e28476a061c8953cc9b913d602244e796bdd6034ed5b16c832df30c27f07712"
+    },
+    {
+      "sprite": "sh_wall_green0",
+      "frame": 0,
+      "atlas_box": [
+        715,
+        3190,
+        748,
+        3221
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        7,
+        1,
+        40,
+        32
+      ],
+      "before_sha256": "9f787d0987912bd66a44624dd8bb016f26cf1cdc641c2c22dcce8a891bb41b41"
+    },
+    {
+      "sprite": "sh_wall_green2",
+      "frame": 0,
+      "atlas_box": [
+        749,
+        3190,
+        782,
+        3221
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        87,
+        1,
+        120,
+        32
+      ],
+      "before_sha256": "4e28476a061c8953cc9b913d602244e796bdd6034ed5b16c832df30c27f07712"
+    },
+    {
+      "sprite": "sh_big_blue1",
+      "frame": 0,
+      "atlas_box": [
+        1687,
+        3190,
+        1713,
+        3220
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        35,
+        18,
+        61,
+        48
+      ],
+      "before_sha256": "c9414ab573bbf60eaea69974815b58da7909fadf9742a236b6b0ff0c87513dcb"
+    },
+    {
+      "sprite": "sh_big_blue3",
+      "frame": 0,
+      "atlas_box": [
+        1714,
+        3190,
+        1740,
+        3220
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        99,
+        18,
+        125,
+        48
+      ],
+      "before_sha256": "f3570be8c3446659e2d2da8b6961621a171e15acdabdf4dfbde4f78cdeb65659"
+    },
+    {
+      "sprite": "sh_wall_blue1",
+      "frame": 0,
+      "atlas_box": [
+        1741,
+        3190,
+        1767,
+        3220
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        35,
+        18,
+        61,
+        48
+      ],
+      "before_sha256": "c9414ab573bbf60eaea69974815b58da7909fadf9742a236b6b0ff0c87513dcb"
+    },
+    {
+      "sprite": "sh_wall_blue3",
+      "frame": 0,
+      "atlas_box": [
+        1768,
+        3190,
+        1794,
+        3220
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        99,
+        18,
+        125,
+        48
+      ],
+      "before_sha256": "f3570be8c3446659e2d2da8b6961621a171e15acdabdf4dfbde4f78cdeb65659"
+    },
+    {
+      "sprite": "sh_big_green1",
+      "frame": 0,
+      "atlas_box": [
+        572,
+        3251,
+        600,
+        3277
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        50,
+        6,
+        78,
+        32
+      ],
+      "before_sha256": "bd99b115ef23b683b6d96a1bd05c5f9b37be8e6ba261bce66f41afff06e4a250"
+    },
+    {
+      "sprite": "sh_big_green3",
+      "frame": 0,
+      "atlas_box": [
+        601,
+        3251,
+        629,
+        3277
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        130,
+        6,
+        158,
+        32
+      ],
+      "before_sha256": "4f3695a17f378554aadfb9ea319414348a50508d2836acad593de9a9346eff97"
+    },
+    {
+      "sprite": "sh_wall_green1",
+      "frame": 0,
+      "atlas_box": [
+        630,
+        3251,
+        658,
+        3277
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        50,
+        6,
+        78,
+        32
+      ],
+      "before_sha256": "bd99b115ef23b683b6d96a1bd05c5f9b37be8e6ba261bce66f41afff06e4a250"
+    },
+    {
+      "sprite": "sh_wall_green3",
+      "frame": 0,
+      "atlas_box": [
+        659,
+        3251,
+        687,
+        3277
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        130,
+        6,
+        158,
+        32
+      ],
+      "before_sha256": "4f3695a17f378554aadfb9ea319414348a50508d2836acad593de9a9346eff97"
+    },
+    {
+      "sprite": "sh_big_brown1",
+      "frame": 0,
+      "atlas_box": [
+        688,
+        3251,
+        708,
+        3277
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        38,
+        22,
+        58,
+        48
+      ],
+      "before_sha256": "0178607d4367d23ac7b58c03c109621fe11453197c3011b31be1bd5a2f23c90e"
+    },
+    {
+      "sprite": "sh_big_brown3",
+      "frame": 0,
+      "atlas_box": [
+        709,
+        3251,
+        729,
+        3277
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        102,
+        22,
+        122,
+        48
+      ],
+      "before_sha256": "8e7a0b49277ea97c82113d0835456cea28bf06a8d2de908fdac329488817d016"
+    },
+    {
+      "sprite": "sh_wall_brown1",
+      "frame": 0,
+      "atlas_box": [
+        730,
+        3251,
+        750,
+        3277
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        38,
+        22,
+        58,
+        48
+      ],
+      "before_sha256": "0178607d4367d23ac7b58c03c109621fe11453197c3011b31be1bd5a2f23c90e"
+    },
+    {
+      "sprite": "sh_wall_brown3",
+      "frame": 0,
+      "atlas_box": [
+        751,
+        3251,
+        771,
+        3277
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        102,
+        22,
+        122,
+        48
+      ],
+      "before_sha256": "8e7a0b49277ea97c82113d0835456cea28bf06a8d2de908fdac329488817d016"
+    },
+    {
+      "sprite": "sh_big_red1",
+      "frame": 0,
+      "atlas_box": [
+        1128,
+        3251,
+        1150,
+        3276
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        37,
+        23,
+        59,
+        48
+      ],
+      "before_sha256": "b7c3192f173afc1a7c5deaabc5839d28d9b916a1a9c788f894af732ddda0be65"
+    },
+    {
+      "sprite": "sh_big_red3",
+      "frame": 0,
+      "atlas_box": [
+        1151,
+        3251,
+        1173,
+        3276
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        101,
+        23,
+        123,
+        48
+      ],
+      "before_sha256": "66702d2c38f5b8a0191a053d6ace66af79eac785852a9d3c8035ff5f3e834104"
+    },
+    {
+      "sprite": "sh_wall_red1",
+      "frame": 0,
+      "atlas_box": [
+        1174,
+        3251,
+        1196,
+        3276
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        37,
+        23,
+        59,
+        48
+      ],
+      "before_sha256": "b7c3192f173afc1a7c5deaabc5839d28d9b916a1a9c788f894af732ddda0be65"
+    },
+    {
+      "sprite": "sh_wall_red3",
+      "frame": 0,
+      "atlas_box": [
+        1197,
+        3251,
+        1219,
+        3276
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        101,
+        23,
+        123,
+        48
+      ],
+      "before_sha256": "66702d2c38f5b8a0191a053d6ace66af79eac785852a9d3c8035ff5f3e834104"
+    },
+    {
+      "sprite": "npc_shroom_purple_d",
+      "frame": 0,
+      "atlas_box": [
+        759,
+        3323,
+        773,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        1,
+        12,
+        15,
+        32
+      ],
+      "before_sha256": "2b7d9f78dd1f6d67bbf93085cf2bed3d84239f455acc15c8b218e11805e6cd0f"
+    },
+    {
+      "sprite": "npc_shroom_purple_d",
+      "frame": 1,
+      "atlas_box": [
+        773,
+        3323,
+        787,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        17,
+        12,
+        31,
+        32
+      ],
+      "before_sha256": "b36f51d58573d2dc4f209cc2c4c3bc5b3010981c052312c843e6303d7bfd8466"
+    },
+    {
+      "sprite": "npc_shroom_purple_s",
+      "frame": 0,
+      "atlas_box": [
+        788,
+        3323,
+        802,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        1,
+        44,
+        15,
+        64
+      ],
+      "before_sha256": "18a5c4a7883387865212a5ce985b02f617c8e409c121feb588ea7d6e7812db20"
+    },
+    {
+      "sprite": "npc_shroom_purple_s",
+      "frame": 1,
+      "atlas_box": [
+        802,
+        3323,
+        816,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        17,
+        44,
+        31,
+        64
+      ],
+      "before_sha256": "05c8426237467c8d00fbebb12b71d153c68187117c93cf07c3d26fa1c8c874a8"
+    },
+    {
+      "sprite": "npc_shroom_purple_u",
+      "frame": 0,
+      "atlas_box": [
+        817,
+        3323,
+        831,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        1,
+        76,
+        15,
+        96
+      ],
+      "before_sha256": "e3761f33f86438b18dc2833b667944d9816524e06ab669c73c53d04085605b60"
+    },
+    {
+      "sprite": "npc_shroom_purple_u",
+      "frame": 1,
+      "atlas_box": [
+        831,
+        3323,
+        845,
+        3343
+      ],
+      "source": "Purple_Shroomling.png",
+      "source_box": [
+        17,
+        76,
+        31,
+        96
+      ],
+      "before_sha256": "3d4947280bd2a5beddb197fa2f8f528cf9ca70d2397a7b4772389a2de00794be"
+    },
+    {
+      "sprite": "sh_rock2",
+      "frame": 0,
+      "atlas_box": [
+        921,
+        3323,
+        942,
+        3343
+      ],
+      "source": "Shroomlands_Rocks.png",
+      "source_box": [
+        21,
+        35,
+        42,
+        55
+      ],
+      "before_sha256": "eedd06b3a2516e155afff2072555db7506dbfd24c211466c2720c34ce99b4627"
+    },
+    {
+      "sprite": "npc_shroom_yellow_d",
+      "frame": 0,
+      "atlas_box": [
+        1704,
+        3323,
+        1720,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        0,
+        13,
+        16,
+        32
+      ],
+      "before_sha256": "6d0b0b0597068c5eec5d2c8c79ad10d45595d7af9e678808d793282a32ab8ef9"
+    },
+    {
+      "sprite": "npc_shroom_yellow_d",
+      "frame": 1,
+      "atlas_box": [
+        1720,
+        3323,
+        1736,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        16,
+        13,
+        32,
+        32
+      ],
+      "before_sha256": "8fc184bf64486055faf66fc50047512f933d9763f5d51945cd9ec1846974a8c7"
+    },
+    {
+      "sprite": "npc_shroom_yellow_s",
+      "frame": 0,
+      "atlas_box": [
+        1737,
+        3323,
+        1753,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        0,
+        45,
+        16,
+        64
+      ],
+      "before_sha256": "556c97f38811bc2cf50c4258506db4744e0e230fb98ceb2cbd36bc124c6d37c9"
+    },
+    {
+      "sprite": "npc_shroom_yellow_s",
+      "frame": 1,
+      "atlas_box": [
+        1753,
+        3323,
+        1769,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        16,
+        45,
+        32,
+        64
+      ],
+      "before_sha256": "566bc1b623f14157a0d76e44c8698489489dadca075f31ba2a365f4e121adfa0"
+    },
+    {
+      "sprite": "npc_shroom_yellow_u",
+      "frame": 0,
+      "atlas_box": [
+        1770,
+        3323,
+        1786,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        0,
+        77,
+        16,
+        96
+      ],
+      "before_sha256": "5c72febdfc840b2fc1d21603654530ec899d8b66c8885b4ff633a57da7da0367"
+    },
+    {
+      "sprite": "npc_shroom_yellow_u",
+      "frame": 1,
+      "atlas_box": [
+        1786,
+        3323,
+        1802,
+        3342
+      ],
+      "source": "Yellow_Shroomling.png",
+      "source_box": [
+        16,
+        77,
+        32,
+        96
+      ],
+      "before_sha256": "672bfc4b0a92a35f0ff976a74474f8d2d799fdbdb7179f703ce0b06c0c5ded05"
+    },
+    {
+      "sprite": "npc_shroom_blue_d",
+      "frame": 0,
+      "atlas_box": [
+        1803,
+        3323,
+        1817,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        1,
+        13,
+        15,
+        32
+      ],
+      "before_sha256": "d3e60b3d0ae1118177815f8e2a8322a368a166b99ab67681fa9f8e991b64333d"
+    },
+    {
+      "sprite": "npc_shroom_blue_d",
+      "frame": 1,
+      "atlas_box": [
+        1817,
+        3323,
+        1831,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        17,
+        13,
+        31,
+        32
+      ],
+      "before_sha256": "6b050c49a1c24843de8f7ecce6cf7de8fd4c324a8ab7cb2fb69a7f7b162c1ddd"
+    },
+    {
+      "sprite": "npc_shroom_blue_s",
+      "frame": 0,
+      "atlas_box": [
+        1832,
+        3323,
+        1846,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        1,
+        45,
+        15,
+        64
+      ],
+      "before_sha256": "93072ce48a63de2c49432286b04ea4b4d4f221a609d280e0d99391edd328d522"
+    },
+    {
+      "sprite": "npc_shroom_blue_s",
+      "frame": 1,
+      "atlas_box": [
+        1846,
+        3323,
+        1860,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        17,
+        45,
+        31,
+        64
+      ],
+      "before_sha256": "9fd5899231ed4ee280324dbe1216e553dfdb5e25ce17d7b8e2a985735562db62"
+    },
+    {
+      "sprite": "npc_shroom_blue_u",
+      "frame": 0,
+      "atlas_box": [
+        1861,
+        3323,
+        1875,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        1,
+        77,
+        15,
+        96
+      ],
+      "before_sha256": "893cb6ba26c02bfdb80b67fb1bb8d8a119b280fabfbb2d4a7821a0f989de2948"
+    },
+    {
+      "sprite": "npc_shroom_blue_u",
+      "frame": 1,
+      "atlas_box": [
+        1875,
+        3323,
+        1889,
+        3342
+      ],
+      "source": "Blue_Shroomling.png",
+      "source_box": [
+        17,
+        77,
+        31,
+        96
+      ],
+      "before_sha256": "f1f403460ac74263ef7b4775377acabbf1559360fb0e52cf78b07b1ad3b1b5f1"
+    },
+    {
+      "sprite": "sh_snail1",
+      "frame": 0,
+      "atlas_box": [
+        1345,
+        3344,
+        1366,
+        3361
+      ],
+      "source": "Snail_1.png",
+      "source_box": [
+        7,
+        11,
+        28,
+        28
+      ],
+      "before_sha256": "34dafedaaa042dae13705a83dca1970bbb86890140a5eb7ee518e0be24ac1937"
+    },
+    {
+      "sprite": "sh_snail1",
+      "frame": 1,
+      "atlas_box": [
+        1366,
+        3344,
+        1387,
+        3361
+      ],
+      "source": "Snail_1.png",
+      "source_box": [
+        39,
+        11,
+        60,
+        28
+      ],
+      "before_sha256": "f6389e7656479d94a43d7b94be1b4dd26e0c9fd61ae5ca53814e6edbc5e44e60"
+    },
+    {
+      "sprite": "sh_snail2",
+      "frame": 0,
+      "atlas_box": [
+        1388,
+        3344,
+        1409,
+        3361
+      ],
+      "source": "Snail_2.png",
+      "source_box": [
+        7,
+        11,
+        28,
+        28
+      ],
+      "before_sha256": "4ef470e6a7732d7a564c121c83af391823573559f9b4637ee2f42f92b8f61cbc"
+    },
+    {
+      "sprite": "sh_snail2",
+      "frame": 1,
+      "atlas_box": [
+        1409,
+        3344,
+        1430,
+        3361
+      ],
+      "source": "Snail_2.png",
+      "source_box": [
+        39,
+        11,
+        60,
+        28
+      ],
+      "before_sha256": "707176286c904cd80d9692cca8493436b16856cf12f0f509d4034564ba64f081"
+    },
+    {
+      "sprite": "sh_snail4",
+      "frame": 0,
+      "atlas_box": [
+        1431,
+        3344,
+        1452,
+        3361
+      ],
+      "source": "Snail_4.png",
+      "source_box": [
+        7,
+        11,
+        28,
+        28
+      ],
+      "before_sha256": "cd320b79793abe7c13affa396f3d52178a3bba77526661636a2e61ef07018859"
+    },
+    {
+      "sprite": "sh_snail4",
+      "frame": 1,
+      "atlas_box": [
+        1452,
+        3344,
+        1473,
+        3361
+      ],
+      "source": "Snail_4.png",
+      "source_box": [
+        39,
+        11,
+        60,
+        28
+      ],
+      "before_sha256": "5ff065e9f577c8756426cb8a4a883dd5b3411c6fa92dd620654dc8ed0420440f"
+    },
+    {
+      "sprite": "npc_shroom_green_d",
+      "frame": 0,
+      "atlas_box": [
+        1474,
+        3344,
+        1488,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        1,
+        15,
+        15,
+        32
+      ],
+      "before_sha256": "0b5a5888f054cd2d42e99cce1b7740730184ca0aec6e435c717aaf0a2540f761"
+    },
+    {
+      "sprite": "npc_shroom_green_d",
+      "frame": 1,
+      "atlas_box": [
+        1488,
+        3344,
+        1502,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        17,
+        15,
+        31,
+        32
+      ],
+      "before_sha256": "e787db452c01d16f0ed123bf0b371c1bf055425ca3393c4f5b16f2c0210c2db3"
+    },
+    {
+      "sprite": "npc_shroom_green_s",
+      "frame": 0,
+      "atlas_box": [
+        1503,
+        3344,
+        1517,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        1,
+        47,
+        15,
+        64
+      ],
+      "before_sha256": "2c89f9150807db9a3221aae1ed761169fbebfff251ed922feab15327670a02f6"
+    },
+    {
+      "sprite": "npc_shroom_green_s",
+      "frame": 1,
+      "atlas_box": [
+        1517,
+        3344,
+        1531,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        17,
+        47,
+        31,
+        64
+      ],
+      "before_sha256": "ca3f4177c5310b1c5fe8005523e3c5a33b751059798ec284cd78ff2a855341e8"
+    },
+    {
+      "sprite": "npc_shroom_green_u",
+      "frame": 0,
+      "atlas_box": [
+        1532,
+        3344,
+        1546,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        1,
+        79,
+        15,
+        96
+      ],
+      "before_sha256": "7e26ca441fd4054749e26289f7c2dec3b264b8c6e552017c6e1f4022bad2a7c0"
+    },
+    {
+      "sprite": "npc_shroom_green_u",
+      "frame": 1,
+      "atlas_box": [
+        1546,
+        3344,
+        1560,
+        3361
+      ],
+      "source": "Green_Shroomling.png",
+      "source_box": [
+        17,
+        79,
+        31,
+        96
+      ],
+      "before_sha256": "57bc80d6a92af9f8fb4f8aa8290cf4cf0f1fb45bb51ca868e57476148d367154"
+    },
+    {
+      "sprite": "sh_rock1",
+      "frame": 0,
+      "atlas_box": [
+        1561,
+        3344,
+        1578,
+        3361
+      ],
+      "source": "Shroomlands_Rocks.png",
+      "source_box": [
+        53,
+        6,
+        70,
+        23
+      ],
+      "before_sha256": "8bd1cf2a6a567a5f8d1a20aea6c3bfb1631536ac27e16926f0d45b0232479f65"
+    },
+    {
+      "sprite": "sh_rock3",
+      "frame": 0,
+      "atlas_box": [
+        1579,
+        3344,
+        1596,
+        3361
+      ],
+      "source": "Shroomlands_Rocks.png",
+      "source_box": [
+        53,
+        38,
+        70,
+        55
+      ],
+      "before_sha256": "33b21b4f9c889fbb003f98ea9be1241b06d26ba5177586f3e0aab76beab9ba21"
+    },
+    {
+      "sprite": "sh_med_purple5",
+      "frame": 0,
+      "atlas_box": [
+        926,
+        3555,
+        935,
+        3570
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        83,
+        80,
+        92,
+        95
+      ],
+      "before_sha256": "cd98e5cac5a312ecac74ad0566d0a78dcaf71f0722a47f8cc610bb2b982fc4cd"
+    },
+    {
+      "sprite": "sh_med_blue5",
+      "frame": 0,
+      "atlas_box": [
+        936,
+        3555,
+        945,
+        3570
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        83,
+        80,
+        92,
+        95
+      ],
+      "before_sha256": "8e62fff054191090fe0d25cd836d48e59aa4bea5baa42f94eb05d2fc42402f59"
+    },
+    {
+      "sprite": "sh_med_green5",
+      "frame": 0,
+      "atlas_box": [
+        946,
+        3555,
+        955,
+        3570
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        83,
+        64,
+        92,
+        79
+      ],
+      "before_sha256": "8594f73f4d580cb45d37a97a8788d7b42220b652e87c55b38e99d241151a45ce"
+    },
+    {
+      "sprite": "sh_glow",
+      "frame": 0,
+      "atlas_box": [
+        415,
+        3571,
+        429,
+        3584
+      ],
+      "source": "Mushrooms_Other.png",
+      "source_box": [
+        1,
+        2,
+        15,
+        15
+      ],
+      "before_sha256": "1b49442e6adc3c0dd333ef770dea3dbae10ec8dc1941500cf5a0cb7f6f0b1d86"
+    },
+    {
+      "sprite": "sh_med_purple2",
+      "frame": 0,
+      "atlas_box": [
+        467,
+        3571,
+        476,
+        3584
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        38,
+        80,
+        47,
+        93
+      ],
+      "before_sha256": "0015ee051890609935e46749df59b976c128148fd8c87cad4545322fffab0a12"
+    },
+    {
+      "sprite": "sh_med_purple6",
+      "frame": 0,
+      "atlas_box": [
+        477,
+        3571,
+        486,
+        3584
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        103,
+        80,
+        112,
+        93
+      ],
+      "before_sha256": "3640a2140c9925976d7a999c06cc97aea8b8297b56ba9ad30b16788e07b887f8"
+    },
+    {
+      "sprite": "sh_med_blue2",
+      "frame": 0,
+      "atlas_box": [
+        487,
+        3571,
+        496,
+        3584
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        38,
+        80,
+        47,
+        93
+      ],
+      "before_sha256": "0fa8ed0f3431f1ccdfc92ae9fc8debc80440674c77fb5151c66c982d00f32600"
+    },
+    {
+      "sprite": "sh_med_blue6",
+      "frame": 0,
+      "atlas_box": [
+        497,
+        3571,
+        506,
+        3584
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        103,
+        80,
+        112,
+        93
+      ],
+      "before_sha256": "3a41fa93b1d955e82d39df140b0b1fa724c2bd5d7c0fe2a0b8394e33b8b03bf2"
+    },
+    {
+      "sprite": "sh_med_green2",
+      "frame": 0,
+      "atlas_box": [
+        507,
+        3571,
+        516,
+        3584
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        38,
+        64,
+        47,
+        77
+      ],
+      "before_sha256": "c1c9dc027d322aed11152ea736dc3d335852ad63eafc7d303a4f886908a2cdbb"
+    },
+    {
+      "sprite": "sh_med_green6",
+      "frame": 0,
+      "atlas_box": [
+        517,
+        3571,
+        526,
+        3584
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        103,
+        64,
+        112,
+        77
+      ],
+      "before_sha256": "e793c2758caba5bd4e266bfccf7e140a3d04e8fb85ede2919a6bc9f41a823065"
+    },
+    {
+      "sprite": "sh_sml_purple5",
+      "frame": 0,
+      "atlas_box": [
+        527,
+        3571,
+        535,
+        3584
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        83,
+        65,
+        91,
+        78
+      ],
+      "before_sha256": "a83fc3f54a93a11a8d338d99c3f8bae9e7c05d6fab28ead30cdcecbb73354dc4"
+    },
+    {
+      "sprite": "sh_sml_blue5",
+      "frame": 0,
+      "atlas_box": [
+        536,
+        3571,
+        544,
+        3584
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        83,
+        65,
+        91,
+        78
+      ],
+      "before_sha256": "974e13d1abdc6ee9ff219712e10977189fd2bb1da2d56636cd8c5575e3e0990a"
+    },
+    {
+      "sprite": "sh_sml_green5",
+      "frame": 0,
+      "atlas_box": [
+        545,
+        3571,
+        553,
+        3584
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        83,
+        49,
+        91,
+        62
+      ],
+      "before_sha256": "437ea932e671abb0cb90158fd0c4e71d4531b53247d5f38e1e2e0a18392b018c"
+    },
+    {
+      "sprite": "sh_sml_brown3",
+      "frame": 0,
+      "atlas_box": [
+        470,
+        3584,
+        483,
+        3596
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        48,
+        68,
+        61,
+        80
+      ],
+      "before_sha256": "f0a441faa22fa91de4a28799d9deef17b8512e3178162a1aeaae786b8ee503ed"
+    },
+    {
+      "sprite": "sh_med_brown0",
+      "frame": 0,
+      "atlas_box": [
+        496,
+        3584,
+        507,
+        3596
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        2,
+        83,
+        13,
+        95
+      ],
+      "before_sha256": "9d9d8ff4a67728f544c644b9cb2711da0dfb270487e4c4939c60b235735ac14b"
+    },
+    {
+      "sprite": "sh_sml_purple3",
+      "frame": 0,
+      "atlas_box": [
+        508,
+        3584,
+        518,
+        3596
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        48,
+        68,
+        58,
+        80
+      ],
+      "before_sha256": "73a0ee8f2fcd475f6d808385497cb725f03645ebc6f461a3c71780873041cc7e"
+    },
+    {
+      "sprite": "sh_sml_blue3",
+      "frame": 0,
+      "atlas_box": [
+        519,
+        3584,
+        529,
+        3596
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        48,
+        68,
+        58,
+        80
+      ],
+      "before_sha256": "0e64d55ae0dac28bcd1a4bb3f533d7c0c92e8cc4dd3245604d7c32de26253d77"
+    },
+    {
+      "sprite": "sh_med_brown1",
+      "frame": 0,
+      "atlas_box": [
+        530,
+        3584,
+        540,
+        3596
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        19,
+        83,
+        29,
+        95
+      ],
+      "before_sha256": "786d870ba4ce8f7a5c0a2b6463a4962e60836efb71d75af4ac40b9df1c2c2ed9"
+    },
+    {
+      "sprite": "sh_sml_green3",
+      "frame": 0,
+      "atlas_box": [
+        541,
+        3584,
+        551,
+        3596
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        48,
+        52,
+        58,
+        64
+      ],
+      "before_sha256": "6ebee145b82fc45b851bd605e7bcd99e27e8c2c0520be08673468b3151fffdea"
+    },
+    {
+      "sprite": "sh_sml_purple1",
+      "frame": 0,
+      "atlas_box": [
+        561,
+        3584,
+        569,
+        3596
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        19,
+        66,
+        27,
+        78
+      ],
+      "before_sha256": "55574219e76dcf86400509082937138cc01513cf42f0092e8cc73cf64d148135"
+    },
+    {
+      "sprite": "sh_med_purple1",
+      "frame": 0,
+      "atlas_box": [
+        570,
+        3584,
+        578,
+        3596
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        19,
+        82,
+        27,
+        94
+      ],
+      "before_sha256": "91142d05e83cce815b76c371185e85ecf854ecab01a1e431cdb0bfb27aebc6b3"
+    },
+    {
+      "sprite": "sh_med_purple4",
+      "frame": 0,
+      "atlas_box": [
+        579,
+        3584,
+        587,
+        3596
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        69,
+        81,
+        77,
+        93
+      ],
+      "before_sha256": "97d15296f80e0a90770cfd74e165921455cbc90bf9431c20a1553f2831067e11"
+    },
+    {
+      "sprite": "sh_med_purple7",
+      "frame": 0,
+      "atlas_box": [
+        588,
+        3584,
+        596,
+        3596
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        83,
+        66,
+        91,
+        78
+      ],
+      "before_sha256": "58ec6eff910750981980bef28b4cf71e6385567db82ed2dbede85eba318dc43a"
+    },
+    {
+      "sprite": "sh_sml_blue1",
+      "frame": 0,
+      "atlas_box": [
+        597,
+        3584,
+        605,
+        3596
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        19,
+        66,
+        27,
+        78
+      ],
+      "before_sha256": "caf77ce75c6585881f9997e660d9cb3ae2ddaa93e088c588eb7aad5307905947"
+    },
+    {
+      "sprite": "sh_med_blue1",
+      "frame": 0,
+      "atlas_box": [
+        606,
+        3584,
+        614,
+        3596
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        19,
+        82,
+        27,
+        94
+      ],
+      "before_sha256": "7dc68473d45c6fa80eb8a1645870094eedfa58c14595a44086a9f8cba5b758ac"
+    },
+    {
+      "sprite": "sh_med_blue4",
+      "frame": 0,
+      "atlas_box": [
+        615,
+        3584,
+        623,
+        3596
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        69,
+        81,
+        77,
+        93
+      ],
+      "before_sha256": "30e0766899fc76ec86ad0b5141af4d34ef52c8095b25acc7863a1fdb8e7a7ddd"
+    },
+    {
+      "sprite": "sh_med_blue7",
+      "frame": 0,
+      "atlas_box": [
+        624,
+        3584,
+        632,
+        3596
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        83,
+        66,
+        91,
+        78
+      ],
+      "before_sha256": "60fa1f162d27b055c331209517f2914565ea65eb56a9ea2277276bb9fa359948"
+    },
+    {
+      "sprite": "sh_sml_green1",
+      "frame": 0,
+      "atlas_box": [
+        633,
+        3584,
+        641,
+        3596
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        19,
+        50,
+        27,
+        62
+      ],
+      "before_sha256": "af64505d2ee4624839d5fb688752becb80b1de10e33d08c3baea9c64605dca94"
+    },
+    {
+      "sprite": "sh_med_green1",
+      "frame": 0,
+      "atlas_box": [
+        642,
+        3584,
+        650,
+        3596
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        19,
+        66,
+        27,
+        78
+      ],
+      "before_sha256": "f9bd6308691269cf8591625307fe8e08da03d350c97bfe9fc7937e73069fb072"
+    },
+    {
+      "sprite": "sh_med_green4",
+      "frame": 0,
+      "atlas_box": [
+        651,
+        3584,
+        659,
+        3596
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        69,
+        65,
+        77,
+        77
+      ],
+      "before_sha256": "ecfca276832bf19d9bd4aa7361904019f9abc41e28e8175d998e6009f121ed8e"
+    },
+    {
+      "sprite": "sh_med_green7",
+      "frame": 0,
+      "atlas_box": [
+        660,
+        3584,
+        668,
+        3596
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        83,
+        50,
+        91,
+        62
+      ],
+      "before_sha256": "b768d5149e94f46e10e04cc50b8fe8a2babe98f1b260f1f573537391f2d6402a"
+    },
+    {
+      "sprite": "sh_sml_brown2",
+      "frame": 0,
+      "atlas_box": [
+        1069,
+        3584,
+        1082,
+        3595
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        35,
+        69,
+        48,
+        80
+      ],
+      "before_sha256": "c8e71918f3ae880205fbfed036e6433af6a4f1d7d4218ff2fc01a125bfc6cac9"
+    },
+    {
+      "sprite": "sh_med_red3",
+      "frame": 0,
+      "atlas_box": [
+        1083,
+        3584,
+        1094,
+        3595
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        48,
+        80,
+        59,
+        91
+      ],
+      "before_sha256": "cfaf1783995c09f4d116f48082dc9919acf802c2cea2547dc4aa71ad4166deb7"
+    },
+    {
+      "sprite": "sh_med_red2",
+      "frame": 0,
+      "atlas_box": [
+        1106,
+        3584,
+        1116,
+        3595
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        38,
+        80,
+        48,
+        91
+      ],
+      "before_sha256": "568436dbe7a2c3fb7bbb0db519d4514d35ebf0d7971f24e12d03a9157ec30443"
+    },
+    {
+      "sprite": "sh_sml_purple6",
+      "frame": 0,
+      "atlas_box": [
+        1117,
+        3584,
+        1126,
+        3595
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        83,
+        80,
+        92,
+        91
+      ],
+      "before_sha256": "f0371e88a6ddab8e3d29f0eed0183cfce5996ecf77a2a431614d8c01cc6e1d74"
+    },
+    {
+      "sprite": "sh_sml_purple7",
+      "frame": 0,
+      "atlas_box": [
+        1127,
+        3584,
+        1136,
+        3595
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        114,
+        69,
+        123,
+        80
+      ],
+      "before_sha256": "e5bebe2699e5821099e852e7964797e16b40bd10e593f805fa77943f1ed0a52f"
+    },
+    {
+      "sprite": "sh_sml_blue6",
+      "frame": 0,
+      "atlas_box": [
+        1137,
+        3584,
+        1146,
+        3595
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        83,
+        80,
+        92,
+        91
+      ],
+      "before_sha256": "befb9d50634e0fedc3b6071b27382667e060a7fc3d3ca9dc9e93b4c3017098be"
+    },
+    {
+      "sprite": "sh_sml_blue7",
+      "frame": 0,
+      "atlas_box": [
+        1147,
+        3584,
+        1156,
+        3595
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        114,
+        69,
+        123,
+        80
+      ],
+      "before_sha256": "4253f74dec74b957a2e7df0d789f8fe9b779db13472f504bc380c2c574153b98"
+    },
+    {
+      "sprite": "sh_med_brown2",
+      "frame": 0,
+      "atlas_box": [
+        1157,
+        3584,
+        1166,
+        3595
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        2,
+        67,
+        11,
+        78
+      ],
+      "before_sha256": "4f842d642228dab1f489b2a581847707fd1a20a087cff5a9909eeaeb03dc0733"
+    },
+    {
+      "sprite": "sh_sml_green6",
+      "frame": 0,
+      "atlas_box": [
+        1167,
+        3584,
+        1176,
+        3595
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        83,
+        64,
+        92,
+        75
+      ],
+      "before_sha256": "db62cbbea0cdfd4939a8c398e038e511fe4cb5111386162fe0cbed658514c2d8"
+    },
+    {
+      "sprite": "sh_sml_green7",
+      "frame": 0,
+      "atlas_box": [
+        1177,
+        3584,
+        1186,
+        3595
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        114,
+        53,
+        123,
+        64
+      ],
+      "before_sha256": "d43f7e3448ad995b4d4496c5020b0f414de25b2e114298fab4db5d8c8cfc9021"
+    },
+    {
+      "sprite": "sh_sml_red0",
+      "frame": 0,
+      "atlas_box": [
+        1187,
+        3584,
+        1195,
+        3595
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        4,
+        67,
+        12,
+        78
+      ],
+      "before_sha256": "32ae0cd0b372205685e8bf7a9bfdfdfd328b782b5b4fd4700f606f7788b0fc57"
+    },
+    {
+      "sprite": "sh_sml_red3",
+      "frame": 0,
+      "atlas_box": [
+        1196,
+        3584,
+        1204,
+        3595
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        48,
+        69,
+        56,
+        80
+      ],
+      "before_sha256": "140dda20b91c81180d262aa93fa067d11249370086150a9060e7dc8aa67d6858"
+    },
+    {
+      "sprite": "sh_med_red0",
+      "frame": 0,
+      "atlas_box": [
+        1205,
+        3584,
+        1212,
+        3595
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        4,
+        83,
+        11,
+        94
+      ],
+      "before_sha256": "801153e96d889715d07eebed4f46cb7f685dd2f8c7e8be8eb0bcd8ebaef43cd8"
+    },
+    {
+      "sprite": "sh_sml_red1",
+      "frame": 0,
+      "atlas_box": [
+        1909,
+        3584,
+        1918,
+        3594
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        19,
+        68,
+        28,
+        78
+      ],
+      "before_sha256": "df7c4e9142f68d3243f06473c88e2cc75770e5b402690dc9945a4582de7572bb"
+    },
+    {
+      "sprite": "sh_sml_brown1",
+      "frame": 0,
+      "atlas_box": [
+        1919,
+        3584,
+        1928,
+        3594
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        20,
+        68,
+        29,
+        78
+      ],
+      "before_sha256": "a718a63306112c33fe4f5739b0e351f61c44888ca6b482524de6174e06a0a649"
+    },
+    {
+      "sprite": "sh_sml_purple4",
+      "frame": 0,
+      "atlas_box": [
+        1929,
+        3584,
+        1937,
+        3594
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        67,
+        67,
+        75,
+        77
+      ],
+      "before_sha256": "43f89f0790fc730f05988444bf5dbdc18c2e0b8b8912ef9fc61c9b99ca67896a"
+    },
+    {
+      "sprite": "sh_sml_blue4",
+      "frame": 0,
+      "atlas_box": [
+        1938,
+        3584,
+        1946,
+        3594
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        67,
+        67,
+        75,
+        77
+      ],
+      "before_sha256": "f7e4480a8b1b44b7f30a1bf8ae8d9748661562a5143ef8dff1ab494d26f88a6d"
+    },
+    {
+      "sprite": "sh_sml_green4",
+      "frame": 0,
+      "atlas_box": [
+        1947,
+        3584,
+        1955,
+        3594
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        67,
+        51,
+        75,
+        61
+      ],
+      "before_sha256": "a3560bad137b074d7fdc93de6bf897d4e01fd6c548f27e40358edf11915c31c5"
+    },
+    {
+      "sprite": "sh_med_purple0",
+      "frame": 0,
+      "atlas_box": [
+        1964,
+        3584,
+        1971,
+        3594
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        5,
+        83,
+        12,
+        93
+      ],
+      "before_sha256": "d811799911d31b507e185fa269d0ba542fce5ff16f1d72129029830fe53959ce"
+    },
+    {
+      "sprite": "sh_med_blue0",
+      "frame": 0,
+      "atlas_box": [
+        1972,
+        3584,
+        1979,
+        3594
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        5,
+        83,
+        12,
+        93
+      ],
+      "before_sha256": "c1562f4218b69868236ec99564b183fd7c981554bd7684883e7a9f1a47ec6c7a"
+    },
+    {
+      "sprite": "sh_sml_brown0",
+      "frame": 0,
+      "atlas_box": [
+        1980,
+        3584,
+        1987,
+        3594
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        4,
+        68,
+        11,
+        78
+      ],
+      "before_sha256": "5bfc5113ac317d80a9be699d7ca1a564a9276531f35f840766b9892f3f9d0c78"
+    },
+    {
+      "sprite": "sh_med_green0",
+      "frame": 0,
+      "atlas_box": [
+        1988,
+        3584,
+        1995,
+        3594
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        5,
+        67,
+        12,
+        77
+      ],
+      "before_sha256": "3b69ae6e395d6ab2cf7f41c943a9700228b192663b0a434ae67c18427032055f"
+    },
+    {
+      "sprite": "sh_snail_sml1",
+      "frame": 0,
+      "atlas_box": [
+        133,
+        3596,
+        145,
+        3605
+      ],
+      "source": "Snail_Small_1.png",
+      "source_box": [
+        3,
+        4,
+        15,
+        13
+      ],
+      "before_sha256": "9582a9b88d888010bf8b835387b47571e610491006b18d4b02b9cb9a519761ee"
+    },
+    {
+      "sprite": "sh_snail_sml2",
+      "frame": 0,
+      "atlas_box": [
+        146,
+        3596,
+        158,
+        3605
+      ],
+      "source": "Snail_Small_2.png",
+      "source_box": [
+        3,
+        4,
+        15,
+        13
+      ],
+      "before_sha256": "a6b08efd1d22f8cb9975ec9db82f2fde5a62af44242102718538629faf4780f2"
+    },
+    {
+      "sprite": "sh_snail_sml3",
+      "frame": 0,
+      "atlas_box": [
+        159,
+        3596,
+        171,
+        3605
+      ],
+      "source": "Snail_Small_3.png",
+      "source_box": [
+        3,
+        4,
+        15,
+        13
+      ],
+      "before_sha256": "848bf909889c5aa6277854aed44facf6929ac994f7b2c8810a87c9c16d0cf793"
+    },
+    {
+      "sprite": "sh_snail_sml4",
+      "frame": 0,
+      "atlas_box": [
+        172,
+        3596,
+        184,
+        3605
+      ],
+      "source": "Snail_Small_4.png",
+      "source_box": [
+        3,
+        4,
+        15,
+        13
+      ],
+      "before_sha256": "e9cb3ec8d5b39a995b9b45f3a1fe013c5529827b96afe4facc87a8a2b2388ab4"
+    },
+    {
+      "sprite": "sh_sml_purple2",
+      "frame": 0,
+      "atlas_box": [
+        185,
+        3596,
+        196,
+        3605
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        37,
+        71,
+        48,
+        80
+      ],
+      "before_sha256": "69f656d59de24924b4cbea77625e651f67a01abaa49782da83b9ff73fe659e37"
+    },
+    {
+      "sprite": "sh_sml_blue2",
+      "frame": 0,
+      "atlas_box": [
+        197,
+        3596,
+        208,
+        3605
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        37,
+        71,
+        48,
+        80
+      ],
+      "before_sha256": "9eea06b7dfcda651c0e95fdbcc78818e31f69c546139381d31cae38e644d5cb4"
+    },
+    {
+      "sprite": "sh_sml_green2",
+      "frame": 0,
+      "atlas_box": [
+        209,
+        3596,
+        220,
+        3605
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        37,
+        55,
+        48,
+        64
+      ],
+      "before_sha256": "1a7cf8dea0151291620d4d356ae37cdc64d6daed9bdf6eb2fcc5d033956b76ba"
+    },
+    {
+      "sprite": "sh_sml_purple0",
+      "frame": 0,
+      "atlas_box": [
+        243,
+        3596,
+        250,
+        3605
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        4,
+        68,
+        11,
+        77
+      ],
+      "before_sha256": "e3efe8ddfe2201498927a81e8ff9ecf97034aac0bc0640fca09202614150a423"
+    },
+    {
+      "sprite": "sh_sml_blue0",
+      "frame": 0,
+      "atlas_box": [
+        251,
+        3596,
+        258,
+        3605
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        4,
+        68,
+        11,
+        77
+      ],
+      "before_sha256": "3137794a8df7b6621e7816dca73bc02598f856e9de08bf83747f8a56b975fb6c"
+    },
+    {
+      "sprite": "sh_sml_green0",
+      "frame": 0,
+      "atlas_box": [
+        259,
+        3596,
+        266,
+        3605
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        4,
+        52,
+        11,
+        61
+      ],
+      "before_sha256": "d41f061380a70a07d2fd43e2bb37491544becddafb66734a92a73697169fb724"
+    },
+    {
+      "sprite": "sh_med_brown3",
+      "frame": 0,
+      "atlas_box": [
+        826,
+        3596,
+        836,
+        3604
+      ],
+      "source": "Mushrooms_Brown.png",
+      "source_box": [
+        19,
+        87,
+        29,
+        95
+      ],
+      "before_sha256": "e641a9247b96180591172fbe32d626fdd7fb36c9f42ce8d2f25265edb1971962"
+    },
+    {
+      "sprite": "sh_med_red1",
+      "frame": 0,
+      "atlas_box": [
+        909,
+        3596,
+        916,
+        3604
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        20,
+        86,
+        27,
+        94
+      ],
+      "before_sha256": "150afd22bf914d71192c97d5874a3358498dd36c9234eea5d76ae32a536102b6"
+    },
+    {
+      "sprite": "sh_med_purple3",
+      "frame": 0,
+      "atlas_box": [
+        945,
+        3596,
+        953,
+        3603
+      ],
+      "source": "Mushrooms_Purple.png",
+      "source_box": [
+        19,
+        71,
+        27,
+        78
+      ],
+      "before_sha256": "f0f6cc234da5ee1bc11d2ce49b411d8329c6299656483a4a9a51e3de61ea9b39"
+    },
+    {
+      "sprite": "sh_sml_red2",
+      "frame": 0,
+      "atlas_box": [
+        954,
+        3596,
+        962,
+        3603
+      ],
+      "source": "Mushrooms_Red.png",
+      "source_box": [
+        4,
+        67,
+        12,
+        74
+      ],
+      "before_sha256": "a482f5a53d80c6900d00e90347b76db0715ee02f41d2b5dfb14ae95f12ce8d34"
+    },
+    {
+      "sprite": "sh_med_blue3",
+      "frame": 0,
+      "atlas_box": [
+        963,
+        3596,
+        971,
+        3603
+      ],
+      "source": "Mushrooms_Blue.png",
+      "source_box": [
+        19,
+        71,
+        27,
+        78
+      ],
+      "before_sha256": "500bf43cedf10bfc3c30a537a64988e4c4bd531d3cfb6822c1c8ddf13a80239a"
+    },
+    {
+      "sprite": "sh_med_green3",
+      "frame": 0,
+      "atlas_box": [
+        972,
+        3596,
+        980,
+        3603
+      ],
+      "source": "Mushrooms_Green.png",
+      "source_box": [
+        19,
+        55,
+        27,
+        62
+      ],
+      "before_sha256": "9ce8ce3deb88b566368b34552977cc54b72db71471a6a054d00a47a93f6abb37"
+    }
+  ]
+}
