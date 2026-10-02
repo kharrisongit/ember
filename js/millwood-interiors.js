@@ -45,9 +45,23 @@ async function prepareMillwoodInteriors(onProgress=()=>{}) {
   prepareMaddockDiningFurniture();
   restoreTavernFurniture();
   prepareRoyalDiningFurniture();
+  prepareCorinWritingDesk();
   onProgress('House furniture · Seating positions');
   await alignHouseTableSeats();
   window.__houseFurnitureCount=Object.values(W.maps).reduce((n,m)=>n+(m.roomActors||[]).filter(o=>o.exactFurniture).length,0);
+}
+
+function prepareCorinWritingDesk(){
+  const room=W.maps.house26_bedroom;
+  const desk=room?.roomActors.find(a=>a.n==='itable1'||a.morningDesk);
+  const source=W.maps.house12_bedroom?.roomActors.find(a=>a.n==='writing table');
+  if(!desk||!source?.extractedCanvas||desk.morningDesk)return;
+  // Reuse a complete native dark-wood writing table, preserving the editor ID.
+  desk.extractedCanvas=source.extractedCanvas;
+  desk.n='Corin’s writing desk';desk.morningDesk=true;
+  const w=desk.extractedCanvas.width,h=desk.extractedCanvas.height;
+  desk.sourceRect=[desk.x-w/2,desk.y-h,w,h];
+  for(const i of desk.moveBlocks)room.roomBlocks[i]=[desk.x-w/2+2,desk.y-h+4,desk.x+w/2-2,desk.y-2];
 }
 
 function restoreTavernFurniture(){

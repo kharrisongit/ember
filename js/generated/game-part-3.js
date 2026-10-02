@@ -4026,6 +4026,7 @@ function checkArea() {
   const tile = MAPID + ":" + Math.floor(P.x / TS) + "," + Math.floor((P.y - 1) / TS);
   if (tile === lastAreaTile) return;
   lastAreaTile = tile;
+  if(typeof rememberAtlasVisit==='function')rememberAtlasVisit();
   if(typeof rememberFlightVisit==='function')rememberFlightVisit();
   const now = areaUnder(P.x, P.y);
   if (now !== lastArea) {

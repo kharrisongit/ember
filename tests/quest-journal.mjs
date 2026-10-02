@@ -20,6 +20,7 @@ assert(run('atlasOpen'));assert(!run('atlasJournalOpen'));assert(el('atlasQuests
 assert.equal(el('atlasName').textContent,'Millwood','Map opens on the current area, not the remote quest');
 assert.equal(el('atlasAreaLabel').textContent,'YOUR CURRENT AREA');
 assert.equal(el('atlasTrackedTitle').textContent,'Calder’s spare rod');
+run("atlasRevealPlace('Sandspire');atlasBuildPlaces();atlasRenderFog()");
 const sandspire=el('atlasPlaces').children.find(b=>b.textContent==='Sandspire');
 sandspire.onclick({stopPropagation(){},detail:0});
 assert.equal(el('atlasName').textContent,'Sandspire');assert.equal(el('atlasAreaLabel').textContent,'SELECTED AREA');

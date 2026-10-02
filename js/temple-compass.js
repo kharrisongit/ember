@@ -107,13 +107,21 @@ function stepNanMorning(){
   const nan=npcs.find(n=>n.n==='Nan Ferrow');if(nan)startNanMorning(nan);
 }
 function morningDeskItems(){
-  const desk=W.maps.house26_bedroom?.roomActors?.find(a=>a.n==='itable1');
-  const x=desk?.x??65,y=(desk?.y??161)-18;
+  const desk=W.maps.house26_bedroom?.roomActors?.find(a=>a.morningDesk||a.n==='itable1');
+  const x=desk?.x??65,y=(desk?.y??161)-10,sy=(desk?.sy??desk?.y??161)+1;
   return [
-    {key:'morningBag',spr:'inventory_bag',x:x-10,y:y+1,width:14,took:'Corin picked up his Bag.',owned:()=>bagOwned},
-    {key:'morningMap',spr:'inventory_mapCompass',x:x+1,y:y-5,width:13,took:'Corin picked up the Map of Emberfell.',owned:()=>templeCompass.mapGiven},
-    {key:'morningCompass',spr:'inventory_compass',x:x+10,y:y+3,width:10,took:"Corin picked up Father's Compass.",owned:()=>templeCompass.owned}
-  ].map(it=>({...it,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true}));
+    {key:'morningBag',spr:'inventory_bag',x:x-16,y,width:15,took:'Corin picked up his Bag.',owned:()=>bagOwned},
+    {key:'morningMap',spr:'inventory_mapCompass',x,y:y-1,width:16,took:'Corin picked up the Map of Emberfell.',owned:()=>templeCompass.mapGiven},
+    {key:'morningCompass',spr:'inventory_compass',x:x+17,y,width:11,took:"Corin picked up Father's Compass.",owned:()=>templeCompass.owned}
+  ].map(it=>({...it,sy,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true}));
+}
+function drawMorningSupplyGlint(o,t){
+  if(!o.item.deskPickup)return;
+  const pulse=Math.max(0,Math.sin(t*2.2+o.x*.15))**6;
+  if(pulse<.05)return;
+  ctx.save();ctx.globalAlpha=pulse*.8;ctx.fillStyle='#fff1b0';
+  const x=Math.round(o.x+o.item.width*.25),y=Math.round(o.y-o.item.width*.7);
+  ctx.fillRect(x-2,y,5,1);ctx.fillRect(x,y-2,1,5);ctx.restore();
 }
 function takeMorningSupply(it){
   if(it.owned())return;

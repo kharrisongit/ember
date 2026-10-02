@@ -122,10 +122,10 @@ const ATLAS_PLACE_NOTES={
  'Northern Woods':['Northern trail','The woods north of Millwood.'],
  'Thornwell':['School · Tavern · Inn','Visit the school, tavern and inn, and ask the townspeople for local knowledge.'],
  'Desert Church':['Brother Cael · Dragon shrine','A secret place of dragon worship south of Sandspire.'],
- 'Sunken Pyramid':['Burial chambers · Emberheart','Explore the chambers west of Sandspire and face the Spider Queen.'],
- 'Spider Queen':['Pyramid guardian','Deep within the Sunken Pyramid. Defeat her and collect the Emberheart.'],
- 'Frosthorn':['Optional boss · Frostheart','Follow the winding winter trail northwest from Hollybeck.'],
- 'Ice Moth':['Optional boss · Soulwing','A long winter detour west of Hollybeck ends in the Ice Moth’s clearing.'],
+ 'Sunken Pyramid':['Ancient burial chambers','Weathered burial chambers lie beneath the desert sands.'],
+ 'Spider Queen':['Pyramid depths','A chamber deep beneath the desert sands.'],
+ 'Frosthorn':['Snowbound clearing','A remote clearing at the end of a winding winter trail.'],
+ 'Ice Moth':['Frozen glade','A secluded glade surrounded by snow and ice.'],
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
  'Forgewick':['Blacksmith','Dunstan works at the forge. Ask him about his brother’s glasswork in Sandspire.'],
  'Forgewick Temple':['Ancient temple','An old stone hall southeast of Forgewick.'],
@@ -171,6 +171,7 @@ function atlasSyncJournal(){
  window.EmberQuestNotifications?.scan(atlasQuests);
  for(const q of atlasQuests){const id=q.questId||q.id;if(id!=='main')atlasJournalKnown[id]={...q,id};}
  if(!atlasQuests.some(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q)))atlasTrackedQuest='main';
+ if(typeof atlasSyncDiscovery==='function')atlasSyncDiscovery();
 }
 function atlasQuestStages(q){
  if(q?.id==='desert-church')return [['Hear Brother Edrin’s secret',DragonChapels.known()],['Find the desert church',DragonChapels.found()]];
@@ -181,8 +182,9 @@ function atlasQuestStages(q){
  if(q?.id==='trials')return [['Ask about the trials',!!cinderSeal],...(cinderSeal?[['Place the seal',!!trialSealPlaced]]:[]),...(trialSealPlaced?[['Win the trial',atlasQuestComplete('trials')]]:[])];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
-function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
+function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,encounteredBosses:typeof atlasEncounteredBosses!=='undefined'?[...atlasEncounteredBosses]:[],discovered:typeof atlasDiscovered!=='undefined'?[...atlasDiscovered]:[],compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
 function restoreQuestJournal(saved){
+ if(typeof restoreAtlasDiscovery==='function')restoreAtlasDiscovery(saved?.discovered,saved?.encounteredBosses);
  window.EmberQuestNotifications?.restore(saved?.notifications);
  atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasJournalOpen=false;atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
  for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===q.place))atlasJournalKnown[id]={id,title:q.title,detail:q.detail,place:q.place};
@@ -197,12 +199,13 @@ function atlasCompletedEntries(){
 }
 function atlasCanonical(label){
  const aliases={'eldershome':'Elder’s Home','sporehollow':'Sporehollow','northshroompassfield':'Northern Shroom Field','cinderhold':'Cinderhold Castle'};
- const key=String(label||'').replace(/[^a-z]/gi,'').toLowerCase();
- return aliases[key]||ATLAS_LOCATIONS.find(p=>p[0].replace(/[^a-z]/gi,'').toLowerCase()===key)?.[0]||null;
+ const key=String(label||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+ return aliases[key]||ATLAS_LOCATIONS.find(p=>p[0].replace(/[^a-z0-9]/gi,'').toLowerCase()===key)?.[0]||null;
 }
 function atlasCurrentArea(){
  if(typeof MAPID==='undefined'||typeof P==='undefined')return null;
  const world=W.maps.world;
+ if(MAPID==='world'&&typeof atlasEnteredArea==='function'){const entered=atlasEnteredArea();if(entered)return entered;}
  if(MAPID==='pyramid_queen')return 'Spider Queen';
  if(MAPID==='desert_chapel')return 'Desert Church';
  if(MAPID==='world'){const boss=(world.features||[]).find(f=>(f.frosthorn||f.iceMoth)&&Math.hypot(P.x/TS-f.x,P.y/TS-f.y)<f.r+4);if(boss)return boss.frosthorn?'Frosthorn':'Ice Moth';}
@@ -281,12 +284,14 @@ function atlasTrack(id){
 function atlasExpandDetails(expanded){
  document.getElementById('atlasDetails').classList.toggle('details-expanded',!!expanded);
 }
-function atlasSelectPlace(index){atlasPick=index;atlasExpandDetails(true);atlasShowDetails();}
+function atlasSelectPlace(index){if(!atlasPlaceKnown(ATLAS_LOCATIONS[index]?.[0]))return;atlasPick=index;atlasExpandDetails(true);atlasShowDetails();}
 function atlasBuildPlaces(){
  const places=document.getElementById('atlasPlaces');places.replaceChildren();
  for(const [i,p]of ATLAS_LOCATIONS.entries()){
-  const b=atlasElement('button','atlasPlace'+(/^Route/.test(p[0])?' routePlace':['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Cinderhold Castle'].includes(p[0])?' townPlace':['Spider Queen','Frosthorn','Ice Moth'].includes(p[0])?' bossPlace':''),p[0]);b.type='button';b.style.left=p[1]+'px';b.style.top=p[2]+'px';b.dataset.placeIndex=i;
-  b.setAttribute('aria-label','Explore '+p[0]);b.onclick=e=>{e.stopPropagation();if(e.detail&&atlasIgnoreClick)return;atlasSelectPlace(i);};places.append(b);
+  if(!atlasPlaceKnown(p[0]))continue;
+  const label=atlasDisplayName(p[0]);
+  const b=atlasElement('button','atlasPlace'+(/^Route/.test(p[0])?' routePlace':['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Cinderhold Castle'].includes(p[0])?' townPlace':['Spider Queen','Frosthorn','Ice Moth'].includes(p[0])?' bossPlace':''),label);b.type='button';b.style.left=p[1]+'px';b.style.top=p[2]+'px';b.dataset.placeIndex=i;
+  b.setAttribute('aria-label','Explore '+label);b.onclick=e=>{e.stopPropagation();if(e.detail&&atlasIgnoreClick)return;atlasSelectPlace(i);};places.append(b);
  }
  // Roads belong to the finished illustration. Only the tracked journey is overlaid.
  document.getElementById('atlasRoutes').innerHTML='<svg viewBox="0 0 1536 512" aria-hidden="true"><path id="atlasTrackedRoute" d=""/></svg>';
@@ -309,10 +314,10 @@ function atlasBegin(){
  if(typeof rememberFlightVisit==='function')rememberFlightVisit();
  window.EmberEncounterCard?.layout();
  document.getElementById('atlasCompassTutorial').hidden=atlasCompassTutorialSeen;
- atlasSyncJournal();atlasBuildPlaces();
+ atlasSyncJournal();atlasBuildPlaces();atlasRenderFog();
  atlasPointers.clear();atlasGesture=null;atlasExpandDetails(false);
  atlasSetJournal(false);document.getElementById('atlasDetails').scrollTop=0;
- const i=ATLAS_LOCATIONS.findIndex(p=>p[0]===atlasCurrentArea());atlasPick=i>=0?i:0;
+ const i=ATLAS_LOCATIONS.findIndex(p=>p[0]===atlasCurrentArea()&&atlasPlaceKnown(p[0]));atlasPick=i>=0?i:0;
  renderAtlas();
 }
 function atlasApplyPan(){
@@ -345,8 +350,8 @@ function atlasRenderJournal(){
  $('atlasObjective').textContent=q?.detail||'Known quests will appear here as you explore.';
  $('atlasQuestKind').textContent=atlasQuestKind(q)==='main'?'MAIN QUEST':atlasQuestKind(q)==='trial'?'TRIAL':'SIDE QUEST';
  $('atlasQuestDestination').textContent=q?'◆ '+q.place:'';
- const area=atlasCurrentArea(),path=atlasRouteBetween(area,q?.place),via=path.slice(1,-1).filter(x=>!/^Route/.test(x));
- $('atlasRouteHint').textContent=atlasSelectedComplete||!q||!area?'':area===q.place?'You are in this area. Follow the objective above.':via.length?'From '+area+' · via '+via.slice(0,3).join(' → ')+(via.length>3?' → …':''):'From '+area+' · toward '+q.place;
+ const area=atlasCurrentArea(),path=atlasRouteBetween(area,q?.place),via=path.slice(1,-1).filter(x=>!/^Route/.test(x)&&atlasPlaceKnown(x)).map(atlasDisplayName);
+ $('atlasRouteHint').textContent=atlasSelectedComplete||!q||!area?'':area===q.place?'You are in this area. Follow the objective above.':via.length?'From '+atlasDisplayName(area)+' · via '+via.slice(0,3).join(' → ')+(via.length>3?' → …':''):'From '+atlasDisplayName(area)+' · toward '+q.place;
  const steps=$('atlasQuestSteps');steps.replaceChildren();
  if(q&&!atlasSelectedComplete){
   const stages=atlasQuestStages(q),active=stages.findIndex(([,done])=>!done);
@@ -367,28 +372,30 @@ function atlasRenderJournal(){
  const rail=atlasElement('div','milestoneRail');for(const [name,complete]of all){const dot=atlasElement('span',complete?'complete':'');dot.title=name;dot.setAttribute('aria-label',name+(complete?' complete':' ahead'));rail.append(dot);}milestones.append(rail);
 }
 function atlasShowDetails(){
+ if(!atlasPlaceKnown(ATLAS_LOCATIONS[atlasPick]?.[0]))atlasPick=0;
  const p=ATLAS_LOCATIONS[atlasPick],q=atlasQuests.find(q=>q.id===atlasTrackedQuest);
  const $=id=>document.getElementById(id),area=atlasCurrentArea();
  $('atlasAreaLabel').textContent=p[0]===area?'YOUR CURRENT AREA':'SELECTED AREA';
- $('atlasName').textContent=p[0];$('atlasText').textContent=p[3];
- const notes=ATLAS_PLACE_NOTES[p[0]]||['The roads of Emberfell',p[3]];
- $('atlasServices').replaceChildren(atlasElement('strong','',notes[0]));
+ const description=atlasPlaceDescription(p);
+ $('atlasName').textContent=description.title;$('atlasText').textContent=description.detail;
+ $('atlasServices').replaceChildren(atlasElement('strong','',description.service));
  if(typeof refreshFlightOption==='function')refreshFlightOption();
  $('atlasTrackedTitle').textContent=q?.title||'No quest tracked';
  $('atlasTrackedObjective').textContent=q?.detail||'Open Quests to choose your next objective.';
  $('atlasTrackedDestination').textContent=q?'◆ '+q.place:'';
  const path=atlasRouteBetween(area,q?.place),line=$('atlasTrackedRoute');
- if(line)line.setAttribute('d',path.map(name=>ATLAS_LOCATIONS.find(p=>p[0]===name)).filter(Boolean).map((p,i)=>(i?'L':'M')+p[1]+','+p[2]).join(' '));
- const you=$('atlasPlayerMarker'),where=ATLAS_LOCATIONS.find(p=>p[0]===area);you.hidden=!where;
- if(where){you.style.left=where[1]+'px';you.style.top=where[2]+'px';you.setAttribute('aria-label','Your current area: '+area);}
+ if(line){let connected=false;line.setAttribute('d',path.map(name=>{if(!atlasPlaceKnown(name)){connected=false;return '';}const p=ATLAS_LOCATIONS.find(p=>p[0]===name);if(!p)return '';const segment=(connected?'L':'M')+p[1]+','+p[2];connected=true;return segment;}).join(' '));}
+ const you=$('atlasPlayerMarker'),where=ATLAS_LOCATIONS.find(p=>p[0]===area&&atlasPlaceKnown(p[0]));you.hidden=!where;
+ if(where){you.style.left=where[1]+'px';you.style.top=where[2]+'px';you.setAttribute('aria-label','Your current area: '+atlasDisplayName(area));}
  document.querySelectorAll('.atlasPlace').forEach(b=>b.classList.toggle('selected',Number(b.dataset.placeIndex)===atlasPick));
  $('atlasDetails').classList.add('settled');
  const cursor=$('atlasCursor');cursor.style.left=p[1]+'px';cursor.style.top=p[2]+'px';
- const target=q&&ATLAS_LOCATIONS.find(p=>p[0]===q.place),marker=$('atlasQuestMarker');
+ const target=q&&atlasPlaceKnown(q.place)&&ATLAS_LOCATIONS.find(p=>p[0]===q.place),marker=$('atlasQuestMarker');
  marker.hidden=!target;if(target){marker.style.left=target[1]+'px';marker.style.top=target[2]+'px';marker.title=q.title;marker.setAttribute('aria-label',q.title+' at '+q.place);}
 }
 function renderQuestAtlas(){
  if(atlasJournalOpen)return;
+ if(!atlasPlaceKnown(ATLAS_LOCATIONS[atlasPick]?.[0]))atlasPick=0;
  const p=ATLAS_LOCATIONS[atlasPick],view=document.getElementById('atlasViewport');
  atlasPan.z=Math.max(1.2,Math.min(2.6,view.clientHeight/340));
  atlasPan.x=view.clientWidth/2-p[1]*atlasPan.z;atlasPan.y=view.clientHeight/2-p[2]*atlasPan.z;
@@ -426,9 +433,9 @@ function bindQuestAtlas(){
   const a=atlasPointers.get(e.pointerId),g=atlasGesture;atlasIgnoreClick=!!g?.moved||e.type==='pointercancel';
   if(a&&g&&!g.moved&&e.type==='pointerup'){
    const x=(a.x-atlasPan.x)/atlasPan.z,y=(a.y-atlasPan.y)/atlasPan.z;
-   const picks=ATLAS_LOCATIONS.map((p,i)=>({i,d:Math.hypot(p[1]-x,p[2]-y)})).sort((a,b)=>a.d-b.d);
+   const picks=ATLAS_LOCATIONS.map((p,i)=>({i,known:atlasPlaceKnown(p[0]),d:Math.hypot(p[1]-x,p[2]-y)})).filter(p=>p.known).sort((a,b)=>a.d-b.d);
    const labeled=Number(g.placeIndex);
-   if(g.placeIndex!==undefined&&ATLAS_LOCATIONS[labeled]||picks[0].d*atlasPan.z<45){atlasSelectPlace(g.placeIndex!==undefined?labeled:picks[0].i);}
+   if(g.placeIndex!==undefined&&atlasPlaceKnown(ATLAS_LOCATIONS[labeled]?.[0])||picks[0]?.d*atlasPan.z<45){atlasSelectPlace(g.placeIndex!==undefined?labeled:picks[0].i);}
   }
   atlasPointers.delete(e.pointerId);resetGesture();if(atlasGesture)atlasGesture.moved=true;else surface.classList.remove('dragging');
  };

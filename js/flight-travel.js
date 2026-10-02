@@ -76,7 +76,7 @@ function flightLanding(name){
 function refreshFlightOption(){
   const button=document.getElementById('atlasFly'),hint=document.getElementById('atlasFlyHint');if(!button||!hint)return;
   const name=ATLAS_LOCATIONS[atlasPick]?.[0],reason=flightUnavailable(name);
-  button.disabled=!!reason;button.textContent='Fly Here';button.setAttribute('aria-label','Fly to '+name);
+  button.disabled=!!reason;button.textContent='Fly Here';button.setAttribute('aria-label','Fly to '+atlasDisplayName(name));
   hint.textContent=reason||'Aurelius will carry you there.';
   button.onclick=()=>beginFlightTravel(name);
 }
