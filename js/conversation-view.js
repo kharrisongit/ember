@@ -22,7 +22,7 @@
   };
   function profile(who,actor){
     const name=PORTRAIT_ALIASES[who]||who;
-    const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.dossier(name,actor);
+    const authored=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.dossier(name,actor))||(typeof ThornwellAudienceDialogue!=='undefined'&&ThornwellAudienceDialogue.dossier(name,actor))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.dossier(name,actor));
     if(authored)return Object.fromEntries(Object.entries(authored).map(([key,value])=>[key,playerFacingText(value)]));
     const records=Object.values(W.maps).flatMap(m=>m.npcs||[]);
     const source=records.find(n=>n.n===name&&n.loc)||records.find(n=>n.n===name)||actor;

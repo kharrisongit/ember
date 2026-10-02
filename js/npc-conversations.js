@@ -1863,6 +1863,7 @@ function npcDragonConversation(n,alt=false){
   return n.dragonRumor||n.d;
 }
 function fishingRodDialogue(name,n){
+  const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.rod(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.rod(n);
   if(authored)return authored;
   const visible=npcSeesDragon(n);
@@ -1921,6 +1922,7 @@ const LIBRARY_QUEST_HINTS={
     "Brin: The temple near Forgewick holds Lightning. Sandspire's temple holds Ice. The temple near Hollybeck holds Shadow. Clear each temple and claim its Heartstone."]}
 };
 function libraryQuestHint(n){
+  const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.library(n);if(thornwell)return thornwell;
   if(n.n==="Brin"&&typeof thornwellKnowledgeHidden==="function"&&thornwellKnowledgeHidden(n))return {title:"The old rider temples",lines:[
     "Brin: The old rider temples hold three Heartstones. Our books associate them with Lightning, Ice and Shadow.",
     "Corin: Where are these temples?",
@@ -1962,7 +1964,7 @@ function hettieErrandReminder(){
 }
 function npcWorldProfile(n){
   const base=typeof NPC_WORLD_TALKS==='undefined'?null:NPC_WORLD_TALKS[n.n]||null;
-  const gift=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.gift(n);
+  const gift=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.gift(n))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.gift(n));
   return gift?{...base,gift}:base;
 }
 function npcFinishedRoadwork(n){
@@ -1976,6 +1978,7 @@ function npcWorldTopics(n){
   return topics;
 }
 function npcAuditedGreeting(n,alt){
+  const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.context(n);
   if(authored)return authored;
   const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);if(quiet)return quiet;
@@ -1994,6 +1997,7 @@ function npcAuditedGreeting(n,alt){
   return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
 }
 function npcStoryTopics(n){
+  const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.topics(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.topics(n);
   if(authored)return authored;
   if(n.n==='Hettie'&&quest<Q.NOISE)return [];
@@ -2002,7 +2006,7 @@ function npcStoryTopics(n){
   const finished=npcFinishedRoadwork(n);
   const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
-  if(n.n==='Dunstan')topics.unshift({title:'Your brother’s glass shop',category:'lead',lines:SandspireGlassworks.referralLines});
+  if(n.n==='Dunstan')topics.unshift({title:'Your brother’s glass shop',category:'lead',questUnlock:!dragonLearned('shield')&&!glassShield,lines:SandspireGlassworks.referralLines});
   if(n.n==='Sela'){
     if(!dragonLearned('shield')&&!glassShield){const i=topics.findIndex(t=>t.title==="The shield's shape");if(i>=0)topics.splice(i,1);}
     topics.unshift({title:'Your brother Dunstan',lines:[
@@ -2044,7 +2048,7 @@ function openNpcTopics(n){
   if(n.n==='King Halvard'&&MAPID!=='tavern')return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);
   if(n.n==='Hettie'&&quest<Q.NOISE)return false;
-  const regional=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(n);
+  const regional=(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(n))||(typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(n));
   if((!regional&&!NPC_STORIES[n.n]&&!npcWorldProfile(n)&&!brambleHint(n))||n.noTalk||n.pettable||npcStoryGiftPending(n))return false;
   if(regional&&!npcStoryTopics(n).length)return false;
   if(n.n==='King Halvard')return false;
@@ -2061,9 +2065,9 @@ function openNpcTopics(n){
     else playScene(lines,{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   };
   ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},
-    ...(brambleHint(n)?[{n:brambleHint(n).title,category:"lead",summary:"Ask about Bramble and his owner",go:()=>choose(brambleHint(n))}]:[]),
+    ...(brambleHint(n)?[{n:brambleHint(n).title,category:"lead",summary:"Ask about Bramble and his owner",friendship:brambleHint(n).friendship,go:()=>choose(brambleHint(n))}]:[]),
     ...(!regional?[{n:libraryQuestHint(n)?.title||(n.n==='King Halvard'?'I came for the stolen eggs.':'Hello!'),category:libraryQuestHint(n)?'lead':'greeting',go:()=>beginNpcTalk(n,true)}]:[]),
-    ...npcStoryTopics(n).map(topic=>({n:topic.title,category:topic.category||(topic.go?"lead":"story"),summary:topic.summary,friendship:!!topic.lines&&topic.friendship!==false,friendshipId:topic.friendshipId,go:()=>choose(topic)}))]};
+    ...npcStoryTopics(n).map(topic=>({n:topic.title,category:topic.category||(topic.go?"lead":"story"),summary:topic.summary,friendship:!!topic.lines&&topic.friendship!==false,friendshipId:topic.friendshipId,questUnlock:topic.questUnlock,go:()=>choose(topic)}))]};
   if(n.sells)ask.opts.push({n:'Browse your supplies',category:'trade',go:()=>openMerchantShop(n)});
   ask.opts.push({n:'Goodbye',go:null});askPick=1;askDraw();return true;
 }

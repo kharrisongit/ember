@@ -1,15 +1,16 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
-const {run,context:c}=await loadEditorGame(process.cwd(),console);
+import {gameDom} from './helpers-game-dom.mjs';
+const {run,context:c}=await loadEditorGame(process.cwd(),console,{document:gameDom().document});
 await run('loadPublishedEditorLayouts()');
 const spoken=[];const originalScene=c.playScene;
 c.playScene=(lines,opts)=>{spoken.push(...lines);return originalScene(lines,opts);};
 // Time moves normally; only the player's dialogue taps are automated.
 const tick=(frames=1)=>run(`for(let i=0;i<${frames};i++){
  useDoors(1/30);stepScene(1/30);stepWalkers(1/30);stepDragon(1/30);
- if(scene&&!scene.silent&&!scene.hold&&!scene.arriving){typeAll();scene.t=1;advanceScene();}
+ if(scene&&!ask?.replyChoices&&!scene.silent&&!scene.hold&&!scene.arriving){typeAll();scene.t=1;if(scene.conversationReplies)EmberConversationFlow.advance();else advanceScene();}
 }`);
-run(`mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.owned=true;templeCompass.meatGiven=true;
+run(`EmberFriendship.restore({tutorialSeen:true});mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.owned=true;templeCompass.meatGiven=true;
 for(const [id,m]of Object.entries(W.maps)){prepareMarketNpcCast(m,id);prepareDialoguePortraitCast(m,id)}
 loadMap('tavern');brambleQuest=1;thornwellRoyal.stage=1;P.x=250;P.y=250;syncBrambleParty();syncThornwellRoyals();`);
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2,'Royal party is visible during the handoff');
@@ -52,7 +53,7 @@ assert(run('ask?.conversationPrompt'),'The king’s opening scene waits for conf
 run("askPick=ask.opts.findIndex(o=>o.n==='Talk');askTake()");
 assert.equal(run('ask?.npcConversation'),'King Halvard');
 assert(run('Math.hypot(P.x-thornwellKing().x,P.y-thornwellKing().y)<55'),'Corin actually walks to the corner table');
-assert(spoken.some(s=>s.includes('boy with the eggs')));
+assert(spoken.some(s=>s.includes('carrying the elder’s eggs')));
 assert(!spoken.some(s=>s.includes('hear you have a dragon')));
 let choices=0;
 for(const name of ['King Halvard','Serjeant Bram']){
@@ -64,7 +65,7 @@ for(const name of ['King Halvard','Serjeant Bram']){
   c.topicTitle=title;
   run('openThornwellAudience(npcs.find(n=>n.thornwellRoyal&&n.n===royalName));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');tick(30);
   if(run("ask?.topicScope!=='thornwell-audience'")){
-   const replies=Array.from(run('ask.opts.filter(o=>o.go&&!o.navigation&&!o.head).map(o=>o.n)'));
+   const replies=Array.from(run('ask.opts.filter(o=>o.go&&!o.head).map(o=>o.n)'));
    assert.equal(replies.length,3);
    for(const reply of replies){
     c.replyTitle=reply;
@@ -75,13 +76,13 @@ for(const name of ['King Halvard','Serjeant Bram']){
   }
  }
 }
-assert.equal(choices,12,'Four branching exchanges with three responses apiece');
+assert.equal(choices,36,'Twelve authored exchanges with three responses apiece');
 run(`thornwellRoyal.answers.tax='defiant';openThornwellAudience(thornwellKing());askBack();`);
 assert.equal(run('thornwellRoyal.stage'),3,'Back stays at the royal topic list');
 run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='May I leave?');askTake();`);tick(30);
 assert.equal(run('thornwellRoyal.stage'),4,'Goodbye dismisses the audience safely');
 assert.equal(run('thornwellAudiencePending()'),false,'Dismissal unlocks the tavern exit');
-assert(spoken.some(s=>s.includes('finishing your thoughts aloud')),'Choices affect the dismissal');
+assert(spoken.some(s=>s.includes('question rather freely')),'Choices affect the dismissal');
 assert.equal(run('atlasJourneyObjective().title'),'Leave the Copper Cup');
 run('atlasSyncJournal();saveToSlot(3,true)');
 assert.equal(run('captureSave().thornwellRoyal.answers.tax'),'defiant');
@@ -91,7 +92,7 @@ run('restoreThornwellRoyal(null,{brambleQuest:1})');assert.equal(run('thornwellR
 run('restoreThornwellRoyal({stage:3,answers:{tax:"defiant"}})');assert.equal(run('thornwellRoyal.stage'),2);
 assert.equal(run('thornwellRoyal.answers.tax'),'defiant');
 assert(run('loadGame(3)'));run('scene=null;ask=null;sayNpc=null;');
-console.log(`PASS: ${residents.length} residents keep Aurelius secret; king and one knight, 12 branches, forced approach, real save/load and legacy migration.`);
+console.log(`PASS: ${residents.length} residents keep Aurelius secret; king and one knight, 36 replies, forced approach, real save/load and legacy migration.`);
 // Use real published outdoor collision, exits and landmarks for all motion.
 console.log('Checking the published outdoor route…');
 run(`loadMap('world');const royalExit=W.maps.tavern.doors.find(d=>d.to==='world');P.x=royalExit.tx*TS+8;P.y=royalExit.ty*TS+TS;cam.x=P.x-200;cam.y=P.y-150;thornwellDoorArrived('tavern');`);
@@ -105,8 +106,8 @@ assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),0,'Party does not ap
 run('useDoors(2)');assert.equal(run('fade'),1);
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2,'Party appears at full black');
 assert.equal(run('fadeDir'),0,'The blackout waits for the knight’s announcement');
-assert.equal(run('scene.lines[0]'),'Serjeant Bram: Make way for royalty!');
-assert.equal(run('typeFull'),'Make way for royalty!','The announcement is visible during the blackout');
+assert.equal(run('scene.lines[0]'),'Serjeant Bram: Keep this road clear for the king!');
+assert.equal(run('typeFull'),'Keep this road clear for the king!','The announcement is visible during the blackout');
 run('useDoors(2)');assert.equal(run('fade'),1,'The party stays hidden until the announcement is advanced');
 run('typeAll();scene.t=1;advanceScene()');
 assert.equal(run('fadeDir'),-1,'Advancing the announcement starts the reveal');
@@ -130,10 +131,10 @@ assert.equal(run('thornwellRoyalDragon'),null);
 assert(run("npcs.filter(n=>n.editKey==='npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605').every(n=>Math.hypot(n.x-P.x,n.y-P.y)>40)"),'Departure keeps Corin away from the drinker');
 assert.equal(run('dragonHere()'),false,'Aurelius stays absent after the royal departure');
 assert.equal(run('atlasJourneyObjective().place'),'Forgefalls');
-assert(spoken.includes('Serjeant Bram: Make way for royalty!'));
-assert.equal(spoken.filter(s=>s==='Serjeant Bram: Make way for royalty!').length,1,'The announcement is not repeated after the reveal');
-assert(spoken.includes('Out of my way, boy!'));
-assert(spoken.some(s=>s.includes('Cinderhold by way of Forgefalls')));
+assert(spoken.includes('Serjeant Bram: Keep this road clear for the king!'));
+assert.equal(spoken.filter(s=>s==='Serjeant Bram: Keep this road clear for the king!').length,1,'The announcement is not repeated after the reveal');
+assert(spoken.includes('Stand back. The king needs this space.'));
+assert(spoken.some(s=>/Forgefalls.*Cinderhold/.test(s)));
 run('restoreThornwellRoyal(captureThornwellRoyal());');tick(5);assert.equal(run('thornwellRoyal.stage'),6,'Reloaded departure does not repeat');
 run(`const meeting=thornwellForgefalls();P.x=meeting.left-16;P.y=meeting.y;dragon.hp=4;`);tick(5);
 assert.equal(run('thornwellFlight'),null,'The riverbank does not trigger the reunion');
@@ -161,7 +162,7 @@ tick(80);
 assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 assert.equal(run('dragon.hp'),4,'Reunion does not heal or reset dragon progress');
 assert(run("atlasQuestComplete('thornwell-royals')"));
-assert(spoken.some(s=>s.includes('I saw them pass')));
+assert(spoken.some(s=>s.includes('I saw his party pass')));
 const linesAfter=spoken.length;tick(100);assert.equal(spoken.length,linesAfter,'Reunion plays once');
 // Departure animation: ownership stays intact; normal following cannot pull
 // the dragon back to Corin while the flight is in progress or after it ends.

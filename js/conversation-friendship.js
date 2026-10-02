@@ -27,7 +27,11 @@
     let rows=[];
     const add=(title,available=true,topicId)=>rows.push({id:topicId||id(name,title),title:playerFacingText(title),available});
     const regional=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(actor);
-    if(regional){
+    if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor)){
+      for(const t of ThornwellDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
+    }else if(actor?.thornwellRoyal&&typeof ThornwellAudienceDialogue!=='undefined'){
+      for(const t of ThornwellAudienceDialogue.rows(actor))add(t.title,true,t.friendshipId);
+    }else if(regional){
       for(const t of MillwoodShroomDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
     }else if(name==='Aurelius'){
       for(const title of ['What should we do next?','The shared dragon consciousness','Why did you choose me?','The heartstones','What do you want for yourself?','Wingfall and the seven riders','The land and its people',wonAll?'Life after Halvard':'Why Halvard fears us','Riding and flying','Fighting as partners','Food and recovery'])add(title);

@@ -781,7 +781,7 @@ const MillwoodShroomDialogue=(()=>{
       }
     }
     if(n.n==='Odo'){
-      if(!fishingPole)result.unshift({title:odoRodReferral?'Where is Calder’s camp again?':'Where can I get a fishing rod?',category:'lead',go:()=>beginNpcTalk(n,true,true)});
+      if(!fishingPole)result.unshift({title:odoRodReferral?'Where is Calder’s camp again?':'Where can I get a fishing rod?',category:'lead',questUnlock:!odoRodReferral,go:()=>beginNpcTalk(n,true,true)});
       if(all||fishingPole)result.unshift(topic(n,t('I have a fishing rod now.', 'Good. A rod is far more useful by the water than left as somebody’s spare. I hope it serves you well.',
         ['Thank you for helping me get started.', 'You are welcome. Come and tell me how you get on; an old fisherman can still enjoy somebody else’s catch.'],
         ['Where would you suggest trying it?', 'The pools at Forgefalls, southeast of Thornwell. Look for quieter water beside the current and keep your feet somewhere safe.']), 'lead'));

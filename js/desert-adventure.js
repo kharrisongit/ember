@@ -189,6 +189,7 @@ const DesertAdventure=(()=>{
   function accept(from){if(source||owned())return false;source=from;atlasSyncJournal();atlasTrackedQuest='pyramid';saveGame();toast('Side quest: The Emberheart of the Sands');return true;}
   function talk(n){
     if(!['Scholar Ilyan','Sahir'].includes(n.n))return false;
+    if(n.n==='Scholar Ilyan'&&typeof ThornwellDialogue!=='undefined')return false; // The school scholar uses the full, context-aware conversation.
     sayOff();P.moving=false;faceToward(n,P.x,P.y);if(n.goto)n.goto=null;
     const speak=(lines,after)=>playScene(lines.map(s=>n.n+': '+s),{who:n.n,npcActor:n,after});
     if(owned()){speak(['You recovered the Emberheart! Carry it with you and Aurelius’s Fire burns a quarter stronger. It needs no clasp or ritual.']);return true;}

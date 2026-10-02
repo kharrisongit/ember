@@ -1,3 +1,26 @@
+# Thornwell rewrite and quest discovery — 2 October 2026
+
+Thornwell now uses a separate, fully authored conversation set in `js/thornwell-dialogue-data.js`, routed by `js/thornwell-dialogue.js`. It covers 55 resident identities, including all 50 published local placements, and replaces their former topics, replies, greetings, profiles and relevant service dialogue. King Halvard and Serjeant Bram have 12 new audience topics in `js/thornwell-audience-dialogue.js`; the compulsory royal visit and Bramble reunion were also rewritten.
+
+First meetings introduce Corin before residents address him by name. Saved flags distinguish meeting him, learning about his dragon, seeing the dragon, and a return visit. Thornwell keeps the dragon secret through the royal visit; after Forgefalls, greetings distinguish a nearby dragon from one Corin only mentions. The royal visitors can recognise Corin's earlier Millwood errand. Bramble hints identify Rowan and the Copper Cup, and disappear after the reunion.
+
+Each resident has five permanent friendship topics with three authored reply paths apiece. Companion and later-return topics stay gated until their story conditions are met; practical leads are excluded from the friendship total so a completed or missed service cannot block the reward. The friendship overview explains story and return-visit requirements. Ilyan's expedition uses the full conversation panel, accepts only the explicit acceptance reply, and does not disclose the hidden dragon.
+
+New quest discovery produces a small passive notice, including during conversations: quest title plus “View in Map → Quest List”. It holds for about four seconds, then fades; there is no dismissal button and it never captures taps or focus. Simultaneous discoveries are grouped. Saved discovery state prevents repeated announcements, and older saves establish a baseline instead of replaying existing quests. Quest topics use a gold surface plus a written “New quest” or “Quest lead” label.
+
+Verification:
+
+- Thornwell: 55 authored residents, 560 topic/state exchanges and 1,716 actual reply selections, covering stranger introductions, saved meetings, dragon secrecy/presence, Bramble guidance, royal answers and one-time friendship rewards.
+- Royal story: all 36 optional reply paths, the published movement route, save/load, departure, separation and Forgefalls reunion.
+- Ilyan: refusal, reconsideration and acceptance; expedition persistence, rewards and existing world mechanics.
+- Quest notices: appearance over dialogue, automatic fade, grouping, save migration, no reload/stage duplicates, and labels following actual quest state.
+- Script validation: all 91 loaded scripts parse individually and in their shared scope. Existing Bramble, Thornwell follow-up, conversation flow, friendship, Millwood/Shroom and quest-journal suites also passed during integration.
+- Browser: the gold topic and passive notice were checked in the actual conversation panel; a reply remains usable while the notice is visible. Portrait phone, landscape phone and desktop layouts were checked without script errors.
+
+Earlier audits below describe the historical implementation, not the current Thornwell or Millwood/Shroom dialogue.
+
+---
+
 # Conversation rewrite — 29 September 2026
 
 The optional conversation rewrite is implemented, including all standard cast members, Aurelius, Nan's extended memories, royal audience topics, and the temporary royal-visit conversations.

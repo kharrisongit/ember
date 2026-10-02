@@ -1,0 +1,28 @@
+#questUnlockNotice{position:fixed;z-index:11000;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(360px,calc(100vw - 28px));box-sizing:border-box;padding:11px 16px;color:#fff5d7;background:linear-gradient(135deg,#49371cf5,#302819f5);border:1px solid #d4b15e;border-radius:10px;box-shadow:0 5px 22px #0007;pointer-events:none;opacity:1;transition:opacity .7s ease;font:13px/1.35 system-ui,sans-serif;text-align:center}
+#questUnlockNotice[hidden]{display:none}
+#questUnlockNotice.fading{opacity:0}
+#questUnlockNotice small{display:block;font-size:10px;font-weight:800;letter-spacing:.16em;color:#f5d57f}
+#questUnlockNotice strong{display:block;margin:3px 0;font:700 17px/1.25 Georgia,serif}
+#questUnlockNotice span{display:block;color:#e6d7b3;font-size:12px}
+@media(prefers-reduced-motion:reduce){#questUnlockNotice{transition:none}}
+/* Match the conversation themes' specificity so quest colours remain visible. */
+#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic.deckTopic-lead,
+#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic.deckTopic-newQuest{
+  background:linear-gradient(110deg,#fff0b9,#ebd39a)!important;
+  border-color:#a67623!important;border-left-color:#b78528!important;
+  color:#49300f!important;box-shadow:inset 4px 0 #b78528;
+}
+#bagAsk .deckTopic.deckTopic-lead .deckTopicIcon,
+#bagAsk .deckTopic.deckTopic-newQuest .deckTopicIcon,
+#bagAsk .deckTopic.deckTopic-lead .deckTopicCopy small,
+#bagAsk .deckTopic.deckTopic-newQuest .deckTopicCopy small{color:#664612}
+#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic.deckTopic-lead[data-selected=true],
+#bagAsk.conversationTopics.journalDeck #askRows>.deckTopic.deckTopic-newQuest[data-selected=true]{
+  background:linear-gradient(110deg,#806027,#5d4118)!important;
+  color:#fff5d8!important;border-color:#f3d17e!important;border-left-color:#f3d17e!important;
+}
+#bagAsk .deckTopic.deckTopic-lead[data-selected=true] .deckTopicIcon,
+#bagAsk .deckTopic.deckTopic-newQuest[data-selected=true] .deckTopicIcon,
+#bagAsk .deckTopic.deckTopic-lead[data-selected=true] .deckTopicCopy small,
+#bagAsk .deckTopic.deckTopic-newQuest[data-selected=true] .deckTopicCopy small{color:#fff0bf}
+#bagAsk .deckQuestLabel{display:table;font:800 10px/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;border:1px solid currentColor;border-radius:3px;padding:1px 5px}

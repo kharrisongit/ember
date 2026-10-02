@@ -11208,6 +11208,7 @@ function drawFerry(g) {
   g.restore();
 }
 function brambleHint(n){
+  if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(n))return ThornwellDialogue.bramble(n);
   if(brambleQuest!==1||n.pettable||n.n==='Rowan the Hunter')return null;
   const profile=typeof npcWorldProfile==='function'&&npcWorldProfile(n);
   let lines=profile?.bramble||BRAMBLE_HINTS[n.portraitOriginalName||n.n];
@@ -11218,6 +11219,7 @@ function brambleHint(n){
 }
 
 function npcContextDialogue(n, alt) {
+  const local=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(local)return local;
   const quiet=typeof thornwellQuietGreeting==="function"&&thornwellQuietGreeting(n);
   if(quiet)return quiet;
   const finished=typeof npcFinishedRoadwork==='function'&&npcFinishedRoadwork(n);
@@ -11353,11 +11355,8 @@ function tryBrambleReunion(n) {
   if(n.n!=="Rowan the Hunter"||MAPID!=="tavern"||brambleQuest!==1)return false;
   const dog=npcs.find(n=>n.pettable);
   faceToward(n,P.x,P.y);faceCorinAt(n.x,n.y);
-  playScene(["Rowan: Bramble! There you are. Thank you for bringing him back.","Corin: He found me on the road. Friendly little fellow.","Rowan: I am Rowan. Bramble usually brings back sticks. Today he has brought me a helpful stranger.",
-    smithUpgrade?"Rowan: I see Dunstan has already worked on your blade. You chose well.":"Rowan: Take that sword to Dunstan, the blacksmith in Forgewick. He will give you a stronger blade for the road ahead.",
-    glassShield?"Rowan: That Glass Shield is Sela’s work. He knows how to keep a traveller safe.":"Rowan: Dunstan knows the craftspeople along this road. Ask him what else might help you before you leave Forgewick.",
-    "Rowan: We should head home. Come find us outside the house any time—Bramble's company is good for the spirits."],{bramble:true,npcActor:n,after:()=>{
-      brambleQuest=2;
+  playScene(ThornwellDialogue.reunion(n),{bramble:true,npcActor:n,after:()=>{
+      brambleQuest=2;ThornwellDialogue.rememberReunion(n);
       const target=brambleExitTarget(n);
       brambleDeparture={phase:'south',hunter:n,dog,target,
         path:maddockWalkPath(n,[n.x,Math.min(n.y+56,target[1]-24)])};
@@ -11395,7 +11394,7 @@ function stepThornwellWelcome(dt) {
       if(!d.path?.length){
         d.hunter.scriptWalking=false;d.phase='calling';
         if(d.dog)faceToward(d.hunter,d.dog.x,d.dog.y);
-        playScene(['Rowan: Come boy!'],{bramble:true,npcActor:d.hunter,faceTarget:d.dog,after:()=>{
+        playScene(['Rowan: Bramble, with me. Let us get you home.'],{bramble:true,npcActor:d.hunter,faceTarget:d.dog,after:()=>{
           d.phase='leaving';
           // Give the waiting dog room before leading him toward the door.
           // Independent routes can otherwise send Rowan straight through him.

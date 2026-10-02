@@ -140,6 +140,7 @@
     let animated=0;
     for(const {o,i}of choices){
       const cat=category(o),read=seen(o),b=node('button',ask.replyChoices?'deckReply':'deckTopic deckTopic-'+cat);
+      b.classList.toggle('deckTopic-newQuest',!!o.questUnlock&&!ask.replyChoices);
       b.type='button';b.dataset.askIndex=i;b.dataset.selected=String(i===askPick);b.setAttribute('aria-pressed',String(i===askPick));
       b.style.setProperty('--topic-delay',Math.min(animated++,7)*24+'ms');
       if(ask.replyChoices){
@@ -148,13 +149,15 @@
         b.append(number,words);
       }else{
         const mark=node('span','deckTopicIcon');mark.innerHTML=symbol(cat);
-        const copy=node('span','deckTopicCopy');copy.append(node('strong','',o.n));
+        const copy=node('span','deckTopicCopy');
+        if(o.questUnlock||cat==='lead')copy.append(node('span','deckQuestLabel',o.questUnlock?'New quest':'Quest lead'));
+        copy.append(node('strong','',o.n));
         const detail=o.summary||({lead:'A direction worth following',story:'A story in their own words',world:'People, places & old memories',trade:'See what is available',greeting:'See what is on their mind',leave:'Return to the journey',folder:'Open this topic'})[cat];
         copy.append(node('small','',detail));
         const badge=node('span','deckTopicBadge',ask.replyChoices?'↵':cat==='leave'?'↗':o.navigation?'›':cat==='trade'?'›':read?'✓':'•');
         badge.setAttribute('aria-hidden','true');b.append(mark,copy,badge);
       }
-      b.setAttribute('aria-label',playerFacingText(o.n)+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
+      b.setAttribute('aria-label',playerFacingText(o.n)+(o.questUnlock?' — unlocks a new quest':cat==='lead'?' — quest lead':'')+(ask.replyChoices?' — Corin’s reply':o.navigation?' — open topic':o.go&&cat!=='trade'?(read?' — discussed':' — unheard'):''));
       b.onclick=e=>{e.stopPropagation();if(box.moved)return;askPick=i;askTake();};
       b.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();askPick=i;askTake();}};
       rows.append(b);

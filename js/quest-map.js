@@ -163,6 +163,7 @@ function atlasQuestComplete(id){
 }
 function atlasSyncJournal(){
  atlasQuests=[...new Map(atlasQuestOptions().map(q=>[q.id,q])).values()];
+ window.EmberQuestNotifications?.scan(atlasQuests);
  for(const q of atlasQuests){const id=q.questId||q.id;if(id!=='main')atlasJournalKnown[id]={...q,id};}
  if(!atlasQuests.some(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q)))atlasTrackedQuest='main';
 }
@@ -175,8 +176,9 @@ function atlasQuestStages(q){
  if(q?.id==='trials')return [['Ask about the trials',!!cinderSeal],...(cinderSeal?[['Place the seal',!!trialSealPlaced]]:[]),...(trialSealPlaced?[['Win the trial',atlasQuestComplete('trials')]]:[])];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
-function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen};}
+function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
 function restoreQuestJournal(saved){
+ window.EmberQuestNotifications?.restore(saved?.notifications);
  atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasJournalOpen=false;atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
  for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===q.place))atlasJournalKnown[id]={id,title:q.title,detail:q.detail,place:q.place};
 }

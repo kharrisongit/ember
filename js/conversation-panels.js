@@ -32,13 +32,13 @@
         ['Read at your own pace','Next finishes a line that is still typing. Press it again to continue. After choosing a reply, the exchange flows to the final answer, which waits for you. Long lines follow the text as it appears; you can scroll back once it finishes.'],
         ['Come back to their last words','When a topic ends, the NPC’s last reply stays in the upper bubble. Press To Chat starts your next question. Profile is at the bottom left; Back / Goodbye and Next are in the middle.'],
         ['Grow each friendship','Finish a new conversation topic to raise that character’s friendship. Repeating a topic, picking another reply, shopping or collecting repeatable supplies does not earn extra progress.'],
-        ['Some stories come later','Certain conversations only open as you progress through the story or help people. Using every topic available today may not fill the friendship meter. Keep exploring and return to talk again.'],
+        ['Some stories come later','Certain conversations only open as you progress through the story, help people, or return for another visit. Using every topic available today may not fill the friendship meter. Keep exploring and return to talk again.'],
         ['A gift for getting to know them','Complete all of a character’s conversation topics and reach maximum friendship to receive 50 gold and a Potion, once for that character. Your progress and claimed rewards are saved with your game.'],
         ['Check your friendships','Tap the meter at the bottom right for a full-screen overview of the people you have spoken with. You can read these tips again there.']
       ])tips.append(node('dt','',heading),node('dd','',words));
       body.append(tips);
     }else{
-      body.append(node('p','conversationPanelIntro','Some conversations only become available as you progress further into the story or help people. If you have discussed every topic you can see, keep exploring and visit again. Your friendship can still have room to grow.'));
+      body.append(node('p','conversationPanelIntro','Some conversations only become available as you progress further into the story, help people, or return for another visit. If you have discussed every topic you can see, keep exploring and visit again. Your friendship can still have room to grow.'));
       body.append(node('p','conversationRewardExplanation','Maximum friendship + every topic completed = 50 gold and 1 Potion. Each character gives this reward once. Replaying topics or choosing other replies never repeats the reward.'));
       body.append(button('How conversations work',()=>{close(false);open('tutorial');}));
       const cards=node('div','friendshipOverview');
@@ -48,7 +48,7 @@
         card.append(node('h3','',s.name),node('p','friendshipLevel','Friendship level '+s.level+' / 5 · '+s.percent+'%'));
         const meter=node('progress','friendshipProgress');meter.max=100;meter.value=s.percent;meter.setAttribute('aria-label',s.name+' friendship');card.append(meter);
         card.append(node('p','',s.completed+' of '+s.total+' topics completed'));
-        card.append(node('p','friendshipAvailability',s.max?'Every topic completed.':s.remaining+' topics available to discuss · '+s.locked+' open later in the story'));
+        card.append(node('p','friendshipAvailability',s.max?'Every topic completed.':s.remaining+' topics available to discuss · '+s.locked+' open with story progress or a later visit'));
         card.append(node('p','friendshipReward',s.rewarded?'Reward received: 50 gold + 1 Potion':'Reward: 50 gold + 1 Potion'));
         cards.append(card);
       }

@@ -36,6 +36,12 @@ jobs:
           node-version: '22'
       - name: Check the scripts loaded by the game
         run: node tools/check-game-scripts.mjs
+      - name: Check authored town conversations and quest notifications
+        run: |
+          node tests/thornwell-dialogue.mjs
+          node tests/quest-notifications.mjs
+          node tests/millwood-shroom-dialogue.mjs
+          node tests/conversation-friendship.mjs
       - name: Check startup and retained overworld performance
         run: |
           node tests/startup-loading.mjs

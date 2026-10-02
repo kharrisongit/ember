@@ -1,14 +1,18 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
-const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
-run(`mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEncounterCard=undefined;
+import {gameDom} from './helpers-game-dom.mjs';
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error},{document:gameDom().document});
+run(`EmberFriendship.restore({tutorialSeen:true});mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=false;window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEncounterCard=undefined;
 DesertAdventure.installWorld(W.maps.world);loadMap('school2');scene=null;bossScene=null;fadeDir=0;`);
 function finish(){for(let i=0;run('!!scene')&&i<20;i++)run('typeAll();scene.t=.3;advanceScene();');assert(!run('!!scene'));}
-run(`beginNpcTalk(npcs.find(n=>n.n==='Scholar Ilyan'));`);finish();
-assert(run('ask.opts.some(o=>o.n.includes("investigate"))'),'School scholar actually offers the expedition');
-run('askPick=1;askTake();');finish();assert(!run('DesertAdventure.accepted()'),'Declining leaves quest available');
-run(`beginNpcTalk(npcs.find(n=>n.n==='Scholar Ilyan'));`);finish();run('askPick=0;askTake();');finish();
+function scholarOffer(){
+ run(`askShut();scene=null;sayNpc=null;openNpcTopics(npcs.find(n=>n.n==='Scholar Ilyan'));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='An expedition for the future');askTake();typeAll();scene.t=1;EmberConversationFlow.advance();`);
+ assert(run('ask.replyChoices'),'School scholar actually offers the expedition through authored replies');
+}
+function scholarReply(index){run(`askPick=${index};askTake();typeAll();scene.t=1;EmberConversationFlow.advance();typeAll();scene.t=1;EmberConversationFlow.advance();`);}
+scholarOffer();scholarReply(3);assert(!run('DesertAdventure.accepted()'),'Declining leaves quest available');
+scholarOffer();scholarReply(1);run('askShut();scene=null;sayNpc=null');
 assert.equal(run('DesertAdventure.capture()'),'school');
 assert.equal(run('atlasQuestKind(atlasQuestOptions().find(q=>q.id==="pyramid"))'),'side');
 assert(run('atlasJournalAllowed("pyramid")&&atlasTrackedQuest==="pyramid"'));

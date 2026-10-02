@@ -4188,6 +4188,7 @@ function updateDeckHealth(){
 function frameCore(ms) {
   restoreCameraTarget();
   globalThis.window?.EmberConversationFlow?.tick();
+  window.EmberQuestNotifications?.tick(ms);
   if(window.EmberCloud?.isOpen()){last=ms;return;}
   if(window.__titleTransition){last=ms;drawWorld(tAcc,0);return;}
   if(window.EmberAttackAlign?.isOpen()){last=ms;return;}
