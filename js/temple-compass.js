@@ -285,14 +285,12 @@ function compassTempleGuide(field, player) {
   if (distance[current] <= 1 && Math.hypot(player.x - root.x, player.y - root.y) < 12)
     return { ...target, arrived: false };
   let aim = point(current);
-  // Look ahead only on this straight section; stop at the first bend.
-  let direction=null;
+  // Look ahead along the route only as far as Corin has a clear walking line.
+  // This rounds open-room diagonals without pointing through a corridor corner.
   for (let n = 0; n < 12 && distance[current] > 0; n++) {
     const next = field.nextStep[current];
     if (next < 0 || !visible(player, point(next))) break;
-    const from=point(current),to=point(next),dx=to.x-from.x,dy=to.y-from.y;
-    if(direction&&(direction[0]!==dx||direction[1]!==dy))break;
-    direction=[dx,dy];current = next; aim = to;
+    current = next; aim = point(current);
   }
   return { ...aim, arrived: false };
 }
@@ -388,50 +386,28 @@ function compassWalkAdvance(nav){
     }
   }
 }
-// Keep a stable current leg. Seeing beyond a bend is not permission to turn.
-function compassPathGuide(nav,player,visible=compassWalkVisible){
-  if(!nav.legs){
-    nav.legs=[nav.path[0]];
-    for(let i=1;i<nav.path.length-1;i++){
-      const a=nav.path[i-1],b=nav.path[i],c=nav.path[i+1];
-      if((b.x-a.x)*(c.y-b.y)!==(b.y-a.y)*(c.x-b.x))nav.legs.push(b);
-    }
-    nav.legs.push(nav.path.at(-1));nav.leg=0;
-  }
-  const legs=nav.legs;
-  const measure=i=>{
-    const a=legs[i],b=legs[i+1],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1;
-    const along=((player.x-a.x)*dx+(player.y-a.y)*dy)/len;
-    const side=((player.x-a.x)*dy-(player.y-a.y)*dx)/len;
-    return {a,b,dx:dx/len,dy:dy/len,len,along,side,d:Math.hypot(side,Math.max(0,-along,along-len))};
-  };
-  let m=measure(nav.leg);
-  if(!nav.located||m.d>32){
-    let best=Infinity;
-    for(let i=0;i<legs.length-1;i++){const v=measure(i);if(v.d<best){best=v.d;nav.leg=i;m=v;}}
-    nav.located=true;
-  }
-  if(m.d>96)return null;
-  while(nav.leg<legs.length-2&&m.along>=m.len-3&&Math.abs(m.side)<=24)m=measure(++nav.leg);
-  if(Math.abs(m.side)>24||m.along< -3)return {...m.b,arrived:false};
-  if(nav.leg===legs.length-2&&m.len-m.along<24)return {...m.b,arrived:false};
-  const ahead=Math.min(32,Math.max(1,m.len-m.along));
-  const guide={x:player.x+m.dx*ahead,y:player.y+m.dy*ahead,arrived:false};
-  return visible(player,guide)?guide:{...m.b,arrived:false};
-}
 function compassWalkGuide(cache,player){
   const target=cache.target;if(!target)return null;
-  if(Math.hypot(target.x-player.x,target.y-player.y)<24&&compassWalkVisible(player,target))
-    return {...target,arrived:!!target.heartstone};
+  if(Math.hypot(target.x-player.x,target.y-player.y)<144&&compassWalkVisible(player,target))
+    return {...target,arrived:target.heartstone&&Math.hypot(target.x-player.x,target.y-player.y)<24};
   let nav=cache.navigation;
   if(!nav||nav.failed&&tAcc>cache.retry||!nav.path&&Math.hypot(player.x-nav.start.x,player.y-nav.start.y)>2048){
     nav=cache.navigation=compassWalkSearch(player,target);cache.retry=tAcc+2;
   }
   compassWalkAdvance(nav);
   if(!nav.path)return null;
-  const guide=compassPathGuide(nav,player);
-  if(!guide)cache.navigation=null;
-  return guide;
+  let nearest=-1,distance=Infinity;
+  const end=nav.located?Math.min(nav.path.length,nav.cursor+32):nav.path.length;
+  for(let i=Math.max(0,nav.cursor-8);i<end;i++){
+    const p=nav.path[i],d=Math.hypot(p.x-player.x,p.y-player.y);
+    if(d<=96&&d<distance&&compassWalkVisible(player,p)){nearest=i;distance=d;}
+  }
+  if(nearest<0||distance>96){cache.navigation=null;return null;}
+  nav.cursor=nearest;nav.located=true;let aim=nav.path[nearest];
+  for(let i=nearest+1;i<Math.min(nav.path.length,nearest+9);i++){
+    if(!compassWalkVisible(player,nav.path[i]))break;aim=nav.path[i];
+  }
+  return {...aim,arrived:false};
 }
 
 function drawTempleCompass() {
