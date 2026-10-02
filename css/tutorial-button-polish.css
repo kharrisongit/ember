@@ -36,3 +36,14 @@
  #reveal.kit-help #revealCap .lesson-row{font-size:11px;padding-top:6px;padding-bottom:6px;margin:4px 0}
 }
 #reveal:not(.kit-help) #revealArt{max-width:50%;max-height:45%;object-fit:contain}
+/* Define the lesson layout here rather than relying on other panel styles. */
+#reveal.kit-help #revealCap .lesson-kicker{display:block!important;text-align:center;line-height:1.4;margin:0 0 8px!important}
+#reveal.kit-help #revealCap>strong{display:block!important;text-align:center;line-height:1.2;margin:0 0 12px!important}
+#reveal.kit-help #revealCap .lesson-row{min-height:42px;margin:7px 0!important;display:flex;align-items:center}
+#reveal.kit-help #revealCap .lesson-row[data-control="Try it"]{display:block;padding:10px 12px;min-height:0;background:#c69a4a12;border-color:#b18a4c55}
+#reveal.kit-help .lesson-row[data-control="Try it"]::before{content:none!important;display:none!important}
+@container(max-height:450px){
+ #reveal.kit-help #revealCap .lesson-kicker{margin-bottom:5px!important}
+ #reveal.kit-help #revealCap>strong{margin-bottom:8px!important}
+ #reveal.kit-help #revealCap .lesson-row{margin:5px 0!important;min-height:38px}
+}

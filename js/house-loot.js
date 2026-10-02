@@ -48,6 +48,8 @@ async function prepareHouseLoot(){
     map.roomActors=(map.roomActors||[]).filter(a=>!(a.exactFurniture&&/chest/i.test(a.n)));
   }
   for(const loot of placements){
+    // Corin and Nan’s starting house has no reward chests.
+    if(/^house26(?:_bedroom\d*)?$/.test(loot.map))continue;
     const map=W.maps[loot.map];
     if(!map||map.roomActors?.some(o=>o.houseLoot?.id===loot.id))continue;
     const blocks=map.roomBlocks||=[];
