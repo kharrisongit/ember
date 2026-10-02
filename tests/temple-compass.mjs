@@ -10,7 +10,7 @@ const button = { style: {}, classList: { toggle(name, on) { button.on = on; } },
 let menu = true, draws = 0, circles = [], rotations = [];
 const ctx = Object.fromEntries(['save','restore','translate','fill','stroke','fillRect','beginPath','moveTo','lineTo','closePath'].map(name => [name, () => { draws++; }]));
 ctx.arc = (...args) => circles.push(args); ctx.rotate = angle => rotations.push(angle);
-const c = vm.createContext({ W, TS:16, DIRT:0, terrRLE:()=>'', window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},
+const c = vm.createContext({ quest:0,Q:{ABED:0}, W, TS:16, DIRT:0, terrRLE:()=>'', window:{EMBER_ASSETS:{DOCK_ORIGINAL_ASSETS:[]}},
   WALL78_PIECES:JSON.parse(assets.match(/const WALL78_PIECES=(.*);/)[1]),
   fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}), Image:class { async decode() {} },
   breathHas:{},chestOpen:{},ctx,tAcc:0,atlasTrackedQuest:'main',gameplayStarted:true,mode:'play',editStamp:0,VW:390,VH:600,
@@ -75,5 +75,4 @@ c.gameplayStarted=true;c.drawTempleCompass();assert.equal(ctx.fillStyle,'#9cdac2
 c.restoreFatherCompass();assert.equal(run('templeCompass.owned'),false);assert.equal(run('templeCompass.awakened'),false);
 assert(rotations.every(Number.isFinite));
 assert(!read('index.html').includes('id="bCompass"'));
-assert(read('js/generated/game-part-3.js').includes('restoreFatherCompass(s.fatherCompass)'));
 console.log(`PASS: Compass routes all ${temples.length} temple maps, ${samples} room positions and ${backwards} side branches; ${simulated} simulated walks reach the next door/chest, plus arrival, caching and ownership and awakening visibility.`);

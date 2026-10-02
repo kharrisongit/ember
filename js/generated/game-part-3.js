@@ -4222,6 +4222,7 @@ function frameCore(ms) {
   tAcc += dt;
   globalThis.window?.EmberArenaEntry?.step(dt);
   globalThis.window?.EmberRiding?.step(dt);
+  stepNanMorning();
   stepNanDeparture();
   if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
@@ -4362,7 +4363,7 @@ function useDoors(dt) {
     if (score < best) { best = score; d = candidate; }
   }
   if (!d) return;
-  if(nanMorningDoorBlocked(d)){P.moving=false;toast("Talk to Nan before you go.");return;}
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My bag, map and compass are still on the desk.");return;}
   if(!foesHeld&&arenaLock?.templeRoom&&arenaLock.templeMap===MAPID&&arenaT>0)return;
   if(MD.templeExpanded&&expandedTempleDoorLocked(d)){toast("Defeat this chamber’s spirits to release the bars.");return;}
   if(!foesHeld && MD.royal && foes.some(f=>(f.kind==="royalguard"||f.kind==="treasuryknight")&&f.st!=="dead")){toast("Defeat the guards to clear this passage.");return;}
@@ -4371,7 +4372,7 @@ function useDoors(dt) {
   beginDoorEntry(d);
 }
 function beginDoorEntry(d){
-  if(nanMorningDoorBlocked(d)){P.moving=false;toast("Talk to Nan before you go.");return;}
+  if(nanMorningDoorBlocked(d)){P.moving=false;toast("My bag, map and compass are still on the desk.");return;}
   globalThis.window?.EmberSfx?.door?.();
   const animated = d.stairDown || MD.roomArt || ["school", "tavern", "inn", "smithy", "glasshouse", "glasswork"].includes(d.to);
   if (animated) {
@@ -4789,7 +4790,7 @@ const BAG = [
     has: () => dragonFish > 0,
     icon: () => "inventory_dragonFish" },
   {key:'fishingPole',name:'Fishing Pole',kind:'key',has:()=>fishingPole,
-    tell:'A gift from Calder at the first camp on the road to Thornwell. He recommends the pools at Forgefalls. Face water and press A. Cast into the gold zone, hook the bite, then hold to reel and release during lunges. Fresh fish heals your dragon.',icon:()=> "inventory_fishingPole"},
+    tell:'A gift from Calder at the first camp on the road to Thornwell. He recommends the pools at Forgefalls. Face water and tap the action button. Cast into the gold zone, hook the bite, then hold to reel and release during lunges. Fresh fish heals your dragon.',icon:()=> "inventory_fishingPole"},
   { key: "glassShield", name: "Glass Shield", kind: "key",
     tell: "Sela's clear-glass focus. Tap/hold B to raise a brief force field. Move with B held to run. Orange flashes warn of blockable attacks; red flashes warn of unblockable attacks.",
     has: () => glassShield,
@@ -5105,10 +5106,11 @@ function refreshBag() {
   }
   const pickIt = held[bagPick];
   if (pickIt && (pickIt.key === "potion" || pickIt.key === "elixir")) {
-    const b = document.createElement("div");
+    const b = document.createElement("button");
+    b.type="button";
     b.className = "equipBtn";
-    b.textContent = pickIt.key === "elixir" ? "DRINK -- full health (A)"
-                                            : "DRINK -- two hearts (A)";
+    b.textContent = pickIt.key === "elixir" ? "DRINK · Full health"
+                                            : "DRINK · Two hearts";
     b.addEventListener("click", (e) => {
       e.stopPropagation();
       if (pickIt.key === "elixir") drinkElixir(); else drinkPotion();
@@ -5117,10 +5119,11 @@ function refreshBag() {
     desc.appendChild(b);
   }
   if (pickIt && pickIt.charm) {
-    const b = document.createElement("div");
+    const b = document.createElement("button");
+    b.type="button";
     b.className = "equipBtn" + (worn[pickIt.charm] ? " on" : "");
     const full = !worn[pickIt.charm] && wornCount() >= WORN_MAX;
-    b.textContent = worn[pickIt.charm] ? "EQUIPPED -- A to unequip"
+    b.textContent = worn[pickIt.charm] ? "UNEQUIP"
                   : full ? "EQUIP (" + wornCount() + "/" + WORN_MAX + " -- full)"
                   : "EQUIP (" + wornCount() + "/" + WORN_MAX + ")";
     if (full) b.className += " full";
@@ -6132,7 +6135,7 @@ function captureSave(){return {
   bossRewardChests:typeof BossRewardChests!=='undefined'?BossRewardChests.capture():undefined,
   spiderWebLesson:typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.capture(),
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
-  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken},
+  fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken,morningMet:templeCompass.morningMet},
   charm:{...charm}, worn:{...worn},
   templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,

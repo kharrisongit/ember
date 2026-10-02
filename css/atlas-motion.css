@@ -1,0 +1,19 @@
+#atlasAnimation{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#atlasAnimation svg{display:block;width:100%;height:100%;overflow:hidden;pointer-events:none}
+#atlasRoutes,#atlasPlaces{z-index:1}
+#atlasAnimation *{animation-play-state:paused!important}
+#atlasAnimation.active *{animation-play-state:running!important}
+.atlas-water-wave{fill:none;stroke:#c2faff;stroke-width:.65;stroke-linecap:round;opacity:0;animation:atlasWater 5s ease-in-out infinite;animation-delay:var(--delay)}
+.atlas-oasis .atlas-water-wave{stroke:#d4ffff;stroke-width:.8}
+.atlas-river-current{fill:none;stroke:#c6faff;stroke-width:1.3;stroke-linecap:round;stroke-dasharray:2 12 5 19;opacity:.4;animation:atlasRiver 2s linear infinite}
+.atlas-fall-stream{fill:none;stroke:#e2ffff;stroke-width:1.05;stroke-linecap:round;stroke-dasharray:5 15 9 19;opacity:.46;animation:atlasFalls 1.1s linear infinite;animation-delay:var(--delay)}
+.atlas-fall-mist{fill:#e2ffff;opacity:.18;animation:atlasMist 2.4s ease-in-out infinite}
+.atlas-windmill-rotor{transform-box:fill-box;transform-origin:center;animation:atlasWindmill 14s linear infinite}
+.atlas-lava{fill:none;stroke:#ffdc70;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 15 6 22;opacity:.58;animation:atlasLava 3.5s linear infinite}
+@keyframes atlasWater{0%,100%{opacity:0;transform:translateX(-2px)}35%{opacity:.34}80%{opacity:.12;transform:translateX(5px)}}
+@keyframes atlasRiver{to{stroke-dashoffset:-38}}
+@keyframes atlasFalls{to{stroke-dashoffset:-48}}
+@keyframes atlasMist{50%{opacity:.35}}
+@keyframes atlasWindmill{from{transform:rotate(25deg)}to{transform:rotate(385deg)}}
+@keyframes atlasLava{to{stroke-dashoffset:-46}}
+@media(prefers-reduced-motion:reduce){#atlasAnimation *{animation:none!important}.atlas-mill-motion{display:none}.atlas-water-wave{opacity:0}.atlas-river-current,.atlas-fall-stream,.atlas-fall-mist,.atlas-lava{display:none}}

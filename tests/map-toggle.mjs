@@ -10,7 +10,7 @@ vm.runInContext(code.slice(code.indexOf('function openAtlas('),code.indexOf('\n'
 vm.runInContext('refreshMapControls();openAtlas()',ctx);
 assert(!ctx.atlasOpen);assert.equal(mapButton['aria-disabled'],'true');assert(bagButton.disabled);
 vm.runInContext("openAtlas('bag')",ctx);assert(!ctx.atlasOpen,'Inventory cannot bypass the locked map');
-vm.runInContext('nanGiftBeat(6)',ctx);
+vm.runInContext('templeCompass.mapGiven=true;refreshMapControls()',ctx);
 assert.equal(mapButton['aria-disabled'],'false');assert(!bagButton.disabled);
 for(let i=0;i<3;i++){
  vm.runInContext('openAtlas()',ctx);assert(ctx.atlasOpen);assert.equal(panel.style.display,'flex');

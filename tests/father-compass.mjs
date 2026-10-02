@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const read=p=>fs.readFileSync(p,'utf8');
 let saves=0,reveal;
-const c=vm.createContext({hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
+const c=vm.createContext({quest:0,Q:{ABED:0},hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
  sceneHold:()=>!!c.scene,sayNpc:null,fadeDir:0,fade:0,doorMotion:null,ovl:null,ask:null,bagOpen:false,editing:false,dying:()=>false,
  toast(){},saveGame:()=>saves++,showReveal:(...args)=>reveal=args,playScene:(lines,opts)=>c.scene={lines,i:0,...opts}});
 const run=s=>vm.runInContext(s,c);
@@ -33,7 +33,7 @@ assert(!game.includes('scene.compassReveal'));
 assert(!read('js/temple-compass.js').includes('Thanks, Dad.'));
 assert(game.includes('if(scene.nanGifts&&nanGiftBeat(scene.i))return;'));
 assert(game.includes("best.n==='Nan Ferrow'&&hasDragon()&&nanGiftPending()"));
-assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken}'));
+assert(bag.includes('fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken,morningMet:templeCompass.morningMet}'));
 console.log('PASS: Nan’s heirloom, family history, immediate guidance without a temple reveal and save restoration.');
 
 Object.assign(c,{MAPID:'world',TS:16,SPR:{},hasDragon:()=>c.hatched,hatched:false,dragonIntroDone:true,npcs:[],
@@ -94,16 +94,16 @@ console.log('PASS: Nan responds naturally to seeing the dragon or hearing Corin�
 // A reload between gifts preserves the compass and still delivers the meat.
 c.restoreFatherCompass({owned:true,awakened:false,meatGiven:false});
 const meat=c.hareMeat;c.scene=null;c.fade=0;c.fadeDir=0;c.npcs=[];c.P={x:31*16,y:429*16};
-c.stepNanDeparture();startApproach();assert.equal(c.scene.i,8);
+c.stepNanDeparture();startApproach();assert.equal(c.scene.i,0,'A compass from the desk must not skip Nan’s reaction to the dragon');
 assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,meat+3);
 assert.equal(c.nanGiftBeat(14),false);
 console.log('PASS: gifts have separate dialogue beats and icons, dragon stays behind Corin from each approach, and partial-gift saves resume without duplicates.');
 
-// A save between compass and map resumes without losing or repeating gifts.
+// A save between separate desk pickups preserves the missing map.
 c.restoreFatherCompass({owned:true,meatGiven:false,mapGiven:false});
-assert(c.worldMapUnlocked(),'Partial legacy gifts keep Map access');assert(c.nanGiftPending());
+assert(!c.worldMapUnlocked(),'Collecting the desk compass alone does not also collect the map');assert(c.nanGiftPending());
 assert.equal(c.nanGiftBeat(6),false);assert.equal(c.nanGiftBeat(12),false);
-assert(c.worldMapUnlocked());assert.equal(c.nanGiftBeat(12),false);
+assert(!c.worldMapUnlocked());assert.equal(c.nanGiftBeat(12),false);
 c.restoreFatherCompass({owned:true,meatGiven:true});assert(c.worldMapUnlocked(),'Legacy gift saves keep map access');
 c.restoreFatherCompass();assert.equal(c.worldMapUnlocked(),false,'New game locks the map again');
 

@@ -395,7 +395,7 @@ function stepThornwellRoyal(dt){
   if(MAPID==='world'&&thornwellRoyal.stage===5){thornwellDeparture();return;}
   if(MAPID==='world'&&thornwellRoyal.stage===6){
     const falls=thornwellForgefalls();
-    if(falls&&P.x>=falls.left&&P.x<=falls.right&&P.y>=falls.top&&P.y<=falls.bottom)thornwellReunion();
+    if(falls&&P.x>=falls.x&&P.x<=falls.right&&P.y>=falls.top&&P.y<=falls.bottom)thornwellReunion();
   }
 }
 function thornwellStoryObjective(){

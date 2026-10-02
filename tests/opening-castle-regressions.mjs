@@ -5,19 +5,36 @@ const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),{log(){},
 await run('loadPublishedEditorLayouts()');
 run(`mode='play';gameplayStarted=true;quest=Q.ABED;bagOwned=false;restoreFatherCompass({});EmberRiding.skip();EmberEquipmentTutorial.skip();loadMap(W.start);[P.x,P.y]=MD.spawn;`);
 assert.equal(run('MAPID'),'house26_bedroom');assert(run('canStand(P.x,P.y)'));
-run('startMorning()');assert.equal(run('scene.lines[0]'),'Corin: Good morning Millwood! I should talk to Nan before I head out for the day.');
-run(`scene=null;loadMap('house26');var exit=MD.doors.find(d=>d.to==='world');var r=doorRect(exit);P.x=r.x+r.w/2;P.y=r.y-2;P.dir='d';P.moving=true;useDoors(1/30);`);
-assert.equal(run('doorMotion'),null);assert.equal(run('toastEl.textContent'),'Talk to Nan before you go.');assert.equal(run('fadeDir'),0);assert(run('nanMorningSolid(P.x,r.y)'));
-run('beginDoorEntry(exit)');assert.equal(run('doorMotion'),null,'Direct transition cannot bypass Nan');
-run("var nan=npcs.find(n=>n.n==='Nan Ferrow');EmberConversationFlow.prompt(nan)");
-assert(run('scene.nanMorning'),'Actual interaction takes the morning gift path');
-run('typeAll();scene.t=1;advanceScene();');assert(run('bagOwned&&worldMapUnlocked()'));assert(!run('templeCompass.owned'),'Morning Map does not grant the compass');
-assert.match(run('revCap.textContent'),/Bag/);run('hideReveal()');assert.match(run('revCap.textContent'),/Map/);run('hideReveal()');
-run('scene=null;saveToSlot(3,true);bagOwned=false;templeCompass.mapGiven=false');assert(run('loadGame(3)'));assert(run('bagOwned&&worldMapUnlocked()'));assert(!run('templeCompass.owned'));
-assert.equal(run('giveMorningSupplies()'),false,'No repeated morning gifts');
-run('scene=null;revealing=false;beginDoorEntry(MD.doors.find(d=>d.to===\'world\'))');assert(run('doorMotion'),'The house exit opens after Nan’s gifts');run('doorMotion=null');
-run('var meatBefore=hareMeat;nanGiftBeat(6)');assert(run('templeCompass.owned'));assert.match(run('revCap.textContent'),/Father.s Compass/);run('hideReveal();nanGiftBeat(14);hideReveal();nanGiftBeat(14)');assert.equal(run('hareMeat-meatBefore'),3);
-assert(!run('FATHER_COMPASS_GIFT.join(" ").includes("A map and a compass")'));
+run('startMorning()');assert.match(run('scene.lines[0]'),/bag, map and compass are on the desk/);
+run(`scene=null;var exit=MD.doors.find(d=>d.to==='house26');beginDoorEntry(exit);`);
+assert.equal(run('doorMotion'),null,'Bedroom exit waits for the desk supplies');
+assert(run('morningSuppliesPending()'));
+for(const key of ['morningBag','morningMap','morningCompass']){
+ c.pickupKey=key;
+ assert(run(`(()=>{const it=morningDeskItems().find(i=>i.key===pickupKey);for(let y=it.y;y<it.y+42;y+=2)for(let x=it.x-28;x<it.x+28;x+=2)if(canStand(x,y)&&itemAt(x,y)?.key===pickupKey){P.x=x;P.y=y;return true;}return false;})()`),'Supply can be reached from a walkable floor');
+ run('interact()');assert(run('revealing'));run('hideReveal()');
+ assert(run('morningDeskItems().find(i=>i.key===pickupKey).owned()'));
+ assert(!run('itemHere(morningDeskItems().find(i=>i.key===pickupKey))'),'Picked supply disappears');
+}
+assert(run('bagOwned&&worldMapUnlocked()&&templeCompass.owned'));
+assert(!run('templeCompass.meatGiven'),'Desk compass does not consume Nan’s later meat gift');
+run('beginDoorEntry(exit)');assert(run('doorMotion'),'Bedroom exit opens after pickups');run('doorMotion=null');
+run(`loadMap('house26');var arrival=MD.doors.find(d=>d.to==='house26_bedroom');P.x=(arrival.x+.5)*TS;P.y=(arrival.y+2)*TS;fade=0;fadeDir=0;stepNanMorning();var nan=npcs.find(n=>n.n==='Nan Ferrow');var nanStart=[nan.x,nan.y];`);
+assert(run('scene.nanMorning'),'Nan approaches automatically when Corin enters the main room');
+run('for(let i=0;i<240&&scene.arriving;i++){stepWalkers(1/30);stepScene(1/30);}');
+assert(!run('scene.arriving'),'Nan reaches Corin and begins talking');
+assert(run('Math.hypot(nan.x-nanStart[0],nan.y-nanStart[1])>5'),'Nan visibly approaches');
+assert.match(run('scene.lines[0]'),/Hettie was looking for you/);
+run('while(scene){typeAll();scene.t=1;advanceScene();}');assert(run('templeCompass.morningMet'));
+run('stepNanMorning()');assert.equal(run('scene'),null,'Morning meeting does not repeat');
+run('saveToSlot(3,true);bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false');assert(run('loadGame(3)'));assert(run('bagOwned&&worldMapUnlocked()&&templeCompass.owned&&templeCompass.morningMet'));
+run('var meatBefore=hareMeat;playScene(FATHER_COMPASS_GIFT,{nanGifts:true,i:14});typeAll();scene.t=1;advanceScene()');assert(run('revealing'));assert.equal(run('scene.i'),14);
+run('hideReveal()');assert.equal(run('scene.i'),15,'Dismissing the gift opens the next line without another action');
+run('nanGiftBeat(14)');assert.equal(run('hareMeat-meatBefore'),3);
+// A queue advances once, after its final item, and callbacks cannot skip a new conversation.
+run(`playScene(['Nan Ferrow: Two gifts.','Corin: Thank you.']);showReveal('inventory_mapCompass','Map');showReveal('inventory_compass','Compass');hideReveal()`);
+assert.equal(run('scene.i'),0);assert(run('revealing'));run('hideReveal()');assert.equal(run('scene.i'),1);
+run(`showReveal('inventory_compass','Compass',1,true,()=>playScene(['Corin: A new thought.','Corin: Continue.']));hideReveal()`);assert.equal(run('scene.i'),0);
 // Published throne footprint follows its movable actor and leaves the aisle open.
 run(`quest=Q.DONE;loadMap('cinderhold');var chair=MD.roomActors.find(a=>a.throneRoomAsset);`);
 assert(run('chair.moveBlocks.length>0'));assert(run('isSolid(chair.x,chair.y-4)'));assert(run('canStand(176,180)'));
@@ -40,4 +57,4 @@ for(const name of run('Object.keys(NpcContextAudit.cast)')){
  run('discussedTopics.clear();dragonOff=true');const away=run('NpcContextAudit.introduction(actor).lines');assert(!/those wings|your dragon|that dragon|beside you|outside/.test(away[0]),name+' does not invent a sighting');run('dragonOff=false');introductions++;
 }
 assert.equal(run("THORNWELL_DIALOGUE_CAST.Isolde.role"),'Thornwell resident');
-console.log(`PASS: bedroom opening, blocked exit, early Bag/Map, saved gifts, compass/meat separation, movable throne collision, three paused/overlapping final-fight starts and ${introductions} stranger introductions.`);
+console.log(`PASS: bedroom pickups and saved supplies, automatic Nan approach, queued gift continuation, movable throne collision, three paused/overlapping final-fight starts and ${introductions} stranger introductions.`);

@@ -26,7 +26,7 @@ run('EmberEquipmentTutorial.restore({equipmentTutorial:{pending:true,done:false}
 assert(run('EmberEquipmentTutorial.holding()'),'Pending lesson resumes after loading');
 run('EmberEquipmentTutorial.restore({});EmberEquipmentTutorial.step()');assert(!run('EmberEquipmentTutorial.holding()'),'Older saves already owning spore migrate without interruption');
 run('EmberEquipmentTutorial.restore({equipmentTutorial:{pending:true,done:false}});bagOpen=true;worn.edge=worn.ward=worn.brand=true;bagPick=bagHeld().findIndex(i=>i.charm==="spore");refreshBag();EmberEquipmentTutorial.step()');
-assert.match(dom.element('equipmentHint').textContent,/UNEQUIP/,'Full slots explain how to make room');
+assert.match(dom.element('equipmentHint').getAttribute('aria-label'),/UNEQUIP/,'Full slots explain how to make room');
 console.log('PASS: real Shroom King reward, reveal ordering, Items → Full inventory → spore → Equip taps, completion, save migration and full charm slots.');
 
 // Exercise the real frame while a tutorial holds combat. Effects must advance

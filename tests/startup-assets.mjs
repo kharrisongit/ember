@@ -50,7 +50,7 @@ const source=p2.slice(p2.indexOf('async function buildHouseFurnitureLayers('),p2
 const p=vm.createContext({prepareJourneyArt:async()=>{const e=new Error('assets/sprites/regional/tilda.png: image request failed');e.startupStage='Regional villagers';throw e;},
   prepareMillwoodInteriors:async()=>{},prepareHouseLoot:async()=>{},prepareExpandedFirstTemple:async()=>{},
   prepareExpandedSandspireTemple:async()=>{},prepareExpandedHollybeckTemple:async()=>{},prepareExpandedMountainPassage:async()=>{},
-  DragonChapels:{prepare:async()=>{}},DesertPyramid:{prepare:()=>new Promise(()=>{})},Frosthorn:{prepare:async()=>{}},IceMoth:{prepare:async()=>{}}});
+  CoralmereLighthouse:{prepare:async()=>{}},DragonChapels:{prepare:async()=>{}},DesertPyramid:{prepare:()=>new Promise(()=>{})},Frosthorn:{prepare:async()=>{}},IceMoth:{prepare:async()=>{}}});
 vm.runInContext(source,p);
 await assert.rejects(p.buildHouseFurnitureLayers(),e=>e.startupStage==='Regional villagers'&&e.message.includes('tilda.png'));
 

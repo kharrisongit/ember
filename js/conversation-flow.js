@@ -5,6 +5,7 @@
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave,greeted=false}={}){
+    if(!telepathy&&talkShroomLookout(actor))return true;
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
     const name=telepathy?'Aurelius':actor.n,map=MAPID;

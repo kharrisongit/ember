@@ -1659,6 +1659,7 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
     ['Mountain passage',prepareExpandedMountainPassage],
     ['Desert pyramid',()=>DesertPyramid.prepare()],
     ['Dragon chapels',()=>DragonChapels.prepare()],
+    ['Coralmere lighthouse',()=>CoralmereLighthouse.prepare()],
     ['Frosthorn artwork',()=>Frosthorn.prepare()],
     ['Ice Moth artwork',()=>IceMoth.prepare()]
   ];
@@ -1753,13 +1754,13 @@ function geometryPatch(onlyMap=null){
  return out;
 }
 // Illustrated atlas: directional focus moves among labelled destinations.
-const ATLAS_LOCATIONS=[["Millwood",78,272,"Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."],["Elder’s Home",96,228,"Maddock’s house, north of Millwood."],["Northern Woods",104,192,"Woodland north of Millwood, leading toward the mushroom country."],["Sporewood",108,107,"The western mushroom woodland."],["Sporehollow",150,77,"A settlement among the giant mushrooms."],["Northern Shroom Field",102,68,"Mushroom fields at the northern edge of the woods."],["Shroom Pass",107,148,"The path between the northern woods and the mushroom country."],["Route 1",133.01,205.89,"The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."],["Thornwell",214,126,"A woodland town on the journey east."],["Forgefalls",322,249,"The falls southeast of Thornwell."],["Route 2",282.75,176.19,"The woodland road to Forgewick."],["Forgewick",423.0,158.91,"A town of craftspeople. Find the blacksmith, glassblower and market."],["Forgewick Temple",468,199,"The temple southeast of Forgewick, reached by the winding southern trail."],["Route 3",544.28,156.75,"The road from Forgewick into the desert."],["The Oasis",590.89,182.4,"A green refuge southwest of Sandspire, beside the desert road."],["Sandspire",686.18,100.05,"The desert city between Forgewick and Coralmere."],["Sandspire Temple",821.89,221.55,"The temple south-east of Sandspire."],["Route 4",812.4,62.79,"The desert route to the coast."],["Coralmere",855,329,"A coastal town with fishing docks and homes by the water."],["Route 5",990.6,291.21,"The route through the wetlands toward Hollybeck."],["Witchmoor",1068.15,236.67,"Maelis’s home in the marsh. The ferry begins at the mainland dock."],["Dreadmarsh",1101.98,318.75,"The deep marshes south of the road."],["Hollybeck Graveyard",1146.53,130.83,"The graveyard northwest of Hollybeck."],["Hollybeck",1175.4,159.99,"A town at the edge of the snowy highlands."],["Hollybeck Temple",1220.78,93.03,"The temple northeast of Hollybeck. Follow the winding trail east and north."],["Route 6",1235.21,191.31,"The mountain road north to Frostcrag."],["Frostcrag",1236.04,67.65,"A stronghold in the snowy mountains."],["Ashcrag",1267.39,64.95,"East of Frostcrag, beyond the mountain passage, before the volcanic road."],["Route 7",1373.81,178.35,"The final road through the volcanic country."],["Cinderhold Castle",1451.78,211.83,"The king’s fortress at the eastern end of Emberfell."],["Sunken Pyramid",576,65,"An optional expedition west of Sandspire. Its burial chambers shelter the Emberheart relic."]];
+const ATLAS_LOCATIONS=[["Millwood",68,349,"Corin’s home town. Visit Nan, Hettie and the Elder before taking the eastern road."],["Elder’s Home",89,276,"Maddock’s house, north of Millwood."],["Northern Woods",100,232,"Woodland north of Millwood, leading toward the mushroom country."],["Sporewood",145,147,"The western mushroom woodland."],["Sporehollow",68,158,"A settlement among the giant mushrooms."],["Northern Shroom Field",79,55,"An open field north of Sporehollow, beyond the stump where the dragon came down."],["Shroom Pass",139,211,"The path between the northern woods and the mushroom country."],["Route 1",136,324,"The road between Millwood and Thornwell. Two peaceful camps offer a place to rest."],["Thornwell",195,261,"A woodland town on the journey east."],["Forgefalls",329,273,"The waterfall crossing on the road from Thornwell to Forgewick."],["Route 2",364,267,"The woodland road to Forgewick."],["Forgewick",466,254,"A town of craftspeople, with Dunstan’s forge, market, mine and chapel."],["Forgewick Temple",458,404,"The ancient temple reached by a separate winding southern trail from Forgewick."],["Route 3",576,230,"The road from Forgewick into the desert."],["The Oasis",640,299,"A green refuge southwest of Sandspire, beside the desert road."],["Sandspire",698,184,"A dry sandstone town among the dunes, with flat-roof homes, market stalls and a covered well. The oasis lies outside town to the southwest."],["Sandspire Temple",794,310,"The temple south-east of Sandspire."],["Route 4",855,235,"The desert route to the coast."],["Coralmere",930,428,"A grassy coastal town of brown timber houses, fishing docks and a lighthouse. Pink blossoms fill the town and follow the winding trail north."],["Route 5",1060,268,"The route through the wetlands toward Hollybeck."],["Witchmoor",1112,401,"Maelis’s home in the marsh. The ferry begins at the mainland dock."],["Dreadmarsh",1088,482,"The deep marshes south of the road."],["Hollybeck Graveyard",1223,258,"The graveyard northwest of Hollybeck."],["Hollybeck",1268,345,"A town at the edge of the snowy highlands."],["Hollybeck Temple",1305,184,"The temple northeast of Hollybeck. Follow the winding trail east and north."],["Route 6",1282,122,"The mountain road north to Frostcrag."],["Frostcrag",1266,60,"A snowy mountain with a cave passage leading east toward Ashcrag."],["Ashcrag",1476,124,"East of Frostcrag, beyond the mountain passage, before the volcanic road."],["Route 7",1440,203,"The final road through the volcanic country."],["Cinderhold Castle",1478,303,"The king’s fortress at the eastern end of Emberfell."],["Sunken Pyramid",600,82,"An optional expedition west of Sandspire. Its burial chambers shelter the Emberheart relic."],["Desert Church",672,425,"A secret dragon shrine south of Sandspire. Brother Cael keeps the old faith alive beyond the dunes."],["Spider Queen",600,41,"The guardian deep within the Sunken Pyramid. Defeat her to claim the Emberheart from the reward chest."],["Frosthorn",1178,92,"An optional boss on the winding winter trail northwest of Hollybeck. Its chest holds the Frostheart Relic."],["Ice Moth",1197,173,"An optional boss at the end of a long winter detour west of Hollybeck. Its chest holds the Soulwing Relic."]];
 let atlasOpen=false,atlasPick=0,atlasReturn='game',atlasTimer=0;
 function atlasNeighbor(dx,dy){const p=ATLAS_LOCATIONS[atlasPick];let best=-1,score=Infinity;const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;ATLAS_LOCATIONS.forEach((q,i)=>{const x=q[1]-p[1],y=q[2]-p[2],d=Math.hypot(x,y),along=x*dx+y*dy;if(i===atlasPick||along<=0)return;const cross=Math.abs(x*dy-y*dx);const cost=d+cross*2.5;if(cost<score){score=cost;best=i}});return best}
 function atlasMove(dx,dy){if(!atlasOpen||Date.now()<atlasTimer)return;if(typeof atlasJournalOpen!=='undefined'&&atlasJournalOpen){atlasTimer=Date.now()+260;atlasJournalMove(dy||dx);return;}const i=atlasNeighbor(dx,dy);if(i<0)return;atlasTimer=Date.now()+260;atlasPick=i;renderAtlas()}
 function renderAtlas(){renderQuestAtlas()}
 function openAtlas(from='game'){if(!worldMapUnlocked()||(typeof flightTravel!=='undefined'&&flightTravel))return;atlasReturn=from;setOvl(null);setBag(false);atlasOpen=true;padDx=padDy=0;P.moving=false;document.getElementById('worldAtlas').style.display='flex';if(typeof atlasBegin==='function')atlasBegin();requestAnimationFrame(renderAtlas)}
-function closeAtlas(){if(typeof atlasSetJournal==='function')atlasSetJournal(false);atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
+function closeAtlas(){if(typeof EmberAtlasMotion!=='undefined')EmberAtlasMotion.stop();if(typeof atlasSetJournal==='function')atlasSetJournal(false);atlasOpen=false;document.getElementById('worldAtlas').style.display='none';padDx=padDy=0;for(const k of Object.keys(keys))keys[k]=0;if(atlasReturn==='bag')setBag(true);else setOvl(null)}
 function bindAtlasAndGeometry(){
  tap(document.getElementById('geometryPan'),()=>{geometryEnd();touches.clear();pinchD=0;mDown=false;geometryPan=!geometryPan;document.getElementById('geometryPan').classList.toggle('on',geometryPan);refreshGeometryLabel();});
  tap(document.getElementById('bDoors'),()=>setGeometryTool(doorEdit?null:'door'));
@@ -2336,6 +2337,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   }
   yield [.92, "Preparing entrances and paths"];
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
+  prepareShroomLookout();
   // The retained world already includes these static repairs. Repeating them
   // rebuilds all collision/buckets and throws away the warmed ground images.
   if(!warmReturn){
@@ -2527,7 +2529,7 @@ const whyBlocked = (px, py) => {
 const isSolid = (px, py, ignoreNpcBuffer = false) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return true;
-  if(progressionSolid(px,py)||nanMorningSolid(px,py))return true;
+  if(progressionSolid(px,py)||nanMorningSolid(px,py)||greenNorthBlocked(px,py))return true;
   const override=collisionOverride(px,py);if(override!==undefined)return override;
   if (MAPID === "witchmoor" && wonAll && px >= 184 && px < 213 && py >= 282 && py < 311) return true;
   const wallEdit=editedTempleWallCollision(px,py);if(wallEdit===true)return true;
@@ -4050,7 +4052,7 @@ function drawWorld(t, dt) {
           iy > cam.y - 64 && iy < cam.y + vh + 64)
         draw.push({ item: { spr, anim: true }, x: ix, y: iy, t: hx * 0.7 });
     }
-  for (const it of ITEMS) {
+  for (const it of (MAPID==='house26_bedroom'?[...ITEMS,...morningDeskItems()]:ITEMS)) {
     if ((it.map || "world") !== MAPID || !itemHere(it)) continue;
     const ix = it.tx * TS + TS / 2, iy = it.ty * TS + TS;
     if (ix > cam.x - 64 && ix < cam.x + vw + 64 &&
@@ -4059,7 +4061,7 @@ function drawWorld(t, dt) {
   }
   if (MAPID === "world")
     for (const it of ITEMS) {
-      if (!itemHere(it)) continue;
+      if ((it.map || "world") !== MAPID || !itemHere(it)) continue;
       let lift = it.dy || 0;
       if (it.onTop && SPR[it.onTop]) {
         const u = SPR[it.onTop];
@@ -4101,9 +4103,10 @@ function drawWorld(t, dt) {
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
   // The smithy's plume is roof-height art, not a ground actor at its chimney y.
-  const groundLayer = o => o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
-    : o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
+  const groundLayer = o => (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? 1 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
+    : o.looseGold || o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
+  draw.push({looseGold:true,x:0,y:0,sy:-1e9});
   draw.sort((a, b) => ((typeof flightTravel!=='undefined'&&flightTravel)?Number(a===P)-Number(b===P):0)
                    || (groundLayer(a) - groundLayer(b))
                    || ((a === P && mouth(b)) ? 1 : (b === P && mouth(a)) ? -1 : 0)
@@ -4112,6 +4115,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(o.looseGold){drawLoot();continue;}
     if(DragonChapels.draw(o,t))continue;
     if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
     if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
@@ -4308,8 +4312,8 @@ function drawWorld(t, dt) {
         ? Math.floor(t * 4 + (o.t || 0)) % s2[4] : 0;
       if (s2) drawGameImage(ctx, sheetOf(s2),
                             s2[0] + fr * s2[2], s2[1], s2[2], s2[3],
-                            Math.round(o.x - s2[2] / 2), Math.round(o.y - s2[3]),
-                            s2[2], s2[3]);
+                            Math.round(o.x - (o.item.width||s2[2]) / 2), Math.round(o.y - (o.item.width||s2[2])*s2[3]/s2[2]),
+                            o.item.width||s2[2], (o.item.width||s2[2])*s2[3]/s2[2]);
       continue;
     }
     if (o.green) {
@@ -4637,6 +4641,7 @@ function drawWorld(t, dt) {
                       tone ? s[1] - tone.dy : s[1], s[2], s[3],
                       px, py, s[2], s[3]);
       }
+      if(o.shroomLookout&&!discussedTopics.has('Mosslet:crash')&&!scene&&!sayNpc)drawHettieCallout(o,s);
       if (o.rod && SPR.fishing_rod && !hasDragon()) {
         const r = SPR.fishing_rod;
         const k = s[3] / 19;
@@ -6222,7 +6227,7 @@ function releaseGreenCamera(){
   cam.z=greenCamera.zoom;greenCamera=null;camFree=false;followCam();
 }
 function frameGreenEncounter(){
-  if(!greenCamera||!scene?.greenEncounter||MAPID!==GREEN.map)return;
+  if(!greenCamera||(!scene?.greenEncounter&&greenPhase!=='staging')||MAPID!==GREEN.map)return;
   const g=greenAt(),left=Math.min(P.x-24,g.x-60),right=Math.max(P.x+24,g.x+60);
   // Reserve room for Corin's portrait/dialogue below the complete landing sprite.
   const inset=24,available=Math.max(40,VH-inset-160);
@@ -6230,10 +6235,23 @@ function frameGreenEncounter(){
   cam.x=(left+right)/2-VW/cam.z/2;
   cam.y=(g.y-40)-Math.min(VH/2,inset+available/2)/cam.z;
 }
+function greenNorthBlocked(x,y){
+  return MAPID===GREEN.map&&quest<Q.FLED&&greenPhase!=='gone'&&x<120*TS&&y<(GREEN.ty+2)*TS;
+}
+function stageGreenEncounter(){
+  if(fadeDir||pendingActorStage||scene)return;
+  clearPadInputs();P.moving=false;P.act=null;running=false;
+  greenPhase='staging';
+  fadeDir=1;
+  pendingActorStage=()=>{
+    P.x=greenAt().x;P.y=(GREEN.ty+2.65)*TS;P.dir='u';P.dir8='n';P.flip=false;
+    greenCamera={zoom:cam.z};frameGreenEncounter();return false;
+  };
+}
 function beginGreenEncounter(){
   if(scene)return;
   greenCamera ||= {zoom:cam.z};
-  if(greenPhase==='off'){greenPhase='in';greenP=0;greenT=0;}
+  if(greenPhase==='off'||greenPhase==='staging'){greenPhase='in';greenP=0;greenT=0;}
   const i=greenPhase==='gone'?2:['sit','rise','depart'].includes(greenPhase)?1:0;
   playScene(['Corin: What the…','Corin: Are…are you okay?','Corin: Hey! You forgot something!'],
     {who:'Corin',greenEncounter:true,i,after:()=>{quest=Q.FLED;releaseGreenCamera();}});
@@ -6248,7 +6266,11 @@ function greenFly(dt) {
   // Only the space directly in front of the stump starts the encounter.
   const stumpY=(GREEN.ty+2)*TS;
   const atStump=Math.abs(P.x-g.x)<=TS*.9&&P.y>=stumpY&&P.y<=stumpY+TS;
-  if(greenPhase==='off'&&atStump&&!sceneHold()&&!sayNpc)beginGreenEncounter();
+  const besideStump=Math.abs(P.x-g.x)<=TS*4&&P.y>=g.y-TS*2&&P.y<=stumpY+TS;
+  if(greenPhase==='off'&&besideStump&&!sceneHold()&&!sayNpc&&!fadeDir){
+    if(atStump)beginGreenEncounter();else stageGreenEncounter();
+  }
+  if(greenPhase==='staging'&&!fadeDir&&fade===0)beginGreenEncounter();
   if (greenPhase === "in") {
     greenP += dt / GREEN_IN;
     greenT = Math.min(1, greenP);
@@ -6270,7 +6292,7 @@ function greenFly(dt) {
   window.EmberDragonSceneAudio?.phase(greenPhase);
 }
 function greenOffset() {
-  if (greenPhase === "off") return null;
+  if (greenPhase === "off" || greenPhase === "staging") return null;
   if (greenPhase === "in") {
     const k = 1 - greenT;                        /* 1 far away .. 0 over the spot */
     return [300 * k, -150 * k];
@@ -7134,7 +7156,7 @@ function advanceScene() {
   if (!typeDone()) { typeAll(); return; }
   if (scene.t < 0.2) return;      /* no skipping on a stray tap */
   if(scene.greenEncounter&&scene.i<2)return; // Flight/rest timing owns these reactions.
-  if(scene.nanMorning&&scene.i===0&&giveMorningSupplies())return;
+  // Morning supplies are picked up at Corin’s desk before this conversation.
   if(scene.nanGifts&&nanGiftBeat(scene.i))return;
   if (scene.hatch && scene.i === 3 && (scene.t < 0.6 || !hatchScene || hatchScene.spreadT < 1)) return; /* finish lowering the egg and both backward steps */
   if (scene.hatch && scene.i === 7 && (!hatchScene || hatchScene.spreadT < 1)) return;
@@ -7201,16 +7223,17 @@ const ITEMS = [
     at: Q.ABED, gone: 99 },
   { key: "stump", spr: "mw_stump", tx: 30, ty: 20, at: Q.ABED, gone: 99,
     solid: 1 },
-  { key: "egg",   spr: "it_egg", tx: 30, ty: 20, at: Q.FLED, gone: Q.CARRY,
+  { key: "egg", width:18, spr: "inventory_egg", tx: 30, ty: 20, at: Q.FLED, gone: Q.CARRY,
     onTop: "mw_stump", took: "Corin takes the egg" },
 ];
 const itemHere = (it) => {
+  if(it.deskPickup)return !it.owned();
   if (it.key === "egg" && quest < it.gone &&
       (greenPhase === "rise" || greenPhase === "depart" || greenPhase === "gone")) return true;
   return quest >= it.at && quest < it.gone;
 };
 function itemAt(px, py) {
-  for (const it of ITEMS) {
+  for (const it of (MAPID==='house26_bedroom'?[...ITEMS,...morningDeskItems()]:ITEMS)) {
     if ((it.map || "world") !== MAPID) continue;
     if (!itemHere(it) || !it.took) continue;
     if (Math.hypot(px / TS - it.tx, (py - 1) / TS - it.ty) < 2.2) return it;
@@ -7236,6 +7259,7 @@ function kingsMen() {
 }
 
 function takeItem(it) {
+  if(it.deskPickup){takeMorningSupply(it);return;}
   if(it.key==="egg")globalThis.window?.EmberSfx?.key();else globalThis.window?.EmberSfx?.pickup();
   if (it.key === "eggs") {
     quest = Q.KING;
@@ -7587,6 +7611,7 @@ let revealing = false;
 let revAnimTimer = null;
 let revealQueue = [];
 let revealAfter = null;
+let revealDialogue = null;
 const REVEAL_BIG = { "drf_s": "drf_s", "dr5_idle_s": "dr5_idle_s" };
 function isKeyItemReveal(caption, sprName='') {
   if(sprName==='inventory_bag')return true;
@@ -7602,6 +7627,7 @@ function showReveal(sprName, caption, maxScale, still, after) {
   const sp = SPR[sprName];
   if (!sp) { if (after) after(); return; }
   revealAfter = after || null;
+  if(!revealDialogue)revealDialogue=scene?{scene,index:scene.i}:sayNpc?{npc:sayNpc,index:sayLine}:null;
   if (isKeyItemReveal(caption, sprName)) playKeyItemGet();
   else if (/^Corin (?:obtained|received)\b|^Maddock packs/i.test(caption)) globalThis.window?.EmberSfx?.pickup();
   if (revAnimTimer) { clearInterval(revAnimTimer); revAnimTimer = null; }
@@ -7654,6 +7680,11 @@ function hideReveal() {
   if (!revealing && revealQueue.length) {
     const [n, c, s, still, next] = revealQueue.shift();
     showReveal(n, c, s, still, next);
+  }
+  if(!revealing&&!revealQueue.length){
+    const resume=revealDialogue;revealDialogue=null;
+    if(resume?.scene===scene&&scene&&scene.i===resume.index&&!scene.hold&&!scene.silent&&!scene.arriving){typeAll();scene.t=Math.max(.2,scene.t);advanceScene();}
+    else if(resume?.npc===sayNpc&&sayNpc&&sayLine===resume.index){typeAll();interact();}
   }
 }
 let revTimer = null;
@@ -8215,7 +8246,6 @@ function drawDying() {
 }
 function drawBreath() {
   drawFall();
-  drawLoot();
   drawFly();
   drawDust();
   drawDying();
@@ -11290,7 +11320,7 @@ function drawHettieCallout(n,sp) {
   ctx.lineTo(x+56,y+12);ctx.quadraticCurveTo(x+56,y+16,x+52,y+16);
   ctx.lineTo(n.x+4,y+16);ctx.lineTo(n.x,y+21);ctx.lineTo(n.x-3,y+16);
   ctx.lineTo(x+4,y+16);ctx.quadraticCurveTo(x,y+16,x,y+12);ctx.lineTo(x,y+4);ctx.quadraticCurveTo(x,y,x+4,y);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.fillStyle="#34251b";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("Yoo-hoo!",n.x,y+8);
+  ctx.fillStyle="#34251b";ctx.font="bold 10px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(n.shroomLookout?"Yoo Hoo":"Yoo-hoo!",n.x,y+8);
   if(Math.sin(tAcc*3)>0.55){ctx.strokeStyle="#f4ce76";ctx.beginPath();ctx.moveTo(x-5,y+2);ctx.lineTo(x-8,y);ctx.moveTo(x+61,y+2);ctx.lineTo(x+64,y);ctx.stroke();}
   ctx.restore();
 }
@@ -11681,6 +11711,7 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(talkShroomLookout(best))return;
     if(DragonChapels.talk(best))return;
     if(DesertAdventure.talk(best))return;
     if(best.thornwellRoyal&&openThornwellAudience(best))return;
@@ -12732,6 +12763,7 @@ function editorCopyPatch() {
 const dumpEl = document.getElementById("dump"), dumpText = document.getElementById("dumpText");
 const toastEl = document.getElementById("toast");
 function toast(msg) {
+  toastEl.classList.remove("compass-safe");
   toastEl.textContent = msg; toastEl.style.display = "block";
   clearTimeout(toast._t); toast._t = setTimeout(() => toastEl.style.display = "none", 1800);
 }

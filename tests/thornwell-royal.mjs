@@ -141,6 +141,7 @@ assert(spoken.some(s=>/Forgefalls.*Cinderhold/.test(s)));
 run('restoreThornwellRoyal(captureThornwellRoyal());');tick(5);assert.equal(run('thornwellRoyal.stage'),6,'Reloaded departure does not repeat');
 run(`const meeting=thornwellForgefalls();P.x=meeting.left-16;P.y=meeting.y;dragon.hp=4;`);tick(5);
 assert.equal(run('thornwellFlight'),null,'The riverbank does not trigger the reunion');
+run('P.x=(meeting.left+meeting.x)/2');tick(5);assert.equal(run('thornwellFlight'),null,'Corin can cross the first half of the bridge before Aurelius joins');
 run(`P.x=meeting.x;P.y=meeting.y;P.moving=true;padDx=1;VW=800;VH=600;cam.z=2.5;cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;`);tick(1);
 assert.equal(run('P.moving'),false,'Corin stops as the flight begins');
 assert.equal(run('padDx'),0,'Held touch input is cleared');

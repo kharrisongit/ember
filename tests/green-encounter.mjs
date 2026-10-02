@@ -5,10 +5,14 @@ const shown=[];c.showScene=()=>shown.push(run('scene?scene.lines[scene.i]:null')
 c.typeDone=()=>true;c.window.EmberDragonSceneAudio={phase(){}};
 run("MAPID='world';quest=Q.ARMED;scene=null;P.x=GREEN.tx*TS+8;P.y=(GREEN.ty+4)*TS;greenFly(.01)");
 assert.equal(run('scene'),null,'The approach stays playable until Corin reaches the stump');
-for(const [dx,dy]of [[-2,2],[2,2],[0,-1],[0,0],[0,3]]){
- c.approach=[dx,dy];run('P.x=greenAt().x+approach[0]*TS;P.y=greenAt().y+approach[1]*TS;greenFly(.01)');
- assert.equal(run('scene'),null,'Only the stump approach triggers the scene');
+for(const dx of [-2,2]){
+ c.approach=dx;run("scene=null;greenPhase='off';fade=0;fadeDir=0;pendingActorStage=null;P.x=greenAt().x+approach*TS;P.y=greenAt().y+2*TS;greenFly(.01)");
+ assert.equal(run('greenPhase'),'staging','A side approach starts the positioning fade');
+ assert.equal(run('fadeDir'),1);assert.equal(run('scene'),null);assert.equal(run('greenOffset()'),null,'Dragon stays hidden until the positioning fade finishes');
+ run('pendingActorStage();pendingActorStage=null;fadeDir=0;fade=0;greenFly(.01)');
+ assert.equal(run('P.x'),run('greenAt().x'));assert(run('scene.greenEncounter'));
 }
+run("scene=null;greenPhase='off';greenCamera=null;fadeDir=0;fade=0;pendingActorStage=null");
 run('P.x=greenAt().x;P.y=greenAt().y+2*TS;greenFly(.01)');
 for(const [w,h]of [[390,510],[844,250],[1280,680]]){
  c.size=[w,h];run('VW=size[0];VH=size[1];frameGreenEncounter()');

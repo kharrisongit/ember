@@ -1,6 +1,6 @@
 /* Father’s compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
-const templeCompass = { owned: false, awakened: false, meatGiven: false, mapGiven: false, morningSpoken: false, cache: null };
+const templeCompass = { owned: false, awakened: false, meatGiven: false, mapGiven: false, morningSpoken: false, morningMet: false, cache: null };
 let compassTrackingStarted=null,compassTrackingReduced=false;
 function compassCelebrateTracking(){
   compassTrackingStarted=performance.now();
@@ -26,9 +26,9 @@ const FATHER_COMPASS_GIFT = [
   "Corin: No. Maddock says he chose me. He hasn't left my side since.",
   "Nan Ferrow: You were only out for the morning. I wasn't expecting this.",
   "Corin: Neither was I. Maddock thinks the old rider temple might have some answers.",
-  "Nan Ferrow: Beyond Millwood, then. Come here, love. There is something I want you to take.",
-  "Corin: Is that Dad’s compass?",
-  "Nan Ferrow: Your father's. He carried it everywhere. I've kept it since we lost him and your mother, when you were born.",
+  "Nan Ferrow: Beyond Millwood, then. You have your father’s compass with you?",
+  "Corin: Yes. I picked it up from my desk this morning.",
+  "Nan Ferrow: He carried it everywhere. I kept it for you after we lost him and your mother, when you were born.",
   "Corin: I wish I could remember them.",
   "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
   "Corin: I promise, Nan.",
@@ -49,9 +49,10 @@ function restoreFatherCompass(saved) {
   templeCompass.awakened = templeCompass.owned;
   // Earlier saves received the meat together with the compass.
   templeCompass.meatGiven = saved?.meatGiven === undefined ? templeCompass.owned : !!saved.meatGiven;
-  // Preserve the morning Map independently of the later Compass gift.
-  templeCompass.mapGiven = templeCompass.owned || !!saved?.mapGiven;
+  // Preserve independently collected desk items, including saves from the older opening.
+  templeCompass.mapGiven = saved?.mapGiven === undefined ? templeCompass.owned : !!saved.mapGiven;
   templeCompass.morningSpoken = !!saved?.morningSpoken;
+  templeCompass.morningMet = saved?.morningMet === undefined ? quest > Q.ABED : !!saved.morningMet;
   templeCompass.cache = null;
   compassTrackingStarted = null;
   refreshMapControls();
@@ -77,37 +78,57 @@ function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gamepl
     if(id==='btnMapQuick')button.textContent=available?'MAP':'';
   }
 }
-function nanGiftPending(){return !templeCompass.owned || !templeCompass.meatGiven;}
-function nanMorningPending(){return !bagOwned || !templeCompass.mapGiven;}
+function nanGiftPending(){return !templeCompass.meatGiven;}
+function nanMorningPending(){return !templeCompass.morningMet;}
+function morningSuppliesPending(){return !bagOwned || !templeCompass.mapGiven || !templeCompass.owned;}
 function startMorning(){
   if(quest!==Q.ABED||templeCompass.morningSpoken)return;
   templeCompass.morningSpoken=true;
-  playScene(['Corin: Good morning Millwood! I should talk to Nan before I head out for the day.']);
+  playScene(['Corin: Good morning, Millwood! My bag, map and compass are on the desk. I should take them before I head out.']);
 }
 function startNanMorning(nan){
   if(hasDragon()||!nanMorningPending())return false;
+  nan.goto=null;nan.houseWalk=null;
+  const home=[nan.x,nan.y];
+  const spots=[[P.x-26,P.y+8],[P.x+26,P.y+8],[P.x,P.y+30]].filter(p=>canStand(...p));
+  const target=spots.sort((a,b)=>Math.hypot(a[0]-nan.x,a[1]-nan.y)-Math.hypot(b[0]-nan.x,b[1]-nan.y))[0];
+  if(target&&Math.hypot(nan.x-P.x,nan.y-P.y)>34){nan.home=home;nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;nan.goto=target;}
   playScene([
-    'Nan Ferrow: Morning, love. Before you go, take this bag and our map of Emberfell.',
-    'Corin: Thank you, Nan. I was going to see if Hettie needs a hand.',
-    'Nan Ferrow: Then you may have something to carry. Your bag will keep your supplies together. The map has a quest list, so you can check where you meant to go.',
-    'Corin: That will save me coming back to ask what I have forgotten.',
-    'Nan Ferrow: You can come back anyway, love. Go and see Hettie when you are ready.'
-  ],{who:nan.n,npcActor:nan,nanMorning:true});
+    'Nan Ferrow: Morning, love. Hettie was looking for you. She asked if you would go and see her by the cows.',
+    'Corin: I have my things. I will go and find her.',
+    'Nan Ferrow: Thank you, darling. Come home when you are hungry.'
+  ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
+    templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;saveGame();
+  }});
   return true;
 }
-function giveMorningSupplies(){
-  if(!nanMorningPending())return false;
-  bagOwned=true;templeCompass.mapGiven=true;refreshMapControls();refreshHandle();saveGame();
-  showReveal('inventory_bag','Nan gave Corin a Bag.',2.5,true);
-  showReveal('inventory_mapCompass','Corin received the Map. Open MAP → Quest List to review your errands.',2.5,true);
-  return true;
+function stepNanMorning(){
+  if(MAPID!=='house26'||!gameplayStarted||mode!=='play'||!nanMorningPending()||hasDragon()||sceneHold()||sayNpc||ask||ovl||bagOpen||fadeDir||fade||doorMotion)return;
+  const nan=npcs.find(n=>n.n==='Nan Ferrow');if(nan)startNanMorning(nan);
 }
-function nanMorningDoorBlocked(d){return MAPID==='house26'&&d?.to==='world'&&nanMorningPending();}
+function morningDeskItems(){
+  const desk=W.maps.house26_bedroom?.roomActors?.find(a=>a.n==='itable1');
+  const x=desk?.x??65,y=(desk?.y??161)-18;
+  return [
+    {key:'morningBag',spr:'inventory_bag',x:x-10,y:y+1,width:14,took:'Corin picked up his Bag.',owned:()=>bagOwned},
+    {key:'morningMap',spr:'inventory_mapCompass',x:x+1,y:y-5,width:13,took:'Corin picked up the Map of Emberfell.',owned:()=>templeCompass.mapGiven},
+    {key:'morningCompass',spr:'inventory_compass',x:x+10,y:y+3,width:10,took:"Corin picked up Father's Compass.",owned:()=>templeCompass.owned}
+  ].map(it=>({...it,map:'house26_bedroom',at:Q.ABED,gone:99,tx:(it.x-8)/TS,ty:(it.y-16)/TS,deskPickup:true}));
+}
+function takeMorningSupply(it){
+  if(it.owned())return;
+  if(it.key==='morningBag')bagOwned=true;
+  if(it.key==='morningMap')templeCompass.mapGiven=true;
+  if(it.key==='morningCompass'){templeCompass.owned=true;templeCompass.awakened=true;}
+  refreshMapControls();refreshHandle();saveGame();showReveal(it.spr,it.took,1,true);
+}
+function nanMorningDoorBlocked(d){return MAPID==='house26_bedroom'&&d?.to==='house26'&&morningSuppliesPending();}
 function nanMorningSolid(x,y){
-  if(MAPID!=='house26'||!nanMorningPending())return false;
-  return (MD.doors||[]).some(d=>{if(d.to!=='world')return false;const r=doorRect(d);return x>=r.x-6&&x<=r.x+r.w+6&&y>=r.y-2&&y<=r.y+r.h+8;});
+  if(MAPID!=='house26_bedroom'||!morningSuppliesPending())return false;
+  return (MD.doors||[]).some(d=>{if(d.to!=='house26')return false;const r=doorRect(d);return x>=r.x-6&&x<=r.x+r.w+6&&y>=r.y-2&&y<=r.y+r.h+8;});
 }
 function nanGiftBeat(index){
+  // An older save may already be outside before the desk pickups existed.
   if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
   if(index===14&&!templeCompass.meatGiven){
     templeCompass.meatGiven=true;hareMeat+=3;saveGame();
@@ -373,7 +394,7 @@ function startNanFarewell(nan){
   nan.goto=target;nan.straightSceneWalk=true;nan.away=false;
   faceToward(nan,...target);faceCorinAt(nan.x,nan.y);
   playScene(fatherCompassGift(nan),
-    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:templeCompass.owned?8:0,after:()=>{
+    {who:'Nan Ferrow',npcActor:nan,nanGifts:true,i:0,after:()=>{
       clearPadInputs();running=false;P.act=null;P.moving=false;
       nan.straightSceneWalk=false;nan.goto=null;nan.nanDeparting=true;
       nan.scriptWalking=true;nan.noTalk=true;

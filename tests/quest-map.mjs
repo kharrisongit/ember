@@ -6,10 +6,12 @@ const source=fs.readFileSync(new URL('../js/quest-map.js',import.meta.url),'utf8
 const c=vm.createContext({console,Map,Set});
 vm.runInContext(`const ATLAS_LOCATIONS=${game.match(/const ATLAS_LOCATIONS=(.*);/)[1]};
 const DesertAdventure={accepted:()=>false,owned:()=>false,won:()=>false};
-const Q={DONE:9};let quest=0,wonAll=false,brambleQuest=0,smithUpgrade=false,glassShield=false,odoRodReferral=false,fishingPole=false,cinderSeal=false,trialSealPlaced=false;
+const DragonChapels={known:()=>false,found:()=>false};
+const Q={DONE:9},templeCompass={morningMet:false};let quest=0,wonAll=false,brambleQuest=0,smithUpgrade=false,glassShield=false,odoRodReferral=false,fishingPole=false,cinderSeal=false,trialSealPlaced=false;
 const charm={},breathHas={lightning:false,ice:false,shadow:false},learned=new Set(),gifts=[];
 const TS=16,W={maps:{world:{features:[]}}};function dragonLearned(k){return learned.has(k)}function dragonGiftLeads(){return gifts}`,c);
 vm.runInContext(source,c);
+assert.equal(vm.runInContext("atlasRouteBetween('Millwood','Forgewick Temple').filter(p=>!p.startsWith('Route ')).join(' > ')",c),'Millwood > Thornwell > Forgefalls > Forgewick > Forgewick Temple','The temple is reached through Forgewick, after the waterfall crossing');
 for(let stage=0;stage<10;stage++){
  const q=vm.runInContext(`quest=${stage};atlasJourneyObjective()`,c);
  assert(q.title&&q.detail&&q.place);
