@@ -33,3 +33,15 @@ run('restoreQuestJournal('+JSON.stringify(journal)+')');assert(run('atlasCompass
 const maps={a:{doors:[{to:'b',x:3,y:4}]},b:{doors:[{to:'a',x:1,y:1},{to:'c',x:8,y:4}]},c:{doors:[]}};
 const route=value(`compassQuestRoute(${JSON.stringify(maps)},'a',{map:'c',x:100,y:100})`);assert.equal(route.x,56,'Interior route uses first connecting door');
 console.log('PASS: main-quest temples, selected quest destinations, temple/interior/world guidance, completion fallback and saved map tutorial.');
+
+// The early objective follows Hettie herself, including her movement by the cows.
+run("quest=Q.ERRAND;templeCompass.morningMet=true;atlasTrackedQuest='main';MAPID='world';npcs=W.maps.world.npcs;");
+for(const stage of ['0','Q.ERRAND']){
+ run('quest='+stage);
+ const hettie=value("npcs.find(n=>n.n==='Hettie')");
+ assert(hettie);
+ const target=value('compassSelectedTarget()');
+ assert.equal(target.map,'world');assert.equal(target.x,hettie.x);assert.equal(target.y,hettie.y+32);
+ run("npcs.find(n=>n.n==='Hettie').y-=16");
+ assert.equal(value('compassSelectedTarget()').y,hettie.y+16,'Tracks her live position');
+}

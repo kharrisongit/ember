@@ -1,15 +1,20 @@
-/* A resident waits at the hidden eastern turn into Sporehollow. */
+/* A resident waits on the main northern path beside the Sporehollow turn. */
 function prepareShroomLookout(){
-  if(MAPID!=='world'||npcs.some(n=>n.shroomLookout))return;
+  if(MAPID!=='world')return;
+  const existing=npcs.find(n=>n.shroomLookout);
+  if(existing?.mainPathLookout)return;
   const town=features.find(f=>f.kind==='area'&&f.place==='Sporehollow');
   if(!town)return;
   const pathY=(town.y0+(town.road?.y??22))*TS;
-  const x=(town.x0-3)*TS+8,y=pathY+16;
+  const road=features.find(f=>f.kind==='route'&&f.id===3);
+  if(!road)return;
+  const x=road.x0*TS+8,y=pathY+16;
   const spots=[[x,y],[x+16,y],[x-16,y],[x,y+16],[x,y-16]].filter(p=>canStand(...p));
   if(!spots.length)return;
+  if(existing){Object.assign(existing,{x:spots[0][0],y:spots[0][1],mainPathLookout:true,goto:null,stationary:true});return;}
   npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:spots[0][0],y:spots[0][1],f:'d',kf:'d',t:0,stationary:true,
-    shroomLookout:true,editKey:'story:shroom-lookout',portraitAlias:'Pip',loc:'Shroom Pass',
-    bio:'A mushroom villager keeping watch at the hidden entrance to Sporehollow.',
+    shroomLookout:true,mainPathLookout:true,editKey:'story:shroom-lookout',portraitAlias:'Pip',loc:'Shroom Pass',
+    bio:'A mushroom villager keeping watch on the main path beside the turn to Sporehollow.',
     d:['Mosslet: Yoo Hoo! Over here!']});
 }
 function talkShroomLookout(n){

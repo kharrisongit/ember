@@ -148,7 +148,7 @@
 <div id="worldAtlas" role="dialog" aria-label="Map of Emberfell"><header><div><small>FATHER’S MAP &amp; COMPASS</small><b>EMBERFELL</b></div><button id="atlasClose" type="button" aria-label="Close map">Close ×</button></header>
 <div id="atlasBody"><div id="atlasViewport"><div id="atlasSurface"><img alt="Map of Emberfell. Clouds cover undiscovered areas; explore or learn a quest to reveal them." src="assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity" width="1536" height="512"><div id="atlasRoutes" aria-hidden="true"></div><div id="atlasPlaces"></div><span id="atlasCursor"></span><span id="atlasQuestMarker" role="img" hidden>◆</span><span id="atlasPlayerMarker" role="img" hidden>●</span></div><div id="atlasMapTools"><button id="atlasWhole" type="button">Whole realm</button><button id="atlasHere" type="button">My area</button></div><div id="atlasMapLegend"><span>● Your area</span><span>◆ Tracked quest</span><span>☁ Unexplored</span></div></div>
 <aside id="atlasDetails" class="scrolls"><div id="atlasSummary">
-<section id="atlasAreaInfo" aria-labelledby="atlasName"><div class="journalHeading"><div><small id="atlasAreaLabel">YOUR CURRENT AREA</small><h2 id="atlasName"></h2></div></div><p id="atlasText"></p><div id="atlasServices"></div><div class="atlasFlight"><button id="atlasFly" type="button">Fly Here</button><small id="atlasFlyHint" aria-live="polite"></small></div></section>
+<section id="atlasAreaInfo" aria-labelledby="atlasName"><div class="journalHeading"><div><small id="atlasAreaLabel">YOUR CURRENT AREA</small><h2 id="atlasName"></h2></div></div><p id="atlasText"></p><div id="atlasServices"></div><div class="atlasFlight" style="display:none"><button id="atlasFly" type="button">Fly Here</button><small id="atlasFlyHint" aria-live="polite"></small></div></section>
 <section id="atlasTrackedInfo" aria-labelledby="atlasTrackedTitle"><small>TRACKED QUEST</small><h3 id="atlasTrackedTitle"></h3><p id="atlasTrackedObjective"></p><span id="atlasTrackedDestination"></span><button id="atlasQuests" type="button">Quests</button></section>
 </div><aside id="atlasCompassTutorial" hidden role="dialog" aria-modal="true" aria-labelledby="atlasLessonTitle"><div class="atlasLessonCard"><strong id="atlasLessonTitle">Your map, quests &amp; compass</strong><p>Open <b>Quests</b> to see what you have learned. Choose a quest, then tap <b>Track quest</b> to make it your destination.</p><p>Your compass guides you along the path. Clouds clear as you visit places or learn about them.</p><button id="atlasCompassGotIt" type="button">Got it</button></div></aside><small class="atlasHelp">Drag to explore · Pinch to zoom · Tap an area for details</small></aside></div>
 <section id="atlasQuestsScreen" hidden aria-label="Quest journal"><header><button id="atlasQuestsBack" type="button">‹ Map</button><div><small>THE TRAVELER’S JOURNAL</small><b>QUESTS</b></div><button id="atlasQuestsClose" type="button" aria-label="Close quests and map">Close ×</button></header>
@@ -475,10 +475,10 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dialogue-portraits.js?v=20261002-forgewick-opening2"></script>
 <script src="js/thornwell-royal.js?v=20261002-living-map"></script>
 <script src="js/atlas-motion.js?v=20261002-path-and-clouds"></script>
-<script src="js/quest-map.js?v=20261002-path-and-clouds"></script>
+<script src="js/quest-map.js?v=20261002-hettie-flight"></script>
 <script src="js/atlas-discovery.js?v=20261002-path-and-clouds"></script>
 <script src="js/quest-notifications.js?v=20261002-forgewick-opening2"></script>
-<script src="js/flight-travel.js?v=20261002-cloud-discovery"></script>
+<script src="js/flight-travel.js?v=20261002-hettie-flight"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
 <script src="js/generated/game-part-3.js?v=20261002-path-and-clouds" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
 <script src="js/blossom-routes.js?v=20261001-fishing-borders2"></script>
@@ -517,7 +517,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/conversation-branch-data.js?v=20261002-forgewick-opening2"></script>
 <script src="js/farm-resident.js?v=20261001-recovery1"></script>
 <script src="js/coralmere-lighthouse.js?v=20261002-lighthouse"></script>
-<script src="js/shroom-lookout.js?v=20261002-living-map"></script>
+<script src="js/shroom-lookout.js?v=20261002-main-path"></script>
 <script src="js/equipment-tutorial.js?v=20261002-living-map"></script>
 <script src="js/spider-queen-demo.js?v=20260930-web2"></script>
 <script src="js/desert-adventure.js?v=20261002-forgewick-opening2"></script>

@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{furniture:false});
+c.document.getElementById('atlasFly').parentNode={style:{}};
+run('quest=Q.ERRAND;refreshFlightOption()');
+assert.equal(c.document.getElementById('atlasFly').parentNode.style.display,'none');
+assert(c.document.getElementById('atlasFly').disabled);
+run('quest=Q.DONE;refreshFlightOption()');
+assert.equal(c.document.getElementById('atlasFly').parentNode.style.display,'');
+console.log('PASS: flight controls hidden before Aurelius and shown after obtaining him.');

@@ -22,8 +22,8 @@ function atlasJourneyObjective(){
   ['Visit Elder Maddock','Elder’s Home','Enter Maddock’s house and deliver the eggs.'],
   ['Leave Maddock’s house','Elder’s Home','Step outside and speak with Maddock before going north.'],
   ['Investigate the crash','Northern Woods','Follow the path north of Maddock’s house toward the crash.'],
-  ['Find what the dragon left','Northern Woods','Approach the crash site and collect the egg.'],
-  ['Bring the egg to Maddock','Elder’s Home','Maddock is waiting outside his house. Speak with him.']
+  ['Find the mysterious egg','Northern Woods','Approach the crash site and collect the mysterious egg.'],
+  ['Bring the mysterious egg to Maddock','Elder’s Home','Maddock is waiting outside his house. Speak with him.']
  ];
  if(quest<Q.DONE)return o(...opening[quest]);
  if(wonAll)return o('A free Emberfell','Millwood','Return to your friends, or select an unfinished side quest below.');
@@ -92,7 +92,8 @@ function atlasQuestTarget(q){
  const named={fishing:'Calder',bramble:'Rowan the Hunter',smith:'Dunstan',shield:'Sela','gift:lamp':'Sverre'};
  let name=named[q.id];
  if(q.id==='main'){
-  if(/Dunstan/.test(q.title))name='Dunstan';
+  if(/Hettie/.test(q.title))name='Hettie';
+  else if(/Dunstan/.test(q.title))name='Dunstan';
   else if(/Sela/.test(q.title))name='Sela';
   else if(/Bramble.*owner|Return Bramble/.test(q.title))name='Rowan the Hunter';
  }
