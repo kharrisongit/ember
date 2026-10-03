@@ -4194,6 +4194,9 @@ function updateDeckHealth(){
   }
 }
 function frameCore(ms) {
+  // The opaque historical prologue owns the screen. Freeze both world updates
+  // and rendering for its duration, then resume with a fresh frame timestamp.
+  if(window.EmberPrologue?.active){last=ms;return;}
   restoreCameraTarget();
   globalThis.window?.EmberConversationFlow?.tick();
   window.EmberQuestNotifications?.tick(ms);
@@ -5702,7 +5705,7 @@ const BOOT = {
     if(!loadGame(slot)){document.getElementById("bootHint").textContent="That save could not be loaded. Try Load Save.";return;}
     BOOT.close();
   },
-  async close() {
+  async close({newGame=false}={}) {
     if(window.EmberCloud?.accountBusy())return;
     if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning) return;
     BOOT.transitioning=true;window.__titleTransition=true;
@@ -5712,8 +5715,15 @@ const BOOT = {
     document.body.classList.remove("boot-menu-open");
     const shade=document.getElementById("titleFade"),el=document.getElementById("boot");
     if(shade){shade.hidden=false;shade.style.transition="opacity 1200ms ease";shade.style.opacity="0";shade.getBoundingClientRect();shade.style.opacity="1";}
-    await Promise.all([BOOT.pause(1200),window.EmberTitleAudio?.fadeOut(1200)]);
+    const showPrologue=newGame&&!!window.EmberPrologue;
+    // Keep the already-unlocked title theme under the illustrated history.
+    await Promise.all([BOOT.pause(1200),showPrologue?null:window.EmberTitleAudio?.fadeOut(1200)]);
     if(el)el.style.display="none";
+    if(showPrologue){
+      try { await window.EmberPrologue.play(); }
+      catch(error) { console.warn('Opening history could not finish',error); }
+      await window.EmberTitleAudio?.fadeOut(1200);
+    }
     await BOOT.pause(550);
     await Promise.all([BOOT.pause(1400),window.EmberTitleAudio?.fadeIn()]);
     if(shade){shade.style.transition="opacity 1100ms ease";shade.style.opacity="0";}
@@ -5728,7 +5738,7 @@ const BOOT = {
     if(!BOOT.menuOpen){BOOT.begin();return;}
     if(BOOT.loading){BOOT.takeLoad();return;}
     const choice=(BOOT.menuOrder||["bootNew","bootContinue","bootLoad"])[BOOT.menuPick];
-    if(choice==="bootNew")BOOT.close();else if(choice==="bootContinue")BOOT.continueGame();else BOOT.openLoad();
+    if(choice==="bootNew")BOOT.close({newGame:true});else if(choice==="bootContinue")BOOT.continueGame();else BOOT.openLoad();
   },
   openLoad() {
     if (!gameplayReady || !BOOT.menuOpen) return;
@@ -5795,7 +5805,7 @@ bootStart();
 
 function bootBind() {
   document.getElementById("bootBegin")?.addEventListener("click",()=>BOOT.begin());
-  document.getElementById("bootNew")?.addEventListener("click",()=>BOOT.close());
+  document.getElementById("bootNew")?.addEventListener("click",()=>BOOT.close({newGame:true}));
   document.getElementById("bootContinue")?.addEventListener("click",()=>BOOT.continueGame());
   document.getElementById("bootLoad")?.addEventListener("click",()=>BOOT.openLoad());
 }

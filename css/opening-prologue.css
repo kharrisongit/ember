@@ -1,0 +1,67 @@
+/* An opaque, temporary cinema surface. Removed completely before gameplay. */
+#openingPrologue {
+  position: fixed; inset: 0; z-index: 2147483002;
+  box-sizing: border-box; height: 100%; height: 100dvh; width: 100%;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: #100e0c; color: #eee4cc; color-scheme: only light;
+  font-family: Georgia, 'Times New Roman', serif;
+  opacity: 0; transition: opacity 650ms ease; touch-action: manipulation;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+#openingPrologue.is-visible { opacity: 1; }
+#openingPrologue * { box-sizing: border-box; }
+#openingPrologue button {
+  font: 15px/1.1 Georgia, serif; letter-spacing: .02em;
+  color: #eee4cc; background: #252018; border: 1px solid #76654a;
+  border-radius: 5px; padding: 10px 18px; min-height: 44px;
+  cursor: pointer; text-shadow: none; box-shadow: none; flex-shrink: 0;
+}
+#openingPrologue button:focus-visible { outline: 2px solid #f4d08e; outline-offset: 3px; }
+#openingPrologue button:disabled { opacity: .5; cursor: default; }
+#openingPrologue button:hover:not(:disabled) { background: #3b3021; }
+#openingPrologue .prologue-top {
+  flex: 0 0 auto; min-height: 54px; padding: 5px clamp(14px, 4vw, 48px);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 11px; letter-spacing: .18em; color: #c4b38d;
+}
+#openingPrologue #prologueSkip { background: transparent; border-color: transparent; font-size: 13px; padding-inline: 10px; }
+#openingPrologue .prologue-art { position: relative; flex: 1 1 46%; min-height: 90px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #433c2d, #151310 80%); }
+#openingPrologue .prologue-image { position: absolute; inset: 0; opacity: 1; transition: opacity 350ms ease; }
+#openingPrologue .prologue-image img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+#openingPrologue .prologue-vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, #100e0c 0%, transparent 12%, transparent 92%, #100e0c 100%); }
+#openingPrologue .prologue-copy {
+  flex: 0 1 auto; max-height: 43%; overflow-y: auto; overscroll-behavior: contain;
+  width: 100%; padding: clamp(12px, 2.2vh, 24px) max(22px, calc((100% - 860px) / 2));
+  text-align: center; opacity: 1; transition: opacity 350ms ease; touch-action: pan-y;
+}
+#openingPrologue .prologue-era { margin: 0 0 7px; color: #c8ae7b; text-transform: uppercase; letter-spacing: .17em; font: 10px/1.5 Georgia, serif; }
+#openingPrologue h2 { margin: 0 0 12px; font: bold clamp(24px, 3.6vw, 38px)/1.15 Georgia, serif; color: #f5e7c9; letter-spacing: .015em; }
+#openingPrologue .prologue-narration { margin: 0; font: clamp(17px, 2vw, 22px)/1.5 Georgia, serif; color: #e2d8c3; }
+#openingPrologue.is-changing .prologue-image, #openingPrologue.is-changing .prologue-copy { opacity: 0; }
+#openingPrologue .prologue-bottom { flex: 0 0 auto; width: min(100%, 900px); margin-inline: auto; padding: 6px 22px 14px; }
+#openingPrologue .prologue-progress { display: flex; gap: 6px; padding-block: 5px 14px; }
+#openingPrologue .prologue-progress span { display: block; flex: 1; height: 2px; background: #3b3328; overflow: hidden; }
+#openingPrologue .prologue-progress i { display: block; width: 100%; height: 100%; background: #c4a05b; transform: scaleX(0); transform-origin: left; }
+#openingPrologue .prologue-progress .complete i { transform: scaleX(1); }
+#openingPrologue .prologue-controls { display: flex; align-items: center; gap: 10px; }
+#openingPrologue .prologue-count { margin-right: auto; color: #b7a588; font-size: 13px; font-variant-numeric: tabular-nums; letter-spacing: .16em; }
+#openingPrologue #prologueNext { min-width: 108px; background: #e1cda3; border-color: #e1cda3; color: #261e14; }
+#openingPrologue #prologueNext:hover:not(:disabled) { background: #f2dfb8; }
+body.prologue-active #deck { visibility: hidden !important; }
+@media (max-width: 400px) {
+  #openingPrologue .prologue-top { letter-spacing: .1em; font-size: 9px; padding-inline: 12px; }
+  #openingPrologue .prologue-copy { padding-inline: 20px; max-height: 48%; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  #openingPrologue { display: grid; grid-template-columns: 48% 52%; grid-template-rows: 48px minmax(0, 1fr) 70px; }
+  #openingPrologue .prologue-top { grid-column: 1 / -1; min-height: 0; }
+  #openingPrologue .prologue-art { grid-column: 1; grid-row: 2 / 4; min-height: 0; }
+  #openingPrologue .prologue-copy { grid-column: 2; grid-row: 2; max-height: none; padding: 8px 20px; align-self: center; max-height: 100%; }
+  #openingPrologue h2 { font-size: 24px; margin-bottom: 8px; }
+  #openingPrologue .prologue-narration { font-size: 16px; line-height: 1.4; }
+  #openingPrologue .prologue-bottom { grid-column: 2; grid-row: 3; padding: 0 20px 10px; }
+  #openingPrologue .prologue-progress { padding-block: 2px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #openingPrologue, #openingPrologue .prologue-image, #openingPrologue .prologue-copy { transition-duration: 80ms; }
+}
