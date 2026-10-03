@@ -5,22 +5,23 @@ and `startMorning()`. Continue and Load Save bypass the prologue. Only explicit
 New Game actions pass `{newGame:true}` to `BOOT.close()`. No quest or save flag
 is changed.
 
-The directed cut has 106.1 seconds of picture holds, plus approximately four
-seconds of transitions: about 1 minute 50 seconds. It replaces the long town
-and enemy tours with brief montages and concise captions.
+The directed cut has 135.1 seconds of picture holds, plus approximately 19
+seconds of transitions: about 2 minutes 35 seconds. Peaceful town shots form
+one narrated passage about coexistence and safe roads, with no visible town-name
+titles. Longer holds and 0.5–0.95 second fades let the dramatic beats settle.
 
 | Sequence | Picture holds | Direction |
 | --- | --- | --- |
-| Peaceful towns | 2.2–2.4 seconds each | Short location captions, alternating lateral moves, rises and pullbacks |
-| Halvard and Wingfall | 5–8.5 seconds each | Face push-ins, opposing battle sweeps, a descent toward fleeing villagers |
-| Monsters | 2.5–3.2 seconds each | Faster reveals, threatening approaches, hard cuts and dark wipes |
-| Aftermath and Corin | 7–8 seconds each | Pull back from the ruined rider halls, then approach Corin's lit window |
+| Peaceful towns | 3.8 seconds each | Connected narration, alternating lateral moves, rises and pullbacks |
+| Riders, Halvard and Wingfall | 5.8–9.3 seconds each | Face push-ins, opposing battle sweeps, a descent toward fleeing villagers |
+| Monsters | 3.6–4.1 seconds each | Threatening approaches, dark dissolves and slow wipes |
+| Aftermath and Corin | 7.8–8.8 seconds each | Pull back from the ruined rider halls, then approach Corin's lit window |
 
 Each shot defines image focal coordinates and zoom keyframes in
 `js/prologue-chapters.js`. The player remains immersed in full-screen art on
 portrait and landscape displays. The camera clamps to image edges to prevent
 uncovered areas, and recomputes framing after rotation without restarting its
-elapsed time. Transitions include short dissolves, hard cuts, dark approaches,
+elapsed time. Transitions include unhurried dissolves, dark approaches,
 sliding curtains, restrained warm battle impacts and longer fades to black.
 
 War scenes have two drifting smoke layers. They animate only transform and
@@ -55,10 +56,15 @@ request. The Spider Queen keeps her crown, silver hair and spider body but uses
 grounded adult facial features and clothing rather than anime proportions.
 `assets/prologue/monster-coverage.json` records included designs and exclusions.
 
+Halvard consistently has short, dark wavy hair, an emerald cloak and a blue
+dragon. The opening and battle shots were rebuilt with separated silhouettes
+and simpler angles to make dragon anatomy readable.
+
 Source references include the existing realm map, building atlas, live enemy
 sprites, golem palette derivation and boss sprite sheets. Reference sheets are
 under `assets/prologue/references/`. Generation and correction prompts are saved
-in `generation-prompts.json`, `expansion-prompts.json` and `roster-prompts.json`.
+in `generation-prompts.json`, `expansion-prompts.json`, `roster-prompts.json`
+and `continuity-prompts.json`.
 These historical illustrations are recognizable interpretations, not new map
 geometry. Original generated output files remain unchanged.
 

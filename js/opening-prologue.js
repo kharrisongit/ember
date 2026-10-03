@@ -5,7 +5,7 @@
   if (!Array.isArray(chapters) || !chapters.length) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261003-roster3';
+  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261003-continuity';
   let active = false, playing = null;
 
   function loadPicture(chapter, signal) {
@@ -86,7 +86,7 @@
     let elapsed = 0, lastTick = performance.now(), timer = 0, transition = 0, controlsTimer = 0;
     let keyboardControls = false, panAnimation = null, captionAnimation = null, wipeAnimation = null, resizeObserver;
     let sceneEffects = [];
-    const cutTiming = { dissolve: 180, cut: 0, dread: 130, veil: 240, impact: 80, black: 420 };
+    const cutTiming = { dissolve: 700, cut: 300, dread: 700, veil: 850, impact: 500, black: 950 };
     const pictures = new Map();
     let resolveDone;
     const done = new Promise(resolve => { resolveDone = resolve; });
@@ -199,7 +199,7 @@
       const token = ++transition;
       syncPause();
       const chapter = chapters[n], kind = chapter.transition || 'dissolve';
-      const ms = reduced ? 50 : (cutTiming[kind] ?? 180);
+      const ms = reduced ? 50 : (cutTiming[kind] ?? 700);
       root.dataset.transition = reduced ? 'dissolve' : kind;
       root.style.setProperty('--scene-fade', ms + 'ms');
       root.classList.add('is-changing');
@@ -213,6 +213,7 @@
       cancelAnimations(); index = n; elapsed = 0; beat = -1;
       root.dataset.mood = chapter.mood || 'peace';
       root.dataset.mode = chapter.mode || 'story';
+      root.dataset.hideTitle = String(!!chapter.hideTitle);
       pictureHost.replaceChildren();
       if (picture) { picture.alt = chapter.alt; pictureHost.appendChild(picture); }
       era.textContent = chapter.era; title.textContent = chapter.title;

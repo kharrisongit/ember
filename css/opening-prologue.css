@@ -36,6 +36,7 @@
 #openingPrologue[data-mode="montage"] h2, #openingPrologue[data-mode="threat"] h2 { font-size: clamp(23px, 3vw, 33px); margin-bottom: 9px; }
 #openingPrologue[data-mode="montage"] .prologue-narration, #openingPrologue[data-mode="threat"] .prologue-narration { font-size: clamp(17px, 2vw, 23px); min-height: 1.5em; }
 #openingPrologue[data-mode="threat"] h2 { color: #e3c4a6; }
+#openingPrologue[data-hide-title="true"] h2 { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 #openingPrologue[data-mood="dread"] .prologue-shade { background: radial-gradient(ellipse at 50% 35%, transparent 24%, #07080b70 85%), linear-gradient(0deg, #050609f5, #05060990 22%, transparent 60%); }
 #openingPrologue .prologue-atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; display: none; }
 #openingPrologue[data-mood="war"] .prologue-atmosphere { display: block; }

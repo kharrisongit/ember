@@ -1,0 +1,44 @@
+{
+  "tool": "Built-in image_gen",
+  "sourceCommit": "7530e82daacfabc22438a1453e68db18ab315141",
+  "note": "Four crowded dragon scenes rebuilt after user rejected recolor-only attempts. Only the council background correction from the first batch was kept. Earlier battle and formation recolors were discarded.",
+  "finals": [
+    {
+      "key": "02-wingfall",
+      "prompt": "Use case: illustration-story. Rebuild the Wingfall opening painting with a radically simpler cinematic composition and sound creature anatomy. Input image is HALVARD CHARACTER REFERENCE only, not composition. ONE wide 2:1 painted fantasy film frame. Show just ONE blue dragon and Halvard, no other dragons anywhere. Full-body medium-wide SIDE PROFILE, head facing left, entire dragon comfortably inside frame with generous margin around nose, tail and wingtips. Dragon flying over a distant river valley and small medieval castle beneath gathering dark clouds. Clearly connected anatomy: ONE horned head, long curved neck, substantial ribcage and abdomen, distinct hips, FOUR individually readable legs attached correctly to chest and pelvis, single long tapering tail. The two wings attach to its upper back separately from the four legs. Near wing raised high; far wing swept diagonally back, neither obscures the head or body. Rich sapphire-blue scales, slate-blue wing membranes, pale cream belly, TWO swept-back ivory horns, amber eyes. Not a black lava dragon. Halvard seated astride behind the shoulders, emerald cloak, ornate blue-black armor with gold trim, same mature face, trimmed dark beard and SHORT dark wavy hair ending at ears/nape as reference. Hair must not flow over shoulders. A modest orange jet of fire extends LEFT from the dragon's clearly visible mouth into empty sky; it hides no anatomy. Tense betrayal scene, dramatic overcast rim lighting, visible blue coloration, smoke far in background only. Sophisticated realistic painterly fantasy like reference, no anime, no collage, no additional creatures, no anatomical tangles. Keep bottom quarter mostly landscape for captions. Do NOT copy crowded aerial battles or extreme foreshortening. Intentional readable composition with a single coherent dragon.",
+      "references": [
+        "assets/prologue/13-halvard-ambition.webp"
+      ]
+    },
+    {
+      "key": "01-seven-riders",
+      "prompt": "Use case: illustration-story. Completely new wide 2:1 opening illustration for The Last Dragonrider. Reference 1 defines Halvard's BLUE dragon and riding costume; reference 2 defines his short dark hair and face. Peaceful, golden dawn overlooking a thriving river valley of medieval timber towns, safe winding roads and green forest. The SEVEN Riders and their seven dragons are resting on a broad grassy ridge, viewed from its side at a modest distance. Grounded dragons, no dragons flying, no dragon fire, no battle. Seven DISTINCT dragons standing on FOUR feet, wings neatly FOLDED along their backs, one rider seated on each. Stage them in a loose spacious procession along a shallow diagonal ridge across the width, EMPTY GRASS between every silhouette, no dragon blocking another's head, chest, hips, feet or tail. Use smaller subjects and wider environment to fit all seven without overlaps. From left to right: ruby red, leafy green, charcoal gray, sapphire BLUE (Halvard), gold, violet, ivory white. Each has exactly one head/neck, one substantial elongated torso, four properly attached legs, two folded wings, and one tapering tail lying behind and parallel to its body, never connecting to neighbors. Entire figures inside frame. Each dragon's head turns gently toward the valley in clear side or mild three-quarter view, never head-on or extreme foreshortening. Halvard's blue dragon retains cream underside, two ivory horns, sapphire scales from reference; Halvard emerald cloak, gold-trimmed armor, short dark wavy hair and beard. Other riders wear distinct modest medieval riding clothes. Elegant realistic fantasy painting, coherent perspective, natural anatomy and tangible texture. The subjects are seven living animals, not a fused multi-headed creature or a collage. Lower quarter open landscape for captions. No text, letters, labels, UI or borders.",
+      "references": [
+        "assets/prologue/02-wingfall.webp",
+        "assets/prologue/13-halvard-ambition.webp"
+      ]
+    },
+    {
+      "key": "14-wingfall-sky",
+      "prompt": "Use case: illustration-story. Rebuild the aerial Wingfall battle as a clean dramatic wide 2:1 cinematic painting. Reference 1 supplies Halvard's exact blue dragon design, complete anatomy and rider; reference 2 his face/SHORT hair; reference 3 only supplies the waterfall/bridge/forest town environment, DO NOT copy its crowded monsters. EXACTLY TWO dragons total, no other dragons in background. Full bodies in SIDE PROFILE with clear air separating them. At LEFT, Halvard on the sapphire BLUE dragon from reference, flying toward right, entire head, neck, torso, four legs, two wings and tail visible. At RIGHT, a red-haired female Rider on an IVORY WHITE dragon, flying toward left, similarly complete four-legged dragon body. Frame both dragons SMALL ENOUGH to leave large clear margins, body silhouettes completely separated; wings never overlap the opponent or cover their own heads, torsos or legs. Heads face each other across a wide EMPTY central gap. Two narrow fire jets meet in that gap, modest flare not a giant explosion; fire never hides either dragon. Two wings per creature attached to upper back, four separate legs beneath chest and hips, one tail continuing spine, no floating limbs. Strong diagonal sky light, dark storm clouds, smoke distant, Forgefalls waterfall and timber bridge with red-roof town below. Painterly realistic fantasy matching reference 1. Blue dragon remains unmistakably blue even in firelight; Halvard emerald cape, gold-trimmed armor, trimmed beard, ear/nape-length dark hair. No black/red Halvard dragon, no long hair, no extreme perspective, no extra heads, no anatomically merged figures. No text or UI.",
+      "references": [
+        "assets/prologue/02-wingfall.webp",
+        "assets/prologue/13-halvard-ambition.webp",
+        "assets/prologue/14-wingfall-sky.webp"
+      ]
+    },
+    {
+      "key": "15-wingfall-temple",
+      "prompt": "Use case: illustration-story. Completely RECOMPOSE the temple-defense painting into a clear wide 2:1 cinematic illustration. Reference 1 defines Halvard and his BLUE dragon, reference 2 his SHORT hair/face, reference 3 defines only the mossy stone Forgewick temple with triangular pediment, dragon statues, stairs and fleeing villagers; do not copy its crowded dragon placement. At lower LEFT, one entire emerald GREEN dragon stands in SIDE PROFILE facing right on a broad flat stone terrace, protecting villagers. All four feet planted, one head, one clear neck, long muscular torso and hips, two folded wings lying along back, single tail extending left. Its entire body fits with generous margins. A young defender stands BESIDE its shoulder, not fused into the dragon. At RIGHT, several villagers run down the temple steps, clear separate human bodies. Upper RIGHT SKY: Halvard rides ONE sapphire-blue dragon in clean full-body side profile, flying left, separated from the green dragon by large region of empty sky. Blue dragon has cream belly, two ivory horns, TWO wings and FOUR legs, exact coherent design from reference 1. Halvard emerald cape and gold armor. A narrow flame jet from blue dragon strikes an EMPTY stone roof beyond the people, hides no creature anatomy. Two dragons total, no white dragon, no additional aerial dragons, no overlapping animals. Keep the temple architecture recognizable, partly damaged but not obscured. Moody smoke behind buildings only, warm embers near frame edge; subjects fully readable. Natural realistic painted fantasy, no anime or collage, no crop through head/legs/torso, no labels or UI.",
+      "references": [
+        "assets/prologue/02-wingfall.webp",
+        "assets/prologue/13-halvard-ambition.webp",
+        "assets/prologue/15-wingfall-temple.webp"
+      ]
+    },
+    {
+      "key": "13-halvard-ambition",
+      "prompt": "Use case: precise-object-edit. Edit only the SMALL BLUE dragon flying with a rider outside the window near the upper center-right of this image: recolor that small background dragon's scales and wing membranes CHARCOAL GRAY (not blue), with a gray underside. This is one of the other six Riders, not Halvard. Keep its exact anatomy, rider, size, pose and location. Keep the MAIN Halvard at LEFT pixel-faithful: his short hair, face, beard, cloak, hands and armor must remain unchanged. Preserve all five other distant dragons, hall, table, throne, mountain vista, lighting, wide dimensions. No other changes."
+    }
+  ]
+}
