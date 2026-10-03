@@ -1,7 +1,8 @@
 /* The title and save browser share Aurelius's blue, teal and gold panels. */
 #boot{background:radial-gradient(ellipse at 50% 25%,#3e73734d,transparent 65%),#0b1c2c!important;color:#f2ebd2!important}
 #boot::before{content:'';position:absolute;inset:0;z-index:-2;pointer-events:none;border:1px solid transparent;border-image:url('../assets/conversation-panels/aurelius-v1.webp') 18% fill / 24px / 0 stretch}
-#titleSky{background:radial-gradient(ellipse at 50% 40%,#bdddb45c 0%,#659b9833 45%,transparent 75%)}
+/* Reach full transparency before the glow meets any edge of its box. */
+#titleSky{background:radial-gradient(ellipse 50% 50% at 50% 50%,#bdddb45c 0%,#659b9833 45%,transparent 100%)}
 #titleRiderArt{filter:drop-shadow(0 0 2px #d8e5ba) drop-shadow(0 0 12px #a0d2c466)}
 #titleWords{color:#f5df9f;text-shadow:0 2px 0 #0a1d2c,0 0 20px #d9c38140;font-family:Georgia,serif}
 #titleStars{position:absolute;inset:16px;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 12% 28%,#d9eadb99 0 1px,transparent 1.7px),radial-gradient(circle at 81% 54%,#e7d49a99 0 1px,transparent 1.7px),radial-gradient(circle at 44% 88%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 72% 18%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 27% 64%,#d9eadb66 0 1px,transparent 1.7px)}
