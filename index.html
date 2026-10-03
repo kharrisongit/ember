@@ -65,7 +65,7 @@
 #cloudSaveDialog details section:first-child{border-top:0;margin-top:0;padding-top:8px}
 @media(max-width:380px){#cloudSaveDialog{padding:18px}#cloudSaveDialog h2{font-size:22px}#cloudSaveDialog section button{width:100%;margin-right:0}}
 </style>
-<link rel="stylesheet" href="css/title-screen.css?v=20260927-hatch-save-controls1">
+<link rel="stylesheet" href="css/title-screen.css?v=20261003-star-menu">
 <link rel="stylesheet" href="css/controls-theme.css?v=20260930-game-view">
 <link rel="stylesheet" href="css/menu-theme.css?v=20261002-path-and-clouds">
 <link rel="stylesheet" href="css/command-dragon-medieval.css?v=20261001-sideroutes1">
@@ -79,7 +79,7 @@
 <link rel="stylesheet" href="css/equipment-tutorial.css?v=20261002-living-map">
 <link rel="stylesheet" href="css/atlas-motion.css?v=20261002-path-and-clouds">
 <link rel="stylesheet" href="css/tutorial-button-polish.css?v=20261002-sound-fit">
-<link rel="stylesheet" href="css/aurelius-interface.css?v=20261003-celestial">
+<link rel="stylesheet" href="css/aurelius-interface.css?v=20261003-panel-fix">
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -114,6 +114,13 @@
      flex-direction:column;align-items:center;justify-content:center;gap:14px;
      background:radial-gradient(120% 90% at 50% 35%,#2b1d16 0%,#120c09 70%);
      color:#e8dcc0;font:14px/1.4 ui-monospace,monospace;text-align:center">
+  <div id="titleStars" aria-hidden="true">
+    <i style="--x:9%;--y:17%;--delay:-1s"></i><i style="--x:29%;--y:8%;--delay:-4s"></i>
+    <i style="--x:67%;--y:12%;--delay:-2s"></i><i style="--x:88%;--y:25%;--delay:-6s"></i>
+    <i style="--x:16%;--y:44%;--delay:-3s"></i><i style="--x:82%;--y:63%;--delay:-1s"></i>
+    <i style="--x:8%;--y:77%;--delay:-4s"></i><i style="--x:38%;--y:91%;--delay:-5s"></i>
+    <i style="--x:72%;--y:86%;--delay:-2s"></i><i style="--x:94%;--y:91%;--delay:-3s"></i>
+  </div>
   <div id="titleLogo">
     <div id="titleSky" aria-hidden="true">
       <div id="titleRider"><canvas id="titleRiderArt" width="128" height="128"></canvas></div>

@@ -1,29 +1,31 @@
-/* Dawn palette for the title screen. The black rider stays silhouetted against
-   a light sky along its entire arrival/departure path. */
-#boot{
-  background:radial-gradient(ellipse at 50% 25%,#fff0d7aa,transparent 58%),
-    linear-gradient(180deg,#91bdcd 0%,#cad8cf 30%,#f1dbb8 60%,#dca173 100%)!important;
-  color:#293e43!important;
-}
-#titleSky{background:radial-gradient(ellipse at 50% 40%,#fff3dacc 0%,#fff3da40 45%,transparent 75%)}
-#titleWords{color:#293e43;text-shadow:0 1px 0 #fff4df,0 3px 8px #fff0d766}
-#bootBegin,#bootBtns button,#bootLoadRows button{
-  color:#293e43;background:#f8edd8;border:1px solid #887a62;
-  box-shadow:inset 0 1px 0 #fff9ec,0 2px 5px #594a3320;border-radius:4px;
-}
-#bootBegin:hover,#bootBtns button:hover:not(:disabled),#bootLoadRows button:hover:not(:disabled){background:#fff7e8;border-color:#405d64}
-#bootBtns button.selected,#bootLoadRows button.selected{
-  color:#fff6e3;background:#36565d;border-color:#29424a;
-  box-shadow:inset 0 1px 0 #ffffff20,0 2px 5px #263b4226;
-}
-#bootBtns button:disabled,#bootLoadRows button:disabled{color:#766e60;background:#e0d5bf;border-color:#b4a88e;opacity:1;box-shadow:none}
-#bootBegin:focus-visible,#bootBtns button:focus-visible,#bootLoadRows button:focus-visible,
-body.boot-ready #bootAccountButtons button:focus-visible{outline:2px solid #29454d;outline-offset:3px}
-#bootLabel{color:#293e43!important;opacity:1!important}
-#bootMsg,#bootHint{color:#3c5154;opacity:1!important}
-#bootBar{background:#fff1d6!important;border-color:#8d866e!important}
-#bootFill{background:#426971!important}
-#bootLoadMsg{color:#70391f}
-body.boot-ready #bootAccountButtons button{color:#fff6e3;background:#36565d;border:1px solid #29424a;box-shadow:inset 0 1px 0 #ffffff20,0 2px 5px #263b4226}
-body.boot-ready #bootAccountButtons button:hover{background:#29424a}
-body.boot-ready #bootCloudStatus{color:#465750}
+/* The title and save browser share Aurelius's blue, teal and gold panels. */
+#boot{background:radial-gradient(ellipse at 50% 25%,#3e73734d,transparent 65%),#0b1c2c!important;color:#f2ebd2!important}
+#boot::before{content:'';position:absolute;inset:0;z-index:-2;pointer-events:none;border:1px solid transparent;border-image:url('../assets/conversation-panels/aurelius-v1.webp') 18% fill / 24px / 0 stretch}
+#titleSky{background:radial-gradient(ellipse at 50% 40%,#bdddb45c 0%,#659b9833 45%,transparent 75%)}
+#titleRiderArt{filter:drop-shadow(0 0 2px #d8e5ba) drop-shadow(0 0 12px #a0d2c466)}
+#titleWords{color:#f5df9f;text-shadow:0 2px 0 #0a1d2c,0 0 20px #d9c38140;font-family:Georgia,serif}
+#titleStars{position:absolute;inset:16px;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 12% 28%,#d9eadb99 0 1px,transparent 1.7px),radial-gradient(circle at 81% 54%,#e7d49a99 0 1px,transparent 1.7px),radial-gradient(circle at 44% 88%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 72% 18%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 27% 64%,#d9eadb66 0 1px,transparent 1.7px)}
+#titleStars i{position:absolute;left:var(--x);top:var(--y);width:9px;height:9px;background:#f4e2af;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);opacity:.2;animation:titleStarTwinkle 5s ease-in-out infinite;animation-delay:var(--delay);transform:scale(.5)}
+#titleStars i:nth-child(even){width:6px;height:6px;background:#c8e9dd;animation-duration:7s}
+@keyframes titleStarTwinkle{0%,65%,100%{opacity:.18;transform:scale(.5)}78%{opacity:.9;transform:scale(1.15)}90%{opacity:.4;transform:scale(.75)}}
+#bootBegin,#bootBtns button,#bootLoadRows button{color:#f2e8c6;background:linear-gradient(125deg,#2d515b,#183646);border:1px solid #a9ad83;box-shadow:inset 0 1px #d9e6c222,0 3px 8px #04142166;border-radius:6px;font-family:Georgia,serif}
+#bootBegin:hover,#bootBtns button:hover:not(:disabled),#bootLoadRows button:hover:not(:disabled){background:#41675f;border-color:#f0d799;color:#fff3d0}
+#bootBtns button.selected,#bootLoadRows button.selected{color:#fff3cb;background:linear-gradient(125deg,#4e756b,#2c5058);border-color:#e5cf92;box-shadow:inset 0 0 0 1px #e5cf9233,0 0 14px #b5d9b722}
+#bootBtns button:disabled,#bootLoadRows button:disabled{color:#9eb4ad;background:#17303d;border-color:#536e72;opacity:1;box-shadow:none}
+#bootBegin:focus-visible,#bootBtns button:focus-visible,#bootLoadRows button:focus-visible,body.boot-ready #bootAccountButtons button:focus-visible{outline:2px solid #f0d99e;outline-offset:3px}
+#bootLabel{color:#e8d39c!important;opacity:1!important}
+#bootMsg,#bootHint,#bootTime{color:#c7d9cf;opacity:1!important}
+#bootBar{background:#102c3a!important;border-color:#829b8c!important;border-radius:4px}
+#bootFill{background:linear-gradient(90deg,#759d89,#e4ce92)!important;box-shadow:0 0 10px #d7d6a866}
+#bootLoadMsg{color:#f0d39e}
+#bootLoadPanel{min-height:0;flex:0 1 auto;padding:4px 6px;scrollbar-color:#8faa9b #102a3a;overscroll-behavior:contain}
+body.boot-menu-open #boot{padding-bottom:44px!important}
+body.boot-menu-open #titleLogo{padding-top:12px}
+body.boot-menu-open #titleSky{display:none}
+body.boot-load-open #bootLoadRows{gap:6px}
+body.boot-load-open #bootLoadRows button{padding:8px 14px}
+body.boot-load-open #titleWords{font-size:min(5vw,28px)}
+body.boot-ready #bootAccountButtons button{color:#f9edc5;background:#284b56;border:1px solid #a9ad83;box-shadow:inset 0 1px #ffffff20,0 2px 5px #06182466}
+body.boot-ready #bootAccountButtons button:hover{background:#41675f}
+body.boot-ready #bootCloudStatus{color:#c7d9cf}
+@media(prefers-reduced-motion:reduce){#titleStars i{animation:none;opacity:.6;transform:scale(.75)}}
