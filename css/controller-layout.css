@@ -116,3 +116,9 @@ body { height:100%; height:100dvh; }
 }
 /* The legacy row's display:flex!important must not override pre-hatch hiding. */
 #deckHealth.solo #deckDragonRow { display:none!important; }
+/* Boot and loaded-save previews must not expose party vitals. JS opens the
+   gameplay gate and independently sets the dragon row from hasDragon(). */
+body:not(.game-started) #deckHealth { visibility:hidden!important; pointer-events:none!important; }
+body:not(.game-started) #deckDragonRow,
+#deckDragonRow[style*="display: none"],
+#deckDragonRow[style*="display:none"] { display:none!important; }

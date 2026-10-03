@@ -26,6 +26,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Last Dragonrider">
 <meta name="mobile-web-app-capable" content="yes">
+<!-- The game supplies its own light parchment and dark panel colors. -->
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#14100d">
 <link rel="manifest" href="manifest.webmanifest?v=20260926-last-dragonrider">
 <title>The Last Dragonrider</title>
@@ -34,7 +36,7 @@
 <link rel="stylesheet" href="css/game.css?v=20260928-bag-player-audio">
 <link rel="stylesheet" href="css/merchant-shop.css?v=20260927-thornwell-cast">
 <link rel="preload" href="assets/fonts/cinzel-decorative-bold.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="css/medieval-ui.css?v=20260926-homecoming">
+<link rel="stylesheet" href="css/medieval-ui.css?v=20261003-preserve-parchment">
 <style>
 #bootAccountButtons,#bootCloudStatus{display:none}
 .boot-ready #bootAccountButtons{display:flex;position:absolute;right:max(12px,env(safe-area-inset-right));bottom:10px;z-index:5}
@@ -80,7 +82,7 @@
 <link rel="stylesheet" href="css/atlas-motion.css?v=20261002-path-and-clouds">
 <link rel="stylesheet" href="css/tutorial-button-polish.css?v=20261002-sound-fit">
 <link rel="stylesheet" href="css/aurelius-interface.css?v=20261003-panel-fix">
-<link rel="stylesheet" href="css/controller-layout.css?v=20261003-responsive">
+<link rel="stylesheet" href="css/controller-layout.css?v=20261003-dragon-visibility">
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -234,7 +236,7 @@
 <div id="deck">
   <div id="trigs"></div>
   <div id="playface">
-  <div id="leftControls"><div id="deckHealth"><div class="deckHpRow"><canvas class="deckPortrait" id="deckCorinPortrait" width="32" height="32"></canvas><div class="deckVital"><span>CORIN</span><div class="deckHearts pixelHearts" id="deckCorinHearts"></div></div></div><div class="deckHpRow" id="deckDragonRow"><canvas class="deckPortrait" id="deckDragonPortrait" width="32" height="32"></canvas><div class="deckVital"><span>DRAGON</span><div class="deckHearts pixelHearts" id="deckDragonHearts"></div></div></div></div>
+  <div id="leftControls"><div id="deckHealth" class="solo"><div class="deckHpRow"><canvas class="deckPortrait" id="deckCorinPortrait" width="32" height="32"></canvas><div class="deckVital"><span>CORIN</span><div class="deckHearts pixelHearts" id="deckCorinHearts"></div></div></div><div class="deckHpRow" id="deckDragonRow" style="display:none"><canvas class="deckPortrait" id="deckDragonPortrait" width="32" height="32"></canvas><div class="deckVital"><span>DRAGON</span><div class="deckHearts pixelHearts" id="deckDragonHearts"></div></div></div></div>
   <div id="dpad">
     <div class="corner"></div>
     <div data-dx="0"  data-dy="-1">&#8593;</div>

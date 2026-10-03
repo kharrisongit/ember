@@ -231,3 +231,10 @@
 #atlasQuestMarker{position:absolute;color:#ffe080;font:24px Georgia,serif;line-height:1;transform:translate(-50%,-100%);text-shadow:0 0 3px #241208,2px 2px 0 #241208,-2px -2px 0 #241208;filter:drop-shadow(0 0 4px #ffcb53);pointer-events:none}
 #atlasQuestMarker[hidden]{display:none}
 @media (max-height:520px){#atlasDetails{max-height:46dvh;padding:6px 12px}#atlasText{display:none}#atlasDetails h2{font-size:16px}#atlasDetails p{font-size:12px}#worldAtlas header{padding:4px 12px}}
+
+/* Opt into authored colors instead of browser-generated dark recoloring.
+   Samsung Internet recognises the matching light/dark meta declaration;
+   Chromium's auto-dark mode also honours only light on parchment surfaces. */
+:root { color-scheme:light dark; }
+body:not(.conversation-session) #say,
+body:not(.conversation-session) #sayname { color-scheme:only light; }
