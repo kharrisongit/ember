@@ -5,6 +5,8 @@ context.assert=assert;
 await run('loadPublishedEditorLayouts()');
 run(`
 loadMap('world');
+assert(MD.npcs.some(n=>n.devLineup),'Editor sample definitions retain their stable keys');
+assert(npcs.every(n=>!n.devLineup),'Hidden editor samples are absent from gameplay AI and collision');
 const retained={terr,solid,fobjs,buckets,sbuckets,chunks,scatterChunks,blockTiles,hidden,decorGone};
 const worldShape=JSON.stringify(features),worldCollision=solid.slice(),worldGround=terr.slice();
 chunks.set('performance-marker',{cv:{marker:true},used:1});
@@ -14,6 +16,7 @@ for(const name of ['rebuildSolid','rebuildBuckets','buildGround','realizeFeature
 }
 for(const room of ['house22','house47','tp1','pyramid_entry']){
   loadMap(room);loadMap('world');
+  assert(npcs.every(n=>!n.devLineup),'Returning to the world keeps editor samples out of gameplay');
   assert.equal(rebuilds,0,'Returning from '+room+' does not rebuild the overworld');
   for(const key of Object.keys(retained))assert.equal(eval(key),retained[key],key+' retained after '+room);
   assert(chunks.has('performance-marker'),'Warmed ground survives '+room);

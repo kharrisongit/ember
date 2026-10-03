@@ -41,8 +41,13 @@ run(`arenaLock=null;arenaT=0;EmberArenaEntry.reset();P.x=0;P.y=0;cam.x=-1000;cam
 features=Array.from({length:60},(_,i)=>({id:30000+i,kind:'arena',x:1000+i*40,y:1000+i*30,r:6.3}));
 foes=features.map(a=>({kind:'plant1',x:a.x*TS,y:a.y*TS,hp:8,st:'idle',t:0}));
 let collisionReads=0;canStand=()=>{collisionReads++;return true;};
-EmberArenaEntry.prepare();collisionReads=0;const stablePopulation=foes;`);
+EmberArenaEntry.prepare();const stablePopulation=foes;`);
+assert.equal(run('collisionReads'),0,'Door loading cannot arrange distant arenas');
+assert(run('foes.every(f=>EmberArenaEntry.protected(f))'),'Deferred formations still protect waiting enemies');
 for(let i=0;i<240;i++)run('P.x+=4;P.y+=1;tAcc+=.05;stepHuntingGrounds(.05);EmberArenaEntry.step(.05)');
 assert.equal(run('collisionReads'),0,'Running cannot restage distant arenas or launch global collision searches');
 assert(run('foes===stablePopulation'),'Periodic wildlife upkeep does not rebuild the enemy array');
 console.log('PASS: running past 60 distant arenas performs zero formation collision searches and keeps the population stable across 12 wildlife refreshes.');
+run(`P.x=features[0].x*TS+8;P.y=(features[0].y+8)*TS+8;EmberArenaEntry.step(.05);`);
+assert(run('collisionReads>0'),'Approaching a deferred arena prepares its formation');
+assert(run('foes[0].y<features[0].y*TS+8'),'Deferred enemies wait across from the approaching player');

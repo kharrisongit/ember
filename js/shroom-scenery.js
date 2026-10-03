@@ -4,7 +4,7 @@ const SHROOM_SCENERY = /^sh_(big|wall|med|sml|fat|stalk|glow)/;
 
 // A display palette for the pointed clusters, whose old green-to-coral tint
 // read as muddy brown. Keep the original pixels, alpha, frames and map IDs.
-function prepareShroomClusterPalette(){
+async function prepareShroomClusterPalette(){
   const sprites=Object.entries(SPR).filter(([name])=>/^sh_(big|wall|med|sml)_green\d+$/.test(name)).map(([,s])=>s);
   for(const page of new Set(atlasPages.values())){
     if(page.shroomLavender)continue;
@@ -22,7 +22,12 @@ function prepareShroomClusterPalette(){
       }
       g.putImageData(im,l-page.x,t-page.y);
     }
-    page.img=canvas;page.shroomLavender=true;
+    // Pixel editing needs a CPU-readable canvas, but gameplay only needs an
+    // immutable image. These pages also contain other world art; do not keep
+    // sampling a readback canvas on every rendered frame (especially on iOS).
+    const image=new Image();image.src=canvas.toDataURL('image/png');
+    await image.decode();
+    page.img=image;page.shroomLavender=true;
   }
 }
 

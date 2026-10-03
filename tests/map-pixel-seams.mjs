@@ -13,7 +13,7 @@ const SPR=JSON.parse(zlib.gunzipSync(Buffer.from(read('js/generated/game-part-1.
 const pages=JSON.parse(read('assets/game-assets.js').match(/window.EMBER_ASSETS.ATLAS_PAGES = (.*);/)[1]);
 const atlasImg={},atlasPages=new Map(),c=vm.createContext({atlasImg,atlasPages});
 const start=code.indexOf('function drawPixelImage(');
-vm.runInContext(code.slice(start<0?code.indexOf('function drawGameImage('):start,code.indexOf('async function loadAtlasPages()')),c);
+vm.runInContext(code.slice(start<0?code.indexOf('function drawGameImage('):start,code.indexOf('async function loadAtlasPages(')),c);
 const draw=c.drawGameImage;
 // Load the real bridge, river and animated shoreline atlas pages.
 for(const [x,y,w,h,src] of pages)if(y<=3395&&y+h>3363){

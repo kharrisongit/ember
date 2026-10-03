@@ -60,12 +60,13 @@ assert.equal(atlasReports.at(-1).done,12);assert.equal(registered.at(-1),'patch'
 
 // Run the actual boot callback. loadMap owns collision and ground construction;
 // the boot warmer only requests chunks and must not evict them immediately.
-const visits=[],delays=[],chunks=[];let ready;
+const visits=[],delays=[],chunks=[];let ready,paletteReady=false;
 const finished=new Promise(resolve=>ready=resolve);
 const bootContext=vm.createContext({console,window:{__firstFrame:true},W:{start:'home',names:[]},
   atlasImg:{width:1024,height:1024},cv:{width:800,height:600},MW:12,MH:12,TS:16,CHUNK:256,
   P:{},objs:[],fobjs:[],MAPID:'',MD:null,
-  buildSkinTones(){},resize(){},frame(){},requestAnimationFrame(){assert.equal(visits.length,3,'The frame loop starts only after all staged maps finish');},bootBind(){},
+  prepareShroomClusterPalette:async()=>{await Promise.resolve();paletteReady=true;},
+  buildSkinTones(){assert(paletteReady,'Decode the recolored static images before gameplay setup');},resize(){},frame(){},requestAnimationFrame(){assert.equal(visits.length,3,'The frame loop starts only after all staged maps finish');},bootBind(){},
   buildHouseFurnitureLayers:async()=>{},loadAnimalSprites:async()=>{},loadPublishedEditorLayouts:async()=>{},
   loadMap(id){visits.push(id);bootContext.MAPID=id;bootContext.MD={spawn:[32,48],doors:id==='home'?[{to:'world',tx:10,ty:10}]:[]};},
   buildGround(){assert.fail('Boot must not repeat ground construction');},rebuildSolid(){assert.fail('Boot must not repeat collision construction');},

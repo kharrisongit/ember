@@ -2266,6 +2266,9 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
     patrolPoints:n.patrolPoints,patrolSpeed:n.patrolSpeed,routeSeed:n.routeSeed,sceneReserved:n.sceneReserved,
     f: n.f || "d", t: Math.random() * 10
   }));
+  // The editor's hundreds of preview actors stay in MD for stable edit keys.
+  // They do not belong in gameplay's per-frame AI/collision population.
+  if(typeof devNpcLineupActive==='undefined'||!devNpcLineupActive)npcs=npcs.filter(n=>!n.devLineup);
   /* Halvard is permanently gone once the final encounter has been won.
      Re-entering Cinderhold (for example via the seal chamber) must not
      reconstruct him from the map's original NPC definition. */
@@ -2490,11 +2493,16 @@ const peekTile = (x, y) => ({
   rock: rockTiles ? rockTiles.has(x + "," + y) : null,
 });
 function blockedByNpcBody(px, py) {
-  return npcs.some(n => n!==npcCollisionActor && !npcCollisionEscape?.has(n) && (typeof npcHere !== "function" || npcHere(n)) && !n.leaving && !n.brambleCompanion &&
-    px >= n.x - (n.nanCooking?15:7) && px < n.x + (n.nanCooking?15:7) && py >= n.y - (n.nanCooking?34:8) && py < n.y);
+  // Reject distant bodies before story visibility checks. Walking actors and
+  // arena placement ask this thousands of times; most NPCs are in other towns.
+  return npcs.some(n => px >= n.x - (n.nanCooking?15:7) && px < n.x + (n.nanCooking?15:7) &&
+    py >= n.y - (n.nanCooking?34:8) && py < n.y && n!==npcCollisionActor &&
+    !npcCollisionEscape?.has(n) && !n.leaving && !n.brambleCompanion &&
+    (typeof npcHere !== "function" || npcHere(n)));
 }
 function blockedByNpcBuffer(px, py) {
   for (const n of npcs) {
+    if(px < n.x-TS/2 || px >= n.x+TS/2 || py < n.y || py >= n.y+TS/2)continue;
     if(n===npcCollisionActor||npcCollisionEscape?.has(n)||n.brambleCompanion)continue;
     if (typeof npcHere === "function" && !npcHere(n)) continue;
     if (n.leaving) continue;
@@ -2611,9 +2619,9 @@ function canStand(x, y) {
   // Ignore only bodies/buffers already touching Corin, and only while moving
   // farther from that NPC. Terrain and every other NPC stay solid.
   npcCollisionEscape=new Set(npcs.filter(n=>{
-    if(n.leaving||n.brambleCompanion||!npcHere(n))return false;
     const touches=P.x+hw>=n.x-TS/2&&P.x-hw<n.x+TS/2&&P.y-1>=n.y-8&&P.y-PC_H<n.y+TS/2;
-    return touches&&(x-n.x)**2+(y-n.y)**2>(P.x-n.x)**2+(P.y-n.y)**2+.000001;
+    return touches&&!n.leaving&&!n.brambleCompanion&&npcHere(n)&&
+      (x-n.x)**2+(y-n.y)**2>(P.x-n.x)**2+(P.y-n.y)**2+.000001;
   }));
   try{return !(isSolid(x-hw,y-PC_H)||isSolid(x+hw,y-PC_H)||isSolid(x-hw,y-1)||isSolid(x+hw,y-1));}
   finally{npcCollisionEscape=previous;}
@@ -2962,8 +2970,8 @@ function lavaShore(g, x, y, px, py) {
   const n = nmask(x, y, lavaLook);
   if (n && SPR[tt.mask[n]]) blit(g, tt.mask[n], 0, px, py);
 }
-const CHUNK = 256;                 /* px; 16x16 tiles */
-const CHUNK_CACHE = 96;            /* ~25 MB ceiling, plenty for any viewport */
+const CHUNK = 128;                 /* 8x8 tiles: shorter ground jobs while running */
+const CHUNK_CACHE = 384;           /* Same ~25 MB pixel budget as 96 large chunks */
 let chunks = new Map();            /* key -> {cv, used} */
 let chunkClock = 0;
 let scatterChunks = null;          /* chunk key -> static scatter entries */
@@ -7214,7 +7222,7 @@ function blockedByItem(x, y) {
 
 let guardsAside = false;
 function blockedByGuard(x, y) {
-  if (quest > Q.KING || MAPID !== "world" || guardsAside) return false;
+  if (x > 120 || quest > Q.KING || MAPID !== "world" || guardsAside) return false;
   const g = guards();
   if (leavingNow) return false;                        /* on their way out */
   if (!g.length || g.some(m => m.goto)) return false;   /* standing aside */

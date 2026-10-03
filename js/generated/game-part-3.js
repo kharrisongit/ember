@@ -4501,7 +4501,7 @@ atlasImg.onload = async () => {
   const step = (m) => { try { window.__boot = (window.__boot || "") + m + "\n"; } catch (e) {} };
   try {
     step("atlas loaded " + atlasImg.width + "x" + atlasImg.height);
-    prepareShroomClusterPalette();
+    await prepareShroomClusterPalette();
     BOOT.step(45, "Loading towns, temples and creatures");
     try { buildSkinTones(); step("skin tones built"); }
     catch (e) { step("skin tones failed: " + e); }

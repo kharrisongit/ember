@@ -28,7 +28,7 @@
   function ensure(){if(map!==MAPID)reset();}
   function state(a){
     let s=states.get(a.id);
-    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map(),retry:0,route:approachRoute(a)};states.set(a.id,s);}
+    if(!s){s={ring:a,phase:'waiting',side:null,foes:[],paths:new Map(),retry:0};states.set(a.id,s);}
     return s;
   }
   function bounds(a){
@@ -103,8 +103,13 @@
     }
   }
   function visible(f){return f.x>cam.x-48&&f.x<cam.x+VW/cam.z+48&&f.y>cam.y&&f.y<cam.y+VH/cam.z+80;}
+  function nearby(s){
+    const b=bounds(s.ring),reach=Math.max(240,Math.min(480,Math.max(VW,VH)/cam.z));
+    return Math.abs(P.x-b.x)<b.rx+reach&&Math.abs(P.y-b.y)<b.ry+reach;
+  }
   function stage(s){
     if(s.phase!=='waiting'||tutorial(s.ring)||(arenaLock&&arenaLock.id!==s.ring.id)||s.retry>tAcc)return;
+    if(s.route===undefined)s.route=approachRoute(s.ring);
     const a=s.ring,b=bounds(a),side=sideOf(a,s),key=side.join(',');
     if(s.side===key&&!s.dirty)return;
     s.side=key;s.dirty=false;s.paths.clear();
@@ -135,7 +140,12 @@
       faceEntrance(s,f);
     }
   }
-  function prepare(a){register(true);for(const s of states.values())if(!a||s.ring.id===a.id)stage(s);}
+  function prepare(a){
+    register(true);
+    // Register protection everywhere, but only arrange a nearby encounter.
+    // A door exit must not run collision searches for every arena in the realm.
+    for(const s of states.values())if(a?s.ring.id===a.id:nearby(s))stage(s);
+  }
   function protectedEnemy(f){
     if(!living(f))return false;
     const s=owners.get(f);
@@ -228,8 +238,7 @@
     for(const s of states.values()){
       if(s.phase==='waiting'){
         // Running past a distant arena must not launch collision/path searches.
-        const b=bounds(s.ring),reach=Math.max(240,Math.min(480,Math.max(VW,VH)/cam.z));
-        if(Math.abs(P.x-b.x)<b.rx+reach&&Math.abs(P.y-b.y)<b.ry+reach)stage(s);
+        if(nearby(s))stage(s);
       }
       if(s.phase!=='active')walk(s,dt);
     }

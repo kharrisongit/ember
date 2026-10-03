@@ -121,9 +121,9 @@ run(`MAPID='world';MD=W.maps.world;features=[{id:29000,kind:'arena',x:140,y:100,
  {id:29001,kind:'route',pts:[[100,100],[160,100],[160,40]],w:5}];
 currentArenaFeatures=()=>features.filter(f=>f.kind==='arena');arenaLock=null;cam.x=-100000;cam.y=-100000;
 P.x=160*TS+8;P.y=40*TS+8;foes=[0,1,2].map(i=>({kind:'reptile',x:140*TS+i*8,y:100*TS,hp:8,st:'idle',t:0}));
-EmberArenaEntry.reset();EmberArenaEntry.prepare();`);
+EmberArenaEntry.reset();EmberArenaEntry.prepare(features[0]);`);
 assert(run('foes.every(f=>f.x<140*TS+8&&foeDir(f.dir,f.flip)==="e")'),'A northward bend east of the arena uses its eastern entrance');
 assert.equal(run('new Set(foes.map(f=>f.x)).size'),1,'The entire three-enemy wave forms one line');
-run('P.x=100*TS+8;P.y=100*TS+8;EmberArenaEntry.prepare()');
+run('P.x=100*TS+8;P.y=100*TS+8;EmberArenaEntry.prepare(features[0])');
 assert(run('foes.every(f=>f.x>140*TS+8&&foeDir(f.dir,f.flip)==="w")'),'Returning from the other route end reverses the formation');
 console.log('PASS: road-aware staging around a distant bend and a reversed three-enemy lineup.');

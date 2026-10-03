@@ -59,7 +59,9 @@ function prepareEditorEntities(m,id) {
     const art=m.roomActors.find(a=>a.spr===n.lookId);
     if(art)art.editorNpcKey=editorNpcKey(n);
   }
-  if(id==='world')prepareNpcLineup(m);
+  // Keep the authored editor slots, but do not rescan the entire sprite
+  // catalog on every gameplay door exit. Opening the lineup refreshes it.
+  if(id==='world'&&(devNpcLineupActive||!m.npcs.some(n=>n.devLineup)))prepareNpcLineup(m);
 }
 
 function syncEditorChest(m,a,dx,dy) {
