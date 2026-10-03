@@ -1,74 +1,82 @@
 # Opening history
 
-New Game plays twenty illustrated chapters before the existing fade into Corin's
-bedroom and `startMorning()`. Continue and Load Save bypass the prologue through
-the default `BOOT.close()` path. Only the explicit New Game actions pass
-`{newGame:true}`. No quest or save flag is changed by the prologue.
+New Game plays 26 illustrated shots before the existing fade into Corin's bedroom
+and `startMorning()`. Continue and Load Save bypass the prologue. Only explicit
+New Game actions pass `{newGame:true}` to `BOOT.close()`. No quest or save flag
+is changed.
 
-The sequence lasts about four minutes including transitions. Full-screen art
-slowly pans across each scene, including on portrait phones. Gold chapter titles
-and two short, fading caption passages accompany each painting. Chapter timing,
-camera endpoints, alt text and captions live in `js/prologue-chapters.js`.
+The directed cut has 106.1 seconds of picture holds, plus approximately four
+seconds of transitions: about 1 minute 50 seconds. It replaces the long town
+and enemy tours with brief montages and concise captions.
 
-Controls are hidden by default. Tapping anywhere reveals them for 1.2 seconds;
-the first tap only reveals controls and never advances the story. Back/Left
-Arrow revisits a scene; Next/A/Space/Enter/Right Arrow advances. Pause/P stops
-the reading timer and camera movement, while captions remain readable. Skip
-intro/B/Escape ends with a short fade. Keyboard input reveals controls until a
-pointer interaction, keeping focused buttons accessible; Tab cycles within the
-dialog. Switching tabs pauses playback. Reduced-motion mode removes camera
-movement and caption animation. The artwork covers the viewport in portrait
-and landscape; captions can scroll on unusually short screens.
+| Sequence | Picture holds | Direction |
+| --- | --- | --- |
+| Peaceful towns | 2.2–2.4 seconds each | Short location captions, alternating lateral moves, rises and pullbacks |
+| Halvard and Wingfall | 5–8.5 seconds each | Face push-ins, opposing battle sweeps, a descent toward fleeing villagers |
+| Monsters | 2.5–3.2 seconds each | Faster reveals, threatening approaches, hard cuts and dark wipes |
+| Aftermath and Corin | 7–8 seconds each | Pull back from the ruined rider halls, then approach Corin's lit window |
 
-The existing title theme continues underneath the prologue, respecting the
-current audio settings. The existing boot transition then fades it out and
-fades in the bedroom's area music. World rendering and simulation are suspended
-while the prologue is visible. Its DOM, timers, animation objects and temporary
-input listeners are removed on completion, including Skip.
+Each shot defines image focal coordinates and zoom keyframes in
+`js/prologue-chapters.js`. The player remains immersed in full-screen art on
+portrait and landscape displays. The camera clamps to image edges to prevent
+uncovered areas, and recomputes framing after rotation without restarting its
+elapsed time. Transitions include short dissolves, hard cuts, dark approaches,
+sliding curtains, restrained warm battle impacts and longer fades to black.
 
-Images load only when New Game selects this sequence, retaining just the current
-and next image instead of decoding the entire gallery. A missing or slow image
-does not disable Skip, and eventually falls back to a dark background while the
-caption still presents the chapter. The twenty optimized WebP illustrations live
-in `assets/prologue/`; the built-in image-generation prompts are saved there in
-`generation-prompts.json` and `expansion-prompts.json`. The latter records the
-fifteen additional paintings and their project-relative references. Original
-generated artwork is unchanged.
+War scenes have two drifting smoke layers. They animate only transform and
+opacity; there are no particles, filters, canvas effects or extra animation
+loops. Effects pause with playback and are canceled when a shot ends. The
+existing world loop remains suspended throughout the intro. Reduced-motion
+mode uses static framing, short dissolves and no smoke or impact effects.
 
-## Expanded journey
+Controls are hidden by default. A tap reveals them for 1.2 seconds and never
+also advances the story. Back/Left Arrow revisits a shot; Next/A/Space/Enter/
+Right Arrow advances. Pause/P holds the camera and reading timer. Skip intro/
+B/Escape ends with a short fade. Keyboard use keeps controls visible and traps
+Tab within the dialog until a pointer interaction. Switching tabs pauses
+playback. Captions remain readable when paused.
 
-The peaceful tour visits Millwood, Thornwell, Forgefalls and Forgewick,
-Sandspire and the Oasis, Coralmere and Witchmoor, Hollybeck, then Ashcrag and
-Cinderhold. Halvard's ambition leads into three views of Wingfall, his coronation,
-the dragon hunts, and four regional views of the roads falling to monsters.
-The sequence ends with the suppression of the old histories and morning in
-Millwood, without revealing Corin's later discoveries.
+The existing title theme continues underneath the prologue, respecting audio
+settings. BOOT then fades it out and fades into the bedroom's area music. The
+prologue's DOM, timers, animations and temporary listeners are removed after
+completion or Skip.
 
-Architecture and terrain follow `assets/maps/emberfell-realm-v2.webp` and the
-actual building atlas: the timber windmill, school and ivy tavern, Forgefalls
-bridge, Forgewick market and temple, sandstone houses, blossom harbor, swamp
-boardwalks, snow cabins and volcanic castle. The monster paintings use actual
-atlas silhouettes for Vinemaws, Longroots, Duneblades, Cistern Fangs, gnolls and
-Watchers. Extracted building, monster and portrait reference sheets are retained
-in `assets/prologue/references/`. These historical vistas are recognizable
-interpretations, not exact map geometry.
+## Artwork and exclusions
 
-## Canon used
+The illustrations interpret the current game atlas and realm map. They preserve
+recognizable town buildings, terrain and creature designs. Millwood's cows and
+hens have been separated and corrected, and the hunted dragon now has a complete
+body. Additional glimpses include the mine shrooms, all four golem designs,
+three variants of each road-monster family, tomb guardians, the Spider Queen,
+Frosthorn, Ice Moth and the fiends.
 
-- `js/dragon-dialogue.js`, Wingfall/bond/history topics: seven riders, Halvard's
-  betrayal fifty years ago, freely chosen bonds, suppressed historical accounts.
-- `js/generated/game-part-2.js` and `js/game.js`, Maddock's history and hatching:
-  Halvard seized the throne; monsters spread onto the roads; he prevents new
-  riders. His betrayal is named Wingfall.
-- `js/dragon-chapels.js`: Halvard bans public dragon worship.
-- `js/millwood-shroom-dialogue.js`: no dragons seen openly, dangerous roads,
-  surviving memories of the riders.
-- The requested expansion establishes plentiful dragons living peacefully
-  alongside people, Halvard's ambition and his organized dragon hunts.
+Ghosts, wraiths and the Lich family are deliberately excluded at the user's
+request. The Spider Queen keeps her crown, silver hair and spider body but uses
+grounded adult facial features and clothing rather than anime proportions.
+`assets/prologue/monster-coverage.json` records included designs and exclusions.
 
-The pictures interpret these events without naming the other riders, asserting
-their individual fates, or revealing Corin's egg encounter. King Halvard's
-throne illustration uses his existing portrait as its character reference.
+Source references include the existing realm map, building atlas, live enemy
+sprites, golem palette derivation and boss sprite sheets. Reference sheets are
+under `assets/prologue/references/`. Generation and correction prompts are saved
+in `generation-prompts.json`, `expansion-prompts.json` and `roster-prompts.json`.
+These historical illustrations are recognizable interpretations, not new map
+geometry. Original generated output files remain unchanged.
 
-`index.html` loads the maintained split runtime. The BOOT integration is in
-`js/generated/game-part-3.js`; the unused monolithic `js/game.js` is not served.
+Images load only when New Game selects the intro. The player retains the current
+and next illustration, not the entire decoded gallery. Missing or slow images
+fall back to the dark stage while captions and Skip remain usable.
+
+## Story sources
+
+- `js/dragon-dialogue.js`: seven Riders, Halvard's betrayal fifty years ago,
+  freely chosen bonds and suppressed histories.
+- `js/generated/game-part-2.js`: Halvard's throne, dangerous roads, prevention of
+  new Riders, the bestiary and its regional creatures.
+- `js/dragon-chapels.js`: the ban on public dragon worship.
+- `js/millwood-shroom-dialogue.js`: no dragons seen openly, surviving memories.
+- The user's expansion: plentiful dragons living peacefully with people,
+  Halvard's ambition and organized dragon hunts.
+
+The intro does not name the other Riders, specify individual deaths, reveal
+Corin's egg encounter, or show later combat outcomes. `index.html` loads the
+maintained split runtime; BOOT integration is in `js/generated/game-part-3.js`.

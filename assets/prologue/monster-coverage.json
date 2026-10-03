@@ -1,0 +1,313 @@
+{
+  "source": "js/generated/game-part-2.js:BESTIARY",
+  "sourceCommit": "69e5c60fae5e477cfa04832996a9641ab56b2cf5",
+  "entries": [
+    {
+      "key": "icemoth",
+      "name": "Ice Moth",
+      "region": "the large clearing midway along the northern end of the winding snow trail",
+      "images": [
+        "25-monsters-winter-bosses.webp"
+      ]
+    },
+    {
+      "key": "frosthorn",
+      "name": "Frosthorn",
+      "region": "the clearing at the end of the winding northern snow trail",
+      "images": [
+        "25-monsters-winter-bosses.webp"
+      ]
+    },
+    {
+      "key": "mummy",
+      "name": "Pyramid Mummy",
+      "region": "the Sunken Pyramid",
+      "images": [
+        "24-monsters-pyramid.webp"
+      ]
+    },
+    {
+      "key": "spiderqueen",
+      "name": "Spider Queen",
+      "region": "the deepest chamber of the Sunken Pyramid",
+      "images": [
+        "24-monsters-pyramid.webp"
+      ]
+    },
+    {
+      "key": "devil1",
+      "name": "Cinder Bailiff",
+      "region": "the demon's Cinderhold trials",
+      "images": [
+        "26-monsters-ember.webp"
+      ]
+    },
+    {
+      "key": "devil3",
+      "name": "Crownless Fiend",
+      "region": "the demon's Cinderhold trials",
+      "images": [
+        "26-monsters-ember.webp"
+      ]
+    },
+    {
+      "key": "skeleton1",
+      "name": "Oathbone Swordsman",
+      "region": "the demon's Cinderhold trials",
+      "images": [
+        "22-monsters-granite.webp"
+      ]
+    },
+    {
+      "key": "skeleton3",
+      "name": "Sepulchral Marshal",
+      "region": "the demon's Cinderhold trials",
+      "images": [
+        "22-monsters-granite.webp"
+      ]
+    },
+    {
+      "key": "mage1",
+      "name": "Ashscript Adept",
+      "region": "the demon's Cinderhold trials",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "mage2",
+      "name": "Hollow Cantor",
+      "region": "the demon's Cinderhold trials",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "ghost3",
+      "name": "Rimecrown Spirit",
+      "region": "Hollybeck Temple and the last graveyard wave",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "shroomBrown",
+      "name": "Timbercap Shroom",
+      "region": "the first Shroom Pass arenas",
+      "images": [
+        "21-monsters-mine.webp"
+      ]
+    },
+    {
+      "key": "reptile",
+      "name": "Duneblade",
+      "region": "the first desert crossings",
+      "images": [
+        "18-monsters-desert.webp"
+      ]
+    },
+    {
+      "key": "reptile2",
+      "name": "Cistern Fang",
+      "region": "the deeper desert roads",
+      "images": [
+        "18-monsters-desert.webp"
+      ]
+    },
+    {
+      "key": "reptile3",
+      "name": "Sunscar Sentinel",
+      "region": "the far desert crossings",
+      "images": [
+        "18-monsters-desert.webp"
+      ]
+    },
+    {
+      "key": "boneguard",
+      "name": "Boneguard",
+      "region": "the final battle at Cinderhold",
+      "images": [
+        "22-monsters-granite.webp"
+      ]
+    },
+    {
+      "key": "plant1",
+      "name": "Hedgebite Vinemaw",
+      "region": "the first blossom roads",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "plant2",
+      "name": "Pilgrim Vinemaw",
+      "region": "the middle blossom roads",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "plant3",
+      "name": "Widowbloom Vinemaw",
+      "region": "the far blossom roads",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "gnoll1",
+      "name": "Tollfang Gnoll",
+      "region": "the first snow arenas and roads",
+      "images": [
+        "19-monsters-winter.webp"
+      ]
+    },
+    {
+      "key": "gnoll2",
+      "name": "Rimepick Gnoll",
+      "region": "the deeper snow roads and mine galleries",
+      "images": [
+        "19-monsters-winter.webp"
+      ]
+    },
+    {
+      "key": "gnoll3",
+      "name": "Cairnkeeper Gnoll",
+      "region": "the last snow arenas",
+      "images": [
+        "19-monsters-winter.webp"
+      ]
+    },
+    {
+      "key": "eyeRed",
+      "name": "Cinder Watcher",
+      "region": "the first volcanic roads and Cinderhold approach",
+      "images": [
+        "20-monsters-ashcrag.webp"
+      ]
+    },
+    {
+      "key": "eye2",
+      "name": "Kiln Watcher",
+      "region": "the middle volcanic roads",
+      "images": [
+        "20-monsters-ashcrag.webp"
+      ]
+    },
+    {
+      "key": "eyePurple",
+      "name": "Vesper Watcher",
+      "region": "the far volcanic roads and Cinderhold approach",
+      "images": [
+        "20-monsters-ashcrag.webp"
+      ]
+    },
+    {
+      "key": "ent1",
+      "name": "Orchard Longroot",
+      "region": "the first wooded roads beyond Coralmere",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "ent2",
+      "name": "Boundary Longroot",
+      "region": "the middle wooded roads beyond Coralmere",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "ent",
+      "name": "Oathroot Longroot",
+      "region": "the far wooded roads beyond Coralmere",
+      "images": [
+        "17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "shroomRed",
+      "name": "Lanterncap Shroom",
+      "region": "the upper and middle mine galleries",
+      "images": [
+        "21-monsters-mine.webp"
+      ]
+    },
+    {
+      "key": "shroomPurple",
+      "name": "Deepveil Shroom",
+      "region": "the deepest mine galleries",
+      "images": [
+        "21-monsters-mine.webp"
+      ]
+    },
+    {
+      "key": "ghost",
+      "name": "Gravewake Spirit",
+      "region": "Hollybeck graveyard and the temple undercrofts",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "wraith",
+      "name": "Bound Wraith",
+      "region": "the summons of the Book of the Dead",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "golem1",
+      "name": "Stone Golem",
+      "region": "the desert temple depths and the mine",
+      "images": [
+        "21-monsters-mine.webp"
+      ]
+    },
+    {
+      "key": "golem4",
+      "name": "Granite Golem",
+      "region": "the Forgewick temple depths",
+      "images": [
+        "22-monsters-granite.webp"
+      ]
+    },
+    {
+      "key": "golem2",
+      "name": "Crystal Golem",
+      "region": "the Hollybeck temple depths",
+      "images": [
+        "23-monsters-crystal.webp"
+      ]
+    },
+    {
+      "key": "golem3",
+      "name": "Ember Golem",
+      "region": "the final lava-route arena near Cinderhold",
+      "images": [
+        "26-monsters-ember.webp"
+      ]
+    },
+    {
+      "key": "lich",
+      "name": "Lich",
+      "region": "the final battle at Cinderhold",
+      "images": [],
+      "omitted": "Ghosts and the Lich family excluded from the opening at the user’s request."
+    },
+    {
+      "key": "devil",
+      "name": "Ashfiend",
+      "region": "the passage beneath Ashcrag",
+      "images": [
+        "26-monsters-ember.webp"
+      ]
+    }
+  ],
+  "additionalFigures": {
+    "24-monsters-pyramid.webp": [
+      "desertarcher1",
+      "desertarcher2",
+      "desertlancer1",
+      "desertlancer2"
+    ]
+  },
+  "note": "Illustrated game creatures, with ghosts/wraiths and the Lich family omitted at the user’s request. Monster scenes are short glimpses, not a full bestiary tour."
+}

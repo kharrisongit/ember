@@ -1,0 +1,132 @@
+{
+  "tool": "Built-in image_gen",
+  "date": "2026-10-03",
+  "sourceCommit": "69e5c60fae5e477cfa04832996a9641ab56b2cf5",
+  "anatomyEdits": [
+    {
+      "key": "06-peace-millwood",
+      "path": "assets/prologue/06-peace-millwood.webp",
+      "prompt": "Use case: precise-object-edit. Edit target: this full wide Millwood panorama for the opening cinematic of The Last Dragonrider. Correct ONLY the farm animals. Preserve the wide 2:1 composition, all buildings, windmill, wheat fields, forest, warm sunlight, people, dragons, river and painterly finish. The current cows and chickens have merged silhouettes that resemble two-headed animals. Remove and repaint ALL cows and chickens throughout the image, including small ambiguous animal shapes in the wheat. Use only THREE clearly separated brown-and-white cows inside the foreground pasture: each has ONE head at one end of its elongated body, one neck, a single torso, four properly joined legs, two ears and a single tail at the opposite end. Give each cow ample empty grass around its outline; no heads emerging from hindquarters, no overlapping bodies or joined cows. One faces left, one faces camera at a gentle three-quarter angle, one grazes right. Paint only THREE chickens on the foreground path, spaced well apart: one brown hen, one white hen, one reddish hen. Every chicken has one head, one beak, one complete body, two legs and a tail at the opposite end. No chicken behind or overlapping another chicken, no second heads. Keep anatomy simple, readable and natural. No additional animals. Retain the illustration's original detail, dimensions and scenery. No text, UI or frame."
+    },
+    {
+      "key": "16-dragon-hunts",
+      "path": "assets/prologue/16-dragon-hunts.webp",
+      "prompt": "Use case: precise-object-edit. Edit target: the entire wide dragon-hunt cinematic illustration. Correct the malformed red adult dragon on the right and reposition its little hatchling enough to keep their silhouettes separate. Preserve King Halvard and every hunter on the left, their faces/armor/weapons, the sandstone town, cacti, desert landscape, golden lighting, wide 2:1 framing and painted style. Repaint the adult as a COMPLETE anatomically coherent large quadrupedal red dragon, slightly smaller so its entire body fits within the right half: one head connected by one neck to a long substantial ribcage and abdomen; a distinct shoulder/chest at the front and hips at the rear; FOUR clearly visible legs (two forelegs beneath the chest and two hind legs beneath the hips) properly attached to the torso, four clawed feet planted on the ground; ONE tapering tail continuing from the spine at the rear; TWO separate leathery wings attached symmetrically to the upper back. Show the adult in a clear side/three-quarter view facing right, standing protectively beside its hatchling. Do not let wings, rocks, dust or the hatchling hide the adult's ribcage, belly, legs or feet. The wings should lift above the body so the body reads unmistakably from shoulders to hips. Keep one visible gap between adult and hatchling; the hatchling also has a complete small body, one head, four legs and two small wings. No fused limbs, missing torso, floating wings, doubled heads, extra tails, humanlike arms or cropped primary dragon. No text, UI or frame."
+    }
+  ],
+  "localizedHenFollowup": "Use case: precise-object-edit. The white chicken in the lower-left foreground of this panorama STILL has a head at both ends. Make a tiny, localized correction ONLY to that white chicken: keep its LEFT head, left-pointing beak, red comb, white chest, round body and two legs. REMOVE the entire right-hand extra head, including its right-pointing beak, red comb and red wattle. Replace that right-hand extra head with a simple triangular fan of WHITE TAIL FEATHERS pointing up-right. The tail has NO face, eye, beak, neck, red comb, red wattle or head-like shape. This must be an ordinary single-headed white hen facing left. Keep the two brown hens, the three cows and literally every other part of the painting unchanged. Preserve full panorama dimensions; no crop, no text, no new elements.",
+  "monsterVariantEdits": [
+    {
+      "key": "17-monsters-blossom",
+      "ref": "roster-blossom",
+      "prompt": "Use case: precise-object-edit. Input 1 is the panorama edit target; Input 2 is the actual game sprite reference sheet, for creature design only; never copy its sheet layout. Keep this blossom-road panorama, Coralmere town, brown houses, lighthouse, ruined wagon, path and pink flowering trees. Change ONLY the monsters to include all SIX supplied sprite designs, each once and with a separate readable silhouette. Three carnivorous plants: pl1 a drooping orange/red bell-shaped maw with green leaves; pl2 a blue-and-gold drooping bell maw; pl3 an UPRIGHT purple round toothy flower face, pink forehead and burgundy petals. Three walking trees: ent1 bare heavy brown trunk, red eyes and blunt broken boughs; ent2 thinner brown trunk, blue eyes and sparse lime-green shoots; ent3 large dark trunk, yellow eyes and a dense leafy GREEN crown. Keep their branch arms, roots as feet and single faces true to the reference. Arrange them across the path without fused bodies; full figures above lower caption margin. Match the original painterly cinematic style. No labels, letters, chart, panels or UI.",
+      "refs": [
+        "assets/prologue/17-monsters-blossom.webp",
+        "assets/prologue/references/roster-blossom.webp"
+      ]
+    },
+    {
+      "key": "18-monsters-desert",
+      "ref": "roster-desert",
+      "prompt": "Use case: precise-object-edit. Input 1 is the panorama edit target; Input 2 is the actual game sprite reference sheet, for creature design only; never copy its sheet layout. Keep this desert-road panorama, Sandspire sandstone town, oasis separate in distance, cacti and abandoned caravan. Correct only the lizard warriors so all THREE reference variants are clearly present, with complete biped anatomy and separated silhouettes. rp1 sandy orange Duneblade with blue eyes and cream belly; rp2 dark teal Cistern Fang with red eyes and bronze shoulder guards; rp3 brick-red Sunscar Sentinel, green eyes, blue-and-white HORNED helmet and blue shoulder armor, curved sword. Make the missing red horned-helmet warrior a prominent figure in the right middle-ground; preserve an orange and a teal warrior in the foreground. Exactly one head and torso, two arms and legs, one tail per warrior; distinct swords held in hands. Preserve painterly style and wide framing. No text, labels, UI or collage.",
+      "refs": [
+        "assets/prologue/18-monsters-desert.webp",
+        "assets/prologue/references/roster-desert.webp"
+      ]
+    },
+    {
+      "key": "19-monsters-winter",
+      "ref": "roster-gnolls",
+      "prompt": "Use case: precise-object-edit. Input 1 is the panorama edit target; Input 2 is the actual game sprite reference sheet, for creature design only; never copy its sheet layout. Keep this snowy-road panorama, abandoned shelter, spruce trees, Hollybeck village and hilltop temple. Repaint only the gnolls to clearly include each of the THREE supplied designs: gn1 a sandy-brown stocky hyena-like Tollfang with large upright ears and green eyes, simple leather; gn2 a darker brown Rimepick with yellow eyes and pale-gold shoulder plate, carrying a stolen pick; gn3 a WHITE-and-dark spotted Cairnkeeper, red eyes, blue steel shoulder armor and flowing red cape, weapon in hand. Make the white/red/blue Cairnkeeper unmistakable in the right foreground. One complete head, torso, two arms, two legs and short tail per creature; generous space between silhouettes. Match the reference anatomy rather than wolves on four legs. Preserve cinematic painting detail and wide framing. No labels, letters, UI or collage.",
+      "refs": [
+        "assets/prologue/19-monsters-winter.webp",
+        "assets/prologue/references/roster-gnolls.webp"
+      ]
+    },
+    {
+      "key": "20-monsters-ashcrag",
+      "ref": "roster-watchers",
+      "prompt": "Use case: precise-object-edit. Input 1 is the panorama edit target; Input 2 is the actual game sprite reference sheet, for creature design only; never copy its sheet layout. Keep this entire volcanic-road scene, cave left, black castle right, lava, bridges and dramatic lighting. Change ONLY the smaller duplicate red watcher in the middle-right into the missing Kiln Watcher bh2 from the sprite reference: orange spherical body, ONE large green central eye, green eyes on its thin radiating stalks and a little toothy mouth below. Preserve the large pale stone-colored/red-eyed bh1 at left, and dark indigo/violet-eyed bh3 in the center; make those designs match the sprite reference. Three floating Watchers with three unmistakably different body/eye color schemes, clean separate silhouettes, no humanoid arms or legs. Keep full scene style and framing. No text, labels or UI.",
+      "refs": [
+        "assets/prologue/20-monsters-ashcrag.webp",
+        "assets/prologue/references/roster-watchers.webp"
+      ]
+    }
+  ],
+  "monsterAdditions": [
+    {
+      "key": "21-monsters-mine",
+      "ref": "mine",
+      "style": "17-monsters-blossom",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show the abandoned Forgewick mine entrance and its timber-propped tunnels beneath oak-covered foothills. Rusting cart rails lead from daylight at left into the dark gallery at right; discarded miner lamps and an empty ore cart evoke vanished workers. Include four exact creatures: ms1 Timbercap, a brown mushroom cap above a pale skull-like face with red eyes and rootlike legs; ms2 Lanterncap, a red mushroom cap with large white spots, pale face and magenta eyes; ms3 Deepveil, broad violet cap with blue speckles, blue eyes, pale rootlike body. They are monsters shaped like the sprites, not friendly mushroom villagers. Last and LARGEST at the mine mouth: gm1 Stone Golem, a squat massive BROWN stone humanoid assembled from rounded boulders, small inset head, glowing amber eyes, broad shoulders, huge fists, short thick legs and two broad feet. Its torso must be complete and much bulkier than its head. All four clearly distinct. Earthy sunlight gives way to violet cave reflections.",
+      "refs": [
+        "assets/prologue/references/roster-mine.webp",
+        "assets/prologue/17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "22-monsters-granite",
+      "ref": "granite",
+      "style": "17-monsters-blossom",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show a long abandoned gray-stone undercroft beneath Forgewick's rider temple: mossy columns, worn stone floor, sealed doorway and old dragon relief carvings. One enormous gm4 GRANITE GOLEM dominates the left-center: the EXACT stout boulder-body design from the reference, entirely cool GRAY stone, small inset head, broad rounded shoulders, massive fists, short stocky legs, one full torso. On the right, two skeletal sentries stand separately: bs1 Oathbone Swordsman has plain ivory bones and a dark steel sword; bs3 Sepulchral Marshal has a gold-and-red horned helmet, dark armor with red cloth, an ivory skull and pale blue blade. A small translucent ice-blue gh1 Gravewake spirit with red eyes and one tapering mist tail drifts farther behind a pillar. All are full readable figures, no skull piles or gore. Golden light from a cracked stairwell meets cool blue underground haze. One continuous temple hall, no tableau grid.",
+      "refs": [
+        "assets/prologue/references/roster-granite.webp",
+        "assets/prologue/17-monsters-blossom.webp"
+      ]
+    },
+    {
+      "key": "23-monsters-crystal",
+      "ref": "crystal",
+      "style": "19-monsters-winter",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show the icy undercroft of Hollybeck Temple. Snow is blown through a broken arched entrance at far left; cold stone pillars and violet crystal seams extend into the hall to the right. Main subject gm2 CRYSTAL GOLEM: a complete towering humanoid of IVORY/WHITE stone, thick upper body, huge fists and short broad legs, with unmistakable large jagged VIOLET crystals projecting from crown, shoulders and forearms; skull-like stone face and purple glow. Three distinct spirits in separate parts of the hall: gh1 pale translucent BLUE spirit with RED eyes and tapering mist tail; gh2 dark-blue spirit in a BLACK HOOD with ORANGE eyes, hovering within a faint binding circle, not attacking; gh3 Rimecrown spirit with BLACK face, GREEN eyes, red hooded robe and ice-blue thorny crown and shoulders. Preserve their simple spectral silhouettes, no human legs. The golem is much larger than the spirits and fully visible. Cold moonlight and violet reflections, melancholy rather than gore.",
+      "refs": [
+        "assets/prologue/references/roster-crystal.webp",
+        "assets/prologue/19-monsters-winter.webp"
+      ]
+    },
+    {
+      "key": "24-monsters-pyramid",
+      "ref": "pyramid",
+      "style": "18-monsters-desert",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show a vast shadowed burial chamber beneath the Sunken Pyramid, with warm sandstone blocks, sandy floors, tapering pillars, old sarcophagi and thick webs framing a deeper doorway. Pan across SIX distinct figures: at left a Pyramid Mummy in tattered tan wrappings with one visible red eye; beside it a living desert tomb archer in a cream headcloth with tan brow band, brown skin, white/light clothes and a wooden bow; a second archer wears dark charcoal headcloth with a red band, dark clothing and a bow. Two separate guards have the corresponding cream/light and charcoal/red outfits but hold long spears/lances, not bows. At the far right the SPIDER QUEEN is the unmistakable main creature: pale adult queen's face, long SILVER hair, small GOLD CROWN with ruby, deep burgundy bodice fully covering her torso, joined cleanly to a massive dark-purple spider body with red markings, rounded abdomen and EIGHT articulated spider legs, no human lower legs. Match the approved sprite; she is not an ordinary giant spider. Keep every head, limb and weapon distinct, figures large enough to read, no fused groups. Cinematic lamplight and dark purple recesses. No gore.",
+      "refs": [
+        "assets/prologue/references/roster-pyramid.webp",
+        "assets/prologue/18-monsters-desert.webp"
+      ]
+    },
+    {
+      "key": "25-monsters-winter-bosses",
+      "ref": "winter-bosses",
+      "style": "19-monsters-winter",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show the winding remote snow trail beyond Hollybeck passing two separated forest clearings, linked naturally by the path and a ridge of dense spruce trees. At left in its own clearing: FROSTHORN, a huge broad-chested bipedal white-furred beast, dark charcoal face, two enormous curved RAM HORNS, RED eyes, long muscular arms, clawed dark hands, two sturdy legs and clawed feet. Match the actual sprite; NOT a deer, wolf, four-legged ram, or dragon. At right in a separate frost-lit glade: the ICE MOTH, hovering with a plump WHITE furry central body, pointed dark-blue caplike head crest, feathery antennae and FOUR broad luminous blue/cyan wings with darker blue edges; small purple face detail, six small insect legs tucked underneath. Each creature is fully visible and complete, clearly separated by trees and distance; they are not fighting each other. Ice crystals, soft snowfall and blue moonlit snow. Keep the white-furred Frosthorn larger and grounded, moth airborne in the other glade.",
+      "refs": [
+        "assets/prologue/references/roster-winter-bosses.webp",
+        "assets/prologue/19-monsters-winter.webp"
+      ]
+    },
+    {
+      "key": "26-monsters-ember",
+      "ref": "ember",
+      "style": "20-monsters-ashcrag",
+      "prompt": "Use case: illustration-story. New cinematic painting for The Last Dragonrider opening. Wide 2:1 landscape, approximately 2048x1024. Input 1 is a REFERENCE showing the actual game monster designs; reproduce their anatomy, colors and distinctive equipment as richly painted fantasy creatures, not pixel art. Input 2 is a STYLE reference only: match its rich hand-painted detail, realistic materials, lighting and cinematic finish, but paint the new scene described here. One coherent panoramic environment, no collage, panels, labels, text, borders or UI. The camera pans left to right; place each required creature visibly across the width, with full bodies and ample space between silhouettes. Main creatures above the bottom caption margin. Each creature has a complete coherent body with correctly attached limbs, never fused with another subject. No Corin, Aurelius, combat results or dead heroes. Show the black-rock passage beneath Ashcrag opening toward a lava-lit ruined hall, red magma channels around a broad safe stone causeway. Four distinct monsters: gm3 EMBER GOLEM prominently at left, a massive stout humanoid in dark BLUE-GRAY stone armor, amber glowing eyes and CHEST CORE, fiery orange-red rim rising behind its head/shoulders and large ICE-BLUE blade-shaped mineral spikes on both forearms/shoulders. This must match the unusual sprite palette, not a generic all-red lava elemental. Complete large torso, two enormous arms/fists and two short broad legs. To the right, separated by pillars and receding in depth, three clearly different horned fiends: dv1 Cinder Bailiff has LAVENDER skin, very tall dark horns and a bronze/gold trident; dv2 Ashfiend has RED skin, black horns/shoulder armor and a BLUE trident; dv3 Crownless Fiend has dark BLUE skin, broad gold shoulder guards, curved horns and an ORANGE trident. Each devil has one head, full torso, two arms, two legs, coherent tail if visible; tridents held in hands, not fused to arms. Fiends are spaced apart, full figures. Dramatic warm lava against cold mineral blue highlights.",
+      "refs": [
+        "assets/prologue/references/roster-ember.webp",
+        "assets/prologue/20-monsters-ashcrag.webp"
+      ]
+    }
+  ],
+  "finalCorrections": [
+    {
+      "key": "23-monsters-crystal",
+      "source": "exec-3ad01279-e857-4167-85ed-688a3db57edb.png",
+      "prompt": "Use case: precise-object-edit. Remove ALL THREE floating spirits from the center and right: the light-blue red-eyed ghost, the black-hooded orange-eyed ghost, and the red-robed green-eyed crowned ghost. Reconstruct the empty stone stairs, icy floor, walls and existing crystals behind them. The ONLY creature in the entire image must be the large white-and-violet CRYSTAL GOLEM on the left. Preserve that golem exactly, with the same complete body, pose, crystals and skull-like stone face. No ghosts, wraiths, spirits, liches, skeletal people or floating faces. Keep the cold temple environment, wide composition, beautiful blue and violet lighting, snow and painterly detail unchanged."
+    },
+    {
+      "key": "24-monsters-pyramid",
+      "source": "exec-210f1a3b-96a7-4156-b73a-3f3a4e20203c.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY the Spider Queen at the far right to remove the anime appearance. Keep the mummy, four armed tomb guards, tomb architecture, webs, warm lighting and wide composition unchanged. Preserve the Spider Queen's huge dark-purple eight-legged spider body with red markings, silver hair, ruby-set gold crown and burgundy/gold clothing. Repaint her human upper half as a disturbing grounded dark-fantasy creature: a mature adult woman's long angular face with realistic small eyes, deep-set brows, a normal substantial nose, defined cheekbones, thin stern lips and slightly weathered pale skin. Natural adult head-to-torso proportions; smaller eyes and irises, no giant glossy red anime eyes, no tiny doll nose, no cute childlike face, no porcelain doll finish, no manga lines, no exaggerated hourglass or anime bust. Give her a dignified high-necked burgundy bodice with worn embroidered gold trim, natural shoulders and realistically proportioned arms/hands joining cleanly to the spider cephalothorax. Long silver hair is coarse and naturally straggled, not glossy anime locks. Menacing, regal and inhumanly patient; not glamorous or pin-up. Keep rich painterly fantasy realism matching the gritty stone, mummy and guards, not a pasted photo. No gore, no text, no additional figures."
+    }
+  ],
+  "graniteFinalPrompt": "Use case: precise-object-edit. Remove the blue floating ghost at far right completely and restore the empty temple stairs behind it. This scene must have NO ghosts, wraiths, spirits or liches. Keep the gray Granite Golem and both existing skeletal SWORD warriors unchanged. Add one additional complete skeletal swordsman on the right-hand stairs where there is free space, clearly separated from the other figures: the game's Boneguard is an ivory skeleton with BLUE shoulder armor, a WHITE-and-BLUE cloth brow band bearing one GREEN forehead jewel, and a worn BRONZE SWORD held in one hand. No crown, robes, staff or magic—he is an armored sword guard, not a lich. One skull, one ribcage, two arms, two legs, correctly attached and full body visible. Match the painting's realistic bones, stone textures and cinematic light. Retain the exact wide framing and temple, no other changes.",
+  "revisionNote": "Final corrections supersede initial prompts: all ghosts/wraiths and the Lich family are excluded, and Spider Queen uses grounded adult proportions. Initial source artwork is identified by the source commit; exec-* inputs are intermediate generated paintings retained in the conversation."
+}

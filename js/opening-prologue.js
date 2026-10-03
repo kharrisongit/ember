@@ -5,7 +5,7 @@
   if (!Array.isArray(chapters) || !chapters.length) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261003-2';
+  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261003-roster3';
   let active = false, playing = null;
 
   function loadPicture(chapter, signal) {
@@ -45,6 +45,9 @@
     root.setAttribute('aria-describedby', 'prologueInstructions');
     root.innerHTML = `
       <div class="prologue-art"><div class="prologue-image"></div></div>
+      <div class="prologue-atmosphere" aria-hidden="true"><i></i><i></i></div>
+      <div class="prologue-impact" aria-hidden="true"></div>
+      <div class="prologue-curtain" aria-hidden="true"></div>
       <div class="prologue-shade" aria-hidden="true"></div>
       <article class="prologue-copy scrolls">
         <p class="prologue-era"></p><h2 id="prologueTitle"></h2>
@@ -65,6 +68,9 @@
       <p class="prologue-sr" id="prologueInstructions">Tap the picture to briefly show controls. A or Right Arrow advances. P pauses. Escape skips. Tab reveals keyboard controls.</p>`;
     const art = root.querySelector('.prologue-art');
     const pictureHost = root.querySelector('.prologue-image');
+    const smoke = [...root.querySelectorAll('.prologue-atmosphere i')];
+    const impact = root.querySelector('.prologue-impact');
+    const curtain = root.querySelector('.prologue-curtain');
     const copy = root.querySelector('.prologue-copy');
     const era = root.querySelector('.prologue-era');
     const title = root.querySelector('h2');
@@ -78,7 +84,9 @@
     const pause = root.querySelector('#prologuePause');
     let index = -1, beat = -1, ended = false, changing = false, paused = false;
     let elapsed = 0, lastTick = performance.now(), timer = 0, transition = 0, controlsTimer = 0;
-    let keyboardControls = false, panAnimation = null, captionAnimation = null, resizeObserver;
+    let keyboardControls = false, panAnimation = null, captionAnimation = null, wipeAnimation = null, resizeObserver;
+    let sceneEffects = [];
+    const cutTiming = { dissolve: 180, cut: 0, dread: 130, veil: 240, impact: 80, black: 420 };
     const pictures = new Map();
     let resolveDone;
     const done = new Promise(resolve => { resolveDone = resolve; });
@@ -105,6 +113,7 @@
       root.dataset.paused = String(paused);
       lastTick = performance.now();
       if (panAnimation) moving() ? panAnimation.pause() : panAnimation.play();
+      for (const animation of sceneEffects) moving() ? animation.pause() : animation.play();
     }
     function hideControls() {
       if (keyboardControls || ended) return;
@@ -124,29 +133,45 @@
     function cancelAnimations() {
       panAnimation?.cancel(); captionAnimation?.cancel();
       panAnimation = captionAnimation = null;
+      sceneEffects.forEach(animation => animation.cancel()); sceneEffects = [];
     }
-    // Size the image to cover the entire viewport. A portrait phone travels
-    // through the wide scene instead of displaying a small letterboxed image.
-    // The only continuous visual work is this one compositor transform.
+    // Focal points are image coordinates, so a face stays framed on both phones
+    // and wide screens. Clamp every keyframe to cover; only transforms animate.
     function framePan() {
       const picture = pictureHost.querySelector('img');
       if (!picture || index < 0 || ended) return;
       panAnimation?.cancel(); panAnimation = null;
       const bounds = art.getBoundingClientRect();
-      const scale = Math.max(bounds.width / picture.naturalWidth, bounds.height / picture.naturalHeight) * 1.035;
+      const scale = Math.max(bounds.width / picture.naturalWidth, bounds.height / picture.naturalHeight);
       const width = picture.naturalWidth * scale, height = picture.naturalHeight * scale;
       picture.style.width = width + 'px'; picture.style.height = height + 'px';
-      const [from, to] = chapters[index].pan || [.35, .65];
-      const x = u => -(width - bounds.width) * u;
-      const y = -(height - bounds.height) * .36;
-      const transform = u => 'translate3d(' + x(u) + 'px,' + y + 'px,0)';
-      picture.style.transform = transform(reduced ? (from + to) / 2 : from);
+      const chapter = chapters[index], path = chapter.camera || [[.4,.4,1.04],[.6,.4,1.04]];
+      const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+      const transform = ([fx, fy, zoom]) => {
+        const z = Math.max(1.001, zoom);
+        const x = clamp(bounds.width * .5 - width * z * fx, bounds.width - width * z, 0);
+        const y = clamp(bounds.height * .38 - height * z * fy, bounds.height - height * z, 0);
+        return 'translate3d(' + x + 'px,' + y + 'px,0) scale(' + z + ')';
+      };
+      picture.style.transformOrigin = '0 0';
+      picture.style.transform = transform(reduced ? path[Math.floor(path.length / 2)] : path[0]);
       if (!reduced && picture.animate) {
-        panAnimation = picture.animate([{ transform: transform(from) }, { transform: transform(to) }],
-          { duration: chapters[index].duration, easing: 'linear', fill: 'forwards' });
+        panAnimation = picture.animate(path.map(point => ({ transform: transform(point) })),
+          { duration: chapter.duration, easing: chapter.ease || 'linear', fill: 'forwards' });
         panAnimation.currentTime = elapsed;
         if (moving()) panAnimation.pause();
       }
+    }
+    function atmosphere(chapter) {
+      if (reduced || chapter.mood !== 'war') return;
+      // Two small rasterized gradient layers, with no filters, particles or RAF.
+      smoke.forEach((layer, i) => sceneEffects.push(layer.animate([
+        { transform: 'translate3d(' + (i ? '9%' : '-9%') + ',6%,0) scale(1)', opacity: .12 },
+        { transform: 'translate3d(' + (i ? '-7%' : '8%') + ',-8%,0) scale(1.12)', opacity: .30 }
+      ], { duration: chapter.duration, easing: 'ease-in-out', fill: 'both' })));
+      if (chapter.transition === 'impact') sceneEffects.push(impact.animate([
+        { opacity: .13 }, { opacity: 0 }
+      ], { duration: 420, easing: 'ease-out', fill: 'both' }));
     }
     function showBeat(n) {
       if (n === beat || index < 0) return;
@@ -155,12 +180,12 @@
       narration.textContent = chapters[index].lines[n];
       if (!reduced && narration.animate) {
         captionAnimation = narration.animate([{ opacity: 0, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }],
-          { duration: 600, easing: 'ease-out', fill: 'both' });
+          { duration: chapters[index].mode ? 120 : 320, easing: 'ease-out', fill: 'both' });
       }
     }
     async function finish() {
       if (ended) return;
-      ended = true; ++transition; clearInterval(timer); clearTimeout(controlsTimer); cancelAnimations();
+      ended = true; ++transition; clearInterval(timer); clearTimeout(controlsTimer); cancelAnimations(); wipeAnimation?.cancel();
       root.classList.remove('is-visible');
       next.disabled = back.disabled = pause.disabled = skip.disabled = true;
       await wait(reduced ? 80 : 650);
@@ -172,11 +197,22 @@
       if (n < 0) return;
       changing = true; next.disabled = back.disabled = true;
       const token = ++transition;
-      syncPause(); root.classList.add('is-changing');
-      const [picture] = await Promise.all([prepare(n), wait(index < 0 ? 0 : reduced ? 50 : 500)]);
+      syncPause();
+      const chapter = chapters[n], kind = chapter.transition || 'dissolve';
+      const ms = reduced ? 50 : (cutTiming[kind] ?? 180);
+      root.dataset.transition = reduced ? 'dissolve' : kind;
+      root.style.setProperty('--scene-fade', ms + 'ms');
+      root.classList.add('is-changing');
+      wipeAnimation?.cancel(); wipeAnimation = null;
+      if (!reduced && kind === 'veil' && index >= 0) {
+        wipeAnimation = curtain.animate([{ transform: 'translateX(110%)' }, { transform: 'translateX(0)' }],
+          { duration: ms, easing: 'ease-in', fill: 'forwards' });
+      }
+      const [picture] = await Promise.all([prepare(n), wait(index < 0 ? 0 : ms)]);
       if (ended || token !== transition) return;
       cancelAnimations(); index = n; elapsed = 0; beat = -1;
-      const chapter = chapters[index];
+      root.dataset.mood = chapter.mood || 'peace';
+      root.dataset.mode = chapter.mode || 'story';
       pictureHost.replaceChildren();
       if (picture) { picture.alt = chapter.alt; pictureHost.appendChild(picture); }
       era.textContent = chapter.era; title.textContent = chapter.title;
@@ -184,8 +220,13 @@
       counter.textContent = (index + 1) + ' / ' + chapters.length;
       next.textContent = index === chapters.length - 1 ? 'Begin →' : 'Next →';
       progress.style.transform = 'scaleX(' + index / chapters.length + ')';
-      framePan(); showBeat(0);
+      framePan(); showBeat(0); atmosphere(chapter);
       root.classList.remove('is-changing');
+      if (wipeAnimation) {
+        wipeAnimation.cancel();
+        wipeAnimation = curtain.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-110%)' }],
+          { duration: ms + 100, easing: 'ease-out', fill: 'forwards' });
+      }
       changing = false; next.disabled = false; back.disabled = index === 0;
       syncPause();
       trimPictures(); void prepare(index + 1);
@@ -242,7 +283,7 @@
       }, 100);
       await done;
     } finally {
-      ended = true; ++transition; clearInterval(timer); clearTimeout(controlsTimer); cancelAnimations();
+      ended = true; ++transition; clearInterval(timer); clearTimeout(controlsTimer); cancelAnimations(); wipeAnimation?.cancel();
       for (const { controller } of pictures.values()) controller.abort();
       pictures.clear(); resizeObserver?.disconnect();
       window.removeEventListener('keydown', keydown, true);
