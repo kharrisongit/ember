@@ -38,11 +38,9 @@
 
 body.conversation-session #bagAsk.dragonTalk #say,#bagAsk.dragonTalk .conversationNpcEcho,#bagAsk.dragonTalk .conversationCorinEcho{scrollbar-color:#91ab91 #142c3a}
 
-/* Individual stars have staggered rhythms, so the sky twinkles organically. */
+/* Static stars preserve the celestial artwork without continuous animation. */
 #bagAsk.dragonTalk .conversationStars{display:block;position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-#bagAsk.dragonTalk .conversationStars i{position:absolute;left:var(--star-x);top:var(--star-y);width:var(--star-size);height:var(--star-size);border-radius:50%;background:#f6e9bd;box-shadow:0 0 5px #d1eee5aa;opacity:.6;animation:bondStarTwinkle calc(var(--star-duration) / var(--conversation-motion-rate,1)) ease-in-out infinite;animation-delay:calc(var(--star-delay) / var(--conversation-motion-rate,1))}
+#bagAsk.dragonTalk .conversationStars i{position:absolute;left:var(--star-x);top:var(--star-y);width:var(--star-size);height:var(--star-size);border-radius:50%;background:#f6e9bd;box-shadow:0 0 5px #d1eee5aa;opacity:.6;animation:none}
 #bagAsk.dragonTalk .conversationStars i:nth-child(3n){background:#bce0fa;box-shadow:0 0 7px #aedbecaa}
 #bagAsk.dragonTalk .conversationPlayer .conversationStars{transform:scaleX(-1)}
-#bagAsk.dragonTalk .conversationPlayer .conversationStars i{animation-direction:reverse}
-@keyframes bondStarTwinkle{0%,100%{opacity:.18;transform:scale(.75)}45%{opacity:1;transform:scale(1.2)}70%{opacity:.4;transform:scale(.9)}}
 @media(prefers-reduced-motion:reduce){#bagAsk.dragonTalk .conversationStars i{animation:none;opacity:.65;transform:none}}

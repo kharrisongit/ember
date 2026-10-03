@@ -5,9 +5,8 @@
 #titleRiderArt{filter:drop-shadow(0 0 2px #d8e5ba) drop-shadow(0 0 12px #a0d2c466)}
 #titleWords{color:#f5df9f;text-shadow:0 2px 0 #0a1d2c,0 0 20px #d9c38140;font-family:Georgia,serif}
 #titleStars{position:absolute;inset:16px;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(circle at 12% 28%,#d9eadb99 0 1px,transparent 1.7px),radial-gradient(circle at 81% 54%,#e7d49a99 0 1px,transparent 1.7px),radial-gradient(circle at 44% 88%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 72% 18%,#d9eadb88 0 1px,transparent 1.7px),radial-gradient(circle at 27% 64%,#d9eadb66 0 1px,transparent 1.7px)}
-#titleStars i{position:absolute;left:var(--x);top:var(--y);width:9px;height:9px;background:#f4e2af;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);opacity:.2;animation:titleStarTwinkle 5s ease-in-out infinite;animation-delay:var(--delay);transform:scale(.5)}
-#titleStars i:nth-child(even){width:6px;height:6px;background:#c8e9dd;animation-duration:7s}
-@keyframes titleStarTwinkle{0%,65%,100%{opacity:.18;transform:scale(.5)}78%{opacity:.9;transform:scale(1.15)}90%{opacity:.4;transform:scale(.75)}}
+#titleStars i{position:absolute;left:var(--x);top:var(--y);width:9px;height:9px;background:#f4e2af;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);opacity:.45;transform:scale(.75)}
+#titleStars i:nth-child(even){width:6px;height:6px;background:#c8e9dd}
 #bootBegin,#bootBtns button,#bootLoadRows button{color:#f2e8c6;background:linear-gradient(125deg,#2d515b,#183646);border:1px solid #a9ad83;box-shadow:inset 0 1px #d9e6c222,0 3px 8px #04142166;border-radius:6px;font-family:Georgia,serif}
 #bootBegin:hover,#bootBtns button:hover:not(:disabled),#bootLoadRows button:hover:not(:disabled){background:#41675f;border-color:#f0d799;color:#fff3d0}
 #bootBtns button.selected,#bootLoadRows button.selected{color:#fff3cb;background:linear-gradient(125deg,#4e756b,#2c5058);border-color:#e5cf92;box-shadow:inset 0 0 0 1px #e5cf9233,0 0 14px #b5d9b722}
@@ -29,3 +28,9 @@ body.boot-ready #bootAccountButtons button{color:#f9edc5;background:#284b56;bord
 body.boot-ready #bootAccountButtons button:hover{background:#41675f}
 body.boot-ready #bootCloudStatus{color:#c7d9cf}
 @media(prefers-reduced-motion:reduce){#titleStars i{animation:none;opacity:.6;transform:scale(.75)}}
+
+/* Release title-only effects once gameplay begins. */
+body.game-started #titleStars{display:none}
+body.game-started #titleRider{will-change:auto}
+body.game-started #boot::before{content:none}
+body.game-started #boot *{animation:none!important}
