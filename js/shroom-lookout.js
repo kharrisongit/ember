@@ -2,21 +2,29 @@
 function prepareShroomLookoutData(m,id){
   if(id!=='world')return;
   m.npcs ||= [];
-  if(m.npcs.some(n=>n.shroomLookout))return;
-  m.npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:536,y:1368,f:'d',kf:'d',t:0,stationary:true,
+  // Separate story placements keep both locations editable, without resetting
+  // an editor move each time the world loads. Only one can be present at once.
+  if(!m.npcs.some(n=>n.editKey==='npc:shroom-lookout'))m.npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:536,y:1368,f:'d',kf:'d',t:0,stationary:true,until:Q.FLED,
     shroomLookout:true,mainPathLookout:true,editKey:'npc:shroom-lookout',portraitAlias:'Pip',loc:'Shroom Pass',
     bio:'A mushroom villager keeping watch on the grassy verge beside the turn to Sporehollow.',
     d:['Mosslet: Yoo Hoo! Over here!']});
+  if(!m.npcs.some(n=>n.editKey==='npc:shroom-lookout-home'))m.npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:1464,y:1280,f:'d',kf:'d',t:0,stationary:true,when:Q.FLED,
+    shroomLookout:true,editKey:'npc:shroom-lookout-home',portraitAlias:'Pip',loc:'Sporehollow',
+    bio:'Back in Sporehollow after keeping watch beside the village path.',
+    d:['Mosslet: I came back once the woods went quiet. It is good to see you safe.']});
 }
 function prepareShroomLookout(){
   if(MAPID!=='world')return;
-  const existing=npcs.find(n=>n.shroomLookout);
-  if(existing){existing.stationary=true;existing.goto=null;}
+  for(const n of npcs)if(n.shroomLookout){n.stationary=true;n.goto=null;}
 }
 function talkShroomLookout(n){
   if(!n?.shroomLookout)return false;
   const heard=discussedTopics.has('Mosslet:crash');
-  const lines=heard?[
+  const lines=quest>=Q.FLED?[
+    'Mosslet: I came back once the woods went quiet. It is good to see you safe.',
+    'Corin: That was a dragon. It has flown away now.',
+    'Mosslet: A dragon! I am glad I waited here. The Shroom King will want to hear about this.'
+  ]:heard?[
     'Mosslet: The Shroom King is inside the village. Follow this path under the caps; he will hear you out.',
     'Corin: Thank you. I will go and speak with him.'
   ]:[

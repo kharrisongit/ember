@@ -4114,8 +4114,9 @@ function drawWorld(t, dt) {
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
-  // The smithy's plume is roof-height art, not a ground actor at its chimney y.
-  const groundLayer = o => (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? 1 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
+  // Floors, corpses, then loot: gold stays visible even on a large fallen foe.
+  // The smithy's plume remains at roof height.
+  const groundLayer = o => (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? .5 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.looseGold || o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.push({looseGold:true,x:0,y:0,sy:-1e9});
@@ -4654,7 +4655,7 @@ function drawWorld(t, dt) {
                       tone ? s[1] - tone.dy : s[1], s[2], s[3],
                       px, py, s[2], s[3]);
       }
-      if(o.shroomLookout&&!discussedTopics.has('Mosslet:crash')&&!scene&&!sayNpc)drawHettieCallout(o,s);
+      if(o.mainPathLookout&&quest<Q.FLED&&!discussedTopics.has('Mosslet:crash')&&!scene&&!sayNpc)drawHettieCallout(o,s);
       if (o.rod && SPR.fishing_rod && !hasDragon()) {
         const r = SPR.fishing_rod;
         const k = s[3] / 19;

@@ -33,12 +33,13 @@ async function prepareJourneyArt(onProgress=()=>{}){
 const caravanCamels=[[-6,42],[42,42],[6,70]];
 function journeyGateClosed(key){return MAPID==='world'&&!JOURNEY_GATES[key].open();}
 let swordReturnNoticeAt=-Infinity;
+const SWORD_RETURN_ROW=400;
 function swordReturnWall(x,y){
-  return MAPID==='world'&&!editing&&quest>=Q.ARMED&&quest<Q.DONE&&x<80*TS&&y>=404*TS&&y<405*TS;
+  return MAPID==='world'&&!editing&&quest>=Q.ARMED&&quest<Q.DONE&&x<80*TS&&y>=SWORD_RETURN_ROW*TS&&y<(SWORD_RETURN_ROW+1)*TS;
 }
 function swordReturnMoveAllowed(x,y){
   if(MAPID!=='world'||editing||quest<Q.ARMED||quest>=Q.DONE||y<=P.y)return true;
-  if(x>=80*TS||P.y>=405*TS||y<404*TS)return true;
+  if(x>=80*TS||P.y>=(SWORD_RETURN_ROW+1)*TS||y<SWORD_RETURN_ROW*TS)return true;
   const now=performance.now();
   if(now-swordReturnNoticeAt>2500){swordReturnNoticeAt=now;toast('there’s no going back now');}
   return false;

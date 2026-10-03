@@ -74,7 +74,7 @@ function thinShroomPass() {
   const area=features.find(f=>f.kind==='area'&&f.label==='Shroom Pass');
   if(!area)return;
   // A foreground mushroom must not cover the small lookout on the grass.
-  const lookouts=npcs.filter(n=>n.shroomLookout&&!n.editorDeleted);
+  const lookouts=npcs.filter(n=>n.shroomLookout&&npcHere(n));
   for(const o of objs){
     const name=NAMES[o.s]||'',sp=SPR[name];
     if(!sp||!SHROOM_SCENERY.test(name))continue;

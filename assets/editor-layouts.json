@@ -52600,6 +52600,35 @@
           }
         ]
       },
+      "object:7287": {
+        "kind": "object",
+        "key": "7287",
+        "sprite": 39,
+        "originX": 564,
+        "originY": 1320,
+        "x": 564,
+        "y": 1320,
+        "deleted": true
+      },
+      "object:7290": {
+        "kind": "object",
+        "key": "7290",
+        "sprite": 39,
+        "originX": 564,
+        "originY": 1320,
+        "x": 564,
+        "y": 1320,
+        "deleted": true
+      },
+      "actor:npc:shroom-lookout": {
+        "kind": "actor",
+        "key": "npc:shroom-lookout",
+        "identity": "Mosslet",
+        "originX": 536,
+        "originY": 1368,
+        "x": 536,
+        "y": 1238
+      },
       "actor:npc:The Shroom King": {
         "kind": "actor",
         "key": "npc:The Shroom King",

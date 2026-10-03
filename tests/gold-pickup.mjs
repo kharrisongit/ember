@@ -32,3 +32,19 @@ for(const layout of [
 }
 assert.equal(created,1,'reuses one overlay through resizes');
 console.log('PASS: coins start at the world pickup and finish at the current lower HUD in portrait, landscape, desktop and offset layouts; resize, pixel ratio and menu cleanup are covered.');
+
+// Exercise the actual world comparator, including its whole-loot batch at sy=-1e9.
+// Corpses must precede that batch regardless of their position or boss type.
+const sorting=game.slice(game.indexOf('  const mouth = (o) =>'),game.indexOf('\n  for (const o of draw) {',game.indexOf('  const mouth = (o) =>')));
+for(const y of [-200,0,200,8000]){
+ const corpseKeys=['foe','frosthorn','iceMoth','queenBoss'];
+ const floor={floor:true,y},live={foe:{st:'walk'},y:y-100},roof={villageCanopy:true,y};
+ const bodies=corpseKeys.map(key=>({[key]:{st:'dead'},y}));
+ const sortingContext=vm.createContext({draw:[roof,live,...bodies,floor],MD:{},NAMES:[],P:{},
+   underfoot:o=>!!o.floor,sortY:o=>o.sy??o.y,topOf:()=>0});
+ vm.runInContext(sorting,sortingContext);
+ const order=sortingContext.draw,goldIndex=order.findIndex(o=>o.looseGold);
+ assert(bodies.every(o=>order.indexOf(o)>order.indexOf(floor)&&order.indexOf(o)<goldIndex),'All corpses draw above floors and below gold');
+ assert(goldIndex<order.indexOf(live)&&order.indexOf(live)<order.indexOf(roof),'Gold remains beneath living actors and roofs');
+}
+console.log('PASS: loose gold renders above ordinary and boss corpses at every depth, while floors, actors and roofs retain their order.');
