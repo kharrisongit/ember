@@ -2,6 +2,30 @@
    Keep authored positions and stable object/scatter IDs for saves and editors. */
 const SHROOM_SCENERY = /^sh_(big|wall|med|sml|fat|stalk|glow)/;
 
+// A display palette for the pointed clusters, whose old green-to-coral tint
+// read as muddy brown. Keep the original pixels, alpha, frames and map IDs.
+function prepareShroomClusterPalette(){
+  const sprites=Object.entries(SPR).filter(([name])=>/^sh_(big|wall|med|sml)_green\d+$/.test(name)).map(([,s])=>s);
+  for(const page of new Set(atlasPages.values())){
+    if(page.shroomLavender)continue;
+    const crops=sprites.map(s=>[Math.max(s[0],page.x),Math.max(s[1],page.y),Math.min(s[0]+s[2]*s[4],page.x+page.w),Math.min(s[1]+s[3],page.y+page.h)]).filter(([l,t,r,b])=>r>l&&b>t);
+    if(!crops.length)continue;
+    const canvas=document.createElement('canvas');canvas.width=page.w;canvas.height=page.h;
+    const g=canvas.getContext('2d',{willReadFrequently:true});g.drawImage(page.img,0,0);
+    for(const [l,t,right,bottom]of crops){
+      const im=g.getImageData(l-page.x,t-page.y,right-l,bottom-t),p=im.data;
+      for(let i=0;i<p.length;i+=4){
+        const r=p[i],green=p[i+1],b=p[i+2];
+        if(!p[i+3]||r<45||r<=green*1.1||green<=b*1.04||r-b<=20)continue;
+        const value=Math.min(1,r/255*.9+.22),sat=Math.min(.58,(r-b)/r*.7),chroma=value*sat,low=value-chroma;
+        p[i]=Math.round((low+chroma*.38)*255);p[i+1]=Math.round(low*255);p[i+2]=Math.round(value*255);
+      }
+      g.putImageData(im,l-page.x,t-page.y);
+    }
+    page.img=canvas;page.shroomLavender=true;
+  }
+}
+
 // Explicit editor additions outrank automatic Shroom Pass border planting.
 // Keep their stable slots and current (possibly moved) coordinates, including
 // additions inside Build snapshots and unsent additions in the current session.

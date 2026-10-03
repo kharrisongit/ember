@@ -8,6 +8,14 @@
     if(!telepathy&&talkShroomLookout(actor))return true;
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
+    // Fen's gift used to bypass introductions and prepend a familiar greeting.
+    // Learn Corin's name through the actual first meeting before offering it.
+    if(!telepathy&&actor?.n==='Fen'&&!charm.twin&&!ThornwellDialogue.remembers(actor,'met')){
+      const introduction=ThornwellDialogue.introduction(actor);
+      playScene(introduction.lines,{who:actor.n,npcActor:actor,conversationGreeting:true,
+        after:()=>{introduction.done();prompt(actor,{talk,leave,greeted:true});}});
+      return true;
+    }
     // Unclaimed gifts are the greeting, before optional Talk or shopping.
     // Use the existing dialogue and completion callback so grants stay once-only.
     if(!telepathy&&(npcStoryGiftPending(actor)||

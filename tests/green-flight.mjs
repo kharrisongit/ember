@@ -36,8 +36,8 @@ for(const phase of ['in','depart']){
  for(let i=0;i<6;i++)frames.push(run(`greenPhase='${phase}';greenP=(${i}+.1)/GREEN.fps/(greenPhase==='in'?GREEN_IN:GREEN_DEPART);greenFlightFrame()`));
  assert.deepEqual(frames,[0,1,2,3,4,5],phase+' uses the full authored wingbeat');
 }
-for(const [time,frame]of [[0,0],[.13,1],[.31,2],[.61,3],[1.01,4]])assert.equal(run(`greenPhase='crash';greenP=${time}/GREEN_CRASH;greenDustFrame()`),frame);
-assert.equal(run("greenPhase='sit';greenP=.4;greenDustFrame()"),5,'Final wisps settle during rest');
+for(const [time,frame]of [[0,0],[.1,1],[.2,2],[.4,3],[.6,4],[.8,5],[1,-1]])assert.equal(run(`greenPhase='crash';greenP=${time}/GREEN_CRASH;greenDustFrame()`),frame);
+assert.equal(run("greenPhase='sit';greenP=0;greenDustFrame()"),-1,'Dust has cleared before the breathing rest');
 assert.equal(run("greenP=.91;greenDustFrame()"),-1,'Dust clears instead of looping');
 for(const phase of ['off','in','rise','depart','gone'])assert.equal(run(`greenPhase='${phase}';greenDustFrame()`),-1,'No impact dust in '+phase);
 run("greenPhase='crash';greenP=.4;drawGreenScene(200,300)");

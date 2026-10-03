@@ -79,12 +79,78 @@ const ThornwellDialogue = (()=>{
     if(n.n==='Calder'&&!fishingPole)result.unshift({title:odoRodReferral?'Odo said you might have a spare rod.':'Could you help me start fishing?',category:'lead',friendship:false,go:()=>beginNpcTalk(n,true,true)});
     return result;
   }
+  const brambleRoutes={
+    Linna:'Try the Copper Cup up in the north of town. Rowan is there.',
+    Garrow:'Rowan is at the Copper Cup. Head north through town to find the tavern.',
+    Wren:'Take him to the Copper Cup; that is where Rowan is waiting.',
+    Calder:'Ask for Rowan at Thornwell’s tavern, the Copper Cup.',
+    Merrin:'The Copper Cup is just west of our school. You will find Rowan there.',
+    Asta:'His owner is at the Copper Cup today. Bramble can follow you there.',
+    Colm:'Bring him along to the Copper Cup. Rowan will be pleased to see him.',
+    Ada:'My husband is at the Copper Cup. Would you take Bramble to him?',
+    Elric:'You need the Copper Cup, in the northern part of Thornwell. Ask for Rowan.',
+    Mara:'Rowan is over at the Copper Cup. Best take his wandering friend with you.',
+    Kit:'The Copper Cup is the tavern west of the school. That is your best stop.',
+    Mabel:'You can spare yourself a trip to the cottage. Rowan is at the Copper Cup.',
+    Bren:'For the owner, try the Copper Cup. A tavern is an easier search than the woods.',
+    Berta:'Go up to the Copper Cup with him. Rowan is in there.',
+    Della:'The Copper Cup is where I would send you. Rowan is there now.',
+    Ewan:'You will want the Copper Cup tavern, towards the north end of town.',
+    Osric:'Find the Copper Cup and you will find Rowan. He is the hunter.',
+    Alder:'Rowan is at the Copper Cup, so there is no need to follow Bramble into the woods.',
+    Gwyneth:'Try the Copper Cup before their house. Rowan is still in town.',
+    'Archivist Elowen':'From the school, go west to the Copper Cup. Rowan is there.',
+    Mira:'Rowan is at the Copper Cup, on the school’s western side.',
+    Oren:'His companion is at the Copper Cup. Take the dog to the hunter.',
+    Tamsin:'Look in the Copper Cup for Rowan. You do not need a woodland expedition.',
+    'Master Iven':'Take him to Rowan at the Copper Cup, west of the school grounds.',
+    Brin:'The search ends at the Copper Cup. Rowan is waiting in the tavern.',
+    Nell:'Rowan is in the Copper Cup; the tavern is near the school, to the west.',
+    Sable:'I can point you to the Copper Cup. That is where you should look for Rowan.',
+    Pella:'For now, take him to the Copper Cup instead of home. Rowan is there.',
+    Bess:'Bring him to Rowan here in the Copper Cup. It will save us all some searching.',
+    Ronan:'Rowan is in the Copper Cup. Bring Bramble over and let them sort out the greeting.',
+    Venn:'Take Bramble to the Copper Cup. Rowan is the person you are looking for.',
+    Hobb:'Check the Copper Cup for Rowan before you try knocking at his cottage.',
+    Edric:'The Copper Cup is the place to ask for him. It is Thornwell’s northern tavern.',
+    Dorr:'Rowan is over at the Copper Cup. Bramble has not got very far from him.',
+    'Ser Anwen':'Escort him to Rowan at the Copper Cup. The tavern is in northern Thornwell.',
+    Grusk:'Head for the Copper Cup with him. His person is inside.',
+    Fen:'Rowan can be found at the Copper Cup. Just bring his new friend along.',
+    Senn:'You will find the owner at the Copper Cup. No wager needed on that one.',
+    Dain:'Rowan is at the Copper Cup, if you are looking to hand Bramble back.',
+    Rusk:'Try Rowan at the Copper Cup first. That will save you looking through the lanes.',
+    Linnet:'Bring Bramble into the Copper Cup. Rowan is there to collect his listener.',
+    Puck:'Go to the Copper Cup and ask for Rowan the Hunter. Bess can point him out.',
+    Vale:'You can return him at the Copper Cup. Rowan is spending time there.',
+    Cerys:'The Copper Cup is where you should take him. Look for Rowan inside.',
+    Nyra:'His owner is at the Copper Cup. You can lead Bramble straight there.',
+    Maren:'Go up to the Copper Cup in north Thornwell. You can catch Rowan there.',
+    Celia:'Rowan is at the Copper Cup, so take Bramble there before trying Ada at home.',
+    Orin:'The Copper Cup is your destination. Rowan will recognise that greeting.',
+    Isolde:'You can find the Copper Cup on the west side of the school.',
+    'Cartwright Oswin':'Drop in at the Copper Cup with him. Rowan is there, not out hunting.',
+    Tessa:'Head inside the Copper Cup with Bramble and ask Bess where Rowan is.',
+    'Scholar Ilyan':'You are looking for Rowan at the Copper Cup, the tavern near the school.',
+    Eira:'Take Bramble up to the Copper Cup. His owner is there today.',
+    Fenton:'Bring him back to Rowan at the Copper Cup. He has had his little adventure.'
+  };
+  const brambleInsideRoutes=[
+    'Rowan is here in the Copper Cup. Bring Bramble over to him.',
+    'You have found the right tavern—the Copper Cup. Rowan is right here.',
+    'No need to go outside again. Rowan is here at the Copper Cup.',
+    'Take Bramble over to Rowan here in the Copper Cup and they can head home together.',
+    'His owner is in this very tavern, the Copper Cup. Look for Rowan.',
+    'Rowan is close by, here at the Copper Cup. Let Bramble follow you over.',
+    'You can reunite them here in the Copper Cup. Rowan is the hunter.',
+    'The Copper Cup was the right place to come. Rowan is waiting here.'
+  ];
   function bramble(n){
     const p=profile(n);if(!p||brambleQuest!==1||n.n==='Rowan the Hunter')return null;
     const inside=MAPID==='tavern';
-    const route=inside?'Rowan is in the Copper Cup. Bring Bramble over to the hunter here in the tavern.':'Look for Rowan at the Copper Cup, the tavern in northern Thornwell, west of the school.';
+    const route=inside?brambleInsideRoutes[Object.keys(cast).indexOf(n.n)%brambleInsideRoutes.length]:brambleRoutes[n.n];
     const row=t('Do you know Bramble?',p.bramble+' '+route,
-      ['He followed me. I want to make sure he gets home.','You have the right idea. '+route+' You do not need to search the woodland for his owner.'],
+      ['He followed me. I want to make sure he gets home.','Rowan will be glad you brought him back. Let Bramble follow you over to him.'],
       ['Should I take him to Rowan’s house instead?',brambleQuest===1?'Find Rowan at the Copper Cup first. The important thing is to reunite them, rather than leave Bramble at an empty doorstep.':'Rowan and Bramble have already been reunited.'],
       ['Is he safe to approach?','He is a friendly dog, but give him time to come to you. You have already done the useful thing by asking whose companion he is.']);
     return {...topic(n,row,'bramble','lead'),friendship:false};

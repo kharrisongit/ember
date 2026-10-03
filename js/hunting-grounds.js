@@ -65,7 +65,8 @@ function dropHuntedMeat(f) {
   if(!f.huntingArena||f.meatDropped)return;
   f.meatDropped=true;
   huntingRest.set(f.huntingKey,HUNT_RESPAWN);
-  loot.push({kind:f.kind+'Meat',x:f.x,y:f.y,n:1,t:0});
+  // A close sword kill must still show the drop before automatic collection.
+  loot.push({kind:f.kind+'Meat',x:f.x,y:f.y,n:1,t:0,pickupDelay:.8});
 }
 function stepHuntingAnimal(f,dt) {
   if(f.st==='dead'){dropHuntedMeat(f);return;}

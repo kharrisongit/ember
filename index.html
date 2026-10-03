@@ -71,7 +71,7 @@
 <link rel="stylesheet" href="css/command-dragon-medieval.css?v=20261001-sideroutes1">
 <link rel="stylesheet" href="css/journal-panels.css?v=20261002-kit-and-delivery">
 <link rel="stylesheet" href="css/riding-tutorial.css?v=20260930-tavern-lessons-portraits">
-<link rel="stylesheet" href="css/conversation-view.css?v=20261002-path-and-clouds">
+<link rel="stylesheet" href="css/conversation-view.css?v=20261003-celestial">
 <link rel="stylesheet" href="css/conversation-standard.css?v=20260929-smart-trees-signs">
 <link rel="stylesheet" href="css/conversation-aurelius.css?v=20260929-smart-trees-signs">
 <link rel="stylesheet" href="css/quest-notifications.css?v=20261002-thornwell2">
@@ -79,6 +79,7 @@
 <link rel="stylesheet" href="css/equipment-tutorial.css?v=20261002-living-map">
 <link rel="stylesheet" href="css/atlas-motion.css?v=20261002-path-and-clouds">
 <link rel="stylesheet" href="css/tutorial-button-polish.css?v=20261002-sound-fit">
+<link rel="stylesheet" href="css/aurelius-interface.css?v=20261003-celestial">
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -170,12 +171,12 @@
      background:#e8dfc8;color:#33302a;font:13px/1.5 ui-monospace,monospace;
      padding:10px 12px;box-sizing:border-box;overflow:hidden">
   <div id="bagHead">
-    <b>INVENTORY</b>
+    <b id="inventoryBanner">INVENTORY</b>
     <span class="chips">
       <span id="bagGold" class="chip gold"><canvas id="bagCoin" width="34" height="34"></canvas><i></i></span>
       <button id="bagSave" class="chip utilityIcon" type="button" aria-label="Save game" title="Save game"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l3 3v15H4V3Zm3 0v7h8V3M8 21v-7h8v7"/><path d="M13 5v3"/></svg><span>Save</span></button>
       <button id="bagMusic" class="chip utilityIcon" type="button" aria-label="Music" title="Music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17V5l11-2v12M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2.5"/><ellipse cx="17" cy="16" rx="3" ry="2.5"/></svg><span>Music</span></button>
-      <button id="bagMap" class="chip" type="button" disabled aria-disabled="true">MAP</button>
+      <button id="bagMap" class="chip utilityIcon" type="button" aria-label="Map" title="Map" disabled aria-disabled="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Zm6-2v16m6-14v16"/></svg><span>Map</span></button>
       <span id="bagBook" class="chip book"><canvas id="bagBookIcon" width="30" height="30"></canvas><i>BESTIARY</i></span>
       <button id="bagClose" class="chip close" type="button" aria-label="Close inventory">×</button>
     </span>
@@ -457,9 +458,9 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/millwood-interiors.js?v=20261002-path-and-clouds"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20261001-winter-scale"></script>
-<script src="js/generated/game-part-2.js?v=20261003-shroom-return" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20261003-celestial" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
-<script src="js/hunting-grounds.js?v=20260928-stable-battles"></script>
+<script src="js/hunting-grounds.js?v=20261003-celestial"></script>
 <script src="js/hollybeck-villagers.js?v=20261001-recovery1"></script>
 <script src="js/workshop-craftsmen.js?v=20260930-smith-smoke-portraits"></script>
 <script src="js/regional-villagers.js?v=20261002-town-placement"></script>
@@ -482,8 +483,8 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/quest-notifications.js?v=20261002-quest-targets"></script>
 <script src="js/flight-travel.js?v=20261002-hettie-flight"></script>
 <script src="js/cloud-save-core.js?v=20260927-hatch-save-controls1"></script>
-<script src="js/generated/game-part-3.js?v=20261002-shroom-cleanup" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
-<script src="js/shroom-scenery.js?v=20261003-shroom-return"></script>
+<script src="js/generated/game-part-3.js?v=20261003-celestial" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 3 LOAD ERROR'"></script>
+<script src="js/shroom-scenery.js?v=20261003-celestial"></script>
 <script src="js/blossom-routes.js?v=20261002-shroom-placements"></script>
 <script src="js/tree-line-editor.js?v=20260929-blossom-borders"></script>
 <script>
@@ -537,14 +538,14 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/forgewick-dialogue-data.js?v=20261002-forgewick-opening2"></script>
 <script src="js/forgewick-dialogue.js?v=20261002-forgewick-opening2"></script>
 <script src="js/thornwell-dialogue-data.js?v=20261002-forgewick-opening2"></script>
-<script src="js/thornwell-dialogue.js?v=20261002-thornwell2"></script>
+<script src="js/thornwell-dialogue.js?v=20261003-bramble-directions"></script>
 <script src="js/thornwell-audience-dialogue.js?v=20261002-thornwell2"></script>
 <script src="js/millwood-shroom-dialogue.js?v=20261002-forgewick-opening2"></script>
 <script src="js/millwood-friendship-topics.js?v=20261002-friendship1"></script>
 <script src="js/conversation-friendship.js?v=20261002-forgewick-opening2"></script>
 <script src="js/conversation-branches.js?v=20261002-millwood-shrooms"></script>
 <script src="js/conversation-panels.js?v=20261002-forgewick-opening2"></script>
-<script src="js/conversation-flow.js?v=20261002-nan-cooking"></script>
+<script src="js/conversation-flow.js?v=20261003-first-meeting"></script>
 <script src="js/conversation-view.js?v=20261002-forgewick-opening2"></script>
 <script src="js/conversation-deck.js?v=20261002-thornwell2"></script>
 <script src="js/riding-tutorial.js?v=20260930-regional-royal-menus"></script>

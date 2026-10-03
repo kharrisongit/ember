@@ -20,6 +20,19 @@ assert.equal(names.length,55);
 for(const n of residents)assert(names.includes(n.n),n.n+' in '+n.map+' is covered');
 assert.equal(run("ThornwellDialogue.profile({n:'Dunstan'})"),null,'Later town remains out of scope');
 assert.equal(run("ThornwellDialogue.profile({n:'Pip'})"),null,'Puck remains distinct from the Shroom Pip');
+const directions=names.filter(n=>n!=='Rowan the Hunter').map(n=>{
+ c.leadName=n;return run("ThornwellDialogue.bramble({n:leadName}).lines[0].slice((leadName+': '+ThornwellDialogue.cast[leadName].bramble+' ').length)");
+});
+assert.equal(new Set(directions).size,directions.length,'Every outdoor Bramble direction has its own wording');
+reset();run("charm.twin=false;var firstFen={n:'Fen',charm:'twin',x:100,y:100};EmberConversationFlow.prompt(firstFen)");
+assert(run('scene?.conversationGreeting'),'The first Fen gift starts with an introduction');
+assert(!run("scene.lines[0].includes('Corin')"),'Fen cannot know Corin’s name before he introduces himself');
+assert(run("scene.lines.some(line=>line.startsWith('Corin: I am Corin'))"),'Corin introduces himself');
+assert(!run('charm.twin'),'Introduction cannot grant the charm early');
+run('var finishFenIntroduction=scene.after;scene=null;finishFenIntroduction()');
+assert(run("ThornwellDialogue.remembers(firstFen,'met')&&sayNpc===firstFen"),'Finishing the introduction starts the normal gift conversation');
+assert(run("firstFen.said.some(line=>line.includes('Twin Heart'))"),'The gift remains available after meeting');
+reset();
 let exchanges=0,choices=0;
 for(const name of names){
  reset();c.actor={n:name,x:100,y:100};

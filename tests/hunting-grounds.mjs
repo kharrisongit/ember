@@ -63,7 +63,9 @@ c.P.x=f.x;c.P.y=f.y+8;c.f=f;
 for(let i=0;i<(['hare','bird'].includes(species)?2:species==='deer'?4:3);i++){c.P.act={kind:'swing',t:4,hit:0};run('swingHits()');}
 assert.equal(f.st,'dead');assert.equal(c.loot.filter(g=>g.kind===species+'Meat').length,1);assert.equal(c.gold,50);
 run('markBossGone(f);stepFoes(.1);spawnHuntingAnimals()');assert.equal(c.loot.length,1,'no duplicate meat from repeated death handling');
-run('grabGold()');assert.equal(c[species+'Meat'],1);assert.equal(c.loot.length,0);assert(c.saved>0);
+run('grabGold()');assert.equal(c[species+'Meat'],0);assert.equal(c.loot.length,1,'Close sword kills leave visible meat on the ground');
+run('loot[0].t=.79;grabGold()');assert.equal(c.loot.length,1,'Drop cannot be collected before the visible settling beat');
+run('loot[0].t=.8;grabGold()');assert.equal(c[species+'Meat'],1);assert.equal(c.loot.length,0);assert(c.saved>0);
 run("feedDragon('"+(species==='boar'?'meat':species)+"')");assert.equal(c[species+'Meat'],0);assert.equal(c.dragon.hp,5,'hunted meat uses dragon healing');
 run('drawHuntingMeat(20,20)');assert(c.meatPixels>20,'meat pickup has visible art');
 run('stepHuntingGrounds(299);spawnFoes()');assert.equal(c.foes.length,2,'travel cannot reset the hunt cooldown');

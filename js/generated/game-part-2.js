@@ -6209,10 +6209,10 @@ function greenSceneFrame(){
 }
 function greenDustFrame(){
   // Impact -> expansion -> settling, once per landing. Starts with the crash
-  // cue and finishes early in the five-second rest; never follows takeoff.
+  // cue and clears within one second, before the dragon's breathing rest.
   const age=greenPhase==='crash'?greenP*GREEN_CRASH:greenPhase==='sit'?GREEN_CRASH+greenP:-1;
-  if(age<0||age>=2)return -1;
-  return age<.12?0:age<.30?1:age<.60?2:age<1?3:age<1.45?4:5;
+  if(age<0||age>=1)return -1;
+  return age<.08?0:age<.18?1:age<.32?2:age<.5?3:age<.72?4:5;
 }
 function drawGreenScene(x,y){
   const [row,frame]=greenSceneFrame(),off=greenOffset();
@@ -8825,6 +8825,7 @@ function grabGold() {
   for (const g of loot) {
     if(g.treasuryId&&treasuryGuarding()){kept.push(g);continue;}
     if(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat'||g.kind==='foxMeat'||g.kind==='birdMeat'){
+      if(g.t<(g.pickupDelay||0)){kept.push(g);continue;}
       if(Math.hypot(g.x-P.x,g.y-P.y)<26){if(g.kind==='hareMeat')hare+=g.n;else if(g.kind==='deerMeat')deer+=g.n;else if(g.kind==='foxMeat')fox+=g.n;else if(g.kind==='birdMeat')bird+=g.n;else meat+=g.n;}else kept.push(g);
       continue;
     }
@@ -8858,7 +8859,7 @@ function drawLoot() {
 }
 function stepLoot(dt) {
  for(const g of loot)g.t+=dt;
- if(mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat'||g.kind==='foxMeat'||g.kind==='birdMeat')&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
+ if(mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>(g.kind==='boarMeat'||g.kind==='hareMeat'||g.kind==='deerMeat'||g.kind==='foxMeat'||g.kind==='birdMeat')&&g.t>=(g.pickupDelay||0)&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
  if(MAPID==='royal_treasury'&&mode==='play'&&!ovl&&!sayNpc&&loot.some(g=>g.treasuryId&&Math.hypot(g.x-P.x,g.y-P.y)<14))grabGold();
 }
 let devItemTest = false;
