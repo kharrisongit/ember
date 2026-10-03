@@ -60,6 +60,37 @@ for(let i=0;i<20000;i++)initial[i%3](i%400,(i*7)%400);
 readRouteLegs=originalRead;
 `,c);
 
+// The play-time index must stay equivalent after map and editor changes.
+vm.runInContext(`
+let editing=false,building=false;
+function reindex(){return 'rebuilt'}
+function loadMap(map){MD=map;return map}
+const liveWinter=inWinter,liveSwamp=inSwamp,makeQuery=createBiomeQuery;
+let queryBuilds=0;
+createBiomeQuery=style=>{queryBuilds++;return makeQuery(style)};
+features=[{id:31,kind:'arena',style:'winter',x:64,y:64,r:8,band:10},
+ {id:32,kind:'route',style:'swamp',pts:[[180,100],[240,170]],w:5,band:10}];
+MD={winter_regions:[[10,10,20,20]],swamp_regions:[[290,290,310,310]]};
+${read('js/overworld-performance.js')}
+function checkRuntime(){
+ for(let y=-5;y<350;y+=7.5)for(let x=-5;x<350;x+=6.5){
+  assert.equal(inWinter(x,y),liveWinter(x,y));
+  assert.equal(inSwamp(x,y),liveSwamp(x,y));
+ }
+}
+checkRuntime();const built=queryBuilds;checkRuntime();
+assert.equal(queryBuilds,built,'Steady gameplay reuses the index');
+features[0].x=120;editStamp++;checkRuntime();
+features.push({id:33,kind:'area',style:'winter',x0:200,y0:200,x1:220,y1:220});checkRuntime();
+MD.swamp_regions=[[20,20,40,40]];checkRuntime();
+editing=true;features[0].x=210;checkRuntime();editing=false;checkRuntime();
+building=true;features[0].style='oak';checkRuntime();building=false;checkRuntime();
+MD.winter_regions[0][0]=-20;assert.equal(reindex(),'rebuilt');checkRuntime();
+const nextMap={winter_regions:[[230,230,250,250]]};
+assert.equal(loadMap(nextMap),nextMap);checkRuntime();
+features=[];MD.features=[{id:34,kind:'area',style:'winter',x0:0,y0:0,x1:30,y1:30}];checkRuntime();
+`,c);
+
 // Small avenue fixture recorded from the previous layout implementation.
 // Preserve object order and IDs, including removing multiple trees on one tile,
 // retaining off-route trees, and leaving authored/generated props alone.

@@ -4158,7 +4158,12 @@ function updateDeckHealth(){
   const max=(typeof pMax!=="undefined"&&pMax)?pMax:1;
   paint(corin,cur,max,"corin");
   const portrait=(cv,sp,img,faceZoom)=>{
-    if(!cv||!sp||!img)return; const x=cv.getContext("2d"); x.clearRect(0,0,cv.width,cv.height); x.imageSmoothingEnabled=false;
+    if(!cv||!sp||!img)return;
+    // These are static portraits, not animation frames. Redrawing them every
+    // tick needlessly repaints the controller artwork on mobile browsers.
+    const key=[...sp.slice(0,4),cv.width,cv.height,!!faceZoom].join('|');
+    if(cv._portraitKey===key&&cv._portraitImage===img)return;
+    const x=cv.getContext("2d"); x.clearRect(0,0,cv.width,cv.height); x.imageSmoothingEnabled=false;
     try{
       let crop=Math.min(sp[2],sp[3]), sx=sp[0]+Math.max(0,(sp[2]-crop)/2), sy=sp[1]+Math.max(0,(sp[3]-crop)/2);
       if(faceZoom){
@@ -4170,6 +4175,7 @@ function updateDeckHealth(){
         sy=sp[1]+Math.max(0,Math.floor(sp[3]*.30));
       }
       drawGameImage(x,img,sx,sy,crop,crop,0,0,cv.width,cv.height);
+      cv._portraitKey=key;cv._portraitImage=img;
     }catch(e){}
   };
   if(typeof SPR!=="undefined"){const cs=SPR[corinKit()+"idle_d"];portrait(cp,cs,atlasImg,true);}
