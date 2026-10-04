@@ -167,8 +167,7 @@ const SpiderQueenDemo = (() => {
     }
     ctx.restore();return true;
   }
-  function travelPlace(){return {name:'Spider Queen — North Field Demo',kind:'Demo',map:'world',x:30,y:10};}
-  return {step,addToDraw,draw,ensureArt,prepareArea,travelPlace,
+  return {step,addToDraw,draw,ensureArt,prepareArea,
     frame:(dir,state,t)=>pose({dir,state,t}),
     venomFrame:(dir,t)=>{const strip=frames.venom[dir];return strip[dir==='impact'?Math.min(strip.length-1,Math.floor(t/.5*strip.length)):Math.floor(t*10)%strip.length];},
     inspect:()=>({ready,failed,actor:{...actor},shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s})),clock}),

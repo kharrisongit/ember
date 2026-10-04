@@ -14409,7 +14409,10 @@ function placesOf() {
 function buildTravel() {
   const list = document.getElementById("tvList");
   list.innerHTML = "";
-  const places = placesOf();
+  const places = placesOf().filter(place => place.map !== 'pyramid_queen');
+  const chamber = W.maps.pyramid_queen;
+  if (chamber) places.unshift({name:'Spider Queen’s Chamber',kind:'Boss',map:'pyramid_queen',
+    x:(chamber.spawn[0]-TS/2)/TS,y:(chamber.spawn[1]-TS)/TS});
   if (!places.length) {
     const d = document.createElement("div");
     d.className = "mini off";

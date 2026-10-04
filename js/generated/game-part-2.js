@@ -2356,7 +2356,6 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   // The retained world already includes these static repairs. Repeating them
   // rebuilds all collision/buckets and throws away the warmed ground images.
   if(!warmReturn){
-    if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.prepareArea();
     if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
     if(typeof DragonChapels!=='undefined')DragonChapels.clearForecourt();
     if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
@@ -3978,7 +3977,6 @@ function drawWorld(t, dt) {
     draw.push({mooring:r,x:r[0],y:r[1],sy:Math.max(r[1],r[3])-4});
   }
   if(stonePreview)draw.push({foe:stonePreview,nm:stonePreview.nm,x:stonePreview.x,y:stonePreview.y});
-  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.addToDraw(draw);
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.addEffects(draw);
   if(typeof Frosthorn!=='undefined')Frosthorn.addEffects(draw);
   if(typeof IceMoth!=='undefined')IceMoth.addEffects(draw);
@@ -4138,7 +4136,6 @@ function drawWorld(t, dt) {
   for (const o of draw) {
     if(o.looseGold){drawLoot();continue;}
     if(DragonChapels.draw(o,t))continue;
-    if(typeof SpiderQueenDemo!=='undefined'&&SpiderQueenDemo.draw(o))continue;
     if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
     if(typeof Frosthorn!=='undefined'&&Frosthorn.draw(o))continue;
     if(typeof IceMoth!=='undefined'&&IceMoth.draw(o))continue;

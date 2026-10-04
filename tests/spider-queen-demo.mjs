@@ -76,7 +76,6 @@ context.bagOpen=false;context.MAPID='millwood';demo.step(.05);
 assert.equal(demo.inspect().shots.length,0,'Projectiles clear on map exit');
 const list=[];demo.addToDraw(list);assert.equal(list.length,0,'The queen never appears inside another map');
 context.MAPID='world';demo.addToDraw(list);assert(list.some(o=>o.spiderQueen));
-assert.equal(demo.travelPlace().map,'world');
 if(process.env.SPIDER_PREVIEW){
   const sheet=createCanvas(512*2,4*132*2),g=sheet.getContext('2d');
   g.scale(2,2);g.imageSmoothingEnabled=false;g.fillStyle='#45593e';g.fillRect(0,0,512,528);

@@ -3454,8 +3454,10 @@ function placesOf() {
 function buildTravel() {
   const list = document.getElementById("tvList");
   list.innerHTML = "";
-  const places = placesOf();
-  if(typeof SpiderQueenDemo!=='undefined')places.unshift(SpiderQueenDemo.travelPlace());
+  const places = placesOf().filter(place => place.map !== 'pyramid_queen');
+  const chamber = W.maps.pyramid_queen;
+  if (chamber) places.unshift({name:'Spider Queen’s Chamber',kind:'Boss',map:'pyramid_queen',
+    x:(chamber.spawn[0]-TS/2)/TS,y:(chamber.spawn[1]-TS)/TS});
   if(typeof Frosthorn!=='undefined')places.unshift(Frosthorn.travelPlace());
   if(typeof IceMoth!=='undefined')places.unshift(IceMoth.travelPlace(),{name:'Snow Trail — Empty Clearing',kind:'Clearing',map:'world',x:2346,y:134});
   if (!places.length) {
@@ -4250,7 +4252,6 @@ function frameCore(ms) {
   stepBirds(dt);
   odoTurnsYouBack();
   stepShake(dt);
-  if(typeof SpiderQueenDemo!=='undefined')SpiderQueenDemo.step(dt);
   greenFly(dt);
   stepWalkers(dt);
   stepElder(dt);
