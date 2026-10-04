@@ -4931,50 +4931,52 @@ function drawBagIcon(cv, spriteName, f) {
               s[2] * sc, s[3] * sc);
 }
 let bookOpen = false, bookPick = 0;
+const bookArtFrames = new WeakMap();
+function bookArtFrame(sp) {
+  const source = sheetOf(sp), cached = bookArtFrames.get(sp);
+  if (cached && cached.source === source) return cached;
+  if (!source || source.complete === false) return null;
+  // Resolve the creature's own sheet before measuring its visible first frame.
+  const image = document.createElement("canvas");
+  image.width = sp[2]; image.height = sp[3];
+  const g = image.getContext("2d", { willReadFrequently: true });
+  drawGameImage(g, source, sp[0], sp[1], sp[2], sp[3], 0, 0, sp[2], sp[3]);
+  const pixels = g.getImageData(0, 0, image.width, image.height).data;
+  let left = image.width, top = image.height, right = -1, bottom = -1;
+  for (let y = 0; y < image.height; y++) for (let x = 0; x < image.width; x++) {
+    if (pixels[(y * image.width + x) * 4 + 3] <= 8) continue;
+    left = Math.min(left, x); right = Math.max(right, x);
+    top = Math.min(top, y); bottom = Math.max(bottom, y);
+  }
+  // Do not cache an empty frame while an auxiliary sheet is still loading.
+  if (right < left || bottom < top) return null;
+  const frame = { source, image, x: left, y: top, w: right - left + 1, h: bottom - top + 1 };
+  bookArtFrames.set(sp, frame);
+  return frame;
+}
 function drawBookArt(cv, ent, known) {
   const g = cv.getContext("2d");
   g.clearRect(0, 0, cv.width, cv.height);
-  const kinds = [ent.k];
-  const sps = kinds.map(k => {
-    const art = FOE_ART[k];
-    return art && (SPR[art + "_idle_d"] || SPR[art + "_walk_d"]
-                || SPR[art + "_idle"]   || SPR[art + "_walk"]);
-  }).filter(Boolean);
-  if (!sps.length) return;
+  const art = FOE_ART[ent.k];
+  const sp = art && (SPR[art + "_idle_d"] || SPR[art + "_walk_d"]
+                 || SPR[art + "_idle"] || SPR[art + "_walk"]);
+  const frame = sp && bookArtFrame(sp);
+  if (!frame) return;
+  g.save();
   g.imageSmoothingEnabled = false;
-  const n = sps.length;
-  const small = cv.width < 150;      /* a tile, however big; not the portrait */
-  const pad = small ? 8 : 6;
-  if (small) {
-    const slot = cv.width / n;
-    sps.forEach((sp, i) => {
-      const fit = Math.min((slot - pad) / sp[2], (cv.height - pad) / sp[3]);
-      const sc = fit >= 1 ? Math.floor(fit) : fit;
-      const dw = sp[2] * sc, dh = sp[3] * sc;
-      drawGameImage(g, atlasImg, sp[0], sp[1], sp[2], sp[3],
-                  Math.round(slot * i + (slot - dw) / 2),
-                  Math.round((cv.height - dh) / 2), dw, dh);
-    });
-  } else {
-    const share = n > 2 ? 1 / n : n > 1 ? 0.74 : 1;
-    sps.forEach((sp, i) => {
-      const sc = Math.max(1, Math.floor(Math.min((cv.width * share - pad) / sp[2],
-                                                 (cv.height * share - pad) / sp[3])));
-      const dw = sp[2] * sc, dh = sp[3] * sc;
-      const off = n > 2 ? (i - (n - 1) / 2) * cv.width / n
-                : n > 1 ? (i === 0 ? -1 : 1) * cv.width * 0.13 : 0;
-      drawGameImage(g, atlasImg, sp[0], sp[1], sp[2], sp[3],
-                  Math.round((cv.width - dw) / 2 + off),
-                  Math.round((cv.height - dh) / 2 + (n > 1 ? (i === 0 ? -6 : 6) : 0)),
-                  dw, dh);
-    });
-  }
+  const pad = Math.max(4, Math.round(Math.min(cv.width, cv.height) * .08));
+  const scale = Math.min((cv.width - pad * 2) / frame.w, (cv.height - pad * 2) / frame.h);
+  const width = Math.max(1, Math.round(frame.w * scale));
+  const height = Math.max(1, Math.round(frame.h * scale));
+  g.drawImage(frame.image, frame.x, frame.y, frame.w, frame.h,
+              Math.round((cv.width - width) / 2), Math.round((cv.height - height) / 2), width, height);
   if (!known) {
     g.globalCompositeOperation = "source-atop";
     g.fillStyle = "#0a0b10";
     g.fillRect(0, 0, cv.width, cv.height);
     g.globalCompositeOperation = "source-over";
   }
+  g.restore();
 }
 function refreshBook() {
   const rows = document.getElementById("bagRows");
