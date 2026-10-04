@@ -29,7 +29,7 @@ await demo.ensureArt();
 assert.equal(demo.inspect().ready,true,'All five source sheets load and decode');
 assert.equal(demo.inspect().failed,false);
 const packed=created.filter(c=>c.pixelLocked);
-assert.equal(packed.length,147,'Every authored pose and projectile frame is imported');
+assert.equal(packed.length,132,'Every authored pose and projectile frame is imported');
 for(const c of packed){
   const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
   let opaque=0;
@@ -86,4 +86,4 @@ if(process.env.SPIDER_PREVIEW){
   }));
   fs.writeFileSync(process.env.SPIDER_PREVIEW,sheet.toBuffer('image/png'));
 }
-console.log('PASS: 147 crisp, unclipped poses; four-direction patrol, stomp/spit cycle, venom lifetime, menu pause and map isolation.');
+console.log('PASS: 132 crisp, unclipped poses; four-direction patrol, stomp/spit cycle, venom lifetime, menu pause and map isolation.');

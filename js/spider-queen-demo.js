@@ -1,7 +1,7 @@
 /* A harmless, repeatable animation audition above the north shroom field.
    Kept outside the combat/quest/save registries until her encounter is authored. */
 const SpiderQueenDemo = (() => {
-  const BASE='assets/sprites/spider-queen/', VERSION='20260930-demo1';
+  const BASE='assets/sprites/spider-queen/', VERSION='20261004-slender-queen';
   const CELL=128, HEIGHT=96, FOOT=90, ALPHA=180;
   const SCALE=.8;
   const VECTORS={d:[0,1],u:[0,-1],e:[1,0],w:[-1,0]};
@@ -135,10 +135,9 @@ const SpiderQueenDemo = (() => {
     const action=['walk','stomp','spit','hurt'].includes(actor.state)?actor.state:'idle',strip=frames[actor.dir][action];
     let i;
     if(action==='stomp'){
-      // Keep anticipation, raised legs and impact distinct even where a source
-      // sheet supplied extra recovery poses rather than equal frame counts.
-      const sequence={e:[0,0,1,1,4,5,6,7],w:[0,1,2,2,3,4,6,10],u:[0,1,2,2,3,4,6,11],d:[0,1,2,2,4,5,6,7]}[actor.dir];
-      i=sequence[Math.min(7,Math.floor(actor.t/1.5*8))];
+      // All four redesigned sheets share four wind-up and four recovery poses.
+      // The first impact pose starts just before the existing .82s damage cue.
+      i=Math.min(strip.length-1,Math.floor(actor.t/1.5*strip.length));
     }else if(action==='spit')i=Math.min(strip.length-1,Math.floor(actor.t/1.1*strip.length));
     else i=Math.floor(actor.t*(action==='walk'?9:3))%strip.length;
     return strip[Math.min(i,strip.length-1)];
