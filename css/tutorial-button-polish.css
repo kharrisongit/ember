@@ -54,7 +54,15 @@
 #soundPanel :is(#soundVolume,.soundMixRange){height:36px;margin:4px 0 7px!important}
 #soundPanel #soundVolumeLabel,#soundPanel .soundMixLabel{font-size:12px;line-height:1.3}
 #soundPanel #soundSong{font-size:10px;margin-top:2px}
-#soundPanel #soundUiMute{min-height:40px;margin-bottom:8px}
+/* Explicit fill avoids native Android button text/theme mismatches. */
+#soundPanel #soundUiMute{
+ appearance:none;-webkit-appearance:none;min-height:44px;margin-bottom:8px;padding:10px 12px;
+ background:#f2e3c6!important;color:#302619!important;-webkit-text-fill-color:currentColor;
+ border:2px solid #8a7352!important;font:700 14px/1.3 system-ui,sans-serif!important;
+ text-shadow:none!important;opacity:1;letter-spacing:.04em;
+}
+#soundPanel #soundUiMute[aria-pressed="true"]{background:#36565d!important;color:#fff7e5!important;border-color:#263e44!important}
+#soundPanel #soundUiMute:focus-visible{outline:3px solid #975638;outline-offset:3px}
 #soundPanel #soundActions{position:sticky;bottom:0;padding:4px 0;background:#f7edd7;z-index:2}
 #soundPanel #soundActions button{min-height:40px;padding:8px!important}
 #soundPanel .foot{font-size:11px!important;line-height:1.3!important;padding-top:8px!important;margin:0!important}

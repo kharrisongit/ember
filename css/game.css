@@ -40,7 +40,8 @@
   body.pseudoFullscreen #deck { display:flex; }
   body.pseudoFullscreen { height:100dvh; min-height:100dvh; }
   #cv { display:block; width:100%; height:100%; image-rendering:pixelated;
-        image-rendering:crisp-edges; touch-action:none; }
+        image-rendering:crisp-edges; touch-action:none;
+        filter:brightness(1.06) saturate(1.10) contrast(1.03); }
   #reveal { position:absolute; inset:0; z-index:20; display:none;
             background:rgba(8,6,5,.86);
             flex-direction:column; align-items:center; justify-content:center;
