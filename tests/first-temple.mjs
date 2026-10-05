@@ -38,7 +38,7 @@ assert.equal(sideways.length,3,'occasional horizontal links between northern win
 assert(northLength>4*sideways.reduce((n,[l,t,r,b])=>n+r-l,0),'north-running halls dominate the layout');
 assert.deepEqual(plan.tp1_sanctum.chambers,[[80,288,272,400],[112,64,256,160]],'guardian and heartstone room sizes preserved');
 const sanctum=W.maps.tp1_sanctum;
-assert.deepEqual([...new Set(Object.values(plan).flatMap(m=>m.enemies.map(f=>f[0])).filter(k=>k.startsWith('golem')))],['golem4'],'Forgewick uses only its gray Granite Golem');
+assert.deepEqual([...new Set(Object.values(plan).flatMap(m=>m.enemies.map(f=>f[0])).filter(k=>k.startsWith('golem')))],['golem4'],'Forgewick uses only its gray Stone Golem');
 const ornaments=sanctum.roomActors.filter(a=>a.entranceOrnament);
 for(const spr of ['first_temple_torch','first_temple_dragon_head','temple67_sentinel']){
  const pair=ornaments.filter(a=>a.spr===spr);assert.equal(pair.length,2);

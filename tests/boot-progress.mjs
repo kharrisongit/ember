@@ -60,11 +60,11 @@ now=90000;run('BOOT.time();');
 assert.equal(node('bootTime').textContent,'Loaded in 1m 13.4s','The final startup time stays visible and stops changing');
 
 // Failed downloads retain the stage and percentage instead of claiming ready.
-run('BOOT.finishedAt=null;BOOT.waiting=false;gameplayReady=false;BOOT.at=0;BOOT.startClock();BOOT.step(54,"Loading Ice Moth artwork");');
+run('BOOT.finishedAt=null;BOOT.waiting=false;gameplayReady=false;BOOT.at=0;BOOT.startClock();BOOT.step(54,"Loading Veilwing artwork");');
 now=95000;run('BOOT.fail(new Error("network error"));BOOT.step(99,"Late completion");BOOT.ready();');
 assert.equal(run('gameplayReady'),false);assert.equal(clocks.size,0);
 assert.equal(node('bootPercent').textContent,'54%');
-assert.equal(node('bootMsg').textContent,'Loading stopped: Loading Ice Moth artwork');
+assert.equal(node('bootMsg').textContent,'Loading stopped: Loading Veilwing artwork');
 assert.equal(node('bootTime').textContent,'Stopped after 1m 35.0s');
 assert.match(node('bootHint').textContent,/reload/);
 assert.match(node('bootHint').textContent,/network error/,'The actual failure is visible without developer tools');

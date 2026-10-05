@@ -45,7 +45,7 @@ const HollybeckRescue=(()=>{
       'Signe: We are unhurt, but we cannot pull the sled past it. We tried waiting for it to leave.',
       'Corin: Stay together. Aurelius and I will clear a way.'
     ]:[
-      'Corin: The Ice Moth is defeated. You can take the southern trail back now.',
+      'Corin: Veilwing is defeated. You can take the southern trail back now.',
       'Signe: Truly? We heard the fighting, but we dared not leave the supplies.',
       'Olin: We brought these all the way from Sandspire. Being trapped so close to home was the worst part.',
       'Corin: Astrid is worried about you. Are either of you hurt?',
@@ -80,10 +80,10 @@ const HollybeckRescue=(()=>{
       category:'lead',friendship:false,questUnlock:!frostKnown()&&!Frosthorn.defeatedAlready(),go:()=>{
         remember(FROST);sayOff();P.moving=false;faceToward(n,P.x,P.y);
         playScene(Frosthorn.defeatedAlready()?[
-          'Corin: We defeated Frosthorn.',
+          'Corin: We defeated Hroth.',
           'Sverre: Then the clearing at the end of that trail is safe again. If you have not already, look for what it left behind.'
         ]:[
-          'Sverre: Take care on the winding trail northwest of Hollybeck. At its far end is a white beast with curling horns. We call it Frosthorn.',
+          'Sverre: Take care on the winding trail northwest of Hollybeck. At its far end is a white beast with curling horns. We call it Hroth.',
           'Corin: Does it come down toward the town?',
           'Sverre: It keeps to its clearing, but it will not let anyone cross. Watch its feet: when it stamps, ice tears through the ground ahead of it. Move sideways.',
           'Corin: Is there something in the clearing?',
@@ -93,10 +93,10 @@ const HollybeckRescue=(()=>{
     return [];
   }
   function quests(){const rows=[];
-    if(known()&&!rescued())rows.push({id:'winter-rescue',title:'The Missing Supply Party',place:IceMoth.defeatedAlready()?'Ice Moth':'Hollybeck',detail:IceMoth.defeatedAlready()?
-      'The Ice Moth is defeated. Continue north to the clearing beyond its glade and tell Olin or Signe that the trail home is safe.':
+    if(known()&&!rescued())rows.push({id:'winter-rescue',title:'The Missing Supply Party',place:IceMoth.defeatedAlready()?'Veilwing':'Hollybeck',detail:IceMoth.defeatedAlready()?
+      'Veilwing is defeated. Continue north to the clearing beyond its glade and tell Olin or Signe that the trail home is safe.':
       'Olin and Signe have not returned from collecting supplies in Sandspire. Follow the winding winter trail west of Hollybeck and search for them in the sheltered clearing at its far end.'});
-    if((frostKnown()||Frosthorn.defeatedAlready())&&!(Frosthorn.defeatedAlready()&&Frosthorn.owned()))rows.push({id:'frosthorn',title:'The Beast on the Northern Trail',place:'Frosthorn',detail:Frosthorn.defeatedAlready()?'Frosthorn is defeated. Open the chest where it fell to recover the Frostheart.':'Follow the winding trail northwest of Hollybeck to Frosthorn’s clearing. Avoid the ice from its stamping feet; search for the Frostheart after victory.'});
+    if((frostKnown()||Frosthorn.defeatedAlready())&&!(Frosthorn.defeatedAlready()&&Frosthorn.owned()))rows.push({id:'frosthorn',title:'The Beast on the Northern Trail',place:'Hroth',detail:Frosthorn.defeatedAlready()?'Hroth is defeated. Open the chest where it fell to recover the Frostheart.':'Follow the winding trail northwest of Hollybeck to Hroth’s clearing. Avoid the ice from its stamping feet; search for the Frostheart after victory.'});
     return rows;
   }
   function target(id){

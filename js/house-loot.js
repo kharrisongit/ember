@@ -69,7 +69,7 @@ function tryHouseLootChest(){
   if(!actor)return false;
   const loot=actor.houseLoot;
   if(houseLootTaken.has(loot.id)){toast('This chest is empty.');return true;}
-  if(loot.item==='emberheart'&&!DesertAdventure.won()){toast('Defeat the Spider Queen to unseal this chest.');return true;}
+  if(loot.item==='emberheart'&&!DesertAdventure.won()){toast('Defeat Velyss to unseal this chest.');return true;}
   // Claim and grant together before saving, so repeat input cannot duplicate loot.
   houseLootTaken.add(loot.id);
   gold+=loot.gold;

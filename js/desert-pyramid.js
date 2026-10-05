@@ -54,7 +54,7 @@ const DesertPyramid = (()=>{
         travel:id==='pyramid_entry'||id==='pyramid_queen',travel_kind:id==='pyramid_queen'?'Boss':'Dungeon',
         roomArt:'pyramid_tiles',_roomBaseCanvas:img,bg:'#000000',floorbg:'#daa16e',spawn:plan.spawn,
         terr:terrRLE(Array(width*height/256).fill(DIRT)),objs:[],scatter:[],sanim:[],fsanim:[],fobjs:[],features:[],hidden:[],regions:[],places:[],npcs:[],roomActors:[],roomBlocks:[],doors:[],foes:[],collisionOverrides:{}};
-      if(id==='pyramid_queen')m.title='Sunken Pyramid — Spider Queen';
+      if(id==='pyramid_queen')m.title='Sunken Pyramid — Velyss';
       m.base_terr=m.terr;
       for(const d of plan.doors)m.doors.push({x:(d.x-8)/16,y:(d.y-16)/16,to:d.to,tx:(d.arrival[0]-8)/16,ty:(d.arrival[1]-16)/16,dir:d.dir,explicitDir:true,
         triggerRect:{x:d.x-14,y:d.dir==='u'?d.y-8:d.y+32,w:28,h:d.dir==='u'?8:16}});

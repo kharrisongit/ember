@@ -186,6 +186,6 @@ const IceMoth=(()=>{
   FOE.icemoth={hp:70,speed:48,sight:999,reach:180,ring:140,dmg:2,swingT:.78,hitAt:.12,rest:1.7,groupRest:1,wind:1};
   FOE_ART.icemoth='icemoth';WORTH.icemoth=100;
   return {arena,endpoint,routes,installWorld,prepare,reset,defeated,defeatedAlready,owned,revive,rewardId:REWARD,spentId:SPENT,step,effects,pose,addEffects,draw,
-    travelPlace:()=>({name:'Ice Moth — Winter Arena',kind:'Boss',map:'world',x:2346,y:182}),
+    travelPlace:()=>({name:'Veilwing — Winter Arena',kind:'Boss',map:'world',x:2346,y:182}),
     inspect:()=>({ready,shots:shots.map(({owner,cast,...s})=>({...s,playerHit:cast.playerHit,dragonHit:cast.dragonHit})),bursts:bursts.map(b=>({...b}))})};
 })();

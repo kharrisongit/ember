@@ -3471,7 +3471,7 @@ function buildTravel() {
   list.innerHTML = "";
   const places = placesOf().filter(place => place.map !== 'pyramid_queen');
   const chamber = W.maps.pyramid_queen;
-  if (chamber) places.unshift({name:'Spider Queen’s Chamber',kind:'Boss',map:'pyramid_queen',
+  if (chamber) places.unshift({name:'Velyss’s Chamber',kind:'Boss',map:'pyramid_queen',
     x:(chamber.spawn[0]-TS/2)/TS,y:(chamber.spawn[1]-TS)/TS});
   if(typeof Frosthorn!=='undefined')places.unshift(Frosthorn.travelPlace());
   if(typeof IceMoth!=='undefined')places.unshift(IceMoth.travelPlace(),{name:'Snow Trail — Empty Clearing',kind:'Clearing',map:'world',x:2346,y:134});
@@ -4735,8 +4735,8 @@ window.__H = { get cv(){return cv;}, get ctx(){return ctx;}, sowDesertRoute, W_G
 
 let heartKnown = false;
 const BAG = [
-  {key:"soulwing",kind:"key",name:"Soulwing Relic",tell:"Won by defeating the Ice Moth. If Corin falls, Aurelius restores him to full health right where he fell. The battle continues, with 3 seconds of protection. Activates automatically once, then is consumed. No equipment slot needed.",has:()=>IceMoth.owned(),icon:()=>"inventory_soulwing"},
-  {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Frosthorn. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
+  {key:"soulwing",kind:"key",name:"Soulwing Relic",tell:"Won by defeating Veilwing. If Corin falls, Aurelius restores him to full health right where he fell. The battle continues, with 3 seconds of protection. Activates automatically once, then is consumed. No equipment slot needed.",has:()=>IceMoth.owned(),icon:()=>"inventory_soulwing"},
+  {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Hroth. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
   {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
   { key: "travelGear", kind: "key", name: "Travel Gear",
     tell: "Your bag, Nan’s map, and your father’s compass, packed together for the road. BAG holds your items and equipment. MAP shows discovered places and quests. The compass automatically guides you along the path to your next story objective; select another quest on the Map to change it.",

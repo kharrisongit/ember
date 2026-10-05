@@ -30,4 +30,4 @@ assert.equal(moved.k,'golem3');assert.equal(moved.x,last.x);assert.equal(moved.y
 const preview=createCanvas(400,90),g=preview.getContext('2d');g.fillStyle='#555951';g.fillRect(0,0,400,90);g.imageSmoothingEnabled=false;
 for(const [i,key]of ['gm4_idle_d','gm1_idle_d','gm2_idle_d','gm3_idle_d'].entries()){const s=SPR[key];c.drawGameImage(g,atlasImg,s[0],s[1],s[2],s[3],i*100+50-s[2]/2,80-s[3],s[2],s[3]);}
 if(process.env.EMBER_PREVIEW)fs.writeFileSync(process.env.EMBER_PREVIEW,preview.toBuffer('image/png'));
-console.log(`PASS: all ${frames} gray golem frames preserve geometry/alpha, original palettes unchanged, correct temple variants, one Ember Golem in final lava arena without shifting saves.`);
+console.log(`PASS: all ${frames} gray golem frames preserve geometry/alpha, original palettes unchanged, correct temple variants, one Fire Golem in final lava arena without shifting saves.`);

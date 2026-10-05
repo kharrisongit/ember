@@ -47,7 +47,7 @@ const Frosthorn=(()=>{
         animalSheets[key]=sheet;SPR[key]=[0,0,CELL,HEIGHT,6,key];
       }
       ready=true;
-    })().catch(error=>{failed=true;console.error('Frosthorn artwork:',error);throw error;});
+    })().catch(error=>{failed=true;console.error('Hroth artwork:',error);throw error;});
     return loading;
   }
   function reset(){waves.length=0;map=MAPID;}
@@ -162,6 +162,6 @@ const Frosthorn=(()=>{
   FOE_ART.frosthorn='frosthorn';WORTH.frosthorn=80;
   return {routes,arena,installWorld,prepare,reset,owned,defeated,defeatedAlready,step,effects,addEffects,draw,pose,rewardId:REWARD,
     power:(el,power)=>el==='ice'&&owned()?power*1.25:power,
-    travelPlace:()=>({name:'Frosthorn — Winter Arena',kind:'Boss',map:'world',x:2545,y:39}),
+    travelPlace:()=>({name:'Hroth — Winter Arena',kind:'Boss',map:'world',x:2545,y:39}),
     inspect:()=>({ready,failed,waves:waves.map(({owner,...w})=>({...w,points:w.points.map(p=>({...p}))}))})};
 })();

@@ -79,7 +79,7 @@ for (const [index, {entry, sp}] of entries.entries()) {
   }
   assert.equal(run('bookArtFrame(spec)'), frame, 'Repeated selections reuse measured pixels');
 }
-assert.equal(auxiliaries, 4, 'Spider Queen, mummy, Frosthorn and Ice Moth use independent sheets');
+assert.equal(auxiliaries, 4, 'Velyss, mummy, Hroth and Veilwing use independent sheets');
 // A temporarily empty sheet must recover instead of caching an invisible icon.
 c.spec = [0, 0, 12, 12, 1, 'bestiary_test']; c.target = createCanvas(12, 12);
 run('animalSheets.bestiary_test = target');

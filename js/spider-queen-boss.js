@@ -171,7 +171,7 @@ const SpiderQueenBoss=(()=>{
       pHp=Math.max(0,pHp-pMax/6);pInv=1.1;
       P.act={kind:pHp<=0?'die':'hurt',t:0,dir:P.dir,flip:P.flip,dir8:playerFacing4()};
     }
-    toast('The Spider Queen drains a heart!');
+    toast('Velyss drains a heart!');
   }
   function stepWebQueen(f,dt){
     web.t+=dt;

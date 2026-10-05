@@ -1,9 +1,9 @@
 /* One saved discovery record controls artwork, labels, selection and routes. */
 let atlasDiscovered=new Set(['Millwood']),atlasEncounteredBosses=new Set(),atlasFogLayer=null,atlasFogSignature='',atlasRegionCells=null;
 const ATLAS_BOSS_PLACES={
-  'Spider Queen':{unseen:'Pyramid Depths',foe:'spiderqueen',reward:'Emberheart',owned:()=>DesertAdventure.owned(),defeated:()=>DesertAdventure.won()},
-  'Frosthorn':{unseen:'Snowbound Clearing',foe:'frosthorn',reward:'Frostheart',owned:()=>Frosthorn.owned(),defeated:()=>Frosthorn.defeatedAlready()},
-  'Ice Moth':{unseen:'Frozen Glade',foe:'icemoth',reward:'Soulwing',owned:()=>houseLootTaken.has(IceMoth.rewardId),defeated:()=>IceMoth.defeatedAlready()}
+  'Velyss':{unseen:'Pyramid Depths',foe:'spiderqueen',reward:'Emberheart',owned:()=>DesertAdventure.owned(),defeated:()=>DesertAdventure.won()},
+  'Hroth':{unseen:'Snowbound Clearing',foe:'frosthorn',reward:'Frostheart',owned:()=>Frosthorn.owned(),defeated:()=>Frosthorn.defeatedAlready()},
+  'Veilwing':{unseen:'Frozen Glade',foe:'icemoth',reward:'Soulwing',owned:()=>houseLootTaken.has(IceMoth.rewardId),defeated:()=>IceMoth.defeatedAlready()}
 };
 function atlasPlaceKnown(name){return atlasDiscovered.has(name);}
 function atlasRevealPlace(name){
@@ -29,7 +29,7 @@ function atlasEnteredArea(){
   if(MAPID!=='world')return atlasCurrentArea();
   // Never discover the nearest town merely by standing somewhere on the road.
   const boss=(W.maps.world.features||[]).find(f=>(f.frosthorn||f.iceMoth)&&Math.hypot(P.x/TS-f.x,P.y/TS-f.y)<=f.r);
-  if(boss)return boss.frosthorn?'Frosthorn':'Ice Moth';
+  if(boss)return boss.frosthorn?'Hroth':'Veilwing';
   const named=flightPlaceAt(P.x,P.y);if(named)return named;
   const x=P.x/TS,y=P.y/TS;
   const entrance=(W.maps.world.doors||[]).find(d=>['pyramid_entry','desert_chapel'].includes(d.to)&&Math.hypot(x-d.x,y-d.y)<=8);
@@ -67,8 +67,8 @@ function atlasSyncDiscovery(){
 }
 function restoreAtlasDiscovery(saved,encounters){
   atlasDiscovered=new Set(['Millwood']);atlasEncounteredBosses=new Set();atlasFogSignature='';
-  for(const name of Array.isArray(saved)?saved:[])atlasRevealPlace(name);
-  for(const name of Array.isArray(encounters)?encounters:[])if(ATLAS_BOSS_PLACES[name])atlasEncounteredBosses.add(name);
+  for(const name of Array.isArray(saved)?saved:[])atlasRevealPlace(atlasCanonical(name)||name);
+  for(const name of Array.isArray(encounters)?encounters:[])if(ATLAS_BOSS_PLACES[atlasCanonical(name)||name])atlasEncounteredBosses.add(atlasCanonical(name)||name);
 }
 function atlasDiscoveryCells(){
   if(atlasRegionCells)return atlasRegionCells;
@@ -107,8 +107,8 @@ const ATLAS_REVEAL_FOOTPRINTS={
  'Hollybeck':[[1240,351],[1302,337],[1370,344],[1403,401],[1405,512],[1236,512],[1223,438]],
  'Hollybeck Temple':[[1301,182],[1384,180],[1410,223],[1403,277],[1356,300],[1284,267]],
  'Hollybeck Graveyard':[[1215,261],[1299,260],[1325,300],[1302,337],[1222,335],[1205,297]],
- 'Frosthorn':[[1167,9],[1242,7],[1272,41],[1260,99],[1201,105],[1162,74]],
- 'Ice Moth':[[1183,113],[1251,109],[1289,143],[1291,186],[1259,216],[1191,211],[1168,166]],
+ 'Hroth':[[1167,9],[1242,7],[1272,41],[1260,99],[1201,105],[1162,74]],
+ 'Veilwing':[[1183,113],[1251,109],[1289,143],[1291,186],[1259,216],[1191,211],[1168,166]],
  'Frostcrag':[[1270,0],[1405,0],[1413,99],[1351,136],[1272,102]],
  'Ashcrag':[[1408,25],[1536,27],[1536,169],[1462,165],[1412,130]],
  'Cinderhold Castle':[[1435,203],[1536,195],[1536,362],[1422,362],[1410,283]],

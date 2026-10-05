@@ -68,8 +68,8 @@ const SpiderQueenDemo = (() => {
   }
   function ensureArt(){
     if(!loading&&!failed)loading=loadArt().catch(error=>{
-      failed=true;console.error('Spider Queen artwork:',error);
-      if(typeof toast==='function')toast('Spider Queen artwork could not load. Reload to retry.');
+      failed=true;console.error('Velyss artwork:',error);
+      if(typeof toast==='function')toast('Velyss artwork could not load. Reload to retry.');
     });
     return loading;
   }

@@ -119,7 +119,7 @@ function atlasQuestOptions(){
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Follow the trail northwest of Hollybeck into the graveyard. Defeat every wave of spirits to receive the Book of the Dead; the first wave is only the beginning.');
  if(DragonChapels.found()&&!DragonChapels.capture())add('sky-blessing','A blessing for the road','Desert Church','Speak with Brother Cael inside the secret desert church and stay for his blessing. It increases Aurelius’s flying sprint speed.');
- if(IceMoth.defeatedAlready()&&!IceMoth.owned())add('soulwing','Collect the Soulwing','Ice Moth','Open the chest where the Ice Moth fell to recover the Soulwing. You can then continue north to greet the stranded travelers.');
+ if(IceMoth.defeatedAlready()&&!IceMoth.owned())add('soulwing','Collect the Soulwing','Veilwing','Open the chest where Veilwing fell to recover the Soulwing. You can then continue north to greet the stranded travelers.');
  if(dragonLearned('mines')&&!charm.flame)add('deep-mines',charm.lamp?'Return to the deep mines':'Find light for the deep mines',charm.lamp||!dragonLearned('lantern')?'Forgewick':'Hollybeck',!charm.lamp&&!dragonLearned('lantern')?'Ask Toft, the former miner at Forgewick’s market, how to light the deep galleries.':charm.lamp?'Return to the mine in Forgewick. Descend through the galleries and clear every creature from the deepest chamber to recover its treasure.':'The deepest mine galleries are too dark to explore. Continue the main journey through Sandspire and Coralmere to Hollybeck, ask Sverre for Torvald’s lantern, then return to Forgewick’s mine.');
  for(const [town,t]of Object.entries(ATLAS_TEMPLE_JOURNEYS))
   if(dragonLearned('temple:'+town)&&!breathHas[t.element]&&!seen.has('temple:'+town)){seen.add('temple:'+town);out.push(atlasTempleObjective(town));}
@@ -231,7 +231,7 @@ function atlasQuestTarget(q){
 const ATLAS_CONNECTIONS=[
  ['Millwood','Elder’s Home','Northern Woods','Shroom Pass','Sporewood','Sporehollow','Northern Shroom Field'],
  ['Millwood','Route 1','Thornwell','Forgefalls','Route 2','Forgewick','Route 3','The Oasis','Sandspire','Route 4','Coralmere','Route 5','Hollybeck','Route 6','Frostcrag','Ashcrag','Route 7','Cinderhold Castle'],
- ['Sandspire','Sunken Pyramid','Spider Queen'],['Sandspire','Desert Church'],['Hollybeck','Ice Moth'],['Hollybeck','Frosthorn'],
+ ['Sandspire','Sunken Pyramid','Velyss'],['Sandspire','Desert Church'],['Hollybeck','Veilwing'],['Hollybeck','Hroth'],
  ['Forgewick','Forgewick Temple'],['Sandspire','Sandspire Temple'],
  ['Route 5','Witchmoor','Dreadmarsh'],['Hollybeck','Hollybeck Graveyard'],['Hollybeck','Hollybeck Temple']
 ];
@@ -242,9 +242,9 @@ const ATLAS_PLACE_NOTES={
  'Thornwell':['School · Tavern · Inn','Visit the school, tavern and inn, and ask the townspeople for local knowledge.'],
  'Desert Church':['Brother Cael · Dragon shrine','A secret place of dragon worship south of Sandspire.'],
  'Sunken Pyramid':['Ancient burial chambers','Weathered burial chambers lie beneath the desert sands.'],
- 'Spider Queen':['Pyramid depths','A chamber deep beneath the desert sands.'],
- 'Frosthorn':['Snowbound clearing','A remote clearing at the end of a winding winter trail.'],
- 'Ice Moth':['Frozen glade','A secluded glade surrounded by snow and ice.'],
+ 'Velyss':['Pyramid depths','A chamber deep beneath the desert sands.'],
+ 'Hroth':['Snowbound clearing','A remote clearing at the end of a winding winter trail.'],
+ 'Veilwing':['Frozen glade','A secluded glade surrounded by snow and ice.'],
  'Forgefalls':['Fishing pools','Fish the quiet pools below the falls once you have a rod.'],
  'Forgewick':['Blacksmith','Dunstan works at the forge. Ask him about his brother’s glasswork in Sandspire.'],
  'Forgewick Temple':['Ancient temple','An old stone hall southeast of Forgewick.'],
@@ -306,9 +306,9 @@ function atlasQuestStages(q){
   ['Reach '+templeTown,p.town],['Enter '+templeTown+' Temple',p.entered],['Defeat the guardian golems',p.defeated],['Collect the '+t.stone+' Heartstone',p.claimed]];}
 
  if(q?.id==='highland-passage'||q?.questId==='highland-passage')return [['Claim the snow temple Heartstone',!!breathHas.shadow],['Cross the mountain into Ashcrag',FrostcragJourney.arrived()]];
- if(q?.id==='winter-rescue')return [['Learn about the missing party',HollybeckRescue.known()],[IceMoth.defeatedAlready()||seenFoe.icemoth?'Defeat the Ice Moth':'Make the route home safe',IceMoth.defeatedAlready()],['Tell the travelers the trail is safe',HollybeckRescue.rescued()]];
- if(q?.id==='frosthorn')return [['Hear Sverre’s warning',HollybeckRescue.frostKnown()],['Defeat Frosthorn',Frosthorn.defeatedAlready()],['Open the Frostheart chest',Frosthorn.owned()]];
- if(q?.id==='soulwing')return [['Defeat the Ice Moth',IceMoth.defeatedAlready()],['Open the Soulwing chest',IceMoth.owned()]];
+ if(q?.id==='winter-rescue')return [['Learn about the missing party',HollybeckRescue.known()],[IceMoth.defeatedAlready()||seenFoe.icemoth?'Defeat Veilwing':'Make the route home safe',IceMoth.defeatedAlready()],['Tell the travelers the trail is safe',HollybeckRescue.rescued()]];
+ if(q?.id==='frosthorn')return [['Hear Sverre’s warning',HollybeckRescue.frostKnown()],['Defeat Hroth',Frosthorn.defeatedAlready()],['Open the Frostheart chest',Frosthorn.owned()]];
+ if(q?.id==='soulwing')return [['Defeat Veilwing',IceMoth.defeatedAlready()],['Open the Soulwing chest',IceMoth.owned()]];
  if(q?.id==='sky-blessing')return [['Find the desert church',DragonChapels.found()],['Receive Brother Cael’s blessing',DragonChapels.capture()]];
  if(q?.id==='deep-mines')return [['Obtain Torvald’s lantern from Sverre',!!charm.lamp],['Clear the deepest mine chamber',!!charm.flame]];
  if(q?.id==='graveyard')return [['Learn about the restless spirits',dragonLearned('graveyard')],['Defeat every ghost wave and receive the Book of the Dead',!!charm.wake]];
@@ -324,23 +324,24 @@ function atlasQuestStages(q){
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
 function captureQuestJournal(){atlasSyncJournal();return {journeyVisits:[...atlasJourneyVisits],tracked:atlasTrackedQuest,known:atlasJournalKnown,encounteredBosses:typeof atlasEncounteredBosses!=='undefined'?[...atlasEncounteredBosses]:[],discovered:typeof atlasDiscovered!=='undefined'?[...atlasDiscovered]:[],compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
+function atlasMigrateMonsterText(text){return text.replace(/Spider Queen|Frosthorn|Ice Moth/g,name=>({'Spider Queen':'Velyss','Frosthorn':'Hroth','Ice Moth':'Veilwing'}[name])).replace(/\b[Tt]he (Velyss|Hroth|Veilwing)\b/g,'$1');}
 function restoreQuestJournal(saved){
  atlasJourneyVisits=new Set((saved?.journeyVisits||[]).filter(p=>Object.keys(ATLAS_TEMPLE_JOURNEYS).some(t=>p===t||p===t+' Temple')));
  if(typeof restoreAtlasDiscovery==='function')restoreAtlasDiscovery(saved?.discovered,saved?.encounteredBosses);
  window.EmberQuestNotifications?.restore(saved?.notifications);
  atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasJournalOpen=false;atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
- for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===q.place))atlasJournalKnown[id]={id,title:q.title,detail:q.detail,place:q.place};
+ for(const [id,q]of Object.entries(saved?.known||{}))if(q&&typeof q.title==='string'&&typeof q.detail==='string'&&ATLAS_LOCATIONS.some(p=>p[0]===(atlasCanonical(q.place)||q.place)))atlasJournalKnown[id]={id,title:atlasMigrateMonsterText(q.title),detail:atlasMigrateMonsterText(q.detail),place:atlasCanonical(q.place)||q.place};
 }
 function atlasCompletedEntries(){
  const known={...atlasJournalKnown};
- const earned=[['sky-blessing','A blessing for the road','Desert Church','Received Brother Cael’s Sky Blessing.'],['soulwing','The Soulwing','Ice Moth','Recovered the Ice Moth’s relic.'],['deep-mines','The deep mines','Forgewick','Cleared the deepest chamber and recovered its treasure.'],['frosthorn','The Beast on the Northern Trail','Frosthorn','Defeated Frosthorn and collected the Frostheart.'],['desert-church','The Secret Dragon Church','Desert Church','Found Brother Cael’s secret church beyond the dunes, where dragon worship endures.'],['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Sandspire','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
+ const earned=[['sky-blessing','A blessing for the road','Desert Church','Received Brother Cael’s Sky Blessing.'],['soulwing','The Soulwing','Veilwing','Recovered Veilwing’s relic.'],['deep-mines','The deep mines','Forgewick','Cleared the deepest chamber and recovered its treasure.'],['frosthorn','The Beast on the Northern Trail','Hroth','Defeated Hroth and collected the Frostheart.'],['desert-church','The Secret Dragon Church','Desert Church','Found Brother Cael’s secret church beyond the dunes, where dragon worship endures.'],['pyramid','The Emberheart of the Sands','Sunken Pyramid','Recovered the Emberheart Relic. Aurelius’s Fire damage is permanently increased by 25% while carrying it.'],['fishing','Calder’s spare rod','Route 1','Received Calder’s fishing rod.'],['bramble','Bramble’s homecoming','Thornwell','Reunited Bramble with Rowan.'],['smith','Dunstan’s craftsmanship','Forgewick','Improved Corin’s sword and armor.'],['shield','Sela’s glasswork','Sandspire','Received Sela’s protective shield.'],['graveyard','Book of the Dead','Hollybeck Graveyard','Unlocked allied-wraith summoning.'],['gift:lamp','Torvald’s lantern','Hollybeck','Obtained the lantern carried by Sverre.'],...['Forgewick','Sandspire','Hollybeck'].map(t=>['temple:'+t,t+' Heartstone',t+' Temple','Recovered the temple Heartstone.'])];
  for(const [id,title,place,detail]of earned)if(atlasQuestComplete(id))known[id]={id,title,place,detail};
  return [...new Map(Object.values(known).filter(q=>atlasQuestComplete(q.id)).map(q=>{
   const id=q.id==='gift:wake'?'graveyard':q.id==='gift:edge'?'smith':q.id;return [id,{...q,id}];
  })).values()].filter(q=>atlasJournalAllowed(q.id));
 }
 function atlasCanonical(label){
- const aliases={'eldershome':'Elder’s Home','sporehollow':'Sporehollow','northshroompassfield':'Northern Shroom Field','cinderhold':'Cinderhold Castle'};
+ const aliases={'spiderqueen':'Velyss','frosthorn':'Hroth','icemoth':'Veilwing','eldershome':'Elder’s Home','sporehollow':'Sporehollow','northshroompassfield':'Northern Shroom Field','cinderhold':'Cinderhold Castle'};
  const key=String(label||'').replace(/[^a-z0-9]/gi,'').toLowerCase();
  return aliases[key]||ATLAS_LOCATIONS.find(p=>p[0].replace(/[^a-z0-9]/gi,'').toLowerCase()===key)?.[0]||null;
 }
@@ -348,9 +349,9 @@ function atlasCurrentArea(){
  if(typeof MAPID==='undefined'||typeof P==='undefined')return null;
  const world=W.maps.world;
  if(MAPID==='world'&&typeof atlasEnteredArea==='function'){const entered=atlasEnteredArea();if(entered)return entered;}
- if(MAPID==='pyramid_queen')return 'Spider Queen';
+ if(MAPID==='pyramid_queen')return 'Velyss';
  if(MAPID==='desert_chapel')return 'Desert Church';
- if(MAPID==='world'){const boss=(world.features||[]).find(f=>(f.frosthorn||f.iceMoth)&&Math.hypot(P.x/TS-f.x,P.y/TS-f.y)<f.r+4);if(boss)return boss.frosthorn?'Frosthorn':'Ice Moth';}
+ if(MAPID==='world'){const boss=(world.features||[]).find(f=>(f.frosthorn||f.iceMoth)&&Math.hypot(P.x/TS-f.x,P.y/TS-f.y)<f.r+4);if(boss)return boss.frosthorn?'Hroth':'Veilwing';}
  let x=P.x/TS,y=P.y/TS;
  if(MAPID!=='world'){
   const map=W.maps[MAPID]||{},direct=atlasPlaceFor(map,null)||atlasCanonical((map.title||'').split(/ [—–] /)[0]);if(direct)return direct;
@@ -435,7 +436,7 @@ function atlasBuildPlaces(){
  for(const [i,p]of ATLAS_LOCATIONS.entries()){
   if(!atlasPlaceKnown(p[0]))continue;
   const label=atlasDisplayName(p[0]);
-  const b=atlasElement('button','atlasPlace'+(/^Route/.test(p[0])?' routePlace':['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Cinderhold Castle'].includes(p[0])?' townPlace':['Spider Queen','Frosthorn','Ice Moth'].includes(p[0])?' bossPlace':''),label);b.type='button';b.style.left=p[1]+'px';b.style.top=p[2]+'px';b.dataset.placeIndex=i;
+  const b=atlasElement('button','atlasPlace'+(/^Route/.test(p[0])?' routePlace':['Millwood','Thornwell','Forgewick','Sandspire','Coralmere','Hollybeck','Cinderhold Castle'].includes(p[0])?' townPlace':['Velyss','Hroth','Veilwing'].includes(p[0])?' bossPlace':''),label);b.type='button';b.style.left=p[1]+'px';b.style.top=p[2]+'px';b.dataset.placeIndex=i;
   b.setAttribute('aria-label','Explore '+label);b.onclick=e=>{e.stopPropagation();if(e.detail&&atlasIgnoreClick)return;atlasSelectPlace(i);};places.append(b);
  }
  // Roads belong to the finished illustration. Only the tracked journey is overlaid.

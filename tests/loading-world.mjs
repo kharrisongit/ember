@@ -22,8 +22,8 @@ for(const room of ['house22','house47','tp1','pyramid_entry']){
   assert(chunks.has('performance-marker'),'Warmed ground survives '+room);
   assert.equal(JSON.stringify(features),worldShape,'Authored routes and arenas unchanged');
   assert.deepEqual(solid,worldCollision,'Collision unchanged');assert.deepEqual(terr,worldGround,'Ground unchanged');
-  assert(foes.some(f=>f.kind==='icemoth'),'Ice Moth remains present');
+  assert(foes.some(f=>f.kind==='icemoth'),'Veilwing remains present');
   assert(MD.doors.some(d=>d.to==='pyramid_entry'),'Pyramid remains reachable');
 }
 `);
-console.log('PASS: complete published map retains exact terrain, collisions, routes, arenas, indexes and ground chunks through four house/temple/pyramid return trips; Ice Moth and pyramid remain present.');
+console.log('PASS: complete published map retains exact terrain, collisions, routes, arenas, indexes and ground chunks through four house/temple/pyramid return trips; Veilwing and pyramid remain present.');

@@ -47,4 +47,4 @@ const source=createCanvas(16,16);source.getContext('2d').fillRect(4,4,8,8);c.sou
 ctx.clearRect(0,0,180,180);vm.runInContext("drawEnemyCombatFrame({st:'idle',hurt:.25},source,0,0,16,16)",c);
 assert.equal(ctx.getImageData(0,0,1,1).data[3],0);assert.equal(ctx.getImageData(8,8,1,1).data[3],255);
 if(process.env.WINTER_BOSS_PREVIEW)fs.writeFileSync(process.env.WINTER_BOSS_PREVIEW,sheet.toBuffer('image/png'));
-console.log('PASS: real Frosthorn and ice moth art, red damage priority, yellow/orange attack pulses and transparent silhouettes.');
+console.log('PASS: real Hroth and ice moth art, red damage priority, yellow/orange attack pulses and transparent silhouettes.');

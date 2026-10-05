@@ -10,11 +10,11 @@ assert.deepEqual(value('[...atlasDiscovered]'),['Millwood']);
 assert.deepEqual(dom.element('atlasPlaces').children.map(b=>b.textContent),['Millwood']);
 assert(dom.element('atlasFog').getAttribute('aria-hidden')==='true');
 assert.equal(run('atlasNeighbor(1,0)'),-1,'Directional navigation cannot browse covered regions');
-run("atlasSelectPlace(ATLAS_LOCATIONS.findIndex(p=>p[0]==='Spider Queen'))");
+run("atlasSelectPlace(ATLAS_LOCATIONS.findIndex(p=>p[0]==='Velyss'))");
 assert.equal(dom.element('atlasName').textContent,'Millwood','Direct hidden-area selection is blocked');
 // An actual NPC referral reveals just its destination, with no free flight landing.
 run("rememberDragonKnowledge('Dunstan','My brother Sela makes a glass shield in Sandspire.');atlasSyncJournal();atlasBuildPlaces();atlasRenderFog()");
-assert(run("atlasPlaceKnown('Sandspire')"));assert(!run("atlasPlaceKnown('Coralmere')"));assert(!run("atlasPlaceKnown('Spider Queen')"));
+assert(run("atlasPlaceKnown('Sandspire')"));assert(!run("atlasPlaceKnown('Coralmere')"));assert(!run("atlasPlaceKnown('Velyss')"));
 assert(!run('flightVisits.Sandspire'),'Quest discovery never grants flight');
 assert(run("flightUnavailable('Sandspire')").startsWith('Visit'));
 // Reaching an area works even without ever opening the map, and is saved.
@@ -35,22 +35,22 @@ run('features=originalFeatures');
 const journal=value('captureQuestJournal()');c.journal=journal;
 run("atlasRevealPlace('Coralmere');restoreQuestJournal(journal)");assert(!run("atlasPlaceKnown('Coralmere')"));assert(run("atlasPlaceKnown('Sandspire')"));
 run("restoreQuestJournal();restoreFlightTravel({'Forgewick':[12000,1700]},['visited:Coralmere']);atlasSyncJournal()");
-assert(run("atlasPlaceKnown('Forgewick')&&atlasPlaceKnown('Coralmere')"));assert(!run("atlasPlaceKnown('Ice Moth')"));
+assert(run("atlasPlaceKnown('Forgewick')&&atlasPlaceKnown('Coralmere')"));assert(!run("atlasPlaceKnown('Veilwing')"));
 // Discovering a clearing doesn't disclose its guardian or prize. An encounter
 // names the guardian; only opening the chest reveals its reward in the atlas.
-run("atlasRevealPlace('Ice Moth');atlasPick=ATLAS_LOCATIONS.findIndex(p=>p[0]==='Ice Moth');atlasShowDetails()");
-assert.equal(dom.element('atlasName').textContent,'Frozen Glade');assert(!/Ice Moth|Soulwing/.test(dom.element('atlasText').textContent));
+run("atlasRevealPlace('Veilwing');atlasPick=ATLAS_LOCATIONS.findIndex(p=>p[0]==='Veilwing');atlasShowDetails()");
+assert.equal(dom.element('atlasName').textContent,'Frozen Glade');assert(!/Veilwing|Soulwing/.test(dom.element('atlasText').textContent));
 run("MAPID='world';W.maps.world.features.push(IceMoth.arena);P.x=IceMoth.arena.x*TS;P.y=IceMoth.arena.y*TS;seenFoe.icemoth=1;atlasSyncJournal();atlasShowDetails()");
-assert.equal(dom.element('atlasName').textContent,'Ice Moth');assert(!/Soulwing/.test(dom.element('atlasText').textContent));
+assert.equal(dom.element('atlasName').textContent,'Veilwing');assert(!/Soulwing/.test(dom.element('atlasText').textContent));
 const encountered=value('captureQuestJournal()');c.encountered=encountered;
-run("restoreQuestJournal(encountered);delete seenFoe.icemoth;atlasShowDetails()");assert.equal(dom.element('atlasName').textContent,'Ice Moth','Encounter identity survives loading');
+run("restoreQuestJournal(encountered);delete seenFoe.icemoth;atlasShowDetails()");assert.equal(dom.element('atlasName').textContent,'Veilwing','Encounter identity survives loading');
 run("houseLootTaken.add(IceMoth.rewardId);atlasShowDetails()");assert.match(dom.element('atlasText').textContent,/Soulwing/);
 run("houseLootTaken.add(IceMoth.spentId);atlasShowDetails()");assert.match(dom.element('atlasText').textContent,/Soulwing/,'Spent relic remains historical knowledge');
 run("restoreQuestJournal();MAPID='house26_bedroom';houseLootTaken.clear();seenFoe.frosthorn=1;atlasSyncJournal()");
-assert(!run("atlasPlaceKnown('Frosthorn')"),'Bestiary state left over from another slot cannot uncover a boss');
-for(const name of ['Spider Queen','Frosthorn']){
+assert(!run("atlasPlaceKnown('Hroth')"),'Bestiary state left over from another slot cannot uncover a boss');
+for(const name of ['Velyss','Hroth']){
  c.name=name;run("atlasRevealPlace(name);atlasPick=ATLAS_LOCATIONS.findIndex(p=>p[0]===name);atlasShowDetails()");
- assert(!/Emberheart|Frostheart|Soulwing|Spider Queen|Frosthorn/.test(dom.element('atlasText').textContent));
+ assert(!/Emberheart|Frostheart|Soulwing|Velyss|Hroth/.test(dom.element('atlasText').textContent));
 }
 // Desk items sort above the replacement table, have separate silhouettes,
 // and follow it when the editor moves the actor.

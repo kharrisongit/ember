@@ -9,7 +9,7 @@ console.log('Building overworld.');
 run(`mode='play';gameplayStarted=true;quest=Q.DONE;wonAll=1;foesHeld=false;dragonOff=true;devSafe=false;
 window.EmberArenaEntry=undefined;window.EmberEncounterCard=undefined;window.EmberRiding=undefined;
 loadMap('world');scene=null;bossScene=null;ovl=null;ask=null;fadeDir=0;doorMotion=null;`);
-console.log('World generated. Checking Frosthorn route and arena.');
+console.log('World generated. Checking Hroth route and arena.');
 const report=JSON.parse(run(`JSON.stringify((()=>{
  const bad=[];let samples=0;
  for(const route of Frosthorn.routes){

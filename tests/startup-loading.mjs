@@ -27,7 +27,7 @@ assert(started.includes('prepareHouseLoot'),'Chests are prepared after furniture
 for(const [name,resolve]of release)if(name!=='IceMoth')resolve();
 for(let i=0;i<5;i++)await Promise.resolve();
 assert(!complete,'Readiness still waits for every asset group');
-assert.deepEqual(areaProgress.at(-1),{done:9,total:10,left:['Ice Moth artwork']},'A slow remaining asset is named explicitly');
+assert.deepEqual(areaProgress.at(-1),{done:9,total:10,left:['Veilwing artwork']},'A slow remaining asset is named explicitly');
 release.get('IceMoth')();await preparation;assert(complete);
 assert.deepEqual(areaProgress.at(-1),{done:10,total:10,left:[]});
 
