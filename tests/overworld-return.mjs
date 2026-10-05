@@ -30,9 +30,9 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  let GRASS=0,DIRT=1,COBBLE=2,FARM=3,WATER=4,BRIDGE=5,WALL=6,DECK=15,DWATER=7,SEA=12,POOL_T=11,VLAVA=18,CELL=256;
  let TCHAR={0:'g',1:'d',4:'w'},stats={generate:0,solid:0,lava:0,ground:0,foes:0,birds:0,repairs:0};
  // Static area hooks used to bypass the retained-world optimization. Model
- // their collision work and cache eviction, including the Spider Queen demo.
+ // their collision work and cache eviction, including chapel forecourts.
  function repairArea(){if(MAPID==='world'){stats.repairs++;rebuildSolid();chunks.clear();}}
- const SpiderQueenDemo={prepareArea:repairArea},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){},installOasis(){}};
+ const DragonChapels={clearForecourt:repairArea,installWorld(){}},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){},installOasis(){}};
  function seedTreasuryGold(){}function stopTrial(){}function setPaint(on){painting=on}function refreshSel(){}
  function resetChunkWarm(){}function placeBirds(){stats.birds++}function openClearings(){}function beginHettieWalk(){}
  let arenasShowing=false;function closeArenaAnimalPicker(){}

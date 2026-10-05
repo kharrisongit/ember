@@ -76,7 +76,7 @@ vm.runInContext(part2.slice(part2.indexOf('const FOE = {'),part2.indexOf('const 
 for(const kind of vm.runInContext('Object.keys(FOE)',foeScope)){c.kind=kind;assert(run('DRAGON_ENEMY_LINES[kind]||DRAGON_BOSS_LINES[kind]'),kind+' has an authored exchange');}
 console.log('PASS: Aurelius introduction, riding tutorial, outdoor NPC reactions, story context, every enemy type, boss outcomes, nonblocking banter, dismissal and restored event history.');
 // Exercise the door handoff itself: one Corin line, then the normal entry animation.
-const door={to:'tavern',dir:'u'},d=vm.createContext({
+const door={to:'tavern',dir:'u'},d=vm.createContext({nanMorningDoorBlocked:()=>false,
  W:{maps:{tavern:{},tp1:{}}},MD:{doors:[door]},MAPID:'world',P:{x:40,y:52,dir:'u',moving:true},TS:16,
  bossScene:null,foesHeld:false,doorMotion:null,fadeDir:0,arriveT:0,sayNpc:null,arenaLock:null,arenaT:0,foes:[],dragon:{on:true},
  dragonHere:()=>true,dragonAllowedInMap:id=>id==='tp1',sceneHold:()=>!!pendingScene,
@@ -178,7 +178,7 @@ console.log('PASS: short bottom captions, unique wording across events and saves
 // The actual Skip button grants dialogue immediately, without the hatch introduction.
 clear();c.ask=null;c.MAPID='world';c.wonAll=false;c.cinderSeal=false;c.P={x:872,y:6130,moving:false};c.dragon={on:false};
 c.document.getElementById=()=>({style:{},appendChild(){}});
-Object.assign(c,{tap:(el,fn)=>{c.pressSkip=fn;},skipBrambleForTest(){},Q:{DONE:9},kingsMen:()=>[],WORN_MAX:2,worn:{},
+Object.assign(c,{setFoesEnabled(){},atlasRevealAll(){},tap:(el,fn)=>{c.pressSkip=fn;},skipBrambleForTest(){},Q:{DONE:9},kingsMen:()=>[],WORN_MAX:2,worn:{},
  houseLootTaken:new Set(),DesertAdventure:{rewardId:'emberheart'},Frosthorn:{rewardId:'frostheart'},IceMoth:{rewardId:'soulwing',spentId:'soulwing-spent'},hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,
  dragonGround:()=>true,charm:{},breathHas:{fire:true},syncDragonVitality(){c.dragon.maxHp=5;},potions:0,elixirs:0,boarMeat:0,dragonFish:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,gold:0,
  BESTIARY:[],seenFoe:{},seenCount:0,rebuildBuckets(){},reindex(){},chunks:new Map(),toast(){},saveGame(){c.savedSkipIntro=run('dragonIntroDone');}});

@@ -1,5 +1,5 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
-const c=vm.createContext({Image:class{},MAPID:'world',mode:'play',editing:false,wonAll:0,brambleQuest:0,breathHas:{},smithUpgrade:false,charm:{},glassShield:false,P:{x:0,y:0}});
+const c=vm.createContext({quest:9,Q:{ARMED:6,DONE:9},TS:16,Image:class{},MAPID:'world',mode:'play',editing:false,wonAll:0,brambleQuest:0,breathHas:{},smithUpgrade:false,charm:{},glassShield:false,P:{x:0,y:0}});
 vm.runInContext(fs.readFileSync('js/progression-gates.js','utf8'),c);const gates=vm.runInContext('JOURNEY_GATES',c);
 const carts=c.journeyGateProps().filter(o=>o.spr==='story_mining_carts');
 assert.equal(carts.length,1,'Forgewick uses the generated cart barricade');

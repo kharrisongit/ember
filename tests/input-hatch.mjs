@@ -30,7 +30,7 @@ for(const [id,parent]of [['atkCloseBtn','atkm'],['airCloseBtn','airm'],['itemClo
 const up=new Element('up',nodes.dpad);up.dataset={dx:'0',dy:'-1'};
 const captures={},keyboard={},intervals=[];
 let interactions=0,devToggles=0,refreshes=0,loadWorks=true,loadedSlot=null;
-const c=vm.createContext({dragonCombatActive:()=>false,
+const c=vm.createContext({performance,startMorning(){},inventoryPromptOpens:10,dragonCombatActive:()=>false,
   document:{body,getElementById:id=>nodes[id]||null,createElement:()=>new Element(''),querySelectorAll:()=>[],addEventListener:(t,f)=>{(captures[t]??=[]).push(f);}},
   window:{addEventListener(){}},navigator:{maxTouchPoints:0},addEventListener:(t,f)=>{keyboard[t]=f;},
   setInterval:fn=>{intervals.push(fn);return intervals.length;},clearInterval(){},setTimeout(){},Date,

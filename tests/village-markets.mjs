@@ -127,7 +127,7 @@ console.log('PASS: reindexed village stand uses the raised canopy and separate c
 
 // Forgewick roofs belong above both walking characters, independently of feet Y.
 c.underfoot=()=>false;c.P={x:0,y:99999};c.MD={};
-const layerStart=code.indexOf('  const groundLayer ='),layerEnd=code.indexOf('  draw.sort(',layerStart);
+const layerStart=code.indexOf('  const groundLayer ='),layerEnd=code.indexOf(';',layerStart)+1;
 run(code.slice(layerStart,layerEnd)+'globalThis.marketTestLayer=groundLayer;');
 for(const sprite of ['stall1','stall2','stall3']){
  c.villageRoof={villageCanopy:{s:W.names.indexOf(sprite),x:100,y:100}};

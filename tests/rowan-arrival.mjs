@@ -5,7 +5,7 @@ await run('loadPublishedEditorLayouts()');
 run(`mode='play';quest=Q.DONE;dragon.on=true;dragonIntroDone=true;templeCompass.owned=true;
 loadMap('tavern');[P.x,P.y]=MD.spawn;brambleQuest=1;thornwellRoyal.stage=1;syncBrambleParty();syncThornwellRoyals();fadeDir=0;fade=0;doorMotion=null;scene=null;ask=null;sayNpc=null;
 var startAt=[P.x,P.y];stepThornwellRoyal(1/30);`);
-assert.match(run('scene?.lines[0]||""'),/^Rowan: Hey, over here!/ ,'Rowan stops the player automatically on arrival');
+assert.match(run('scene?.lines[0]||""'),/^Rowan: Is that Bramble with you\?/ ,'Rowan stops the player automatically on arrival');
 run('var rowan=npcs.find(n=>n.n==="Rowan the Hunter"),rowanStart=[rowan.x,rowan.y];scene.after();var approachEnd=thornwellMotion.path.at(-1).slice()');assert.equal(run('thornwellMotion.kind'),'rowan');
 assert(run('Math.hypot(approachEnd[0]-rowan.x,approachEnd[1]-rowan.y)<=28.01'),'Approach ends within speaking distance');
 assert.deepEqual(Array.from(run('[P.x,P.y]')),Array.from(run('startAt')),'No teleport to Rowan');
@@ -19,7 +19,7 @@ for(let i=0;i<2400;i++){
   const expected=run("Math.abs(P.x-rowan.x)>Math.abs(P.y-rowan.y)?(P.x<rowan.x?'w':'e'):(P.y<rowan.y?'u':'d')");
   assert.equal(run('rowan.kf'),expected,'Rowan watches Corin throughout the approach');
  }
- if(run('scene?.npcActor?.n==="Rowan the Hunter"&&scene.lines[0]?.includes("Thank you")')){
+ if(run('scene?.npcActor?.n==="Rowan the Hunter"&&scene.lines[0]?.includes("Bramble! You found")')){
   assert.deepEqual(Array.from(run('[P.x,P.y]')),Array.from(run('approachEnd')),'Dialogue waits for the complete approach');
   const expected=run("Math.abs(P.x-rowan.x)>Math.abs(P.y-rowan.y)?(P.x<rowan.x?'w':'e'):(P.y<rowan.y?'u':'d')");
   assert.equal(run('rowan.kf'),expected,'Rowan faces Corin throughout every dialogue line');

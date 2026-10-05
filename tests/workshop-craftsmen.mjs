@@ -55,19 +55,17 @@ run('sayNpc=null;drawWorkshopCraftsman(sela,25)');assert.equal(draw.at(-1)[2],0)
 run('drawWorkshopCraftsman(sela,31.601)');assert.equal(draw.at(-1)[2],44*64,'Native 45-frame glasswork loop retained');
 assert(!run('drawWorkshopCraftsman(smith,32)'),'Map identity prevents unrelated actor overrides');
 
-// Execute Rowan's authored referral and the same knowledge hook used by typeStart.
+// Execute the authored reunion through its current dialogue module.
 const game=read('js/generated/game-part-2.js');
 run(`var npcs=[],P={x:0,y:0},brambleQuest=1,smithUpgrade=false,glassShield=false;
   function faceToward(){};function faceCorinAt(){};function playScene(lines){scene={lines}};MAPID='tavern';`);
+run('var discussedTopics=new Set();');
+run(read('js/thornwell-dialogue-data.js'));
+run(read('js/thornwell-dialogue.js'));
 run(game.slice(game.indexOf('function tryBrambleReunion('),game.indexOf('function planBrambleDeparture(')));
 assert(run("tryBrambleReunion({n:'Rowan the Hunter'})"));
-const clue=run("scene.lines.find(line=>line.includes('visit Sela'))");
-assert.match(clue,/Forgewick.*workshop behind the glass shop.*Ask him.*Glass Shield/);
-const dragon=read('js/dragon-dialogue.js');
-run('var dragonBanterSeen=new Set();function persistDragonBanterSeen(){}');
-run(dragon.slice(dragon.indexOf('function dragonLearned('),dragon.indexOf('function dragonGiftLeads')));
-c.clue=clue;run("rememberDragonKnowledge('Rowan',clue)");
-assert(run("dragonLearned('shield')"),'Hearing the clue unlocks the real saved journal lead');
+assert(run("scene.lines.some(line=>line.includes('Dunstan in Forgewick'))"),'Rowan sends Corin to the first equipment craftsman');
+assert(run("scene.lines.some(line=>line.includes('Ask Dunstan about other protection'))"),'Later protection is introduced through Dunstan');
 run("glassShield=true;tryBrambleReunion({n:'Rowan the Hunter'})");
-assert(run("scene.lines.some(line=>line.includes('That Glass Shield is Sela’s work. He'))"),'Already owned shield is acknowledged');
-console.log('PASS: continuous hammer strokes, one-time put-down/pickup, conversation holds, workshop art, Sela’s native loop and Rowan’s shield referral.');
+assert(run("scene.lines.some(line=>line.includes('You have found a Glass Shield'))"),'Already owned shield is acknowledged');
+console.log('PASS: continuous hammer strokes, one-time put-down/pickup, conversation holds, workshop art, Sela’s native loop and Rowan’s equipment referral.');

@@ -14,28 +14,30 @@ for(const n of cast){
  const topics=run('npcExtraTopics(actor)');
  for(const t of topics){assert.equal(t.lines.length,3);assert(t.lines[0].startsWith(n.n+': '));assert(t.lines[1].startsWith('Corin: '));}
 }
-run(`quest=Q.DONE;dragon.on=true;dragonOff=false;templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;`);
+run(`mode='play';gameplayStarted=true;editing=false;ovl=null;bagOpen=false;atlasOpen=false;revealing=false;EmberRiding.skip();EmberFriendship.restore({tutorialSeen:true});quest=Q.DONE;dragon.on=true;dragonOff=false;templeCompass.owned=true;templeCompass.meatGiven=true;templeCompass.mapGiven=true;`);
 const rows=dom.element('askRows'),box=dom.element('bagAsk');box.append(rows);
 const click=b=>{assert(b,'Expected control');if((b.classList.contains('deckTopic')||b.classList.contains('deckTab'))&&run('EmberConversationFlow.welcoming()'))run('EmberConversationFlow.openChat()');b.onclick({detail:1,stopPropagation(){}});};
 const cards=()=>rows.querySelectorAll('.deckTopic');
 const evt={preventDefault(){},stopPropagation(){}};
 c.faceToward=()=>{};
-let scene;c.playScene=(lines,options)=>{scene={lines,options};};
-run(`openNpcTopics({n:'Linna',x:0,y:0,d:['Hello']})`);
+
+run(`openNpcTopics({n:'Oren',x:0,y:0,d:['Hello']})`);
 assert(box.classList.contains('journalDeck'));
 run('EmberConversationFlow.openChat()');
 assert(!rows.querySelector('.deckTabs'));
-assert(cards().some(b=>run('EmberConversationDeck.category(ask.opts['+b.dataset.askIndex+'])')==='world'));
+assert(cards().length>1,'The current authored speaker offers multiple topics');
 assert(cards().some(b=>run('EmberConversationDeck.category(ask.opts['+b.dataset.askIndex+'])')==='story'));
-const choice=cards().find(b=>b.getAttribute('aria-label').startsWith(source.Linna[1].title+' —'));
+const choice=cards().find(b=>run('EmberConversationDeck.category(ask.opts['+b.dataset.askIndex+'])')==='story');
 const index=Number(choice.dataset.askIndex),title=run('ask.opts['+index+'].n');
 choice.onkeydown({...evt,key:'Enter'});
 assert.equal(run('ask'),null,'Choosing a topic exits the panel into its original callback');
-assert(scene.lines.length>=3);assert(scene.lines[0].startsWith('Linna:'));
-scene.options.after();
+assert(run("scene.lines.length>=3&&scene.lines[0].startsWith('Oren:')"));
+// Complete the actual reply flow so the friendship/read marker is earned.
+for(let i=0;i<30&&run('!!scene');i++)run(`typeAll();scene.t=1;if(ask?.replyChoices){askPick=ask.opts.findIndex(o=>o.go&&!o.head);askTake();}else EmberConversationFlow.advance();`);
+assert(!run('scene'),'The complete topic returns to its menu');
 assert.equal(run('ask._deckFilter'),'all','Returning keeps the complete topic list');
-assert(cards().find(b=>Number(b.dataset.askIndex)===index).getAttribute('aria-label').endsWith('discussed'));
 run('EmberConversationFlow.openChat()');
+assert(cards().find(b=>Number(b.dataset.askIndex)===index).getAttribute('aria-label').endsWith('discussed'));
 assert(cards().some(b=>b.getAttribute('aria-label').startsWith(title+' —')),'Discussed topics remain available');
 for(let i=0;i<12;i++){run('askStep(1)');assert(cards().some(b=>Number(b.dataset.askIndex)===run('askPick')),'D-pad stays on visible topics');}
 run(`askShut();MAPID='world';dragonIntroDone=true;dragon.air=false;openDragonConversation('root')`);
@@ -75,7 +77,9 @@ run(`MAPID='witchmoor'`);assert.equal(run('atlasCurrentArea()'),'Witchmoor');
 assert.deepEqual(Array.from(run(`atlasRouteBetween('Forgewick','Sandspire Temple')`)),['Forgewick','Route 3','The Oasis','Sandspire','Sandspire Temple']);
 // Taps on the far edge of a long label still pick that label; drags don't select.
 const view=dom.element('atlasViewport');view.setPointerCapture=()=>{};
+run("atlasRevealPlace('Hollybeck Graveyard');atlasBuildPlaces();atlasRenderFog()");
 const place=dom.element('atlasPlaces').children.find(b=>b.getAttribute('aria-label')==='Explore Hollybeck Graveyard');
+assert(place,'The discovered graveyard label is present');
 const fire=(type,extra={})=>{for(const fn of view.listeners.get(type)||[])fn({type,button:0,pointerId:1,clientX:0,clientY:0,target:place,preventDefault(){},...extra});};
 run('atlasPan={x:0,y:0,z:1}');fire('pointerdown');fire('pointerup');
 assert.equal(run('ATLAS_LOCATIONS[atlasPick][0]'),'Hollybeck Graveyard');

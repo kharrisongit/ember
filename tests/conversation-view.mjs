@@ -21,7 +21,7 @@ const original=run('askPick');
 click(box.querySelector('.deckProfileToggle'));
 assert.equal(run('ask._profileOpen'),true);
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');
-assert(box.querySelector('.deckProfileQuote').querySelector('blockquote'),'The profile quote has its own banner');
+assert(!box.querySelector('.deckProfileQuote'),'Profiles without a memory do not render an empty quote banner');
 assert.match(box.querySelector('.deckProfile').querySelector('p').textContent||run(`EmberConversationView.profile('Linna').bio`),/mill/i);
 assert.equal(run(`EmberConversationView.profile('King Halvard').role`),'King of Emberfell','Profiles never reuse obsolete sprite/editor roles');
 assert.equal(run(`EmberConversationView.profile('Bess').home`),'Thornwell');

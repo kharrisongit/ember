@@ -1,6 +1,6 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const read=p=>fs.readFileSync(p,'utf8');
-const c=vm.createContext({DesertAdventure:{talk:()=>false},brambleHint:()=>null,hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
+const c=vm.createContext({NpcContextAudit:{context:()=>null},talkShroomLookout:()=>false,DragonChapels:{talk:()=>false},startNanMorning:()=>false,DesertAdventure:{talk:()=>false},brambleHint:()=>null,hasDragon:()=>c.hatched,hatched:false,wonAll:false,dragonHere:()=>true,dragon:{on:true,x:0,y:0},mounted:false,MAPID:"world",
  templeCompass:{owned:false,meatGiven:false},nanGiftPending:()=>!c.templeCompass.owned||!c.templeCompass.meatGiven,glassShield:true,smithUpgrade:true,hasSword:()=>true,charm:{edge:true},breathHas:{},
  canCamperGiveFishingPole:n=>n.n==='Calder'&&!c.fishingPole,fishingPole:false,odoRodReferral:false,
  npcContextDialogue:n=>n.dd||n.d});

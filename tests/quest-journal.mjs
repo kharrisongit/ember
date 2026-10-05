@@ -40,9 +40,11 @@ run("closeAtlas();openAtlas('bag')");click('atlasQuests');active('main').onclick
 run('keys.ArrowUp=1;padDx=1;padDy=1');click('atlasFocus');
 assert(!run('atlasOpen'));assert(!run('atlasJournalOpen'));assert(!run('bagOpen'));assert.equal(run('ovl'),null);
 assert.equal(el('worldAtlas').style.display,'none');assert.equal(run('atlasTrackedQuest'),'main');
-assert.equal(saved.tracked,'main');assert(saved.compassTutorialSeen);assert.match(notice,/^Tracking: Overthrow King Halvard$/);
+assert.equal(saved.tracked,'main');assert(saved.compassTutorialSeen);assert.equal(notice,'','Default journey resumes silently');
 assert.equal(run('keys.ArrowUp'),0);assert.equal(run('padDx+padDy'),0);
 assert.equal(run('fishingPole'),false,'Tracking grants no quest rewards');
+assert.equal(run('compassTrackingStarted'),null,'Default journey has no tracking celebration');
+run("atlasTrack('fishing')");assert.match(notice,/^Tracking: Calder’s spare rod$/);
 assert.equal(run('compassTrackingStarted'),now,'The visible compass animation begins after closing the map');
 const motion=t=>run(`compassTrackingMotion(${t})`);
 assert(motion(now).glow>0);assert(motion(now+700).spin>Math.PI,'The needle visibly spins');

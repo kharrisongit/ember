@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
 const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{furniture:false});
 c.document.getElementById('atlasClose').parentNode={hidden:false};
+c.document.getElementById('atlasFly').parentNode={style:{}};
 const value=s=>JSON.parse(run('JSON.stringify('+s+')'));
 // Small clear outdoor fixture exercises production visits, transitions, movement,
 // controls and saves without generating the entire overworld's terrain.
@@ -60,8 +61,8 @@ run("dragon.hp=20;flightVisits.Forgewick=[12000,1600];brambleQuest=0");assert.ma
 // A changed destination is checked again rather than landing inside a new wall.
 run('for(let y=36;y<=38;y++)for(let x=78;x<=81;x++)solid[y*MW+x]=1');
 const landing=value("flightLanding('Thornwell')");assert(landing);assert(Math.hypot(landing[0]-1280,landing[1]-600)>20);
-// Actual movement confirms 285 flight sprint versus 190 on foot.
+// Actual movement confirms 228 flight sprint versus 190 on foot.
 run('P.x=600;P.y=600;mounted=false;running=true;dragon.air=false;dragon.tr=null;movePlayer(1,0,1)');const foot=run('P.x-600');
 run('P.x=600;mounted=true;dragon.air=true;movePlayer(1,0,1)');const flight=run('P.x-600');
-assert.equal(foot,190);assert.equal(flight,285);
-console.log('PASS: real visits only, saved destinations, mounting/reveal, complete flight/fade/landing, safe mid-flight saves, gates, health, landing collision and 50% faster mounted sprint.');
+assert.equal(foot,190);assert.equal(flight,228);
+console.log('PASS: real visits only, saved destinations, mounting/reveal, complete flight/fade/landing, safe mid-flight saves, gates, health, landing collision and 20% faster mounted sprint.');

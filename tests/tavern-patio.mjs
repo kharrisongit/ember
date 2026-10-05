@@ -58,23 +58,11 @@ const eater=run('patioEater');assert(eater);
 assert(c.patioPatronDepth(eater,tables)>eater.y,'Actual outdoor eating animation clears its table');
 assert.equal(c.patioPatronDepth({x:tables[0].x,y:tables[0].y-12,n:'Corin'},tables),tables[0].y-12,'Player still walks behind furniture normally');
 console.log('PASS: outdoor tavern patrons and the authored eater sort above their tables/chairs, including moved and deleted furniture.');
-// Exercise the actual published drinkers, rather than only the old named cast.
-const saved=JSON.parse(fs.readFileSync('assets/editor-layouts.json','utf8')).maps.world;
-const patioOps=Object.fromEntries(Object.entries(saved).filter(([k,v])=>
-  v.kind==='npc-add'&&/^sprite:tavern_src_Drinker[12]$/.test(v.look||'')||
-  v.kind==='actor'&&(v.key.startsWith('patio:')||/tavern src Drinker[12]/.test(v.identity||''))));
-c.savedPatioOps=patioOps;
-run(`const savedPatio={objs:[],roomActors:Object.values(savedPatioOps)
- .filter(op=>op.kind==='actor'&&op.key.startsWith('patio:'))
- .map(op=>({spr:op.identity,x:op.x,y:op.y})),npcs:[],roomBlocks:[]};
-for(const op of Object.values(savedPatioOps))if(op.kind==='npc-add')npcCreatePlacement(savedPatio,op);
-applyPublishedEditorEntries(savedPatio,'world',Object.fromEntries(Object.entries(savedPatioOps)
- .filter(([key,op])=>!op.key.startsWith('patio:'))));`);
-const drinkers=run('savedPatio.npcs');
-assert.equal(drinkers.length,2,'Both published drinkers are covered');
-for(const patron of drinkers){
- const furniture=run('savedPatio.roomActors');
- assert(c.isPatioPatron(patron),'Placed drinking sprite is recognized');
- assert(c.patioPatronDepth(patron,furniture)>patron.y,'Actual saved drinker clears the nearby chair crop');
+// Legacy single-sprite drinkers remain valid editor placements even though
+// the current published scene no longer contains the old npc-add records.
+for(const [i,sprite]of ['tavern_src_Drinker1','tavern_src_Drinker2'].entries()){
+ const table=tables[i],patron={packSpr:'npc_single_'+sprite,x:table.x,y:table.y-12};
+ assert(c.isPatioPatron(patron),'Single-sprite drinking actor is recognized');
+ assert(c.patioPatronDepth(patron,tables)>patron.y,'Drinker clears the nearby chair crop');
 }
-console.log('PASS: both published Drinker sprites sort above chairs at their saved patio positions.');
+console.log('PASS: both legacy single-sprite Drinker placements sort above patio chairs.');

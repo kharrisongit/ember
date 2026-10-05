@@ -6,7 +6,7 @@ const context={
  createGain:()=>({gain:{value:1},connect(to){this.to=to;},disconnect(){}}),
  createBufferSource:()=>{const s={connect(to){this.gain=to;},start(){this.started=true;},stop(){this.stopped=true;},disconnect(){}};sources.push(s);return s;}
 };
-const c=vm.createContext({window:{EmberAudio:{graph:()=>({context,output})},addEventListener:(e,f)=>listeners[e]=f},
+const c=vm.createContext({fadeDir:0,window:{EmberAudio:{graph:()=>({context,output})},addEventListener:(e,f)=>listeners[e]=f},
  document:{hidden:false,addEventListener:(e,f)=>documentListeners[e]=f},performance:{now:()=>0},fetch:async path=>({ok:true,arrayBuffer:async()=>[path]}),
  setTimeout:(f,ms)=>cueTimers.push({f,ms}),setInterval:f=>timers.push(f),mode:'play',MAPID:'world',quest:5,Q:{NOISE:5,ARMED:6},P:{x:488,y:344},TS:16,shake:0,cam:{z:3}});
 const run=s=>vm.runInContext(s,c),flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};

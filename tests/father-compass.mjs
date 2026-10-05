@@ -10,7 +10,7 @@ const run=s=>vm.runInContext(s,c);
 run(read('js/temple-compass.js'));
 assert.equal(c.scene,undefined,'No automatic compass scene');
 assert.equal(c.nanGiftBeat(5),false);assert.equal(saves,0);
-assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_compass');
+assert.equal(c.nanGiftBeat(6),true);assert.equal(c.hareMeat,0);assert.equal(reveal[0],'inventory_travelGear');
 assert.equal(c.nanGiftBeat(6),false);assert.equal(saves,1,'Compass cannot duplicate');
 assert.equal(c.nanGiftBeat(11),false);assert.equal(c.hareMeat,0,'Meat waits for Nan’s own line');
 assert(c.worldMapUnlocked(),'Legacy saves that missed the morning Map also recover access');

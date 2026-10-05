@@ -24,7 +24,7 @@ assert.throws(()=>applyMoves(second,{...draft,id:webcrypto.randomUUID(),operatio
 for(const op of [{...ops[0],value:9},{...ops[0],value:NaN},{...ops[0],key:'__proto__'}])assert.throws(()=>applyMoves(first,{...draft,id:webcrypto.randomUUID(),operations:[op]},revision),/Invalid audio/);
 mix.reset();assert.equal(mix.level('sfx:door'),.5);assert.equal(mix.operations().length,0);
 // Every player door path uses the same opening hook, including animated rooms.
-let opens=0;const doorCtx=vm.createContext({window:{EmberSfx:{door:()=>opens++}},MD:{},P:{},MAPID:'world'});
+let opens=0;const doorCtx=vm.createContext({nanMorningDoorBlocked:()=>false,window:{EmberSfx:{door:()=>opens++}},MD:{},P:{},MAPID:'world'});
 const source=fs.readFileSync('js/generated/game-part-3.js','utf8');
 vm.runInContext(source.slice(source.indexOf('function beginDoorEntry('),source.indexOf('\nfunction drawArena(')),doorCtx);
 for(const d of [{to:'house'},{to:'tavern'},{to:'school',stairDown:true}])doorCtx.beginDoorEntry(d);

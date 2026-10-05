@@ -17,8 +17,8 @@ for(const folder of ['first-temple','sandspire-temple','hollybeck-temple']){
 }
 const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){} });
 await run('loadPublishedEditorLayouts()');
-run(`for(const [id,m]of Object.entries(W.maps))if(m.templeExpanded&&!m.mountainPassage){prepareEditorEntities(m,id);applyPublishedEditorLayout(m,id);}`);
-const maps=JSON.parse(run(`JSON.stringify(Object.entries(W.maps).filter(([,m])=>m.templeExpanded&&!m.mountainPassage).map(([id,m])=>({id,plan:m.templePlan,actors:m.roomActors,blocks:m.roomBlocks})))`));
+run(`for(const [id,m]of Object.entries(W.maps))if((m.firstTemple||m.sandspire||m.hollybeck)){prepareEditorEntities(m,id);applyPublishedEditorLayout(m,id);}`);
+const maps=JSON.parse(run(`JSON.stringify(Object.entries(W.maps).filter(([,m])=>(m.firstTemple||m.sandspire||m.hollybeck)).map(([id,m])=>({id,plan:m.templePlan,actors:m.roomActors,blocks:m.roomBlocks})))`));
 let levers=0,chests=0;
 const clear=(m,x,y)=>[[x-5.5,y-7],[x+5.5,y-7],[x-5.5,y-1],[x+5.5,y-1]].every(([px,py])=>m.plan.floors.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b)&&!m.blocks.some(([l,t,r,b])=>px>=l&&px<r&&py>=t&&py<b));
 for(const m of maps){

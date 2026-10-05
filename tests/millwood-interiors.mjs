@@ -13,7 +13,7 @@ const layouts={...JSON.parse(read('assets/interiors/millwood/layouts.json')),...
 const outside=JSON.stringify(Object.fromEntries(Object.entries(world.maps).filter(([id])=>!layouts[id]&&!world.maps[id].royal&&id!=='cinderhold')));
 const canvasCalls=[];
 // Geometry/editor fixture: drawing and the separate forge animation are inert.
-const canvasContext={drawImage(){},fillRect:(...a)=>canvasCalls.push(a),save(){},restore(){},translate(){},scale(){},putImageData(){},getImageData:(x,y,w,h)=>({data:new Uint8ClampedArray(w*h*4)})};
+const canvasContext={clearRect(){},drawImage(){},fillRect:(...a)=>canvasCalls.push(a),save(){},restore(){},translate(){},scale(){},putImageData(){},getImageData:(x,y,w,h)=>({data:new Uint8ClampedArray(w*h*4)})};
 const ctx=vm.createContext({W:world,window:{},animalSheets:{},fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}),setTimeout,clearTimeout,Image:class{set src(value){this._src=value;if(value)queueMicrotask(()=>this.onload());}get src(){return this._src;}decode(){throw new Error("Loading error.");}},document:{createElement:()=>({getContext:()=>canvasContext})},npcs:[],actorLayouts:{},SPR:sprites,NAMES:[],throneRoomImg:{},atlasImg:{},drawGameImage(){},TS:16,sheetOf(){return {};},prepareDunstanStation(){},rebuildSolid(){},scheduleEditorDraft(){},mapDirty:false});
 vm.runInContext(read('js/startup-assets.js'),ctx);
 vm.runInContext(read('js/millwood-interiors.js'),ctx);

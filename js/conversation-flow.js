@@ -294,6 +294,8 @@
       if(readKey)discussedTopics.add(readKey);
       if(session){session.friendshipTopic=null;session.topicReadKey=null;}
       if(credit)window.EmberFriendship?.complete(credit);else if(readKey)saveGame();
+      // The scene callback rendered its menu before this completion was saved.
+      if(isMenu(ask))askDraw();
       sync();
     }
     tick();return true;

@@ -13,8 +13,8 @@ const register=c.registerAtlasPage;
 c.registerAtlasPage=page=>{pages.push(page);register(page);};
 vm.runInContext(fs.readFileSync('js/inventory-icons.js','utf8'),c);
 await c.loadInventoryIcons();
-assert.equal(pages.length,5);
-assert.equal(samples.length,1,'The painted bag is sampled once into its own 128px page');
+assert.equal(pages.length,6);
+assert.equal(samples.length,2,'The painted bag and travel gear each get their own 128px page');
 assert.equal(samples[0][3],128);assert(samples[0][4]<128,'Bag proportions are preserved');
 assert.equal(pages[3].w,128);assert.equal(pages[3].h,128);
 const manifest=JSON.parse(fs.readFileSync('assets/inventory/manifest.json','utf8'));
@@ -23,18 +23,18 @@ c.SPR={};c.registerInventorySprites();assert.equal(JSON.stringify(c.SPR),initial
 const positions=new Set();
 const rest=JSON.parse(fs.readFileSync('assets/inventory/manifest-rest.json','utf8'));
 const relics=JSON.parse(fs.readFileSync('assets/inventory/manifest-relics.json','utf8'));
-for(const key of [...manifest.keys,...rest.keys,...relics.keys,"mapCompass","bag"]){
+for(const key of [...manifest.keys,...rest.keys,...relics.keys,"mapCompass","bag","travelGear"]){
  const sprite=c.SPR['inventory_'+key];assert(c.isInventorySprite(sprite));
  positions.add(sprite.slice(0,2).join(','));assert.equal(sprite[2],128);assert.equal(sprite[4],1);
  const page=pages.find(p=>sprite[1]>=p.y&&sprite[1]<p.y+p.h);assert(page);
  assert(sprite[0]+sprite[2]<=page.w);assert(sprite[1]+sprite[3]<=page.y+page.h);
  c.sprite=sprite;assert.equal(vm.runInContext('atlasPages.get(Math.floor(sprite[1]/1024)*4+Math.floor(sprite[0]/1024))',c),page,key+' resolves to its own image page');
 }
-assert.equal(positions.size,40);
+assert.equal(positions.size,41);
 assert.equal(c.inventoryIconName('it_cinderseal'),'inventory_cinderSeal','Reward reveals use the new seal');
 assert.equal(c.SPR.inventory_cinderSeal[1],c.SPR.inventory_emberheart[1],'Seal uses the new relic artwork page');
 assert.notDeepEqual(c.SPR.inventory_emberheart,c.SPR.inventory_flame,'Emberheart has its own artwork');
 assert.notDeepEqual(c.SPR.inventory_frostheart,c.SPR.inventory_hs_ice,'Frostheart has its own artwork');
 for(const [alias,key] of Object.entries({it_saint:'saint',it_res:'stone',it_salt:'salt',it_dust:'dust'}))assert.equal(c.SPR[alias],c.SPR['inventory_'+key]);
 assert(fs.readFileSync('js/generated/game-part-2.js','utf8').includes('registerAnimalSprites();\n  registerInventorySprites();'));
-console.log('PASS: 40 distinct item icons including original relics, shop aliases, atlas bounds and registration in either asset-loading order.');
+console.log('PASS: 41 distinct item icons including original relics, shop aliases, atlas bounds and registration in either asset-loading order.');

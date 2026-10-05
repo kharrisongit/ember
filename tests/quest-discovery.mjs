@@ -9,7 +9,7 @@ run(`quest=Q.DONE-1;dragonIntroDone=false;dragonBanterSeen.clear();brambleQuest=
 MAPID='world';MD=W.maps.world;breathHas.lightning=false;breathHas.ice=false;breathHas.shadow=false;`);
 // Maddock owns the first quest. Other speakers cannot reveal Aurelius's plan.
 run("rememberDragonKnowledge('Maddock',HATCH_LINES.find(s=>s.includes('overthrow')),false)");
-assert.equal(run('atlasMainObjective().title'),'Overthrow King Halvard');
+assert.equal(run('atlasMainObjective().title'),'Bring the mysterious egg to Maddock');
 run("rememberDragonKnowledge('Alderic','The Heartstones are in Forgewick, Sandspire and Hollybeck Temples.',false)");
 assert.equal(run("atlasQuestOptions().filter(q=>q.id.startsWith('temple:')).length"),0);
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;dragon.down=false;dragon.placed='world';dragon.introOrigin=[100,100];
@@ -35,7 +35,7 @@ run("breathHas.ice=true;atlasOpen=true;atlasSyncJournal()");assert(run("atlasTra
 // Saved selections cannot bypass prerequisites; old introductions get all three leads.
 run("breathHas.lightning=false;breathHas.ice=false;atlasTrackedQuest='temple:Sandspire';atlasSyncJournal()");assert.equal(run('atlasTrackedQuest'),'main');
 run('dragonBanterSeen.clear();dragonIntroDone=true');assert(run("dragonLearned('temple:Hollybeck')"));
-run('brambleQuest=1');assert.equal(run("atlasQuestKind(atlasQuestOptions().find(q=>q.id==='bramble'))"),'main');
+run('brambleQuest=1');assert.equal(run("atlasQuestKind(atlasQuestOptions().find(q=>q.questId==='bramble'||q.id==='bramble'))"),'main');
 // A direct rod gift is an interaction, not an accepted/completed quest.
 run("odoRodReferral=false;fishingPole=false;rememberDragonKnowledge('Calder','Take this fishing rod.',false)");
 assert(!run("atlasQuestOptions().some(q=>q.id==='fishing')"));run('fishingPole=true');

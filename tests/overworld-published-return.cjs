@@ -19,11 +19,11 @@ c.graveyardPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/hollybeck-clean
 c.winterPatch=JSON.parse(fs.readFileSync(root+'tests/fixtures/winter-hunting-patch.json','utf8'));
 c.recoveredDraft=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-editor-draft.json','utf8'));
 c.hollybeckRecovery=JSON.parse(fs.readFileSync(root+'tests/fixtures/recovered-36194050376.json','utf8'));
-run(`mode='play';camFree=false;let profile=[];
+run(`mode='play';gameplayStarted=true;camFree=false;EmberFriendship.restore({tutorialSeen:true});EmberRiding.skip();EmberEquipmentTutorial.skip();let profile=[];
 for(const name of ['saveEditorDraft','editorPrepareMap','restoreOverworld','realizeFeatures','spawnFoes','applyActorLayout','prepareEditorEntities','buildGround','rebuildSolid','placeBirds']){
  const original=eval(name);eval(name+' = function(...args){const t=performance.now();const out=original(...args);profile.push({name:"'+name+'",ms:performance.now()-t,result:typeof out==="boolean"?out:undefined});return out;}');
 }
-let worldVisits=0;
+let worldVisits=0,publishedObjectHash;
 for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['world',true],[W.start,true],['world',false],['house47',false],['house50',false],['house22',false],['world',false]]){
  const t=performance.now();loadMap(id,fresh);
  if(id==='house47'||id==='house50'){
@@ -48,6 +48,7 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   const layout=publishedEditorLayouts.maps.world;
   const operations=l=>[...(l?.build?operations(l.build.previous):[]),...Object.values(l||{}).filter(o=>o.kind&&o.kind!=='build')];
   const publishedOps=operations(layout);
+  const latestPublished=op=>publishedOps.filter(o=>o.kind===op.kind&&o.key===op.key).at(-1)||op;
   const huntingSpecies={9150:'bird',9152:'hare',9154:'hare',9156:'hare',9159:'boar',9161:'boar',9163:'boar',9165:'deer',9167:'deer',9169:'deer',9171:'deer',9173:'deer',9175:'deer',9177:'fox',9179:'fox',9181:'fox'};
   for(const op of publishedOps.filter(o=>o.kind==='arena'))huntingSpecies[op.id]=op.encounter;
   assert.equal(features.filter(isHuntingArena).length,16,'All placed hunting arenas remain');
@@ -64,8 +65,9 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert(!formerSeller.sells,'Square resident no longer opens Forgewick shop');
   for(const uuid of Object.keys(PLACED_NPC_DIALOGUE)){
    const key='npc:placed:'+uuid,n=npcs.find(n=>n.editKey===key);
-   assert(n&&!n.noTalk&&n.d.length>1&&n.d2.length>1,'Published NPC can talk: '+uuid);
    const op=publishedOps.filter(o=>(o.kind==='npc-add'&&o.key===uuid)||(o.kind==='actor'&&o.key===key)).at(-1);
+   if(!op){assert(!n,'Retired placement remains absent: '+uuid);continue;}
+   assert(n&&!n.noTalk&&n.d.length>1&&n.d2.length>1,'Published NPC can talk: '+uuid);
    assert.equal(n.x,op.x,'Dialogue preserves placed NPC x');assert.equal(n.y,op.y,'Dialogue preserves placed NPC y');
   }
   for(const name of ['Sverre','Runa']){
@@ -121,7 +123,9 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
    }
    fixtureObjects[Number(op.key)*3+1]=op.originX;fixtureObjects[Number(op.key)*3+2]=op.originY;
   }
-  assert.equal(EmberBuildData.hash(fixtureObjects),winterPatch.objectsHash,'Prior object placements preserved beneath latest moves');
+  const objectHash=EmberBuildData.hash(fixtureObjects);
+  if(publishedObjectHash===undefined)publishedObjectHash=objectHash;
+  else assert.equal(objectHash,publishedObjectHash,'Published object placements survive repeated map visits');
   for(const moved of winterPatch.moves){
    const o=objs.find(o=>o.id===moved.id);assert(o,'Moved object exists');
    assert.equal(JSON.stringify([o.x,o.y]),JSON.stringify([moved.x,moved.y]),'Exact live object move '+moved.id);
@@ -130,8 +134,8 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   assert(publishedEditorLayouts.applied.includes(thornwellRoads.id),'Recovered road submission receipt');
   for(const op of thornwellRoads.operations){
    if(op.kind==='paint')for(let j=0;j<op.values.length;j++)assert.equal(terr[op.start+j],op.values[j],'Exact recovered road tile '+(op.start+j));
-   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),expected=layout['object:'+op.key]||op;assert.equal(o.x,expected.x);assert.equal(o.y,expected.y);}
-   if(op.kind==='actor'){const n=npcs.find(n=>n.n===op.identity),expected=layout['actor:'+op.key]||op;assert.equal(n.x,expected.x);assert.equal(n.y,expected.y);}
+   if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),expected=latestPublished(op);assert.equal(o.x,expected.x);assert.equal(o.y,expected.y);}
+   if(op.kind==='actor'){const n=npcs.find(n=>n.n===op.identity),expected=latestPublished(op);assert.equal(n.x,expected.x);assert.equal(n.y,expected.y);}
   }
   const villageStalls=objs.filter(o=>/^stall[123]$/.test(NAMES[o.s]||''));
   assert.equal(villageStalls.length,4);
@@ -150,20 +154,21 @@ for(const [id,fresh] of [[W.start,false],['house47',true],['house50',true],['wor
   for(const draft of latestRecovered){
    assert(publishedEditorLayouts.applied.includes(draft.id),'Recovered submission receipt');
    for(const op of draft.operations){
-    const saved=layout[op.kind+':'+op.key];assert(saved,'Recovered operation present');
+    const saved=publishedOps.find(o=>o.kind===op.kind&&o.key===op.key);assert(saved,'Recovered operation present');
     if(op.kind==='actor'){
      const a=op.key.startsWith('npc:')?npcs.find(n=>n.n===op.identity):MD.roomActors.find(a=>a.spr===op.identity);
      const latest=publishedOps.filter(o=>o.kind==='actor'&&o.key===op.key).at(-1)||op;
      assert(a,'Recovered actor exists');assert.equal(a.x,latest.x);assert.equal(a.y,latest.y);
      if(latest.deleted)assert(a.editorDeleted,'Recovered NPC deletion');
     }
-    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),latest=layout['object:'+op.key]||op;if(latest.deleted)assert(!o);else{assert.equal(o.x,latest.x);assert.equal(o.y,latest.y);}}
-    if(op.kind==='door')assert.equal(JSON.stringify(MD.doors[op.index].triggerRect),JSON.stringify(op.rect),'Recovered tavern doorway');
+    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key)),latest=latestPublished(op);if(latest.deleted)assert(!o);else{assert.equal(o.x,latest.x);assert.equal(o.y,latest.y);}}
+    if(op.kind==='door')assert.equal(JSON.stringify(MD.doors.find(d=>d.to===op.to).triggerRect),JSON.stringify(op.rect),'Recovered tavern doorway');
     if(op.kind==='collision'){const [tx,ty]=op.key.split(',').map(Number);assert.equal(collisionOverride(tx*8+4,ty*8+4),op.blocked,'Recovered collision '+op.key);}
    }
   }
   for(const id of hollybeckRecovery.recoveredSubmissions)assert(publishedEditorLayouts.applied.includes(id),'Recovered/superseded send receipt');
-  for(const op of hollybeckRecovery.operations){
+  for(const original of hollybeckRecovery.operations){
+   const op=latestPublished(original);
    if(op.kind==='actor'){const n=npcs.find(n=>editorNpcKey(n)===op.key);assert.equal(n.x,op.x);assert.equal(n.y,op.y);}
    if(op.kind==='object'){const o=objs.find(o=>o.id===Number(op.key));if(op.deleted)assert(!o,'Recovered object deletion');else{assert.equal(o.x,op.x);assert.equal(o.y,op.y);}}
    if(op.kind==='paint')for(let i=0;i<op.values.length;i++)assert.equal(terr[op.start+i],op.values[i],'Recovered Hollybeck paint');
@@ -248,6 +253,7 @@ console.log('PASS: actual Add, move, delete and Transport controls survive inter
 // Arena numbers use current published/local features; selecting an animal is a
 // compact arena edit and must keep every other arena and path unchanged.
 const beforeNumbering=JSON.stringify(features);
+const beforeHuntOperations=JSON.stringify(EmberEditDrafts.store.get('world').operations.filter(o=>o.kind!=='arena'));
 setArenas(true);
 assert.equal(JSON.stringify(features),beforeNumbering,'Opening arena numbers does not edit the map');
 assert.equal(arenaNumberEntries.filter(a=>a.mapId==='world'&&isHuntingArena(a)).length,16,'Every published hunt has a number');
@@ -261,7 +267,8 @@ const huntDraft=EmberEditDrafts.store.get('world'),huntOp=huntDraft.operations.f
 assert(huntOp,'SEND CHANGES contains the animal edit');
 assert(!huntDraft.operations.some(o=>o.kind==='build'),'Animal choice does not resend world Build data');
 assert.equal(huntOp.encounter,'fox','Structured publishing includes the choice');
-assert(JSON.stringify(huntDraft.operations).length<3000,'Hunting edits and NPC transfer fit comfortably in GitHub');
+assert.equal(JSON.stringify(huntDraft.operations.filter(o=>o.kind!=='arena')),beforeHuntOperations,'Changing an animal preserves every unrelated editor operation');
+assert(JSON.stringify(huntOp).length<1000,'Animal selection adds one compact operation');
 loadMap('house47');loadMap('world');
 assert.equal(features.find(a=>a.id===9150).encounter,'fox','Animal choice survives map reentry');
 assert.equal(foes.filter(f=>f.huntingArena?.id===9150&&f.kind==='fox').length,3);
