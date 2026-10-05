@@ -6898,13 +6898,13 @@ function maddockWalkPath(e,to,canWalk=(x,y)=>canNpcStand(x,y,e)) {
   }
   return null;
 }
-function goBackIn(useHouseDoor) {
+function goBackIn(useHouseDoor,finishOffscreen=false) {
   const e = elder();
   if (!e) return;
   if(useHouseDoor){
     const door=maddockDoor();
     e.goto=null;e.scriptWalking=true;e.houseEntry=0;
-    e.houseWalk={door,path:maddockWalkPath(e,[door.x,door.y]),t:0,retry:0};
+    e.houseWalk={door,path:maddockWalkPath(e,[door.x,door.y]),t:0,retry:0,finishOffscreen};
     goingIn=true;return;
   }
   e.goto = useHouseDoor ? [MAD_DOOR[0], MAD_DOOR[1]] : (doorRoute() || offStage());
@@ -6917,9 +6917,9 @@ function stepElder(dt=1/60) {
   if (!e) { goingIn = false; if(hatchExit)faceCorinAt(dragon.x,dragon.y); hatchExit = false; return; }
   if(e.houseWalk){
     const walk=e.houseWalk;
-    // Keep the close-up fixed until his whole walking sprite leaves it.
-    // The indoor Maddock is already available once the hatch quest is done.
-    if(hatchExit){
+    // Finish a scripted return only after his entire sprite leaves the view.
+    // Both the north-road warning and hatch exit can release control here.
+    if(hatchExit||walk.finishOffscreen){
       const dir=e.f==='s'?(e.flip?'w':'e'):(e.f||'d');
       const sprite=SPR[e.packSpr+'_walk_'+dir]||SPR[e.packSpr+'_idle_d'];
       const halfW=(sprite?.[2]||60)/2,height=sprite?.[3]||60;
@@ -6928,7 +6928,7 @@ function stepElder(dt=1/60) {
          top+height<cam.y||top>cam.y+VH/cam.z){
         e.x=walk.door.x;e.y=walk.door.y-32;e.away=1;e.goto=null;
         e.houseWalk=null;e.houseEntry=0;e.scriptWalking=false;
-        goingIn=false;hatchExit=false;faceCorinAt(dragon.x,dragon.y);return;
+        goingIn=false;if(hatchExit)faceCorinAt(dragon.x,dragon.y);hatchExit=false;return;
       }
     }
     if(!walk.path){walk.retry-=dt;if(walk.retry<=0){walk.path=maddockWalkPath(e,[walk.door.x,walk.door.y]);walk.retry=.5;}return;}
@@ -7448,7 +7448,7 @@ function stepQuest(dt) {
         "Maddock: Hettie said you were bringing the eggs. Thank you.",
         "Maddock: Come down to the house. We can put that basket somewhere safe.",
       ], { who: "Maddock", after: () => {
-        goBackIn(true);
+        goBackIn(true,true);
         playScene([], { silent:true, until:()=>!!elder()?.away, after:()=>{
           warnedNorth = true;
           gateRow = Math.floor((P.y - 1) / TS) - 1;

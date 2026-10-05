@@ -47,7 +47,8 @@ body.conversation-session #say::before,body.conversation-session #say::after{dis
 /* Cutscenes retain tap-to-advance and a single alternating portrait. */
 #say.on{cursor:pointer;pointer-events:auto;touch-action:manipulation}
 #say.on::after{content:attr(data-advance-hint);position:absolute;right:14px;bottom:5px;color:#886238;font:600 10px/1.2 system-ui;letter-spacing:.025em;pointer-events:none}
-#face.left{left:0!important}#face.right{right:0!important}
+#face{bottom:calc(var(--deck) + 10px + var(--dialogue-panel-height));max-width:calc(100vw - 24px)}
+#face.left{left:12px!important;right:auto}#face.right{right:12px!important;left:auto}
 body.topics-open:not(.conversation-speaking) #face,body.topics-open:not(.conversation-speaking) #sayname{display:none!important}
 body.conversation-session #deck{visibility:hidden;pointer-events:none}
 body.conversation-session #reveal{position:relative;inset:auto;grid-row:1/3;grid-column:1;min-height:0;min-width:0;overflow:hidden;z-index:10;background:#23190ee8}

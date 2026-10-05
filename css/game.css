@@ -2415,7 +2415,7 @@ body.boot-menu-open.boot-ready:not(.game-started) #dpad,
 body.boot-menu-open.boot-ready:not(.game-started) #dpad *{pointer-events:auto!important}
 
 /* Aurelius has extra transparent space under his bust; seat it on the dialogue box. */
-#face[data-speaker="Aurelius"] { transform:translateY(8%); }
+/* All speaker busts share the dialogue edge; no per-character vertical shift. */
 
 /* Player mixer and quick Bag shortcuts. */
 #itemQuickHead .itemQuickSpacer{flex:1}

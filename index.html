@@ -33,7 +33,7 @@
 <title>The Last Dragonrider</title>
 <meta name="description" content="The Last Dragonrider, a top-down pixel-art RPG.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23171310'/%3E%3Cpath d='M16 3c2 6 8 8 8 16a8 8 0 1 1-16 0c0-4 2-7 5-10 0 4 1 6 3 7-1-5 0-9 0-13Z' fill='%23e0913f'/%3E%3Cpath d='M16 15c3 3 4 5 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8Z' fill='%23f0e6d2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/game.css?v=20261005-colour-boost">
+<link rel="stylesheet" href="css/game.css?v=20261005-portrait-map-return">
 <link rel="stylesheet" href="css/merchant-shop.css?v=20260927-thornwell-cast">
 <link rel="preload" href="assets/fonts/cinzel-decorative-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/medieval-ui.css?v=20261003-preserve-parchment">
@@ -71,9 +71,9 @@
 <link rel="stylesheet" href="css/controls-theme.css?v=20260930-game-view">
 <link rel="stylesheet" href="css/menu-theme.css?v=20261002-path-and-clouds">
 <link rel="stylesheet" href="css/command-dragon-medieval.css?v=20261001-sideroutes1">
-<link rel="stylesheet" href="css/journal-panels.css?v=20261002-kit-and-delivery">
+<link rel="stylesheet" href="css/journal-panels.css?v=20261005-portrait-map-return">
 <link rel="stylesheet" href="css/riding-tutorial.css?v=20260930-tavern-lessons-portraits">
-<link rel="stylesheet" href="css/conversation-view.css?v=20261003-celestial">
+<link rel="stylesheet" href="css/conversation-view.css?v=20261005-portrait-map-return">
 <link rel="stylesheet" href="css/conversation-standard.css?v=20260929-smart-trees-signs">
 <link rel="stylesheet" href="css/conversation-aurelius.css?v=20261003-static-stars">
 <link rel="stylesheet" href="css/quest-notifications.css?v=20261002-thornwell2">
@@ -158,13 +158,13 @@
   <canvas id="cv"></canvas>
 <div id="npcLineupControls" hidden aria-label="NPC lineup browser"><button id="bNpcType" aria-label="Next NPC type">Walking ▸</button><button id="bNpcPrev" aria-label="Previous NPC page">‹</button><span id="npcLineupStatus" aria-live="polite"></span><button id="bNpcNext" aria-label="Next NPC page">›</button><button id="bNpcClose" aria-label="Close NPC lineup">×</button></div>
 <div id="geometryBar"><span id="geometryLabel"></span><span id="collisionBrushes"><button data-collision="block" class="on">Block</button><button data-collision="open">Open</button><button data-collision="reset">Restore</button></span><button id="geometryPan">PAN</button><button id="geometryCopy">COPY</button><button id="geometryDone">DONE</button></div>
-<div id="worldAtlas" role="dialog" aria-label="Map of Emberfell"><header><div><small>FATHER’S MAP &amp; COMPASS</small><b>EMBERFELL</b></div><button id="atlasClose" type="button" aria-label="Close map">Close ×</button></header>
-<div id="atlasBody"><div id="atlasViewport"><div id="atlasSurface"><img alt="Map of Emberfell. Opaque clouds hide unexplored areas, with simple dark silhouettes hinting at locations. Explore or learn a quest to reveal names and details." src="assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity" width="1536" height="512"><div id="atlasRoutes" aria-hidden="true"></div><div id="atlasPlaces"></div><span id="atlasCursor"></span><span id="atlasQuestMarker" role="img" hidden>◆</span><span id="atlasPlayerMarker" role="img" hidden>●</span></div><div id="atlasMapTools"><button id="atlasWhole" type="button">Whole realm</button><button id="atlasHere" type="button">My area</button></div><div id="atlasMapLegend"><span>● Your area</span><span>◆ Tracked quest</span><span>☁ Unexplored</span></div></div>
+<div id="worldAtlas" role="dialog" aria-label="Map of Emberfell"><header><div><small>FATHER’S MAP &amp; COMPASS</small><b>EMBERFELL</b></div><div id="atlasMapTools"><button id="atlasWhole" type="button">Whole realm</button><button id="atlasHere" type="button">My area</button></div><button id="atlasClose" type="button" aria-label="Close map">×</button></header>
+<div id="atlasBody"><div id="atlasViewport"><div id="atlasSurface"><img alt="Map of Emberfell. Opaque clouds hide unexplored areas, with simple dark silhouettes hinting at locations. Explore or learn a quest to reveal names and details." src="assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity" width="1536" height="512"><div id="atlasRoutes" aria-hidden="true"></div><div id="atlasPlaces"></div><span id="atlasCursor"></span><span id="atlasQuestMarker" role="img" hidden>◆</span><span id="atlasPlayerMarker" role="img" hidden>●</span></div><div id="atlasMapLegend"><span>● Your area</span><span>◆ Tracked quest</span><span>☁ Unexplored</span></div></div>
 <aside id="atlasDetails" class="scrolls"><div id="atlasSummary">
 <section id="atlasAreaInfo" aria-labelledby="atlasName"><div class="journalHeading"><div><small id="atlasAreaLabel">YOUR CURRENT AREA</small><h2 id="atlasName"></h2></div></div><p id="atlasText"></p><div id="atlasServices"></div><div class="atlasFlight" style="display:none"><button id="atlasFly" type="button">Fly Here</button><small id="atlasFlyHint" aria-live="polite"></small></div></section>
 <section id="atlasTrackedInfo" aria-labelledby="atlasTrackedTitle"><small>TRACKED QUEST</small><h3 id="atlasTrackedTitle"></h3><p id="atlasTrackedObjective"></p><span id="atlasTrackedDestination"></span><button id="atlasQuests" type="button">Quests</button></section>
 </div><aside id="atlasCompassTutorial" hidden role="dialog" aria-modal="true" aria-labelledby="atlasLessonTitle"><div class="atlasLessonCard"><strong id="atlasLessonTitle">Your map, quests &amp; compass</strong><p>Open <b>Quests</b> to see what you have learned. Choose a quest, then tap <b>Track quest</b> to make it your destination.</p><p>Your compass guides you along the path. Clouds clear as you visit places or learn about them.</p><button id="atlasCompassGotIt" type="button">Got it</button></div></aside><small class="atlasHelp">Drag to explore · Pinch to zoom · Tap an area for details</small></aside></div>
-<section id="atlasQuestsScreen" hidden aria-label="Quest journal"><header><button id="atlasQuestsBack" type="button">‹ Map</button><div><small>THE TRAVELER’S JOURNAL</small><b>QUESTS</b></div><button id="atlasQuestsClose" type="button" aria-label="Close quests and map">Close ×</button></header>
+<section id="atlasQuestsScreen" hidden aria-label="Quest journal"><header><button id="atlasQuestsBack" type="button">‹ Map</button><div><small>THE TRAVELER’S JOURNAL</small><b>QUESTS</b></div><button id="atlasQuestsClose" type="button" aria-label="Close quests and map">×</button></header>
 <div id="atlasJournalBody"><nav id="atlasQuestList" class="scrolls" aria-label="Quests"><span id="atlasQuestCount"></span><h2>Active</h2><div id="atlasActiveQuests"></div><h2>Completed</h2><div id="atlasCompletedQuests"></div></nav>
 <section id="atlasQuestInfo" class="scrolls" aria-labelledby="atlasQuestTitle" tabindex="0"><article id="atlasQuestCard"><div class="atlasQuestMeta"><span id="atlasQuestKind"></span><span id="atlasQuestDestination"></span></div><h3 id="atlasQuestTitle"></h3><p id="atlasObjective" aria-live="polite"></p><p id="atlasRouteHint"></p><div id="atlasQuestSteps"></div><p id="atlasQuestStatus" role="status"></p><button id="atlasFocus" type="button">Track quest</button></article><div id="atlasMilestones"></div></section></div></section></div>
 <div id="sound" class="ovl"><div id="soundPanel"><b>SOUND</b><label id="soundVolumeLabel" for="soundVolume">Overall volume <output id="soundPct" for="soundVolume">35%</output></label><input id="soundVolume" type="range" min="0" max="100" step="1" value="35" aria-label="Overall volume"><label class="soundMixLabel" for="soundMusic">Music <output id="soundMusicPct">100%</output></label><small id="soundSong"></small><input class="soundMixRange" id="soundMusic" type="range" min="0" max="100" value="100" aria-label="Current song volume"><label class="soundMixLabel" for="soundEffects">Effects <output id="soundEffectsPct">100%</output></label><input class="soundMixRange" id="soundEffects" type="range" min="0" max="100" value="100" aria-label="Sound effects volume"><button id="soundUiMute" type="button" aria-pressed="false">UI SOUND: ON</button><div id="soundActions"><button id="soundMute" type="button">MUTE</button><button id="soundClose" type="button">DONE</button></div><div class="foot" id="soundDesc">Drag the slider to adjust music volume.</div></div><div class="rows" id="soundRows"></div></div>
@@ -469,7 +469,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/millwood-interiors.js?v=20261005-door-access"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20261001-winter-scale"></script>
-<script src="js/generated/game-part-2.js?v=20261005-monster-names" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20261005-portrait-map-return" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20261003-celestial"></script>
 <script src="js/hollybeck-villagers.js?v=20261001-recovery1"></script>
@@ -533,7 +533,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/encounter-cards.js?v=20260930-tavern-lessons-portraits"></script>
 <script src="js/arena-entry.js?v=20261003-door-motion-fix"></script>
 <script src="js/conversation-branch-data.js?v=20261005-temple-journey"></script>
-<script src="js/farm-resident.js?v=20261002-town-placement"></script>
+<script src="js/farm-resident.js?v=20261005-farmer-idle"></script>
 <script src="js/coralmere-lighthouse.js?v=20261002-lighthouse"></script>
 <script src="js/shroom-lookout.js?v=20261003-shroom-return"></script>
 <script src="js/equipment-tutorial.js?v=20261002-living-map"></script>
