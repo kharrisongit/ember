@@ -25,8 +25,7 @@ async function prepareShroomClusterPalette(){
     // Pixel editing needs a CPU-readable canvas, but gameplay only needs an
     // immutable image. These pages also contain other world art; do not keep
     // sampling a readback canvas on every rendered frame (especially on iOS).
-    const image=new Image();image.src=canvas.toDataURL('image/png');
-    await image.decode();
+    const image=await loadStartupImage(canvas.toDataURL('image/png'),'Shroom scenery palette');
     page.img=image;page.shroomLavender=true;
   }
 }

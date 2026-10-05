@@ -8,6 +8,8 @@ const {PNG}=require(prefix?prefix+'/pngjs':'pngjs');
 const canvases=[];
 class LocalImage extends Image{set src(path){super.src=PNG.sync.write(PNG.sync.read(fs.readFileSync(path.split('?')[0])));}}
 const context=vm.createContext({Image:LocalImage,document:{createElement(){const c=createCanvas(1,1);canvases.push(c);return c;}}});
+Object.assign(context,{setTimeout,clearTimeout});
+vm.runInContext(fs.readFileSync('js/startup-assets.js','utf8'),context);
 vm.runInContext(fs.readFileSync('js/spider-queen-web.js','utf8'),context);
 const art=vm.runInContext('SpiderQueenWeb',context);await art.ensureArt();
 assert(art.ready());assert.equal(canvases.filter(c=>c.pixelLocked).length,36);

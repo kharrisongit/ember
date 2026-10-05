@@ -14,6 +14,8 @@ const c=vm.createContext({console,Image:LocalImage,document:{createElement:()=>c
  ctx,FOE:{},FOE_ART:{},WORTH:{},animalSheets:{},SPR:{},houseLootTaken:new Set(),
  tAcc:Math.PI/48,enemyMaxHp:()=>140,glassAttackUnblockable:f=>!!f.unblockableAttack,
  drawPixelImage:(g,...args)=>g.drawImage(...args)});
+Object.assign(c,{setTimeout,clearTimeout});
+vm.runInContext(fs.readFileSync('js/startup-assets.js','utf8'),c);
 for(const file of ['combat-navigation','frosthorn','ice-moth'])vm.runInContext(fs.readFileSync('js/'+file+'.js','utf8'),c);
 const sheet=createCanvas(720,360),g=sheet.getContext('2d');
 for(const [row,name,prop,kind]of [[0,'Frosthorn','frosthorn','frosthorn'],[1,'IceMoth','iceMoth','icemoth']]){

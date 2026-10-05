@@ -2,9 +2,7 @@
 // Image pages must start in separate 1024px atlas buckets.
 async function loadInventoryIcons() {
   for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['travel-gear.webp',3005440],['relics.webp',3004416]]) {
-  const image = new Image();
-  image.src = 'assets/inventory/'+file+'?v=20261001-soulwing';
-  await image.decode();
+  const image=await loadStartupImage('assets/inventory/'+file+'?v=20261001-soulwing');
 
   // Single-item art is sampled into the same 128px atlas cell as other rewards.
   // Keep the high-resolution source intact for future inventory sizes.

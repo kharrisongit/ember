@@ -23,6 +23,8 @@ const context=vm.createContext({console,Image:LocalImage,
   fishing:false,fadeDir:0,doorMotion:null,ctx,
   drawPixelImage:(g,...args)=>g.drawImage(...args),
 });
+Object.assign(context,{setTimeout,clearTimeout});
+vm.runInContext(fs.readFileSync('js/startup-assets.js','utf8'),context);
 vm.runInContext(fs.readFileSync(new URL('js/spider-queen-demo.js',root),'utf8'),context);
 const demo=vm.runInContext('SpiderQueenDemo',context);
 await demo.ensureArt();

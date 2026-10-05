@@ -2,8 +2,7 @@
 const SpiderQueenWeb=(()=>{
   const SIZE=96,frames=[],shapes=[];let loading=null;
   async function sheet(file,rows,output){
-    const source=new Image();source.src='assets/sprites/spider-queen/'+file+'?v=20260930-web2';
-    await source.decode();
+    const source=await loadStartupImage('assets/sprites/spider-queen/'+file+'?v=20260930-web2');
     const matte=document.createElement('canvas');matte.width=source.width;matte.height=source.height;
     const mg=matte.getContext('2d',{willReadFrequently:true});mg.drawImage(source,0,0);
     const raw=mg.getImageData(0,0,matte.width,matte.height),rgba=raw.data;

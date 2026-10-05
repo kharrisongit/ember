@@ -4,6 +4,7 @@ import vm from 'node:vm';
 const pages=[],samples=[];
 const document={createElement:()=>({width:0,height:0,getContext:()=>({drawImage:(...args)=>samples.push(args)})})};
 const c=vm.createContext({SPR:{},document,Image:class {width=512;height=512;async decode(){if(this.src.includes('rest'))this.height=768;if(this.src.includes('map-compass'))this.width=this.height=128;if(this.src.includes('bag-painted')){this.width=1300;this.height=1200;}if(this.src.includes('relics.webp')){this.width=512;this.height=128;}}},registerAtlasPage:page=>pages.push(page)});
+c.loadStartupImage=async src=>{const image=new c.Image();image.src=src;await image.decode();return image;};
 // Exercise the real atlas lookup: two separate images cannot own the same
 // 1024px bucket even if their individual sprite rectangles do not overlap.
 const game=fs.readFileSync('js/generated/game-part-2.js','utf8');

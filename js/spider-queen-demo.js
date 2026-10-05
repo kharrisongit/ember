@@ -51,11 +51,9 @@ const SpiderQueenDemo = (() => {
     hardPixels(g,c.width,c.height);c.pixelLocked=true;return c;
   }
   async function loadArt(){
-    const response=await fetch(BASE+'frames.json?v='+VERSION);
-    if(!response.ok)throw Error('Spider Queen frame map could not load');
-    const manifest=await response.json();
+    const manifest=await loadStartupJSON(BASE+'frames.json?v='+VERSION);
     await Promise.all(Object.entries(manifest).map(async([dir,spec])=>{
-      const image=new Image();image.src=BASE+spec.file+'?v='+VERSION;await image.decode();
+      const image=await loadStartupImage(BASE+spec.file+'?v='+VERSION);
       if(dir==='venom'){
         frames.venom={};
         ['d','u','e','w','impact'].forEach((action,row)=>{

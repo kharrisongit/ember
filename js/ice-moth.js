@@ -37,7 +37,7 @@ const IceMoth=(()=>{
     if(loading)return loading;
     loading=(async()=>{
       for(const [dir,name]of [['d','south'],['e','east'],['u','north']]){
-        const source=new Image();source.src=BASE+name+'-packed.png?v='+VERSION;await source.decode();
+        const source=await loadStartupImage(BASE+name+'-packed.png?v='+VERSION);
         frames[dir]=Array.from({length:6},(_,row)=>Array.from({length:6},(_,col)=>{
           const c=canvas(CELL,HEIGHT);c.getContext('2d').drawImage(source,col*CELL,row*HEIGHT,CELL,HEIGHT,0,0,CELL,HEIGHT);c.pixelLocked=true;return c;
         }));
@@ -48,7 +48,7 @@ const IceMoth=(()=>{
         frames[dir][0].forEach((frame,i)=>g.drawImage(frame,i*CELL,0));c.pixelLocked=true;
         animalSheets[key]=c;SPR[key]=[0,0,CELL,HEIGHT,6,key];
       }
-      const source=new Image();source.src=BASE+'projectiles-packed.png?v='+VERSION;await source.decode();
+      const source=await loadStartupImage(BASE+'projectiles-packed.png?v='+VERSION);
       for(let row=0;row<4;row++)effectsArt[row]=Array.from({length:6},(_,col)=>{
         const c=canvas(FX,FX);c.getContext('2d').drawImage(source,col*FX,row*FX,FX,FX,0,0,FX,FX);c.pixelLocked=true;return c;
       });

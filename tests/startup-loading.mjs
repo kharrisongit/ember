@@ -38,16 +38,18 @@ const atlasContext=vm.createContext({console,
   Image:class{set src(value){this.url=value;images.push(this);}},
   ATLAS_PAGES:Array.from({length:4},(_,i)=>[i,0,16,16,'page'+i]),
   ATLAS_PATCHES:[[0,0,16,16,'patch']],MOUNTED_KEY_Y:new Set(),
-  registerAtlasPage:p=>registered.push(p.img.url),knightStoryImg:{decode:async()=>{}},
+  registerAtlasPage:p=>registered.push(p.img.url),knightStoryImg:null,KNIGHT_STORY_SRC:"knight",setTimeout,clearTimeout,
   report:(done,total,label)=>atlasReports.push({done,total,label})
 });
 for(const name of ['prepareGreenScene','loadDesertNpcAssets','loadDockOriginalAssets','loadRoyalAssets','loadInventoryIcons','loadWorkshopCraftsmen'])
   atlasContext[name]=()=>new Promise(resolve=>extraLoads.set(name,resolve));
+vm.runInContext(read('js/startup-assets.js'),atlasContext);
 vm.runInContext(section(p2,'async function loadAtlasPages(','const stageEl ='),atlasContext);
 let atlasComplete=false;const atlasLoad=vm.runInContext('loadAtlasPages(report)',atlasContext).then(()=>atlasComplete=true);
 assert.equal(images.length,3);images[0].onload();await new Promise(setImmediate);
 assert.equal(images.length,4,'A free worker starts the next page');
 for(const image of images.slice(1))image.onload();await new Promise(setImmediate);
+assert.equal(images.at(-1).url,'knight');images.at(-1).onload();await new Promise(setImmediate);
 assert.equal(images.at(-1).url,'patch');assert.equal(registered.length,4);
 images.at(-1).onload();await new Promise(setImmediate);
 assert.equal(extraLoads.size,6,'Independent artwork groups still load together');

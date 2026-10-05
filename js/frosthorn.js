@@ -32,14 +32,14 @@ const Frosthorn=(()=>{
     if(loading)return loading;
     loading=(async()=>{
       for(const [dir,file]of [['d','south'],['e','east'],['u','north']]){
-        const source=new Image();source.src=BASE+file+'-packed.png?v='+VERSION;await source.decode();
+        const source=await loadStartupImage(BASE+file+'-packed.png?v='+VERSION);
         frames[dir]=Array.from({length:7},(_,row)=>Array.from({length:6},(_,col)=>{
           const c=canvas(CELL,HEIGHT);c.getContext('2d').drawImage(source,col*CELL,row*HEIGHT,CELL,HEIGHT,0,0,CELL,HEIGHT);c.pixelLocked=true;return c;
         }));
       }
       // Mirror each cell, never the complete strip (which reverses time).
       frames.w=frames.e.map(row=>row.map(c=>{const out=canvas(CELL,HEIGHT),g=out.getContext('2d');g.translate(CELL,0);g.scale(-1,1);g.drawImage(c,0,0);out.pixelLocked=true;return out;}));
-      const ice=new Image();ice.src=BASE+'ice-spikes-packed.png?v='+VERSION;await ice.decode();
+      const ice=await loadStartupImage(BASE+'ice-spikes-packed.png?v='+VERSION);
       for(let row=0;row<2;row++)for(let col=0;col<6;col++){const c=canvas(72,72);c.getContext('2d').drawImage(ice,col*72,row*72,72,72,0,0,72,72);c.pixelLocked=true;spikes.push(c);}
       for(const dir of ['d','e','u','w']){
         const key='frosthorn_idle_'+dir,sheet=canvas(CELL*6,HEIGHT),g=sheet.getContext('2d');

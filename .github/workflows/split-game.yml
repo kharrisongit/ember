@@ -48,6 +48,8 @@ jobs:
         run: |
           node tests/startup-loading.mjs
           node tests/startup-assets.mjs
+          node tests/startup-art.mjs
+          node tests/temple-startup.mjs
           node tests/furniture-loading.mjs
           node tests/millwood-interiors.mjs
           node tests/boot-progress.mjs

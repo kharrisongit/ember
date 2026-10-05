@@ -7,6 +7,7 @@ const c=vm.createContext({sayNpc:null,scene:null,ask:null,MAPID:'smithy',
   window:{EmberConversationFlow:{partner:()=>null}},ctx:{imageSmoothingEnabled:true},
   SPR:{glassnew_anim_4:[0,47104,64,80,45]},sheetOf:()=>({native:true}),
   drawGameImage:(...args)=>draw.push(args),Image:class{async decode(){}}});
+c.loadStartupImage=async src=>({src});
 const run=s=>vm.runInContext(s,c);
 run(read('js/workshop-craftsmen.js'));await run('loadWorkshopCraftsmen()');
 run("var smith={spr:'smithy_anim_8',x:200.25,y:192.25},sela={spr:'glassnew_anim_4',x:160,y:176}");

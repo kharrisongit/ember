@@ -10,9 +10,7 @@ const workshopAnimationState=new WeakMap();
 const workshopImages={};
 async function loadWorkshopCraftsmen(){
   await Promise.all(['work','idle'].map(async action=>{
-    const image=new Image();
-    image.src='assets/sprites/workshops/dunstan-'+action+'.png?v=20260930-complete-station';
-    await image.decode();workshopImages[action]=image;
+    workshopImages[action]=await loadStartupImage('assets/sprites/workshops/dunstan-'+action+'.png?v=20260930-complete-station');
   }));
 }
 function prepareDunstanStation(map){
