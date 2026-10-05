@@ -1,4 +1,4 @@
-/* Keep town/pyramid image requests bounded, and recover transient failures.
+/* Keep town, temple and cave image requests bounded, and recover transient failures.
    Use the load event, as the atlas loader does: a separate decode() rejection
    must not discard an image that the browser has already loaded successfully. */
 const startupImageQueue=[];

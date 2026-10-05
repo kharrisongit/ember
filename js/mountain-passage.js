@@ -2,15 +2,13 @@ window.EMBER_ASSETS.DOCK_ORIGINAL_ASSETS.push(...[{"name":"passage_torch","w":32
 /* Mountain Passage: one through-route, nine optional branches and the original Ashfiend. */
 async function prepareExpandedMountainPassage(){
   if(W.maps.passage.mountainPassage)return;
-  const response=await fetch('assets/interiors/mountain-passage/layout.json?v=20260924-passage4');
-  if(!response.ok)throw Error('Mountain passage layout could not load');
-  const plans=await response.json();
+  const plans=await loadStartupJSON('assets/interiors/mountain-passage/layout.json?v=20260924-passage4');
   const frostExit=W.maps.passage.doors.find(d=>d.to==='world');
   const ashExit=W.maps.passage3.doors.find(d=>d.to==='world');
   const bossKind=W.maps.passage3.foes[0].k;
   const images=await Promise.all(Object.keys(plans).map(async id=>{
-    const image=new Image();image.src='assets/interiors/mountain-passage/'+id+'.png?v=20260924-passage4';
-    await image.decode();return [id,image];
+    const image=await loadStartupImage('assets/interiors/mountain-passage/'+id+'.png?v=20260924-passage4');
+    return [id,image];
   }));
   for(const [id,image] of images){
     const plan=plans[id],[width,height]=plan.size;

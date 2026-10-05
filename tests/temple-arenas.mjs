@@ -10,6 +10,8 @@ const c=vm.createContext({nanMorningSolid:()=>false,nanMorningDoorBlocked:()=>fa
  stepChest(){},settleGraves(){},recoverStrandedDragon(){},saveGame(){},toast(){},rebuildBuckets(){},showRise(){},
  FOE:new Proxy({},{get:()=>({hp:20})}),enemyMaxHp:()=>20,NO_RESPAWN:/golem|devil/,
  royalDefeated:{},knightEncounterDone:false,houseLootTaken:new Set(),lootChestAnimations:new Map(),twinSpent:false,twinKills:0});
+c.loadStartupImage=async src=>({src});
+c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('const foeVisibleTopCache82')));

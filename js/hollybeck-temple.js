@@ -1,14 +1,13 @@
 /* Hollybeck: twenty sections with east/west switchbacks and the original skull chamber. */
 async function prepareExpandedHollybeckTemple(){
   if(W.maps.sn1.hollybeck)return;
-  const response=await fetch('assets/interiors/hollybeck-temple/layout.json?v=20260930-room-space');
-  if(!response.ok)throw Error('Hollybeck temple layout could not load');
-  const plans=await response.json(),old=W.maps.sn1,outside=old.doors.find(d=>d.to==='world');
+  const plans=await loadStartupJSON('assets/interiors/hollybeck-temple/layout.json?v=20260930-room-space');
+  const old=W.maps.sn1,outside=old.doors.find(d=>d.to==='world');
   const chamberProps=old.roomActors.filter(o=>!o.editableWall&&o.y<512).map(o=>({...o}));
   const chamberBlocks=old.roomBlocks.filter(b=>b[1]<512).map(b=>b.slice());
   const images=await Promise.all(Object.keys(plans).map(async id=>{
-    const image=new Image();image.src='assets/interiors/hollybeck-temple/'+id+'.png?v=20260930-room-space';
-    await image.decode();return [id,image];
+    const image=await loadStartupImage('assets/interiors/hollybeck-temple/'+id+'.png?v=20260930-room-space');
+    return [id,image];
   }));
   for(const [id,image] of images){
     const plan=plans[id],[width,height]=plan.size;

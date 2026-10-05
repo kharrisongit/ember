@@ -1,12 +1,11 @@
 /* Sandspire: compact rooms, seven-stage main route and three optional branches. */
 async function prepareExpandedSandspireTemple(){
   if(W.maps.ds1.sandspire)return;
-  const response=await fetch('assets/interiors/sandspire-temple/layout.json?v=20260930-room-space');
-  if(!response.ok)throw Error('Sandspire temple layout could not load');
-  const plans=await response.json(),outside=W.maps.ds1.doors.find(d=>d.to==='world');
+  const plans=await loadStartupJSON('assets/interiors/sandspire-temple/layout.json?v=20260930-room-space');
+  const outside=W.maps.ds1.doors.find(d=>d.to==='world');
   const images=await Promise.all(Object.keys(plans).map(async id=>{
-    const image=new Image();image.src='assets/interiors/sandspire-temple/'+id+'.png?v=20260930-room-space';
-    await image.decode();return [id,image];
+    const image=await loadStartupImage('assets/interiors/sandspire-temple/'+id+'.png?v=20260930-room-space');
+    return [id,image];
   }));
   for(const [id,image] of images){
     const plan=plans[id],[width,height]=plan.size;

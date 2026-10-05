@@ -8,6 +8,8 @@ const c=vm.createContext({W,fetch:async()=>({ok:true,json:async()=>structuredClo
  CHESTS:[{map:'ds1',gift:'ice'}],chestOpen:{},hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,charm:{},worn:{},breathHas:{ice:false,lightning:false},bossGone:{},foesHeld:false,foes:[],P:{},tAcc:0,sceneHold:()=>false,fadeDir:0,
  performance:{now:()=>clock},gold:0,potions:0,elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,dragonFish:0,flyGold(){},showReveal(){reveals++;},showRise(){rises++;},rebuildBuckets(){},hurtPlayer(){hits++;},saveGame(){},toast(){},
  FOE:{ghost:{hp:6},wraith:{hp:8},golem1:{hp:12}},TS:16,NO_RESPAWN:/golem/,royalDefeated:{},knightEncounterDone:false,MAPID:'world'});
+c.loadStartupImage=async src=>({src});
+c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c),game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-part-3.js');
 run(read('js/first-temple.js'));run(read('js/house-loot.js'));run(read('js/sandspire-temple.js'));
 run(game.slice(game.indexOf('const ROUTE_2_HP_START_X'),game.indexOf('const FOE_ART')));

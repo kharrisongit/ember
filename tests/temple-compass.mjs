@@ -15,6 +15,8 @@ const c = vm.createContext({ quest:0,Q:{ABED:0}, W, TS:16, DIRT:0, terrRLE:()=>'
   fetch:async url=>({ok:true,json:async()=>JSON.parse(read(url.split('?')[0]))}), Image:class { async decode() {} },
   breathHas:{},chestOpen:{},ctx,tAcc:0,atlasTrackedQuest:'main',gameplayStarted:true,mode:'play',editStamp:0,VW:390,VH:600,
   document:{getElementById:()=>button},setDev:on=>{menu=on;},toast(){} });
+c.loadStartupImage=async src=>({src});
+c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run = source => vm.runInContext(source, c);
 run(game.slice(game.indexOf('const CHESTS = ['), game.indexOf('function chestHere()')));
 run(game.slice(game.indexOf('function installFirstTemple(){'), game.indexOf('const foeVisibleTopCache82')));

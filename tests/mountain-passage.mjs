@@ -9,6 +9,8 @@ const c=vm.createContext({templeCompass:{owned:false,awakened:false},restoreFath
  sceneHold:()=>false,fadeDir:0,tAcc:0,hurtPlayer(){c.hits++;},hits:0,saveGame(){},toast(){},chunks:new Map(),
  FOE:{ghost3:{hp:6},wraith:{hp:8},devil:{hp:22}},NO_RESPAWN:/devil/,royalDefeated:{},knightEncounterDone:false,
  houseLootTaken:new Set(),lootChestAnimations:new Map()});
+c.loadStartupImage=async src=>({src});
+c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 for(const path of ['js/first-temple.js','js/sandspire-temple.js','js/hollybeck-temple.js','js/mountain-passage.js'])run(read(path));

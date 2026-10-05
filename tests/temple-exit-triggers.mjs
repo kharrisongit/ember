@@ -9,6 +9,8 @@ const c=vm.createContext({nanMorningDoorBlocked:()=>false,progressionMoveAllowed
  breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
  isArea:()=>false,playZoom:()=>1,clampCam(){},checkArea(){},setDevTitle(){},toast(){},setTravel:on=>{travelClosed=!on;},
  document:{getElementById:()=>list,createElement:()=>({handlers:{},addEventListener(type,fn){this.handlers[type]=fn;}})}});
+c.loadStartupImage=async src=>({src});
+c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('const foeVisibleTopCache82')));
