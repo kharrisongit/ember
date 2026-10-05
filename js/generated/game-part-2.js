@@ -177,17 +177,32 @@ async function loadRoyalAssets(){
 }
 function installMineDoorAccess(){
  for(const [id,map] of Object.entries(W.maps))if(/^mine\d*$/.test(id)){
+  // Wall art lives in the ground scatter, which does not stamp object collision.
+  // Include every rock corner and face, but leave timber passage openings clear.
+  const cells=map.collisionOverrides ||= {};
+  for(let i=0;i<map.scatter.length;i+=3)if(/^rc_walls_/.test(W.names[map.scatter[i]])){
+   const x=map.scatter[i+1],y=map.scatter[i+2];
+   for(let py=y-16;py<y;py+=8)for(let px=x-8;px<x+8;px+=8)cells[px/8+','+py/8]=true;
+  }
+  // Keep spawn indices stable for saved defeats, replacing only the wrong species.
+  for(const foe of map.foes||[])if(!/^shroom/.test(foe.k))foe.k='shroomPurple';
   for(const d of map.doors||[]){
    let cx=d.x*TS+8,y=d.y*TS+16,cave=-1;
    for(let i=0;i<map.objs.length;i+=3)if(W.names[map.objs[i]]==='cave4'&&
-     Math.hypot(map.objs[i+1]-cx,map.objs[i+2]-d.y*TS)<40){cave=i;break;}
+     Math.hypot(map.objs[i+1]-cx,map.objs[i+2]-d.y*TS)<64){cave=i;break;}
    if(cave>=0){
-    // Level three's eastern cave sat inside the solid boundary column.
-    cx=map.objs[cave+1]=Math.min(map.objs[cave+1],map.w*TS-56);
-    y=map.objs[cave+2];
+    cx=Math.max(24,Math.min(map.objs[cave+1],map.w*TS-56));
+    // Seat the north-facing mouth on the wall's bottom edge, not on the floor.
+    const wallBottom=[];
+    for(let i=0;i<map.scatter.length;i+=3)if(/^rc_(walls_|sup2_|wallsup_)/.test(W.names[map.scatter[i]])&&
+      Math.abs(map.scatter[i+1]-cx)<=16&&map.scatter[i+2]<=112)wallBottom.push(map.scatter[i+2]);
+    y=Math.max(...wallBottom);
+    map.objs[cave+1]=cx;map.objs[cave+2]=y;
    }
-   d.x=(cx-8)/TS;d.dir='u';d.explicitDir=true;
-   d.triggerRect={x:cx-12,y:y-8,w:24,h:16};
+   d.x=(cx-8)/TS;d.y=(y-16)/TS;d.dir='u';d.explicitDir=true;
+   delete d.ox;delete d.oy;
+   // Contact is on the floor in front of the mouth; no walking into rock needed.
+   d.triggerRect={x:cx-12,y,w:24,h:16};
    const back=W.maps[d.to]?.doors.find(other=>other.to===id);
    if(back){back.tx=(cx-8)/TS;back.ty=(y+16)/TS;}
   }
@@ -8463,7 +8478,7 @@ const BESTIARY = [
   {"k": "plant2", "n": "Pilgrim Vinemaw", "w": "the middle blossom roads", "t": "These grew where travellers left flowers at roadside shrines. Their seeds travelled in the hems of pilgrims' coats, linking one shrine to the next. The pilgrims are gone, but the plants still lean towards the road whenever they hear someone coming."},
   {"k": "plant3", "n": "Widowbloom Vinemaw", "w": "the far blossom roads", "t": "Village custom was to plant one at the gate when a rider failed to return. After Wingfall, entire lanes flowered. The oldest blooms have swallowed their gates and the paths beyond; people still leave offerings, though nobody now agrees whom they are feeding."},
   {"k": "gnoll1", "n": "Tollfang Gnoll", "w": "the first snow arenas and roads", "t": "Tollfang bands occupy the shelters where winter roadkeepers once collected passage money. They have copied the custom without understanding the receipt. A strip of old uniform is enough to make one a collector; anyone without it is expected to pay."},
-  {"k": "gnoll2", "n": "Rimepick Gnoll", "w": "the deeper snow roads and mine galleries", "t": "Rimepicks learned to follow ore carts rather than caravans. When Forgewick's deeper workings fell silent, they carried stolen tools into the mountain roads. Each band keeps a broken miner's lamp, passed from hand to hand as a claim to everything found underground."},
+  {"k": "gnoll2", "n": "Rimepick Gnoll", "w": "the deeper snow roads", "t": "Rimepicks learned to follow ore carts rather than caravans. When Forgewick's deeper workings fell silent, they carried stolen tools into the mountain roads. Each band keeps a broken miner's lamp, passed from hand to hand as a claim to everything found underground."},
   {"k": "gnoll3", "n": "Cairnkeeper Gnoll", "w": "the last snow arenas", "t": "The largest clans leave their dead beneath heaps of travellers' stones. A Cairnkeeper carries the names of those cairns in a knotted cord. It raids the road for iron and cloth, then takes the spoils home to people who can no longer use them."},
   {"k": "eyeRed", "n": "Cinder Watcher", "w": "the first volcanic roads and Cinderhold approach", "t": "Quarrymen once judged safe footing by where the red eyes gathered: warm rock, but not yet molten. That knowledge died with the last road crews. The Watchers still gather at the crossings, patiently examining every living thing that mistakes them for distant lamps."},
   {"k": "eye2", "n": "Kiln Watcher", "w": "the middle volcanic roads", "t": "The shuttered kilns beyond Ashcrag have no windows, yet their keepers used to complain of being watched. When the doors were broken open, these creatures drifted out. Some still circle an empty patch of road as though tending a furnace only they can see."},
@@ -8475,7 +8490,7 @@ const BESTIARY = [
   {"k": "shroomPurple", "n": "Deepveil Shroom", "w": "the deepest mine galleries", "t": "Miners found the violet caps growing through the felt of abandoned helmets. They thrive below the last timber supports, where even the roots from above cannot reach. Old pit hands left an empty helmet at each descent, hoping the growth would settle for that."},
   {"k": "ghost", "n": "Gravewake Spirit", "w": "Hollybeck graveyard and the temple undercrofts", "t": "Hollybeck's oldest graves face the road so the dead may see their families return. Few families make that journey now. The restless rise to meet footsteps at the gate; beneath the temples, other spirits wait with the same terrible patience."},
   {"k": "wraith", "n": "Bound Wraith", "w": "the summons of the Book of the Dead", "t": "The Book of the Dead records obligations rather than names. Read a debt aloud and something hooded arrives to discharge it. It will fight beside the bearer without complaint. The missing pages may explain what the bearer owes in return."},
-  {"k": "golem1", "n": "Stone Golem", "w": "the desert temple depths and the mine", "t": "The chisel marks beneath its feet belong to the masons who built the old rider halls. Stone Golems hauled the blocks, then stood watch when the work was done. Their makers carved the command to wake. No surviving wall records the command to rest."},
+  {"k": "golem1", "n": "Stone Golem", "w": "the desert temple depths", "t": "The chisel marks beneath its feet belong to the masons who built the old rider halls. Stone Golems hauled the blocks, then stood watch when the work was done. Their makers carved the command to wake. No surviving wall records the command to rest."},
   {"k":"golem4","n":"Granite Golem","w":"the Forgewick temple depths","t":"Carved from gray mountain stone, these wardens share the old masons' design with Sandspire's brown guardians. They have stood beneath Forgewick since the rider halls fell silent, waking only when footsteps disturb their watch."},
   {"k":"golem2","n":"Crystal Golem","w":"the Hollybeck temple depths","t":"White stone shelters a heart of violet crystal. The old riders set these guardians beneath Hollybeck to keep watch through the long winters. Their crystals still shine in halls that have forgotten daylight."},
   {"k": "golem3", "n": "Ember Golem", "w": "the final lava-route arena near Cinderhold", "t": "An ember carried from a rider's hearth was sealed inside each of these guardians to keep the high halls warm. The hearths went cold after Wingfall; the embers did not. On the road to Cinderhold, their embers still burn beneath the armored stone."},

@@ -86,6 +86,7 @@ jobs:
           node tests/dragon-dialogue.mjs
           node tests/dragon-staging.mjs
           node tests/mine-companion.mjs
+          node tests/mine-geometry.mjs
           node tests/npc-callouts-facing.mjs
           node tests/cutscene-walking.mjs
           node tests/green-encounter.mjs
