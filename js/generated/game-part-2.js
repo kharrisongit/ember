@@ -4122,7 +4122,7 @@ function drawWorld(t, dt) {
   draw.push({ portalLayer: true, x: 0, y: 0 });
   // Floors, corpses, then loot: gold stays visible even on a large fallen foe.
   // The smithy's plume remains at roof height.
-  const groundLayer = o => (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? .5 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
+  const groundLayer = o => o.queenWeb ? .25 : (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? .5 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
     : o.looseGold || o.portalLayer || (MD.templeExpanded && o.houseLoot) || o.heartstoneChest ||
       (MD.hollybeck && (o.spr === 'dragon75_plinth_blue' || o.spr === 'dragon75_skull')) ? 1 : 2;
   draw.push({looseGold:true,x:0,y:0,sy:-1e9});

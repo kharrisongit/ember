@@ -73,6 +73,21 @@ assert.equal(run('dragon.x-P.x'),44,'Party lands side by side');assert.equal(run
 assert(run('canStand(P.x,P.y)&&dragonCanStand(dragon.x,dragon.y)'), 'Both capture destinations are clear');
 assert(run('SpiderQueenBoss.playerPose()?.kind==="die"&&P.act===null&&!dragon.down&&dragon.knockdown===0'),'Lying poses do not kill, faint or disable Fire');
 const nets=JSON.parse(run('JSON.stringify(SpiderQueenBoss.inspect().web.nets)'));assert(new Set(nets.map(n=>n.w)).size>=6&&new Set(nets.map(n=>n.variant)).size===5,'Layered web scales and five silhouettes');
+const webLayers=JSON.parse(run(`JSON.stringify((()=>{
+  const entries=[];SpiderQueenBoss.addEffects(entries);
+  const original=drawPixelImage,alphas=[];
+  try{
+    drawPixelImage=()=>alphas.push(ctx.globalAlpha);
+    SpiderQueenBoss.draw(entries.find(o=>o.queenWeb));
+    const floor=alphas.splice(0);
+    SpiderQueenBoss.draw(entries.find(o=>o.queenWebBinding));
+    return {floor,bindings:alphas};
+  }finally{drawPixelImage=original;}
+})())`));
+assert.equal(webLayers.floor.length,nets.length,'Room silk is a separate floor pass');
+assert.equal(webLayers.bindings.length,2,'Only one binding per character overlays the party');
+assert(webLayers.bindings.every(a=>a<=.3),'Bindings keep the trapped characters visible');
+assert(webLayers.floor.every(a=>a<=.45),'Overlapping room silk is softened');
 assert.equal(run('breathWait("fire")'),0,'Escape Fire is available even after a recent cast');
 const zoomBeforeWeb=run('cam.z');run('SpiderQueenBoss.frameCamera();');
 assert(run('cam.z>Math.min(3.2,(VW-24)/(192+40),(VH-24)/(144+96))'),'Capture camera stays closer than a whole-room view');

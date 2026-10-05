@@ -112,12 +112,12 @@ const SpiderQueenBoss=(()=>{
     restoreCameraTarget();
     web={queen:f,phase:'casting',t:0,biteCool:0,source:[f.x,f.y-40*SCALE],points:[],cameraZoom:cam.z};
     const [l,t,r,b]=f.expandedRoom;
-    // Large sheets sit underneath crooked mid-size nets and small foreground knots.
+    // Floor silk stays beneath the party; sparse knots keep the chamber readable.
     const add=(x,y,w,h,variant,turn=0)=>web.points.push({x,y,w,h,variant,turn});
     add(l+70,t+65,226,190,1);add(r-78,t+90,232,168,2);
     add((l+r)/2,b-65,224,180,0);add(l+70,b-62,142,202,3);
     add(r-42,b-45,154,122,4,1);
-    for(let i=0;i<13;i++){
+    for(let i=0;i<7;i++){
       const x=l+18+(i*83)%(r-l-28),y=t+14+(i*67)%(b-t-24);
       const size=[44,64,82,112][i%4];add(x,y,size,size,[4,0,2,1,3][i%5],i%4);
     }
@@ -235,7 +235,7 @@ const SpiderQueenBoss=(()=>{
     f.queenStun=3.5;f.webCool=9;f.st='idle';f.t=0;f.hurt=.35;
     shots.length=0;toast('The web burns away! She is stunned—attack!');
   }
-  function drawWeb(){
+  function drawWeb(bodyOnly=false){
     if(!web||!SpiderQueenWeb.ready())return;
     const [l,t,r,b]=web.queen.expandedRoom;
     const drawNet=(net,phase=web.phase,time=web.t)=>{
@@ -246,11 +246,12 @@ const SpiderQueenBoss=(()=>{
       }
       const frame=SpiderQueenWeb.frame(phase,time,variant);
       ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.rotate(turn*Math.PI/2);
-      ctx.globalAlpha=phase==='burning'?Math.min(1,Math.max(0,(1.25-time)*5)):body ? .94 : w>=140 ? .64 : .8;
+      const opacity=body ? .3 : w>=140 ? .38 : .45;
+      ctx.globalAlpha=opacity*(phase==='burning'?Math.min(1,Math.max(0,(1.25-time)*5)):1);
       drawPixelImage(ctx,frame,0,0,frame.width,frame.height,-Math.round(w/2),-Math.round(h/2),w,h);ctx.restore();
     };
     ctx.save();ctx.imageSmoothingEnabled=false;ctx.beginPath();ctx.rect(l,t-24,r-l,b-t+24);ctx.clip();
-    for(const [i,net]of web.points.entries()){
+    if(!bodyOnly)for(const [i,net]of web.points.entries()){
       if(web.phase==='casting'){
         const delay=(i%7)*.045,progress=Math.max(0,Math.min(1,(web.t-delay)/.85));
         if(!progress)continue;
@@ -258,7 +259,7 @@ const SpiderQueenBoss=(()=>{
         drawNet({...net,x,y},progress<.9?'casting':'trapped',progress);
       }else drawNet(net);
     }
-    if(web.phase!=='casting')for(const [i,[x,y]]of [[P.x,P.y],[dragon.x,dragon.y]].entries())drawNet({x,y:y-8,w:i?108:78,h:i?72:52,variant:i?1:2,body:true});
+    if(bodyOnly&&web.phase!=='casting')for(const [i,[x,y]]of [[P.x,P.y],[dragon.x,dragon.y]].entries())drawNet({x,y:y-8,w:i?108:78,h:i?72:52,variant:i?1:2,body:true});
     ctx.restore();
   }
   function frameCamera(){
@@ -274,12 +275,17 @@ const SpiderQueenBoss=(()=>{
   function addEffects(list){
     if(map!==MAPID||!MD?.pyramid||foesHeld)return;
     for(const w of waves)list.push({queenWave:w,x:w.x,y:w.y,sy:-1e7});
-    if(web)list.push({queenWeb:true,x:0,y:0,sy:1e8});
+    if(web){
+      list.push({queenWeb:true,x:0,y:0,sy:0});
+      // Only a light binding overlay goes over Corin and Aurelius.
+      list.push({queenWebBinding:true,x:0,y:0,sy:1e8});
+    }
     for(const s of shots)list.push({queenVenom:s,x:s.x,y:s.y-s.z,sy:s.y+48});
     for(const s of splashes)list.push({queenSplash:s,x:s.x,y:s.y});
   }
   function draw(o){
     if(o.queenWeb){drawWeb();return true;}
+    if(o.queenWebBinding){drawWeb(true);return true;}
     if(o.queenWave){
       const w=o.queenWave,[l,t,r,b]=w.queen.expandedRoom;
       ctx.save();ctx.beginPath();ctx.rect(l,t,r-l,b-t);ctx.clip();
