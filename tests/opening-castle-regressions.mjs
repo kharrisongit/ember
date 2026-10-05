@@ -41,6 +41,9 @@ run(`quest=Q.DONE;loadMap('cinderhold');var chair=MD.roomActors.find(a=>a.throne
 assert(run('chair.moveBlocks.length>0'));assert(run('isSolid(chair.x,chair.y-4)'));assert(run('canStand(176,180)'));
 run('var chairX=chair.x;shiftActorData(MD,chair,chair.x+32,chair.y,true)');assert(run('isSolid(chair.x,chair.y-4)'));run('shiftActorData(MD,chair,chairX,chair.y,true)');
 assert.equal(run('SPR.throne_wall[5]'),'castle_north_wall');
+assert.equal(run('SPR.royal_throne_door[3]'),48,'Door uses the same native height as the surrounding wall');
+assert.equal(run('MD.roomActors.find(a=>a.royalDoor).y-SPR.royal_throne_door[3]'),13,'Door cornice aligns with the north wall');
+assert(run("(()=>{const a=MD.roomActors.find(a=>a.royalDoor),r=doorRect(MD.doors.find(d=>d.to==='royal_seal'));return a.x===r.x+r.w/2;})()"),'Door artwork remains centered on its trigger');
 assert.equal(run("W.maps.royal_seal.roomActors.find(a=>a.editKey==='royal:relocated-painting').extractedCanvas.width"),21,'Painting crop has no wall-column fragments');
 for(const [x,y]of [[176,148],[214,140],[245,150]]){
  c.startX=x;c.startY=y;

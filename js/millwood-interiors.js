@@ -246,7 +246,9 @@ function repairCastleNorthWall(){
   for(const [x,sx]of [[28,121],[92,153],[156,281]])drawGameImage(g,atlasImg,old[0]+sx,old[1]+13,21,26,x,13,21,26);
   // The doorway frame owns its columns and threshold; leave a dark opening
   // behind every animation frame, with no old painting showing through.
-  g.fillStyle='#19121b';g.fillRect(284,15,24,33);
+  g.fillStyle='#19121b';g.fillRect(288,12,16,28);
+  // The threshold is transparent floor, not a black extension of the opening.
+  g.clearRect(288,40,16,11);
   animalSheets.castle_north_wall=c;SPR.throne_wall=[0,0,328,51,1,'castle_north_wall'];
 }
 
@@ -254,12 +256,17 @@ async function prepareCastleArchitecture(){
   const hall=W.maps.royal_westhall,throne=W.maps.cinderhold;
   if(!hall?._roomBaseCanvas||!throne||throne._architectureReady)return;
   const load=name=>loadStartupImage('assets/interiors/'+name+'.png?v=20261001-furniture1');
-  const doors=await load('throne-door-frames');
+  const sourceDoors=await load('throne-door-frames');
+  // These frames were stretched to 51px, while the surrounding wall is 48px.
+  // Restore the native height so the cornice and blue skirting share a baseline.
+  const doors=document.createElement('canvas');doors.width=192;doors.height=48;
+  const doorContext=doors.getContext('2d');doorContext.imageSmoothingEnabled=false;
+  doorContext.drawImage(sourceDoors,0,0,192,51,0,0,192,48);
   repairCastleNorthWall();
-  SPR.royal_throne_door=[0,0,32,51,6];
+  SPR.royal_throne_door=[0,0,32,48,6];
   throne.roomActors ||= [];
   const throneDoor=throne.roomActors.find(a=>a.royalDoor);
-  if(throneDoor){throneDoor.spr='royal_throne_door';throneDoor.doorImage=doors;}
+  if(throneDoor){throneDoor.spr='royal_throne_door';throneDoor.doorImage=doors;throneDoor.y=61;}
   throne.roomActors=throne.roomActors.filter(a=>!a.throneWallRepair);
   // The larder entrance occupies the old picture's wall bay. Preserve the
   // picture on the larder's clear north wall instead of drawing it under a door.

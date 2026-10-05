@@ -96,6 +96,8 @@ jobs:
           node tests/tavern-patio.mjs
           node tests/bramble-departure.mjs
           node tests/temple-exit-triggers.mjs
+          node tests/door-accessibility.mjs
+          node tests/lich-facing.mjs
           node tests/temple-arenas.mjs
           node tests/temple-room-updates.mjs
           node tests/temple-save-load.mjs
