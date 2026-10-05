@@ -10,7 +10,8 @@ const Frosthorn=(()=>{
   const frames={},spikes=[],waves=[];
   let loading=null,ready=false,failed=false,map='';
   const owned=()=>houseLootTaken.has(REWARD);
-  const defeatedAlready=()=>owned()||houseLootTaken.has(DEFEATED);
+  // Skip grants the relic for testing; only an actual victory retires the boss.
+  const defeatedAlready=()=>houseLootTaken.has(DEFEATED);
   const paused=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const facing=f=>f.dir==='s'?(f.flip?'w':'e'):f.dir;
   function face(f,dx,dy){f.dir=Math.abs(dx)>Math.abs(dy)?'s':dy<0?'u':'d';f.flip=dx<0;}

@@ -14,7 +14,8 @@ const IceMoth=(()=>{
   ].map(f=>({...f,kind:'route',w:5,band:20,style:'winter',a0:null,a1:null,sideRoute:'ice-moth',shortcut:true}));
   const frames={},effectsArt=[],shots=[],bursts=[];
   let loading=null,ready=false,map='';
-  const defeatedAlready=()=>houseLootTaken.has(DEFEATED)||houseLootTaken.has(REWARD);
+  // Owning (or spending) Skip's relic must never count as beating the moth.
+  const defeatedAlready=()=>houseLootTaken.has(DEFEATED);
   const owned=()=>houseLootTaken.has(REWARD)&&!houseLootTaken.has(SPENT);
   const paused=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const direction=f=>f.dir==='s'?(f.flip?'w':'e'):f.dir;
