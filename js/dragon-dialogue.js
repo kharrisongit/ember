@@ -1,3 +1,11 @@
+const FROSTCRAG_BRIEFING=[
+    'Aurelius: The snow temple’s Heartstone is ours. Our road now leads north through Frostcrag.',
+    'Corin: Through the mountain?',
+    'Aurelius: Yes. Find the cave entrance in Frostcrag and follow the passage east. It opens into Ashcrag, the volcanic country beyond the snow.',
+    'Corin: And that takes us toward Cinderhold?',
+    'Aurelius: It does. The creatures ahead are tougher than those on the lowland roads. Stock up, and keep your healing supplies close. We should enter together.',
+    'Corin: Frostcrag, then east through the mountain. I will mark it on the map.'
+  ];
 /* Aurelius's optional telepathic banter never opens a blocking game dialogue. */
 const dragonBanterSeen=new Set();
 let dragonBanterQueue=[],dragonBanterActive=null,dragonBanterGap=0,dragonBanterPanel=null,dragonNpcCooldown=0;
@@ -350,6 +358,7 @@ function stepDragonBanter(dt){
   if(dragonBanterActive&&(dragonBanterActive.map!==MAPID||dragonBanterActive.stage!==dragonStoryStage()))dismissDragonBanter();
   dragonBanterQueue=dragonBanterQueue.filter(b=>b.map===MAPID&&b.stage===dragonStoryStage());
   if(paused)return;
+  if(typeof FrostcragJourney!=='undefined'&&FrostcragJourney.step())return;
   rememberDragonConversationPlace();
   const place=MAPID==='world'?areaUnder(P.x,P.y):(MD.title||MAPID);
   const title=MAPID==='world'?(DRAGON_PLACE_LINES[place]?place:null):Object.keys(DRAGON_PLACE_LINES).sort((a,b)=>b.length-a.length).find(k=>place?.includes(k));
@@ -626,6 +635,7 @@ function dragonKnowsPlace(place){
     key==='place:'+place+':journey'||key==='place:'+place+':victory');
 }
 const DRAGON_JOURNEY_TOPICS=[
+  {id:'frostcrag-road',name:'The road through Frostcrag',when:()=>breathHas.shadow&&!wonAll,lines:()=>FROSTCRAG_BRIEFING.slice()},
   {id:'home',name:'Leaving Millwood',when:()=>!wonAll,lines:()=>[
     'Corin: I keep thinking I have forgotten something at home.',
     'Aurelius: Have you?',

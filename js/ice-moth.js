@@ -27,7 +27,7 @@ const IceMoth=(()=>{
       const existing=m.features.find(f=>f.id===spec.id),copy={...spec,...(spec.pts?{pts:spec.pts.map(p=>p.slice())}:{})};
       if(existing)Object.assign(existing,copy);else m.features.push(copy);
     }
-    // The endpoint is deliberately reserved. Neither it nor the boss clearing
+    // The endpoint shelters the supply party. Neither it nor the boss clearing
     // inherits incidental enemies from a pre-existing world spawn list.
     m.foes=m.foes.filter(f=>f.iceMoth||![arena,endpoint].some(a=>Math.hypot(f.x-a.x,f.y-a.y)<=a.r+5));
     if(!m.foes.some(f=>f.iceMoth))m.foes.push({k:'icemoth',x:arena.x,y:arena.y-3,iceMoth:true});
@@ -52,6 +52,7 @@ const IceMoth=(()=>{
       for(let row=0;row<4;row++)effectsArt[row]=Array.from({length:6},(_,col)=>{
         const c=canvas(FX,FX);c.getContext('2d').drawImage(source,col*FX,row*FX,FX,FX,0,0,FX,FX);c.pixelLocked=true;return c;
       });
+      if(typeof HollybeckRescue!=='undefined')await HollybeckRescue.prepare();
       ready=true;
     })();return loading;
   }

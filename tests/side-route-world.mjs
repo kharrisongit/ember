@@ -19,7 +19,9 @@ export function verifySideRoutes(run){
    }
    for(const c of MD.roomActors.filter(a=>a.sideRoute===f.id))chests.push({id:f.id,clear:canStand(c.x,c.y+24)});
   }
-  for(const a of features.filter(f=>f.sideRoute&&f.kind==='arena'))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)
+  // The former empty endpoint is now the supply camp; its sled/NPC collision
+  // and accessible approach are covered by hollybeck-rescue-world.mjs.
+  for(const a of features.filter(f=>f.sideRoute&&f.kind==='arena'&&!f.iceMothEnd))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)
    if(Math.hypot(dx,dy)<=a.r-1.7&&!canStand((a.x+dx)*16+8,(a.y+dy)*16+16))arenaFloor.push({id:a.id,x:a.x+dx,y:a.y+dy,stamp:stampedBy(a.x+dx,a.y+dy)});
   const g=SideRouteAdventures.geometry(features,MW,MH),holes=[];
   const oasis=features.find(f=>f.label==='The Oasis');

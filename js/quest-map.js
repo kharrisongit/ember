@@ -3,13 +3,13 @@ let atlasTrackedQuest='main',atlasQuests=[],atlasPan={x:0,y:0,z:1.6},atlasPointe
 let atlasPanFrame=0,atlasPanScale=null,atlasViewBounds=null;
 let atlasGesture=null,atlasJournalKnown={},atlasIgnoreClick=false,atlasCompassTutorialSeen=false;
 let atlasJournalOpen=false,atlasSelectedQuest='main',atlasSelectedComplete=false;
-function atlasQuestKind(q){return ['main','bramble','smith','shield','thornwell-royals'].includes(q?.id)||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
+function atlasQuestKind(q){return ['main','highland-passage','bramble','smith','shield','thornwell-royals'].includes(q?.id)||q?.id?.startsWith('temple:')?'main':q?.id==='trials'?'trial':'side';}
 function atlasQuestTrackLock(q){
  if(q?.id==='temple:Sandspire'&&!breathHas.lightning)return 'Complete Forgewick Temple and claim its Lightning Heartstone before tracking Sandspire Temple.';
  if(q?.id==='temple:Hollybeck'&&!breathHas.ice)return 'Complete Sandspire Temple and claim its Ice Heartstone before tracking Hollybeck Temple.';
  return '';
 }
-function atlasJournalAllowed(id){return ['desert-church','pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
+function atlasJournalAllowed(id){return ['highland-passage','winter-rescue','frosthorn','desert-church','pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
 function atlasJourneyObjective(){
@@ -36,6 +36,7 @@ function atlasJourneyObjective(){
   if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.','temple:'+town);
  }
  if(!breathHas.lightning||!breathHas.ice||!breathHas.shadow)return o('Ask about the road ahead',breathHas.lightning?'Forgewick Temple':'Forgewick',breathHas.lightning?'Speak with Alderic about what you found.':'Speak with the people of Forgewick and follow the leads they share.');
+ if(typeof FrostcragJourney!=='undefined'&&!FrostcragJourney.arrived())return o('Cross Frostcrag into Ashcrag','Frostcrag','Follow the road north from Hollybeck to the cave in Frostcrag. Cross the mountain passage east into Ashcrag. Prepare for stronger enemies.','highland-passage');
  return o('Face King Halvard','Cinderhold Castle','Cross the highlands through Frostcrag and Ashcrag, then follow the volcanic road to Cinderhold.');
 }
 function atlasMainObjective(){return atlasJourneyObjective();}
@@ -56,6 +57,7 @@ function atlasQuestOptions(){
  const main=atlasMainObjective(),out=[main],seen=new Set([main.questId]),add=(id,...args)=>{if(!seen.has(id)){seen.add(id);out.push(atlasObjective(id,...args));}};
  if(DragonChapels.known()&&!DragonChapels.found())add('desert-church','The Secret Dragon Church','Desert Church','Brother Edrin’s brother Cael keeps a secret church beyond Sandspire. Follow the winding path south from the eastern desert road, then west through the dunes.');
  if(DesertAdventure.accepted()&&!DesertAdventure.owned())add('pyramid','The Emberheart of the Sands','Sunken Pyramid',DesertAdventure.won()?'Open the chest in the guardian’s chamber. The relic permanently strengthens Aurelius’s Fire while carried.':'Follow the western desert detour, explore the Sunken Pyramid and defeat its guardian. Recover the Emberheart from the treasure chest.');
+ if(typeof HollybeckRescue!=='undefined')for(const q of HollybeckRescue.quests())add(q.id,q.title,q.place,q.detail);
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();
  if(royal&&brambleQuest>=2)add('thornwell-royals',...royal);
  if(odoRodReferral&&!fishingPole)add('fishing','Calder’s spare rod','Route 1','Ask Calder at the first camp on the road from Millwood to Thornwell for his spare fishing rod.');
@@ -106,6 +108,8 @@ function atlasQuestTarget(q){
   if(quest<Q.DONE)return atlasOpeningTarget();
   q=atlasJourneyObjective();
  }
+ if(typeof HollybeckRescue!=='undefined'){const target=HollybeckRescue.target(q.id);if(target)return target;}
+ if(q.id==='highland-passage'||q.questId==='highland-passage')return FrostcragJourney.target();
  if(q.id==='trials')return !cinderSeal?{map:'witchmoor',x:196,y:304}:!trialSealPlaced?{map:'cinderhold',x:TRIAL_PEDESTAL.x,y:TRIAL_PEDESTAL.y+24}:{map:'cinderhold',...THRONE_DEMON};
  if(q.id==='graveyard'){const a=W.maps.world.features.find(f=>f.id===207);if(a)return {map:'world',x:a.x*TS,y:a.y*TS};}
  if(['main','thornwell-royals'].includes(q.id)){
@@ -193,6 +197,9 @@ function atlasMilestoneData(){return [
  ['Lightning',!!breathHas.lightning],['Ice',!!breathHas.ice],['Shadow',!!breathHas.shadow],['Face Halvard',!!wonAll]
  ].filter(([,complete])=>complete).concat(wonAll?[]:[[atlasJourneyObjective().title,false]]);}
 function atlasQuestComplete(id){
+ if(id==='highland-passage')return FrostcragJourney.arrived();
+ if(id==='winter-rescue')return typeof HollybeckRescue!=='undefined'&&HollybeckRescue.rescued();
+ if(id==='frosthorn')return Frosthorn.defeatedAlready();
  if(id==='desert-church')return DragonChapels.known()&&DragonChapels.found();
  if(id==='pyramid')return DesertAdventure.owned();
  if(id==='main')return !!wonAll;
@@ -215,6 +222,9 @@ function atlasSyncJournal(){
  if(typeof atlasSyncDiscovery==='function')atlasSyncDiscovery();
 }
 function atlasQuestStages(q){
+ if(q?.id==='highland-passage'||q?.questId==='highland-passage')return [['Claim the snow temple Heartstone',!!breathHas.shadow],['Cross the mountain into Ashcrag',FrostcragJourney.arrived()]];
+ if(q?.id==='winter-rescue')return [['Learn about the missing party',HollybeckRescue.known()],[IceMoth.defeatedAlready()||seenFoe.icemoth?'Defeat the Ice Moth':'Make the route home safe',IceMoth.defeatedAlready()],['Tell the travelers the trail is safe',HollybeckRescue.rescued()]];
+ if(q?.id==='frosthorn')return [['Hear Sverre’s warning',HollybeckRescue.frostKnown()],['Defeat Frosthorn',Frosthorn.defeatedAlready()]];
  if(q?.id==='desert-church')return [['Hear Brother Edrin’s secret',DragonChapels.known()],['Find the desert church',DragonChapels.found()]];
  if(q?.id==='pyramid')return [['Accept the expedition',DesertAdventure.accepted()||DesertAdventure.owned()],['Defeat the pyramid guardian',DesertAdventure.won()],['Open the Emberheart chest',DesertAdventure.owned()]];
  if(q?.id==='main')return atlasMilestoneData();

@@ -57,6 +57,8 @@ jobs:
           node tests/boot-progress.mjs
           node tests/world-layout.mjs
           node tests/world-generation-indexes.mjs
+          node tests/hollybeck-rescue.mjs
+          node tests/hollybeck-rescue-world.mjs
           node tests/overworld-return.mjs
           node tests/loading-world.mjs
       - name: Check the pyramid and Spider Queen

@@ -2012,6 +2012,7 @@ function npcStoryTopics(n){
   const finished=npcFinishedRoadwork(n);
   const current=finished?[finished.slice(1),...profile.slice(1)]:profile;
   const topics=current.map(([title,first,question,last])=>({title,lines:[n.n+': '+first,'Corin: '+question,n.n+': '+last]}));
+  if(typeof HollybeckRescue!=='undefined')topics.unshift(...HollybeckRescue.topics(n));
   if(n.n==='Dunstan')topics.unshift({title:'Your brother’s glass shop',category:'lead',questUnlock:!dragonLearned('shield')&&!glassShield,lines:SandspireGlassworks.referralLines});
   if(n.n==='Sela'){
     if(!dragonLearned('shield')&&!glassShield){const i=topics.findIndex(t=>t.title==="The shield's shape");if(i>=0)topics.splice(i,1);}
