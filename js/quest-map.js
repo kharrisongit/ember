@@ -12,6 +12,52 @@ function atlasQuestTrackLock(q){
 function atlasJournalAllowed(id){return ['highland-passage','winter-rescue','frosthorn','desert-church','pyramid','main','bramble','smith','shield','thornwell-royals','graveyard','gift:lamp','trials','temple:Forgewick','temple:Sandspire','temple:Hollybeck'].includes(id)||id==='fishing'&&odoRodReferral;}
 function atlasObjective(id,title,place,detail){return {id,title,place,detail};}
 function atlasBrambleClue(){return dragonLearned('bramble-owner')?'Bring Bramble to Rowan the Hunter in the Copper Cup tavern.':'Ask the people of Thornwell who the friendly dog belongs to.';}
+// Arrival is saved separately from map discovery: hearing a place name is not a visit.
+let atlasJourneyVisits=new Set();
+const ATLAS_TEMPLE_JOURNEYS={
+ Forgewick:{element:'lightning',entry:'tp1',prefix:'tp',stone:'Lightning',road:'Follow the eastern road from Thornwell through Forgefalls to Forgewick.',trail:'Follow the trail southeast of Forgewick to the temple entrance.'},
+ Sandspire:{element:'ice',entry:'ds1',prefix:'ds',stone:'Ice',road:'Leave Forgewick by the eastern road and cross the desert past the Oasis to Sandspire.',trail:'Follow the winding trail southeast from Sandspire to its temple.'},
+ Hollybeck:{element:'shadow',entry:'sn1',prefix:'sn',stone:'Shadow',road:'Leave Sandspire along the eastern road to Coralmere, then follow the road through the wetlands into snowy Hollybeck.',trail:'Follow the temple trail east and then north from Hollybeck.'}
+};
+function atlasRememberJourneyVisits(){
+ for(const [town,t]of Object.entries(ATLAS_TEMPLE_JOURNEYS)){
+  if(MD&&dragonKnowsPlace(town))atlasJourneyVisits.add(town);
+  if(W.maps[MAPID]?.title===town+' Temple'||Object.keys(bossGone).some(k=>k.startsWith(t.prefix)&&bossGone[k])||breathHas[t.element]){
+   atlasJourneyVisits.add(town);atlasJourneyVisits.add(town+' Temple');
+  }
+ }
+}
+function atlasTempleGuardians(town){
+ const out=[];
+ for(const [map,m]of Object.entries(W.maps))if(!m.templeLegacy&&m.title===town+' Temple')
+  (m.foes||[]).forEach((f,i)=>{if(/^golem[1-4]$/.test(f.k))out.push({map,i,x:f.x*TS+8,y:f.y*TS+16,dead:!!bossGone[map+':'+i]||!!bossGone[map+':room:golem']||!!(m.templeContinuous&&bossGone[(m.templeOldGolem||'tp3')+':'+(i-4)])});});
+ return out;
+}
+function atlasTempleProgress(town){
+ atlasRememberJourneyVisits();
+ const t=ATLAS_TEMPLE_JOURNEYS[town],guards=atlasTempleGuardians(town),claimed=!!breathHas[t.element];
+ return {town:claimed||atlasJourneyVisits.has(town),entered:claimed||atlasJourneyVisits.has(town+' Temple'),defeated:claimed||guards.length>0&&guards.every(g=>g.dead),claimed,guards};
+}
+function atlasTempleObjective(town){
+ const t=ATLAS_TEMPLE_JOURNEYS[town],p=atlasTempleProgress(town),id='temple:'+town;
+ if(town!=='Forgewick'&&breathHas.lightning&&(!smithUpgrade||!charm.edge))return {...atlasObjective(id,'Finish preparing with Dunstan','Forgewick','Return to Dunstan in Forgewick. Receive the sword and armour improvements and finish his conversation for the Whetstone before taking the desert road.'),journeyStage:'smith'};
+ if(!p.town)return {...atlasObjective(id,'Travel to '+town,town,t.road+' Reach the town before seeking its temple.'),journeyStage:'town'};
+ if(!p.entered)return {...atlasObjective(id,'Enter '+town+' Temple',town+' Temple',t.trail+' Explore its halls, defeat the guardian golems and recover the '+t.stone+' Heartstone.'),journeyStage:'entrance'};
+ if(!p.defeated)return {...atlasObjective(id,'Defeat the '+town+' temple golems',town+' Temple','Make your way through the temple halls and defeat its guardian golems to reach the '+t.stone+' Heartstone.'),journeyStage:'golems'};
+ return {...atlasObjective(id,'Collect the '+t.stone+' Heartstone',town+' Temple','The guardian golems are defeated. Continue to the Heartstone chamber and open its chest to strengthen Aurelius.'),journeyStage:'heartstone'};
+}
+function atlasTempleTarget(q){
+ const town=(q.questId||q.id).slice(7),t=ATLAS_TEMPLE_JOURNEYS[town];if(!t)return null;
+ const stage=atlasTempleObjective(town).journeyStage;
+ if(stage==='smith')return atlasNpcTarget(['Dunstan']);
+ if(stage==='town'){
+  const a=W.maps.world.features.find(f=>f.kind==='area'&&(f.label||f.place)===town);
+  return a?{map:'world',x:(a.x0+a.x1)/2*TS,y:(a.y0+a.y1)/2*TS}:null;
+ }
+ if(stage==='entrance')return {map:t.entry,x:W.maps[t.entry].spawn[0],y:W.maps[t.entry].spawn[1]};
+ if(stage==='golems'){const g=atlasTempleGuardians(town).find(g=>!g.dead);if(g)return {map:g.map,x:g.x,y:g.y};}
+ const c=CHESTS.find(c=>c.gift===t.element);return c?{map:c.map,x:c.x*TS+8,y:c.y*TS+TS+24,heartstone:true}:null;
+}
 function atlasJourneyObjective(){
  const o=(title,place,detail,questId='main')=>({...atlasObjective('main',title,place,detail),questId});
  const opening=[
@@ -29,15 +75,15 @@ function atlasJourneyObjective(){
  if(wonAll)return o('A free Emberfell','Millwood','Return to your friends, or select an unfinished side quest below.');
  const royal=typeof thornwellStoryObjective==='function'&&thornwellStoryObjective();if(royal)return o(...royal,brambleQuest<2?'bramble':'thornwell-royals');
  if(brambleQuest<2)return o(brambleQuest===1?'Find Bramble’s owner':'Follow the eastern road','Thornwell',brambleQuest===1?atlasBrambleClue():'Travel east through the camps to Thornwell and speak with the people you meet.',brambleQuest===1?'bramble':'main');
- if(!smithUpgrade&&dragonLearned('smith'))return o('Visit Dunstan','Forgewick','Speak with the blacksmith about improving Maddock’s sword and your armour.','smith');
- if(smithUpgrade&&!charm.edge)return o('Finish with Dunstan','Forgewick','Finish your conversation with Dunstan.','smith');
- if(!glassShield&&dragonLearned('shield')&&breathHas.lightning)return o('Visit Sela','Sandspire','Follow Dunstan’s referral to his brother’s shop in northwest Sandspire.','shield');
- for(const [key,town]of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']]){
-  if(!breathHas[key]&&dragonLearned('temple:'+town))return o(town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.','temple:'+town);
+ atlasRememberJourneyVisits();
+ if((atlasJourneyVisits.has('Forgewick')||breathHas.lightning)&&(!smithUpgrade||!charm.edge))return o(!smithUpgrade?'Visit Dunstan':'Finish with Dunstan','Forgewick','Speak with Dunstan to improve your sword and armour, then finish his conversation to receive the Whetstone. You need these and the Lightning Heartstone before leaving for Sandspire.','smith');
+ if(atlasJourneyVisits.has('Sandspire')&&!glassShield&&dragonLearned('shield')&&breathHas.lightning)return o('Visit Sela','Sandspire','Visit Dunstan’s brother at the glass shop in northwest Sandspire before continuing to the temple.','shield');
+ for(const [town,t]of Object.entries(ATLAS_TEMPLE_JOURNEYS)){
+  if(!breathHas[t.element]&&dragonLearned('temple:'+town)){const q=atlasTempleObjective(town);return {...q,id:'main',questId:q.id};}
  }
  if(!breathHas.lightning||!breathHas.ice||!breathHas.shadow)return o('Ask about the road ahead',breathHas.lightning?'Forgewick Temple':'Forgewick',breathHas.lightning?'Speak with Alderic about what you found.':'Speak with the people of Forgewick and follow the leads they share.');
  if(typeof FrostcragJourney!=='undefined'&&!FrostcragJourney.arrived())return o('Cross Frostcrag into Ashcrag','Frostcrag','Follow the road north from Hollybeck to the cave in Frostcrag. Cross the mountain passage east into Ashcrag. Prepare for stronger enemies.','highland-passage');
- return o('Face King Halvard','Cinderhold Castle','Cross the highlands through Frostcrag and Ashcrag, then follow the volcanic road to Cinderhold.');
+ return o('Face King Halvard','Cinderhold Castle','Follow the volcanic road east through Ashcrag to Cinderhold. Enter the castle and make your way to King Halvard.');
 }
 function atlasMainObjective(){return atlasJourneyObjective();}
 function atlasPlaceFor(map,n){
@@ -66,8 +112,8 @@ function atlasQuestOptions(){
  if(dragonLearned('shield')&&!glassShield)add('shield','Sela’s glasswork','Sandspire','Dunstan’s brother Sela works behind the glass shop in northwest Sandspire. Ask him about the Glass Shield.');
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Investigate the reports of restless spirits in the graveyard.');
- for(const [key,town] of [['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']])
-  if(dragonLearned('temple:'+town)&&!breathHas[key])add('temple:'+town,town+' Heartstone',town+' Temple','Claim the '+({lightning:'Lightning',ice:'Ice',shadow:'Shadow'}[key])+' Heartstone in '+town+' Temple to strengthen Aurelius.');
+ for(const [town,t]of Object.entries(ATLAS_TEMPLE_JOURNEYS))
+  if(dragonLearned('temple:'+town)&&!breathHas[t.element]&&!seen.has('temple:'+town)){seen.add('temple:'+town);out.push(atlasTempleObjective(town));}
  if(dragonLearned('trials')&&!atlasQuestComplete('trials'))add('trials','The demon’s trials',cinderSeal?'Cinderhold Castle':'Witchmoor',!cinderSeal?'Return to Witchmoor and ask about the trials.':!trialSealPlaced?'Find where the Cinderhold Seal belongs.':'Return to the throne room to challenge the demon.');
  return out;
 }
@@ -108,6 +154,7 @@ function atlasQuestTarget(q){
   if(quest<Q.DONE)return atlasOpeningTarget();
   q=atlasJourneyObjective();
  }
+ if((q.questId||q.id).startsWith('temple:'))return atlasTempleTarget(q);
  if(typeof HollybeckRescue!=='undefined'){const target=HollybeckRescue.target(q.id);if(target)return target;}
  if(q.id==='highland-passage'||q.questId==='highland-passage')return FrostcragJourney.target();
  if(q.id==='trials')return !cinderSeal?{map:'witchmoor',x:196,y:304}:!trialSealPlaced?{map:'cinderhold',x:TRIAL_PEDESTAL.x,y:TRIAL_PEDESTAL.y+24}:{map:'cinderhold',...THRONE_DEMON};
@@ -222,6 +269,12 @@ function atlasSyncJournal(){
  if(typeof atlasSyncDiscovery==='function')atlasSyncDiscovery();
 }
 function atlasQuestStages(q){
+ const templeTown=(q?.questId||q?.id||'').replace(/^temple:/,'');
+ if(ATLAS_TEMPLE_JOURNEYS[templeTown]){const p=atlasTempleProgress(templeTown),t=ATLAS_TEMPLE_JOURNEYS[templeTown];return [
+  ...(templeTown!=='Forgewick'?[['Prepare with Dunstan and claim the Lightning Heartstone',!!(smithUpgrade&&charm.edge&&breathHas.lightning)]]:[]),
+  ...(templeTown==='Hollybeck'?[['Claim the Ice Heartstone in Sandspire',!!breathHas.ice]]:[]),
+  ['Reach '+templeTown,p.town],['Enter '+templeTown+' Temple',p.entered],['Defeat the guardian golems',p.defeated],['Collect the '+t.stone+' Heartstone',p.claimed]];}
+
  if(q?.id==='highland-passage'||q?.questId==='highland-passage')return [['Claim the snow temple Heartstone',!!breathHas.shadow],['Cross the mountain into Ashcrag',FrostcragJourney.arrived()]];
  if(q?.id==='winter-rescue')return [['Learn about the missing party',HollybeckRescue.known()],[IceMoth.defeatedAlready()||seenFoe.icemoth?'Defeat the Ice Moth':'Make the route home safe',IceMoth.defeatedAlready()],['Tell the travelers the trail is safe',HollybeckRescue.rescued()]];
  if(q?.id==='frosthorn')return [['Hear Sverre’s warning',HollybeckRescue.frostKnown()],['Defeat Frosthorn',Frosthorn.defeatedAlready()]];
@@ -233,8 +286,9 @@ function atlasQuestStages(q){
  if(q?.id==='trials')return [['Ask about the trials',!!cinderSeal],...(cinderSeal?[['Place the seal',!!trialSealPlaced]]:[]),...(trialSealPlaced?[['Win the trial',atlasQuestComplete('trials')]]:[])];
  return [['Learn the lead',true],['Reach '+(q?.place||'the destination'),atlasCurrentArea()===q?.place||atlasQuestComplete(q?.id||'')],['Collect the reward',atlasQuestComplete(q?.id||'')]];
 }
-function captureQuestJournal(){atlasSyncJournal();return {tracked:atlasTrackedQuest,known:atlasJournalKnown,encounteredBosses:typeof atlasEncounteredBosses!=='undefined'?[...atlasEncounteredBosses]:[],discovered:typeof atlasDiscovered!=='undefined'?[...atlasDiscovered]:[],compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
+function captureQuestJournal(){atlasSyncJournal();return {journeyVisits:[...atlasJourneyVisits],tracked:atlasTrackedQuest,known:atlasJournalKnown,encounteredBosses:typeof atlasEncounteredBosses!=='undefined'?[...atlasEncounteredBosses]:[],discovered:typeof atlasDiscovered!=='undefined'?[...atlasDiscovered]:[],compassTutorialSeen:atlasCompassTutorialSeen,notifications:window.EmberQuestNotifications?.capture()};}
 function restoreQuestJournal(saved){
+ atlasJourneyVisits=new Set((saved?.journeyVisits||[]).filter(p=>Object.keys(ATLAS_TEMPLE_JOURNEYS).some(t=>p===t||p===t+' Temple')));
  if(typeof restoreAtlasDiscovery==='function')restoreAtlasDiscovery(saved?.discovered,saved?.encounteredBosses);
  window.EmberQuestNotifications?.restore(saved?.notifications);
  atlasCompassTutorialSeen=!!saved?.compassTutorialSeen;atlasTrackedQuest=typeof saved?.tracked==='string'?saved.tracked:'main';atlasJournalKnown={};atlasJournalOpen=false;atlasSelectedQuest=atlasTrackedQuest;atlasSelectedComplete=false;
@@ -420,7 +474,7 @@ function atlasRenderJournal(){
  const steps=$('atlasQuestSteps');steps.replaceChildren();
  if(q&&!atlasSelectedComplete){
   const stages=atlasQuestStages(q),active=stages.findIndex(([,done])=>!done);
-  if(q.id==='main'){
+  if(q.id==='main'&&!ATLAS_TEMPLE_JOURNEYS[(q.questId||'').slice(7)]){
    const current=active<0?stages.at(-1):stages[active];
    if(current)steps.append(atlasElement('span','questStep current',active<0?'✓ Main journey complete':'◉ Current chapter: '+current[0]));
   }else for(const [i,[label,done]]of stages.entries())steps.append(atlasElement('span','questStep'+(done?' done':i===active?' current':''),(done?'✓ ':i===active?'◉ ':'○ ')+label));

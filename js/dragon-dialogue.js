@@ -4,7 +4,8 @@ const FROSTCRAG_BRIEFING=[
     'Aurelius: Yes. Find the cave entrance in Frostcrag and follow the passage east. It opens into Ashcrag, the volcanic country beyond the snow.',
     'Corin: And that takes us toward Cinderhold?',
     'Aurelius: It does. The creatures ahead are tougher than those on the lowland roads. Stock up, and keep your healing supplies close. We should enter together.',
-    'Corin: Frostcrag, then east through the mountain. I will mark it on the map.'
+    'Corin: Frostcrag, then east through the mountain. I will mark it on the map.',
+    'Aurelius: Good. Once we reach Ashcrag, follow the volcanic road east toward Cinderhold.'
   ];
 /* Aurelius's optional telepathic banter never opens a blocking game dialogue. */
 const dragonBanterSeen=new Set();

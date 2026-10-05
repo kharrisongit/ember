@@ -326,5 +326,9 @@
   "Sela/smith-brother": {
     "name": "Sela",
     "title": "Your brother Dunstan"
+  },
+  "Aurelius/journey/frostcrag-road": {
+    "name": "Aurelius",
+    "title": "The road through Frostcrag"
   }
 }

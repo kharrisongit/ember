@@ -4,7 +4,7 @@ const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){}},{fur
 const value=s=>JSON.parse(run('JSON.stringify('+s+')'));
 run("prepareHollybeckVillagers(W.maps.world,'world');MAPID='world';MD=W.maps.world;npcs=MD.npcs;atlasTrackedQuest='main';templeCompass.morningMet=true;bagOwned=true;templeCompass.mapGiven=true;templeCompass.owned=true;");
 const target=()=>value('compassSelectedTarget()');
-for(const [stage,expected] of [['ABED','world'],['ERRAND','world'],['EGGS','world'],['KING','world'],['ELDER','house22'],['NOISE','world'],['ARMED','world'],['FLED','world'],['CARRY','world']]){
+for(const [stage,expected] of [['ABED','world'],['ERRAND','world'],['EGGS','world'],['KING','house22'],['ELDER','house22'],['NOISE','world'],['ARMED','world'],['FLED','world'],['CARRY','world']]){
  run('quest=Q.'+stage);const t=target();assert(t&&Number.isFinite(t.x)&&Number.isFinite(t.y),stage);assert.equal(t.map,expected,stage);
 }
 run('quest=Q.EGGS');let t=target();assert.equal(t.x,run("ITEMS.find(i=>i.key==='eggs').tx*TS+8"));assert.equal(t.y,run("ITEMS.find(i=>i.key==='eggs').ty*TS+16"));
@@ -22,7 +22,7 @@ assert.deepEqual(target(),value('atlasQuestTarget(atlasJourneyObjective())'));
 for(const [id,name]of [['fishing','Calder'],['smith','Dunstan'],['shield','Sela'],['gift:lamp','Sverre']]){
  c.q={id};const t=value('atlasQuestTarget(q)');assert(t,id);assert.equal(t.y,run(`W.maps[${JSON.stringify(t.map)}].npcs.find(n=>n.n===${JSON.stringify(name)}).y`));
 }
-for(const town of ['Forgewick','Sandspire','Hollybeck']){c.q={id:'temple:'+town,place:town+' Temple'};assert(value('atlasQuestTarget(q)').heartstone);}
+for(const town of ['Forgewick','Sandspire','Hollybeck']){run(`smithUpgrade=true;charm.edge=true;atlasJourneyVisits.add('${town}');atlasJourneyVisits.add('${town} Temple');for(const g of atlasTempleGuardians('${town}'))bossGone[g.map+':'+g.i]=true;`);c.q={id:'temple:'+town,place:town+' Temple'};assert(value('atlasQuestTarget(q)').heartstone);}
 for(const id of ['pyramid','desert-church','graveyard']){c.q={id};assert(value('atlasQuestTarget(q)'),id);}
 run('cinderSeal=false');assert.equal(value("atlasQuestTarget({id:'trials'})").map,'witchmoor');
 run('cinderSeal=true;trialSealPlaced=false');assert.equal(value("atlasQuestTarget({id:'trials'})").x,run('TRIAL_PEDESTAL.x'));

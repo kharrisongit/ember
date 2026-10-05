@@ -127,6 +127,7 @@ jobs:
           node tests/npc-conversations.mjs
           node tests/npc-world-talks.mjs
           node tests/quest-map.mjs
+          node tests/temple-journey.mjs
           node tests/quest-journal.mjs
           node tests/quest-discovery.mjs
           node tests/equipment-tutorial.mjs

@@ -4,6 +4,7 @@ const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){}});
 const value=s=>JSON.parse(run('JSON.stringify('+s+')'));
 run("prepareHollybeckVillagers(W.maps.world,'world');MAPID='world';MD=W.maps.world;npcs=MD.npcs;quest=Q.DONE;brambleQuest=3;restoreThornwellRoyal({stage:7});smithUpgrade=true;charm.edge=true;glassShield=true;");
 for(const [town,gift]of [['Forgewick','lightning'],['Sandspire','ice'],['Hollybeck','shadow']]){
+ run(`atlasJourneyVisits.add('${town}');atlasJourneyVisits.add('${town} Temple');for(const g of atlasTempleGuardians('${town}'))bossGone[g.map+':'+g.i]=true;`);
  const q={id:'temple:'+town,place:town+' Temple'};const target=value('atlasQuestTarget('+JSON.stringify(q)+')');
  assert.equal(run('atlasQuestKind('+JSON.stringify(q)+')'),'main');
  assert.equal(target.map,run(`CHESTS.find(c=>c.gift==='${gift}').map`));
