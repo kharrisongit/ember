@@ -1,4 +1,4 @@
-/* Father’s compass. Route through temple doors, then follow walkable floors
+/* Quest compass. Route through temple doors, then follow walkable floors
    inside the current map. Closed combat gates never change the destination. */
 const templeCompass = { owned: false, awakened: false, meatGiven: false, mapGiven: false, morningSpoken: false, morningMet: false, cache: null };
 let compassTrackingStarted=null,compassTrackingReduced=false;
@@ -26,9 +26,9 @@ const FATHER_COMPASS_GIFT = [
   "Corin: No. Maddock says he chose me. He hasn't left my side since.",
   "Nan Ferrow: You were only out for the morning. I wasn't expecting this.",
   "Corin: Neither was I. Maddock thinks the old rider temple might have some answers.",
-  "Nan Ferrow: Beyond Millwood, then. You have your father’s compass with you?",
+  "Nan Ferrow: Beyond Millwood, then. You have your compass with you?",
   "Corin: Yes. I picked it up from my desk this morning.",
-  "Nan Ferrow: He carried it everywhere. I kept it for you after we lost him and your mother, when you were born.",
+  "Nan Ferrow: I have looked after you since we lost your parents, when you were born. It is hard to see you setting off on your own.",
   "Corin: I wish I could remember them.",
   "Nan Ferrow: I know. There is so much I want to tell you about them. Promise me you'll come home to hear it.",
   "Corin: I promise, Nan.",

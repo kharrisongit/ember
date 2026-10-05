@@ -15,7 +15,12 @@ scholarOffer();scholarReply(3);assert(!run('DesertAdventure.accepted()'),'Declin
 scholarOffer();scholarReply(1);run('askShut();scene=null;sayNpc=null');
 assert.equal(run('DesertAdventure.capture()'),'school');
 assert.equal(run('atlasQuestKind(atlasQuestOptions().find(q=>q.id==="pyramid"))'),'side');
-assert(run('atlasJournalAllowed("pyramid")&&atlasTrackedQuest==="pyramid"'));
+assert(run('atlasJournalAllowed("pyramid")'),'Accepted expedition is recorded before the desert road opens');
+assert(!run('atlasTrack("pyramid")'),'Compass cannot send the player past the closed desert road');
+assert.equal(run('atlasTrackedQuest'),'main');
+run('smithUpgrade=1;charm.edge=true;breathHas.lightning=true');
+assert(run('atlasTrack("pyramid")'),'Expedition can be tracked after its travel requirements are met');
+assert.equal(run('atlasTrackedQuest'),'pyramid');
 assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="pyramid")).map'),'pyramid_queen');
 run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);finish();assert.equal(run('ask'),null,'Town giver does not offer a duplicate');
 assert.equal(run('DesertAdventure.capture()'),'school');

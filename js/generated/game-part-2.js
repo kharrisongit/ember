@@ -1235,6 +1235,7 @@ function npcStepClearsPlayer(n,x,y){
   return Math.hypot(n.x+along*dx-P.x,n.y+along*dy-P.y)>=radius;
 }
 function canNpcStand(x,y,actor){
+  if(typeof shroomPatrolBlocksEntrance==='function'&&shroomPatrolBlocksEntrance(x,y,actor))return false;
   const previous=npcCollisionActor;npcCollisionActor=actor;
   try{return ![[-5.5,-7],[5.5,-7],[-5.5,-1],[5.5,-1]].some(([dx,dy])=>isSolid(x+dx,y+dy,true));}
   finally{npcCollisionActor=previous;}
@@ -2356,6 +2357,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   yield [.92, "Preparing entrances and paths"];
   if(typeof prepareJourneyGates==='function')prepareJourneyGates();
   if(typeof prepareShroomLookout==='function')prepareShroomLookout();
+  if(typeof prepareShroomPatrols==='function')prepareShroomPatrols();
   // The retained world already includes these static repairs. Repeating them
   // rebuilds all collision/buckets and throws away the warmed ground images.
   if(!warmReturn){

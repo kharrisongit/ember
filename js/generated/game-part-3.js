@@ -4739,7 +4739,7 @@ const BAG = [
   {key:"frostheart",kind:"key",name:"Frostheart Relic",tell:"Won by defeating Hroth. Carrying it increases Aurelius’s Ice breath damage by 25%. Always active; no equipment slot needed.",has:()=>Frosthorn.owned(),icon:()=>"inventory_frostheart"},
   {key:"emberheart",kind:"key",name:"Emberheart Relic",tell:"A relic recovered from the Sunken Pyramid. Carrying it increases Aurelius’s Fire damage by 25%. Always active; no equipment slot needed.",has:()=>DesertAdventure.owned(),icon:()=>"inventory_emberheart"},
   { key: "travelGear", kind: "key", name: "Travel Gear",
-    tell: "Your bag, Nan’s map, and your father’s compass, packed together for the road. BAG holds your items and equipment. MAP shows discovered places and quests. The compass automatically guides you along the path to your next story objective; select another quest on the Map to change it.",
+    tell: "Your bag, map, and compass, packed together for the road. BAG holds your items and equipment. MAP shows discovered places and quests. The compass automatically guides you along the path to your next story objective; select another quest on the Map to change it.",
     has: () => bagOwned || templeCompass.mapGiven || templeCompass.owned, icon: () => "inventory_travelGear" },
   { key: "hs_light", kind: "key", name: "Heartstone of the Storm",
     tell: "Cut from the first dragon. It wakes the lightning in her.",

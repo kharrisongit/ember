@@ -63,8 +63,7 @@ function houseLootFrame(actor){
 }
 function tryHouseLootChest(){
   const actor=(MD.roomActors||[]).filter(o=>!o.editorDeleted&&o.houseLoot&&
-    (o.houseLoot.bossReward?Math.hypot(P.x-o.x,P.y-o.y)<36:
-      Math.abs(P.x-o.x)<26&&P.y>=o.y-4&&P.y<=o.y+32))
+    Math.hypot(P.x-o.x,P.y-o.y)<36)
     .sort((a,b)=>Math.hypot(P.x-a.x,P.y-a.y)-Math.hypot(P.x-b.x,P.y-b.y))[0];
   if(!actor)return false;
   const loot=actor.houseLoot;

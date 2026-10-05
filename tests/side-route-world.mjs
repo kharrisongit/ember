@@ -17,7 +17,9 @@ export function verifySideRoutes(run){
      if(!canStand(x,y))bad.push({route:f.id,x,y,why:whyBlocked(x,y-4),stamp:stampedBy(Math.floor(x/16),Math.floor((y-4)/16))});
     }
    }
-   for(const c of MD.roomActors.filter(a=>a.sideRoute===f.id))chests.push({id:f.id,clear:canStand(c.x,c.y+24)});
+   for(const c of MD.roomActors.filter(a=>a.sideRoute===f.id&&!a.editorDeleted&&!a.publishedDeleted))
+    for(const [dx,dy] of [[0,-28],[28,0],[0,28],[-28,0],[20,-20],[20,20],[-20,20],[-20,-20]])
+      chests.push({id:f.id,dx,dy,clear:canStand(c.x+dx,c.y+dy)});
   }
   // The former empty endpoint is now the supply camp; its sled/NPC collision
   // and accessible approach are covered by hollybeck-rescue-world.mjs.
@@ -33,7 +35,7 @@ export function verifySideRoutes(run){
  console.log(JSON.stringify(report));
  assert.equal(report.badPaving,0,'Desert chest lanes and arenas match the main stone paving');
  assert.equal(report.badCount,0,'Every route centerline remains traversable');
- assert(report.chests.every(c=>c.clear),'All active chests have clear south approaches');
+ assert(report.chests.every(c=>c.clear),'All active route chests have clear approaches from all eight directions');
  assert.equal(report.arenaBad,0,'Arena interiors clear of procedural obstacles');
  assert.equal(report.holeCount,0,'Continuous solid boundaries survive the final terrain/collision pass');
  // Every authored fight activates with real enemies; chests grant gold + the item exactly once.
@@ -48,7 +50,11 @@ export function verifySideRoutes(run){
   const key=JSON.stringify(chest.houseLoot.id),item=chest.houseLoot.item;
   const counter={potion:'potions',elixir:'elixirs',dragonFish:'dragonFish',bomb:'bombs',dust:'dust',bell:'bells',mark:'marks',saint:'breaths',stone:'stones',salt:'salts'}[item];
   const gold=run('gold'),count=run(counter);
-  run(`P.x=${chest.x};P.y=${chest.y+24};tryHouseLootChest();tryHouseLootChest();`);
+  for(const [dx,dy] of [[0,-28],[28,0],[0,28],[-28,0],[20,-20],[20,20],[-20,20],[-20,-20]]){
+   run(`P.x=${chest.x+dx};P.y=${chest.y+dy}`);
+   assert(run('canStand(P.x,P.y)'),chest.houseLoot.id+' reachable '+dx+','+dy);
+   assert(run('tryHouseLootChest()'),chest.houseLoot.id+' opens '+dx+','+dy);
+  }
   assert(run(`houseLootTaken.has(${key})`));assert.equal(run('gold'),gold+chest.houseLoot.gold);assert.equal(run(counter),count+1);
  }
  // Exercise actual serialization without regenerating the huge overworld.
