@@ -5,6 +5,23 @@ const BLOSSOM_BAND_STEP = 3;
 const BLOSSOM_TREE_CLEARANCE = 4;
 const BLOSSOM_ROUTE_TREES = /^(oak_|bir_|spr_|fru_|mw_tree|kt_tree|blo_|sw_tree|wf_tree|wf_pine|cactus|deadtree|halfdead|vplant)/;
 
+// A pass-local broad phase: retain input order and exact geometry tests, but
+// only visit shapes whose bounds reach this cell. Never retained across edits.
+function treeBorderLookup(items,bounds,cell=32) {
+  const rows=new Map(),empty=[];
+  for(const item of items) {
+    const [x0,y0,x1,y1]=bounds(item);
+    for(let y=Math.floor(y0/cell);y<=Math.floor(y1/cell);y++) {
+      let row=rows.get(y);if(!row)rows.set(y,row=new Map());
+      for(let x=Math.floor(x0/cell);x<=Math.floor(x1/cell);x++) {
+        let bucket=row.get(x);if(!bucket)row.set(x,bucket=[]);
+        bucket.push(item);
+      }
+    }
+  }
+  return (x,y)=>rows.get(Math.floor(y/cell))?.get(Math.floor(x/cell))||empty;
+}
+
 function treeBorderSpacing(feature) {
   if(feature.kind==='scenery')return {step:64/16,band:2.5,clearance:42/16};
   if(feature.region==='oak')return {step:64/16,band:2.5,clearance:3};
@@ -125,6 +142,15 @@ function blossomTownCandidates(t,row) {
 }
 function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[],extraCandidates=()=>[]) {
   roads=blossomRoadJoinCaps(roads);
+  const roadsAt=treeBorderLookup(roads,r=>{
+    const pad=r.half+2+3*treeBorderSpacing(r).band;
+    return [Math.min(r.a[0],r.b[0])-pad,Math.min(r.a[1],r.b[1])-pad,
+      Math.max(r.a[0],r.b[0])+pad,Math.max(r.a[1],r.b[1])+pad];
+  });
+  const arenasAt=treeBorderLookup(arenas,a=>{
+    const pad=(a.r||6)+Math.max(11,2.5+3*treeBorderSpacing(a).band);
+    return [a.x-pad,a.y-pad,a.x+pad,a.y+pad];
+  });
   const result=[];
   const occupied=new Map(),gridKey=(x,y)=>Math.floor(x/4)+','+Math.floor(y/4);
   const crowded=(p,clearance)=>{
@@ -141,7 +167,8 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[],extraC
       [row===0?scenery:[],arenas.flatMap(a=>blossomArenaCandidates(a,row)),
        towns.flatMap(t=>blossomTownCandidates(t,row)),extraCandidates(row),blossomDesertJoinCandidates(roads,row),blossomRouteCandidates(roads,row)];
     for(const group of groups)for(const p of group.sort((a,b)=>a.y-b.y||a.x-b.x)) {
-      const owner=arenas.filter(a=>Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+11)
+      const localArenas=arenasAt(p.x,p.y);
+      const owner=localArenas.filter(a=>Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+11)
         .sort((a,b)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(p.x-b.x,p.y-b.y))[0];
       if(owner&&p.kind!=='scenery'){
         p.tree=owner.northTree&&p.y<owner.y?owner.northTree:owner.tree;
@@ -151,8 +178,8 @@ function planBlossomLayout(roads,arenas,towns,allowed=()=>true,scenery=[],extraC
       // Physical road clearance and the spacing grid still keep it open.
       const borderRow=p.roofBacking||p.transition?0:row;
       const roadMargin=p.kind==='scenery'&&p.source==='falls'?1:2;
-      if(roads.some(r=>blossomWithinRoadCaps(p.x,p.y,r)&&blossomRoadDistance(p.x,p.y,r)<r.half+roadMargin+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
-      if(arenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
+      if(roadsAt(p.x,p.y).some(r=>blossomWithinRoadCaps(p.x,p.y,r)&&blossomRoadDistance(p.x,p.y,r)<r.half+roadMargin+(r.blossom?borderRow*treeBorderSpacing(r).band:0)-.04))continue;
+      if(localArenas.some(a=>!(p.kind==='arena'&&p.source===a.id)&&
         Math.hypot(p.x-a.x,p.y-a.y)<(a.r||6)+2.5+borderRow*treeBorderSpacing(a).band-.04))continue;
       if(towns.some(t=>!(p.kind==='town'&&p.source===t.id)&&blossomInsideBox(p.x,p.y,blossomTownBox(t,borderRow))))continue;
       const clearance=treeBorderSpacing(p).clearance;
@@ -317,7 +344,13 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
   const townBorder=(x,y)=>towns.some(t=>blossomInsideBox(x,y,
     {left:t.x0,right:t.x1,top:t.y0,bottom:t.y1},7)&&
     !blossomInsideBox(x,y,blossomTownBox({...t,northInset:undefined}),-2));
-  const atArena=(x,y)=>arenas.some(a=>Math.hypot(x-a.x,y-a.y)<(a.r||ARENA_R)+11);
+  const arenaNeighbors=treeBorderLookup(arenas,a=>{
+    const pad=(a.r||ARENA_R)+11;return [a.x-pad,a.y-pad,a.x+pad,a.y+pad];
+  });
+  const ringNeighbors=treeBorderLookup(otherRings,a=>{
+    const pad=(a.r||ARENA_R)+3.5;return [a.x-pad,a.y-pad,a.x+pad,a.y+pad];
+  });
+  const atArena=(x,y)=>arenaNeighbors(x,y).some(a=>Math.hypot(x-a.x,y-a.y)<(a.r||ARENA_R)+11);
   const protectedPlace=(x,y,region)=>
     (region==='shroom'?features.some(a=>{
       if(!['area','town'].includes(a.kind)||a.wild)return false;
@@ -326,7 +359,7 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       const inset=a.meadow?0:(a.band||6);
       return x>=a.x0+inset&&x<=a.x1-inset&&y>=a.y0+inset&&y<=a.y1-inset;
     }):inClearing(x,y))||
-    otherRings.some(f=>Math.hypot(x-f.x,y-f.y)<(f.r||ARENA_R)+3.5);
+    ringNeighbors(x,y).some(f=>Math.hypot(x-f.x,y-f.y)<(f.r||ARENA_R)+3.5);
   const inBand=(x,y)=>sceneryBand(x,y)||atArena(x,y)||townBorder(x,y)||
     (!inTownArea(x,y)&&legs.some(r=>{
       const reach=Math.max(14,r.band)+r.half+2;
@@ -349,6 +382,17 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       o.x>=Math.min(r.a[0],r.b[0])-30&&o.x<=Math.max(r.a[0],r.b[0])+30&&
       o.y>=Math.min(r.a[1],r.b[1])-30&&o.y<=Math.max(r.a[1],r.b[1])+30));
   const props=living.filter(o=>!tree(o)&&SPR[NAMES[o.s]]&&DEFS[o.s]?.c);
+  const treeSprites=Object.entries(SPR).filter(([name])=>BLOSSOM_ROUTE_TREES.test(name)).map(([,sp])=>sp);
+  const maxTreeWidth=Math.max(TS,...treeSprites.map(sp=>sp[2]));
+  const maxTreeHeight=Math.max(TS,...treeSprites.map(sp=>sp[3]));
+  const nearbyProps=treeBorderLookup(props,o=>{
+    const sp=SPR[NAMES[o.s]],foot=DEFS[o.s].c;
+    const reach=Math.max((maxTreeWidth+sp[2])/2+4,(TS+(foot[0]||TS))/2+2);
+    return [o.x-reach,o.y-Math.max(sp[3],foot[1]||TS)-4,
+      o.x+reach,o.y+Math.max(maxTreeHeight+4,TS)];
+  },TS*8);
+  // Four tiles covers the largest clearance returned by treeBorderSpacing.
+  const nearbyTrees=treeBorderLookup(neighbors,o=>[o.x-4,o.y-4,o.x+4,o.y+4],8);
   const buildings=new Set(living.filter(o=>SPR[NAMES[o.s]]&&
     /^(house|sh_house|barn|shed|coop|windmill|silo|mill|tower|rt_|wt_)/.test(NAMES[o.s])));
   const backsRoof=(px,py,sp)=>{
@@ -383,10 +427,10 @@ function rebuildBlossomRoutes({inTownArea,onBuilding}) {
       return px>r.x-sp[2]/2-4&&px<r.x+r.w+sp[2]/2+4&&Math.abs(py-(r.y+r.h))<TS*3;
     }))return false;
     if(onBuilding(px,py,sp)&&!(p.roofBacking&&backsRoof(px,py,sp)))return false;
-    if(neighbors.some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
+    if(nearbyTrees(x,y).some(o=>Math.hypot(x-o.x,y-o.y)<treeBorderSpacing(p).clearance))return false;
     const behindHouses=p.roofBacking||p.kind==='town'&&!p.vertical&&towns.some(t=>
       t.id===p.source&&t.northInset!==undefined&&y===blossomTownBox(t,p.row).top);
-    if(props.some(o=>{
+    if(nearbyProps(px,py).some(o=>{
       if(p.kind==='scenery'&&/^(mtn|cliff_fall)/.test(NAMES[o.s]||''))return false;
       if(p.roofBacking&&buildings.has(o))return false;
       if(!behindHouses){

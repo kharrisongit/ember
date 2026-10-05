@@ -319,6 +319,10 @@ function* realizeFeatureSteps() {
   // arena pass reads stale styles restored by published or local edits.
   if(MAPID==='world')normalizeWesternTreeFeatures(features);
 
+  // This pass only reads route geometry. Keep editable copies for editor
+  // callers, but avoid allocating them again for every tile in the world.
+  const routeLegs = readRouteLegs;
+
   const inWinter = createBiomeQuery("winter"), inSwamp = createBiomeQuery("swamp");
   const volcanoRegion = createBiomeQuery("volcano");
   const inVolcano = (x, y) => onLava(x, y) || volcanoRegion(x, y);
@@ -682,10 +686,18 @@ function* realizeFeatureSteps() {
       for (let x = x0; x <= x1; x++) bodyTiles.add(x + "," + y);
   }
   const onBody = (tx, ty) => bodyTiles.has(tx + "," + ty);
+  // Bounds include the largest tree sprite that this pass can place.
+  const forestSprites=Object.values(STYLE_TREE).flat().map(name=>SPR[name]).filter(Boolean);
+  const forestHalfWidth=Math.max(8,...forestSprites.map(sp=>sp[2]>>1));
+  const forestHeight=Math.max(16,...forestSprites.map(sp=>sp[3]));
+  const buildingsAt=treeBorderLookup(buildingBoxes,([x0,y0,x1,y1])=>
+    [x0-forestHalfWidth,y0,x1+forestHalfWidth,y1+forestHeight],TS*16);
   const onBuilding = (px, py, sp) => {
     const tx0 = px - (sp ? sp[2] >> 1 : 8), tx1 = px + (sp ? sp[2] >> 1 : 8);
     const ty0 = py - (sp ? sp[3] : 16), ty1 = py;
-    return buildingBoxes.some(([bx0, by0, bx1, by1]) =>
+    // Border callers may use a sprite outside the forest pool.
+    const boxes=sp&&((sp[2]>>1)>forestHalfWidth||sp[3]>forestHeight)?buildingBoxes:buildingsAt(px,py);
+    return boxes.some(([bx0, by0, bx1, by1]) =>
       Math.min(tx1, bx1) > Math.max(tx0, bx0) &&
       Math.min(ty1, by1) > Math.max(ty0, by0));
   };
@@ -813,8 +825,8 @@ function* realizeFeatureSteps() {
             const dd = Math.max(Math.abs(dx), Math.abs(dy));
             if (dd <= half + 1) continue;
             const cx2 = ex + dx, cy2 = ey + dy;
-            if (nearRoad(cx2, cy2)) continue;
             if (dd >= half + 3 && dd <= half + 6) {
+              if (nearRoad(cx2, cy2)) continue;
               glades.add(cx2 + "," + cy2);
               continue;
             }
@@ -831,10 +843,10 @@ function* realizeFeatureSteps() {
           for (let d = -half - 1 - f.band; d <= half + 1 + f.band; d++) {
             if (Math.abs(d) <= half + 1) continue;
             const tx = vert ? line + d : v, ty = vert ? v : line + d;
-            if (nearRoad(tx, ty)) continue;   /* mushrooms are the shoulder here */
             const isEdge = Math.abs(d) === half + 2;
             const isSouth2 = f.style === "swamp" && !vert && d === half + 5;
             if (!isEdge && !isSouth2) continue;
+            if (nearRoad(tx, ty)) continue;   /* mushrooms are the shoulder here */
             if (isSouth2) {
               if (f.style !== "desert") plant(tx, ty, f.style, false, {});
               continue;
@@ -924,16 +936,19 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
       }
     }
   }
+  const forestArenas=features.filter(f=>(f.kind==='arena'||f.kind==='camp')&&f.style);
+  const forestArenasAt=treeBorderLookup(forestArenas,f=>{
+    const r=(f.r||6)+8;return [f.x-r,f.y-r,f.x+r,f.y+r];
+  });
   for (let y = 0; y < MH; y += TREE_STEP)
     for (let x = 0; x < MW; x += TREE_STEP) {
       if (Math.min(x, y, MW - 1 - x, MH - 1 - y) < RIM + 1) continue;
-      if (nearRoad(x, y)) continue;
       if (glades.has(x + "," + y)) continue;   /* left bare on purpose */
       if (routeBand[y * MW + x]) continue;      /* the road's own wood */
       if (bandStyleTiles.has(x + "," + y)) continue;
+      if (nearRoad(x, y)) continue;
       let ownSt = null, ownNear = false;
-      for (const f of features) {
-        if (f.kind !== "arena" && f.kind !== "camp" || !f.style) continue;
+      for (const f of forestArenasAt(x,y)) {
         const dx = x - f.x, dy = y - f.y, r = (f.r || 6) + 8;
         if (dx * dx + dy * dy <= r * r) {
           ownSt = f.style;
