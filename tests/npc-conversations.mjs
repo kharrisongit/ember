@@ -103,6 +103,7 @@ for(const hatched of [false,true])for(const victory of [false,true]){
    continue;
   }
   const npc={n:name,x:20,y:0,d:[name+': Morning.'],dd:[name+': Your companion is welcome.'],dv:[name+': Peace at last.']};
+  if(name==='Odo'&&!hatched){assert.equal(c.openNpcTopics(npc),false,'Odo only gives his fishing refusal before hatch');continue;}
   assert(c.openNpcTopics(npc),name+' menu opens');
   const labels=c.ask.opts.map(o=>o.n);
   assert(!labels.includes('A dragon on the road')&&!labels.includes('How are things?'),name+' has no duplicate greeting topic');

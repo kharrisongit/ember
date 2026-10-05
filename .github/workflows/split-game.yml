@@ -43,6 +43,7 @@ jobs:
           node tests/thornwell-dialogue.mjs
           node tests/quest-notifications.mjs
           node tests/millwood-shroom-dialogue.mjs
+          node tests/odo-hatch-gate.mjs
           node tests/conversation-friendship.mjs
       - name: Check startup and retained overworld performance
         run: |

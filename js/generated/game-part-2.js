@@ -11743,6 +11743,11 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(best.n==='Odo'&&!hasDragon()){
+      askShut();sayOff();P.moving=false;faceToward(best,P.x,P.y);
+      playScene(['Odo: Not now, lad. I am going to catch a big one.'],{who:'Odo'});
+      return;
+    }
     if(talkShroomLookout(best))return;
     if(DragonChapels.talk(best))return;
     if(typeof HollybeckRescue!=='undefined'&&HollybeckRescue.talk(best))return;
