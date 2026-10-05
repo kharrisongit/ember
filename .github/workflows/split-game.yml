@@ -50,6 +50,8 @@ jobs:
           node tests/startup-assets.mjs
           node tests/startup-art.mjs
           node tests/temple-startup.mjs
+          node tests/startup-image-reuse.mjs
+          node tests/early-fish-and-hatch-egg.mjs
           node tests/furniture-loading.mjs
           node tests/millwood-interiors.mjs
           node tests/boot-progress.mjs

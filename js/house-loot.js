@@ -37,7 +37,7 @@ function stepLootChestOpening(){
   }
 }
 async function prepareHouseLoot(){
-  const response=await fetch('assets/interiors/house-loot.json?v=20260923-temple1');
+  const response=await fetch('assets/interiors/house-loot.json?v=20261005-early-rewards');
   if(!response.ok)throw new Error('Household chest data could not load');
   const placements=await response.json();
   // Retire decorative, single-frame chest cutouts so every visible household

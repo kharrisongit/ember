@@ -8,18 +8,22 @@ async function loadDockImage(src,index,name){
 async function loadDockOriginalAssets(){
   // Startup decodes images before inflateWorld: assign virtual pages before registering them.
   registerDockOriginalSprites();
-  for(const [i,a]of DOCK_ORIGINAL_ASSETS.entries()){
-    const img=await loadDockImage(a.src,i,a.name);
-    let sheet=img;
-    if(a.cellW){
-      sheet=document.createElement('canvas');sheet.width=a.w*a.frames;sheet.height=a.h;
-      const g=sheet.getContext('2d'),cols=a.cols||a.frames;
-      g.imageSmoothingEnabled=false;
-      for(let f=0;f<a.frames;f++)g.drawImage(img,
-        (f%cols)*a.cellW+(a.cropX||0),Math.floor(f/cols)*(a.cellH||a.h)+(a.cropY||0),
-        a.w,a.h,f*a.w,0,a.w,a.h);
+  for(let start=0;start<DOCK_ORIGINAL_ASSETS.length;start+=3){
+    const batch=DOCK_ORIGINAL_ASSETS.slice(start,start+3);
+    const images=await Promise.all(batch.map((a,i)=>loadDockImage(a.src,start+i,a.name)));
+    for(const [i,a] of batch.entries()){
+      const img=images[i];
+      let sheet=img;
+      if(a.cellW){
+        sheet=document.createElement('canvas');sheet.width=a.w*a.frames;sheet.height=a.h;
+        const g=sheet.getContext('2d'),cols=a.cols||a.frames;
+        g.imageSmoothingEnabled=false;
+        for(let f=0;f<a.frames;f++)g.drawImage(img,
+          (f%cols)*a.cellW+(a.cropX||0),Math.floor(f/cols)*(a.cellH||a.h)+(a.cropY||0),
+          a.w,a.h,f*a.w,0,a.w,a.h);
+      }
+      registerAtlasPage({img:sheet,x:0,y:a.atlasY,w:a.w*a.frames,h:a.h});
     }
-    registerAtlasPage({img:sheet,x:0,y:a.atlasY,w:a.w*a.frames,h:a.h});
   }
 }
 // Gray stone is derived from every original Sandspire frame at load time.
@@ -2784,6 +2788,7 @@ function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
 async function loadAtlasPages(onProgress=()=>{}) {
   // Limit simultaneous decodes to avoid a large startup memory spike.
   let next = 0, completed = 0, pages = 0;
+  const imageLoads=new Map();
   const total = ATLAS_PAGES.length + ATLAS_PATCHES.length + 7;
   const report = label => onProgress(completed, total, label);
   report("Loading sprite sheets");
@@ -2791,15 +2796,19 @@ async function loadAtlasPages(onProgress=()=>{}) {
     while (next < ATLAS_PAGES.length) {
       const idx = next++;
       const [x, y, w, h, src] = ATLAS_PAGES[idx];
-      const img = new Image();
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = (e) => {
-          console.error("FAILED TO LOAD ATLAS PAGE " + idx, src.substring(0, 100));
-          reject(new Error("Atlas Page " + idx + " failed"));
-        };
-        img.src = src;
-      });
+      // Several virtual pages reuse the same artwork. Load its pixels once,
+      // while still registering every page at its original sprite coordinates.
+      let loading=imageLoads.get(src);
+      if(!loading){
+        const image=new Image();
+        loading=new Promise((resolve,reject)=>{
+          image.onload=()=>{image.onload=image.onerror=null;resolve(image);};
+          image.onerror=()=>{image.onload=image.onerror=null;reject(new Error('Atlas Page '+idx+' failed'));};
+          image.src=src;
+        });
+        imageLoads.set(src,loading);
+      }
+      const img=await loading;
       registerAtlasPage({ img: MOUNTED_KEY_Y.has(y) ? decodeMountedMatte(img, w, h) : img, x, y, w, h });
       completed++;pages++;
       report("Loading sprite sheets ("+pages+"/"+ATLAS_PAGES.length+")");
@@ -4247,12 +4256,13 @@ function drawWorld(t, dt) {
       const hs = hatchScene;
       if (!hs) continue;
       if (hs.stage < 7) {
-        const sp = SPR.it_egg;
+        const sp = SPR.inventory_egg;
         if (!sp) continue;
         const strength = hs.stage < 5 ? 0 : hs.stage === 5 ? 1 : 3;
         const ox = strength ? Math.round(Math.sin(hs.t * (hs.stage === 5 ? 16 : 28)) * strength) : 0;
+        const dw=18,dh=Math.round(sp[3]*dw/sp[2]);
         drawGameImage(ctx, sheetOf(sp), sp[0], sp[1], sp[2], sp[3],
-                      Math.round(hs.x - sp[2] / 2) + ox, Math.round(hs.y - sp[3]), sp[2], sp[3]);
+                      Math.round(hs.x-dw/2)+ox, Math.round(hs.y-dh), dw, dh);
       } else {
         const dir = hs.dir || "s";
         const artDir = dir === "w" && !SPR.dr5_idle_w ? "e" : dir;
