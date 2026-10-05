@@ -116,10 +116,11 @@ const DesertPyramid = (()=>{
     await Promise.all([SpiderQueenDemo.ensureArt(),SpiderQueenWeb.ensureArt()]);
     if(!SpiderQueenDemo.inspect().ready||SPR.pyramid_spider_idle_d)return;
     for(const dir of ['d','u','e','w']){
-      const key='pyramid_spider_idle_'+dir,c=document.createElement('canvas');c.width=512;c.height=90;c.pixelLocked=true;
+      const frame=SpiderQueenDemo.frame(dir,'idle',0),detail=frame.width/128;
+      const key='pyramid_spider_idle_'+dir,c=document.createElement('canvas');c.width=frame.width*4;c.height=90*detail;c.pixelLocked=true;c.spriteScale=detail;
       const g=c.getContext('2d');g.imageSmoothingEnabled=false;
-      for(let i=0;i<4;i++)g.drawImage(SpiderQueenDemo.frame(dir,'idle',i/3),i*128,0);
-      animalSheets[key]=c;SPR[key]=[0,0,128,90,4,key];
+      for(let i=0;i<4;i++)g.drawImage(SpiderQueenDemo.frame(dir,'idle',i/3),i*frame.width,0);
+      animalSheets[key]=c;SPR[key]=[0,0,frame.width,c.height,4,key];
     }
     FOE_ART.spiderqueen='pyramid_spider';
   }

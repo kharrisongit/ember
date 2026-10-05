@@ -305,13 +305,13 @@ const SpiderQueenBoss=(()=>{
       const frame=SpiderQueenDemo.frame(dir(f),action,f.t);
       if(f.st==='dead')ctx.globalAlpha=Math.max(0,1-f.t);
       ctx.fillStyle='rgba(20,9,25,.25)';ctx.beginPath();ctx.ellipse(f.x,f.y-5,24,6,0,0,Math.PI*2);ctx.fill();
-      drawPixelImage(ctx,frame,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));
+      drawPixelImage(ctx,frame,0,0,frame.width,frame.height,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));
       if(f.st==='wind'||web?.queen===f&&web.phase==='casting'){
-        if(!tellCanvas){tellCanvas=document.createElement('canvas');tellCanvas.width=128;tellCanvas.height=96;}
-        const g=tellCanvas.getContext('2d');g.clearRect(0,0,128,96);g.globalCompositeOperation='source-over';g.drawImage(frame,0,0);
-        g.globalCompositeOperation='source-in';g.fillStyle=web?.phase==='casting'?'#ff4242':'#ff9a22';g.fillRect(0,0,128,96);
+        if(!tellCanvas){tellCanvas=document.createElement('canvas');tellCanvas.width=frame.width;tellCanvas.height=frame.height;}
+        const g=tellCanvas.getContext('2d');g.clearRect(0,0,tellCanvas.width,tellCanvas.height);g.globalCompositeOperation='source-over';g.drawImage(frame,0,0);
+        g.globalCompositeOperation='source-in';g.fillStyle=web?.phase==='casting'?'#ff4242':'#ff9a22';g.fillRect(0,0,tellCanvas.width,tellCanvas.height);
         ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.25+.5*(.5+.5*Math.sin(tAcc*24));
-        drawPixelImage(ctx,tellCanvas,0,0,128,96,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));ctx.restore();
+        drawPixelImage(ctx,tellCanvas,0,0,tellCanvas.width,tellCanvas.height,Math.round(f.x-64*SCALE),Math.round(f.y-90*SCALE),Math.round(128*SCALE),Math.round(96*SCALE));ctx.restore();
       }
       if(f.queenStun>0){
         ctx.fillStyle='#ffe8a6';for(let i=0;i<3;i++){const angle=tAcc*3+i*Math.PI*2/3;ctx.fillRect(Math.round(f.x+Math.cos(angle)*16)-1,Math.round(f.y-50+Math.sin(angle)*4)-1,3,3);}

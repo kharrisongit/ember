@@ -30,6 +30,7 @@ assert.equal(demo.inspect().ready,true,'All five source sheets load and decode')
 assert.equal(demo.inspect().failed,false);
 const packed=created.filter(c=>c.pixelLocked);
 assert.equal(packed.length,132,'Every authored pose and projectile frame is imported');
+assert.equal(packed.filter(c=>c.width===256&&c.height===192).length,112,'All queen poses retain double-resolution source detail');
 for(const c of packed){
   const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
   let opaque=0;
@@ -39,7 +40,7 @@ for(const c of packed){
       opaque++;
       const x=((p-3)/4)%c.width,y=Math.floor((p-3)/4/c.width);
       assert(x>0&&x<c.width-1&&y>0&&y<c.height-1,'Pose fits without touching a frame boundary');
-      if(c.width===128)assert(y<90,'All queen feet use the shared ground baseline');
+      if(c.width===256)assert(y<180,'All queen feet use the shared ground baseline');
     }
   }
   assert(opaque>20,'No pose is empty after extraction');

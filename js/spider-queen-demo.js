@@ -1,8 +1,10 @@
 /* A harmless, repeatable animation audition above the north shroom field.
    Kept outside the combat/quest/save registries until her encounter is authored. */
 const SpiderQueenDemo = (() => {
-  const BASE='assets/sprites/spider-queen/', VERSION='20261004-slender-queen';
+  const BASE='assets/sprites/spider-queen/', VERSION='20261005-queen-detail';
   const CELL=128, HEIGHT=96, FOOT=90, ALPHA=180;
+  // Keep twice the artwork resolution without changing world size or hitboxes.
+  const DETAIL=2;
   const SCALE=.8;
   const VECTORS={d:[0,1],u:[0,-1],e:[1,0],w:[-1,0]};
   const route=[[27*16,7.5*16],[34*16,7.5*16],[34*16,5.5*16],[27*16,5.5*16]];
@@ -41,10 +43,11 @@ const SpiderQueenDemo = (() => {
     hardPixels(g,w,h);return c;
   }
   function pack(source,pose,scale,projectile=false){
-    const crop=isolate(source,pose),c=canvas(projectile?32:CELL,projectile?32:HEIGHT);
+    const detail=projectile?1:DETAIL;
+    const crop=isolate(source,pose),c=canvas(projectile?32:CELL*detail,projectile?32:HEIGHT*detail);
     const g=c.getContext('2d',{willReadFrequently:true});g.imageSmoothingEnabled=false;
-    const w=Math.max(1,Math.round(crop.width*scale)),h=Math.max(1,Math.round(crop.height*scale));
-    g.drawImage(crop,0,0,crop.width,crop.height,Math.round((c.width-w)/2),projectile?Math.round((32-h)/2):FOOT-h,w,h);
+    const w=Math.max(1,Math.round(crop.width*scale*detail)),h=Math.max(1,Math.round(crop.height*scale*detail));
+    g.drawImage(crop,0,0,crop.width,crop.height,Math.round((c.width-w)/2),projectile?Math.round((32-h)/2):FOOT*detail-h,w,h);
     hardPixels(g,c.width,c.height);c.pixelLocked=true;return c;
   }
   async function loadArt(){
@@ -159,7 +162,7 @@ const SpiderQueenDemo = (() => {
         const v=VECTORS[actor.dir],x=Math.round(actor.x+v[0]*28),y=Math.round(actor.y-6+v[1]*7);
         ctx.strokeStyle='#b49a70';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(x,y,14+(1-impact/.28)*9,4,0,0,Math.PI*2);ctx.stroke();
       }
-      drawPixelImage(ctx,image,0,0,CELL,HEIGHT,Math.round(actor.x-CELL*SCALE/2),Math.round(actor.y-FOOT*SCALE),Math.round(CELL*SCALE),Math.round(HEIGHT*SCALE));
+      drawPixelImage(ctx,image,0,0,image.width,image.height,Math.round(actor.x-CELL*SCALE/2),Math.round(actor.y-FOOT*SCALE),Math.round(CELL*SCALE),Math.round(HEIGHT*SCALE));
     }else{
       const effect=o.spiderVenom||o.spiderSplash,strip=frames.venom[o.spiderVenom?effect.dir:'impact'];
       const index=o.spiderVenom?Math.floor(effect.t*10)%strip.length:Math.min(strip.length-1,Math.floor(effect.t/.5*strip.length));
