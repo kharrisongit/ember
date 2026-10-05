@@ -7900,7 +7900,8 @@ function stepDark(dt) {
   darkKick = 0;
   const back = (MD.doors || []).find(d => /^mine/.test(d.to || ""));
   if (!back) return;
-  playScene(["It is too dark to see a hand in front of him."], {
+  rememberDragonKnowledge('Corin','The deep mines are too dark.');
+  playScene(["Corin: I cannot see far enough to go on.",charm.lamp?"Corin: I should check my lantern.":dragonLearned('lantern')?"Corin: I need Torvald’s lantern from Sverre in Hollybeck before I return.":"Corin: I need a better light. I should ask Toft, the former miner at Forgewick’s market."], {
     after: () => { pendingDoor = back; fadeDir = 1; }
   });
 }

@@ -47,6 +47,7 @@ const BossRewardChests=(()=>{
     if(!data&&IceMoth.defeatedAlready())houseLootTaken.add(IceMoth.rewardId);
     // Older Queen saves have no death position. Preserve their unclaimed prize
     // at her authored resting spot instead of leaving an inaccessible reward.
+    if(Frosthorn.defeatedAlready()&&!Frosthorn.owned()&&!drops.frosthorn)drops.frosthorn={map:'world',x:Frosthorn.arena.x*16,y:Frosthorn.arena.y*16};
     if(DesertAdventure.won()&&!DesertAdventure.owned()&&!drops.spiderqueen){
       const foe=W.maps.pyramid_queen?.foes.find(f=>f.k==='spiderqueen');
       if(foe)drops.spiderqueen={map:'pyramid_queen',x:foe.x*16+8,y:foe.y*16+16};

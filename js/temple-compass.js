@@ -306,6 +306,8 @@ function compassQuestRoute(maps,start,target){
  for(let i=0;i<queue.length;i++){
   const step=queue[i];
   for(const d of maps[step.map].doors||[]){
+   // Crossing the mountain must follow its halls, not shortcut back through the overworld.
+   if(maps[start].mountainPassage&&maps[target.map]?.mountainPassage&&d.to==='world')continue;
    if(seen.has(d.to)||!maps[d.to]||maps[d.to].templeLegacy)continue;
    const door=step.door||d;
    if(d.to===target.map)return compassTempleTarget(maps[start],{door});
@@ -316,7 +318,7 @@ function compassQuestRoute(maps,start,target){
 }
 function compassSelectedTarget(){
  const options=atlasQuestOptions();
- const selected=options.find(q=>q.id===atlasTrackedQuest)||options[0];
+ const selected=options.find(q=>q.id===atlasTrackedQuest&&!atlasQuestTrackLock(q))||options[0];
  if(selected&&selected.id!==atlasTrackedQuest)atlasTrackedQuest=selected.id;
  return atlasQuestTarget(selected);
 }

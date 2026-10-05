@@ -182,6 +182,7 @@ function rememberDragonKnowledge(who,text,persist=true){
       if(n.charm&&words.toLowerCase().includes(n.n.toLowerCase()))learn('gift:'+n.n);
   }
   if(/Torvald|Hollybeck Lantern/i.test(words)&&/lantern|light/i.test(words))learn('lantern');
+  if(/\bmines?\b|deep galleries/i.test(words))learn('mines');
   if(/graveyard|Book of the Dead/i.test(words)&&/ghost|wraith|summon/i.test(words))learn('graveyard');
   if(persist&&before!==dragonBanterSeen.size)persistDragonBanterSeen();
 }
@@ -522,13 +523,14 @@ function dragonCurrentQuest(){
     'Corin: And the ordinary things?',
     'Aurelius: They matter as much as ever. Missing companions, a useful gift, a promise to return. A victory does not make those things smaller.'
   ];
+  const current=typeof atlasJourneyObjective==='function'?atlasJourneyObjective():null;
   const missing=[['lightning','Forgewick'],['ice','Sandspire'],['shadow','Hollybeck']].filter(([key])=>!breathHas[key]);
   const knownTemples=missing.filter(([,town])=>dragonLearned('temple:'+town));
   return [
     'Corin: Help me put our next steps in order.',
     'Aurelius: Halvard threatens us and everyone living under his rule. Our goal is to reach Cinderhold ready to face him.',
     smithUpgrade?'Aurelius: Dunstan’s work has given you a stronger blade and armour. Keep supplies ready as well.':dragonLearned('smith')?'Aurelius: We heard that Dunstan can improve your equipment. Following up with him would be a sensible beginning.':'Aurelius: Keep food and supplies ready. We can ask the people we meet about the road ahead.',
-    !missing.length?'Aurelius: Fire, lightning, shadow and ice are all with us now. The heartstones have given us the choices we came looking for.':
+    current?'Aurelius: '+current.detail:!missing.length?'Aurelius: Fire, lightning, shadow and ice are all with us now. The heartstones have given us the choices we came looking for.':
       knownTemples.length?'Aurelius: The Heartstones we still need are in '+knownTemples.map(([,town])=>town).join(', ')+'. We should seek '+knownTemples[0][1]+' Temple next. Each stone prepares us for the next temple.':
       'Aurelius: Let us follow the road Maddock described and ask questions as we go. We still have much to learn together.',
     'Corin: Does that mean we must hurry?',

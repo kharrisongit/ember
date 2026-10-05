@@ -44,7 +44,7 @@ run('odoRodReferral=true;fishingPole=false');assert(run("atlasQuestOptions().som
 run('fishingPole=true');assert(run("atlasCompletedEntries().some(q=>q.id==='fishing')"));
 run(`atlasJournalKnown={'gift:wake':{id:'gift:wake',title:'Gift',place:'Hollybeck Graveyard',detail:'Claimed'},'gift:ward':{id:'gift:ward',title:'Gift',place:'Witchmoor',detail:'Claimed'}};charm.wake=true;charm.ward=true;`);
 assert.equal(run("atlasCompletedEntries().filter(q=>q.id==='graveyard').length"),1);
-assert(!run("atlasCompletedEntries().some(q=>q.id==='gift:ward')"));
+assert(run("atlasCompletedEntries().some(q=>q.id==='gift:ward')"),'An accepted gift lead keeps its completed journal entry');
 const side=value("atlasQuestOptions().concat(atlasCompletedEntries()).filter(q=>atlasQuestKind(q)==='side').map(q=>q.id)");
-assert(side.every(id=>['fishing','graveyard','gift:lamp'].includes(id)));
+assert(side.every(id=>['fishing','graveyard','gift:lamp','gift:ward'].includes(id)));
 console.log('PASS: Maddock then Aurelius, four visible main quests, sequential tappable tracking locks, save migration, mandatory Bramble and referral-only fishing history.');

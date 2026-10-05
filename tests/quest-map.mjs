@@ -6,7 +6,8 @@ const source=fs.readFileSync(new URL('../js/quest-map.js',import.meta.url),'utf8
 const c=vm.createContext({console,Map,Set});
 vm.runInContext(`const ATLAS_LOCATIONS=${game.match(/const ATLAS_LOCATIONS=(.*);/)[1]};
 const DesertAdventure={accepted:()=>false,owned:()=>false,won:()=>false};
-const DragonChapels={known:()=>false,found:()=>false};
+const DragonChapels={known:()=>false,found:()=>false,capture:()=>false};
+const IceMoth={defeatedAlready:()=>false,owned:()=>false},Frosthorn={defeatedAlready:()=>false,owned:()=>false};
 const Q={DONE:9},templeCompass={morningMet:false};let quest=0,wonAll=false,brambleQuest=0,smithUpgrade=false,glassShield=false,odoRodReferral=false,fishingPole=false,cinderSeal=false,trialSealPlaced=false;
 const charm={},breathHas={lightning:false,ice:false,shadow:false},learned=new Set(),gifts=[];
 const bossGone={},MAPID='world',MD={};function dragonKnowsPlace(){return false;}

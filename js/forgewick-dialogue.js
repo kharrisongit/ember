@@ -126,6 +126,11 @@ const ForgewickDialogue=(()=>{
       if(hasSword()&&(!smithUpgrade||!charm.edge))rows.unshift({title:smithUpgrade?'May I collect the Whetstone?':'Could you improve my sword and armour?',
         category:'lead',friendship:false,go:()=>beginNpcTalk(n,true)});
     }
+    if(n.n==='Toft')rows.unshift({...topic(n,t('Light for the deep mines',
+      'The deep mines are too dark for an ordinary lamp. Torvald left his Hollybeck Lantern with Sverre in Hollybeck. Ask Sverre for it before going below the lit galleries.',
+      ['How do I reach Hollybeck?', 'Finish your business here in Forgewick, then follow the road through Sandspire and Coralmere into the snow country. Bring the lantern back to our mine when you have it.'],
+      ['Can I explore any of the mine now?', 'You can explore the lit galleries. Turn back when the darkness closes in; there is no sense fighting what you cannot see.'],
+      ['What is down at the bottom?', 'The deepest chamber has been overrun by mushroom creatures. Clear them all and search the chamber, but take the lantern first.']), 'mines','lead'),friendship:false});
     if(n.n==='Brother Edrin')rows.unshift(church(n));
     return rows;
   }

@@ -96,11 +96,12 @@ const HollybeckRescue=(()=>{
     if(known()&&!rescued())rows.push({id:'winter-rescue',title:'The Missing Supply Party',place:IceMoth.defeatedAlready()?'Ice Moth':'Hollybeck',detail:IceMoth.defeatedAlready()?
       'The Ice Moth is defeated. Continue north to the clearing beyond its glade and tell Olin or Signe that the trail home is safe.':
       'Olin and Signe have not returned from collecting supplies in Sandspire. Follow the winding winter trail west of Hollybeck and search for them in the sheltered clearing at its far end.'});
-    if(frostKnown()&&!Frosthorn.defeatedAlready())rows.push({id:'frosthorn',title:'The Beast on the Northern Trail',place:'Frosthorn',detail:'Follow the winding trail northwest of Hollybeck to Frosthorn’s clearing. Avoid the ice from its stamping feet; search for the Frostheart after victory.'});
+    if((frostKnown()||Frosthorn.defeatedAlready())&&!(Frosthorn.defeatedAlready()&&Frosthorn.owned()))rows.push({id:'frosthorn',title:'The Beast on the Northern Trail',place:'Frosthorn',detail:Frosthorn.defeatedAlready()?'Frosthorn is defeated. Open the chest where it fell to recover the Frostheart.':'Follow the winding trail northwest of Hollybeck to Frosthorn’s clearing. Avoid the ice from its stamping feet; search for the Frostheart after victory.'});
     return rows;
   }
   function target(id){
     if(id==='winter-rescue')return {map:'world',x:(camp.x-2)*16+8,y:(IceMoth.defeatedAlready()?camp.y+1:168)*16};
+    if(id==='frosthorn'&&Frosthorn.defeatedAlready())return atlasBossRewardTarget('frosthorn');
     if(id==='frosthorn')return {map:'world',x:2545*16,y:25*16};
     return null;
   }
@@ -124,6 +125,8 @@ const FrostcragJourney=(()=>{
     playScene(lines.slice(),{who:'Aurelius',after:()=>{atlasTrackedQuest='main';atlasSyncJournal();saveGame();}});
     return true;
   }
-  function target(){const d=W.maps.world.doors.find(d=>d.to==='passage');return d?{map:'world',x:d.x*TS+8,y:d.y*TS+24}:null;}
+  function target(){
+    if(W.maps[MAPID]?.mountainPassage||/^passage/.test(MAPID)){const d=W.maps.passage3.doors.find(d=>d.to==='world');return d?{map:'passage3',x:d.x*TS+8,y:d.y*TS+16}:null;}
+    const d=W.maps.world.doors.find(d=>d.to==='passage');return d?{map:'world',x:d.x*TS+8,y:d.y*TS+24}:null;}
   return {arrived,step,target,lines};
 })();
