@@ -25,7 +25,7 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Turn the mixing channels to bring the ingredients together. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Crush the herbs, stir the mixture, then bottle it. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
     healer:{name:'Wren',where:'Thornwell market',line:'For a stronger restorative, use sunblooms from the desert. I will write down the proportions for you.'},
     shroom:{name:'The Shroom King',where:'Sporehollow',line:'A careful hand can turn our mushrooms into a powder that muddles an enemy’s senses. Use this knowledge wisely.'},
     smith:{name:'Dunstan',where:'Forgewick smithy',line:'Keep the fragments you find in the mines or knock from a golem. Grind them finely for these two tools.'},
@@ -67,62 +67,41 @@ const Crafting=(()=>{
     if(state.pending){for(const [id,n]of Object.entries(state.pending.costs))add(id,n);state.pending=null;session=null;saveGame();}
     session=null;
   }
-  // An untimed routing puzzle. Rotate channels to connect every ingredient
-  // station to the bowl. No timing score, wasted ingredients or bonus duplication.
-  const turnMask=m=>((m<<1)&15)|(m>>3);
-  function makeBoard(id){
-    let seed=[...id].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,(state.mastered[id]||0)+19);
-    const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
-    const path=rand()%2?[0,1,2,5,4,3,6,7,8]:[0,3,6,7,4,1,2,5,8];
-    const direction=(a,b)=>b===a-3?0:b===a+1?1:b===a+3?2:3;
-    const solution=Array(9).fill(0);
-    path.forEach((cell,i)=>{solution[cell]=(1<<(i?direction(cell,path[i-1]):3))|(1<<(i<8?direction(cell,path[i+1]):1));});
-    const tiles=solution.map(m=>{for(let n=rand()%4;n-->0;)m=turnMask(m);return m;});
-    // A new board always needs at least one deliberate turn.
-    if(tiles.every((m,i)=>m===solution[i]))tiles[0]=turnMask(tiles[0]);
-    return {tiles,solution,stations:[path[2],path[4],path[6]],selected:0,moves:0};
-  }
-  function route(board=session?.board){
-    if(!board)return {cells:[],complete:false};
-    let cell=0,entry=3;const cells=[],seen=new Set();
-    while(!seen.has(cell)){
-      const mask=board.tiles[cell];if(!(mask&(1<<entry)))break;
-      seen.add(cell);cells.push(cell);
-      const exit=[0,1,2,3].find(d=>d!==entry&&(mask&(1<<d)));
-      if(cell===8&&exit===1)return {cells,complete:board.stations.every(i=>seen.has(i))};
-      const x=cell%3+[0,1,0,-1][exit],y=Math.floor(cell/3)+[-1,0,1,0][exit];
-      if(x<0||x>2||y<0||y>2)break;cell=y*3+x;entry=(exit+2)%4;
-    }
-    return {cells,complete:false};
-  }
+  // Direct manipulation, with equivalent keyboard actions and optional instant
+  // completion. Both paths use the same reserved cost and one atomic reward.
   function start(id,qty=1){
     const r=recipe(id);if(!opened||session&&session.phase!=='result'||!r||!known(r))return false;
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
     const costs=Object.fromEntries(Object.entries(r.cost).map(([k,v])=>[k,v*qty]));
     for(const [k,v] of Object.entries(costs))add(k,-v);
-    state.pending={id,qty,costs};session={id,qty,phase:'mix',age:0,board:makeBoard(id),feedback:'Connect the inlet to the bowl through all three ingredient stations.',bonus:0};
+    state.pending={id,qty,costs};session={id,qty,phase:'prepare',age:0,progress:0,completed:0,bonus:0,pulse:0,feedback:'',motion:{x:.5,y:.5,angle:0}};
     saveGame();window.CraftingView?.play();return true;
   }
-  function rotate(index=session?.board.selected){
-    if(session?.phase!=='mix'||!Number.isInteger(index)||index<0||index>8)return false;
-    const b=session.board;b.selected=index;b.tiles[index]=turnMask(b.tiles[index]);b.moves++;
-    session.feedback=route().complete?'All ingredients connected. Your batch is ready to make.':'Turn the channels until every ingredient reaches the bowl.';
-    window.EmberSfx?.ui?.();window.CraftingView?.paint();return true;
+  function work(amount=.2){
+    const s=session;if(!s||s.phase==='result'||!Number.isFinite(amount)||amount<=0)return false;
+    s.progress=Math.min(1,s.progress+Math.min(.35,amount));s.pulse=1;
+    if(s.progress>=.999){
+      s.completed++;s.progress=0;
+      if(s.phase==='prepare'){s.phase='mix';s.feedback='Prepared. Bring the ingredients together.';}
+      else if(s.phase==='mix'){s.phase='finish';s.feedback='Ready for the finishing touch.';}
+      else return finish();
+      window.EmberSfx?.ui?.();
+    }
+    window.CraftingView?.paint();return true;
   }
-  function select(dx,dy){if(session?.phase!=='mix')return;const b=session.board,x=b.selected%3,y=Math.floor(b.selected/3);b.selected=Math.max(0,Math.min(2,y+dy))*3+Math.max(0,Math.min(2,x+dx));window.CraftingView?.paint();}
-  function hint(){if(session?.phase!=='mix')return;const b=session.board,i=b.tiles.findIndex((m,i)=>m!==b.solution[i]);if(i<0)return;b.selected=i;b.tiles[i]=b.solution[i];session.feedback='One channel is in place. Follow the flow from the inlet.';window.CraftingView?.paint();}
-  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else rotate();}
-  function release(){} // No held inputs or timing windows in the mixing puzzle.
+  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else work(.25);}
+  function release(){if(session)session.touching=false;}
   function tick(dt){
     if(!opened)return false;
-    if(!document.hidden&&session)session.age+=Math.max(0,Math.min(.05,dt));
+    if(!document.hidden&&session){session.age+=Math.max(0,Math.min(.05,dt));session.pulse=Math.max(0,session.pulse-dt*3);window.CraftingView?.paint();}
     return true;
   }
-  function finish(){
-    const s=session,p=state.pending;if(!s||s.phase!=='mix'||!p||!route().complete)return false;
+  function finish(skip=false){
+    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.completed<3))return false;
     s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
-    s.phase='result';saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
+    s.phase='result';s.progress=1;s.touching=false;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
+  function skipPreparation(){return finish(true);}
   function capture(){return JSON.parse(JSON.stringify(state));}
   function restore(saved){
     opened=false;vendor=null;session=null;window.CraftingView?.hide();state=fresh();
@@ -252,5 +231,5 @@ const Crafting=(()=>{
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    active:()=>opened,current:()=>session,rotate,select,hint,route,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+    active:()=>opened,current:()=>session,work,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

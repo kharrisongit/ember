@@ -1,0 +1,16 @@
+{
+  "tool": "built-in imagegen",
+  "style": "2D pixel art portable camp kit",
+  "assets": [
+    {
+      "path": "camp-kit.webp",
+      "prompt": "2D pixel art asset for a classic top-down 16-bit fantasy RPG, conspicuous crisp square pixel clusters, dark outlines, flat limited palette shading, absolutely NO realism, NO painterly texture, NO photographic lighting, NO 3D. Landscape 3:2 campsite crafting background seen from above at slight RPG angle. Small portable campfire with a simple low iron grill over orange flames at center lower area (50% across, 73% down). Empty space directly above grill where game will overlay cauldron. Dark teal woodland earth with a few grass tufts, simple gray ring stones. Rolled herb pouch and folded cloth at left edge, waterskin at right edge. No table, furniture, cauldron, text, UI, people. Charming bright readable SNES-like game sprites, chunky pixels consistent throughout."
+    },
+    {
+      "path": "camp-tools.webp",
+      "prompt": "Game sprite atlas, classic 2D 16-bit pixel art, bold dark outlines and chunky crisp square pixel clusters, simple 3-tone shading limited palette. TRANSPARENT background. Six separate centered fully contained objects in equal square cells in exact 3 columns x 2 rows, landscape 3:2 sheet. Top row: stone mortar bowl seen above, round black iron open cauldron with handles seen above, black shallow skillet with handle pointing right. Bottom row: diagonal wooden pestle, long diagonal wooden mixing spoon, small upright empty blue glass potion bottle. Each object fills 65% of its cell with generous empty transparent margins. All same RPG perspective. Mortar cauldron and skillet are empty dark interiors for animated contents. No floor, shadows outside objects, scenery, text, labels, glow, haze. Absolutely no photorealism, smooth gradients, realistic rendering or 3D. Match SNES topdown RPG inventory sprite style.",
+      "edit": "Remove all background and halos; preserve six pixel sprites on transparent alpha."
+    }
+  ],
+  "processing": "Nearest-neighbor resize to 768x512; lossless WebP preserving alpha."
+}

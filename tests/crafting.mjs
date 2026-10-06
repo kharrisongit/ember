@@ -8,7 +8,7 @@ const reset=()=>run(`Crafting.close();Crafting.restore(null);mode='play';gamepla
  trial=null;arenaLock=null;deadShown=false;mounted=false;ride=null;fishing=null;P.act=null;flightTravel=null;
  foes=[];ask=null;ovl=null;templeCompass.morningMet=true;potions=0;elixirs=0;bombs=0;dust=0;bells=0;marks=0;breaths=0;stones=0;salts=0;
  boarMeat=5;hareMeat=5;deerMeat=5;foxMeat=5;birdMeat=5;dragonFish=5;`);
-const solve=()=>run('for(let i=0;i<9;i++){let n=0;while(Crafting.current().board.tiles[i]!==Crafting.current().board.solution[i]&&n++<4)Crafting.rotate(i);}');
+const solve=()=>run('for(let n=0;n<12&&Crafting.current().phase!=="result";n++)Crafting.press();');
 reset();assert(run('Crafting.open()'));assert.equal(run('Crafting.capture().learned.length'),0,'Opening a book cannot grant unlearned recipes');
 assert(!run('Crafting.start("potion")'),'No recipe, no crafting');
 run('Crafting.learn("nan",true);Crafting.learn("nan",true)');assert.equal(run('Crafting.count("herb")'),0,'Lessons do not duplicate the trail supplies');
@@ -19,14 +19,14 @@ for(const id of ids){
  const recipe=json(`Crafting.recipe('${id}')`),before=json(`Object.fromEntries(Object.keys(Crafting.recipe('${id}').cost).map(k=>[k,Crafting.count(k)]))`),held=run(`Crafting.count('${id}')`);
  assert(run(`Crafting.start('${id}',2)`));
  for(const [k,n] of Object.entries(recipe.cost))assert.equal(run(`Crafting.count('${k}')`),before[k]-n*2);
- assert(!run('Crafting.finish()'),'Unconnected board cannot award items');
- const board=json('Crafting.current().board.tiles');run('for(let i=0;i<1000;i++)Crafting.tick(.05)');assert.deepEqual(json('Crafting.current().board.tiles'),board,'No timing pressure or automatic movement');
- solve();assert(run('Crafting.route().complete'));assert(run('Crafting.finish()'));assert(!run('Crafting.finish()'));
+ assert(!run('Crafting.finish()'),'Unfinished preparation cannot award items');
+ run('for(let i=0;i<1000;i++)Crafting.tick(.05)');assert.equal(run('Crafting.current().progress'),0,'No automatic progress or timing pressure');
+ solve();assert.equal(run('Crafting.current().phase'),'result');assert(!run('Crafting.finish()'));
  assert.equal(run(`Crafting.count('${id}')`),held+2,'Exact requested batch, no extra potion from one set of materials');
  assert.equal(run('Crafting.capture().pending'),null);
  run('Crafting.press();Crafting.close()');assert.equal(run(`Crafting.count('${id}')`),held+2);
 }
-reset();run('Crafting.skip();Crafting.open();Crafting.start("potion",2);Crafting.rotate(0);Crafting.close();Crafting.close()');
+reset();run('Crafting.skip();Crafting.open();Crafting.start("potion",2);Crafting.work(.1);Crafting.close();Crafting.close()');
 assert.equal(run('Crafting.count("herb")'),20,'Cancel refunds exactly once');assert.equal(run('potions'),0);
 reset();run('Crafting.skip();Crafting.open();Crafting.start("cooked_dragonFish",2);saveToSlot(1,true)');
 assert.equal(run('dragonFish'),3);assert(run('loadGame(1)'));assert.equal(run('dragonFish'),5,'Interrupted batch refunds raw fish');
@@ -36,7 +36,18 @@ run('localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),crafting:u
 assert.equal(run('Crafting.count("herb")'),0,'Legacy slots do not inherit supplies');
 reset();run('Crafting.skip();Crafting.open();Crafting.start("potion")');solve();run('Crafting.finish();saveToSlot(1,true);loadGame(1)');
 assert.equal(run('potions'),1);assert.equal(run('Crafting.count("herb")'),18);
-reset();run('Crafting.skip();Crafting.open();Crafting.start("potion");for(let i=0;i<9;i++)Crafting.hint()');assert(run('Crafting.route().complete'),'Accessible hint can solve without timing');
+for(const steps of [0,4,8]){
+ reset();run('Crafting.skip();Crafting.open();Crafting.start("potion",3)');
+ for(let i=0;i<steps;i++)run('Crafting.press()');
+ assert(run('Crafting.skipPreparation()'),'Skip works in every phase');
+ assert(!run('Crafting.skipPreparation()'),'Repeated skip cannot duplicate rewards');
+ assert.equal(run('potions'),3);assert.equal(run('Crafting.count("herb")'),14);
+ assert.equal(run('Crafting.count("root")'),17);assert.equal(run('Crafting.capture().pending'),null);
+}
+reset();assert(!run('Crafting.skipPreparation()'));run('Crafting.skip();Crafting.open();Crafting.start("potion");Crafting.cancel()');assert(!run('Crafting.skipPreparation()'));
+reset();run('Crafting.skip();Crafting.open();Crafting.start("potion")');
+for(const amount of ['NaN','Infinity','-1','0'])assert(!run('Crafting.work('+amount+')'));
+assert.equal(run('Crafting.current().progress'),0);
 reset();
 for(const [n,group,packSpr] of [['Nan Ferrow','nan'],['Wren','healer'],['The Shroom King','shroom'],['Dunstan','smith'],['Brother Edrin','chapel','chapel_priest'],['Maelis','witch'],['Sverre','winter']]){
  run(`scene=null;sayNpc=null;Crafting.close();Crafting.restore({starter:true});var teacher={n:${JSON.stringify(n)},packSpr:${JSON.stringify(packSpr)},x:100,y:100};var topic=npcStoryTopics(teacher).find(t=>t.title==='Will you teach me to craft?');`);
@@ -73,7 +84,7 @@ assert.equal(run('Crafting.count("herb")'),2);assert.equal(run('Crafting.count("
 run('Crafting.restore(Crafting.capture())');assert(!run('Crafting.gather()'),'One-time trail supplies stay harvested after reload');
 assert.equal(run('Crafting.capture().harvested["craft:intro:root"]'),-1);
 run('Crafting.learn("nan",true);Crafting.open()');assert.equal(run('Crafting.maxBatch(Crafting.recipe("potion"))'),1);
-assert(run('Crafting.start("potion")'));solve();assert(run('Crafting.finish()'));assert.equal(run('potions'),1);
+assert(run('Crafting.start("potion")'));solve();assert.equal(run('Crafting.current().phase'),'result');assert.equal(run('potions'),1);
 assert.equal(run('Crafting.maxBatch(Crafting.recipe("potion"))'),0,'Northern trail supplies make exactly one potion');
 reset();run("Crafting.open({n:'Wren'});EmberConversationFlow.tick()");assert.equal(run('ask'),null,'Closing a shop for crafting does not reopen a conversation');
-console.log('PASS: all 15 recipes, untimed routing, exact rewards, cancellations, actual saves, seven NPC teachers, merchants, cooked food and once-only drops.');
+console.log('PASS: all 15 recipes, hands-on phases and equivalent skip, exact rewards, cancellations, actual saves, seven NPC teachers, merchants, cooked food and once-only drops.');
