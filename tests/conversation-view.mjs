@@ -70,6 +70,8 @@ assert.equal(run('typeFull'),'','Opening topics does not replay the overworld gr
 assert(!dom.element('say').classList.contains('on'));
 assert.equal(box.querySelector('.conversationNpcEcho').textContent,'');
 assert.equal(box.querySelector('.conversationCorinEcho').textContent,'');
+assert(!box.querySelector('.conversationCorinEcho').hidden,'Corin keeps an empty dialogue box while waiting for Chat');
+assert.equal(box.querySelector('.conversationChat').parentNode,box.querySelector('.conversationCorinSpeech'),'Chat lives inside Corin’s empty dialogue box');
 assert.equal(dom.element('say').dataset.advanceHint,'Choose Chat to begin');
 run('ask._profileOpen=true;askDraw();presentCamera(.016);');
 assert.deepEqual(run('({...cam})'),before,'Opening a profile never changes the camera');

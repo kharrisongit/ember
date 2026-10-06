@@ -185,17 +185,19 @@ const DragonChapels=(()=>{
     if(isGuest(n)||MAPID==='forgewick_chapel')return false;
     if(n?.packSpr!=='chapel_priest')return false;
     ask=null;sayNpc=null;clearPadInputs();running=false;P.act=null;
+    const lesson='Brother Cael: I can also share our consecration recipe: mineral dust and sunblooms. Keep it in your crafting book, and use the mixture to protect ground you have cleared.';
+    const teach=()=>{if(typeof Crafting!=='undefined')Crafting.learn('chapel',true);};
     if(blessed){playScene(['Brother Cael: The blessing is already with you, Corin. You do not need to earn it twice.',
-      'Brother Cael: Hold your sprint control while riding Aurelius in flight. Trust his wings, and let him carry you.'],{who:n.n,npcActor:n});return true;}
+      'Brother Cael: Hold your sprint control while riding Aurelius in flight. Trust his wings, and let him carry you.',lesson],{who:n.n,npcActor:n,after:teach});return true;}
     if(!hasDragon()||!dragonIntroDone){playScene(['Brother Cael: Welcome. I am Brother Cael. I keep this chapel for the day a dragon and rider return together.',
-      'Brother Cael: Until then, you are welcome to rest here.'],{who:n.n,npcActor:n});return true;}
+      'Brother Cael: Until then, you are welcome to rest here.',lesson],{who:n.n,npcActor:n,after:teach});return true;}
     const intro=NpcContextAudit.introduction(n);
     playScene([...(intro?.first?intro.lines:[]),
       'Corin: Why are there dragon statues in this chapel?',
       'Brother Cael: They honour the dragons who carried the old riders. Those riders came here to ask for a clear sky and a safe return.',
-      'Corin: Could you give us that blessing?',
+      lesson,'Corin: Could you give us that blessing?',
       'Brother Cael: Gladly. Stand here a moment. Your bond will carry it to him.'],
-      {who:n.n,npcActor:n,after:()=>{if(intro?.first)intro.done();beginBlessing(n);}});
+      {who:n.n,npcActor:n,after:()=>{if(intro?.first)intro.done();teach();beginBlessing(n);}});
     return true;
   }
   function beginBlessing(n){

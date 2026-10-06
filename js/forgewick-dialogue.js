@@ -20,7 +20,7 @@ const ForgewickDialogue=(()=>{
     const met=remembers(n,'met'),known=remembers(n,'dragon'),seen=remembers(n,'seen');
     const near=npcSeesDragon(n),companion=hasDragon();let lines;
     if(!met&&near)lines=p.meeting.map((s,i)=>(i===1?'Corin':n.n)+': '+s);
-    else if(!met)lines=[n.n+': '+p.hello,'Corin: I’m Corin, from Millwood.'+
+    else if(!met)lines=[n.n+': '+p.hello,'Corin: '+corinFirstGreeting(n)+
       (companion?' I travel with a dragon named Aurelius.':''),...(companion?[n.n+': '+p.news]:[])];
     else if(companion&&!known){
       lines=near?[n.n+': '+(n.n==='Tessa'?'You have a dragon companion now! I would like a proper introduction.':'You have brought a dragon companion. Will you introduce us?'),

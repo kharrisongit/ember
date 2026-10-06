@@ -96,9 +96,11 @@ function startNanMorning(nan){
   playScene([
     'Nan Ferrow: Morning, love. Hettie was looking for you. She asked if you would go and see her by the cows.',
     'Corin: I have my things. I will go and find her.',
+    'Nan Ferrow: I tucked my recipes into your bag, along with herbs and bitterroot. Try making a potion when you have a quiet moment. Open your Bag and choose Craft.',
     'Nan Ferrow: Thank you, darling. Come home when you are hungry.'
   ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
-    templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;saveGame();
+    templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;
+    if(typeof Crafting!=='undefined')Crafting.learn('nan',true);saveGame();
   }});
   return true;
 }

@@ -58,12 +58,18 @@ assert(!run('DragonChapels.capture()'),'Forgewick preacher cannot grant blessing
 assert(run('scene.lines.some(s=>s.includes("My brother Cael"))&&scene.lines.some(s=>s.includes("Halvard’s ban"))'));
 run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=1;if(ask?.replyChoices){askPick=1;askTake();}else EmberConversationFlow.advance();}');
 assert(run('DragonChapels.known()&&!DragonChapels.found()'),'Finishing Edrin’s account unlocks the lead');
-assert.equal(run('atlasTrackedQuest'),'desert-church');
+assert(run('atlasJournalAllowed("desert-church")'),'The chapel lead is recorded before the desert road opens');
+assert(!run('atlasTrack("desert-church")'),'The compass respects the closed road');
+assert.equal(run('atlasTrackedQuest'),'main');
+run('smithUpgrade=1;charm.edge=true;breathHas.lightning=true');
+assert(run('atlasTrack("desert-church")'),'The chapel can be tracked after the travel requirements are met');
 assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="desert-church")).map'),'desert_chapel');
 run('saveToSlot(1,true);DragonChapels.restore(false);');assert(run('loadGame(1)&&DragonChapels.known()'),'Quest lead persists');
 run(`globalThis.reachableGuests=new Set();for(let y=90;y<238;y+=2)for(let x=46;x<306;x+=2){
  if(!canStand(x,y))continue;P.x=x;P.y=y;const n=nearestTalkNpc();if(n)reachableGuests.add(n.n);}`);
 assert(run('npcs.every(n=>reachableGuests.has(n.n))'),'Every preacher and congregant has a reachable interaction');
+assert(run('npcs.every(n=>portraitFor(n.n)?.src.includes("chapel.webp"))'),'Every Forgewick chapel speaker has a portrait');
+assert(run('portraitFor("Brother Cael").cell===17'),'The desert preacher has his own portrait');
 run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;askShut();
  if(DragonChapels.talk(n)||!openNpcTopics(n)||ask.npcConversation!==n.n)throw Error('Missing full conversation: '+n.n);
  if(EmberFriendship.status().total!==5)throw Error('Missing friendship topics: '+n.n);}`);

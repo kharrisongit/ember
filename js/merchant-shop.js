@@ -28,9 +28,10 @@ function drawMerchantShop(){
   root.innerHTML=`<header class="shop-header"><div class="shop-portrait"></div><div><small>${witch?'HEXES & REMEDIES':'TRAVELLER’S SUPPLIES'}</small><h1>${esc(giver.n)}’s ${witch?'Cabinet':'Shop'}</h1><p>${witch?'A little luck. A little trouble.':'Something useful for the road ahead.'}</p></div><button class="shop-close" aria-label="Leave shop">×</button></header>
   <div class="shop-account"><span>${witch?'The cabinet is open':'Take your time. Have a look.'}</span><strong><span aria-hidden="true">◈</span> ${gold} <small>GOLD</small></strong></div>
   <div class="shop-main"><div class="shop-stock" aria-label="Goods for sale"></div><article class="shop-detail"><div class="shop-plinth"><canvas width="260" height="260"></canvas></div><small class="shop-kind">${witch?'FROM THE WITCH’S SHELF':'READY FOR YOUR JOURNEY'}</small><h2>${esc(item.n)}</h2><p class="shop-description">${esc(bagItem?bagTell(bagItem):'Supplies for the road.')}</p><div class="shop-price"><strong>${item.cost()} <small>gold each</small></strong><span>In pack: ${shopItemCount(key)}</span></div><div class="shop-quantity"></div><div class="shop-action"></div></article></div>
-  <footer class="shop-footer"><button class="shop-talk">Talk to ${esc(giver.n)}</button><p class="shop-receipt" role="status">${esc(merchantShopReceipt||'Choose an item to take a closer look.')}</p><button class="shop-back">${detail?'Back to goods':'Leave shop'}</button></footer>`;
+  <footer class="shop-footer"><button class="shop-ingredients">Ingredients</button><button class="shop-talk">Talk to ${esc(giver.n)}</button><p class="shop-receipt" role="status">${esc(merchantShopReceipt||'Choose an item to take a closer look.')}</p><button class="shop-back">${detail?'Back to goods':'Leave shop'}</button></footer>`;
   paintSmallPortrait(root.querySelector('.shop-portrait'),giver.n);
   root.querySelector('.shop-close').onclick=()=>askShut();
+  root.querySelector('.shop-ingredients').onclick=()=>{if(typeof Crafting!=='undefined')Crafting.open(giver);};
   root.querySelector('.shop-talk').onclick=()=>{askShut();beginNpcTalk(giver);};
   root.querySelector('.shop-back').onclick=()=>detail?sellerAsk(giver):askShut();
   const stock=root.querySelector('.shop-stock');

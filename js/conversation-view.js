@@ -104,7 +104,8 @@
     npcEcho.hidden=speaking&&!corin;if(npcEcho.textContent!==lastNpc)npcEcho.textContent=lastNpc;
     if(npcEcho.textContent!==npcEcho._lastScrollText||echoWasHidden&&!npcEcho.hidden){npcEcho.scrollTop=npcEcho.scrollHeight;npcEcho._lastScrollText=npcEcho.textContent;}
     const corinEcho=player.querySelector('.conversationCorinEcho');
-    corinEcho.hidden=phase==='welcome'||speaking&&corin;const reply=lastCorin;if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
+    // The empty parchment supports Corin's portrait while Chat awaits input.
+    corinEcho.hidden=speaking&&corin;const reply=lastCorin;if(corinEcho.textContent!==reply)corinEcho.textContent=reply;
     if(speaking&&(sayEl._scrollLine!==typeFull||sayEl._scrollLength!==Math.floor(typed))){sayEl.scrollTop=sayEl.scrollHeight;sayEl._scrollLine=typeFull;sayEl._scrollLength=Math.floor(typed);}
     const active=phase==='listen'&&speaking&&!revealing&&!ask?._profileOpen;
     const ready=active&&!automatic&&typeDone()&&!scene?.hold;

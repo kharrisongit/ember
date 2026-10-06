@@ -52,6 +52,14 @@ for(const [index,person]of (typeof REGIONAL_VILLAGERS==='undefined'?[]:REGIONAL_
   FACE_OF[person.name]=160+index;
 }
 const portraitFileImages=new Map();
+// One small, lazy atlas covers both preachers and all sixteen parishioners.
+const CHAPEL_PORTRAITS=Object.fromEntries(['Brother Oswin','Brother Ansel','Mara Bell','Teren Vale','Nessa Flint','Orris Reed','Elva Moss','Brennor Ash','Sera Penn','Halen Birch','Iria Dawn','Davin Rook','Mina Thorne','Perrin Clay','Brother Orenfold','Brother Selwyn','Brother Edrin','Brother Cael'].map((name,cell)=>[name,{id:220+cell,src:'assets/portraits/chapel.webp?v=20261006',cell,cols:6,rows:3}]));
+for(const [name,p]of Object.entries(CHAPEL_PORTRAITS))FACE_OF[name]=p.id;
+function portraitBackground(p){
+  if(p.src&&!p.cols)return {size:'contain',position:'center bottom'};
+  const cols=p.cols||5,rows=p.rows||4;
+  return {size:cols*100+'% '+rows*100+'%',position:(p.cell%cols)*100/(cols-1)+'% '+Math.floor(p.cell/cols)*100/(rows-1)+'%'};
+}
 const portraitPackPromises=new Map(), portraitPackImages=new Map();
 const portraitPackSources=new Map();
 let portraitRequest=0;
@@ -82,6 +90,7 @@ function loadPortraitPack(pack) {
 function portraitFor(who) {
   if(!who)return null;
   const name=PORTRAIT_ALIASES[who]||who;
+  if(CHAPEL_PORTRAITS[name])return CHAPEL_PORTRAITS[name];
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   const portrait=DIALOGUE_PORTRAITS[name];
   if(PORTRAIT_FILES[name])return {...(portrait||{id:FACE_OF[name]??(name==='Tobin'?135:134)}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260930-hatless-farmer'};
@@ -100,8 +109,8 @@ function showDialoguePortrait(who) {
   const paint=source=>{
     if(!source||request!==portraitRequest)return;
     faceEl.style.backgroundImage='url("'+source+'")';
-    faceEl.style.backgroundSize=portrait.src?'contain':'500% 400%';
-    faceEl.style.backgroundPosition=portrait.src?'center bottom':(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
+    const frame=portraitBackground(portrait);faceEl.style.backgroundSize=frame.size;
+    faceEl.style.backgroundPosition=frame.position;
     faceEl.style.display='block';
   };
   if(portrait.src){paint(portrait.src);return;}
@@ -125,8 +134,8 @@ function paintSmallPortrait(el,who){
   const paint=source=>{
     if(!source||el.dataset.speaker!==who)return;
     el.style.backgroundImage='url("'+source+'")';
-    el.style.backgroundSize=portrait.src?'contain':'500% 400%';
-    el.style.backgroundPosition=portrait.src?'center bottom':(portrait.cell%5)*25+'% '+Math.floor(portrait.cell/5)*(100/3)+'%';
+    const frame=portraitBackground(portrait);el.style.backgroundSize=frame.size;
+    el.style.backgroundPosition=frame.position;
   };
   if(portrait.src){paint(portrait.src);return;}
   const cached=portraitPackImages.get(portrait.pack);

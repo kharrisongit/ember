@@ -1,0 +1,26 @@
+{
+  "columns": 6,
+  "rows": 3,
+  "cellSize": 256,
+  "speakers": [
+    "Brother Oswin",
+    "Brother Ansel",
+    "Mara Bell",
+    "Teren Vale",
+    "Nessa Flint",
+    "Orris Reed",
+    "Elva Moss",
+    "Brennor Ash",
+    "Sera Penn",
+    "Halen Birch",
+    "Iria Dawn",
+    "Davin Rook",
+    "Mina Thorne",
+    "Perrin Clay",
+    "Brother Orenfold",
+    "Brother Selwyn",
+    "Brother Edrin",
+    "Brother Cael"
+  ],
+  "source": "Built-in image generation, 2026-10-06; painted Rowan portrait and chapel NPC sprites as references. Repacked with transparent margins; loaded only when used."
+}

@@ -27,7 +27,7 @@ assert.equal(new Set(directions).size,directions.length,'Every outdoor Bramble d
 reset();run("charm.twin=false;var firstFen={n:'Fen',charm:'twin',x:100,y:100};EmberConversationFlow.prompt(firstFen)");
 assert(run('scene?.conversationGreeting'),'The first Fen gift starts with an introduction');
 assert(!run("scene.lines[0].includes('Corin')"),'Fen cannot know Corin’s name before he introduces himself');
-assert(run("scene.lines.some(line=>line.startsWith('Corin: I am Corin'))"),'Corin introduces himself');
+assert(run("scene.lines.some(line=>line.startsWith('Corin: Hello, Fen.'))"),'Corin responds personally without the repeated biography');
 assert(!run('charm.twin'),'Introduction cannot grant the charm early');
 run('var finishFenIntroduction=scene.after;scene=null;finishFenIntroduction()');
 assert(run("ThornwellDialogue.remembers(firstFen,'met')&&sayNpc===firstFen"),'Finishing the introduction starts the normal gift conversation');
@@ -39,7 +39,7 @@ for(const name of names){
  const first=json('ThornwellDialogue.introduction(actor).lines');
  const firstCorin=first.findIndex(l=>l.startsWith('Corin: '));
  assert(firstCorin>0);assert(!first.slice(0,firstCorin).some(l=>/\bCorin\b/.test(l)),name+' does not know a stranger’s name');
- assert.match(first[firstCorin],/I am Corin, from Millwood/);
+ assert(!first[firstCorin].includes("Corin, from Millwood"),name+" avoids the stock introduction");
  assert(!/Aurelius|dragon/i.test(first.join(' ')),name+' secret first introduction');
  run('ThornwellDialogue.introduction(actor).done()');
  assert.notDeepEqual(json('ThornwellDialogue.introduction(actor).lines'),first,name+' remembers meeting Corin');
@@ -57,7 +57,7 @@ for(const name of names){
  assert.deepEqual(json('ThornwellDialogue.introduction(actor).lines'),remembered,'Meeting memories survive saved data');
  run('discussedTopics.clear();dragonOff=true');
  const heard=json('ThornwellDialogue.introduction(actor).lines');
- assert(heard[1].startsWith('Corin: I am Corin'));
+ assert(heard[1].startsWith('Corin: ')&&!heard[1].includes('Corin, from Millwood'));
  assert(!/beside you|those wings|that tail|waiting outside/i.test(heard.join(' ')),name+' cannot see an absent dragon');
  run('ThornwellDialogue.introduction(actor).done();dragonOff=false');
  assert.match(run('ThornwellDialogue.introduction(actor).lines[0]'),/You told me/,'Hearing and seeing are separate');

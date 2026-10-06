@@ -2002,6 +2002,10 @@ function npcAuditedGreeting(n,alt){
   return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
 }
 function npcStoryTopics(n){
+  const topics=baseNpcStoryTopics(n);
+  return typeof Crafting!=='undefined'?[...Crafting.topics(n),...topics]:topics;
+}
+function baseNpcStoryTopics(n){
   if(n.n==='Odo'&&!hasDragon())return [];
   const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.topics(n);if(forgewick)return forgewick;
   const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.topics(n);if(thornwell)return thornwell;
@@ -2044,11 +2048,11 @@ function npcStoryTopics(n){
       'Nan Ferrow: It flew straight past my nose. You were so pleased you forgot to be sorry about the flour.',
       'Corin: I am sorry now.',
       'Nan Ferrow: Too late. I have been enjoying that story for years.']});
-    if(templeCompass.owned)topics.push({title:"Dad's compass",lines:[
-      'Corin: Did Dad take the compass everywhere?',
-      'Nan Ferrow: Even on walks he knew by heart. He said there was comfort in knowing where home lay.',
-      'Corin: I will look after it.',
-      'Nan Ferrow: Look after yourself. He would have wanted that far more.']});
+    if(templeCompass.owned)topics.push({title:"Finding my way",lines:[
+      'Corin: Any advice for finding my way out there?',
+      'Nan Ferrow: Keep your map and compass handy. Stop and ask someone if you are unsure.',
+      'Corin: I will.',
+      'Nan Ferrow: And look after yourself, love. A detour is better than rushing into trouble.']});
   }
   return topics;
 }

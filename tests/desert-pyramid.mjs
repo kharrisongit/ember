@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {verifyCraftingWorld} from './crafting-world.mjs';
 import {verifySideRoutes} from './side-route-world.mjs';
 import {verifyDesertBorders} from './desert-borders.mjs';
 const {run,context}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error});
 await run('loadPublishedEditorLayouts()');
 run("mode='play';gameplayStarted=true;quest=Q.DONE;foesHeld=true;loadMap('world');");
 console.log('World generated; checking road and arena access.');
+verifyCraftingWorld(run);
 const routes=JSON.parse(run('JSON.stringify(DesertPyramid.routes)'));
 for(const f of routes)assert.equal(run(`JSON.stringify(features.find(f=>f.id===${f.id}))`),JSON.stringify(f),'Exact patch survives full world generation');
 const approach=JSON.parse(run('JSON.stringify(features.filter(f=>f.pyramidApproach))'));

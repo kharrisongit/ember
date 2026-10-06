@@ -16,7 +16,7 @@ const replies=Object.values(stories).flatMap(topics=>topics.map(t=>t[1]));assert
 const nan={n:'Nan Ferrow',d:['Hello'],dd:['Aurelius'],dv:['Home again']};
 assert(!c.npcStoryGiftPending(nan),'Nan has no gift before hatching');c.hatched=true;assert(c.npcStoryGiftPending(nan));
 c.templeCompass.owned=true;assert(c.npcStoryGiftPending(nan),'Nan still has meat to give');c.templeCompass.meatGiven=true;assert(!c.npcStoryGiftPending(nan));
-assert(c.npcStoryTopics(nan).some(t=>t.title==="Dad's compass"));assert(!c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
+assert(c.npcStoryTopics(nan).some(t=>t.title==='Finding my way'));assert(!c.npcStoryTopics(nan).some(t=>/Dad.*compass|father.*compass/i.test(t.title)));assert(!c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
 c.wonAll=true;assert(c.npcStoryTopics(nan).some(t=>t.title==='After Halvard’s defeat'));
 assert(c.npcStoryGiftPending({n:'Odo'}));assert(c.npcStoryGiftPending({n:'Calder'}));
 assert.match(c.fishingRodDialogue('Calder').join(' '),/Odo is my grandfather/);

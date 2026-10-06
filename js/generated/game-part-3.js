@@ -4227,6 +4227,7 @@ function frameCore(ms) {
   if (ovl === "atkm") updateBreathRefills();
   if (ovl === "airm") updateCommandRows();
   const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms;
+  if(typeof Crafting!=='undefined'&&Crafting.tick(dt))return;
   // Reward effects finish while tutorial cards, dialogue and menus hold combat.
   stepFly(dt);
   stepHeal(dt);
@@ -5386,7 +5387,8 @@ function useAsk() {
   askDraw();
 }
 function doUse(it) {
-  const act = it.key === "potion" ? drinkPotion
+  const act = typeof Crafting!=='undefined'&&Crafting.recipe(it.key)?.raw ? ()=>Crafting.useFood(it.key)
+            : it.key === "potion" ? drinkPotion
             : it.key === "elixir" ? drinkElixir
             : it.key === "boarMeat" ? () => feedDragon("meat")
             : it.key === "deerMeat" ? () => feedDragon("deer")
@@ -5419,7 +5421,8 @@ function bagUse() {
   const it = held[bagPick];
   if (!it) { setBag(false); return; }
   const opts = [];
-  if (it.key === "saint") opts.push({ n: "BREATHE IT", go: useSaint });
+  if(typeof Crafting!=='undefined'&&Crafting.recipe(it.key)?.raw)opts.push({n:'FEED DRAGON',go:()=>Crafting.useFood(it.key)});
+  else if (it.key === "saint") opts.push({ n: "BREATHE IT", go: useSaint });
   else if (it.key === "stone") opts.push({ n: "RAISE ONE", go: useStone });
   else if (it.key === "salt") opts.push({ n: "SCATTER IT", go: useSalt });
   else if (it.key === "bell") opts.push({ n: "DRIVE IT IN", go: useBell });
@@ -5538,13 +5541,14 @@ function bagDragged() {
 }
 function setBag(on) {
   if(on&&typeof flightTravel!=='undefined'&&flightTravel)return;
-  if(on&&(fishing||!hasBag()))return;
+  if(on&&(fishing||!hasBag()||(typeof Crafting!=='undefined'&&Crafting.active())))return;
   if (!on) { bookOpen = false; askShut(); }      /* both shut with the pack */
   bagOpen = on;
   document.getElementById("bag").style.display = on ? "flex" : "none";
   if (on) { bagPick = 0; refreshBag(); wireBagDrag(); if (!bagRAF) bagRAF = requestAnimationFrame(bagTick); }
   else if (bagRAF) { cancelAnimationFrame(bagRAF); bagRAF = 0; bagAnim = []; }
 }
+document.getElementById('bagCraft')?.addEventListener('click',()=>{if(typeof Crafting!=='undefined')Crafting.open();});
 const bagCloseBtn = document.getElementById("bagClose");
 const bagSaveBtn = document.getElementById("bagSave");
 const bagMusicBtn = document.getElementById("bagMusic");
@@ -5726,6 +5730,7 @@ const BOOT = {
   async close({newGame=false}={}) {
     if(window.EmberCloud?.accountBusy())return;
     if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning) return;
+    if(newGame&&typeof Crafting!=='undefined')Crafting.restore(null);
     BOOT.transitioning=true;window.__titleTransition=true;
     gameplayReady=false;BOOT.waiting=false;clearPadInputs();
     document.body.classList.remove("boot-ready");
@@ -5922,7 +5927,7 @@ function setOvl(which) {
   if(which&&typeof flightTravel!=='undefined'&&flightTravel)return;
   if(which==="itemm"&&!hasBag())return;
   if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
-  if(which&&fishing)return;
+  if(which&&(fishing||(typeof Crafting!=='undefined'&&Crafting.active())))return;
   const firstOpen=which==='itemm'&&ovl!=='itemm';
   const inventoryButton=document.getElementById('itemFullBtn');
   if(which!=='itemm')inventoryButton.classList.remove('inventory-intro');
@@ -6159,6 +6164,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  crafting:typeof Crafting!=='undefined'?Crafting.capture():undefined,
   friendship:window.EmberFriendship?.capture(),
   nanElixirReadyAt, flightVisits:typeof flightVisits!=='undefined'?flightVisits:{},
   inventoryPromptOpens,
@@ -6261,6 +6267,7 @@ function loadGame(slot=activeSaveSlot) {
     elixirs=Math.max(0,s.elixirs|0);bombs=Math.max(0,s.bombs|0);dust=Math.max(0,s.dust|0);
     bells=Math.max(0,s.bells|0);marks=Math.max(0,s.marks|0);breaths=Math.max(0,s.breaths|0);
     stones=Math.max(0,s.stones|0);salts=Math.max(0,s.salts|0);
+    if(typeof Crafting!=='undefined')Crafting.restore(s.crafting);
     for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     if(typeof BossRewardChests!=='undefined')BossRewardChests.restore(s.bossRewardChests);
@@ -6385,6 +6392,7 @@ tap(document.getElementById("bSkip"), () => {
   setFoesEnabled(true);
   skipBrambleForTest();
   if (typeof restoreFatherCompass === "function") restoreFatherCompass({owned:true,awakened:false});
+  if(typeof Crafting!=='undefined')Crafting.skip();
   devItemTest = true;
   document.getElementById('bNpcLineup').style.display='';
   leavingNow = false;
@@ -6555,7 +6563,7 @@ function npcSheetFor(o, s) {
 
 const PATROL_REST = 5000;                 /* how long they linger, in ms */
 setInterval(() => {
-  if (typeof npcs === "undefined" || editing || fishing) return;
+  if (typeof npcs === "undefined" || editing || fishing || (typeof Crafting!=='undefined'&&Crafting.active())) return;
   const now = Date.now();
   for (const n of npcs) {
     if (n.stationary || !n.patrol || n.goto || n.nanSceneAside) continue;

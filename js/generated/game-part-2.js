@@ -2365,6 +2365,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
     if(typeof DragonChapels!=='undefined')DragonChapels.clearForecourt();
     if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
   }
+  if(typeof Crafting!=='undefined')Crafting.prepareWorld();
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();
   if(typeof Frosthorn!=='undefined')Frosthorn.reset();
   if(typeof IceMoth!=='undefined')IceMoth.reset();
@@ -3987,6 +3988,7 @@ function drawWorld(t, dt) {
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.addEffects(draw);
   if(typeof Frosthorn!=='undefined')Frosthorn.addEffects(draw);
   if(typeof IceMoth!=='undefined')IceMoth.addEffects(draw);
+  if(typeof Crafting!=='undefined')Crafting.addDraw(draw);
   // Chests are low props: Corin must remain visible while walking around them.
   // Hollybeck's lid also needs to draw in front of its skull pedestal.
   const hollybeckChest = MD.hollybeck && chestHere();
@@ -4141,6 +4143,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(typeof Crafting!=='undefined'&&Crafting.draw(o,t))continue;
     if(o.looseGold){drawLoot();continue;}
     if(DragonChapels.draw(o,t))continue;
     if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.draw(o))continue;
@@ -4974,6 +4977,7 @@ function titleControlReady(id) {
 const keys = {};
 addEventListener("keydown", e => {
   const k=e.key.toLowerCase();
+  if(window.CraftingView?.key(e))return;
   if (!gameplayStarted) {
     if (k === " " || k === "a") { e.preventDefault(); if (!e.repeat) actionButton(); }
     else if (gameplayReady && BOOT.menuOpen) {
@@ -5008,6 +5012,7 @@ addEventListener("keydown", e => {
 });
 addEventListener("keyup", e => {
   const k=e.key.toLowerCase(); keys[k] = 0;
+  if(window.CraftingView?.key(e))return;
   if(['a',' ','enter'].includes(k))fishingRelease();
   if(k === "b") { glassShieldHeld = false; running = false; }
 });
@@ -7175,7 +7180,7 @@ function sendWalkerHome(stay) {
   if (walker) walker.goto = stay ? null : walker.goto;
   walker = null;
 }
-function sceneHold() { return !!(typeof flightTravel!=='undefined'&&flightTravel) || !!globalThis.window?.EmberEquipmentTutorial?.holding() || !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
+function sceneHold() { return (typeof Crafting!=='undefined'&&Crafting.active()) || !!(typeof flightTravel!=='undefined'&&flightTravel) || !!globalThis.window?.EmberEquipmentTutorial?.holding() || !!scene || revealing || hatchExit || !!bossScene || !!(typeof ask!=="undefined" && ask?.dragonConversation) || !!globalThis.window?.EmberRiding?.holding() || !!globalThis.window?.EmberArenaEntry?.holding(); }
 function advanceScene() {
   if (revealing) { globalThis.window?.EmberSfx?.ui?.(); hideReveal(); return; }
   if (!scene) return;
@@ -9690,6 +9695,7 @@ const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|
 const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight|spiderqueen|frosthorn|icemoth)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
+  if(typeof Crafting!=='undefined')Crafting.defeated(f);
   if(f.kind==='frosthorn'&&!f.ally)Frosthorn.defeated(f);
   if(f.kind==='icemoth'&&!f.ally)IceMoth.defeated(f);
   if(typeof dragonBossBanter==='function')dragonBossBanter(f,true);
@@ -11658,6 +11664,7 @@ function interact() {
   if (tryTreasuryChest()) return;
   if (tryExpandedTempleLever() || tryTempleLever()) return;
   if (tryCellarSupplies()) return;
+  if(typeof Crafting!=='undefined'&&Crafting.gather())return;
   if (tryChest()) return;              /* the temple chest, if he is at one */
   {
     const it = itemAt(P.x, P.y);
@@ -11845,6 +11852,7 @@ padBind();
   });
 }
 function actionButton() {
+  if(typeof Crafting!=='undefined'&&Crafting.active()){Crafting.press();return;}
   if(typeof flightTravel!=='undefined'&&flightTravel){if(revealing)hideReveal();return;}
   if(globalThis.window?.EmberConversationFlow?.active()&&globalThis.window?.EmberConversationFlow?.advance())return;
   if(window.EmberCloud?.isOpen())return;
@@ -11865,8 +11873,9 @@ function actionButton() {
   if (grabGold()) return;      /* gold underfoot comes first */
   interact();
 }
-bindHold("act", actionButton, fishingRelease);
+bindHold("act", actionButton, ()=>{fishingRelease();if(typeof Crafting!=='undefined')Crafting.release();});
 bindHold("btnB", () => {
+  if(typeof Crafting!=='undefined'&&Crafting.active()){window.CraftingView?.back();return;}
   if (!gameplayStarted) { if (gameplayReady && BOOT.loading) BOOT.back(); return; }
   if(fishing){askShut();endFishing();return;}
   if(atlasOpen){globalThis.window?.EmberSfx?.ui?.();atlasBack();return;}

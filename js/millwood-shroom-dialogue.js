@@ -432,7 +432,7 @@ const MillwoodShroomDialogue=(()=>{
   };
   Object.assign(cast,{
     'Pip':{
-      pre:['Hello! I felt your footsteps before I saw you. I am Pip.', 'I am Corin, from Millwood. Am I allowed to stop here?', 'Of course. I only meant you were easy to hear coming.'],
+      pre:['Hello! I felt your footsteps before I saw you. I am Pip.', 'Hello, Pip. Am I allowed to stop here?', 'Of course. I only meant you were easy to hear coming.'],
       first:['There is a dragon following you! Is he meant to be there?', 'Yes. I am Corin. He hatched from an egg I found, and we are travelling together.', 'I am Pip. I have never met a dragon before. Do you think he would mind me watching him for a little while?'],
       heard:'You travel with a dragon? I am Pip, and I would very much like to meet him sometime. Only if he wants to meet me too.',
       back:['Hello again, Corin! I am glad you have both come to visit.','Hello, Corin. What have you come to ask?'],
@@ -462,7 +462,7 @@ const MillwoodShroomDialogue=(()=>{
         ['I would still like to visit you.', 'Then please do. You do not need to bring important news every time.'])
     },
     'Mycella':{
-      pre:['Welcome, traveller. I am Mycella. Have you come from the southern woods?', 'I am Corin, from Millwood. I wanted to meet the people here.', 'Then take your time. A visit need not begin with a favour to ask.'],
+      pre:['Welcome, traveller. I am Mycella. Have you come from the southern woods?', 'Yes, from Millwood. I wanted to meet the people here.', 'Then take your time. A visit need not begin with a favour to ask.'],
       first:['A young dragon. I remember wings above these woods, but I never expected to meet one like this.', 'I am Corin. He hatched near Millwood, and we have stayed together.', 'I am Mycella. Welcome to you both. There is much here he has never seen; let him take his time.'],
       heard:'A dragon has hatched in your care? I am Mycella. I remember seeing dragons long ago, and I am glad to hear there is another.',
       back:['Welcome back, Corin. It is good to see you both.','Welcome back. What would you like to talk about?'],

@@ -106,7 +106,7 @@
     if(first&&window.EmberFriendship?.needsTutorial())window.EmberConversationPanels?.open('tutorial');
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
-  function shut(){if(session?.shopping)return;reset();}
+  function shut(force=false){if(session?.shopping&&!force)return;reset();}
   function retained(fn){keeping++;try{return fn();}finally{keeping--;sync();}}
   function listening(selected){
     if(!session||ask)return;

@@ -29,18 +29,17 @@ const ThornwellDialogue = (()=>{
   function introduction(n){
     const p=profile(n);if(!p)return null;
     const met=remembers(n,'met'),known=remembers(n,'dragon'),seen=remembers(n,'seen'),near=visible(n),open=publicDragon();
-    const self=met?'':'I am Corin, from Millwood. ';
     let lines;
     if(open&&!known){
       if(near)lines=[n.n+': '+(met?p.sight:p.sight+' I am '+shortName(n)+'.'),
-        'Corin: '+self+(dragonIntroDone?'This is Aurelius. ':'')+'We are travelling together. '+(firstDragonReplies[n.n]||'I would like you to get to know him.')];
+        'Corin: '+(dragonIntroDone?'This is Aurelius. ':'')+'We are travelling together. '+(firstDragonReplies[n.n]||'I would like you to get to know him.')];
       else lines=[n.n+': '+(met?p.back:namedOpening(n,p.pre)),
-        'Corin: '+self+'I am travelling with a dragon.'+(dragonIntroDone?' His name is Aurelius.':' We are getting to know each other.'),n.n+': '+p.news];
+        'Corin: '+'I am travelling with a dragon.'+(dragonIntroDone?' His name is Aurelius.':' We are getting to know each other.'),n.n+': '+p.news];
     }else if(open&&near&&!seen){
       lines=[n.n+': You told me about your companion. '+p.sight,
         'Corin: Yes, this is the dragon I told you about. I wanted you to meet him when we had the chance.'];
     }else if(!met){
-      lines=[n.n+': '+namedOpening(n,p.pre),'Corin: I am Corin, from Millwood. I would enjoy a chance to talk.'];
+      lines=[n.n+': '+namedOpening(n,p.pre),'Corin: '+corinFirstGreeting(n)];
     }else lines=[n.n+': '+p.back,'Corin: It is good to see you again. Have you a moment?'];
     return {lines,done(){
       if(met)discussedTopics.add(key(n,'return'));
@@ -226,7 +225,7 @@ const ThornwellDialogue = (()=>{
   function reunion(n){
     const met=remembers(n,'met');
     return ['Rowan: Bramble! You found someone to bring you back. I have been wondering where you had got to.',
-      met?'Corin: He caught up with me on the road. I wanted to make sure he reached you.':'Corin: I am Corin, from Millwood. He caught up with me on the road, so I asked around for his owner.',
+      met?'Corin: He caught up with me on the road. I wanted to make sure he reached you.':'Corin: He caught up with me on the road, so I asked around for his owner.',
       met?'Rowan: Thank you, Corin. Ada and I would have had a miserable evening searching for him.':'Rowan: Rowan. Thank you for taking the trouble, Corin. Ada and I would have been out searching for him.',
       smithUpgrade?'Rowan: You have already had that sword improved. I am glad you are preparing for the road.':'Rowan: If you are heading east, speak to Dunstan in Forgewick about improving your sword and armour. A safer journey is a better thank-you than another speech from me.',
       !glassShield?'Rowan: Ask Dunstan about other protection too. He knows craftspeople farther along the road.':'Rowan: You have found a Glass Shield as well. Keep your equipment ready, and give yourself time to rest.',

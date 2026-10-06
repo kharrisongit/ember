@@ -71,6 +71,7 @@ function tryHouseLootChest(){
   if(loot.item==='emberheart'&&!DesertAdventure.won()){toast('Defeat Velyss to unseal this chest.');return true;}
   // Claim and grant together before saving, so repeat input cannot duplicate loot.
   houseLootTaken.add(loot.id);
+  const ingredients=typeof Crafting!=='undefined'?Crafting.chest(loot):null;
   gold+=loot.gold;
   const item=CHEST_CONSUMABLES[chestConsumable(loot)];
   if(item)item[1]();
@@ -81,6 +82,7 @@ function tryHouseLootChest(){
   if(loot.item==='frostheart')rewards.push('Frostheart Relic · Ice damage +25% (always active)');
   if(loot.item==='soulwing')rewards.push('Soulwing Relic · Aurelius can revive Corin once, right in battle');
   if(item)rewards.push('+1 '+item[0]);
+  if(ingredients)rewards.push(ingredients);
   beginLootChestOpening(loot.id,rewards.join(' · ')||'This chest is empty.','it_coin',!!loot.ghost);
   saveGame();
   return true;

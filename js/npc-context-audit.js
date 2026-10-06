@@ -1,5 +1,22 @@
 /* First meetings for towns awaiting their full dialogue rewrite. These are
    personal introductions, not guesses based on an actor's appearance or props. */
+function corinFirstGreeting(n){
+  const replies={
+    Wren:'I could use some advice about supplies for the road.',Fen:'I am glad I stopped. I am still finding my way around.',
+    Linna:'I hope I am not interrupting your work.',Garrow:'I can wait until you have finished that.',Bess:'It is good to get off the road for a while.',
+    'Rowan the Hunter':'I was hoping to catch you here.',Dunstan:'I have heard you are the person to see about a good blade.',
+    Sela:'Your glasswork caught my eye.',Maelis:'I would like to hear about your remedies from you.',
+    'Brother Edrin':'Thank you for making room for me.','Brother Cael':'It is peaceful here.',
+    Astrid:'It is good to be somewhere warm.',Sverre:'I could use some advice before heading into the mountains.',
+    Nazim:'I am glad to have reached the town.',Nerissa:'A chance to stop and rest sounds good.',
+    Sahir:'I would like to hear what you know about the roads here.',Edwin:'I hope the farm is treating you well.'
+  };
+  const name=({'Rowan the Hunter':'Rowan','Archivist Elowen':'Elowen','Master Iven':'Iven','Cartwright Oswin':'Oswin'})[n.n]||n.n;
+  const greetings=['Have you a moment?','I thought I would stop and say hello.','How is your day going?','Do you mind some company?',
+    'I have a little time before I head on.','It is good to meet you.','I hope I have caught you at a good time.','May I join you for a moment?'];
+  const index=[...name].reduce((v,c)=>(v*31+c.charCodeAt(0))>>>0,0)%greetings.length;
+  return 'Hello, '+name+'. '+(replies[n.n]||greetings[index]);
+}
 const NpcContextAudit=(()=>{
   const cast={};
   const p=(name,about,sight,reply)=>cast[name]={about,sight,reply};
@@ -79,7 +96,7 @@ const NpcContextAudit=(()=>{
     let lines;
     if(!met){
       lines=[n.n+': '+(visible?p.sight+' ':'')+'I am '+n.n+'. '+p.about,
-        'Corin: I am Corin, from Millwood. '+(visible?p.reply:hasDragon()?'I am travelling with a dragon called Aurelius. I wanted to introduce myself while we are here.':'It is good to meet you.')];
+        'Corin: '+(visible?p.reply:corinFirstGreeting(n)+(hasDragon()?' My travelling companion is a dragon called Aurelius.':''))];
       if(!visible&&hasDragon())lines.push(n.n+': A dragon? That is quite a travelling companion. I am glad you stopped to introduce yourself.');
     }else if(visible&&!seen)lines=known?[n.n+': You told me about Aurelius. Seeing a dragon for myself is rather different from trying to imagine one.','Corin: Yes, this is him. I wanted you to have a chance to meet.']:[n.n+': '+p.sight,'Corin: '+p.reply];
     else if(companion&&!known)lines=['Corin: I have a travelling companion now: a dragon named Aurelius.',n.n+': A dragon? That is remarkable news. How are you both managing?'];
