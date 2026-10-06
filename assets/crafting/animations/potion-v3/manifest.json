@@ -1,0 +1,33 @@
+{
+  "purpose": "Potion-only motion preview; not connected to the live crafting renderer.",
+  "durationSeconds": 4.5,
+  "finishHoldSeconds": 0.7,
+  "previewFramesPerSecond": 50,
+  "canvasSize": 192,
+  "renderScale": 4,
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: one isolated cauldron sprite for a polished fantasy RPG crafting animation, viewed at 192x192 pixels. Make ONE sturdy dark cast-iron cauldron, broad rounded belly, small brass side handles, three short feet, filled with a smooth still deep ruby-red potion. The open top is a clean symmetrical horizontal ellipse, viewed slightly from above so the full liquid surface is visible, with a clear thick dark iron front lip and rim. Large simple readable shapes, refined hand-painted game item art with crisp dark silhouette and restrained warm metallic highlights. Cauldron centered, full object including feet visible, three-quarter elevation but perfectly symmetrical straight-on orientation; pot occupies about 75 percent of square image width. Empty transparent space above the pot for a spoon and steam to be animated later. The liquid surface is FLAT, STILL and SIMPLE, with no bubbles, no swirling patterns, no reflection objects, no steam. No spoon, no tools, no fire, no wood, no floor, no scenery, no shadow outside the object, no border, no writing, no watermark. Genuinely transparent background.",
+  "assets": {
+    "cauldron": {
+      "file": "cauldron.webp",
+      "sourceCrop": [
+        65,
+        373,
+        1188,
+        1234
+      ],
+      "maxSourceSize": 640
+    },
+    "spoon": {
+      "file": "spoon.webp",
+      "source": "../sources-v2/tools.webp",
+      "sourceCrop": [
+        300,
+        14,
+        454,
+        706
+      ]
+    }
+  },
+  "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam."
+}
