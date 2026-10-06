@@ -25,7 +25,7 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Choose the ingredients from your recipe, add them to the pot, then give it a good stir. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Keep the right ingredients with you. My kit has everything you need to prepare your recipes on the road. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
     healer:{name:'Wren',where:'Thornwell market',line:'For a stronger restorative, use sunblooms from the desert. I will write down the proportions for you.'},
     shroom:{name:'The Shroom King',where:'Sporehollow',line:'A careful hand can turn our mushrooms into a powder that muddles an enemy’s senses. Use this knowledge wisely.'},
     smith:{name:'Dunstan',where:'Forgewick smithy',line:'Keep the fragments you find in the mines or knock from a golem. Grind them finely for these two tools.'},
@@ -75,36 +75,27 @@ const Crafting=(()=>{
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
     const costs=Object.fromEntries(Object.entries(r.cost).map(([k,v])=>[k,v*qty]));
     for(const [k,v] of Object.entries(costs))add(k,-v);
-    state.pending={id,qty,costs};session={id,qty,phase:'prepare',age:0,progress:0,completed:0,added:{},selected:null,bonus:0,pulse:0,feedback:'',motion:{x:.5,y:.5,angle:0}};
+    state.pending={id,qty,costs};session={id,qty,phase:'animate',age:0,progress:0,duration:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?1:4.2};
     saveGame();window.CraftingView?.play();return true;
   }
-  function addIngredient(id){
-    const s=session,r=s&&recipe(s.id);if(!s||s.phase!=='prepare')return false;
-    if(!r.cost[id]||s.added[id]){s.feedback=s.added[id]?'That ingredient is already in the pot.':'That ingredient is not in this recipe.';window.CraftingView?.paint();return false;}
-    // The full batch was reserved at start; this gesture transfers its measured portion.
-    s.added[id]=r.cost[id]*s.qty;s.selected=null;s.feedback=materials[id]?.name||'Ingredient added';
-    s.progress=Object.keys(s.added).length/Object.keys(r.cost).length;
-    if(s.progress===1){s.phase='mix';s.completed=1;s.progress=0;s.feedback='All ingredients added. Stir with the spoon.';}
-    window.EmberSfx?.ui?.();window.CraftingView?.paint();return true;
-  }
-  function selectIngredient(id){if(session?.phase!=='prepare')return false;session.selected=id;session.feedback='Ready to add. Drag into the pot or press Add selected.';window.CraftingView?.paint();return true;}
-  function work(amount=.2){
-    const s=session;if(!s||s.phase!=='mix'||!Number.isFinite(amount)||amount<=0)return false;
-    s.progress=Math.min(1,s.progress+Math.min(.35,amount));s.pulse=1;
-    if(s.progress>=.999){s.completed=2;return finish();}
-    window.CraftingView?.paint();return true;
-  }
-  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else if(session?.phase==='prepare'){if(session.selected)addIngredient(session.selected);}else work(.2);}
-  function release(){if(session)session.touching=false;}
+  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else skipPreparation();}
+  function release(){}
   function tick(dt){
     if(!opened)return false;
-    if(!document.hidden&&session){session.age+=Math.max(0,Math.min(.05,dt));session.pulse=Math.max(0,session.pulse-dt*3);window.CraftingView?.paint();}
+    if(!document.hidden&&session){
+      session.age+=Math.max(0,Math.min(.05,Number.isFinite(dt)?dt:0));
+      if(session.phase==='animate'){
+        session.progress=Math.min(1,session.age/session.duration);
+        if(session.progress>=1)finish();
+      }
+      window.CraftingView?.paint();
+    }
     return true;
   }
   function finish(skip=false){
-    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.completed<2))return false;
+    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.progress<1))return false;
     s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
-    s.phase='result';s.progress=1;s.touching=false;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
+    s.phase='result';s.progress=1;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
   function skipPreparation(){return finish(true);}
   function capture(){return JSON.parse(JSON.stringify(state));}
@@ -238,5 +229,5 @@ const Crafting=(()=>{
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,addIngredient,selectIngredient,work,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

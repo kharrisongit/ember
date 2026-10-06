@@ -860,6 +860,10 @@ function repairCoralmere(){
 function npcTalkDistance(n){
   // Talking is proximity-based from every direction, including behind a vendor.
   let distance=Math.hypot(n.x-P.x,n.y-P.y);
+  if(n.nanCooking){
+    const dx=Math.max(0,Math.abs(P.x-n.x)-15),dy=Math.max(n.y-34-P.y,0,P.y-n.y);
+    distance=Math.min(distance,Math.hypot(dx,dy));
+  }
   if(Number.isFinite(n.talkX)&&Number.isFinite(n.talkY))
     distance=Math.min(distance,Math.hypot(n.talkX-P.x,n.talkY-P.y));
   if(n.marketVendor){

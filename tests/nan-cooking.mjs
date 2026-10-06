@@ -8,6 +8,7 @@ run(`restoreFatherCompass({owned:true,mapGiven:true,meatGiven:true});loadMap('ho
 assert(run("nan.nanCooking&&nan.packSpr==='nan_cooking'&&nan.stationary"));
 assert.equal(run('SPR.nan_cooking[4]'),12);assert.equal(run('SPR.nan_cooking[3]'),57);
 assert(run('canStand(P.x,P.y)&&nearestTalkNpc()===nan'),'Corin can stand at talking distance');assert(run('blockedByNpcBody(170,145)'),'Cauldron has a solid body');
+for(const [dx,dy] of [[0,17],[0,-49],[-29,-17],[29,-17]]){run('P.x=nan.x+'+dx+';P.y=nan.y+'+dy);assert(run('canStand(P.x,P.y)'), 'All four approaches are walkable');assert(run('nearestTalkNpc()===nan'),'Nan talks from every side of the cauldron');}
 let now=1000000,saves=0,reveal=null;c.clock=()=>now;run('Date.now=clock');
 c.saveGame=()=>saves++;c.showReveal=(...args)=>reveal=args;c.openNpcTopics=()=>{};
 const finish=()=>run('var after=scene.after;scene=null;after()');

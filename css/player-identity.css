@@ -9,14 +9,16 @@
 #playerNameHelp{font:12px/1.4 system-ui,sans-serif;text-align:left;color:#c4d7d0;margin:6px 0 18px}
 #playerCreator fieldset{border:0;padding:0;margin:0 0 22px;text-align:left;min-width:0}
 #playerCreator legend{font-weight:bold;margin-bottom:10px}
-.playerHairChoices{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+:is(.playerHairChoices,.playerEyeChoices){display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 #playerCreator button{font:14px/1.2 Georgia,serif;min-height:46px;color:#f8edcf;border:1px solid #809d96;background:#203e44;border-radius:8px;padding:9px 5px;cursor:pointer}
-.playerHairChoices button::before{content:'';display:block;width:22px;height:22px;margin:0 auto 7px;background:var(--hair);border:1px solid #fff5;border-radius:50%}
-#playerCreator .playerHairChoices button[aria-pressed=true]{outline:2px solid #f1d78e;outline-offset:1px;background:#3e5148;color:#fff6d8}
+:is(.playerHairChoices,.playerEyeChoices) button::before{content:'';display:block;width:22px;height:22px;margin:0 auto 7px;background:var(--hair);border:1px solid #fff5;border-radius:50%}
+#playerCreator :is(.playerHairChoices,.playerEyeChoices) button[aria-pressed=true]{outline:2px solid #f1d78e;outline-offset:1px;background:#3e5148;color:#fff6d8}
 .playerCreatorActions{display:grid;grid-template-columns:1fr 2fr;gap:10px}
 #playerCreator .playerCreatorBegin{background:#e8d293;color:#17252c;border-color:#ffe6a6;font-weight:bold}
 #playerCreator :focus-visible{outline:3px solid #b0e8f1;outline-offset:3px}
 @media(max-height:650px) and (min-width:560px){.playerCreatorCard{width:min(100%,670px);padding:18px 24px 18px 205px;position:relative}.playerCreatorPreview{position:absolute;left:12px;top:68px}.playerCreatorEyebrow{font-size:11px}#playerCreator h2{font-size:24px}.playerCreatorCard fieldset{margin-bottom:12px!important}#playerNameHelp{margin-bottom:10px}}
-@media(max-width:370px){.playerCreatorCard{padding:18px 14px}.playerHairChoices{gap:4px}#playerCreator button{font-size:12px}.playerCreatorPreview{width:160px;height:160px}}
+@media(max-width:370px){.playerCreatorCard{padding:18px 14px}:is(.playerHairChoices,.playerEyeChoices){gap:4px}#playerCreator button{font-size:12px}.playerCreatorPreview{width:160px;height:160px}}
 
 #playerHudName{display:block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+#playerCreator{overflow:hidden}.playerCreatorCard{max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain}.playerCreatorPreview{height:160px;width:160px}#playerCreator fieldset{margin-bottom:14px}

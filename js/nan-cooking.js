@@ -15,7 +15,7 @@ function prepareNanCooking(map,id){
     if(n.nanCooking){Object.assign(n,n._beforeCooking);delete n.nanCooking;}
     return;
   }
-  if(!n.nanCooking)Object.assign(n,{x:182,y:160,nanCooking:true});
+  if(!n.nanCooking||(n.x===182&&n.y===160))Object.assign(n,{x:173,y:157,nanCooking:true});
   Object.assign(n,{packSpr:'nan_cooking',packDirections:false,packWalk:false,stationary:true,patrol:null,goto:null,idleFps:1000/window.NAN_COOKING_DATA.durations[0]});
 }
 function nanCookingHere(n){return MAPID==='house26'&&n?.n==='Nan Ferrow'&&!nanGiftPending();}
