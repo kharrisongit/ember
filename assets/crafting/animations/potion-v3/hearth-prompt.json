@@ -1,0 +1,13 @@
+{
+  "tool": "Built-in image_gen",
+  "reference": "cauldron.webp",
+  "prompt": "Use case: precise-object-edit / unified fantasy game asset. Reference image: this painted cast-iron potion cauldron. Redesign it into ONE coherent cauldron-over-fire illustration, all designed and lit together in the same rich hand-painted material style. Preserve its dark rounded iron belly, thick elliptical opening, brass side handles and still ruby-red liquid. Redesign the three feet into slightly taller sturdy curved iron legs, firmly planted around a compact low wood fire. The short charred logs are nested BETWEEN the legs directly beneath the belly, at a physically believable scale. The cauldron is supported by its legs, never floating; the feet and bottom of the wood share the same ground level. Low natural curling orange-gold flames actually lick the underside of the pot, with dark orange edges, translucent amber tips, irregular intertwined tongues, glowing coals and warm firelight reflected subtly on the lower iron and the logs. Paint the fire with the same detailed painterly realism as the metal and wood, NOT clean vector teardrops, NOT separate candles, NOT flat cartoon symbols. Compact squat silhouette: broad pot above a small low hearth, not a tall tripod or bonfire. Single fixed symmetrical front view slightly from above so the liquid is visible; complete object including handles, feet and logs visible, no cropping. Liquid flat, calm, simple deep ruby red, no spoon and no bubbles or steam, as they will be animated later. Transparent background, no floor or scenery, no cast ground shadow, no background glow outside the object, no text, no sheet of frames. This should look like one beautifully designed physical object, not two stacked icons.",
+  "sourceCrop": [
+    63,
+    17,
+    1370,
+    1058
+  ],
+  "output": "hearth.webp",
+  "maxSourceSize": 768
+}

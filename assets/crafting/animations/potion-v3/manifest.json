@@ -37,12 +37,27 @@
         722
       ],
       "maxSourceSize": 512
+    },
+    "hearth": {
+      "file": "hearth.webp",
+      "sourceCrop": [
+        63,
+        17,
+        1370,
+        1058
+      ],
+      "maxSourceSize": 768,
+      "prompt": "hearth-prompt.json"
     }
   },
   "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam.",
-  "fireMotion": "Stationary logs; five independently bending flames and rising embers, continuous throughout the finish hold, with a seamless 5.2-second fire loop.",
+  "fireMotion": "Unified painted cauldron, legs, logs and fire; smoothly deform only warm fire pixels with feathered boundaries. Neutral iron and supports stay fixed. Continuous 5.2-second fire loop, including the finish hold.",
   "firePreviews": [
     "../../../../previews/potion-motion/potion-fire-preview.gif",
     "../../../../previews/potion-motion/potion-fire-preview.mp4"
+  ],
+  "currentPreviews": [
+    "../../../../previews/potion-motion/potion-hearth-preview.gif",
+    "../../../../previews/potion-motion/potion-hearth-preview.mp4"
   ]
 }
