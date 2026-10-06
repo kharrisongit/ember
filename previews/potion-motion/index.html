@@ -10,12 +10,12 @@ main{text-align:center;width:min(100%,440px)}h1{font:28px Georgia,serif;margin:0
 <script>
 (async()=>{
   const load=async name=>{const i=new Image();i.src='../../assets/crafting/animations/potion-v3/'+name+'.webp';await i.decode();return i;};
-  const [pot,spoon]=await Promise.all([load('cauldron'),load('spoon')]);
-  const renderer=PotionMotionPreview.make({pot,spoon}),canvas=document.querySelector('canvas'),progress=document.querySelector('progress');
+  const [pot,spoon,logs]=await Promise.all([load('cauldron'),load('spoon'),load('embers')]);
+  const renderer=PotionMotionPreview.make({pot,spoon,logs}),canvas=document.querySelector('canvas'),progress=document.querySelector('progress');
   let elapsed=0,last=performance.now(),paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pause=document.getElementById('pause');pause.textContent=paused?'Play':'Pause';
   pause.onclick=()=>{paused=!paused;pause.textContent=paused?'Play':'Pause';};
   document.getElementById('replay').onclick=()=>{elapsed=0;paused=false;pause.textContent='Pause';};
-  function tick(now){const dt=(now-last)/1000;last=now;if(!paused&&!document.hidden)elapsed=(elapsed+Math.min(dt,.05))%5.2;renderer.draw(canvas,Math.min(4.5,elapsed));progress.value=Math.min(4.5,elapsed);requestAnimationFrame(tick);}requestAnimationFrame(tick);
+  function tick(now){const dt=(now-last)/1000;last=now;if(!paused&&!document.hidden)elapsed=(elapsed+Math.min(dt,.05))%5.2;renderer.draw(canvas,elapsed);progress.value=Math.min(4.5,elapsed);requestAnimationFrame(tick);}requestAnimationFrame(tick);
 })().catch(error=>{document.querySelector('p').textContent='The preview could not load.';console.error(error);});
 </script></html>

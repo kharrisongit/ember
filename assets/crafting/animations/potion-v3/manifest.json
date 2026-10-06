@@ -27,7 +27,22 @@
         454,
         706
       ]
+    },
+    "embers": {
+      "file": "embers.webp",
+      "sourceCrop": [
+        134,
+        229,
+        1647,
+        722
+      ],
+      "maxSourceSize": 512
     }
   },
-  "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam."
+  "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam.",
+  "fireMotion": "Stationary logs; five independently bending flames and rising embers, continuous throughout the finish hold, with a seamless 5.2-second fire loop.",
+  "firePreviews": [
+    "../../../../previews/potion-motion/potion-fire-preview.gif",
+    "../../../../previews/potion-motion/potion-fire-preview.mp4"
+  ]
 }

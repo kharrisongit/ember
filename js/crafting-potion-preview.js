@@ -4,7 +4,48 @@
   const TAU = Math.PI * 2;
   const clamp = x => Math.max(0, Math.min(1, x));
   const smooth = x => { x = clamp(x); return x*x*(3-2*x); };
-  const geometry = {pot:[27,75,138,105.8],liquid:[96,92.7,48.5,8.7]};
+  const geometry = {pot:[27,60,138,105.8],liquid:[96,77.7,48.5,8.7],logs:[54,160,84,27]};
+
+  function flame(g,x,y,width,height,lean,inner=false) {
+    const light=g.createLinearGradient(x,y,x,y-height);
+    light.addColorStop(0,inner?'#ffb42b':'#de4314');
+    light.addColorStop(.45,inner?'#ffe49b':'#ff941c');
+    light.addColorStop(1,inner?'#fff2b8':'#ffc35a');
+    g.fillStyle=light;
+    g.beginPath();g.moveTo(x-width*.55,y);
+    g.bezierCurveTo(x-width*.8,y-height*.27,x-width*.22+lean*.2,y-height*.64,x+lean,y-height);
+    g.bezierCurveTo(x+width*.06+lean*.8,y-height*.72,x+width*.55,y-height*.42,x+width*.48,y-height*.16);
+    g.bezierCurveTo(x+width*.56,y+1,x-width*.42,y+2,x-width*.55,y);g.fill();
+  }
+
+  function fire(g,logs,age) {
+    // All harmonics share the preview's 5.2s period, including the finish hold.
+    // Flames bend and stretch continuously; neither the logs nor their anchors move.
+    const phase=age*TAU/5.2;
+    const warmth=.88+.07*Math.sin(phase*4)+.05*Math.sin(phase*7+.6);
+    g.save();g.translate(96,174);g.scale(48,18);
+    const glow=g.createRadialGradient(0,0,.08,0,0,1);
+    glow.addColorStop(0,`rgba(255,119,24,${.23*warmth})`);glow.addColorStop(1,'rgba(255,119,24,0)');
+    g.fillStyle=glow;g.fillRect(-1,-1,2,2);g.restore();
+    g.drawImage(logs,...geometry.logs);
+    const coals=g.createRadialGradient(96,176,5,96,176,37);
+    coals.addColorStop(0,'#ff851fb0');coals.addColorStop(1,'#f6611500');g.fillStyle=coals;
+    g.beginPath();g.ellipse(96,176,37,4,0,0,TAU);g.fill();
+    for(const [i,x,base,w,h] of [[0,66,176,10,22],[1,81,177,15,30],[2,103,177,16,27],[3,124,176,10,23],[4,93,178,11,19]]) {
+      const a=phase*(i%2?4:3)+i*1.9;
+      const height=h*(1+.11*Math.sin(a)+.045*Math.sin(phase*7+i));
+      const lean=3.4*Math.sin(a-.5)+1.1*Math.sin(phase*5+i);
+      flame(g,x,base,w,height,lean);
+      flame(g,x+.5,base-.8,w*.48,height*.63,lean*.6,true);
+    }
+    for(let i=0;i<2;i++) {
+      const u=(age/1.3+i*.43)%1;
+      g.globalAlpha=Math.sin(Math.PI*u)**2*.7;
+      g.fillStyle='#ffd38a';g.beginPath();
+      g.ellipse(77+i*34+Math.sin(u*4+i)*2,173-u*21,.7,1.1,0,0,TAU);g.fill();
+    }
+    g.globalAlpha=1;
+  }
 
   function motion(age) {
     const t = Math.max(0, Math.min(4.5, age));
@@ -19,7 +60,7 @@
     return {t,phase,lift,alpha:smooth(t/.18)*(1-smooth((t-4.05)/.35)),energy:smooth(t/.75)*(1-.7*smooth((t-3.6)/.9))};
   }
 
-  function make({pot,spoon}) {
+  function make({pot,spoon,logs}) {
     function draw(canvas,age) {
       const g=canvas.getContext('2d'),s=motion(age),[cx,cy,rx,ry]=geometry.liquid;
       g.clearRect(0,0,canvas.width,canvas.height);
@@ -27,6 +68,7 @@
       const scale=Math.min(canvas.width,canvas.height)/192;
       g.translate((canvas.width-192*scale)/2,(canvas.height-192*scale)/2);
       g.scale(scale,scale);g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+      fire(g,logs,Math.max(0,Number.isFinite(age)?age:0));
       g.drawImage(pot,...geometry.pot);
 
       g.save();g.beginPath();g.ellipse(cx,cy,rx,ry,0,0,TAU);g.clip();

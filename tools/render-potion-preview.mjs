@@ -12,11 +12,11 @@ const output=process.argv[2];if(!output)throw Error('Provide an output directory
 fs.mkdirSync(output,{recursive:true});
 const context=vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(root,'js/crafting-potion-preview.js'),'utf8'),context);
-const [pot,spoon]=await Promise.all(['cauldron','spoon'].map(file=>loadImage(path.join(root,'assets/crafting/animations/potion-v3',file+'.webp'))));
-const renderer=context.PotionMotionPreview.make({pot,spoon});
+const [pot,spoon,logs]=await Promise.all(['cauldron','spoon','embers'].map(file=>loadImage(path.join(root,'assets/crafting/animations/potion-v3',file+'.webp'))));
+const renderer=context.PotionMotionPreview.make({pot,spoon,logs});
 const scene=createCanvas(768,768),frame=createCanvas(192,192),g=frame.getContext('2d');
 for(let i=0;i<260;i++){
-  renderer.draw(scene,Math.min(4.5,i/50));
+  renderer.draw(scene,i/50);
   g.fillStyle='#ead9b7';g.fillRect(0,0,192,192);
   g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(scene,0,0,192,192);
   fs.writeFileSync(path.join(output,String(i).padStart(3,'0')+'.png'),frame.toBuffer('image/png'));
