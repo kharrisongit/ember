@@ -93,7 +93,7 @@ const Crafting=(()=>{
   }
   function finish(){
     const s=session;if(!s||s.phase!=='confirm'||!state.pending||s.progress<1)return false;
-    s.phase='crafting';s.age=0;s.duration=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?0.45:1.6;
+    s.phase='crafting';s.age=0;s.duration=4.5;
     window.CraftingView?.paint();return true;
   }
   function complete(s){

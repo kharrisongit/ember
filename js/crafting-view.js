@@ -50,8 +50,9 @@
     root.querySelector('.craft-book').hidden=true;root.querySelector('.craft-tabs').hidden=true;panel.hidden=false;panel.classList.add('craft-simple');
     panel.innerHTML='<div class="craft-confirm-card"><canvas class="craft-result-icon" width="128" height="128" aria-hidden="true"></canvas><h2>'+r.name+' × '+s.qty+'</h2><p>'+Object.entries(r.cost).map(([id,n])=>n*s.qty+' '+label(id)).join(' · ')+'</p><div class="craft-slide-track"><span>Slide to craft →</span><button class="craft-slider-thumb" role="slider" aria-label="Slide to craft '+r.name+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Slide right to craft">➜</button></div><p class="craft-slide-help">Drag the handle all the way right.</p><p class="craft-feedback" role="status" aria-live="polite"></p><button class="craft-done" hidden>Back to recipes</button></div>';
     drawBagIcon(panel.querySelector('canvas'),BAG.find(i=>i.key===r.id)?.icon?.(),0);
-    const animation=document.createElement('canvas');animation.className='craft-preparation';animation.width=192;animation.height=160;animation.hidden=true;
+    const animation=document.createElement('canvas');animation.className='craft-preparation';animation.width=animation.height=192;animation.hidden=true;
     animation.setAttribute('role','img');animation.setAttribute('aria-label',window.CraftingAnimation.label(r));panel.querySelector('.craft-result-icon').after(animation);
+    const progress=document.createElement('progress');progress.className='craft-preparation-progress';progress.max=1;progress.value=0;progress.hidden=true;progress.setAttribute('aria-label','Crafting progress');animation.after(progress);
     const thumb=panel.querySelector('.craft-slider-thumb'),track=panel.querySelector('.craft-slide-track');
     thumb.onpointerdown=e=>{if(drag||e.button>0||Crafting.current()?.phase!=='confirm')return;e.preventDefault();thumb.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,start:Crafting.current().progress};};
     thumb.onpointermove=e=>{if(drag?.id!==e.pointerId)return;e.preventDefault();const span=track.clientWidth-thumb.offsetWidth-8;Crafting.slide(drag.start+(e.clientX-drag.x)/Math.max(1,span));};
@@ -76,6 +77,7 @@
     track.hidden=done||working;thumb.disabled=working||done;
     const animation=panel.querySelector('.craft-preparation');animation.hidden=!working;panel.querySelector('.craft-result-icon').hidden=working;
     if(working)window.CraftingAnimation.draw(animation,Crafting.recipe(s.id),s.age);
+    const progress=panel.querySelector('.craft-preparation-progress');progress.hidden=!working;progress.value=working?s.age/s.duration:0;
     panel.querySelector('.craft-slide-help').hidden=done||working;panel.querySelector('.craft-done').hidden=!done;
     const feedback=panel.querySelector('.craft-feedback'),message=done?s.produced+' × '+Crafting.recipe(s.id).name+' added to your Bag.':working?window.CraftingAnimation.label(Crafting.recipe(s.id)):'';
     if(feedback.textContent!==message)feedback.textContent=message;

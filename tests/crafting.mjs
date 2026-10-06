@@ -8,7 +8,7 @@ const reset=()=>run(`Crafting.close();Crafting.restore(null);mode='play';gamepla
  trial=null;arenaLock=null;deadShown=false;mounted=false;ride=null;fishing=null;P.act=null;flightTravel=null;
  foes=[];ask=null;ovl=null;templeCompass.morningMet=true;templeCompass.meatGiven=true;Crafting.giveKit();Crafting.restore({...Crafting.capture(),learned:[]});potions=0;elixirs=0;bombs=0;dust=0;bells=0;marks=0;breaths=0;stones=0;salts=0;
  boarMeat=5;hareMeat=5;deerMeat=5;foxMeat=5;birdMeat=5;dragonFish=5;`);
-const animate=()=>run('for(let i=0;i<40;i++)Crafting.tick(.05)');
+const animate=()=>run('for(let i=0;i<91;i++)Crafting.tick(.05)');
 const solve=()=>{run('Crafting.slide(1);Crafting.finish()');animate();};
 reset();assert(run('Crafting.open()'));assert.equal(run('Crafting.capture().learned.length'),0,'Opening a book cannot grant unlearned recipes');
 assert(!run('Crafting.start("potion")'),'No recipe, no crafting');
@@ -23,10 +23,11 @@ for(const id of ids){
  assert(!run('Crafting.finish()'),'Unfinished preparation cannot award items');
  c.document.hidden=true;run('for(let i=0;i<100;i++)Crafting.tick(.05)');assert.equal(run('Crafting.current().progress'),0,'Hidden pages pause the animation');c.document.hidden=false;
  run('Crafting.slide(1);Crafting.finish()');assert.equal(run('Crafting.current().phase'),'crafting');
+ assert.equal(run('Crafting.current().duration'),4.5,'All recipes use a 4.5-second preparation');
  assert.equal(run(`Crafting.count('${id}')`),held,'No reward until the animation finishes');
  assert(!run('Crafting.finish()'),'Repeated confirmation cannot skip the animation');
  c.document.hidden=true;animate();assert.equal(run('Crafting.current().age'),0,'Hidden pages pause confirmed crafting');c.document.hidden=false;
- run('for(let i=0;i<10;i++)Crafting.tick(.05)');assert.equal(run(`Crafting.count('${id}')`),held,'Partial animation has no reward');
+ run('for(let i=0;i<89;i++)Crafting.tick(.05)');assert.equal(run(`Crafting.count('${id}')`),held,'No early reward before 4.5 seconds');
  animate();assert.equal(run('Crafting.current().phase'),'result');assert(!run('Crafting.finish()'));
  assert.equal(run(`Crafting.count('${id}')`),held+2,'Exact requested batch, no extra potion from one set of materials');
  assert.equal(run('Crafting.capture().pending'),null);
