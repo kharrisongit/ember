@@ -72,7 +72,7 @@ run('DesertAdventure.installWorld(W.maps.world);');assert.equal(run('W.maps.worl
 const usage=JSON.parse(fs.readFileSync('assets/interiors/desert-pyramid/pack-usage.json','utf8'));
 run('DragonChapels.installWorld(W.maps.world);');
 const used=new Set(JSON.parse(run('JSON.stringify(Object.values(W.maps).flatMap(m=>[...(m.roomActors||[]).map(a=>a.spr),...Object.values(m.desertHouseSprites||{})]))')));
-for(const refs of Object.values(usage))for(const ref of refs)if(ref.startsWith('dd_'))assert(used.has(ref),'Native asset placed: '+ref);
+for(const refs of Object.values(usage))for(const ref of refs)if(ref==='dd_mummy')assert(!used.has(ref),'Stationary mummy dressing is retired');else if(ref.startsWith('dd_'))assert(used.has(ref),'Native asset placed: '+ref);
 assert.equal(Object.keys(usage).length,92);
 assert(!run('W.maps.world.doors.some(d=>d.to==="sandspire_court")'));
 assert.equal(run('W.maps.world.roomActors.filter(a=>a.spr==="dd_fall1").length'),0);

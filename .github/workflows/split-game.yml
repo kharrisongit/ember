@@ -56,6 +56,8 @@ jobs:
           node tests/conversation-friendship.mjs
       - name: Check startup and retained overworld performance
         run: |
+          node tests/opening-prologue.mjs
+          node tests/player-identity.mjs
           node tests/startup-loading.mjs
           node tests/startup-assets.mjs
           node tests/startup-art.mjs
@@ -81,6 +83,7 @@ jobs:
           node tests/spider-queen-boss.mjs
           node tests/desert-pyramid.mjs
           node tests/desert-adventure.mjs
+          node tests/pyramid-scarabs.mjs
           node tests/desert-vultures.mjs
           node tests/arena-floor-render.mjs
           node tests/side-route-adventures.mjs

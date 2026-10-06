@@ -113,7 +113,7 @@
       const talking=active&&corin===isCorin;
       lane.classList.toggle('is-speaking',talking);
       lane.classList.toggle('is-listening',active&&!talking);
-      lane.querySelector('.conversationSpeakerName').setAttribute('aria-label',(isCorin?'Corin':npcName)+(talking?' — speaking':''));
+      lane.querySelector('.conversationSpeakerName').setAttribute('aria-label',playerFacingText(isCorin?'Corin':npcName)+(talking?' — speaking':''));
       lane.querySelector('.conversationAdvance').hidden=!(ready&&corin===isCorin);
     }
     const secondary=room.querySelector('.conversationGoodbye'),label=backAvailable?'Back':'Goodbye';

@@ -534,7 +534,7 @@ function atlasShowDetails(){
  const $=id=>document.getElementById(id),area=atlasCurrentArea();
  $('atlasAreaLabel').textContent=p[0]===area?'YOUR CURRENT AREA':'SELECTED AREA';
  const description=atlasPlaceDescription(p);
- $('atlasName').textContent=description.title;$('atlasText').textContent=description.detail;
+ $('atlasName').textContent=description.title;$('atlasText').textContent=playerFacingText(description.detail);
  $('atlasServices').replaceChildren(atlasElement('strong','',description.service));
  if(typeof refreshFlightOption==='function')refreshFlightOption();
  $('atlasTrackedTitle').textContent=q?.title||'No quest tracked';

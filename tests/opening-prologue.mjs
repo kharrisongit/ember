@@ -49,3 +49,16 @@ reset();c.EmberPrologue=undefined;await run('BOOT.close({newGame:true})');
 assert(run('gameplayStarted'),'Missing optional prologue script cannot block startup');
 assert(!events.includes('prologue'));
 console.log('PASS: touch and keyboard New Game await the prologue; Continue/Load bypass it; music and morning handoff remain ordered; optional-script failure is non-blocking.');
+
+// Creation is exclusive; Back keeps the current profile and title untouched.
+reset();let finishCreator;
+c.EmberPlayerIdentity={choose(){events.push('creator');return new Promise(r=>finishCreator=r);},restore(profile){events.push('profile:'+profile.name);}};
+const cancelled=run('BOOT.close({newGame:true})');await settle();
+run('BOOT.close({newGame:true})');assert.equal(events.filter(x=>x==='creator').length,1);
+assert(!events.includes('morning'));finishCreator(null);await cancelled;
+assert(run('gameplayReady'));assert(!run('BOOT.transitioning'));assert(!events.some(x=>x.startsWith('profile:')));
+reset();c.EmberPrologue={play(){events.push('prologue');return new Promise(resolve=>finishPrologue=resolve);}};
+run('BOOT.close({newGame:true})');await settle();assert(!events.includes('prologue'));
+finishCreator({name:'Kurtis',hair:'silver'});await finishNew();
+assert(events.indexOf('profile:Kurtis')<events.indexOf('prologue'));
+console.log('PASS: creator cancellation, duplicate clicks and profile-before-prologue handoff.');

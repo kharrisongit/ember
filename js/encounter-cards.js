@@ -13,7 +13,7 @@ window.EmberEncounterCard={layout:layoutEncounterCards,blocking:()=>[...encounte
   node.replaceChildren();node.dataset.instruction=title;node.dataset.kind=kind;node.dataset.dismiss=dismiss;
   const footer=dismiss==='a'?'Press A to dismiss':dismiss==='battle'?'Press A to begin':'';
   node.classList.add('encounter-card');node.setAttribute('aria-label',[title,action,footer].filter(Boolean).join('. '));
-  const add=(tag,cls,text)=>{const e=document.createElement(tag);e.className=cls;if(text)e.textContent=text;node.appendChild(e);return e;};
+  const add=(tag,cls,text)=>{const e=document.createElement(tag);e.className=cls;if(text)e.textContent=window.EmberPlayerIdentity?.text(text)??text;node.appendChild(e);return e;};
   const atmosphere=add('span','encounter-atmosphere');atmosphere.setAttribute('aria-hidden','true');
   for(let i=0;i<12;i++){
     const spark=document.createElement('i');spark.style.setProperty('--x',((i*29+7)%94+3)+'%');
@@ -27,7 +27,7 @@ window.EmberEncounterCard={layout:layoutEncounterCards,blocking:()=>[...encounte
   add('strong','encounter-title',title);
   add('span','encounter-detail',detail);
   const cta=add('span','encounter-action');if(key){const badge=document.createElement('b');badge.textContent=key;cta.appendChild(badge);}
-  const label=document.createElement('span');label.textContent=action;cta.appendChild(label);
+  const label=document.createElement('span');label.textContent=window.EmberPlayerIdentity?.text(action)??action;cta.appendChild(label);
   if(footer)add('span','encounter-footnote',footer);
 }};
 window.addEventListener?.('resize',layoutEncounterCards);

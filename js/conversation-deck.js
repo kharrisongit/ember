@@ -43,7 +43,7 @@
     speech.append(identity);stage.append(speech);return stage;
   }
   function makePlayer(workspace){
-    const player=node('section','conversationPlayer');player.setAttribute('aria-label','Corin’s side of the conversation');
+    const player=node('section','conversationPlayer');player.setAttribute('aria-label',playerFacingText('Corin’s side of the conversation'));
     const identity=node('div','conversationSpeaker');identity.append(portrait('Corin'),node('strong','conversationSpeakerName','Corin'));
     const body=node('div','conversationPlayerBody');
     const speech=node('div','conversationCorinSpeech');speech.append(node('div','conversationCorinEcho scrolls'),advanceCue());
@@ -94,7 +94,7 @@
     box.moved=false;box.classList.add('journalDeck');box.classList.toggle('deckEntering',enter);
     box.style.display='grid';box.style.width='100%';rows.replaceChildren();
     rows.classList.toggle('replyMenu',!!ask.replyChoices);
-    rows.setAttribute('role','group');rows.setAttribute('aria-label',ask.replyChoices?'Choose Corin’s reply':'Conversation topics');
+    rows.setAttribute('role','group');rows.setAttribute('aria-label',ask.replyChoices?playerFacingText('Choose Corin’s reply'):'Conversation topics');
     const name=ask.npcConversation||'Aurelius';
     box.dataset.conversationTheme=window.EmberConversationView.theme(name,ask.npcActor);
     for(const lane of [stage,player]){

@@ -91,6 +91,7 @@ function portraitFor(who) {
   if(!who)return null;
   const name=PORTRAIT_ALIASES[who]||who;
   if(CHAPEL_PORTRAITS[name])return CHAPEL_PORTRAITS[name];
+  if(name==='Corin'){const custom=window.EmberPlayerIdentity?.portrait(undefined,typeof smithUpgrade!=='undefined'&&!!smithUpgrade);if(custom)return custom;}
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
   const portrait=DIALOGUE_PORTRAITS[name];
   if(PORTRAIT_FILES[name])return {...(portrait||{id:FACE_OF[name]??(name==='Tobin'?135:134)}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260930-hatless-farmer'};

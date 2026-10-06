@@ -5,7 +5,7 @@
   if (!Array.isArray(chapters) || !chapters.length) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261003-continuity';
+  const imageURL = chapter => 'assets/prologue/' + chapter.image + '.webp?v=20261006-two-heads';
   let active = false, playing = null;
 
   function loadPicture(chapter, signal) {
@@ -177,7 +177,7 @@
       if (n === beat || index < 0) return;
       beat = n;
       captionAnimation?.cancel(); captionAnimation = null;
-      narration.textContent = chapters[index].lines[n];
+      narration.textContent = window.EmberPlayerIdentity?.text(chapters[index].lines[n])??chapters[index].lines[n];
       if (!reduced && narration.animate) {
         captionAnimation = narration.animate([{ opacity: 0, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }],
           { duration: chapters[index].mode ? 120 : 320, easing: 'ease-out', fill: 'both' });
@@ -215,7 +215,7 @@
       root.dataset.mode = chapter.mode || 'story';
       root.dataset.hideTitle = String(!!chapter.hideTitle);
       pictureHost.replaceChildren();
-      if (picture) { picture.alt = chapter.alt; pictureHost.appendChild(picture); }
+      if (picture) { picture.alt = window.EmberPlayerIdentity?.text(chapter.alt)??chapter.alt; pictureHost.appendChild(picture); }
       era.textContent = chapter.era; title.textContent = chapter.title;
       copy.scrollTop = 0;
       counter.textContent = (index + 1) + ' / ' + chapters.length;

@@ -40,8 +40,31 @@ const DesertAdventure=(()=>{
       const m=W.maps[id];m.templePlan.chambers.forEach(([l,t,r,b],room)=>{
         // Side-wall furnishings leave the middle and every door approach open.
         const spots=[[l+32,t+96],[r-32,t+96],[l+24,b-56],[r-24,b-56],[l+56,t+32],[r-56,t+32],[l+48,b-24],[r-48,b-24]];
-        names.forEach((name,i)=>{const [x,y]=name==='dd_ladder'?[r-48,t+4]:spots[i];prop(m,name,x,y,{floor:/rug|bones|mat|leaves|scarab/.test(name)});});
+        names.forEach((name,i)=>{const [x,y]=name==='dd_ladder'?[r-48,t+4]:spots[i];
+          const actor=prop(m,name,x,y,{floor:/rug|bones|mat|leaves|scarab/.test(name)});
+          if(/^dd_scarab/.test(name)){
+            const angle=(room*1.7+i*2.4),speed=13+i%3*3;
+            actor.scarab={bounds:[l+16,t+24,r-16,b-16],vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed};
+          }
+        });
       });
+      // Decorative standing mummies are not enemies and have no interaction.
+      // Keep combat mummies in m.foes; discard only these dressing actors.
+      m.roomActors=m.roomActors.filter(a=>a.spr!=='dd_mummy');
+    }
+  }
+  function stepScarabs(dt,map=MD){
+    if(!map?.pyramid||!(dt>0))return;
+    const step=Math.min(dt,.05),radius=5;
+    for(const actor of map.roomActors||[]){
+      const crawl=actor.scarab;if(!crawl||actor.editorDeleted)continue;
+      const [l,t,r,b]=crawl.bounds;
+      const free=(x,y)=>x>=l&&x<=r&&y>=t&&y<=b&&!(map.roomBlocks||[]).some(([x0,y0,x1,y1])=>x+radius>x0&&x-radius<x1&&y+radius>y0&&y-radius<y1);
+      let x=actor.x+crawl.vx*step,y=actor.y+crawl.vy*step;
+      if(!free(x,actor.y)){crawl.vx=-crawl.vx;x=actor.x+crawl.vx*step;}
+      if(free(x,actor.y))actor.x=x;
+      if(!free(actor.x,y)){crawl.vy=-crawl.vy;y=actor.y+crawl.vy*step;}
+      if(free(actor.x,y))actor.y=y;
     }
   }
   function organizeTown(m){
@@ -206,5 +229,5 @@ const DesertAdventure=(()=>{
         ]};askPick=0;askDraw();
       });return true;
   }
-  return {prepare,installWorld,clearApproach,vultures,drawVulture,scareVultures,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
+  return {prepare,stepScarabs,installWorld,clearApproach,vultures,drawVulture,scareVultures,houseSprite:o=>MAPID==='world'&&MD.desertHouseSprites?.[o.id],talk,accept,owned,won,rewardId:REWARD,arenas,accepted:()=>!!source,capture:()=>source,restore:value=>{source=['school','sandspire'].includes(value)?value:null;},firePower:(el,power)=>el==='fire'&&owned()?power*1.25:power};
 })();

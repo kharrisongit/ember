@@ -1,0 +1,21 @@
+{
+  "portraits": {
+    "prompt": "Generate a production-ready transparent fantasy RPG portrait atlas with EXACTLY 4 columns by 2 rows, equal SQUARE cells, overall canvas aspect ratio 2:1. Make hair-color variants of the EXACT SAME young male character shown in the two attached reference portraits. Preserve his face, age, expression, skin color, messy hairstyle, pose, clothing, painterly style, opaque shoulder silhouette, waist-up framing and direction. NOT new people. Top row uses the first reference's rugged brown leather vest/clothes. Bottom row uses the second reference's blue steel armor. In BOTH rows, columns left to right hair colors are: 1 warm chestnut BROWN; 2 natural COPPER RED; 3 GOLDEN BLOND; 4 SILVER WHITE. The original hair must be fully recolored while retaining all shading and individual strands; brows can be a natural complementary color. Do not recolor skin, clothes or armor. Each complete head, both full shoulders and upper torso fit comfortably INSIDE its own square cell with at least 7% transparent margins on top, left and right. Same size and baseline across all eight portraits. True transparent alpha background, no colored backdrop, no background glow or haze, no text or labels, no frames, no lines, no other objects. Portrait torsos should terminate cleanly at the bottom baseline, no transparency fade.",
+    "source": "exec-ead12ab3-6f1f-4655-9e42-669b592789c7.png",
+    "columns": [
+      "brown",
+      "copper",
+      "blond",
+      "silver"
+    ],
+    "rows": [
+      "travel clothes",
+      "upgraded armor"
+    ]
+  },
+  "royal": {
+    "01-seven-riders": "Keep this exact fantasy painting, seven riders, seven dragons, landscape, lighting, colors and composition. Change ONLY the central sapphire BLUE dragon ridden by green-cloaked dark-haired Halvard: it must have TWO separate long necks emerging side by side from ONE blue torso, each ending in its own fully readable horned blue dragon head. Add the second neck/head next to the existing one with a clear gap between the heads. Both heads visible against the distant landscape, looking right, not overlapping the gold dragon. All six other dragons stay single-headed. Still exactly seven dragon bodies, two wings/four legs/one tail for the blue one. No extra rider. No other changes.",
+    "02-wingfall": "Edit this exact cinematic painting. Halvard rides a TWO-HEADED sapphire-blue dragon. Replace the single neck/head with exactly TWO anatomically complete separate blue necks rising naturally from one shared blue chest, each with its own horned head, jaw and amber eye. Keep the near head breathing fire to the left; make the second head slightly higher and farther back, jaw open but no flame obscuring it. Clearly separated silhouettes, same blue/cream palette, same ivory horns. Preserve the ONE shared dragon body, four legs, two wings, one tail, seated Halvard with short dark hair and green cloak, camera framing and landscape. No second body or rider. Recompose slightly if necessary so both complete heads fit comfortably. Painterly style exactly as original.",
+    "15-wingfall-temple": "Edit this exact painting with one precise correction: the blue dragon carrying Halvard in the sky MUST have TWO distinct necks emerging from its one torso and TWO clearly separated horned blue heads, not one. Both face right; the near head breathes the existing fire and the second head rises slightly above it so its outline is visible against clouds. Preserve Halvard, his green cloak, the dragon's single blue body, wings, four legs and tail. Keep the green defending dragon on the ground SINGLE-headed. Preserve all villagers, rider, temple, flames, stone statues, composition and painted style. There is only one flying blue dragon and it has two heads."
+  }
+}

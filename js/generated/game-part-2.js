@@ -2783,7 +2783,7 @@ function drawGameImage(g, img, sx, sy, sw, sh, dx, dy, dw, dh) {
     const right = Math.min(sx + sw, page.x + page.w, (tx + 1) * 1024);
     const bottom = Math.min(sy + sh, page.y + page.h, (ty + 1) * 1024);
     if (right <= x || bottom <= y) continue;
-    drawPixelImage(g,page.img, x - page.x, y - page.y, right - x, bottom - y,
+    drawPixelImage(g,globalThis.window?.EmberPlayerIdentity?.spritePage(page)||page.img, x - page.x, y - page.y, right - x, bottom - y,
       dx + (x - sx) * dw / sw, dy + (y - sy) * dh / sh,
       (right - x) * dw / sw, (bottom - y) * dh / sh);
   }
@@ -7704,7 +7704,7 @@ function showReveal(sprName, caption, maxScale, still, after) {
       drawFrame(frame);
     }, 90);
   }
-  revCap.textContent = caption;
+  revCap.textContent = playerFacingText(caption);
   revEl.classList.add("on");
   revealing = true;
 }
@@ -7737,7 +7737,7 @@ let typed = 0, typeFull = "", typeWho = "";
 function playerFacingText(text){
   // Editor house IDs sometimes travel in location metadata or topic text.
   // Keep identifiers intact in world data; only translate their displayed form.
-  return String(text??'').replace(/\s*\(\s*house\d+(?:_[a-z0-9]+)*\s*\)/gi,'')
+  return (window.EmberPlayerIdentity?.text(text)??String(text??'')).replace(/\s*\(\s*house\d+(?:_[a-z0-9]+)*\s*\)/gi,'')
     .replace(/\bhouse\d+(?:_[a-z0-9]+)*\b/gi,id=>{
       const title=W.maps[id.toLowerCase()]?.title;
       return title&&!/\bhouse\d/i.test(title)?title:'the house';
@@ -7753,7 +7753,7 @@ function typeAll() { typed = typeFull.length; typePaint(); }
 function typePaint() {
   sayEl.innerHTML = esc(typeFull.slice(0, Math.floor(typed)));
   if(window.EmberConversationFlow?.active())sayEl.scrollTop=sayEl.scrollHeight;
-  nameEl.textContent = typeWho || "";
+  nameEl.textContent = playerFacingText(typeWho || "");
   const faceLeft = (faceEl.className || "left").indexOf("right") < 0;
   nameEl.className = (typeWho ? "on " : "") + (faceLeft ? "right" : "left");
 }
@@ -12814,7 +12814,7 @@ const dumpEl = document.getElementById("dump"), dumpText = document.getElementBy
 const toastEl = document.getElementById("toast");
 function toast(msg) {
   toastEl.classList.remove("compass-safe");
-  toastEl.textContent = msg; toastEl.style.display = "block";
+  toastEl.textContent = playerFacingText(msg); toastEl.style.display = "block";
   clearTimeout(toast._t); toast._t = setTimeout(() => toastEl.style.display = "none", 1800);
 }
 function copyText(txt, done) {

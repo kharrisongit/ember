@@ -4178,7 +4178,7 @@ function updateDeckHealth(){
     if(!cv||!sp||!img)return;
     // These are static portraits, not animation frames. Redrawing them every
     // tick needlessly repaints the controller artwork on mobile browsers.
-    const key=[...sp.slice(0,4),cv.width,cv.height,!!faceZoom].join('|');
+    const key=[...sp.slice(0,4),cv.width,cv.height,!!faceZoom,faceZoom?window.EmberPlayerIdentity?.capture().hair:''].join('|');
     if(cv._portraitKey===key&&cv._portraitImage===img)return;
     const x=cv.getContext("2d"); x.clearRect(0,0,cv.width,cv.height); x.imageSmoothingEnabled=false;
     try{
@@ -4253,7 +4253,7 @@ function frameCore(ms) {
   globalThis.window?.EmberRiding?.step(dt);
   stepNanMorning();
   stepNanDeparture();
-  if (mode === "play") { stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
+  if (mode === "play") { DesertAdventure.stepScarabs(dt); stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
   DragonChapels.step(dt);
   stepScene(dt);
@@ -4924,8 +4924,8 @@ function bagTick() {
   }
   bagRAF = requestAnimationFrame(bagTick);
 }
-function bagName(it) { return typeof it.name === "function" ? it.name() : it.name; }
-function bagTell(it) { return typeof it.tell === "function" ? it.tell() : it.tell; }
+function bagName(it) { return playerFacingText(typeof it.name === "function" ? it.name() : it.name); }
+function bagTell(it) { return playerFacingText(typeof it.tell === "function" ? it.tell() : it.tell); }
 const BAG_ORDER = { key: 0, charm: 1, use: 2 };
 function bagKind(it) { return it.kind || (it.charm ? "charm" : "use"); }
 function bagHeld() {
@@ -5125,7 +5125,7 @@ function refreshBag() {
   }
   desc.innerHTML = held.length
     ? "<b>" + bagName(held[bagPick]) + "</b><span>" + bagTell(held[bagPick]) + "</span>"
-    : "<span>Corin is not carrying anything yet.</span>";
+    : "<span>"+esc(playerFacingText("Corin is not carrying anything yet."))+"</span>";
   const big = document.getElementById("bagBig");
   if (big) {
     const ic = held.length && held[bagPick].icon();
@@ -5252,7 +5252,7 @@ function askDraw() {
                 + "border-left:3px solid #6f9c58;"
                 : "color:#7a3f3a;background:rgba(190,110,95,.26);"
                 + "border-left:3px solid #b0685c;");
-      d.textContent = o.n;
+      d.textContent = playerFacingText(o.n);
       if(ask.npcConversation||ask.dragonConversation){
         d.className="topicSpeaker";
         d.textContent="";const identity=document.createElement('span');identity.className='topicIdentity';identity.textContent=o.n;
@@ -5281,10 +5281,10 @@ function askDraw() {
                   Math.round((18 - sp[2] * sc) / 2), Math.round((18 - sp[3] * sc) / 2),
                   sp[2] * sc, sp[3] * sc);
       const t = document.createElement("span");
-      t.textContent = (i === askPick ? "\u25B8 " : "  ") + o.n;
+      t.textContent = (i === askPick ? "\u25B8 " : "  ") + playerFacingText(o.n);
       d.appendChild(t);
     } else {
-      d.textContent = (i === askPick ? "\u25B8 " : "  ") + o.n;
+      d.textContent = (i === askPick ? "\u25B8 " : "  ") + playerFacingText(o.n);
     }
     if(ask.npcConversation||ask.dragonConversation){
       d.style.setProperty('--topic-delay',Math.min(i-1,5)*35+'ms');
@@ -5729,7 +5729,13 @@ const BOOT = {
   },
   async close({newGame=false}={}) {
     if(window.EmberCloud?.accountBusy())return;
-    if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning) return;
+    if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning || BOOT.creating) return;
+    if(newGame&&window.EmberPlayerIdentity){
+      BOOT.creating=true;
+      let profile;try{profile=await window.EmberPlayerIdentity.choose();}finally{BOOT.creating=false;}
+      if(!profile)return;
+      window.EmberPlayerIdentity.restore(profile);
+    }
     if(newGame&&typeof Crafting!=='undefined')Crafting.restore(null);
     BOOT.transitioning=true;window.__titleTransition=true;
     gameplayReady=false;BOOT.waiting=false;clearPadInputs();
@@ -6022,7 +6028,7 @@ function refreshOvl() {
     }
     rows.appendChild(d);
   });
-  desc.textContent = typeof items[M.pick].tell === "function" ? items[M.pick].tell() : items[M.pick].tell || "";
+  desc.textContent = playerFacingText(typeof items[M.pick].tell === "function" ? items[M.pick].tell() : items[M.pick].tell || "");
   if (ovl === "itemm") {
     const on = rows.querySelector(".row.on");
     if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
@@ -6161,9 +6167,10 @@ function saveSummary(slot){
   const map=(W.maps[s.map]&&W.maps[s.map].name)||String(s.map||"Unknown").replaceAll("_"," ");
   const d=s.when?new Date(s.when):null;
   const stamp=d&&!isNaN(d)?d.toLocaleString():"saved game";
-  return "Slot "+slot+" — "+map+" — "+stamp;
+  return "Slot "+slot+" — "+(window.EmberPlayerIdentity?.normalize(s.playerIdentity).name||"Corin")+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  playerIdentity:window.EmberPlayerIdentity?.capture(),
   crafting:typeof Crafting!=='undefined'?Crafting.capture():undefined,
   friendship:window.EmberFriendship?.capture(),
   nanElixirReadyAt, flightVisits:typeof flightVisits!=='undefined'?flightVisits:{},
@@ -6228,6 +6235,7 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    window.EmberPlayerIdentity?.restore(s.playerIdentity);
     if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
     restoreInventoryPrompt(s);
     DesertAdventure.restore(s.pyramidQuest);
