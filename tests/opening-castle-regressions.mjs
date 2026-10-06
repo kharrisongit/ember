@@ -56,7 +56,8 @@ let introductions=0;
 run(`scene=null;ask=null;sayNpc=null;MAPID='world';MD=W.maps.world;dragon.on=true;dragonOff=false;dragonIntroDone=true;thornwellRoyal.stage=7;`);
 for(const name of run('Object.keys(NpcContextAudit.cast)')){
  c.actor={n:name,x:12000,y:3300};run('discussedTopics.clear();dragon.x=12000;dragon.y=3300');
- const intro=run('NpcContextAudit.introduction(actor)');assert(!/\bCorin\b|\bAurelius\b/.test(intro.lines[0]),name+' is a stranger');assert.match(intro.lines[1],/I am Corin/);intro.done();
+ const intro=run('NpcContextAudit.introduction(actor)');assert(!/\bCorin\b|\bAurelius\b/.test(intro.lines[0]),name+' is a stranger');
+ assert.match(intro.lines[1],/^Corin: .+/);assert(!intro.lines[1].includes('Corin, from Millwood'),name+' avoids the repeated hometown introduction');intro.done();
  assert.match(run('NpcContextAudit.introduction(actor).lines[0]'),/again, Corin/);
  run('discussedTopics.clear();dragonOff=true');const away=run('NpcContextAudit.introduction(actor).lines');assert(!/those wings|your dragon|that dragon|beside you|outside/.test(away[0]),name+' does not invent a sighting');run('dragonOff=false');introductions++;
 }
