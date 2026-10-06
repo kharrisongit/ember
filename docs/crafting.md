@@ -24,10 +24,14 @@ Golems drop mineral dust; shroom and mine enemies provide supplementary ingredie
 
 Choose a quantity and slide the handle fully to the right to craft immediately. Partial drags reset on release; tapping the track or waiting never crafts. Keyboard users adjust with arrow keys (or End) and confirm with Enter. There is no preparation animation or minigame.
 
+The top-right X closes crafting. The redundant status/footer and Return to game button are removed; finished batches retain their Back to recipes button. Closing an unfinished batch returns its reserved ingredients.
+
 The world pauses while the book is open. Only a completed slide confirms the batch. Ingredients are reserved and saved when a batch begins. Closing or cancelling refunds them once. Loading an interrupted batch refunds its canonical recipe costs after loading the base inventory. Finishing grants the result and clears the pending batch together before saving. New games and other save slots have independent crafting state.
 
 ## Assets and verification
 
 `assets/crafting/ingredients.webp` is a generated ten-cell ingredient sheet (5×2), decoded lazily and never awaited during boot. The confirmation uses the existing inventory item icon and a touch/keyboard slider. The retired campsite animation assets are not loaded. The church portrait fix uses a separate lazy 6×3 atlas with all eighteen speakers; its cast manifest is under `assets/portraits`.
+
+The six cooked foods have dedicated generated artwork in `assets/inventory/cooked-foods.webp` (3×2, 128px cells), shared by recipe cards, confirmations, results and the Bag. Raw ingredients keep their original icons. The full-resolution transparent source, exact built-in image-generation prompt, and cell manifest are alongside the runtime sheet. Only the small runtime sheet loads during gameplay startup.
 
 `tests/crafting.mjs` checks all recipes, slide confirmation and cancelled gestures, exact output, inventory deductions, cancellations, actual save/load, migration, teachers, stock, food, drops and gathering cooldowns. `tests/crafting-world.mjs` runs inside the existing full-world pyramid audit to verify every gatherable material has walkable patches without generating the world twice.

@@ -5756,8 +5756,13 @@ const BOOT = {
     }
     await BOOT.pause(550);
     await Promise.all([BOOT.pause(1400),window.EmberTitleAudio?.fadeIn()]);
-    if(shade){shade.style.transition="opacity 1100ms ease";shade.style.opacity="0";}
-    await BOOT.pause(1100);
+    if(shade&&window.EmberIris){
+      document.body.classList.add("game-started");
+      await window.EmberIris.reveal(shade);
+    }else{
+      if(shade){shade.style.transition="opacity 1100ms ease";shade.style.opacity="0";}
+      await BOOT.pause(1100);
+    }
     gameplayStarted=true;BOOT.transitioning=false;window.__titleTransition=false;
     clearPadInputs();document.body.classList.add("game-started");
     if(shade)shade.hidden=true;

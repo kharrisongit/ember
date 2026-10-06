@@ -64,3 +64,17 @@ run('BOOT.close({newGame:true})');await settle();assert(!events.includes('prolog
 finishCreator({name:'Kurtis',hair:'silver'});await finishNew();
 assert(events.indexOf('profile:Kurtis')<events.indexOf('prologue'));
 console.log('PASS: creator cancellation, duplicate clicks and profile-before-prologue handoff.');
+
+// New Game, Continue and Load all keep input locked until the circular reveal ends.
+c.EmberPlayerIdentity=undefined;c.EmberPrologue=undefined;
+for(const action of ['BOOT.close({newGame:true})','BOOT.continueGame()','BOOT.loading=true;BOOT.takeLoad(0)']){
+  reset();let finishIris;
+  c.EmberIris={reveal(shade){assert.equal(shade,dom.element('titleFade'));events.push('iris');return new Promise(resolve=>finishIris=resolve);}};
+  run(action);await settle();
+  assert(events.includes('iris'));assert(!run('gameplayStarted'));assert(run('BOOT.transitioning'));
+  assert(!events.includes('morning'));
+  run('BOOT.close()');assert.equal(events.filter(e=>e==='iris').length,1);
+  finishIris();await settle();assert(run('gameplayStarted'));assert(!run('BOOT.transitioning'));
+  assert(dom.element('titleFade').hidden);assert.equal(events.filter(e=>e==='morning').length,1);
+}
+console.log('PASS: circular reveals lock controls, reject duplicate starts, and complete before morning dialogue for New Game/Continue/Load.');

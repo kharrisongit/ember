@@ -2,7 +2,7 @@
 const EmberAtlasMotion=(()=>{
   let layer,gestureTimer;
   const wave=(x,y,w,i)=>`<path class="atlas-water-wave" style="--delay:-${(i*.73)%7}s;--speed:${4+i%4}s" d="M${x} ${y}q${w/4} -2 ${w/2} 0t${w/2} 0"/>`;
-  const art='assets/maps/emberfell-realm-v2.webp?v=20261002-millwood-clarity';
+  const art='assets/maps/emberfell-realm-v3.webp?v=20261006-cows';
   const texture=cls=>`<image class="${cls}" href="${art}" width="1536" height="512"/>`;
   const lavaPath='M1387 0L1399 18L1438 25L1434 56L1451 83L1440 108L1448 132L1490 148L1510 132L1535 145M1497 0L1509 35L1531 46M1515 211L1510 239L1527 264L1510 290L1530 317M1462 351L1446 380L1435 405L1441 430L1427 464L1430 488L1419 512M1520 350L1514 380L1494 402L1515 423L1505 444L1522 470L1508 489L1511 512';
   function build(){

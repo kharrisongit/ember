@@ -1,8 +1,8 @@
 /* Generated inventory artwork shares the normal sprite pipeline, including shops and reveals. */
 // Image pages must start in separate 1024px atlas buckets.
 async function loadInventoryIcons() {
-  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['travel-gear.webp',3005440],['relics.webp',3004416]]) {
-  const image=await loadStartupImage('assets/inventory/'+file+'?v=20261001-soulwing');
+  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['travel-gear.webp',3005440],['relics.webp',3004416],['cooked-foods.webp',3006464]]) {
+  const image=await loadStartupImage('assets/inventory/'+file+'?v=20261006-cooked');
 
   // Single-item art is sampled into the same 128px atlas cell as other rewards.
   // Keep the high-resolution source intact for future inventory sizes.
@@ -31,11 +31,14 @@ function registerInventorySprites() {
   SPR.inventory_frostheart=[128,3004416,128,128,1];
   SPR.inventory_cinderSeal=[256,3004416,128,128,1];
   SPR.inventory_soulwing=[384,3004416,128,128,1];
+  ['boarMeat','hareMeat','deerMeat','foxMeat','birdMeat','dragonFish'].forEach((key,i)=>{
+    SPR['inventory_cooked_'+key]=[(i%3)*cell,3006464+Math.floor(i/3)*cell,cell,cell,1];
+  });
   for (const [alias,key] of Object.entries({it_saint:'saint',it_res:'stone',it_salt:'salt',it_dust:'dust'}))
     SPR[alias] = SPR['inventory_'+key];
 }
 
-function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416 || sprite[1]===3005440); }
+function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416 || sprite[1]===3005440 || (sprite[1]>=3006464 && sprite[1]<3006720)); }
 
 // Resolve only UI art; world pickups retain their original sprite sizes.
 const INVENTORY_UI_ALIASES = {

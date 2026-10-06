@@ -1,8 +1,12 @@
 # Emberfell realm artwork
 
-`emberfell-realm-final.png` is the complete, single-image map. The atlas displays
-`emberfell-realm-v2.webp`, converted from that PNG without changing its composition.
-The older `emberfell-realm.webp` is retained as an earlier artwork revision.
+`emberfell-realm-v3.webp` is the current complete, single-image map used by the
+atlas and its animated water textures. The October 6 revision redraws the two
+Millwood cows as readable side-profile animals while preserving the geography
+and landmark coordinates. Generated with the built-in image tool; direction is
+recorded in `emberfell-realm-v3.prompt.txt`.
+`emberfell-realm-final.png`, `emberfell-realm-v2.webp` and `emberfell-realm.webp`
+are retained as earlier artwork revisions.
 
 The current map was made with the built-in image generation tool on 2026-10-02,
 using the actual game temples, town buildings, mill and animals as visual

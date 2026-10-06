@@ -186,9 +186,9 @@
     async function finish() {
       if (ended) return;
       ended = true; ++transition; clearInterval(timer); clearTimeout(controlsTimer); cancelAnimations(); wipeAnimation?.cancel();
-      root.classList.remove('is-visible');
       next.disabled = back.disabled = pause.disabled = skip.disabled = true;
-      await wait(reduced ? 80 : 650);
+      if(window.EmberIris)await window.EmberIris.close(root);
+      else{root.classList.remove('is-visible');await wait(reduced ? 80 : 650);}
       resolveDone();
     }
     async function showChapter(n) {

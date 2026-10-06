@@ -215,7 +215,7 @@ const Crafting=(()=>{
   for(const r of recipes.filter(r=>r.raw)){
     USABLE[r.id]=1;
     HEALS[r.id]=HEALS[r.raw]+.5;
-    BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
+    BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.id});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
     giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,slide,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
