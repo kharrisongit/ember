@@ -1,11 +1,15 @@
 /* Pack the generated sheet into crisp game-sized cells; retain the source art. */
 import fs from 'node:fs';
 import {createCanvas,loadImage} from '@napi-rs/canvas';
-const source=await loadImage('assets/ferry/corin-seated-source.png');
-const full=createCanvas(source.width,source.height),fg=full.getContext('2d');fg.drawImage(source,0,0);
-const pixels=fg.getImageData(0,0,full.width,full.height),out=createCanvas(64,96),g=out.getContext('2d');g.imageSmoothingEnabled=false;
+// Preserve the original front poses; use the targeted hand correction behind.
+const sources=await Promise.all(['corin-seated-source.png','corin-seated-rear-source.png'].map(async name=>{
+ const source=await loadImage('assets/ferry/'+name),full=createCanvas(source.width,source.height),fg=full.getContext('2d');
+ fg.drawImage(source,0,0);return {source,pixels:fg.getImageData(0,0,full.width,full.height)};
+}));
+const out=createCanvas(64,96),g=out.getContext('2d');g.imageSmoothingEnabled=false;
 const hair=[0x211a1c,0x2b2023,0x3b2c33,0x4d3945,0x684f5a,0x876c7d].map(v=>[v>>16,(v>>8)&255,v&255]);
 for(let row=0;row<3;row++)for(let col=0;col<2;col++){
+ const {source,pixels}=sources[col];
  const left=col*source.width/2,top=row*source.height/3,w=source.width/2,h=source.height/3;
  let x0=w,y0=h,x1=0,y1=0;
  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(pixels.data[((top+y)*source.width+left+x)*4+3]>=220){x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}

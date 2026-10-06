@@ -5,7 +5,7 @@ const FerryPassenger=(()=>{
   function prepare(){
     if(image)return;
     image=new Image();image.onload=()=>{ready=true;variants.clear();};image.onerror=()=>{image=null;};
-    image.src='assets/ferry/corin-seated.png?v=20261006-seated';
+    image.src='assets/ferry/corin-seated.png?v=20261006-centered-rear';
   }
   function sheet(){
     const identity=window.EmberPlayerIdentity,profile=identity?.capture()||{hair:'dark',eyes:'blue'};

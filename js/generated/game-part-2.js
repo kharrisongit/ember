@@ -11237,7 +11237,8 @@ function ferryTry() {
   toast("you push off");
   return true;
 }
-const FERRY_SEAT = 14;
+// The seated passenger's hips rest near the middle bench of the hull.
+const FERRY_SEAT = 6;
 function ferrySeatAt(a) {
   const s = SPR[ferryOf().boat];
   return (a[1] - s[3] / 2) + FERRY_SEAT;
