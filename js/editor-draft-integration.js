@@ -9,7 +9,8 @@ function editorBaseFields(m) {
   return {w:m.w,h:m.h,objs:m.objs,roomActors:m.roomActors,npcs:m.npcs,foes:m.foes,
     roomBlocks:m.roomBlocks,doors:m.doors,scatter:m.scatter,sanim:m.sanim,features:m.features,
     terr:m.terr,base_terr:m.base_terr,felled:m.felled,felled_rle:m.felled_rle,cellarCaches:m.cellarCaches,
-    editorDeletedObjects:m.editorDeletedObjects,editorDeletedDecor:m.editorDeletedDecor,editorPublishedPaint:m.editorPublishedPaint};
+    editorDeletedObjects:m.editorDeletedObjects,editorDeletedDecor:m.editorDeletedDecor,editorPublishedPaint:m.editorPublishedPaint,
+    editorFelledKeys:m.editorFelledKeys,editorPlacedObjectIds:m.editorPlacedObjectIds};
 }
 function editorPrepareMap(id, fresh) {
   const api = EmberEditDrafts;
@@ -57,7 +58,9 @@ function editorPrepareMap(id, fresh) {
   // The retained world already contains this exact draft. Reapplying Build
   // here clones and hashes the entire map before the warm-return check.
   if(draft.state.build && !(typeof canReusePreparedOverworld==='function' && canReusePreparedOverworld(id,draft.state,fresh))){
-    Object.assign(W.maps[id],EmberBuildData.apply(editorDraftBases.get(id).build,draft.state.build));
+    const built=EmberBuildData.apply(editorDraftBases.get(id).build,draft.state.build);
+    trackEditorBuildScenery(W.maps[id],built);
+    Object.assign(W.maps[id],built);
     editorBuildActive.add(id);
   }
   return draft.state;
@@ -148,9 +151,9 @@ function saveEditorDraft() {
       features,decks,felled:[],felled_rle:B.encodeFelled(felled),editorDeletedObjects:[],editorDeletedDecor:[],editorPublishedPaint:[...paint.values()]});
     const build={kind:'build',layout:B.hash(publishedEditorLayouts.maps[MAPID]||{}),before:B.hash(before),after:B.hash(after),changes:B.diff(before,after)};
     B.apply(before,build);
-    const actorOps=operations.filter(o=>['actor','npc-add','npc-transfer'].includes(o.kind));operations.splice(0,operations.length,build,...actorOps);
+    const actorOps=operations.filter(o=>['actor','npc-add','npc-transfer','feature-delete'].includes(o.kind));operations.splice(0,operations.length,build,...actorOps);
     Object.assign(state,{build,moves:[],added:[],deleted:[],nextId:after.objs.length/3,painted:[],features:null,
-      regionMoves:[],clearedBoxes:[],felledNew:[],decorGone:[],decorDel:[],decorMoved:[]});
+      regionMoves:[],clearedBoxes:[],felledNew:[...felledNew],decorGone:[],decorDel:[],decorMoved:[]});
   }
   for(const line of geometryPatch(MAPID)){
     const split=line.indexOf(' '),g=JSON.parse(line.slice(split+1));

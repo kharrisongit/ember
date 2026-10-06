@@ -25,6 +25,8 @@ export function gameDom(){
     removeAttribute(k){delete this.attrs[k];}
     addEventListener(type,fn){if(!this.listeners.has(type))this.listeners.set(type,[]);this.listeners.get(type).push(fn);}
     getContext(){return drawing;}getBoundingClientRect(){return {width:800,height:600,left:0,top:0};}
+    // Portrait customization encodes its canvas after asynchronous image load.
+    toDataURL(){return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';}
     pause(){}play(){return Promise.resolve();}load(){}scrollIntoView(){}focus(){}showModal(){this.open=true;}close(){this.open=false;}
   }
   const body=new Element('body');

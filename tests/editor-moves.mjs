@@ -134,6 +134,34 @@ g.run(`clearedBoxes=[[2,2,4,4]];deleted.add(0);objs=objs.filter(o=>o.id!==0);sav
 assert(g.run("EmberEditDrafts.store.get('a').operations.some(o=>o.kind==='object'&&o.deleted)"));
 console.log('PASS: generated-tree moves/additions survive area switches, publish both ends, retry once, remain movable after publication, and support box deletions.');
 
+// Real forest repairs used to ignore published cuts and hide moved trees.
+g=gameContext();
+g.run(`visit('a',true);NAMES[2]='sw_tree3_3';var fobjs=[],hidden=new Set(),rockTiles=new Set(),SCENE_WALL=new Set(),blockTiles=[];
+ var GRASS=0,DIRT=1,SAND=3,WALL=2;
+ felled.add('3,4');fobjs=[{id:-1,s:2,x:56,y:80,feat:1},{id:-2,s:2,x:88,y:80,feat:1}];`);
+g.run(read('js/editor-generated-scenery.js'));
+g.run(`for(const source of fobjs.slice()){
+ removeGeneratedObject(source);const copy={id:nextId++,s:source.s,x:source.x+96,y:source.y};objs.push(copy);added.push(copy);
+}saveEditorDraft();`);
+assert.deepEqual(JSON.parse(g.run('JSON.stringify(felledNew)')),['3,4','5,4']);
+const explicit=g.run('saveEditorDraft()');
+const explicitLayout=applyMoves(empty,{...first,map:'a',operations:JSON.parse(JSON.stringify(explicit.operations))},revision);
+g.c.layout=explicitLayout;
+g.run(`var replay={objs:[1,40,40],scatter:[],sanim:[],roomActors:[],npcs:[]};publishedEditorLayouts=layout;applyPublishedEditorLayout(replay,'a');
+ MD=replay;ORIG=[];for(let i=0;i<MD.objs.length;i+=3)ORIG.push({s:MD.objs[i],x:MD.objs[i+1],y:MD.objs[i+2]});
+ objs=ORIG.map((o,id)=>({...o,id}));added=[];felledNew=[];hidden=new Set([1,2]);
+ fobjs=[{id:-1,s:2,x:56,y:80,feat:1},{id:-2,s:2,x:88,y:80,feat:1}];
+ terr[4*MW+3]=WALL;blockTiles=[4*MW+3];applyGeneratedEditorChanges();`);
+assert.equal(g.run('fobjs.length'),0);assert.equal(g.run('hidden.size'),0);
+assert.equal(g.run('terr[4*MW+3]'),0);assert.equal(g.run('blockTiles.length'),0);
+// Build compaction must retain the moved tree's identity after an earlier slot is removed.
+g.run(`trackEditorBuildScenery(MD,{objs:MD.objs.slice(3),felled:MD.felled,felled_rle:''});`);
+assert.deepEqual(JSON.parse(g.run('JSON.stringify(MD.editorPlacedObjectIds)')),[0,1]);
+g=gameContext();g.run(`visit('a',true);felled.add('3,4');felledNew=['3,4'];editorBuildActive.add('a');saveEditorDraft();`);
+assert(g.run("EmberEditDrafts.store.get('a').operations.some(o=>o.kind==='feature-delete'&&o.key==='3,4')"),'Build keeps explicit removal separate from its historical felled terrain');
+g.run("visit('b');visit('a')");assert(g.run("felledNew.includes('3,4')"));
+console.log('PASS: historical cut cells still export, fresh publication defeats replanting, destinations stay visible, collision clears, and Build compaction/restoration retains editor intent.');
+
 // An old device override already merged into the authored map is not a new edit.
 g=gameContext();g.run(`visit('b',true);MD.doors=[{x:2,y:3}];MD.collisionOverrides={'1,2':false};geometryEdits.b={doors:{0:{x:32,y:48,w:16,h:16}},collision:{'1,2':false}};objs[0].x=28;`);
 assert.equal(g.run("geometryPatch('b').length"),0);

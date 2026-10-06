@@ -16,7 +16,7 @@ function applyPublishedEditorLayout(m,id) {
   // Preserve the pre-existing authored placement of the world room exterior.
   if(id==='world'&&m.roomActors?.[24]?.spr==='rt_ext2')shiftActorData(m,m.roomActors[24],15330,4328,true);
   if(typeof preparePublishedNpcPlacements==='function')preparePublishedNpcPlacements(m,id);
-  m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];m.editorPlacedObjectIds=[];
+  m.editorDeletedObjects=[];m.editorDeletedDecor=[];m.editorPublishedPaint=[];m.editorPlacedObjectIds=[];m.editorFelledKeys=[];
   applyPublishedEditorEntries(m,id,publishedEditorLayouts.maps[id]||{});
   if(id==='world'&&typeof DesertPyramid!=='undefined')DesertPyramid.installWorld(m);
   if(id==='world'&&typeof SideRouteAdventures!=='undefined')SideRouteAdventures.installWorld(m);
@@ -35,11 +35,9 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
     // Old Build snapshots predate independent patio tables. Migrate only when
     // the next snapshot was authored with the new table entities.
     if(EmberBuildData.hash(EmberBuildData.snapshot(m))!==layout.build.before&&typeof prepareTavernPatio==='function')prepareTavernPatio(m,id);
-    const oldObjectLength=(m.objs||[]).length;
-    Object.assign(m,EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build));
-    // Build snapshots also carry manually appended trees. Track their stable
-    // slots outside snapshot data so old Build fingerprints stay valid.
-    for(let i=oldObjectLength;i<m.objs.length;i+=3)(m.editorPlacedObjectIds||=[]).push(i/3);
+    const built=EmberBuildData.apply(EmberBuildData.snapshot(m),layout.build);
+    trackEditorBuildScenery(m,built);
+    Object.assign(m,built);
   }
   if(final&&typeof prepareShroomLookoutData==='function')prepareShroomLookoutData(m,id);
   // This reward chest was deliberately retired from Corin’s starting room.
@@ -57,6 +55,7 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
   for(const op of all)if(op.kind==='paint')paint.set(op.index,op);
   m.editorPublishedPaint=[...paint.values()];
   m.felled=[...new Set([...(m.felled||[]),...all.filter(op=>op.kind==='feature-delete').map(op=>op.key)])];
+  m.editorFelledKeys=[...new Set([...(m.editorFelledKeys||[]),...all.filter(op=>op.kind==='feature-delete').map(op=>op.key)])];
   const entries=all.filter(op=>['actor','object','decor'].includes(op.kind));
   const resolve = op => op.kind==='actor' ?
     (op.key.startsWith('npc:')?(m.npcs||[]).find(n=>(n.editKey||'npc:'+n.n)===op.key):(m.roomActors||[]).find((a,i)=>(a.editKey||'actor:'+i+':'+a.spr)===op.key)) : null;
@@ -82,7 +81,10 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
       }
     }else if(op.deleted){
       (op.kind==='object'?m.editorDeletedObjects:m.editorDeletedDecor).push(op.kind==='object'?Number(op.key):op.key);
-    }else {const arr=op.kind==='object'?m.objs:op.tag==='s'?m.scatter:m.sanim;const i=op.kind==='object'?Number(op.key)*3:op.index;arr[i+1]=op.x;arr[i+2]=op.y;}
+    }else {
+      const arr=op.kind==='object'?m.objs:op.tag==='s'?m.scatter:m.sanim;const i=op.kind==='object'?Number(op.key)*3:op.index;arr[i+1]=op.x;arr[i+2]=op.y;
+      if(op.kind==='object')(m.editorPlacedObjectIds||=[]).push(Number(op.key));
+    }
   }
   if(valid.length!==entries.length)console.warn('Some saved moves have changed anchors in '+id+' and were left unapplied.');
   for(const op of all){
@@ -94,6 +96,22 @@ function applyPublishedEditorEntries(m,id,layout,final=true) {
     if(op.kind==='door'){const d=m.doors?.[op.index];if(d&&d.to===op.to)d.triggerRect={...op.rect};}
     if(op.kind==='collision')(m.collisionOverrides||={})[op.key]=op.blocked;
   }
+}
+function trackEditorBuildScenery(m,built){
+  // A Build can compact deleted object slots. Compare placements rather than
+  // assuming every manual tree remains past the old array length.
+  const before=new Set(),manual=new Set(),placed=new Set(m.editorPlacedObjectIds||[]);
+  for(let i=0;i<(m.objs||[]).length;i+=3){const key=m.objs.slice(i,i+3).join(',');before.add(key);if(placed.has(i/3))manual.add(key);}
+  m.editorPlacedObjectIds=[];
+  for(let i=0;i<built.objs.length;i+=3){const key=built.objs.slice(i,i+3).join(',');if(!before.has(key)||manual.has(key))m.editorPlacedObjectIds.push(i/3);}
+  const cells=map=>{
+    const out=new Set((map.felled||[]).map(k=>Array.isArray(k)?k.join(','):k));
+    for(const row of (map.felled_rle||'').split('|').filter(Boolean)){
+      const [y,span]=row.split(':'),[a,b=a]=span.split('-').map(Number);for(let x=a;x<=b;x++)out.add(x+','+y);
+    }return out;
+  };
+  const old=cells(m),next=cells(built);
+  m.editorFelledKeys=[...new Set([...(m.editorFelledKeys||[]).filter(k=>next.has(k)),...[...next].filter(k=>!old.has(k))])];
 }
 let editorMapLoading=false;
 function applyEditorPaint(captureBaseline=false){

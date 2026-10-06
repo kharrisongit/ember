@@ -19,6 +19,13 @@ expanding the map). Moving a generated tree publishes both removal of the
 original and placement at the new location. Existing saved geometry overrides
 join the current map's submission. RESET discards only that map's local draft.
 
+Generated-tree moves and deletions are applied after procedural forest repairs,
+so later border passes cannot replant their originals or hide manually placed
+trees. Each explicit removal is recorded even when the authored terrain already
+marked that tile as felled. Moving one generated tree updates that object without
+regenerating the whole forest. Build batches retain these removal records and
+track manual placements through object-array compaction.
+
 Build changes capture the resulting terrain, features, objects, scenery and
 decks as a validated data diff. Terrain strings send only their changed span,
 and identical terrain/base-terrain content is transferred once. Opening Build

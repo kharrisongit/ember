@@ -86,6 +86,7 @@ jobs:
           node tests/pyramid-scarabs.mjs
           node tests/desert-vultures.mjs
           node tests/arena-floor-render.mjs
+          node tests/ferry-passenger.mjs
           node tests/side-route-adventures.mjs
           node tests/side-route-borders.mjs
       - name: Check temple travel and combat

@@ -2434,6 +2434,8 @@ function openClearings() {
   }
 }
 function rebuildSolid() {
+  if(typeof applyGeneratedEditorChanges==='function')applyGeneratedEditorChanges();
+  if(typeof clearFerrySignTrees==='function')clearFerrySignTrees();
   solid.fill(0);
   for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
     const t = terr[y * MW + x];
@@ -2599,6 +2601,8 @@ const CELL = 256;
 let CW = 1, CH = 1, buckets = [], sbuckets = [];
 let fenceAt = null;
 function rebuildBuckets() {
+  if(typeof applyGeneratedEditorChanges==='function')applyGeneratedEditorChanges();
+  if(typeof clearFerrySignTrees==='function')clearFerrySignTrees();
   CW = Math.ceil(PXW / CELL); CH = Math.ceil(PXH / CELL);
   fenceAt = new Set((MD.fence || []).map(([fx, fy]) => fy * MW + fx));
   buckets = new Array(CW * CH); for (let i = 0; i < buckets.length; i++) buckets[i] = [];
@@ -4524,7 +4528,10 @@ function drawWorld(t, dt) {
           continue;
         }
       }
-      if (ride) drawFerry(ctx);
+      if (ride) {
+        drawFerry(ctx);
+        if(typeof FerryPassenger!=='undefined'&&FerryPassenger.draw(ctx))continue;
+      }
       const kit = mounted ? (hasSword() ? "sm_" : "fm_") : corinKit();
       const nm = kit + (!P.moving ? "idle" : running ? "run" : "walk")
                  + "_" + corinDirection();
@@ -5494,14 +5501,12 @@ function mapTouchMove(t) {
     }
     if(moveEditorActor(dragObj,dragObj.x+dx/cam.z,dragObj.y+dy/cam.z))return;
     if (dragObj.feat) {
-      const tx = Math.floor(dragObj.x / TS), ty = Math.floor((dragObj.y - 1) / TS);
-      const key = tx + "," + ty;
-      if (!felled.has(key)) { felled.add(key); felledNew.push(key); }
+      removeGeneratedObject(dragObj);
       const copy = { id: nextId++, s: dragObj.s,
                      x: dragObj.x, y: dragObj.y };
       objs.push(copy);
       added.push(copy);
-      worldChanged(); realizeFeatures(); rebuildBuckets(); rebuildSolid();
+      rebuildBuckets(); rebuildSolid();
       reindex(); indexScatter(); chunks.clear();
       dragObj = copy; selected = copy; refreshSel();
     }
@@ -11215,6 +11220,7 @@ function ferryTry() {
   if (near(f.land_a)) from = "a"; else if (near(f.land_b)) from = "b";
   if (!from) return false;
   if(mounted){toast("Dismount, then press A on the boat to take a ride.");return true;}
+  if(typeof FerryPassenger!=='undefined')FerryPassenger.prepare();
   const pts = f.pts.map(p => [p[0] * TS + TS / 2, p[1] * TS + TS]);
   const route = from === "a" ? pts : pts.slice().reverse();
   const d0 = Math.atan2(route[1][1] - route[0][1], route[1][0] - route[0][0]) + Math.PI / 2;
@@ -12621,9 +12627,7 @@ function deleteGrabbed() {
   }
   for (let ty = y0; ty <= y1; ty++)
     for (let tx = x0; tx <= x1; tx++) {
-      const key = tx + "," + ty;
-      if (felled.has(key)) continue;
-      felled.add(key); felledNew.push(key);
+      recordGeneratedRemoval(tx,ty);
     }
   n += fobjs.filter(o => inside(o.x, o.y)).length;
   for (const [tag, arr] of [["s", scat], ["a", sanm]])
@@ -12713,11 +12717,9 @@ function deleteSelected() {
   }
   if(editorActorInfo(selected)){toast("This object can be moved with MOVE.");return;}
   if (selected.feat) {
-    const tx = Math.floor(selected.x / TS), ty = Math.floor((selected.y - 1) / TS);
-    const key = tx + "," + ty;
-    if (!felled.has(key)) { felled.add(key); felledNew.push(key); }
+    removeGeneratedObject(selected);
     selected = null;
-    realizeFeatures(); rebuildBuckets(); rebuildSolid();
+    rebuildBuckets(); rebuildSolid(); chunks.clear(); scheduleEditorDraft();
     refreshSel(); refreshHandle();
     return;
   }
