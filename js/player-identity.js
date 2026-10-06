@@ -12,7 +12,7 @@
     .replace(/[^\p{L}\p{M}\p{N} '\u2019-]/gu,'').replace(/\s+/g,' ').trim()).slice(0,16).join('');
   const normalize = value => ({name:cleanName(value?.name)||'Corin',hair:colors.some(c=>c.id===value?.hair)?value.hair:'dark'});
   let profile=normalize(null), choosing=null, pageKeys=null, bytes=0;
-  const cache=new Map(),hairSource='assets/portraits/corin-hair.webp?v=20261006-player';
+  const cache=new Map();
   function restore(value){
     profile=normalize(value);cache.clear();bytes=0;
     const hud=document.getElementById('playerHudName'),death=document.getElementById('playerDeathTitle');
@@ -24,9 +24,32 @@
     const escaped=profile.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
     return String(value??'').replace(new RegExp('(?<![\\p{L}\\p{N}_])(?:'+escaped+'|Corin)(?![\\p{L}\\p{N}_])','gu'),match=>match==='Corin'?profile.name:match);
   }
+  const portraitColors=new Map();
   function portrait(hair=profile.hair,armored=false){
     const column=colors.findIndex(c=>c.id===hair)-1;
-    return column<0?null:{id:250+column+(armored?4:0),src:hairSource,cell:column+(armored?4:0),cols:4,rows:2};
+    return column<0?null:{id:250+column+(armored?4:0),pack:armored?8:1,cell:0,cols:1,rows:1,hair,armored};
+  }
+  function portraitSource(p,source){
+    if(!source||!p.hair)return Promise.resolve(source);
+    const key=p.hair+':'+p.armored;if(portraitColors.has(key))return portraitColors.get(key);
+    const promise=new Promise(resolve=>{
+      const image=new Image();image.onerror=()=>{portraitColors.delete(key);resolve(null);};
+      image.onload=()=>{
+        const w=image.width/5,h=image.height/4,c=document.createElement('canvas');c.width=w;c.height=h;
+        const g=c.getContext('2d');g.drawImage(image,0,0,w,h,0,0,w,h);
+        const pixels=g.getImageData(0,0,w,h),data=pixels.data,base=colors.find(c=>c.id===p.hair).rgb;
+        // Both outfits use their exact original portrait. Only the cool plum
+        // hair pixels above the face/ears change; geometry and alpha never do.
+        const bounds=p.armored?{x0:.33,x1:.70,y0:.15,y1:.39}:{x0:.33,x1:.79,y0:.025,y1:.36};
+        for(let y=Math.floor(h*bounds.y0);y<h*bounds.y1;y++)for(let x=Math.floor(w*bounds.x0);x<w*bounds.x1;x++){
+          const i=(y*w+x)*4,r=data[i],green=data[i+1],b=data[i+2];
+          if(!data[i+3]||r<15||b<green*1.05||r<green*1.06||b<r*.70||b>r*1.32)continue;
+          const light=(r*.28+green*.5+b*.22)/74;
+          for(let n=0;n<3;n++)data[i+n]=Math.min(255,Math.round(base[n]*light));
+        }
+        g.putImageData(pixels,0,0);resolve(c.toDataURL('image/png'));
+      };image.src=source;
+    });portraitColors.set(key,promise);return promise;
   }
   const footPalette=new Map([0x211a1c,0x2b2023,0x3b2c33,0x4d3945,0x684f5a,0x876c7d].map((rgb,i)=>[rgb,i]));
   // The on-foot source has an exact six-color hair ramp. Mounted sheets are
@@ -81,8 +104,8 @@
       function paint(){
         const p=portrait(draft.hair)||((typeof DIALOGUE_PORTRAITS!=='undefined'&&DIALOGUE_PORTRAITS.Corin)||null);
         const color=colors.find(c=>c.id===draft.hair);preview.setAttribute('aria-label',color.label+' hair preview');
-        const apply=src=>{if(!alive||draft.hair!==color.id||!src)return;preview.style.backgroundImage='url("'+src+'")';const cols=p.cols||5,rows=p.rows||4;preview.style.backgroundSize=cols*100+'% '+rows*100+'%';preview.style.backgroundPosition=(p.cell%cols)*100/(cols-1)+'% '+Math.floor(p.cell/cols)*100/(rows-1)+'%';};
-        if(p?.src)apply(p.src);else if(p&&typeof loadPortraitPack==='function')loadPortraitPack(p.pack).then(apply);
+        const apply=src=>{if(!alive||draft.hair!==color.id||!src)return;preview.style.backgroundImage='url("'+src+'")';const frame=portraitBackground(p);preview.style.backgroundSize=frame.size;preview.style.backgroundPosition=frame.position;};
+        if(p?.src)apply(p.src);else if(p&&typeof loadPortraitPack==='function')loadPortraitPack(p.pack).then(src=>portraitSource(p,src)).then(apply);
         for(const b of choices.children)b.setAttribute('aria-pressed',String(b.dataset.hair===draft.hair));
       }
       for(const color of colors){const b=document.createElement('button');b.type='button';b.dataset.hair=color.id;b.style.setProperty('--hair',color.swatch);b.textContent=color.label;b.addEventListener('click',()=>{draft.hair=color.id;paint();});choices.appendChild(b);}
@@ -105,5 +128,5 @@
     });
     return choosing;
   }
-  window.EmberPlayerIdentity={colors,cleanName,normalize,capture:()=>({...profile}),restore,text,portrait,spritePage,recolorPixels,choose,active:()=>!!choosing};
+  window.EmberPlayerIdentity={colors,cleanName,normalize,capture:()=>({...profile}),restore,text,portrait,portraitSource,spritePage,recolorPixels,choose,active:()=>!!choosing};
 })();

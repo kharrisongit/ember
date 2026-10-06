@@ -56,7 +56,7 @@ const portraitFileImages=new Map();
 const CHAPEL_PORTRAITS=Object.fromEntries(['Brother Oswin','Brother Ansel','Mara Bell','Teren Vale','Nessa Flint','Orris Reed','Elva Moss','Brennor Ash','Sera Penn','Halen Birch','Iria Dawn','Davin Rook','Mina Thorne','Perrin Clay','Brother Orenfold','Brother Selwyn','Brother Edrin','Brother Cael'].map((name,cell)=>[name,{id:220+cell,src:'assets/portraits/chapel.webp?v=20261006',cell,cols:6,rows:3}]));
 for(const [name,p]of Object.entries(CHAPEL_PORTRAITS))FACE_OF[name]=p.id;
 function portraitBackground(p){
-  if(p.src&&!p.cols)return {size:'contain',position:'center bottom'};
+  if(p.cols===1||p.src&&!p.cols)return {size:'contain',position:'center bottom'};
   const cols=p.cols||5,rows=p.rows||4;
   return {size:cols*100+'% '+rows*100+'%',position:(p.cell%cols)*100/(cols-1)+'% '+Math.floor(p.cell/cols)*100/(rows-1)+'%'};
 }
@@ -116,7 +116,7 @@ function showDialoguePortrait(who) {
   };
   if(portrait.src){paint(portrait.src);return;}
   const cached=portraitPackImages.get(portrait.pack);
-  if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
+  const source=cached?Promise.resolve(cached.src):loadPortraitPack(portrait.pack);source.then(src=>portrait.hair?window.EmberPlayerIdentity.portraitSource(portrait,src):src).then(paint);
 }
 // Warm the full cast during the existing loading/title screens. Conversation
 // should never be the first time we fetch a portrait's script and decode it.
@@ -140,5 +140,5 @@ function paintSmallPortrait(el,who){
   };
   if(portrait.src){paint(portrait.src);return;}
   const cached=portraitPackImages.get(portrait.pack);
-  if(cached)paint(cached.src);else loadPortraitPack(portrait.pack).then(paint);
+  const source=cached?Promise.resolve(cached.src):loadPortraitPack(portrait.pack);source.then(src=>portrait.hair?window.EmberPlayerIdentity.portraitSource(portrait,src):src).then(paint);
 }

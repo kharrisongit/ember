@@ -25,14 +25,14 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Crush the herbs, stir the mixture, then bottle it. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Choose the ingredients from your recipe, add them to the pot, then give it a good stir. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
     healer:{name:'Wren',where:'Thornwell market',line:'For a stronger restorative, use sunblooms from the desert. I will write down the proportions for you.'},
     shroom:{name:'The Shroom King',where:'Sporehollow',line:'A careful hand can turn our mushrooms into a powder that muddles an enemy’s senses. Use this knowledge wisely.'},
     smith:{name:'Dunstan',where:'Forgewick smithy',line:'Keep the fragments you find in the mines or knock from a golem. Grind them finely for these two tools.'},
     chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:'Mineral dust and sunblooms make consecration. Scatter it after a battle, and the cleared ground will remain quiet.'},
     witch:{name:'Maelis',where:'Witchmoor',line:'Ghostcaps, marsh reeds, and a little spirit essence. Bring the ingredients together carefully. Even a curse deserves to be made properly.'},
     winter:{name:'Sverre',where:'Hollybeck',line:'Snowbells survive more than they seem able to. With frostberries or mineral dust and spirit essence, they make powerful protections.'}};
-  const fresh=()=>({version:1,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
+  const fresh=()=>({version:2,kit:false,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
   let state=fresh(),session=null,opened=false,vendor=null,nodes=[],art=null,artReady=false;
   const clean=n=>Number.isFinite(n)?Math.max(0,Math.min(9999,Math.floor(n))):0;
   const recipe=id=>recipes.find(r=>r.id===id);
@@ -54,6 +54,7 @@ const Crafting=(()=>{
   function eligible(){return gameplayStarted&&mode==='play'&&hasBag()&&!scene&&!revealing&&!sayNpc&&!doorMotion&&!fadeDir&&!trial&&!arenaLock&&!deadShown&&!mounted&&!ride&&!fishing&&!P.act&&!inFight()&&!flightTravel;}
   function open(person=null){
     if(opened)return true;
+    if(!state.kit){toast('Nan has a crafting kit for you before you leave Millwood.');return false;}
     // Close a service menu only after ensuring the world itself is safe.
     if(!eligible()){toast('Find a safe place and dismount before crafting.');return false;}
     setBag(false);askShut();window.EmberConversationFlow?.shut(true);sayOff();showFace(null);
@@ -74,22 +75,26 @@ const Crafting=(()=>{
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
     const costs=Object.fromEntries(Object.entries(r.cost).map(([k,v])=>[k,v*qty]));
     for(const [k,v] of Object.entries(costs))add(k,-v);
-    state.pending={id,qty,costs};session={id,qty,phase:'prepare',age:0,progress:0,completed:0,bonus:0,pulse:0,feedback:'',motion:{x:.5,y:.5,angle:0}};
+    state.pending={id,qty,costs};session={id,qty,phase:'prepare',age:0,progress:0,completed:0,added:{},selected:null,bonus:0,pulse:0,feedback:'',motion:{x:.5,y:.5,angle:0}};
     saveGame();window.CraftingView?.play();return true;
   }
+  function addIngredient(id){
+    const s=session,r=s&&recipe(s.id);if(!s||s.phase!=='prepare')return false;
+    if(!r.cost[id]||s.added[id]){s.feedback=s.added[id]?'That ingredient is already in the pot.':'That ingredient is not in this recipe.';window.CraftingView?.paint();return false;}
+    // The full batch was reserved at start; this gesture transfers its measured portion.
+    s.added[id]=r.cost[id]*s.qty;s.selected=null;s.feedback=materials[id]?.name||'Ingredient added';
+    s.progress=Object.keys(s.added).length/Object.keys(r.cost).length;
+    if(s.progress===1){s.phase='mix';s.completed=1;s.progress=0;s.feedback='All ingredients added. Stir with the spoon.';}
+    window.EmberSfx?.ui?.();window.CraftingView?.paint();return true;
+  }
+  function selectIngredient(id){if(session?.phase!=='prepare')return false;session.selected=id;session.feedback='Ready to add. Drag into the pot or press Add selected.';window.CraftingView?.paint();return true;}
   function work(amount=.2){
-    const s=session;if(!s||s.phase==='result'||!Number.isFinite(amount)||amount<=0)return false;
+    const s=session;if(!s||s.phase!=='mix'||!Number.isFinite(amount)||amount<=0)return false;
     s.progress=Math.min(1,s.progress+Math.min(.35,amount));s.pulse=1;
-    if(s.progress>=.999){
-      s.completed++;s.progress=0;
-      if(s.phase==='prepare'){s.phase='mix';s.feedback='Prepared. Bring the ingredients together.';}
-      else if(s.phase==='mix'){s.phase='finish';s.feedback='Ready for the finishing touch.';}
-      else return finish();
-      window.EmberSfx?.ui?.();
-    }
+    if(s.progress>=.999){s.completed=2;return finish();}
     window.CraftingView?.paint();return true;
   }
-  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else work(.25);}
+  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else if(session?.phase==='prepare'){if(session.selected)addIngredient(session.selected);}else work(.2);}
   function release(){if(session)session.touching=false;}
   function tick(dt){
     if(!opened)return false;
@@ -97,7 +102,7 @@ const Crafting=(()=>{
     return true;
   }
   function finish(skip=false){
-    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.completed<3))return false;
+    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.completed<2))return false;
     s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
     s.phase='result';s.progress=1;s.touching=false;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
@@ -105,7 +110,9 @@ const Crafting=(()=>{
   function capture(){return JSON.parse(JSON.stringify(state));}
   function restore(saved){
     opened=false;vendor=null;session=null;window.CraftingView?.hide();state=fresh();
-    if(!saved||typeof saved!=='object')return;
+    if(saved===null)return;
+    if(!saved||typeof saved!=='object'){state.kit=!!templeCompass.meatGiven;return;}
+    state.kit=!!saved.kit||!!templeCompass.meatGiven;
     for(const id of Object.keys(materials))state.ingredients[id]=clean(saved.ingredients?.[id]);
     for(const r of recipes.filter(r=>r.raw))state.cooked[r.id]=clean(saved.cooked?.[r.id]);
     state.learned=Array.isArray(saved.learned)?[...new Set(saved.learned.filter(k=>teachers[k]))]:[];
@@ -224,12 +231,12 @@ const Crafting=(()=>{
     }else{ctx.fillStyle='#fff4b5';ctx.globalAlpha=.45+.3*Math.sin(t*2+n.x);ctx.fillRect(n.x+4,n.y-16,2,2);}
     ctx.restore();return true;
   }
-  function skip(){for(const k of Object.keys(teachers))if(!state.learned.includes(k))state.learned.push(k);state.starter=true;for(const id of Object.keys(materials))state.ingredients[id]=Math.max(count(id),20);for(const r of recipes.filter(r=>r.raw))state.cooked[r.id]=Math.max(count(r.id),3);}
+  function skip(){state.kit=true;for(const k of Object.keys(teachers))if(!state.learned.includes(k))state.learned.push(k);state.starter=true;for(const id of Object.keys(materials))state.ingredients[id]=Math.max(count(id),20);for(const r of recipes.filter(r=>r.raw))state.cooked[r.id]=Math.max(count(r.id),3);}
   for(const r of recipes.filter(r=>r.raw)){
     USABLE[r.id]=1;
     HEALS[r.id]=HEALS[r.raw]+.5;
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    active:()=>opened,current:()=>session,work,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,addIngredient,selectIngredient,work,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

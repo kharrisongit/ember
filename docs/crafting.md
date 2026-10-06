@@ -1,6 +1,6 @@
 # Fieldcraft
 
-Open **Bag → Craft** in a safe place, while dismounted. Nan gives the first recipes during the morning introduction or her crafting lesson. Opening the book never grants recipes or supplies.
+Nan gives the portable Crafting Kit alongside three Hare Meat during her post-hatching goodbye. Then open **Bag → Craft** in a safe place, while dismounted. Older saves past that goodbye retain access; dev Skip grants the kit. Nan gives the first recipes during the morning introduction or her crafting lesson. Opening the book never grants recipes or supplies.
 
 | Teacher | Recipes |
 | --- | --- |
@@ -22,7 +22,7 @@ Golems drop mineral dust; shroom and mine enemies provide supplementary ingredie
 
 ## Minigame and saves
 
-Use the portable camp kit beside a small campfire and grill: swipe to crush ingredients, stir in circles (or season food), then pour, finish or pack. Progress follows deliberate gestures, with no timer, failure or quality penalty. The action button and A are accessible alternatives. **Skip preparation** is available in every phase and instantly makes exactly the same quantity for the same ingredients, up to five.
+Drag measured ingredient portions from the tray into the cauldron, following the always-visible recipe checklist. Incorrect, duplicate and outside drops consume nothing. All ingredients must be added before stirring unlocks. Hold the spoon already planted in the brew and trace two circles to finish; tapping an ingredient then Add selected and the Stir button are accessible alternatives. Skip preparation is available at either step and makes exactly the same quantity for the same ingredients.
 
 The world pauses while the book is open. Preparation never advances or expires on its own. Ingredients are reserved and saved when a batch begins. Closing or cancelling refunds them once. Loading an interrupted batch refunds its canonical recipe costs after loading the base inventory. Finishing grants the result and clears the pending batch together before saving. New games and other save slots have independent crafting state.
 

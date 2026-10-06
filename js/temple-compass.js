@@ -34,7 +34,7 @@ const FATHER_COMPASS_GIFT = [
   "Corin: I promise, Nan.",
   "Nan Ferrow: Follow the eastern road to Thornwell. Keep the map and compass handy if you lose your way.",
   "Corin: I will. Thank you.",
-  "Nan Ferrow: Oh, and take this for your new friend, in case he gets hungry.",
+  "Nan Ferrow: Oh, and take this hare meat for your new friend, and my little crafting kit. There is a pot, a folding grill, and a spoon. Use those recipes I packed to make things on the road.",
   "Corin: Thank you, Nan. I think he will appreciate that.",
   "Nan Ferrow: Good. Both of you. Take care of each other, love. Stop by sometime and I’ll whip you up something special."
 ];
@@ -96,7 +96,7 @@ function startNanMorning(nan){
   playScene([
     'Nan Ferrow: Morning, love. Hettie was looking for you. She asked if you would go and see her by the cows.',
     'Corin: I have my things. I will go and find her.',
-    'Nan Ferrow: I tucked my recipes into your bag. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion. Open your Bag and choose Craft when you are somewhere safe.',
+    'Nan Ferrow: I tucked my recipes into your bag. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion. Keep them for later. I have a little crafting kit you can take when you leave Millwood.',
     'Nan Ferrow: Thank you, darling. Come home when you are hungry.'
   ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
     templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;
@@ -166,8 +166,8 @@ function nanGiftBeat(index){
   // An older save may already be outside before the desk pickups existed.
   if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
   if(index===14&&!templeCompass.meatGiven){
-    templeCompass.meatGiven=true;hareMeat+=3;saveGame();
-    showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat.');return true;
+    templeCompass.meatGiven=true;hareMeat+=3;if(typeof Crafting!=='undefined')Crafting.giveKit();saveGame();
+    showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat and a Crafting Kit! Open Bag → Craft in a safe place.');return true;
   }
   return false;
 }

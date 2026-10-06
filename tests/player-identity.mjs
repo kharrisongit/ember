@@ -16,12 +16,12 @@ for(const name of ['Rowan','Aurelius','Cor','Corin Junior','El Corin','李明','
  assert.equal(run('typeWho'),'Corin','Speaker key remains canonical even with NPC name collision');
  assert.equal(run('nameEl.textContent'),name);
  assert.equal(run('typeFull'),`Hello, ${name}.`);
- assert.equal(run('portraitFor("Corin").src'),'assets/portraits/corin-hair.webp?v=20261006-player');
+ assert.equal(run('portraitFor("Corin").hair'),'copper');
  assert.notEqual(run('portraitFor("Aurelius").id'),run('portraitFor("Corin").id'));
 }
 for(const [column,hair] of ['brown','copper','blond','silver'].entries()){
- id.restore({name:'Kurtis',hair});run('smithUpgrade=false');assert.equal(run('portraitFor("Corin").cell'),column);
- run('smithUpgrade=true');assert.equal(run('portraitFor("Corin").cell'),column+4);
+ id.restore({name:'Kurtis',hair});run('smithUpgrade=false');assert.equal(run('portraitFor("Corin").pack'),1);assert.equal(run('portraitFor("Corin").cell'),0);
+ run('smithUpgrade=true');assert.equal(run('portraitFor("Corin").pack'),8);assert.equal(run('portraitFor("Corin").cell'),0);
  const source=new Uint8ClampedArray([77,57,69,255,225,178,110,255,85,45,36,255,74,67,91,255,77,57,69,0]);
  assert.equal(id.recolorPixels(source,hair),1);assert.notDeepEqual([...source.slice(0,3)],[77,57,69]);
  assert.deepEqual([...source.slice(4)],[225,178,110,255,85,45,36,255,74,67,91,255,77,57,69,0],'Skin, clothing, armor and alpha untouched');
