@@ -30,7 +30,18 @@ The world pauses while the book is open. Only a completed slide confirms the bat
 
 ## Assets and verification
 
-`assets/crafting/ingredients.webp` is a generated ten-cell ingredient sheet (5×2), decoded lazily and never awaited during boot. The confirmation uses the existing inventory item icon and a touch/keyboard slider. The animations use seven dedicated generated nine-frame sheets in `assets/crafting/animations/`: brewing, grinding, forging, chiseling, enchanting, roasting meat, and baking fish (63 frames total). Each 576×576 lossless WebP contains 3×3 cells of 192px and plays at 8 fps, repeating four times over 4.5 seconds. Only the selected style is loaded, when entering its confirmation screen; nothing is added to startup loading. An item icon is the fallback during decoding or a failed request. `js/crafting-animation.js` selects frames from the paused-world crafting clock. Full-resolution transparent sources, the exact built-in image generation prompts, and crop/anchor metadata are retained beside the runtime sheets; `tools/pack-crafting-animations.py` reproduces them. The old procedural tool animation is replaced. The church portrait fix uses a separate lazy 6×3 atlas with all eighteen speakers; its cast manifest is under `assets/portraits`.
+`assets/crafting/ingredients.webp` is a generated ten-cell ingredient sheet (5×2), decoded lazily and never awaited during boot. The confirmation uses the existing inventory item icon and a touch/keyboard slider. The animations use generated layers in `assets/crafting/animations/`. The updated 4×4 sheets have sixteen frames for liquid/fire, powder, unfinished-metal forging, meat cooking and fish cooking; adjacent liquid/fire/powder frames dissolve continuously using premultiplied alpha. Stirring follows a continuous elliptical path, and the pestle uses an eased lift and downstroke synchronized to the powder puff. Tools are isolated generated sprites, not redrawn shapes. The rough stone blank has an exposed chisel cap; the mallet's striking face is anchored to that cap, clear of the stone itself. Finished Grave Marker and Bell Stake art appears on the result screen.
+
+| Recipe | Contents color |
+| --- | --- |
+| Potion | Ruby red |
+| Elixir | Amber gold |
+| Maelis’s Curse | Green |
+| Saint’s Breath | Pale turquoise |
+| Madness Dust | Violet |
+| Consecration | Ivory |
+
+The generated magenta ingredient pixels are recolored once per recipe and cached; the stone, wood, metal, fire and neutral steam keep their original colors. Sheets are shared across recipes and loaded only at confirmation. The 4.5-second crafting clock drives every frame and tool movement, so hiding the page pauses everything and reduced motion holds a still image. The existing nine-frame enchanting sheet remains in use. `manifest-v2.json`, `prompts-v2.json`, `sources-v2/` and `tools/pack-crafting-v2.py` preserve the revised source art and reproduce its atlases. The original assets and packaging files remain available for reference. The church portrait fix uses a separate lazy 6×3 atlas with all eighteen speakers; its cast manifest is under `assets/portraits`.
 
 The six cooked foods have dedicated generated artwork in `assets/inventory/cooked-foods.webp` (3×2, 128px cells), shared by recipe cards, confirmations, results and the Bag. Raw ingredients keep their original icons. The full-resolution transparent source, exact built-in image-generation prompt, and cell manifest are alongside the runtime sheet. Only the small runtime sheet loads during gameplay startup.
 
