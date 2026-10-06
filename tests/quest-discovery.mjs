@@ -15,7 +15,7 @@ assert.equal(run("atlasQuestOptions().filter(q=>q.id.startsWith('temple:')).leng
 run(`quest=Q.DONE;dragon.on=true;dragonOff=false;dragon.down=false;dragon.placed='world';dragon.introOrigin=[100,100];
 P.x=100;P.y=400;P.moving=true;scene=null;ask=null;sayNpc=null;hatchExit=false;hatchCamera=null;fade=0;fadeDir=0;arenaLock=null;`);
 assert(run('stepDragonIntroduction()'));
-assert.match(run('scene.lines.join(" ")'),/Maddock’s plan/);
+assert.match(run('scene.lines.join(" ")'),/what Maddock asked of us.*overthrowing Halvard/);
 assert.equal(run("atlasQuestOptions().filter(q=>q.id.startsWith('temple:')).length"),0,'Unread intro does not discover the plan');
 run('scene.after();scene=null');
 assert.deepEqual(value('atlasQuestOptions().map(q=>q.id)'),['main','temple:Forgewick','temple:Sandspire','temple:Hollybeck']);

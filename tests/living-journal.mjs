@@ -41,11 +41,11 @@ assert(cards().find(b=>Number(b.dataset.askIndex)===index).getAttribute('aria-la
 assert(cards().some(b=>b.getAttribute('aria-label').startsWith(title+' —')),'Discussed topics remain available');
 for(let i=0;i<12;i++){run('askStep(1)');assert(cards().some(b=>Number(b.dataset.askIndex)===run('askPick')),'D-pad stays on visible topics');}
 run(`askShut();MAPID='world';dragonIntroDone=true;dragon.air=false;openDragonConversation('root')`);
-const chapter=cards().find(b=>b.getAttribute('aria-label').startsWith('Emberfell and its history'));
+const chapter=cards().find(b=>b.getAttribute('aria-label').startsWith('History'));
 click(chapter);
-assert.equal(run('ask.topicScope'),'history');
-assert(!run(`discussedTopics.has('Aurelius:Emberfell and its history')`),'Opening a chapter does not mark a story heard');
-assert(cards().some(b=>b.getAttribute('aria-label').startsWith('Can a map remember a place?')));
+assert.equal(run('ask.topicScope'),'History');
+assert(!run(`discussedTopics.has('Aurelius:History')`),'Opening a chapter does not mark a story heard');
+assert(cards().some(b=>b.getAttribute('aria-label').startsWith('What ruins leave out')));
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back','The secondary control handles folder navigation');
 click(box.querySelector('.conversationGoodbye'));assert.equal(run('ask.topicScope'),'root');
 assert.equal(box.querySelector('.conversationGoodbye').textContent,'Back');

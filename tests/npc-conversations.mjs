@@ -121,3 +121,5 @@ for(const hatched of [false,true])for(const victory of [false,true]){
  }
 }
 console.log('PASS: every authored NPC menu has one contextual greeting or quest entry, no duplicate dragon option, and distinct personal-topic callbacks across story stages.');
+
+await import('./dialogue-renewal.mjs');

@@ -32,6 +32,6 @@ for(const door of world.doors.filter(d=>['house28','house29','house51','house52'
 c.playScene=lines=>c.lines=lines;c.faceToward=()=>{};
 for(const heard of [false,true]){
  run(`quest=Q.ARMED;discussedTopics.clear();${heard?"discussedTopics.add('Mosslet:crash');":''}talkShroomLookout({n:'Mosslet',shroomLookout:true})`);
- assert(c.lines.some(line=>/before you continue north/i.test(line)), 'King hint appears on first and repeat visits');
+ assert(c.lines.some(line=>/Speak with the Shroom King before going on|before you head farther north/i.test(line)), 'King hint appears on first and repeat visits');
 }
 console.log('PASS: shroom patrols and walking collision checks leave house entrances clear; Mosslet recommends the king before continuing north.');

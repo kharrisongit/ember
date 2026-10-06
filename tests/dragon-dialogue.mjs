@@ -36,7 +36,7 @@ c.P.y=6338;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);
 c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
 assert.equal(run('stepDragonIntroduction()'),true);
 assert.match(pendingScene.lines[0],/voice.*inside your head/);
-assert(pendingScene.lines.join(' ').includes('share a consciousness'));
+assert(pendingScene.lines.join(' ').includes('shared consciousness'));
 assert(!pendingScene.lines.some(line=>/COMMAND|Mount|ride you/i.test(line)),'Introduction does not teach riding');
 pendingScene.after();pendingScene=null;assert.equal(menu,null);
 assert.equal(run('stepDragonIntroduction()'),false,'Only once');
@@ -61,7 +61,7 @@ clear();for(const map of ['tavern','school','tp1']){c.MAPID=map;run("dragonConve
 c.MAPID='world';run("dragonConversationReaction({n:'Odo',said:['Take this fishing pole.']})");tick();assert.match(active().key,/fishing/);
 clear();c.brambleQuest=3;run("dragonConversationReaction({n:'Rowan the Hunter',said:['Bramble is home again.']})");tick();assert.match(active().key,/reunion/);
 // Use the spoken dialogue and current story stage, discarding pre-victory assumptions.
-clear();run("dragonConversationReaction({n:'Orin',said:['Halvard demands another levy.']})");tick();assert.match(active().lines[0],/Fear/);
+clear();run("dragonConversationReaction({n:'Orin',said:['Halvard demands another levy.']})");tick();assert.equal(active().key,'npc:Orin:journey:king');
 c.wonAll=true;tick();assert(!active()||active().stage==='victory');
 clear();run("dragonConversationReaction({n:'Orin',said:['The king is defeated. We are free.']})");tick();assert.match(active().key,/victory:freedom/);
 assert.doesNotMatch(active().lines.join(' '),/demands|live like this/);
@@ -237,7 +237,7 @@ run('dragonDoorExchange()');assert.equal(active().handoff,true);assert.equal(run
 c.MAPID='tavern';c.fadeDir=1;tick(3.2);assert.equal(run('dragonBanterPanel.speaker'),'Aurelius');
 assert.equal(run('dragonBanterPanel.hidden'),false,'telepathy survives crossing into an interior');
 assert.equal(pendingScene,null,'handoff never opens a scene');tick(5);assert.equal(active(),null);c.fadeDir=0;
-const replies=new Set();for(let i=0;i<12;i++){run('dragonDoorExchange()');replies.add(active().lines[1]);}
+run('resetDragonBanter()');const replies=new Set();for(let i=0;i<12;i++){run('dragonDoorExchange()');replies.add(active().lines[1]);run('dismissDragonBanter()');}run('dragonDoorExchange()');assert.equal(active(),null,'Door exchanges stop instead of repeating');
 assert.equal(replies.size,12);
 assert.equal(run('DRAGON_GENERAL_TOPICS.history.length+DRAGON_GENERAL_TOPICS.personal.length'),12);
 console.log('PASS: facing, short range, combat locks, 12 general topics, and 12 nonblocking doorway replies.');

@@ -9,5 +9,5 @@ for(const dir of ['d','u','e','w'])assert.equal(run(`SPR.farm_edwin_idle_${dir}[
 assert(fs.existsSync(run("portraitFor('Edwin').src").split('?')[0]));
 run("mode='play';quest=Q.DONE;thornwellRoyal.stage=7;brambleQuest=3;loadMap('world');");
 assert(run("(()=>{const n=npcs.find(n=>n.n==='Edwin');return n&&canNpcStand(n.x,n.y,n)})()"),'Edwin stands on clear ground in the published farm layout');
-assert(run("npcStoryTopics({n:'Edwin'}).length>=5"),'Farmer has personal stories, local topics and world dialogue');
+assert(run("npcStoryTopics({n:'Edwin'}).filter(t=>t.friendshipId?.startsWith('renewal-')).length>=3"),'Farmer has personal stories, local topics and world dialogue');
 console.log('PASS: one farmer beside the coop and windmill, clear published placement, four directional idles, portrait and full conversation topics.');

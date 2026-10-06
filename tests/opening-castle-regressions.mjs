@@ -5,7 +5,7 @@ const dom=gameDom(),{run,context:c}=await loadEditorGame(process.cwd(),{log(){},
 await run('loadPublishedEditorLayouts()');
 run(`mode='play';gameplayStarted=true;quest=Q.ABED;bagOwned=false;restoreFatherCompass({});EmberRiding.skip();EmberEquipmentTutorial.skip();loadMap(W.start);[P.x,P.y]=MD.spawn;`);
 assert.equal(run('MAPID'),'house26_bedroom');assert(run('canStand(P.x,P.y)'));
-run('startMorning()');assert.match(run('scene.lines[0]'),/Travel Gear is on the desk/);
+run('startMorning()');assert.match(run('scene.lines[0]'),/Travel Gear.*desk/);
 run(`scene=null;var exit=MD.doors.find(d=>d.to==='house26');beginDoorEntry(exit);`);
 assert.equal(run('doorMotion'),null,'Bedroom exit waits for the desk supplies');
 assert(run('morningSuppliesPending()'));
@@ -25,7 +25,7 @@ assert(run('scene.nanMorning'),'Nan approaches automatically when Corin enters t
 run('for(let i=0;i<240&&scene.arriving;i++){stepWalkers(1/30);stepScene(1/30);}');
 assert(!run('scene.arriving'),'Nan reaches Corin and begins talking');
 assert(run('Math.hypot(nan.x-nanStart[0],nan.y-nanStart[1])>5'),'Nan visibly approaches');
-assert.match(run('scene.lines[0]'),/Hettie was looking for you/);
+assert.match(run('scene.lines[0]'),/Hettie/);
 run('while(scene){typeAll();scene.t=1;advanceScene();}');assert(run('templeCompass.morningMet'));
 run('stepNanMorning()');assert.equal(run('scene'),null,'Morning meeting does not repeat');
 run('saveToSlot(3,true);bagOwned=false;templeCompass.mapGiven=false;templeCompass.owned=false');assert(run('loadGame(3)'));assert(run('bagOwned&&worldMapUnlocked()&&templeCompass.owned&&templeCompass.morningMet'));

@@ -459,7 +459,7 @@ const DRAGON_NPC_THOUGHTS={
     "I'd like to leave a few things like that behind us."
   ],
   "Linna": [
-    "She catches details while other people are still introducing themselves.",
+    "She notices the details before anyone has finished speaking.",
     "I'll check my sums before buying anything."
   ],
   "Orin": [

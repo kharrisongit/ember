@@ -189,8 +189,9 @@ const revealBefore=showReveal,lanternReveals=[];
 showReveal=(...args)=>lanternReveals.push(args);
 assert(!charm.lamp,'Fresh save has no lantern');
 P.x=lanternGiver.x;P.y=lanternGiver.y+20;
-beginNpcTalk(lanternGiver);
-assert(sayNpc.said.some(line=>line.includes('Torvald left this lantern')),'New giver explains the handoff');
+beginNpcTalk(lanternGiver);assert.equal(ask.npcConversation,'Sverre');assert(!charm.lamp);
+EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='Something you wanted to give me');assert(askPick>0);askTake();
+assert(sayNpc.said.some(line=>/Torvald.*lantern/i.test(line)),'New giver explains the handoff');
 for(let i=0;sayNpc&&i<20;i++){typeAll();interact();}
 assert.equal(sayNpc,null,'Handoff dialogue completes');
 assert(charm.lamp,'Completing the conversation grants the lantern');
@@ -214,11 +215,8 @@ beginNpcTalk(returningGiver);
 assert.equal(ask.npcConversation,'Sverre','Returning visitors get the new conversation choices');
 assert.equal(sayNpc,null,'Opening topics does not restart the gift dialogue');
 EmberConversationFlow.openChat();
-askPick=ask.opts.findIndex(o=>o.n==='Hello!');assert(askPick>=0,'Greeting topic is available');askTake();
-assert(sayNpc,'Selecting Hello starts the follow-up greeting');
-assert(!sayNpc.said.some(line=>line.includes('Torvald left this lantern')),'Owned lantern does not repeat the handoff');
-for(let i=0;sayNpc&&i<20;i++){typeAll();interact();}
-assert.equal(sayNpc,null,'Follow-up conversation completes');
+assert(!ask.opts.some(o=>o.n==='Something you wanted to give me'),'Owned lantern removes the gift offer');
+assert(npcStoryTopics(returningGiver).filter(t=>t.friendshipId?.startsWith('renewal-')).length>=3,'Personal exchanges remain available');
 assert.equal(lanternReveals.length,1,'Existing owners receive no duplicate lantern');
 showReveal=revealBefore;
 console.log("PASS: Sverre grants the deleted Torvald's lantern once; ownership survives save/load, slot switching and map reentry.");

@@ -352,21 +352,36 @@ const DialogueRenewal=(()=>{
    ['Is the book an equipped charm?','It is a carried key item. Summon becomes available once you have it.'],
    ['I will wait until we are prepared.','A sensible choice. You can remember the lead without treating it as today’s task.']));
   if(n.n==='Tamsin')list.push(lead(n,'witch','Meeting Maelis',
-   'Maelis lives in Witchmoor, north of Dreadmarsh. Her protective ward is a practical reason to speak to her yourself.',
+   charm.ward?'Maelis’s ward is already yours. Equip it in your Bag when you need its protection; carrying it loose will not soften a blow.':'Maelis lives in Witchmoor, north of Dreadmarsh. Her protective ward is a practical reason to speak to her yourself.',
    ['What does the ward do?','It lessens damage from enemy attacks while equipped in your Bag.'],
    ['Does she sell anything?','Bombs. Bring coin if you want to buy them.'],
    ['Is she as frightening as people say?','I would rather you met her than inherited another person’s rumour.']));
   if(n.n==='Brin'||n.n==='Elder Maddock'&&dragonIntroDone||n.n==='Alderic')list.push(lead(n,'temples','Our route through the sanctuaries',
-   'The temple near Forgewick holds Lightning, Sandspire holds Ice, and Hollybeck holds Shadow. Claim them in that order before the road through Frostcrag and Ashcrag to Cinderhold.',
+   wonAll?'The three sanctuaries brought you this far. With Halvard defeated, you can return to them without another road demanding your next victory.':breathHas.shadow?'You have all three temple Heartstones. Go north from Hollybeck to Frostcrag, cross the mountain passage east to Ashcrag, then follow the volcanic road to Cinderhold.':breathHas.ice?'Lightning and Ice are yours. The next Heartstone is Shadow, in Hollybeck Temple northeast of town.':breathHas.lightning?'You have claimed Lightning. Sandspire Temple holds the next Heartstone, Ice. Prepare in town before following its southeastern approach.':'Begin with Lightning in Forgewick Temple, south of Forgewick. From Millwood the road passes through Thornwell before reaching the smiths’ town.',
    ['Does reaching a temple count?','You must clear its guardian and collect the Heartstone. The entrance is only the beginning.'],
-   ['Where should we begin?','Forgewick Temple, south of Forgewick. Ask locally and check the tracked quest on your map.'],
+   ['Which destination should I track?',wonAll?'Choose an unfinished errand or somewhere you want to revisit. The war no longer determines your destination.':breathHas.shadow?'Cinderhold, beyond Frostcrag and Ashcrag. Make sure you are supplied for the final road.':breathHas.ice?'Hollybeck Temple and its Shadow Heartstone. Follow the trail east and north of town.':breathHas.lightning?'Sandspire Temple and its Ice Heartstone. Follow the temple approach southeast of town.':'Forgewick Temple and its Lightning Heartstone. Take the separate trail south of Forgewick.'],
    ['What if we already have a stone?','Continue to the next sanctuary. The quest list follows which stones you have actually claimed.']));
+  const road={
+   'Cartwright Oswin':['thornwell','Rowan and his dog still need finding. Ask in Thornwell before trying to continue toward Forgefalls.','The cart is clear of the road. You can continue east toward Forgefalls and Forgewick.','Did the wheel survive?','After a little persuasion. I would rather replace a spoke here than lose a whole load halfway to Forgewick.'],
+   'Miner Marn':['forgewick','We are still clearing the east road. Use the delay to see Dunstan for his equipment and collect Lightning from Forgewick Temple.','The road is clear through to the desert. You have Dunstan’s equipment and the Lightning Heartstone, so Sandspire is your next stop.','Are you heading home now?','After we count the tools. A missing pick is easier to find before everybody goes home.'],
+   'Miner Nerik':['sandspire','The caravan cannot pass yet. The Ice Heartstone in Sandspire Temple should be your next task while we finish here.','The caravan has moved aside. The eastern route toward Coralmere is open.','What held the caravan up?','A load that shifted at exactly the wrong place. We have learned a great deal about distributing weight today.'],
+   'Snowbuilder Nessa':['hollybeck','The northern passage is not ready. Claim Shadow from Hollybeck Temple before you attempt Frostcrag.','The mountain road is open. Head north to Frostcrag, then through the passage east to Ashcrag.','Will the path stay clear?','For now. In this country we finish a job knowing the weather may give it straight back.']
+  }[n.n];
+  if(road){const [gate,blocked,clear,question,answer]=road,opened=JOURNEY_GATES[gate].open();list.push(lead(n,'road','The road ahead',opened?clear:blocked,
+   [question,answer],['Can I still go back?', 'The return road is available. Take time to gather anything you left behind.'],
+   ['I will check my map.',opened?'Track your next destination before leaving the settled road.':'Keep the local task tracked; there is useful work to do before this route opens.']));}
   if(n.n==='Astrid'||n.n==='Sverre')list.push(...HollybeckRescue.topics(n));
   if(n.n==='King Halvard'&&!n.thornwellRoyal&&MAPID==='cinderhold'&&!wonAll)action('We came to end your rule',()=>beginNpcTalk(n,true));
   if(brambleQuest===1&&brambleLeads[n.n])list.unshift({title:'Bramble’s missing owner',category:'lead',friendship:false,go:()=>{
    const [clue,reply,answer]=brambleLeads[n.n];
    playScene([n.n+': '+clue,'Corin: '+reply,n.n+': '+answer],{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
   }});
+  for(const t of list){
+   if(t.friendshipId==='renewal-shield')t.questUnlock=!glassShield&&!dragonLearned('shield');
+   if(t.friendshipId==='renewal-lantern')t.questUnlock=!charm.lamp&&!dragonLearned('lantern');
+   if(t.friendshipId==='renewal-graveyard')t.questUnlock=!charm.wake&&!dragonLearned('graveyard');
+   if(t.friendshipId==='renewal-witch')t.questUnlock=!charm.ward&&!dragonLearned('gift:Maelis');
+  }
   return list;
  }
  function topics(n,{all=false}={}){

@@ -18,7 +18,7 @@ const texts=[],rects=[],ctx=new Proxy({fillText:(...a)=>texts.push(a),fillRect:(
 const d=vm.createContext({ctx,tAcc:0,n:{x:100,y:100},sp:[0,0,20,30]});
 vm.runInContext(source.slice(source.indexOf('function drawHettieCallout('),source.indexOf('let thornwellMet=')),d);
 vm.runInContext('drawHettieCallout(n,sp)',d);assert.equal(texts[0][0],'Yoo-hoo!');assert.equal(rects.length,0,'Hettie callout has no shadow rectangle');
-assert(source.includes("royalBlackout('Out of my way, boy!'"));
+assert(source.includes("royalBlackout('Move aside. The king is leaving.'"));
 console.log('PASS: Maddock turns from all four sides and returns to his painting; Hettie calls Yoo-hoo without a shadow; King’s call is capitalized.');
 
 // A walking Nan must pause for every conversation path, then resume her route.
