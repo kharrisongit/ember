@@ -32,7 +32,8 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  // Static area hooks used to bypass the retained-world optimization. Model
  // their collision work and cache eviction, including chapel forecourts.
  function repairArea(){if(MAPID==='world'){stats.repairs++;rebuildSolid();chunks.clear();}}
- const DragonChapels={clearForecourt:repairArea,installWorld(){}},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){},installOasis(){}};
+ const DragonChapels={clearForecourt:repairArea,installWorld(){}},DesertPyramid={clearForecourt:repairArea,installWorld(){}},SideRouteAdventures={finishWorld:repairArea,installWorld(){},installOasis(){}},CoralmereLighthouse={repairPaths:repairArea,installWorld(){}};
+ function clearBlossomTufts(){repairArea();}
  function seedTreasuryGold(){}function stopTrial(){}function setPaint(on){painting=on}function refreshSel(){}
  function resetChunkWarm(){}function placeBirds(){stats.birds++}function openClearings(){}function beginHettieWalk(){}
  let arenasShowing=false;function closeArenaAnimalPicker(){}
@@ -65,7 +66,7 @@ run(`const originalSolid=rebuildSolid,originalLava=rebuildLavaNear;
  if(npcs[0].x!==npcStart||foes[0].hp!==10)throw Error('Dynamic actors were not reset');
 `);
 for(const key of ['generate','solid','lava','ground','repairs'])assert.equal(c.after[key],c.before[key],key+' must not run on a warm return');
-assert.equal(c.before.repairs,3,'A cold world still applies all three static area repairs');
+assert.equal(c.before.repairs,5,'A cold world applies all five static area repairs');
 assert.equal(c.after.foes,c.before.foes+1);assert.equal(c.after.birds,c.before.birds+1);
 run(`saveEditorDraft();globalThis.saved=EmberEditDrafts.store.get('world');loadMap('room');loadMap('world');saveEditorDraft();`);
 assert.equal(run("JSON.stringify(EmberEditDrafts.store.get('world').operations)"),JSON.stringify(c.saved.operations),'repeat visits preserve publishable edits');
