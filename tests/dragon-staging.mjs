@@ -96,7 +96,7 @@ class Element{
  addEventListener(t,f){this.handlers[t]=f;}querySelectorAll(){return this.children;}
 }
 const nodes=Object.fromEntries(['airRows','airDesc','atkRows','atkDesc'].map(k=>[k,new Element()]));let summoned=0;
-const m=vm.createContext({SpiderQueenBoss:{escapeReady:()=>false,webbed:()=>false},dragonTooHurtToFly:()=>false,dragonIntroDone:true,document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
+const m=vm.createContext({playerFacingText:String,SpiderQueenBoss:{escapeReady:()=>false,webbed:()=>false},dragonTooHurtToFly:()=>false,dragonIntroDone:true,document:{getElementById:id=>nodes[id],createElement:()=>new Element()},ovl:'airm',mounted:false,dragon:{air:false},charm:{},wakeCool:0,
  wakeCount:()=>0,wakeTheDead:()=>{summoned++;return false;},setMounted:()=>false,breathHas:{slash:true,fire:true,lightning:true,shadow:true,ice:true},breathWait:()=>0});
 const mr=s=>vm.runInContext(s,m);mr(section(p3,'const MENUS = {','let ovl = null;'));mr(section(p3,'function refreshOvl()','function updateBreathRefills()'));mr(section(p3,'function ovlStep(','const atkCloseBtn='));
 mr('refreshOvl()');const blank=nodes.airRows.children[2];

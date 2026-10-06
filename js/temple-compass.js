@@ -96,7 +96,7 @@ function startNanMorning(nan){
   playScene([
     'Nan Ferrow: Morning, love. Hettie was looking for you. She asked if you would go and see her by the cows.',
     'Corin: I have my things. I will go and find her.',
-    'Nan Ferrow: I tucked my recipes into your bag, along with herbs and bitterroot. Try making a potion when you have a quiet moment. Open your Bag and choose Craft.',
+    'Nan Ferrow: I tucked my recipes into your bag. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion. Open your Bag and choose Craft when you are somewhere safe.',
     'Nan Ferrow: Thank you, darling. Come home when you are hungry.'
   ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
     templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;

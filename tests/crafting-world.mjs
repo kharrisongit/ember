@@ -3,5 +3,9 @@ export function verifyCraftingWorld(run){
  const stats=JSON.parse(run(`JSON.stringify((()=>{const nodes=Crafting.inspect().nodes;return {counts:nodes.reduce((a,n)=>(a[n.material]=(a[n.material]||0)+1,a),{}),blocked:nodes.filter(n=>!canStand(n.x,n.y)).map(n=>n.id),unique:new Set(nodes.map(n=>n.id)).size,total:nodes.length};})())`));
  for(const id of ['herb','mushroom','root','sunbloom','reed','ghostcap','frostberry','snowbell','mineral'])assert(stats.counts[id]>0,'Gatherable source exists: '+id);
  assert.equal(stats.blocked.length,0,'Every gathering patch is on walkable ground');assert.equal(stats.unique,stats.total,'Gathering patch IDs are unique');
+ const early=JSON.parse(run('JSON.stringify(Crafting.inspect().nodes.filter(n=>n.x<80*TS))'));
+ assert.equal(early.length,2,'Only the northern chest trail has western gathering patches');
+ assert.deepEqual(early.map(n=>[n.material,n.amount]).sort(),[['herb',2],['root',1]]);
+ assert(early.every(n=>n.once&&n.id.startsWith('craft:intro:')&&n.y>=289*16&&n.y<=326*16));
  console.log('PASS: '+stats.total+' reachable ingredient patches cover every gatherable ingredient.');
 }

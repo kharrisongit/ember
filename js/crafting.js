@@ -1,7 +1,7 @@
 /* Fieldcraft: shared recipe, reward and gathering state. Save IDs stay stable. */
 const Crafting=(()=>{
   const materials={
-    herb:{name:'Healing Herb',source:'Grassy roads around Millwood, Thornwell and Forgewick.',price:6,color:'#87ac67'},
+    herb:{name:'Healing Herb',source:'The northern Millwood chest trail and roads east toward Thornwell and Forgewick.',price:6,color:'#87ac67'},
     mushroom:{name:'Wild Mushroom',source:'Shroom Pass and shaded woodland roads; shroom enemies.',price:7,color:'#c29874'},
     root:{name:'Bitterroot',source:'Woodland, desert and swamp paths.',price:8,color:'#c39a64'},
     sunbloom:{name:'Sunbloom',source:'Desert paths near the Oasis and Sandspire.',price:10,color:'#efbf59'},
@@ -25,12 +25,12 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Crush them, watch the heat, then finish the mixture. I have packed enough for your first potion.'},
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Turn the mixing channels to bring the ingredients together. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
     healer:{name:'Wren',where:'Thornwell market',line:'For a stronger restorative, use sunblooms from the desert. I will write down the proportions for you.'},
     shroom:{name:'The Shroom King',where:'Sporehollow',line:'A careful hand can turn our mushrooms into a powder that muddles an enemy’s senses. Use this knowledge wisely.'},
     smith:{name:'Dunstan',where:'Forgewick smithy',line:'Keep the fragments you find in the mines or knock from a golem. Grind them finely for these two tools.'},
     chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:'Mineral dust and sunblooms make consecration. Scatter it after a battle, and the cleared ground will remain quiet.'},
-    witch:{name:'Maelis',where:'Witchmoor',line:'Ghostcaps, marsh reeds, and a little spirit essence. Mind the heat. Even a curse deserves to be made properly.'},
+    witch:{name:'Maelis',where:'Witchmoor',line:'Ghostcaps, marsh reeds, and a little spirit essence. Bring the ingredients together carefully. Even a curse deserves to be made properly.'},
     winter:{name:'Sverre',where:'Hollybeck',line:'Snowbells survive more than they seem able to. With frostberries or mineral dust and spirit essence, they make powerful protections.'}};
   const fresh=()=>({version:1,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
   let state=fresh(),session=null,opened=false,vendor=null,nodes=[],art=null,artReady=false;
@@ -48,7 +48,7 @@ const Crafting=(()=>{
   function learn(group,quiet=false){
     if(!teachers[group])return false;
     if(!state.learned.includes(group))state.learned.push(group);
-    if(group==='nan'&&!state.starter){state.starter=true;add('herb',6);add('root',3);}
+    if(group==='nan')state.starter=true;
     saveGame();if(!quiet)toast('Recipes learned: '+recipes.filter(r=>r.teacher===group).map(r=>r.name).join(', '));return true;
   }
   function eligible(){return gameplayStarted&&mode==='play'&&hasBag()&&!scene&&!revealing&&!sayNpc&&!doorMotion&&!fadeDir&&!trial&&!arenaLock&&!deadShown&&!mounted&&!ride&&!fishing&&!P.act&&!inFight()&&!flightTravel;}
@@ -56,7 +56,6 @@ const Crafting=(()=>{
     if(opened)return true;
     // Close a service menu only after ensuring the world itself is safe.
     if(!eligible()){toast('Find a safe place and dismount before crafting.');return false;}
-    if(!state.starter&&(templeCompass.morningMet||quest>Q.ABED))learn('nan',true);
     setBag(false);askShut();window.EmberConversationFlow?.shut(true);sayOff();showFace(null);
     opened=true;vendor=person;P.moving=false;P.act=null;running=false;clearPadInputs();for(const k in keys)keys[k]=0;
     loadArt();window.CraftingView?.show(person?'ingredients':'recipes');return true;
@@ -68,46 +67,61 @@ const Crafting=(()=>{
     if(state.pending){for(const [id,n]of Object.entries(state.pending.costs))add(id,n);state.pending=null;session=null;saveGame();}
     session=null;
   }
-  function start(id,qty=1,steady=false){
+  // An untimed routing puzzle. Rotate channels to connect every ingredient
+  // station to the bowl. No timing score, wasted ingredients or bonus duplication.
+  const turnMask=m=>((m<<1)&15)|(m>>3);
+  function makeBoard(id){
+    let seed=[...id].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,(state.mastered[id]||0)+19);
+    const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
+    const path=rand()%2?[0,1,2,5,4,3,6,7,8]:[0,3,6,7,4,1,2,5,8];
+    const direction=(a,b)=>b===a-3?0:b===a+1?1:b===a+3?2:3;
+    const solution=Array(9).fill(0);
+    path.forEach((cell,i)=>{solution[cell]=(1<<(i?direction(cell,path[i-1]):3))|(1<<(i<8?direction(cell,path[i+1]):1));});
+    const tiles=solution.map(m=>{for(let n=rand()%4;n-->0;)m=turnMask(m);return m;});
+    // A new board always needs at least one deliberate turn.
+    if(tiles.every((m,i)=>m===solution[i]))tiles[0]=turnMask(tiles[0]);
+    return {tiles,solution,stations:[path[2],path[4],path[6]],selected:0,moves:0};
+  }
+  function route(board=session?.board){
+    if(!board)return {cells:[],complete:false};
+    let cell=0,entry=3;const cells=[],seen=new Set();
+    while(!seen.has(cell)){
+      const mask=board.tiles[cell];if(!(mask&(1<<entry)))break;
+      seen.add(cell);cells.push(cell);
+      const exit=[0,1,2,3].find(d=>d!==entry&&(mask&(1<<d)));
+      if(cell===8&&exit===1)return {cells,complete:board.stations.every(i=>seen.has(i))};
+      const x=cell%3+[0,1,0,-1][exit],y=Math.floor(cell/3)+[-1,0,1,0][exit];
+      if(x<0||x>2||y<0||y>2)break;cell=y*3+x;entry=(exit+2)%4;
+    }
+    return {cells,complete:false};
+  }
+  function start(id,qty=1){
     const r=recipe(id);if(!opened||session&&session.phase!=='result'||!r||!known(r))return false;
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
     const costs=Object.fromEntries(Object.entries(r.cost).map(([k,v])=>[k,v*qty]));
     for(const [k,v] of Object.entries(costs))add(k,-v);
-    state.pending={id,qty,costs};session={id,qty,steady:!!steady,phase:'prepare',time:0,age:0,meter:.5,heat:.45,held:false,goodHeat:0,scores:[],feedback:'',bonus:0};
+    state.pending={id,qty,costs};session={id,qty,phase:'mix',age:0,board:makeBoard(id),feedback:'Connect the inlet to the bowl through all three ingredient stations.',bonus:0};
     saveGame();window.CraftingView?.play();return true;
   }
-  function press(){
-    const s=session;if(!s)return;
-    if(s.phase==='result'){session=null;window.CraftingView?.book();return;}
-    if(s.phase==='heat'){
-      if(s.steady){s.scores.push(1);s.phase='finish';s.time=0;s.meter=.5;s.held=false;}
-      else s.held=true;
-      return;
-    }
-    const score=s.steady?1:Math.max(0,1-Math.abs(s.meter-.5)*2.4);s.scores.push(score);
-    s.feedback=score>=.8?'Perfect timing!':score>=.45?'Nicely done.':'Keep going — your batch is still safe.';
-    window.EmberSfx?.ui?.();
-    if(s.phase==='prepare'){s.phase='heat';s.time=0;s.held=false;}
-    else if(s.phase==='finish')finish();
+  function rotate(index=session?.board.selected){
+    if(session?.phase!=='mix'||!Number.isInteger(index)||index<0||index>8)return false;
+    const b=session.board;b.selected=index;b.tiles[index]=turnMask(b.tiles[index]);b.moves++;
+    session.feedback=route().complete?'All ingredients connected. Your batch is ready to make.':'Turn the channels until every ingredient reaches the bowl.';
+    window.EmberSfx?.ui?.();window.CraftingView?.paint();return true;
   }
-  function release(){if(session)session.held=false;}
+  function select(dx,dy){if(session?.phase!=='mix')return;const b=session.board,x=b.selected%3,y=Math.floor(b.selected/3);b.selected=Math.max(0,Math.min(2,y+dy))*3+Math.max(0,Math.min(2,x+dx));window.CraftingView?.paint();}
+  function hint(){if(session?.phase!=='mix')return;const b=session.board,i=b.tiles.findIndex((m,i)=>m!==b.solution[i]);if(i<0)return;b.selected=i;b.tiles[i]=b.solution[i];session.feedback='One channel is in place. Follow the flow from the inlet.';window.CraftingView?.paint();}
+  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else rotate();}
+  function release(){} // No held inputs or timing windows in the mixing puzzle.
   function tick(dt){
     if(!opened)return false;
-    if(!document.hidden&&session&&session.phase!=='result'){
-      const s=session;dt=Math.max(0,Math.min(.05,dt));s.time+=dt;s.age+=dt;
-      if(s.phase==='heat'&&!s.steady){
-        s.heat=Math.max(0,Math.min(1,s.heat+(s.held?.30:-.17)*dt));
-        if(s.heat>=.35&&s.heat<=.7)s.goodHeat+=dt;
-        if(s.time>=6){s.scores.push(Math.min(1,s.goodHeat/4.5));s.phase='finish';s.time=0;s.held=false;s.meter=.5;s.feedback='Finish the batch in the gold zone.';}
-      }else s.meter=s.steady?.5:.5+.5*Math.sin(s.time*(s.phase==='prepare'?2:2.6));
-    }
-    window.CraftingView?.paint();return true;
+    if(!document.hidden&&session)session.age+=Math.max(0,Math.min(.05,dt));
+    return true;
   }
   function finish(){
-    const s=session,p=state.pending;if(!s||s.phase==='result'||!p)return false;
-    s.bonus=s.scores.reduce((a,b)=>a+b,0)>=2.35?1:0;s.produced=p.qty+s.bonus;
-    add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
-    s.phase='result';s.held=false;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
+    const s=session,p=state.pending;if(!s||s.phase!=='mix'||!p||!route().complete)return false;
+    s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
+    s.phase='result';saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
   function capture(){return JSON.parse(JSON.stringify(state));}
   function restore(saved){
@@ -118,7 +132,7 @@ const Crafting=(()=>{
     state.learned=Array.isArray(saved.learned)?[...new Set(saved.learned.filter(k=>teachers[k]))]:[];
     state.starter=!!saved.starter;state.seenHelp=!!saved.seenHelp;state.kills=clean(saved.kills);
     for(const r of recipes)state.mastered[r.id]=clean(saved.mastered?.[r.id]);
-    const now=Date.now();for(const [id,t]of Object.entries(saved.harvested||{}).slice(-500))if(id.startsWith('craft:')&&Number.isFinite(t)&&t>now&&t<=now+20*60*1000)state.harvested[id]=t;
+    const now=Date.now();for(const [id,t]of Object.entries(saved.harvested||{}).filter(([id,t])=>id.startsWith('craft:intro:')&&t===-1).concat(Object.entries(saved.harvested||{}).filter(([,t])=>t!==-1).slice(-500)))if(id.startsWith('craft:')&&Number.isFinite(t)&&((id.startsWith('craft:intro:')&&t===-1)||(t>now&&t<=now+20*60*1000)))state.harvested[id]=t;
     // Costs were saved at start. Interrupted batches refund once on load.
     const p=saved.pending,r=recipe(p?.id);
     if(r){const qty=clean(p.qty);if(qty>=1&&qty<=5)for(const [id,n]of Object.entries(r.cost))add(id,n*qty);}
@@ -178,6 +192,7 @@ const Crafting=(()=>{
     nodes=[];if(MAPID!=='world')return;loadArt();
     const seen=new Set();
     for(const f of features.filter(f=>f.kind==='route')){
+      if(f.id===9185)continue;
       const legs=readRouteLegs(f);if(!legs)continue;
       for(const [li,[a,b]]of legs.entries()){
         const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(length<10)continue;
@@ -188,7 +203,7 @@ const Crafting=(()=>{
           let point=null;
           for(const side of [1,-1])for(const off of [24,16]){
             const px=Math.round(x+dx*off*side),py=Math.round(y+dy*off*side);
-            if(!point&&canStand(px,py)&&!nodes.some(n=>Math.hypot(n.x-px,n.y-py)<90)&&!(MD.doors||[]).some(d=>{const r=doorRect(d);return Math.hypot(px-r.x-r.w/2,py-r.y-r.h/2)<70;}))point=[px,py];
+            if(!point&&px>=80*TS&&canStand(px,py)&&!nodes.some(n=>Math.hypot(n.x-px,n.y-py)<90)&&!(MD.doors||[]).some(d=>{const r=doorRect(d);return Math.hypot(px-r.x-r.w/2,py-r.y-r.h/2)<70;}))point=[px,py];
           }
           if(!point)continue;const key='craft:'+f.id+':'+li+':'+j;if(seen.has(key))continue;seen.add(key);
           const picks=regionMaterials(f.style||f.road||'',point[0]/TS),id=picks[(Math.abs(f.id)+li+j)%picks.length];
@@ -196,14 +211,24 @@ const Crafting=(()=>{
         }
       }
     }
+    // Only this one-time potion supply appears in the opening western region.
+    const trail=features.find(f=>f.kind==='route'&&f.id===9185),legs=trail&&readRouteLegs(trail);
+    if(legs?.length){
+      for(const [i,material,amount,t]of [[0,'herb',2,.55],[1,'root',1,.72]]){
+        const [a,b]=legs[i===0?0:legs.length-1],x=(a[0]+(b[0]-a[0])*t)*TS+8,y=(a[1]+(b[1]-a[1])*t)*TS+16;
+        const length=Math.hypot(b[0]-a[0],b[1]-a[1])||1,dx=-(b[1]-a[1])/length,dy=(b[0]-a[0])/length;
+        const offsets=[16,-16,8,-8,0];
+        for(const off of offsets){const px=Math.round(x+dx*off),py=Math.round(y+dy*off);if(canStand(px,py)){nodes.push({id:'craft:intro:'+material,material,amount,once:true,x:px,y:py});break;}}
+      }
+    }
   }
-  const ready=n=>!state.harvested[n.id]||Date.now()>=state.harvested[n.id];
+  const ready=n=>state.harvested[n.id]!==-1&&(!state.harvested[n.id]||Date.now()>=state.harvested[n.id]);
   function gather(){
     if(MAPID!=='world'||!hasBag()||mounted||sceneHold()||inFight())return false;
     const n=nodes.filter(n=>ready(n)&&Math.hypot(n.x-P.x,n.y-P.y)<34).sort((a,b)=>Math.hypot(a.x-P.x,a.y-P.y)-Math.hypot(b.x-P.x,b.y-P.y))[0];
-    if(!n)return false;add(n.material,2);state.harvested[n.id]=Date.now()+20*60*1000;
-    for(const [id,t]of Object.entries(state.harvested))if(t<Date.now())delete state.harvested[id];
-    window.EmberSfx?.pickup?.();toast('+2 '+materials[n.material].name+' · Bag → Craft');saveGame();return true;
+    if(!n)return false;const amount=n.amount||2;add(n.material,amount);state.harvested[n.id]=n.once?-1:Date.now()+20*60*1000;
+    for(const [id,t]of Object.entries(state.harvested))if(t!==-1&&t<Date.now())delete state.harvested[id];
+    window.EmberSfx?.pickup?.();toast('+'+amount+' '+materials[n.material].name+' · Bag → Craft');saveGame();return true;
   }
   function addDraw(draw){
     if(MAPID!=='world')return;
@@ -212,12 +237,12 @@ const Crafting=(()=>{
   }
   function draw(o,t){
     if(!o.craftNode)return false;const n=o.craftNode,i=Object.keys(materials).indexOf(n.material);
-    ctx.save();ctx.fillStyle='#16211944';ctx.beginPath();ctx.ellipse(n.x,n.y,11,4,0,0,Math.PI*2);ctx.fill();
-    if(artReady){const w=art.width/5,h=art.height/2;ctx.drawImage(art,i%5*w,Math.floor(i/5)*h,w,h,n.x-13,n.y-25,26,26);}
-    else{ctx.fillStyle=materials[n.material].color;ctx.fillRect(n.x-5,n.y-12,10,10);}
+    ctx.save();ctx.fillStyle='#16211944';ctx.beginPath();ctx.ellipse(n.x,n.y,7,2.5,0,0,Math.PI*2);ctx.fill();
+    if(artReady){const w=art.width/5,h=art.height/2;ctx.drawImage(art,i%5*w,Math.floor(i/5)*h,w,h,n.x-9,n.y-17,18,18);}
+    else{ctx.fillStyle=materials[n.material].color;ctx.fillRect(n.x-3,n.y-8,6,6);}
     if(Math.hypot(P.x-n.x,P.y-n.y)<50&&!scene&&!ask&&!inFight()){
-      ctx.fillStyle='#fff4b5';ctx.font='bold 8px sans-serif';ctx.textAlign='center';ctx.fillText('A · Gather',n.x,n.y-30);
-    }else{ctx.fillStyle='#fff4b5';ctx.globalAlpha=.45+.3*Math.sin(t*2+n.x);ctx.fillRect(n.x+6,n.y-23,2,2);}
+      ctx.fillStyle='#fff4b5';ctx.font='bold 8px sans-serif';ctx.textAlign='center';ctx.fillText('A · Gather',n.x,n.y-22);
+    }else{ctx.fillStyle='#fff4b5';ctx.globalAlpha=.45+.3*Math.sin(t*2+n.x);ctx.fillRect(n.x+4,n.y-16,2,2);}
     ctx.restore();return true;
   }
   function skip(){for(const k of Object.keys(teachers))if(!state.learned.includes(k))state.learned.push(k);state.starter=true;for(const id of Object.keys(materials))state.ingredients[id]=Math.max(count(id),20);for(const r of recipes.filter(r=>r.raw))state.cooked[r.id]=Math.max(count(r.id),3);}
@@ -227,5 +252,5 @@ const Crafting=(()=>{
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    active:()=>opened,current:()=>session,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+    active:()=>opened,current:()=>session,rotate,select,hint,route,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();
