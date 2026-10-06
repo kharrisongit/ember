@@ -226,6 +226,7 @@ const Crafting=(()=>{
     ctx.restore();return true;
   }
   function skip(){state.kit=true;for(const k of Object.keys(teachers))if(!state.learned.includes(k))state.learned.push(k);state.starter=true;for(const id of Object.keys(materials))state.ingredients[id]=Math.max(count(id),20);for(const r of recipes.filter(r=>r.raw))state.cooked[r.id]=Math.max(count(r.id),3);}
+  BAG.push({key:'craftingKit',kind:'key',name:'Crafting Kit',tell:"Nan's well-worn tools for brewing, cooking and making useful things. Choose Craft in a safe place. Yours to keep.",has:()=>state.kit,icon:()=> 'inventory_craftingKit'});
   for(const r of recipes.filter(r=>r.raw)){
     USABLE[r.id]=1;
     HEALS[r.id]=HEALS[r.raw]+.5;

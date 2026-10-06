@@ -1,0 +1,10 @@
+{
+  "file": "crafting-kit.webp",
+  "source": "crafting-kit-source.webp",
+  "cell": 128,
+  "keys": [
+    "craftingKit"
+  ],
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: a single transparent RPG inventory item icon for a medieval fantasy game, designed to read at 46px. Subject: Nan's compact portable crafting kit: an open worn brown leather tool roll, holding a small wooden-handled hammer and steel chisel, a tiny stone mortar with pestle, and a corked amber glass vial. Cozy hand-painted fantasy inventory art with confident dark outlines, warm highlights and restrained fine detail, consistent with classic illustrated game item icons. All parts form one cohesive compact bundle, centered, three-quarter view, nearly square silhouette, full item visible with generous transparent margins. True transparent background. No ground, scenery, frame, letters, watermark, people, or hands. Strong readable silhouette."
+}

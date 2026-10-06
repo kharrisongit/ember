@@ -1,7 +1,7 @@
 /* Generated inventory artwork shares the normal sprite pipeline, including shops and reveals. */
 // Image pages must start in separate 1024px atlas buckets.
 async function loadInventoryIcons() {
-  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['travel-gear.webp',3005440],['relics.webp',3004416],['cooked-foods.webp',3006464]]) {
+  for (const [file,y] of [['icons.webp',3000320],['icons-rest.webp',3001344],['map-compass.png',3002368],['bag-painted.png',3003392],['travel-gear.webp',3005440],['relics.webp',3004416],['cooked-foods.webp',3006464],['crafting-kit.webp',3007488]]) {
   const image=await loadStartupImage('assets/inventory/'+file+'?v=20261006-cooked');
 
   // Single-item art is sampled into the same 128px atlas cell as other rewards.
@@ -25,6 +25,7 @@ function registerInventorySprites() {
   const remaining = ["hs_light", "hs_shadow", "hs_ice", "bell", "mark", "bomb", "elixir", "potion", "fishingPole", "wake", "flame", "lamp", "twin", "brand", "spore", "ward", "edge", "sword", "cinderSeal", "egg", "heart", "eggs"];
   remaining.forEach((key,i) => { SPR['inventory_'+key] = [(i%4)*cell,3001344+Math.floor(i/4)*cell,cell,cell,1]; });
   SPR.inventory_travelGear=[0,3005440,128,128,1];
+  SPR.inventory_craftingKit=[0,3007488,128,128,1];
   SPR.inventory_bag=[0,3003392,128,128,1];
   SPR.inventory_mapCompass=[0,3002368,128,128,1];
   SPR.inventory_emberheart=[0,3004416,128,128,1];
@@ -38,7 +39,7 @@ function registerInventorySprites() {
     SPR[alias] = SPR['inventory_'+key];
 }
 
-function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416 || sprite[1]===3005440 || (sprite[1]>=3006464 && sprite[1]<3006720)); }
+function isInventorySprite(sprite) { return !!sprite && ((sprite[1] >= 3000320 && sprite[1] < 3000832) || (sprite[1] >= 3001344 && sprite[1] < 3002112) || sprite[1]===3002368 || sprite[1]===3003392 || sprite[1]===3004416 || sprite[1]===3005440 || sprite[1]===3007488 || (sprite[1]>=3006464 && sprite[1]<3006720)); }
 
 // Resolve only UI art; world pickups retain their original sprite sizes.
 const INVENTORY_UI_ALIASES = {

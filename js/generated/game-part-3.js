@@ -5134,6 +5134,13 @@ function refreshBag() {
     if (ic && SPR[ic] && SPR[ic][4] > 1) bagAnim.push([big, ic, 1]);
   }
   const pickIt = held[bagPick];
+  if (pickIt?.key === "craftingKit") {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "equipBtn";
+    b.textContent = "CRAFT · Recipes & ingredients";
+    b.addEventListener("click", (e) => { e.stopPropagation(); Crafting.open(); });
+    desc.appendChild(b);
+  }
   if (pickIt && (pickIt.key === "potion" || pickIt.key === "elixir")) {
     const b = document.createElement("button");
     b.type="button";
@@ -5421,6 +5428,7 @@ function bagUse() {
   const held = bagHeld();
   const it = held[bagPick];
   if (!it) { setBag(false); return; }
+  if (it.key === "craftingKit") { Crafting.open(); return; }
   const opts = [];
   if(typeof Crafting!=='undefined'&&Crafting.recipe(it.key)?.raw)opts.push({n:'FEED DRAGON',go:()=>Crafting.useFood(it.key)});
   else if (it.key === "saint") opts.push({ n: "BREATHE IT", go: useSaint });

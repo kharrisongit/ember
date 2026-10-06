@@ -167,7 +167,7 @@ function nanGiftBeat(index){
   if(index===6&&!templeCompass.owned){giveFatherCompass();return true;}
   if(index===14&&!templeCompass.meatGiven){
     templeCompass.meatGiven=true;hareMeat+=3;if(typeof Crafting!=='undefined')Crafting.giveKit();saveGame();
-    showReveal('inventory_hareMeat', 'Corin received 3 Hare Meat and a Crafting Kit! Open Bag → Craft in a safe place.');return true;
+    showReveal('inventory_craftingKit', 'Corin received a Crafting Kit and 3 Hare Meat! Open Bag → Craft in a safe place.');return true;
   }
   return false;
 }
