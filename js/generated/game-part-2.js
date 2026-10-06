@@ -2191,6 +2191,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   if (!W.maps[id]) throw new Error("no such map: " + id);
   if(arenaLock?.templeRoom){arenaLock=null;arenaT=0;arenaGoing=false;}
   if (trial) stopTrial("");
+  if(lastFight||bossScene||risePend)resetFinalBattle();
   if (wonAll) lastFight = 0;
   if (MD && !fresh) {
     edits[MAPID] = { objs, added, deleted, nextId, painted, undoStack };
@@ -9238,6 +9239,39 @@ function stepTrial(dt) {
   if (trial.wait >= 2) nextTrialWave();
 }
 
+function throneRoomKing(n) {
+  return MAPID==='cinderhold'&&!wonAll&&/Halvard/.test(n?.n||'');
+}
+function beginThroneConfrontation(n) {
+  if(!throneRoomKing(n))return false;
+  if(lastFight||scene?.finalBattleIntro||window.EmberArenaEntry?.holding())return true;
+  window.EmberConversationFlow?.shut(true);askShut();sayNpc=null;sayOff();showFace(null);
+  clearPadInputs();P.act=null;P.moving=false;faceToward(n,P.x,P.y);faceCorinAt(n.x,n.y);
+  window.EmberKingMusic?.start();
+  playScene(npcContextDialogue(n,false),{who:n.n,npcActor:n,finalBattleIntro:true,after:()=>{
+    if(MAPID==='cinderhold'&&!wonAll&&!lastFight)window.EmberArenaEntry.readyFinalBattle();
+  }});
+  return true;
+}
+function resetFinalBattle() {
+  lastFight=0;bossScene=null;grief=null;risePend=null;dragonBossClaws=0;
+  bolts.length=0;breath=null;hunt=null;claw=null;spell=null;risings=[];
+  turnHolder=null;turnT=0;foeCool=0;twinSpent=false;twinKills=0;
+  window.EmberArenaEntry?.reset();window.EmberKingMusic?.stop();
+  window.EmberConversationFlow?.shut(true);askShut();scene=null;sayNpc=null;sayOff();showFace(null);
+  clearPadInputs();P.act=null;P.moving=false;camFree=false;restoreCameraTarget();cam.z=playZoom();
+}
+function restoreThroneCompanion() {
+  mounted=false;ride=null;dragon.on=true;dragonOff=false;dragon.placed=MAPID;
+  dragon.maxHp=dragonMaxHp();dragon.hp=dragon.maxHp;
+  dragon.down=false;dragon.revive=0;dragon.knockdown=0;dragon.hurt=0;dragon.inv=2.2;
+  dragon.air=false;dragon.tr=null;dragon.moving=false;dragonFacingLocked=false;
+  for(const key in breathCooldown)breathCooldown[key]=0;
+  const candidates=[[-48,-24],[48,-24],[0,-56],[-32,-48],[32,-48],[0,-24]];
+  const offset=candidates.find(([x,y])=>dragonCanStand(P.x+x,P.y+y))||[0,-24];
+  dragon.x=P.x+offset[0];dragon.y=P.y+offset[1];dragon.dir='u';
+  refreshWingBtn();
+}
 function startLastFight() {
   if (wonAll || lastFight || MAPID !== "cinderhold") return;
   // Accepting this confrontation starts combat even after a dev traversal
@@ -10729,6 +10763,7 @@ function getUp() {
 }
 let standing = false;
 function standUp() {
+  const retryFinal=MAPID==='cinderhold'&&!wonAll&&!!(lastFight||bossScene||risePend||scene?.finalBattleIntro);
   if (trial) stopTrial("");
   if (standing) return;        /* one press is enough, even during the fade */
   standing = true;
@@ -10744,9 +10779,13 @@ function standUp() {
   P.act = null;
   try { releaseArena(); } catch (e) { /* no ring open */ }
   foes = foes.filter(f => f.ally);
-  const to = safeSpot || { map: "world", x: P.x, y: P.y };
-  if (to.map !== MAPID) { loadMap(to.map, true); buildGround(); }
+  let to = safeSpot || { map: "world", x: P.x, y: P.y };
+  if(retryFinal){
+    resetFinalBattle();loadMap('cinderhold');buildGround();
+    to={map:'cinderhold',x:MD.spawn[0],y:MD.spawn[1]};
+  }else if (to.map !== MAPID) { loadMap(to.map, true); buildGround(); }
   P.x = to.x; P.y = to.y;
+  if(retryFinal){P.dir='u';P.flip=false;restoreThroneCompanion();safeSpot={...to};}
   recoverTempleArrival(!!W.maps[to.map]?.templeLegacy);
   spawnFoes();
   rebuildBuckets();
@@ -11711,7 +11750,7 @@ function interact() {
       if (MAPID === "cinderhold" && /Halvard/.test(sayNpc.n || "")) {
         const gone = sayNpc;
         sayNpc = null; sayOff(); showFace(null);
-        startLastFight();
+        window.EmberArenaEntry.readyFinalBattle();
         return;
       }
       const giver = sayNpc;
@@ -11781,6 +11820,7 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(beginThroneConfrontation(best))return;
     if(typeof DialogueRenewal!=="undefined"){
       if(!greetingOnly&&DialogueRenewal.profile(best)&&DialogueRenewal.open(best))return;
       if(DialogueRenewal.church(best)){

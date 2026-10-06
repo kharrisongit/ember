@@ -12,9 +12,10 @@ for(const file of fs.readdirSync('assets/dialogue/renewal').filter(f=>f.endsWith
   }else if(line.startsWith('> ')){
    assert(current&&cells.length===6,at+' needs six greeting fields');current.greetings=cells;
   }else if(line.startsWith('= ')){
-   assert(current&&cells.length===8,at+' needs title, opening and three complete reply pairs');
-   const [title,first,...rest]=cells;
-   current.topics.push({title,first,replies:[rest.slice(0,2),rest.slice(2,4),rest.slice(4,6)]});
+   assert(current&&cells.length===9,at+' needs title, Corin question, NPC opening and three complete reply pairs');
+   const [title,opening,first,...rest]=cells;
+   assert(opening&&/\?$/.test(opening),at+" needs an authored Corin opening question");
+   current.topics.push({title,opening,first,replies:[rest.slice(0,2),rest.slice(2,4),rest.slice(4,6)]});
   }else throw Error(at+' unknown row');
  }
 }

@@ -48,6 +48,7 @@ console.log('PASS: Nan stories wait for hatching; Hettie menu waits for egg deli
 // Exercise the menu callbacks themselves: personal topics must start with their
 // authored exchange, while the general greeting accounts for the companion.
 const game=read('js/generated/game-part-2.js');
+vm.runInContext(game.slice(game.indexOf('function throneRoomKing('),game.indexOf('function resetFinalBattle(')),c);
 vm.runInContext(game.slice(game.indexOf('function brambleHint('),game.indexOf('\nfunction ',game.indexOf('function npcContextDialogue(')+10)),c);
 vm.runInContext(game.slice(game.indexOf('function beginNpcTalk('),game.indexOf('\nconst esc =')),c);
 vm.runInContext(read('js/story-dialogue.js'),c);

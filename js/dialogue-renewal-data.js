@@ -8,6 +8,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The cow that escaped",
+        "opening": "How did you keep that cow from escaping?",
         "first": "One of my cows learned to lift the gate latch. I spent a week blaming Gwil for leaving it open.",
         "replies": [
           [
@@ -26,6 +27,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Raising a calf",
+        "opening": "What is it like raising a calf?",
         "first": "A newborn calf tries to stand before it knows what its legs are for. I never get tired of watching that part.",
         "replies": [
           [
@@ -44,6 +46,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "My place on the farm",
+        "opening": "Do I still have a place here when I'm not helping with the work?",
         "first": "You don't have to earn your welcome here by carrying something, Corin. You've done enough mornings' work for that.",
         "replies": [
           [
@@ -78,6 +81,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A chair too grand",
+        "opening": "Have you ever made something that turned out too grand for its purpose?",
         "first": "I once carved a chair so elaborately that no one could sit on it without snagging a sleeve. Beautiful waste of a month.",
         "replies": [
           [
@@ -96,6 +100,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working with Hettie",
+        "opening": "How do you and Hettie get the work done together?",
         "first": "Hettie can tell I'm avoiding a job before I've decided how to avoid it.",
         "replies": [
           [
@@ -114,6 +119,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Something worth keeping",
+        "opening": "What have you made that you'd never part with?",
         "first": "My father's old saw is worn down nearly to its spine. I bought a replacement, but I haven't thrown the old one out.",
         "replies": [
           [
@@ -147,7 +153,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "01-millwood.txt:12",
     "topics": [
       {
-        "title": "The fish I let go",
+        "title": "The fish you let go",
+        "opening": "What's the most embarrassing catch you've ever lost?",
         "first": "I caught a fine trout once and dropped it while explaining how firmly to hold a trout. Calder was watching.",
         "replies": [
           [
@@ -166,6 +173,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Calder's camp",
+        "opening": "Do you hear much from Calder at his camp?",
         "first": "Calder writes that the camp is doing well. Then he asks whether I've eaten. I appear to have raised a second grandmother.",
         "replies": [
           [
@@ -184,6 +192,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Fishing alone",
+        "opening": "Don't you get lonely fishing out here?",
         "first": "Some days I don't care whether I catch anything. I just want an hour when nobody expects an answer.",
         "replies": [
           [
@@ -217,7 +226,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "01-millwood.txt:17",
     "topics": [
       {
-        "title": "When I gave up travelling",
+        "title": "When you gave up travelling",
+        "opening": "What made you stop travelling?",
         "first": "I stopped travelling after I injured my knee. For months I called it a temporary delay. Eventually I planted beans.",
         "replies": [
           [
@@ -236,6 +246,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An unreliable map",
+        "opening": "Have you ever trusted a bad map?",
         "first": "I once followed a map to a bridge that had washed away fifteen years earlier. The innkeeper had been trying to tell me all morning.",
         "replies": [
           [
@@ -254,6 +265,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The seven riders",
+        "opening": "What were the seven riders like?",
         "first": "There were seven riders before Wingfall. Halvard was one of them. He betrayed the others and made a crime of the bond they shared.",
         "replies": [
           [
@@ -272,6 +284,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Why help me?",
+        "opening": "Why did you decide to help me?",
         "first": "I gave you the sword because the woods were dangerous. I didn't expect it to put you on a road to Cinderhold.",
         "replies": [
           [
@@ -306,6 +319,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A memory of Mum",
+        "opening": "Would you tell me something you remember about Mum?",
         "first": "Your mother hated singing in front of people, but she sang while she mended clothes. If I entered, she would pretend she had been humming.",
         "replies": [
           [
@@ -324,6 +338,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A memory of Dad",
+        "opening": "What was Dad like when he wasn't being sensible?",
         "first": "Your father once spent an entire afternoon helping a neighbour find a lost goose. It had been following him for the last hour.",
         "replies": [
           [
@@ -342,6 +357,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Bringing me home",
+        "opening": "Do you remember the first night you brought me home?",
         "first": "The first night you stayed with me, you cried whenever I put you down. I ate my supper standing up with you against my shoulder.",
         "replies": [
           [
@@ -360,6 +376,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Your own adventures",
+        "opening": "Did you ever sneak off on an adventure?",
         "first": "I went to a dance in Thornwell once without telling my mother. I thought I'd be home before she noticed.",
         "replies": [
           [
@@ -378,6 +395,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Leaving home",
+        "opening": "Is it hard watching me leave?",
         "first": "I want you home. I also know why you go. Both things are true, and you needn't fix that for me.",
         "replies": [
           [
@@ -412,6 +430,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Nan's competitive streak",
+        "opening": "Has Nan always been this competitive?",
         "first": "Nan once entered a cake contest under a false name because she'd promised not to enter again.",
         "replies": [
           [
@@ -430,6 +449,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An evening with friends",
+        "opening": "What do you and your friends do of an evening?",
         "first": "We used to take turns hosting suppers. The host cooked, and everyone else pretended not to notice the burnt parts.",
         "replies": [
           [
@@ -448,6 +468,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Growing older together",
+        "opening": "What changes when you've known someone for years?",
         "first": "Your grandmother remembers the versions of me that everyone else has forgotten. Including several I'd prefer she forgot.",
         "replies": [
           [
@@ -482,6 +503,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A failed bargain",
+        "opening": "Have you ever come out badly in a bargain?",
         "first": "I bought cheap leather once. Finished six belts before the first buckle tore through. I had to find all six customers.",
         "replies": [
           [
@@ -499,7 +521,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Your father's hands",
+        "title": "My father's hands",
+        "opening": "Was my father good at making things?",
         "first": "Your father was good at delicate work. Huge hands, but he could pass a needle through a hole I'd missed twice.",
         "replies": [
           [
@@ -517,7 +540,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "The repair I refused",
+        "title": "The repair you refused",
+        "opening": "Have you ever refused a repair?",
         "first": "Someone asked me to mend a rotten harness. I told him a patch wouldn't make the rest safe. He called me lazy.",
         "replies": [
           [
@@ -552,6 +576,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Moving to Millwood",
+        "opening": "What brought you to Millwood?",
         "first": "I came from Thornwell for one harvest. Tam hired me for a week and corrected my work every day.",
         "replies": [
           [
@@ -570,6 +595,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The first cider",
+        "opening": "How did your first batch of cider turn out?",
         "first": "Our first batch tasted so sour that Tam suggested cleaning the press with it. I insisted it needed time.",
         "replies": [
           [
@@ -588,6 +614,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Being a father",
+        "opening": "What surprised you about being a father?",
         "first": "Our children ask why things work. I answer until I reach a question I don't know, then they look delighted.",
         "replies": [
           [
@@ -622,6 +649,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The children's harvest",
+        "opening": "Do the children help with the harvest?",
         "first": "We let the children choose names for three apple trees. We now harvest from Lady Crunch, Boots, and Uncle Ned.",
         "replies": [
           [
@@ -640,6 +668,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A useful disagreement",
+        "opening": "Can a disagreement ever make the work better?",
         "first": "Joss likes to start a job immediately. I like to check whether we've promised the same afternoon to someone else.",
         "replies": [
           [
@@ -658,6 +687,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Food for Nan",
+        "opening": "Do you and Nan exchange food?",
         "first": "I send Nan apple preserves, and she sends the jars back with something in them. We've been exchanging the same jars for years.",
         "replies": [
           [
@@ -692,6 +722,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The uneven sleeves",
+        "opening": "Have you ever finished something and found it didn't fit?",
         "first": "My first jumper had one sleeve longer than the other. I told my sister she'd been standing crookedly.",
         "replies": [
           [
@@ -710,6 +741,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Wool in spring",
+        "opening": "What do you do with the spring wool?",
         "first": "Everyone thinks winter is my busiest season. In spring I wash wool, sort it, and prepare for winter all over again.",
         "replies": [
           [
@@ -728,6 +760,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Choosing a colour",
+        "opening": "How do you settle on a colour?",
         "first": "I spent years making sensible brown things. Then I made myself a bright blue scarf and wore it everywhere.",
         "replies": [
           [
@@ -762,6 +795,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The hidden apple",
+        "opening": "Have you ever hidden an apple for later?",
         "first": "As a boy I hid the best apple behind a shed so my brothers wouldn't find it. When I returned, the wasps had claimed it.",
         "replies": [
           [
@@ -780,6 +814,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A tree with two crops",
+        "opening": "Can one tree really give you two kinds of crop?",
         "first": "People are surprised you can graft one apple variety onto another. They expect trees to object to the arrangement.",
         "replies": [
           [
@@ -798,6 +833,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A neighbour's ladder",
+        "opening": "Do you lend your tools to the neighbours?",
         "first": "I borrowed a neighbour's ladder for an afternoon. Kept it so long he asked if he might borrow mine.",
         "replies": [
           [
@@ -832,6 +868,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Bread before dawn",
+        "opening": "How early do you have to get up to bake?",
         "first": "The hardest part of baking early is being hungry while everything still needs another quarter of an hour.",
         "replies": [
           [
@@ -850,6 +887,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The disastrous cake",
+        "opening": "What's the worst thing you've baked?",
         "first": "I once iced a cake while it was warm. The decoration slid off in a magnificent white heap.",
         "replies": [
           [
@@ -868,6 +906,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A recipe from home",
+        "opening": "Is there a recipe that reminds you of home?",
         "first": "Nan taught me a loaf she measures mostly by touch. Writing it down was an argument between my pencil and her hands.",
         "replies": [
           [
@@ -902,6 +941,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The mill's sound",
+        "opening": "Can you tell whether the mill is working by its sound?",
         "first": "I could tell when a bearing needed attention from the sound across the yard. At home I still listen for it.",
         "replies": [
           [
@@ -920,6 +960,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A flooded morning",
+        "opening": "Has the river ever flooded the mill?",
         "first": "After a heavy rain, I arrived to find a duck inside the mill. It looked thoroughly offended by the accommodation.",
         "replies": [
           [
@@ -937,7 +978,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My unplanned afternoon",
+        "title": "Your unplanned afternoon",
+        "opening": "What do you do with an afternoon you haven't planned?",
         "first": "I used to schedule every hour. Now I sometimes walk to the river without deciding when to return.",
         "replies": [
           [
@@ -972,6 +1014,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The missing egg",
+        "opening": "Do eggs ever go missing from the coop?",
         "first": "A hen started laying in my spare boot. I found three eggs before I realised why that boot had become so popular.",
         "replies": [
           [
@@ -990,6 +1033,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Keeping watch",
+        "opening": "What do you watch for around the farm?",
         "first": "People think watching chickens is dull. Then a fox begins coming near the fence and every small change matters.",
         "replies": [
           [
@@ -1008,6 +1052,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A quieter ambition",
+        "opening": "Is there something you'd like to do beyond the farm?",
         "first": "I'd like to learn to draw birds. Every time I try, the subject turns its back on me.",
         "replies": [
           [
@@ -1042,6 +1087,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The first patrol",
+        "opening": "Do you remember your first patrol?",
         "first": "On my first patrol I rehearsed what to say to a suspicious stranger. The first stranger asked where to buy bread.",
         "replies": [
           [
@@ -1060,6 +1106,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Why a steady wage mattered",
+        "opening": "What made you join the guard?",
         "first": "My sister needed boots the winter I enlisted. We had food, but never quite enough money for the thing that broke next.",
         "replies": [
           [
@@ -1077,7 +1124,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "An order I questioned",
+        "title": "An order you questioned",
+        "opening": "Have you ever questioned an order?",
         "first": "An officer wanted a man held because he looked nervous. I asked what he'd done. The officer disliked the question.",
         "replies": [
           [
@@ -1112,6 +1160,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Hearing rain",
+        "opening": "Does the rain sound different to you?",
         "first": "Rain sounds different under every cap. I like the little drops best. The heavy ones make me sneeze.",
         "replies": [
           [
@@ -1130,6 +1179,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A human game",
+        "opening": "Have you tried any human games?",
         "first": "A child taught me hide-and-seek. I was very good at hiding until I laughed.",
         "replies": [
           [
@@ -1148,6 +1198,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "What counts as tall",
+        "opening": "Do I seem tall to you?",
         "first": "I thought humans stopped growing when they could see over grass. Then I met one taller than you.",
         "replies": [
           [
@@ -1182,6 +1233,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Remembering a drought",
+        "opening": "How did the hollow manage during the drought?",
         "first": "One summer the streams shrank to threads. We carried wet leaves to the youngest growth every evening.",
         "replies": [
           [
@@ -1200,6 +1252,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A human who listened",
+        "opening": "Have humans ever stopped to listen to you?",
         "first": "A traveller once sat with me for three evenings without asking how old I was. I found that very refreshing.",
         "replies": [
           [
@@ -1218,6 +1271,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The old dragon shadows",
+        "opening": "Do you remember seeing dragons overhead?",
         "first": "I remember the shade of passing wings before I remember faces. A dragon could cross the sunlight and make the whole hollow look up.",
         "replies": [
           [
@@ -1252,6 +1306,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Roots across the path",
+        "opening": "What do you do when roots grow across the path?",
         "first": "A root I cut back kept returning under the same stepping place. Finally I moved the path a little.",
         "replies": [
           [
@@ -1270,6 +1325,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A visitor in a hurry",
+        "opening": "Do hurried visitors cause trouble here?",
         "first": "Someone once told me the hollow needed straight paths. He drew one directly through a patch of young shoots.",
         "replies": [
           [
@@ -1288,6 +1344,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Work after rain",
+        "opening": "Does the rain leave you much work?",
         "first": "After rain I check where water has carried loose soil away. People notice mud sooner than they notice a hollow beneath it.",
         "replies": [
           [
@@ -1322,6 +1379,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A name that stuck",
+        "opening": "How did you get your name?",
         "first": "They call me Truffle because I spent my first season refusing to come out of the soil. I wanted another week.",
         "replies": [
           [
@@ -1340,6 +1398,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Teaching the youngest",
+        "opening": "What do you teach the youngest mushrooms?",
         "first": "The young ones keep asking whether a falling leaf is alive. I spend autumn explaining the difference between a leaf and a beetle.",
         "replies": [
           [
@@ -1358,6 +1417,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A small visitor",
+        "opening": "Do small creatures visit the hollow too?",
         "first": "A hedgehog used to sleep near my growing patch. I learned its route well enough to leave the crossing clear.",
         "replies": [
           [
@@ -1392,6 +1452,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Being called king",
+        "opening": "Do you enjoy being called king?",
         "first": "The title makes humans expect commands. My people expect me to remember what everyone has already agreed.",
         "replies": [
           [
@@ -1410,6 +1471,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An argument about shade",
+        "opening": "What do people here argue about?",
         "first": "Two neighbours once spent a season arguing over whose cap shaded the other. Both insisted they were being deprived of sunlight.",
         "replies": [
           [
@@ -1428,6 +1490,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Gifts and guests",
+        "opening": "What makes a good guest in your hollow?",
         "first": "A gift should make a visit easier, not purchase the visitor. I distrust hosts who remember every favour aloud.",
         "replies": [
           [
@@ -1446,6 +1509,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "News beyond the hollow",
+        "opening": "Does much news reach you from outside?",
         "first": "We learn about humans from the people who arrive. It gives us a rather uneven picture of your kind.",
         "replies": [
           [
@@ -1480,6 +1544,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Winter stores",
+        "opening": "How do you keep enough food for winter?",
         "first": "We store food in several places. One damp cellar going bad is trouble; our entire winter going bad would be disaster.",
         "replies": [
           [
@@ -1498,6 +1563,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An adventurous recipe",
+        "opening": "Have you ever tried a recipe you regretted?",
         "first": "I once added something new to supper without telling Ilsa. She noticed before the first bite.",
         "replies": [
           [
@@ -1516,6 +1582,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Living with Ilsa",
+        "opening": "What's it like sharing a home with Ilsa?",
         "first": "Ilsa remembers who likes what. I remember how much we have. Together we produce a respectable supper.",
         "replies": [
           [
@@ -1550,6 +1617,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A human breakfast",
+        "opening": "Have you ever tried a human breakfast?",
         "first": "Do humans really eat food before they're fully awake? That seems a dangerous time to make decisions about chewing.",
         "replies": [
           [
@@ -1568,6 +1636,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Teaching patience",
+        "opening": "How do you teach somebody to be patient?",
         "first": "I once told the young ones to watch a shoot grow. They complained that it wasn't doing anything. Then I went away and missed it opening.",
         "replies": [
           [
@@ -1586,6 +1655,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Food for company",
+        "opening": "What do you cook when you have company?",
         "first": "Cap plans enough for dinner. I plan enough for whoever arrives. We have been disagreeing about portions for years.",
         "replies": [
           [
@@ -1620,6 +1690,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Taking the lookout shift",
+        "opening": "How did you become the lookout?",
         "first": "I volunteered to watch the path because I wanted to meet travellers. Then I realised most travellers would simply walk past.",
         "replies": [
           [
@@ -1638,6 +1709,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A beetle's directions",
+        "opening": "Can a beetle help you find your way?",
         "first": "I tried following a beetle to see where it lived. After an hour it returned to the same log.",
         "replies": [
           [
@@ -1656,6 +1728,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Coming back to the hollow",
+        "opening": "What do you miss when you're away from the hollow?",
         "first": "After standing beside the road, the hollow sounds crowded. You wouldn't think roots and dripping leaves could make such a fuss.",
         "replies": [
           [
@@ -1690,6 +1763,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Spare ground",
+        "opening": "Do you leave any of your ground unplanted?",
         "first": "I kept a patch clear for passing carts. Now travellers ask whether I'll clear another. Success seems to involve less grass every year.",
         "replies": [
           [
@@ -1708,6 +1782,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A guest who stayed",
+        "opening": "Have any travellers stayed longer than they meant to?",
         "first": "A carter hurt his ankle here and stayed a week. He was so bored he repaired three things I'd been avoiding.",
         "replies": [
           [
@@ -1726,6 +1801,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Farming beside a road",
+        "opening": "What's it like farming beside a busy road?",
         "first": "People lean over a fence and tell me how they'd grow my crops. None return for the weeding.",
         "replies": [
           [
@@ -1760,6 +1836,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A wheel's wobble",
+        "opening": "How do you find what's making a wheel wobble?",
         "first": "A man asked me to straighten his wheel. The wheel was sound; he'd loaded all his stone on one side.",
         "replies": [
           [
@@ -1778,6 +1855,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A father's cart",
+        "opening": "Did your father teach you about carts?",
         "first": "My father built carts and tested them himself. I thought that meant a pleasant ride. He made me walk beside him listening for trouble.",
         "replies": [
           [
@@ -1796,6 +1874,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An expensive colour",
+        "opening": "Can painting a cart really cost that much?",
         "first": "A customer once demanded a red cart because red carts travelled faster. I painted it beautifully and let him enjoy the theory.",
         "replies": [
           [
@@ -1830,6 +1909,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A tired crew",
+        "opening": "How do you know when the crew needs a rest?",
         "first": "The worst mistakes happen near the end of a shift, when everyone wants one last load finished.",
         "replies": [
           [
@@ -1848,6 +1928,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The stone animals",
+        "opening": "Why do you carve those little stone animals?",
         "first": "I carve animals from waste stone. My first duck looked like a boot, so I carved another and called them a pair.",
         "replies": [
           [
@@ -1866,6 +1947,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Teaching Nerik",
+        "opening": "What was Nerik like when you first taught him?",
         "first": "Nerik apologises whenever he asks a question. I keep telling him an apology takes longer than the answer.",
         "replies": [
           [
@@ -1900,6 +1982,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The first wage",
+        "opening": "What did you do with your first wages?",
         "first": "I bought my mother a good lamp with my first pay. She said it was too expensive and spent the evening trying it in every room.",
         "replies": [
           [
@@ -1918,6 +2001,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Asking for help",
+        "opening": "Is it difficult asking the other miners for help?",
         "first": "I once carried a load too heavy for me because I didn't want the crew to think I was weak. I slowed everyone down.",
         "replies": [
           [
@@ -1936,6 +2020,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "After work",
+        "opening": "What do you like doing after a shift?",
         "first": "I like lying down somewhere I can't hear stones being moved. It isn't an ambitious hobby.",
         "replies": [
           [
@@ -1970,6 +2055,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A face in snow",
+        "opening": "How do you choose the faces for your snow figures?",
         "first": "I give each snow figure a different expression. My brother says every one looks annoyed with him.",
         "replies": [
           [
@@ -1988,6 +2074,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "When they melt",
+        "opening": "Does it bother you when your work melts?",
         "first": "I used to patch every thawing figure. Now I let the weather finish what it started.",
         "replies": [
           [
@@ -2006,6 +2093,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Winter visitors",
+        "opening": "Do many visitors come through in winter?",
         "first": "People stop to look at the snow figures and end up telling me who used to build them in their village.",
         "replies": [
           [
@@ -2040,6 +2128,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An honest shortage",
+        "opening": "What happens when the mill's figures don't add up?",
         "first": "A miller reported a missing sack before I noticed. I believed his next correction much more readily.",
         "replies": [
           [
@@ -2058,6 +2147,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The wedding order",
+        "opening": "Have you ever had trouble with a wedding order?",
         "first": "I enjoy wedding accounts. Large quantities of butter suggest someone expects happiness.",
         "replies": [
           [
@@ -2075,7 +2165,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Keeping my own accounts",
+        "title": "Keeping your own accounts",
+        "opening": "Are your own accounts as tidy as the mill's?",
         "first": "My household accounts are a disgrace. Apparently I spend my precision at work.",
         "replies": [
           [
@@ -2110,6 +2201,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A tree left standing",
+        "opening": "How do you decide which trees to leave standing?",
         "first": "I left a sound tree because birds had nested in it. My customer grumbled about the delay.",
         "replies": [
           [
@@ -2128,6 +2220,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The axe handle",
+        "opening": "Do you make your own axe handles?",
         "first": "I once fitted a handle beautifully and forgot to test its grip. It twisted every time I swung.",
         "replies": [
           [
@@ -2146,6 +2239,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An afternoon indoors",
+        "opening": "What keeps you indoors on a free afternoon?",
         "first": "I mend little wooden toys when rain keeps me home. Wheels, mostly. Children are demanding drivers.",
         "replies": [
           [
@@ -2180,6 +2274,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Learning what works",
+        "opening": "How do you learn which remedies actually work?",
         "first": "I keep notes when a remedy disappoints someone. Those entries teach me more than the compliments.",
         "replies": [
           [
@@ -2198,6 +2293,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A customer's cure",
+        "opening": "Do customers bring you remedies of their own?",
         "first": "A customer said my tea restored his energy. Then he mentioned sleeping two extra hours each night.",
         "replies": [
           [
@@ -2216,6 +2312,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Work after closing",
+        "opening": "Can you stop thinking about work once you close?",
         "first": "After hearing everyone's troubles, I sometimes want an evening without being useful.",
         "replies": [
           [
@@ -2250,6 +2347,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Odo's letters",
+        "opening": "Does Odo write to you often?",
         "first": "Grandfather's letters devote three lines to his health and a whole page to a disputed fish.",
         "replies": [
           [
@@ -2268,6 +2366,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A place by the fire",
+        "opening": "Is there room for anyone beside your fire?",
         "first": "I ask newcomers whether they want company before introducing them to everyone.",
         "replies": [
           [
@@ -2286,6 +2385,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Breakfast in the rain",
+        "opening": "How do you make breakfast when it's pouring?",
         "first": "I once protected breakfast from rain so carefully that I forgot the fire underneath it had gone out.",
         "replies": [
           [
@@ -2320,6 +2420,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The disappointing seeds",
+        "opening": "Have you ever planted seeds that disappointed you?",
         "first": "I bought seeds with a magnificent picture on the packet. The plants looked nothing like it.",
         "replies": [
           [
@@ -2338,6 +2439,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A borrowed garden",
+        "opening": "Did you always have a garden of your own?",
         "first": "I tended a neighbour's garden while she was ill. She complained that I'd arranged everything too neatly.",
         "replies": [
           [
@@ -2356,6 +2458,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Growing for pleasure",
+        "opening": "What would you grow just for the pleasure of it?",
         "first": "I keep a corner for flowers that do nothing but please me.",
         "replies": [
           [
@@ -2390,6 +2493,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A walk too far",
+        "opening": "Have you ever walked farther than you meant to?",
         "first": "I followed a pleasant lane until I realised I had no idea where it joined the road.",
         "replies": [
           [
@@ -2407,7 +2511,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My aunt's recipe",
+        "title": "Your aunt's recipe",
+        "opening": "How did you learn your aunt's recipe?",
         "first": "My aunt measures ingredients by the bowl she happens to use. I borrowed the bowl before asking for the recipe.",
         "replies": [
           [
@@ -2426,6 +2531,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Knowing a town",
+        "opening": "What makes a town feel familiar to you?",
         "first": "I like learning people's routes: who walks early, who stops everywhere, who always seems late.",
         "replies": [
           [
@@ -2459,7 +2565,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:31",
     "topics": [
       {
-        "title": "Our anniversary",
+        "title": "Your anniversary",
+        "opening": "Does Rowan remember your anniversary?",
         "first": "Rowan remembers the day we met perfectly. He remembers our wedding a day late.",
         "replies": [
           [
@@ -2478,6 +2585,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Bramble's loyalties",
+        "opening": "Who does Bramble listen to most?",
         "first": "Bramble follows Rowan outdoors and follows me whenever food is involved. A thoroughly practical division.",
         "replies": [
           [
@@ -2496,6 +2604,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Time to myself",
+        "opening": "Do you get much time to yourself?",
         "first": "I like an afternoon when neither husband nor dog needs locating.",
         "replies": [
           [
@@ -2530,6 +2639,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Ordinary history",
+        "opening": "Do you keep records of ordinary people's lives?",
         "first": "A feast's records list the guests but never the people who cooked. I'd rather know how they fed so many.",
         "replies": [
           [
@@ -2548,6 +2658,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The wrong date",
+        "opening": "What happens when a history gives the wrong date?",
         "first": "I corrected a neighbour's date for a festival. Then found my own source had copied an error.",
         "replies": [
           [
@@ -2566,6 +2677,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "What gets remembered",
+        "opening": "How do you decide which stories deserve remembering?",
         "first": "My grandmother remembered a great procession chiefly because her shoes hurt.",
         "replies": [
           [
@@ -2600,6 +2712,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Being a beginner",
+        "opening": "Is it difficult being a beginner again?",
         "first": "I'm learning to draw. My first pear looked like a boot. It's pinned up at home.",
         "replies": [
           [
@@ -2618,6 +2731,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Advice withheld",
+        "opening": "Have you ever decided someone didn't need your advice?",
         "first": "I still catch myself telling Wren how to arrange her work. She lets me finish, then asks whether I've retired.",
         "replies": [
           [
@@ -2636,6 +2750,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The quiet house",
+        "opening": "Does the house feel too quiet sometimes?",
         "first": "Retirement made my house unexpectedly quiet. I hadn't realised how much company came with work.",
         "replies": [
           [
@@ -2670,6 +2785,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The enormous marrow",
+        "opening": "What's the largest thing you've grown?",
         "first": "I grew a marrow so large I couldn't carry it. For three days it was an achievement. Then it was a problem.",
         "replies": [
           [
@@ -2687,7 +2803,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "A plant I disliked",
+        "title": "A plant you disliked",
+        "opening": "Have you ever kept a plant you didn't like?",
         "first": "Someone gave me a plant I disliked. I kept it for years because throwing it away felt rude.",
         "replies": [
           [
@@ -2706,6 +2823,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The best garden visitor",
+        "opening": "Who is your favourite visitor to the garden?",
         "first": "My favourite visitor asks one question and listens to the answer. Some ask six and leave during the first.",
         "replies": [
           [
@@ -2740,6 +2858,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Two festival stories",
+        "opening": "Can two people tell the same festival story differently?",
         "first": "One account calls a festival splendid. Another says the rain spoiled everything. Both writers attended.",
         "replies": [
           [
@@ -2758,6 +2877,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A ridiculous book",
+        "opening": "Have you read anything delightfully ridiculous lately?",
         "first": "I enjoy terrible adventure stories. The hero always recognises poison by looking offended at it.",
         "replies": [
           [
@@ -2776,6 +2896,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Admitting an error",
+        "opening": "Is it hard admitting you've got a story wrong?",
         "first": "I defended a story so fiercely that admitting it was wrong felt worse than the error itself.",
         "replies": [
           [
@@ -2810,6 +2931,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The apology letter",
+        "opening": "How do you put an apology into a letter?",
         "first": "A customer wanted an apology that didn't admit fault. We spent an hour discovering what an apology was.",
         "replies": [
           [
@@ -2828,6 +2950,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A letter never sent",
+        "opening": "Have you ever written a letter and kept it?",
         "first": "I once wrote to an old friend and carried the letter for weeks. I worried it sounded foolish.",
         "replies": [
           [
@@ -2846,6 +2969,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Difficult handwriting",
+        "opening": "Can you make sense of anyone's handwriting?",
         "first": "My writing grows worse when I'm excited. Customers assume a letter writer has beautiful personal correspondence.",
         "replies": [
           [
@@ -2880,6 +3004,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The unpopular loaf",
+        "opening": "Have you ever baked a loaf nobody wanted?",
         "first": "I made a loaf with a flavour I adored. Nobody bought a second one. I ate my conviction for a week.",
         "replies": [
           [
@@ -2898,6 +3023,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A borrowed recipe",
+        "opening": "Do you borrow recipes from other bakers?",
         "first": "A neighbour shared a recipe and asked me to use her mother's name for it.",
         "replies": [
           [
@@ -2916,6 +3042,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The last customer",
+        "opening": "Do you ever stay open for one last customer?",
         "first": "One regular arrived just before closing because he disliked crowded shops. I nearly mistook it for carelessness.",
         "replies": [
           [
@@ -2950,6 +3077,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wrong recipient",
+        "opening": "Have you ever delivered a message to the wrong person?",
         "first": "Two people named Mara lived on my route. I once delivered a birthday greeting to the wrong one.",
         "replies": [
           [
@@ -2968,6 +3096,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A slow walk",
+        "opening": "Do you enjoy walking when you aren't making deliveries?",
         "first": "On free evenings I walk without anything to deliver. At first I kept speeding up out of habit.",
         "replies": [
           [
@@ -2986,6 +3115,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A sealed message",
+        "opening": "Are you ever curious about the messages you carry?",
         "first": "People ask what I'm carrying. I tell them whose door I'm looking for, not what's inside.",
         "replies": [
           [
@@ -3020,6 +3150,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The itchy masterpiece",
+        "opening": "Have you ever made something beautiful that nobody could bear to wear?",
         "first": "I wove a beautiful scarf from wool that irritated everyone's neck. Beauty had failed a basic inspection.",
         "replies": [
           [
@@ -3038,6 +3169,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Choosing a gift",
+        "opening": "How do you choose something to make as a gift?",
         "first": "My sister likes colours I would never wear. I finally learned to make her presents she would choose.",
         "replies": [
           [
@@ -3056,6 +3188,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A pattern remembered",
+        "opening": "Are there patterns you can make from memory?",
         "first": "I recreated a pattern from my grandmother's cloth, then found the original. Mine was completely different.",
         "replies": [
           [
@@ -3090,6 +3223,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The tired guest",
+        "opening": "How can you tell when a guest needs some kindness?",
         "first": "A traveller asked the same direction three times. I finally walked him to the door instead of repeating it louder.",
         "replies": [
           [
@@ -3107,7 +3241,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "What I can promise",
+        "title": "What you can promise",
+        "opening": "What can a traveller count on at your inn?",
         "first": "I can promise a prepared room. I cannot promise that every other guest will sleep without snoring.",
         "replies": [
           [
@@ -3126,6 +3261,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A returning traveller",
+        "opening": "Do you remember guests when they come back?",
         "first": "A woman returned after ten years and remembered exactly where she'd sat at breakfast. I'd forgotten her name.",
         "replies": [
           [
@@ -3160,6 +3296,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Predicting rain",
+        "opening": "How do you decide whether rain is coming?",
         "first": "I predicted a dry afternoon, announced it confidently, and got drenched. My notes survived better than my reputation.",
         "replies": [
           [
@@ -3178,6 +3315,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Watching snails",
+        "opening": "What do you learn from watching snails?",
         "first": "Snails are surprisingly difficult subjects. They look stationary until you turn away.",
         "replies": [
           [
@@ -3196,6 +3334,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A failed experiment",
+        "opening": "Have any of your experiments gone badly?",
         "first": "I planted seeds in three different soils and forgot to label the pots.",
         "replies": [
           [
@@ -3230,6 +3369,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Salt and confidence",
+        "opening": "How did you learn to judge the salt in a meal?",
         "first": "I salted a soup twice because I forgot doing it the first time. Confidence made the second handful particularly generous.",
         "replies": [
           [
@@ -3248,6 +3388,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Cooking for strangers",
+        "opening": "How do you cook for people whose tastes you don't know?",
         "first": "I ask guests what they dislike. Asking what they love produces a much longer and less useful answer.",
         "replies": [
           [
@@ -3266,6 +3407,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A meal remembered",
+        "opening": "Is there a meal you still think about?",
         "first": "My best meal was bread and cheese after a day walking in rain. I've failed to recreate it indoors.",
         "replies": [
           [
@@ -3300,6 +3442,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wrong tempo",
+        "opening": "Have you ever started a tune at completely the wrong speed?",
         "first": "I played a dance too quickly and watched everyone become cross with their feet.",
         "replies": [
           [
@@ -3318,6 +3461,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A child's request",
+        "opening": "Do children ask you for particular songs?",
         "first": "A child asked me to play a tune I'd never heard. She sang three notes and expected the rest.",
         "replies": [
           [
@@ -3336,6 +3480,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Practising alone",
+        "opening": "Do you enjoy practising when nobody's listening?",
         "first": "The awkward part of practice is repeating the bit you dislike instead of the bit you already play well.",
         "replies": [
           [
@@ -3370,6 +3515,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Reading a trail",
+        "opening": "What do you look for when you follow a trail?",
         "first": "A track tells you where something was. Young hunters often mistake that for knowing where it is.",
         "replies": [
           [
@@ -3388,6 +3534,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Ada's patience",
+        "opening": "Does Ada mind how often you're out in the woods?",
         "first": "Ada says I can describe a woodland path perfectly and forget where I left my coat.",
         "replies": [
           [
@@ -3406,6 +3553,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Knowing when to stop",
+        "opening": "How do you decide when to turn back?",
         "first": "I've turned back from hunts that looked promising. Bad light makes good tracks useless.",
         "replies": [
           [
@@ -3440,6 +3588,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A disappointing ending",
+        "opening": "Has a book ever let you down at the end?",
         "first": "A hero escaped because a stranger arrived with exactly the right key. We'd never heard of him before.",
         "replies": [
           [
@@ -3458,6 +3607,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Cloth that lasts",
+        "opening": "How can you tell whether a piece of cloth will last?",
         "first": "A customer wanted delicate cloth for a child's everyday coat. I suggested something that could survive a hedge.",
         "replies": [
           [
@@ -3476,6 +3626,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Reading aloud",
+        "opening": "Do you enjoy reading aloud to someone?",
         "first": "I read aloud when a sentence refuses to make sense. Sometimes it remains nonsense with more volume.",
         "replies": [
           [
@@ -3510,6 +3661,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A swarm overhead",
+        "opening": "What do you do when the bees swarm?",
         "first": "A swarm once settled where I couldn't reach it. I spent an hour planning, then they left while I fetched help.",
         "replies": [
           [
@@ -3528,6 +3680,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Different honey",
+        "opening": "Does honey taste different from one hive to another?",
         "first": "Honey changes with the flowers. People ask for the same flavour every season as though bees follow my orders.",
         "replies": [
           [
@@ -3546,6 +3699,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Gwyneth's limit",
+        "opening": "Does Gwyneth ever tell you to stop talking about bees?",
         "first": "Gwyneth lets me speak about bees until she asks how the rest of my day went.",
         "replies": [
           [
@@ -3580,6 +3734,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A crowded supper",
+        "opening": "Have you ever had more supper guests than you expected?",
         "first": "I once invited so many people that the quiet guests couldn't finish a sentence.",
         "replies": [
           [
@@ -3598,6 +3753,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An honest invitation",
+        "opening": "How do you invite someone without making them feel obliged?",
         "first": "I tell guests they may leave early. Otherwise a pleasant invitation can become an endurance trial.",
         "replies": [
           [
@@ -3616,6 +3772,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The unfinished song",
+        "opening": "Is there a song you've never managed to finish?",
         "first": "I know the beginning of a song perfectly and none of the middle. Alder supplies invented verses.",
         "replies": [
           [
@@ -3650,6 +3807,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The disputed batch",
+        "opening": "What do you do when someone disputes a batch?",
         "first": "Half my neighbours liked a new batch; half hated it. Both groups advised me to listen to everyone.",
         "replies": [
           [
@@ -3668,6 +3826,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Work at a celebration",
+        "opening": "Do you still end up working at celebrations?",
         "first": "People invite me to parties and ask me to explain the drinks. I sometimes want to simply attend.",
         "replies": [
           [
@@ -3686,6 +3845,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A useful failure",
+        "opening": "Has a mistake ever taught you something useful?",
         "first": "I tried copying a rival's cider and made something dull. My own worst batch had more character.",
         "replies": [
           [
@@ -3720,6 +3880,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Walking past the inn",
+        "opening": "Have you ever kept walking when you ought to have stopped at an inn?",
         "first": "I walked past the inn I wanted because I was describing it to another traveller.",
         "replies": [
           [
@@ -3738,6 +3899,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Someone else's rescue",
+        "opening": "Has a stranger ever had to rescue you?",
         "first": "A woman once found my lost pack. I kept telling the story as though my search had been heroic.",
         "replies": [
           [
@@ -3756,6 +3918,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travelling for pleasure",
+        "opening": "Where would you travel if you had no business to finish?",
         "first": "I like choosing a destination for no better reason than wanting to see it.",
         "replies": [
           [
@@ -3790,6 +3953,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A household account",
+        "opening": "How do you keep track of a household's expenses?",
         "first": "I found an old household list with shoes crossed out and medicine written beneath them.",
         "replies": [
           [
@@ -3808,6 +3972,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The borrowed pot",
+        "opening": "Have you ever had trouble returning something you borrowed?",
         "first": "A neighbour recalled a terrible quarrel chiefly because one family never returned a cooking pot.",
         "replies": [
           [
@@ -3826,6 +3991,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning for myself",
+        "opening": "What would you like to learn just for yourself?",
         "first": "I learned a little embroidery last winter. It has nothing to do with my research.",
         "replies": [
           [
@@ -3860,6 +4026,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A damaged page",
+        "opening": "Can you save a badly damaged page?",
         "first": "A missing corner can change an entire account. I once found a warning quoted as a recommendation.",
         "replies": [
           [
@@ -3878,6 +4045,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An embarrassed reader",
+        "opening": "What do you do when a reader is embarrassed to ask for help?",
         "first": "A man pretended to know a book he couldn't read. He'd come to learn and feared being laughed at.",
         "replies": [
           [
@@ -3896,6 +4064,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Records under a king",
+        "opening": "Does the crown interfere with what you record?",
         "first": "Official accounts can be accurate about dates and dishonest about reasons.",
         "replies": [
           [
@@ -3930,6 +4099,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A miner's note",
+        "opening": "What can you learn from a miner's notes?",
         "first": "One miner recorded a dangerous turn as 'the familiar bend'. Useless advice for anyone new.",
         "replies": [
           [
@@ -3948,6 +4118,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Why study underground?",
+        "opening": "What drew you to studying the mines?",
         "first": "My uncle worked below ground and hated how visitors discussed mines without discussing miners.",
         "replies": [
           [
@@ -3966,6 +4137,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A map without height",
+        "opening": "Can a map mislead you about what's underground?",
         "first": "I copied a mine plan and forgot to mark changes in level. It looked wonderfully simple.",
         "replies": [
           [
@@ -4000,6 +4172,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The unnamed memorial",
+        "opening": "What do you do when a memorial has no name?",
         "first": "I found a memorial described only by its stonework. Nobody had recorded whose name was worn away.",
         "replies": [
           [
@@ -4018,6 +4191,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A frightening story",
+        "opening": "Why do people keep telling frightening stories?",
         "first": "I repeated a ghost story and discovered one listener knew the family in it.",
         "replies": [
           [
@@ -4036,6 +4210,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Something cheerful",
+        "opening": "Do you ever read anything cheerful?",
         "first": "I grow terrible little flowers at home. They lean, refuse schedules, and make me disproportionately happy.",
         "replies": [
           [
@@ -4070,6 +4245,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A villain with supper",
+        "opening": "Do villains in books ever get an ordinary evening?",
         "first": "I wrote a villain who stopped a speech because he was hungry. My friend said it ruined the menace.",
         "replies": [
           [
@@ -4088,6 +4264,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A rumour about Maelis",
+        "opening": "Do you believe the stories about Maelis?",
         "first": "People repeat frightening stories about Maelis without saying who actually met her.",
         "replies": [
           [
@@ -4106,6 +4283,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The first page",
+        "opening": "What makes you keep reading after the first page?",
         "first": "I kept rewriting an opening sentence until I forgot what happened next.",
         "replies": [
           [
@@ -4140,6 +4318,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The quiet student",
+        "opening": "How do you know whether a quiet student understands?",
         "first": "A student understood a lesson but would never answer aloud. I mistook silence for confusion.",
         "replies": [
           [
@@ -4157,7 +4336,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My worst lesson",
+        "title": "Your worst lesson",
+        "opening": "Have you ever taught a lesson badly?",
         "first": "I once explained a difficult idea three times using exactly the same words, louder each time.",
         "replies": [
           [
@@ -4176,6 +4356,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning without school",
+        "opening": "Can someone learn well without going to school?",
         "first": "People apologise for what they haven't studied, then describe work I couldn't do.",
         "replies": [
           [
@@ -4210,6 +4391,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The narrow doorway",
+        "opening": "Have you ever found an entrance too narrow for your expedition?",
         "first": "I drew a temple entrance beautifully and much too narrow. I had copied its decoration, not its proportions.",
         "replies": [
           [
@@ -4228,6 +4410,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Keeping a ruin",
+        "opening": "Should people leave ruins as they find them?",
         "first": "A ruined building can preserve mistakes as well as achievements. I'd like to know both.",
         "replies": [
           [
@@ -4246,6 +4429,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An expedition postponed",
+        "opening": "What would make you postpone an expedition?",
         "first": "I wanted to visit a temple before learning how to prepare. I mistook wanting for readiness.",
         "replies": [
           [
@@ -4280,6 +4464,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The convenient word",
+        "opening": "Do people ever choose a word because it helps their argument?",
         "first": "A proclamation called a new levy 'temporary'. It didn't say what would make it end.",
         "replies": [
           [
@@ -4298,6 +4483,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Winning badly",
+        "opening": "Can you win an argument and still regret it?",
         "first": "I once won an argument by mocking the other person's mistake. She stopped speaking, and I called that success.",
         "replies": [
           [
@@ -4316,6 +4502,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A question for pleasure",
+        "opening": "What would you ask if you didn't need to prove anything?",
         "first": "I asked my sister what she'd do with a completely free afternoon. We spoke for an hour without debating anything.",
         "replies": [
           [
@@ -4350,6 +4537,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A copied error",
+        "opening": "How do you spot an error everyone has copied?",
         "first": "Three books repeated the same mistake. I nearly counted them as three witnesses.",
         "replies": [
           [
@@ -4368,6 +4556,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A dreadful riddle",
+        "opening": "Do you know any dreadful riddles?",
         "first": "What has a spine, no bones, and too many opinions? A history book written by my tutor.",
         "replies": [
           [
@@ -4386,6 +4575,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Dating a memory",
+        "opening": "Can you work out when an old memory happened?",
         "first": "Someone dated a storm by a wedding. The wedding had moved a week, but the family remembered both as one event.",
         "replies": [
           [
@@ -4420,6 +4610,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The blank patch",
+        "opening": "What do you put in a part of the map nobody has explored?",
         "first": "A map left a district blank because its maker hadn't visited. Readers decided nobody lived there.",
         "replies": [
           [
@@ -4438,6 +4629,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Directions by memory",
+        "opening": "Can you give directions without looking at a map?",
         "first": "My mother gives directions by people: past where someone lived, beside where someone fell over.",
         "replies": [
           [
@@ -4456,6 +4648,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The way home",
+        "opening": "Do you ever have trouble finding your own way home?",
         "first": "I practise giving directions back as well as onward. A place looks different when you're leaving.",
         "replies": [
           [
@@ -4490,6 +4683,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An uncertain translation",
+        "opening": "How do you translate something when you aren't sure what it means?",
         "first": "One damaged phrase could mean 'heart of fire' or 'fire at the centre'. An expedition shouldn't depend on my favourite reading.",
         "replies": [
           [
@@ -4508,6 +4702,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Research at a distance",
+        "opening": "Can you study a place without visiting it?",
         "first": "Reading about a place makes it familiar in a dangerously incomplete way.",
         "replies": [
           [
@@ -4526,6 +4721,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Who gets the discovery?",
+        "opening": "Who should get the credit for a discovery?",
         "first": "Scholars often name the person who wrote an account and omit everyone who made the journey possible.",
         "replies": [
           [
@@ -4560,6 +4756,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The expert customer",
+        "opening": "Do customers often tell you how to run the tavern?",
         "first": "A customer explained how to run my tavern. I asked which shift he'd like.",
         "replies": [
           [
@@ -4578,6 +4775,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Closing time",
+        "opening": "How do you persuade people it's time to go home?",
         "first": "The last guests always tell me they're no trouble. They're standing between me and my bed.",
         "replies": [
           [
@@ -4596,6 +4794,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Royal demands",
+        "opening": "What does a royal visit cost you?",
         "first": "A royal visit means food taken from paying customers and a bill nobody wants to acknowledge.",
         "replies": [
           [
@@ -4630,6 +4829,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Naming a batch",
+        "opening": "How do you name a new batch?",
         "first": "I named a cider 'Golden Triumph' before tasting it. Confidence was the principal ingredient.",
         "replies": [
           [
@@ -4648,6 +4848,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A rival's opinion",
+        "opening": "Would you ask a rival what they thought of your work?",
         "first": "A rival liked my least successful batch. I couldn't decide whether to thank him or feel insulted.",
         "replies": [
           [
@@ -4666,6 +4867,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Winter evenings",
+        "opening": "How do you spend the long winter evenings?",
         "first": "In winter I mend things I've ignored all year. Most remain annoyed at me for waiting.",
         "replies": [
           [
@@ -4699,7 +4901,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:11",
     "topics": [
       {
-        "title": "The doorstep I missed",
+        "title": "The doorstep you missed",
+        "opening": "Have you ever walked straight past the right door?",
         "first": "A family painted their door and I walked past it twice. I knew the colour better than the address.",
         "replies": [
           [
@@ -4718,6 +4921,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Reading a message twice",
+        "opening": "Do you check a message before delivering it?",
         "first": "I deliver spoken messages too. I repeat them back before leaving, however impatient the sender is.",
         "replies": [
           [
@@ -4735,7 +4939,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "News of my own",
+        "title": "News of your own",
+        "opening": "Do you have any news of your own for a change?",
         "first": "I carried everyone else's good news for years before announcing I'd saved enough for a holiday.",
         "replies": [
           [
@@ -4770,6 +4975,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A chair for someone",
+        "opening": "Have you ever made a chair for one particular person?",
         "first": "A customer said every chair felt wrong. His feet didn't reach the floor properly.",
         "replies": [
           [
@@ -4788,6 +4994,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The borrowed saw",
+        "opening": "Are you happy lending out your saw?",
         "first": "I lent a saw and got it back sharper than before. I nearly invented another reason to lend it.",
         "replies": [
           [
@@ -4805,7 +5012,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My own unfinished shelf",
+        "title": "Your own unfinished shelf",
+        "opening": "Does your own furniture get finished last?",
         "first": "I finish customers' shelves promptly. My own spent months as a promise.",
         "replies": [
           [
@@ -4840,6 +5048,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A poor arrival",
+        "opening": "Have you ever arrived somewhere badly unprepared?",
         "first": "I once entered a town and immediately explained what my last stop did better.",
         "replies": [
           [
@@ -4858,6 +5067,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The unnecessary luggage",
+        "opening": "What have you carried that you wished you'd left behind?",
         "first": "I carried a spare cooking pot for weeks without using the first one.",
         "replies": [
           [
@@ -4876,6 +5086,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Asking directions again",
+        "opening": "Do you mind asking for directions a second time?",
         "first": "I used to pretend I'd understood directions because I feared looking foolish.",
         "replies": [
           [
@@ -4910,6 +5121,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Work after dark",
+        "opening": "What is it like working after everyone else has gone to bed?",
         "first": "People see me resting in daylight and offer advice about industry. I was working while they slept.",
         "replies": [
           [
@@ -4928,6 +5140,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A tired promise",
+        "opening": "Have you ever agreed to something because you were too tired to argue?",
         "first": "I once agreed to help someone move before remembering it followed my night shift.",
         "replies": [
           [
@@ -4946,6 +5159,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A small holiday",
+        "opening": "What would you do with a little time off?",
         "first": "My ideal holiday includes breakfast whenever I wake, with no apology.",
         "replies": [
           [
@@ -4980,6 +5194,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An incomplete order",
+        "opening": "What do you do when an order leaves something important unsaid?",
         "first": "An officer ordered a household searched and wouldn't explain what we were looking for.",
         "replies": [
           [
@@ -4998,6 +5213,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Fear in training",
+        "opening": "Do recruits admit when they're frightened?",
         "first": "I was frightened of my first practice opponent and furious with myself for showing it.",
         "replies": [
           [
@@ -5016,6 +5232,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An unrecorded kindness",
+        "opening": "Have you ever helped someone without putting it in a report?",
         "first": "A guard once gave a cold prisoner his spare coat. No one put it in the report.",
         "replies": [
           [
@@ -5050,6 +5267,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The small favour",
+        "opening": "Do people ask you for help with small things?",
         "first": "A neighbour called moving a wardrobe a small favour. I asked which part was small.",
         "replies": [
           [
@@ -5068,6 +5286,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A delicate hobby",
+        "opening": "Do you have any hobbies that would surprise people?",
         "first": "I mend small wooden boxes. People seem disappointed that I don't collect boulders.",
         "replies": [
           [
@@ -5086,6 +5305,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Being quiet",
+        "opening": "Do you mind sitting quietly with someone?",
         "first": "If I don't speak in a group, people assume I'm angry. Usually I'm listening.",
         "replies": [
           [
@@ -5120,6 +5340,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Missing the beat",
+        "opening": "Have you ever lost the beat while dancing?",
         "first": "I once lost the rhythm and confidently led three people in the wrong direction.",
         "replies": [
           [
@@ -5138,6 +5359,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Watching is joining",
+        "opening": "Does watching the dancing make you feel left out?",
         "first": "I dislike pulling reluctant people into a dance. Watching can be their way of enjoying it.",
         "replies": [
           [
@@ -5156,6 +5378,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Giving freely",
+        "opening": "How do you decide when to give something away?",
         "first": "I like making gifts. I dislike hearing people list everything the recipient owes afterward.",
         "replies": [
           [
@@ -5190,6 +5413,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A wager refused",
+        "opening": "Have you ever refused a wager?",
         "first": "I refused a wager after noticing my opponent couldn't comfortably lose it.",
         "replies": [
           [
@@ -5208,6 +5432,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A surprise for family",
+        "opening": "Have you managed to surprise your family?",
         "first": "I organised a surprise supper for my brother. He'd planned an evening alone.",
         "replies": [
           [
@@ -5226,6 +5451,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning a new game",
+        "opening": "Do you enjoy learning games you aren't good at yet?",
         "first": "I enjoy being terrible at a new game before I begin caring about winning.",
         "replies": [
           [
@@ -5260,6 +5486,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The quiet opponent",
+        "opening": "Can you tell much about a quiet opponent?",
         "first": "I underestimated a quiet card player. She let me explain the game, then beat me three times.",
         "replies": [
           [
@@ -5278,6 +5505,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A growing story",
+        "opening": "Does a story get larger every time you tell it?",
         "first": "Each time I described a victory, my opponent became more formidable. Eventually a friend asked whether I'd defeated an army.",
         "replies": [
           [
@@ -5296,6 +5524,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Playing without money",
+        "opening": "Would you still play if there were no money involved?",
         "first": "Without a wager I take risks I'd never afford otherwise. The game becomes less tidy and more fun.",
         "replies": [
           [
@@ -5330,6 +5559,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Old advice",
+        "opening": "Is there any advice you once believed and no longer do?",
         "first": "I once recommended a bridge that no longer stood. My information had been sound and had become dangerous.",
         "replies": [
           [
@@ -5348,6 +5578,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A journey declined",
+        "opening": "Have you ever decided against taking a journey?",
         "first": "I turned down a profitable journey because the weather was worsening. Others called me timid.",
         "replies": [
           [
@@ -5366,6 +5597,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Arriving safely",
+        "opening": "What matters most when you reach the end of a trip?",
         "first": "My favourite part of a journey is taking my boots off somewhere I expect to sleep.",
         "replies": [
           [
@@ -5400,6 +5632,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An unwelcome request",
+        "opening": "Do people request songs you'd rather not play?",
         "first": "A guest requested a song another guest had asked me to avoid. I chose something else entirely.",
         "replies": [
           [
@@ -5418,6 +5651,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Playing beside someone",
+        "opening": "What's it like playing alongside another musician?",
         "first": "Another musician once slowed to match my playing instead of showing everyone I was behind.",
         "replies": [
           [
@@ -5436,6 +5670,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A wrong note",
+        "opening": "What do you do when you hit a wrong note?",
         "first": "One wrong note feels enormous to the player. Listeners may already be following the next phrase.",
         "replies": [
           [
@@ -5470,6 +5705,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wrong chorus",
+        "opening": "Have you ever sung the wrong chorus?",
         "first": "I sang a chorus wrong for years. Apparently I had been celebrating a wheelbarrow rather than a wedding.",
         "replies": [
           [
@@ -5488,6 +5724,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Enjoying music badly",
+        "opening": "Can someone enjoy music without being any good at it?",
         "first": "I sing enthusiastically and inaccurately. Those qualities occasionally compete.",
         "replies": [
           [
@@ -5506,6 +5743,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "One more song",
+        "opening": "How do you know when to stop asking for one more song?",
         "first": "I keep deciding to leave after the next song. Musicians are inconsiderate about playing another good one.",
         "replies": [
           [
@@ -5540,6 +5778,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An obsolete word",
+        "opening": "Do you find words that nobody uses anymore?",
         "first": "I found an old word for a person who promises to leave and continues talking. I've been hoping to use it.",
         "replies": [
           [
@@ -5558,6 +5797,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A reliable breakfast",
+        "opening": "What makes a dependable breakfast?",
         "first": "When travelling, I prefer a breakfast I recognise. I have the rest of the day for uncertainty.",
         "replies": [
           [
@@ -5576,6 +5816,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A question declined",
+        "opening": "Do you ever decide not to answer a question?",
         "first": "A stranger once asked why I travelled alone. I told him I preferred discussing where I was going.",
         "replies": [
           [
@@ -5610,6 +5851,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An unfair guess",
+        "opening": "Have you ever judged someone unfairly?",
         "first": "I thought a quiet neighbour disliked everyone. Then discovered she was struggling to hear the conversation.",
         "replies": [
           [
@@ -5627,7 +5869,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My sister's complaint",
+        "title": "Your sister's complaint",
+        "opening": "Does your sister enjoy being asked so many questions?",
         "first": "My sister says I turn ordinary chats into investigations. She would sometimes like to mention lunch without explaining herself.",
         "replies": [
           [
@@ -5646,6 +5889,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Being mistaken",
+        "opening": "What do you do when you realise you've been mistaken?",
         "first": "I enjoy a surprising answer unless I've already announced the opposite too confidently.",
         "replies": [
           [
@@ -5680,6 +5924,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A failed trick",
+        "opening": "Have you ever had a trick fail in front of everyone?",
         "first": "A coin fell from my sleeve before I'd asked anyone to choose a hand. The audience enjoyed it enormously.",
         "replies": [
           [
@@ -5698,6 +5943,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Knowing the secret",
+        "opening": "Is a trick still enjoyable once you know how it works?",
         "first": "Some spectators enjoy a trick more after learning how it works. Others prefer the mystery.",
         "replies": [
           [
@@ -5716,6 +5962,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A game worth losing",
+        "opening": "Can losing a game be worth it?",
         "first": "I enjoy an opponent who makes a good move I didn't anticipate. Even when it ruins my plan.",
         "replies": [
           [
@@ -5750,6 +5997,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An arch without mortar",
+        "opening": "How does an arch stand without mortar?",
         "first": "An arch can hold because each stone presses against its neighbours. Remove the wrong one and the whole arrangement objects.",
         "replies": [
           [
@@ -5767,7 +6015,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "A commission I want",
+        "title": "A commission you want",
+        "opening": "What would you most like to be commissioned to build?",
         "first": "I'd like to build a covered gathering place where a person can sit without buying anything.",
         "replies": [
           [
@@ -5786,6 +6035,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A stubborn signature",
+        "opening": "Do you put your name on your work?",
         "first": "I hide a tiny mark in finished stonework. My father said a mason shouldn't need applause.",
         "replies": [
           [
@@ -5820,6 +6070,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Leaving the mine",
+        "opening": "Why did you leave the mine?",
         "first": "I left mining after my shoulder stopped forgiving me overnight. I disliked admitting it before I disliked the pain.",
         "replies": [
           [
@@ -5838,6 +6089,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Stock that sells slowly",
+        "opening": "What happens to stock that doesn't sell?",
         "first": "A shelf full of useful goods can still bankrupt a shop if nobody needs them this month.",
         "replies": [
           [
@@ -5856,6 +6108,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Underground lunches",
+        "opening": "What did you eat underground during a shift?",
         "first": "A warm meal after a shift could improve my opinion of the entire world.",
         "replies": [
           [
@@ -5890,6 +6143,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The shared passage",
+        "opening": "Do you get along with the people sharing your passage?",
         "first": "Two traders claimed the same strip of market ground. Neither had noticed customers could no longer pass.",
         "replies": [
           [
@@ -5908,6 +6162,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A market sound",
+        "opening": "Is there a market sound you'd recognise anywhere?",
         "first": "I can tell when a delivery has arrived by the change in voices. Everyone becomes briefly optimistic.",
         "replies": [
           [
@@ -5926,6 +6181,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An empty stall",
+        "opening": "What happens when a stall stands empty?",
         "first": "When an old trader retired, people complained about the empty space. Few had visited him lately.",
         "replies": [
           [
@@ -5960,6 +6216,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An ordinary hinge",
+        "opening": "Is an ordinary hinge harder to make than it looks?",
         "first": "A good hinge gets ignored for years. A bad one makes its maker famous by supper.",
         "replies": [
           [
@@ -5978,6 +6235,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Throwing contests",
+        "opening": "Do you ever compete at throwing things?",
         "first": "We hold harmless throwing contests after work. Kerr says I'm too competitive about objects that aren't worth owning.",
         "replies": [
           [
@@ -5996,6 +6254,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A workday's noise",
+        "opening": "Does the noise of work stay with you afterward?",
         "first": "After a day of metalwork, I enjoy hearing rain without hammers underneath it.",
         "replies": [
           [
@@ -6030,6 +6289,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A painted fish",
+        "opening": "Have you ever painted something that surprised its owner?",
         "first": "A customer wanted a noble-looking fish on a cup. Fish have limited access to noble expressions.",
         "replies": [
           [
@@ -6048,6 +6308,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working with light",
+        "opening": "How do you work with the light coming through glass?",
         "first": "A colour that looks rich indoors may look thin in sunlight. Glass refuses to stay one picture.",
         "replies": [
           [
@@ -6065,7 +6326,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "A design of my own",
+        "title": "A design of your own",
+        "opening": "What would you design if the choice were entirely yours?",
         "first": "I'd like to make a window full of ordinary leaves, with no family crest demanding the centre.",
         "replies": [
           [
@@ -6100,6 +6362,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Dividing a load",
+        "opening": "How do you divide a load fairly?",
         "first": "Two smaller journeys can be quicker than one load that stops you every ten steps.",
         "replies": [
           [
@@ -6118,6 +6381,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Sweet peas",
+        "opening": "Do you grow sweet peas?",
         "first": "I want to grow sweet peas. Something delicate after carrying black dust all day.",
         "replies": [
           [
@@ -6136,6 +6400,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Clean clothes",
+        "opening": "Does keeping your clothes clean matter in your work?",
         "first": "I can wash thoroughly and still discover coal dust behind an ear. It has ambitions beyond my employment.",
         "replies": [
           [
@@ -6170,6 +6435,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A cold room",
+        "opening": "How would you make a cold room warmer?",
         "first": "A grand room can be miserable if the door lets every gust through. People notice decoration before draughts.",
         "replies": [
           [
@@ -6188,6 +6454,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Solving a puzzle",
+        "opening": "Do you enjoy solving puzzles?",
         "first": "I enjoy fitting an awkward staircase into a plan. It's a puzzle people must safely use afterward.",
         "replies": [
           [
@@ -6206,6 +6473,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Building for neighbours",
+        "opening": "Is it different building something for a neighbour?",
         "first": "A customer apologised for asking for a handrail. She thought it would spoil the appearance.",
         "replies": [
           [
@@ -6240,6 +6508,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A sleeve's explanation",
+        "opening": "Can a sleeve tell you why a garment doesn't fit?",
         "first": "A customer blamed a torn sleeve on a heroic rescue. It had caught on his own gate.",
         "replies": [
           [
@@ -6258,6 +6527,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Worth repairing",
+        "opening": "How do you decide whether something is worth repairing?",
         "first": "I ask what an old coat means before suggesting a replacement. Sometimes the answer changes the work.",
         "replies": [
           [
@@ -6276,6 +6546,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Choosing bright thread",
+        "opening": "Do you prefer working with bright thread?",
         "first": "I sometimes mend with contrasting thread. A repair can look deliberate instead of apologetic.",
         "replies": [
           [
@@ -6310,6 +6581,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wrong household",
+        "opening": "Have you ever taken a delivery to the wrong household?",
         "first": "I delivered a letter to the wrong family and learned that two brothers had married two sisters with similar names.",
         "replies": [
           [
@@ -6328,6 +6600,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A good courier",
+        "opening": "What makes someone a good courier?",
         "first": "A courier needs to know when a message matters more than looking brave about the weather.",
         "replies": [
           [
@@ -6345,7 +6618,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "No one expecting me",
+        "title": "Life after deliveries",
+        "opening": "What was it like when people stopped expecting your arrival?",
         "first": "Retirement felt strange because nobody waited for my arrival. I hadn't known how much I'd miss that.",
         "replies": [
           [
@@ -6380,6 +6654,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Too many beginnings",
+        "opening": "Do you ever start too many stories at once?",
         "first": "I have six beginnings and one ending. Unfortunately the ending belongs to none of them.",
         "replies": [
           [
@@ -6397,7 +6672,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My first reader",
+        "title": "Your first reader",
+        "opening": "Who gets to read your first drafts?",
         "first": "My friend reads my drafts and marks the places she wanted to stop.",
         "replies": [
           [
@@ -6416,6 +6692,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A comic villain",
+        "opening": "Can a villain be funny without spoiling the story?",
         "first": "I gave a villain excellent manners and terrible patience. He apologised before every threat.",
         "replies": [
           [
@@ -6450,6 +6727,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The first file",
+        "opening": "Do you remember using a file for the first time?",
         "first": "I spent days learning to make a surface flat. Apparently 'looks flat' was an optimistic first draft.",
         "replies": [
           [
@@ -6468,6 +6746,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Inventing a game",
+        "opening": "Have you ever invented a game?",
         "first": "I designed a board game and won every trial because only I understood the rules.",
         "replies": [
           [
@@ -6485,7 +6764,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My own workshop",
+        "title": "Your own workshop",
+        "opening": "Would you like a workshop of your own?",
         "first": "I picture having my own workshop. In the picture, no one asks me to calculate rent.",
         "replies": [
           [
@@ -6520,6 +6800,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A gift gone wrong",
+        "opening": "Have you ever chosen a gift badly?",
         "first": "I made a friend a beautiful shawl in my favourite colour. Hers was entirely different.",
         "replies": [
           [
@@ -6538,6 +6819,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Cloth for daily use",
+        "opening": "How do you choose cloth for something people use every day?",
         "first": "I like making sturdy cloth. Some customers hear 'sturdy' and imagine something ugly.",
         "replies": [
           [
@@ -6555,7 +6837,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "A journey I'd choose",
+        "title": "A journey you'd choose",
+        "opening": "Where would you go if you didn't have to sell anything?",
         "first": "I'd like to see the sea without having to sell anything when I arrive.",
         "replies": [
           [
@@ -6590,6 +6873,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Watching the fire",
+        "opening": "What do you watch for in a fire?",
         "first": "Tending a forge meant watching changes nobody else noticed until something went wrong.",
         "replies": [
           [
@@ -6608,6 +6892,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A serious stew",
+        "opening": "Do you take cooking as seriously as your other work?",
         "first": "I prefer food that can wait a little if someone arrives late. A stew is more forgiving than its cook.",
         "replies": [
           [
@@ -6626,6 +6911,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Quiet company",
+        "opening": "Do you enjoy company when nobody feels like talking?",
         "first": "I like visitors who don't assume a pause means the evening has failed.",
         "replies": [
           [
@@ -6660,6 +6946,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Sharing the work",
+        "opening": "How do you make sure the work gets shared?",
         "first": "When a miner is hurt, the household still needs food and repairs. I help neighbours divide the jobs.",
         "replies": [
           [
@@ -6677,7 +6964,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My husband's silence",
+        "title": "Your husband's silence",
+        "opening": "What do you do when your husband comes home wanting quiet?",
         "first": "My husband sometimes returns from the mine wanting quiet. I once mistook that for refusing to talk to me.",
         "replies": [
           [
@@ -6696,6 +6984,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A favour refused",
+        "opening": "Have you ever had to refuse a favour?",
         "first": "I refuse tasks I can't properly do. People occasionally call that unhelpful.",
         "replies": [
           [
@@ -6730,6 +7019,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A proper celebration",
+        "opening": "What makes a celebration feel special to you?",
         "first": "A proper celebration needs something delicious and someone who remembers why you're gathering.",
         "replies": [
           [
@@ -6748,6 +7038,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An experimental filling",
+        "opening": "Have you tried any unusual fillings?",
         "first": "I tried a savoury filling in a sweet pastry. Dagna said my pastry was arguing with itself.",
         "replies": [
           [
@@ -6766,6 +7057,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Living with Dagna",
+        "opening": "What's it like living with Dagna?",
         "first": "Dagna knows when I'm pretending a mistake was intentional. It's a terrible inconvenience.",
         "replies": [
           [
@@ -6800,6 +7092,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A missing garment",
+        "opening": "Have you ever lost track of a garment?",
         "first": "A customer accused me of losing a shirt he was wearing. I let him finish the accusation.",
         "replies": [
           [
@@ -6818,6 +7111,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A competitive afternoon",
+        "opening": "Do you get competitive when you have an afternoon off?",
         "first": "I like games more than people expect. Ember says my pleasant face conceals ruthless arithmetic.",
         "replies": [
           [
@@ -6836,6 +7130,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Being called dependable",
+        "opening": "Do you like being the person everyone depends on?",
         "first": "People call me dependable when they want something done. I'd enjoy hearing it occasionally afterward.",
         "replies": [
           [
@@ -6870,6 +7165,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The sound below",
+        "opening": "Could you tell what was happening below by the sound?",
         "first": "Underground, a changed sound matters. I trusted the men who stopped talking to listen.",
         "replies": [
           [
@@ -6887,7 +7183,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My terrible riddles",
+        "title": "Your terrible riddles",
+        "opening": "Are you any good at solving riddles?",
         "first": "I love riddles and solve very few. The answer always appears obvious after someone says it.",
         "replies": [
           [
@@ -6906,6 +7203,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Soup after retirement",
+        "opening": "Has retirement changed the way you spend mealtimes?",
         "first": "I learned cooking after retirement. My first soup had excellent ingredients and no agreement between them.",
         "replies": [
           [
@@ -6940,6 +7238,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Testing a basket",
+        "opening": "How do you test whether a basket is strong enough?",
         "first": "I load a finished basket before selling it. A handsome weave must survive something heavier than admiration.",
         "replies": [
           [
@@ -6958,6 +7257,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A sharp bargain",
+        "opening": "Have you ever regretted driving a hard bargain?",
         "first": "A trader offered half my price and called it friendship. We'd met moments earlier.",
         "replies": [
           [
@@ -6976,6 +7276,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Packing for a holiday",
+        "opening": "What would you pack for a holiday?",
         "first": "I'd pack less for a holiday than for a working day. I want room to return with something unexpected.",
         "replies": [
           [
@@ -7010,6 +7311,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A clock that rushed",
+        "opening": "Have you ever had a clock that wouldn't keep proper time?",
         "first": "I repaired a clock that gained time. The owner liked it because he was always late.",
         "replies": [
           [
@@ -7028,6 +7330,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Finding a fault",
+        "opening": "Where do you start when something stops working?",
         "first": "I ask what changed before something broke. People often begin with what they've already hit with a hammer.",
         "replies": [
           [
@@ -7046,6 +7349,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An unwanted mechanism",
+        "opening": "Have you ever made a mechanism nobody wanted?",
         "first": "I keep a little broken music box. Repairing it would cost more time than anyone would pay for.",
         "replies": [
           [
@@ -7080,6 +7384,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An inherited name",
+        "opening": "How did you come by your name?",
         "first": "My family thought Quarrel a fine name. Strangers regard it as instructions.",
         "replies": [
           [
@@ -7098,6 +7403,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Being contradicted",
+        "opening": "Does being contradicted bother you?",
         "first": "I like a person who can explain why I'm wrong. I dislike a person who assumes that guarantees I'll enjoy hearing it.",
         "replies": [
           [
@@ -7116,6 +7422,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Flint's patience",
+        "opening": "Is Flint as patient as he seems?",
         "first": "Flint lets me finish a magnificent argument, then asks whether I want tea. It ruins the grandeur.",
         "replies": [
           [
@@ -7150,6 +7457,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A practical joke",
+        "opening": "Have you ever played a joke that went wrong?",
         "first": "I once replaced a friend's empty lunch bag with a larger lunch. He spent the meal trying to locate the trick.",
         "replies": [
           [
@@ -7168,6 +7476,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working at the kiln",
+        "opening": "What do you enjoy about working at the kiln?",
         "first": "A kiln rewards preparation and punishes distraction. I learned to enjoy boring checklists.",
         "replies": [
           [
@@ -7186,6 +7495,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Life with Quarrel",
+        "opening": "Do you and Quarrel argue as much as the name suggests?",
         "first": "Quarrel rehearses disagreements while doing chores. I occasionally object on behalf of the absent opponent.",
         "replies": [
           [
@@ -7219,7 +7529,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:41",
     "topics": [
       {
-        "title": "Meeting my husband",
+        "title": "Meeting your husband",
+        "opening": "How did you meet your husband?",
         "first": "I met Kiln when I complained about a crooked cup. He asked whether my mouth was perfectly straight.",
         "replies": [
           [
@@ -7238,6 +7549,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Useful furniture",
+        "opening": "What makes a piece of furniture useful?",
         "first": "I build for elbows, knees, and people who set things down clumsily. Showroom elegance has different customers.",
         "replies": [
           [
@@ -7256,6 +7568,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working with different materials",
+        "opening": "Do you like working with materials besides wood?",
         "first": "Kiln can reshape clay where I've already cut away wood. I find that deeply unfair.",
         "replies": [
           [
@@ -7290,6 +7603,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A crooked cup",
+        "opening": "Have you ever made a cup that wouldn't sit straight?",
         "first": "A slightly uneven cup can fit a hand beautifully. People sometimes ask me to remove exactly what they enjoy holding.",
         "replies": [
           [
@@ -7308,6 +7622,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Teaching clay",
+        "opening": "How do you teach someone to work clay?",
         "first": "Beginners press too hard, then barely touch it. Clay receives the entire argument.",
         "replies": [
           [
@@ -7326,6 +7641,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A piece to keep",
+        "opening": "Have you made a piece you wanted to keep?",
         "first": "I want to make a large serving bowl for our home. No customer, no deadline, no negotiation over the glaze.",
         "replies": [
           [
@@ -7360,6 +7676,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A familiar detour",
+        "opening": "Do you ever take a longer route just because you like it?",
         "first": "I take a longer way home because there's a stretch where the traffic quiets. People keep correcting my route.",
         "replies": [
           [
@@ -7378,6 +7695,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The difficult name",
+        "opening": "How do you remember a name you find difficult?",
         "first": "I practised a neighbour's name privately after getting it wrong. He heard me through the wall.",
         "replies": [
           [
@@ -7396,6 +7714,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning to whistle",
+        "opening": "Did someone teach you to whistle?",
         "first": "I cannot whistle. Small children keep offering lessons with brutal optimism.",
         "replies": [
           [
@@ -7430,6 +7749,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Forgetting a verse",
+        "opening": "What do you do if you forget a verse?",
         "first": "I forgot a verse in public and repeated the previous one with greater conviction.",
         "replies": [
           [
@@ -7448,6 +7768,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Choosing the tune",
+        "opening": "How do you choose what to play next?",
         "first": "I begin with something familiar. It tells me whether people want to listen, sing, or continue their conversation.",
         "replies": [
           [
@@ -7466,6 +7787,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A musician's reputation",
+        "opening": "Does a musician's reputation help or get in the way?",
         "first": "Someone called me the finest player in three towns. I asked which towns; he hadn't heard the others.",
         "replies": [
           [
@@ -7500,6 +7822,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A machine for everything",
+        "opening": "Do you think every task needs a machine?",
         "first": "I drew a machine to fetch water, wash clothes, and ring a bell. Then couldn't explain how it did any one job.",
         "replies": [
           [
@@ -7518,6 +7841,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Asking craftspeople",
+        "opening": "Do craftspeople welcome your questions?",
         "first": "Garran asked what material I planned to use. I'd written 'metal' as though that settled everything.",
         "replies": [
           [
@@ -7536,6 +7860,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A drawing for pleasure",
+        "opening": "Do you ever draw something with no plan to build it?",
         "first": "Sometimes I draw impossible things without intending to build them. That's allowed too.",
         "replies": [
           [
@@ -7570,6 +7895,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Counting water",
+        "opening": "How do you make sure the water measures are right?",
         "first": "I check the water measures myself. A small error repeated across a caravan becomes a serious shortage.",
         "replies": [
           [
@@ -7588,6 +7914,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The broken lid",
+        "opening": "Can a broken cistern lid cause much trouble?",
         "first": "A cracked cistern lid spoiled more water than a week's ordinary use. People had complained about replacing it.",
         "replies": [
           [
@@ -7606,6 +7933,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An evening off",
+        "opening": "What do you do when you have an evening free?",
         "first": "I like listening to musicians after work. For once, nobody asks how much remains.",
         "replies": [
           [
@@ -7640,6 +7968,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A scent from childhood",
+        "opening": "Is there a smell that takes you straight back to childhood?",
         "first": "The smell of toasted cumin reminds me of my mother's kitchen before I remember a single meal.",
         "replies": [
           [
@@ -7658,6 +7987,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The travelling sack",
+        "opening": "How do you know where your spices have come from?",
         "first": "A sack can pass through many hands before reaching my stall. Each seller has a more impressive origin story.",
         "replies": [
           [
@@ -7675,7 +8005,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My least profitable habit",
+        "title": "Your least profitable habit",
+        "opening": "Do your stories ever distract people from buying anything?",
         "first": "I enjoy telling stories about spices so much that customers occasionally forget to purchase any.",
         "replies": [
           [
@@ -7710,6 +8041,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "An opinionated camel",
+        "opening": "Can a camel decide how a caravan ought to run?",
         "first": "One camel refuses to move until the others are loaded. It has apparently appointed itself inspector.",
         "replies": [
           [
@@ -7728,6 +8060,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning an animal's mood",
+        "opening": "How do you recognise an animal's mood?",
         "first": "I watch ears, stance, and breathing. People often notice teeth rather late in the discussion.",
         "replies": [
           [
@@ -7746,6 +8079,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Caravan bells",
+        "opening": "Why do the caravan animals wear different bells?",
         "first": "Different bells help me recognise which animal has moved before I turn around.",
         "replies": [
           [
@@ -7779,7 +8113,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:16",
     "topics": [
       {
-        "title": "My daughter's loom",
+        "title": "Your daughter's loom",
+        "opening": "Does your daughter weave the same patterns you do?",
         "first": "My daughter changed a pattern I'd used for years. I prepared a criticism before seeing the finished cloth.",
         "replies": [
           [
@@ -7798,6 +8133,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working hands",
+        "opening": "Can you tell someone's work from their hands?",
         "first": "My hands tire sooner now. I dislike admitting it more than I dislike taking breaks.",
         "replies": [
           [
@@ -7816,6 +8152,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Evening conversation",
+        "opening": "What do you like talking about in the evening?",
         "first": "I like evening visits when the heat eases and nobody is trying to complete a task.",
         "replies": [
           [
@@ -7850,6 +8187,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Three different sons",
+        "opening": "Are your sons much like one another?",
         "first": "My three sons all claim they'll never become traders. Each bargains fiercely over chores.",
         "replies": [
           [
@@ -7868,6 +8206,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A fair price",
+        "opening": "How do you agree on a fair price?",
         "first": "A fair price lets a customer return and a shop remain open. Neither side should require a rescue.",
         "replies": [
           [
@@ -7886,6 +8225,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The item forgotten",
+        "opening": "Have you ever forgotten something important while packing?",
         "first": "People remember impressive equipment and forget ordinary food. Then hope the road supplies it.",
         "replies": [
           [
@@ -7920,6 +8260,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The imperfect vase",
+        "opening": "Do you ever keep a vase that isn't quite perfect?",
         "first": "I bought a vase with a small bubble in the glass. The seller apologised; it was the part I liked.",
         "replies": [
           [
@@ -7938,6 +8279,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Workshop rivalry",
+        "opening": "Is there much rivalry between the workshops?",
         "first": "Forgewick and Sandspire argue about glass as though one good cup makes every other town incompetent.",
         "replies": [
           [
@@ -7956,6 +8298,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Choosing a keepsake",
+        "opening": "How do you choose something worth keeping?",
         "first": "I prefer one object attached to a memory over a shelf of expensive things.",
         "replies": [
           [
@@ -7990,6 +8333,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Goat names",
+        "opening": "Do all your goats have names?",
         "first": "I named one goat Patience in the hope it would help. The name now sounds like a command directed at me.",
         "replies": [
           [
@@ -8008,6 +8352,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A missing goat",
+        "opening": "What do you do when a goat goes missing?",
         "first": "I once searched half a morning for a goat sleeping behind the water jars.",
         "replies": [
           [
@@ -8026,6 +8371,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Milk and neighbours",
+        "opening": "Do you share the milk with your neighbours?",
         "first": "People want milk at convenient times. The goats have never attended a scheduling meeting.",
         "replies": [
           [
@@ -8060,6 +8406,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The light parcel",
+        "opening": "Have you ever carried a parcel lighter than it looked?",
         "first": "My lightest parcel caused the most trouble. A customer had wrapped it without writing whose it was.",
         "replies": [
           [
@@ -8078,6 +8425,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A stranger's kindness",
+        "opening": "Has a stranger ever helped you on the road?",
         "first": "A stranger helped me lift a fallen load and left before I could learn his name.",
         "replies": [
           [
@@ -8096,6 +8444,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Why stop travelling?",
+        "opening": "What made you stop travelling?",
         "first": "I wanted to wake in one place without calculating the distance before supper.",
         "replies": [
           [
@@ -8130,6 +8479,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A stale bargain",
+        "opening": "Have you ever bought something that looked better than it tasted?",
         "first": "I bought a cheap sack before smelling it. My father asked how cheaply I'd purchased flavourless dust.",
         "replies": [
           [
@@ -8148,6 +8498,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A family recipe",
+        "opening": "Who taught you your family recipe?",
         "first": "My family argues about the exact spice mix for the same dish. Everyone cites the same grandmother.",
         "replies": [
           [
@@ -8166,6 +8517,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A customer's memory",
+        "opening": "Do customers remember what they bought from you?",
         "first": "A traveller recognised a spice by a childhood meal and nearly cried at my stall.",
         "replies": [
           [
@@ -8200,6 +8552,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Cloth in the heat",
+        "opening": "What makes cloth comfortable in this heat?",
         "first": "Light cloth needs to shade without trapping every breath of air. Thickness alone doesn't explain comfort.",
         "replies": [
           [
@@ -8218,6 +8571,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A difficult pattern",
+        "opening": "Do you enjoy a difficult pattern?",
         "first": "I enjoy repeating patterns until someone asks me to explain how I keep count.",
         "replies": [
           [
@@ -8236,6 +8590,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Clothes for myself",
+        "opening": "Do you make different clothes for yourself?",
         "first": "My own clothes are usually plainer than my work. I prefer not to carry a demonstration everywhere.",
         "replies": [
           [
@@ -8270,6 +8625,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The second count",
+        "opening": "Why count a caravan's supplies twice?",
         "first": "A driver complained that I counted twice. The totals disagreed, which shortened his complaint.",
         "replies": [
           [
@@ -8288,6 +8644,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Caravans and tempers",
+        "opening": "How do you deal with tempers on the road?",
         "first": "People argue most fiercely before leaving. Every small delay seems to threaten the entire journey.",
         "replies": [
           [
@@ -8305,7 +8662,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My own journey",
+        "title": "Your own journey",
+        "opening": "Do you pack as carefully for your own trips?",
         "first": "I once packed for a personal trip and forgot my comb. Perfect provisions, hopeless hair.",
         "replies": [
           [
@@ -8340,6 +8698,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A short line on a map",
+        "opening": "Can a short route on a map turn into a long walk?",
         "first": "A route can look short and take a miserable day. Heat and a heavy pack don't appear as ink.",
         "replies": [
           [
@@ -8358,6 +8717,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Reading the ground",
+        "opening": "What can you tell from the ground ahead?",
         "first": "I look for firm ground and signs of recent passage. A clear view doesn't mean an easy walk.",
         "replies": [
           [
@@ -8376,6 +8736,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A place to rest",
+        "opening": "How do you choose a good place to rest?",
         "first": "Good shade is worth planning around. I dislike arriving exhausted at a spot that only looked useful from afar.",
         "replies": [
           [
@@ -8410,6 +8771,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The duplicate charge",
+        "opening": "Have you ever caught the same charge being entered twice?",
         "first": "A trader charged the same fee twice under different names. He called it an administrative distinction.",
         "replies": [
           [
@@ -8428,6 +8790,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Remembering a date",
+        "opening": "How do you remember an important date?",
         "first": "My aunt dates everything by births and weddings. I convert them into years when writing accounts.",
         "replies": [
           [
@@ -8446,6 +8809,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Work left at work",
+        "opening": "Can you leave work behind at the end of the day?",
         "first": "I refuse to divide a shared supper into everyone's exact contribution. People assume I'd enjoy it.",
         "replies": [
           [
@@ -8480,6 +8844,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Shutters at noon",
+        "opening": "Does closing the shutters help in the midday heat?",
         "first": "I close the shutters before the heat builds. My brother waits until the room is already unbearable.",
         "replies": [
           [
@@ -8498,6 +8863,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Evening errands",
+        "opening": "Do you leave your errands until evening?",
         "first": "I save ordinary errands for evening whenever I can. Everyone else has the same brilliant idea.",
         "replies": [
           [
@@ -8516,6 +8882,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A guest who hurried",
+        "opening": "Have you ever had a guest who was always in a hurry?",
         "first": "A guest insisted on leaving at noon to save time, then returned exhausted an hour later.",
         "replies": [
           [
@@ -8550,6 +8917,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A seam that failed",
+        "opening": "What makes a seam give way?",
         "first": "I made a travelling shirt with elegant, weak seams. It came apart during its first hard day.",
         "replies": [
           [
@@ -8568,6 +8936,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Repairing a favourite",
+        "opening": "Is repairing a favourite garment different from other work?",
         "first": "A customer brought a coat too worn for ordinary repair. She wanted one sound pocket saved.",
         "replies": [
           [
@@ -8585,7 +8954,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Choosing my own clothes",
+        "title": "Choosing your own clothes",
+        "opening": "Do people expect your own clothes to be perfect?",
         "first": "People expect me to dress perfectly because I mend clothes. My favourite shirt contains three visible repairs.",
         "replies": [
           [
@@ -8620,6 +8990,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Too many guests",
+        "opening": "Have you ever invited more guests than you could manage?",
         "first": "I once agreed to host two families on the same night. I'd said yes before checking the first arrangement.",
         "replies": [
           [
@@ -8638,6 +9009,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A useful guest",
+        "opening": "What can a guest do to make things easier?",
         "first": "The best guests ask where to put things. The worst explain how my house should be arranged.",
         "replies": [
           [
@@ -8656,6 +9028,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "News from elsewhere",
+        "opening": "Do you like hearing news from other places?",
         "first": "I hear wildly different accounts of the same town. A bad meal apparently transforms entire populations.",
         "replies": [
           [
@@ -8690,6 +9063,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The parcel exchange",
+        "opening": "Have you ever received somebody else's parcel?",
         "first": "My sister and I send parcels back and forth. We both insist the other needn't send anything.",
         "replies": [
           [
@@ -8708,6 +9082,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A broken cup",
+        "opening": "Would you mend a cup after it broke?",
         "first": "I packed a cup poorly and it arrived in pieces. My sister sent a drawing of the pieces arranged like a flower.",
         "replies": [
           [
@@ -8726,6 +9101,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Writing ordinary news",
+        "opening": "Is ordinary news worth putting in a letter?",
         "first": "I used to wait for important news before writing. That left whole months empty.",
         "replies": [
           [
@@ -8760,6 +9136,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A deliberate mismatch",
+        "opening": "Would you ever choose colours that didn't match?",
         "first": "I once repeated an accidental knot because I liked the shape. It became a pattern customers requested.",
         "replies": [
           [
@@ -8778,6 +9155,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A family route",
+        "opening": "Does your family travel the same route every year?",
         "first": "One family pattern marks the places our grandparents travelled. The bends mean more than decoration to us.",
         "replies": [
           [
@@ -8796,6 +9174,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working slowly",
+        "opening": "Do you mind taking your time over the work?",
         "first": "A large rug takes enough time for my opinions to change before it's finished.",
         "replies": [
           [
@@ -8830,6 +9209,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A reputation's cost",
+        "opening": "Has your reputation ever cost you something?",
         "first": "I once returned money after a buyer overpaid. He became a customer for years.",
         "replies": [
           [
@@ -8848,6 +9228,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The second cup",
+        "opening": "Is a second cup an excuse to stay and talk?",
         "first": "The first cup is often business. The second is when someone finally says what troubles them.",
         "replies": [
           [
@@ -8866,6 +9247,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An unsold treasure",
+        "opening": "Have you ever kept something on the stall because you didn't want it sold?",
         "first": "I kept a small carved box because I liked it too much to sell. A poor decision for stock, an excellent one for me.",
         "replies": [
           [
@@ -8900,6 +9282,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Meeting Latif",
+        "opening": "How did you meet Latif?",
         "first": "Latif offered to help plan a feast. He brought figures; I needed someone to move chairs.",
         "replies": [
           [
@@ -8918,6 +9301,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Chairs after sunset",
+        "opening": "Do you sit outside when the evening cools down?",
         "first": "I like taking chairs outside when the heat eases. Neighbours join without arranging a formal visit.",
         "replies": [
           [
@@ -8936,6 +9320,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Fixing things myself",
+        "opening": "Do you prefer fixing things yourself?",
         "first": "People ask whether Latif will mend something. I usually have the repair half finished.",
         "replies": [
           [
@@ -8970,6 +9355,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Figures in the shade",
+        "opening": "Is it easier to keep accounts in the shade?",
         "first": "I work better when the room is cool. Heat makes every column seem personally unreasonable.",
         "replies": [
           [
@@ -8988,6 +9374,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Rania's repairs",
+        "opening": "Does Rania repair things around the house?",
         "first": "Rania repairs things while I explain possible causes. She says my commentary is an optional extra.",
         "replies": [
           [
@@ -9006,6 +9393,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An evening purchase",
+        "opening": "Do you ever buy something just for an enjoyable evening?",
         "first": "I once bargained so long that the seller closed. Rania bought the thing elsewhere while I was still considering strategy.",
         "replies": [
           [
@@ -9040,6 +9428,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Choosing apples",
+        "opening": "How do you choose the best apples?",
         "first": "People ask for the biggest apple, then complain it tastes less sweet. Size has excellent advertising.",
         "replies": [
           [
@@ -9058,6 +9447,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Salt in the garden",
+        "opening": "Does the sea air trouble your garden?",
         "first": "Wind carries salt farther inland than visitors expect. Young plants complain before people notice.",
         "replies": [
           [
@@ -9076,6 +9466,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The crooked carrot",
+        "opening": "Does a crooked carrot taste any different?",
         "first": "Children prefer my odd-shaped vegetables. Adults call them imperfect and pay more for straight ones.",
         "replies": [
           [
@@ -9110,6 +9501,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Learning to swim",
+        "opening": "How did you learn to swim?",
         "first": "I learned swimming late because I was ashamed to admit living by the sea hadn't taught me.",
         "replies": [
           [
@@ -9128,6 +9520,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Watching the tide",
+        "opening": "How do you keep track of the tide?",
         "first": "A place that was dry when you arrived may not stay your path home.",
         "replies": [
           [
@@ -9146,6 +9539,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A merchant's supper",
+        "opening": "What does a merchant cook for supper?",
         "first": "I sell provisions and occasionally discover I've forgotten to keep my own supper.",
         "replies": [
           [
@@ -9180,6 +9574,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The changing stew",
+        "opening": "Do you make your stew the same way every time?",
         "first": "My stew changes with the catch. My husband calls that improvisation when the fishing goes badly.",
         "replies": [
           [
@@ -9198,6 +9593,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Waiting for the boat",
+        "opening": "What do you do while you're waiting for the boat?",
         "first": "I can usually keep busy while my husband is out. Bad weather makes ordinary chores strangely difficult.",
         "replies": [
           [
@@ -9216,6 +9612,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Cooking for yourself",
+        "opening": "Do you cook differently when it's only for you?",
         "first": "When I cook only for myself, I choose something simple and eat before it cools.",
         "replies": [
           [
@@ -9250,6 +9647,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The lost knife",
+        "opening": "Have you ever lost a tool you depended on?",
         "first": "I dropped a good knife into the harbour and spent days looking whenever the water cleared.",
         "replies": [
           [
@@ -9268,6 +9666,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A net's small holes",
+        "opening": "Do the little holes in a net matter much?",
         "first": "Small holes become large ones under strain. People bring me damage they could have repaired much earlier.",
         "replies": [
           [
@@ -9286,6 +9685,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Work by touch",
+        "opening": "Can you do any of your work by touch?",
         "first": "I can feel some faults before seeing them. My hands remember the pattern.",
         "replies": [
           [
@@ -9320,6 +9720,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A thrown fish",
+        "opening": "Have you ever thrown a fish and regretted it?",
         "first": "Someone threw me a fish before I turned around. I caught it with most of my shirt.",
         "replies": [
           [
@@ -9338,6 +9739,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A loose mooring",
+        "opening": "How do you notice when a mooring has worked loose?",
         "first": "A boat can look settled while a rope rubs itself thin. I check where the strain actually falls.",
         "replies": [
           [
@@ -9355,7 +9757,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My imaginary voyage",
+        "title": "Your imaginary voyage",
+        "opening": "Where would you go on a voyage of your own?",
         "first": "I talk about taking a long voyage. So far I've planned the food more carefully than the destination.",
         "replies": [
           [
@@ -9390,6 +9793,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The soup dispute",
+        "opening": "Can people really argue over a pot of soup?",
         "first": "My mother wants fish soup thick. My father wants it clear. I serve it differently when they visit separately.",
         "replies": [
           [
@@ -9408,6 +9812,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A borrowed bowl",
+        "opening": "Do you lend bowls to the neighbours?",
         "first": "I returned a borrowed bowl with food in it. It came back with something else. Neither household has seen it empty since.",
         "replies": [
           [
@@ -9426,6 +9831,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An afternoon by the water",
+        "opening": "What do you like doing down by the water?",
         "first": "I sometimes watch the sea without planning what might come out of it for dinner.",
         "replies": [
           [
@@ -9459,7 +9865,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:31",
     "topics": [
       {
-        "title": "My first oar",
+        "title": "Your first oar",
+        "opening": "How did your first attempt at carving an oar turn out?",
         "first": "I carved my first oar too heavily and insisted on rowing home with it. Pride supplied the extra labour.",
         "replies": [
           [
@@ -9478,6 +9885,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A hidden leak",
+        "opening": "How do you find a leak you can't see?",
         "first": "Water appeared far from the damaged seam. The owner wanted me to patch where the puddle was.",
         "replies": [
           [
@@ -9495,7 +9903,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "A boat of my own",
+        "title": "A boat of your own",
+        "opening": "Would you like to build yourself a boat?",
         "first": "I'd like a little boat maintained to my own schedule. Customers' boats always get there first.",
         "replies": [
           [
@@ -9530,6 +9939,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The first net",
+        "opening": "Who taught you to make your first net?",
         "first": "My first net narrowed as I worked. I had made an impressive bag by accident.",
         "replies": [
           [
@@ -9548,6 +9958,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A knot remembered",
+        "opening": "Do you ever forget how to tie a knot?",
         "first": "My grandmother taught one knot while telling a story. I still remember the story whenever I tie it.",
         "replies": [
           [
@@ -9566,6 +9977,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Keeping spare cord",
+        "opening": "Why keep spare cord with you?",
         "first": "I carry spare cord because something always needs tying when nobody expects it.",
         "replies": [
           [
@@ -9600,6 +10012,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Salt on the hinges",
+        "opening": "Does the salt get into everything here?",
         "first": "Salt works its way into everything. I oil hinges more often than visitors think reasonable.",
         "replies": [
           [
@@ -9618,6 +10031,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A storm's preparations",
+        "opening": "What do you do when a storm is coming?",
         "first": "Before a storm I check ordinary things: shutters, loose objects, where water might get in.",
         "replies": [
           [
@@ -9636,6 +10050,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A familiar sound",
+        "opening": "What sound tells you you're home?",
         "first": "I sleep better with the sea audible. Inland, I kept waking because something seemed missing.",
         "replies": [
           [
@@ -9670,6 +10085,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Reading gulls",
+        "opening": "What can you learn by watching gulls?",
         "first": "People think gulls predict weather. Mine mainly predict that someone has food.",
         "replies": [
           [
@@ -9688,6 +10104,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A reputation for temper",
+        "opening": "Do you deserve your reputation for being bad-tempered?",
         "first": "Someone called me ill-tempered after I asked him to stop blocking my gate. He omitted the first three polite requests.",
         "replies": [
           [
@@ -9705,7 +10122,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "The view I keep",
+        "title": "The view you keep",
+        "opening": "Is there a view here you never get tired of?",
         "first": "There's a particular evening light that still stops me mid-complaint.",
         "replies": [
           [
@@ -9740,6 +10158,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The slippery step",
+        "opening": "Have you ever slipped on the dock steps?",
         "first": "I stepped onto wet stone while explaining how sure-footed I'd become. The timing was exceptionally cruel.",
         "replies": [
           [
@@ -9758,6 +10177,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Making a home",
+        "opening": "When did this place begin to feel like home?",
         "first": "I knew this was home when someone noticed I'd been absent before I told them I was away.",
         "replies": [
           [
@@ -9776,6 +10196,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A poor sailor",
+        "opening": "Are you comfortable out on a boat?",
         "first": "I enjoy looking at boats considerably more than travelling in them.",
         "replies": [
           [
@@ -9810,6 +10231,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The crooked patch",
+        "opening": "Does a patch have to be straight to do its job?",
         "first": "My husband called a sail patch crooked. I suggested he admire it while staying afloat.",
         "replies": [
           [
@@ -9828,6 +10250,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A window light",
+        "opening": "Why leave a light in the window?",
         "first": "I keep a light where my husband recognises it when returning. It's become part of how we end the day.",
         "replies": [
           [
@@ -9846,6 +10269,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Mending in company",
+        "opening": "Do you like having company while you mend things?",
         "first": "I like working while someone tells me a story. My hands stay busy without demanding the whole conversation.",
         "replies": [
           [
@@ -9880,6 +10304,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Leftover cord",
+        "opening": "What do you do with leftover cord?",
         "first": "Short pieces of cord become ties, handles, and repairs. Eventually even I admit a piece is too short.",
         "replies": [
           [
@@ -9897,7 +10322,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My grandmother's net",
+        "title": "Your grandmother's net",
+        "opening": "What did your grandmother teach you about nets?",
         "first": "My grandmother made me repair small damage before tackling the impressive tear. I thought she'd misunderstood ambition.",
         "replies": [
           [
@@ -9916,6 +10342,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A knot contest",
+        "opening": "Have you ever competed at tying knots?",
         "first": "A child challenged me to tie a knot blindfolded. I agreed before asking which knot.",
         "replies": [
           [
@@ -9950,6 +10377,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wonderful shard",
+        "opening": "What's the best thing you've found on the beach?",
         "first": "I found blue glass worn smooth by water. It looked precious until someone called it an old bottle.",
         "replies": [
           [
@@ -9968,6 +10396,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A crab's objection",
+        "opening": "Have you ever annoyed a crab?",
         "first": "I lifted a shell and discovered its resident strongly opposed moving house.",
         "replies": [
           [
@@ -9986,6 +10415,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Looking down",
+        "opening": "Do you find more by looking down than looking ahead?",
         "first": "I find things because I look down. I miss things because I look down. It's an inconvenient system.",
         "replies": [
           [
@@ -10020,6 +10450,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The first winter",
+        "opening": "What was your first winter here like?",
         "first": "My first winter here, I stored plenty of food and nowhere near enough fuel. I had prepared for hunger and overlooked cold.",
         "replies": [
           [
@@ -10038,6 +10469,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Feeding neighbours",
+        "opening": "How do you make sure your neighbours have enough to eat?",
         "first": "When someone needs supper, I try to make the invitation ordinary. Being helped can already feel difficult.",
         "replies": [
           [
@@ -10056,6 +10488,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A thaw's promise",
+        "opening": "What do you look forward to when the thaw comes?",
         "first": "The first thaw makes everyone plan too much. Mud then provides a correction.",
         "replies": [
           [
@@ -10090,6 +10523,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Following a fence",
+        "opening": "Can a fence help you find your way through snow?",
         "first": "In a blizzard I followed a fence toward a farmhouse. I could barely see the next post.",
         "replies": [
           [
@@ -10108,6 +10542,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A traveller's gloves",
+        "opening": "Have you ever helped a traveller who wasn't dressed for the cold?",
         "first": "A visitor once had splendid gloves packed at the bottom of a bag and numb hands opening the straps.",
         "replies": [
           [
@@ -10126,6 +10561,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An ordinary welcome",
+        "opening": "What makes a stranger feel welcome here?",
         "first": "I remember a stranger offering me a dry place to sit without first asking why I'd been foolish.",
         "replies": [
           [
@@ -10159,7 +10595,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:11",
     "topics": [
       {
-        "title": "My first broth",
+        "title": "Your first broth",
+        "opening": "How did your first broth turn out?",
         "first": "I put everything fragrant into my first broth. It smelled magnificent and tasted like an argument.",
         "replies": [
           [
@@ -10178,6 +10615,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The thaw",
+        "opening": "What changes here when the snow starts melting?",
         "first": "I love the thaw and hate the mud. Apparently wanting spring involves accepting its entrance.",
         "replies": [
           [
@@ -10196,6 +10634,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning from Astrid",
+        "opening": "What have you learned from Astrid?",
         "first": "Astrid lets me try things, then asks what I think went wrong. It's much harder than being told.",
         "replies": [
           [
@@ -10230,6 +10669,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The unfinished mitten",
+        "opening": "Have you ever left a mitten unfinished?",
         "first": "I knitted one mitten beautifully, then couldn't remember exactly how I'd shaped it.",
         "replies": [
           [
@@ -10248,6 +10688,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Mending winter clothes",
+        "opening": "Do winter clothes need constant mending?",
         "first": "A small hole matters when the wind finds it. People notice the cold before they notice the seam.",
         "replies": [
           [
@@ -10266,6 +10707,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Tea that never boiled",
+        "opening": "Have you ever waited ages for water that wasn't heating?",
         "first": "I once knitted through the time I'd meant to heat water. The kettle had been sitting above a dead fire.",
         "replies": [
           [
@@ -10300,6 +10742,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Snow before breakfast",
+        "opening": "Do you have to clear snow before breakfast?",
         "first": "I once postponed clearing fresh snow until after breakfast. By then it had hardened under traffic.",
         "replies": [
           [
@@ -10318,6 +10761,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A cleared path",
+        "opening": "Is there always somebody keeping the paths clear?",
         "first": "A clear lane lets people do ordinary things again. Nobody praises it as dramatically as a new building.",
         "replies": [
           [
@@ -10336,6 +10780,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Predicting the thaw",
+        "opening": "Can you tell when the thaw is coming?",
         "first": "Everyone asks when the thaw will come. I give them the same answer as the sky: eventually.",
         "replies": [
           [
@@ -10370,6 +10815,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The red scarf",
+        "opening": "Is there a story behind your red scarf?",
         "first": "I wore a red scarf while playing hide-and-seek in snow. My brother found me every time.",
         "replies": [
           [
@@ -10388,6 +10834,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A sibling's challenge",
+        "opening": "Do you and your siblings challenge one another?",
         "first": "My brother challenged me to stay silent all morning. He lasted six minutes before asking whether I was still playing.",
         "replies": [
           [
@@ -10406,6 +10853,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A quiet snowfall",
+        "opening": "Do you like watching snow fall when everything's quiet?",
         "first": "I like the first quiet after fresh snow. Before anyone begins moving it into other people's way.",
         "replies": [
           [
@@ -10439,7 +10887,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:31",
     "topics": [
       {
-        "title": "My own wet boots",
+        "title": "Your own wet boots",
+        "opening": "Have you ever broken one of your own rules about wet boots?",
         "first": "I told a visitor to clean his boots and then walked in with mine covered in snow.",
         "replies": [
           [
@@ -10458,6 +10907,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Winter memories",
+        "opening": "Which winter do you remember most clearly?",
         "first": "People call old winters worse. I remember being younger and having worse coats.",
         "replies": [
           [
@@ -10476,6 +10926,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A visitor's pace",
+        "opening": "Do visitors ever try to hurry you?",
         "first": "Visitors often rush a conversation because they assume I tire easily. Some of them exhaust me explaining that.",
         "replies": [
           [
@@ -10510,6 +10961,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The roof repair",
+        "opening": "How did you manage when the roof needed repairing?",
         "first": "I postponed a small roof repair until rain made the decision expensive.",
         "replies": [
           [
@@ -10528,6 +10980,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Saving for pleasure",
+        "opening": "Do you ever save money for something you simply want?",
         "first": "Every time I save for something pleasant, the house invents a need.",
         "replies": [
           [
@@ -10546,6 +10999,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A room repainted",
+        "opening": "Can repainting a room make much difference?",
         "first": "I changed a room's colour and discovered how much I'd disliked the old one.",
         "replies": [
           [
@@ -10580,6 +11034,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Herbs in winter",
+        "opening": "How do you keep herbs through the winter?",
         "first": "Growing herbs here involves shelter, timing, and accepting that some plants dislike my ambitions.",
         "replies": [
           [
@@ -10598,6 +11053,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The open back door",
+        "opening": "What happens when someone leaves the back door open?",
         "first": "I once forgot the back door while carrying supplies. Spent the evening complaining about an inexplicable draught.",
         "replies": [
           [
@@ -10616,6 +11072,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Home before dusk",
+        "opening": "Why do you like getting home before dusk?",
         "first": "I enjoy the moment the evening chores are done and the door is fastened.",
         "replies": [
           [
@@ -10650,6 +11107,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The second helping",
+        "opening": "How do you decide who needs a second helping?",
         "first": "I used to offer second helpings until people surrendered. Fennel explained that wasn't quite the same as generosity.",
         "replies": [
           [
@@ -10668,6 +11126,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A proper broth",
+        "opening": "What makes a really good broth?",
         "first": "A proper broth tastes of what you put in it, rather than everything you could find.",
         "replies": [
           [
@@ -10686,6 +11145,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Cooking for grief",
+        "opening": "Can cooking help when someone is grieving?",
         "first": "When someone is grieving, I bring food they can warm easily. I don't expect a conversation in return.",
         "replies": [
           [
@@ -10720,6 +11180,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Firewood indoors",
+        "opening": "Where do you keep enough firewood for winter?",
         "first": "One winter the outer door froze shut with my dry wood beyond it. I rearranged the stores before the next snowfall.",
         "replies": [
           [
@@ -10738,6 +11199,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A neighbour's errand",
+        "opening": "Do you run errands for the neighbours?",
         "first": "A neighbour kept visiting to borrow kindling. I finally realised the tea mattered more than the wood.",
         "replies": [
           [
@@ -10756,6 +11218,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The spring list",
+        "opening": "What do you want to do when spring comes?",
         "first": "I write a winter list of repairs for spring. By spring, some entries look like accusations.",
         "replies": [
           [
@@ -10790,6 +11253,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Choosing the forge",
+        "opening": "What made you choose the forge?",
         "first": "I liked the moment rough metal began doing what I intended. Took years to make that happen reliably.",
         "replies": [
           [
@@ -10807,7 +11271,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My brother's trade",
+        "title": "Your brother's trade",
+        "opening": "Do you and Sela agree about each other's work?",
         "first": "Sela works glass in Sandspire. I tease him about fragile material; he asks why I keep buying his work.",
         "replies": [
           [
@@ -10826,6 +11291,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Equipment and habit",
+        "opening": "Can good equipment make up for bad habits?",
         "first": "Good equipment gives you a chance. It doesn't correct where you put your feet.",
         "replies": [
           [
@@ -10844,6 +11310,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A gift for the road",
+        "opening": "Why give equipment to someone who's only passing through?",
         "first": "I remember needing help before I could pay for it. Someone helped anyway.",
         "replies": [
           [
@@ -10878,6 +11345,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Glass in motion",
+        "opening": "What do you watch for while you're shaping glass?",
         "first": "Hot glass keeps moving. Hesitate without supporting it and yesterday's confidence becomes today's strange lump.",
         "replies": [
           [
@@ -10896,6 +11364,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Dunstan's advice",
+        "opening": "Does Dunstan give you much advice?",
         "first": "Dunstan tells me glass breaks. I remind him people visit his smithy because metal breaks too.",
         "replies": [
           [
@@ -10914,6 +11383,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Making protection",
+        "opening": "How did you start making glass that could protect someone?",
         "first": "The Glass Shield uses a field to turn force aside. Treating it like an ordinary metal shield misunderstands the work.",
         "replies": [
           [
@@ -10948,6 +11418,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Explaining a price",
+        "opening": "How do you explain the price of handmade glass?",
         "first": "Customers see a cup and ask why it costs more than another. I explain the work before defending the number.",
         "replies": [
           [
@@ -10966,6 +11437,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A gift chosen badly",
+        "opening": "Have you ever helped someone choose entirely the wrong gift?",
         "first": "Someone asked me to choose a gift for a wife he described only as 'particular'. I asked what she actually liked.",
         "replies": [
           [
@@ -10984,6 +11456,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working with Sela",
+        "opening": "What's Sela like to work with?",
         "first": "Sela can explain a flaw for ten minutes while a customer is deciding whether a cup feels comfortable.",
         "replies": [
           [
@@ -11018,6 +11491,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A flower in glass",
+        "opening": "Can you make a flower look alive in glass?",
         "first": "I wanted a glass flower until I realised I preferred watching sunlight through it to owning it.",
         "replies": [
           [
@@ -11035,7 +11509,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "My own window",
+        "title": "Your own window",
+        "opening": "Would you like coloured glass in your own window?",
         "first": "I'd like a little coloured glass at home, somewhere the morning light reaches.",
         "replies": [
           [
@@ -11053,7 +11528,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Taking my time",
+        "title": "Taking your time",
+        "opening": "Do people mind when you stop to enjoy a place?",
         "first": "People ask what I'm waiting for when I linger. Sometimes I'm simply enjoying being somewhere.",
         "replies": [
           [
@@ -11088,6 +11564,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Lightning and the bond",
+        "opening": "What does Lightning change about the bond?",
         "first": "The Lightning Heartstone lets Aurelius draw on another kind of power. Both of you must learn how to use it deliberately.",
         "replies": [
           [
@@ -11106,6 +11583,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Separate sanctuaries",
+        "opening": "Why are the Heartstones kept in separate sanctuaries?",
         "first": "The Heartstones were kept in separate sanctuaries. A rider had to travel, learn, and encounter people beyond home.",
         "replies": [
           [
@@ -11124,6 +11602,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A keeper's doubts",
+        "opening": "Have you ever doubted what you're keeping them for?",
         "first": "I spent years preserving lessons for someone who might never arrive. Some mornings the task felt foolish.",
         "replies": [
           [
@@ -11142,6 +11621,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "What a rider owes",
+        "opening": "What does being a rider require of me?",
         "first": "A rider owes a dragon attention and honesty. Obedience extracted through fear is a different relationship.",
         "replies": [
           [
@@ -11175,7 +11655,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:28",
     "topics": [
       {
-        "title": "My alleged wickedness",
+        "title": "Your reputation",
+        "opening": "Why do people call you wicked?",
         "first": "Someone blamed me for sour milk from a dirty pail. Apparently washing was less appealing than accusing a witch.",
         "replies": [
           [
@@ -11194,6 +11675,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Learning remedies",
+        "opening": "How did you learn to make remedies?",
         "first": "My first teacher made me name what I couldn't cure before explaining what I could.",
         "replies": [
           [
@@ -11212,6 +11694,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Life in the marsh",
+        "opening": "Do you like living out here in the marsh?",
         "first": "I like living where visitors have made a deliberate effort to arrive.",
         "replies": [
           [
@@ -11230,6 +11713,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Making a ward",
+        "opening": "What goes into making a protective ward?",
         "first": "A ward is useful protection, not permission to become careless. People hear the first part more eagerly.",
         "replies": [
           [
@@ -11264,6 +11748,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A buried landmark",
+        "opening": "Can you still find a landmark after the sand buries it?",
         "first": "A sand drift hid a landmark I'd relied on for years. I walked past the turning while feeling experienced.",
         "replies": [
           [
@@ -11282,6 +11767,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travellers' tales",
+        "opening": "How much of a traveller's tale do you believe?",
         "first": "People return from dangerous places and leave out how much time they spent afraid.",
         "replies": [
           [
@@ -11300,6 +11786,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A journey refused",
+        "opening": "Have you ever refused to lead someone on a journey?",
         "first": "I refused a journey when my companion fell ill. The customer called the delay inconvenient.",
         "replies": [
           [
@@ -11334,6 +11821,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Packing the sled",
+        "opening": "How do you decide what goes on the sled?",
         "first": "A sled's load needs balance, not merely enough rope. An uneven load fights every turn.",
         "replies": [
           [
@@ -11352,6 +11840,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The long return",
+        "opening": "Does the return journey feel longer to you?",
         "first": "Being close to home makes a delay harder. I keep thinking of the last ordinary meal before we left.",
         "replies": [
           [
@@ -11370,6 +11859,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Working with Signe",
+        "opening": "How do you and Signe divide the work?",
         "first": "Signe checks the plan while I want to begin moving. We prevent different mistakes.",
         "replies": [
           [
@@ -11404,6 +11894,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Checking the ropes",
+        "opening": "Do you check every rope before setting out?",
         "first": "I check a knot after the load settles. Rope can look secure before the weight truly pulls on it.",
         "replies": [
           [
@@ -11422,6 +11913,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Keeping watch together",
+        "opening": "Is keeping watch easier with someone you trust?",
         "first": "When you're stranded, company can become short-tempered. We take turns worrying aloud.",
         "replies": [
           [
@@ -11440,6 +11932,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "What waits at home",
+        "opening": "What do you look forward to at home?",
         "first": "I want to put down the work and be Signe for an evening, rather than half of the missing supplies.",
         "replies": [
           [
@@ -11474,6 +11967,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The unexplored turn",
+        "opening": "Have you ever left a turning in the mine unexplored?",
         "first": "I once entered a passage because I disliked admitting I'd lost my bearings. It led nowhere useful.",
         "replies": [
           [
@@ -11492,6 +11986,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Miners' songs",
+        "opening": "Do miners really sing while they work?",
         "first": "We sang above ground after shifts. People imagine underground work as one long heroic chorus.",
         "replies": [
           [
@@ -11510,6 +12005,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A good lamp",
+        "opening": "What makes a lamp safe to depend on underground?",
         "first": "A lamp isn't useful because it looks bright in a shop. It needs to keep working when conditions turn poor.",
         "replies": [
           [
@@ -11544,6 +12040,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The wrong room",
+        "opening": "Have you ever given someone the wrong room?",
         "first": "I once gave a guest directions to the room he'd just left. We both believed me for several steps.",
         "replies": [
           [
@@ -11562,6 +12059,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An empty evening",
+        "opening": "What do you do when the inn has no guests?",
         "first": "Quiet evenings sound pleasant until you're paying to keep an inn open.",
         "replies": [
           [
@@ -11580,6 +12078,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A guest remembered",
+        "opening": "Is there a guest you've never forgotten?",
         "first": "A traveller returned years later and remembered a meal I'd forgotten cooking.",
         "replies": [
           [
@@ -11614,6 +12113,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Watching the carts",
+        "opening": "What do you notice when you watch the carts go by?",
         "first": "Carts pass all day and rarely stop. I used to resent that, as though every traveller owed me company.",
         "replies": [
           [
@@ -11632,6 +12132,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The quiet pool",
+        "opening": "Do you have a favourite quiet fishing place?",
         "first": "I prefer water where I can see the current change. Fishing becomes less guessing when I pay attention.",
         "replies": [
           [
@@ -11650,6 +12151,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A borrowed rod",
+        "opening": "Has anyone ever lent you a rod?",
         "first": "I borrowed a rod and returned it with new line. The owner seemed more pleased by that than by the fish.",
         "replies": [
           [
@@ -11684,6 +12186,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Winter ground",
+        "opening": "Can anything grow in the winter ground?",
         "first": "Frozen ground makes yesterday's easy job impossible. I try to finish repairs before the soil hardens.",
         "replies": [
           [
@@ -11702,6 +12205,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A late harvest",
+        "opening": "What happens when the harvest is late?",
         "first": "I once waited for a crop to improve and lost part of it to an early freeze.",
         "replies": [
           [
@@ -11720,6 +12224,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The living trees",
+        "opening": "How do you look after the trees through the cold?",
         "first": "Winter trees look idle, but I dislike people treating them as spare firewood.",
         "replies": [
           [
@@ -11754,6 +12259,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Leaving the lantern",
+        "opening": "What made you leave your lantern for another traveller?",
         "first": "I left my special lantern with Sverre. It belongs with someone who'll pass it to a traveller who needs it.",
         "replies": [
           [
@@ -11772,6 +12278,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The road south",
+        "opening": "Do you miss travelling the southern road?",
         "first": "A passable road isn't necessarily a pleasant one. I choose my words carefully when people ask.",
         "replies": [
           [
@@ -11790,6 +12297,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "An unexpected day off",
+        "opening": "What do you do with an unexpected day off?",
         "first": "A halted shift once gave me an afternoon free. I spent half of it deciding how not to waste it.",
         "replies": [
           [
@@ -11824,6 +12332,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Recognising regulars",
+        "opening": "How do you recognise people who come back here?",
         "first": "I remember people's usual drinks before their names. I'm working to reverse that order.",
         "replies": [
           [
@@ -11842,6 +12351,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Closing in winter",
+        "opening": "What does closing up involve in winter?",
         "first": "Winter customers linger because leaving means facing the cold. Unfortunately I must go home too.",
         "replies": [
           [
@@ -11860,6 +12370,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Beyond the graves",
+        "opening": "Do you ever wish your work took you somewhere beyond the graves?",
         "first": "I avoid the graveyard after dark. People occasionally challenge me to prove I'm not frightened.",
         "replies": [
           [
@@ -11894,6 +12405,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Broth for a crowd",
+        "opening": "How do you make enough broth for a crowd?",
         "first": "When feeding a crowd, I prepare what can wait without spoiling. Guests arrive according to their own clocks.",
         "replies": [
           [
@@ -11912,6 +12424,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A secret ingredient",
+        "opening": "Do you have an ingredient you keep secret?",
         "first": "People keep asking for my secret ingredient. Usually I tell them patience, which disappoints shoppers.",
         "replies": [
           [
@@ -11930,6 +12443,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A meal remembered",
+        "opening": "Is there a meal that brings back a particular memory?",
         "first": "My mother once burned supper, and we ate bread together laughing about the smoke.",
         "replies": [
           [
@@ -11964,6 +12478,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A recruit's name",
+        "opening": "Do you remember the names of new recruits?",
         "first": "I learn recruits' names before correcting them. A person should know I'm speaking to him, not merely shouting at a uniform.",
         "replies": [
           [
@@ -11982,6 +12497,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Orders and consequences",
+        "opening": "Who answers for what happens when an order is carried out?",
         "first": "An order can be clear and still be wrong. Rank makes that distinction difficult to discuss aloud.",
         "replies": [
           [
@@ -12000,6 +12516,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A quiet ambition",
+        "opening": "Is there anything you want beyond your rank?",
         "first": "I'd like a garden small enough to finish tending before supper.",
         "replies": [
           [
@@ -12018,6 +12535,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A name in the report",
+        "opening": "What happens after you put someone's name in a report?",
         "first": "I write down names while people still think the conversation is informal. Later, everyone remembers the distance differently.",
         "replies": [
           [
@@ -12052,6 +12570,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Armour maintenance",
+        "opening": "Does armour take much looking after?",
         "first": "People notice a polished breastplate. I notice a strap about to fail.",
         "replies": [
           [
@@ -12070,6 +12589,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Patrol supper",
+        "opening": "What do you eat when you're out on patrol?",
         "first": "I learned cooking because our patrol treated burnt porridge as unavoidable.",
         "replies": [
           [
@@ -12088,6 +12608,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "A frightened horse",
+        "opening": "How do you calm a frightened horse?",
         "first": "A horse once refused a bridge. I tried forcing it before noticing a loose board.",
         "replies": [
           [
@@ -12122,6 +12643,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "A king's authority",
+        "opening": "What gives you the right to rule everyone?",
         "first": "A kingdom survives because somebody can end an argument. I have spent years being that somebody.",
         "replies": [
           [
@@ -12140,6 +12662,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The old riders",
+        "opening": "What happened between you and the other riders?",
         "first": "The riders mistook equal power for shared purpose. They could agree on a rescue and quarrel endlessly over what came after.",
         "replies": [
           [
@@ -12158,6 +12681,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Keeping the roads",
+        "opening": "Do your roads protect the people who use them?",
         "first": "People demand safe roads and resent the men stationed on them. They want the result without the cost.",
         "replies": [
           [
@@ -12176,6 +12700,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The egg errand",
+        "opening": "Do you remember taking Hettie's eggs in Millwood?",
         "first": "You carried that basket through a royal escort without breaking an egg. Millwood evidently teaches useful caution.",
         "replies": [
           [
@@ -12194,6 +12719,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Hunting dragons",
+        "opening": "Why hunt dragons that have done nothing to you?",
         "first": "One surviving dragon can give a dissatisfied subject the power to make his dissatisfaction everyone else's problem.",
         "replies": [
           [
@@ -12212,6 +12738,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Reports from Millwood",
+        "opening": "What are your men looking for near Millwood?",
         "first": "A heavy landing, broken branches, witnesses who suddenly remember other errands. My officers have enough to continue searching.",
         "replies": [
           [
@@ -12230,6 +12757,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Shelter for an injured dragon",
+        "opening": "What would you do to someone who sheltered an injured dragon?",
         "first": "Anyone finding an injured dragon should withdraw and summon my officers. An attempt to hide it would make the finder part of the investigation.",
         "replies": [
           [
@@ -12248,6 +12776,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "What follows your reign?",
+        "opening": "What do you expect to happen after your reign?",
         "first": "You speak of the future as though a kingdom could be left to grow like an unattended hedge. Someone must impose its shape.",
         "replies": [
           [
@@ -12282,6 +12811,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "The keeper's part",
+        "opening": "What is your part in the trials?",
         "first": "I arrange the contest and judge its end. I do not enter the fight disguised as its referee.",
         "replies": [
           [
@@ -12300,6 +12830,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The waves you summon",
+        "opening": "What exactly happens when I summon a wave?",
         "first": "Each wave joins two lesser creatures with one stronger opponent. You must account for all three.",
         "replies": [
           [
@@ -12318,6 +12849,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "The Cinderhold Seal",
+        "opening": "What is the Cinderhold Seal for?",
         "first": "The seal calls me to the chamber adjoining Cinderhold's throne room. Place it in the pedestal there.",
         "replies": [
           [
@@ -12352,6 +12884,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "topics": [
       {
         "title": "Our bond / A voice without sound",
+        "opening": "Can you hear thoughts I haven't meant to share?",
         "first": "When you speak toward me, I hear you. The rest of your thoughts aren't a room I can wander through.",
         "replies": [
           [
@@ -12369,7 +12902,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Our bond / The memories I inherited",
+        "title": "Our bond / The memories you inherited",
+        "opening": "What is it like remembering lives you haven't lived?",
         "first": "I remember places I've never stood. Then I turn my head and this body is the one that moves. That difference still surprises me.",
         "replies": [
           [
@@ -12387,7 +12921,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Our bond / Hatching beside you",
+        "title": "Our bond / Hatching beside me",
+        "opening": "What do you remember about hatching beside me?",
         "first": "My first clear memory of this life is trying to stand while everyone watched. The ground felt much less cooperative than it looked.",
         "replies": [
           [
@@ -12406,6 +12941,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Our bond / When we disagree",
+        "opening": "What happens when we disagree about where to go?",
         "first": "I can carry you somewhere quickly and still think going there is a mistake. I'd rather say so before taking off.",
         "replies": [
           [
@@ -12423,7 +12959,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Dragon life / My first rain",
+        "title": "Dragon life / Your first rain",
+        "opening": "How did your first rain compare with the memories you'd inherited?",
         "first": "Old memories told me what rain was. They failed to mention how annoying a drop inside a nostril could be.",
         "replies": [
           [
@@ -12442,6 +12979,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Dragon life / Being stared at",
+        "opening": "Does it bother you when people stare?",
         "first": "I understand people staring. I still get tired of every arrival becoming a demonstration that dragons exist.",
         "replies": [
           [
@@ -12460,6 +12998,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Dragon life / A dream of landing",
+        "opening": "What do you dream about?",
         "first": "I dreamed I couldn't land because every clear patch became water just before I reached it. I woke with my feet moving.",
         "replies": [
           [
@@ -12477,7 +13016,8 @@ const DIALOGUE_RENEWAL_CAST = {
         ]
       },
       {
-        "title": "Dragon life / What I want",
+        "title": "Dragon life / What you want",
+        "opening": "Where would you go if we could choose any destination?",
         "first": "I'd like to choose a place because I want to see it, without first asking whether it makes us stronger.",
         "replies": [
           [
@@ -12496,6 +13036,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travelling / A rider's balance",
+        "opening": "How can I make riding easier for you?",
         "first": "When you tense every muscle, I feel you fighting the movement. Let your body follow mine before trying to correct it.",
         "replies": [
           [
@@ -12514,6 +13055,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travelling / Fighting beside you",
+        "opening": "What do you need from me when we fight together?",
         "first": "In a fight, I need room to turn and a clear sense of where you are. Charging after everything makes both harder.",
         "replies": [
           [
@@ -12532,6 +13074,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travelling / Food and recovery",
+        "opening": "How do I know when you need food or rest?",
         "first": "Food helps me recover, and carrying it matters more than remembering it once I'm already hurt.",
         "replies": [
           [
@@ -12550,6 +13093,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Travelling / Slowing down",
+        "opening": "Will you tell me when we need to slow down?",
         "first": "I notice when your steps shorten and you insist you aren't tired. You're not particularly convincing at that point.",
         "replies": [
           [
@@ -12568,6 +13112,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "History / Wingfall",
+        "opening": "What do you remember about Wingfall?",
         "first": "Halvard belonged to the seven riders. He turned against the others, then made their bond a threat his kingdom was taught to fear.",
         "replies": [
           [
@@ -12586,6 +13131,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "History / Ordinary rider work",
+        "opening": "What did riders do when they weren't fighting?",
         "first": "The old riders carried news and searched for missing people. Songs prefer the battles because waiting and wrong turns make awkward verses.",
         "replies": [
           [
@@ -12604,6 +13150,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "History / What ruins leave out",
+        "opening": "What do the ruins leave out of their stories?",
         "first": "A ruined hall preserves its size better than the voices that filled it. It's easy to imagine everyone solemn all the time.",
         "replies": [
           [
@@ -12622,6 +13169,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "History / The other dragons",
+        "opening": "What do you know about the other dragons?",
         "first": "I have memories of flight and hiding after Wingfall. I cannot turn them into a reliable map of where dragons live now.",
         "replies": [
           [
@@ -12640,6 +13188,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Us / Missing home",
+        "opening": "Do you miss home too?",
         "first": "Home can arrive in a smell before you've decided you miss it. Woodsmoke sometimes does that to you; I can see your expression change.",
         "replies": [
           [
@@ -12658,6 +13207,7 @@ const DIALOGUE_RENEWAL_CAST = {
       },
       {
         "title": "Us / A bad joke",
+        "opening": "Do dragons tell jokes?",
         "first": "I've been trying to invent a joke about a dragon who hoards maps. Unfortunately every ending gets lost.",
         "replies": [
           [

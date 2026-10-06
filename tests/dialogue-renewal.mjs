@@ -28,7 +28,9 @@ for(const name of names){
   c.topic=run('DialogueRenewal.topics(actor,{all:true})')[index];
   for(let branch=0;branch<3;branch++){
    c.branch=branch;
-   run(`EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null;openNpcTopics(actor);EmberConversationFlow.openChat();EmberConversationFlow.take({n:topic.title,friendshipId:topic.friendshipId,go:()=>EmberConversationFlow.playTopic(actor,topic)});typeAll();scene.t=1;EmberConversationFlow.advance();`);
+   run(`EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null;openNpcTopics(actor);EmberConversationFlow.openChat();var actualOption=ask.opts.find(o=>o.friendshipId===topic.friendshipId);if(!actualOption)throw Error(actor.n+' missing '+topic.title);EmberConversationFlow.take(actualOption);typeAll();scene.t=1;EmberConversationFlow.advance();`);
+   assert(row.opening?.endsWith('?'),name+' has an authored opening');
+   assert.equal(dom.element('bagAsk').querySelector('.conversationCorinEcho').textContent,row.opening,name+' says the authored question');
    assert(run('ask?.replyChoices'),name+' / '+row.title+' reaches choices');
    assert.deepEqual(json('ask.opts.filter(o=>!o.head).map(o=>o.n)'),row.replies.map(r=>r[0]));
    run('askPick=branch+1;askTake()');assert.equal(run('typeFull'),row.replies[branch][0],name+' Corin response');
@@ -37,6 +39,12 @@ for(const name of names){
   }
  }
 }
+assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].opening"),'Why do people call you wicked?');
+assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].title"),'Your reputation');
+assert.equal(run("DialogueRenewal.cast.Ned.topics[1].title"),"My father's hands",'Corin asks Ned about Corin’s father');
+run('wonAll=true');
+assert.equal(run("DialogueRenewal.topics({n:'Bess'},{all:true})[2].opening"),'Will the people who supplied Halvard’s meals finally be paid?');
+run('wonAll=false');
 // Church NPCs remain world conversations, including their ritual.
 reset();for(const name of json('Object.keys(DIALOGUE_CHURCH_LINES)')){
  c.actor={n:name,x:12000,y:3300,packSpr:name==='Brother Cael'?'chapel_priest':'chapel_parishioners1'};

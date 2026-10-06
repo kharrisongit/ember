@@ -61,10 +61,10 @@ const DialogueRenewalDragon=(()=>{
    after:()=>openDragonConversation(category),conversationReplies:{topic:t,handled:new Set()}});};
   const options=category==='root'?[
    ...groups.map(g=>({n:g,navigation:true,category:'folder',go:()=>openDragonConversation(g)})),
-   {n:'Our next step',category:'lead',friendship:false,go:()=>speak(guide())},
+   {n:'Our next step',opening:'Where should we go from here?',category:'lead',friendship:false,go:()=>speak(guide())},
    ...(leads().length?[{n:'The leads we know',category:'folder',navigation:true,go:()=>openDragonConversation('leads')}]:[])
   ]:(category==='leads'?leads():p.topics.map((r,i)=>({...DialogueRenewal.topic(n,r,i),group:r.title.split(' / ')[0]})).filter(t=>t.group===category))
-   .map(t=>({n:t.title,category:t.category,friendship:t.friendship!==false,friendshipId:t.friendshipId,go:()=>speak(t)}));
+   .map(t=>({n:t.title,opening:t.opening,category:t.category,friendship:t.friendship!==false,friendshipId:t.friendshipId,go:()=>speak(t)}));
   ask={quick:1,dragonConversation:true,npcActor:n,topicScope:category,back:category==='root'?null:()=>openDragonConversation(),
    opts:[{n:'Aurelius',head:true},...options,{n:'Let’s move on',go:null}]};askPick=1;askDraw();return true;
  }

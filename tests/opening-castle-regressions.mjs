@@ -63,3 +63,5 @@ for(const name of run('Object.keys(NpcContextAudit.cast)')){
 }
 assert.equal(run("THORNWELL_DIALOGUE_CAST.Isolde.role"),'Thornwell resident');
 console.log(`PASS: bedroom pickups and saved supplies, automatic Nan approach, queued gift continuation, movable throne collision, three paused/overlapping final-fight starts and ${introductions} stranger introductions.`);
+
+await import('./throne-retry.mjs');

@@ -5,6 +5,7 @@
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave,greeted=false}={}){
+    if(!telepathy&&beginThroneConfrontation(actor))return true;
     if(typeof DialogueRenewal!=="undefined"){
       if(!telepathy&&DialogueRenewal.church(actor))return false;
       const subject=telepathy?{...actor,n:'Aurelius'}:actor;
@@ -125,12 +126,11 @@
   }
 
   function openingQuestion(option){
-    const title=playerFacingText(option.opening||option.n).trim();
-    if(/[?!.]$/.test(title))return title;
-    if(/^(who|what|when|where|why|how|can|could|do|does|did|have|has|is|are|will|would|may)\b/i.test(title))return title+'?';
-    if(/^(I|we|hello|hi|tell|let[’']s)\b/i.test(title))return title+'.';
-    return 'Tell me about '+title.replace(/^(The|A|An|Your|Our|My)\b/,word=>word.toLowerCase())+'.';
+    // A menu label is not spoken dialogue. Only show an authored Corin line;
+    // in particular, never copy an NPC's first-person title into his mouth.
+    return playerFacingText(option.opening||'').trim();
   }
+
   function take(option){
     if(window.EmberConversationPanels?.isOpen())return true;
     if(!isMenu(ask))return false;

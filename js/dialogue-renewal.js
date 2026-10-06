@@ -30,12 +30,25 @@ const DialogueRenewal=(()=>{
  }
  function topic(n,row,id,extra={}){
   const title=row.title.includes(' / ')?row.title.split(' / ')[1]:row.title;
-  return {title,category:'story',friendshipId:'renewal-'+id,available:true,
+  return {title,opening:row.opening||'',category:'story',friendshipId:'renewal-'+id,available:true,
    lines:[n.n+': '+row.first,'Corin: '+row.replies[0][0],n.n+': '+row.replies[0][1]],
    authoredBranches:{decisions:{0:row.replies.slice(1)}},...extra};
  }
  const row=(title,first,...replies)=>({title,first,replies});
- const lead=(n,id,title,first,...replies)=>topic(n,row(title,first,...replies),id,{category:'lead',friendship:false});
+ const lead=(n,id,title,first,...replies)=>topic(n,row(title,first,...replies),id,{category:'lead',friendship:false,opening:{
+  pyramid:DesertAdventure.owned()?'What can you tell me about the Emberheart we found?':DesertAdventure.accepted()?'What is left for us to do at the pyramid?':'What have you learned about the pyramid?',
+  shield:glassShield?'How should I use Sela’s shield?':'Where can I find your brother’s workshop?',
+  lantern:charm.lamp?'Will this lantern be enough for the deep mines?':'What would we need to explore the deep mines?',
+  graveyard:charm.wake?'What does the book let me summon?':'What do you know about the book in the graveyard?',
+  witch:'What should I know before visiting Maelis?',
+  temples:wonAll?'What becomes of the sanctuaries now?':'Which sanctuary should we head for next?',
+  road:'How is the work on the road coming along?',
+  plan:'Where should we go from here?',
+  fishing:fishingPole?'How can I put Calder’s rod to good use?':'Where could we get a fishing rod?',
+  bramble:brambleQuest>=2?'Shall we visit Bramble and Rowan again?':'What should we do about Bramble?',
+  equipment:smithUpgrade?'Is there anything else we need to do about our equipment?':'Who could help me with my sword and armour?',
+  gifts:'Are we making good use of the things people gave us?'
+ }[id]||''});
  function pyramid(n){
   if(DesertAdventure.owned())return lead(n,'pyramid','The recovered Emberheart',
    'The Emberheart you found strengthens Aurelius’s Fire by twenty-five percent while you carry it. Leave your charm slots for other equipment.',
@@ -371,7 +384,6 @@ const DialogueRenewal=(()=>{
    [question,answer],['Can I still go back?', 'The return road is available. Take time to gather anything you left behind.'],
    ['I will check my map.',opened?'Track your next destination before leaving the settled road.':'Keep the local task tracked; there is useful work to do before this route opens.']));}
   if(n.n==='Astrid'||n.n==='Sverre')list.push(...HollybeckRescue.topics(n));
-  if(n.n==='King Halvard'&&!n.thornwellRoyal&&MAPID==='cinderhold'&&!wonAll)action('We came to end your rule',()=>beginNpcTalk(n,true));
   if(brambleQuest===1&&brambleLeads[n.n])list.unshift({title:'Bramble’s missing owner',category:'lead',friendship:false,go:()=>{
    const [clue,reply,answer]=brambleLeads[n.n];
    playScene([n.n+': '+clue,'Corin: '+reply,n.n+': '+answer],{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
@@ -389,23 +401,25 @@ const DialogueRenewal=(()=>{
   const rows=p.topics.map((r,i)=>topic(n,r,i));
   // Past-tense alternatives keep changed world conditions coherent.
   if(n.n==='Bess'&&wonAll)rows[2]=topic(n,row('The unpaid royal meals','Now Halvard is gone, I want the people who supplied those meals to be paid. Relief does not settle their bills.',
-   ['Where would you begin?','With the households that lost the most. Ask them what they need.'],['Will the tavern feel different?','Yes. An important guest can arrive without owning my evening.'],['I hope the next feast is your choice.','So do I. I have plans that include payment and an ordinary closing time.']),2);
+   ['Where would you begin?','With the households that lost the most. Ask them what they need.'],['Will the tavern feel different?','Yes. An important guest can arrive without owning my evening.'],['I hope the next feast is your choice.','So do I. I have plans that include payment and an ordinary closing time.']),2,{opening:'Will the people who supplied Halvard’s meals finally be paid?'});
   if(n.n==='Elder Maddock')rows[2].available=quest>=Q.NOISE;
   const optional=all?rows:rows.filter(r=>r.available);
   if(all)return optional;
   return [...guides(n),...(typeof Crafting!=='undefined'?Crafting.topics(n):[]),...optional];
  }
  function open(n){
+  if(throneRoomKing(n))return false;
   if(!profile(n))return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);
   n.goto=null;n.arrived=true;n.scriptWalking=false;P.moving=false;sayOff();showFace(null);faceToward(n,P.x,P.y);
-  const options=topics(n).map(t=>({n:t.title,category:t.category,friendship:!!t.lines&&t.friendship!==false,friendshipId:t.friendshipId,questUnlock:t.questUnlock,
+  const options=topics(n).map(t=>({n:t.title,opening:t.opening,category:t.category,friendship:!!t.lines&&t.friendship!==false,friendshipId:t.friendshipId,questUnlock:t.questUnlock,
    go:()=>t.go?t.go():EmberConversationFlow.playTopic(n,t)}));
   ask={quick:1,npcConversation:n.n,npcActor:n,repaintWorld:true,opts:[{n:n.n,head:true},...options,
    ...(n.sells?[{n:'See your stock',category:'trade',friendship:false,go:()=>openMerchantShop(n)}]:[]),{n:'Goodbye',go:null}]};
   askPick=1;askDraw();return true;
  }
  function prompt(n,{dragon:telepathy=false,talk,leave,greeted=false}={}){
+  if(!telepathy&&beginThroneConfrontation(n))return true;
   if(!profile(n))return false;
   clearPadInputs();running=false;P.act=null;P.moving=false;
   const map=MAPID;

@@ -1,14 +1,18 @@
 /* A battle begins only after its entrance has closed and the player is ready. */
 (function(){
   'use strict';
-  let map=null,population=null,populationSize=-1,states=new Map(),owners=new WeakMap(),pending=null,engaged=null,cameraZoom=null;
+  let map=null,population=null,populationSize=-1,states=new Map(),owners=new WeakMap(),pending=null,engaged=null,cameraZoom=null,finalPending=false;
   const popup=document.createElement('section');
   popup.id='arenaReady';popup.setAttribute('role','dialog');popup.hidden=true;
-  popup.setAttribute('aria-label','It’s time to fight! Press A to begin');
-  window.EmberEncounterCard.paint(popup,{title:'It’s time to fight!',kicker:'ENCOUNTER READY',detail:'Your foes are waiting. The next move is yours.',action:'Defeat every foe to open the way.',key:'',kind:'battle'});
+  function paintReady(final=false){
+    window.EmberEncounterCard.paint(popup,{title:'It’s time to fight!',kicker:final?'THE FINAL BATTLE':'ENCOUNTER READY',
+      detail:final?'Halvard has called his dragon. Stand together, Corin and Aurelius.':'Your foes are waiting. The next move is yours.',
+      action:final?'Defeat the king and his dragon.':'Defeat every foe to open the way.',key:'',kind:'battle'});
+  }
+  paintReady();
   document.body.appendChild(popup);
   const living=f=>f.st!=='dead'&&!f.ally&&!f.huntingArena;
-  const holding=()=>!!pending&&pending.phase!=='tutorial';
+  const holding=()=>finalPending||!!pending&&pending.phase!=='tutorial';
   const tutorial=a=>MAPID==='world'&&((a.id===208&&!window.EmberRiding?.capture().swordDone)||(a.id===11&&!window.EmberRiding?.capture().done));
   const rings=()=>{
     const all=MD?.templeExpanded?expandedTempleArenas():currentArenaFeatures().filter(a=>!['hare','boar','deer','fox','bird'].includes(a.encounter));
@@ -22,8 +26,15 @@
     }
   }
   function reset(){
-    finishView();pending=null;engaged=null;states=new Map();owners=new WeakMap();map=MAPID;population=null;populationSize=-1;
+    finishView();finalPending=false;pending=null;engaged=null;states=new Map();owners=new WeakMap();map=MAPID;population=null;populationSize=-1;
     window.EmberBattleMusic?.stop();
+  }
+  function readyFinalBattle(){
+    if(MAPID!=='cinderhold'||wonAll||lastFight||finalPending)return false;
+    reset();finalPending=true;paintReady(true);popup.hidden=false;
+    clearPadInputs();for(const k in keys)keys[k]=0;running=false;P.act=null;P.moving=false;
+    hunt=null;breath=null;claw=null;setOvl(null);window.EmberEncounterCard.layout();
+    return true;
   }
   function ensure(){if(map!==MAPID)reset();}
   function state(a){
@@ -181,6 +192,7 @@
     if(!holding())return;
     dragon.t+=dt;dragon.moving=false;
     if(mounted){dragon.x=P.x;dragon.y=P.y;stepTransition(dt);return;}
+    if(finalPending||!pending)return;
     const arrival=pending.companion;if(!arrival)return;
     let left=arrival.speed*dt;
     while(arrival.path.length&&left>0){
@@ -200,7 +212,7 @@
   function entered(a){
     register();const s=state(a);
     if(s.phase==='active'||pending===s)return;
-    stage(s);pending=s;s.phase=window.EmberRiding?.holding()?'tutorial':'walls';
+    paintReady();stage(s);pending=s;s.phase=window.EmberRiding?.holding()?'tutorial':'walls';
     clearPadInputs();for(const k in keys)keys[k]=0;running=false;P.moving=false;P.act=null;
     if(s.phase!=='tutorial'){hunt=null;breath=null;claw=null;setOvl(null);gatherCompanion(s);}
     if(cameraZoom===null){restoreCameraTarget();cameraZoom=cam.z;}
@@ -230,6 +242,7 @@
     }
   }
   function step(dt){
+    if(finalPending){if(MAPID!=='cinderhold'||wonAll||deadShown||!gameplayStarted||mode!=='play')reset();return;}
     if(!gameplayStarted||mode!=='play'||foesHeld||deadShown){if(pending||engaged||map!==MAPID)reset();return;}
     register();
     if(engaged&&(!arenaLock||arenaLock.id!==engaged.ring.id))completed(engaged.ring);
@@ -252,6 +265,7 @@
     }
   }
   function action(){
+    if(finalPending){finalPending=false;finishView();clearPadInputs();for(const k in keys)keys[k]=0;if(MAPID==='cinderhold'&&!wonAll)startLastFight();return true;}
     if(!holding())return false;
     if(pending.phase==='prompt')activate(pending.ring);
     return true;
@@ -279,5 +293,5 @@
     cam.x=(l+r)/2-VW/cam.z/2;
     cam.y=(t+b)/2-(top+usable/2)/cam.z;
   }
-  window.EmberArenaEntry={prepare,entered,activate,completed,reset,step,gather,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};
+  window.EmberArenaEntry={readyFinalBattle,prepare,entered,activate,completed,reset,step,gather,holding,protected:protectedEnemy,action,key,blockPointer,frameCamera};
 })();

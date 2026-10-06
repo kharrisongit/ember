@@ -63,7 +63,7 @@ assert.equal(run('scene'),null,'A greeting never starts a quest scene');
 run('ask._profileOpen=true;askDraw();askBack();');assert.equal(run('typeFull'),'');
 select('The cow that escaped');
 assert.equal(box.querySelector('.conversationStage').dataset.phase,'listen');
-assert.equal(player.querySelector('.conversationCorinEcho').textContent,'Tell me about the cow that escaped.');
+assert.equal(player.querySelector('.conversationCorinEcho').textContent,'How did you keep that cow from escaping?');
 assert(box.querySelector('.conversationStage').classList.contains('is-speaking'));
 assert(!player.classList.contains('is-speaking'));
 assert(player.classList.contains('is-listening'),'Corin’s panel dims while the NPC is speaking');
@@ -231,7 +231,7 @@ assert.equal(dom.element('say').dataset.telepathy,'true','Overworld greeting use
 finishGreeting();select('Talk');select('Our bond');
 assert.equal(run('typeFull'),'');
 assert.equal(dom.element('say').dataset.telepathy,'true','Aurelius retains the bond theme between exchanges');
-select('Hatching beside you');
+select('Hatching beside me');
 for(let i=0;i<10&&!run('ask?.replyChoices');i++){run('typeAll();if(scene)scene.t=1');step();}
 assert(run('ask?.replyChoices'));assert(run('ask.opts.some(o=>/frightened of me/.test(o.n))'));
 assert(box.classList.contains('dragonTalk'),'Aurelius’s theme persists through branching replies');
@@ -250,12 +250,12 @@ assert.equal(run('ask.topicScope'),'Our bond');
 run(`MAPID='house0';EmberConversationFlow.tick()`);assert(!run('EmberConversationFlow.active()'));assert.equal(run('ask'),null);
 console.log('PASS: persistent parchment, actual tap/drag/pinch routing, authored choices for 173 NPCs and Aurelius, branching responses, root/branch Back, greetings, gifts, shopping and area teardown.');
 run(`const showdownKing={n:'King Halvard',x:100,y:100};ask=null;`);
-for(const map of ['cinderhold','world']){
- c.kingMap=map;run('EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null;MAPID=kingMap;wonAll=false');
- assert(run('openNpcTopics(showdownKing)'),'The king has a full conversation in each location');
- assert.equal(run('ask.npcConversation'),'King Halvard');
- assert.equal(run('ask.opts.some(o=>o.n==="We came to end your rule")'),map==='cinderhold','Only the castle offers the final confrontation');
-}
+run('EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null;MAPID="cinderhold";wonAll=false;lastFight=0;');
+assert.equal(run('openNpcTopics(showdownKing)'),false,'The throne room never opens a social panel');
+assert(run('EmberConversationFlow.prompt(showdownKing)'),'The throne room handles its own encounter');
+assert(run('scene.finalBattleIntro&&!ask&&!EmberConversationFlow.active()'),'Only the short confrontation appears');
+run('scene=null;sayOff();MAPID="world";openNpcTopics(showdownKing)');
+assert.equal(run('ask.npcConversation'),'King Halvard','Social conversations remain available away from the final encounter');
 run('EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null');
 run("MAPID='tavern'");
 assert.equal(run('EmberConversationFlow.prompt({...showdownKing,thornwellRoyal:true})'),true,'Tavern royal audience retains its prompt');
@@ -264,4 +264,4 @@ run('var dismissedAudience=false;EmberConversationFlow.prompt(showdownKing,{gree
 assert.equal(run('scene'),null,'The scripted royal greeting is not repeated');
 assert(run('ask.conversationPrompt'),'The royal arrival leads directly to the invitation');
 select('Maybe Another Time');assert(run('dismissedAudience'),'Declining preserves the royal dismissal callback');
-console.log('PASS: king conversation covers every location; castle confrontation and royal dismissal remain explicit.');
+console.log('PASS: throne room uses its short confrontation; social royal conversations and dismissal remain intact.');

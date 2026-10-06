@@ -74,7 +74,7 @@ const ThornwellAudienceDialogue=(()=>{
       return topic;
     });
   }
-  function options(n){return rows(n).map(topic=>({n:topic.title,category:topic.category,friendship:true,friendshipId:topic.friendshipId,go:()=>EmberConversationFlow.playTopic(n,topic)}));}
+  function options(n){return rows(n).map(topic=>({n:topic.title,opening:topic.opening,category:topic.category,friendship:true,friendshipId:topic.friendshipId,go:()=>EmberConversationFlow.playTopic(n,topic)}));}
   function dossier(name,actor){
     if(!actor?.thornwellRoyal)return null;
     return {name,role:name==='King Halvard'?'King of Emberfell':'Royal serjeant',home:'The royal party · visiting Thornwell',
