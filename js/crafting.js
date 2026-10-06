@@ -75,29 +75,18 @@ const Crafting=(()=>{
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
     const costs=Object.fromEntries(Object.entries(r.cost).map(([k,v])=>[k,v*qty]));
     for(const [k,v] of Object.entries(costs))add(k,-v);
-    state.pending={id,qty,costs};session={id,qty,phase:'animate',age:0,progress:0,duration:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?1:4.2};
+    state.pending={id,qty,costs};session={id,qty,phase:'confirm',progress:0};
     saveGame();window.CraftingView?.play();return true;
   }
-  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}else skipPreparation();}
-  function release(){}
-  function tick(dt){
-    if(!opened)return false;
-    if(!document.hidden&&session){
-      session.age+=Math.max(0,Math.min(.05,Number.isFinite(dt)?dt:0));
-      if(session.phase==='animate'){
-        session.progress=Math.min(1,session.age/session.duration);
-        if(session.progress>=1)finish();
-      }
-      window.CraftingView?.paint();
-    }
-    return true;
-  }
-  function finish(skip=false){
-    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||(!skip&&s.progress<1))return false;
+  function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}}
+  function release(){if(session?.phase==='confirm'){session.progress=0;window.CraftingView?.paint();}}
+  function slide(value){if(session?.phase!=='confirm'||!Number.isFinite(value))return false;session.progress=Math.max(0,Math.min(1,value));window.CraftingView?.paint();return true;}
+  function tick(){return opened;}
+  function finish(){
+    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||s.progress<1)return false;
     s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
     s.phase='result';s.progress=1;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
-  function skipPreparation(){return finish(true);}
   function capture(){return JSON.parse(JSON.stringify(state));}
   function restore(saved){
     opened=false;vendor=null;session=null;window.CraftingView?.hide();state=fresh();
@@ -229,5 +218,5 @@ const Crafting=(()=>{
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.raw});
   }
   return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,finish,skipPreparation,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,slide,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

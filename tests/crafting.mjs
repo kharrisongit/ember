@@ -8,7 +8,7 @@ const reset=()=>run(`Crafting.close();Crafting.restore(null);mode='play';gamepla
  trial=null;arenaLock=null;deadShown=false;mounted=false;ride=null;fishing=null;P.act=null;flightTravel=null;
  foes=[];ask=null;ovl=null;templeCompass.morningMet=true;templeCompass.meatGiven=true;Crafting.giveKit();Crafting.restore({...Crafting.capture(),learned:[]});potions=0;elixirs=0;bombs=0;dust=0;bells=0;marks=0;breaths=0;stones=0;salts=0;
  boarMeat=5;hareMeat=5;deerMeat=5;foxMeat=5;birdMeat=5;dragonFish=5;`);
-const solve=()=>run('for(let n=0;n<100;n++)Crafting.tick(.05)');
+const solve=()=>run('Crafting.slide(1);Crafting.finish()');
 reset();assert(run('Crafting.open()'));assert.equal(run('Crafting.capture().learned.length'),0,'Opening a book cannot grant unlearned recipes');
 assert(!run('Crafting.start("potion")'),'No recipe, no crafting');
 run('Crafting.learn("nan",true);Crafting.learn("nan",true)');assert.equal(run('Crafting.count("herb")'),0,'Lessons do not duplicate the trail supplies');
@@ -39,12 +39,12 @@ assert.equal(run('potions'),1);assert.equal(run('Crafting.count("herb")'),18);
 for(const steps of [0,1,3]){
  reset();run('Crafting.skip();Crafting.open();Crafting.start("potion",3)');
  run('for(let i=0;i<'+(steps*20)+';i++)Crafting.tick(.05)');
- assert(run('Crafting.skipPreparation()'),'Skip works in every phase');
- assert(!run('Crafting.skipPreparation()'),'Repeated skip cannot duplicate rewards');
+ assert(!run('Crafting.finish()'),'Waiting cannot craft');run('Crafting.slide(.5)');assert(!run('Crafting.finish()'));run('Crafting.release()');assert.equal(run('Crafting.current().progress'),0);run('Crafting.slide(1)');assert(run('Crafting.finish()'),'Full slide crafts');
+ assert(!run('Crafting.finish()'),'Repeated skip cannot duplicate rewards');
  assert.equal(run('potions'),3);assert.equal(run('Crafting.count("herb")'),14);
  assert.equal(run('Crafting.count("root")'),17);assert.equal(run('Crafting.capture().pending'),null);
 }
-reset();assert(!run('Crafting.skipPreparation()'));run('Crafting.skip();Crafting.open();Crafting.start("potion");Crafting.cancel()');assert(!run('Crafting.skipPreparation()'));
+reset();assert(!run('Crafting.finish()'));run('Crafting.skip();Crafting.open();Crafting.start("potion");Crafting.cancel()');assert(!run('Crafting.finish()'));
 reset();run('Crafting.skip();Crafting.open();Crafting.start("potion")');
 run('Crafting.tick(NaN);Crafting.tick(-1)');assert.equal(run('Crafting.current().progress'),0);
 reset();
@@ -87,4 +87,4 @@ assert(run('Crafting.start("potion")'));solve();assert.equal(run('Crafting.curre
 assert.equal(run('Crafting.maxBatch(Crafting.recipe("potion"))'),0,'Northern trail supplies make exactly one potion');
 reset();run("Crafting.open({n:'Wren'});EmberConversationFlow.tick()");assert.equal(run('ask'),null,'Closing a shop for crafting does not reopen a conversation');
 reset();run('templeCompass.meatGiven=false;Crafting.restore(null)');assert(!run('Crafting.open()'));run('nanGiftBeat(14)');assert(run('Crafting.hasKit()'));const meat=run('hareMeat');run('nanGiftBeat(14)');assert.equal(run('hareMeat'),meat);run('Crafting.restore(Crafting.capture())');assert(run('Crafting.hasKit()'));
-console.log('PASS: all 15 recipes, automatic completion, hidden-page pause and equivalent finish-now, exact rewards, cancellations, actual saves, seven NPC teachers, merchants, cooked food and once-only drops.');
+console.log('PASS: all 15 recipes, slide confirmation, cancelled gestures and exact rewards, exact rewards, cancellations, actual saves, seven NPC teachers, merchants, cooked food and once-only drops.');

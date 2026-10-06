@@ -14,7 +14,7 @@ const c=vm.createContext({console,performance,setTimeout,clearTimeout,setInterva
   clearPadInputs(){events.push('clear-input');},startMorning(){events.push('morning');},
   loadGame(){events.push('load');return true;},readSaveSlot:()=>({when:1}),SAVE_SLOT_COUNT:3,
   EmberPrologue:{play(){events.push('prologue');return new Promise(resolve=>finishPrologue=resolve);}},
-  EmberTitleAudio:{fadeOut:async()=>events.push('fade-out'),fadeIn:async()=>events.push('fade-in'),finish:()=>events.push('audio-finish')}
+  EmberTitleAudio:{prologue:()=>events.push('opening-music'),fadeOut:async()=>events.push('fade-out'),fadeIn:async()=>events.push('fade-in'),finish:()=>events.push('audio-finish')}
 });
 c.window=c;
 const run=text=>vm.runInContext(text,c);
@@ -31,7 +31,8 @@ async function finishNew(){
   assert.equal(run('gameplayStarted'),false,'No gameplay beneath the prologue');
   assert.equal(run('window.__titleTransition'),true);
   assert(!events.includes('morning'),'Bedroom dialogue waits for completion or Skip');
-  assert(!events.includes('fade-out'),'Title music remains under the history');
+  assert(events.indexOf('opening-music')>=0&&events.indexOf('opening-music')<events.indexOf('prologue'),'Opening music starts before the history');
+  assert(!events.includes('fade-out'),'Opening music remains under the history');
   finishPrologue();await settle();
   assert.equal(run('gameplayStarted'),true);
   assert.equal(run('window.__titleTransition'),false);
@@ -42,12 +43,13 @@ async function finishNew(){
 reset();dom.dispatch(dom.element('bootNew'),'click');await finishNew();
 reset();run('BOOT.activate()');await finishNew();
 reset();run('BOOT.continueGame()');await settle();
-assert(events.includes('load'));assert(!events.includes('prologue'));assert(run('gameplayStarted'));
+assert(events.includes('load'));assert(!events.includes('prologue'));assert(!events.includes('opening-music'));assert(run('gameplayStarted'));
 reset();run('BOOT.loading=true;BOOT.takeLoad(0)');await settle();
-assert(events.includes('load'));assert(!events.includes('prologue'));assert(run('gameplayStarted'));
+assert(events.includes('load'));assert(!events.includes('prologue'));assert(!events.includes('opening-music'));assert(run('gameplayStarted'));
 reset();c.EmberPrologue=undefined;await run('BOOT.close({newGame:true})');
 assert(run('gameplayStarted'),'Missing optional prologue script cannot block startup');
 assert(!events.includes('prologue'));
+assert(!events.includes('opening-music'));
 console.log('PASS: touch and keyboard New Game await the prologue; Continue/Load bypass it; music and morning handoff remain ordered; optional-script failure is non-blocking.');
 
 // Creation is exclusive; Back keeps the current profile and title untouched.

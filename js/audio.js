@@ -2,6 +2,7 @@ let routeMusicIntroPlayed=false;
 
 (()=>{
   const title=document.getElementById('lastDragonriderTitleBgm');
+  const intro=document.getElementById('emberfellIntroBgm');
   const spores=document.getElementById('emberfellSporesBgm');
   const titleScreen=()=>{try{return typeof gameplayStarted==='undefined'||!gameplayStarted;}catch(e){return true;}};
   let endingMode=false,titleStage=null,titleAccepted=false;
@@ -159,7 +160,7 @@ let routeMusicIntroPlayed=false;
     } catch(e) {}
     return false;
   };
-  const tracks=[title,spores,bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,snowRoute,reveal,temple,desert,sandspire,school,tavern,seatown].filter(Boolean);
+  const tracks=[title,intro,spores,bgm,millwood,villain,battle,thornwell,field,forgewick,mystic,mine,cinderhold,hollybeck,lavaRoute,snowRoute,reveal,temple,desert,sandspire,school,tavern,seatown].filter(Boolean);
   const hasSong=a=>{
     const src=a?.getAttribute('src')||a?.querySelector('source[src]')?.getAttribute('src')||'';
     return !!src && !/^data:[^,]*,\s*$/.test(src);
@@ -342,6 +343,7 @@ let routeMusicIntroPlayed=false;
   const chooseMusic=()=>{
     if(previewTrack){selectTrack(previewTrack);return;}
     if(titleStage==='out')return;
+    if(titleStage==='prologue'){selectTrack(hasSong(intro)?intro:title);return;}
     if(titleScreen()||endingMode||(typeof deadShown!=='undefined'&&deadShown))battleMode=false;
     if((titleStage!=='in'&&titleScreen())||endingMode){selectTrack(hasSong(title)?title:millwood);return;}
     if(typeof deadShown!=='undefined'&&deadShown){selectTrack(null);return;}
@@ -425,6 +427,11 @@ let routeMusicIntroPlayed=false;
       // Called synchronously by the Begin gesture: Safari must see both
       // AudioContext.resume() and HTMLMediaElement.play() in that gesture.
       startMusic();
+    },
+    prologue:()=>{
+      titleStage='prologue';
+      if(intro)intro.currentTime=0;
+      chooseMusic();startMusic();
     },
     fadeOut:(ms=1200)=>{
       titleStage='out';selected=null;fadeDuration=ms;fadeDelay=0;

@@ -5745,7 +5745,8 @@ const BOOT = {
     const shade=document.getElementById("titleFade"),el=document.getElementById("boot");
     if(shade){shade.hidden=false;shade.style.transition="opacity 1200ms ease";shade.style.opacity="0";shade.getBoundingClientRect();shade.style.opacity="1";}
     const showPrologue=newGame&&!!window.EmberPrologue;
-    // Keep the already-unlocked title theme under the illustrated history.
+    // Start the opening track before awaiting the transition.
+    if(showPrologue)window.EmberTitleAudio?.prologue();
     await Promise.all([BOOT.pause(1200),showPrologue?null:window.EmberTitleAudio?.fadeOut(1200)]);
     if(el)el.style.display="none";
     if(showPrologue){

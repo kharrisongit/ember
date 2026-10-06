@@ -450,3 +450,19 @@ console.log('PASS: song mixer applies live without restarting on desktop/iPhone;
  assert(m.audible(m.track('Millwood'))>0,'Effects mute leaves music playing');
 }
 console.log('PASS: player current-song levels, effects gain and independent UI mute work through iPhone audio graph.');
+
+// The opening film has its own streamed cue and shares the normal volume/fade controls.
+for(const ios of [false,true]){
+ const opening=setup(null,ios),api=opening.c.window.EmberTitleAudio;
+ opening.c.gameplayStarted=false;opening.sync();api.begin();await opening.advance();
+ const title=opening.elements.get('lastDragonriderTitleBgm');assert(!title.paused);
+ api.prologue();await opening.advance();assert(title.paused);assert(!opening.track('Intro').paused);
+ assert.equal(opening.track('Intro').currentTime,0);
+ opening.sync();await opening.advance();assert(!opening.track('Intro').paused,'Region polling preserves the opening cue');
+ const out=api.fadeOut(1200);await opening.advance(1400);await out;assert(opening.track('Intro').paused);
+ opening.c.gameplayStarted=true;const into=api.fadeIn();await opening.advance(1600);await into;api.finish();
+ assert(!opening.track('Millwood').paused);assert(opening.track('Intro').paused);
+ opening.c.window.EmberEndingMusic.start();await opening.advance();assert(!title.paused,'The ending retains the title theme');
+}
+assert.match(html,/<audio id="emberfellIntroBgm"[^>]+preload="none"/);
+console.log('PASS: opening film uses its own track on desktop/iPhone, survives polling, fades into gameplay, and preserves the title/ending theme.');

@@ -37,7 +37,7 @@ run('localStorage.setItem(saveKey(3),JSON.stringify({...captureSave(),playerIden
 assert.equal(id.capture().name,'Corin');assert.equal(id.capture().hair,'dark');assert.equal(run('portraitFor("Corin").pack'),8);
 const chapters={window:{}};vm.runInNewContext(fs.readFileSync('js/prologue-chapters.js','utf8'),chapters);
 const shots=chapters.window.EmberPrologueChapters;
-assert.equal(shots.length,9);assert.equal(shots.reduce((n,s)=>n+s.duration,0),61500);
+assert.equal(shots.length,9);assert.equal(shots.reduce((n,s)=>n+s.duration,0),42500);
 assert.deepEqual(Array.from(shots).flatMap(s=>Array.from(s.lines)),["Fifty years ago, the skies over Emberfell belonged to dragons.", "Seven Riders kept the peace, and every town slept safe beneath their wings.", "Then came Wingfall. Halvard, the seventh, turned on his brothers and sisters.", "Six Riders fell in a single day, and the sky burned red.", "Halvard crowned himself King, and his dragon is the only one he allows to fly.", "Every dragon but his own is hunted down. The skies went quiet.", "Monsters crept into the silence and took the roads. Now no one travels far.", "No new Riders were chosen, because no dragons were left to choose them.", "For fifty years the skies have stayed empty, and the world has learned to stop looking up.", "But a new dawn has come, and something has answered the old call."]);
 for(const shot of shots)assert(fs.existsSync('assets/prologue/'+shot.image+'.webp'));
 for(const key of ['01-seven-riders','02-wingfall','15-wingfall-temple'])assert.match(shots.find(s=>s.image===key).alt,/two-headed blue dragon/);
@@ -48,3 +48,5 @@ assert.equal(id.normalize({eyes:'invalid'}).eyes,'blue');
 for(const eyes of ['green','brown','hazel','gray']){const pixels=new Uint8ClampedArray([45,116,183,255,225,178,110,255,130,142,155,255]);assert.equal(id.recolorEyes(pixels,eyes),1);assert.deepEqual([...pixels.slice(4)],[225,178,110,255,130,142,155,255]);}
 id.restore({name:'Rowan',eyes:'hazel'});assert.equal(id.text(shots.at(-1).lines.at(-1)), 'But a new dawn has come, and something has answered the old call.');
 const boot=fs.readFileSync('js/generated/game-part-3.js','utf8');const start=boot.indexOf('async close({newGame=false}');assert(boot.indexOf('EmberPlayerIdentity.choose()',start)<boot.indexOf('EmberPrologue.play()',start),'Identity selection precedes the opening movie');
+
+assert.equal(shots[6].title,'The roads fall');assert.equal(shots.at(-1).title,'A new dawn');
