@@ -6,7 +6,8 @@ const CoralmereLighthouse=(()=>{
     if(ready)return;
     const image=await loadStartupImage('assets/buildings/coralmere-lighthouse.webp?v=20261006-timber');
     const crop=await loadStartupJSON('assets/buildings/coralmere-lighthouse.json?v=20261006-timber');
-    const canvas=document.createElement('canvas');canvas.height=144;canvas.width=Math.round(144*crop.w/crop.h);
+    // Give the narrow tower a house-sized footprint while keeping its taller silhouette.
+    const canvas=document.createElement('canvas');canvas.height=192;canvas.width=Math.round(192*crop.w/crop.h);
     const g=canvas.getContext('2d');g.imageSmoothingEnabled=false;
     g.drawImage(image,crop.x,crop.y,crop.w,crop.h,0,0,canvas.width,canvas.height);
     canvas.pixelLocked=true;animalSheets.coralmere_lighthouse=canvas;
@@ -15,7 +16,7 @@ const CoralmereLighthouse=(()=>{
   function installWorld(m){
     if(!ready||m.roomActors?.some(a=>a.coralmereLighthouse))return;
     m.roomActors||=[];m.roomBlocks||=[];
-    const moveBlocks=[m.roomBlocks.push([X-28,Y-25,X+28,Y-2])-1];
+    const moveBlocks=[m.roomBlocks.push([X-37,Y-33,X+37,Y-2])-1];
     m.roomActors.push({spr:'coralmere_lighthouse',x:X,y:Y,schoolArt:true,
       editKey:'coralmere:lighthouse',coralmereLighthouse:true,moveBlocks});
     m.doors.push({x:2053,y:516,to:'coralmere_lighthouse',tx:7,ty:11,dir:'u',

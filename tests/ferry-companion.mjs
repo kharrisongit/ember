@@ -14,10 +14,13 @@ run(game.slice(game.indexOf('function ferryOf()'),game.indexOf('function npcCont
 run(game.slice(game.indexOf('function dragonAirborne()'),game.indexOf('function dragonHover()')));
 run('installFerrySigns();installFerrySigns()');const signs=m.roomActors.filter(o=>o.ferrySign);assert.equal(signs.length,2);
 for(const sign of signs){
- const tx=Math.floor(sign.x/16),ty=Math.floor((sign.y-1)/16);assert.equal(terr[ty*m.w+tx],15,'sign stands on the dock');
- c.P={x:sign.x,y:sign.y+20,dir8:'n'};assert(run('tryFerrySign()'));
- assert.equal(messages.at(-1),'Press A on the boat to take a ride! Sorry, no dragons allowed in the boat!');
- c.P.dir8='s';assert(!run('tryFerrySign()'),'must face the sign');
+ const tx=Math.floor(sign.x/16),ty=Math.floor((sign.y-1)/16);assert.equal(terr[ty*m.w+tx],0,'sign stands on grass beside the dock');
+ assert([[-1,0],[1,0],[0,-1],[0,1]].some(([dx,dy])=>terr[(ty+dy)*m.w+tx+dx]===4),'sign is at the water edge');
+ for(const [dx,dy,toward,away] of [[0,20,'n','s'],[0,-26,'s','n'],[-20,-6,'e','w'],[20,-6,'w','e']]){
+  c.P={x:sign.x+dx,y:sign.y+dy,dir8:toward};assert(run('tryFerrySign()'),'read from any side while facing the sign');
+  assert.equal(messages.at(-1),'Press A on the boat to take a ride! Sorry, no dragons allowed in the boat!');
+  c.P.dir8=away;assert(!run('tryFerrySign()'),'must face the sign');
+ }
 }
 for(const [start,end] of [[f.land_a,f.land_b],[f.land_b,f.land_a]]){
  c.P={x:start[0]*16+8,y:start[1]*16+16};c.mounted=true;
@@ -35,4 +38,4 @@ for(const [start,end] of [[f.land_a,f.land_b],[f.land_b,f.land_a]]){
  assert.equal(c.P.dir8,end===f.land_b?'n':'s');
 }
 assert(game.indexOf('if (!sayNpc && tryFerrySign())')<game.indexOf('if (ferryTry())'),'sign gets A before nearby ferry');
-console.log('PASS: both dock signs stand on planks, exact dialogue, dismount requirement, finite boarding pose, both full ferry routes with dragon alongside and correct facing.');
+console.log('PASS: both dock signs stand on grass at the water edge, exact dialogue, dismount requirement, finite boarding pose, both full ferry routes with dragon alongside and correct facing.');

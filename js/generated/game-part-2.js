@@ -287,7 +287,8 @@ function installFerrySigns(){
   const m=W.maps.world,f=m.ferry;if(!f)return;
   m.roomActors||=[];m.roomBlocks||=[];
   for(const [i,land] of [f.land_a,f.land_b].entries()){
-    const x=(land[0]+1)*16+8,y=land[1]*16+16,key='swamp:ferry-sign:'+i;
+    // Both posts stand on the grassy bank just east of the dock's landward end.
+    const x=(land[0]+2)*16+8,y=(land[1]+(i===0?3:-1))*16+16,key='swamp:ferry-sign:'+i;
     if(m.roomActors.some(a=>a.editKey===key))continue;
     m.roomActors.push({spr:'signpost',x,y,schoolArt:true,stillFrame:0,ferrySign:true,editKey:key,
       moveBlocks:[m.roomBlocks.push([x-5,y-6,x+5,y])-1]});
@@ -11194,7 +11195,12 @@ function followDragonFerry(dt){
 const FERRY_SIGN_TEXT="Press A on the boat to take a ride! Sorry, no dragons allowed in the boat!";
 function tryFerrySign(){
   if(!ferryOf()||ride)return false;
-  const sign=(MD.roomActors||[]).find(o=>o.ferrySign&&!o.editorDeleted&&Math.abs(P.x-o.x)<=24&&P.y>=o.y-4&&P.y<=o.y+34&&playerFacing4()==='n');
+  const sign=(MD.roomActors||[]).find(o=>{
+    if(!o.ferrySign||o.editorDeleted)return false;
+    const dx=o.x-P.x,dy=o.y-6-P.y;
+    const facing=Math.abs(dx)>Math.abs(dy)?(dx<0?'w':'e'):(dy<0?'n':'s');
+    return Math.abs(dx)<=28&&Math.abs(dy)<=34&&playerFacing4()===facing;
+  });
   if(!sign)return false;
   playScene([FERRY_SIGN_TEXT]);return true;
 }

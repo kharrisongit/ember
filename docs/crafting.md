@@ -22,15 +22,15 @@ Golems drop mineral dust; shroom and mine enemies provide supplementary ingredie
 
 ## Minigame and saves
 
-Choose a quantity and slide the handle fully to the right to craft immediately. Partial drags reset on release; tapping the track or waiting never crafts. Keyboard users adjust with arrow keys (or End) and confirm with Enter. There is no preparation animation or minigame.
+Choose a quantity and slide the handle fully to the right. A small 1.6-second preparation animation plays before the batch is awarded: stirring a cauldron for brews, grinding in a mortar for powders, chiseling a grave marker, hammering a bell stake, enchanting a resurrection stone, or cooking food over a grill. Partial drags reset on release; tapping the track or waiting never confirms a batch. Keyboard users adjust with arrow keys (or End) and confirm with Enter. There is no additional minigame or input after confirmation. Reduced motion shows a still illustration for 0.45 seconds; switching tabs pauses preparation.
 
 The top-right X closes crafting. The redundant status/footer and Return to game button are removed; finished batches retain their Back to recipes button. Closing an unfinished batch returns its reserved ingredients.
 
-The world pauses while the book is open. Only a completed slide confirms the batch. Ingredients are reserved and saved when a batch begins. Closing or cancelling refunds them once. Loading an interrupted batch refunds its canonical recipe costs after loading the base inventory. Finishing grants the result and clears the pending batch together before saving. New games and other save slots have independent crafting state.
+The world pauses while the book is open. Only a completed slide confirms the batch. Ingredients are reserved and saved when a batch begins. Closing or cancelling, including during preparation, refunds them once. Loading an interrupted batch refunds its canonical recipe costs after loading the base inventory. Finishing the animation grants the result and clears the pending batch together before saving. New games and other save slots have independent crafting state.
 
 ## Assets and verification
 
-`assets/crafting/ingredients.webp` is a generated ten-cell ingredient sheet (5×2), decoded lazily and never awaited during boot. The confirmation uses the existing inventory item icon and a touch/keyboard slider. The retired campsite animation assets are not loaded. The church portrait fix uses a separate lazy 6×3 atlas with all eighteen speakers; its cast manifest is under `assets/portraits`.
+`assets/crafting/ingredients.webp` is a generated ten-cell ingredient sheet (5×2), decoded lazily and never awaited during boot. The confirmation uses the existing inventory item icon and a touch/keyboard slider. The small animation reuses `camp-tools.webp`, loaded on recipe selection, and existing item art; the retired campsite background is not loaded. `js/crafting-animation.js` draws each recipe's tools using the crafting clock. The church portrait fix uses a separate lazy 6×3 atlas with all eighteen speakers; its cast manifest is under `assets/portraits`.
 
 The six cooked foods have dedicated generated artwork in `assets/inventory/cooked-foods.webp` (3×2, 128px cells), shared by recipe cards, confirmations, results and the Bag. Raw ingredients keep their original icons. The full-resolution transparent source, exact built-in image-generation prompt, and cell manifest are alongside the runtime sheet. Only the small runtime sheet loads during gameplay startup.
 

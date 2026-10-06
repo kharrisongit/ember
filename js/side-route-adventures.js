@@ -232,7 +232,8 @@ const SideRouteAdventures=(()=>{
     let id=fobjs.reduce((n,o)=>Math.min(n,o.id||0),-1)-1;
     for(const p of points){
       // Snow uses its native white conifers, never the green temple substitute.
-      const pool=p.style==='winter'?STYLE_TREE.winter:p.tree;
+      const pool=p.style==='winter'?STYLE_TREE.winter:p.style==='swamp'?
+        (p.row===0?STYLE_TREE.swamp_safe||STYLE_TREE.swamp:STYLE_TREE.swamp):p.tree;
       const name=Array.isArray(pool)?pool[hash2(Math.round(p.x),Math.round(p.y))%pool.length]:pool;
       const s=NAME2I[name];if(s===undefined||!SPR[name])continue;
       fobjs.push({id:id--,s,x:p.x*TS+TS/2,y:(p.y+1)*TS,feat:1,

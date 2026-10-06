@@ -68,8 +68,8 @@ const Crafting=(()=>{
     if(state.pending){for(const [id,n]of Object.entries(state.pending.costs))add(id,n);state.pending=null;session=null;saveGame();}
     session=null;
   }
-  // Direct manipulation, with equivalent keyboard actions and optional instant
-  // completion. Both paths use the same reserved cost and one atomic reward.
+  // A completed slide confirms the reserved batch; a short animation precedes
+  // the single atomic reward. Closing at any point before that refunds it.
   function start(id,qty=1){
     const r=recipe(id);if(!opened||session&&session.phase!=='result'||!r||!known(r))return false;
     qty=Math.max(1,Math.min(5,Math.floor(qty)||1));if(maxBatch(r)<qty)return false;
@@ -81,9 +81,23 @@ const Crafting=(()=>{
   function press(){if(session?.phase==='result'){session=null;window.CraftingView?.book();}}
   function release(){if(session?.phase==='confirm'){session.progress=0;window.CraftingView?.paint();}}
   function slide(value){if(session?.phase!=='confirm'||!Number.isFinite(value))return false;session.progress=Math.max(0,Math.min(1,value));window.CraftingView?.paint();return true;}
-  function tick(){return opened;}
+  function tick(dt){
+    if(!opened)return false;
+    const s=session;
+    if(s?.phase==='crafting'&&!document.hidden&&Number.isFinite(dt)&&dt>0){
+      s.age=Math.min(s.duration,s.age+Math.min(dt,.05));
+      window.CraftingView?.paint();
+      if(s.age>=s.duration)complete(s);
+    }
+    return true;
+  }
   function finish(){
-    const s=session,p=state.pending;if(!s||s.phase==='result'||!p||s.progress<1)return false;
+    const s=session;if(!s||s.phase!=='confirm'||!state.pending||s.progress<1)return false;
+    s.phase='crafting';s.age=0;s.duration=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?0.45:1.6;
+    window.CraftingView?.paint();return true;
+  }
+  function complete(s){
+    const p=state.pending;if(session!==s||s.phase!=='crafting'||!p)return false;
     s.produced=p.qty;add(p.id,s.produced);state.mastered[p.id]=clean((state.mastered[p.id]||0)+1);state.pending=null;
     s.phase='result';s.progress=1;saveGame();window.EmberSfx?.pickup?.();window.CraftingView?.result();return true;
   }
