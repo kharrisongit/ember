@@ -467,3 +467,26 @@ function clearCrashFieldMushrooms(){
   for(const [prefix,arr] of [['s',typeof scat==='undefined'?[]:scat],['a',typeof sanm==='undefined'?[]:sanm]])
     for(let i=0;i<arr.length;i+=3)if(removed(arr[i],arr[i+1],arr[i+2])&&typeof decorGone!=='undefined')decorGone.add(prefix+i);
 }
+
+// Keep the blossom grass calm while retaining its flowers and other biomes.
+function clearBlossomTufts(){
+  if(MAPID!=='world')return;
+  const bounds=[];
+  for(const f of features){
+    if(f.style!=='blossom')continue;
+    if(f.kind==='route'){
+      const pad=(f.band||8)+(f.w||5)/2+1;
+      for(const [a,b]of routeLegs(f))bounds.push([Math.min(a[0],b[0])-pad,Math.min(a[1],b[1])-pad,Math.max(a[0],b[0])+pad,Math.max(a[1],b[1])+pad]);
+    }else if(f.kind==='area')bounds.push([f.x0,f.y0,f.x1,f.y1]);
+    else if(f.kind==='arena'||f.kind==='camp'){
+      const r=(f.r||6)+12;bounds.push([f.x-r,f.y-r,f.x+r,f.y+r]);
+    }
+  }
+  const remove=(s,x,y)=>/^(agrass|dtuft|tuft)/.test(NAMES[s]||'')&&
+    bounds.some(([x0,y0,x1,y1])=>x/TS>=x0&&x/TS<=x1+1&&y/TS>=y0&&y/TS<=y1+1);
+  // Preserve authored indices so saved/editor decoration keys remain stable.
+  for(let i=0;i<sanm.length;i+=3)if(remove(sanm[i],sanm[i+1],sanm[i+2]))decorGone.add('a'+i);
+  const keep=[];
+  for(let i=0;i<fsanim.length;i+=3)if(!remove(fsanim[i],fsanim[i+1],fsanim[i+2]))keep.push(fsanim[i],fsanim[i+1],fsanim[i+2]);
+  fsanim=keep;
+}

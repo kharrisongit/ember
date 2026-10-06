@@ -1695,6 +1695,7 @@ async function buildHouseFurnitureLayers(onProgress=()=>{}){
     }
     pending.delete(name);report();
   }));
+  CoralmereLighthouse.installInteriors();
 }
 /* === end household furniture layering === */
 
@@ -2368,6 +2369,11 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
     if(typeof DesertPyramid!=='undefined')DesertPyramid.clearForecourt();
     if(typeof DragonChapels!=='undefined')DragonChapels.clearForecourt();
     if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld();
+    if(id==='world'){
+      clearBlossomTufts();
+      CoralmereLighthouse.repairPaths();
+      rebuildBuckets();
+    }
   }
   if(typeof Crafting!=='undefined')Crafting.prepareWorld();
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.reset();

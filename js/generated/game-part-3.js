@@ -2558,6 +2558,7 @@ const FOREST = STYLE_TREE[MD.forest_style || "spruce"];
   extendStumpTreeLine();
   clearForgefallsCliffTrees();
   rebuildBlossomRoutes({inTownArea,onBuilding});
+  clearBlossomTufts();
   if(!editorMapLoading)applyEditorPaint();
   chunks.clear();
   if(typeof SideRouteAdventures!=='undefined')SideRouteAdventures.finishWorld(false);
