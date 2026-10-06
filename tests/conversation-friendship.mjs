@@ -19,49 +19,41 @@ assert.equal(box.querySelector('.conversationChat').textContent,'Press To Chat')
 assert.equal(box.querySelector('.conversationChat').parentNode,box.querySelector('.conversationCorinSpeech'));
 assert.equal(box.querySelector('.deckProfileToggle').parentNode,box.querySelector('.conversationFooter'));
 assert.deepEqual(box.querySelector('.conversationFooter').children.map(e=>e.className),['deckProfileToggle','conversationAB','conversationFriendship']);
-assert(status().locked>0,'Later story topics count toward maximum from the outset');
+assert.equal(status().locked,0,'Hettie’s new personal topics are available immediately');
 const total=status().total;
 const start=title=>{c.topicTitle=title;run('if(EmberConversationFlow.welcoming())EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n===topicTitle);askTake();');};
 const next=()=>run('typeAll();scene.t=1;EmberConversationFlow.advance()');
-start('How did you start keeping cattle?');assert.equal(status().completed,0,'Selecting is not completing');
+start('The cow that escaped');assert.equal(status().completed,0,'Selecting is not completing');
 next();assert(run('ask.replyChoices'));run('EmberConversationFlow.back()');assert.equal(status().completed,0,'Backing out earns nothing');
-start('How did you start keeping cattle?');next();run('askPick=2;askTake()');next();
+start('The cow that escaped');next();run('askPick=2;askTake()');next();
 say.scrollHeight=940;say.clientHeight=100;say.scrollTop=0;run('stepType(.03);EmberConversationFlow.sync()');assert.equal(say.scrollTop,940,'Typing follows overflowing speech');
 run('typeAll();EmberConversationFlow.sync()');say.scrollTop=20;run('EmberConversationFlow.sync()');assert.equal(say.scrollTop,20,'Finished text can be scrolled back manually');
 const finalWords=run('typeFull');next();assert.equal(status().completed,1);
 assert.equal(box.querySelector('.conversationNpcEcho').textContent,finalWords,'The final NPC reply remains after the topic');
 click(box.querySelector('.conversationChat'));assert.equal(box.querySelector('.conversationNpcEcho').textContent,finalWords,'Opening Chat retains that reply until a new topic is picked');
-start('How did you start keeping cattle?');next();run('askPick=3;askTake()');next();next();assert.equal(status().completed,1,'Another branch earns no duplicate friendship');
-click(box.querySelector('.conversationFriendship'));assert(run('EmberConversationPanels.isOpen()'));assert.match(box.querySelector('.conversationPanelIntro').textContent,/progress further into the story/);
+start('The cow that escaped');next();run('askPick=3;askTake()');next();next();assert.equal(status().completed,1,'Another branch earns no duplicate friendship');
+click(box.querySelector('.conversationFriendship'));assert(run('EmberConversationPanels.isOpen()'));assert(box.querySelector('.conversationPanelIntro').textContent);
 const before=run('askPick');run('askStep(1)');assert.equal(run('askPick'),before);run('askBack()');assert(!run('EmberConversationPanels.isOpen()'));
-start('Do you ever take a day off?');next();run('askPick=1;askTake()');next();run('typeAll();EmberConversationFlow.goodbye()');
+start('Raising a calf');next();run('askPick=1;askTake()');next();run('typeAll();EmberConversationFlow.goodbye()');
 assert.equal(status().completed,2,'Goodbye after reading the final answer also completes the topic');
 run('openNpcTopics(friendActor)');
-// Complete available topics; future content must prevent an early reward.
+// Complete all three conversations and award once, only after reading the answers.
 run('var originalGold=gold,originalPotions=potions;for(const t of EmberFriendship.status("Hettie").topics)if(t.available)EmberFriendship.complete({name:"Hettie",id:t.id,key:"Hettie:"+t.title});');
-assert(status().percent<100);assert.equal(run('gold'),run('originalGold'));assert.equal(run('potions'),run('originalPotions'));
-run('breathHas.lightning=true;openNpcTopics(friendActor)');assert.equal(status().total,total,'Unlocking a story keeps the same denominator');assert.equal(status().locked,0);
-run('for(const t of EmberFriendship.status("Hettie").topics)EmberFriendship.complete({name:"Hettie",id:t.id,key:"Hettie:"+t.title});');
-assert.equal(status().percent,100);assert.equal(status().level,5);assert(status().rewarded);
+assert.equal(status().total,total);assert.equal(status().percent,100);assert.equal(status().level,5);assert(status().rewarded);
 assert.equal(run('gold-originalGold'),50);assert.equal(run('potions-originalPotions'),1);
 run('var savedFriendship=captureSave().friendship;EmberFriendship.restore(savedFriendship);openNpcTopics(friendActor);for(const t of EmberFriendship.status("Hettie").topics)EmberFriendship.complete({name:"Hettie",id:t.id,key:"Hettie:"+t.title});');
 assert.equal(run('gold-originalGold'),50);assert.equal(run('potions-originalPotions'),1,'Saved rewarded flag prevents farming');
 assert(!run('EmberConversationPanels.isOpen()'),'Read tutorial does not return after restoring a save');
-// Every Millwood resident has two immediate additions and one real story gate.
-const names=JSON.parse(run('JSON.stringify(Object.keys(MillwoodFriendshipTopics.rows))'));assert.equal(names.length,15);
-for(const name of names){c.npcName=name;run('askShut();scene=null;sayNpc=null;breathHas.lightning=false;fishingPole=false;wonAll=false;var a={n:npcName,x:100,y:100};');
- const early=JSON.parse(run('JSON.stringify(MillwoodShroomDialogue.topics(a))'));
- const all=JSON.parse(run('JSON.stringify(MillwoodShroomDialogue.topics(a,{all:true}))'));
- assert.equal(early.filter(t=>t.friendshipId?.startsWith('millwood-')).length,2,name+' has two new early topics');
- assert.equal(all.filter(t=>t.friendshipId?.startsWith('millwood-')).length,3,name+' counts its later topic');
- run('breathHas.lightning=true;fishingPole=true;wonAll=true');
- const late=JSON.parse(run('JSON.stringify(MillwoodShroomDialogue.topics(a))'));
- assert.equal(late.filter(t=>t.friendshipId?.startsWith('millwood-')).length,3);
- for(const row of late.filter(t=>t.friendshipId))assert.equal(row.authoredBranches.decisions[0].length,2,'Three distinct authored reply choices');
-}
-// An old save can retain discussed topics without confusing introductory memory tags.
-run('discussedTopics.clear();discussedTopics.add("Hettie:How did you start keeping cattle?");discussedTopics.add("@millwood-shrooms-v1:Hettie:seen");EmberFriendship.restore();openNpcTopics(friendActor)');assert.equal(status().completed,1);
-assert(run('EmberConversationPanels.isOpen()'),'Legacy saves receive the new tutorial once');
-run('EmberConversationPanels.close();EmberFriendship.restore({tutorialSeen:true,people:{}});openNpcTopics(friendActor)');
-assert.equal(status().completed,1,'Legacy credit remains stable when reloaded');
-console.log('PASS: first-use help, controls, retained/scrolling dialogue, completion-only friendship, all 45 gated Millwood additions, persistent one-time rewards, and old-save migration.');
+// Maddock's history waits until his compulsory opening account has happened.
+run(`EmberConversationFlow.shut(true);askShut();scene=null;sayNpc=null;quest=Q.EGGS;var elderFriend={n:'Elder Maddock',x:100,y:100};openNpcTopics(elderFriend);`);
+assert.equal(run('EmberFriendship.status().locked'),1);
+const elderTotal=run('EmberFriendship.status().total');
+run('quest=Q.NOISE;openNpcTopics(elderFriend)');
+assert.equal(run('EmberFriendship.status().locked'),0);assert.equal(run('EmberFriendship.status().total'),elderTotal);
+// Retired dialogue does not falsely mark a rewritten exchange as read.
+run('EmberConversationFlow.shut(true);askShut();discussedTopics.clear();discussedTopics.add("Hettie:How did you start keeping cattle?");discussedTopics.add("@millwood-shrooms-v1:Hettie:seen");EmberFriendship.restore();openNpcTopics(friendActor)');assert.equal(status().completed,0);
+assert(run('EmberConversationPanels.isOpen()'),'Legacy saves receive the tutorial once');
+run('EmberConversationPanels.close();EmberFriendship.restore({tutorialSeen:true,people:{Hettie:{completed:[],known:[],rewarded:true}}});openNpcTopics(friendActor)');
+const oldReward=run('[gold,potions]');run('for(const o of ask.opts)if(o.friendship)EmberFriendship.complete(EmberFriendship.start(ask,o))');
+assert.deepEqual(Array.from(run('[gold,potions]')),Array.from(oldReward),'Previously rewarded saves cannot farm the rewrite');
+console.log('PASS: first-use help, controls, scrolling, completed exchanges, story lock, persistent one-time rewards, and rewritten-topic migration.');

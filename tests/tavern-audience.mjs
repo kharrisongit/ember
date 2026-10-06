@@ -9,8 +9,8 @@ assert(run('!!ask?.conversationPrompt'),'Audience starts with the normal convers
 const scripts=run('ThornwellAudienceDialogue.rows(thornwellKing())');
 assert.equal(scripts.length,8,'The current audience has eight authored topics');
 for(const topic of scripts)assert.equal(1+topic.authoredBranches.decisions[0].length,3,'Every topic has three complete reply branches');
-assert.match(JSON.stringify(scripts),/fifty years/);assert.match(JSON.stringify(scripts),/dragon/);
-run(`ThornwellAudienceDialogue.rows(thornwellKing()).find(t=>t.title==='What gave you the right to rule?').onReply('You chose to attack people who trusted you.')`);
+assert.match(JSON.stringify(scripts),/dragons/i);assert.match(JSON.stringify(scripts),/dragon/);
+run(`ThornwellAudienceDialogue.rows(thornwellKing()).find(t=>t.title==="A king's authority").onReply('And if your decision is wrong?')`);
 assert.equal(run('thornwellRoyal.answers.conquest'),'defiant','Audience choices update the saved response');
 run(`restoreThornwellRoyal({stage:4,answers:{conquest:'defiant',hunt:'question'}})`);
 assert.equal(run('captureThornwellRoyal().answers.conquest'),'defiant');assert.equal(run('captureThornwellRoyal().answers.hunt'),'question');

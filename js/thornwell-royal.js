@@ -32,7 +32,7 @@ function thornwellQuietGreeting(n){
   if(n.n==='Fen'&&!charm.twin)return [
     brambleQuest>=2?'Fen: You brought Rowan his dog. That deserves a little kindness in return.':'Fen: Bramble seems to trust you. Dogs are often better judges than kings.',
     'Fen: Take this Twin Heart. It is an old charm for two companions who look after one another.',
-    'Corin: You are giving it to me?',
+    "Corin: That's yours. Are you sure you want to part with it?",
     'Fen: I can choose who receives a gift. Whatever Halvard thinks.'];
   const p=typeof npcWorldProfile==='function'?npcWorldProfile(n):null;
   const lines=p?.greetings?.d||n.d||[n.n+': Keep your voice down. The king is visiting Thornwell.'];
@@ -64,12 +64,12 @@ function beginThornwellDetour(){
   thornwellRoyal.stage=1;
   if(MAPID==='world')thornwellFlight={kind:'depart',phase:'talk',distance:0};
   thornwellScene([
-    'Aurelius: Before we enter Thornwell, we should decide how much attention we can afford. We cannot know how everyone will react.',
-    'Corin: I need to find this dog’s owner. That will mean asking people.',
-    'Aurelius: Then go in without me. I can stay beyond the town and meet you at the bridge over Forgefalls, southeast of Thornwell.',
-    'Corin: If I am delayed, stay hidden near the bridge. I will come as soon as I can.',
-    'Aurelius: Agreed. Do not let being on your own persuade you that you have to solve everything alone.',
-    'Corin: And do not come looking for me just because I am taking longer than expected. We will meet at Forgefalls.'
+    "Aurelius: Thornwell is close. Before everyone sees me, we should think about who might be watching.",
+    "Corin: Bramble's owner could be in there. I can't find him without asking around.",
+    "Aurelius: Go ahead with the dog. I'll keep out of sight and meet you at the Forgefalls bridge, southeast of town.",
+    "Corin: Stay under cover if I'm late. I don't know how long finding one person will take.",
+    "Aurelius: I'll wait. You can leave a difficult conversation without winning it, Corin.",
+    "Corin: I'll try to remember that. Forgefalls, then. Don't let a delay bring you into town."
   ],()=>{
     if(!thornwellFlight){saveGame();return;}
     thornwellFlight.phase='lift';dragon.dir='e';dragon.moving=false;
@@ -170,7 +170,7 @@ function beginRowanReunion(){
   const end=path.at(-1),dogSpot=[end[0],end[1]+28];
   const dogTarget=canNpcStand(...dogSpot,dog)?dogSpot:null;
   faceToward(rowan,P.x,P.y);
-  thornwellScene(['Rowan: Is that Bramble with you? Bring him over, please!'],()=>{
+  thornwellScene(["Rowan: Bramble! Corin, is he with you? Over here!"],()=>{
     thornwellWalkPlayer(path,()=>{brambleTrail=[];faceCorinAt(rowan.x,rowan.y);faceToward(rowan,P.x,P.y);tryBrambleReunion(rowan);},'rowan');
     thornwellMotion.dog=dog;thornwellMotion.trail=trail;thornwellMotion.rowan=rowan;
     thornwellMotion.dogTarget=dogTarget;
@@ -195,18 +195,18 @@ function thornwellSummon(){
   if(!path)return; // Retry a real route; never teleport through edited furniture.
   thornwellCheckpoint(2);
   thornwellScene([
-    'King Halvard: I know that face. Millwood, was it? You were carrying the elder’s eggs.',
-    'Corin: I was, Your Majesty.',
-    'King Halvard: Come to the table. I would like to hear what has brought you farther from home.',
-    'Serjeant Bram: The king has asked you to approach.'
+    "King Halvard: The egg boy. I wondered whether Millwood had anything else to send me.",
+    "Corin: Your Majesty. I didn't expect to see you here.",
+    "King Halvard: Evidently. Come closer. I prefer to hear an explanation without raising my voice.",
+    'Serjeant Bram: You heard His Majesty. Come to the table.'
   ],()=>{releaseThornwellSummonCamera();thornwellWalkPlayer(path,()=>{
     faceCorinAt(king.x,king.y);thornwellRoyal.stage=3;thornwellRoyal.answers.visit='yes';
     thornwellScene([
-      'King Halvard: Your name, boy. I remember the errand better than the introduction.',
-      'Corin: Corin, from Millwood. I brought a lost dog back to its owner.',
-      'King Halvard: A useful morning, then. My officers are investigating reports of a dragon landing in the woods north of Millwood. People have become much too eager to keep their discoveries to themselves.',
-      'Corin: What do you want me to do?',
-      'King Halvard: Report anything you hear to my officers. Now, you may ask your questions. I will decide which deserve an answer.'
+      "King Halvard: Remind me of your name. Your village's errands are easier to keep track of than its children.",
+      "Corin: Corin. I found Bramble on the road and brought him back to Rowan.",
+      "King Halvard: How diligent. My officers could use such help. A dragon was reported in the woods north of Millwood, yet suddenly nobody remembers looking up.",
+      "Corin: What would you expect someone to report?",
+      "King Halvard: Anything unusual, to the nearest officer. Leave the judgement to us. You seem to have questions of your own; this is your opportunity."
     ],()=>thornwellInviteAudience(king),king);
   });},king);
   scene.thornwellSummons=true;
@@ -229,17 +229,17 @@ function thornwellDismissAudience(){
   const king=thornwellKing();
   thornwellAudienceLines(king,[
     ['tax','conquest','hunt','riders'].some(key=>thornwellRoyal.answers[key]==='defiant')?
-      'King Halvard: You have used my invitation to question rather freely. Do not assume every officer will extend the same patience.':
-      'King Halvard: You have had your answers. I expect you to remember the parts that concern your responsibilities.',
-    'Corin: May I continue my journey, Your Majesty?',
-    'King Halvard: Yes. If you hear a report of a dragon, give it to my officers before turning it into a village tale.',
-    'Serjeant Bram: You are dismissed. Leave the king room to finish his visit.'
+      "King Halvard: You have a taste for difficult questions. Remember that my patience is a privilege I have extended to you.":
+      "King Halvard: That is enough of your questions. My instructions are the part of this conversation you need to retain.",
+    "Corin: Then may I leave the table, Your Majesty?",
+    "King Halvard: You may. A dragon sighting belongs in an officer's report before it becomes tavern entertainment.",
+    'Serjeant Bram: That concludes the audience. Step away from the table.'
   ],()=>{thornwellCheckpoint(4);});
 }
 function openThornwellAudience(actor){
   if(!actor?.thornwellRoyal)return false;
   if(brambleQuest<3){if(brambleQuest===1)beginRowanReunion();return true;}
-  if(thornwellRoyal.stage<3){thornwellScene([actor.n+': Return the dog to his owner first. The king’s table will still be here.'],null,actor);return true;}
+  if(thornwellRoyal.stage<3){thornwellScene([actor.n+': Settle the matter with the hunter. His Majesty will speak to you afterward.'],null,actor);return true;}
   if(thornwellRoyal.stage>4)return false;
   sayNpc=null;sayOff();showFace(null);P.moving=false;
   const king=actor.n==='King Halvard',back=thornwellRoyal.stage===3?thornwellDismissAudience:()=>{};
@@ -263,7 +263,7 @@ function thornwellDeparture(){
   // The ceremonial escort has idle art only. Stage the entire party while
   // black, just as in Millwood; never swap them for the Cinderhold fighters.
   thornwellScene([]);thornwellMotion={kind:'blackout'};thornwellRoyalDragon=null;
-  royalBlackout('Serjeant Bram: Keep this road clear for the king!',()=>{
+  royalBlackout('Serjeant Bram: To the side of the road. Leave room for the escort.',()=>{
     npcs=npcs.filter(n=>!n.thornwellRoyal);
     const forward=[[P.x,P.y+32],[P.x+16,P.y+32],[P.x-16,P.y+32]].find(p=>canStand(...p));
     if(forward)[P.x,P.y]=forward;
@@ -278,8 +278,8 @@ function thornwellDeparture(){
   },()=>{
     const king=thornwellKing();thornwellMotion=null;
     thornwellScene([
-      'King Halvard: We have spent enough time here, Bram. The road past Forgefalls will take us towards Cinderhold.',
-      'Serjeant Bram: Your dragon is approaching, Your Majesty. I will clear the departure.'
+      "King Halvard: Bram, we leave. Take the Forgefalls road toward Cinderhold.",
+      'Serjeant Bram: Clear the landing ground. His Majesty’s dragon is coming down.'
     ],thornwellRoyalArrival,king);
     scene.hold=()=>fade<=0;showScene();
     // Reveal the party only after Bram's announcement has been read in black.
@@ -305,8 +305,8 @@ function thornwellRoyalExit(){
   },()=>{
     thornwellMotion=null;thornwellCheckpoint(6);
     thornwellScene([
-      'Corin: They are taking the road to Forgefalls. I told Aurelius to wait near that bridge.',
-      'Corin: He knows to stay hidden, but I need to reach him before they do.'
+      "Corin: Forgefalls. They're heading straight toward the bridge where Aurelius is waiting.",
+      "Corin: He'll stay hidden. I need to get there without leading them to him."
     ],()=>{saveGame();});
     scene.hold=()=>fade<=0;showScene();
   });
@@ -338,16 +338,16 @@ function thornwellReunion(){
 }
 function thornwellReunionDialogue(){
   thornwellScene([
-    'Corin: Aurelius! I was afraid I would reach the bridge too late.',
-    'Aurelius: I stayed under cover, as we agreed. What happened in Thornwell?',
-    'Corin: Halvard was at the Copper Cup. He recognised me from the egg errand and called me over. He is searching for signs of a dragon in the northern woods.',
-    'Aurelius: Did he learn anything about us?',
-    'Corin: I did not tell him. He ordered me to report any dragon sightings to his officers. Then he left by this road, and I thought he might find you waiting.',
-    'Aurelius: I saw his party pass and kept still until they were gone. He did not see me.',
-    'Corin: I kept wanting to hurry. It was difficult to sit there and listen to him talk about hunting dragons.',
-    'Aurelius: You got away without leading him to me. I am grateful you trusted me to keep our agreement.',
-    'Corin: I returned the dog too. His name is Bramble, and Rowan was very glad to see him.',
-    'Aurelius: Then we have both kept somebody waiting long enough. Let us go on together. I would rather meet the next town beside you.'
+    "Corin: There you are. I saw which road they took and thought—",
+    "Aurelius: They passed. I'm safe. Breathe first; tell me afterward.",
+    "Corin: Halvard was in the tavern. He remembered me and called me to his table. His men know a dragon landed north of Millwood.",
+    "Aurelius: Did he suspect what happened after the landing?",
+    "Corin: I don't think so. He told me to report sightings, then left for this bridge. I couldn't warn you.",
+    "Aurelius: You had already warned me. I stayed still until his party was out of sight.",
+    "Corin: He spoke about hunting you while I sat there. I wanted to knock his cup off the table.",
+    "Aurelius: I'm glad you left the cup standing. We can do more together out here than with you under arrest.",
+    "Corin: Bramble made it back to Rowan, at least. One part of the afternoon went as planned.",
+    "Aurelius: Then let us count that part. And walk together for a while; I've had enough of waiting behind a bridge."
   ],()=>{thornwellFlight=null;thornwellCheckpoint(7);refreshWingBtn();toast('Reunited at Forgefalls. Aurelius travels with you again.');});
 }
 function stepThornwellRoyal(dt){
@@ -363,7 +363,7 @@ function stepThornwellRoyal(dt){
       if(dist<=step){d.arrived=true;d.dir='s';motion.pause+=dt;}
       if(motion.pause>=.7){
         thornwellMotion=null;
-        thornwellScene(['King Halvard: The visit is concluded. Bram, attend me.','Serjeant Bram: Stand clear while His Majesty departs.'],thornwellRoyalExit,thornwellKing());
+        thornwellScene(["King Halvard: Bram, finish here. We are departing.",'Serjeant Bram: Step back. Leave the doorway for the king.'],thornwellRoyalExit,thornwellKing());
       }
       return;
     }

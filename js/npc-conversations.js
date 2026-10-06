@@ -1863,6 +1863,7 @@ function npcDragonConversation(n,alt=false){
   return n.dragonRumor||n.d;
 }
 function fishingRodDialogue(name,n){
+  if(typeof DialogueRenewal!=="undefined")return DialogueRenewal.rod(name);
   const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.rod(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.rod(n);
   if(authored)return authored;
@@ -1957,10 +1958,10 @@ function npcStoryGiftPending(n){
 let hettieErrandReminderIndex=0;
 function hettieErrandReminder(){
   const lines=[
-    "Hettie: Off you go, Corin, love. Maddock will be waiting for those eggs.",
-    "Hettie: Get a move on, sweetheart. We can have a proper chat when your errand is done.",
-    "Hettie: Mind that basket, Corin. Gently with the eggs, quickly with your feet.",
-    "Hettie: Go on, love. I'll still be here when you've delivered them."
+    "Hettie: The basket is at the coop behind the mill. Six eggs, all for Maddock.",
+    "Hettie: Has the basket reached Maddock yet? His house is waiting even if he has wandered out.",
+    "Hettie: Mind the ruts on the lane. Those eggs have had a peaceful morning so far.",
+    "Hettie: If Maddock offers you a story, hear it after putting the basket down. He talks with his hands."
   ];
   return lines[hettieErrandReminderIndex++%lines.length];
 }
@@ -1980,6 +1981,7 @@ function npcWorldTopics(n){
   return topics;
 }
 function npcAuditedGreeting(n,alt){
+  if(typeof DialogueRenewal!=="undefined"){const lines=DialogueRenewal.context(n);if(lines)return lines;}
   const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.context(n);if(forgewick)return forgewick;
   const thornwell=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(thornwell)return thornwell;
   const authored=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.context(n);
@@ -2002,6 +2004,7 @@ function npcAuditedGreeting(n,alt){
   return spoken((visible&&alt&&p.greetings?.dd2)||p.greetings?.[field]||p.greetings?.d);
 }
 function npcStoryTopics(n){
+  if(typeof DialogueRenewal!=="undefined"&&DialogueRenewal.profile(n))return DialogueRenewal.topics(n);
   const topics=baseNpcStoryTopics(n);
   return typeof Crafting!=='undefined'?[...Crafting.topics(n),...topics]:topics;
 }
@@ -2057,6 +2060,7 @@ function baseNpcStoryTopics(n){
   return topics;
 }
 function openNpcTopics(n){
+  if(typeof DialogueRenewal!=="undefined"){if(DialogueRenewal.church(n))return false;if(DialogueRenewal.profile(n))return DialogueRenewal.open(n);}
   if(n.n==='Odo'&&!hasDragon())return false;
   if(n.n==='King Halvard'&&MAPID!=='tavern')return false;
   if(n.thornwellRoyal)return openThornwellAudience(n);

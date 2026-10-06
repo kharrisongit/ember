@@ -37,7 +37,7 @@ for(const {map,n} of residents){
 }
 run(`MAPID='tavern';MD=W.maps.tavern;scene=null;ask=null;sayNpc=null;`);
 const firstLinna=run("npcContextDialogue({n:'Linna',d:['Hello']},false).join(' ')");
-run('thornwellRoyal.stage=7');assert.notEqual(run("npcContextDialogue({n:'Linna',d:['Hello']},false).join(' ')"),firstLinna);
+run('thornwellRoyal.stage=7');assert.doesNotMatch(run("npcContextDialogue({n:'Linna',d:['Hello']},false).join(' ')"),/beside you|your dragon/,'Indoor greetings do not invent a sighting after the reunion');
 run('thornwellRoyal.stage=1');
 // Actual save and load keeps the dragon separated and reconstructs the cast.
 run('saveToSlot(3,true);thornwellRoyal.stage=7');assert(run('loadGame(3)'));
@@ -56,7 +56,7 @@ assert(run('ask?.conversationPrompt'),'The king’s opening scene waits for conf
 run("askPick=ask.opts.findIndex(o=>o.n==='Talk');askTake()");
 assert.equal(run('ask?.npcConversation'),'King Halvard');
 assert(run('Math.hypot(P.x-thornwellKing().x,P.y-thornwellKing().y)<55'),'Corin actually walks to the corner table');
-assert(spoken.some(s=>s.includes('carrying the elder’s eggs')));
+assert(spoken.some(s=>s.includes('The egg boy')));
 assert(!spoken.some(s=>s.includes('hear you have a dragon')));
 let choices=0;
 for(const name of ['King Halvard','Serjeant Bram']){
@@ -85,7 +85,7 @@ assert.equal(run('thornwellRoyal.stage'),3,'Back stays at the royal topic list')
 run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='May I leave?');askTake();`);tick(30);
 assert.equal(run('thornwellRoyal.stage'),4,'Goodbye dismisses the audience safely');
 assert.equal(run('thornwellAudiencePending()'),false,'Dismissal unlocks the tavern exit');
-assert(spoken.some(s=>s.includes('question rather freely')),'Choices affect the dismissal');
+assert(spoken.some(s=>s.includes('taste for difficult questions')),'Choices affect the dismissal');
 assert.equal(run('atlasJourneyObjective().title'),'Leave the Copper Cup');
 run('atlasSyncJournal();saveToSlot(3,true)');
 assert.equal(run('captureSave().thornwellRoyal.answers.tax'),'defiant');
@@ -109,8 +109,8 @@ assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),0,'Party does not ap
 run('useDoors(2)');assert.equal(run('fade'),1);
 assert.equal(run('npcs.filter(n=>n.thornwellRoyal).length'),2,'Party appears at full black');
 assert.equal(run('fadeDir'),0,'The blackout waits for the knight’s announcement');
-assert.equal(run('scene.lines[0]'),'Serjeant Bram: Keep this road clear for the king!');
-assert.equal(run('typeFull'),'Keep this road clear for the king!','The announcement is visible during the blackout');
+assert.equal(run('scene.lines[0]'),'Serjeant Bram: To the side of the road. Leave room for the escort.');
+assert.equal(run('typeFull'),'To the side of the road. Leave room for the escort.','The announcement is visible during the blackout');
 run('useDoors(2)');assert.equal(run('fade'),1,'The party stays hidden until the announcement is advanced');
 run('typeAll();scene.t=1;advanceScene()');
 assert.equal(run('fadeDir'),-1,'Advancing the announcement starts the reveal');
@@ -134,8 +134,8 @@ assert.equal(run('thornwellRoyalDragon'),null);
 assert(run("npcs.filter(n=>n.editKey==='npc:placed:f30b6b62-a107-47b7-95ad-7cc27ab5c605').every(n=>Math.hypot(n.x-P.x,n.y-P.y)>40)"),'Departure keeps Corin away from the drinker');
 assert.equal(run('dragonHere()'),false,'Aurelius stays absent after the royal departure');
 assert.equal(run('atlasJourneyObjective().place'),'Forgefalls');
-assert(spoken.includes('Serjeant Bram: Keep this road clear for the king!'));
-assert.equal(spoken.filter(s=>s==='Serjeant Bram: Keep this road clear for the king!').length,1,'The announcement is not repeated after the reveal');
+assert(spoken.includes('Serjeant Bram: To the side of the road. Leave room for the escort.'));
+assert.equal(spoken.filter(s=>s==='Serjeant Bram: To the side of the road. Leave room for the escort.').length,1,'The announcement is not repeated after the reveal');
 assert(spoken.includes('Stand back. The king needs this space.'));
 assert(spoken.some(s=>/Forgefalls.*Cinderhold/.test(s)));
 run('restoreThornwellRoyal(captureThornwellRoyal());');tick(5);assert.equal(run('thornwellRoyal.stage'),6,'Reloaded departure does not repeat');
@@ -166,7 +166,7 @@ tick(80);
 assert.equal(run('thornwellRoyal.stage'),7);assert(run('dragonHere()'));
 assert.equal(run('dragon.hp'),4,'Reunion does not heal or reset dragon progress');
 assert(run("atlasQuestComplete('thornwell-royals')"));
-assert(spoken.some(s=>s.includes('I saw his party pass')));
+assert(spoken.some(s=>s.includes('stayed still until his party')));
 const linesAfter=spoken.length;tick(100);assert.equal(spoken.length,linesAfter,'Reunion plays once');
 // Departure animation: ownership stays intact; normal following cannot pull
 // the dragon back to Corin while the flight is in progress or after it ends.

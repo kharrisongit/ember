@@ -19,13 +19,13 @@ for(const [w,h]of [[390,510],[844,250],[1280,680]]){
  assert(run('(()=>{const g=greenAt();return (g.x-48-cam.x)*cam.z>=0&&(g.x+48-cam.x)*cam.z<=VW&&(g.y-40-cam.y)*cam.z>=0&&(g.y-40-cam.y)*cam.z<VH-100})()'),'Landed dragon stays in view with close framing at '+w+'×'+h);
 }
 assert.equal(run('cam.z'),run('greenCamera.zoom'),'Dragon scene keeps normal gameplay zoom');
-assert.equal(shown.at(-1),'Corin: What the…');
+assert.equal(shown.at(-1),"Corin: That's coming straight at me!");
 run('stepScene(1.5)');assert(!run('scene.greenTextHidden'),'Flight reaction has time to read');
 run('stepScene(.1)');assert(run('scene.greenTextHidden'),'Flight reaction clears after 1.6 seconds');
 assert(run('sceneHold()'),'Clearing the text does not release the cinematic');
 run('scene.t=1;advanceScene()');assert.equal(run('scene.i'),0,'A cannot skip the flight reaction');
 run('greenFly(5.5);stepScene(.1)');assert.equal(run('greenPhase'),'crash');assert.equal(run('scene.i'),0);
-run('greenFly(1.1);stepScene(.1)');assert.equal(shown.at(-1),'Corin: Are…are you okay?');
+run('greenFly(1.1);stepScene(.1)');assert.equal(shown.at(-1),"Corin: Easy. I'm not going to hurt you.");
 assert(!run('scene.greenTextHidden'),'The next reaction becomes visible');
 run('greenFly(2.1);stepScene(2.1)');assert(!run('scene.greenTextHidden'));
 run('greenFly(.1);stepScene(.1)');assert(run('scene.greenTextHidden'),'Concern clears after 2.2 seconds');
@@ -33,7 +33,7 @@ assert.equal(run('greenGone'),false,'Breathing continues after the text clears')
 run('greenFly(2.7);stepScene(2.7)');assert.equal(run('greenGone'),false);
 run('greenFly(.2);stepScene(.2)');assert.equal(run('greenGone'),true);
 run('greenFly(.01);greenFly(1.2);stepScene(.1)');assert.equal(run('scene.i'),1);
-run('greenFly(2);stepScene(.1)');assert.equal(shown.at(-1),'Corin: Hey! You forgot something!');
+run('greenFly(2);stepScene(.1)');assert.equal(shown.at(-1),"Corin: Wait—there's an egg here! Is it yours?");
 assert(!run('scene.greenTextHidden'),'The final line is visible and awaits confirmation');
 assert.equal(run('quest'),run('Q.ARMED'),'Egg quest waits for the final line');
 run('scene.t=1;advanceScene()');assert.equal(run('quest'),run('Q.FLED'));assert.equal(run('scene'),null);assert.equal(run('greenCamera'),null,'Normal camera returns after the last line');

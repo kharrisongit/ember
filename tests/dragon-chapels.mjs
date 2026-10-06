@@ -50,13 +50,11 @@ run(`DragonChapels.restore(false);dragonOff=false;dragon.on=true;dragon.air=fals
 P.x=176;P.y=216;stepDragon(.05);`);
 assert(run('dragonHere()&&Number.isFinite(dragon.x)&&Number.isFinite(dragon.y)'),'Aurelius enters Forgewick chapel');
 assert(!run('atlasQuestOptions().some(q=>q.id==="desert-church")'),'Secret lead stays hidden before Edrin');
-run(`EmberFriendship.restore({tutorialSeen:true});globalThis.edrin=npcs.find(n=>n.n==='Brother Edrin');
-EmberConversationFlow.prompt(edrin);for(let i=0;i<10&&scene;i++){typeAll();scene.t=1;advanceScene();}
-askPick=1;askTake();EmberConversationFlow.openChat();
-askPick=ask.opts.findIndex(o=>o.questUnlock);askTake();`);
+run(`EmberFriendship.restore({tutorialSeen:true});globalThis.edrin=npcs.find(n=>n.n==='Brother Edrin');beginNpcTalk(edrin);`);
+assert(!run('EmberConversationFlow.active()||ask?.npcConversation'),'Church conversations remain in the world');
 assert(!run('DragonChapels.capture()'),'Forgewick preacher cannot grant blessing');
-assert(run('scene.lines.some(s=>s.includes("My brother Cael"))&&scene.lines.some(s=>s.includes("Halvard’s ban"))'));
-run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=1;if(ask?.replyChoices){askPick=1;askTake();}else EmberConversationFlow.advance();}');
+assert(run('scene.lines.some(s=>s.includes("My brother Cael"))'));
+run('for(let i=0;i<30&&scene;i++){typeAll();scene.t=1;advanceScene();}');
 assert(run('DragonChapels.known()&&!DragonChapels.found()'),'Finishing Edrin’s account unlocks the lead');
 assert(run('atlasJournalAllowed("desert-church")'),'The chapel lead is recorded before the desert road opens');
 assert(!run('atlasTrack("desert-church")'),'The compass respects the closed road');
@@ -70,9 +68,9 @@ run(`globalThis.reachableGuests=new Set();for(let y=90;y<238;y+=2)for(let x=46;x
 assert(run('npcs.every(n=>reachableGuests.has(n.n))'),'Every preacher and congregant has a reachable interaction');
 assert(run('npcs.every(n=>portraitFor(n.n)?.src.includes("chapel.webp"))'),'Every Forgewick chapel speaker has a portrait');
 assert(run('portraitFor("Brother Cael").cell===17'),'The desert preacher has his own portrait');
-run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;askShut();
- if(DragonChapels.talk(n)||!openNpcTopics(n)||ask.npcConversation!==n.n)throw Error('Missing full conversation: '+n.n);
- if(EmberFriendship.status().total!==5)throw Error('Missing friendship topics: '+n.n);}`);
+run(`for(const n of npcs.filter(DragonChapels.isGuest)){scene=null;askShut();beginNpcTalk(n);
+ if(!scene||EmberConversationFlow.active()||ask?.npcConversation)throw Error('Missing short church conversation: '+n.n);
+ if(DialogueRenewal.profile(n))throw Error('Church entered the full-screen cast: '+n.n);}`);
 run("scene=null;loadMap('desert_chapel');P.x=176;P.y=216;DragonChapels.step(.05);stepDragon(.05);");
 assert(run('dragonHere()'),'Aurelius enters the desert church');
 assert(run('atlasQuestComplete("desert-church")&&atlasCompletedEntries().some(q=>q.id==="desert-church")'),'Finding the church completes the journal quest');

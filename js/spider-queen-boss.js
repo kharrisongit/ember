@@ -150,11 +150,11 @@ const SpiderQueenBoss=(()=>{
     if(learned||web.lesson)return;
     web.lesson=true;const capture=web;
     playScene([
-      "Corin: I'm stuck! She's coming straight for us!",
-      "Aurelius: My wings are pinned. Pulling only tightens the silk.",
-      "Corin: It's silk... could you burn through it?",
-      "Aurelius: I can still breathe. Give me the word, and I'll try fire.",
-      "Corin: All right. Together."
+      "Corin: The web won't give! She's closing in!",
+      "Aurelius: It has both wings. Stop pulling; the silk tightens when we struggle.",
+      "Corin: Your head is free. Can you burn a way out?",
+      "Aurelius: I have room for a breath. Choose Fire and I'll aim at the strands.",
+      "Corin: Do it. I'll be ready when they break."
     ],{telepathy:true,spiderWebLesson:true,after:()=>{
       if(web!==capture)return;learned=true;web.t=0;web.biteCool=1.2;
       toast('Open Dragon → Fire to burn the web and stun her.');

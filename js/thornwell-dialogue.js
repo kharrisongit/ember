@@ -224,12 +224,13 @@ const ThornwellDialogue = (()=>{
   }
   function reunion(n){
     const met=remembers(n,'met');
-    return ['Rowan: Bramble! You found someone to bring you back. I have been wondering where you had got to.',
-      met?'Corin: He caught up with me on the road. I wanted to make sure he reached you.':'Corin: He caught up with me on the road, so I asked around for his owner.',
-      met?'Rowan: Thank you, Corin. Ada and I would have had a miserable evening searching for him.':'Rowan: Rowan. Thank you for taking the trouble, Corin. Ada and I would have been out searching for him.',
-      smithUpgrade?'Rowan: You have already had that sword improved. I am glad you are preparing for the road.':'Rowan: If you are heading east, speak to Dunstan in Forgewick about improving your sword and armour. A safer journey is a better thank-you than another speech from me.',
-      !glassShield?'Rowan: Ask Dunstan about other protection too. He knows craftspeople farther along the road.':'Rowan: You have found a Glass Shield as well. Keep your equipment ready, and give yourself time to rest.',
-      'Rowan: We are going home now. You are welcome to visit us in Thornwell; Bramble would certainly be pleased.'];
+    return ["Rowan: Bramble! Come here, you enormous worry. Let me look at you.",
+      met?"Corin: He found me on the road. I thought you'd want him brought straight back.":"Corin: He started following me outside town. People here helped me find you.",
+      met?"Rowan: I'd checked our path twice. Thank you for bringing the part I couldn't find.":"Rowan: I'm Rowan. I'd been searching our usual path. Thank you for trying the people instead.",
+      smithUpgrade?"Rowan: You've found a smith for that blade already. Good. I'd hate to see your kindness send you onto a road you weren't ready for.":"Rowan: If you're going east, ask Dunstan in Forgewick to improve your sword and armour. He'll give you useful help, and I'd like to know you've had it.",
+      !glassShield?"Rowan: Ask him about other protection while you're there. Dunstan knows who makes work worth carrying.":"Rowan: With a Glass Shield too, you're better prepared than I was on my first long journey. Keep using your head as well.",
+      "Rowan: Ada will be waiting at home. Visit us in Thornwell when you can; Bramble clearly wants to keep the acquaintance."];
+
   }
   function rememberReunion(n){discussedTopics.add(key(n,'met'));saveGame();}
   function dossier(name,actor){

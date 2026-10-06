@@ -1276,7 +1276,7 @@ function repairSeating(){
     ada.bio='Rowan the Hunter’s wife. She keeps their Thornwell cottage while he ranges with Bramble.';
     ada.d=[
       'Ada: Rowan leaves before sunrise and still manages to bring half the forest home on his boots.',
-      'Corin: Bramble brings the other half.',
+      'Corin: Bramble has enough enthusiasm for both of them.',
       'Ada: That is why I married the hunter and merely tolerate his dog.'
     ];
     ada.d2=[
@@ -6301,7 +6301,7 @@ function beginGreenEncounter(){
   greenCamera ||= {zoom:cam.z};
   if(greenPhase==='off'||greenPhase==='staging'){greenPhase='in';greenP=0;greenT=0;}
   const i=greenPhase==='gone'?2:['sit','rise','depart'].includes(greenPhase)?1:0;
-  playScene(['Corin: What the…','Corin: Are…are you okay?','Corin: Hey! You forgot something!'],
+  playScene(["Corin: That's coming straight at me!","Corin: Easy. I'm not going to hurt you.","Corin: Wait—there's an egg here! Is it yours?"],
     {who:'Corin',greenEncounter:true,i,after:()=>{quest=Q.FLED;releaseGreenCamera();}});
   const g=greenAt();faceCorinAt(g.x,g.y);
 }
@@ -6442,7 +6442,7 @@ function odoTurnsYouBack() {
     odoSaid = 1;
     faceToward(fisher, P.x, P.y);
     playScene([
-      "Odo: Not now, lad. I am going to catch a big one.",
+      "Odo: Soft feet, Corin. I've spent an hour persuading this fish the bank is empty.",
     ]);
   }
   return true;
@@ -6504,26 +6504,26 @@ function stepBirds(dt) {
   for (const b of BIRDS) { b.x += b.vx * dt; b.y += b.vy * dt; }
 }
 const HATCH_LINES = [
-      "Maddock: Corin! What is that under your arm!",
-      "Corin: Maddock, I found something in the north field.",
-      "Maddock: Let me see. Where did you find an egg that size?",
-      "Maddock: Set it here, gently. It is moving.",
-      "Maddock: A dragon’s egg. I never thought I would see one hatch.",
+      "Maddock: Hold still a moment. That bundle is moving.",
+      "Corin: A dragon left it in the field. I couldn't just leave it there.",
+      "Maddock: An egg? And you carried it all the way back?",
+      "Maddock: Down here, on the ground. Slowly now.",
+      "Maddock: Look at the shell. Corin, it's hatching.",
       "The egg moves.",
       "It shakes again -- harder.",
       "The shell splits. A hatchling pushes free.",
       "The hatchling turns to Maddock.",
       "Then it turns to Corin and crosses the space between them.",
       "A smooth stone lies in the broken shell. It glows as Corin lifts it.",
-      "Corin: Why did it come to me?",
-      "Maddock: He has chosen you, Corin. That is how a rider’s bond begins.",
-      "Maddock: Halvard has spent fifty years making sure there would be no more riders. When he hears about this, he will come for you both.",
-      "Corin: Then where can we go?",
-      "Maddock: Neither of you will be safe while Halvard rules. We must overthrow the king. He holds Cinderhold, his fortress in the far east.",
-      "Corin: I would not last a minute against his guards.",
-      "Maddock: Then grow stronger together. Forgewick has craftsmen who can help. Perhaps your new companion remembers what the old riders knew.",
-      "Corin: How do we get to Forgewick?",
-      "Maddock: Forgewick is east of Thornwell. Follow the road through Thornwell and keep heading east. Ask for the old temple when you reach Forgewick.",
+      "Corin: He's following me. Am I supposed to do something?",
+      "Maddock: Let him come. A dragon chooses whom to trust. This is the beginning of a rider's bond.",
+      "Maddock: I wish I could let you enjoy that without a warning. Halvard has hunted dragons for fifty years. He will hunt this one too.",
+      "Corin: He's barely out of his shell. We have to hide him.",
+      "Maddock: Hiding may buy time. It will never make you safe. To end this hunt, we must overthrow Halvard at Cinderhold, in the far east.",
+      "Corin: You want me to face the king? I was bringing you eggs this morning.",
+      "Maddock: I want you alive tomorrow. Start with help: Forgewick's craftsmen, its old rider temple, and whatever your companion can teach you. You have time to learn.",
+      "Corin: Forgewick. Tell me how to get there.",
+      "Maddock: Take the road east to Thornwell, then continue east to Forgewick. Ask there about the temple. One journey at a time, Corin.",
 ];
 
 let hatchScene = null;
@@ -6782,23 +6782,23 @@ function stepDragonIntroduction(){
   faceCorinAt(dragon.x,dragon.y);
   playScene([
     'You hear a voice, but it seems to be inside your head.',
-    'Aurelius: Corin. You need not keep looking back. I am still here.',
-    'Corin: Who said that?',
-    'Aurelius: I did. My name is Aurelius.',
-    'Corin: Your mouth did not move. I heard you inside my head.',
-    'Aurelius: Our bond carries thought. Speak aloud or think the words toward me; I will hear you.',
-    'Corin: But you only just hatched. How do you already know how to talk?',
-    'Aurelius: Dragons share a consciousness. When we hatch, we awaken into its knowledge: words, understanding, the memories of our kind.',
-    'Aurelius: My body is new. My mind did not begin empty. What we discover together will still be our own.',
-    'Corin: Then do you think we can do what Maddock asked? Overthrow Halvard?',
-    'Aurelius: If we intend to follow Maddock’s plan, we will need the three temple Heartstones. Their power will help us face him together.',
-    'Corin: Like the stone I found in your shell?',
-    'Aurelius: Yes. That is the Heartstone of the Flame. The others will awaken more of my strength.',
-    'Aurelius: The Lightning Heartstone rests in Forgewick Temple, the Ice Heartstone in Sandspire Temple, and the Shadow Heartstone in Hollybeck Temple.',
-    'Aurelius: We must claim them in that order. First Lightning, then Ice, then Shadow. Each will prepare us for the next temple.',
-    'Corin: Three Heartstones, then the king. We start east, through Thornwell to Forgewick.',
-    'Aurelius: And whatever waits along that road, we face it together.',
-    'Corin: Then we had better make a start.',
+    "Aurelius: If you look back again, you're going to walk into that tree.",
+    "Corin: Maddock? How did you—",
+    "Aurelius: A little lower. The wings are a useful clue. I'm Aurelius.",
+    "Corin: You can talk. Without making a sound.",
+    "Aurelius: To you, yes. Think the words toward me, or say them aloud. The bond carries them either way.",
+    "Corin: You've been alive for minutes. I've had years to learn words.",
+    "Aurelius: Dragons hatch into a shared consciousness. Language comes with it, along with pieces of our kind's knowledge and memories.",
+    "Aurelius: Experience is less convenient. I knew what legs were before I knew how to stand on these.",
+    "Corin: Then did you understand what Maddock asked of us? About overthrowing Halvard?",
+    "Aurelius: I did. Before we attempt that, we need the Heartstones kept in the three rider temples. I cannot face him as I am.",
+    "Corin: There's already one in my bag. The stone from your shell.",
+    "Aurelius: The Heartstone of the Flame. It gives us a beginning. Lightning, Ice and Shadow are still waiting in the temples.",
+    "Aurelius: Lightning is in Forgewick Temple. Ice is in Sandspire Temple. Shadow is in Hollybeck Temple.",
+    "Aurelius: That is our order: Lightning, then Ice, then Shadow. Each stone gives us strength for what follows.",
+    "Corin: All right. East to Thornwell, then Forgewick. I can manage the next place on a road.",
+    "Aurelius: Good. I'll watch the next tree while you consider the kingdom.",
+    "Corin: You're going to keep bringing that up, aren't you?",
     'Approach Aurelius on foot and press A whenever you want to ask about your journey, history, or helping people.'
   ],{telepathy:true,after:()=>{
     dragonIntroDone=true;dragonIntroArmed=false;learnHeartstonePlan();saveGame();
@@ -7316,13 +7316,13 @@ function takeItem(it) {
   if(it.key==="egg")globalThis.window?.EmberSfx?.key();else globalThis.window?.EmberSfx?.pickup();
   if (it.key === "eggs") {
     quest = Q.KING;
-    playScene(["Hettie: There we are. Plenty of grass over here."],
+    playScene(["Hettie: In you go. You'd think I was asking you to cross the sea."],
       { who: "Hettie", offscreen:true, after: () => {
         const her=npcs.find(m=>m.n==="Hettie");if(her)beginHettieWalk(her);
       } });
   } else if (it.key === "egg") {
     quest = Q.CARRY;
-    playScene(["Corin: Maddock needs to see this."]);
+    playScene(["Corin: If anyone knows what to do with a dragon's egg, it's Maddock."]);
   }
   if (it.took) toast(it.took);
 }
@@ -7351,22 +7351,22 @@ function questTalk() {
       const k = kingNow();
       if (window.EmberKingMusic) window.EmberKingMusic.start();
       playScene([
-        near.n + ": HALT.",
-        near.n + ": Close enough. The King is on this road.",
-        "Corin: I am only going up to the field.",
-        near.n + ": Then you can wait a minute to do it.",
+        near.n + ": Stop at the verge.",
+        near.n + ": His Majesty has the road. Nobody passes until he leaves.",
+        "Corin: The field is just up there. I won't be in your way.",
+        near.n + ": The field will keep. Stand clear.",
       ], { after: () => {
-        royalBlackout('Make way for King Halvard!',()=>{dismissRoadGuards();if(k)k.goto=null;},()=>{
+        royalBlackout('Clear the lane. His Majesty is approaching.',()=>{dismissRoadGuards();if(k)k.goto=null;},()=>{
           if(k){k.goto=standableNear(P.x+4,P.y-30)||[P.x+4,P.y-30];k.hurry=1;}
         // Opening forest encounter: use Halvard's villain theme while he speaks.
         if(window.EmberKingMusic) window.EmberKingMusic.start();
         playScene([
-          "Halvard: Hold. You are out early for a boy with a basket.",
-          "Halvard: There have been reports of wild dragons in this valley. "
-            + "Have you seen anything?",
-          "Corin: ...No, sire. Only the hens.",
-          "Halvard: No. Of course you have not.",
-          "Halvard: Go on, then. Mind the pass.",
+          "Halvard: You. Stay where you are. What takes a village boy onto my road so early?",
+          "Halvard: My men have heard of dragons in this valley. "
+            + "Tell me what you have seen.",
+          "Corin: I haven't seen one, Your Majesty. I've been collecting eggs.",
+          "Halvard: An answer you had better remember giving me.",
+          "Halvard: Finish your errand. Leave the woods to my officers.",
         ], { who: "Halvard",
              stay:true,
              hold: () => {
@@ -7376,7 +7376,7 @@ function questTalk() {
                       Math.hypot(kk.x - P.x, kk.y - P.y) < 46;
              },
              after: () => {
-               royalBlackout('Out of my way, boy!',()=>{
+               royalBlackout('Move aside. The king is leaving.',()=>{
                  leavingNow=false;banishKingsMen();
                  if(quest===Q.KING)quest=Q.ELDER;
                },()=>{
@@ -7397,11 +7397,11 @@ function questTalk() {
   if (quest === Q.ERRAND && nearNpc("Hettie")) {
     quest = Q.EGGS;
     playScene([
-      "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
-      "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
-      "Hettie: You brought a bag. Good — keep the eggs together, and mind them on the lane.",
-      "Hettie: The coop is behind the mill. I should have the "
-        + "cows out of your way by the time you have the basket.",
+      "Hettie: Corin, could I borrow the only pair of hands here that isn't attached to a cow?",
+      "Hettie: Maddock needs six eggs. There's a basket waiting at the coop behind the mill.",
+      "Hettie: Tuck them into your bag so they don't knock together. He asked for breakfast, not a puzzle.",
+      "Hettie: Go round the back of the mill. With any luck, I'll have these "
+        + "cows off the lane before you come back.",
     ], { who: "Hettie" });
     return true;
   }
@@ -7421,15 +7421,15 @@ function questTalk() {
   }
   if (quest === Q.ELDER && MAPID === "house22" && nearNpc("Maddock")) {
     playScene([
-      "Maddock: Morning, Corin. Come in.",
-      "Maddock: Thank you for bringing those. Set the basket on the table.",
-      "Corin: Were those really dragons in the painting? I never "
-        + "noticed the people riding them.",
-      "Maddock: Yes. Seven riders once watched over Emberfell. People could travel from one end of the country to the other without fearing the road.",
-      "Maddock: Halvard rode with them. Fifty years ago he betrayed the other six and seized the throne. That was Wingfall.",
-      "Maddock: With the dragons gone, monsters spread out of the wilds and onto the roads. The king’s patrols do little to hold them back.",
-      "Corin: The king was asking about dragons in the north woods.",
-      "Maddock: Was he? Then someone has seen something. I hope they had the sense to keep their distance from his men.",
+      "Maddock: Ah, my breakfast has an escort. Come through, Corin.",
+      "Maddock: Set the basket by the maps. I'll find a corner of table under them somewhere.",
+      "Corin: That painting—are those people on the dragons? I hadn't "
+        + "noticed the saddles before.",
+      "Maddock: Seven riders, with seven dragons. They kept the roads open. I remember journeys people wouldn't dare make now.",
+      "Maddock: Halvard was one of them. Fifty years ago he turned on the other six, destroyed their fellowship and took the throne. We call it Wingfall.",
+      "Maddock: The monsters came down when the dragons disappeared. Halvard sends men to collect taxes along roads he no longer keeps safe.",
+      "Corin: He stopped me on the lane. He wanted to know whether I'd seen a dragon.",
+      "Maddock: Here? Then something has frightened him. Be careful who hears you repeat that question.",
     ], { who: "Maddock", after: () => { quest = Q.NOISE; } });
     return true;
   }
@@ -7455,21 +7455,21 @@ function stepQuest(dt) {
 
   if (false) {
     playScene([
-      "Hettie: Morning, Corin. I am trying to get the cows off the lane.",
-      "Hettie: Could you take six eggs to Maddock? He asked for some this morning.",
-      "Hettie: The coop is behind the mill. I should have the "
-        + "cows out of your way by the time you have the basket.",
+      "Hettie: Corin, could I borrow the only pair of hands here that isn't attached to a cow?",
+      "Hettie: Maddock needs six eggs. There's a basket waiting at the coop behind the mill.",
+      "Hettie: Go round the back of the mill. With any luck, I'll have these "
+        + "cows off the lane before you come back.",
     ], { who: "Hettie" });
     return;
   }
   if (quest === Q.ELDER && !warnedNorth &&
       P.y < (SPOT.elder[1] - 5) * TS && P.y > (SPOT.elder[1] - 20) * TS &&
       inRoadBand()) {
-    playScene(["Maddock: Corin, over here!"], {
+    playScene(["Maddock: Corin! A moment before you go north."], {
       until: () => elderArrived(),
       after: () => { playScene([
-        "Maddock: Hettie said you were bringing the eggs. Thank you.",
-        "Maddock: Come down to the house. We can put that basket somewhere safe.",
+        "Maddock: Hettie sent word about my eggs. I was beginning to suspect you'd eaten them.",
+        "Maddock: Bring them down to my house. I'd rather receive them before the basket has another adventure.",
       ], { who: "Maddock", after: () => {
         goBackIn(true,true);
         playScene([], { silent:true, until:()=>!!elder()?.away, after:()=>{
@@ -7487,13 +7487,13 @@ function stepQuest(dt) {
     playScene([], { silent:true, until:()=>scene.t>=1.5, after: () => {
       comeOut(P.x + 22, P.y + 2);
       playScene([
-        "Maddock: Wait, Corin. If you are going to look, take my sword.",
-        "Maddock: It belonged to my father. The edge is sound, and I have kept it oiled.",
-        "Corin: Maddock, I don’t know how to use this thing.",
-        "Maddock: Oh, I imagine you’ll figure it out quick enough. Trust yourself.",
-        "Maddock: Monsters have been coming down through Shroom Pass. Stay on the path, and leave yourself a way back.",
-        "Corin: What was it?",
-        "Maddock: Well, the King wasn’t looking for wild boars, was he? Be careful, Corin.",
+        "Maddock: You're going toward that crash, aren't you? Take this before you argue.",
+        "Maddock: My father's sword. I've kept the blade sound. It deserves a steadier hand than mine now.",
+        "Corin: I've never used a real sword. Carrying one won't change that.",
+        "Maddock: No. Keep your distance, face what threatens you, and move before it strikes. You do not have to meet every blow.",
+        "Maddock: Shroom Pass has become dangerous. Keep to the path, and remember how you came in. I've packed five potions too.",
+        "Corin: Do you think that noise was a dragon?",
+        "Maddock: I think Halvard had a reason to come here. I'd like you to return with an answer, not a wound.",
       ], { who: "Maddock", until: () => elderArrived(), after: () => {
         quest = Q.ARMED;
         goBackIn();
@@ -7551,11 +7551,11 @@ function stepQuest(dt) {
         }
       }
     }
-    playScene(["Maddock: Corin! Bring that over here."], {
+    playScene(["Maddock: Corin! Over here, away from the lane."], {
       until: () => elderArrived(),
       after: () => playScene([
-        "Maddock: You have been gone a while. Did you find what fell?",
-        "Maddock: Come off the road. The king’s men could still be nearby.",
+        "Maddock: You look as though the woods answered you. What are you carrying?",
+        "Maddock: Come closer before someone else sees it. The royal patrol may not be far away.",
       ], { who: "Maddock", after: () => {
         eggGate = Math.floor((P.y - 1) / TS) + 1;
         eggWarned = true;
@@ -7924,7 +7924,7 @@ function stepDark(dt) {
   const back = (MD.doors || []).find(d => /^mine/.test(d.to || ""));
   if (!back) return;
   rememberDragonKnowledge('Corin','The deep mines are too dark.');
-  playScene(["Corin: I cannot see far enough to go on.",charm.lamp?"Corin: I should check my lantern.":dragonLearned('lantern')?"Corin: I need Torvald’s lantern from Sverre in Hollybeck before I return.":"Corin: I need a better light. I should ask Toft, the former miner at Forgewick’s market."], {
+  playScene(["Corin: The floor disappears a few steps ahead. I can't cross this blind.",charm.lamp?"Corin: I have the lantern. I need its light before I go deeper.":dragonLearned('lantern')?"Corin: Sverre has Torvald's lantern in Hollybeck. This is why I need it.":"Corin: Toft worked these mines. I'll ask him at Forgewick's market what can light this place."], {
     after: () => { pendingDoor = back; fadeDir = 1; }
   });
 }
@@ -9125,19 +9125,22 @@ function interactTrialPedestal() {
   else trialAsk();
   return true;
 }
-function talkTrialDemon() {
+function talkTrialDemon(renewalService=false) {
+  if(!wonAll||trial)return;
+  if(!renewalService&&typeof DialogueRenewal!=="undefined"){DialogueRenewal.open({n:"Demon",x:MAPID==="witchmoor"?196:THRONE_DEMON.x,y:MAPID==="witchmoor"?304:THRONE_DEMON.y});return;}
   if (!wonAll || trial) return;
   if(trialSealPlaced&&MAPID==='cinderhold'){
-    playScene(["Demon: I will summon waves of creatures for you to face. Two of the lesser kinds, one of the greater.",
-      "Demon: Defeat them all to complete the trial. You may return and try again whenever you wish.",
-      "Demon: Are you ready?"],{hold:false,after:()=>{
-      ask={quick:1,opts:[{n:'YES',go:startTrial},{n:'NO',go:null}]};askPick=0;askDraw();
+    playScene(["Demon: Here is the arrangement: waves of summoned creatures. Two at a time for the lesser kinds, one for the greater.",
+      "Demon: Clear every wave and the victory is yours. The trial can be repeated; I keep no appointments.",
+      "Demon: Shall I call the first creatures, or do you need to prepare?"],{hold:false,after:()=>{
+      const actor={n:'Demon',...THRONE_DEMON};
+      ask={quick:1,npcConversation:'Demon',npcActor:actor,replyChoices:true,opts:[{n:'Demon',head:true},{n:'Begin the trial',friendship:false,go:()=>{EmberConversationFlow.shut(true);startTrial();}},{n:'I need to prepare',navigation:true,go:()=>DialogueRenewal.open(actor)}]};askPick=1;askDraw();
     }});return;
   }
-  playScene(cinderSeal ? ["Demon: Place your seal in the chamber adjoining the throne room. I will meet you in the hall."] : [
-    "Maelis: With the King gone, a keeper of old trials has answered my circle.",
-    "Demon: I offer a contest against summoned creatures. I will oversee it, not fight you.",
-    "Demon: Take this seal to the chamber adjoining Cinderhold's throne room. Set it in the pedestal to call me there."
+  playScene(cinderSeal ? ["Demon: Cinderhold's throne room has an adjoining seal chamber. Set your seal in its pedestal. That gives me somewhere to arrive."] : [
+    "Maelis: The throne is vacant, and my circle has acquired a visitor. He claims his entertainment is educational.",
+    "Demon: Trials. I summon the opposition and judge the result. You will not be required to fight your host.",
+    "Demon: Carry this seal to the chamber beside Cinderhold's throne room. Place it in the pedestal, then meet me in the hall when you want a contest."
   ],{hold:false,after:()=>{const first=!cinderSeal;cinderSeal=true;saveGame();if(first)showReveal('it_cinderseal','Corin obtained the Cinderhold Seal!',3);}});
 }
 function clearTrialCombat() {
@@ -9163,7 +9166,7 @@ function startTrial() {
   arenaLock = { id: "demon-trial", kind: "arena", x: 11, y: 18, r: 25.2 };
   arenaT = 1; arenaGoing = false;
   const run = trial;
-  playScene(["Demon: Then let the trial begin.",
+  playScene(["Demon: Your choice is made. Keep your footing; here they come.",
     "Shapes begin to gather across the throne room."],
     { hold: false, after: () => {
       if (trial === run && MAPID === "cinderhold") nextTrialWave();
@@ -9176,7 +9179,7 @@ function nextTrialWave() {
   if (run.index >= run.waves.length) {
     trialWins++; stopTrial(""); saveGame();
     playScene(["The last shape breaks apart. Cinderhold falls quiet.",
-      "Demon: Every creature, and still you stand. Come again when the silence bores you.",
+      "Demon: All waves cleared. A result worth returning for, should you wish to improve on it.",
       "Cinderhold trial complete! Victories: " + trialWins], { hold: false });
     return;
   }
@@ -9441,7 +9444,7 @@ function stepBossScene(dt) {
     b.black = Math.min(1, (b.black || 0) + dt / .34);
     if (b.black < 1) return;
     stageBossBlackout(b); b.phase = "blackoutLine"; b.t = 0;
-    playScene(["Halvard: No!"], { after: () => { b.phase = "blackoutOut"; b.t = 0; } });
+    playScene(["Halvard: Get up. I command you!"], { after: () => { b.phase = "blackoutOut"; b.t = 0; } });
     return;
   }
   if (b.phase === "blackoutLine") return;
@@ -9486,10 +9489,10 @@ function stepBossScene(dt) {
   } else if (b.phase === "settle" && b.t >= 1.2) {
       b.phase="dialogue";
       playScene([
-        "Halvard: ...",
-        "Halvard: Forty years I fed that thing out of my own hand.",
-        "Halvard: You will not have understood what you have taken.",
-        "Halvard: I stopped being a man some time ago. Watch.",
+        "Halvard: You should have stayed in Millwood.",
+        "Halvard: Forty years at my hand. Forty years, and you bring him down in my own hall.",
+        "Halvard: You think that was all that stood between you and my throne?",
+        "Halvard: I kept one power for myself. You should have fled while you still recognised me.",
       ], { after: () => { b.phase = "fade"; b.t = 0; } });
   } else if (b.phase === "fade") {
     b.dead.sceneAlpha = Math.max(0, 1 - b.t / 1.2);
@@ -9612,8 +9615,9 @@ function winGame() {
   playScene([
     "The King goes down in his own hall.",
     "The two heads come to rest, one across the other.",
-    "Corin: It is done, then.",
-    "Corin: Come on. There is a long road home and nothing chasing us down it.",
+    "Corin: Aurelius? Tell me you're all right.",
+    "Aurelius: Bruised, exhausted, and very glad to hear you. I can walk.",
+    "Corin: We can go home now. I want to tell Nan ourselves.",
     "-- THE LAST DRAGONRIDER --",
   ], { hold: false, after:()=>window.EmberEndingMusic?.stop() });
 }
@@ -11333,11 +11337,12 @@ function brambleHint(n){
 }
 
 function npcContextDialogue(n, alt) {
+  if(typeof DialogueRenewal!=="undefined"&&!(n.n==="King Halvard"&&MAPID==="cinderhold"&&!wonAll)){const lines=DialogueRenewal.context(n);if(lines)return lines;}
   if(n.n==='King Halvard'&&MAPID==='cinderhold'&&!wonAll)return [
-    'King Halvard: So you have brought the dragon to Cinderhold. You could have given him to me before all this trouble.',
-    'Corin: Aurelius is not something I can give away. We came to end what you have done to these towns.',
-    'King Halvard: You believe reaching my hall makes you my equal. My dragon has survived battles you cannot imagine.',
-    'Corin: Then we will face him together. We are not leaving you in control of the roads.'
+    "King Halvard: At last. The boy from Millwood, grown bold enough to bring my quarry through the front door.",
+    "Corin: His name is Aurelius. We crossed your kingdom and saw what you leave people to survive.",
+    "King Halvard: And so you have appointed yourself their answer. My dragon has put down better claims than yours.",
+    "Corin: You've had fifty years to make them safe. We're ending your rule here."
   ];
   const forgewick=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.context(n);if(forgewick)return forgewick;
   const local=typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.context(n);if(local)return local;
@@ -11359,7 +11364,7 @@ function npcContextDialogue(n, alt) {
 function finishSmithUpgrade() {
   const whetstone = () => {
     if (charm.edge) return;
-    playScene(["Dunstan: Take this Whetstone charm as well. Equip it in your Bag when you want stronger sword blows."], { who: "Dunstan", after: () => {
+    playScene(["Dunstan: Nearly forgot the Whetstone charm. Equip it in your Bag for stronger sword strikes. A finished blade still deserves looking after."], { who: "Dunstan", after: () => {
       if (charm.edge) return;
       charm.edge = true;
       showReveal(SPR.it_edge ? "it_edge" : CHARM_ICON.edge,
@@ -11515,7 +11520,7 @@ function stepThornwellWelcome(dt) {
       if(!d.path?.length){
         d.hunter.scriptWalking=false;d.phase='calling';
         if(d.dog)faceToward(d.hunter,d.dog.x,d.dog.y);
-        playScene(['Rowan: Bramble, with me. Let us get you home.'],{bramble:true,npcActor:d.hunter,faceTarget:d.dog,after:()=>{
+        playScene(["Rowan: Come on, Bramble. We'll take the quiet way home."],{bramble:true,npcActor:d.hunter,faceTarget:d.dog,after:()=>{
           d.phase='leaving';
           // Give the waiting dog room before leading him toward the door.
           // Independent routes can otherwise send Rowan straight through him.
@@ -11576,7 +11581,7 @@ function stepThornwellWelcome(dt) {
     const nearby=bramblePath([dog.x,dog.y],path.at(-1));if(!nearby)return;thornwellArrival={dog,path:nearby};
   }else{[dog.x,dog.y]=path[0];thornwellArrival={dog,path:path.slice(1)};}
   brambleQuest=1;thornwellMet=true;
-  playScene(["Corin: Oh! Hello there. Come here, boy.","Corin scratches the dog's ears. His tail wags furiously.","Corin: You have a collar. We'd better find your owner.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];if(typeof beginThornwellDetour==="function")beginThornwellDetour();}});
+  playScene(["Corin: Hello, you. Have you lost someone?","Corin scratches the dog's ears. His tail wags furiously.","Corin: A collar, but nobody calling for you. Come along—we'll ask in town.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];if(typeof beginThornwellDetour==="function")beginThornwellDetour();}});
 }
 function skipBrambleForTest(){
   if(scene?.bramble){scene=null;walker=null;sayOff();showFace(null);}
@@ -11776,9 +11781,18 @@ function canCamperGiveFishingPole(n) {
   return n?.n==='Calder' && !fishingPole;
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
+    if(typeof DialogueRenewal!=="undefined"){
+      if(!greetingOnly&&DialogueRenewal.profile(best)&&DialogueRenewal.open(best))return;
+      if(DialogueRenewal.church(best)){
+        if(DragonChapels.talk(best))return;
+        const lines=DialogueRenewal.context(best);
+        if(best.n==="Brother Edrin")lines.push("Brother Edrin: My brother Cael keeps the hidden desert chapel. I can share our consecration recipe: mineral dust and sunblooms for protecting cleared ground.");
+        playScene(lines,{who:best.n,npcActor:best,after:()=>{if(best.n==="Brother Edrin"){DragonChapels.learnChurch();Crafting.learn("chapel",true);}}});return;
+      }
+    }
     if(best.n==='Odo'&&!hasDragon()){
       askShut();sayOff();P.moving=false;faceToward(best,P.x,P.y);
-      playScene(['Odo: Not now, lad. I am going to catch a big one.'],{who:'Odo'});
+      playScene(["Odo: Soft feet, Corin. I've spent an hour persuading this fish the bank is empty."],{who:'Odo'});
       return;
     }
     if(talkShroomLookout(best))return;
@@ -11804,8 +11818,10 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     faceToward(best, P.x, P.y);
     best.spoke = (best.spoke || 0) + 1;
     const alt = best.spoke % 2 === 0;
-    const forgewickService=typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.service(best);
-    if(forgewickService)sayNpc.said=forgewickService;
+    const renewedService=typeof DialogueRenewal!=="undefined"&&DialogueRenewal.service(best);
+    const forgewickService=!renewedService&&typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.service(best);
+    if(renewedService)sayNpc.said=renewedService;
+    else if(forgewickService)sayNpc.said=forgewickService;
     else if(best.n==='Odo'&&!fishingPole&&(!odoRodReferral||rodRequest)){
       sayNpc.said=fishingRodDialogue('Odo',best);
       odoRodReferral=true;saveGame();

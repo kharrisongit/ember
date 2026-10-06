@@ -7,11 +7,11 @@ function prepareShroomLookoutData(m,id){
   if(!m.npcs.some(n=>n.editKey==='npc:shroom-lookout'))m.npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:536,y:1368,f:'d',kf:'d',t:0,stationary:true,until:Q.FLED,
     shroomLookout:true,mainPathLookout:true,editKey:'npc:shroom-lookout',portraitAlias:'Pip',loc:'Shroom Pass',
     bio:'A mushroom villager keeping watch on the grassy verge beside the turn to Sporehollow.',
-    d:['Mosslet: Yoo Hoo! Over here!']});
+    d:["Mosslet: Traveller! Over here, by the village path!"]});
   if(!m.npcs.some(n=>n.editKey==='npc:shroom-lookout-home'))m.npcs.push({n:'Mosslet',sk:'shroom_green',s:610,x:1464,y:1280,f:'d',kf:'d',t:0,stationary:true,when:Q.FLED,
     shroomLookout:true,editKey:'npc:shroom-lookout-home',portraitAlias:'Pip',loc:'Sporehollow',
     bio:'Back in Sporehollow after keeping watch beside the village path.',
-    d:['Mosslet: I came back once the woods went quiet. It is good to see you safe.']});
+    d:["Mosslet: You're back. I was beginning to regret not going after you."]});
 }
 function prepareShroomLookout(){
   if(MAPID!=='world')return;
@@ -21,18 +21,18 @@ function talkShroomLookout(n){
   if(!n?.shroomLookout)return false;
   const heard=discussedTopics.has('Mosslet:crash');
   const lines=quest>=Q.FLED?[
-    'Mosslet: I came back once the woods went quiet. It is good to see you safe.',
-    'Corin: That was a dragon. It has flown away now.',
-    'Mosslet: A dragon! I am glad I waited here. The Shroom King will want to hear about this.'
+    "Mosslet: You're back. I was beginning to regret not going after you.",
+    "Corin: A dragon came down in the field. It managed to fly away again.",
+    "Mosslet: A dragon made that noise? I thought half the hill had fallen. Tell our king—he needs to hear this from you."
   ]:heard?[
-    'Mosslet: Before you continue north, you should speak with our king. Follow this path into the village; he is waiting beneath the great caps.',
-    'Corin: Thank you. I will go and speak with him.'
+    "Mosslet: Our king is under the great caps in the village. Take this turning before you head farther north.",
+    "Corin: I'll ask him what he knows about the woods."
   ]:[
-    'Mosslet: Yoo Hoo! You on the path! I heard something enormous come down in the woods further north. The ground shook right under my feet.',
-    'Corin: Did you see what it was?',
-    'Mosslet: Only the treetops moving. I was not about to run towards that noise on my own.',
-    'Mosslet: You should speak with our king before you continue north. Our village is through here, under the great caps. He may be able to help you.',
-    'Corin: I will speak with him. Thank you.'
+    "Mosslet: Something hit the northern woods hard enough to shake this path. I've been waiting for someone to tell me they heard it too.",
+    "Corin: I heard it from Millwood. Did anything come out afterward?",
+    "Mosslet: Nothing I could see. The trees were moving, then everything went quiet. I didn't like the quiet much better.",
+    "Mosslet: Speak with the Shroom King before going on. Our village is through here, beneath the great caps. He'll know what help we can offer.",
+    "Corin: That's worth a short detour. I'll go to him first."
   ];
   faceToward(n,P.x,P.y);playScene(lines,{who:n.n,npcActor:n,after:()=>{discussedTopics.add('Mosslet:crash');saveGame();}});return true;
 }

@@ -7,7 +7,7 @@ run(`EmberFriendship.restore({tutorialSeen:true});mode='play';gameplayStarted=tr
 DesertAdventure.installWorld(W.maps.world);loadMap('school2');scene=null;bossScene=null;fadeDir=0;`);
 function finish(){for(let i=0;run('!!scene')&&i<20;i++)run('typeAll();scene.t=.3;advanceScene();');assert(!run('!!scene'));}
 function scholarOffer(){
- run(`askShut();scene=null;sayNpc=null;openNpcTopics(npcs.find(n=>n.n==='Scholar Ilyan'));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='An expedition for the future');askTake();typeAll();scene.t=1;EmberConversationFlow.advance();`);
+ run(`askShut();scene=null;sayNpc=null;openNpcTopics(npcs.find(n=>n.n==='Scholar Ilyan'));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='A relic beneath the pyramid');askTake();typeAll();scene.t=1;EmberConversationFlow.advance();`);
  assert(run('ask.replyChoices'),'School scholar actually offers the expedition through authored replies');
 }
 function scholarReply(index){run(`askPick=${index};askTake();typeAll();scene.t=1;EmberConversationFlow.advance();typeAll();scene.t=1;EmberConversationFlow.advance();`);}
@@ -22,12 +22,12 @@ run('smithUpgrade=1;charm.edge=true;breathHas.lightning=true');
 assert(run('atlasTrack("pyramid")'),'Expedition can be tracked after its travel requirements are met');
 assert.equal(run('atlasTrackedQuest'),'pyramid');
 assert.equal(run('atlasQuestTarget(atlasQuestOptions().find(q=>q.id==="pyramid")).map'),'pyramid_queen');
-run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);finish();assert.equal(run('ask'),null,'Town giver does not offer a duplicate');
+run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);assert(run('ask.npcConversation==="Sahir"'),'Town giver has a complete conversation');assert(run('!DialogueRenewal.pyramid({n:"Sahir"}).questUnlock'),'Town giver does not offer a duplicate');
 assert.equal(run('DesertAdventure.capture()'),'school');
 run('saveToSlot(1,true);DesertAdventure.restore(null);');assert(run('loadGame(1)'));assert.equal(run('DesertAdventure.capture()'),'school');
 run(`localStorage.setItem(saveKey(2),JSON.stringify({...captureSave(),pyramidQuest:null,houseLootTaken:[],templeDefeated:{}}));`);
 assert(run('loadGame(2)'));assert(!run('DesertAdventure.accepted()'));
-run(`beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));`);finish();run('askPick=0;askTake();');finish();assert.equal(run('DesertAdventure.capture()'),'sandspire');
+run(`askShut();scene=null;sayNpc=null;beginNpcTalk(W.maps.world.npcs.find(n=>n.n==='Sahir'));EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='A relic beneath the pyramid');askTake();typeAll();scene.t=1;EmberConversationFlow.advance();`);scholarReply(1);run('askShut();scene=null;sayNpc=null');assert.equal(run('DesertAdventure.capture()'),'sandspire');
 assert(!run('DesertAdventure.accept("school")'),'Source remains whichever giver was accepted first');
 console.log('PASS: school and Sandspire offers, decline/reoffer, no duplicates, side-quest journal and save-slot isolation.');
 run(`loadMap('pyramid_queen');scene=null;bossScene=null;ovl=null;fadeDir=0;P.x=216;P.y=128;P.act=null;

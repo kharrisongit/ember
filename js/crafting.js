@@ -25,13 +25,13 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:'A handful of herbs and a little patience, love. Keep the right ingredients with you. My kit has everything you need to prepare your recipes on the road. Look along the chest trail north of Millwood for two herbs and a bitterroot — enough for one potion.'},
-    healer:{name:'Wren',where:'Thornwell market',line:'For a stronger restorative, use sunblooms from the desert. I will write down the proportions for you.'},
-    shroom:{name:'The Shroom King',where:'Sporehollow',line:'A careful hand can turn our mushrooms into a powder that muddles an enemy’s senses. Use this knowledge wisely.'},
-    smith:{name:'Dunstan',where:'Forgewick smithy',line:'Keep the fragments you find in the mines or knock from a golem. Grind them finely for these two tools.'},
-    chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:'Mineral dust and sunblooms make consecration. Scatter it after a battle, and the cleared ground will remain quiet.'},
-    witch:{name:'Maelis',where:'Witchmoor',line:'Ghostcaps, marsh reeds, and a little spirit essence. Bring the ingredients together carefully. Even a curse deserves to be made properly.'},
-    winter:{name:'Sverre',where:'Hollybeck',line:'Snowbells survive more than they seem able to. With frostberries or mineral dust and spirit essence, they make powerful protections.'}};
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:"Start with a potion: two herbs and one bitterroot. You can gather them along the chest trail north of Millwood. My kit lets you brew or cook on the road; keep these recipes beside the ingredients."},
+    healer:{name:'Wren',where:'Thornwell market',line:"An elixir restores you fully. Three herbs, two sunblooms and one bitterroot; I’ll write it down so you aren’t trusting a tired memory in the dark."},
+    shroom:{name:'The Shroom King',where:'Sporehollow',line:"Three mushrooms and a bitterroot make Madness Dust. Grind them together and you can confuse nearby enemies into attacking one another. Mind where the powder goes."},
+    smith:{name:'Dunstan',where:'Forgewick smithy',line:"Keep mineral dust from the mines and golems. Two measures with two bitterroots make a Bell Stake to draw enemies. Three with a mushroom make a Grave Marker to recover lost gold."},
+    chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:"Use one measure of mineral dust and two sunblooms for consecration. Scatter it in an arena after clearing the enemies; they will not return to that ground."},
+    witch:{name:'Maelis',where:'Witchmoor',line:"My Curse needs two ghostcaps, two marsh reeds and one spirit essence. Brew it carefully. It opens a way out of an ordinary battle; don’t expect it to break the seal on a major fight."},
+    winter:{name:'Sverre',where:'Hollybeck',line:"Two snowbells, two frostberries and spirit essence make Saint’s Breath: sixteen seconds of protection. For a Resurrection Stone, use three mineral dust, two snowbells and one essence. That raises a fallen enemy to help you."}};
   const fresh=()=>({version:2,kit:false,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
   let state=fresh(),session=null,opened=false,vendor=null,nodes=[],art=null,artReady=false;
   const clean=n=>Number.isFinite(n)?Math.max(0,Math.min(9999,Math.floor(n))):0;
@@ -125,7 +125,7 @@ const Crafting=(()=>{
     const group=teacherFor(n);if(!group||n.n==='Nan Ferrow'&&!templeCompass.morningMet)return [];
     return [{title:state.learned.includes(group)?'Let’s look at my recipes':'Will you teach me to craft?',category:'lead',friendship:false,go:()=>{
       askShut();window.EmberConversationFlow?.shut();sayNpc=null;scene=null;sayOff();
-      playScene([n.n+': '+teachers[group].line,'Corin: I will keep the recipes in my bag.'],{npcActor:n,who:n.n,after:()=>{learn(group);open();}});
+      playScene([n.n+': '+teachers[group].line,"Corin: Let me write that down before I muddle the amounts."],{npcActor:n,who:n.n,after:()=>{learn(group);open();}});
     }}];
   }
   function useFood(id){

@@ -3883,13 +3883,13 @@ function beginKnightFight(ring, f) {
   arenaLock = ring; arenaT = Math.max(arenaT, .05); arenaGoing = false;
   faceCorinAt(f.x, f.y); f.dir = "u";
   playScene([
-    "King's Knight: Hold there. I know you. You were in Millwood when His Majesty came through.",
-    "King's Knight: So the rumors are true. You found a dragon.",
-    "King's Knight: By order of King Halvard, hand it over. The creature belongs to the Crown.",
-    "Corin: She belongs to no one.",
-    "King's Knight: Then you leave me no choice.",
-    "Corin: I won't let you take her.",
-    "King's Knight: Draw your sword."
+    "King's Knight: Stop. The boy with the basket. I remember you from Millwood.",
+    "King's Knight: You let the king question you, then walked away with this secret.",
+    "King's Knight: Step away from the dragon. The crown will decide what happens to it.",
+    "Corin: Aurelius isn't yours to claim.",
+    "King's Knight: You are a village boy carrying an old man's sword. Consider your position.",
+    "Corin: If you want a fight, you'll have to face us both.",
+    "King's Knight: So be it. Defend yourself."
   ], { stay:true, after:() => {
     knightEncounterPhase = "fight";
     f.storyPassive = false; f.st = "walk"; f.t = 0; f.cool = .35;
@@ -3916,9 +3916,9 @@ function stepKnightEncounter(dt) {
     if (f.storyT >= .9 && !scene) {
       knightEncounterPhase = "yield";
       playScene([
-        "King's Knight: Enough... I yield.",
-        "Corin: Go. Tell Halvard the dragon chose me.",
-        "King's Knight: You have made yourself an enemy of the Crown."
+        "King's Knight: Hold! My sword is down. I yield.",
+        "Corin: You can still walk away. Tell Halvard we won't surrender.",
+        "King's Knight: He will hear of this. And he will come himself."
       ], { stay:true, after:() => {
         knightEncounterPhase = "rise"; f.st = "rise"; f.storyT = 0;
       }});

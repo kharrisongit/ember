@@ -23,12 +23,12 @@ function giveNanElixir(n){
   if(!nanCookingHere(n))return false;
   if(Date.now()<nanElixirReadyAt){
     const minutes=Math.max(1,Math.ceil((nanElixirReadyAt-Date.now())/60000));
-    playScene([`Nan Ferrow: This batch needs about ${minutes===1?'another minute':minutes+' more minutes'}, love. Good medicine cannot be hurried.`],{npcActor:n,after:()=>openNpcTopics(n)});
+    playScene([`Nan Ferrow: About ${minutes===1?'one minute':minutes+' minutes'} left on this batch. Sit with me while it cools, if you like.`],{npcActor:n,after:()=>openNpcTopics(n)});
     return true;
   }
-  playScene(['Nan Ferrow: Just in time, love. I have an elixir ready for you. Take it with you—there is no charge for keeping my boy well.',
-    'Corin: Thank you, Nan.',
-    'Nan Ferrow: I will have another bottle in ten minutes. Come and see me when you need it.'],{npcActor:n,after:()=>{
+  playScene(["Nan Ferrow: Hold out your hand, love. This elixir has cooled enough to pack. I've wrapped the bottle so it won't rattle against your other things.",
+    "Corin: You even thought of the bottle. Thank you.",
+    "Nan Ferrow: The next batch takes ten minutes. Come back if you need another, or just if you fancy sitting down with me."],{npcActor:n,after:()=>{
       const now=Date.now();if(now<nanElixirReadyAt)return;
       nanElixirReadyAt=now+10*60*1000;elixirs++;saveGame();
       showReveal('inventory_elixir','Nan gave Corin an Elixir.',1,false,()=>openNpcTopics(n));

@@ -19,7 +19,7 @@ assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,1,'Map is part of the s
 assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
 assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),true);
-assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('when you were born'));
+assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('too small to hold my finger'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
 assert.equal(c.stepFatherCompass,undefined,'The first-temple glow dialogue is removed');
 c.restoreFatherCompass({owned:true,awakened:false});
@@ -86,7 +86,7 @@ console.log('PASS: town entry and houses stay free; Nan approaches from the sout
 // Indoors or with the dragon away, Corin brings up what happened himself.
 c.npcSeesDragon=()=>false;
 const indoors=c.fatherCompassGift({n:'Nan Ferrow'});
-assert.match(indoors[0],/What has kept you/);assert.match(indoors[1],/I found a dragon's egg/);
+assert.match(indoors[0],/What happened in the woods/);assert.match(indoors[1],/I found a dragon's egg/);
 assert.deepEqual(Array.from(indoors.slice(2)),Array.from(run('FATHER_COMPASS_GIFT.slice(2)')));
 assert(!indoors.some(l=>/Aurelius|But first|Before you go/.test(l)));
 console.log('PASS: Nan responds naturally to seeing the dragon or hearing Corin’s news, without knowing his name early.');

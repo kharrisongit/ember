@@ -55,6 +55,13 @@ const ThornwellAudienceDialogue=(()=>{
       ['I would like to finish this visit without trouble.','Then say what you mean plainly, follow the directions you are given, and leave when you are dismissed.'])]
   ];
   function rows(n){
+    if(typeof DialogueRenewal!=="undefined"&&DialogueRenewal.profile(n))return DialogueRenewal.topics(n,{all:true}).map((t,i)=>({...t,onReply:words=>{
+      if(n.n!=='King Halvard')return;
+      const key=['conquest','riders','tax','eggs','hunt','search','shelter','future'][i],row=DialogueRenewal.cast[n.n].topics[i];
+      if(!['conquest','riders','tax','eggs','hunt','search'].includes(key))return;
+      const index=row.replies.findIndex(r=>r[0]===words);
+      thornwellRoyal.answers[key]=index<2?'defiant':'careful';saveGame();
+    }}));
     return (n.n==='King Halvard'?king:knight).map(([key,row])=>{
       const topic=ThornwellDialogue.topic(n,row,'royal-'+key,'world');
       topic.onReply=words=>{

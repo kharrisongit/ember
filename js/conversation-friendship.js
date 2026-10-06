@@ -30,7 +30,9 @@
     let rows=[];
     const add=(title,available=true,topicId)=>rows.push({id:topicId||id(name,title),title:playerFacingText(title),available});
     const regional=typeof MillwoodShroomDialogue!=='undefined'&&MillwoodShroomDialogue.profile(actor);
-    if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(actor)){
+    if(typeof DialogueRenewal!=='undefined'&&DialogueRenewal.profile(actor)){
+      for(const t of DialogueRenewal.topics(actor,{all:true}))add(t.title,t.available,t.friendshipId);
+    }else if(typeof ForgewickDialogue!=='undefined'&&ForgewickDialogue.profile(actor)){
       for(const t of ForgewickDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
     }else if(typeof ThornwellDialogue!=='undefined'&&ThornwellDialogue.profile(actor)){
       for(const t of ThornwellDialogue.topics(actor,{all:true}))if(t.lines&&t.friendship!==false)add(t.title,t.available,t.friendshipId);
@@ -64,7 +66,7 @@
     activeName=name;activeActor=actor;
     const p=person(name),rows=catalogue(name,actor,menu);
     // Side-quest folders may be visited independently of the root menu.
-    for(const old of p.known)if(!rows.some(r=>r.id===old.id)&&name==='Aurelius'&&old.sideQuest)rows.push({...old,available:true});
+    for(const old of p.known)if(!(typeof DialogueRenewal!=='undefined'&&DialogueRenewal.profile(actor))&&!rows.some(r=>r.id===old.id)&&name==='Aurelius'&&old.sideQuest)rows.push({...old,available:true});
     if(name==='Aurelius'&&menu.topicScope==='quests')for(const row of rows)if(menu.opts.some(o=>id(name,o.n)===row.id))row.sideQuest=true;
     p.known=rows.map(({id,title,available,sideQuest})=>({id,title,available,sideQuest}));
     catalogues.set(name,rows);if(award(name))saveGame();return status(name);

@@ -5,6 +5,11 @@
   const box=()=>document.getElementById('bagAsk');
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave,greeted=false}={}){
+    if(typeof DialogueRenewal!=="undefined"){
+      if(!telepathy&&DialogueRenewal.church(actor))return false;
+      const subject=telepathy?{...actor,n:'Aurelius'}:actor;
+      if(DialogueRenewal.profile(subject))return DialogueRenewal.prompt(subject,{dragon:telepathy,talk,leave,greeted});
+    }
     if(!telepathy&&talkShroomLookout(actor))return true;
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
@@ -140,7 +145,7 @@
     }
     if(!option.navigation||old.replyChoices)session.browsing=false;
     retained(()=>{askShut();option.go?.();});
-    if(old.replyChoices&&scene&&!ask){session.exchanged=true;autoReply={scene,index:scene.i,read:0,last:performance.now()};}
+    if(session&&old.replyChoices&&scene&&!ask){session.exchanged=true;autoReply={scene,index:scene.i,read:0,last:performance.now()};}
     if(ask?.shop){
       session.shopping=true;document.body.classList.remove('topics-open');document.body.classList.remove('conversation-session');
       window.EmberConversationView?.release();

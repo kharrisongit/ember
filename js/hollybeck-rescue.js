@@ -36,21 +36,21 @@ const HollybeckRescue=(()=>{
     learn();sayOff();P.moving=false;faceToward(n,P.x,P.y);
     const safe=IceMoth.defeatedAlready();
     const lines=rescued()?[
-      n.n+': We are tightening the ropes and getting the sled ready. Thank you for clearing the trail.',
-      'Corin: Astrid will be glad to hear you are all right.'
+      n.n+': Nearly packed. After so much waiting, even hauling this sled will feel good.',
+      "Corin: I'll let Astrid know you're preparing to return."
     ]:!safe?[
-      n.n+': Please stay back from the southern trail. That enormous moth attacks anything that moves through its glade.',
-      'Corin: Did you come from Sandspire?',
-      'Olin: With flour, lamp oil and enough salt to last the winter. The moth drove us off the road into this clearing.',
-      'Signe: We are unhurt, but we cannot pull the sled past it. We tried waiting for it to leave.',
-      'Corin: Stay together. Aurelius and I will clear a way.'
+      n.n+": Don’t take the southern trail unprepared. Veilwing is in the glade, and it attacks anything trying to pass.",
+      "Corin: Is that the supply sled from Sandspire?",
+      "Olin: Flour, salt and lamp oil. Every sack made it this far, then that moth drove us off the trail.",
+      "Signe: We can't move the sled quickly enough to pass it. Waiting hasn't made it any less hungry.",
+      "Corin: Stay in the clearing. We'll deal with Veilwing before you try the trail again."
     ]:[
-      'Corin: Veilwing is defeated. You can take the southern trail back now.',
-      'Signe: Truly? We heard the fighting, but we dared not leave the supplies.',
-      'Olin: We brought these all the way from Sandspire. Being trapped so close to home was the worst part.',
-      'Corin: Astrid is worried about you. Are either of you hurt?',
-      'Signe: Only cold and very tired. We will rest a moment, then get this sled moving.',
-      'Olin: Thank you, both of you. Hollybeck will have its supplies after all.'
+      "Corin: The moth is down. The southern trail is open for your sled.",
+      "Signe: You did it? Olin, loosen the brake rope. I want to see a chimney before dark.",
+      "Olin: We could almost smell Hollybeck's fires from here. That made the waiting worse.",
+      "Corin: Can you both walk? Astrid needs to know how you're doing.",
+      "Signe: Cold feet, empty stomachs, no injuries. Give us a moment to repack and we'll manage.",
+      "Olin: Tell her the supplies survived too. And thank you for coming this far for two overdue travellers."
     ];
     playScene(lines,{who:n.n,npcActor:n,after:()=>{
       if(safe&&!rescued()){
@@ -64,30 +64,30 @@ const HollybeckRescue=(()=>{
       category:'lead',friendship:false,questUnlock:!known()&&!rescued(),go:()=>{
         learn();sayOff();P.moving=false;faceToward(n,P.x,P.y);
         playScene(rescued()?[
-          'Corin: We found Olin and Signe. They are unhurt, and the trail is clear.',
-          'Astrid: Oh, thank goodness. I can replace sacks of flour. I cannot replace those two.',
-          'Corin: They are getting their sled ready to come home.',
-          'Astrid: Then I had better keep the soup hot. Thank you, Corin. And you, Aurelius.'
+          "Corin: Olin and Signe are safe. We cleared the moth from their route.",
+          "Astrid: Both of them? I've been counting days and pretending it was an inventory problem.",
+          "Corin: They're packing the sled. Signe was especially keen to see a chimney.",
+          "Astrid: I'll put more wood on. There'll be bowls for you and Aurelius as well—you've earned a warmer ending to this trip."
         ]:[
-          'Astrid: Olin and Signe went to Sandspire for supplies. They should have been back days ago. I keep wondering whether one of them is hurt.',
-          'Corin: Do you know which way they were coming?',
-          'Astrid: Their last message said they had reached the winter roads. They meant to follow the winding trail west of Hollybeck. There is a sheltered clearing at its far end where they could have stopped.',
-          'Corin: Aurelius and I will look for them.',
-          'Astrid: Please do. I do not care if they have lost every sack. I just want to know they are all right.'
+          "Astrid: Olin and Signe are overdue from Sandspire. They know the winter roads; if they're still out there, something has stopped them.",
+          "Corin: Where should we begin looking?",
+          "Astrid: Take the winding winter trail west of Hollybeck. There's a sheltered clearing at the far end. They'd wait there if the route home was blocked.",
+          "Corin: We'll search that way. Is there anything they need to hear from you?",
+          "Astrid: Tell them to come home without the supplies if they must. I should have said that before they left."
         ],{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
       }}];
     if(n.n==='Sverre')return [{title:Frosthorn.defeatedAlready()?'The horned beast is gone':'The beast on the northern trail',
       category:'lead',friendship:false,questUnlock:!frostKnown()&&!Frosthorn.defeatedAlready(),go:()=>{
         remember(FROST);sayOff();P.moving=false;faceToward(n,P.x,P.y);
         playScene(Frosthorn.defeatedAlready()?[
-          'Corin: We defeated Hroth.',
-          'Sverre: Then the clearing at the end of that trail is safe again. If you have not already, look for what it left behind.'
+          "Corin: Hroth won't block the northern clearing anymore.",
+          "Sverre: Then travellers have that ground back. Search the place where it fell; the Frostheart may still be waiting in its chest."
         ]:[
-          'Sverre: Take care on the winding trail northwest of Hollybeck. At its far end is a white beast with curling horns. We call it Hroth.',
-          'Corin: Does it come down toward the town?',
-          'Sverre: It keeps to its clearing, but it will not let anyone cross. Watch its feet: when it stamps, ice tears through the ground ahead of it. Move sideways.',
-          'Corin: Is there something in the clearing?',
-          'Sverre: The old stories place a Frostheart there. They say it strengthens a dragon’s ice. If you face the beast, look for the relic afterward.'
+          "Sverre: The trail northwest of Hollybeck winds into Hroth's clearing. White fur, curled horns, a temper you won't mistake for curiosity.",
+          "Corin: Has anyone seen it leave the clearing?",
+          "Sverre: It guards that ground. A stamp sends ice tearing toward you; move sideways when the foot rises. Close in, watch the horns and arms as well.",
+          "Corin: Why would anyone risk going in there?",
+          "Sverre: For the Frostheart. The relic strengthens dragon Ice by a quarter. Defeat Hroth, then claim it from the reward chest; winning the fight alone won't put it in your bag."
         ],{who:n.n,npcActor:n,after:()=>openNpcTopics(n)});
       }}];
     return [];

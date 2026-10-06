@@ -150,7 +150,7 @@
     if(resumeCorin&&!scene&&!revealing){resumeCorin=false;beginCorinRecovery();return;}
     if(phase==='walls'&&arenaT>=1&&!scene){
       window.EmberBattleMusic?.start();unlocked=true;moveTo('mountTalk');
-      say(['Aurelius: Quick! Get on my back!'],()=>{
+      say(["Aurelius: On my back, Corin! We need to move as one!"],()=>{
         moveTo('mount','Choose Mount in COMMAND.');overlay('airm');
       });
     }
@@ -172,7 +172,7 @@
       breathCooldown.fire=0;
       moveTo('fire','Choose Fire to attack.');
       // Keep the menu open under his question; the next input selects Fire.
-      playScene(['Aurelius: What should I do?'],{telepathy:true,ridingFirePrompt:true});
+      playScene(["Aurelius: I'm ready. Choose our attack."],{telepathy:true,ridingFirePrompt:true});
       paint();
     }else if(phase==='itemsButton'&&which==='itemm'){
       moveTo('heal','Choose Hare Meat to heal Aurelius.');paint();
@@ -206,7 +206,7 @@
     // Keep a reload or an automatic healing charm from making the lesson unusable.
     pHp=Math.max(1,Math.min(pHp,pMax-1));potions=Math.max(1,potions);
     saveGame();moveTo('corinHealTalk');
-    playScene(['Corin: Ow... I should drink a potion before I go any farther.'],{who:'Corin',after:()=>{
+    playScene(["Corin: That caught me properly. I need a potion before the next fight."],{who:'Corin',after:()=>{
       moveTo('corinItemsButton','Open the highlighted BAG button.');paint();
     }});
   }
@@ -221,7 +221,7 @@
     saveGame();
     if(mounted){
       moveTo('dismountTalk');
-      say(['Aurelius: I need a break. Let me show you how to dismount.'],()=>{
+      say(["Aurelius: We have a moment. Climb down so I can rest my legs."],()=>{
         moveTo('dismount','Choose Dismount in COMMAND.');overlay('airm');
       });
     }else teachHealing();
@@ -229,22 +229,22 @@
   function teachHealing(){
     moveTo('healTalk');
     say([
-      'Aurelius: I am too hurt to fly. A little food will help me recover.',
-      'Corin: Nan packed some hare meat for you. Let me get it.'
+      "Aurelius: I can't take off with these injuries. Food will help me recover.",
+      "Corin: I've still got Nan's hare meat. Hold on while I find it."
     ],()=>{moveTo('itemsButton','Open the highlighted BAG button.');overlay(null);paint();});
   }
   function usedItem(item){
     if(phase==='corinHeal'&&item.key==='potion'){
       moveTo('corinThanks');overlay(null);setBag(false);
-      playScene(['Corin: That’s better. Potions restore my hearts. I should keep some with me.'],{who:'Corin',after:()=>{
+      playScene(["Corin: I can feel the potion working. I'll keep the next bottle within reach."],{who:'Corin',after:()=>{
         corinHealDone=true;moveTo('');saveGame();
       }});
       return true;
     }
     if(phase!=='heal'||item.key!=='hareMeat'||dragon.hp<=dragonFlightMinimum())return false;
     moveTo('thanks');overlay(null);setBag(false);
-    say(['Aurelius: That is better. Thank you, Corin.',
-      'Aurelius: If I am badly hurt, I need meat or fish before I can fly again. Keep an eye on my health.'],()=>{
+    say(["Aurelius: My strength is coming back. That was exactly what I needed.",
+      "Aurelius: If I fall or can't fly, give me meat or fish through Items. Please check my health before asking for another flight."],()=>{
       done=true;unlocked=true;moveTo('');saveGame();
     });
     return true;

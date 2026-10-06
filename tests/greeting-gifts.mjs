@@ -9,10 +9,14 @@ let rewards=0;c.showReveal=()=>rewards++;
 for(const [name,key] of [['The Shroom King','spore'],['Fen','twin'],['Maelis','ward'],['Rashida','brand'],['Sverre','lamp']]){
  c.actor={n:name,charm:key,x:100,y:100,d:[name+': Take this for your journey.']};
  run('scene=null;ask=null;sayNpc=null;EmberConversationFlow.prompt(actor)');
- assert(run('sayNpc===actor'),name+' starts gift dialogue without Talk');
+ assert(run('scene?.conversationGreeting'),name+' begins with the new introduction');
  assert.equal(run('ask'),null);
- assert.match(run('actor.said[0]'),/^(The Shroom King|Fen|Maelis|Rashida|Sverre): /);
- assert.match(run('actor.said.at(-1)'),/Here, take this .+\. It is yours\./);
+ run('for(let i=0;i<10&&scene;i++){typeAll();scene.t=1;advanceScene()}');
+ assert(run('ask?.conversationPrompt'),name+' can choose a full conversation before receiving the gift');
+ run('beginNpcTalk(actor);');assert.equal(run('ask?.npcConversation'),name);
+ run('askShut();beginNpcTalk(actor,true)');
+ assert(run('sayNpc===actor'),name+' explicit gift starts the authored offer');
+ assert(run('actor.said.some(s=>/equip|key item/i.test(s))'));
  assert.equal(rewards,['spore','twin','ward','brand','lamp'].indexOf(key),'No reward before the greeting and offer finish');
  for(let i=0;i<30&&run('!!sayNpc');i++)run('typeAll();interact()');
  assert(run(`charm.${key}`),name+' awards the item after greeting');
@@ -20,4 +24,4 @@ for(const [name,key] of [['The Shroom King','spore'],['Fen','twin'],['Maelis','w
  for(let i=0;i<30&&run('!!sayNpc');i++)run('typeAll();interact()');
  assert.equal(rewards,before,name+' never awards the gift twice');
 }
-console.log('PASS: five gift greetings bypass Talk and grant each reward once.');
+console.log('PASS: five gift givers have full conversation menus and explicit offers, granting each reward once.');

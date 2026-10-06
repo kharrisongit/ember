@@ -148,7 +148,7 @@ P.x=168;P.y=204;Object.assign(dragon,{on:true,down:false,x:186,y:204,placed:MAPI
 Object.assign(foes[0],{x:168,y:168,st:'idle',t:0,webCool:0});`);
 for(let i=0;i<50;i++)run('stepCombat(.05)');
 assert(run('scene?.telepathy&&scene.spiderWebLesson'),'First capture opens telepathy');
-assert(run('scene.lines.some(s=>s.startsWith("Corin:"))&&scene.lines.some(s=>s.startsWith("Aurelius:")&&s.includes("fire"))'),'Both characters discover fire');
+assert(run('scene.lines.some(s=>s.startsWith("Corin:"))&&scene.lines.some(s=>s.startsWith("Aurelius:")&&/fire/i.test(s))'),'Both characters discover fire');
 const waiting=run('JSON.stringify([foes[0].x,foes[0].y,pHp,dragon.hp,SpiderQueenBoss.inspect().web.t])');
 for(let i=0;i<100;i++)run('stepCombat(.05)');
 assert.equal(run('JSON.stringify([foes[0].x,foes[0].y,pHp,dragon.hp,SpiderQueenBoss.inspect().web.t])'),waiting,'Reading time does not consume the escape window');

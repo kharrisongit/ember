@@ -44,7 +44,7 @@ assert(!run('npcStoryGiftPending(selaTest)||dragonLearned("shield")'),'Sela does
 run(`sayNpc=null;sayOff();loadMap('smithy');scene=null;bossScene=null;ask=null;fadeDir=0;
 smithUpgrade=true;charm.edge=true;const smithTest=npcs.find(n=>n.n==='Dunstan');beginNpcTalk(smithTest,true);`);
 run(`sayNpc=null;sayOff();EmberFriendship.restore({tutorialSeen:true});openNpcTopics(smithTest);EmberConversationFlow.openChat();
-askPick=ask.opts.findIndex(o=>o.n==='Can you recommend other protection?');askTake();`);
+askPick=ask.opts.findIndex(o=>o.n==='Sela’s protective glass');askTake();`);
 assert(run('scene.lines.some(line=>/My brother Sela/.test(line))'),'Already-upgraded players can choose Dunstan’s protection referral');
 assert(run('dragonLearned("shield")'),'Hearing Dunstan unlocks the lead');
 assert.equal(run('atlasQuestOptions().find(q=>q.id==="shield").place'),'Sandspire');
@@ -53,7 +53,7 @@ run(`sayNpc=null;scene=null;askShut();sayOff();saveToSlot(1,true);dragonBanterSe
 assert(run('loadGame(1)&&dragonLearned("shield")'),'Referral survives a real save/load');
 run(`loadMap('glasswork');scene=null;bossScene=null;ask=null;ovl=null;fadeDir=0;P.act=null;
 beginNpcTalk(npcs.find(n=>n.n==='Sela'),true);`);
-assert(run('sayNpc.said[0].includes("Your brother Dunstan sent me")'));
+assert(run('sayNpc.said[0].includes("Dunstan sent you")'));
 for(let i=0;i<20&&run('!!sayNpc');i++)run('typeAll();actionButton();');
 assert(run('glassShield'),'Sela gives the shield after the referral conversation');
 assert(run('atlasQuestComplete("shield")'));
