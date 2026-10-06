@@ -48,16 +48,58 @@
       ],
       "maxSourceSize": 768,
       "prompt": "hearth-prompt.json"
+    },
+    "hearth-clean": {
+      "file": "hearth-clean.webp",
+      "sourceCrop": [
+        0,
+        0,
+        1405,
+        1120
+      ],
+      "size": [
+        768,
+        612
+      ],
+      "rootX": null
+    },
+    "flame-curl": {
+      "file": "flame-curl.webp",
+      "sourceCrop": [
+        223,
+        46,
+        753,
+        1709
+      ],
+      "size": [
+        122,
+        384
+      ],
+      "rootX": 0.49352577586094826
+    },
+    "flame-fork": {
+      "file": "flame-fork.webp",
+      "sourceCrop": [
+        237,
+        21,
+        912,
+        1436
+      ],
+      "size": [
+        183,
+        384
+      ],
+      "rootX": 0.41409344258829084
     }
   },
   "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam.",
-  "fireMotion": "Unified painted cauldron, legs, logs and fire; smoothly deform only warm fire pixels with feathered boundaries. Neutral iron and supports stay fixed. Continuous 5.2-second fire loop, including the finish hold.",
+  "fireMotion": "Painted flame emission: staggered tongues emerge from five anchored sources, grow, rise, curl, taper and extinguish over independent lifetimes. Clean stationary hearth with no baked flames; no image displacement. The foreground wood occludes the flame roots. Seamless 5.2-second loop including the finish hold.",
   "firePreviews": [
     "../../../../previews/potion-motion/potion-fire-preview.gif",
     "../../../../previews/potion-motion/potion-fire-preview.mp4"
   ],
   "currentPreviews": [
-    "../../../../previews/potion-motion/potion-hearth-preview.gif",
-    "../../../../previews/potion-motion/potion-hearth-preview.mp4"
+    "../../../../previews/potion-motion/potion-living-fire-preview.gif",
+    "../../../../previews/potion-motion/potion-living-fire-preview.mp4"
   ]
 }

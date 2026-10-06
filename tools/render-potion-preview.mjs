@@ -13,8 +13,8 @@ fs.mkdirSync(output,{recursive:true});
 const context=vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(root,'js/crafting-hearth-motion.js'),'utf8'),context);
 vm.runInContext(fs.readFileSync(path.join(root,'js/crafting-potion-preview.js'),'utf8'),context);
-const [hearth,spoon]=await Promise.all(['hearth','spoon'].map(file=>loadImage(path.join(root,'assets/crafting/animations/potion-v3',file+'.webp'))));
-const renderer=context.PotionMotionPreview.make({hearth,spoon,createCanvas});
+const [hearth,spoon,flameCurl,flameFork]=await Promise.all(['hearth-clean','spoon','flame-curl','flame-fork'].map(file=>loadImage(path.join(root,'assets/crafting/animations/potion-v3',file+'.webp'))));
+const renderer=context.PotionMotionPreview.make({hearth,spoon,flameCurl,flameFork,createCanvas});
 const scene=createCanvas(768,768),frame=createCanvas(192,192),g=frame.getContext('2d');
 for(let i=0;i<260;i++){
   renderer.draw(scene,i/50);

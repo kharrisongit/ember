@@ -1,0 +1,44 @@
+{
+  "hearth-clean": {
+    "file": "hearth-clean.webp",
+    "sourceCrop": [
+      0,
+      0,
+      1405,
+      1120
+    ],
+    "size": [
+      768,
+      612
+    ],
+    "rootX": null
+  },
+  "flame-curl": {
+    "file": "flame-curl.webp",
+    "sourceCrop": [
+      223,
+      46,
+      753,
+      1709
+    ],
+    "size": [
+      122,
+      384
+    ],
+    "rootX": 0.49352577586094826
+  },
+  "flame-fork": {
+    "file": "flame-fork.webp",
+    "sourceCrop": [
+      237,
+      21,
+      912,
+      1436
+    ],
+    "size": [
+      183,
+      384
+    ],
+    "rootX": 0.41409344258829084
+  }
+}

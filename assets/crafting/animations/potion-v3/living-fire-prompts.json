@@ -1,0 +1,17 @@
+{
+  "tool": "Built-in image_gen",
+  "prompts": [
+    {
+      "id": "hearth-clean",
+      "prompt": "Use case: precise-object-edit. This image is the exact production sprite of a cauldron with wood under it. Make a precision layer-separation edit: REMOVE ONLY the visible orange/yellow flame tongues. Reconstruct the dark iron and charred wood that was behind the tongues, leaving the same glowing orange-red embers in the gaps. Preserve the EXACT cauldron silhouette, short sturdy legs, handles, liquid opening and ruby liquid, logs, registration, proportions, perspective, highlights, and warm reflected firelight on the underside. The logs are still hot and burning but there are NO FLAMES and NO STEAM; animated flame layers will be added by the game later. Do not redesign, move, crop, stretch, or add anything. Identical transparent background. Keep the whole object pixel-aligned and in the same position. This is the stationary background layer for the same composed campfire scene."
+    },
+    {
+      "id": "flame-curl",
+      "prompt": "Use case: stylized-concept. Create ONE isolated painted FLAME TONGUE animation texture, matching the beautiful detailed warm orange-gold fire in the reference cauldron image. The reference is STYLE ONLY; do NOT include the cauldron, wood, ground or any other object. A single slender tapering living flame, rooted at the bottom with a narrow bright yellow-gold base, rises upward, bends gently left in its middle, then curls its thin translucent amber tip to the right. Irregular wispy edges, natural fine inner ribbons and a pale warm core, airy semitransparent edges with actual alpha. It should look like a small real wood flame painted with rich fine brushwork, NOT an icon, not a smooth vector teardrop, not a flat solid silhouette, not smoke, no glow halo, no blue. About 1:2 width to height. Entire flame visible, substantial transparent margins, no shadows, no background, no letters. Only one isolated tongue of fire."
+    },
+    {
+      "id": "flame-fork",
+      "prompt": "Use case: stylized-concept. Create ONE isolated painted FLAME TONGUE animation texture, matching the detailed warm orange-gold fire in the reference cauldron. Reference is STYLE ONLY; no cauldron, wood, coal, ground or other object. A single small living wood flame with a broad yellow-gold root at bottom and two unequal narrow curling tips at top, one longer leaning right and one shorter wispy branch leaning left. Natural ragged translucent amber edges, fine inner golden strands and a pale warm yellow core, light and airy with real semitransparent alpha. It must resemble richly painted real wood fire, NOT a vector symbol, not a symmetrical icon, not a filled teardrop, not smoke. About 2:3 width to height. No halo outside the flame, no blue, no text. Full isolated flame silhouette completely visible with generous transparent margins on all sides."
+    }
+  ]
+}

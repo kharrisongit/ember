@@ -19,8 +19,8 @@
     return {t,phase,lift,alpha:smooth(t/.18)*(1-smooth((t-4.05)/.35)),energy:smooth(t/.75)*(1-.7*smooth((t-3.6)/.9))};
   }
 
-  function make({hearth,spoon,createCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}}) {
-    const paintedFire=CraftingHearthMotion.make({image:hearth,rect:geometry.hearth,fireRect:geometry.fire,createCanvas});
+  function make({hearth,spoon,flameCurl,flameFork,createCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}}) {
+    const paintedFire=CraftingHearthMotion.make({image:hearth,rect:geometry.hearth,createCanvas,flameCurl,flameFork});
     function draw(canvas,age) {
       const g=canvas.getContext('2d'),s=motion(age),[cx,cy,rx,ry]=geometry.liquid;
       g.clearRect(0,0,canvas.width,canvas.height);

@@ -11,8 +11,8 @@ main{text-align:center;width:min(100%,440px)}h1{font:28px Georgia,serif;margin:0
 <script>
 (async()=>{
   const load=async name=>{const i=new Image();i.src='../../assets/crafting/animations/potion-v3/'+name+'.webp';await i.decode();return i;};
-  const [hearth,spoon]=await Promise.all([load('hearth'),load('spoon')]);
-  const renderer=PotionMotionPreview.make({hearth,spoon}),canvas=document.querySelector('canvas'),progress=document.querySelector('progress');
+  const [hearth,spoon,flameCurl,flameFork]=await Promise.all([load('hearth-clean'),load('spoon'),load('flame-curl'),load('flame-fork')]);
+  const renderer=PotionMotionPreview.make({hearth,spoon,flameCurl,flameFork}),canvas=document.querySelector('canvas'),progress=document.querySelector('progress');
   let elapsed=0,last=performance.now(),paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pause=document.getElementById('pause');pause.textContent=paused?'Play':'Pause';
   pause.onclick=()=>{paused=!paused;pause.textContent=paused?'Play':'Pause';};
