@@ -8,6 +8,7 @@ import {WebSocketTransport} from '@colyseus/ws-transport';
 import {initializeApp} from 'firebase-admin/app';
 import {getAuth} from 'firebase-admin/auth';
 import {makeCoopRoom} from './room.mjs';
+import {PROTOCOL} from './world.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 export async function startServer({port=Number(process.env.PORT)||2567,host='0.0.0.0',verifyIdentity}={}){
   if(!verifyIdentity){
@@ -28,7 +29,7 @@ export async function startServer({port=Number(process.env.PORT)||2567,host='0.0
     let item=attempts.get(key);if(!item||now-item.time>60000){item={time:now,n:0};attempts.set(key,item);}
     if(++item.n>120)return res.status(429).json({error:'Too many room requests. Wait a minute and try again.'});next();
   });
-  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'movement-preview',protocol:1}));
+  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'shared-combat-preview',protocol:PROTOCOL}));
   app.get('/coop-sdk.js',(_req,res)=>res.sendFile(path.join(root,'multiplayer/node_modules/@colyseus/sdk/dist/colyseus.js')));
   app.get(['/', '/index.html'],(_req,res)=>{
     const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('</body>',
@@ -44,5 +45,5 @@ export async function startServer({port=Number(process.env.PORT)||2567,host='0.0
   return {gameServer,http,port:http.address().port,close:()=>gameServer.gracefullyShutdown(false)};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
-  const server=await startServer();console.log(`LDR co-op movement preview listening on ${server.port}`);
+  const server=await startServer();console.log(`LDR co-op combat preview listening on ${server.port}`);
 }

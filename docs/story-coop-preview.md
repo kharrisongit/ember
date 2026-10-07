@@ -1,17 +1,27 @@
 # Story co-op foundation / Render deployment
 
-Branch: `coop-foundation`. This is the first network milestone for The Last
-Dragonrider, not a finished story co-op mode. The Render preview has private
-rooms for two Google accounts, independent riders and hovering dragons, validated
-server-side movement in a collision-checked patch of Millwood, and 30-second
-reconnection. Character names, hair and eye colors are independent.
+Branch: `coop-foundation`. The Render preview is a staging build of The Last
+Dragonrider. The live GitHub Pages game remains on `main`.
 
-Campaign combat, story decisions, interiors, mounting, quests, rewards, and shared
-saves are not synchronized yet. The preview freezes normal game simulation and
-blocks saving for the duration of the test. Leaving reloads the title screen.
-Firebase sign-in/cloud-save features are reused; the server only verifies Firebase
-ID tokens against public Google certificates and cannot access Firestore. No
-service-account private key is needed for this milestone.
+The combat milestone includes:
+- Private rooms for two Google accounts, independent rider names/hair/eyes,
+  and a dragon for each rider with all four flying directions.
+- Server-validated walking and sprinting across the overworld terrain. The small
+  Millwood test rectangle is gone; buildings, water, trees and roadworks stay solid.
+- A repeatable woodland encounter with three mushrooms. Both players must choose
+  **Ready for battle** before the party moves into the arena and the countdown starts.
+- Shared enemies, health, attacks, deaths and victory; separate rider/dragon health,
+  sword attacks, dragon claw commands and fire projectiles with separate cooldowns.
+- Nearby partner/own-dragon revival, a full-health retry after defeat, and healing
+  after victory. No friendly fire or campaign rewards are applied.
+- A paused battle during the 30-second reconnect window. If a guest permanently
+  leaves, the encounter ends and can restart when a partner joins again.
+
+Campaign quests, conversations, cutscenes, interiors, mounting, other encounters,
+rewards and shared saves are not connected yet. Normal campaign simulation remains
+frozen, and campaign saving is blocked during the preview. Leaving reloads the title.
+The server verifies Firebase ID tokens using public Google signing certificates;
+it has no Firestore access and requires no service-account private key.
 
 ## Render setup
 
@@ -41,11 +51,24 @@ project, open **Authentication → Settings → Authorized domains → Add domai
 Add only that hostname (no `https://` and no path). Google sign-in on the preview
 needs this setup. Keep the existing GitHub Pages domain.
 
-Open the Render URL in Safari or Chrome. When the game has loaded, use the
-existing Google sign-in button, then **Co-op Preview → Host preview**. On a second
-device, sign into a **different Google account**, open Co-op Preview, and join
-with the eight-character code. Arrow keys/WASD and the preview's touch pad move
-the rider. The hovering dragon follows. The gold boundary marks the test area.
+Open the Render URL in Safari or Chrome. Use Google sign-in, then **Co-op Preview →
+Host preview**. On a second device, sign into a different Google account and join
+with the eight-character code. Both players choose **Ready for battle** to begin.
+A gold/orange ring marks the combat boundary only while fighting.
+
+| Action | Touch | Keyboard |
+| --- | --- | --- |
+| Move | Direction pad | Arrow keys / WASD |
+| Sprint | Hold Run and a direction | Hold Shift |
+| Sword | Sword | Space |
+| Dragon claw | Dragon claw | Q |
+| Dragon fire | Dragon fire | E |
+| Revive | Stand near a fallen partner/own dragon, then Revive | R |
+
+Dragon attacks aim at a nearby visible enemy. Fire has a 12-second cooldown; claw
+has a 2.4-second cooldown. The orange enemy attack area signals where to dodge.
+After victory or defeat, both players can choose Ready again for a fresh fight.
+These are preview combat values, not final campaign balance.
 
 The free Render service sleeps after 15 minutes without incoming traffic and may
 take about a minute to wake. It may also restart at any time. Reconnection works
@@ -60,20 +83,23 @@ npm test --prefix multiplayer
 npm start --prefix multiplayer
 ```
 
-`tools/export-coop-preview-map.mjs` regenerates the small server collision mask
-from the maintained game world and published layouts. Regenerate it when changing
-the Millwood preview area. No campaign state is imported into multiplayer.
+`tools/export-coop-preview-map.mjs` regenerates the shared static collision map
+from the maintained game world and published layouts. Terrain is a compressed
+bit mask; collision overrides and fixed bodies preserve edited geometry.
+Regenerate after changing the world. All room movement and combat is decided on
+the server; clients send directions and action requests, never positions or damage.
+The Firebase verifier can be injected by local tests only; production always
+verifies real Google sign-in tokens. Protocol 2 rejects stale movement-preview clients.
 
 ## Next milestones
 
-1. Test real Google login and two physical devices on the deployed Render URL.
-2. Extract reusable movement/collision and actor simulation from the single-player
-   runtime. Implement local prediction and smooth server reconciliation.
-3. Add shared enemy simulation, damage, dragon commands, death and checkpoints.
-4. Add host-owned campaign state, explicit shared dialogue progression, and party
-   transitions. Handle hatching, ferry/flight scenes and scripted boss phases.
-5. Introduce a separate co-op save schema and rules; validate reconnect and save
-   recovery before allowing progression writes.
+1. Connect existing campaign encounters and progression to shared server state,
+   starting with the opening story sequence and a separate co-op campaign schema.
+2. Add shared dialogue progression, party interior transitions, hatching, mounting,
+   ferry/flight scenes and scripted boss phases.
+3. Validate separate co-op save recovery before enabling progress writes.
+4. Expose the validated co-op mode from the main game's title screen using the same
+   Render service. Keep the preview branch for testing future multiplayer changes.
 
 Official setup references:
 - https://render.com/docs/deploy-node-express-app

@@ -47,7 +47,7 @@
     });
   };
   const clear=()=>{for(const name of dragonEffects)if(name!==previewName)stop(name);currentPhase='off';window.EmberDragonMusic?.encounter?.(false);};
-  const inGame=()=>{try{return !document.hidden&&mode==='play';}catch(e){return false;}};
+  const inGame=()=>{try{return !document.hidden&&(mode==='play'||window.LDRCoop?.active);}catch(e){return false;}};
   const playable=()=>{
     try{return inGame()&&MAPID==='world'&&quest>=Q.NOISE&&quest<=Q.ARMED;}catch(e){return false;}
   };
@@ -88,6 +88,7 @@
     ui:uiClick,
     coin:()=>{if(inGame())play('coin');},
     breathHit:()=>{if(inGame())play('breathHit',false,true);},
+    dragonFire:()=>{if(inGame())play('breathing',false,true);},
     hatch:()=>{if(inGame())play('hatch',false,true);},
     golemHit:()=>{if(inGame())play('golemHit',false,true);},
     hit:()=>{if(inGame())play('hit',false,true);},

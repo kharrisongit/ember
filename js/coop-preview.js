@@ -3,13 +3,14 @@
   'use strict';
   const el=(tag,text)=>{const node=document.createElement(tag);if(text)node.textContent=text;return node;};
   const button=(text,fn)=>{const node=el('button',text);node.type='button';node.addEventListener('click',fn);return node;};
-  let client=null,room=null,active=false,connecting=false,leaving=false,reconnecting=false,seq=0,lastInput=0,lastFrame=0;
+  let client=null,room=null,active=false,connecting=false,leaving=false,reconnecting=false,seq=0,actionSeq=0,lastInput=0,lastFrame=0;
   let snapshots=[],bounds=null,roomCode='',message='Sign in with Google, then create or join a preview room.';
+  let battle=null,seenEffect=0,renderEnemies=[];
   try{message=sessionStorage.getItem('ldr.coop.message')||message;sessionStorage.removeItem('ldr.coop.message');}catch{}
   const held=new Set(),touch=new Map(),spriteCache=new Map();
   const dialog=el('dialog');dialog.id='coopDialog';dialog.setAttribute('aria-labelledby','coopTitle');
-  const heading=el('h2','Story co-op · connection preview');heading.id='coopTitle';
-  const description=el('p','Meet in Millwood with a dragon each. This first test checks movement and connections. Battles, quests and saving are not enabled in this preview.');
+  const heading=el('h2','Story co-op · combat preview');heading.id='coopTitle';
+  const description=el('p','Explore the overworld with a dragon each, then both choose Ready for battle to fight together. Sword, dragon claw and fire are available. Story events, interiors and saving are still being connected.');
   const status=el('p',message);status.setAttribute('role','status');status.className='coop-status';
   const nameLabel=el('label','Rider name'),name=el('input');name.value='Dragonrider';name.maxLength=16;name.autocomplete='nickname';nameLabel.append(name);
   const hairLabel=el('label','Hair'),hair=el('select');hair.setAttribute('aria-label','Hair color');
@@ -27,7 +28,20 @@
   const hud=el('div');hud.id='coopHud';hud.hidden=true;
   const label=el('strong'),detail=el('span');detail.setAttribute('role','status');
   const copy=button('Copy code',async()=>{try{await navigator.clipboard.writeText(roomCode);detail.textContent='Room code copied.';}catch{detail.textContent='Share this code: '+roomCode;}});
-  hud.append(label,detail,copy,button('Leave',()=>leave()));document.body.append(hud);
+  const ready=button('Ready for battle',()=>{const own=latestOwn();if(room&&own&&!reconnecting)room.send('battle-ready',!own.ready);});
+  const party=el('div');party.id='coopParty';
+  hud.append(label,copy,button('Leave',()=>leave()),detail,ready,party);document.body.append(hud);
+  const combatControls=el('div');combatControls.id='coopCombat';combatControls.hidden=true;
+  const actionButtons=new Map();
+  for(const [kind,caption,key]of [['sword','Sword','Space'],['claw','Dragon claw','Q'],['fire','Dragon fire','E'],['revive','Revive','R']]){
+    const b=button(caption,()=>sendAction(kind));b.dataset.action=kind;b.title=caption+' ('+key+')';b.dataset.caption=caption;
+    actionButtons.set(kind,b);combatControls.append(b);
+  }
+  document.body.append(combatControls);
+  const sprint=button('Run',()=>{});sprint.id='coopRun';sprint.hidden=true;sprint.setAttribute('aria-label','Hold to run');
+  sprint.addEventListener('pointerdown',e=>{e.preventDefault();sprint.setPointerCapture(e.pointerId);touch.set(e.pointerId,'shift');});
+  for(const event of ['pointerup','pointercancel','lostpointercapture'])sprint.addEventListener(event,e=>touch.delete(e.pointerId));
+  document.body.append(sprint);
   const pad=el('div');pad.id='coopPad';pad.hidden=true;pad.setAttribute('aria-label','Movement controls');
   for(const [caption,key]of [['↑','arrowup'],['←','arrowleft'],['↓','arrowdown'],['→','arrowright']]){
     const b=button(caption,()=>{});b.dataset.direction=key;b.setAttribute('aria-label','Move '+key.slice(5));
@@ -42,12 +56,13 @@
     const key=e.key.toLowerCase();
     if(e.key==='Tab'||e.target.closest?.('input,select')||(e.target.closest?.('button')&&['Enter',' '].includes(e.key)))return;
     e.preventDefault();e.stopImmediatePropagation();
+    if(type==='keydown'&&!e.repeat){const kind=({' ':'sword',q:'claw',e:'fire',r:'revive'})[key];if(kind)sendAction(kind);}
     if(type==='keydown')held.add(key);else held.delete(key);
   },true);
   function errorText(error){
     const raw=String(error?.message||'');
-    if(/401|Google|token/i.test(raw))return 'Sign in with Google at the title screen, then try again.';
     if(/409|different Google/.test(raw))return 'Each player needs a different Google account.';
+    if(/401|Google|token/i.test(raw))return 'Sign in with Google at the title screen, then try again.';
     if(/not found|not exist|invalid room|4212/i.test(raw))return 'That room is no longer available. Check the code or ask the host to create a new room.';
     if(/locked|full|403/i.test(raw))return 'This room already has two players.';
     return raw||'Could not connect. The free server may be waking up. Try again in a minute.';
@@ -62,14 +77,15 @@
       const token=await window.EmberCloud.getIdToken();
       client=new Colyseus.Client(location.origin);client.auth.token=token;
       const profile=window.EmberPlayerIdentity.normalize({name:name.value,hair:hair.value,eyes:eyes.value});
-      const options={protocol:1,profile};
+      const options={protocol:2,profile};
       room=isHost?await client.create('story_coop_preview',options):await client.joinById(roomId,options);
-      leaving=false;seq=0;roomCode=room.roomId;wire(room);
+      leaving=false;seq=0;actionSeq=0;seenEffect=0;snapshots=[];roomCode=room.roomId;wire(room);
       // Loading the map does not run a campaign or touch any save slot.
-      if(MAPID!=='world')await BOOT.map('world',true,100,100,'Preparing Millwood co-op preview');
+      quest=Q.DONE;greenPhase='gone';bridgeCleared=true;guardsAside=true;
+      if(MAPID!=='world')await BOOT.map('world',true,100,100,'Preparing co-op overworld');
       active=true;lastFrame=performance.now();lastInput=0;
-      document.body.classList.add('coop-preview-active');dialog.close();hud.hidden=pad.hidden=false;
-      label.textContent='ROOM '+roomCode;detail.textContent='Waiting for your partner · movement test only';
+      document.body.classList.add('coop-preview-active');dialog.close();hud.hidden=pad.hidden=combatControls.hidden=sprint.hidden=false;
+      label.textContent='ROOM '+roomCode;detail.textContent='Waiting for your partner';
       room.send('ready');
     }catch(error){if(room){leaving=true;await room.leave().catch(()=>{});room=null;}status.textContent=errorText(error);}
     finally{connecting=false;host.disabled=join.disabled=false;}
@@ -78,9 +94,8 @@
     connection.reconnection.enabled=false;
     connection.onMessage('welcome',data=>{bounds=data.bounds;});
     connection.onMessage('snapshot',data=>{
-      snapshots.push({at:performance.now(),players:data.players});if(snapshots.length>4)snapshots.shift();
-      const connected=data.players.filter(p=>p.connected).length;
-      detail.textContent=connected===2?'Two riders connected · movement test only':'Waiting for your partner · movement test only';
+      snapshots.push({at:performance.now(),players:data.players,enemies:data.battle.enemies});if(snapshots.length>4)snapshots.shift();
+      battle=data.battle;updateHud(data.players);playEffects();
     });
     connection.onMessage('pong',()=>{});
     connection.onMessage('ended',reason=>{message=reason;leaving=true;finish();});
@@ -99,8 +114,8 @@
     });
   }
   function finish(){
-    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;held.clear();touch.clear();spriteCache.clear();
-    document.body.classList.remove('coop-preview-active');hud.hidden=pad.hidden=true;
+    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;battle=null;held.clear();touch.clear();spriteCache.clear();
+    document.body.classList.remove('coop-preview-active');hud.hidden=pad.hidden=combatControls.hidden=sprint.hidden=true;
     try{sessionStorage.setItem('ldr.coop.message',message);}catch{}
     location.reload();
   }
@@ -111,9 +126,104 @@
     const a=Math.max(0,Math.min(1,(performance.now()-latest.at)/50));
     return latest.players.map(p=>{
       const before=previous.players.find(q=>q.id===p.id)||p;
-      const lerp=key=>({...p[key],x:before[key].x+(p[key].x-before[key].x)*a,y:before[key].y+(p[key].y-before[key].y)*a});
+      const lerp=key=>{const old=Math.hypot(p[key].x-before[key].x,p[key].y-before[key].y)>128?p[key]:before[key];return {...p[key],x:old.x+(p[key].x-old.x)*a,y:old.y+(p[key].y-old.y)*a};};
       return {...p,rider:lerp('rider'),dragon:lerp('dragon')};
     });
+  }
+  function latestOwn(){return snapshots[snapshots.length-1]?.players.find(p=>p.id===room?.sessionId);}
+  function sendAction(kind){if(room&&active&&!reconnecting&&battle?.phase==='active'&&!battle.paused)room.send('action',{seq:++actionSeq,kind});}
+  const partyCards=new Map();
+  function updateHud(members){
+    const own=members.find(p=>p.id===room?.sessionId),connected=members.filter(p=>p.connected).length;
+    if(reconnecting)detail.textContent='Connection lost · reconnecting…';
+    else if(battle.paused)detail.textContent='Battle paused · waiting for your partner to reconnect';
+    else if(battle.phase==='countdown')detail.textContent='Woodland skirmish · '+Math.max(1,Math.ceil((battle.startsAt-battle.now)/1000));
+    else if(battle.phase==='active')detail.textContent='Defeat the mushrooms · '+battle.enemies.filter(e=>e.hp>0).length+' remaining'+(own?.rider.hp<=0?' · Your partner can revive you':'');
+    else if(battle.phase==='won')detail.textContent='Victory! Both riders and dragons healed. Ready again to replay, or keep exploring.';
+    else if(battle.phase==='lost')detail.textContent='Battle ended. Both choose Ready to retry with full health.';
+    else detail.textContent=connected<2?'Explore while you wait for your partner.':'Explore, or both choose Ready to enter the shared battle.';
+    const canReady=['idle','won','lost'].includes(battle.phase);
+    ready.disabled=!canReady||reconnecting;ready.textContent=own?.ready?'Ready ✓ · waiting for partner':'Ready for battle';
+    if(!canReady)ready.textContent=battle.paused?'Battle paused':'Battle in progress';
+    for(const m of members){
+      let card=partyCards.get(m.id);
+      if(!card){card=el('div');card.className='coop-vitals';card.append(el('strong'),el('span'),el('span'));partyCards.set(m.id,card);party.append(card);}
+      card.classList.toggle('coop-own',m.id===room?.sessionId);
+      card.children[0].textContent=(m.id===room?.sessionId?'You · ':'')+m.name+(m.connected?'':' · reconnecting');
+      card.children[1].textContent='Rider '+m.rider.hp+'/'+m.rider.maxHp+(m.rider.hp<=0?' · DOWN':'');
+      card.children[2].textContent='Dragon '+m.dragon.hp+'/'+m.dragon.maxHp+(m.dragon.hp<=0?' · DOWN':'');
+    }
+    for(const [id,card]of partyCards)if(!members.some(m=>m.id===id)){card.remove();partyCards.delete(id);}
+    for(const [kind,b]of actionButtons){
+      const remaining=Math.max(0,(own?.cooldowns[kind]||0)-battle.now);
+      b.disabled=!own||own.rider.hp<=0||battle.phase!=='active'||battle.paused||reconnecting||remaining>0||(['claw','fire'].includes(kind)&&(own.dragon.hp<=0||own.dragon.attackUntil>battle.now));
+      b.textContent=b.dataset.caption+(remaining>0?' · '+Math.ceil(remaining/1000)+'s':'');
+    }
+  }
+  function playEffects(){
+    for(const event of battle.effects){
+      if(event.id<=seenEffect)continue;
+      if(event.kind==='sword')window.EmberSfx?.sword?.();
+      if(event.kind==='fire')window.EmberSfx?.dragonFire?.();
+      if(event.kind==='burst')window.EmberSfx?.breathHit?.();
+      seenEffect=Math.max(seenEffect,event.id);
+    }
+  }
+  function interpolatedEnemies(){
+    const latest=snapshots[snapshots.length-1];if(!latest)return [];
+    const previous=snapshots[snapshots.length-2]||latest,a=Math.max(0,Math.min(1,(performance.now()-latest.at)/50));
+    return latest.enemies.map(e=>{const old=previous.enemies.find(p=>p.id===e.id)||e;return {...e,x:old.x+(e.x-old.x)*a,y:old.y+(e.y-old.y)*a};});
+  }
+  function healthBar(x,y,width,hp,max,color){
+    ctx.fillStyle='#16171b';ctx.fillRect(Math.round(x-width/2)-1,Math.round(y)-1,width+2,5);
+    ctx.fillStyle='#4c3234';ctx.fillRect(Math.round(x-width/2),Math.round(y),width,3);
+    ctx.fillStyle=color;ctx.fillRect(Math.round(x-width/2),Math.round(y),Math.round(width*hp/max),3);
+  }
+  function drawArena(){
+    const a=battle.arena;ctx.save();ctx.strokeStyle=battle.phase==='active'?'#ed9d51':'#e8d194';ctx.lineWidth=2;
+    ctx.setLineDash([5,6]);ctx.beginPath();ctx.arc(a.x,a.y,a.r-8,0,Math.PI*2);ctx.stroke();ctx.restore();
+  }
+  function drawEnemy(e){
+    const dir=e.dir==='n'?'u':e.dir==='s'?'d':e.dir;
+    const action=e.hp<=0?'die':e.hurtUntil>battle.now?'hurt':e.state==='attack'?'atk':e.state==='walk'?'walk':'idle';
+    const sprite=SPR['ms1_'+action+'_'+dir]||SPR.ms1_idle_d;if(!sprite)return;
+    const frame=e.hp<=0?Math.min(sprite[4]-1,Math.floor(e.t/.6*sprite[4])):action==='atk'?Math.min(sprite[4]-1,Math.floor(e.t/.4*sprite[4])):Math.floor(e.t*8)%sprite[4];
+    const x=Math.round(e.x-sprite[2]/2),y=Math.round(e.y-sprite[3]);
+    ctx.save();
+    if(e.state==='windup'){
+      const angle=({n:-Math.PI/2,s:Math.PI/2,w:Math.PI,e:0})[e.dir];
+      ctx.fillStyle='#ff992c66';ctx.beginPath();ctx.moveTo(e.x,e.y-3);ctx.arc(e.x,e.y-3,34,angle-1.3,angle+1.3);ctx.closePath();ctx.fill();
+    }
+    if(e.hurtUntil>battle.now||e.state==='windup'){
+      const tint=e.hurtUntil>battle.now?'#ff4030':'#ffb347';
+      drawGameImage(ctx,tintFoe(sprite,frame,tint,.6),x,y);
+    }else drawGameImage(ctx,sheetOf(sprite),sprite[0]+frame*sprite[2],sprite[1],sprite[2],sprite[3],x,y,sprite[2],sprite[3]);
+    if(e.hp>0)healthBar(e.x,y+5,25,e.hp,e.maxHp,'#a5ce6b');
+    ctx.restore();
+  }
+  function drawCombatEffects(){
+    if(!battle)return;ctx.save();
+    for(const shot of battle.projectiles){
+      const sprite=SPR['fx_attack_fire_'+(Math.floor(battle.now/1000*24)%DRAGON_PROJECTILE.fire)];
+      if(sprite){ctx.save();ctx.translate(shot.x,shot.y-12);ctx.rotate(Math.atan2(shot.vy,shot.vx));
+        drawGameImage(ctx,sheetOf(sprite),sprite[0],sprite[1],sprite[2],sprite[3],-20,-20,40,40);ctx.restore();continue;}
+      const gradient=ctx.createRadialGradient(shot.x,shot.y-12,1,shot.x,shot.y-12,11);
+      gradient.addColorStop(0,'#fffad8');gradient.addColorStop(.35,'#ffc35c');gradient.addColorStop(1,'#ff501000');
+      ctx.fillStyle=gradient;ctx.fillRect(shot.x-12,shot.y-24,24,24);
+      ctx.strokeStyle='#ef652a';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(shot.x-shot.vx*14,shot.y-12-shot.vy*14);ctx.lineTo(shot.x,shot.y-12);ctx.stroke();
+    }
+    for(const e of battle.effects){
+      const age=Math.max(0,(battle.now-e.at)/1000),fade=1-age/.8;ctx.globalAlpha=Math.max(0,fade);
+      if(e.kind==='damage'){ctx.font='bold 8px sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff1d5';ctx.fillText('−'+e.amount,e.x,e.y-30-age*18);}
+      else if(e.kind==='claw'||e.kind==='sword'||e.kind==='enemy-swing'){
+        if(age>.3)continue;
+        const angle=({n:-Math.PI/2,s:Math.PI/2,w:Math.PI,e:0})[e.dir],reach=e.kind==='claw'?32:24;
+        ctx.strokeStyle=e.kind==='enemy-swing'?'#ff9e49':e.kind==='claw'?'#ffdfa3':'#d9f3ff';ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(e.x,e.y-10,reach,angle-1+age*3,angle+.7+age*3);ctx.stroke();
+      }else if(e.kind==='burst'||e.kind==='revive'){
+        ctx.strokeStyle=e.kind==='revive'?'#99f6b7':'#ffb756';ctx.lineWidth=2;ctx.beginPath();ctx.arc(e.x,e.y-12,4+age*24,0,Math.PI*2);ctx.stroke();
+      }
+    }ctx.restore();
   }
   let renderPlayers=[];
   function frame(ms){
@@ -123,21 +233,34 @@
       lastInput=ms;const keysNow=new Set([...held,...touch.values()]);
       const x=Number(keysNow.has('arrowright')||keysNow.has('d'))-Number(keysNow.has('arrowleft')||keysNow.has('a'));
       const y=Number(keysNow.has('arrowdown')||keysNow.has('s'))-Number(keysNow.has('arrowup')||keysNow.has('w'));
-      room.send('input',{seq:++seq,x,y});
+      room.send('input',{seq:++seq,x,y,run:keysNow.has('shift')});
     }
     renderPlayers=players();const own=renderPlayers.find(p=>p.id===room?.sessionId);
-    if(own){P.x=own.rider.x;P.y=own.rider.y;P.moving=false;cam.z=playZoom();cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;clampCam();}
+    renderEnemies=interpolatedEnemies();
+    if(own){
+      P.x=own.rider.x;P.y=own.rider.y;P.moving=false;
+      const arena=battle?.arena,framing=arena&&battle.phase!=='idle'&&Math.hypot(P.x-arena.x,P.y-arena.y)<arena.r+40;
+      if(framing){
+        // Keep the whole shared fight below the HUD and above the touch controls.
+        const top=hud.getBoundingClientRect().bottom+8,bottom=VW>=660?VH-12:Math.min(pad.getBoundingClientRect().top,combatControls.getBoundingClientRect().top)-10;
+        const available=Math.max(110,bottom-top);
+        cam.z=Math.min(playZoom(),(VW-24)/(arena.r*2+54),available/(arena.r*2+60));
+        cam.x=arena.x-VW/cam.z/2;cam.y=arena.y-20-(top+available/2)/cam.z;
+      }else{cam.z=playZoom();cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;}
+      clampCam();
+    }
     drawWorld(tAcc,dt);return true;
   }
   const originalFrame=frameCore;frameCore=function(ms){if(!frame(ms))return originalFrame(ms);};
   const originalSave=saveToSlot;saveToSlot=function(...args){if(active)return false;return originalSave(...args);};
   function addActors(draw){
     if(!active)return;
-    for(let i=draw.length-1;i>=0;i--)if(draw[i]===P||draw[i].dg)draw.splice(i,1);
+    for(let i=draw.length-1;i>=0;i--)if(draw[i]===P||draw[i].dg||draw[i].foe||draw[i].frosthorn||draw[i].iceMoth||draw[i].queenBoss||draw[i].queenWeb||draw[i].bolt||draw[i].green)draw.splice(i,1);
     for(const member of renderPlayers){
       draw.push({coop:member,kind:'rider',x:member.rider.x,y:member.rider.y});
     }
-    if(bounds)draw.push({coopBoundary:true,x:bounds.x,y:bounds.y,sy:-1e9});
+    for(const enemy of renderEnemies)draw.push({coopEnemy:enemy,x:enemy.x,y:enemy.y,sy:enemy.hp>0?enemy.y:-1e8});
+    if(battle&&battle.phase!=='idle')draw.push({coopBoundary:true,x:battle.arena.x,y:battle.arena.y,sy:-1e9});
   }
   function riderCanvas(sprite,frame,member){
     const key=[sprite[0],sprite[1],frame,member.hair,member.eyes].join(':');if(spriteCache.has(key))return spriteCache.get(key);
@@ -154,19 +277,25 @@
   }
   function drawActor(actor){
     if(!active)return false;
-    if(actor.coopBoundary){ctx.save();ctx.strokeStyle='#e7c977';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.strokeRect(bounds.x,bounds.y,bounds.w,bounds.h);ctx.restore();return true;}
+    if(actor.coopBoundary){drawArena();return true;}
+    if(actor.coopEnemy){drawEnemy(actor.coopEnemy);return true;}
     const member=actor.coop;if(!member)return false;
     const pose=member[actor.kind];ctx.save();ctx.globalAlpha=member.connected?1:.45;
     if(actor.kind==='rider'){
       const dir=pose.dir==='n'?'u':pose.dir==='s'?'d':pose.dir;
-      const sprite=SPR['corin_bare_'+(pose.moving?'walk':'idle')+'_'+dir];
-      if(sprite){const frame=Math.floor(pose.t*(pose.moving?9:6))%sprite[4];ctx.imageSmoothingEnabled=false;ctx.drawImage(riderCanvas(sprite,frame,member),Math.round(pose.x-sprite[2]/2),Math.round(pose.y-sprite[3]+corinFeetOffset()));}
+      const attacking=pose.attackUntil>battle.now,down=pose.hp<=0;
+      const action=down?'die':attacking?'atk':pose.moving?(pose.running?'run':'walk'):'idle';
+      const sprite=SPR['corin_sword_'+action+'_'+dir];
+      if(sprite){const frame=down?sprite[4]-1:attacking?Math.min(sprite[4]-1,Math.floor((battle.now-pose.attackAt)/420*sprite[4])):Math.floor(pose.t*(pose.moving?9:6))%sprite[4];
+        ctx.imageSmoothingEnabled=false;if(pose.hurtUntil>battle.now)ctx.globalAlpha*=.55;
+        ctx.drawImage(riderCanvas(sprite,frame,member),Math.round(pose.x-sprite[2]/2),Math.round(pose.y-sprite[3]+corinFeetOffset()));}
     }else{
-      const direction=pose.dir==='w'?'e':pose.dir,action=pose.moving?'fly':'hover';
-      const sprite=SPR['dr5_'+action+'_'+direction]||SPR['dr5_fly_'+direction]||SPR.dr5_idle_s;
-      if(sprite){const frame=Math.floor(pose.t*6)%sprite[4],scale=DRAGON_DRAW_SCALE,w=Math.round(sprite[2]*scale),h=Math.round(sprite[3]*scale),bob=Math.sin(pose.t*2)*2;
+      const attacking=pose.attackUntil>battle.now,down=pose.hp<=0;
+      const sprite=SPR[(down?'dr5_idle_':attacking&&pose.attack==='fire'?'drf_fire_':'drf_')+pose.dir]||SPR['dr5_idle_'+pose.dir];
+      if(sprite){const frame=attacking?Math.min(sprite[4]-1,Math.floor((battle.now-pose.attackAt)/700*sprite[4])):Math.floor(pose.t*4)%sprite[4],scale=DRAGON_DRAW_SCALE,w=Math.round(sprite[2]*scale),h=Math.round(sprite[3]*scale),bob=down?0:Math.sin(pose.t*2)*2;
         ctx.globalAlpha*=.25;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(pose.x,pose.y+3,11,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=member.connected?1:.45;
-        ctx.translate(Math.round(pose.x-w/2),Math.round(pose.y-h-12+bob));if(pose.dir==='w'){ctx.translate(w,0);ctx.scale(-1,1);}ctx.imageSmoothingEnabled=false;
+        ctx.translate(Math.round(pose.x-w/2),Math.round(pose.y-h-(down?0:12)+bob));ctx.imageSmoothingEnabled=false;
+        if(down)ctx.globalAlpha*=.4;else if(pose.hurtUntil>battle.now)ctx.globalAlpha*=.5;
         drawGameImage(ctx,sheetOf(sprite),sprite[0]+frame*sprite[2],sprite[1],sprite[2],sprite[3],0,0,w,h);
       }
     }
@@ -175,10 +304,13 @@
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne(){
     if(!active)return;
     for(const member of renderPlayers)drawActor({coop:member,kind:'dragon'});
+    drawCombatEffects();
     ctx.save();ctx.font='6px sans-serif';ctx.textAlign='center';
     for(const member of renderPlayers){const pose=member.rider,width=Math.ceil(ctx.measureText(member.name).width)+6;
       ctx.fillStyle='#191614';ctx.fillRect(pose.x-width/2,pose.y+3,width,9);
       ctx.fillStyle=member.id===room?.sessionId?'#ffe29a':'#a1e8ef';ctx.fillText(member.name,pose.x,pose.y+10);
+      if(member.rider.hp<=0){ctx.fillStyle='#ffc6a1';ctx.fillText('DOWN · revive nearby',pose.x,pose.y+20);}
+      const d=member.dragon;healthBar(d.x,d.y+5,22,d.hp,d.maxHp,member.id===room?.sessionId?'#e6b461':'#73cdda');
     }ctx.restore();
   }};
   const originalOpen=BOOT.close;BOOT.close=async function(...args){if(active||connecting)return;return originalOpen.apply(this,args);};
