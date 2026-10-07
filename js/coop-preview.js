@@ -6,11 +6,13 @@
   let client=null,room=null,active=false,connecting=false,leaving=false,reconnecting=false,seq=0,actionSeq=0,lastInput=0,lastFrame=0;
   let snapshots=[],bounds=null,roomCode='',message='Sign in with Google, then create or join a preview room.';
   let battle=null,seenEffect=0,renderEnemies=[];
+  let pickups=[],inventory={ingredients:{},story:[]},pickupCatalog={materials:{},storyItems:{}},noticeUntil=0;
+  const ingredientArt=new Image();ingredientArt.src='/assets/crafting/ingredients.webp?v=20261005';
   try{message=sessionStorage.getItem('ldr.coop.message')||message;sessionStorage.removeItem('ldr.coop.message');}catch{}
-  const held=new Set(),touch=new Map(),spriteCache=new Map();
+  const held=new Set(),touch=new Map(),spriteCache=new Map(),dragonCache=new Map();
   const dialog=el('dialog');dialog.id='coopDialog';dialog.setAttribute('aria-labelledby','coopTitle');
-  const heading=el('h2','Story co-op · combat preview');heading.id='coopTitle';
-  const description=el('p','Explore the overworld with a dragon each, then both choose Ready for battle to fight together. Sword, dragon claw and fire are available. Story events, interiors and saving are still being connected.');
+  const heading=el('h2','Story co-op · exploration preview');heading.id='coopTitle';
+  const description=el('p','Your partner has a purple dragon. Gather ingredients for your own bag; story pickups are shared with the party. Both choose Ready for battle to fight together. Story scenes, interiors and permanent co-op saves are still being connected.');
   const status=el('p',message);status.setAttribute('role','status');status.className='coop-status';
   const nameLabel=el('label','Rider name'),name=el('input');name.value='Dragonrider';name.maxLength=16;name.autocomplete='nickname';nameLabel.append(name);
   const hairLabel=el('label','Hair'),hair=el('select');hair.setAttribute('aria-label','Hair color');
@@ -29,14 +31,21 @@
   const label=el('strong'),detail=el('span');detail.setAttribute('role','status');
   const copy=button('Copy code',async()=>{try{await navigator.clipboard.writeText(roomCode);detail.textContent='Room code copied.';}catch{detail.textContent='Share this code: '+roomCode;}});
   const ready=button('Ready for battle',()=>{const own=latestOwn();if(room&&own&&!reconnecting)room.send('battle-ready',!own.ready);});
+  const bagButton=button('Bag',()=>showBag());
   const party=el('div');party.id='coopParty';
-  hud.append(label,copy,button('Leave',()=>leave()),detail,ready,party);document.body.append(hud);
+  hud.append(label,bagButton,copy,button('Leave',()=>leave()),detail,ready,party);document.body.append(hud);
+  const bag=el('dialog');bag.id='coopBag';bag.setAttribute('aria-labelledby','coopBagTitle');
+  const bagTitle=el('h2','Co-op Bag');bagTitle.id='coopBagTitle';
+  const bagContents=el('div');bag.append(bagTitle,el('p','Your ingredients are yours to gather. Story items are available to both riders.'),bagContents,button('Close bag',()=>bag.close()));
+  bag.addEventListener('close',release);document.body.append(bag);
+  const notice=el('div');notice.id='coopNotice';notice.hidden=true;notice.setAttribute('role','status');document.body.append(notice);
   const combatControls=el('div');combatControls.id='coopCombat';combatControls.hidden=true;
   const actionButtons=new Map();
   for(const [kind,caption,key]of [['sword','Sword','Space'],['claw','Dragon claw','Q'],['fire','Dragon fire','E'],['revive','Revive','R']]){
     const b=button(caption,()=>sendAction(kind));b.dataset.action=kind;b.title=caption+' ('+key+')';b.dataset.caption=caption;
     actionButtons.set(kind,b);combatControls.append(b);
   }
+  const gather=button('Pick up',()=>collectNearest());gather.id='coopGather';gather.title='Pick up (F or Space)';combatControls.append(gather);
   document.body.append(combatControls);
   const sprint=button('Run',()=>{});sprint.id='coopRun';sprint.hidden=true;sprint.setAttribute('aria-label','Hold to run');
   sprint.addEventListener('pointerdown',e=>{e.preventDefault();sprint.setPointerCapture(e.pointerId);touch.set(e.pointerId,'shift');});
@@ -54,9 +63,17 @@
   for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{
     if(!active)return;
     const key=e.key.toLowerCase();
+    if(bag.open){
+      if(type==='keydown'&&(key==='escape'||key==='i'))bag.close();
+      if(!['tab','enter',' '].includes(key))e.preventDefault();e.stopImmediatePropagation();return;
+    }
     if(e.key==='Tab'||e.target.closest?.('input,select')||(e.target.closest?.('button')&&['Enter',' '].includes(e.key)))return;
     e.preventDefault();e.stopImmediatePropagation();
-    if(type==='keydown'&&!e.repeat){const kind=({' ':'sword',q:'claw',e:'fire',r:'revive'})[key];if(kind)sendAction(kind);}
+    if(type==='keydown'&&!e.repeat){
+      if(key==='i')showBag();
+      else if(key==='f'||(key===' '&&battle?.phase!=='active'))collectNearest();
+      else{const kind=({' ':'sword',q:'claw',e:'fire',r:'revive'})[key];if(kind)sendAction(kind);}
+    }
     if(type==='keydown')held.add(key);else held.delete(key);
   },true);
   function errorText(error){
@@ -77,7 +94,7 @@
       const token=await window.EmberCloud.getIdToken();
       client=new Colyseus.Client(location.origin);client.auth.token=token;
       const profile=window.EmberPlayerIdentity.normalize({name:name.value,hair:hair.value,eyes:eyes.value});
-      const options={protocol:2,profile};
+      const options={protocol:3,profile};
       room=isHost?await client.create('story_coop_preview',options):await client.joinById(roomId,options);
       leaving=false;seq=0;actionSeq=0;seenEffect=0;snapshots=[];roomCode=room.roomId;wire(room);
       // Loading the map does not run a campaign or touch any save slot.
@@ -92,7 +109,13 @@
   }
   function wire(connection){
     connection.reconnection.enabled=false;
-    connection.onMessage('welcome',data=>{bounds=data.bounds;});
+    connection.onMessage('welcome',data=>{bounds=data.bounds;pickupCatalog=data.pickupCatalog;});
+    connection.onMessage('inventory',data=>{inventory=data;if(bag.open)renderBag();});
+    connection.onMessage('nearby-pickups',data=>{pickups=data;});
+    connection.onMessage('pickup-result',data=>{
+      showNotice(data.ok?(data.kind==='story'?data.by+' found '+data.name+' · shared with both riders':'+'+data.amount+' '+data.name):data.reason);
+      if(data.ok){if(data.kind==='story')window.EmberSfx?.key?.();else window.EmberSfx?.pickup?.();}
+    });
     connection.onMessage('snapshot',data=>{
       snapshots.push({at:performance.now(),players:data.players,enemies:data.battle.enemies});if(snapshots.length>4)snapshots.shift();
       battle=data.battle;updateHud(data.players);playEffects();
@@ -114,7 +137,7 @@
     });
   }
   function finish(){
-    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;battle=null;held.clear();touch.clear();spriteCache.clear();
+    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;battle=null;pickups=[];held.clear();touch.clear();spriteCache.clear();dragonCache.clear();bag.close();notice.hidden=true;
     document.body.classList.remove('coop-preview-active');hud.hidden=pad.hidden=combatControls.hidden=sprint.hidden=true;
     try{sessionStorage.setItem('ldr.coop.message',message);}catch{}
     location.reload();
@@ -131,6 +154,31 @@
     });
   }
   function latestOwn(){return snapshots[snapshots.length-1]?.players.find(p=>p.id===room?.sessionId);}
+  function showNotice(text){notice.textContent=text;notice.style.top=Math.round(hud.getBoundingClientRect().bottom+8)+'px';notice.hidden=false;noticeUntil=performance.now()+4500;}
+  function gatheringAllowed(){return active&&!reconnecting&&!battle?.paused&&!['active','countdown'].includes(battle?.phase)&&latestOwn()?.rider.hp>0;}
+  function nearestPickup(){const p=latestOwn()?.rider;if(!p)return null;return pickups.filter(n=>Math.hypot(n.x-p.x,n.y-p.y)<=36).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0]||null;}
+  function collectNearest(){if(!gatheringAllowed()||bag.open)return;const node=nearestPickup();if(node)room.send('pickup',node.id);else showNotice('Move close to an ingredient or story item to pick it up.');}
+  function showBag(){if(!gatheringAllowed())return;release();renderBag();bag.showModal();}
+  function renderBag(){
+    bagContents.replaceChildren();
+    for(const [title,entries,empty]of [
+      ['Your ingredients',Object.entries(inventory.ingredients).filter(([,amount])=>amount>0).map(([key,amount])=>({key,amount,kind:'ingredient',name:pickupCatalog.materials[key]?.name||key})),'Nothing gathered yet. Look beside woodland roads and the trail north of Millwood.'],
+      ['Shared story items',inventory.story.map(key=>({key,kind:'story',name:pickupCatalog.storyItems[key]?.name||key})),'When either rider finds a story item, it will appear here for both of you.']
+    ]){
+      bagContents.append(el('h3',title));
+      if(!entries.length){bagContents.append(el('p',empty));continue;}
+      const list=el('ul');
+      for(const item of entries){const row=el('li');row.dataset.item=item.key;
+        const art=el('canvas');art.width=art.height=40;art.setAttribute('aria-hidden','true');
+        const g=art.getContext('2d');g.imageSmoothingEnabled=false;
+        if(item.kind==='ingredient'){
+          const i=Object.keys(pickupCatalog.materials).indexOf(item.key),w=ingredientArt.naturalWidth/5,h=ingredientArt.naturalHeight/2;
+          if(w&&h)g.drawImage(ingredientArt,i%5*w,Math.floor(i/5)*h,w,h,0,0,40,40);
+        }else{const sprite=SPR[pickupCatalog.storyItems[item.key]?.icon];if(sprite)drawGameImage(g,sheetOf(sprite),sprite[0],sprite[1],sprite[2],sprite[3],0,0,40,40);}
+        row.append(art,el('span',item.name),el('strong',item.kind==='story'?'Both riders':'×'+item.amount));list.append(row);
+      }bagContents.append(list);
+    }
+  }
   function sendAction(kind){if(room&&active&&!reconnecting&&battle?.phase==='active'&&!battle.paused)room.send('action',{seq:++actionSeq,kind});}
   const partyCards=new Map();
   function updateHud(members){
@@ -143,6 +191,8 @@
     else if(battle.phase==='lost')detail.textContent='Battle ended. Both choose Ready to retry with full health.';
     else detail.textContent=connected<2?'Explore while you wait for your partner.':'Explore, or both choose Ready to enter the shared battle.';
     const canReady=['idle','won','lost'].includes(battle.phase);
+    const fighting=['active','countdown'].includes(battle.phase);
+    if(fighting&&bag.open)bag.close();bagButton.disabled=fighting||reconnecting||!own||own.rider.hp<=0;
     ready.disabled=!canReady||reconnecting;ready.textContent=own?.ready?'Ready ✓ · waiting for partner':'Ready for battle';
     if(!canReady)ready.textContent=battle.paused?'Battle paused':'Battle in progress';
     for(const m of members){
@@ -155,10 +205,12 @@
     }
     for(const [id,card]of partyCards)if(!members.some(m=>m.id===id)){card.remove();partyCards.delete(id);}
     for(const [kind,b]of actionButtons){
+      b.hidden=!fighting;
       const remaining=Math.max(0,(own?.cooldowns[kind]||0)-battle.now);
       b.disabled=!own||own.rider.hp<=0||battle.phase!=='active'||battle.paused||reconnecting||remaining>0||(['claw','fire'].includes(kind)&&(own.dragon.hp<=0||own.dragon.attackUntil>battle.now));
       b.textContent=b.dataset.caption+(remaining>0?' · '+Math.ceil(remaining/1000)+'s':'');
     }
+    gather.hidden=fighting;
   }
   function playEffects(){
     for(const event of battle.effects){
@@ -236,6 +288,9 @@
       room.send('input',{seq:++seq,x,y,run:keysNow.has('shift')});
     }
     renderPlayers=players();const own=renderPlayers.find(p=>p.id===room?.sessionId);
+    const pickup=nearestPickup();gather.disabled=!gatheringAllowed()||!pickup;
+    gather.textContent=pickup?(pickup.kind==='ingredient'?'Gather ':'Pick up ')+(pickup.kind==='ingredient'?pickupCatalog.materials[pickup.item]?.name:pickupCatalog.storyItems[pickup.item]?.name):'Move close to pick up';
+    if(!notice.hidden&&ms>noticeUntil)notice.hidden=true;
     renderEnemies=interpolatedEnemies();
     if(own){
       P.x=own.rider.x;P.y=own.rider.y;P.moving=false;
@@ -255,15 +310,17 @@
   const originalSave=saveToSlot;saveToSlot=function(...args){if(active)return false;return originalSave(...args);};
   function addActors(draw){
     if(!active)return;
-    for(let i=draw.length-1;i>=0;i--)if(draw[i]===P||draw[i].dg||draw[i].foe||draw[i].frosthorn||draw[i].iceMoth||draw[i].queenBoss||draw[i].queenWeb||draw[i].bolt||draw[i].green)draw.splice(i,1);
+    for(let i=draw.length-1;i>=0;i--)if(draw[i]===P||draw[i].dg||draw[i].foe||draw[i].frosthorn||draw[i].iceMoth||draw[i].queenBoss||draw[i].queenWeb||draw[i].bolt||draw[i].green||draw[i].craftNode||draw[i].item?.took)draw.splice(i,1);
     for(const member of renderPlayers){
       draw.push({coop:member,kind:'rider',x:member.rider.x,y:member.rider.y});
     }
     for(const enemy of renderEnemies)draw.push({coopEnemy:enemy,x:enemy.x,y:enemy.y,sy:enemy.hp>0?enemy.y:-1e8});
+    for(const node of pickups)if(node.x>=cam.x-48&&node.x<=cam.x+VW/cam.z+48&&node.y>=cam.y-48&&node.y<=cam.y+VH/cam.z+48)draw.push({coopPickup:node,x:node.x,y:node.y});
     if(battle&&battle.phase!=='idle')draw.push({coopBoundary:true,x:battle.arena.x,y:battle.arena.y,sy:-1e9});
   }
   function riderCanvas(sprite,frame,member){
-    const key=[sprite[0],sprite[1],frame,member.hair,member.eyes].join(':');if(spriteCache.has(key))return spriteCache.get(key);
+    const hair=window.LDRCoopAppearance.forViewer(member,latestOwn()).hair;
+    const key=[sprite[0],sprite[1],frame,hair,member.eyes].join(':');if(spriteCache.has(key))return spriteCache.get(key);
     const canvas=document.createElement('canvas');canvas.width=sprite[2];canvas.height=sprite[3];const g=canvas.getContext('2d');
     const sx=sprite[0]+frame*sprite[2],sy=sprite[1];
     for(const page of atlasPages.values()){
@@ -271,14 +328,42 @@
       if(right>left&&bottom>top)g.drawImage(page.img,left-page.x,top-page.y,right-left,bottom-top,left-sx,top-sy,right-left,bottom-top);
     }
     const pixels=g.getImageData(0,0,canvas.width,canvas.height);
-    window.EmberPlayerIdentity.recolorPixels(pixels.data,member.hair,false);
+    window.EmberPlayerIdentity.recolorPixels(pixels.data,hair,false);
     window.EmberPlayerIdentity.recolorEyes(pixels.data,member.eyes,false,canvas.width);g.putImageData(pixels,0,0);
     if(spriteCache.size>160)spriteCache.delete(spriteCache.keys().next().value);spriteCache.set(key,canvas);return canvas;
+  }
+  function dragonCanvas(sprite,frame){
+    const key=[sprite[0],sprite[1],frame].join(':');if(dragonCache.has(key))return dragonCache.get(key);
+    const source=sheetOf(sprite);if(!source||source.complete===false||source.naturalWidth===0)return null;
+    const canvas=document.createElement('canvas');canvas.width=sprite[2];canvas.height=sprite[3];
+    const g=canvas.getContext('2d');drawGameImage(g,source,sprite[0]+frame*sprite[2],sprite[1],sprite[2],sprite[3],0,0,sprite[2],sprite[3]);
+    const pixels=g.getImageData(0,0,canvas.width,canvas.height);window.LDRCoopAppearance.purpleDragon(pixels.data);g.putImageData(pixels,0,0);
+    if(dragonCache.size>=96)dragonCache.delete(dragonCache.keys().next().value);dragonCache.set(key,canvas);return canvas;
+  }
+  function drawPickup(node){
+    ctx.save();ctx.imageSmoothingEnabled=false;let top=node.y-18;
+    if(node.kind==='ingredient'){
+      const i=Object.keys(pickupCatalog.materials).indexOf(node.item),w=ingredientArt.naturalWidth/5,h=ingredientArt.naturalHeight/2;
+      ctx.fillStyle='#14201a55';ctx.beginPath();ctx.ellipse(node.x,node.y,7,2,0,0,Math.PI*2);ctx.fill();
+      if(w&&h)ctx.drawImage(ingredientArt,i%5*w,Math.floor(i/5)*h,w,h,node.x-9,node.y-17,18,18);
+      else{ctx.fillStyle=pickupCatalog.materials[node.item]?.color||'#87ac67';ctx.fillRect(node.x-3,node.y-8,6,6);}
+    }else{
+      const sprite=SPR[node.sprite];if(sprite){
+        let y=node.y;const prop=SPR[node.onTop];if(prop)y-=prop[3]-((ATLAS.flattop&&ATLAS.flattop[node.onTop])||2);
+        const w=node.width||sprite[2],h=w*sprite[3]/sprite[2];top=y-h;
+        drawGameImage(ctx,sheetOf(sprite),sprite[0],sprite[1],sprite[2],sprite[3],Math.round(node.x-w/2),Math.round(y-h),w,h);
+      }
+    }
+    const nearest=gatheringAllowed()&&nearestPickup()?.id===node.id;
+    ctx.fillStyle='#fff2ad';ctx.globalAlpha=.6+.3*Math.sin(tAcc*3+node.x);ctx.fillRect(node.x+5,top-3,2,2);ctx.globalAlpha=1;
+    if(nearest){ctx.font='bold 6px sans-serif';ctx.textAlign='center';ctx.fillText(node.kind==='ingredient'?'Gather':'Pick up · shared',node.x,top-7);}
+    ctx.restore();
   }
   function drawActor(actor){
     if(!active)return false;
     if(actor.coopBoundary){drawArena();return true;}
     if(actor.coopEnemy){drawEnemy(actor.coopEnemy);return true;}
+    if(actor.coopPickup){drawPickup(actor.coopPickup);return true;}
     const member=actor.coop;if(!member)return false;
     const pose=member[actor.kind];ctx.save();ctx.globalAlpha=member.connected?1:.45;
     if(actor.kind==='rider'){
@@ -296,7 +381,9 @@
         ctx.globalAlpha*=.25;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(pose.x,pose.y+3,11,3,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=member.connected?1:.45;
         ctx.translate(Math.round(pose.x-w/2),Math.round(pose.y-h-(down?0:12)+bob));ctx.imageSmoothingEnabled=false;
         if(down)ctx.globalAlpha*=.4;else if(pose.hurtUntil>battle.now)ctx.globalAlpha*=.5;
-        drawGameImage(ctx,sheetOf(sprite),sprite[0]+frame*sprite[2],sprite[1],sprite[2],sprite[3],0,0,w,h);
+        const purple=window.LDRCoopAppearance.forViewer(member,latestOwn()).dragon==='purple',canvas=purple?dragonCanvas(sprite,frame):null;
+        if(canvas)drawGameImage(ctx,canvas,0,0,sprite[2],sprite[3],0,0,w,h);
+        else drawGameImage(ctx,sheetOf(sprite),sprite[0]+frame*sprite[2],sprite[1],sprite[2],sprite[3],0,0,w,h);
       }
     }
     ctx.restore();return true;
@@ -310,7 +397,7 @@
       ctx.fillStyle='#191614';ctx.fillRect(pose.x-width/2,pose.y+3,width,9);
       ctx.fillStyle=member.id===room?.sessionId?'#ffe29a':'#a1e8ef';ctx.fillText(member.name,pose.x,pose.y+10);
       if(member.rider.hp<=0){ctx.fillStyle='#ffc6a1';ctx.fillText('DOWN · revive nearby',pose.x,pose.y+20);}
-      const d=member.dragon;healthBar(d.x,d.y+5,22,d.hp,d.maxHp,member.id===room?.sessionId?'#e6b461':'#73cdda');
+      const d=member.dragon;healthBar(d.x,d.y+5,22,d.hp,d.maxHp,member.id===room?.sessionId?'#e6b461':'#b892ec');
     }ctx.restore();
   }};
   const originalOpen=BOOT.close;BOOT.close=async function(...args){if(active||connecting)return;return originalOpen.apply(this,args);};

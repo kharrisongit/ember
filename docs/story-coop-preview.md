@@ -3,9 +3,18 @@
 Branch: `coop-foundation`. The Render preview is a staging build of The Last
 Dragonrider. The live GitHub Pages game remains on `main`.
 
-The combat milestone includes:
+The exploration milestone includes:
 - Private rooms for two Google accounts, independent rider names/hair/eyes,
   and a dragon for each rider with all four flying directions.
+- Each rider sees their own dragon in its original red colors and their partner's
+  dragon in purple. If both select the same hair, the partner gets a contrasting
+  hair color in that viewer's game. Selected profiles remain unchanged.
+- All 676 overworld ingredient nodes have independent availability for each
+  account. Gathering never removes a partner's ingredients. Ordinary plants
+  respawn after 20 minutes per player; one-time introductory supplies stay collected.
+- Either rider can pick up an overworld story item to grant it to the whole party.
+  The co-op Bag shows personal ingredient counts and shared story items. Rejoining
+  the same room restores the account's ingredients and party story ownership.
 - Server-validated walking and sprinting across the overworld terrain. The small
   Millwood test rectangle is gone; buildings, water, trees and roadworks stay solid.
 - A repeatable woodland encounter with three mushrooms. Both players must choose
@@ -17,8 +26,12 @@ The combat milestone includes:
 - A paused battle during the 30-second reconnect window. If a guest permanently
   leaves, the encounter ends and can restart when a partner joins again.
 
-Campaign quests, conversations, cutscenes, interiors, mounting, other encounters,
-rewards and shared saves are not connected yet. Normal campaign simulation remains
+The two existing overworld story pickups (six brown eggs and the dragon's egg)
+are available as shared inventory pickups in this preview. Collecting them does
+not run their single-player dialogue, quest gates or cutscenes. Scripted quest,
+NPC and boss rewards still need to be connected to the shared reward system.
+Campaign quests, conversations, cutscenes, interiors, mounting, other encounters
+and shared saves are not connected yet. Normal campaign simulation remains
 frozen, and campaign saving is blocked during the preview. Leaving reloads the title.
 The server verifies Firebase ID tokens using public Google signing certificates;
 it has no Firestore access and requires no service-account private key.
@@ -60,7 +73,9 @@ A gold/orange ring marks the combat boundary only while fighting.
 | --- | --- | --- |
 | Move | Direction pad | Arrow keys / WASD |
 | Sprint | Hold Run and a direction | Hold Shift |
-| Sword | Sword | Space |
+| Gather / story pickup | Move close, then Gather / Pick up | F / Space outside battle |
+| Co-op Bag | Bag | I; Escape to close |
+| Sword | Sword | Space during battle |
 | Dragon claw | Dragon claw | Q |
 | Dragon fire | Dragon fire | E |
 | Revive | Stand near a fallen partner/own dragon, then Revive | R |
@@ -73,7 +88,9 @@ These are preview combat values, not final campaign balance.
 The free Render service sleeps after 15 minutes without incoming traffic and may
 take about a minute to wake. It may also restart at any time. Reconnection works
 while the same server room remains alive; a server restart ends this temporary
-room. Free bandwidth/build quotas still apply.
+room. Ingredient and story inventories currently live only in that room and reset
+when the room ends; they never write to single-player saves. Free bandwidth/build
+quotas still apply.
 
 ## Development
 
@@ -84,12 +101,18 @@ npm start --prefix multiplayer
 ```
 
 `tools/export-coop-preview-map.mjs` regenerates the shared static collision map
-from the maintained game world and published layouts. Terrain is a compressed
+and pickup catalog from the maintained game world and published layouts. Terrain is a compressed
 bit mask; collision overrides and fixed bodies preserve edited geometry.
 Regenerate after changing the world. All room movement and combat is decided on
 the server; clients send directions and action requests, never positions or damage.
+Pickup requests contain only a catalog node ID. The server checks proximity, line
+of sight, battle state and per-account collection history before granting anything.
+Ingredient inventories and visible nodes are sent privately to their owner. Story
+ownership belongs to the room, including late joiners and temporarily disconnected
+players. Trusted future quest handlers can call `grantStoryItem`; no client can
+grant an arbitrary story key.
 The Firebase verifier can be injected by local tests only; production always
-verifies real Google sign-in tokens. Protocol 2 rejects stale movement-preview clients.
+verifies real Google sign-in tokens. Protocol 3 rejects stale preview clients.
 
 ## Next milestones
 

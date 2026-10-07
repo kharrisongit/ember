@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {inflateSync} from 'node:zlib';
 export const previewMap=JSON.parse(fs.readFileSync(new URL('./preview-map.json',import.meta.url)));
-export const PROTOCOL=2;
+export const PROTOCOL=3;
 const bits=previewMap.tiles?inflateSync(Buffer.from(previewMap.tiles,'base64')):null;
 const fences=new Set(previewMap.fences||[]),rectBuckets=new Map();
 for(const rect of [...previewMap.blocks||[],...previewMap.npcBodies||[]]){

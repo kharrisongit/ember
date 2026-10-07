@@ -2,6 +2,7 @@ import {Room,ServerError} from '@colyseus/core';
 import {randomInt} from 'node:crypto';
 import {PROTOCOL,previewMap,newMember,acceptInput,stepMember,publicMember} from './world.mjs';
 import {createBattle,setBattleReady,acceptAction,stepBattle,cancelBattle,publicBattle} from './combat.mjs';
+import {createPickupStore,pickupCatalog,collectPickup,publicInventory,nearbyPickups} from './pickups.mjs';
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export function makeCoopRoom(verifyIdentity) {
   return class CoopRoom extends Room {
@@ -18,14 +19,23 @@ export function makeCoopRoom(verifyIdentity) {
       this.roomId=Array.from({length:8},()=>alphabet[randomInt(alphabet.length)]).join('');
       await this.setPrivate(true);
       this.members=new Map();this.hostId=null;this.startedAt=Date.now();this.battle=createBattle();
+      this.pickups=createPickupStore();this.pickupViews=new Map();
       this.maxMessagesPerSecond=40;
       this.onMessage('input',(client,input)=>{
         const m=this.members.get(client.sessionId);if(m)acceptInput(m,input,Date.now());
       });
       this.onMessage('action',(client,input)=>{const m=this.members.get(client.sessionId);if(m)acceptAction(this.battle,this.members,m,input);});
       this.onMessage('battle-ready',(client,ready)=>{const m=this.members.get(client.sessionId);if(m)setBattleReady(this.battle,this.members,m,ready);});
+      this.onMessage('pickup',(client,id)=>{
+        const member=this.members.get(client.sessionId);if(!member)return;
+        const result=collectPickup(this.pickups,member,id,Date.now(),this.battle);
+        if(result.ok&&result.kind==='story')this.broadcast('pickup-result',{...result,by:member.profile.name});
+        else client.send('pickup-result',result);
+        if(result.ok)for(const peer of this.clients)this.sendPickups(peer);
+      });
       this.onMessage('ready',client=>{client.send('welcome',{protocol:PROTOCOL,roomId:this.roomId,hostId:this.hostId,
-        bounds:{x:0,y:0,w:previewMap.width*previewMap.tile,h:previewMap.height*previewMap.tile}});this.sendSnapshot();});
+        bounds:{x:0,y:0,w:previewMap.width*previewMap.tile,h:previewMap.height*previewMap.tile},
+        pickupCatalog:{materials:pickupCatalog.materials,storyItems:pickupCatalog.storyItems}});this.sendPickups(client,true);this.sendSnapshot();});
       this.onMessage('ping',(client)=>client.send('pong',Date.now()));
       this.setSimulationInterval(delta=>{
         const now=Date.now(),dt=Math.min(.05,Math.max(0,delta/1000)),b=this.battle;
@@ -35,6 +45,7 @@ export function makeCoopRoom(verifyIdentity) {
             arena:inBattle?b.arena:null,bodies:inBattle?b.enemies.filter(e=>e.hp>0):[]});
         }
         this.sendSnapshot();
+        if(now-(this.lastPickupSync||0)>=250){this.lastPickupSync=now;for(const client of this.clients)this.sendPickups(client);}
       },50);
     }
     onJoin(client,options,auth){
@@ -47,6 +58,14 @@ export function makeCoopRoom(verifyIdentity) {
       this.sendSnapshot();
     }
     sendSnapshot(){this.broadcast('snapshot',{hostId:this.hostId,players:[...this.members.values()].map(publicMember),battle:publicBattle(this.battle)});}
+    sendPickups(client,force=false){
+      const member=this.members.get(client.sessionId);if(!member?.connected)return;
+      const inventory=publicInventory(this.pickups,member.uid),nodes=nearbyPickups(this.pickups,member,Date.now());
+      const old=this.pickupViews.get(client.sessionId)||{},key=nodes.map(n=>n.id).join('|');
+      if(force||old.revision!==inventory.revision)client.send('inventory',inventory);
+      if(force||old.key!==key)client.send('nearby-pickups',nodes);
+      this.pickupViews.set(client.sessionId,{revision:inventory.revision,key});
+    }
     async onDrop(client){
       const member=this.members.get(client.sessionId);if(!member)return;
       member.connected=false;member.ready=false;member.input={x:0,y:0};
@@ -58,6 +77,7 @@ export function makeCoopRoom(verifyIdentity) {
     removeMember(id){
       if(!this.members?.has(id))return;
       this.members.delete(id);
+      this.pickupViews.delete(id);
       cancelBattle(this.battle,this.members);
       if(id===this.hostId){this.broadcast('ended','The host left. Create a new room to continue the preview.');void this.disconnect();}
       else this.sendSnapshot();

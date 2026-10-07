@@ -22,3 +22,14 @@ data.solid.forEach((v,i)=>{if(v)bits[i>>3]|=1<<(i&7);});
 data.tiles=deflateSync(bits).toString('base64');delete data.solid;
 fs.writeFileSync('multiplayer/src/preview-map.json',JSON.stringify(data)+'\n');
 console.log('Exported overworld:',data.width*data.tile,'×',data.height*data.tile,'pixels;',data.arenas.length,'arenas;',data.tiles.length,'collision bytes (base64)');
+const pickups=JSON.parse(run(`JSON.stringify({
+  version:1,materials:Crafting.materials,
+  storyItems:Object.fromEntries(BAG.filter(it=>it.kind==='key'||it.kind==='charm'||['egg','eggs'].includes(it.key)).map(it=>[it.key,{
+    name:typeof it.name==='function'?it.name():it.name,icon:it.icon?.()||null
+  }])),
+  nodes:[...Crafting.inspect().nodes.map(n=>({...n,kind:'ingredient',map:'world',item:n.material,amount:n.amount||2})),
+    ...ITEMS.filter(it=>(it.map||'world')==='world'&&it.took).map(it=>({id:'story:'+it.key,kind:'story',map:'world',
+      item:it.key,x:it.tx*TS+TS/2,y:it.ty*TS+TS,amount:1,once:true,sprite:it.spr,width:it.width||null,onTop:it.onTop||null}))]
+})`));
+fs.writeFileSync('multiplayer/src/pickup-catalog.json',JSON.stringify(pickups,null,2)+'\n');
+console.log('Exported',pickups.nodes.length,'co-op pickups and',Object.keys(pickups.storyItems).length,'shared story item definitions.');

@@ -29,11 +29,11 @@ export async function startServer({port=Number(process.env.PORT)||2567,host='0.0
     let item=attempts.get(key);if(!item||now-item.time>60000){item={time:now,n:0};attempts.set(key,item);}
     if(++item.n>120)return res.status(429).json({error:'Too many room requests. Wait a minute and try again.'});next();
   });
-  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'shared-combat-preview',protocol:PROTOCOL}));
+  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'coop-pickups-preview',protocol:PROTOCOL}));
   app.get('/coop-sdk.js',(_req,res)=>res.sendFile(path.join(root,'multiplayer/node_modules/@colyseus/sdk/dist/colyseus.js')));
   app.get(['/', '/index.html'],(_req,res)=>{
     const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('</body>',
-      '<link rel="stylesheet" href="/css/coop-preview.css"><script src="/coop-sdk.js"></script><script src="/js/coop-preview.js"></script></body>');
+      '<link rel="stylesheet" href="/css/coop-preview.css"><script src="/coop-sdk.js"></script><script src="/js/coop-appearance.js"></script><script src="/js/coop-preview.js"></script></body>');
     res.setHeader('Cache-Control','no-store');res.type('html').send(html);
   });
   // Serve game assets only: server code, environment files and dependencies stay private.

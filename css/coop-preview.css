@@ -44,3 +44,12 @@
   #coopParty{padding-top:3px}#coopParty .coop-vitals{display:flex;align-items:center;gap:7px;padding:2px 5px}
   #coopParty strong{max-width:100px;font-size:9px}#coopParty span{font-size:9px}
 }
+
+#coopCombat button[hidden]{display:none!important}
+#coopGather{grid-column:1/-1;min-height:50px;background:#324b35f5!important}
+#coopNotice{position:fixed;left:50%;transform:translateX(-50%);z-index:22000;box-sizing:border-box;width:max-content;max-width:min(520px,94vw);padding:12px 16px;border:1px solid #e6c676;border-radius:9px;background:#2a2817f5;color:#fff0c6;text-align:center;font:600 14px/1.35 system-ui;pointer-events:none}
+#coopNotice[hidden]{display:none}
+#coopBag{box-sizing:border-box;width:min(580px,94vw);max-height:85dvh;border:2px solid #bca46e;border-radius:12px;padding:20px;background:#202c26;color:#f7e9c9;font:14px/1.4 system-ui;z-index:23000}
+#coopBag::backdrop{background:#0d1715d9}#coopBag h2{margin:0 0 8px;font-size:25px;color:#ffdf9a}#coopBag h3{font-size:15px;border-bottom:1px solid #728167;margin:20px 0 8px;padding-bottom:7px}#coopBag p{color:#d5d8c8;font-size:13px}#coopBag ul{list-style:none;padding:0;margin:0}
+#coopBag li{display:flex;gap:10px;align-items:center;min-height:48px;border-bottom:1px solid #ffffff15}#coopBag li canvas{width:40px;height:40px;flex-shrink:0;image-rendering:pixelated}#coopBag li span{flex:1}#coopBag li strong{font-size:12px;color:#e9cc8d;white-space:nowrap}
+#coopBag button{margin-top:16px;border:1px solid #c9af72;border-radius:7px;background:#394e3d;color:#ffeac4;min-height:42px;padding:8px 18px;font:600 14px system-ui;cursor:pointer}
