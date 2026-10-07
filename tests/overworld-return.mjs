@@ -23,7 +23,7 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  let blockTiles=[],lineTiles=new Set(),rockTiles=new Set(),soilAreas=[],arenaRings=null,blossomBand=null,townBoxList=null;
  let chunks=new Map(),chunkClock=0,scatterChunks=new Map(),CW=0,CH=0,buckets=[],sbuckets=[],fenceAt=null,mapDirty=false;
  let buildUndo=[],grabRect=null,grabDrag=null,stroke=null,chestAnim=null,fishing=null,pendingActorStage=null,brambleMap='',doorMotion=null;
- let arenaLock=null,arenaT=0,arenaGoing=false,trial=null,wonAll=false,lastFight=0,edits={},camFree=true,mode='test',cam={};
+ let arenaLock=null,arenaT=0,arenaGoing=false,trial=null,wonAll=false,lastFight=0,bossScene=null,risePend=null,edits={},camFree=true,mode='test',cam={};
  let loot=[],spell=null,risings=[],blooms=[],consecrationTrails=[],dustPuff=null,graves=null,flying=[],falling=null,npcs=[],selected=null;
  let mounted=false,breath=null,breathT=0;
  let editing=false,building=false,painting=false,doorEdit=false,collideView=false,quest=0,Q={KING:99},dragon={},foes=[];
