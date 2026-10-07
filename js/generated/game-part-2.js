@@ -5090,6 +5090,21 @@ function padAim() {
   padDy = Math.max(-1, Math.min(1, dy));
 }
 
+function controllerDirection(dx,dy) {
+  if(atlasOpen){atlasMove(dx,dy);return true;}
+  if(typeof ask!=="undefined"&&ask){
+    if(dx&&ask.quantity)changePurchaseQuantity(dx>0?1:-1);
+    if(dy)askStep(dy>0?1:-1);
+    return true;
+  }
+  if(typeof bagOpen!=="undefined"&&bagOpen){
+    if(dy)bagStep(dy>0?4:-4);else if(dx)bagStep(dx>0?1:-1);
+    return true;
+  }
+  if(typeof ovl!=="undefined"&&ovl){if(dy)ovlStep(dy>0?1:-1);return true;}
+  return false;
+}
+
 function padBind() {
   const pad = document.getElementById("dpad");
   const cells = [];
@@ -5101,24 +5116,7 @@ function padBind() {
       const dy = parseInt(el.dataset.dy, 10) || 0;
       const dx = parseInt(el.dataset.dx, 10) || 0;
       if (!gameplayStarted) { if (titleControlReady("dpad") && dy) BOOT.stepLoad(dy); e?.preventDefault(); return; }
-      if(atlasOpen){atlasMove(dx,dy);e?.preventDefault();return;}
-      if (typeof ask !== "undefined" && ask) {
-        if (dx && ask.quantity) changePurchaseQuantity(dx > 0 ? 1 : -1);
-        if (dy) askStep(dy > 0 ? 1 : -1);
-        if (e && e.preventDefault) e.preventDefault();
-        return;
-      }
-      if (typeof bagOpen !== "undefined" && bagOpen) {
-        if (dy) bagStep(dy > 0 ? 4 : -4);
-        else if (dx) bagStep(dx > 0 ? 1 : -1);
-        if (e && e.preventDefault) e.preventDefault();
-        return;
-      }
-      if (typeof ovl !== "undefined" && ovl) {
-        if (dy) ovlStep(dy > 0 ? 1 : -1);
-        if (e && e.preventDefault) e.preventDefault();
-        return;
-      }
+      if (controllerDirection(dx,dy)) { e?.preventDefault(); return; }
       for (const id of padInputIds(e)) padHeld.set(id, el);
       el.classList.add("hit");
       padAim();
@@ -5169,21 +5167,28 @@ function padBind() {
   });
 }
 
+const controllerBindings = new Map();
+function nativeControllerButton(id,down) {
+  const binding=controllerBindings.get(id);if(!binding)return false;
+  if(down){
+    if(!gameplayStarted&&!titleControlReady(id))return false;
+    if((globalThis.window?.EmberArenaEntry?.holding()&&id!=="act")||globalThis.window?.EmberRiding?.allowControl(id)===false)return false;
+    if(["btnL","btnR","btnItems","btnMapQuick"].includes(id))globalThis.window?.EmberSfx?.ui?.();
+    binding.onDown();
+  }else binding.onUp?.();
+  return true;
+}
 function bindHold(id, onDown, onUp) {
+  controllerBindings.set(id,{onDown,onUp});
   const el = document.getElementById(id);
   if (!el) { (window.__boot = (window.__boot || "") +
               "\nbindHold: no element #" + id); return; }
   const down = (e) => {
-    if (!gameplayStarted && !titleControlReady(id)) {
-      e?.preventDefault(); e?.stopPropagation(); return;
-    }
-    if((globalThis.window?.EmberArenaEntry?.holding()&&id!=="act")||globalThis.window?.EmberRiding?.allowControl(id)===false){e?.preventDefault();e?.stopPropagation();return;}
-    if(["btnL","btnR","btnItems","btnMapQuick"].includes(id))globalThis.window?.EmberSfx?.ui?.();
-    el.classList.add("hit"); onDown();
+    if(nativeControllerButton(id,true))el.classList.add("hit");
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
   };
   const up = (e) => {
-    el.classList.remove("hit"); if (onUp) onUp();
+    el.classList.remove("hit"); nativeControllerButton(id,false);
     if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
   };
   el.addEventListener("touchstart", down, { passive: false });
@@ -5196,7 +5201,7 @@ function bindHold(id, onDown, onUp) {
 // A visible menu owns its touches. The deck-sized dragon menus cover every
 // controller; other menus still use the exposed D-pad, A and B to navigate.
 function blockCoveredGameInput(e) {
-  if(window.LDRCoopCampaign?.active&&(window.LDRCoopUI?.dispatching||e.target?.closest?.('#campaignControls,#campaignBar,#campaignMenus')))return;
+  if(window.LDRCoopCampaign?.active&&(window.LDRCoopUI?.dispatching||e.target?.closest?.('#deck,#campaignBar,#campaignMenus')))return;
   if(globalThis.window?.EmberConversationFlow?.input(e))return;
   if(globalThis.window?.EmberArenaEntry?.blockPointer(e))return;
   if(globalThis.window?.EmberRiding?.blockPointer(e))return;
@@ -5214,7 +5219,7 @@ function blockCoveredGameInput(e) {
 for (const event of ["pointerdown", "touchstart", "mousedown", "click"])
   document.addEventListener(event, blockCoveredGameInput, { capture: true, passive: false });
 
-const SCROLLERS = ["toolbody", "bagLeft", "bagPanel", "bagRows", "bagAsk", "bootLoadPanel"];
+const SCROLLERS = ["campaignMenus", "toolbody", "bagLeft", "bagPanel", "bagRows", "bagAsk", "bootLoadPanel"];
 
 function scrollerFor(node) {
   for (let el = node; el && el !== document.body; el = el.parentNode) {
@@ -11958,6 +11963,7 @@ padBind();
   });
 }
 function actionButton() {
+  if(window.LDRCampaign?.voteAction?.())return;
   if(typeof Crafting!=='undefined'&&Crafting.active()){Crafting.press();return;}
   if(typeof flightTravel!=='undefined'&&flightTravel){if(revealing)hideReveal();return;}
   if(globalThis.window?.EmberConversationFlow?.active()&&globalThis.window?.EmberConversationFlow?.advance())return;

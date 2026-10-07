@@ -4160,6 +4160,7 @@ function frame(ms) {
   finally { requestAnimationFrame(frame); }
 }
 function updateDeckHealth(){
+  const state=window.LDRCoopCampaign?.controllerState;
   const corin=document.getElementById("deckCorinHearts"), dg=document.getElementById("deckDragonHearts"), dr=document.getElementById("deckDragonRow");
   const box=document.getElementById("deckHealth"), cp=document.getElementById("deckCorinPortrait"), dp=document.getElementById("deckDragonPortrait");
   const paint=(el,cur,max,kind)=>{
@@ -4172,8 +4173,8 @@ function updateDeckHealth(){
     }
     if(el._hpMarkup!==html){el.innerHTML=html;el._hpMarkup=html;}
   };
-  const cur=(typeof pHp!=="undefined"&&Number.isFinite(pHp))?pHp:0;
-  const max=(typeof pMax!=="undefined"&&pMax)?pMax:1;
+  const cur=state?state.hp:(typeof pHp!=="undefined"&&Number.isFinite(pHp))?pHp:0;
+  const max=state?state.max:(typeof pMax!=="undefined"&&pMax)?pMax:1;
   paint(corin,cur,max,"corin");
   const portrait=(cv,sp,img,faceZoom)=>{
     if(!cv||!sp||!img)return;
@@ -4196,17 +4197,17 @@ function updateDeckHealth(){
       cv._portraitKey=key;cv._portraitImage=img;
     }catch(e){}
   };
-  if(typeof SPR!=="undefined"){const cs=SPR[corinKit()+"idle_d"];portrait(cp,cs,atlasImg,true);}
+  if(typeof SPR!=="undefined"){const cs=SPR[(state?.kit||corinKit())+"idle_d"];portrait(cp,cs,atlasImg,true);}
 
-  const hatched=(typeof hasDragon==="function"&&hasDragon());
-  if(typeof dragon!=="undefined"&&hatched)paint(dg,Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp,dragon.maxHp||1,"dragon");
+  const hatched=state?!!state.dragon:(typeof hasDragon==="function"&&hasDragon());
+  if(typeof dragon!=="undefined"&&hatched)paint(dg,state?state.dragon.hp:(Number.isFinite(dragon.hp)?dragon.hp:dragon.maxHp),state?state.dragon.max:(dragon.maxHp||1),"dragon");
   if(dr)dr.style.display=hatched?"flex":"none";
   if(hatched&&typeof SPR!=="undefined"){const ds=SPR.dr5_pose_south||SPR.dr5_idle_s;portrait(dp,ds,ds?sheetOf(ds):dragonImg);}
   if(box){
     box.classList.toggle("solo",!hatched);
     /* Never show party vitals on the boot/start screen. They become visible
        only after gameplay has actually begun. */
-    const playing=gameplayStarted && (typeof mode!=="undefined"&&mode==="play");
+    const playing=state?state.playing:gameplayStarted && (typeof mode!=="undefined"&&mode==="play");
     box.style.visibility=playing?"visible":"hidden";
     box.style.pointerEvents=playing?"auto":"none";
   }
@@ -6491,10 +6492,11 @@ setInterval(() => {
   }
 }, 120);
 
-setInterval(() => {
+function refreshControllerControls(){
+  const state=window.LDRCoopCampaign?.controllerState;
   const started = !!gameplayStarted;
-  const on = started && hasDragon();
-  const unlocked = on && (globalThis.window?.EmberRiding?.unlocked() ?? true);
+  const on = started && (state?!!state.dragon:hasDragon());
+  const unlocked = on && (state?state.dragonUnlocked:(globalThis.window?.EmberRiding?.unlocked() ?? true));
   const dragonBtn = document.getElementById("btnL");
   const commandBtn = document.getElementById("btnR");
   const itemsBtn = document.getElementById("btnItems");
@@ -6508,11 +6510,12 @@ setInterval(() => {
     commandBtn.style.opacity = on ? "" : "0.38";
     commandBtn.setAttribute("aria-disabled",String(!unlocked));
   }
-  if (itemsBtn) {const ready=started&&hasBag();itemsBtn.textContent=ready?"BAG":"";itemsBtn.style.opacity=ready?"":"0.38";itemsBtn.setAttribute("aria-disabled",String(!ready));}
-  refreshMapControls(started);
+  if (itemsBtn) {const ready=started&&(state?state.bag:hasBag());itemsBtn.textContent=ready?"BAG":"";itemsBtn.style.opacity=ready?"":"0.38";itemsBtn.setAttribute("aria-disabled",String(!ready));}
+  refreshMapControls(started,state?.map);
   // Cooldowns update in place in frameCore; replacing these rows during a
   // touch detaches the pressed button before the browser can deliver its click.
-}, 400);
+}
+setInterval(refreshControllerControls,400);
 
 const SKIN_BAND = { y: 831, h: 142 };
 const SKIN  = [[0xf6,0xca,0x9f],[0xf9,0xe6,0xcf],[0xd2,0x9f,0x70]];

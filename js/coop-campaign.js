@@ -5,7 +5,7 @@
   const ENDPOINT=location.hostname==='localhost'||location.hostname==='127.0.0.1'?location.origin:'https://ldr-coop-preview.onrender.com';
   const el=(tag,text)=>{const node=document.createElement(tag);if(text)node.textContent=text;return node;};
   const button=(text,fn)=>{const node=el('button',text);node.type='button';node.addEventListener('click',fn);return node;};
-  let client,room,active=false,hosting=false,connecting=false,reconnecting=false,leaving=false,players=[],hostId='',uid='',seq=0,commandSeq=0,frameAt=0,syncAt=0,saveAt=0,pendingSave=false,latestSave=null,campaignId='',cloudSlot=0,remoteSize={w:640,h:480},startPromise=null,ready=false;
+  let client,room,active=false,hosting=false,connecting=false,reconnecting=false,leaving=false,players=[],hostId='',uid='',seq=0,commandSeq=0,frameAt=0,syncAt=0,saveAt=0,pendingSave=false,latestSave=null,campaignId='',cloudSlot=0,remoteSize={w:640,h:480},startPromise=null,ready=false,controllerState=null;
   const pressed=new Set(),touch=new Map(),owner=()=>window.EmberCloudState?.owner||'',key=()=>`ldr.coop.campaigns.${owner()}`;
   const localSaves=()=>{try{return JSON.parse(localStorage.getItem(key()))||[];}catch{return [];}};
   const dialog=el('dialog');dialog.id='campaignLobby';const heading=el('h2','Story co-op'),description=el('p','Travel through the campaign together, with your own riders and dragons. Story progress and equipment are shared. Each rider can gather every ingredient.');
@@ -19,25 +19,58 @@
   dialog.append(heading,description,el('label','Your rider'),name,hair,eyes,el('label','Host a new adventure or resume'),adventure,code,status,host,join,button('Google sign-in',()=>{dialog.close();EmberCloud.open();}),button('Back',()=>dialog.close()));document.body.append(dialog);
   const open=button('Story Co-op',()=>openLobby());open.id='campaignOpen';document.getElementById('bootAccountButtons')?.append(open);
   const bar=el('div');bar.id='campaignBar';bar.hidden=true;const roomLabel=el('strong'),detail=el('span');detail.setAttribute('role','status');
-  bar.append(roomLabel,button('Copy code',async()=>{try{await navigator.clipboard.writeText(room.roomId);notice('Room code copied.');}catch{notice('Share '+room.roomId);}}),button('Save',()=>send({kind:'save'})),button('Leave',()=>leave()),detail);document.body.append(bar);
+  bar.append(roomLabel,button('Copy code',async()=>{try{await navigator.clipboard.writeText(room.roomId);notice('Room code copied.');}catch{notice('Share '+room.roomId);}}),button('Revive',()=>send({kind:'revive'})),button('Save',()=>send({kind:'save'})),button('Leave',()=>leave()),detail);document.body.prepend(bar);
   const noticeEl=el('p');noticeEl.id='campaignNotice';noticeEl.hidden=true;noticeEl.setAttribute('role','status');document.body.append(noticeEl);let noticeUntil=0;
   function notice(text){noticeEl.textContent=text;noticeEl.hidden=false;noticeUntil=performance.now()+5000;}
-  const vitals=el('div');vitals.id='campaignVitals';vitals.hidden=true;document.body.append(vitals);
-  function showVitals(value){if(!Array.isArray(value))return;vitals.hidden=false;vitals.replaceChildren();for(const rider of [...value].sort((a,b)=>Number(b.uid===uid)-Number(a.uid===uid)).slice(0,2)){const row=el('div'),label=el('strong',rider.uid===uid?'You':String(rider.name).slice(0,16)),health=el('span',rider.hp>0?'♥ '+rider.hp+' / '+rider.max:'Down · needs revival');row.append(label,health);if(rider.dragon)row.append(el('span','Dragon '+rider.dragon.hp+' / '+rider.dragon.max));vitals.append(row);}}
-  const remote=el('canvas');remote.id='campaignView';remote.hidden=true;document.body.append(remote);
+  const remote=el('canvas');remote.id='campaignView';remote.hidden=true;document.getElementById('stage').append(remote);
   const menus=el('div');menus.id='campaignMenus';menus.hidden=true;document.body.append(menus);
   const menuHost=LDRCoopUI.host(),menuGuest=LDRCoopUI.guest(menus,send),display=LDRCoopRender.player(remote,n=>room?.send('ack',n),ids=>room?.send('need',ids));
   const recorder=LDRCoopRender.recorder((type,data)=>room?.send(type,data));
-  const controls=el('div');controls.id='campaignControls';controls.hidden=true;
-  const pad=el('div');pad.className='campaignPad';
-  for(const [caption,dir,x,y]of [['↑','up',0,-1],['←','left',-1,0],['↓','down',0,1],['→','right',1,0]]){
-    const b=button(caption,()=>{});b.dataset.direction=dir;b.setAttribute('aria-label','Move '+dir);
-    b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);touch.set(e.pointerId,{x,y});send({kind:dir});});
-    for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,e=>touch.delete(e.pointerId));pad.append(b);
+  const controllerSelector='#act,#btnB,#btnL,#btnR,#btnItems,#btnMapQuick';
+  function dropTouch(id){
+    const held=touch.get(id);if(!held)return;touch.delete(id);
+    if(![...touch.values()].some(other=>other.node===held.node)){
+      held.node.classList.remove('hit');
+      if(held.control)send({kind:'control',control:held.control,down:false});
+    }
   }
-  const actions=el('div');actions.className='campaignActions';
-  for(const [caption,kind]of [['A · Interact','action'],['B · Back','back'],['Bag','bag'],['Dragon','dragon'],['Orders','orders'],['Map','map'],['Revive','revive']])actions.append(button(caption,()=>send({kind})));
-  const run=button('Hold to run / block',()=>{});run.addEventListener('pointerdown',e=>{e.preventDefault();run.setPointerCapture(e.pointerId);touch.set(e.pointerId,{run:true});});for(const type of ['pointerup','pointercancel','lostpointercapture'])run.addEventListener(type,e=>touch.delete(e.pointerId));actions.append(run);controls.append(pad,actions);document.body.append(controls);
+  const pressType=padTouchMode?'touchstart':'mousedown';
+  window.addEventListener(pressType,event=>{
+    if(!active||LDRCoopUI.dispatching)return;
+    const node=event.target.closest?.(controllerSelector+',#dpad [data-dx]');if(!node)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    const control=node.matches(controllerSelector)?node.id:null;
+    const held={node,control,x:Number(node.dataset.dx)||0,y:Number(node.dataset.dy)||0,run:control==='btnB'};
+    const already=[...touch.values()].some(other=>other.node===node);
+    for(const id of padInputIds(event)){dropTouch(id);touch.set(id,held);}
+    node.classList.add('hit');
+    if(!already){
+      if(control)send({kind:'control',control,down:true});
+      else send({kind:held.x<0?'left':held.x>0?'right':held.y<0?'up':'down'});
+    }
+  },{capture:true,passive:false});
+  for(const type of padTouchMode?['touchend','touchcancel']:['mouseup'])window.addEventListener(type,event=>{
+    if(!active)return;const ids=padInputIds(event);if(!ids.some(id=>touch.has(id)))return;
+    for(const id of ids)dropTouch(id);event.preventDefault();event.stopImmediatePropagation();
+  },{capture:true,passive:false});
+  function keyboard(event){
+    if(LDRCoopUI.dispatching||!active||event.ctrlKey||event.metaKey||event.altKey||event.target.closest?.('input,select,textarea')||event.key==='Tab')return;
+    const key=event.key.toLowerCase(),down=event.type==='keydown';
+    if(event.target.closest?.('#campaignBar button,#campaignMenus button')&&['enter',' '].includes(key))return;
+    if(!['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','b',' ','enter','escape','r'].includes(key))return;
+    event.preventDefault();event.stopImmediatePropagation();
+    if(down)pressed.add(key);else pressed.delete(key);
+    if(key==='r'){if(down&&!event.repeat)send({kind:'revive'});return;}
+    send({kind:'key',key:event.key,down,repeat:event.repeat});
+  }
+  function viewport(){
+    if(!active)return;const rect=document.getElementById('stage').getBoundingClientRect();
+    document.body.style.setProperty('--campaign-bar-height',bar.getBoundingClientRect().height+'px');
+    resize();
+    if(!hosting)room?.send('viewport',{w:Math.max(320,Math.min(1280,rect.width)),h:Math.max(160,Math.min(960,rect.height))});
+  }
+  new ResizeObserver(viewport).observe(document.getElementById('stage'));
+  function showController(state){if(!state)return;controllerState=state;updateDeckHealth();refreshControllerControls();}
   function options(){
     const saves=new Map(localSaves().map(s=>[s.id,s]));
     for(let slot=1;slot<=3;slot++){const s=readSaveSlot(slot);if(s?.coop?.version===1){const checkpoint={...s.coop,save:{...s,coop:undefined}};if(!saves.has(checkpoint.id)||(saves.get(checkpoint.id).when||0)<checkpoint.when)saves.set(checkpoint.id,checkpoint);}}
@@ -82,11 +115,11 @@
       const token=await EmberCloud.getIdToken();uid=owner();client=new Colyseus.Client(ENDPOINT);client.auth.token=token;
       hosting=isHost;const profile=EmberPlayerIdentity.normalize({name:name.value,hair:hair.value,eyes:eyes.value});
       latestSave=isHost?options().find(s=>s.id===adventure.value)||null:null;campaignId=latestSave?.id||crypto.randomUUID();cloudSlot=0;
-      room=isHost?await client.create('story_campaign',{protocol:5,profile}):await client.joinById(roomCode,{protocol:5,profile});
-      wire(room);active=true;ready=false;leaving=false;dialog.close();bar.hidden=controls.hidden=false;open.hidden=true;roomLabel.textContent='ROOM '+room.roomId;
-      document.body.classList.add('campaign-active',hosting?'campaign-host':'campaign-guest');resize();
+      room=isHost?await client.create('story_campaign',{protocol:6,profile}):await client.joinById(roomCode,{protocol:6,profile});
+      wire(room);active=true;ready=false;leaving=false;dialog.close();bar.hidden=false;open.hidden=true;roomLabel.textContent='ROOM '+room.roomId;
+      document.body.classList.add('campaign-active','game-started',hosting?'campaign-host':'campaign-guest');EmberPlayerIdentity.restore(profile);viewport();
       if(!hosting){gameplayStarted=true;EmberTitleAudio?.finish();remote.hidden=false;document.getElementById('boot').style.display='none';}
-      room.send('ready');room.send('viewport',{w:Math.max(320,Math.min(1280,innerWidth)),h:Math.max(240,Math.min(960,innerHeight-180))});
+      room.send('ready');viewport();
     }catch(error){status.textContent=/401|token|Google/.test(error.message)?'Sign in with Google first. Each player needs a different account.':error.message||'Could not connect. The free server may need a moment to wake up.';active=false;}
     finally{connecting=false;host.disabled=join.disabled=false;}
   }
@@ -110,7 +143,7 @@
     connection.onMessage('frame',data=>{if(!hosting){display.frame(data);ready=true;}});
     connection.onMessage('ui',data=>{if(!hosting)menuGuest.render(data);});
     connection.onMessage('sfx',data=>{if(!hosting&&sfxNames.includes(data.name))EmberSfx[data.name]();});
-    connection.onMessage('status',data=>{if(!hosting){if(data.vitals)showVitals(data.vitals);if(data.music&&data.music!==lastMusic&&EmberAudio.tracks().includes(data.music)){lastMusic=data.music;EmberAudio.preview(data.music);}if(data.reset)display.reset();detail.textContent=data.text||'';if(data.notice&&data.notice!==lastNotice){lastNotice=data.notice;notice(data.notice);};}});
+    connection.onMessage('status',data=>{if(!hosting){if(data.controller)showController(data.controller);if(data.music&&data.music!==lastMusic&&EmberAudio.tracks().includes(data.music)){lastMusic=data.music;EmberAudio.preview(data.music);}if(data.reset)display.reset();detail.textContent=data.text||'';if(data.notice&&data.notice!==lastNotice){lastNotice=data.notice;notice(data.notice);};}});
     connection.onMessage('checkpoint',data=>{if(!hosting)persist(data);});
     connection.onMessage('pong',()=>{});
     connection.onMessage('ended',text=>{notice(text);ready=false;leaving=true;detail.textContent=text;});
@@ -129,30 +162,22 @@
     detail.textContent=reconnecting?'Reconnecting · adventure paused':players.length<2?'Waiting for your partner':players.some(m=>!m.connected)?'Waiting for your partner to reconnect':players.some(m=>!m.visible)?'Paused while your partner is away':cloudSlot?'Co-op autosave · slot '+cloudSlot:'Co-op autosave on this device';
   }
   function execute(id,data){
-    if(!ready||reconnecting)return;if(paused()&&data.kind!=='save'){notice('Waiting for your partner · adventure paused.');return;}
+    if(!ready||reconnecting)return;if(paused()&&!['save','release'].includes(data.kind)&&!(data.kind==='control'&&!data.down)&&!(data.kind==='key'&&!data.down)){notice('Waiting for your partner · adventure paused.');return;}
     if(data.kind==='ui'){const kind=menuHost.actionKind(data);if(kind)LDRCampaign.command(id,kind);else if(LDRCampaign.claim(id,'ui'))menuHost.act(data);}
     else LDRCampaign.command(id,data.kind,data);
   }
   function send(data){if(!active||!room||reconnecting)return;if(hosting)execute(uid,data);else room.send('command',{...data,seq:++commandSeq});}
-  function release(){pressed.clear();touch.clear();if(active){if(hosting)LDRCampaign.setInput(uid,{x:0,y:0});else room?.send('input',{seq:++seq,x:0,y:0});send({kind:'release'});}}
+  function release(){pressed.clear();for(const held of touch.values())held.node.classList.remove('hit');touch.clear();if(active){if(hosting)LDRCampaign.setInput(uid,{x:0,y:0});else room?.send('input',{seq:++seq,x:0,y:0});send({kind:'release'});}}
   async function leave(){
     if(hosting)checkpoint(true);else if(latestSave)persist(latestSave);
     leaving=true;release();const connection=room;if(connection)await connection.leave().catch(()=>{});location.reload();
   }
-  window.addEventListener('resize',()=>{if(active&&!hosting)room?.send('viewport',{w:Math.max(320,Math.min(1280,innerWidth)),h:Math.max(240,Math.min(960,innerHeight-180))});});
+  window.addEventListener('resize',viewport);
   window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(!active)return;release();room?.send('visibility',!document.hidden);if(document.hidden&&hosting)checkpoint();});
   window.addEventListener('pagehide',()=>{if(active&&hosting)checkpoint();});
-  for(const type of ['keydown','keyup'])window.addEventListener(type,event=>{
-    if(LDRCoopUI.dispatching||!active||event.target.closest?.('input,select,textarea')||event.key==='Tab')return;
-    const key=event.key.toLowerCase();if(event.target.closest?.('#campaignBar button,#campaignMenus button')&&['enter',' '].includes(key))return;
-    event.preventDefault();event.stopImmediatePropagation();
-    if(type==='keydown'){
-      pressed.add(key);if(!event.repeat){const kind=({' ':'action',enter:'action',f:'action',escape:'back',b:'back',i:'bag',q:'claw',e:'fire',r:'revive',m:'map',arrowup:'up',arrowdown:'down',arrowleft:'left',arrowright:'right'})[key];if(kind)send({kind});}
-    }else{pressed.delete(key);if([' ','enter','f'].includes(key))send({kind:'release'});}
-  },true);
   // Native host menus belong to the rider who opened them. A companion sees
   // the same menu and uses its bounded tokens; no remote DOM selectors execute.
-  window.addEventListener('click',event=>{if(LDRCoopUI.dispatching||!active||!hosting||event.target.closest?.('#campaignBar,#campaignControls,#campaignLobby'))return;if(event.target.closest?.('#say,#sayname,#face,#reveal')){event.preventDefault();event.stopImmediatePropagation();send({kind:'action'});return;}if(LDRCampaign.held&&LDRCampaign.owner!==uid){event.preventDefault();event.stopImmediatePropagation();notice('Your partner is choosing. Use A to continue shared dialogue.');}},true);
+  window.addEventListener('click',event=>{if(LDRCoopUI.dispatching||!active||!hosting||event.target.closest?.('#campaignBar,#deck,#campaignLobby'))return;if(event.target.closest?.('#say,#sayname,#face,#reveal')){event.preventDefault();event.stopImmediatePropagation();send({kind:'action'});return;}if(LDRCampaign.held&&LDRCampaign.owner!==uid){event.preventDefault();event.stopImmediatePropagation();notice('Your partner is choosing. Use A to continue shared dialogue.');}},true);
   let lastMusic='',lastNotice='';
   const sfxNames=['door','ui','coin','breathHit','dragonFire','hatch','golemHit','hit','death','stopDeath','block','sword','pickup','key'];
   for(const name of sfxNames){const original=EmberSfx[name];EmberSfx[name]=function(...args){if(active&&hosting&&room)room.send('sfx',{name});return original.apply(this,args);};}
@@ -160,14 +185,16 @@
   frameCore=function(ms){
     if(!active)return baseFrame(ms);
     if(!ready){last=ms;return;}
-    const vector={x:Number(pressed.has('d')||pressed.has('arrowright'))-Number(pressed.has('a')||pressed.has('arrowleft')),y:Number(pressed.has('s')||pressed.has('arrowdown'))-Number(pressed.has('w')||pressed.has('arrowup')),run:pressed.has('shift')||pressed.has('b')};
+    const vector={x:Number(pressed.has('d')||pressed.has('arrowright'))-Number(pressed.has('a')||pressed.has('arrowleft')),y:Number(pressed.has('s')||pressed.has('arrowdown'))-Number(pressed.has('w')||pressed.has('arrowup')),run:pressed.has('b')};
     for(const held of touch.values()){vector.x+=held.x||0;vector.y+=held.y||0;vector.run||=held.run;}
     if(ms-frameAt>=50){frameAt=ms;if(hosting)LDRCampaign.setInput(uid,vector);else if(!reconnecting)room.send('input',{...vector,seq:++seq});}
     if(hosting){
+      controllerState=LDRCampaign.controllerState(uid);
       LDRCampaign.mainFrame(ms,paused());
+      updateDeckHealth();
       const guest=players.find(m=>m.id!==hostId);
       if(guest?.connected&&recorder.ready(ms))recorder.capture(remoteSize.w,remoteSize.h,g=>LDRCampaign.renderGuest(g,remoteSize.w,remoteSize.h,guest.uid),ms);
-      if(ms-syncAt>180){syncAt=ms;const ui=menuHost.capture();if(ui.changed)room.send('ui',ui);updateStatus();const health=LDRCampaign.vitals();showVitals(health);room.send('status',{vitals:health,text:detail.textContent,music:EmberAudio.currentTrack?.(),notice:noticeEl.hidden?'':noticeEl.textContent});}
+      if(ms-syncAt>180){syncAt=ms;const ui=menuHost.capture();if(ui.changed)room.send('ui',ui);updateStatus();room.send('status',{controller:guest?LDRCampaign.controllerState(guest.uid):null,text:detail.textContent,music:EmberAudio.currentTrack?.(),notice:noticeEl.hidden?'':noticeEl.textContent});}
       if(ms-saveAt>10000||pendingSave&&ms-saveAt>1500)checkpoint();
     }else last=ms;
     if(!noticeEl.hidden&&ms>noticeUntil)noticeEl.hidden=true;
@@ -175,5 +202,5 @@
   const continueGame=BOOT.continueGame;BOOT.continueGame=function(){const saved=readSaveSlot(BOOT.latestSave());if(saved?.coop){openLobby(saved.coop.id);return;}return continueGame.call(this);};
   const takeLoad=BOOT.takeLoad;BOOT.takeLoad=function(pick=BOOT.loadPick){const saved=pick<3?readSaveSlot(pick+1):null;if(saved?.coop){openLobby(saved.coop.id);return;}return takeLoad.call(this,pick);};
   setInterval(()=>{open.hidden=active||gameplayStarted;open.disabled=!gameplayReady||connecting;},300);
-  window.LDRCoopCampaign={get active(){return active;},open:openLobby,save:checkpoint,inspect:()=>({hosting,ready,players,cloudSlot,latestSave,campaignId})};
+  window.LDRCoopCampaign={get active(){return active;},get controllerState(){return controllerState;},keyboard,open:openLobby,save:checkpoint,inspect:()=>({hosting,ready,players,cloudSlot,latestSave,campaignId})};
 })();

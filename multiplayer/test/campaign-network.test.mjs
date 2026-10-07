@@ -10,19 +10,24 @@ test('campaign relay authenticates two different accounts, restricts authority, 
  const client=token=>{const c=new Client(url);c.auth.token=token;return c;};
  function track(r){rooms.push(r);r.reconnection.enabled=false;const messages={};for(const name of ['members','frame','texture','input','command','checkpoint','refresh','ack','need','viewport','ui','status','sfx','ended'])r.onMessage(name,data=>{messages[name]=data;});r.send('ready');return messages;}
  try{
-  assert.equal((await (await fetch(url+'/healthz')).json()).protocol,5);
-  await assert.rejects(()=>client('invalid').create('story_campaign',{protocol:5}),/Google/);
+  assert.equal((await (await fetch(url+'/healthz')).json()).protocol,6);
+  await assert.rejects(()=>client('invalid').create('story_campaign',{protocol:6}),/Google/);
   await assert.rejects(()=>client('host').create('story_campaign',{protocol:4}),/Reload/);
-  const h=await client('host').create('story_campaign',{protocol:5,profile:{name:'Host'}}),hs=track(h);
-  await assert.rejects(()=>client('host').joinById(h.roomId,{protocol:5}),/different/);
-  const gc=client('guest'),g=await gc.joinById(h.roomId,{protocol:5,profile:{name:'Guest'}}),gs=track(g);
+  const h=await client('host').create('story_campaign',{protocol:6,profile:{name:'Host'}}),hs=track(h);
+  await assert.rejects(()=>client('host').joinById(h.roomId,{protocol:6}),/different/);
+  const gc=client('guest'),g=await gc.joinById(h.roomId,{protocol:6,profile:{name:'Guest'}}),gs=track(g);
   await until(()=>hs.members?.players.length===2&&gs.members?.players.length===2);
-  await assert.rejects(()=>client('third').joinById(h.roomId,{protocol:5}),/locked|full/);
+  await assert.rejects(()=>client('third').joinById(h.roomId,{protocol:6}),/locked|full/);
   g.send('frame',{seq:1,width:300,height:300,ops:[]});await wait(70);assert.equal(hs.frame,undefined);
   g.send('input',{seq:1,x:1,y:0});await until(()=>hs.input?.seq===1);assert.equal(hs.input.id,g.sessionId);
   g.send('input',{seq:0,x:0,y:99});await wait(60);assert.equal(hs.input.seq,1);
   g.send('command',{seq:1,kind:'ui',token:'test',version:4});await until(()=>hs.command?.seq===1);
   g.send('command',{seq:2,kind:'execute',code:'arbitrary code'});await wait(60);assert.equal(hs.command.seq,1);
+  g.send('command',{seq:3,kind:'control',control:'btnB',down:true});await until(()=>hs.command?.seq===3);assert.equal(hs.command.id,g.sessionId);
+  g.send('command',{seq:4,kind:'control',control:'btnDev',down:true});await wait(60);assert.equal(hs.command.seq,3,'Remote controller cannot invoke developer controls');
+  g.send('command',{seq:5,kind:'control',control:'btnB',down:false});await until(()=>hs.command?.seq===5);assert.equal(hs.command.down,false);
+  g.send('command',{seq:6,kind:'key',key:'ArrowRight',down:true});await until(()=>hs.command?.seq===6);
+  g.send('command',{seq:7,kind:'key',key:'F12',down:true});await wait(60);assert.equal(hs.command.seq,6);
   h.send('frame',{seq:4,width:640,height:480,ops:[]});await until(()=>gs.frame?.seq===4);
   const checkpoint={version:1,id:'adventure',when:1,save:{map:'world',quest:9,x:700,y:6000,when:1},players:{host:{hp:6},guest:{hp:4}}};
   h.send('checkpoint',checkpoint);await until(()=>gs.checkpoint?.id==='adventure');

@@ -9,5 +9,13 @@
     }
     return original.call(this,type,fn,options);
   };
-  window.LDRCoopEvents={types:node=>handlers.get(node)||new Set()};
+  let replaying=false;
+  for(const type of ['keydown','keyup'])window.addEventListener(type,event=>{
+    if(!replaying)window.LDRCoopCampaign?.keyboard(event);
+  },true);
+  window.LDRCoopEvents={types:node=>handlers.get(node)||new Set(),get replaying(){return replaying;},replayKey(data){
+    replaying=true;
+    try{window.dispatchEvent(new KeyboardEvent(data.down?'keydown':'keyup',{key:data.key,repeat:!!data.repeat,bubbles:true,cancelable:true}));}
+    finally{replaying=false;}
+  }};
 })();

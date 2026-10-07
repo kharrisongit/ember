@@ -68,9 +68,9 @@ function giveFatherCompass() {
   showReveal('inventory_travelGear', 'Corin received his Travel Gear.');
 }
 function worldMapUnlocked(){return templeCompass.mapGiven;}
-function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gameplayStarted){
+function refreshMapControls(started=typeof gameplayStarted!=='undefined'&&gameplayStarted,unlocked=worldMapUnlocked()){
   if(typeof document==='undefined')return;
-  const available=!!started&&worldMapUnlocked();
+  const available=!!started&&unlocked;
   for(const id of ['btnMapQuick','bagMap']){
     const button=document.getElementById(id);if(!button)continue;
     button.setAttribute('aria-disabled',String(!available));

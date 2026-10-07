@@ -140,7 +140,7 @@ assert(dispatch(nodes.btnDev,'click').defaultPrevented,'Inventory also blocks un
 assert.equal(dispatch(nodes.act,'pointerdown').defaultPrevented,undefined,'Inventory retains exposed A navigation');
 c.bagOpen=false;
 c.refreshMapControls=()=>{};
-run(section(p3,'setInterval(() => {\n  const started =','const SKIN_BAND ='));
+run(section(p3,'function refreshControllerControls(){','const SKIN_BAND ='));
 run('setOvl("atkm")');const before=refreshes;intervals.at(-1)();assert.equal(refreshes,before,'Label updates never detach a pressed attack row');
 c.window.EmberRiding={unlocked:()=>false};intervals.at(-1)();assert.equal(nodes.btnL['aria-disabled'],'true');assert.equal(nodes.btnR['aria-disabled'],'true');
 c.window.EmberRiding={unlocked:()=>true};intervals.at(-1)();assert.equal(nodes.btnL['aria-disabled'],'false');assert.equal(nodes.btnR['aria-disabled'],'false');delete c.window.EmberRiding;

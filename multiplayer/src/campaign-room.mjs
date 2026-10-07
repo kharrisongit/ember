@@ -2,7 +2,7 @@
  * bounded presentation packets and guest controls; guests never submit game state. */
 import {Room,ServerError} from '@colyseus/core';
 import {randomInt} from 'node:crypto';
-export const CAMPAIGN_PROTOCOL=5;
+export const CAMPAIGN_PROTOCOL=6;
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const size=value=>Buffer.byteLength(JSON.stringify(value));
 const profile=p=>({name:String(p?.name||'Dragonrider').replace(/[<>\x00-\x1f]/g,'').slice(0,16),hair:['dark','brown','copper','blond','silver'].includes(p?.hair)?p.hair:'brown',eyes:['brown','blue','green','gray','hazel'].includes(p?.eyes)?p.eyes:'brown'});
@@ -12,7 +12,7 @@ export function makeCampaignRoom(verifyIdentity){return class CampaignRoom exten
     this.roomId=Array.from({length:8},()=>alphabet[randomInt(alphabet.length)]).join('');
     await this.setPrivate(true);this.members=new Map();this.hostId=null;this.checkpoint=null;this.maxMessagesPerSecond=180;
     this.onMessage('ready',client=>{this.memberList();this.host()?.send('refresh',{id:client.sessionId});if(this.checkpoint)client.send('checkpoint',this.checkpoint);});
-    this.onMessage('viewport',(client,data)=>{if(client.sessionId!==this.hostId&&Number.isFinite(data?.w)&&Number.isFinite(data?.h))this.host()?.send('viewport',{w:Math.round(Math.max(320,Math.min(1280,data.w))),h:Math.round(Math.max(240,Math.min(960,data.h)))});});
+    this.onMessage('viewport',(client,data)=>{if(client.sessionId!==this.hostId&&Number.isFinite(data?.w)&&Number.isFinite(data?.h))this.host()?.send('viewport',{w:Math.round(Math.max(320,Math.min(1280,data.w))),h:Math.round(Math.max(160,Math.min(960,data.h)))});});
     this.onMessage('input',(client,data)=>{
       const m=this.members.get(client.sessionId);if(!m||client.sessionId===this.hostId||!data||!Number.isSafeInteger(data.seq)||data.seq<=m.seq)return;
       if(!Number.isFinite(data.x)||!Number.isFinite(data.y))return;m.seq=data.seq;
@@ -20,8 +20,11 @@ export function makeCampaignRoom(verifyIdentity){return class CampaignRoom exten
     });
     this.onMessage('command',(client,data)=>{
       const m=this.members.get(client.sessionId);if(!m||client.sessionId===this.hostId||!data||size(data)>2048||!Number.isSafeInteger(data.seq)||data.seq<=m.commandSeq)return;
-      const allowed=['action','back','bag','dragon','orders','map','fire','claw','revive','up','down','left','right','ui','release','save'];
-      if(!allowed.includes(data.kind))return;m.commandSeq=data.seq;
+      const allowed=['action','back','bag','dragon','orders','map','fire','claw','revive','up','down','left','right','ui','release','save','control','key'];
+      if(!allowed.includes(data.kind))return;
+      if(data.kind==='control'&&(!['act','btnB','btnL','btnR','btnItems','btnMapQuick'].includes(data.control)||typeof data.down!=='boolean'))return;
+      if(data.kind==='key'&&(typeof data.key!=='string'||!['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','b',' ','enter','escape'].includes(data.key.toLowerCase())||typeof data.down!=='boolean'))return;
+      m.commandSeq=data.seq;
       this.host()?.send('command',{...data,id:client.sessionId});
     });
     for(const type of ['frame','texture','ui','status','checkpoint','sfx'])this.onMessage(type,(client,data)=>{

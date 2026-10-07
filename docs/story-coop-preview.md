@@ -29,17 +29,25 @@ recipes, gold and ordinary consumable supplies are shared. Each player can gathe
 the same world ingredient node. A surviving rider can revive a nearby fallen
 partner; both falling uses the original retry flow.
 
-| Action | Touch | Keyboard |
+Both players use the main game's original controller, artwork, layout, button
+callbacks, and personal rider/dragon heart display. The same responsive deck is
+used in portrait and landscape. Only the session bar adds co-op controls.
+
+| Action | Main controller | Keyboard |
 | --- | --- | --- |
 | Move | Direction pad | WASD / arrows |
-| Run / shield block | Hold Run / Block | Hold Shift or B |
-| Interact / sword / continue | A | Space / F / Enter |
-| Back | B | Escape |
-| Bag / crafting / equipment | Bag, then the ordinary game menu | I |
-| Dragon attacks / commands | Dragon / Orders | Q for claw, E for breath |
-| World map / travel | Map | M |
-| Revive fallen partner | Revive nearby | R |
-| Save checkpoint | Save in the room bar | — |
+| Run / shield block | Hold B | Hold B |
+| Interact / sword / continue | A | Space; A/Enter in supported menus |
+| Back | B | Escape in supported menus |
+| Bag / crafting / equipment | Bag, then the ordinary game menu | — |
+| Dragon attacks / commands | Dragon / Command | — |
+| World map / travel | Map | Arrows / Enter / Escape inside the map |
+| Revive fallen partner | Revive in the session bar | R |
+| Save checkpoint | Save in the session bar | — |
+
+Press and release are relayed separately. Releasing B stops only that rider's
+run/block even while their partner owns a menu. Using B for Back does not start a
+run. Touch cancellation, blur, stale input and a paused connection clear holds.
 
 ## Saves
 
@@ -76,7 +84,7 @@ still apply. Keep the host's device awake while playing.
   control. Account/login panels are never mirrored.
 - `js/coop-campaign.js` handles entry, controls, Google-authenticated transport,
   reconnection, music/effects, and existing account-scoped save integration.
-- `multiplayer/src/campaign-room.mjs` is protocol 5, private, two accounts per
+- `multiplayer/src/campaign-room.mjs` is protocol 6, private, two accounts per
   room. It validates bounded monotonic input/commands and relays presentation and
   checkpoints only from the host. The host is trusted to run the campaign; this
   is cooperative play, not an anti-cheat-authoritative competitive server.
@@ -100,7 +108,7 @@ still apply. Keep the host's device awake while playing.
 
 `render.yaml` contains this configuration. Retain both the GitHub Pages and Render
 hostnames in Firebase Authentication's authorized domains. No new Firebase rules
-or paid service is required. Health reports `full-campaign-runtime`, protocol 5.
+or paid service is required. Health reports `full-campaign-runtime`, protocol 6.
 
 ## Verification
 
@@ -121,5 +129,7 @@ Tests exercise actual campaign functions for actor health, targeting, revival,
 per-player gathering, shared equipment/unlocks, dialogue readiness and checkpoint
 compatibility, plus authenticated room/relay/reconnect behavior. Existing campaign
 regressions cover temple layouts, bosses, rewards, combat, royal quests and saves.
-Browser checks use two independent clients, including a phone-sized companion.
+Browser checks use two independent clients, including a phone-sized companion,
+and cover simultaneous D-pad/B touch, native menu buttons, keyboard input,
+per-rider health, hold/release/cancel/blur, and portrait/landscape deck geometry.
 These checks do not substitute for playing every campaign branch end to end.

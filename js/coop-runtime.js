@@ -3,17 +3,17 @@
  * synchronously around the original engine functions. No second quest engine. */
 (() => {
   'use strict';
-  let active=false,current=null,viewer=null,local=null,members=[],party=new Map(),notify=()=>{},save=()=>{},rendering=false,remoteRender=false,lastMap=null,lastArena=null,sharedOwner=null,voteKey='',votes=new Set();
+  let active=false,current=null,viewer=null,local=null,members=[],party=new Map(),notify=()=>{},save=()=>{},rendering=false,remoteRender=false,lastMap=null,lastArena=null,sharedOwner=null,voteKey='',votes=new Set(),requester=null;
   const originalFrame=frameCore,originalDraw=drawWorld,originalSave=saveToSlot,originalRead=readSaveSlot,originalLoad=loadGame;
   const originalDeath=showDeath,originalGetUp=getUp,originalPresent=presentCamera,originalImage=drawGameImage;
   const originalIdentityText=EmberPlayerIdentity.text;
   EmberPlayerIdentity.text=function(value){if(!active)return originalIdentityText(value);const name=party.get(current)?.profile?.name||'Corin';return String(value??'').replace(/(?<![\p{L}\p{N}_])Corin(?![\p{L}\p{N}_])/gu,name);};
   const spriteCache=new Map(),sourceIds=new WeakMap();let sourceSerial=0,personalPaint=null,loadingSave=null;
   const cleanObject=(target,source)=>{for(const key of Object.keys(target))if(key!=='dir'&&!(key in source))delete target[key];Object.assign(target,source);};
-  function captureActor(){return {P:{...P},dragon:{...dragon},vars:{pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse},worn:{...worn},cooldown:{...breathCooldown}};}
+  function captureActor(){return {P:{...P},dragon:{...dragon},vars:{pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince},worn:{...worn},cooldown:{...breathCooldown}};}
   function applyActor(a){
     dragonFacingLocked=false;cleanObject(P,a.P);cleanObject(dragon,a.dragon);
-    ({pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse}=a.vars);
+    ({pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince}=a.vars);
     cleanObject(worn,a.worn);cleanObject(breathCooldown,a.cooldown);
   }
   function stash(){if(current&&party.has(current))Object.assign(party.get(current),captureActor());}
@@ -23,7 +23,61 @@
   function held(){return !!(scene||sayNpc||revealing||ask||ovl||bagOpen||Crafting.active()||atlasOpen||fishing||doorMotion||fadeDir||bossScene||hatchCamera||ride||flightTravel||window.EmberConversationFlow?.active()||window.EmberArenaEntry?.holding()||window.EmberRiding?.holding());}
   function inputFor(id){const a=party.get(id),input=a?.input;if(!input||performance.now()-input.at>400)return {x:0,y:0,run:false};return input;}
   function setInput(id,input){const a=party.get(id);if(a)a.input={x:Math.max(-1,Math.min(1,input.x||0)),y:Math.max(-1,Math.min(1,input.y||0)),run:!!input.run,at:performance.now()};}
-  function applyInput(){const input=inputFor(current);for(const key in keys)keys[key]=0;padDx=input.x;padDy=input.y;running=input.run;if(input.run&&glassShield&&!glassShieldHeld){glassShieldWindowUntil=tAcc+GLASS_BLOCK_WINDOW;glassShieldPulse=Math.max(glassShieldPulse,.18);tryGlassShieldParry();}glassShieldHeld=input.run&&glassShield;}
+  function applyInput(){
+    const input=inputFor(current),a=party.get(current);
+    if(a?.input&&performance.now()-a.input.at>400)releaseControls(current);
+    for(const key in keys)keys[key]=0;padDx=input.x;padDy=input.y;
+    running=!!input.run&&!!a?.runHeld;
+    glassShieldHeld=running&&!!a?.blockHeld;
+  }
+  const controlKinds={act:'action',btnB:'back',btnL:'dragon',btnR:'orders',btnItems:'bag',btnMapQuick:'map'};
+  function releaseControls(id){
+    const a=party.get(id);if(!a)return;
+    withActor(id,()=>{
+      for(const control of a.controls||[])nativeControllerButton(control,false);
+      a.controls?.clear();
+      for(const key of a.keyControls||[])window.LDRCoopEvents?.replayKey({key,down:false});
+      a.keyControls?.clear();a.runHeld=false;a.blockHeld=false;running=false;glassShieldHeld=false;lHeld=rHeld=false;bothHeldSince=-1;
+    });
+  }
+  function control(id,data){
+    const a=party.get(id),kind=controlKinds[data.control];if(!a||!kind||typeof data.down!=='boolean')return false;
+    a.controls??=new Set();
+    // A release belongs to the rider who pressed, even after someone else opens a menu.
+    if(!data.down){if(a.controls.delete(data.control))withActor(id,()=>nativeControllerButton(data.control,false));if(data.control==='btnB'){a.runHeld=false;a.blockHeld=false;}return true;}
+    if(a.controls.has(data.control)||!claim(id,kind)||a.vars.pHp<=0&&!deadShown)return false;
+    if((ovl||bagOpen||atlasOpen||ask)&&!['act','btnB'].includes(data.control))return false;
+    const wasHeld=held();requester=id;
+    try{
+      if(!nativeControllerButton(data.control,true))return false;
+      a.controls.add(data.control);if(data.control==='btnB'){a.runHeld=running&&!wasHeld;a.blockHeld=glassShieldHeld&&!wasHeld;}
+    }finally{requester=null;stash();}
+    sharedOwner=held()?current:null;return true;
+  }
+  function keyboard(id,data){
+    const a=party.get(id);if(!a||typeof data.key!=='string')return false;
+    const k=data.key.toLowerCase(),kind=k==='b'||k==='escape'?'back':['a',' ','enter'].includes(k)?'action':({arrowup:'up',arrowdown:'down',arrowleft:'left',arrowright:'right'})[k]||'key';
+    a.keyControls??=new Set();
+    if(!data.down){if(a.keyControls.delete(data.key))withActor(id,()=>window.LDRCoopEvents?.replayKey(data));if(k==='b'){a.runHeld=false;a.blockHeld=false;}return true;}
+    if(!claim(id,kind)||a.vars.pHp<=0&&!deadShown)return false;
+    const wasHeld=held();requester=id;
+    try{
+      if((scene||sayNpc||revealing)&&['a',' ','enter'].includes(k)){if(!data.repeat)actionButton();}
+      else window.LDRCoopEvents?.replayKey(data);
+      a.keyControls.add(data.key);if(k==='b'){a.runHeld=running&&!wasHeld;a.blockHeld=(glassShieldHeld||a.blockHeld)&&!wasHeld;}
+    }
+    finally{requester=null;stash();}
+    sharedOwner=held()?current:null;return true;
+  }
+  function voteAction(){
+    if(!active||!(scene||sayNpc||revealing)||members.length!==2)return false;
+    const signature=[scene?.i,sayLine,typeFull,typeDone(),revealing,document.getElementById('revealCap')?.textContent].join('|');
+    if(signature!==voteKey){voteKey=signature;votes.clear();}
+    votes.add(requester||current);
+    if(members.some(m=>!votes.has(m.uid))){notify('Ready · waiting for your partner to continue.');return true;}
+    votes.clear();voteKey='';return false;
+  }
+  function controllerState(id){return withActor(id,()=>({hp:pHp,max:pMax,kit:corinKit(),dragon:hasDragon()?{hp:dragon.hp,max:dragon.maxHp}:null,dragonUnlocked:window.EmberRiding?.unlocked()??true,bag:hasBag(),map:worldMapUnlocked(),playing:gameplayStarted&&mode==='play'}));}
   function placeNear(id,x=P.x,y=P.y){withActor(id,()=>{
     for(const radius of [24,40,56,8,0])for(let angle=0;angle<8;angle++){
       const nx=x+Math.cos(angle*Math.PI/4)*radius,ny=y+Math.sin(angle*Math.PI/4)*radius;
@@ -82,39 +136,32 @@
     }
     select(id);return true;
   }
-  function command(id,kind,data){
-    if(!active||!party.has(id)||!claim(id,kind))return false;
-    if(pHp<=0&&!deadShown&&kind!=='save')return false;
-    if(kind==='action'){
-      if((scene||sayNpc||revealing)&&members.length===2){
-        const signature=[scene?.i,sayLine,typeFull,typeDone(),revealing,document.getElementById('revealCap')?.textContent].join('|');
-        if(signature!==voteKey){voteKey=signature;votes.clear();}
-        votes.add(id);if(members.some(m=>!votes.has(m.uid))){notify('Ready · waiting for your partner to continue.');return true;}
-        votes.clear();voteKey='';
+  function command(id,kind,data={}){
+    if(!active||!party.has(id))return false;
+    if(kind==='release'){releaseControls(id);return true;}
+    if(kind==='control')return control(id,data);
+    if(kind==='key')return keyboard(id,data);
+    if(!claim(id,kind)||pHp<=0&&!deadShown&&kind!=='save')return false;
+    requester=id;
+    try{
+      if(kind==='action')actionButton();
+      else if(kind==='back'){nativeControllerButton('btnB',true);nativeControllerButton('btnB',false);}
+      else if(['bag','dragon','orders','map'].includes(kind)){
+        const button=Object.keys(controlKinds).find(key=>controlKinds[key]===kind);
+        nativeControllerButton(button,true);nativeControllerButton(button,false);
       }
-      actionButton();
-    }
-    else if(kind==='back'){
-      if(Crafting.active())window.CraftingView?.back();else if(fishing){askShut();endFishing();}else if(atlasOpen)atlasBack();else if(ask)askBack();else if(bagOpen)setBag(false);else if(ovl)setOvl(null);
-    }else if(kind==='release'){fishingRelease();Crafting.release();}
-    else if(kind==='bag'){if(hasBag()){setOvl(ovl==='itemm'?null:'itemm');}}
-    else if(kind==='dragon'){if(hasDragon())setOvl(ovl==='atkm'?null:'atkm');}
-    else if(kind==='orders'){if(hasDragon())setOvl(ovl==='airm'?null:'airm');}
-    else if(kind==='map'){if(atlasOpen)closeAtlas();else openAtlas();}
-    else if(kind==='fire'){if(!held())breatheFire();}
-    else if(kind==='claw'){if(!held())clawNow();}
-    else if(kind==='revive')revive();
-    else if(kind==='save')save(true);
-    else if(['up','down','left','right'].includes(kind)){
-      const direction=['up','left'].includes(kind)?-1:1;
-      if(ask)askStep(direction);else if(ovl)ovlStep(direction);else if(bagOpen)bagStep(['up','down'].includes(kind)?direction*4:direction);
-    }
+      else if(kind==='fire'){if(!held())breatheFire();}
+      else if(kind==='claw'){if(!held())clawNow();}
+      else if(kind==='revive')revive();
+      else if(kind==='save')save(true);
+      else if(['up','down','left','right'].includes(kind))controllerDirection(kind==='left'?-1:kind==='right'?1:0,kind==='up'?-1:kind==='down'?1:0);
+    }finally{requester=null;}
     sharedOwner=held()?current:null;stash();return true;
   }
   function mainFrame(ms,paused){
     if(!active)return originalFrame(ms);
     viewer=local;const dt=Math.min(.05,(ms-last)/1000||0);
-    if(paused){last=ms;originalDraw(tAcc,0);return;}
+    if(paused){for(const m of members)releaseControls(m.uid);last=ms;originalDraw(tAcc,0);return;}
     if(!held()){
       const moving=members.find(m=>{const input=inputFor(m.uid);return input.x||input.y;});
       if(moving)select(moving.uid);
@@ -198,6 +245,8 @@
   function renderGuest(g,width,height,uid){
     const backup={ctx,VW,VH,DPR,cam:{...cam},cameraLogical,cameraPresentation,viewer};
     rendering=remoteRender=true;ctx=g;VW=width;VH=height;DPR=1;viewer=uid;
+    // Retain the authored scene center when the two screens have different sizes.
+    cam.x=backup.cam.x+(backup.VW-width)/(2*cam.z);cam.y=backup.cam.y+(backup.VH-height)/(2*cam.z);
     try{ctx.setTransform(1,0,0,1,0,0);originalDraw(tAcc,0);withActor(uid,()=>drawHearts());drawDark(0);drawFade();drawBossBlack();}
     finally{ctx=backup.ctx;VW=backup.VW;VH=backup.VH;DPR=backup.DPR;Object.assign(cam,backup.cam);cameraLogical=backup.cameraLogical;cameraPresentation=backup.cameraPresentation;viewer=backup.viewer;rendering=remoteRender=false;}
   }
@@ -226,6 +275,6 @@
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
     if(!previous)startMorning();last=performance.now();LDRCoopRender.enable();
   }
-  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,mainFrame,renderGuest,checkpoint,withActor,actor,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
+  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne};
 })();

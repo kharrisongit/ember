@@ -37,6 +37,21 @@ run(`scene=null;sayNpc=null;revealing=false;sayOff();arenaLock=null;foes=[];`);
 const saved=data(`LDRCampaign.checkpoint()`);assert(saved);assert.equal(saved.players.host.crafting.ingredients.herb,2);assert.equal(saved.players.guest.crafting.ingredients.herb,2);assert.equal(saved.players.guest.hp,3);assert(saved.save.charm.lamp);assert(saved.save.breathHas.ice);
 assert(run(`EmberCloudSaveValid(${JSON.stringify(JSON.stringify({...saved.save,coop:{version:1,id:'test',players:saved.players}}))})`));
 console.log('PASS: both riders must advance dialogue; safe checkpoint includes both inventories and health in the existing cloud-save format.');
+// Co-op calls the same bound controls as solo, with releases tied to their rider.
+const control=(uid,button,down)=>run(`LDRCampaign.command('${uid}','control',{control:'${button}',down:${down}})`);
+run(`scene=null;sayNpc=null;revealing=false;ovl=null;ask=null;bagOpen=false;bagOwned=true;templeCompass.mapGiven=true;`);
+assert(control('host','btnB',true));assert.equal(run(`LDRCampaign.actor('host').vars.running`),true);
+assert(control('guest','btnItems',true));assert.equal(run('ovl'),'itemm');
+control('host','btnB',false);assert.equal(run(`LDRCampaign.actor('host').vars.running`),false,'B release reaches its rider while the partner owns the menu');
+control('guest','btnItems',false);control('guest','btnB',true);
+assert.equal(run('ovl'),null);assert.equal(run(`LDRCampaign.actor('guest').runHeld`),false,'B used for Back does not start running');control('guest','btnB',false);
+run(`LDRCampaign.claim('guest','ui');fishing={phase:'reel',requireRelease:false,held:false};`);
+control('guest','act',true);assert.equal(run('fishing.held'),true,'The native A press reels');
+control('guest','act',false);assert.equal(run('fishing.held'),false,'The native A release stops reeling');
+control('guest','act',true);run(`LDRCampaign.command('guest','release')`);assert.equal(run('fishing.held'),false,'Blur/disconnect releases held actions');run('fishing=null');
+run(`LDRCampaign.withActor('host',()=>{pHp=6;});LDRCampaign.withActor('guest',()=>{pHp=3;});`);
+assert.equal(data(`LDRCampaign.controllerState('host').hp`),6);assert.equal(data(`LDRCampaign.controllerState('guest').hp`),3);
+console.log('PASS: native buttons, per-rider releases during menus, Back without running, fishing hold/release and personal controller health.');
 // Boss projectiles retain the rider targeted at casting even when another rider
 // becomes closer before impact. The real boss effect code runs once per tick.
 await run('IceMoth.prepare()');

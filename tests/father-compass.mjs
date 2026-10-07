@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const read=p=>fs.readFileSync(p,'utf8');
-let saves=0,reveal;
-const c=vm.createContext({quest:0,Q:{ABED:0},hareMeat:0,npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
+let saves=0,reveal,kits=0;
+const c=vm.createContext({quest:0,Q:{ABED:0},hareMeat:0,Crafting:{giveKit:()=>kits++},npcSeesDragon:()=>true,gameplayStarted:true,mode:'play',MD:{templeExpanded:true,templePlan:{}},
  sceneHold:()=>!!c.scene,sayNpc:null,fadeDir:0,fade:0,doorMotion:null,ovl:null,ask:null,bagOpen:false,editing:false,dying:()=>false,
  toast(){},saveGame:()=>saves++,showReveal:(...args)=>reveal=args,playScene:(lines,opts)=>c.scene={lines,i:0,...opts}});
 const run=s=>vm.runInContext(s,c);
@@ -16,8 +16,8 @@ assert.equal(c.nanGiftBeat(11),false);assert.equal(c.hareMeat,0,'Meat waits for 
 assert(c.worldMapUnlocked(),'Legacy saves that missed the morning Map also recover access');
 assert.equal(c.nanGiftBeat(12),false);assert(c.worldMapUnlocked());assert.equal(c.hareMeat,0);
 assert.equal(c.nanGiftBeat(12),false);assert.equal(saves,1,'Map is part of the same gift');
-assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_hareMeat');
-assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');
+assert.equal(c.nanGiftBeat(14),true);assert.equal(c.hareMeat,3);assert.equal(reveal[0],'inventory_craftingKit');assert.equal(kits,1);
+assert.equal(c.nanGiftBeat(14),false);assert.equal(c.hareMeat,3);assert.equal(saves,2,'Meat cannot duplicate');assert.equal(kits,1,'Kit cannot duplicate');
 assert.equal(run('templeCompass.owned'),true);assert.equal(run('templeCompass.awakened'),true);
 assert(run('FATHER_COMPASS_GIFT.join(" ")').includes('too small to hold my finger'));
 assert(!/temple|heartstone/i.test(run('FATHER_COMPASS_GIFT.filter(line=>line.startsWith("Nan Ferrow:")).join(" ")')),'Nan does not explain the magic');
