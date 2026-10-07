@@ -41,18 +41,29 @@
     function drawSmoke(g,time,front) {
       // Overlapping painted wisps expand into the updraft. Birth/death happen
       // at zero opacity; the full cycle also runs through the finish hold.
-      const count=front?23:15;
+      const count=front?26:18;
       for(let i=0;i<count;i++) {
-        const lane=i%3,life=front?2.05:2.6;
+        const lane=i%3,life=front?2.5:2.9;
         const elapsed=((time-i*LOOP/count)%LOOP+LOOP)%LOOP,u=elapsed/life;
         if(u>=1)continue;
-        const alpha=smooth(u/.17)*(1-smooth((u-.38)/.62))*(front?.32:.19);
-        const x=front?96+(lane-1)*20+Math.sin(u*2.5+i)*6
-          :96+(i%2?1:-1)*(44+u*9);
-        const y=front?82-u*39:159-u*66;
-        const w=(front?15:18)+u*(front?16:24),h=(front?27:33)+u*18;
+        const alpha=smooth(u/.17)*(1-smooth((u-.36)/.64))*(front?.54:.30);
+        const x=front?96+(lane-1)*22+Math.sin(u*2.5+i)*8
+          :96+(i%2?1:-1)*(47+u*10);
+        // Broad plumes fill the space over the cauldron. Fade before the top
+        // edge, so their larger silhouettes never end in a hard cropped line.
+        const y=front?82-u*25:159-u*70;
+        const w=(front?28:25)+u*(front?34:29),h=(front?40:39)+u*22;
         g.save();g.globalAlpha=alpha;g.translate(x,y);g.rotate(Math.sin(i*2.1)*.12*u);
         g.scale(i%2?-1:1,1);g.drawImage(smoke,-w/2,-h,w,h);g.restore();
+      }
+      if(front)for(const [index,d] of drops.entries()) {
+        const u=(time-d.start-d.fall)/1.25;
+        if(u<0||u>=1)continue;
+        // Each ingredient releases a fresh billow as well as the steady steam.
+        const alpha=smooth(u/.13)*(1-smooth((u-.26)/.74))*.58;
+        const w=24+35*smooth(u),h=31+26*u;
+        g.save();g.globalAlpha=alpha;g.translate(d.x+(index-1)*u*7,d.y-u*24);
+        g.scale(index%2?-1:1,1);g.drawImage(smoke,-w/2,-h,w,h);g.restore();
       }
     }
     function drawIngredients(g,time) {
@@ -88,38 +99,39 @@
     function drawMagic(g,time,surface) {
       for(const [index,d] of drops.entries()) {
         const elapsed=time-d.start-d.fall;
-        if(elapsed<0||elapsed>1.1)continue;
+        if(elapsed<0||elapsed>1.5)continue;
         if(surface) {
           // A local glow blooms under the ingredient, bounded by the liquid.
           const pulse=smooth(elapsed/.07)*(1-smooth((elapsed-.1)/.42));
           if(!pulse)continue;
           g.save();g.beginPath();g.ellipse(...geometry.liquid,0,0,TAU);g.clip();
           g.translate(d.x,d.y);g.scale(1,.3);
-          const halo=g.createRadialGradient(0,0,0,0,0,22);
-          halo.addColorStop(0,`rgba(255,237,181,${pulse*.7})`);
-          halo.addColorStop(.4,`rgba(255,166,204,${pulse*.4})`);halo.addColorStop(1,'rgba(255,166,204,0)');
-          g.fillStyle=halo;g.fillRect(-22,-22,44,44);g.restore();
+          const halo=g.createRadialGradient(0,0,0,0,0,34);
+          halo.addColorStop(0,`rgba(255,244,193,${pulse*.88})`);
+          halo.addColorStop(.4,`rgba(255,144,209,${pulse*.62})`);halo.addColorStop(1,'rgba(255,144,209,0)');
+          g.fillStyle=halo;g.fillRect(-34,-34,68,68);g.restore();
           continue;
         }
-        // Deterministic little comet arcs: bright cores, short trails, and
-        // a few four-point glints. No per-frame randomness or blinking.
-        for(let j=0;j<11;j++) {
-          const life=.68+(j%4)*.085,u=(elapsed-(j%3)*.025)/life;
+        // Broad comet bursts: saturated trails, bright cores and large
+        // four-point glints. Continuous arcs with no random per-frame flicker.
+        for(let j=0;j<21;j++) {
+          const life=.98+(j%4)*.12,u=(elapsed-(j%3)*.03)/life;
           if(u<0||u>=1)continue;
-          const alpha=smooth(u/.07)*(1-smooth((u-.38)/.62));
-          const angle=-Math.PI+.20+j*(Math.PI-.40)/10;
-          const speed=22+(j*7+index*5)%19;
-          const point=v=>[d.x+Math.cos(angle)*speed*v,d.y+Math.sin(angle)*speed*v-11*v+9*v*v];
-          const [x,y]=point(u),[tx,ty]=point(Math.max(0,u-.10));
-          const tint=j%3===0?'115,225,215':j%3===1?'255,204,127':'233,173,249';
-          const radius=(j%4===0?2.1:1.25)*(1-.5*smooth(u));
-          g.save();g.lineCap='round';g.lineWidth=.7;
-          g.strokeStyle=`rgba(${tint},${alpha*.55})`;g.beginPath();g.moveTo(tx,ty);g.lineTo(x,y);g.stroke();
-          const glow=g.createRadialGradient(x,y,0,x,y,radius*3);
-          glow.addColorStop(0,`rgba(${tint},${alpha*.46})`);glow.addColorStop(1,`rgba(${tint},0)`);
-          g.fillStyle=glow;g.fillRect(x-radius*3,y-radius*3,radius*6,radius*6);
+          const alpha=smooth(u/.07)*(1-smooth((u-.5)/.5));
+          const angle=-Math.PI+.18+j*(Math.PI-.36)/20;
+          const speed=43+(j*7+index*5)%28;
+          const point=v=>[d.x+Math.cos(angle)*speed*v,d.y+Math.sin(angle)*speed*v-13*v+10*v*v];
+          const [x,y]=point(u),[tx,ty]=point(Math.max(0,u-.14));
+          const color=(j+Math.floor(j/3)+index)%3;
+          const tint=color===0?'47,207,197':color===1?'255,179,55':'187,111,241';
+          const radius=(j%3===0?4.3:2.05)*(1-.4*smooth(u));
+          g.save();g.lineCap='round';g.lineWidth=j%3===0?1.25:1;
+          g.strokeStyle=`rgba(${tint},${alpha*.82})`;g.beginPath();g.moveTo(tx,ty);g.lineTo(x,y);g.stroke();
+          const glow=g.createRadialGradient(x,y,0,x,y,radius*3.2);
+          glow.addColorStop(0,`rgba(${tint},${alpha*.65})`);glow.addColorStop(1,`rgba(${tint},0)`);
+          g.fillStyle=glow;g.fillRect(x-radius*3.2,y-radius*3.2,radius*6.4,radius*6.4);
           g.translate(x,y);g.rotate(u*.65+j);g.fillStyle=`rgba(${tint},${alpha})`;
-          if(j%4===0) {
+          if(j%3===0) {
             g.beginPath();g.moveTo(-radius,0);g.quadraticCurveTo(0,0,0,-radius*1.4);
             g.quadraticCurveTo(0,0,radius,0);g.quadraticCurveTo(0,0,0,radius*1.4);
             g.quadraticCurveTo(0,0,-radius,0);g.fill();
@@ -163,6 +175,9 @@
         if(u<.65){g.fillStyle=`rgba(248,150,159,${alpha*.5})`;g.fill();}
       }
       g.restore();
+      // Keep the enlarged smoke behind the ingredients and spoon so the
+      // brewing action stays readable through the denser plumes.
+      drawSmoke(g,time,true);
       drawMagic(g,s.t,true);
       drawIngredients(g,s.t);
       drawSplashes(g,s.t);
@@ -187,7 +202,6 @@
         g.ellipse(tipX,tipY+2,5.4,1.7,0,.1,Math.PI*.85);g.stroke();g.restore();
       }
 
-      drawSmoke(g,time,true);
       drawMagic(g,s.t,false);
       // A restrained final glint marks completion before the reward appears.
       const finish=Math.sin(Math.PI*clamp((s.t-5.25)/.55));
