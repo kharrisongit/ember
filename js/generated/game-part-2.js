@@ -4145,6 +4145,7 @@ function drawWorld(t, dt) {
   const mouth = (o) => o.s !== undefined &&
     /^(wf_cave|dg_mouth|rc_cave)/.test(NAMES[o.s] || "");
   draw.push({ portalLayer: true, x: 0, y: 0 });
+  window.LDRCoop?.addActors(draw);
   // Floors, corpses, then loot: gold stays visible even on a large fallen foe.
   // The smithy's plume remains at roof height.
   const groundLayer = o => o.queenWeb ? .25 : (o.foe||o.frosthorn||o.iceMoth||o.queenBoss)?.st==='dead' ? .5 : o.marketCanopy || o.villageCanopy || o.spr==='smithout_anim_6' ? 3 : o.roomBackgroundPatch || underfoot(o) ? 0
@@ -4159,6 +4160,7 @@ function drawWorld(t, dt) {
                    || (topOf(a) - topOf(b)));
 
   for (const o of draw) {
+    if(window.LDRCoop?.drawActor(o))continue;
     if(typeof Crafting!=='undefined'&&Crafting.draw(o,t))continue;
     if(o.looseGold){drawLoot();continue;}
     if(DragonChapels.draw(o,t))continue;
@@ -4847,8 +4849,9 @@ function drawWorld(t, dt) {
   drawLavaBubbles();   /* over the cached ground, under everything else */
   drawBreath();
   drawClaw();
-  if (dragonAirborne() && !(typeof mounted !== "undefined" && mounted))
+  if (!window.LDRCoop?.active && dragonAirborne() && !(typeof mounted !== "undefined" && mounted))
     drawDragon();
+  window.LDRCoop?.drawAirborne();
   drawDragonProjectile();  /* breath effects always clear every combat sprite */
   ctx.restore();
   drawWeather(t);

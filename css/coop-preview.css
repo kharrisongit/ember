@@ -1,0 +1,14 @@
+#coopOpen{position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;z-index:20000;border:1px solid #d3b174;border-radius:8px;padding:10px 14px;background:#292a27;color:#f8e4b7;font:600 14px system-ui;cursor:pointer}
+#coopOpen:disabled{opacity:.5}
+#coopDialog{box-sizing:border-box;width:min(540px,94vw);max-height:90dvh;border:2px solid #ae8c57;border-radius:14px;padding:24px;background:#252722;color:#f5e8cf;font:16px/1.45 system-ui;z-index:22000}
+#coopDialog::backdrop{background:#101612df}#coopDialog h2{font-size:24px;line-height:1.15;margin:0 0 16px;color:#f9d796}#coopDialog p{color:#d9d1c0}#coopDialog label{display:block;font-size:13px;color:#ddd0b4}
+#coopDialog input,#coopDialog select{box-sizing:border-box;display:block;width:100%;margin:5px 0 14px;border:1px solid #817763;border-radius:6px;background:#151c19;color:#fff1d7;padding:10px;font:16px system-ui}
+.coop-profile{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}.coop-status{min-height:45px;border-top:1px solid #655d4d;padding-top:14px}
+.coop-actions{display:flex;gap:8px;flex-wrap:wrap}#coopDialog button,#coopHud button{border:1px solid #ad996d;border-radius:7px;background:#394a40;color:#f9e6bd;padding:10px 13px;font:600 14px system-ui;cursor:pointer}#coopDialog button:disabled{opacity:.45}
+.coop-preview-active #boot,.coop-preview-active #titleFade,.coop-preview-active #hud,.coop-preview-active #dpad,.coop-preview-active #controls,.coop-preview-active #pad{display:none!important}
+#coopHud{position:fixed;z-index:21000;left:12px;right:12px;top:max(12px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border:1px solid #b29b67;border-radius:10px;background:#17231ded;color:#f9e5b6;font:14px system-ui}#coopHud strong{letter-spacing:2px}#coopHud span{flex:1;min-width:150px;color:#cee0cb;font-size:12px}
+#coopPad{position:fixed;bottom:max(22px,env(safe-area-inset-bottom));left:22px;z-index:21000;display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,46px);gap:4px;touch-action:none}#coopPad button{background:#243b31df;border:1px solid #c8b879;color:#fff2c3;border-radius:9px;font:24px system-ui;touch-action:none;user-select:none}#coopPad [data-direction=arrowup]{grid-column:2}#coopPad [data-direction=arrowleft]{grid-column:1;grid-row:2}#coopPad [data-direction=arrowdown]{grid-column:2;grid-row:2}#coopPad [data-direction=arrowright]{grid-column:3;grid-row:2}
+#coopHud[hidden],#coopPad[hidden],#coopOpen[hidden]{display:none!important}
+@media(max-width:450px){#coopDialog{padding:18px}.coop-profile{grid-template-columns:1fr 1fr}.coop-profile label:first-child{grid-column:1/-1}#coopHud{gap:7px}#coopHud span{order:4;width:100%}}
+
+.coop-preview-active #deck{display:none!important}

@@ -184,6 +184,6 @@
   window.addEventListener('storage',e=>{if(e.key?.startsWith('emberfell.account.')){render();schedule();}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush();else if(user)flush(true);});
   store.onChange=()=>render();store.onDirty=()=>{status='Saved on device · waiting to sync';render();schedule();};
-  window.EmberCloud={open,manage,isOpen:()=>opened,isSignedIn:()=>!!user,accountBusy:()=>accountBusy,sync:()=>flush(true)};
+  window.EmberCloud={open,manage,getIdToken:async()=>{if(!user||user.uid!==store.owner)throw Error('Sign in with Google first.');return user.getIdToken();},isOpen:()=>opened,isSignedIn:()=>!!user,accountBusy:()=>accountBusy,sync:()=>flush(true)};
   render();if(store.owner)init();
 })();

@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ldr-coop-preview
+    runtime: node
+    plan: free
+    branch: coop-foundation
+    buildCommand: npm ci --prefix multiplayer --omit=dev
+    startCommand: npm start --prefix multiplayer
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FIREBASE_PROJECT_ID
+        value: lastdragonridergame
