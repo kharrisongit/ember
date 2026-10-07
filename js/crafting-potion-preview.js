@@ -5,30 +5,85 @@
   const clamp = x => Math.max(0, Math.min(1, x));
   const smooth = x => { x = clamp(x); return x*x*(3-2*x); };
   const geometry = {hearth:[20,64,152,121.07],liquid:[95.9,83.3,52,9.5],fire:[39,138,155,184]};
+  // Nan's potion recipe: two healing herbs and one bitterroot.
+  const drops = [
+    {cell:0,start:.08,fall:.47,fromX:57,x:76,y:83,size:22,angle:-.65,spin:1.15},
+    {cell:0,start:.32,fall:.48,fromX:137,x:112,y:81,size:20,angle:.65,spin:-1.1},
+    {cell:2,start:.57,fall:.49,fromX:87,x:94,y:86,size:23,angle:-.35,spin:.8}
+  ];
 
   function motion(age) {
     const t = Math.max(0, Math.min(4.5, age));
-    const duration = 3.35, ramp = .4;
-    const e = Math.max(0, Math.min(duration, t-.4));
+    const duration = 2.5, ramp = .3;
+    const e = Math.max(0, Math.min(duration, t-1.3));
     // Integrate a trapezoidal velocity profile: no position or speed jumps.
     const distance = e < ramp ? e*e/(2*ramp)
       : e > duration-ramp ? duration-ramp-(duration-e)**2/(2*ramp)
       : e-ramp/2;
-    const phase = -.7 + TAU*2*distance/(duration-ramp);
-    const lift = 16*(1-smooth(t/.4)) + 22*smooth((t-3.82)/.55);
-    return {t,phase,lift,alpha:smooth(t/.18)*(1-smooth((t-4.05)/.35)),energy:smooth(t/.75)*(1-.7*smooth((t-3.6)/.9))};
+    const phase = -.7 + TAU*1.5*distance/(duration-ramp);
+    const lift = 16*(1-smooth((t-1.02)/.32)) + 22*smooth((t-3.82)/.55);
+    return {t,phase,lift,alpha:smooth((t-1.02)/.18)*(1-smooth((t-4.05)/.35)),energy:smooth((t-1.1)/.55)*(1-.7*smooth((t-3.6)/.9))};
   }
 
-  function make({hearth,spoon,flameCurl,flameFork,createCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}}) {
+  function make({hearth,spoon,flameCurl,flameFork,smoke,ingredients,createCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}}) {
     const paintedFire=CraftingHearthMotion.make({image:hearth,rect:geometry.hearth,createCanvas,flameCurl,flameFork});
+    function drawSmoke(g,time,front) {
+      // Overlapping painted wisps expand into the updraft. Birth/death happen
+      // at zero opacity; the 5.2-second cycle also runs through the finish hold.
+      const count=front?18:12;
+      for(let i=0;i<count;i++) {
+        const lane=i%3,life=front?2.05:2.6;
+        const elapsed=((time-i*5.2/count)%5.2+5.2)%5.2,u=elapsed/life;
+        if(u>=1)continue;
+        const alpha=smooth(u/.17)*(1-smooth((u-.38)/.62))*(front?.32:.19);
+        const x=front?96+(lane-1)*20+Math.sin(u*2.5+i)*6
+          :96+(i%2?1:-1)*(44+u*9);
+        const y=front?82-u*39:159-u*66;
+        const w=(front?15:18)+u*(front?16:24),h=(front?27:33)+u*18;
+        g.save();g.globalAlpha=alpha;g.translate(x,y);g.rotate(Math.sin(i*2.1)*.12*u);
+        g.scale(i%2?-1:1,1);g.drawImage(smoke,-w/2,-h,w,h);g.restore();
+      }
+    }
+    function drawIngredients(g,time) {
+      for(const d of drops) {
+        const elapsed=time-d.start,u=elapsed/d.fall,sink=(elapsed-d.fall)/.2;
+        if(u<0||sink>=1)continue;
+        const f=clamp(u),x=d.fromX+(d.x-d.fromX)*f;
+        const y=10+(d.y-10)*f*f+Math.max(0,sink)*d.size*.95;
+        g.save();
+        // Sink through the waterline instead of fading in front of the pot.
+        g.beginPath();g.rect(0,-30,192,d.y+31);g.clip();
+        g.globalAlpha=smooth(elapsed/.08);g.translate(x,y);g.rotate(d.angle+d.spin*f);
+        const size=d.size*(1-.15*clamp(sink));
+        g.drawImage(ingredients,d.cell*200,0,200,200,-size/2,-size/2,size,size);g.restore();
+      }
+    }
+    function drawSplashes(g,time) {
+      for(const d of drops) {
+        const elapsed=time-d.start-d.fall,u=elapsed/.52;
+        if(u<0||u>1)continue;
+        g.save();g.beginPath();g.ellipse(...geometry.liquid,0,0,TAU);g.clip();
+        g.strokeStyle=`rgba(255,192,191,${.65*(1-smooth(u))})`;g.lineWidth=.8;
+        g.beginPath();g.ellipse(d.x,d.y,2+u*18,.7+u*3.6,0,0,TAU);g.stroke();g.restore();
+        // Small droplets leave the contact point and fall back into the brew.
+        for(let j=0;j<5;j++) {
+          const v=elapsed/(.28+j*.025);if(v>1)continue;
+          const x=d.x+(j-2)*4*v,y=d.y-Math.sin(Math.PI*v)*(5+(j%3)*2);
+          g.fillStyle=`rgba(246,126,149,${.85*(1-smooth((v-.7)/.3))})`;
+          g.beginPath();g.ellipse(x,y,.65,.9+Math.sin(Math.PI*v)*.35,0,0,TAU);g.fill();
+        }
+      }
+    }
     function draw(canvas,age) {
       const g=canvas.getContext('2d'),s=motion(age),[cx,cy,rx,ry]=geometry.liquid;
+      const time=Math.max(0,Number.isFinite(age)?age:0);
       g.clearRect(0,0,canvas.width,canvas.height);
       g.save();
       const scale=Math.min(canvas.width,canvas.height)/192;
       g.translate((canvas.width-192*scale)/2,(canvas.height-192*scale)/2);
       g.scale(scale,scale);g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
-      paintedFire.draw(g,Math.max(0,Number.isFinite(age)?age:0));
+      drawSmoke(g,time,false);
+      paintedFire.draw(g,time);
 
       g.save();g.beginPath();g.ellipse(cx,cy,rx,ry,0,0,TAU);g.clip();
       const liquid=g.createLinearGradient(0,cy-ry,0,cy+ry);
@@ -46,7 +101,7 @@
         g.strokeStyle=`rgba(255,160,168,${.12+.16*s.energy})`;g.lineWidth=1.25;g.stroke();
       }
       // Each bubble grows, breaks, and fades once; no random per-frame changes.
-      for(const [start,x,y] of [[1.0,cx-27,cy-3],[2.02,cx+22,cy+4],[2.95,cx-7,cy-6]]) {
+      for(const [start,x,y] of [[1.45,cx-27,cy-3],[2.32,cx+22,cy+4],[3.12,cx-7,cy-6]]) {
         const u=(s.t-start)/.6;if(u<0||u>1)continue;
         const r=.6+1.9*smooth(u/.65),alpha=Math.sin(Math.PI*u)*.65;
         g.strokeStyle=`rgba(255,206,202,${alpha})`;g.lineWidth=.65;
@@ -54,6 +109,8 @@
         if(u<.65){g.fillStyle=`rgba(248,150,159,${alpha*.5})`;g.fill();}
       }
       g.restore();
+      drawIngredients(g,s.t);
+      drawSplashes(g,s.t);
 
       const tipX=cx+Math.cos(s.phase)*19,tipY=cy+Math.sin(s.phase)*3.8;
       g.save();
@@ -75,15 +132,7 @@
         g.ellipse(tipX,tipY+2,5.4,1.7,0,.1,Math.PI*.85);g.stroke();g.restore();
       }
 
-      // Soft coherent steam, with a continuous path and a zero-alpha reset.
-      for(let j=0;j<3;j++) {
-        const u=((s.t+j*.79)%2.45)/2.45;
-        const alpha=Math.sin(Math.PI*u)**2*.18*smooth(s.t/.45);
-        const x=cx+(j-1)*18+Math.sin(s.t*.9+j)*3,y=cy-7-u*30;
-        g.strokeStyle=`rgba(150,132,118,${alpha})`;g.lineWidth=2.1;g.lineCap='round';
-        g.beginPath();g.moveTo(x,y);
-        g.bezierCurveTo(x-7,y-9,x+8,y-13,x+2,y-23);g.stroke();
-      }
+      drawSmoke(g,time,true);
       // A restrained final glint marks completion before the reward appears.
       const finish=Math.sin(Math.PI*clamp((s.t-3.95)/.55));
       if(finish>0)for(const [x,y] of [[cx-27,cy-5],[cx+18,cy+1]]) {

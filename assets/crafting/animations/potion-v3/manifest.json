@@ -90,16 +90,44 @@
         384
       ],
       "rootX": 0.41409344258829084
+    },
+    "smoke": {
+      "file": "smoke.webp",
+      "sourceCrop": [
+        286,
+        56,
+        968,
+        1195
+      ],
+      "size": [
+        230,
+        384
+      ],
+      "prompt": "smoke-prompt.json"
+    },
+    "ingredients": {
+      "file": "../../ingredients.webp",
+      "cellSize": 200,
+      "columns": 5,
+      "recipe": {
+        "herb": 2,
+        "root": 1
+      },
+      "cells": {
+        "herb": 0,
+        "root": 2
+      }
     }
   },
-  "motion": "Fixed cauldron; continuous spoon orbit with eased entry and exit, waterline and front-rim occlusion, phase-coupled liquid highlights, deterministic bubbles and steam.",
+  "motion": "Two healing herbs and one bitterroot fall in staggered arcs, sink below the liquid, and create droplets and expanding ripples. The spoon then eases into a continuous orbit at the previously approved peak speed, before lifting at completion. Fixed cauldron, waterline occlusion, phase-coupled liquid highlights, and deterministic bubbles. Total crafting duration remains 4.5 seconds.",
   "fireMotion": "Painted flame emission: staggered tongues emerge from five anchored sources, grow, rise, curl, taper and extinguish over independent lifetimes. Clean stationary hearth with no baked flames; no image displacement. The foreground wood occludes the flame roots. Seamless 5.2-second loop including the finish hold.",
   "firePreviews": [
     "../../../../previews/potion-motion/potion-fire-preview.gif",
     "../../../../previews/potion-motion/potion-fire-preview.mp4"
   ],
   "currentPreviews": [
-    "../../../../previews/potion-motion/potion-living-fire-preview.gif",
-    "../../../../previews/potion-motion/potion-living-fire-preview.mp4"
-  ]
+    "../../../../previews/potion-motion/potion-ingredients-preview.gif",
+    "../../../../previews/potion-motion/potion-ingredients-preview.mp4"
+  ],
+  "smokeMotion": "Painted translucent wisps rise, expand, and fade above the potion and from behind the hearth. Independent overlapping lifetimes and a seamless 5.2-second loop keep the smoke moving through the finish hold."
 }
