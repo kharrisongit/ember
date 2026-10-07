@@ -5,7 +5,7 @@
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;background:#17313c;color:#f5e6c5;font:15px/1.5 system-ui,sans-serif;padding:24px}
 main{text-align:center;width:min(100%,440px)}h1{font:28px Georgia,serif;margin:0 0 7px}p{margin:6px 0 20px;color:#d6d7c3}.stage{display:grid;place-items:center;margin:auto;background:#ead9b7;border:1px solid #bca270;border-radius:12px;padding:16px;width:226px}canvas{width:192px;height:192px;display:block}progress{appearance:none;display:block;width:160px;height:5px;margin:10px auto 0;border:0;border-radius:3px;overflow:hidden}progress::-webkit-progress-bar{background:#c5b38d}progress::-webkit-progress-value{background:#365c57}progress::-moz-progress-bar{background:#365c57}.controls{display:flex;justify-content:center;gap:10px;margin-top:18px}button{min-height:44px;min-width:90px;padding:8px 15px;background:#355e59;color:#fff0cb;border:1px solid #bba775;border-radius:7px;font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fff0cb;outline-offset:3px}small{display:block;margin:15px;color:#c1cab9}
 </style>
-<main><h1>Brewing a potion</h1><p>Two healing herbs, one bitterroot, and a steady stir.</p><div class="stage"><canvas width="768" height="768" aria-label="Two healing herbs and a bitterroot drop into a ruby potion with small splashes, followed by smooth stirring above a smoky fire"></canvas><progress max="4.5" value="0" aria-label="Crafting progress"></progress></div><div class="controls"><button id="pause">Pause</button><button id="replay">Replay</button></div><small>Actual game size · 192 × 192 · 4.5 seconds</small></main>
+<main><h1>Brewing a potion</h1><p>A little magic with every ingredient.</p><div class="stage"><canvas width="768" height="768" aria-label="Herbs and bitterroot drop into a ruby potion with magical sparks and splashes. The fire flares briefly, then settles as a wooden spoon stirs the smoky brew."></canvas><progress max="5.8" value="0" aria-label="Crafting progress"></progress></div><div class="controls"><button id="pause">Pause</button><button id="replay">Replay</button></div><small>Actual game size · 192 × 192 · 5.8 seconds</small></main>
 <script src="../../js/crafting-hearth-motion.js"></script>
 <script src="../../js/crafting-potion-preview.js"></script>
 <script>
@@ -13,10 +13,11 @@ main{text-align:center;width:min(100%,440px)}h1{font:28px Georgia,serif;margin:0
   const load=async name=>{const i=new Image();i.src='../../assets/crafting/animations/potion-v3/'+name+'.webp';await i.decode();return i;};
   const [hearth,spoon,flameCurl,flameFork,smoke,ingredients]=await Promise.all([load('hearth-clean'),load('spoon'),load('flame-curl'),load('flame-fork'),load('smoke'),load('../../ingredients')]);
   const renderer=PotionMotionPreview.make({hearth,spoon,flameCurl,flameFork,smoke,ingredients}),canvas=document.querySelector('canvas'),progress=document.querySelector('progress');
+  progress.max=PotionMotionPreview.duration;
   let elapsed=0,last=performance.now(),paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pause=document.getElementById('pause');pause.textContent=paused?'Play':'Pause';
   pause.onclick=()=>{paused=!paused;pause.textContent=paused?'Play':'Pause';};
   document.getElementById('replay').onclick=()=>{elapsed=0;paused=false;pause.textContent='Pause';};
-  function tick(now){const dt=(now-last)/1000;last=now;if(!paused&&!document.hidden)elapsed=(elapsed+Math.min(dt,.05))%5.2;renderer.draw(canvas,elapsed);progress.value=Math.min(4.5,elapsed);requestAnimationFrame(tick);}requestAnimationFrame(tick);
+  function tick(now){const dt=(now-last)/1000;last=now;if(!paused&&!document.hidden)elapsed=(elapsed+Math.min(dt,.05))%PotionMotionPreview.loopDuration;renderer.draw(canvas,elapsed);progress.value=Math.min(PotionMotionPreview.duration,elapsed);requestAnimationFrame(tick);}requestAnimationFrame(tick);
 })().catch(error=>{document.querySelector('p').textContent='The preview could not load.';console.error(error);});
 </script></html>
