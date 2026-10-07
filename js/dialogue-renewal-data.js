@@ -4,7 +4,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Hettie",
     "home": "Millwood",
     "role": "Cattle farmer",
-    "source": "01-millwood.txt:2",
+    "source": "01-millwood.txt:5",
     "topics": [
       {
         "title": "The cow that escaped",
@@ -77,7 +77,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Gwil",
     "home": "Millwood",
     "role": "Farmhand and woodworker",
-    "source": "01-millwood.txt:7",
+    "source": "01-millwood.txt:10",
     "topics": [
       {
         "title": "A chair too grand",
@@ -143,14 +143,14 @@ const DIALOGUE_RENEWAL_CAST = {
       "Hettie hasn't sent you to fetch me, has she?",
       "You're safe. I came on my own.",
       "I thought the noise was another cart. That's your dragon?",
-      "Yes. Sorry about the rather larger surprise."
+      "He's with me, Gwil. I'll keep him clear of the cart."
     ]
   },
   "Odo": {
     "name": "Odo",
     "home": "Millwood",
     "role": "Fisher and Calder's grandfather",
-    "source": "01-millwood.txt:12",
+    "source": "01-millwood.txt:15",
     "topics": [
       {
         "title": "The fish you let go",
@@ -223,7 +223,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Elder Maddock",
     "home": "Millwood",
     "role": "Elder and Corin's mentor",
-    "source": "01-millwood.txt:17",
+    "source": "01-millwood.txt:20",
     "topics": [
       {
         "title": "When you gave up travelling",
@@ -315,7 +315,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Nan Ferrow",
     "home": "Millwood",
     "role": "Corin's grandmother",
-    "source": "01-millwood.txt:23",
+    "source": "01-millwood.txt:26",
     "topics": [
       {
         "title": "A memory of Mum",
@@ -426,7 +426,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Winnie",
     "home": "Millwood",
     "role": "Nan's old friend",
-    "source": "01-millwood.txt:30",
+    "source": "01-millwood.txt:33",
     "topics": [
       {
         "title": "Nan's competitive streak",
@@ -491,15 +491,15 @@ const DIALOGUE_RENEWAL_CAST = {
       "I wasn't sure whether you wanted company.",
       "Back again? I'm beginning to feel fashionable.",
       "Don't tell Nan I said yours was the quieter house.",
-      "So Nan wasn't exaggerating about your new companion.",
-      "No. The wings are as large as she said."
+      "Corin, is that a dragon? Come here and tell me how you've ended up with him!",
+      "He hatched from an egg I found, Winnie. I couldn't leave him on his own."
     ]
   },
   "Ned": {
     "name": "Ned",
     "home": "Millwood",
     "role": "Leatherworker",
-    "source": "01-millwood.txt:35",
+    "source": "01-millwood.txt:38",
     "topics": [
       {
         "title": "A failed bargain",
@@ -572,7 +572,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Joss",
     "home": "Millwood",
     "role": "Apple grower and cider maker",
-    "source": "01-millwood.txt:40",
+    "source": "01-millwood.txt:43",
     "topics": [
       {
         "title": "Moving to Millwood",
@@ -635,8 +635,8 @@ const DIALOGUE_RENEWAL_CAST = {
     "greetings": [
       "Hello, Corin. Tam says I need a conversation that isn't about apples.",
       "I'm willing to try. No promises.",
-      "A visitor! That gives me an excuse to stop calculating the harvest.",
-      "We could discuss something less round.",
+      "Come and sit with me, Corin. I've been calculating the harvest all morning.",
+      "I could use a rest too, Joss.",
       "A dragon. Well, that should finally distract me from the orchard.",
       "I'm glad he's useful before he's even said hello."
     ]
@@ -645,7 +645,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Tam",
     "home": "Millwood",
     "role": "Apple grower and mother",
-    "source": "01-millwood.txt:45",
+    "source": "01-millwood.txt:48",
     "topics": [
       {
         "title": "The children's harvest",
@@ -710,15 +710,15 @@ const DIALOGUE_RENEWAL_CAST = {
       "I can offer news with fewer tasting notes.",
       "Come and keep me company. I've been outnumbered by opinions today.",
       "Whose opinion was loudest?",
-      "Joss told me about the dragon. He left out how hard it would be to stop staring.",
-      "That's all right. I stared for quite a while myself."
+      "Corin, would you look at the size of him! How did you end up with a dragon following you?",
+      "He hatched from an egg I found, Tam. I wasn't expecting it either."
     ]
   },
   "Tilda": {
     "name": "Tilda",
     "home": "Millwood",
     "role": "Spinner and knitter",
-    "source": "01-millwood.txt:50",
+    "source": "01-millwood.txt:53",
     "topics": [
       {
         "title": "The uneven sleeves",
@@ -779,19 +779,19 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "I'm Tilda. If you hear me counting, wait until I lose my place. It won't be long.",
-      "I'm Corin. I can try not to make it worse.",
+      "Hold on, Corin, let me finish counting this row. You know what happens when I stop halfway.",
+      "I remember, Tilda. I'll wait until you put the needles down.",
       "Corin! I reached the end of the row this time.",
-      "Then I'm less dangerous than I was.",
-      "Those wings will make an ordinary knitting project seem very small.",
-      "This is Aurelius. He'll leave the wool to you."
+      "Then I picked a better moment.",
+      "Corin, I've patched your clothes since you were little. How have you come home with a dragon?",
+      "His name's Aurelius. I'm still getting used to it myself."
     ]
   },
   "Emmet": {
     "name": "Emmet",
     "home": "Millwood",
     "role": "Orchard worker",
-    "source": "01-millwood.txt:55",
+    "source": "01-millwood.txt:58",
     "topics": [
       {
         "title": "The hidden apple",
@@ -852,19 +852,19 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "Emmet. You look like someone who could settle a serious question about pies.",
-      "Corin. I'll need to hear the question before volunteering.",
+      "Corin, come and settle something for me. Nan's apple pie or Lark's?",
+      "You're asking me to choose against Nan? You know better than that, Emmet.",
       "I've been thinking about our last conversation instead of pruning.",
       "I hope I haven't endangered the apples.",
-      "Is he interested in fruit, or should I keep my fingers back?",
-      "His name's Aurelius. Let's introduce you before offering food."
+      "Corin, that's a dragon beside you. I nearly dropped the pruning shears.",
+      "This is Aurelius. We'll stand back until you've put those down."
     ]
   },
   "Lark": {
     "name": "Lark",
     "home": "Millwood",
     "role": "Baker",
-    "source": "01-millwood.txt:60",
+    "source": "01-millwood.txt:63",
     "topics": [
       {
         "title": "Bread before dawn",
@@ -925,19 +925,19 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "Lark. Yes, like the bird. Less cheerful before sunrise, though.",
-      "Corin. I'll remember to visit after breakfast.",
+      "Morning, Corin. Is Nan sending you for a loaf, or have you followed the smell again?",
+      "The smell got me this time, Lark. How's the baking going?",
       "You're back. Tell me something from outside the kitchen for once.",
       "Gladly. I've smelled enough bread to become distracted.",
-      "A dragon! I'd ask whether he likes baking, but that sounds like volunteering my oven.",
-      "I'm Corin, and this is Aurelius. We only came to say hello."
+      "Corin! A dragon outside my kitchen? Nan must have had a shock when you brought him home.",
+      "This is Aurelius. I thought we should stop and see you."
     ]
   },
   "Hal": {
     "name": "Hal",
     "home": "Millwood",
     "role": "Retired miller",
-    "source": "01-millwood.txt:65",
+    "source": "01-millwood.txt:68",
     "topics": [
       {
         "title": "The mill's sound",
@@ -998,8 +998,8 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "Hal. Used to work the mill. Now I inspect the village at a more reasonable pace.",
-      "Corin. Does the village pass?",
+      "Corin! Walk with me a moment. I want to hear how you're getting on.",
+      "Of course, Hal. We can take the long way by the river.",
       "You caught me enjoying retirement. Don't tell anyone; they'll suggest a job.",
       "Your secret is safe for this conversation.",
       "I've seen some unusual loads arrive at the mill, but never on wings.",
@@ -1010,7 +1010,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Edwin",
     "home": "Millwood",
     "role": "Poultry keeper",
-    "source": "01-millwood.txt:70",
+    "source": "01-millwood.txt:73",
     "topics": [
       {
         "title": "The missing egg",
@@ -1071,8 +1071,8 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "Edwin. Mind the hens if you pass the coop. They're convinced every visitor brings supper.",
-      "I'm Corin. I don't want to disappoint them.",
+      "Corin, don't let the hens crowd you by the gate. They still think your pockets are full of grain.",
+      "They never remember the days I come empty-handed, Edwin.",
       "Corin, you arrived between feeding times. The hens may let us speak.",
       "I'll try not to sound like grain.",
       "Your dragon has their full attention. That's almost a holiday for me.",
@@ -1083,7 +1083,7 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Tolan",
     "home": "Millwood",
     "role": "Village guard",
-    "source": "01-millwood.txt:75",
+    "source": "01-millwood.txt:78",
     "topics": [
       {
         "title": "The first patrol",
@@ -1144,12 +1144,12 @@ const DIALOGUE_RENEWAL_CAST = {
       }
     ],
     "greetings": [
-      "Tolan. You can speak plainly; I'm off the official questions for a moment.",
-      "Corin. That's a relief.",
+      "Morning, Corin. How's Nan? I haven't seen her out today.",
+      "She's well. I'll tell her you asked, Tolan.",
       "Corin. It's good to have someone approach without needing me to settle a quarrel.",
       "I'll try to keep this peaceful.",
-      "A dragon beside you. I need a moment to decide what face to make.",
-      "A friendly one would help. He's with me."
+      "Corin, that's a dragon. I've known you for years, and you've never given me a fright like that.",
+      "I'm all right, Tolan. He's with me."
     ]
   },
   "Pip": {
