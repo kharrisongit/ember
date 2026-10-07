@@ -4,6 +4,7 @@
   const TAU = Math.PI * 2;
   const clamp = x => Math.max(0, Math.min(1, x));
   const smooth = x => { x = clamp(x); return x*x*(3-2*x); };
+  const seeded=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);};
   const DURATION=5.8, FINISH_HOLD=.7, LOOP=DURATION+FINISH_HOLD;
   const geometry = {hearth:[20,64,152,121.07],liquid:[95.9,83.3,52,9.5],fire:[39,138,155,184]};
   // Nan's potion recipe: two healing herbs and one bitterroot.
@@ -38,6 +39,32 @@
 
   function make({hearth,spoon,flameCurl,flameFork,smoke,ingredients,createCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;}}) {
     const paintedFire=CraftingHearthMotion.make({image:hearth,rect:geometry.hearth,createCanvas,flameCurl,flameFork,loopSeconds:LOOP});
+    // Seed whole flight paths once. The sparks change direction sharply but
+    // always travel through their bends, rather than jumping between frames.
+    const sparks=drops.map((d,index)=>Array.from({length:21},(_,j)=>{
+      const id=1+index*71+j*19,r=n=>seeded(id+n*43);
+      const endX=(r(1)-.5)*122,endY=-25-r(2)*37,distance=Math.hypot(endX,endY);
+      const steps=7+Math.floor(r(3)*3),points=[{t:0,x:0,y:0}];
+      let total=0;
+      for(let k=1;k<=steps;k++) {
+        const v=k/steps,side=(k%2?1:-1)*(4+r(k+10)*7)*Math.sqrt(Math.sin(Math.PI*v));
+        total+=.7+r(k+30);
+        points.push({t:total,x:endX*v-endY/distance*side,y:Math.min(-2,endY*v+endX/distance*side)});
+      }
+      for(const p of points)p.t/=total;
+      const color=r(5),palette=color<.5?['238,153,39','255,216,112']
+        :color<.83?['142,77,224','211,176,255']:['64,155,224','179,229,255'];
+      return {points,delay:r(6)*.18,life:1.05+r(7)*.45,trail:.20+r(8)*.10,
+        star:j%3===0,radius:(j%3===0?4.3:2.05)*(.85+r(9)*.3),palette,spin:r(4)*TAU};
+    }));
+    function sparkPoint(spark,t) {
+      const points=spark.points;
+      for(let k=1;k<points.length;k++)if(t<=points[k].t) {
+        const a=points[k-1],b=points[k],u=clamp((t-a.t)/(b.t-a.t));
+        return {x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u};
+      }
+      return points[points.length-1];
+    }
     function drawSmoke(g,time,front) {
       // Overlapping painted wisps expand into the updraft. Birth/death happen
       // at zero opacity; the full cycle also runs through the finish hold.
@@ -99,7 +126,7 @@
     function drawMagic(g,time,surface) {
       for(const [index,d] of drops.entries()) {
         const elapsed=time-d.start-d.fall;
-        if(elapsed<0||elapsed>1.5)continue;
+        if(elapsed<0||elapsed>1.7)continue;
         if(surface) {
           // A local glow blooms under the ingredient, bounded by the liquid.
           const pulse=smooth(elapsed/.07)*(1-smooth((elapsed-.1)/.42));
@@ -112,26 +139,26 @@
           g.fillStyle=halo;g.fillRect(-34,-34,68,68);g.restore();
           continue;
         }
-        // Broad comet bursts: saturated trails, bright cores and large
-        // four-point glints. Continuous arcs with no random per-frame flicker.
-        for(let j=0;j<21;j++) {
-          const life=.98+(j%4)*.12,u=(elapsed-(j%3)*.03)/life;
+        // Independent jagged flights with irregular delays, speeds and bends.
+        // Trace the actual recent turns so the trails also read as zigzags.
+        for(const spark of sparks[index]) {
+          const u=(elapsed-spark.delay)/spark.life;
           if(u<0||u>=1)continue;
-          const alpha=smooth(u/.07)*(1-smooth((u-.5)/.5));
-          const angle=-Math.PI+.18+j*(Math.PI-.36)/20;
-          const speed=43+(j*7+index*5)%28;
-          const point=v=>[d.x+Math.cos(angle)*speed*v,d.y+Math.sin(angle)*speed*v-13*v+10*v*v];
-          const [x,y]=point(u),[tx,ty]=point(Math.max(0,u-.14));
-          const color=(j+Math.floor(j/3)+index)%3;
-          const tint=color===0?'47,207,197':color===1?'255,179,55':'187,111,241';
-          const radius=(j%3===0?4.3:2.05)*(1-.4*smooth(u));
-          g.save();g.lineCap='round';g.lineWidth=j%3===0?1.25:1;
-          g.strokeStyle=`rgba(${tint},${alpha*.82})`;g.beginPath();g.moveTo(tx,ty);g.lineTo(x,y);g.stroke();
-          const glow=g.createRadialGradient(x,y,0,x,y,radius*3.2);
-          glow.addColorStop(0,`rgba(${tint},${alpha*.65})`);glow.addColorStop(1,`rgba(${tint},0)`);
-          g.fillStyle=glow;g.fillRect(x-radius*3.2,y-radius*3.2,radius*6.4,radius*6.4);
-          g.translate(x,y);g.rotate(u*.65+j);g.fillStyle=`rgba(${tint},${alpha})`;
-          if(j%3===0) {
+          const alpha=smooth(u/.06)*(1-smooth((u-.53)/.47));
+          const point=sparkPoint(spark,u),tailTime=Math.max(0,u-spark.trail),tail=sparkPoint(spark,tailTime);
+          const x=d.x+point.x,y=d.y+point.y,[tint,core]=spark.palette;
+          const radius=spark.radius*(1-.4*smooth(u));
+          g.save();g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(d.x+tail.x,d.y+tail.y);
+          for(const p of spark.points)if(p.t>tailTime&&p.t<u)g.lineTo(d.x+p.x,d.y+p.y);
+          g.lineTo(x,y);
+          g.strokeStyle=`rgba(${tint},${alpha*.16})`;g.lineWidth=3.4;g.stroke();
+          g.strokeStyle=`rgba(${tint},${alpha*.92})`;g.lineWidth=spark.star?1.2:.85;g.stroke();
+          g.strokeStyle=`rgba(${core},${alpha*.84})`;g.lineWidth=.38;g.stroke();
+          const glow=g.createRadialGradient(x,y,0,x,y,radius*2.7);
+          glow.addColorStop(0,`rgba(${tint},${alpha*.52})`);glow.addColorStop(1,`rgba(${tint},0)`);
+          g.fillStyle=glow;g.fillRect(x-radius*2.7,y-radius*2.7,radius*5.4,radius*5.4);
+          g.translate(x,y);g.rotate(u*.65+spark.spin);g.fillStyle=`rgba(${core},${alpha})`;
+          if(spark.star) {
             g.beginPath();g.moveTo(-radius,0);g.quadraticCurveTo(0,0,0,-radius*1.4);
             g.quadraticCurveTo(0,0,radius,0);g.quadraticCurveTo(0,0,0,radius*1.4);
             g.quadraticCurveTo(0,0,-radius,0);g.fill();
