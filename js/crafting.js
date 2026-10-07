@@ -33,6 +33,7 @@ const Crafting=(()=>{
     witch:{name:'Maelis',where:'Witchmoor',line:"My Curse needs two ghostcaps, two marsh reeds and one spirit essence. Brew it carefully. It opens a way out of an ordinary battle; don’t expect it to break the seal on a major fight."},
     winter:{name:'Sverre',where:'Hollybeck',line:"Two snowbells, two frostberries and spirit essence make Saint’s Breath: sixteen seconds of protection. For a Resurrection Stone, use three mineral dust, two snowbells and one essence. That raises a fallen enemy to help you."}};
   const fresh=()=>({version:2,kit:false,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
+  const coopStates=new Map();let coopOwner=null;
   let state=fresh(),session=null,opened=false,vendor=null,nodes=[],art=null,artReady=false;
   const clean=n=>Number.isFinite(n)?Math.max(0,Math.min(9999,Math.floor(n))):0;
   const recipe=id=>recipes.find(r=>r.id===id);
@@ -48,6 +49,7 @@ const Crafting=(()=>{
   function learn(group,quiet=false){
     if(!teachers[group])return false;
     if(!state.learned.includes(group))state.learned.push(group);
+    for(const other of coopStates.values())if(!other.learned.includes(group))other.learned.push(group);
     if(group==='nan')state.starter=true;
     saveGame();if(!quiet)toast('Recipes learned: '+recipes.filter(r=>r.teacher===group).map(r=>r.name).join(', '));return true;
   }
@@ -232,6 +234,13 @@ const Crafting=(()=>{
     HEALS[r.id]=HEALS[r.raw]+.5;
     BAG.push({key:r.id,name:()=>r.name+(count(r.id)>1?' ×'+count(r.id):''),tell:r.effect,has:()=>count(r.id)>0,icon:()=> 'inventory_'+r.id});
   }
-  return {materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
-    giveKit:()=>{state.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,slide,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
+  function coopSelect(id){
+    if(coopOwner===id)return;
+    if(coopOwner)coopStates.set(coopOwner,state);
+    if(!coopStates.has(id))coopStates.set(id,{...fresh(),kit:state.kit,learned:[...state.learned],starter:state.starter});
+    coopOwner=id;state=coopStates.get(id);
+  }
+  function coopRestore(id,saved){const owner=coopOwner,previous=state;restore(saved);coopStates.set(id,state);state=previous;coopOwner=owner;}
+  return {coopSelect,coopRestore,materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
+    giveKit:()=>{state.kit=true;for(const other of coopStates.values())other.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,slide,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

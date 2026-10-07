@@ -4,7 +4,7 @@ const game=read('js/generated/game-part-2.js'),part3=read('js/generated/game-par
 const first=JSON.parse(read('assets/interiors/first-temple/layout.json')).tp1_sanctum;
 const second=JSON.parse(read('assets/interiors/sandspire-temple/layout.json')).ds_sanctum;
 let rewards=[],saves=0,swings=0,notices=[];
-const c=vm.createContext({TS:16,MAPID:'tp1_sanctum',MD:{},P:{},breathHas:{lightning:false,ice:false,shadow:false},
+const c=vm.createContext({window:{},TS:16,MAPID:'tp1_sanctum',MD:{},P:{},breathHas:{lightning:false,ice:false,shadow:false},
  SPR:{it_hs_light:[0],it_hs_ice:[0],it_hs_shadow:[0],heartstone_chest:[0,0,19,22,5]},HS_ICON:{lightning:'it_hs_light',ice:'it_hs_ice',shadow:'it_hs_shadow'},
  dragon:{hp:8,maxHp:8,down:false},dragonMaxHp:()=>8,syncDragonVitality(){},stepLootChestOpening(){},stepDark(){},checkDeepPrize(){},
  showReveal:(icon,caption)=>rewards.push({icon,caption}),saveGame:()=>saves++,toast:s=>notices.push(s),

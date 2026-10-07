@@ -2667,7 +2667,8 @@ function movePlayer(dx, dy, dt) {
   P.y = Math.max(16, Math.min(PXH - 2, P.y));
 }
 
-const cv = document.getElementById("cv"), ctx = cv.getContext("2d", { alpha: false });
+const cv = document.getElementById("cv");
+let ctx = cv.getContext("2d", { alpha: false });
 let VW = 0, VH = 0, DPR = 1;
 // Virtual source coordinates keep every sprite and alternate NPC tone unchanged.
 const atlasImg = {width:4096,height:1039360};
@@ -3841,6 +3842,130 @@ function worldArtVisible(x,y,w,h,vw,vh){
   return x+w>=cam.x-pad&&x<=cam.x+vw+pad&&y+h>=cam.y-pad&&y<=cam.y+vh+pad;
 }
 
+function drawCorinActor() {
+      if (doorMotion && doorMotion.map === MAPID && doorMotion.d.stairDown) {
+        const k = Math.min(1, doorMotion.t / doorMotion.duration);
+        const sp = SPR[(mounted ? (hasSword() ? "sm_" : "fm_") : corinKit()) + "walk_" + smDir("s", doorMotion.d.dir !== "r")];
+        const fr = Math.floor(doorMotion.t * 10) % sp[4];
+        ctx.save(); ctx.beginPath(); ctx.rect(P.x - 48, P.y - 80, 96, 78); ctx.clip();
+        drawGameImage(ctx, corinSheet(), sp[0] + fr * sp[2], sp[1], sp[2], sp[3],
+          Math.round(P.x - sp[2] / 2 + (doorMotion.d.dir === "r" ? 12 : -12) * k), Math.round(P.y - sp[3] + corinFeetOffset() + 20 * k), sp[2], sp[3]);
+        ctx.restore(); return;
+      }
+      const playerAct=(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.playerPose())||P.act;
+      if (playerAct && !mounted) {
+        const sp = ACT[playerAct.kind];
+        const base = (mounted ? (hasSword() ? "sm_" : "fm_") : corinKit()) + sp.anim + "_"
+                   + corinDirection(playerAct);
+        const s = SPR[base];
+        if (s) {
+          const f = Math.min(s[4] - 1, Math.floor(playerAct.t / sp.frames * s[4]));
+          const dx = Math.round(P.x - s[2] / 2), dy = Math.round(P.y - s[3] + corinFeetOffset());
+          drawGameImage(ctx, corinSheet(), s[0] + f * s[2], s[1], s[2], s[3],
+                        dx, dy, s[2], s[3]);
+          if (playerAct.kind === "swing" && hasSword()) {
+            const k = playerAct.t / ACT.swing.frames;
+            if (k > 0.2 && k < 0.8) {
+              const d = corinDirection(playerAct);
+              const tail = (d === "u" ? "u" : d === "d" ? "d" : "s");
+              const sl = (playerAct.hot && SPR["fslash_" + tail])
+                         ? SPR["fslash_" + tail] : SPR["slash_" + tail];
+              if (sl) {
+                const ax = d === "e" ? 14 : d === "w" ? -14 : 0;
+                const ay = d === "u" ? -14 : d === "d" ? 10 : -4;
+                const px0 = Math.round(P.x + ax - sl[2] / 2);
+                const py0 = Math.round(P.y - 20 + ay - sl[3] / 2);
+                ctx.save();
+                ctx.globalAlpha = Math.sin((k - 0.2) / 0.6 * Math.PI);
+                if (d === "w") {          /* the side arc mirrors for the west */
+                  ctx.translate(px0 + sl[2], py0);
+                  ctx.scale(-1, 1);
+                  drawGameImage(ctx, atlasImg, sl[0], sl[1], sl[2], sl[3], 0, 0, sl[2], sl[3]);
+                } else {
+                  drawGameImage(ctx, atlasImg, sl[0], sl[1], sl[2], sl[3],
+                                px0, py0, sl[2], sl[3]);
+                }
+                ctx.restore();
+              }
+            }
+          }
+          return;
+        }
+      }
+      if (ride) {
+        drawFerry(ctx);
+        if(typeof FerryPassenger!=='undefined'&&FerryPassenger.draw(ctx))return;
+      }
+      const kit = mounted ? (hasSword() ? "sm_" : "fm_") : corinKit();
+      const nm = kit + (!P.moving ? "idle" : running ? "run" : "walk")
+                 + "_" + corinDirection();
+      if (typeof mounted !== "undefined" && mounted && dragonHere()) {
+        const st = dragon.air ? (P.moving ? "fly" : "hover") : !P.moving ? "idle" : running ? "run" : "walk";
+        const rd = playerFacing4(P.act);
+        const wantW = rd === "w";
+        const tr = dragon.tr && dragon.tr.kind;
+        const want = tr === "up" ? "up" : tr === "down" ? "down"
+                   : breath ? (dragon.air ? "ffire" : "fire")
+                   : (st === "run" ? "walk" : st);
+        const mountKit = "corinride_" + (smithUpgrade ? "armor_" : "sword_");
+        const mountedAttack = P.act && P.act.kind === "swing";
+        const mountAction = mountedAttack ? "atk" : want;
+        const hasW = wantW && !!SPR[mountKit + mountAction + "_w"];
+        const flip = wantW && !hasW;
+        const key = wantW ? (hasW ? "w" : "e") : rd;
+        const rs = SPR[mountKit + mountAction + "_" + key]
+                || SPR[mountKit + st + "_" + key]
+                || SPR[mountKit + "idle_s"];
+        if (rs) {
+          const side = key === "e" || key === "w";
+          const fps = st === "idle" ? 3.5
+                    : (st === "fly" || st === "hover") ? (side ? 2.6 : 3.4)
+                    : 6;
+          const rf = mountedAttack
+            ? Math.min(rs[4] - 1, Math.floor(P.act.t / ACT.swing.frames * rs[4]))
+            : dragon.tr
+            ? Math.min(rs[4] - 1, Math.floor(dragon.tr.t / dragon.tr.n * rs[4]))
+            : Math.floor(P.t * fps * rs[4] / 3) % rs[4];
+          /* Mounted sheets are pixel art. The previous 0.448 resample plus
+             browser smoothing softened them every frame. Use a nearby clean
+             pixel scale and nearest-neighbour rendering so the original detail
+             stays crisp while preserving essentially the same on-screen size. */
+          const RS = 0.45;
+          const dw = Math.round(rs[2] * RS), dh = Math.round(rs[3] * RS);
+          const RIDEDROP = 14;
+          const lift = (dragon.air ? Math.round(Math.sin(P.t * 2.0) * 3) : 0)
+                     - RIDEDROP + (typeof flightTravel!=='undefined'&&flightTravel?flightTravel.lift:0);
+          const dx = Math.round(P.x - dw / 2), dy = Math.round(P.y - dh - lift);
+          const sm0 = ctx.imageSmoothingEnabled;
+          const sq0 = ctx.imageSmoothingQuality;
+          ctx.imageSmoothingEnabled = false;
+          if (flip) {
+            ctx.save();
+            ctx.translate(dx + dw, dy);
+            ctx.scale(-1, 1);
+            drawGameImage(ctx, sheetOf(rs), rs[0] + rf * rs[2], rs[1], rs[2], rs[3],
+                          0, 0, dw, dh);
+            ctx.restore();
+          } else {
+            drawGameImage(ctx, sheetOf(rs), rs[0] + rf * rs[2], rs[1], rs[2], rs[3],
+                          dx, dy, dw, dh);
+          }
+          ctx.imageSmoothingEnabled = sm0;
+          /* Safari can throw on an unsupported/undefined quality assignment.
+             Only restore the previous quality when it is a valid canvas value. */
+          if (sq0 === "low" || sq0 === "medium" || sq0 === "high") {
+            try { ctx.imageSmoothingQuality = sq0; } catch (_) {}
+          }
+          return;
+        }
+      }
+      const s = SPR[nm];
+      const f = Math.floor(P.t * (!P.moving ? 6 : running ? 14 : 9)) % s[4];
+      const dx = Math.round(P.x - s[2] / 2), dy = Math.round(P.y - s[3] + corinFeetOffset());
+      drawGameImage(ctx, corinSheet(), s[0] + f * s[2], s[1], s[2], s[3], dx, dy, s[2], s[3]);
+      return;
+}
+
 function drawWorld(t, dt) {
   frameGreenEncounter();
   if(typeof frameThornwellCamera==='function')frameThornwellCamera();
@@ -4481,129 +4606,7 @@ function drawWorld(t, dt) {
                     Math.round(o.x - s2[2] / 2), Math.round(o.y - s2[3]), s2[2], s2[3]);
       continue;
     }
-    if (o === P) {
-      if (doorMotion && doorMotion.map === MAPID && doorMotion.d.stairDown) {
-        const k = Math.min(1, doorMotion.t / doorMotion.duration);
-        const sp = SPR[(mounted ? (hasSword() ? "sm_" : "fm_") : corinKit()) + "walk_" + smDir("s", doorMotion.d.dir !== "r")];
-        const fr = Math.floor(doorMotion.t * 10) % sp[4];
-        ctx.save(); ctx.beginPath(); ctx.rect(P.x - 48, P.y - 80, 96, 78); ctx.clip();
-        drawGameImage(ctx, corinSheet(), sp[0] + fr * sp[2], sp[1], sp[2], sp[3],
-          Math.round(P.x - sp[2] / 2 + (doorMotion.d.dir === "r" ? 12 : -12) * k), Math.round(P.y - sp[3] + corinFeetOffset() + 20 * k), sp[2], sp[3]);
-        ctx.restore(); continue;
-      }
-      const playerAct=(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.playerPose())||P.act;
-      if (playerAct && !mounted) {
-        const sp = ACT[playerAct.kind];
-        const base = (mounted ? (hasSword() ? "sm_" : "fm_") : corinKit()) + sp.anim + "_"
-                   + corinDirection(playerAct);
-        const s = SPR[base];
-        if (s) {
-          const f = Math.min(s[4] - 1, Math.floor(playerAct.t / sp.frames * s[4]));
-          const dx = Math.round(P.x - s[2] / 2), dy = Math.round(P.y - s[3] + corinFeetOffset());
-          drawGameImage(ctx, corinSheet(), s[0] + f * s[2], s[1], s[2], s[3],
-                        dx, dy, s[2], s[3]);
-          if (playerAct.kind === "swing" && hasSword()) {
-            const k = playerAct.t / ACT.swing.frames;
-            if (k > 0.2 && k < 0.8) {
-              const d = corinDirection(playerAct);
-              const tail = (d === "u" ? "u" : d === "d" ? "d" : "s");
-              const sl = (playerAct.hot && SPR["fslash_" + tail])
-                         ? SPR["fslash_" + tail] : SPR["slash_" + tail];
-              if (sl) {
-                const ax = d === "e" ? 14 : d === "w" ? -14 : 0;
-                const ay = d === "u" ? -14 : d === "d" ? 10 : -4;
-                const px0 = Math.round(P.x + ax - sl[2] / 2);
-                const py0 = Math.round(P.y - 20 + ay - sl[3] / 2);
-                ctx.save();
-                ctx.globalAlpha = Math.sin((k - 0.2) / 0.6 * Math.PI);
-                if (d === "w") {          /* the side arc mirrors for the west */
-                  ctx.translate(px0 + sl[2], py0);
-                  ctx.scale(-1, 1);
-                  drawGameImage(ctx, atlasImg, sl[0], sl[1], sl[2], sl[3], 0, 0, sl[2], sl[3]);
-                } else {
-                  drawGameImage(ctx, atlasImg, sl[0], sl[1], sl[2], sl[3],
-                                px0, py0, sl[2], sl[3]);
-                }
-                ctx.restore();
-              }
-            }
-          }
-          continue;
-        }
-      }
-      if (ride) {
-        drawFerry(ctx);
-        if(typeof FerryPassenger!=='undefined'&&FerryPassenger.draw(ctx))continue;
-      }
-      const kit = mounted ? (hasSword() ? "sm_" : "fm_") : corinKit();
-      const nm = kit + (!P.moving ? "idle" : running ? "run" : "walk")
-                 + "_" + corinDirection();
-      if (typeof mounted !== "undefined" && mounted && dragonHere()) {
-        const st = dragon.air ? (P.moving ? "fly" : "hover") : !P.moving ? "idle" : running ? "run" : "walk";
-        const rd = playerFacing4(P.act);
-        const wantW = rd === "w";
-        const tr = dragon.tr && dragon.tr.kind;
-        const want = tr === "up" ? "up" : tr === "down" ? "down"
-                   : breath ? (dragon.air ? "ffire" : "fire")
-                   : (st === "run" ? "walk" : st);
-        const mountKit = "corinride_" + (smithUpgrade ? "armor_" : "sword_");
-        const mountedAttack = P.act && P.act.kind === "swing";
-        const mountAction = mountedAttack ? "atk" : want;
-        const hasW = wantW && !!SPR[mountKit + mountAction + "_w"];
-        const flip = wantW && !hasW;
-        const key = wantW ? (hasW ? "w" : "e") : rd;
-        const rs = SPR[mountKit + mountAction + "_" + key]
-                || SPR[mountKit + st + "_" + key]
-                || SPR[mountKit + "idle_s"];
-        if (rs) {
-          const side = key === "e" || key === "w";
-          const fps = st === "idle" ? 3.5
-                    : (st === "fly" || st === "hover") ? (side ? 2.6 : 3.4)
-                    : 6;
-          const rf = mountedAttack
-            ? Math.min(rs[4] - 1, Math.floor(P.act.t / ACT.swing.frames * rs[4]))
-            : dragon.tr
-            ? Math.min(rs[4] - 1, Math.floor(dragon.tr.t / dragon.tr.n * rs[4]))
-            : Math.floor(P.t * fps * rs[4] / 3) % rs[4];
-          /* Mounted sheets are pixel art. The previous 0.448 resample plus
-             browser smoothing softened them every frame. Use a nearby clean
-             pixel scale and nearest-neighbour rendering so the original detail
-             stays crisp while preserving essentially the same on-screen size. */
-          const RS = 0.45;
-          const dw = Math.round(rs[2] * RS), dh = Math.round(rs[3] * RS);
-          const RIDEDROP = 14;
-          const lift = (dragon.air ? Math.round(Math.sin(P.t * 2.0) * 3) : 0)
-                     - RIDEDROP + (typeof flightTravel!=='undefined'&&flightTravel?flightTravel.lift:0);
-          const dx = Math.round(P.x - dw / 2), dy = Math.round(P.y - dh - lift);
-          const sm0 = ctx.imageSmoothingEnabled;
-          const sq0 = ctx.imageSmoothingQuality;
-          ctx.imageSmoothingEnabled = false;
-          if (flip) {
-            ctx.save();
-            ctx.translate(dx + dw, dy);
-            ctx.scale(-1, 1);
-            drawGameImage(ctx, sheetOf(rs), rs[0] + rf * rs[2], rs[1], rs[2], rs[3],
-                          0, 0, dw, dh);
-            ctx.restore();
-          } else {
-            drawGameImage(ctx, sheetOf(rs), rs[0] + rf * rs[2], rs[1], rs[2], rs[3],
-                          dx, dy, dw, dh);
-          }
-          ctx.imageSmoothingEnabled = sm0;
-          /* Safari can throw on an unsupported/undefined quality assignment.
-             Only restore the previous quality when it is a valid canvas value. */
-          if (sq0 === "low" || sq0 === "medium" || sq0 === "high") {
-            try { ctx.imageSmoothingQuality = sq0; } catch (_) {}
-          }
-          continue;
-        }
-      }
-      const s = SPR[nm];
-      const f = Math.floor(P.t * (!P.moving ? 6 : running ? 14 : 9)) % s[4];
-      const dx = Math.round(P.x - s[2] / 2), dy = Math.round(P.y - s[3] + corinFeetOffset());
-      drawGameImage(ctx, corinSheet(), s[0] + f * s[2], s[1], s[2], s[3], dx, dy, s[2], s[3]);
-      continue;
-    }
+    if (o === P) { drawCorinActor(); continue; }
     if (!npcHere(o)) continue;
     if(o.seatSpr&&!o.goto&&(!scene||o.thornwellRoyal)&&!bossScene&&!hatchExit){
       const s=SPR[o.seatSpr];if(s){drawNpcFrame(o,s,Math.floor(npcMotionTime(o,t)*3)%s[4],sheetOf(s));continue;}
@@ -5193,6 +5196,7 @@ function bindHold(id, onDown, onUp) {
 // A visible menu owns its touches. The deck-sized dragon menus cover every
 // controller; other menus still use the exposed D-pad, A and B to navigate.
 function blockCoveredGameInput(e) {
+  if(window.LDRCoopCampaign?.active&&(window.LDRCoopUI?.dispatching||e.target?.closest?.('#campaignControls,#campaignBar,#campaignMenus')))return;
   if(globalThis.window?.EmberConversationFlow?.input(e))return;
   if(globalThis.window?.EmberArenaEntry?.blockPointer(e))return;
   if(globalThis.window?.EmberRiding?.blockPointer(e))return;
@@ -5757,6 +5761,8 @@ function stepBolts(dt) {
   if (bossScene) return;
   for (let i = bolts.length - 1; i >= 0; i--) {
     const b = bolts[i];
+    const coopPrevious = window.LDRCampaign?.beginProjectile(b);
+    try {
     b.t += dt;
     const step = b.sp * dt;
     const nx = b.x + b.vx * step, ny = b.y + b.vy * step;
@@ -5780,6 +5786,8 @@ function stepBolts(dt) {
       bolts.splice(i, 1); continue;
     }
     if (b.t > b.life) bolts.splice(i, 1);
+
+    } finally { window.LDRCampaign?.endEnemy(coopPrevious); }
   }
 }
 function stepAnims(dt) {
@@ -10406,22 +10414,32 @@ function stepFoes(dt) {
   if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
+    const coopPrevious = window.LDRCampaign?.beginEnemy(f);
+    try {
     f._thinking = !f.huntingArena && f.st !== "dead" && !globalThis.window?.EmberRiding?.waitingEnemy(f) && !globalThis.window?.EmberArenaEntry?.protected(f) && thinks(f);
     if (f._thinking) live.push(f);
+
+    } finally { window.LDRCampaign?.endEnemy(coopPrevious); }
   }
   turnT -= dt;
   if (foeCool > 0) foeCool -= dt;
   if (!turnHolder || turnHolder.st === "dead" || turnT <= 0) {
     let best = null, bd = 1e9;
     for (const f of live) {
+    const coopPrevious = window.LDRCampaign?.beginEnemy(f);
+    try {
       const t = targetFor(f);
       if (t.d < bd) { bd = t.d; best = f; }
-    }
+
+    } finally { window.LDRCampaign?.endEnemy(coopPrevious); }
+  }
     turnHolder = best;
     turnT = 1.6;
   }
   if (lastFight && MAPID === "cinderhold") {
     for (const f of foes) {
+    const coopPrevious = window.LDRCampaign?.beginEnemy(f);
+    try {
       if (!(f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard"))
         continue;
       const k2 = FOE[f.kind] || {};
@@ -10519,9 +10537,13 @@ function stepFoes(dt) {
         moveCombatActor(f,dx/d*sp,dy/d*sp);
         f.st = "walk";
       } else if (f.st !== "walk") f.st = "idle";
-    }
+
+    } finally { window.LDRCampaign?.endEnemy(coopPrevious); }
+  }
   }
   for (const f of foes) {
+    const coopPrevious = window.LDRCampaign?.beginEnemy(f);
+    try {
     const k = FOE[f.kind];
     if (lastFight && MAPID === "cinderhold" &&
         (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
@@ -10700,6 +10722,8 @@ function stepFoes(dt) {
         if (myTurn) turnT = 0;
       }
     }
+
+    } finally { window.LDRCampaign?.endEnemy(coopPrevious); }
   }
 }
 let pHp = 6, pMax = 6, pInv = 0;

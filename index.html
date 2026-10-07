@@ -86,6 +86,8 @@
 <link rel="stylesheet" href="css/player-identity.css?v=20261006-eyes-hair">
 <link rel="stylesheet" href="css/opening-prologue.css?v=20261003-dramatic5">
 <link rel="stylesheet" href="css/crafting.css?v=20261006-crafting-kit">
+<link rel="stylesheet" href="css/coop-campaign.css?v=20261007-campaign">
+<script src="js/coop-events.js?v=20261007-campaign"></script>
 </head>
 <body>
 <audio id="emberfellMillwoodBgm" loop preload="none" style="display:none" aria-hidden="true" src="assets/audio/millwood-rustic-town.m4a?v=20260926-smooth-loop"></audio>
@@ -114,7 +116,7 @@
 <audio id="emberfellIntroBgm" loop preload="none" src="assets/audio/opening-mountain-path.m4a?v=20261006-intro"></audio>
 <audio id="emberfellSporesBgm" loop preload="none" src="assets/audio/spores-loop.m4a?v=20260926-1"></audio>
 <script src="js/audio-mix.js?v=20261006-intro"></script>
-<script src="js/audio.js?v=20261006-intro"></script>
+<script src="js/audio.js?v=20261007-campaign"></script>
 <div id="titleFade" hidden aria-hidden="true" style="position:fixed;inset:0;z-index:2147483001;background:#000;opacity:0;pointer-events:auto"></div>
 <div id="stage">
 <div id="boot" style="position:absolute;inset:0;z-index:99;display:flex;
@@ -478,7 +480,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/millwood-interiors.js?v=20261005-door-access"></script>
 <script src="js/generated/game-part-1.js?v=20260930-craftsmen-idle" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 1 LOAD ERROR'"></script>
 <script src="js/combat-navigation.js?v=20261001-winter-scale"></script>
-<script src="js/generated/game-part-2.js?v=20261006-throne-retry" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
+<script src="js/generated/game-part-2.js?v=20261007-campaign" onerror="(document.getElementById('bootMsg')||document.getElementById('bootmsg')).textContent='GAME PART 2 LOAD ERROR'"></script>
 <script src="js/ferry-passenger.js?v=20261006-centered-rear"></script>
 <script src="js/animal-sprites.js?v=20260925-stable-farm-ids"></script>
 <script src="js/hunting-grounds.js?v=20261003-celestial"></script>
@@ -547,7 +549,7 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/conversation-branch-data.js?v=20261005-temple-journey"></script>
 <script src="js/farm-resident.js?v=20261005-farmer-idle"></script>
 <script src="js/coralmere-lighthouse.js?v=20261006-craft-world"></script>
-<script src="js/crafting.js?v=20261006-crafting-kit"></script>
+<script src="js/crafting.js?v=20261007-campaign"></script>
 <script src="js/crafting-animation.js?v=20261006-smooth-colors"></script>
 <script src="js/crafting-view.js?v=20261006-craft-frames"></script>
 <script src="js/shroom-lookout.js?v=20261006-all-dialogue"></script>
@@ -560,9 +562,9 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/dragon-chapels.js?v=20261006-all-dialogue"></script>
 <script src="js/desert-pyramid.js?v=20261005-monster-names"></script>
 <script src="js/spider-queen-web.js?v=20261005-android-art-loading"></script>
-<script src="js/spider-queen-boss.js?v=20261006-all-dialogue"></script>
-<script src="js/frosthorn.js?v=20261005-monster-names"></script>
-<script src="js/ice-moth.js?v=20261005-monster-names"></script>
+<script src="js/spider-queen-boss.js?v=20261007-campaign"></script>
+<script src="js/frosthorn.js?v=20261007-campaign"></script>
+<script src="js/ice-moth.js?v=20261007-campaign"></script>
 <script src="js/hollybeck-rescue.js?v=20261006-all-dialogue"></script>
 <script src="js/npc-context-audit.js?v=20261006-fieldcraft-dialogue"></script>
 <script src="js/forgewick-dialogue-data.js?v=20261002-forgewick-opening2"></script>
@@ -585,5 +587,11 @@ window.addEventListener("unhandledrejection", function (e) {
 <script src="js/riding-tutorial.js?v=20261006-all-dialogue"></script>
 <script src="js/cloud-saves.js?v=20260927-bramble-north"></script>
 <script src="js/audio-mix-editor.js?v=20260928-mixer-scroll"></script>
+<script src="js/vendor/colyseus.js?v=0.18.5"></script>
+<script src="js/coop-appearance.js?v=20261007-campaign"></script>
+<script src="js/coop-render.js?v=20261007-campaign"></script>
+<script src="js/coop-ui.js?v=20261007-campaign"></script>
+<script src="js/coop-runtime.js?v=20261007-campaign"></script>
+<script src="js/coop-campaign.js?v=20261007-campaign"></script>
 </body>
 </html>

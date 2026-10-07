@@ -26,7 +26,7 @@ test('private authenticated room, movement, independent ingredients, shared stor
  try{
   assert.equal((await fetch(url+'/healthz')).status,200);
   assert.equal((await fetch(url+'/multiplayer/src/server.mjs')).status,404);
-  const html=await (await fetch(url)).text();assert(html.includes('/js/coop-preview.js'));
+  const html=await (await fetch(url)).text();assert(html.includes('js/coop-campaign.js'));
   await assert.rejects(()=>client(url,'bad').create('story_coop_preview',{protocol:PROTOCOL}),/Google|401/);
   await assert.rejects(()=>client(url,'host').create('story_coop_preview',{protocol:0}),/reload|400/);
   const host=await client(url,'host').create('story_coop_preview',{protocol:PROTOCOL,profile:{name:'Host'}});rooms.push(host);const hs=track(host);

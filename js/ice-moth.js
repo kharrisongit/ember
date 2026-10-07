@@ -83,7 +83,7 @@ const IceMoth=(()=>{
     const z={d:26,u:42,e:34,w:34}[direction(f)]*WINTER_BOSS_SCALE,distance=Math.hypot(aim.x-f.x,aim.y-f.y);
     for(const offset of type==='gust'?[0]:[-.28,0,.28]){
       const a=angle+offset;
-      shots.push({owner:f,cast,type,x:f.x+Math.cos(a)*22*WINTER_BOSS_SCALE,y:f.y+Math.sin(a)*22*WINTER_BOSS_SCALE,
+      shots.push({owner:f,coopTarget:window.LDRCampaign?.active?window.LDRCampaign.owner:null,cast,type,x:f.x+Math.cos(a)*22*WINTER_BOSS_SCALE,y:f.y+Math.sin(a)*22*WINTER_BOSS_SCALE,
         vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,speed,angle:a,z,startZ:z,endZ:aim.dragon?14:10,distance:Math.max(50,distance-22*WINTER_BOSS_SCALE),t:0,unblockable:!!f.unblockableAttack});
     }
   }
@@ -122,7 +122,7 @@ const IceMoth=(()=>{
     if(paused())return;
     for(let i=bursts.length-1;i>=0;i--){bursts[i].t+=dt;if(bursts[i].t>=.54)bursts.splice(i,1);}
     for(let i=shots.length-1;i>=0;i--){
-      const s=shots[i];if(s.owner.st==='dead'){shots.splice(i,1);continue;}
+      const s=shots[i],previous=window.LDRCampaign?.beginProjectile(s);try{if(s.owner.st==='dead'){shots.splice(i,1);continue;}
       s.t+=dt;s.z=s.startZ+(s.endZ-s.startZ)*Math.min(1,s.t*s.speed/s.distance);
       const radius=s.type==='gust'?12+Math.min(8,s.t*7):7;
       const count=Math.max(1,Math.ceil(s.speed*dt/4));let end=false;
@@ -140,6 +140,7 @@ const IceMoth=(()=>{
         else if(!mounted&&!s.cast.dragonHit&&dragonCombatHere()&&dragon.on&&!dragon.down&&segmentDistance(x,y,s.x,s.y,dragon.x,dragon.y)<radius+12){s.cast.dragonHit=true;hurtDragon(2);end=true;}
       }
       if(end||s.t>=3){bursts.push({type:s.type,x:s.x,y:s.y,z:s.z,angle:s.angle,t:0});shots.splice(i,1);}
+      }finally{window.LDRCampaign?.endEnemy(previous);}
     }
   }
   function pose(f){

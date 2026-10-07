@@ -13,6 +13,7 @@ on:
       - 'assets/interiors/**'
       - 'assets/dialogue/**'
       - 'tests/**'
+      - 'multiplayer/**'
       - 'tools/**'
       - 'assets/editor-layouts.json'
       - '.github/workflows/split-game.yml'
@@ -26,6 +27,7 @@ on:
       - 'assets/interiors/**'
       - 'assets/dialogue/**'
       - 'tests/**'
+      - 'multiplayer/**'
       - 'tools/**'
       - 'assets/editor-layouts.json'
       - '.github/workflows/split-game.yml'
@@ -33,6 +35,16 @@ on:
 permissions:
   contents: read
 jobs:
+  co-op:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --prefix multiplayer
+      - run: npm test --prefix multiplayer
+      - run: node tests/campaign-coop.mjs
   validate:
     runs-on: ubuntu-latest
     steps:

@@ -9,6 +9,7 @@ import {initializeApp} from 'firebase-admin/app';
 import {getAuth} from 'firebase-admin/auth';
 import {makeCoopRoom} from './room.mjs';
 import {PROTOCOL} from './world.mjs';
+import {makeCampaignRoom,CAMPAIGN_PROTOCOL} from './campaign-room.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 export async function startServer({port=Number(process.env.PORT)||2567,host='0.0.0.0',verifyIdentity}={}){
   if(!verifyIdentity){
@@ -29,21 +30,21 @@ export async function startServer({port=Number(process.env.PORT)||2567,host='0.0
     let item=attempts.get(key);if(!item||now-item.time>60000){item={time:now,n:0};attempts.set(key,item);}
     if(++item.n>120)return res.status(429).json({error:'Too many room requests. Wait a minute and try again.'});next();
   });
-  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'shared-opening-story',protocol:PROTOCOL}));
+  app.get('/healthz',(_req,res)=>res.json({ok:true,game:'The Last Dragonrider',milestone:'full-campaign-runtime',protocol:CAMPAIGN_PROTOCOL}));
   app.get('/coop-sdk.js',(_req,res)=>res.sendFile(path.join(root,'multiplayer/node_modules/@colyseus/sdk/dist/colyseus.js')));
   app.get(['/', '/index.html'],(_req,res)=>{
-    const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('</body>',
-      '<link rel="stylesheet" href="/css/coop-preview.css"><script src="/coop-sdk.js"></script><script src="/js/coop-appearance.js"></script><script src="/js/coop-story.js"></script><script src="/js/coop-preview.js"></script></body>');
+    const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
     res.setHeader('Cache-Control','no-store');res.type('html').send(html);
   });
   // Serve game assets only: server code, environment files and dependencies stay private.
   for(const dir of ['assets','css','js'])app.use('/'+dir,express.static(path.join(root,dir),{dotfiles:'deny',maxAge:dir==='assets'?'1h':0}));
   const http=createServer(app);
-  const gameServer=new Server({transport:new WebSocketTransport({server:http,maxPayload:16*1024}),greet:false});
+  const gameServer=new Server({transport:new WebSocketTransport({server:http,maxPayload:512*1024,perMessageDeflate:true}),greet:false});
   gameServer.define('story_coop_preview',makeCoopRoom(verifyIdentity));
+  gameServer.define('story_campaign',makeCampaignRoom(verifyIdentity));
   await gameServer.listen(port,host);
   return {gameServer,http,port:http.address().port,close:()=>gameServer.gracefullyShutdown(false)};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
-  const server=await startServer();console.log(`LDR co-op combat preview listening on ${server.port}`);
+  const server=await startServer();console.log(`LDR story co-op listening on ${server.port}`);
 }

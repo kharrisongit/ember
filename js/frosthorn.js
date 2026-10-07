@@ -67,7 +67,7 @@ const Frosthorn=(()=>{
         if(Math.hypot(x-(arena.x*TS+8),y-(arena.y*TS+8))>arena.r*TS-16||isSolid(x,y))break;
         points.push({x,y,delay:i*.13,size:1+i*.025});
       }
-      waves.push({owner:f,t:-.9,points,playerHit:false,dragonHit:false});
+      waves.push({owner:f,coopTarget:window.LDRCampaign?.active?window.LDRCampaign.owner:null,t:-.9,points,playerHit:false,dragonHit:false});
       f.frostStompCool=5.5;
     }
   }
@@ -109,7 +109,7 @@ const Frosthorn=(()=>{
     if(map!==MAPID||foesHeld||MAPID!=='world'){reset();return;}
     if(paused())return;
     for(let i=waves.length-1;i>=0;i--){
-      const w=waves[i];
+      const w=waves[i],previous=window.LDRCampaign?.beginProjectile(w);try{
       if(w.owner.st==='dead'||arenaLock?.id!==arena.id){waves.splice(i,1);continue;}
       w.t+=dt;
       for(const p of w.points){
@@ -119,6 +119,7 @@ const Frosthorn=(()=>{
         if(!mounted&&!w.dragonHit&&dragonCombatHere()&&dragon.on&&!dragon.down&&Math.hypot(dragon.x-p.x,dragon.y-p.y)<radius+12){w.dragonHit=true;hurtDragon(2);}
       }
       if(w.t>(w.points.at(-1)?.delay||0)+1.12)waves.splice(i,1);
+      }finally{window.LDRCampaign?.endEnemy(previous);}
     }
   }
   function addEffects(list){

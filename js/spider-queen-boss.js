@@ -2,7 +2,7 @@
 const SpiderQueenBoss=(()=>{
   const shots=[],splashes=[],waves=[];let map='',web=null,learned=false;
   const SCALE=.68,WEB_CRAWL=19;let tellCanvas=null;
-  const webbed=()=>!!web&&['gathering','trapped','retreating'].includes(web.phase)&&map===MAPID&&!foesHeld;
+  const webbed=()=>!!web&&(!web.coopOwner||web.coopOwner===window.LDRCampaign?.owner)&&['gathering','trapped','retreating'].includes(web.phase)&&map===MAPID&&!foesHeld;
   const aboveWeb=()=>!!web&&map===MAPID&&!foesHeld;
   const pause=()=>sceneHold()||fadeDir||doorMotion||encounterCombatPaused();
   const face=(x,y)=>Math.abs(x)>Math.abs(y)?x<0?'w':'e':y<0?'u':'d';
@@ -20,11 +20,11 @@ const SpiderQueenBoss=(()=>{
   function slam(f){
     const [l,t,r,b]=f.expandedRoom;
     const maxRadius=Math.max(...[[l,t],[r,t],[l,b],[r,b]].map(([x,y])=>Math.hypot(x-f.x,y-f.y)))+16;
-    waves.push({queen:f,x:f.x,y:f.y,t:0,radius:0,maxRadius,hit:false});
+    waves.push({queen:f,coopTarget:window.LDRCampaign?.active?window.LDRCampaign.owner:null,x:f.x,y:f.y,t:0,radius:0,maxRadius,hit:false});
   }
   function stepWaves(dt){
     for(let i=waves.length-1;i>=0;i--){
-      const w=waves[i];
+      const w=waves[i],previous=window.LDRCampaign?.beginProjectile(w);try{
       if(w.queen.st==='dead'){finishGlassShieldParry(w.queen);waves.splice(i,1);continue;}
       w.t+=dt;w.radius=Math.min(w.maxRadius,w.maxRadius*w.t/1.05);
       // One hit as the visible front reaches Corin. Running behind it cannot dodge it.
@@ -33,6 +33,7 @@ const SpiderQueenBoss=(()=>{
         if(!glassShieldDeflectFoe(w.queen))hurtPlayer(2);
       }
       if(w.t>=1.2){finishGlassShieldParry(w.queen);waves.splice(i,1);}
+      }finally{window.LDRCampaign?.endEnemy(previous);}
     }
   }
   function enter(f,state){f.st=state;f.t=0;f.hit=0;}
@@ -42,7 +43,7 @@ const SpiderQueenBoss=(()=>{
     // offset; testing it against floor walls used to swallow north-edge shots.
     const x=f.x+v[0]*27*SCALE,y=f.y+v[1]*7*SCALE;
     const dx=f.aimX-x,dy=f.aimY-y,length=Math.hypot(dx,dy)||1;
-    shots.push({x,y,z:47*SCALE,startZ:47*SCALE,endZ:f.aimDragon?14:10,length,
+    shots.push({coopTarget:window.LDRCampaign?.active?window.LDRCampaign.owner:null,x,y,z:47*SCALE,startZ:47*SCALE,endZ:f.aimDragon?14:10,length,
       vx:dx/length*105,vy:dy/length*105,dir:face(dx,dy),t:0});
   }
   function step(f,dt){
@@ -96,7 +97,7 @@ const SpiderQueenBoss=(()=>{
     stepWaves(dt);
     const segment=(s,x,y,px,py)=>{const vx=s.x-x,vy=s.y-y,t=Math.max(0,Math.min(1,((px-x)*vx+(py-y)*vy)/(vx*vx+vy*vy||1)));return Math.hypot(px-x-vx*t,py-y-vy*t);};
     for(let i=shots.length-1;i>=0;i--){
-      const s=shots[i],x=s.x,y=s.y;s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      const s=shots[i],previous=window.LDRCampaign?.beginProjectile(s);try{const x=s.x,y=s.y;s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
       s.z=s.startZ+(s.endZ-s.startZ)*Math.min(1,s.t*105/s.length);
       let hit=false;
       if(segment(s,x,y,P.x,P.y)<12){hurtPlayer(2);hit=true;}
@@ -104,13 +105,14 @@ const SpiderQueenBoss=(()=>{
       if(hit||s.t>2.8||isSolid(s.x,s.y)){
         splashes.push({x:s.x,y:s.y-s.z,t:0});shots.splice(i,1);
       }
+      }finally{window.LDRCampaign?.endEnemy(previous);}
     }
     for(let i=splashes.length-1;i>=0;i--){splashes[i].t+=dt;if(splashes[i].t>=.5)splashes.splice(i,1);}
   }
   function beginWeb(f){
     shots.length=0;f.queenAttack='web';enter(f,'swing');f.webCool=9;
     restoreCameraTarget();
-    web={queen:f,phase:'casting',t:0,biteCool:0,source:[f.x,f.y-40*SCALE],points:[],cameraZoom:cam.z};
+    web={queen:f,coopOwner:window.LDRCampaign?.active?window.LDRCampaign.owner:null,phase:'casting',t:0,biteCool:0,source:[f.x,f.y-40*SCALE],points:[],cameraZoom:cam.z};
     const [l,t,r,b]=f.expandedRoom;
     // Floor silk stays beneath the party; sparse knots keep the chamber readable.
     const add=(x,y,w,h,variant,turn=0)=>web.points.push({x,y,w,h,variant,turn});
@@ -327,5 +329,5 @@ const SpiderQueenBoss=(()=>{
     }
     ctx.restore();return true;
   }
-  return {capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,roomThreat,canBlockSlam,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,escapeReady,commandBreath,fireCast,inspect:()=>({waves:waves.map(({queen,...w})=>({...w})),web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
+  return {coopOwner:()=>web?.coopOwner,capture:()=>learned,restore:value=>{learned=value===true;},step,effects,addEffects,draw,reset,roomThreat,canBlockSlam,webbed,aboveWeb,frameCamera,holdPlayer,holdDragon,playerPose,escapeReady,commandBreath,fireCast,inspect:()=>({waves:waves.map(({queen,...w})=>({...w})),web:web?{phase:web.phase,t:web.t,player:web.player,dragon:web.dragon,crawlSpeed:web.crawlSpeed,nets:web.points.map(p=>({...p}))}:null,shots:shots.map(s=>({...s})),splashes:splashes.map(s=>({...s}))})};
 })();

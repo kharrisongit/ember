@@ -1,166 +1,125 @@
-# Story co-op foundation / Render deployment
+# The Last Dragonrider — story co-op
 
-Branch: `coop-foundation`. The Render preview is a staging build of The Last
-Dragonrider. The live GitHub Pages game remains on `main`.
+Story Co-op is integrated into the main game's title screen. The GitHub Pages
+client connects to `https://ldr-coop-preview.onrender.com`; the Render URL also
+serves the same game. Render deploys `coop-foundation`, and GitHub Pages deploys
+`main`. Keep both branches on the same integration commit.
 
-The opening story milestone includes:
-- **Story opening** rooms start together in Nan's upstairs bedroom. Shared
-  progression covers Travel Gear, Nan, Hettie, the egg errand, the royal guard and
-  Halvard, Maddock's history of Wingfall, receiving swords, the first mushroom
-  battle, the northern dragon encounter, returning the eggs, two hatchlings and
-  Aurelius's introduction to the Heartstone plan.
-- Every dialogue line waits for both connected players. Duplicate/stale line
-  acknowledgements cannot advance it. A disconnect pauses the scene; reconnecting
-  restores the exact line and the existing party's progress.
-- Both players must stand near the same supported doorway and choose **Travel
-  together**. The server moves the party and waits for both browsers to finish
-  loading. The bedroom, Nan's house and Maddock's house use exported furniture
-  collision from the maintained game.
-- The current objective and a direction marker guide the party. Bag includes
-  shared story progress. Story pickups are gated to their proper step; deliveries
-  consume the shared item once. Travel Gear, swords and the mysterious stones are
-  granted to both players by completed server events.
-- Riders begin without dragons. The first shared fight uses swords and nearby
-  partner revival. Each rider gets a dragon at the hatching. The opening dialogue
-  adapts the solo story for two companions, two swords and two dragon eggs; the
-  solo dialogue and campaign scripts remain unchanged.
-- **Free exploration** rooms retain the previous immediate dragons, independent
-  pickups and repeatable practice encounter.
+## Play
 
-Both modes include:
-- Private rooms for two Google accounts, independent rider names/hair/eyes,
-  and a dragon for each rider with all four flying directions.
-- Each rider sees their own dragon in its original red colors and their partner's
-  dragon in purple. If both select the same hair, the partner gets a contrasting
-  hair color in that viewer's game. Selected profiles remain unchanged.
-- All 676 overworld ingredient nodes have independent availability for each
-  account. Gathering never removes a partner's ingredients. Ordinary plants
-  respawn after 20 minutes per player; one-time introductory supplies stay collected.
-- Either rider can pick up an overworld story item to grant it to the whole party.
-  The co-op Bag shows personal ingredient counts and shared story items. Rejoining
-  the same room restores the account's ingredients and party story ownership.
-- Server-validated walking and sprinting across the overworld terrain. The small
-  Millwood test rectangle is gone; buildings, water, trees and roadworks stay solid.
-- A repeatable woodland encounter with three mushrooms. Both players must choose
-  **Ready for battle** before the party moves into the arena and the countdown starts.
-- Shared enemies, health, attacks, deaths and victory; separate rider/dragon health,
-  sword attacks, dragon claw commands and fire projectiles with separate cooldowns.
-- Nearby partner/own-dragon revival, a full-health retry after defeat, and healing
-  after victory. No friendly fire or campaign rewards are applied.
-- A paused battle during the 30-second reconnect window. If a guest permanently
-  leaves, the encounter ends and can restart when a partner joins again.
+Sign in with different Google accounts on two devices. Choose **Story Co-op**.
+One player chooses **New shared story** (or a saved adventure) and **Host
+adventure**. The other enters the eight-character room code and chooses **Join
+adventure**. Keep both game tabs visible; the adventure pauses when either player
+is disconnected or away. Both riders press A to continue shared dialogue.
 
-In Story opening, the egg pickups run shared story scenes and advance the party's
-objective. In Free exploration they remain ungated inventory demonstrations.
-The opening concludes after Aurelius explains Lightning, Ice and Shadow. Later
-chapters (including Thornwell), optional NPC topics, other interiors, mounting,
-later encounters/rewards, crafting and shared saves are not connected yet.
-Normal single-player campaign simulation remains
-frozen, and campaign saving is blocked during the preview. Leaving reloads the title.
-The server verifies Firebase ID tokens using public Google signing certificates;
-it has no Firestore access and requires no service-account private key.
+The complete existing campaign engine runs in the host's browser: world,
+interiors, quests, optional conversations, shops, crafting, temples, encounters,
+boss phases, travel and ending. There is no separate chapter-limited co-op story.
+The companion sends controls and receives the actual game's rendered scene and
+visible menu controls. Host and companion can each move, turn, fight, mount and
+command their own dragon. Ordinary cameras follow the viewing rider; authored
+scenes use their shared camera. Bring your partner close before using a doorway.
 
-## Render setup
-
-In the Render dashboard select **New → Web Service**, connect GitHub, and choose
-`kharrisongit/ember`.
-
-| Field | Value |
-| --- | --- |
-| Name | `ldr-coop-preview` (or another available name) |
-| Branch | `coop-foundation` |
-| Language / runtime | Node |
-| Root Directory | Leave blank |
-| Build Command | `npm ci --prefix multiplayer --omit=dev` |
-| Start Command | `npm start --prefix multiplayer` |
-| Instance Type | Free |
-| Health Check Path | `/healthz` |
-| Environment variable | `FIREBASE_PROJECT_ID=lastdragonridergame` |
-| Environment variable | `NODE_ENV=production` |
-
-The same configuration is provided in `render.yaml`. The server reads Render's
-`PORT` automatically and binds to `0.0.0.0`. It serves the preview client and
-WebSocket endpoint from the same origin. The GitHub Pages game stays on `main`.
-
-After deploying, copy the **actual hostname** Render assigns (for example,
-`ldr-coop-preview.onrender.com`). In the existing `lastdragonridergame` Firebase
-project, open **Authentication → Settings → Authorized domains → Add domain**.
-Add only that hostname (no `https://` and no path). Google sign-in on the preview
-needs this setup. Keep the existing GitHub Pages domain.
-
-Open the Render URL in Safari or Chrome. Use Google sign-in, then **Co-op Preview →
-Host preview**. **Host adventure** defaults to **Story opening**; choose **Free
-exploration** for the previous test room. On a second device, sign into a different
-Google account and join with the eight-character code; the host's mode applies.
-For the story fight, both players approach the marked mushroom clearing after
-receiving swords and choose **Ready for battle**. In Free exploration, both can
-choose Ready from anywhere in the overworld.
-A gold/orange ring marks the combat boundary only while fighting.
+Each viewer sees their own dragon in red and their partner's in purple. Matching
+hair choices appear as contrasting colors to the other rider without changing
+saved profiles. Each rider has independent health, equipped charms, ingredients,
+collection history and dragon attacks. Story flags, key items, equipment ownership,
+recipes, gold and ordinary consumable supplies are shared. Each player can gather
+the same world ingredient node. A surviving rider can revive a nearby fallen
+partner; both falling uses the original retry flow.
 
 | Action | Touch | Keyboard |
 | --- | --- | --- |
-| Move | Direction pad | Arrow keys / WASD |
-| Sprint | Hold Run and a direction | Hold Shift |
-| Gather / story pickup | Move close, then Gather / Pick up | F / Space outside battle |
-| Talk / Travel together | Move close, then use the interaction button; both confirm a doorway | F / Space outside battle |
-| Advance story dialogue | Both players tap Continue | Space / Enter |
-| Co-op Bag | Bag | I; Escape to close |
-| Sword | Sword | Space during battle |
-| Dragon claw | Dragon claw | Q |
-| Dragon fire | Dragon fire | E |
-| Revive | Stand near a fallen partner/own dragon, then Revive | R |
+| Move | Direction pad | WASD / arrows |
+| Run / shield block | Hold Run / Block | Hold Shift or B |
+| Interact / sword / continue | A | Space / F / Enter |
+| Back | B | Escape |
+| Bag / crafting / equipment | Bag, then the ordinary game menu | I |
+| Dragon attacks / commands | Dragon / Orders | Q for claw, E for breath |
+| World map / travel | Map | M |
+| Revive fallen partner | Revive nearby | R |
+| Save checkpoint | Save in the room bar | — |
 
-Dragon attacks aim at a nearby visible enemy. Fire has a 12-second cooldown; claw
-has a 2.4-second cooldown. The orange enemy attack area signals where to dodge.
-After victory or defeat, both players can choose Ready again for a fresh fight.
-These are preview combat values, not final campaign balance.
+## Saves
 
-The free Render service sleeps after 15 minutes without incoming traffic and may
-take about a minute to wake. It may also restart at any time. Reconnection works
-while the same server room remains alive; a server restart ends this temporary
-room. Ingredient and story inventories currently live only in that room and reset
-when the room ends; they never write to single-player saves. Free bandwidth/build
-quotas still apply.
+Co-op uses the existing three account-scoped Firebase save slots and cloud queue.
+It chooses an empty slot or its own previous campaign slot and does not replace a
+solo save or another co-op adventure. Each account also retains up to four local
+co-op backups. If all three cloud slots are occupied, the new adventure saves on
+that device only; the room bar and manual Save notice explain this.
 
-## Development
+Autosaves occur at safe points, approximately every ten seconds. A requested save
+during a scene, encounter, doorway, flight or ferry ride waits for a safe point.
+The checkpoint stores shared campaign progress plus both riders' identities,
+positions, health, equipment and ingredient histories. Each account receives the
+same checkpoint; either can host **Resume** after the room ends. Mid-battle and
+mid-cutscene actions are not checkpointed. Loading a co-op slot routes to the co-op
+lobby, and solo autosaves protect occupied co-op slots.
+
+A temporary network drop pauses play and reserves the seat for 60 seconds. A host
+leaving or a server restart ends the room; resume the last checkpoint from the
+title screen. The free Render service can sleep or restart, and bandwidth quotas
+still apply. Keep the host's device awake while playing.
+
+## Runtime and trust boundary
+
+- `js/coop-runtime.js` switches actor-local state around existing engine updates.
+  Shared simulation ticks once; enemy/projectile target ownership stays attached
+  to a rider. It adds the second rider and dragon to ordinary world rendering.
+- `js/coop-render.js` sends bounded canvas display lists and batches cached sprite
+  crops. The companion replays an allowlist of drawing operations; it never runs
+  code supplied by another player. Frame acknowledgements bound outstanding work;
+  reconnect and missing-texture requests rebuild the rendering cache.
+- `js/coop-ui.js` exposes text and short-lived tokens for visible controls in
+  allowlisted gameplay menus. A token must still refer to a visible enabled
+  control. Account/login panels are never mirrored.
+- `js/coop-campaign.js` handles entry, controls, Google-authenticated transport,
+  reconnection, music/effects, and existing account-scoped save integration.
+- `multiplayer/src/campaign-room.mjs` is protocol 5, private, two accounts per
+  room. It validates bounded monotonic input/commands and relays presentation and
+  checkpoints only from the host. The host is trusted to run the campaign; this
+  is cooperative play, not an anti-cheat-authoritative competitive server.
+- Production Firebase ID tokens are verified against Google's public signing
+  certificates. The server has no Firestore access or service-account secret.
+  Test identity verification exists only as an injected local test dependency.
+- The older protocol-4 preview room and its tests remain for reference, but the
+  title screen and Render root no longer launch that separate preview engine.
+
+## Render configuration
+
+| Field | Value |
+| --- | --- |
+| Repository | `kharrisongit/ember` |
+| Branch | `coop-foundation` |
+| Root Directory | Blank |
+| Build Command | `npm ci --prefix multiplayer --omit=dev` |
+| Start Command | `npm start --prefix multiplayer` |
+| Health Check | `/healthz` |
+| Environment | `FIREBASE_PROJECT_ID=lastdragonridergame`, `NODE_ENV=production` |
+
+`render.yaml` contains this configuration. Retain both the GitHub Pages and Render
+hostnames in Firebase Authentication's authorized domains. No new Firebase rules
+or paid service is required. Health reports `full-campaign-runtime`, protocol 5.
+
+## Verification
 
 ```
 npm ci --prefix multiplayer
 npm test --prefix multiplayer
-npm start --prefix multiplayer
+node tools/check-game-scripts.mjs
+node tests/campaign-coop.mjs
+node tests/cloud-saves.mjs
+node tests/temple-arenas.mjs
+node tests/ice-moth-projectiles.mjs
+node tests/combat-navigation.mjs
+node tests/heartstone-interaction.mjs
+node tests/thornwell-royal.mjs
 ```
 
-`tools/export-coop-preview-map.mjs` regenerates the shared static collision map
-and pickup catalog from the maintained game world and published layouts. Terrain is a compressed
-bit mask; collision overrides and fixed bodies preserve edited geometry.
-Regenerate after changing the world. All room movement and combat is decided on
-the server; clients send directions and action requests, never positions or damage.
-Pickup requests contain only a catalog node ID. The server checks proximity, line
-of sight, battle state and per-account collection history before granting anything.
-Ingredient inventories and visible nodes are sent privately to their owner. Story
-ownership belongs to the room, including late joiners and temporarily disconnected
-players. Trusted future quest handlers can call `grantStoryItem`; no client can
-grant an arbitrary story key. The shared opening lives in `multiplayer/src/story.mjs`.
-`tools/export-coop-story.mjs` regenerates its four maps, door rectangles and opening
-NPC appearances from the maintained game; regenerate after editing those rooms.
-The story validates the map, proximity, partner presence, current step and exact
-scene/line token. Interior transitions use a room epoch and per-player loading
-acknowledgements. A new guest inherits the current shared chapter and story items.
-The Firebase verifier can be injected by local tests only; production always
-verifies real Google sign-in tokens. Protocol 4 rejects stale preview clients.
-
-## Next milestones
-
-1. Extend the shared chapter state into Thornwell: Bramble, the royal tavern visit,
-   and the Forgefalls reunion, followed by the temple routes.
-2. Connect optional NPC conversations, later encounters, mounting, ferry/flight
-   scenes and scripted boss phases.
-3. Validate separate co-op save recovery before enabling progress writes.
-4. Expose the validated co-op mode from the main game's title screen using the same
-   Render service. Keep the preview branch for testing future multiplayer changes.
-
-Official setup references:
-- https://render.com/docs/deploy-node-express-app
-- https://render.com/docs/free
-- https://firebase.google.com/docs/auth/web/google-signin
-- https://firebase.google.com/docs/auth/admin/verify-id-tokens
+Tests exercise actual campaign functions for actor health, targeting, revival,
+per-player gathering, shared equipment/unlocks, dialogue readiness and checkpoint
+compatibility, plus authenticated room/relay/reconnect behavior. Existing campaign
+regressions cover temple layouts, bosses, rewards, combat, royal quests and saves.
+Browser checks use two independent clients, including a phone-sized companion.
+These checks do not substitute for playing every campaign branch end to end.

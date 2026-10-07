@@ -397,6 +397,7 @@ let routeMusicIntroPlayed=false;
   window.EmberAudioMix?.subscribe(applyVolumes);
   window.EmberAudio={
     unlock:startMusic,
+    currentTrack:()=>selected?.id||null,
     tracks:()=>tracks.filter(hasSong).map(a=>a.id),
     preview:id=>{previewTrack=tracks.find(a=>a.id===id&&hasSong(a))||null;openAudioGraph();unlocked=true;chooseMusic();playSelected();},
     stopPreview:()=>{previewTrack=null;chooseMusic();},
