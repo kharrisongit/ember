@@ -5,14 +5,14 @@
   const button=(text,fn)=>{const node=el('button',text);node.type='button';node.addEventListener('click',fn);return node;};
   let client=null,room=null,active=false,connecting=false,leaving=false,reconnecting=false,seq=0,actionSeq=0,lastInput=0,lastFrame=0;
   let snapshots=[],bounds=null,roomCode='',message='Sign in with Google, then create or join a preview room.';
-  let battle=null,seenEffect=0,renderEnemies=[];
+  let battle=null,story=null,seenEffect=0,renderEnemies=[];
   let pickups=[],inventory={ingredients:{},story:[]},pickupCatalog={materials:{},storyItems:{}},noticeUntil=0;
   const ingredientArt=new Image();ingredientArt.src='/assets/crafting/ingredients.webp?v=20261005';
   try{message=sessionStorage.getItem('ldr.coop.message')||message;sessionStorage.removeItem('ldr.coop.message');}catch{}
   const held=new Set(),touch=new Map(),spriteCache=new Map(),dragonCache=new Map();
   const dialog=el('dialog');dialog.id='coopDialog';dialog.setAttribute('aria-labelledby','coopTitle');
-  const heading=el('h2','Story co-op · exploration preview');heading.id='coopTitle';
-  const description=el('p','Your partner has a purple dragon. Gather ingredients for your own bag; story pickups are shared with the party. Both choose Ready for battle to fight together. Story scenes, interiors and permanent co-op saves are still being connected.');
+  const heading=el('h2','Story co-op · opening chapter');heading.id='coopTitle';
+  const description=el('p','Start the story together, from Nan’s house to your two dragons hatching. Conversations wait for both players. Your partner’s dragon is purple; ingredients are personal and story rewards are shared. Progress currently lasts for this room.');
   const status=el('p',message);status.setAttribute('role','status');status.className='coop-status';
   const nameLabel=el('label','Rider name'),name=el('input');name.value='Dragonrider';name.maxLength=16;name.autocomplete='nickname';nameLabel.append(name);
   const hairLabel=el('label','Hair'),hair=el('select');hair.setAttribute('aria-label','Hair color');
@@ -20,12 +20,14 @@
   const eyeLabel=el('label','Eyes'),eyes=el('select');eyes.setAttribute('aria-label','Eye color');
   for(const color of window.EmberPlayerIdentity.eyeColors){const option=el('option',color.label);option.value=color.id;eyes.append(option);}eyeLabel.append(eyes);
   const profileRow=el('div');profileRow.className='coop-profile';profileRow.append(nameLabel,hairLabel,eyeLabel);
+  const adventureLabel=el('label','Host adventure'),adventure=el('select');adventure.setAttribute('aria-label','Host adventure');
+  for(const [value,caption]of [['story','Story opening · start together'],['explore','Free exploration · dragons and practice battle']]){const o=el('option',caption);o.value=value;adventure.append(o);}adventureLabel.append(adventure);
   const joinLabel=el('label','Room code'),code=el('input');code.maxLength=8;code.autocomplete='off';code.autocapitalize='characters';code.spellcheck=false;code.placeholder='8-character code';joinLabel.append(code);
   const actions=el('div');actions.className='coop-actions';
   const sign=button('Google sign-in',()=>{dialog.close();window.EmberCloud.open();});
   const host=button('Host preview',()=>connect(true)),join=button('Join preview',()=>connect(false));
   const close=button('Back',()=>dialog.close());actions.append(sign,host,join,close);
-  dialog.append(heading,description,profileRow,joinLabel,status,actions);document.body.append(dialog);
+  dialog.append(heading,description,profileRow,adventureLabel,joinLabel,status,actions);document.body.append(dialog);
   const open=button('Co-op Preview',()=>{status.textContent=message;dialog.showModal();});open.id='coopOpen';document.body.append(open);
   const hud=el('div');hud.id='coopHud';hud.hidden=true;
   const label=el('strong'),detail=el('span');detail.setAttribute('role','status');
@@ -38,6 +40,8 @@
   const bagTitle=el('h2','Co-op Bag');bagTitle.id='coopBagTitle';
   const bagContents=el('div');bag.append(bagTitle,el('p','Your ingredients are yours to gather. Story items are available to both riders.'),bagContents,button('Close bag',()=>bag.close()));
   bag.addEventListener('close',release);document.body.append(bag);
+  const storyClient=window.LDRCoopStory.create({send:(type,data)=>room?.send(type,data),release,notify:showNotice,
+    session:()=>room?.sessionId,members:()=>snapshots[snapshots.length-1]?.players||[],closeBag:()=>{if(bag.open)bag.close();},leave});
   const notice=el('div');notice.id='coopNotice';notice.hidden=true;notice.setAttribute('role','status');document.body.append(notice);
   const combatControls=el('div');combatControls.id='coopCombat';combatControls.hidden=true;
   const actionButtons=new Map();
@@ -63,6 +67,11 @@
   for(const type of ['keydown','keyup'])window.addEventListener(type,e=>{
     if(!active)return;
     const key=e.key.toLowerCase();
+    if(story?.scene){
+      if(e.target.closest?.('#coopHud button'))return;
+      if(type==='keydown'&&!e.repeat&&[' ','enter'].includes(key))storyClient.advance();
+      e.preventDefault();e.stopImmediatePropagation();return;
+    }
     if(bag.open){
       if(type==='keydown'&&(key==='escape'||key==='i'))bag.close();
       if(!['tab','enter',' '].includes(key))e.preventDefault();e.stopImmediatePropagation();return;
@@ -94,7 +103,7 @@
       const token=await window.EmberCloud.getIdToken();
       client=new Colyseus.Client(location.origin);client.auth.token=token;
       const profile=window.EmberPlayerIdentity.normalize({name:name.value,hair:hair.value,eyes:eyes.value});
-      const options={protocol:3,profile};
+      const options={protocol:4,profile,mode:adventure.value};
       room=isHost?await client.create('story_coop_preview',options):await client.joinById(roomId,options);
       leaving=false;seq=0;actionSeq=0;seenEffect=0;snapshots=[];roomCode=room.roomId;wire(room);
       // Loading the map does not run a campaign or touch any save slot.
@@ -109,7 +118,7 @@
   }
   function wire(connection){
     connection.reconnection.enabled=false;
-    connection.onMessage('welcome',data=>{bounds=data.bounds;pickupCatalog=data.pickupCatalog;});
+    connection.onMessage('welcome',data=>{bounds=data.bounds;pickupCatalog=data.pickupCatalog;storyClient.resetMap();});
     connection.onMessage('inventory',data=>{inventory=data;if(bag.open)renderBag();});
     connection.onMessage('nearby-pickups',data=>{pickups=data;});
     connection.onMessage('pickup-result',data=>{
@@ -118,7 +127,7 @@
     });
     connection.onMessage('snapshot',data=>{
       snapshots.push({at:performance.now(),players:data.players,enemies:data.battle.enemies});if(snapshots.length>4)snapshots.shift();
-      battle=data.battle;updateHud(data.players);playEffects();
+      battle=data.battle;story=data.story||null;if(active)storyClient.update(story);updateHud(data.players);playEffects();
     });
     connection.onMessage('pong',()=>{});
     connection.onMessage('ended',reason=>{message=reason;leaving=true;finish();});
@@ -137,7 +146,7 @@
     });
   }
   function finish(){
-    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;battle=null;pickups=[];held.clear();touch.clear();spriteCache.clear();dragonCache.clear();bag.close();notice.hidden=true;
+    active=false;reconnecting=false;room=null;snapshots=[];bounds=null;battle=null;story=null;storyClient.reset();pickups=[];held.clear();touch.clear();spriteCache.clear();dragonCache.clear();bag.close();notice.hidden=true;
     document.body.classList.remove('coop-preview-active');hud.hidden=pad.hidden=combatControls.hidden=sprint.hidden=true;
     try{sessionStorage.setItem('ldr.coop.message',message);}catch{}
     location.reload();
@@ -155,12 +164,13 @@
   }
   function latestOwn(){return snapshots[snapshots.length-1]?.players.find(p=>p.id===room?.sessionId);}
   function showNotice(text){notice.textContent=text;notice.style.top=Math.round(hud.getBoundingClientRect().bottom+8)+'px';notice.hidden=false;noticeUntil=performance.now()+4500;}
-  function gatheringAllowed(){return active&&!reconnecting&&!battle?.paused&&!['active','countdown'].includes(battle?.phase)&&latestOwn()?.rider.hp>0;}
+  function gatheringAllowed(){return active&&!reconnecting&&storyClient.mapReady&&!story?.scene&&!story?.held&&!battle?.paused&&!['active','countdown'].includes(battle?.phase)&&latestOwn()?.rider.hp>0;}
   function nearestPickup(){const p=latestOwn()?.rider;if(!p)return null;return pickups.filter(n=>Math.hypot(n.x-p.x,n.y-p.y)<=36).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0]||null;}
-  function collectNearest(){if(!gatheringAllowed()||bag.open)return;const node=nearestPickup();if(node)room.send('pickup',node.id);else showNotice('Move close to an ingredient or story item to pick it up.');}
+  function collectNearest(){if(!gatheringAllowed()||bag.open)return;const action=storyClient.nearest(latestOwn()),node=nearestPickup();if(node)room.send('pickup',node.id);else if(action)room.send('interact',action.id);else showNotice('Move close to an ingredient, story item, person or doorway.');}
   function showBag(){if(!gatheringAllowed())return;release();renderBag();bag.showModal();}
   function renderBag(){
     bagContents.replaceChildren();
+    storyClient.journal(bagContents);
     for(const [title,entries,empty]of [
       ['Your ingredients',Object.entries(inventory.ingredients).filter(([,amount])=>amount>0).map(([key,amount])=>({key,amount,kind:'ingredient',name:pickupCatalog.materials[key]?.name||key})),'Nothing gathered yet. Look beside woodland roads and the trail north of Millwood.'],
       ['Shared story items',inventory.story.map(key=>({key,kind:'story',name:pickupCatalog.storyItems[key]?.name||key})),'When either rider finds a story item, it will appear here for both of you.']
@@ -189,11 +199,13 @@
     else if(battle.phase==='active')detail.textContent='Defeat the mushrooms · '+battle.enemies.filter(e=>e.hp>0).length+' remaining'+(own?.rider.hp<=0?' · Your partner can revive you':'');
     else if(battle.phase==='won')detail.textContent='Victory! Both riders and dragons healed. Ready again to replay, or keep exploring.';
     else if(battle.phase==='lost')detail.textContent='Battle ended. Both choose Ready to retry with full health.';
-    else detail.textContent=connected<2?'Explore while you wait for your partner.':'Explore, or both choose Ready to enter the shared battle.';
+    else detail.textContent=story?(story.waiting?'Waiting for your partner · ':'')+story.objective:connected<2?'Explore while you wait for your partner.':'Explore, or both choose Ready to enter the shared battle.';
     const canReady=['idle','won','lost'].includes(battle.phase);
     const fighting=['active','countdown'].includes(battle.phase);
     if(fighting&&bag.open)bag.close();bagButton.disabled=fighting||reconnecting||!own||own.rider.hp<=0;
     ready.disabled=!canReady||reconnecting;ready.textContent=own?.ready?'Ready ✓ · waiting for partner':'Ready for battle';
+    if(story){ready.hidden=!['skirmish','complete'].includes(story.step)||story.map!=='world';ready.disabled=ready.disabled||story.held||story.waiting||!own||Math.hypot(own.rider.x-battle.arena.x,own.rider.y-battle.arena.y)>battle.arena.r+140;}
+    else ready.hidden=false;
     if(!canReady)ready.textContent=battle.paused?'Battle paused':'Battle in progress';
     for(const m of members){
       let card=partyCards.get(m.id);
@@ -201,11 +213,11 @@
       card.classList.toggle('coop-own',m.id===room?.sessionId);
       card.children[0].textContent=(m.id===room?.sessionId?'You · ':'')+m.name+(m.connected?'':' · reconnecting');
       card.children[1].textContent='Rider '+m.rider.hp+'/'+m.rider.maxHp+(m.rider.hp<=0?' · DOWN':'');
-      card.children[2].textContent='Dragon '+m.dragon.hp+'/'+m.dragon.maxHp+(m.dragon.hp<=0?' · DOWN':'');
+      card.children[2].textContent=story&&!story.hasDragon?'Dragon bond · not yet formed':'Dragon '+m.dragon.hp+'/'+m.dragon.maxHp+(m.dragon.hp<=0?' · DOWN':'');
     }
     for(const [id,card]of partyCards)if(!members.some(m=>m.id===id)){card.remove();partyCards.delete(id);}
     for(const [kind,b]of actionButtons){
-      b.hidden=!fighting;
+      b.hidden=!fighting||story&&!story.hasDragon&&['claw','fire'].includes(kind);
       const remaining=Math.max(0,(own?.cooldowns[kind]||0)-battle.now);
       b.disabled=!own||own.rider.hp<=0||battle.phase!=='active'||battle.paused||reconnecting||remaining>0||(['claw','fire'].includes(kind)&&(own.dragon.hp<=0||own.dragon.attackUntil>battle.now));
       b.textContent=b.dataset.caption+(remaining>0?' · '+Math.ceil(remaining/1000)+'s':'');
@@ -285,13 +297,16 @@
       lastInput=ms;const keysNow=new Set([...held,...touch.values()]);
       const x=Number(keysNow.has('arrowright')||keysNow.has('d'))-Number(keysNow.has('arrowleft')||keysNow.has('a'));
       const y=Number(keysNow.has('arrowdown')||keysNow.has('s'))-Number(keysNow.has('arrowup')||keysNow.has('w'));
-      room.send('input',{seq:++seq,x,y,run:keysNow.has('shift')});
+      const blocked=bag.open||story?.held||!storyClient.mapReady;
+      room.send('input',{seq:++seq,x:blocked?0:x,y:blocked?0:y,run:!blocked&&keysNow.has('shift')});
     }
     renderPlayers=players();const own=renderPlayers.find(p=>p.id===room?.sessionId);
-    const pickup=nearestPickup();gather.disabled=!gatheringAllowed()||!pickup;
-    gather.textContent=pickup?(pickup.kind==='ingredient'?'Gather ':'Pick up ')+(pickup.kind==='ingredient'?pickupCatalog.materials[pickup.item]?.name:pickupCatalog.storyItems[pickup.item]?.name):'Move close to pick up';
+    const pickup=nearestPickup(),action=storyClient.nearest(own);gather.disabled=!gatheringAllowed()||(!pickup&&!action);
+    gather.textContent=pickup?(pickup.kind==='ingredient'?'Gather ':'Pick up ')+(pickup.kind==='ingredient'?pickupCatalog.materials[pickup.item]?.name:pickupCatalog.storyItems[pickup.item]?.name):action?(story?.travel?.id===action.id&&story.travel.ready.includes(room?.sessionId)?'Ready ✓ · waiting for partner':action.label):story?'Move closer to interact':'Move close to pick up';
+    pad.style.visibility=sprint.style.visibility=combatControls.style.visibility=story?.scene?'hidden':'';
     if(!notice.hidden&&ms>noticeUntil)notice.hidden=true;
     renderEnemies=interpolatedEnemies();
+    if(story&&!storyClient.mapReady)return true;
     if(own){
       P.x=own.rider.x;P.y=own.rider.y;P.moving=false;
       const arena=battle?.arena,framing=arena&&battle.phase!=='idle'&&Math.hypot(P.x-arena.x,P.y-arena.y)<arena.r+40;
@@ -301,8 +316,8 @@
         const available=Math.max(110,bottom-top);
         cam.z=Math.min(playZoom(),(VW-24)/(arena.r*2+54),available/(arena.r*2+60));
         cam.x=arena.x-VW/cam.z/2;cam.y=arena.y-20-(top+available/2)/cam.z;
-      }else{cam.z=playZoom();cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;}
-      clampCam();
+      }else if(!storyClient.frameCamera(own)){cam.z=playZoom();cam.x=P.x-VW/cam.z/2;cam.y=P.y-VH/cam.z/2;}
+      if(!story||story.map==='world')clampCam();
     }
     drawWorld(tAcc,dt);return true;
   }
@@ -316,6 +331,7 @@
     }
     for(const enemy of renderEnemies)draw.push({coopEnemy:enemy,x:enemy.x,y:enemy.y,sy:enemy.hp>0?enemy.y:-1e8});
     for(const node of pickups)if(node.x>=cam.x-48&&node.x<=cam.x+VW/cam.z+48&&node.y>=cam.y-48&&node.y<=cam.y+VH/cam.z+48)draw.push({coopPickup:node,x:node.x,y:node.y});
+    storyClient.addActors(draw);
     if(battle&&battle.phase!=='idle')draw.push({coopBoundary:true,x:battle.arena.x,y:battle.arena.y,sy:-1e9});
   }
   function riderCanvas(sprite,frame,member){
@@ -351,7 +367,7 @@
       const sprite=SPR[node.sprite];if(sprite){
         let y=node.y;const prop=SPR[node.onTop];if(prop)y-=prop[3]-((ATLAS.flattop&&ATLAS.flattop[node.onTop])||2);
         const w=node.width||sprite[2],h=w*sprite[3]/sprite[2];top=y-h;
-        drawGameImage(ctx,sheetOf(sprite),sprite[0],sprite[1],sprite[2],sprite[3],Math.round(node.x-w/2),Math.round(y-h),w,h);
+        for(const offset of story&&node.item==='egg'?[-8,8]:[0])drawGameImage(ctx,sheetOf(sprite),sprite[0],sprite[1],sprite[2],sprite[3],Math.round(node.x+offset-w/2),Math.round(y-h),w,h);
       }
     }
     const nearest=gatheringAllowed()&&nearestPickup()?.id===node.id;
@@ -361,6 +377,7 @@
   }
   function drawActor(actor){
     if(!active)return false;
+    if(storyClient.drawActor(actor))return true;
     if(actor.coopBoundary){drawArena();return true;}
     if(actor.coopEnemy){drawEnemy(actor.coopEnemy);return true;}
     if(actor.coopPickup){drawPickup(actor.coopPickup);return true;}
@@ -370,7 +387,7 @@
       const dir=pose.dir==='n'?'u':pose.dir==='s'?'d':pose.dir;
       const attacking=pose.attackUntil>battle.now,down=pose.hp<=0;
       const action=down?'die':attacking?'atk':pose.moving?(pose.running?'run':'walk'):'idle';
-      const sprite=SPR['corin_sword_'+action+'_'+dir];
+      const sprite=SPR[(story&&!story.hasSword?'corin_bare_':'corin_sword_')+action+'_'+dir];
       if(sprite){const frame=down?sprite[4]-1:attacking?Math.min(sprite[4]-1,Math.floor((battle.now-pose.attackAt)/420*sprite[4])):Math.floor(pose.t*(pose.moving?9:6))%sprite[4];
         ctx.imageSmoothingEnabled=false;if(pose.hurtUntil>battle.now)ctx.globalAlpha*=.55;
         ctx.drawImage(riderCanvas(sprite,frame,member),Math.round(pose.x-sprite[2]/2),Math.round(pose.y-sprite[3]+corinFeetOffset()));}
@@ -390,14 +407,15 @@
   }
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne(){
     if(!active)return;
-    for(const member of renderPlayers)drawActor({coop:member,kind:'dragon'});
+    if(!story||story.hasDragon)for(const member of renderPlayers)drawActor({coop:member,kind:'dragon'});
     drawCombatEffects();
+    storyClient.drawWaypoint(renderPlayers.find(m=>m.id===room?.sessionId));
     ctx.save();ctx.font='6px sans-serif';ctx.textAlign='center';
     for(const member of renderPlayers){const pose=member.rider,width=Math.ceil(ctx.measureText(member.name).width)+6;
       ctx.fillStyle='#191614';ctx.fillRect(pose.x-width/2,pose.y+3,width,9);
       ctx.fillStyle=member.id===room?.sessionId?'#ffe29a':'#a1e8ef';ctx.fillText(member.name,pose.x,pose.y+10);
       if(member.rider.hp<=0){ctx.fillStyle='#ffc6a1';ctx.fillText('DOWN · revive nearby',pose.x,pose.y+20);}
-      const d=member.dragon;healthBar(d.x,d.y+5,22,d.hp,d.maxHp,member.id===room?.sessionId?'#e6b461':'#b892ec');
+      const d=member.dragon;if(!story||story.hasDragon)healthBar(d.x,d.y+5,22,d.hp,d.maxHp,member.id===room?.sessionId?'#e6b461':'#b892ec');
     }ctx.restore();
   }};
   const originalOpen=BOOT.close;BOOT.close=async function(...args){if(active||connecting)return;return originalOpen.apply(this,args);};

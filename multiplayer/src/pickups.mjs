@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {distance,clearLine,canStand} from './world.mjs';
+import {distance,clearLine,canStand,previewMap} from './world.mjs';
 export const pickupCatalog=JSON.parse(fs.readFileSync(new URL('./pickup-catalog.json',import.meta.url)));
 export const pickupNodes=new Map(pickupCatalog.nodes.map(node=>[node.id,Object.freeze(node)]));
 export const RESPAWN_MS=20*60*1000;
@@ -26,22 +26,22 @@ export function pickupAvailable(store,uid,node,now){
 export function nearbyPickups(store,member,now,radius=800){
   return pickupCatalog.nodes.filter(n=>distance(n,member.rider)<=radius&&pickupAvailable(store,member.uid,n,now));
 }
-function reachable(rider,node){
+function reachable(rider,node,grid){
   if(distance(rider,node)>36)return false;
-  if(node.kind==='ingredient')return clearLine(rider,node);
+  if(node.kind==='ingredient')return clearLine(rider,node,grid);
   // A story object can rest on a solid prop. Reach its near edge, never through
   // a wall from an unrelated room or across a distant part of the map.
-  if(canStand(node.x,node.y)&&clearLine(rider,node))return true;
+  if(canStand(node.x,node.y,grid)&&clearLine(rider,node,grid))return true;
   const len=Math.max(1,distance(rider,node)),edge={x:node.x+(rider.x-node.x)/len*16,y:node.y+(rider.y-node.y)/len*16};
-  return canStand(edge.x,edge.y)&&clearLine(rider,edge);
+  return canStand(edge.x,edge.y,grid)&&clearLine(rider,edge,grid);
 }
-export function collectPickup(store,member,id,now,battle){
+export function collectPickup(store,member,id,now,battle,grid=previewMap){
   if(!member.connected||member.rider.hp<=0||battle?.paused||['active','countdown'].includes(battle?.phase))return {ok:false,reason:'Gather when you are safely out of battle.'};
   if(typeof id!=='string'||id.length>100)return {ok:false,reason:'That pickup is unavailable.'};
   const node=pickupNodes.get(id);
   if(!node)return {ok:false,reason:'That pickup is unavailable.'};
   if(!pickupAvailable(store,member.uid,node,now))return {ok:false,reason:node.kind==='story'?'The party already has that item.':'You already gathered this plant.'};
-  if(!reachable(member.rider,node))return {ok:false,reason:'Move closer to pick that up.'};
+  if(!reachable(member.rider,node,grid))return {ok:false,reason:'Move closer to pick that up.'};
   if(node.kind==='story'){
     if(!grantStoryItem(store,node.item))return {ok:false,reason:'The party already has that item.'};
   }else{

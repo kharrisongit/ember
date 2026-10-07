@@ -49,11 +49,11 @@ export function acceptAction(b,members,m,input){
     for(const e of liveEnemies(b))if(inArc(p,e,40)&&clearLine(p,e))damage(b,e,2);
     effect(b,'sword',p,{dir:p.dir});
   }else if(input.kind==='claw'){
-    if(d.hp<=0||d.attackUntil>b.now||d.command)return false;
+    if(d.available===false||d.hp<=0||d.attackUntil>b.now||d.command)return false;
     const target=nearestEnemy(b,d,260);if(!target)return false;
     d.command={target:target.id,expires:b.now+5000};
   }else if(input.kind==='fire'){
-    if(d.hp<=0||d.attackUntil>b.now)return false;
+    if(d.available===false||d.hp<=0||d.attackUntil>b.now)return false;
     const target=nearestEnemy(b,d,300);if(!target)return false;
     d.command=null;d.dir=facing(target.x-d.x,target.y-d.y);d.attack='fire';d.attackAt=b.now;d.attackUntil=b.now+700;
     const len=distance(d,target)||1,vx=(target.x-d.x)/len,vy=(target.y-d.y)/len;
@@ -61,7 +61,7 @@ export function acceptAction(b,members,m,input){
     effect(b,'fire',d,{dir:d.dir});
   }else if(input.kind==='revive'){
     const targets=[...members.values()].filter(other=>other!==m&&other.connected&&other.rider.hp<=0&&distance(p,other.rider)<=48).map(other=>other.rider);
-    if(d.hp<=0&&distance(p,d)<=56)targets.push(d);
+    if(d.available!==false&&d.hp<=0&&distance(p,d)<=56)targets.push(d);
     if(!targets.length)return false;
     for(const target of targets){target.hp=Math.ceil(target.maxHp/2);target.invulnerableUntil=b.now+2000;target.hurtUntil=0;target.attackUntil=0;target.state='idle';effect(b,'revive',target);}
   }
@@ -69,7 +69,7 @@ export function acceptAction(b,members,m,input){
 }
 function stepDragon(b,m,dt){
   const d=m.dragon,command=d.command;
-  if(!command)return;
+  if(!command||d.available===false)return;
   const target=b.enemies.find(e=>e.id===command.target&&e.hp>0);
   if(!target||d.hp<=0||m.rider.hp<=0||command.expires<b.now||distance(d,m.rider)>300){d.command=null;return;}
   const dx=target.x-d.x,dy=target.y-d.y,len=Math.hypot(dx,dy);d.dir=facing(dx,dy);
@@ -93,7 +93,7 @@ function stepProjectiles(b,dt){
 function stepEnemy(b,e,members,dt){
   e.t+=dt;if(e.hp<=0)return;
   const targets=[...members.values()].filter(m=>m.connected&&m.rider.hp>0).flatMap(m=>[
-    {id:m.id+':rider',actor:m.rider},...(m.dragon.hp>0?[{id:m.id+':dragon',actor:m.dragon}]:[])
+    {id:m.id+':rider',actor:m.rider},...(m.dragon.available!==false&&m.dragon.hp>0?[{id:m.id+':dragon',actor:m.dragon}]:[])
   ]);
   if(e.state==='windup'){
     if(b.now>=e.strikesAt){
