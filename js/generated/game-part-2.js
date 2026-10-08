@@ -8539,10 +8539,12 @@ function foeDir(dir, flip) {
 function spawnFoes() {
   globalThis.window?.EmberArenaEntry?.reset();
   foes = []; turnHolder = null; turnT = 0; foeCool = 0;
+  const consecrated=typeof holy==='undefined'?[]:features.filter(a=>a.kind==='arena'&&holy.has(ringKey(a)));
   (MD.foes || []).forEach((f, idx) => {
     if(f.retiredEncounter)return;
     if(f.chestAmbush&&(!houseLootTaken.has(f.chestAmbush)||lootChestAnimations.has(f.chestAmbush)))return;
     const kind = FOE[f.k] ? f.k : "skeleton";
+    if(consecrated.length&&!BOSS_KIND.test(kind)&&consecrated.some(a=>Math.hypot(f.x-a.x,f.y-a.y)<=(a.r||6)+2))return;
     if(kind==="treasuryknight" && royalDefeated["treasuryCaptain"])return;
     if(kind==="royalguard" && (wonAll || royalDefeated[MAPID+":"+idx]))return;
     if (kind === "knight" && knightEncounterDone) return;
@@ -8999,10 +9001,12 @@ function useSalt() {
   if (bossRing(ring)) { toast("that one was never coming back"); return false; }
   if (arenaLock === ring && !arenaGoing) { toast("not while it is still fighting"); return false; }
   if (arenaFoesLeft(ring) && !devSafe) { toast("clear it first"); return false; }
+  if (holy.has(ringKey(ring))) { toast("This ground is already consecrated."); return false; }
   salts--;
   holy.add(ringKey(ring));
   plantRing(ring);            /* and the ground shows it */
   cooling.delete(ringKey(ring));
+  saveGame();
   toast("the ground is at peace. Nothing will rise here again.");
   return true;
 }
@@ -9740,10 +9744,16 @@ function settleGraves() {
 }
 function useMark() {
   if (marks <= 0 && !devSafe) { toast("no markers"); return false; }
+  if(dropped?.gold>0){
+    const recovered=dropped.gold;
+    marks=Math.max(0,marks-1);gold+=recovered;dropped=null;
+    toast('Recovered '+recovered+' lost gold.');saveGame();return true;
+  }
   if (graves) { toast("his stones are already in the ground"); return false; }
   if (!arenaLock && !devSafe && !devItemTest) { toast("there is no fight to wager on"); return false; }
   marks--;
   plantGraves();
+  saveGame();
   toast("three stones go in. Finish it and they pay.");
   return true;
 }
@@ -10825,6 +10835,7 @@ function standUp() {
   cam.y = P.y - VH / cam.z / 2;
   clampCam();
   toast("he gets up");
+  saveGame();
 }
 function blockReason(px, py) {
   if(px<0||py<0||px>=MW*TS||py>=MH*TS)return "edge";

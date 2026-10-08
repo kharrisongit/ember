@@ -4775,8 +4775,8 @@ const BAG = [
     icon: () => "inventory_bell" },
   { key: "mark", name: () => "Grave Marker" + (marks > 1 ? " x" + marks : ""),
     tell: () => (dropped && dropped.gold
-                 ? "There is " + dropped.gold + " gold lying where he fell."
-                 : "He has not dropped anything anywhere.")
+                 ? "Use to recover " + dropped.gold + " gold lost when he fell."
+                 : "No lost gold to recover. During a battle, plant it to earn extra gold when you win.")
               + " " + marks + " in the pack.",
     has: () => marks > 0,
     icon: () => "inventory_mark" },
@@ -5331,7 +5331,7 @@ function askStep(d) {
   updateTopicScrollHint();
 }
 const USE_SAID = {
-  mark:   ["it_mark",   "Corin planted the Grave Marker!"],
+  mark:   ["it_mark",   "Corin used a Grave Marker!"],
   salt:   ["it_salt",   "Corin consecrated the ground!"],
 };
 function askTake() {
@@ -5740,13 +5740,22 @@ const BOOT = {
   async close({newGame=false}={}) {
     if(window.EmberCloud?.accountBusy())return;
     if (!gameplayReady || !BOOT.menuOpen || BOOT.loading || BOOT.transitioning || BOOT.creating) return;
+    const noNewSlot=()=>{document.getElementById('bootHint').textContent='All save slots are full. Open Load Save → Manage saves to free a slot before starting a new game.';};
+    if(newGame&&!firstEmptySaveSlot()){noNewSlot();return;}
     if(newGame&&window.EmberPlayerIdentity){
       BOOT.creating=true;
       let profile;try{profile=await window.EmberPlayerIdentity.choose();}finally{BOOT.creating=false;}
       if(!profile)return;
+      // Cloud downloads may have filled a slot while the creator was open.
+      if(!firstEmptySaveSlot()){noNewSlot();return;}
       window.EmberPlayerIdentity.restore(profile);
     }
-    if(newGame&&typeof Crafting!=='undefined')Crafting.restore(null);
+    if(newGame){
+      const slot=firstEmptySaveSlot();if(!slot){noNewSlot();return;}
+      if(typeof Crafting!=='undefined')Crafting.restore(null);
+      // Claim the empty slot now, before the prologue or any story autosave.
+      if(!saveToSlot(slot,true)){document.getElementById('bootHint').textContent='Could not create a save on this device. Free some storage and try again.';return;}
+    }
     BOOT.transitioning=true;window.__titleTransition=true;
     gameplayReady=false;BOOT.waiting=false;clearPadInputs();
     document.body.classList.remove("boot-ready");
@@ -6177,7 +6186,7 @@ function migrateLegacySave(){
   }catch(e){}
 }
 migrateLegacySave();
-function firstEmptySaveSlot(){ for(let i=1;i<=SAVE_SLOT_COUNT;i++)if(!readSaveSlot(i))return i; return 0; }
+function firstEmptySaveSlot(){ for(let i=1;i<=SAVE_SLOT_COUNT;i++)if(!readSaveSlot(i)&&!window.EmberCloudState?.conflicts.has(i))return i; return 0; }
 function saveSummary(slot){
   const s=readSaveSlot(slot); if(!s)return "Slot "+slot+" — Empty";
   const map=(W.maps[s.map]&&W.maps[s.map].name)||String(s.map||"Unknown").replaceAll("_"," ");
@@ -6186,6 +6195,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+(window.EmberPlayerIdentity?.normalize(s.playerIdentity).name||"Corin")+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  playerHp:pHp, consecratedArenas:[...holy], droppedGold:dropped?.gold||0,
   playerIdentity:window.EmberPlayerIdentity?.capture(),
   crafting:typeof Crafting!=='undefined'?Crafting.capture():undefined,
   friendship:window.EmberFriendship?.capture(),
@@ -6251,6 +6261,13 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    // Restore permanent arena effects before spawning the destination's foes.
+    holy.clear();cooling.clear();
+    for(const key of Array.isArray(s.consecratedArenas)?s.consecratedArenas:[]){
+      const match=typeof key==='string'&&key.match(/^([^:]+):(\d+)$/);
+      if(match&&W.maps[match[1]])holy.add(key);
+    }
+    dropped=Number.isSafeInteger(s.droppedGold)&&s.droppedGold>0?{gold:s.droppedGold}:null;
     window.EmberPlayerIdentity?.restore(s.playerIdentity);
     if(typeof restoreQuestJournal==="function")restoreQuestJournal(s.questJournal);
     restoreInventoryPrompt(s);
@@ -6313,6 +6330,10 @@ function loadGame(slot=activeSaveSlot) {
     if(s.map&&W.maps[s.map])loadMap(s.map,true);P.x=s.x;P.y=s.y;recoverTempleArrival(!!W.maps[s.map]?.templeLegacy);
     if(MD.royal&&(retiredRoyalRoom||!canStand(P.x,P.y))){P.x=MD.spawn[0];P.y=MD.spawn[1];}
     if(typeof deadShown!=='undefined')deadShown=false;
+    // Old saves have no health field; defeated checkpoints also resume alive.
+    pHp=Number.isFinite(s.playerHp)&&s.playerHp>0?Math.max(1,Math.min(pMax,Math.round(s.playerHp))):pMax;
+    pInv=0;P.act=null;P.moving=false;standing=false;
+    safeSpot={map:MAPID,x:P.x,y:P.y};
     globalThis.window?.EmberSfx?.stopDeath();
     const deathScreen=globalThis.document?.getElementById?.('dead');if(deathScreen)deathScreen.style.display='none';
     globalThis.window?.EmberRiding?.restore(s);

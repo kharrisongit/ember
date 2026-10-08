@@ -21,6 +21,7 @@
   function withActor(id,fn){const previous=current;select(id);try{return fn();}finally{select(previous);}}
   function actor(id){if(id===current)stash();return party.get(id);}
   function held(){return !!(scene||sayNpc||revealing||ask||ovl||bagOpen||Crafting.active()||atlasOpen||fishing||doorMotion||fadeDir||bossScene||hatchCamera||ride||flightTravel||window.EmberConversationFlow?.active()||window.EmberArenaEntry?.holding()||window.EmberRiding?.holding());}
+  const sharedDialogue=()=>!!(scene||sayNpc||revealing);
   function inputFor(id){const a=party.get(id),input=a?.input;if(!input||performance.now()-input.at>400)return {x:0,y:0,run:false};return input;}
   function setInput(id,input){const a=party.get(id);if(a)a.input={x:Math.max(-1,Math.min(1,input.x||0)),y:Math.max(-1,Math.min(1,input.y||0)),run:!!input.run,at:performance.now()};}
   function applyInput(){
@@ -45,7 +46,7 @@
     a.controls??=new Set();
     // A release belongs to the rider who pressed, even after someone else opens a menu.
     if(!data.down){if(a.controls.delete(data.control))withActor(id,()=>nativeControllerButton(data.control,false));if(data.control==='btnB'){a.runHeld=false;a.blockHeld=false;}return true;}
-    if(a.controls.has(data.control)||!claim(id,kind)||a.vars.pHp<=0&&!deadShown)return false;
+    if(a.controls.has(data.control)||!claim(id,kind))return false;
     if((ovl||bagOpen||atlasOpen||ask)&&!['act','btnB'].includes(data.control))return false;
     const wasHeld=held();requester=id;
     try{
@@ -59,7 +60,7 @@
     const k=data.key.toLowerCase(),kind=k==='b'||k==='escape'?'back':['a',' ','enter'].includes(k)?'action':({arrowup:'up',arrowdown:'down',arrowleft:'left',arrowright:'right'})[k]||'key';
     a.keyControls??=new Set();
     if(!data.down){if(a.keyControls.delete(data.key))withActor(id,()=>window.LDRCoopEvents?.replayKey(data));if(k==='b'){a.runHeld=false;a.blockHeld=false;}return true;}
-    if(!claim(id,kind)||a.vars.pHp<=0&&!deadShown)return false;
+    if(!claim(id,kind))return false;
     const wasHeld=held();requester=id;
     try{
       if((scene||sayNpc||revealing)&&['a',' ','enter'].includes(k)){if(!data.repeat)actionButton();}
@@ -130,6 +131,10 @@
     withActor(other.uid,()=>{pHp=Math.ceil(pMax/2);pInv=3;P.act=null;showHeal('player',P.x,P.y-16);});notify(other.profile.name+' is back on their feet.');save();
   }
   function claim(id,kind){
+    // Falling blocks gameplay actions, but both riders still read and advance
+    // shared dialogue. Otherwise a scene can trap them outside revival range.
+    if(!party.has(id))return false;
+    if(actor(id).vars.pHp<=0&&!deadShown&&kind!=='save'&&!(kind==='action'&&sharedDialogue()))return false;
     if(held()&&id!==current){
       if(['action','back','up','down','left','right','ui'].includes(kind)&&!Crafting.active()&&!bagOpen&&!ovl)return true;
       notify((party.get(current)?.profile.name||'Your partner')+' is using the menu.');return false;
@@ -141,7 +146,7 @@
     if(kind==='release'){releaseControls(id);return true;}
     if(kind==='control')return control(id,data);
     if(kind==='key')return keyboard(id,data);
-    if(!claim(id,kind)||pHp<=0&&!deadShown&&kind!=='save')return false;
+    if(!claim(id,kind))return false;
     requester=id;
     try{
       if(kind==='action')actionButton();

@@ -13,6 +13,7 @@ const c=vm.createContext({console,performance,setTimeout,clearTimeout,setInterva
   document:dom.document({}),gameplayReady:true,gameplayStarted:false,
   clearPadInputs(){events.push('clear-input');},startMorning(){events.push('morning');},
   loadGame(){events.push('load');return true;},readSaveSlot:()=>({when:1}),SAVE_SLOT_COUNT:3,
+  firstEmptySaveSlot:()=>2,saveToSlot(){events.push('new-save');return true;},
   EmberPrologue:{play(){events.push('prologue');return new Promise(resolve=>finishPrologue=resolve);}},
   EmberTitleAudio:{prologue:()=>events.push('opening-music'),fadeOut:async()=>events.push('fade-out'),fadeIn:async()=>events.push('fade-in'),finish:()=>events.push('audio-finish')}
 });

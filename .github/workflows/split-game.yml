@@ -54,6 +54,10 @@ jobs:
           node-version: '22'
       - name: Check the scripts loaded by the game
         run: node tools/check-game-scripts.mjs
+      - name: Check save recovery and fallen co-op dialogue
+        run: |
+          node tests/save-recovery-regressions.mjs
+          node tests/coop-fallen-dialogue.mjs
       - name: Check authored town conversations and quest notifications
         run: |
           node tests/opening-castle-regressions.mjs
