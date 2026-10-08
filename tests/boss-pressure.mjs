@@ -5,6 +5,7 @@ const c=vm.createContext({TS:16,PC_W:12,PC_H:7,foesHeld:false,mounted:false,reve
  targetFor:f=>({x:c.P.x,y:c.P.y,d:Math.hypot(c.P.x-f.x,c.P.y-f.y),isPlayer:true}),
  hurtPlayer:n=>{c.playerHp-=n;c.landed++;},glassShieldDeflectFoe:()=>false,finishGlassShieldParry(){},hurtDragon(){},bolts:[],
  playerHp:6,landed:0,BOSS_KIND:/^(golem[1234]|devil|lich|ghost3?|knight|treasuryknight)$/});
+c.window=c;
 const run=s=>vm.runInContext(s,c);
 Object.assign(c,{dragon:{},arenaPass:false});
 run(fs.readFileSync(new URL('../js/combat-navigation.js',import.meta.url),'utf8'));

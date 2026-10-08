@@ -78,7 +78,10 @@
     }
     if(playing()){
       secondary.append(el('p','Switch accounts or choose a cloud version at the title screen. Exiting saves on this device and reloads the game.'));
-      secondary.append(button('Save & exit to title',()=>{if(saveToSlot(activeSaveSlot,true))location.reload();}));
+      secondary.append(button('Save & exit to title',()=>{
+        if(saveToSlot(activeSaveSlot))location.reload();
+        else{status='Save did not complete. Your game is still open. Close this dialog to check the save notice and try again.';render();}
+      }));
     }
     for(const [slot,remote] of store.conflicts){
       const box=el('section');box.append(el('h3','Slot '+slot+' has two versions'),el('p','This device: '+summary(localStorage.getItem(store.key(slot)))),el('p','Cloud: '+summary(remote?.deleted?null:remote?.saveJson)));

@@ -6141,6 +6141,7 @@ function stepDragon(dt) {
         if ((far.kind === "kdragon" || far.kind === "lich") && far.swordGuard > 0) {
           kingDeflect(far, dragon);
         } else {
+          if (!seenFoe[far.kind]) seenFoe[far.kind] = ++seenCount;
           far.hp -= CLAW.dmg;
           far.hurt = 0.25;
           if (far.kind === "kdragon" && ++dragonBossClaws % 2 === 0) {
@@ -8211,6 +8212,7 @@ function stepBreath(dt) {
       });
       if (f) {
         b.hit = 1;
+        if (!seenFoe[f.kind]) seenFoe[f.kind] = ++seenCount;
         const power = Frosthorn.power(b.el,DesertAdventure.firePower(b.el,DRAGON_BREATH[b.el]?.damage || DRAGON_BREATH.fire.damage));
         const fullHp = (FOE[f.kind] || {}).hp || f.hp;
         /* A fresh enemy always survives the first blast; later blasts or

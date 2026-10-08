@@ -59,6 +59,8 @@ that device only; the room bar and manual Save notice explain this.
 
 Autosaves occur at safe points, approximately every ten seconds. A requested save
 during a scene, encounter, doorway, flight or ferry ride waits for a safe point.
+Save & exit stays in the game if the save is queued or device storage fails;
+finish the encounter or resolve the storage problem and try again before exiting.
 The checkpoint stores shared campaign progress plus both riders' identities,
 positions, health, equipment and ingredient histories. Each account receives the
 same checkpoint; either can host **Resume** after the room ends. Mid-battle and

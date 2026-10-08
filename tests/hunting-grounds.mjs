@@ -18,6 +18,7 @@ const c=vm.createContext({console,TS:16,revealing:false,MAPID:'world',MD:{foes:[
  arenaFoesLeft(){throw Error('Hunts must not enter battle-wall logic');},
  ctx:{fillStyle:'',fillRect(){c.meatPixels=(c.meatPixels||0)+1}}
 });
+c.window=c;
 const run=s=>vm.runInContext(s,c);
 const section=(source,start,end)=>source.slice(source.indexOf(start),source.indexOf(end,source.indexOf(start)));
 run(read('js/editor-build-data.js'));run(read('js/hunting-grounds.js'));

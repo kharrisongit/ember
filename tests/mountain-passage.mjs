@@ -81,7 +81,7 @@ for(const [id,m]of maps)for(const h of m.templePlan.hazards){
 }
 // Save and restore new-room progress, the existing boss key and legacy positions.
 let saved=null;
-Object.assign(c,{pHp:6,pMax:6,pInv:0,standing:false,safeSpot:null,holy:new Set(),cooling:new Map(),dropped:null});
+Object.assign(c,{pHp:6,pMax:6,pInv:0,standing:false,safeSpot:null,holy:new Set(),cooling:new Map(),dropped:null,seenFoe:{},seenCount:0,BESTIARY:[]});
 Object.assign(c,{dragonIntroDone:true,dragonIntroArmed:false,dragonBanterSeen:new Set(["enemy:ent"]),resetDragonBanter:seen=>{c.dragonBanterSeen=new Set(seen);},quest:1,smithUpgrade:false,glassShield:false,wonAll:0,cinderSeal:false,trialSealPlaced:false,trialWins:0,thornwellMet:false,brambleQuest:0,
  gold:100,potions:1,treasuryTaken:new Set(),dragon:{hp:5,maxHp:5},elixirs:0,bombs:0,dust:0,bells:0,marks:0,breaths:0,stones:0,salts:0,boarMeat:0,hareMeat:2,deerMeat:3,foxMeat:4,birdMeat:5,dragonFish:0,fishingPole:false,trial:null,activeSaveSlot:1,
  migrateLegacySave(){},readSaveSlot:()=>saved,syncDragonVitality(){},hasSword:()=>true,

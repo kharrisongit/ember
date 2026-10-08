@@ -41,6 +41,7 @@ const c=vm.createContext({performance,startMorning(){},inventoryPromptOpens:10,d
   openAtlas:()=>{c.atlasOpen=true;},closeAtlas:()=>{c.atlasOpen=false;},
   trigHold(){},hasBag:()=>true,hasDragon:()=>true,refreshOvl:()=>refreshes++,
   MENUS:{atkm:{},airm:{},itemm:{},sound:{},loadSlots:{}},
+  firstEmptySaveSlot:()=>3,saveToSlot:()=>true,
   migrateLegacySave(){},readSaveSlot:slot=>slot<3?{when:slot*100}:null,wireBagDrag(){},SAVE_SLOT_COUNT:3,
   saveSummary:slot=>'Slot '+slot,loadGame:slot=>{loadedSlot=slot;return loadWorks;}
 });

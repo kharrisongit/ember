@@ -101,11 +101,12 @@
     }catch(error){notice('Could not save co-op: '+error.message);return false;}
   }
   function checkpoint(force=false){
-    if(!hosting){if(force)room?.send('command',{kind:'save',seq:++commandSeq});return;}
-    pendingSave=true;const data=LDRCampaign.checkpoint();if(!data){if(force)notice('Save queued until this scene or battle finishes.');return;}
-    const saved={version:1,id:campaignId,when:Date.now(),...data};if(!persist(saved))return;
+    if(!hosting){if(force)room?.send('command',{kind:'save',seq:++commandSeq});return false;}
+    pendingSave=true;const data=LDRCampaign.checkpoint();if(!data){if(force)notice('Save queued until this scene or battle finishes.');return false;}
+    const saved={version:1,id:campaignId,when:Date.now(),...data};if(!persist(saved))return false;
     room?.send('checkpoint',saved);pendingSave=false;saveAt=performance.now();
     if(force)notice(cloudSlot?'Co-op saved · cloud backup queued in slot '+cloudSlot:'Co-op saved on this device · all cloud slots are occupied.');
+    return true;
   }
   async function connect(isHost){
     if(connecting||!gameplayReady||gameplayStarted)return;const roomCode=code.value.replace(/\s/g,'').toUpperCase();

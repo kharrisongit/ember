@@ -4468,6 +4468,7 @@ function drawBossBlack() {
 }
 
 function stepPlayer(dt) {
+  if(pHp<=0){P.moving=false;return;}
   if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.holdPlayer(dt))return;
   if(atlasOpen)return;
   if (bossScene) return;
@@ -6195,6 +6196,7 @@ function saveSummary(slot){
   return "Slot "+slot+" — "+(window.EmberPlayerIdentity?.normalize(s.playerIdentity).name||"Corin")+" — "+map+" — "+stamp;
 }
 function captureSave(){return {
+  bestiary:Object.keys(seenFoe).sort((a,b)=>seenFoe[a]-seenFoe[b]),
   playerHp:pHp, consecratedArenas:[...holy], droppedGold:dropped?.gold||0,
   playerIdentity:window.EmberPlayerIdentity?.capture(),
   crafting:typeof Crafting!=='undefined'?Crafting.capture():undefined,
@@ -6261,6 +6263,10 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    // Discoveries belong to this adventure, including their encounter order.
+    for(const kind of Object.keys(seenFoe))delete seenFoe[kind];seenCount=0;
+    for(const kind of Array.isArray(s.bestiary)?s.bestiary:[])
+      if(BESTIARY.some(entry=>entry.k===kind)&&!seenFoe[kind])seenFoe[kind]=++seenCount;
     // Restore permanent arena effects before spawning the destination's foes.
     holy.clear();cooling.clear();
     for(const key of Array.isArray(s.consecratedArenas)?s.consecratedArenas:[]){
@@ -6680,6 +6686,7 @@ function clawNow() {
       kingDeflect(f, dragon);
       continue;
     }
+    if (!seenFoe[f.kind]) seenFoe[f.kind] = ++seenCount;
     f.hp -= CLAW.dmg; f.hurt = 0.25;
     if (f.hp <= 0) { f.st = "dead"; f.t = 0; markBossGone(f); }
   }

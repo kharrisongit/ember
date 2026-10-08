@@ -79,15 +79,19 @@
     votes.clear();voteKey='';return false;
   }
   function controllerState(id){return withActor(id,()=>({hp:pHp,max:pMax,kit:corinKit(),dragon:hasDragon()?{hp:dragon.hp,max:dragon.maxHp}:null,dragonUnlocked:window.EmberRiding?.unlocked()??true,bag:hasBag(),map:worldMapUnlocked(),playing:gameplayStarted&&mode==='play'}));}
+  function restActor(){
+    P.moving=false;
+    P.act=pHp>0?null:{kind:'die',t:ACT.die.frames-.01,done:1,dir:P.dir,flip:P.flip,dir8:playerFacing4()};
+  }
   function placeNear(id,x=P.x,y=P.y){withActor(id,()=>{
     for(const radius of [24,40,56,8,0])for(let angle=0;angle<8;angle++){
       const nx=x+Math.cos(angle*Math.PI/4)*radius,ny=y+Math.sin(angle*Math.PI/4)*radius;
       const inside=!arenaLock||!arenaT||(arenaLock.templeRoom?expandedTempleArenaContains(arenaLock,nx,ny,10):Math.hypot(nx-(arenaLock.x*TS+8),ny-(arenaLock.y*TS+8))<(arenaLock.r-1)*TS);
       if(canStand(nx,ny)&&inside){
-        P.x=nx;P.y=ny;P.act=null;P.moving=false;dragon.x=nx+24;dragon.y=ny-28;dragon.placed=MAPID;hunt=null;breath=null;claw=null;return;
+        P.x=nx;P.y=ny;restActor();dragon.x=nx+24;dragon.y=ny-28;dragon.placed=MAPID;hunt=null;breath=null;claw=null;return;
       }
     }
-    P.x=x;P.y=y;P.act=null;dragon.x=x+20;dragon.y=y-20;dragon.placed=MAPID;
+    P.x=x;P.y=y;restActor();dragon.x=x+20;dragon.y=y-20;dragon.placed=MAPID;
   });}
   function syncParty(players){
     members=players;
@@ -256,7 +260,8 @@
     finally{ctx=backup.ctx;VW=backup.VW;VH=backup.VH;DPR=backup.DPR;Object.assign(cam,backup.cam);cameraLogical=backup.cameraLogical;cameraPresentation=backup.cameraPresentation;viewer=backup.viewer;rendering=remoteRender=false;}
   }
   saveToSlot=function(...args){
-    if(active){save();return true;}
+    // A queued or failed checkpoint must not authorize Save & exit to reload.
+    if(active)return save(!args[1])===true;
     if(originalRead(args[0])?.coop){const free=[1,2,3].find(n=>!originalRead(n));if(!free){toast('This slot contains a co-op adventure. Choose another slot for your solo game.');return false;}activeSaveSlot=free;args[0]=free;}
     return originalSave(...args);
   };
@@ -274,7 +279,7 @@
     syncParty(players);
     if(previous?.players)for(const [id,saved]of Object.entries(previous.players)){
       if(!party.has(id))party.set(id,{...captureActor(),profile:saved.profile});
-      Crafting.coopRestore(id,saved.crafting);withActor(id,()=>{Object.assign(P,saved.P);Object.assign(dragon,saved.dragon);pHp=Number.isFinite(saved.hp)?saved.hp:pMax;P.act=null;Object.assign(worn,saved.worn);mounted=!!saved.mounted;});
+      Crafting.coopRestore(id,saved.crafting);withActor(id,()=>{Object.assign(P,saved.P);Object.assign(dragon,saved.dragon);pHp=Number.isFinite(saved.hp)?Math.max(0,Math.min(pMax,saved.hp)):pMax;restActor();Object.assign(worn,saved.worn);mounted=!!saved.mounted&&pHp>0;});
     }
     lastMap=MAPID;gameplayStarted=true;BOOT.waiting=false;BOOT.menuOpen=false;document.getElementById('boot').style.display='none';document.body.classList.remove('boot-ready','boot-menu-open');document.body.classList.add('game-started');
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
