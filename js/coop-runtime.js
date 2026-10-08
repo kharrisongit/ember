@@ -138,6 +138,8 @@
     // Falling blocks gameplay actions, but both riders still read and advance
     // shared dialogue. Otherwise a scene can trap them outside revival range.
     if(!party.has(id))return false;
+    // Account management pauses gameplay for both riders; saving still works.
+    if(window.EmberCloud?.isOpen()&&kind!=='save')return false;
     if(actor(id).vars.pHp<=0&&!deadShown&&kind!=='save'&&!(kind==='action'&&sharedDialogue()))return false;
     if(held()&&id!==current){
       if(['action','back','up','down','left','right','ui'].includes(kind)&&!Crafting.active()&&!bagOpen&&!ovl)return true;
@@ -171,6 +173,7 @@
     if(!active)return originalFrame(ms);
     viewer=local;const dt=Math.min(.05,(ms-last)/1000||0);
     if(paused){for(const m of members)releaseControls(m.uid);last=ms;originalDraw(tAcc,0);return;}
+    if(window.EmberCloud?.isOpen()){for(const m of members)releaseControls(m.uid);last=ms;return;}
     if(!held()){
       const moving=members.find(m=>{const input=inputFor(m.uid);return input.x||input.y;});
       if(moving)select(moving.uid);

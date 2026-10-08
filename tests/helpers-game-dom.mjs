@@ -27,7 +27,8 @@ export function gameDom(){
     getContext(){return drawing;}getBoundingClientRect(){return {width:800,height:600,left:0,top:0};}
     // Portrait customization encodes its canvas after asynchronous image load.
     toDataURL(){return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';}
-    pause(){}play(){return Promise.resolve();}load(){}scrollIntoView(){}focus(){}showModal(){this.open=true;}close(){this.open=false;}
+    pause(){}play(){return Promise.resolve();}load(){}scrollIntoView(){}focus(){}showModal(){this.open=true;}
+    close(){if(!this.open)return;this.open=false;for(const fn of this.listeners.get('close')||[])fn({target:this,type:'close'});}
   }
   const body=new Element('body');
   const element=id=>{if(!nodes.has(id)){const n=new Element();n.id=id;body.appendChild(n);}return nodes.get(id);};

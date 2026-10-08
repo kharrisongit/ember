@@ -60,6 +60,8 @@ jobs:
           node tests/coop-fallen-dialogue.mjs
           node tests/coop-recovery-regressions.mjs
           node tests/bestiary-progress.mjs
+          node tests/boss-save-resurrection.mjs
+          node tests/coop-cloud-pause.mjs
       - name: Check authored town conversations and quest notifications
         run: |
           node tests/opening-castle-regressions.mjs

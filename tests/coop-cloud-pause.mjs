@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+import {gameDom} from './helpers-game-dom.mjs';
+const dom=gameDom();
+const {run}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error},{furniture:false,document:dom.document});
+const json=s=>JSON.parse(run('JSON.stringify('+s+')'));
+run(`ctx.getTransform=()=>({a:1,b:0,c:0,d:1,e:0,f:0});
+mode='play';quest=Q.DONE;gameplayStarted=true;loadMap('house22');[P.x,P.y]=MD.spawn;
+window.LDRCoopRender={enable(){}};window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEquipmentTutorial=undefined;
+var players=[{uid:'host',profile:{name:'Host'}},{uid:'guest',profile:{name:'Guest'}}],saves=0;`);
+await run(`LDRCampaign.start({uid:'host',players,onNotice:()=>{},onSave:()=>{saves++;return true;}})`);
+run(`scene=null;sayNpc=null;revealing=false;ovl=null;ask=null;arenaLock=null;foes=[];fadeDir=0;doorMotion=null;bossScene=null;deadShown=false;arriveT=0;
+for(const id of ['host','guest'])LDRCampaign.withActor(id,()=>{P.x=128;P.y=192;P.act=null;pHp=6;pInv=2;breathCooldown.fire=5;});
+LDRCampaign.command('guest','control',{control:'btnB',down:true});EmberCloud.manage();`);
+const state=()=>json(`players.map(m=>{const a=LDRCampaign.actor(m.uid);return {x:a.P.x,y:a.P.y,hp:a.vars.pHp,pInv:a.vars.pInv,fire:a.cooldown.fire,act:a.P.act};})`);
+const before=state();
+run(`for(var i=0;i<10;i++){for(const m of players)LDRCampaign.setInput(m.uid,{x:1,y:0});LDRCampaign.mainFrame(last+50,false);}`);
+assert.deepEqual(state(),before,'Both riders, attacks and timers freeze behind cloud management');
+assert.equal(run(`LDRCampaign.actor('guest').vars.running`),false,'Opening the dialog releases held run controls');
+for(const id of ['host','guest'])for(const kind of ['action','back','bag','dragon','orders','fire','claw','revive','ui'])
+ assert.equal(run(`LDRCampaign.command('${id}','${kind}')`),false,'Gameplay commands cannot leak through the dialog');
+assert(run(`LDRCampaign.command('host','save')`));assert.equal(run('saves'),1,'Saving remains available while paused');
+dom.element('cloudSaveDialog').close();
+run(`for(const m of players)LDRCampaign.setInput(m.uid,{x:1,y:0});LDRCampaign.mainFrame(last+50,false);`);
+for(const a of state())assert(a.x>128,'Both riders resume movement after closing the dialog');
+console.log('PASS: actual cloud dialog pauses both riders and commands, preserves save access, releases holds and resumes normally.');

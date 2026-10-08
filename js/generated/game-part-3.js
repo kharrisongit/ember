@@ -4762,7 +4762,7 @@ const BAG = [
     has: () => breaths > 0,
     icon: () => (SPR.it_saint ? "it_saint" : null) },
   { key: "stone", name: () => "Resurrection Stone" + (stones > 1 ? " x" + stones : ""),
-    tell: "The nearest of the dead gets up on his side, half as strong as it "
+    tell: "The nearest fallen ordinary enemy gets up on his side, half as strong as it "
         + "was, until the fighting stops.",
     has: () => stones > 0,
     icon: () => (SPR.it_res ? "it_res" : null) },
@@ -6213,7 +6213,8 @@ function captureSave(){return {
   quest, bagOwned:hasBag(), questJournal:typeof captureQuestJournal==="function"?captureQuestJournal():null,discussedTopics:[...discussedTopics], routeMusicIntroPlayed:typeof routeMusicIntroPlayed!=='undefined'&&routeMusicIntroPlayed, dragonJourneyEnded:typeof dragonJourneyEnded!=='undefined'&&dragonJourneyEnded, dragonIntroDone, dragonIntroArmed, dragonBanterSeen:[...dragonBanterSeen], smithUpgrade, glassShield, wonAll, cinderSeal, trialSealPlaced, trialWins, thornwellMet, brambleQuest, thornwellRoyal:typeof captureThornwellRoyal==="function"?captureThornwellRoyal():null, knightEncounterDone, royalDefeated, gold, potions, houseLootTaken:[...houseLootTaken], treasuryTaken:[...treasuryTaken],
   fatherCompass:{owned:templeCompass.owned,awakened:templeCompass.awakened,meatGiven:templeCompass.meatGiven,mapGiven:templeCompass.mapGiven,morningSpoken:templeCompass.morningSpoken,morningMet:templeCompass.morningMet},
   charm:{...charm}, worn:{...worn},
-  templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:Object.fromEntries(Object.entries(bossGone).filter(([id])=>/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))),
+  // Keep the legacy field name, but preserve permanent defeats on every map.
+  templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:{...bossGone},
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
   map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
@@ -6315,7 +6316,7 @@ function loadGame(slot=activeSaveSlot) {
     bells=Math.max(0,s.bells|0);marks=Math.max(0,s.marks|0);breaths=Math.max(0,s.breaths|0);
     stones=Math.max(0,s.stones|0);salts=Math.max(0,s.salts|0);
     if(typeof Crafting!=='undefined')Crafting.restore(s.crafting);
-    for(const id of Object.keys(bossGone))if(/^(tp1_|tp1:|ds_|ds1:|sn_|sn1:|passage(?:[23])?[:_]|pyramid_)/.test(id))delete bossGone[id];
+    for(const id of Object.keys(bossGone))delete bossGone[id];
     Object.assign(bossGone,s.templeDefeated||{});
     if(typeof BossRewardChests!=='undefined')BossRewardChests.restore(s.bossRewardChests);
     for(const m of Object.values(W.maps))if(m.templeExpanded){

@@ -119,7 +119,7 @@ function atlasQuestOptions(){
  if(dragonLearned('lantern')&&!charm.lamp)add('gift:lamp','Torvald’s lantern for the mines','Hollybeck','Find Sverre in Hollybeck and ask for Torvald’s Hollybeck Lantern. Carry it to see in the dark mine galleries.');
  if(dragonLearned('graveyard')&&!charm.wake)add('graveyard','The restless graveyard','Hollybeck Graveyard','Follow the trail northwest of Hollybeck into the graveyard. Defeat every wave of spirits to receive the Book of the Dead; the first wave is only the beginning.');
  if(DragonChapels.found()&&!DragonChapels.capture())add('sky-blessing','A blessing for the road','Desert Church','Speak with Brother Cael inside the secret desert church and stay for his blessing. It increases Aurelius’s flying sprint speed.');
- if(IceMoth.defeatedAlready()&&!IceMoth.owned())add('soulwing','Collect the Soulwing','Veilwing','Open the chest where Veilwing fell to recover the Soulwing. You can then continue north to greet the stranded travelers.');
+ if(IceMoth.defeatedAlready()&&!atlasQuestComplete('soulwing'))add('soulwing','Collect the Soulwing','Veilwing','Open the chest where Veilwing fell to recover the Soulwing. You can then continue north to greet the stranded travelers.');
  if(dragonLearned('mines')&&!charm.flame)add('deep-mines',charm.lamp?'Return to the deep mines':'Find light for the deep mines',charm.lamp||!dragonLearned('lantern')?'Forgewick':'Hollybeck',!charm.lamp&&!dragonLearned('lantern')?'Ask Toft, the former miner at Forgewick’s market, how to light the deep galleries.':charm.lamp?'Return to the mine in Forgewick. Descend through the galleries and clear every creature from the deepest chamber to recover its treasure.':'The deepest mine galleries are too dark to explore. Continue the main journey through Sandspire and Coralmere to Hollybeck, ask Sverre for Torvald’s lantern, then return to Forgewick’s mine.');
  for(const [town,t]of Object.entries(ATLAS_TEMPLE_JOURNEYS))
   if(dragonLearned('temple:'+town)&&!breathHas[t.element]&&!seen.has('temple:'+town)){seen.add('temple:'+town);out.push(atlasTempleObjective(town));}
@@ -274,7 +274,7 @@ function atlasQuestComplete(id){
  if(id==='highland-passage')return FrostcragJourney.arrived();
  if(id==='winter-rescue')return typeof HollybeckRescue!=='undefined'&&HollybeckRescue.rescued();
  if(id==='frosthorn')return Frosthorn.defeatedAlready()&&Frosthorn.owned();
- if(id==='soulwing')return IceMoth.owned();
+ if(id==='soulwing')return houseLootTaken.has(IceMoth.rewardId);
  if(id==='sky-blessing')return DragonChapels.capture();
  if(id==='deep-mines')return !!charm.flame;
  if(id==='desert-church')return DragonChapels.known()&&DragonChapels.found();
@@ -308,7 +308,7 @@ function atlasQuestStages(q){
  if(q?.id==='highland-passage'||q?.questId==='highland-passage')return [['Claim the snow temple Heartstone',!!breathHas.shadow],['Cross the mountain into Ashcrag',FrostcragJourney.arrived()]];
  if(q?.id==='winter-rescue')return [['Learn about the missing party',HollybeckRescue.known()],[IceMoth.defeatedAlready()||seenFoe.icemoth?'Defeat Veilwing':'Make the route home safe',IceMoth.defeatedAlready()],['Tell the travelers the trail is safe',HollybeckRescue.rescued()]];
  if(q?.id==='frosthorn')return [['Hear Sverre’s warning',HollybeckRescue.frostKnown()],['Defeat Hroth',Frosthorn.defeatedAlready()],['Open the Frostheart chest',Frosthorn.owned()]];
- if(q?.id==='soulwing')return [['Defeat Veilwing',IceMoth.defeatedAlready()],['Open the Soulwing chest',IceMoth.owned()]];
+ if(q?.id==='soulwing')return [['Defeat Veilwing',IceMoth.defeatedAlready()],['Open the Soulwing chest',atlasQuestComplete('soulwing')]];
  if(q?.id==='sky-blessing')return [['Find the desert church',DragonChapels.found()],['Receive Brother Cael’s blessing',DragonChapels.capture()]];
  if(q?.id==='deep-mines')return [['Obtain Torvald’s lantern from Sverre',!!charm.lamp],['Clear the deepest mine chamber',!!charm.flame]];
  if(q?.id==='graveyard')return [['Learn about the restless spirits',dragonLearned('graveyard')],['Defeat every ghost wave and receive the Book of the Dead',!!charm.wake]];

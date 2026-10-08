@@ -8961,10 +8961,12 @@ function useSaint() {
 }
 function useStone() {
   if (stones <= 0 && !devSafe) { toast("no stones"); return false; }
-  let best = null, bd = 260;
+  let best = null, bd = 260, nearbyBoss = false;
   for (const f of foes) {
     if (f.st !== "dead" || f.ally || f.raised) continue;
     const d = Math.hypot(f.x - P.x, f.y - P.y);
+    // Scripted boss attacks and story transitions cannot run as allied AI.
+    if (BOSS_KIND.test(f.kind) || f.kind === 'kdragon') { if (d < 260) nearbyBoss = true; continue; }
     if (d < bd) { bd = d; best = f; }
   }
   if (!best && devItemTest) {
@@ -8974,6 +8976,7 @@ function useStone() {
     if(!nm){toast('No death animation available here.');return false;}
     stonePreview={kind,x:P.x+28,y:P.y,st:'idle',t:0,hp:1,raised:1,ally:1,emerge:1,reverseRise:1.2,reverseRiseMax:1.2,nm};return true;
   }
+  if (!best && nearbyBoss) { toast("Bosses cannot be resurrected."); return false; }
   if (!best && !devSafe) { toast("nothing dead near enough"); return false; }
   if (!best) { stones--; toast("nothing dead near enough -- spent anyway"); return true; }
   stones--;
