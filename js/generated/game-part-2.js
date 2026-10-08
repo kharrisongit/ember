@@ -5037,6 +5037,7 @@ addEventListener("keydown", e => {
   }
   if(fishing&&fishing.phase!=='prompt')return;
   if((bagOpen||ovl)&&['a',' ','enter','b','escape','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){
+    if(k!=='escape'&&e.target?.closest?.('input,select,textarea'))return;
     if([' ','enter'].includes(k)&&e.target?.closest?.('button'))return;
     e.preventDefault();
     if(k.startsWith('arrow'))controllerDirection(k==='arrowleft'?-1:k==='arrowright'?1:0,k==='arrowup'?-1:k==='arrowdown'?1:0);
