@@ -240,7 +240,11 @@ const Crafting=(()=>{
     if(!coopStates.has(id))coopStates.set(id,{...fresh(),kit:state.kit,learned:[...state.learned],starter:state.starter});
     coopOwner=id;state=coopStates.get(id);
   }
-  function coopRestore(id,saved){const owner=coopOwner,previous=state;restore(saved);coopStates.set(id,state);state=previous;coopOwner=owner;}
+  function coopRestore(id,saved){
+    const owner=coopOwner,previous=state;restore(saved);coopStates.set(id,state);
+    if(owner!==id)state=previous;
+    coopOwner=owner;
+  }
   return {coopSelect,coopRestore,materials,recipes,teachers,recipe,count,known,maxBatch,learn,topics,open,close,cancel,start,press,release,tick,capture,restore,useFood,buy,availableStock,defeated,chest,prepareWorld,gather,addDraw,draw,skip,
     giveKit:()=>{state.kit=true;for(const other of coopStates.values())other.kit=true;learn('nan',true);},hasKit:()=>state.kit,active:()=>opened,current:()=>session,slide,finish,merchant:()=>vendor,help:()=>{const fresh=!state.seenHelp;state.seenHelp=true;return fresh;},inspect:()=>({nodes,ingredients:state.ingredients,learned:state.learned,pending:state.pending})};
 })();

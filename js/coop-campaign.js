@@ -56,7 +56,8 @@
   function keyboard(event){
     if(LDRCoopUI.dispatching||!active||event.ctrlKey||event.metaKey||event.altKey||event.target.closest?.('input,select,textarea')||event.key==='Tab')return;
     const key=event.key.toLowerCase(),down=event.type==='keydown';
-    if(event.target.closest?.('#campaignBar button,#campaignMenus button')&&['enter',' '].includes(key))return;
+    const nativeButton=event.target.closest?.('#campaignBar button,#campaignMenus button')||event.target.closest?.('button')?.closest?.('#merchantShop');
+    if(nativeButton&&['enter',' '].includes(key))return;
     if(!['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','b',' ','enter','escape','r'].includes(key))return;
     event.preventDefault();event.stopImmediatePropagation();
     if(down)pressed.add(key);else pressed.delete(key);

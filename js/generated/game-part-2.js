@@ -5015,6 +5015,8 @@ addEventListener("keydown", e => {
   if(globalThis.window?.EmberRiding?.key(e))return;
   if(globalThis.window?.EmberConversationFlow?.key(e))return;
   if(typeof ask!=='undefined'&&(ask?.shop||ask?.npcConversation||ask?.dragonConversation||ask?.conversationPrompt)&&['a',' ','enter','b','escape','arrowleft','arrowright'].includes(k)){
+    // Tab-focused shop buttons own their native Enter/Space activation.
+    if(ask.shop&&[' ','enter'].includes(k)&&e.target?.closest?.('button')?.closest?.('#merchantShop'))return;
     e.preventDefault();if(e.repeat)return;
     if(k==='b'||k==='escape')askBack();
     else if(k==='arrowleft'||k==='arrowright'){if(ask.quantity)changePurchaseQuantity(k==='arrowright'?1:-1);else askStep(k==='arrowright'?1:-1);}
@@ -5052,6 +5054,12 @@ function clearPadInputs() {
   padHeld.clear();
   document.querySelectorAll("#dpad .hit").forEach(el => el.classList.remove("hit"));
   padAim();
+}
+function releaseHeldInputs() {
+  clearPadInputs();
+  for (const key in keys) keys[key] = 0;
+  running = false;
+  glassShieldHeld = false;
 }
 
 function padInputIds(e) {
@@ -5160,10 +5168,10 @@ function padBind() {
   } else {
     window.addEventListener("mouseup", releasePadInputs);
   }
-  window.addEventListener("blur", clearPadInputs);
-  window.addEventListener("pagehide", clearPadInputs);
+  window.addEventListener("blur", releaseHeldInputs);
+  window.addEventListener("pagehide", releaseHeldInputs);
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) clearPadInputs();
+    if (document.hidden) releaseHeldInputs();
   });
 }
 
@@ -11718,7 +11726,7 @@ function waterInReach(){
 }
 function fishingSafe(){
   return mode==='play'&&!sceneHold()&&!doorMotion&&!fadeDir&&!ride&&!mounted&&!arenaLock&&!trial&&!deadShown&&!P.act&&
-    !foes.some(f=>f.hp>0&&Math.hypot(f.x-P.x,f.y-P.y)<180);
+    !foes.some(f=>!f.ally&&!f.storyPassive&&f.st!=='dead'&&f.hp>0&&Math.hypot(f.x-P.x,f.y-P.y)<180);
 }
 function endFishing(){
   closeFishingView();

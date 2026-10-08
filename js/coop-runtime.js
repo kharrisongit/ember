@@ -277,12 +277,15 @@
   }
   async function start({uid,players,checkpoint:previous,onNotice,onSave}){
     active=true;local=viewer=uid;notify=onNotice;save=onSave;members=players;party=new Map();current=uid;
-    if(previous?.save){loadingSave=previous.save;try{if(!loadGame(1))throw Error('The saved adventure could not be loaded.');}finally{loadingSave=null;}}
+    // Crafting belongs to each rider and is restored below. Loading its world
+    // snapshot too would refund shared cooking ingredients a second time.
+    if(previous?.save){loadingSave={...previous.save,crafting:null};try{if(!loadGame(1))throw Error('The saved adventure could not be loaded.');}finally{loadingSave=null;}}
     party.set(uid,{...captureActor(),profile:players.find(m=>m.uid===uid)?.profile});Crafting.coopRestore(uid,previous?.players?.[uid]?.crafting||previous?.save?.crafting||Crafting.capture());Crafting.coopSelect(uid);
     syncParty(players);
     if(previous?.players)for(const [id,saved]of Object.entries(previous.players)){
       if(!party.has(id))party.set(id,{...captureActor(),profile:saved.profile});
-      Crafting.coopRestore(id,saved.crafting);withActor(id,()=>{Object.assign(P,saved.P);Object.assign(dragon,saved.dragon);pHp=Number.isFinite(saved.hp)?Math.max(0,Math.min(pMax,saved.hp)):pMax;restActor();Object.assign(worn,saved.worn);mounted=!!saved.mounted&&pHp>0;});
+      if(id!==uid)Crafting.coopRestore(id,saved.crafting);
+      withActor(id,()=>{Object.assign(P,saved.P);Object.assign(dragon,saved.dragon);pHp=Number.isFinite(saved.hp)?Math.max(0,Math.min(pMax,saved.hp)):pMax;restActor();Object.assign(worn,saved.worn);mounted=!!saved.mounted&&pHp>0;});
     }
     lastMap=MAPID;gameplayStarted=true;BOOT.waiting=false;BOOT.menuOpen=false;document.getElementById('boot').style.display='none';document.body.classList.remove('boot-ready','boot-menu-open');document.body.classList.add('game-started');
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
