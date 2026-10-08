@@ -7,3 +7,8 @@
 #campaignMenus.campaignDialogue section+section{border:0;padding-top:0;margin-top:0}
 #campaignMenus.campaignDialogue section:first-child p{color:#c6a4dd;font-weight:bold}
 .campaign-active #btnDev{visibility:hidden}
+#campaignMenus.campaignFishing{top:auto;max-height:30%;bottom:calc(var(--deck) + 8px)}
+.campaign-guest #stage>#sound{visibility:visible!important;z-index:32000}
+#campaignExit{box-sizing:border-box;width:min(460px,90vw);background:#201c27;color:#f8ecd3;border:1px solid #9c77b3;border-radius:12px;padding:22px;font:15px/1.5 system-ui}
+#campaignExit::backdrop{background:#08070be0}
+#campaignExit button{margin:6px 6px 0 0;padding:10px;border:1px solid #897094;border-radius:7px;background:#3c304b;color:#fff0d7;font:inherit}

@@ -2,7 +2,7 @@
  * bounded presentation packets and guest controls; guests never submit game state. */
 import {Room,ServerError} from '@colyseus/core';
 import {randomInt} from 'node:crypto';
-export const CAMPAIGN_PROTOCOL=6;
+export const CAMPAIGN_PROTOCOL=7;
 const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const size=value=>Buffer.byteLength(JSON.stringify(value));
 const profile=p=>({name:String(p?.name||'Dragonrider').replace(/[<>\x00-\x1f]/g,'').slice(0,16),hair:['dark','brown','copper','blond','silver'].includes(p?.hair)?p.hair:'brown',eyes:['brown','blue','green','gray','hazel'].includes(p?.eyes)?p.eyes:'brown'});

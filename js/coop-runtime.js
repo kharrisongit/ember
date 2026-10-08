@@ -9,6 +9,9 @@
   const originalIdentityText=EmberPlayerIdentity.text;
   EmberPlayerIdentity.text=function(value){if(!active)return originalIdentityText(value);const name=party.get(current)?.profile?.name||'Corin';return String(value??'').replace(/(?<![\p{L}\p{N}_])Corin(?![\p{L}\p{N}_])/gu,name);};
   const spriteCache=new Map(),sourceIds=new WeakMap();let sourceSerial=0,personalPaint=null,loadingSave=null;
+  const framePhases=new Set();let ticking=false,openLocalPanel=()=>{};
+  function noteFrame(phase){if(active&&ticking)framePhases.add(phase);}
+  function localPanel(kind){if(!active||current===local)return false;openLocalPanel(kind,current);return true;}
   const cleanObject=(target,source)=>{for(const key of Object.keys(target))if(key!=='dir'&&!(key in source))delete target[key];Object.assign(target,source);};
   function captureActor(){return {P:{...P},dragon:{...dragon},vars:{pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince},worn:{...worn},cooldown:{...breathCooldown}};}
   function applyActor(a){
@@ -172,6 +175,7 @@
   function command(id,kind,data={}){
     if(!active||!party.has(id))return false;
     if(kind==='release'){releaseControls(id);return true;}
+    if(kind==='save'){save(true);return true;}
     if(kind==='control')return control(id,data);
     if(kind==='key')return keyboard(id,data);
     if(!claim(id,kind))return false;
@@ -186,7 +190,6 @@
       else if(kind==='fire'){if(!held())breatheFire();}
       else if(kind==='claw'){if(!held())clawNow();}
       else if(kind==='revive')revive();
-      else if(kind==='save')save(true);
       else if(['up','down','left','right'].includes(kind))controllerDirection(kind==='left'?-1:kind==='right'?1:0,kind==='up'?-1:kind==='down'?1:0);
     }finally{requester=null;}
     sharedOwner=held()?current:null;stash();return true;
@@ -200,7 +203,9 @@
       const moving=members.find(m=>{const input=inputFor(m.uid);return input.x||input.y;});
       if(moving)select(moving.uid);
     }
-    const focus=current;applyInput();originalFrame(ms);stash();
+    const focus=current;applyInput();framePhases.clear();ticking=true;
+    try{originalFrame(ms);}finally{ticking=false;}
+    stash();
     if(MAPID!==lastMap){lastMap=MAPID;for(const m of members)if(m.uid!==current)placeNear(m.uid);lastArena=null;}
     if(arenaLock&&arenaLock!==lastArena){lastArena=arenaLock;for(const m of members)if(m.uid!==current)placeNear(m.uid);}
     if(!arenaLock)lastArena=null;
@@ -208,8 +213,12 @@
     for(const m of members)if(m.uid!==focus){
       const wasHeld=held();withActor(m.uid,()=>{
         applyInput();syncDragonVitality();
-        if(!wasHeld&&mode==='play'&&!deadShown){stepAct(dt);stepPlayer(dt);swingHits();if(pInv>0)pInv=Math.max(0,pInv-dt);}
-        if(!wasHeld){stepBreath(dt);stepDragon(dt);stepClaw(dt);}
+        if(framePhases.has('player')&&!deadShown){stepAct(dt);stepPlayer(dt);}
+        if(framePhases.has('immunity')&&pInv>0)pInv=Math.max(0,pInv-dt);
+        if(framePhases.has('sword'))swingHits();
+        if(framePhases.has('breath'))stepBreath(dt);
+        if(framePhases.has('dragon'))stepDragon(dt);
+        if(framePhases.has('claw'))stepClaw(dt);
       });
       if(!wasHeld&&!held()){
         const beforeMap=MAPID,beforeArena=arenaLock;withActor(m.uid,()=>{useDoors(0);if(!doorMotion&&!fadeDir){checkArea();stepArena(0);stepKnightEncounter(0);stepQuest(0);}});
@@ -281,12 +290,20 @@
     rendering=remoteRender=true;ctx=g;VW=width;VH=height;DPR=1;viewer=uid;
     // Retain the authored scene center when the two screens have different sizes.
     cam.x=backup.cam.x+(backup.VW-width)/(2*cam.z);cam.y=backup.cam.y+(backup.VH-height)/(2*cam.z);
-    try{ctx.setTransform(1,0,0,1,0,0);originalDraw(tAcc,0);withActor(uid,()=>drawHearts());drawDark(0);drawFade();drawBossBlack();}
+    try{
+      ctx.setTransform(1,0,0,1,0,0);
+      if(fishing&&fishing.phase!=='prompt')drawFishingWater(ctx,width,height*.65,fishing);
+      else{
+        originalDraw(tAcc,0);
+        withActor(uid,()=>{drawDark(0);drawHearts();drawTempleCompass();});
+        drawFade();drawBossBlack();
+      }
+    }
     finally{ctx=backup.ctx;VW=backup.VW;VH=backup.VH;DPR=backup.DPR;Object.assign(cam,backup.cam);cameraLogical=backup.cameraLogical;cameraPresentation=backup.cameraPresentation;viewer=backup.viewer;rendering=remoteRender=false;}
   }
   saveToSlot=function(...args){
     // A queued or failed checkpoint must not authorize Save & exit to reload.
-    if(active)return save(!args[1])===true;
+    if(active)return save(!args[1],args[1]?undefined:args[0])===true;
     if(originalRead(args[0])?.coop){const free=[1,2,3].find(n=>!originalRead(n));if(!free){toast('This slot contains a co-op adventure. Choose another slot for your solo game.');return false;}activeSaveSlot=free;args[0]=free;}
     return originalSave(...args);
   };
@@ -297,11 +314,16 @@
     stash();const players={};for(const [id,a] of party)players[id]=withActor(id,()=>({profile:a.profile,P:{x:P.x,y:P.y,dir:P.dir,dir8:P.dir8,flip:P.flip},dragon:{...dragon},hp:pHp,worn:{...worn},crafting:Crafting.capture(),mounted}));
     return {save:captureSave(),players};
   }
-  async function start({uid,players,checkpoint:previous,onNotice,onSave}){
+  async function start({uid,players,checkpoint:previous,onNotice,onSave,onLocalPanel=()=>{}}){
     active=true;local=viewer=uid;notify=onNotice;save=onSave;members=players;party=new Map();current=uid;
+    openLocalPanel=onLocalPanel;
     // Crafting belongs to each rider and is restored below. Loading its world
     // snapshot too would refund shared cooking ingredients a second time.
     if(previous?.save){loadingSave={...previous.save,crafting:null};try{if(!loadGame(1))throw Error('The saved adventure could not be loaded.');}finally{loadingSave=null;}}
+    // Protect the resumed slot immediately, even if nearby combat delays the
+    // first checkpoint. Prefer the copy corresponding to the chosen revision.
+    const resumeSlots=previous?.id?[1,2,3].filter(slot=>originalRead(slot)?.coop?.id===previous.id):[];
+    activeSaveSlot=resumeSlots.find(slot=>originalRead(slot).when===previous.when)||resumeSlots.sort((a,b)=>(originalRead(b).when||0)-(originalRead(a).when||0))[0]||0;
     party.set(uid,{...captureActor(),profile:players.find(m=>m.uid===uid)?.profile});Crafting.coopRestore(uid,previous?.players?.[uid]?.crafting||previous?.save?.crafting||Crafting.capture());Crafting.coopSelect(uid);
     syncParty(players);
     if(previous?.players)for(const [id,saved]of Object.entries(previous.players)){
@@ -313,6 +335,6 @@
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
     if(!previous)startMorning();last=performance.now();LDRCoopRender.enable();
   }
-  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,hurtHazard,landFlight,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
+  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},defeated:()=>!living().length,noteFrame,localPanel,vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,hurtHazard,landFlight,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne};
 })();

@@ -8,7 +8,7 @@ const json=s=>JSON.parse(run('JSON.stringify('+s+')'));
 run(`mode='play';quest=Q.DONE;gameplayStarted=true;loadMap('house22');[P.x,P.y]=MD.spawn;
 window.LDRCoopRender={enable(){}};window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEquipmentTutorial=undefined;
 EmberCloudState.activate('host');
-var hosting=true,uid='host',campaignId='recovery-test',cloudSlot=0,latestSave=null,pendingSave=false,saveAt=0,commandSeq=0;
+var hosting=true,uid='host',campaignId='recovery-test',cloudSlot=0,latestSave=null,pendingSave=false,saveAt=0,commandSeq=0,pendingSlot,saveRequest=null;
 var notices=[],sent=[],room={send:(type,data)=>sent.push({type,data})},notice=text=>notices.push(text);
 var owner=()=>EmberCloudState.owner,key=()=> 'ldr.coop.campaigns.'+owner();
 var localSaves=()=>JSON.parse(localStorage.getItem(key())||'[]');`);

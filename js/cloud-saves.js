@@ -78,7 +78,11 @@
     }
     if(playing()){
       secondary.append(el('p','Switch accounts or choose a cloud version at the title screen. Exiting saves on this device and reloads the game.'));
-      secondary.append(button('Save & exit to title',()=>{
+      secondary.append(button('Save & exit to title',async()=>{
+        if(window.LDRCoopCampaign?.active){
+          if(await window.LDRCoopCampaign.leave())return;
+          status='Waiting for a checkpoint. Close this dialog to finish the scene or battle, then try Leave again.';render();return;
+        }
         if(saveToSlot(activeSaveSlot))location.reload();
         else{status='Save did not complete. Your game is still open. Close this dialog to check the save notice and try again.';render();}
       }));
@@ -121,9 +125,10 @@
       return result;
     });
   }};
-  function schedule(delay=15000){clearTimeout(timer);timer=setTimeout(()=>flush(),delay);}
+  function schedule(delay=15000){if(timer)return;timer=setTimeout(()=>{timer=0;flush();},delay);}
   async function flush(all=false){
     if(busy||!sdk||!user||user.uid!==store.owner)return;
+    clearTimeout(timer);timer=0;
     if(navigator.onLine===false){status='Offline · waiting to sync';render();return;}
     busy=true;status='Syncing…';render();
     try{
@@ -187,6 +192,6 @@
   window.addEventListener('storage',e=>{if(e.key?.startsWith('emberfell.account.')){render();schedule();}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush();else if(user)flush(true);});
   store.onChange=()=>render();store.onDirty=()=>{status='Saved on device · waiting to sync';render();schedule();};
-  window.EmberCloud={open,manage,getIdToken:async()=>{if(!user||user.uid!==store.owner)throw Error('Sign in with Google first.');return user.getIdToken();},isOpen:()=>opened,isSignedIn:()=>!!user,accountBusy:()=>accountBusy,sync:()=>flush(true)};
+  window.EmberCloud={open,manage,close:()=>dialog.close(),getIdToken:async()=>{if(!user||user.uid!==store.owner)throw Error('Sign in with Google first.');return user.getIdToken();},isOpen:()=>opened,isSignedIn:()=>!!user,accountBusy:()=>accountBusy,sync:()=>flush(true)};
   render();if(store.owner)init();
 })();

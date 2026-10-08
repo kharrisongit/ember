@@ -2654,7 +2654,7 @@ function canStand(x, y) {
   finally{npcCollisionEscape=previous;}
 }
 function movePlayer(dx, dy, dt) {
-  if (sceneHold()) return;      /* held still while someone is talking */
+  if (sceneHold()||bagOpen||ovl||ask||atlasOpen) return;
   const SP = mounted&&dragonAirborne() ? (running?DragonChapels.sprintSpeed():170) : (running?190:118);     /* B is hold-to-run */
   const nx = P.x + dx * SP * dt, ny = P.y + dy * SP * dt;
   // Ordinary temple doors only start opening when a movement crosses their threshold.
@@ -8957,6 +8957,7 @@ function stepLoot(dt) {
 }
 let devItemTest = false;
 function drinkPotion() {
+  if(pHp<=0||P.act?.kind==='die'||deadShown){toast('A fallen rider must be revived first.');return false;}
   if (potions <= 0 && !devSafe) { toast("no potions"); return false; }
   if (pHp >= pMax && !devSafe && !devItemTest) { toast("he is not hurt"); return false; }
   potions--;
@@ -9294,7 +9295,7 @@ function nextTrialWave() {
 function stepTrial(dt) {
   if (!trial) return;
   if (MAPID !== "cinderhold") { stopTrial(""); return; }
-  if (pHp <= 0) { stopTrial("The trial is lost. Speak to the demon in the throne room to try again."); return; }
+  if (window.LDRCampaign?.active?window.LDRCampaign.defeated():pHp<=0) { stopTrial("The trial is lost. Speak to the demon in the throne room to try again."); return; }
   if (trial.spawning || scene || sayNpc || ask || ovl) return;
   if (foes.some(f => !f.ally && f.st !== "dead")) { trial.wait = 0; return; }
   trial.wait += dt;
@@ -10214,6 +10215,7 @@ function useBomb() {
   return true;
 }
 function drinkElixir() {
+  if(pHp<=0||P.act?.kind==='die'||deadShown){toast('A fallen rider must be revived first.');return false;}
   if (elixirs <= 0 && !devSafe) { toast("no elixirs"); return false; }
   if (pHp >= pMax && !devSafe && !devItemTest) { toast("he is not hurt"); return false; }
   elixirs--;
@@ -10502,6 +10504,7 @@ function stepFoes(dt) {
     try {
       if (!(f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard"))
         continue;
+      if(f.ally||f.mad>0)continue;
       const k2 = FOE[f.kind] || {};
       f.t += dt;
       if (f.hurt > 0) f.hurt -= dt;
@@ -10606,7 +10609,7 @@ function stepFoes(dt) {
     try {
     const k = FOE[f.kind];
     if (lastFight && MAPID === "cinderhold" &&
-        (f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
+        !f.ally&&!(f.mad>0)&&(f.kind === "kdragon" || f.kind === "lich" || f.kind === "boneguard")) continue;
     f.t += dt;
     if(f.st==='dead'&&typeof BossRewardChests!=='undefined')BossRewardChests.afterFade(f);
     if(f.kind==='spiderqueen'){SpiderQueenBoss.step(f,dt);continue;}
@@ -10851,6 +10854,7 @@ function getUp() {
 }
 let standing = false;
 function standUp() {
+  if(graves)graves.fell=1;
   const retryFinal=MAPID==='cinderhold'&&!wonAll&&!!(lastFight||bossScene||risePend||scene?.finalBattleIntro);
   if (trial) stopTrial("");
   if (standing) return;        /* one press is enough, even during the fade */
@@ -11221,10 +11225,12 @@ function stepCombat(dt) {
   if(foesHeld&&typeof Frosthorn!=='undefined')Frosthorn.reset();
   if(foesHeld&&typeof IceMoth!=='undefined')IceMoth.reset();
   stepTempleGates(dt);
-  if (pInv > 0) pInv -= dt;
+  window.LDRCampaign?.noteFrame('immunity');
+  if (pInv > 0) pInv = Math.max(0,pInv-dt);
   stepKingShield(dt);
   if (bossScene) { stepRise(dt); stepBossScene(dt); return; }
   if (foesHeld) return;
+  window.LDRCampaign?.noteFrame('sword');
   swingHits();
   stepFoes(dt);
   stepSpell(dt);

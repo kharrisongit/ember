@@ -7,6 +7,17 @@
   const button=(text,fn)=>{const node=el('button',text);node.type='button';node.addEventListener('click',fn);return node;};
   let client,room,active=false,hosting=false,connecting=false,reconnecting=false,leaving=false,players=[],hostId='',uid='',seq=0,commandSeq=0,frameAt=0,syncAt=0,saveAt=0,pendingSave=false,latestSave=null,campaignId='',cloudSlot=0,remoteSize={w:640,h:480},startPromise=null,ready=false,controllerState=null;
   const pressed=new Set(),touch=new Map(),owner=()=>window.EmberCloudState?.owner||'',key=()=>`ldr.coop.campaigns.${owner()}`;
+  let pendingSlot,saveRequest=null,leaveRequest=null,exitDialog=null,sessionEnded=false,settingsPaused=false;
+  const localSettings=()=>!hosting&&(ovl==='sound'||window.EmberCloud?.isOpen());
+  function openSettings(kind){
+    if(hosting||!['sound','account'].includes(kind))return;
+    release();if(kind==='sound')setOvl('sound');else EmberCloud.open();
+    syncSettings();
+  }
+  function syncSettings(){
+    const paused=localSettings();if(paused===settingsPaused)return;
+    settingsPaused=paused;room?.send('visibility',!paused&&!document.hidden);
+  }
   const localSaves=()=>{try{return JSON.parse(localStorage.getItem(key()))||[];}catch{return [];}};
   const dialog=el('dialog');dialog.id='campaignLobby';const heading=el('h2','Story co-op'),description=el('p','Travel through the campaign together, with your own riders and dragons. Story progress and equipment are shared. Each rider can gather every ingredient.');
   const status=el('p','Sign in with Google, then host an adventure or join your partner.');status.setAttribute('role','status');
@@ -37,6 +48,7 @@
   const pressType=padTouchMode?'touchstart':'mousedown';
   window.addEventListener(pressType,event=>{
     if(!active||LDRCoopUI.dispatching)return;
+    if(localSettings())return;
     const node=event.target.closest?.(controllerSelector+',#dpad [data-dx]');if(!node)return;
     event.preventDefault();event.stopImmediatePropagation();
     const control=node.matches(controllerSelector)?node.id:null;
@@ -54,6 +66,8 @@
     for(const id of ids)dropTouch(id);event.preventDefault();event.stopImmediatePropagation();
   },{capture:true,passive:false});
   function keyboard(event){
+    if(exitDialog?.open){event.stopImmediatePropagation();return;}
+    if(localSettings())return;
     if(LDRCoopUI.dispatching||!active||event.ctrlKey||event.metaKey||event.altKey||event.target.closest?.('input,select,textarea')||event.key==='Tab')return;
     const key=event.key.toLowerCase(),down=event.type==='keydown';
     const nativeButton=event.target.closest?.('#campaignBar button,#campaignMenus button')||event.target.closest?.('button')?.closest?.('#merchantShop');
@@ -74,7 +88,8 @@
   function showController(state){if(!state)return;controllerState=state;updateDeckHealth();refreshControllerControls();}
   function options(){
     const saves=new Map(localSaves().map(s=>[s.id,s]));
-    for(let slot=1;slot<=3;slot++){const s=readSaveSlot(slot);if(s?.coop?.version===1){const checkpoint={...s.coop,save:{...s,coop:undefined}};if(!saves.has(checkpoint.id)||(saves.get(checkpoint.id).when||0)<checkpoint.when)saves.set(checkpoint.id,checkpoint);}}
+    const cached=new Set(saves.keys());
+    for(let slot=1;slot<=3;slot++){const s=readSaveSlot(slot);if(s?.coop?.version===1){const checkpoint={...s.coop,save:{...s,coop:undefined}};if(!cached.has(checkpoint.id)&&(!saves.has(checkpoint.id)||(saves.get(checkpoint.id).when||0)<checkpoint.when))saves.set(checkpoint.id,checkpoint);}}
     return [...saves.values()].sort((a,b)=>b.when-a.when);
   }
   function restoreProfile(){const profile=options().find(s=>s.id===adventure.value)?.players?.[owner()]?.profile;if(profile){name.value=profile.name;hair.value=profile.hair;eyes.value=profile.eyes;}}
@@ -84,28 +99,33 @@
     for(const s of options()){const option=el('option','Resume · '+s.save.map.replaceAll('_',' ')+' · '+new Date(s.when).toLocaleString());option.value=s.id;adventure.append(option);}
     adventure.value=id||options()[0]?.id||'new';restoreProfile();dialog.showModal();
   }
-  function persist(checkpoint){
+  function persist(checkpoint,destination){
     if(!owner()||!checkpoint||checkpoint.version!==1||typeof checkpoint.id!=='string')return;
-    latestSave=checkpoint;campaignId=checkpoint.id;const saves=localSaves().filter(s=>s.id!==checkpoint.id);saves.unshift(checkpoint);
+    if(destination!==undefined&&(!Number.isInteger(destination)||destination<1||destination>3))return false;
+    const saves=localSaves().filter(s=>s.id!==checkpoint.id);saves.unshift(checkpoint);
     try{
-      localStorage.setItem(key(),JSON.stringify(saves.slice(0,4)));
+      if(destination!==undefined)cloudSlot=destination;
+      else if(cloudSlot&&readSaveSlot(cloudSlot)?.coop?.id!==checkpoint.id)cloudSlot=0;
       if(!cloudSlot)for(let slot=1;slot<=3;slot++){const existing=readSaveSlot(slot);if(existing?.coop?.id===checkpoint.id){cloudSlot=slot;break;}}
       if(!cloudSlot)for(let slot=1;slot<=3;slot++)if(!readSaveSlot(slot)){cloudSlot=slot;break;}
       if(cloudSlot){
-        const existing=readSaveSlot(cloudSlot);if(existing&&existing.coop?.id!==checkpoint.id){cloudSlot=0;return;}
         const {save,...coop}=checkpoint,personal=checkpoint.players?.[uid];
         const payload={...save,when:checkpoint.when,playerIdentity:personal?.profile||save.playerIdentity,crafting:personal?.crafting||save.crafting,coop};
         const raw=JSON.stringify(payload);if(raw.length>262144)throw Error('Co-op save is too large for cloud backup.');
-        localStorage.setItem(EmberCloudState.key(cloudSlot),raw);EmberCloudState.saved(cloudSlot);
+        localStorage.setItem(EmberCloudState.key(cloudSlot),raw);
       }
+      localStorage.setItem(key(),JSON.stringify(saves.slice(0,4)));
+      latestSave=checkpoint;campaignId=checkpoint.id;activeSaveSlot=cloudSlot;
+      if(cloudSlot)EmberCloudState.saved(cloudSlot);
       return true;
     }catch(error){notice('Could not save co-op: '+error.message);return false;}
   }
-  function checkpoint(force=false){
+  function checkpoint(force=false,destination){
     if(!hosting){if(force)room?.send('command',{kind:'save',seq:++commandSeq});return false;}
+    if(destination!==undefined){if(!Number.isInteger(destination)||destination<1||destination>3)return false;pendingSlot=destination;}
     pendingSave=true;const data=LDRCampaign.checkpoint();if(!data){if(force)notice('Save queued until this scene or battle finishes.');return false;}
-    const saved={version:1,id:campaignId,when:Date.now(),...data};if(!persist(saved))return false;
-    room?.send('checkpoint',saved);pendingSave=false;saveAt=performance.now();
+    const saved={version:1,id:campaignId,when:Date.now(),...data};if(!persist(saved,pendingSlot))return false;
+    room?.send('checkpoint',{...saved,requestId:saveRequest});pendingSlot=undefined;saveRequest=null;pendingSave=false;saveAt=performance.now();
     if(force)notice(cloudSlot?'Co-op saved · cloud backup queued in slot '+cloudSlot:'Co-op saved on this device · all cloud slots are occupied.');
     return true;
   }
@@ -117,7 +137,8 @@
       const token=await EmberCloud.getIdToken();uid=owner();client=new Colyseus.Client(ENDPOINT);client.auth.token=token;
       hosting=isHost;const profile=EmberPlayerIdentity.normalize({name:name.value,hair:hair.value,eyes:eyes.value});
       latestSave=isHost?options().find(s=>s.id===adventure.value)||null:null;campaignId=latestSave?.id||crypto.randomUUID();cloudSlot=0;
-      room=isHost?await client.create('story_campaign',{protocol:6,profile}):await client.joinById(roomCode,{protocol:6,profile});
+      room=isHost?await client.create('story_campaign',{protocol:7,profile}):await client.joinById(roomCode,{protocol:7,profile});
+      sessionEnded=false;leaveRequest=saveRequest=null;pendingSlot=undefined;settingsPaused=false;activeSaveSlot=0;
       wire(room);active=true;ready=false;leaving=false;dialog.close();bar.hidden=false;open.hidden=true;roomLabel.textContent='ROOM '+room.roomId;
       document.body.classList.add('campaign-active','game-started',hosting?'campaign-host':'campaign-guest');EmberPlayerIdentity.restore(profile);viewport();
       if(!hosting){gameplayStarted=true;EmberTitleAudio?.finish();remote.hidden=false;document.getElementById('boot').style.display='none';}
@@ -130,7 +151,7 @@
     connection.onMessage('members',data=>{
       players=data.players;hostId=data.hostId;
       if(hosting){
-        if(!startPromise){startPromise=LDRCampaign.start({uid,players,checkpoint:latestSave,onNotice:notice,onSave:checkpoint}).then(()=>{LDRCampaign.syncParty(players);ready=true;checkpoint();}).catch(error=>{notice('Co-op could not start: '+error.message);console.error(error);});}
+        if(!startPromise){startPromise=LDRCampaign.start({uid,players,checkpoint:latestSave,onNotice:notice,onSave:checkpoint,onLocalPanel:(kind,id)=>room?.send('status',{localPanel:kind,recipient:id})}).then(()=>{cloudSlot=activeSaveSlot;LDRCampaign.syncParty(players);ready=true;checkpoint();}).catch(error=>{notice('Co-op could not start: '+error.message);console.error(error);});}
         else if(ready)LDRCampaign.syncParty(players);
       }
       updateStatus();
@@ -145,13 +166,23 @@
     connection.onMessage('frame',data=>{if(!hosting){display.frame(data);ready=true;}});
     connection.onMessage('ui',data=>{if(!hosting)menuGuest.render(data);});
     connection.onMessage('sfx',data=>{if(!hosting&&sfxNames.includes(data.name))EmberSfx[data.name]();});
-    connection.onMessage('status',data=>{if(!hosting){if(data.controller)showController(data.controller);if(data.music&&data.music!==lastMusic&&EmberAudio.tracks().includes(data.music)){lastMusic=data.music;EmberAudio.preview(data.music);}if(data.reset)display.reset();detail.textContent=data.text||'';if(data.notice&&data.notice!==lastNotice){lastNotice=data.notice;notice(data.notice);};}});
-    connection.onMessage('checkpoint',data=>{if(!hosting)persist(data);});
+    connection.onMessage('status',data=>{if(!hosting){
+      if(data.controller)showController(data.controller);
+      if(Object.hasOwn(data,'music')&&data.music!==lastMusic&&EmberAudio.follow(data.music))lastMusic=data.music;
+      if(data.localPanel&&data.recipient===uid)openSettings(data.localPanel);
+      if(data.reset)display.reset();if(data.text!==undefined)detail.textContent=data.text;
+      if(data.notice&&data.notice!==lastNotice){lastNotice=data.notice;notice(data.notice);}
+    }});
+    connection.onMessage('checkpoint',data=>{
+      if(hosting)return;const {requestId,...saved}=data;
+      const stored=persist(saved);
+      if(leaveRequest&&requestId===leaveRequest){leaveRequest=null;if(stored)finishLeave();}
+    });
     connection.onMessage('pong',()=>{});
-    connection.onMessage('ended',text=>{notice(text);ready=false;leaving=true;detail.textContent=text;});
+    connection.onMessage('ended',text=>{notice(text);ready=false;sessionEnded=true;detail.textContent=text;});
     connection.onError((_code,text)=>notice(text));
     connection.onLeave(async code=>{
-      if(leaving)return;release();reconnecting=true;updateStatus();const deadline=Date.now()+55000;
+      if(leaving||sessionEnded)return;release();reconnecting=true;updateStatus();const deadline=Date.now()+55000;
       while(!leaving&&Date.now()<deadline){
         try{const recovered=await client.reconnect(connection.reconnectionToken);room=recovered;wire(room);reconnecting=false;room.send('ready');return;}
         catch{await new Promise(resolve=>setTimeout(resolve,1500));}
@@ -159,39 +190,71 @@
       detail.textContent='Connection ended. Your last co-op save is available at the title screen.';
     });
   }
-  function paused(){return reconnecting||players.length<2||players.some(m=>!m.connected||!m.visible);}
+  function paused(){return sessionEnded||reconnecting||players.length<2||players.some(m=>!m.connected||!m.visible);}
   function updateStatus(){
     detail.textContent=reconnecting?'Reconnecting · adventure paused':players.length<2?'Waiting for your partner':players.some(m=>!m.connected)?'Waiting for your partner to reconnect':players.some(m=>!m.visible)?'Paused while your partner is away':cloudSlot?'Co-op autosave · slot '+cloudSlot:'Co-op autosave on this device';
   }
   function execute(id,data){
     if(!ready||reconnecting)return;if(paused()&&!['save','release'].includes(data.kind)&&!(data.kind==='control'&&!data.down)&&!(data.kind==='key'&&!data.down)){notice('Waiting for your partner · adventure paused.');return;}
+    if(data.kind==='save'&&typeof data.requestId==='string'&&data.requestId.length<=80)saveRequest=data.requestId;
     if(data.kind==='ui'){const kind=menuHost.actionKind(data);if(kind)LDRCampaign.command(id,kind);else if(LDRCampaign.claim(id,'ui'))menuHost.act(data);}
     else LDRCampaign.command(id,data.kind,data);
   }
   function send(data){if(!active||!room||reconnecting)return;if(hosting)execute(uid,data);else room.send('command',{...data,seq:++commandSeq});}
   function release(){pressed.clear();for(const held of touch.values())held.node.classList.remove('hit');touch.clear();if(active){if(hosting)LDRCampaign.setInput(uid,{x:0,y:0});else room?.send('input',{seq:++seq,x:0,y:0});send({kind:'release'});}}
-  async function leave(){
-    if(hosting){if(!checkpoint(true))return false;}
-    else if(latestSave&&!persist(latestSave))return false;
+  async function finishLeave(){
+    if(leaving)return false;
     leaving=true;release();const connection=room;if(connection)await connection.leave().catch(()=>{});location.reload();
     return true;
   }
+  function offerCheckpointExit(){
+    if(exitDialog?.open)return;
+    exitDialog=el('dialog');exitDialog.id='campaignExit';
+    exitDialog.append(el('h2','Leave this adventure?'),el('p',latestSave?
+      'Your partner is unavailable. You can resume the checkpoint saved '+new Date(latestSave.when).toLocaleString()+'. Progress since that checkpoint will be lost.':
+      'Your partner is unavailable and this adventure has no saved checkpoint yet. Leaving will discard this adventure.'),
+      button('Keep waiting',()=>exitDialog.close()),
+      button(latestSave?'Exit at saved checkpoint':'Exit without saving',async()=>{
+        if(latestSave&&!persist(latestSave))return;
+        await finishLeave();
+      }));
+    const prompt=exitDialog;
+    document.body.append(prompt);prompt.showModal();
+    prompt.addEventListener('close',()=>{prompt.remove();if(exitDialog===prompt)exitDialog=null;leaveRequest=null;});
+  }
+  async function leave(){
+    if(leaving)return false;
+    const hadSettings=localSettings();
+    if(hadSettings){setOvl(null);EmberCloud.close();syncSettings();}
+    if(hosting){
+      if(checkpoint(true))return finishLeave();
+      if(paused())offerCheckpointExit();
+    }else{
+      const hostMember=players.find(m=>m.id===hostId);
+      if(sessionEnded||reconnecting||!ready||hostMember?.connected===false){offerCheckpointExit();return false;}
+      if(!leaveRequest){leaveRequest=crypto.randomUUID();room?.send('command',{kind:'save',requestId:leaveRequest,seq:++commandSeq});}
+      notice('Waiting for a fresh checkpoint before leaving. Finish the current scene or battle with your partner, then Leave will complete.');
+      if(paused()&&!hadSettings)offerCheckpointExit();
+    }
+    return false;
+  }
   window.addEventListener('resize',viewport);
-  window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(!active)return;release();room?.send('visibility',!document.hidden);if(document.hidden&&hosting)checkpoint();});
+  window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(!active)return;release();room?.send('visibility',!document.hidden&&!localSettings());if(document.hidden&&hosting)checkpoint();});
   window.addEventListener('pagehide',()=>{if(active&&hosting)checkpoint();});
   // Native host menus belong to the rider who opened them. A companion sees
   // the same menu and uses its bounded tokens; no remote DOM selectors execute.
-  window.addEventListener('click',event=>{if(LDRCoopUI.dispatching||!active||!hosting||event.target.closest?.('#campaignBar,#deck,#campaignLobby'))return;if(event.target.closest?.('#say,#sayname,#face,#reveal')){event.preventDefault();event.stopImmediatePropagation();send({kind:'action'});return;}if(LDRCampaign.held&&LDRCampaign.owner!==uid){event.preventDefault();event.stopImmediatePropagation();notice('Your partner is choosing. Use A to continue shared dialogue.');}},true);
+  window.addEventListener('click',event=>{if(LDRCoopUI.dispatching||!active||!hosting||event.target.closest?.('#campaignBar,#deck,#campaignLobby,#campaignExit,#cloudSaveDialog'))return;if(event.target.closest?.('#say,#sayname,#face,#reveal')){event.preventDefault();event.stopImmediatePropagation();send({kind:'action'});return;}if(LDRCampaign.held&&LDRCampaign.owner!==uid){event.preventDefault();event.stopImmediatePropagation();notice('Your partner is choosing. Use A to continue shared dialogue.');}},true);
   let lastMusic='',lastNotice='';
   const sfxNames=['door','ui','coin','breathHit','dragonFire','hatch','golemHit','hit','death','stopDeath','block','sword','pickup','key'];
   for(const name of sfxNames){const original=EmberSfx[name];EmberSfx[name]=function(...args){if(active&&hosting&&room)room.send('sfx',{name});return original.apply(this,args);};}
   const baseFrame=frameCore;
   frameCore=function(ms){
     if(!active)return baseFrame(ms);
+    syncSettings();
     if(!ready){last=ms;return;}
     const vector={x:Number(pressed.has('d')||pressed.has('arrowright'))-Number(pressed.has('a')||pressed.has('arrowleft')),y:Number(pressed.has('s')||pressed.has('arrowdown'))-Number(pressed.has('w')||pressed.has('arrowup')),run:pressed.has('b')};
     for(const held of touch.values()){vector.x+=held.x||0;vector.y+=held.y||0;vector.run||=held.run;}
-    if(ms-frameAt>=50){frameAt=ms;if(hosting)LDRCampaign.setInput(uid,vector);else if(!reconnecting)room.send('input',{...vector,seq:++seq});}
+    if(ms-frameAt>=50){frameAt=ms;if(hosting)LDRCampaign.setInput(uid,vector);else if(!reconnecting&&!settingsPaused)room.send('input',{...vector,seq:++seq});}
     if(hosting){
       controllerState=LDRCampaign.controllerState(uid);
       LDRCampaign.mainFrame(ms,paused());
@@ -206,5 +269,5 @@
   const continueGame=BOOT.continueGame;BOOT.continueGame=function(){const saved=readSaveSlot(BOOT.latestSave());if(saved?.coop){openLobby(saved.coop.id);return;}return continueGame.call(this);};
   const takeLoad=BOOT.takeLoad;BOOT.takeLoad=function(pick=BOOT.loadPick){const saved=pick<3?readSaveSlot(pick+1):null;if(saved?.coop){openLobby(saved.coop.id);return;}return takeLoad.call(this,pick);};
   setInterval(()=>{open.hidden=active||gameplayStarted;open.disabled=!gameplayReady||connecting;},300);
-  window.LDRCoopCampaign={get active(){return active;},get controllerState(){return controllerState;},keyboard,open:openLobby,save:checkpoint,inspect:()=>({hosting,ready,players,cloudSlot,latestSave,campaignId})};
+  window.LDRCoopCampaign={get active(){return active;},get controllerState(){return controllerState;},keyboard,open:openLobby,save:checkpoint,leave,inspect:()=>({hosting,ready,players,cloudSlot,latestSave,campaignId})};
 })();

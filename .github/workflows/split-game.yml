@@ -66,6 +66,11 @@ jobs:
           node tests/friendly-projectiles.mjs
           node tests/coop-travel-hazards.mjs
           node tests/coop-exit-cache.mjs
+          node tests/coop-save-lifecycle.mjs
+          node tests/combat-party-regressions.mjs
+          node tests/coop-guest-ui.mjs
+          node tests/cloud-saves.mjs
+          node tests/cloud-save-controls.mjs
       - name: Check authored town conversations and quest notifications
         run: |
           node tests/opening-castle-regressions.mjs

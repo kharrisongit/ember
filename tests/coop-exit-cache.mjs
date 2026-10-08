@@ -10,12 +10,12 @@ var hosting=true,uid='host',campaignId='exit-test',cloudSlot=0,latestSave=null,p
 var notices=[],sent=[],leaves=0,room={send:(type,data)=>sent.push({type,data}),leave:async()=>{leaves++;}},notice=text=>notices.push(text);
 var owner=()=>EmberCloudState.owner,key=()=> 'ldr.coop.campaigns.'+owner();
 var localSaves=()=>JSON.parse(localStorage.getItem(key())||'[]');
-var leaving=false,reloads=0;location.reload=()=>reloads++;function release(){};`);
+var leaving=false,reloads=0,pendingSlot,saveRequest=null,leaveRequest=null,exitDialog=null;location.reload=()=>reloads++;function release(){};function localSettings(){return false;}function paused(){return false;}`);
 // Run the production persistence and Leave handlers with only transport inert.
 const campaign=fs.readFileSync(new URL('../js/coop-campaign.js',import.meta.url),'utf8');
 run(campaign.slice(campaign.indexOf('  function persist('),campaign.indexOf('  async function connect(')));
 run(campaign.slice(campaign.indexOf('  function options('),campaign.indexOf('  function restoreProfile(')));
-run(campaign.slice(campaign.indexOf('  async function leave('),campaign.indexOf("  window.addEventListener('resize'")));
+run(campaign.slice(campaign.indexOf('  async function finishLeave('),campaign.indexOf("  window.addEventListener('resize'")));
 run(`var players=[{uid:'host',profile:{name:'Host'}},{uid:'guest',profile:{name:'Guest'}}];`);
 await run(`LDRCampaign.start({uid:'host',players,onNotice:notice,onSave:checkpoint})`);
 run(`scene=null;sayNpc=null;revealing=false;ovl=null;ask=null;arenaLock=null;foes=[];fadeDir=0;doorMotion=null;bossScene=null;deadShown=false;gold=100;`);

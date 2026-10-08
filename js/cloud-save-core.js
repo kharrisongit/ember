@@ -51,7 +51,19 @@
       this.storage.setItem(key,JSON.stringify(unique));
     }
     apply(slot,remote){
-      if(remote&&!remote.deleted)this.storage.setItem(this.key(slot),remote.saveJson);
+      if(remote&&!remote.deleted){
+        // An explicitly accepted cloud revision also replaces the resume cache,
+        // even when the discarded device checkpoint had a later timestamp.
+        this.removeCampaign(this.storage.getItem(this.key(slot)));
+        this.removeCampaign(remote.saveJson);
+        this.storage.setItem(this.key(slot),remote.saveJson);
+        const saved=parse(remote.saveJson);
+        if(saved?.coop?.version===1&&typeof saved.coop.id==='string'){
+          const key='ldr.coop.campaigns.'+this.owner,cached=parse(this.storage.getItem(key));
+          const {coop,...save}=saved;
+          this.storage.setItem(key,JSON.stringify([{...coop,save},...(Array.isArray(cached)?cached:[])].slice(0,4)));
+        }
+      }
       else {this.removeCampaign(this.storage.getItem(this.key(slot)));this.storage.removeItem(this.key(slot));}
       this.setMeta(slot,{base:remote?.revision||null,dirty:false,writeId:null});this.conflicts.delete(slot);this.onChange();
     }

@@ -35,6 +35,7 @@ c.drawMerchantShop=()=>{};
 // Exercise the co-op capture handler too, without starting network transport.
 const campaign=fs.readFileSync(new URL('../js/coop-campaign.js',import.meta.url),'utf8');
 run(`var active=true,pressed=new Set(),sentKeys=[];function send(data){sentKeys.push(data);}window.LDRCoopUI={dispatching:false};`);
+run('var exitDialog=null;function localSettings(){return false;}');
 run(campaign.slice(campaign.indexOf('  function keyboard('),campaign.indexOf('  function viewport(')));
 const shop=dom.element('merchantShop');
 for(const label of ['Back to goods','Change quantity','Leave shop','Confirm purchase']){

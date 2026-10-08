@@ -4255,7 +4255,7 @@ function frameCore(ms) {
   globalThis.window?.EmberRiding?.step(dt);
   stepNanMorning();
   stepNanDeparture();
-  if (mode === "play") { DesertAdventure.stepScarabs(dt); stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
+  if (mode === "play") { window.LDRCampaign?.noteFrame('player'); DesertAdventure.stepScarabs(dt); stepAct(dt); stepPlayer(dt); useDoors(dt); checkArea(); stepKnightEncounter(dt); stepArena(dt); warmAhead(); stepCombat(dt); }
   const dgx0 = dragon.x, dgy0 = dragon.y;
   DragonChapels.step(dt);
   stepScene(dt);
@@ -4277,10 +4277,11 @@ function frameCore(ms) {
   stepKingsMen(dt);
   stepQuest(dt);
   stepDragonBanter(dt);
-  if(globalThis.window?.EmberRiding?.demonstratingFire()||(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()))stepBreath(dt);
+  if(globalThis.window?.EmberRiding?.demonstratingFire()||(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding())){window.LDRCampaign?.noteFrame('breath');stepBreath(dt);}
+  window.LDRCampaign?.noteFrame('dragon');
   stepDragon(dt);
   noteDragonMotion(dgx0, dgy0, dt);
-  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()&&!globalThis.window?.EmberEquipmentTutorial?.holding())stepClaw(dt);
+  if(!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()&&!globalThis.window?.EmberEquipmentTutorial?.holding()){window.LDRCampaign?.noteFrame('claw');stepClaw(dt);}
   stepAnims(dt);   /* one-shot animations run in the editor too */
   if (mode === "play"&&!globalThis.window?.EmberArenaEntry?.holding()&&!globalThis.window?.EmberRiding?.holding()&&!globalThis.window?.EmberEquipmentTutorial?.holding()) stepBolts(dt);
   stepFerry(dt);
@@ -4469,6 +4470,7 @@ function drawBossBlack() {
 
 function stepPlayer(dt) {
   if(pHp<=0){P.moving=false;return;}
+  if(bagOpen||ovl||ask){P.moving=false;P.t+=dt;return;}
   if(typeof SpiderQueenBoss!=='undefined'&&SpiderQueenBoss.holdPlayer(dt))return;
   if(atlasOpen)return;
   if (bossScene) return;
@@ -5869,7 +5871,7 @@ const MENUS = {
   savePrompt: { rows: "savePromptRows", desc: "savePromptDesc", pick: 0, items: () => [
     { name: "Overwrite existing save", tell: "Choose an existing save slot to overwrite.", go: () => setOvl("saveSlots") },
     { name: "Create new save", tell: "Use the first empty save slot.", go: () => { const slot=firstEmptySaveSlot(); if(!slot){toast("all save slots are full — overwrite one instead");setOvl("saveSlots");return;} saveToSlot(slot); setOvl(null); } },
-    { name: () => window.EmberCloud?.isSignedIn() ? "Signed In" : "Sign In", tell: "Sign into Google for cloud saves.", go: () => {setOvl(null);window.EmberCloud?.open();} },
+    { name: () => window.EmberCloud?.isSignedIn() ? "Signed In" : "Sign In", tell: "Sign into Google for cloud saves.", go: () => {setOvl(null);if(!window.LDRCampaign?.localPanel('account'))window.EmberCloud?.open();} },
     { name: "Back", tell: "Close the save menu.", go: () => setOvl(null) }
   ] },
   saveSlots: { rows: "saveSlotRows", desc: "saveSlotDesc", pick: 0, items: () => saveSlotItems("overwrite") },
@@ -5956,6 +5958,7 @@ function restoreInventoryPrompt(saved){
   document.getElementById('itemFullBtn').classList.remove('inventory-intro');
 }
 function setOvl(which) {
+  if(which==='sound'&&window.LDRCampaign?.localPanel('sound')){setOvl(null);return;}
   if(which&&typeof flightTravel!=='undefined'&&flightTravel)return;
   if(which==="itemm"&&!hasBag())return;
   if(globalThis.window?.EmberRiding?.allowOverlay(which)===false)return;
@@ -6693,7 +6696,7 @@ function clawNow() {
     }
     if (!seenFoe[f.kind]) seenFoe[f.kind] = ++seenCount;
     f.hp -= CLAW.dmg; f.hurt = 0.25;
-    if (f.hp <= 0) { f.st = "dead"; f.t = 0; markBossGone(f); }
+    if (f.hp <= 0) { f.st = "dead"; f.t = 0; if(!f.storyKnight)dropGold(f.x,f.y,f.kind); markBossGone(f); }
   }
 }
 

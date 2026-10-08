@@ -466,3 +466,15 @@ for(const ios of [false,true]){
 }
 assert.match(html,/<audio id="emberfellIntroBgm"[^>]+preload="none"/);
 console.log('PASS: opening film uses its own track on desktop/iPhone, survives polling, fades into gameplay, and preserves the title/ending theme.');
+
+// A guest follows an explicit host soundtrack, including deliberate silence.
+const follower=setup(),audio=follower.c.window.EmberAudio;
+assert(audio.follow('emberfellBattleBgm'));await follower.advance();
+assert.equal(audio.currentTrack(),'emberfellBattleBgm');
+audio.set(42);assert(audio.follow(null));await follower.advance();follower.sync();await follower.advance();
+assert.equal(audio.currentTrack(),null);assert([...follower.elements.values()].every(a=>a.paused&&a.volume===0));
+assert.equal(audio.percent(),42,'Remote silence preserves personal volume');
+assert(audio.follow('emberfellMillwoodBgm'));await follower.advance();assert(!follower.track('Millwood').paused);
+assert.equal(audio.follow('not-a-track'),false);assert.equal(audio.currentTrack(),'emberfellMillwoodBgm');
+audio.stopFollowing();follower.sync();await follower.advance();assert.equal(audio.currentTrack(),'emberfellMillwoodBgm');
+console.log('PASS: host music and silence survive guest region polling, preserve local volume, and resume normally.');

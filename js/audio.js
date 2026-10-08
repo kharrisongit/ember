@@ -191,7 +191,7 @@ let routeMusicIntroPlayed=false;
   const finalBattle=()=>{
     try{return MAPID==='cinderhold'&&!wonAll&&!!lastFight;}catch(e){return false;}
   };
-  let previewTrack=null;
+  let previewTrack=null,remoteMusic=false,remoteTrack=null;
   let kingMap=null,selected=null,unlocked=false,pending=0,fading=false,fadeDuration=900,fadeDelay=0;
   const gains=new Map(tracks.map(a=>[a,0]));
   let audioContext=null,masterGain=null,effectsGain=null,masterPct=-1;
@@ -341,6 +341,7 @@ let routeMusicIntroPlayed=false;
     playSelected();
   };
   const chooseMusic=()=>{
+    if(remoteMusic){selectTrack(remoteTrack);return;}
     if(previewTrack){selectTrack(previewTrack);return;}
     if(titleStage==='out')return;
     if(titleStage==='prologue'){selectTrack(hasSong(intro)?intro:title);return;}
@@ -399,6 +400,13 @@ let routeMusicIntroPlayed=false;
     unlock:startMusic,
     currentTrack:()=>selected?.id||null,
     tracks:()=>tracks.filter(hasSong).map(a=>a.id),
+    follow:id=>{
+      if(id!==null&&!tracks.some(a=>a.id===id&&hasSong(a)))return false;
+      remoteMusic=true;remoteTrack=tracks.find(a=>a.id===id)||null;
+      openAudioGraph();unlocked=true;chooseMusic();
+      if(!remoteTrack)silence();else playSelected();return true;
+    },
+    stopFollowing:()=>{remoteMusic=false;remoteTrack=null;chooseMusic();},
     preview:id=>{previewTrack=tracks.find(a=>a.id===id&&hasSong(a))||null;openAudioGraph();unlocked=true;chooseMusic();playSelected();},
     stopPreview:()=>{previewTrack=null;chooseMusic();},
     percent:()=>pct,

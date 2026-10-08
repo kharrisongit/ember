@@ -52,8 +52,8 @@ run. Touch cancellation, blur, stale input and a paused connection clear holds.
 ## Saves
 
 Co-op uses the existing three account-scoped Firebase save slots and cloud queue.
-It chooses an empty slot or its own previous campaign slot and does not replace a
-solo save or another co-op adventure. Each account also retains up to four local
+Autosaving chooses an empty slot or its own previous campaign slot. Manual
+Create new save and Overwrite use the selected destination. Each account also retains up to four local
 co-op backups. If all three cloud slots are occupied, the new adventure saves on
 that device only; the room bar and manual Save notice explain this.
 
@@ -61,6 +61,10 @@ Autosaves occur at safe points, approximately every ten seconds. A requested sav
 during a scene, encounter, doorway, flight or ferry ride waits for a safe point.
 Save & exit stays in the game if the save is queued or device storage fails;
 finish the encounter or resolve the storage problem and try again before exiting.
+Guest Leave requests a fresh host checkpoint and exits after storing the matching
+reply. If the partner is unavailable, Leave offers an explicit return to the last
+saved checkpoint and explains that later progress will be lost. Frequent autosaves
+do not postpone cloud uploads; choosing a cloud version also replaces the resume cache.
 The checkpoint stores shared campaign progress plus both riders' identities,
 positions, health, equipment and ingredient histories. Each account receives the
 same checkpoint; either can host **Resume** after the room ends. Mid-battle and
@@ -71,6 +75,10 @@ A temporary network drop pauses play and reserves the seat for 60 seconds. A hos
 leaving or a server restart ends the room; resume the last checkpoint from the
 title screen. The free Render service can sleep or restart, and bandwidth quotas
 still apply. Keep the host's device awake while playing.
+
+Account and sound settings open on the requesting rider's own device. The guest
+screen includes its rider's compass and mine lighting, live fishing gauges, and
+stable crafting controls that retain focus while progress updates arrive.
 
 ## Runtime and trust boundary
 
@@ -86,7 +94,7 @@ still apply. Keep the host's device awake while playing.
   control. Account/login panels are never mirrored.
 - `js/coop-campaign.js` handles entry, controls, Google-authenticated transport,
   reconnection, music/effects, and existing account-scoped save integration.
-- `multiplayer/src/campaign-room.mjs` is protocol 6, private, two accounts per
+- `multiplayer/src/campaign-room.mjs` is protocol 7, private, two accounts per
   room. It validates bounded monotonic input/commands and relays presentation and
   checkpoints only from the host. The host is trusted to run the campaign; this
   is cooperative play, not an anti-cheat-authoritative competitive server.
@@ -110,7 +118,7 @@ still apply. Keep the host's device awake while playing.
 
 `render.yaml` contains this configuration. Retain both the GitHub Pages and Render
 hostnames in Firebase Authentication's authorized domains. No new Firebase rules
-or paid service is required. Health reports `full-campaign-runtime`, protocol 6.
+or paid service is required. Health reports `full-campaign-runtime`, protocol 7.
 
 ## Verification
 
