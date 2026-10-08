@@ -25,7 +25,7 @@ run(`W.maps.room={w:8,h:8,terr:'0.64',objs:[0,32,32],npcs:[],doors:[],scatter:[]
  let buildUndo=[],grabRect=null,grabDrag=null,stroke=null,chestAnim=null,fishing=null,pendingActorStage=null,brambleMap='',doorMotion=null;
  let arenaLock=null,arenaT=0,arenaGoing=false,trial=null,wonAll=false,lastFight=0,bossScene=null,risePend=null,edits={},camFree=true,mode='test',cam={};
  let loot=[],spell=null,risings=[],blooms=[],consecrationTrails=[],dustPuff=null,graves=null,flying=[],falling=null,npcs=[],selected=null;
- let mounted=false,breath=null,breathT=0;
+ let mounted=false,breath=null,breathT=0,ride=null;
  let editing=false,building=false,painting=false,doorEdit=false,collideView=false,quest=0,Q={KING:99},dragon={},foes=[];
  let GRASS=0,DIRT=1,COBBLE=2,FARM=3,WATER=4,BRIDGE=5,WALL=6,DECK=15,DWATER=7,SEA=12,POOL_T=11,VLAVA=18,CELL=256;
  let TCHAR={0:'g',1:'d',4:'w'},stats={generate:0,solid:0,lava:0,ground:0,foes:0,birds:0,repairs:0};

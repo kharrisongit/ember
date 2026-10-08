@@ -105,12 +105,12 @@ function stepExpandedDragonHazards(dt){
     if(a.type==='flame'){
       a.frame=disabled||phase<1.6||phase>=2.5?0:Math.min(8,1+Math.floor((phase-1.6)/.1));
       a.active=!disabled&&a.frame>=3&&a.frame<=6;
-      if(a.active&&Math.abs(P.y-a.y)<9&&P.x>a.minX&&P.x<a.maxX)hurtPlayer(1);
+      if(a.active)hurtTemplePlayers(p=>Math.abs(p.y-a.y)<9&&p.x>a.minX&&p.x<a.maxX);
     }else{
       a.active=!disabled&&phase>=1.4&&phase<4.2;
       const prev=a.x;a.x=a.minX+12+(a.active?(a.maxX-a.minX-24)*Math.sin((phase-1.4)/2.8*Math.PI):0);
       a.frame=a.active?Math.floor(MD.templeClock*18)%6:0;
-      if(a.active&&Math.abs(P.y-a.y)<12&&P.x>Math.min(prev,a.x)-11&&P.x<Math.max(prev,a.x)+11)hurtPlayer(1);
+      if(a.active)hurtTemplePlayers(p=>Math.abs(p.y-a.y)<12&&p.x>Math.min(prev,a.x)-11&&p.x<Math.max(prev,a.x)+11);
     }
   }
 }

@@ -139,7 +139,7 @@ function stepExpandedTempleMachines(dt){
     if(expandedTrapDisabled(shot.hall))continue;
     const prev=shot.x;shot.x+=shot.dir*(shot.type==='arrow'?180:140)*dt;shot.age+=dt;
     const end=Math.max(shot.minX,Math.min(shot.maxX,shot.x));
-    if(Math.abs(P.y-shot.y)<(shot.type==='arrow'?8:10)&&P.x>=Math.min(prev,end)-7&&P.x<=Math.max(prev,end)+7){hurtPlayer(1);continue;}
+    if(hurtTemplePlayers(p=>Math.abs(p.y-shot.y)<(shot.type==='arrow'?8:10)&&p.x>=Math.min(prev,end)-7&&p.x<=Math.max(prev,end)+7,1,true))continue;
     if(shot.x>shot.minX&&shot.x<shot.maxX&&shot.age<2)live.push(shot);
   }
   MD.templeShots=live;

@@ -210,8 +210,10 @@ function stepExpandedTemple(dt){
   }
   if(!sceneHold()&&!fadeDir)for(const h of (MD.templePlan.hazards||[]).filter(h=>!h.type||h.type==='spikes'))
     h.lines.forEach((line,i)=>{
-      const along=h.axis==='x'?P.x:P.y,cross=h.axis==='x'?P.y:P.x;
-      if(expandedSpikeFrame({id:h.id,phase:i*.55})===3&&Math.abs(along-line)<10&&cross>h.cross[0]&&cross<h.cross[1])hurtPlayer(1);
+      if(expandedSpikeFrame({id:h.id,phase:i*.55})===3)hurtTemplePlayers(p=>{
+        const along=h.axis==='x'?p.x:p.y,cross=h.axis==='x'?p.y:p.x;
+        return Math.abs(along-line)<10&&cross>h.cross[0]&&cross<h.cross[1];
+      });
     });
 }
 function tryExpandedTempleLever(){

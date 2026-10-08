@@ -28,8 +28,14 @@
       if(!this.owner)return;
       this.setMeta(slot,{...this.meta(slot),dirty:true,writeId:this.makeId()});this.onChange();this.onDirty();
     }
+    removeCampaign(raw){
+      const id=parse(raw)?.coop?.id;if(typeof id!=='string')return;
+      const key='ldr.coop.campaigns.'+this.owner,saves=parse(this.storage.getItem(key));
+      if(Array.isArray(saves))this.storage.setItem(key,JSON.stringify(saves.filter(s=>s.id!==id)));
+    }
     remove(slot){
       const key=this.key(slot),raw=this.storage.getItem(key);
+      this.removeCampaign(raw);
       if(!this.owner){
         // Deleted device saves must never be resurrected by legacy migration.
         this.storage.setItem('emberfell.save.migrated','1');
@@ -46,7 +52,7 @@
     }
     apply(slot,remote){
       if(remote&&!remote.deleted)this.storage.setItem(this.key(slot),remote.saveJson);
-      else this.storage.removeItem(this.key(slot));
+      else {this.removeCampaign(this.storage.getItem(this.key(slot)));this.storage.removeItem(this.key(slot));}
       this.setMeta(slot,{base:remote?.revision||null,dirty:false,writeId:null});this.conflicts.delete(slot);this.onChange();
     }
     async syncSlot(slot,transport,canPull=()=>true){

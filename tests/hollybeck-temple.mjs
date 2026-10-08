@@ -11,6 +11,9 @@ const c=vm.createContext({W,TS:16,DIRT:0,terrRLE:a=>'0.'+a.length,WALL78_PIECES:
  hareMeat:0,deerMeat:0,foxMeat:0,birdMeat:0,charm:{},worn:{},breathHas:{},chestOpen:{},features:[],MAPID:'world',MD:W.maps.world,P:{},dragon:{placed:'old'},chunks:new Map(),cam:{z:1},VW:400,VH:300,
  isArea:()=>false,playZoom:()=>1,clampCam(){},checkArea(){},setDevTitle(){},toast(){},setTravel:on=>{travelClosed=!on;},
  document:{getElementById:()=>list,createElement:()=>({handlers:{},addEventListener(type,fn){this.handlers[type]=fn;}})}});
+c.pHp=6;
+const hazardSource=read('js/generated/game-part-2.js');
+vm.runInContext(hazardSource.slice(hazardSource.indexOf('function hurtTemplePlayers('),hazardSource.indexOf('function stepDragonTempleTraps(')),c);
 c.loadStartupImage=async src=>({src});
 c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);

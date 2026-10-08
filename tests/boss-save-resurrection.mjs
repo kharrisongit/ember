@@ -30,8 +30,13 @@ W.maps.house22.foes=[{...lavaSpawn,x:8,y:8}];loadMap('house22');[P.x,P.y]=MD.spa
 bossRoom(run);
 assert(run("lavaSpawn.k==='golem3'&&foes.some(f=>f.idx===0)"));
 assert(run('saveToSlot(2,true)'));
+run('activeSaveSlot=1');
+const writes=[],setItem=c.localStorage.setItem;
+c.localStorage.setItem=(key,value)=>{if(key===run('saveKey(1)'))writes.push(JSON.parse(value));return setItem(key,value);};
 run(`var lava=foes.find(f=>f.idx===0);lava.hp=0;lava.st='dead';markBossGone(lava);`);
-assert(run('saveToSlot(1,true)'));
+c.localStorage.setItem=setItem;
+assert(writes.length>0,'Defeat autosaves without a later manual save');
+assert(writes.every(s=>s.templeDefeated['house22:0']&&s.crafting.ingredients.mineral===2),'Every reward/defeat autosave includes both the boss flag and its material reward');
 const saved=json('readSaveSlot(1)');
 assert(saved.templeDefeated['house22:0']);
 assert(run('loadGame(2)'));

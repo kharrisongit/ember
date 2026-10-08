@@ -9,6 +9,9 @@ const c=vm.createContext({templeCompass:{owned:false,awakened:false},restoreFath
  sceneHold:()=>false,fadeDir:0,tAcc:0,hurtPlayer(){c.hits++;},hits:0,saveGame(){},toast(){},chunks:new Map(),
  FOE:{ghost3:{hp:6},wraith:{hp:8},devil:{hp:22}},NO_RESPAWN:/devil/,royalDefeated:{},knightEncounterDone:false,
  houseLootTaken:new Set(),lootChestAnimations:new Map()});
+c.pHp=6;
+const hazardSource=read('js/generated/game-part-2.js');
+vm.runInContext(hazardSource.slice(hazardSource.indexOf('function hurtTemplePlayers('),hazardSource.indexOf('function stepDragonTempleTraps(')),c);
 c.loadStartupImage=async src=>({src});
 c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);
@@ -88,6 +91,7 @@ Object.assign(c,{dragonIntroDone:true,dragonIntroArmed:false,dragonBanterSeen:ne
  loadMap(id){c.MAPID=id;c.MD=W.maps[id];},cam:{},clampCam(){},canStand:(x,y)=>clear(c.MD,x,y)});
 run(game.slice(game.indexOf('function recoverTempleArrival('),game.indexOf('function blockedByTempleGate(')));
 Object.assign(c,{nanElixirReadyAt:0,inventoryPromptOpens:0,flightTravel:null,restoreNanCooking(){},restoreFlightTravel(){},restoreInventoryPrompt(){},DesertAdventure:{capture(){return {};},restore(){}},DragonChapels:{capture(){return {};},captureQuest(){return {};},restore(){}},Q:{EGGS:2},bagOwned:false,hasBag:()=>false,discussedTopics:new Set(),topicMenuPositions:new Map()});
+Object.assign(c,{ride:null,bolts:[],breathCooldown:{fire:0,bolt:0,shadow:0,ice:0}});
 run(part3.slice(part3.indexOf('function captureSave()'),part3.indexOf('function saveToSlot(')));
 run(part3.slice(part3.indexOf('function loadGame('),part3.indexOf('let mounted =')));
 c.MAPID='passage_west';c.MD=W.maps.passage_west;c.P={x:c.MD.spawn[0],y:c.MD.spawn[1]};saved=JSON.parse(JSON.stringify(run('captureSave()')));

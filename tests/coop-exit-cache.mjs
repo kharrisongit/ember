@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {loadEditorGame} from '../tools/editor-game-context.mjs';
+const {run,context:c}=await loadEditorGame(process.cwd(),{log(){},warn(){},error:console.error},{furniture:false});
+const json=s=>JSON.parse(run('JSON.stringify('+s+')'));
+run(`mode='play';quest=Q.DONE;gameplayStarted=true;loadMap('house22');[P.x,P.y]=MD.spawn;
+window.LDRCoopRender={enable(){}};window.EmberArenaEntry=undefined;window.EmberRiding=undefined;window.EmberEquipmentTutorial=undefined;
+EmberCloudState.activate('host');
+var hosting=true,uid='host',campaignId='exit-test',cloudSlot=0,latestSave=null,pendingSave=false,saveAt=0,commandSeq=0;
+var notices=[],sent=[],leaves=0,room={send:(type,data)=>sent.push({type,data}),leave:async()=>{leaves++;}},notice=text=>notices.push(text);
+var owner=()=>EmberCloudState.owner,key=()=> 'ldr.coop.campaigns.'+owner();
+var localSaves=()=>JSON.parse(localStorage.getItem(key())||'[]');
+var leaving=false,reloads=0;location.reload=()=>reloads++;function release(){};`);
+// Run the production persistence and Leave handlers with only transport inert.
+const campaign=fs.readFileSync(new URL('../js/coop-campaign.js',import.meta.url),'utf8');
+run(campaign.slice(campaign.indexOf('  function persist('),campaign.indexOf('  async function connect(')));
+run(campaign.slice(campaign.indexOf('  function options('),campaign.indexOf('  function restoreProfile(')));
+run(campaign.slice(campaign.indexOf('  async function leave('),campaign.indexOf("  window.addEventListener('resize'")));
+run(`var players=[{uid:'host',profile:{name:'Host'}},{uid:'guest',profile:{name:'Guest'}}];`);
+await run(`LDRCampaign.start({uid:'host',players,onNotice:notice,onSave:checkpoint})`);
+run(`scene=null;sayNpc=null;revealing=false;ovl=null;ask=null;arenaLock=null;foes=[];fadeDir=0;doorMotion=null;bossScene=null;deadShown=false;gold=100;`);
+assert(run('checkpoint()'));
+run('gold=250;arenaLock={id:77,x:8,y:8,r:6};arenaT=1');
+assert.equal(await run('leave()'),false);assert.equal(run('reloads+leaves'),0);assert(run('pendingSave'));
+assert.equal(run('latestSave.save.gold'),100);assert.equal(run('gold'),250);
+run('arenaLock=null;arenaT=0');
+const setItem=c.localStorage.setItem;c.localStorage.setItem=()=>{throw Error('Storage is full');};
+assert.equal(await run('leave()'),false);assert.equal(run('reloads+leaves'),0,'Failed persistence must keep the session open');
+c.localStorage.setItem=setItem;
+assert(await run('leave()'));assert.equal(run('reloads'),1);assert.equal(run('leaves'),1);
+assert.equal(run('readSaveSlot(cloudSlot).gold'),250);assert(!run('pendingSave'));
+console.log('PASS: Leave refuses deferred and failed checkpoints; retry persists current progress before disconnecting.');
+
+const retained=json('latestSave');
+run(`localStorage.setItem(key(),JSON.stringify([...localSaves(),{id:'another-adventure',when:1,save:{map:'world'}}]));
+localStorage.setItem('ldr.coop.campaigns.other-account',localStorage.getItem(key()));gameplayStarted=false;`);
+assert(run('deleteSaveSlot(cloudSlot)'));
+assert.equal(run('readSaveSlot(cloudSlot)'),null);
+assert.deepEqual(json('options().map(s=>s.id)'),['another-adventure']);
+assert(run(`JSON.parse(localStorage.getItem('ldr.coop.campaigns.other-account')).some(s=>s.id==='exit-test')`),'Deletion stays within its account');
+// Receiving a cloud deletion must purge the same resume cache on another device.
+c.retained=retained;run('persist(retained)');
+run(`EmberCloudState.apply(cloudSlot,{format:1,revision:'remote-delete',deleted:true,saveJson:''})`);
+assert(!run(`options().some(s=>s.id==='exit-test')`));
+assert(!run('EmberCloudState.meta(cloudSlot).dirty'));
+console.log('PASS: local and synced cloud deletions remove the matching resumable campaign while preserving other adventures and accounts.');

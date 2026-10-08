@@ -19,6 +19,28 @@
   function stash(){if(current&&party.has(current))Object.assign(party.get(current),captureActor());}
   function select(id){if(!id||id===current||!party.has(id))return;stash();current=id;applyActor(party.get(id));Crafting.coopSelect(id);}
   function withActor(id,fn){const previous=current;select(id);try{return fn();}finally{select(previous);}}
+  function hurtHazard(test,damage,first=false){
+    let hit=false;
+    for(const m of members){
+      const touched=withActor(m.uid,()=>{if(pHp<=0||!test(P))return false;hurtPlayer(damage);return true;});
+      hit=hit||touched;if(touched&&first)break;
+    }
+    return hit;
+  }
+  function landFlight(){
+    if(!active)return;
+    const x=P.x,y=P.y;
+    for(const m of members)if(m.uid!==current)withActor(m.uid,()=>{
+      let spot=null;
+      for(let radius=28;radius<=160&&!spot;radius+=12)for(let i=0;i<16;i++){
+        const nx=x+Math.cos(i*Math.PI/8)*radius,ny=y+Math.sin(i*Math.PI/8)*radius;
+        if(flightGroundClear(nx,ny)){spot=[nx,ny];break;}
+      }
+      // The leader's validated landing remains a safe fallback in tight spaces.
+      [P.x,P.y]=spot||[x,y];restActor();mounted=pHp>0&&!dragon.down;
+      dragon.x=P.x;dragon.y=P.y;dragon.air=false;dragon.tr=null;dragon.moving=false;dragon.placed=MAPID;
+    });
+  }
   function actor(id){if(id===current)stash();return party.get(id);}
   function held(){return !!(scene||sayNpc||revealing||ask||ovl||bagOpen||Crafting.active()||atlasOpen||fishing||doorMotion||fadeDir||bossScene||hatchCamera||ride||flightTravel||window.EmberConversationFlow?.active()||window.EmberArenaEntry?.holding()||window.EmberRiding?.holding());}
   const sharedDialogue=()=>!!(scene||sayNpc||revealing);
@@ -126,7 +148,7 @@
     const effects=system.effects;system.effects=function(dt){const foe=active&&foes.find(f=>f.kind===kind&&f.st!=='dead'),previous=foe?beginEnemy(foe):undefined;try{return effects(dt);}finally{endEnemy(previous);}};
   }
   const spiderDraw=SpiderQueenBoss.draw;SpiderQueenBoss.draw=function(o){const owner=SpiderQueenBoss.coopOwner();return active&&owner?withActor(owner,()=>spiderDraw(o)):spiderDraw(o);};
-  showDeath=function(){if(!active)return originalDeath();stash();if(living().length)return;originalDeath();};
+  showDeath=function(){if(!active)return originalDeath();if(IceMoth.revive()){stash();return;}stash();if(living().length)return;originalDeath();};
   ACT.die.then=showDeath;
   getUp=function(){originalGetUp();if(active){for(const m of members)withActor(m.uid,()=>{pHp=pMax;pInv=2;P.act=null;dragon.hp=dragon.maxHp;dragon.down=false;});for(const m of members)if(m.uid!==current)placeNear(m.uid);save();}};
   function revive(){
@@ -291,6 +313,6 @@
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
     if(!previous)startMorning();last=performance.now();LDRCoopRender.enable();
   }
-  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
+  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,hurtHazard,landFlight,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne};
 })();

@@ -129,6 +129,7 @@ function stepFlightTravel(dt){
     stepTransition(dt);
     if(!dragon.tr&&!f.lift){
       dragon.air=false;dragon.moving=false;dragon.placed=MAPID;P.moving=false;
+      window.LDRCampaign?.landFlight();
       flightTravel=null;clearPadInputs();running=false;arriveT=.35;fade=0;fadeDir=0;
       followCam();clampCam();checkArea();saveGame();toast('Arrived at '+f.name+'.');
     }

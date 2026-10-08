@@ -171,8 +171,10 @@
   function send(data){if(!active||!room||reconnecting)return;if(hosting)execute(uid,data);else room.send('command',{...data,seq:++commandSeq});}
   function release(){pressed.clear();for(const held of touch.values())held.node.classList.remove('hit');touch.clear();if(active){if(hosting)LDRCampaign.setInput(uid,{x:0,y:0});else room?.send('input',{seq:++seq,x:0,y:0});send({kind:'release'});}}
   async function leave(){
-    if(hosting)checkpoint(true);else if(latestSave)persist(latestSave);
+    if(hosting){if(!checkpoint(true))return false;}
+    else if(latestSave&&!persist(latestSave))return false;
     leaving=true;release();const connection=room;if(connection)await connection.leave().catch(()=>{});location.reload();
+    return true;
   }
   window.addEventListener('resize',viewport);
   window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(!active)return;release();room?.send('visibility',!document.hidden);if(document.hidden&&hosting)checkpoint();});

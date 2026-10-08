@@ -62,6 +62,10 @@ jobs:
           node tests/bestiary-progress.mjs
           node tests/boss-save-resurrection.mjs
           node tests/coop-cloud-pause.mjs
+          node tests/travel-save-input-regressions.mjs
+          node tests/friendly-projectiles.mjs
+          node tests/coop-travel-hazards.mjs
+          node tests/coop-exit-cache.mjs
       - name: Check authored town conversations and quest notifications
         run: |
           node tests/opening-castle-regressions.mjs

@@ -6217,7 +6217,7 @@ function captureSave(){return {
   templeLayoutVersion:2, pyramidLayoutVersion:3, sandspireLayoutVersion:1, hollybeckLayoutVersion:1, passageLayoutVersion:1, templeDefeated:{...bossGone},
   breathHas:{...breathHas}, dragonHp:dragon.hp, boarMeat, hareMeat, deerMeat, foxMeat, birdMeat, dragonFish, fishingPole, odoRodReferral:typeof odoRodReferral!=='undefined'&&odoRodReferral,
   elixirs, bombs, dust, bells, marks, breaths, stones, salts,
-  map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:P.y, when:Date.now()
+  map:MAPID, x:trial?160:flightTravel?flightTravel.origin[0]:ride?ride.from[0]:P.x, y:trial?464:flightTravel?flightTravel.origin[1]:ride?ride.from[1]:P.y, when:Date.now()
 };}
 function saveToSlot(slot,quiet=false){
   try{
@@ -6264,6 +6264,10 @@ function loadGame(slot=activeSaveSlot) {
     const s = readSaveSlot(slot);
     if (!s) { toast("save slot "+slot+" is empty"); return false; }
     activeSaveSlot=slot;
+    // Temporary combat state belongs to the adventure being left.
+    saintT=0;wakeCool=0;bell=null;bolts.length=0;
+    breath=null;breathT=0;claw=null;clawT=0;hunt=null;mounted=false;
+    for(const key in breathCooldown)breathCooldown[key]=0;
     // Discoveries belong to this adventure, including their encounter order.
     for(const kind of Object.keys(seenFoe))delete seenFoe[kind];seenCount=0;
     for(const kind of Array.isArray(s.bestiary)?s.bestiary:[])

@@ -689,18 +689,23 @@ function editedTempleWallCollision(x,y){
  if(MD.editableWallOrigins.some(b=>x>=b[0]&&x<b[2]&&y>=b[1]&&y<b[3]))return false;
  return null;
 }
+// Advance each trap once, but check its damage against every living rider.
+function hurtTemplePlayers(test,damage=1,first=false){
+ if(globalThis.window?.LDRCampaign?.active)return LDRCampaign.hurtHazard(test,damage,first);
+ const hit=pHp>0&&test(P);if(hit)hurtPlayer(damage);return hit;
+}
 function stepDragonTempleTraps(dt){
  if(!MD.templeDragon)return;
  for(const a of MD.templeHazards){
   const disabled=bossGone[MAPID+':traps:'+a.hall],phase=(MD.templeClock+a.offset)%(a.type==='flame'?3.4:5.6);
   if(a.type==='flame'){
    a.frame=disabled||phase<1.5||phase>=2.3?0:Math.min(8,1+Math.floor((phase-1.5)/.1));a.active=!disabled&&a.frame>=3&&a.frame<=6;
-   if(a.active&&Math.abs(P.y-a.y)<9&&P.x>115&&P.x<205)hurtPlayer(1);
+   if(a.active)hurtTemplePlayers(p=>Math.abs(p.y-a.y)<9&&p.x>115&&p.x<205);
   }else{
    a.active=!disabled&&phase>=1.4&&phase<4.2;
    const prev=a.x;a.x=a.active?128+64*Math.sin((phase-1.4)/2.8*Math.PI):128;
    a.frame=a.active?Math.floor(MD.templeClock*12)%6:0;
-   if(a.active&&Math.abs(P.y-a.y)<12&&P.x>Math.min(prev,a.x)-11&&P.x<Math.max(prev,a.x)+11)hurtPlayer(1);
+   if(a.active)hurtTemplePlayers(p=>Math.abs(p.y-a.y)<12&&p.x>Math.min(prev,a.x)-11&&p.x<Math.max(prev,a.x)+11);
   }
  }
 }
@@ -755,7 +760,7 @@ function stepTempleMachines(dt){
  for(const shot of MD.templeShots){
   if(bossGone[MAPID+':traps:'+shot.hall])continue;
   const prev=shot.x;shot.x+=shot.dir*(shot.type==='arrow'?180:140)*dt;shot.age+=dt;
-  if(Math.abs(P.y-shot.y)<(shot.type==='arrow'?8:10)&&P.x>=Math.min(prev,shot.x)-7&&P.x<=Math.max(prev,shot.x)+7){hurtPlayer(1);continue;}
+  if(hurtTemplePlayers(p=>Math.abs(p.y-shot.y)<(shot.type==='arrow'?8:10)&&p.x>=Math.min(prev,shot.x)-7&&p.x<=Math.max(prev,shot.x)+7,1,true))continue;
   if(shot.x>112&&shot.x<208&&shot.age<2)live.push(shot);
  }
  MD.templeShots=live;
@@ -777,7 +782,7 @@ function stepTempleGates(dt){
  for(const g of MD.templeGates){const open=foesHeld||(g.room?templeRoomCleared(g.room):!!g.entered);
   g.open=Math.max(0,Math.min(1,g.open+(open?1:-1)*dt*3));}
  if(chestOpen[MD.templeOldChest||'tp4'])chestOpen[MAPID]=true;
- if(!sceneHold()&&fadeDir===0){MD.templeClock+=dt;for(const h of MD.templeTraps){h.leverOpen=Math.min(1,h.leverOpen+(bossGone[MAPID+':traps:'+h.id]?dt*3:0));if(foesHeld||bossGone[MAPID+':traps:'+h.id])continue;for(let i=0;i<h.rows.length;i++)if(templeSpikeFrame(h.id,i)===3&&P.x>112&&P.x<208&&Math.abs(P.y-h.rows[i])<9)hurtPlayer(1);}stepTempleMachines(dt);stepDragonTempleTraps(dt);}
+ if(!sceneHold()&&fadeDir===0){MD.templeClock+=dt;for(const h of MD.templeTraps){h.leverOpen=Math.min(1,h.leverOpen+(bossGone[MAPID+':traps:'+h.id]?dt*3:0));if(foesHeld||bossGone[MAPID+':traps:'+h.id])continue;for(let i=0;i<h.rows.length;i++)if(templeSpikeFrame(h.id,i)===3)hurtTemplePlayers(p=>p.x>112&&p.x<208&&Math.abs(p.y-h.rows[i])<9);}stepTempleMachines(dt);stepDragonTempleTraps(dt);}
 
 }
 function templeSpikeFrame(id,row){
@@ -2174,6 +2179,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   yield [0, "Reading map data"];
   if(W.maps[id]?.templeLegacy)id=typeof W.maps[id].templeLegacy==='string'?W.maps[id].templeLegacy:'tp1';
   if(!W.maps[id])throw new Error('no such map: '+id);
+  if(ride){const boat=ferryBoatObj();if(boat)hidden.delete(boat.id);ride=null;}
   const leavingDraft=typeof saveEditorDraft==='function'?saveEditorDraft():null;
   rememberOverworld(leavingDraft);
   editorDraftReady=false;editorMapLoading=true;
@@ -5030,6 +5036,16 @@ addEventListener("keydown", e => {
     e.preventDefault(); if(!e.repeat){if(['a',' ','enter'].includes(k)) actionButton();else {askShut();endFishing();}} return;
   }
   if(fishing&&fishing.phase!=='prompt')return;
+  if((bagOpen||ovl)&&['a',' ','enter','b','escape','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){
+    if([' ','enter'].includes(k)&&e.target?.closest?.('button'))return;
+    e.preventDefault();
+    if(k.startsWith('arrow'))controllerDirection(k==='arrowleft'?-1:k==='arrowright'?1:0,k==='arrowup'?-1:k==='arrowdown'?1:0);
+    else if(!e.repeat){
+      if(k==='b'||k==='escape'){nativeControllerButton('btnB',true);nativeControllerButton('btnB',false);}
+      else actionButton();
+    }
+    return;
+  }
   keys[k] = 1;
   if (k === "b") {
     running = true;
@@ -5774,13 +5790,25 @@ function stepBolts(dt) {
   if (bossScene) return;
   for (let i = bolts.length - 1; i >= 0; i--) {
     const b = bolts[i];
-    const coopPrevious = window.LDRCampaign?.beginProjectile(b);
+    const coopPrevious = b.foeShot?undefined:window.LDRCampaign?.beginProjectile(b);
     try {
     b.t += dt;
     const step = b.sp * dt;
     const nx = b.x + b.vx * step, ny = b.y + b.vy * step;
     if (isSolid(nx, ny)) { burstAt(b.art, b.dir, b.x, b.y); bolts.splice(i, 1); continue; }
     b.x = nx; b.y = ny;
+    if(b.foeShot){
+      const target=foes.find(f=>{
+        if(f===b.sourceFoe||f.ally||f.storyPassive||f.st==='dead'||window.EmberArenaEntry?.protected(f))return false;
+        const body=foeBodyProfile(f);return Math.hypot(body.x-b.x,body.y-b.y)<body.r+4;
+      });
+      if(target){
+        target.hp-=b.dmg;target.hurt=.25;
+        if(target.hp<=0){target.st='dead';target.t=0;markBossGone(target);}
+        burstAt(b.art,b.dir,b.x,b.y);bolts.splice(i,1);
+      }else if(b.t>b.life)bolts.splice(i,1);
+      continue;
+    }
     if (b.targetDragon && !dragon.down && dragonHere() &&
         Math.hypot(dragon.x - b.x, dragon.y - 8 - b.y) < 18) {
       burstAt(b.art, b.dir, b.x, b.y);
@@ -9788,7 +9816,6 @@ const BOSS_KIND = /^(golem1|golem2|golem3|golem4|devil|lich|ghost|ghost3|knight|
 const NO_RESPAWN = /^(golem1|golem2|golem3|golem4|devil|lich|knight|spiderqueen|frosthorn|icemoth)$/;
 const bossGone = {};                /* mapid+":"+idx -> true once one falls for good */
 function markBossGone(f) {
-  if(typeof Crafting!=='undefined')Crafting.defeated(f);
   if(f.kind==='frosthorn'&&!f.ally)Frosthorn.defeated(f);
   if(f.kind==='icemoth'&&!f.ally)IceMoth.defeated(f);
   if(typeof dragonBossBanter==='function')dragonBossBanter(f,true);
@@ -9796,10 +9823,14 @@ function markBossGone(f) {
   if(f.chestAmbush){f.hold=0;f.emerge=1;}
   if(f.kind==="treasuryknight"){royalDefeated.treasuryCaptain=true;recoverStrandedDragon();toast("Treasury Captain defeated — the treasure is yours!");}
   if(f.kind==="royalguard" && f.idx!==undefined){royalDefeated[MAPID+":"+f.idx]=true;if(!foes.some(q=>q!==f&&q.kind==="royalguard"&&q.st!=="dead"))recoverStrandedDragon();}
-  if (!f.ally && !f.storyKnight && f.idx !== undefined && (MD.templeExpanded || NO_RESPAWN.test(f.kind)))
+  const permanent=!f.ally&&!f.storyKnight&&f.idx!==undefined&&(MD.templeExpanded||NO_RESPAWN.test(f.kind));
+  const newlyDefeated=permanent&&!bossGone[MAPID+':'+f.idx];
+  if (permanent)
     bossGone[MAPID + ":" + f.idx] = true;   /* stays down for good, however it died */
   const rewardDrop=typeof BossRewardChests!=='undefined'&&BossRewardChests.defeated(f);
-  if(rewardDrop||(MD.templeExpanded&&!f.ally&&f.idx!==undefined))saveGame();
+  // Material rewards can autosave, so record the defeat and relic drop first.
+  if(typeof Crafting!=='undefined')Crafting.defeated(f);
+  if(newlyDefeated||rewardDrop||(MD.templeExpanded&&!f.ally&&f.idx!==undefined))saveGame();
 }
 function bossRing(a) {
   if (!a) return false;
@@ -10734,7 +10765,8 @@ function stepFoes(dt) {
           const dd = Math.abs(ax) > Math.abs(ay) ? (ax < 0 ? "w" : "e")
                                                  : (ay < 0 ? "u" : "d");
           bolts.push({ x: f.x, y: f.y - 22, vx: ax / ad, vy: ay / ad,
-                       dir: dd, art: k.cast, dmg: k.dmg,
+                       dir: dd, art: k.cast, dmg: k.dmg*(f.mad>0?2:1),
+                       foeShot:!!(f.ally||f.mad>0),sourceFoe:f,
                        sp: k.boltSp || 150, life: 2.6, t: 0,
                        targetDragon: !!tgt.isDragon, unblockable: !!f.unblockableAttack });
         } else if (d < k.reach + 8 && tgt.isPlayer) { if(!glassShieldDeflectFoe(f)) hurtPlayer(k.dmg); }
