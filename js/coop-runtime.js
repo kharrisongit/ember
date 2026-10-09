@@ -13,15 +13,22 @@
   function noteFrame(phase){if(active&&ticking)framePhases.add(phase);}
   function localPanel(kind){if(!active||current===local)return false;openLocalPanel(kind,current);return true;}
   const cleanObject=(target,source)=>{for(const key of Object.keys(target))if(key!=='dir'&&!(key in source))delete target[key];Object.assign(target,source);};
-  function captureActor(){return {P:{...P},dragon:{...dragon},vars:{pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince},worn:{...worn},cooldown:{...breathCooldown}};}
+  function captureActor(){return {P:{...P},dragon:{...dragon},vars:{pHp,pMax,pInv,saintT,wakeCool,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince},worn:{...worn},cooldown:{...breathCooldown}};}
   function applyActor(a){
     dragonFacingLocked=false;cleanObject(P,a.P);cleanObject(dragon,a.dragon);
-    ({pHp,pMax,pInv,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince}=a.vars);
+    ({pHp,pMax,pInv,saintT,wakeCool,mounted,running,breath,breathT,claw,clawT,hunt,linger,dragonCombatPause,dragonRecall,dragonRecallT,dragonBossClaws,dragonBreak,dragonFacingLocked,dragonEl,breathPick,wardCarry,edgeCarry,brandCount,brandHot,twinSpent,twinKills,glassShieldHeld,glassShieldWindowUntil,glassShieldPulse,lHeld,rHeld,bothHeldSince}=a.vars);
     cleanObject(worn,a.worn);cleanObject(breathCooldown,a.cooldown);
   }
   function stash(){if(current&&party.has(current))Object.assign(party.get(current),captureActor());}
   function select(id){if(!id||id===current||!party.has(id))return;stash();current=id;applyActor(party.get(id));Crafting.coopSelect(id);}
   function withActor(id,fn){const previous=current;select(id);try{return fn();}finally{select(previous);}}
+  function forEachActor(fn){return members.map(m=>withActor(m.uid,fn));}
+  function combatPartyClear(foe,x,y,sweep){
+    return members.every(m=>withActor(m.uid,()=>{
+      if(combatBodyBlocks(foe,x,y,P,sweep))return false;
+      return mounted||!dragon.on||dragon.down||dragon.placed!==MAPID||!combatBodyBlocks(foe,x,y,dragon,sweep);
+    }));
+  }
   function hurtHazard(test,damage,first=false){
     let hit=false;
     for(const m of members){
@@ -123,7 +130,7 @@
     if(!active)return;
     for(const member of players){
       if(!party.has(member.uid)){
-        stash();const a=captureActor();a.P={...P,act:null};a.dragon={...dragon,tr:null};a.vars={...a.vars,breath:null,claw:null,hunt:null,breathT:0,clawT:0,pInv:1,pHp:pMax,mounted:false};a.cooldown={fire:0,bolt:0,shadow:0,ice:0};
+        stash();const a=captureActor();a.P={...P,act:null};a.dragon={...dragon,tr:null};a.vars={...a.vars,breath:null,claw:null,hunt:null,breathT:0,clawT:0,pInv:1,pHp:pMax,saintT:0,wakeCool:0,mounted:false};a.cooldown={fire:0,bolt:0,shadow:0,ice:0};
         party.set(member.uid,{...a,profile:member.profile});Crafting.coopSelect(member.uid);Crafting.coopSelect(current);placeNear(member.uid);
       }
       party.get(member.uid).profile=member.profile;
@@ -132,6 +139,7 @@
   function living(){stash();return members.filter(m=>party.get(m.uid)?.vars.pHp>0).map(m=>party.get(m.uid));}
   function beginEnemy(f){
     if(!active||rendering)return undefined;const previous=current;stash();
+    if(f.ally){select(party.has(f.summoner)?f.summoner:local);return previous;}
     const webOwner=f.kind==='spiderqueen'?SpiderQueenBoss.coopOwner():null;
     let chosen=members.find(m=>webOwner?m.uid===webOwner:m.uid===f.coopTarget&&party.get(m.uid)?.vars.pHp>0);
     if(!chosen||!webOwner&&!['wind','swing'].includes(f.st))chosen=members.filter(m=>party.get(m.uid)?.vars.pHp>0).sort((a,b)=>{
@@ -216,6 +224,7 @@
         if(framePhases.has('player')&&!deadShown){stepAct(dt);stepPlayer(dt);}
         if(framePhases.has('immunity')&&pInv>0)pInv=Math.max(0,pInv-dt);
         if(framePhases.has('sword'))swingHits();
+        if(framePhases.has('buffs'))stepActorBuffs(dt);
         if(framePhases.has('breath'))stepBreath(dt);
         if(framePhases.has('dragon'))stepDragon(dt);
         if(framePhases.has('claw'))stepClaw(dt);
@@ -304,7 +313,7 @@
   saveToSlot=function(...args){
     // A queued or failed checkpoint must not authorize Save & exit to reload.
     if(active)return save(!args[1],args[1]?undefined:args[0])===true;
-    if(originalRead(args[0])?.coop){const free=[1,2,3].find(n=>!originalRead(n));if(!free){toast('This slot contains a co-op adventure. Choose another slot for your solo game.');return false;}activeSaveSlot=free;args[0]=free;}
+    if(originalRead(args[0])?.coop){const free=firstEmptySaveSlot();if(!free){toast('This slot contains a co-op adventure. Choose another slot for your solo game.');return false;}activeSaveSlot=free;args[0]=free;}
     return originalSave(...args);
   };
   loadGame=function(slot){if(!active&&originalRead(slot)?.coop){if(!gameplayStarted)window.LDRCoopCampaign?.open(originalRead(slot).coop.id);else toast('Resume co-op from Story Co-op at the title screen.');return false;}return originalLoad(slot);};
@@ -335,6 +344,6 @@
     EmberPlayerIdentity.restore(players.find(m=>m.uid===uid)?.profile);window.EmberTitleAudio?.finish();
     if(!previous)startMorning();last=performance.now();LDRCoopRender.enable();
   }
-  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},defeated:()=>!living().length,noteFrame,localPanel,vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,actor,hurtHazard,landFlight,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
+  window.LDRCampaign={get active(){return active;},get owner(){return current;},get uiOwner(){return sharedOwner;},get held(){return held();},get safe(){return !!checkpoint();},defeated:()=>!living().length,noteFrame,localPanel,vitals:()=>members.map(m=>{const a=actor(m.uid);return {uid:m.uid,name:m.profile.name,hp:a?.vars.pHp||0,max:a?.vars.pMax||6,dragon:hasDragon()?{hp:a?.dragon.hp||0,max:a?.dragon.maxHp||20}:null};}),start,syncParty,setInput,command,claim,voteAction,controllerState,mainFrame,renderGuest,checkpoint,withActor,forEachActor,combatPartyClear,actor,hurtHazard,landFlight,beginEnemy,beginProjectile,endEnemy,inspect:()=>({current,local,map:MAPID,quest,party:[...party.entries()]})};
   window.LDRCoop={get active(){return active;},addActors,drawActor,drawAirborne};
 })();

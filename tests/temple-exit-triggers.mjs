@@ -160,7 +160,7 @@ console.log(`PASS: FOES bypasses ${bypassDoors} passage leaves in both direction
 // Walk and run into every cross-map temple doorway with real movement and
 // footprint checks. Exact-coordinate teleports concealed the north-wall bug.
 c.PC_W=11;c.PC_H=7;c.running=false;c.blockedByNpcBuffer=()=>false;
-c.npcCollisionEscape=null;c.npcs=[];c.mounted=false;
+c.npcCollisionEscape=null;c.npcs=[];c.mounted=false;c.bagOpen=false;c.ovl=null;c.ask=null;c.atlasOpen=false;
 run(read('js/combat-navigation.js'));
 c.isSolid=(x,y)=>{
  c.point=[x,y];if(run('expandedTempleSolid(...point)')||run('blockedByTempleGate(...point)'))return true;

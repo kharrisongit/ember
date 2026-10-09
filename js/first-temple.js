@@ -151,7 +151,7 @@ function stepExpandedTempleArena(dt){
   arenaGoing=!arenaFoesLeft(arenaLock);
   arenaT=Math.min(1,arenaT+dt*(arenaGoing?-2.2:3));
   if(arenaGoing&&arenaT<=0){
-    releaseArena();twinSpent=false;twinKills=0;
+    releaseArena();
     for(const f of foes)if(f.raised){f.ally=0;f.raised=0;f.st='dead';f.t=0;}
   }
 }

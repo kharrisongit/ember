@@ -13,6 +13,7 @@ const c=vm.createContext({nanMorningSolid:()=>false,nanMorningDoorBlocked:()=>fa
 c.loadStartupImage=async src=>({src});
 c.loadStartupJSON=async src=>(await c.fetch(src)).json();
 const run=s=>vm.runInContext(s,c);
+run(game.slice(game.indexOf('function resetBattleCharms()'),game.indexOf('function wornCount()')));
 run(game.slice(game.indexOf('const CHESTS = ['),game.indexOf('function chestHere()')));
 run(game.slice(game.indexOf('function installFirstTemple(){'),game.indexOf('const foeVisibleTopCache82')));
 run('installFirstTemple();installSecondTemple();installThirdTemple();refineSecondTemple();finishTempleLayouts77();refineTemples78();finishTempleLayouts82();');

@@ -3759,6 +3759,7 @@ let falling = null;
 function releaseArena() {
   globalThis.window?.EmberArenaEntry?.completed(arenaLock);
   settleGraves();
+  resetBattleCharms();
   if(arenaLock && !arenaFoesLeft(arenaLock)) recoverStrandedDragon();
   if (arenaLock && arenaT > 0.2) falling = { ring: arenaLock, t: 0, life: 1.0 };
   arenaLock = null; arenaT = 0; arenaGoing = false;
@@ -4006,11 +4007,12 @@ function stepArena(dt) {
       if (!bossRing(arenaLock) && !holy.has(ringKey(arenaLock)))
         cooling.set(ringKey(arenaLock), ARENA_REST);
       const completedRing=arenaLock;
+      settleGraves();
       recoverStrandedDragon();
       arenaLock = null; arenaT = 0; arenaGoing = false;
       globalThis.window?.EmberArenaEntry?.completed(completedRing);
       globalThis.window?.EmberRiding?.completed(completedRing);
-      twinSpent = false; twinKills = 0;   /* ready for the next ring */
+      resetBattleCharms();   /* ready for the next ring */
       for (const f of foes) if (f.raised) { f.ally = 0; f.raised = 0; f.st = "dead"; f.t = 0; }
     }
   }
@@ -4932,6 +4934,11 @@ function bagTick() {
 function bagName(it) { return playerFacingText(typeof it.name === "function" ? it.name() : it.name); }
 function bagTell(it) { return playerFacingText(typeof it.tell === "function" ? it.tell() : it.tell); }
 const BAG_ORDER = { key: 0, charm: 1, use: 2 };
+function toggleCharm(key) {
+  if(!charm[key])return false;
+  if(!worn[key]&&wornCount()>=WORN_MAX){toast("three at a time -- take one off first");return false;}
+  worn[key]=!worn[key];saveGame();toast(worn[key]?"worn":"taken off");return true;
+}
 function bagKind(it) { return it.kind || (it.charm ? "charm" : "use"); }
 function bagHeld() {
   const held = BAG.filter(it => { try { return !!it.has(); } catch (e) { return false; } });
@@ -5174,7 +5181,7 @@ function refreshBag() {
         toast("three at a time -- take one off first");
         return;
       }
-      worn[pickIt.charm] = !on;
+      toggleCharm(pickIt.charm);
       refreshBag();
     });
     desc.appendChild(b);
@@ -5454,7 +5461,7 @@ function bagUse() {
     const on = worn[it.charm];
     if (!on && wornCount() >= WORN_MAX) { toast("three at a time -- take one off first"); return; }
     opts.push({ n: on ? "UNEQUIP" : "EQUIP",
-                go: () => { worn[it.charm] = !on; toast(!on ? "worn" : "taken off"); } });
+                go: () => toggleCharm(it.charm) });
   } else { toast("nothing to do with it"); return; }
   opts.push({ n: "CANCEL", go: null });
   ask = { opts, key: it.key }; askPick = 0;
@@ -6269,6 +6276,7 @@ function loadGame(slot=activeSaveSlot) {
     activeSaveSlot=slot;
     // Temporary combat state belongs to the adventure being left.
     saintT=0;wakeCool=0;bell=null;bolts.length=0;
+    brandCount=0;brandHot=false;wardCarry=0;edgeCarry=0;twinSpent=false;twinKills=0;
     breath=null;breathT=0;claw=null;clawT=0;hunt=null;mounted=false;
     for(const key in breathCooldown)breathCooldown[key]=0;
     // Discoveries belong to this adventure, including their encounter order.

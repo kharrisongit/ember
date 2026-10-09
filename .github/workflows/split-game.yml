@@ -56,6 +56,7 @@ jobs:
         run: node tools/check-game-scripts.mjs
       - name: Check save recovery and fallen co-op dialogue
         run: |
+          node tests/audit-2026-10-09.mjs
           node tests/save-recovery-regressions.mjs
           node tests/coop-fallen-dialogue.mjs
           node tests/coop-recovery-regressions.mjs

@@ -2264,6 +2264,7 @@ function* loadMapSteps(id, fresh, discardDraft=false, progressive=false) {
   }
   stroke = null;
 
+  bolts.length=0;bell=null;
   loot = []; spell = null; risings = []; blooms = []; consecrationTrails = []; dustPuff = null; graves = null; flying = []; falling = null;
   seedTreasuryGold();
   if (id !== "cinderhold") lastFight = 0;   /* the hall keeps its own fight */
@@ -5805,7 +5806,7 @@ function stepBolts(dt) {
       });
       if(target){
         target.hp-=b.dmg;target.hurt=.25;
-        if(target.hp<=0){target.st='dead';target.t=0;markBossGone(target);}
+        if(target.hp<=0){target.st='dead';target.t=0;if(!target.storyKnight)dropGold(target.x,target.y,target.kind);markBossGone(target);}
         burstAt(b.art,b.dir,b.x,b.y);bolts.splice(i,1);
       }else if(b.t>b.life)bolts.splice(i,1);
       continue;
@@ -5818,7 +5819,7 @@ function stepBolts(dt) {
     }
     if (!b.targetDragon && Math.hypot(P.x - b.x, (P.y - 8) - b.y) < 11) {
       if (glassShieldActive() && !b.unblockable) {
-        glassShieldPulse = .42; globalThis.window?.EmberSfx?.block(); burstAt(b.art, b.dir, b.x, b.y);
+        glassShieldPulse = .42; glassGifStart=tAcc; globalThis.window?.EmberSfx?.block(); burstAt(b.art, b.dir, b.x, b.y);
         const dx=b.x-P.x,dy=b.y-(P.y-8),d=Math.hypot(dx,dy)||1;
         b.vx=dx/d; b.vy=dy/d; b.targetDragon=false; b.t=0; b.x+=b.vx*10; b.y+=b.vy*10;
         continue;
@@ -7888,7 +7889,8 @@ function unlockDragonBreath(kind) {
   syncDragonVitality(true);
   return true;
 }
-function recoverStrandedDragon() {
+function recoverStrandedDragon(localOnly=false) {
+  if(!localOnly&&window.LDRCampaign?.active)return window.LDRCampaign.forEachActor(()=>recoverStrandedDragon(true)).some(Boolean);
   if(!hasDragon() || boarMeat>0 || hareMeat>0 || deerMeat>0 || foxMeat>0 || birdMeat>0 || dragonFish>0 || !(dragon.down || dragon.hp<=0))return false;
   dragon.maxHp=dragonMaxHp();dragon.hp=dragon.maxHp;
   dragon.down=false;dragon.revive=0;dragon.knockdown=0;dragon.hurt=0;dragon.inv=1.2;
@@ -8932,7 +8934,7 @@ function grabGold() {
   gold += got;boarMeat+=meat;hareMeat+=hare;deerMeat+=deer;foxMeat+=fox;birdMeat+=bird;
   const cuts=[meat?meat+' boar meat':'',hare?hare+' hare meat':'',deer?deer+' deer meat':'',fox?fox+' fox meat':'',bird?bird+' bird meat':'',got?got+' gold':''].filter(Boolean);
   toast(meat||hare||deer||fox||bird?'Collected '+cuts.join(' and ')+' — feed it to your dragon.':"Corin got " + got + " gold!");
-  if(meat||hare||deer||fox||bird)saveGame();
+  saveGame();
   return true;
 }
 function drawLoot() {
@@ -8963,6 +8965,7 @@ function drinkPotion() {
   potions--;
   pHp = Math.min(pMax, pHp + 2);
   showHeal("potion");
+  saveGame();
   toast("two hearts back -- " + potions + " left");
   return true;
 }
@@ -8993,7 +8996,7 @@ function feedDragon(kind) {
 let saintT = 0;
 function useSaint() {
   if (breaths <= 0 && !devSafe) { toast("no saint's breath"); return false; }
-  breaths--; saintT = 16;
+  breaths--; saintT = 16;saveGame();
   toast("nothing can touch him");
   return true;
 }
@@ -9023,9 +9026,11 @@ function useStone() {
   best.st = "idle"; best.t = 0; best.ally = 1; best.raised = 1;
   best.hold = 0; best.holdMax = 0; best.emerge = 1;   /* it climbs out */
   best.hp = Math.max(1, Math.round((k.hp || 4) / 2));
-  best.hurt = 0; best.mad = 0;
+  best.hurt = 0; best.mad = 0;best._hunt=null;best._huntT=-Infinity;
+  if(window.LDRCampaign?.active)best.summoner=window.LDRCampaign.owner;
   best.slot = foes.indexOf(best);
   rebuildBuckets();
+  saveGame();
   toast("it gets up, and it is his now");
   return true;
 }
@@ -9062,6 +9067,7 @@ function useBell() {
   else if (P.dir === "u") { bx = P.x + (P.flip ? -30 : 30); by = P.y + 12; }
   else { bx = P.x + (P.flip ? -32 : 32); by = P.y + 12; }
   bell = { x: bx, y: by, t: 12, age: 0 };
+  saveGame();
   toast("the bell goes in, and it will not stop");
   return true;
 }
@@ -9213,7 +9219,7 @@ function clearTrialCombat() {
   spell = null; risings = []; turnHolder = null; turnT = 0; foeCool = 0;
   lastFight = 0; bossScene = null; grief = null; risePend = null;
   arenaLock = null; arenaT = 0; arenaGoing = false;
-  twinSpent = false; twinKills = 0;
+  resetBattleCharms();
 }
 function stopTrial(message = "The trial ends. Speak to the demon in the throne room to try again.") {
   if (!trial) return;
@@ -9319,7 +9325,7 @@ function beginThroneConfrontation(n) {
 function resetFinalBattle() {
   lastFight=0;bossScene=null;grief=null;risePend=null;dragonBossClaws=0;
   bolts.length=0;breath=null;hunt=null;claw=null;spell=null;risings=[];
-  turnHolder=null;turnT=0;foeCool=0;twinSpent=false;twinKills=0;
+  turnHolder=null;turnT=0;foeCool=0;resetBattleCharms();
   window.EmberArenaEntry?.reset();window.EmberKingMusic?.stop();
   window.EmberConversationFlow?.shut(true);askShut();scene=null;sayNpc=null;sayOff();showFace(null);
   clearPadInputs();P.act=null;P.moving=false;camFree=false;restoreCameraTarget();cam.z=playZoom();
@@ -9784,6 +9790,7 @@ function settleGraves() {
     toast("the stones had nothing to give");
   }
   graves = null;
+  saveGame();
 }
 function useMark() {
   if (marks <= 0 && !devSafe) { toast("no markers"); return false; }
@@ -9809,6 +9816,7 @@ function useDust() {
   dust--;
   showDust(P.x, P.y);
   for (const f of near) f.mad = MAD_FOR;
+  saveGame();
   toast("the dust goes up -- they cannot tell one another from him");
   return true;
 }
@@ -10184,11 +10192,11 @@ function useBomb() {
   if (bombs <= 0 && !devSafe) { toast("he has no curse to spend"); return false; }
   if (!arenaLock && !devSafe && !devItemTest) { toast("nothing to walk out of"); return false; }
   if (!arenaLock) {
-    bombs--;
+    bombs--;saveGame();
     castSkull(P.x, P.y, "#a8c8bc", () => toast("nothing here to curse"));
     return true;
   }
-  bombs--;
+  bombs--;saveGame();
   if (bossRing(arenaLock)) {
     castSkull(P.x, P.y, "#a8c8bc", () => {
       toast("he says the word. It does not even look up.");
@@ -10221,6 +10229,7 @@ function drinkElixir() {
   elixirs--;
   pHp = pMax;
   showHeal("elixir");
+  saveGame();
   toast("full again -- " + elixirs + " elixir" + (elixirs === 1 ? "" : "s") + " left");
   return true;
 }
@@ -10351,6 +10360,10 @@ const CHARM_ART = { spore: "it_spore", ward: "it_ward", edge: "it_edge",
                     flame: "it_twinflame", wake: "it_wake" };
 let twinSpent = false;
 const WORN_MAX = 3;
+function resetBattleCharms() {
+  const reset=()=>{twinSpent=false;twinKills=0;};
+  if(window.LDRCampaign?.active)window.LDRCampaign.forEachActor(reset);else reset();
+}
 function wornCount() {
   let n = 0;
   for (const k in worn) if (worn[k]) n++;
@@ -10381,10 +10394,10 @@ let turnHolder = null, turnT = 0, foeCool = 0;
 function targetFor(f) {
   if (f.ally || f.mad > 0) {
     let best = null, bd = 220;
+    const validTarget=q=>q&&q!==f&&!q.ally&&!q.storyPassive&&q.st!=='dead'&&!globalThis.window?.EmberArenaEntry?.protected(q);
     const fresh = f._huntT !== undefined && f._huntT > foeClock - 0.25;
     const kept = f._hunt;
-    if (fresh && (!kept || (kept.st !== "dead" && !globalThis.window?.EmberArenaEntry?.protected(kept) &&
-                            Math.hypot(kept.x - f.x, kept.y - f.y) < 300))) {
+    if (fresh && (!kept || (validTarget(kept) && Math.hypot(kept.x - f.x, kept.y - f.y) < 300))) {
       if (kept) return { x: kept.x, y: kept.y,
                          d: Math.hypot(kept.x - f.x, kept.y - f.y),
                          isPlayer: false, foe: kept };
@@ -10392,9 +10405,7 @@ function targetFor(f) {
     } else {
       f._huntT = foeClock;
       for (const q of foes) {
-      if (q === f || q.st === "dead" || globalThis.window?.EmberArenaEntry?.protected(q)) continue;
-      if (f.ally && q.ally) continue;
-      if (!f.ally && q.ally) continue;   /* a maddened foe leaves his side alone */
+      if (!validTarget(q)) continue;
       const d = Math.hypot(q.x - f.x, q.y - f.y);
       if (d < bd) { bd = d; best = q; }
     }
@@ -10417,7 +10428,8 @@ const WAKE_COOL = 24;              /* seconds between callings */
 let wakeCool = 0;
 function wakeReady() { return charm.wake && wakeCool <= 0 && !dying(); }
 function wakeCount() {
-  return foes.filter(f => f.ally && f.kind === "wraith" && f.st !== "dead").length;
+  return foes.filter(f => f.ally && f.kind === "wraith" && f.st !== "dead" &&
+    (!window.LDRCampaign?.active||f.summoner===window.LDRCampaign.owner)).length;
 }
 function wakeTheDead() {
   if (!wakeReady()) return false;
@@ -10427,7 +10439,7 @@ function wakeTheDead() {
   for (let i = 0; i < room; i++) {
     const ang = i * Math.PI + 0.7854;       /* one either side of him */
     showRise(P.x + Math.cos(ang) * 34, P.y + Math.sin(ang) * 26);   /* violet */
-    foes.push({ kind: "wraith", ally: 1, slot: i,
+    foes.push({ kind: "wraith", ally: 1, slot: i, summoner:window.LDRCampaign?.active?window.LDRCampaign.owner:null,
                 x: P.x + Math.cos(ang) * 34,
                 y: P.y + Math.sin(ang) * 26,
                 hx: P.x, hy: P.y,
@@ -10473,7 +10485,6 @@ function stepFoes(dt) {
   if(typeof SpiderQueenBoss!=='undefined')SpiderQueenBoss.effects(dt);
   if(typeof Frosthorn!=='undefined')Frosthorn.effects(dt);
   if(typeof IceMoth!=='undefined')IceMoth.effects(dt);
-  if (wakeCool > 0) wakeCool -= dt;
   live.length = 0;
   for (const f of foes) {
     const coopPrevious = window.LDRCampaign?.beginEnemy(f);
@@ -10777,7 +10788,7 @@ function stepFoes(dt) {
         else if (d < k.reach + 8 && tgt.isDragon) hurtDragon(k.dmg);
         else if (d < k.reach + 8 && (f.ally || f.mad > 0) && tgt.foe && tgt.foe.st !== "dead") {
           tgt.foe.hp -= k.dmg * (f.mad > 0 ? 2 : 1); tgt.foe.hurt = 0.25;
-          if (tgt.foe.hp <= 0) { tgt.foe.st = "dead"; tgt.foe.t = 0; markBossGone(tgt.foe); }
+          if (tgt.foe.hp <= 0) { tgt.foe.st = "dead"; tgt.foe.t = 0; if(!tgt.foe.storyKnight)dropGold(tgt.foe.x,tgt.foe.y,tgt.foe.kind); markBossGone(tgt.foe); }
         }
       }
       if (f.t > k.swingT + (f.mad > 0 ? k.rest * 0.25 : k.rest * (heavyFoe(f) ? .55 : .80))) {
@@ -11245,10 +11256,15 @@ function stepCombat(dt) {
   stepLoot(dt);
   stepBell(dt);
   stepArenas(dt);
-  if (saintT > 0) { saintT -= dt; if (saintT <= 0) toast("the breath goes out of him"); }
+  window.LDRCampaign?.noteFrame('buffs');
+  stepActorBuffs(dt);
   markSafe();
 }
 
+function stepActorBuffs(dt) {
+  if(wakeCool>0)wakeCool=Math.max(0,wakeCool-dt);
+  if(saintT>0){saintT=Math.max(0,saintT-dt);if(!saintT)toast("the breath goes out of him");}
+}
 const ACT = {
   swing: { frames: 8, fps: 16, anim: "atk" },
   hurt:  { frames: 5, fps: 14, anim: "hurt" },

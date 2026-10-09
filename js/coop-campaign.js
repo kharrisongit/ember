@@ -105,9 +105,9 @@
     const saves=localSaves().filter(s=>s.id!==checkpoint.id);saves.unshift(checkpoint);
     try{
       if(destination!==undefined)cloudSlot=destination;
-      else if(cloudSlot&&readSaveSlot(cloudSlot)?.coop?.id!==checkpoint.id)cloudSlot=0;
-      if(!cloudSlot)for(let slot=1;slot<=3;slot++){const existing=readSaveSlot(slot);if(existing?.coop?.id===checkpoint.id){cloudSlot=slot;break;}}
-      if(!cloudSlot)for(let slot=1;slot<=3;slot++)if(!readSaveSlot(slot)){cloudSlot=slot;break;}
+      else if(cloudSlot&&(readSaveSlot(cloudSlot)?.coop?.id!==checkpoint.id||EmberCloudState.conflicts.has(cloudSlot)))cloudSlot=0;
+      if(!cloudSlot)for(let slot=1;slot<=3;slot++){const existing=readSaveSlot(slot);if(existing?.coop?.id===checkpoint.id&&!EmberCloudState.conflicts.has(slot)){cloudSlot=slot;break;}}
+      if(!cloudSlot)cloudSlot=firstEmptySaveSlot();
       if(cloudSlot){
         const {save,...coop}=checkpoint,personal=checkpoint.players?.[uid];
         const payload={...save,when:checkpoint.when,playerIdentity:personal?.profile||save.playerIdentity,crafting:personal?.crafting||save.crafting,coop};

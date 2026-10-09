@@ -28,7 +28,7 @@ const Crafting=(()=>{
   const teachers={nan:{name:'Nan',where:'Millwood — your home',line:"Start with a potion: two herbs and one bitterroot. You can gather them along the chest trail north of Millwood. My kit lets you brew or cook on the road; keep these recipes beside the ingredients."},
     healer:{name:'Wren',where:'Thornwell market',line:"An elixir restores you fully. Three herbs, two sunblooms and one bitterroot; I’ll write it down so you aren’t trusting a tired memory in the dark."},
     shroom:{name:'The Shroom King',where:'Sporehollow',line:"Three mushrooms and a bitterroot make Madness Dust. Grind them together and you can confuse nearby enemies into attacking one another. Mind where the powder goes."},
-    smith:{name:'Dunstan',where:'Forgewick smithy',line:"Keep mineral dust from the mines and golems. Two measures with two bitterroots make a Bell Stake to draw enemies. Three with a mushroom make a Grave Marker to recover lost gold."},
+    smith:{name:'Dunstan',where:'Forgewick smithy',line:"Keep mineral dust from the mines and golems. Two measures with two bitterroots make a Bell Stake to draw enemies. Two with a mushroom make a Grave Marker to recover lost gold."},
     chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:"Use one measure of mineral dust and two sunblooms for consecration. Scatter it in an arena after clearing the enemies; they will not return to that ground."},
     witch:{name:'Maelis',where:'Witchmoor',line:"My Curse needs two ghostcaps, two marsh reeds and one spirit essence. Brew it carefully. It opens a way out of an ordinary battle; don’t expect it to break the seal on a major fight."},
     winter:{name:'Sverre',where:'Hollybeck',line:"Two snowbells, two frostberries and spirit essence make Saint’s Breath: sixteen seconds of protection. For a Resurrection Stone, use three mineral dust, two snowbells and one essence. That raises a fallen enemy to help you."}};
@@ -45,7 +45,7 @@ const Crafting=(()=>{
     else switch(id){case 'potion':potions+=n;break;case 'elixir':elixirs+=n;break;case 'bomb':bombs+=n;break;case 'dust':dust+=n;break;case 'bell':bells+=n;break;case 'mark':marks+=n;break;case 'saint':breaths+=n;break;case 'stone':stones+=n;break;case 'salt':salts+=n;break;case 'boarMeat':boarMeat+=n;break;case 'hareMeat':hareMeat+=n;break;case 'deerMeat':deerMeat+=n;break;case 'foxMeat':foxMeat+=n;break;case 'birdMeat':birdMeat+=n;break;case 'dragonFish':dragonFish+=n;break;}
   }
   const known=r=>!!r&&state.learned.includes(r.teacher);
-  const maxBatch=r=>known(r)?Math.max(0,Math.min(5,...Object.entries(r.cost).map(([id,n])=>Math.floor(count(id)/n)))):0;
+  const maxBatch=r=>known(r)?Math.max(0,Math.min(5,r.raw?9999-count(r.id):Infinity,...Object.entries(r.cost).map(([id,n])=>Math.floor(count(id)/n)))):0;
   function learn(group,quiet=false){
     if(!teachers[group])return false;
     if(!state.learned.includes(group))state.learned.push(group);
@@ -208,7 +208,9 @@ const Crafting=(()=>{
   function gather(){
     if(MAPID!=='world'||!hasBag()||mounted||sceneHold()||inFight())return false;
     const n=nodes.filter(n=>ready(n)&&Math.hypot(n.x-P.x,n.y-P.y)<34).sort((a,b)=>Math.hypot(a.x-P.x,a.y-P.y)-Math.hypot(b.x-P.x,b.y-P.y))[0];
-    if(!n)return false;const amount=n.amount||2;add(n.material,amount);state.harvested[n.id]=n.once?-1:Date.now()+20*60*1000;
+    if(!n)return false;const amount=n.amount||2;
+    if(count(n.material)+amount>9999){toast('Make room for '+amount+' '+materials[n.material].name+' before gathering.');return false;}
+    add(n.material,amount);state.harvested[n.id]=n.once?-1:Date.now()+20*60*1000;
     for(const [id,t]of Object.entries(state.harvested))if(t!==-1&&t<Date.now())delete state.harvested[id];
     window.EmberSfx?.pickup?.();toast('+'+amount+' '+materials[n.material].name+' · Bag → Craft');saveGame();return true;
   }

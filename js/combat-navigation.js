@@ -92,6 +92,7 @@ function combatBodiesClear(actor,x,y,sweep=true){
   if(actor===P||actor===dragon||actor.ally){
     for(const f of foes)if(f!==actor&&solidCombatFoe(f)&&combatBodyBlocks(actor,x,y,f,sweep))return false;
   }else if(solidCombatFoe(actor)){
+    if(globalThis.window?.LDRCampaign?.active)return window.LDRCampaign.combatPartyClear(actor,x,y,sweep);
     if(combatBodyBlocks(actor,x,y,P,sweep))return false;
     if(!mounted&&dragon.on&&!dragon.down&&dragon.placed===MAPID&&combatBodyBlocks(actor,x,y,dragon,sweep))return false;
   }

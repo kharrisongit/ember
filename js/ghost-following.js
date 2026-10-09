@@ -1,7 +1,11 @@
 /* Spirits remember the path rather than mirroring the player's facing. */
-const spiritTrail={map:null,points:[],sample:-1};
+const spiritTrail={map:null,points:[],sample:-1},spiritTrails=new Map();
 function spiritFollowTarget(f){
-  const trail=spiritTrail;
+  let trail=spiritTrail;
+  if(f.summoner){
+    if(!spiritTrails.has(f.summoner))spiritTrails.set(f.summoner,{map:null,points:[],sample:-1});
+    trail=spiritTrails.get(f.summoner);
+  }
   if(trail.map!==MAPID||trail.sample>foeClock){trail.map=MAPID;trail.points=[];trail.sample=-1;}
   if(foeClock-trail.sample>=.1||!trail.points.length){
     trail.sample=foeClock;
