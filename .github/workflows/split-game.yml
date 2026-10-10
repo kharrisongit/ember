@@ -35,6 +35,27 @@ on:
 permissions:
   contents: read
 jobs:
+  conversation-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright@1.51.1
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Check touch conversations with the game loop running
+        env:
+          CONVERSATION_ARTIFACTS: conversation-test-results
+        run: |
+          python3 -m http.server 8765 >/tmp/conversation-http.log 2>&1 &
+          PLAYWRIGHT_BROWSER=chromium node tests/conversation-browser.mjs
+          PLAYWRIGHT_BROWSER=webkit node tests/conversation-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: conversation-browser-failure
+          path: conversation-test-results
   co-op:
     runs-on: ubuntu-latest
     steps:
@@ -188,6 +209,7 @@ jobs:
           node tests/living-journal.mjs
           node tests/conversation-view.mjs
           node tests/conversation-flow.mjs
+          node tests/conversation-topic-handoff.mjs
           node tests/workshop-craftsmen.mjs
           node tests/workshop-station.mjs
           node tests/remaining-interactions.mjs

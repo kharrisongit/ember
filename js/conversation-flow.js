@@ -116,7 +116,14 @@
     if(first&&window.EmberFriendship?.needsTutorial())window.EmberConversationPanels?.open('tutorial');
   }
   function preserve(){return !!session&&keeping>0&&!session.shopping;}
-  function shut(force=false){if(session?.shopping&&!force)return;reset();}
+  function shut(force=false){
+    if(session?.shopping&&!force)return;
+    reset();
+    // A topic can leave for a world lesson while retained() is preserving
+    // askShut's deck. Explicitly ending that session must hide its shell too,
+    // or the abandoned topic cards cover the speech and swallow later taps.
+    box().style.display='none';
+  }
   function retained(fn){keeping++;try{return fn();}finally{keeping--;sync();}}
   function listening(selected){
     if(!session||ask)return;
