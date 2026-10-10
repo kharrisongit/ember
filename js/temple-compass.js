@@ -34,7 +34,7 @@ const FATHER_COMPASS_GIFT = [
   "Corin: Start with something embarrassing about Dad. I'll come back for the rest.",
   "Nan Ferrow: That would take a second visit. For now, follow the road east to Thornwell. Use the map and compass before you're properly lost.",
   "Corin: Before, not after. I heard that part.",
-  "Nan Ferrow: Take this hare meat for him, and my crafting kit. Pot, folding grill, spoon. Those recipes in your bag will be more use with something to cook them in.",
+  "Nan Ferrow: Take this hare meat for him, and my crafting kit. Pot, folding grill, spoon, and a few recipes for the road.",
   "Corin: You've thought of food for both of us already.",
   "Nan Ferrow: It gives my hands something to do, love. Look after each other. And come by when you can; I'll keep an elixir ready."
 ];
@@ -96,11 +96,10 @@ function startNanMorning(nan){
   playScene([
     "Nan Ferrow: You're up. Hettie came looking for you; she's outside trying to negotiate with the cows.",
     "Corin: I'll find her. Cows usually take longer to persuade than I do.",
-    "Nan Ferrow: I've packed my recipes too. Two herbs and a bitterroot make a potion; the chest trail north of Millwood is a good place to gather them. Save what you find. I'll give you my crafting kit when you travel farther.",
     "Nan Ferrow: Off you go, then. Leave a little of the morning for breakfast next time."
   ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
     templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;
-    if(typeof Crafting!=='undefined')Crafting.learn('nan',true);saveGame();
+    saveGame();
   }});
   return true;
 }

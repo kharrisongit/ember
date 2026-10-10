@@ -56,7 +56,7 @@ const Crafting=(()=>{
   function eligible(){return gameplayStarted&&mode==='play'&&hasBag()&&!scene&&!revealing&&!sayNpc&&!doorMotion&&!fadeDir&&!trial&&!arenaLock&&!deadShown&&!mounted&&!ride&&!fishing&&!P.act&&!inFight()&&!flightTravel;}
   function open(person=null){
     if(opened)return true;
-    if(!state.kit){toast('Nan has a crafting kit for you before you leave Millwood.');return false;}
+    if(!state.kit)return false;
     // Close a service menu only after ensuring the world itself is safe.
     if(!eligible()){toast('Find a safe place and dismount before crafting.');return false;}
     setBag(false);askShut();window.EmberConversationFlow?.shut(true);sayOff();showFace(null);
@@ -124,7 +124,7 @@ const Crafting=(()=>{
     if(n.packSpr==='chapel_priest')return 'chapel';if(/Maelis/.test(n.n))return 'witch';if(n.n==='Sverre')return 'winter';return null;
   }
   function topics(n){
-    const group=teacherFor(n);if(!group||n.n==='Nan Ferrow'&&!templeCompass.morningMet)return [];
+    const group=teacherFor(n);if(!state.kit||!group||n.n==='Nan Ferrow'&&!templeCompass.morningMet)return [];
     return [{title:state.learned.includes(group)?'Let’s look at my recipes':'Will you teach me to craft?',category:'lead',friendship:false,go:()=>{
       askShut();window.EmberConversationFlow?.shut();sayNpc=null;scene=null;sayOff();
       playScene([n.n+': '+teachers[group].line,"Corin: Let me write that down before I muddle the amounts."],{npcActor:n,who:n.n,after:()=>{learn(group);open();}});

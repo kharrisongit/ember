@@ -5046,6 +5046,8 @@ function refreshBook() {
 }
 function refreshBag() {
   bagAnim = [];
+  const craft = document.getElementById("bagCraft");
+  if(craft)craft.hidden=typeof Crafting==='undefined'||!Crafting.hasKit();
   const bk = document.getElementById("bagBook");
   if (bk && !bk._wired) {
     bk._wired = 1;
