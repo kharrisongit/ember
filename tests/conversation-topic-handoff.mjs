@@ -29,7 +29,7 @@ for(const name of ['The Shroom King','Nan Ferrow','Wren','Dunstan','Maelis','Sve
  assert(run('Crafting.active()'),name+': completing the lesson opens recipes');
  run('Crafting.close();openNpcTopics(teacher)');
  click(box.querySelector('.conversationChat'));
- const story=run(`ask.opts.findIndex(o=>o.friendshipId==='renewal-0')`);
+ const story=run(`ask.opts.findIndex(o=>o.friendshipId==='renewal-v2-0')`);
  click(box.querySelectorAll('.deckTopic').find(b=>Number(b.dataset.askIndex)===story));
  assert(run('!!scene?.conversationReplies&&EmberConversationFlow.active()'));
  assert.equal(box.style.display,'grid','Ordinary stories keep their conversation panel');

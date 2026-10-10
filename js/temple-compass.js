@@ -20,28 +20,28 @@ function compassTrackingMotion(now){
   return {spin:turn<1?Math.PI*4*(1-(1-turn)**3):wiggle*.38,wiggle:wiggle*.08,glow};
 }
 const FATHER_COMPASS_GIFT = [
-  "Nan Ferrow: Corin, stop there. Is that creature following you?",
-  "Corin: He's a dragon. I brought an egg back from the woods, and it hatched beside Maddock's house.",
-  "Nan Ferrow: Let me see your face. Are you hurt anywhere?",
-  "Corin: I'm all right. Maddock says he chose me. I don't think either of us expected it.",
-  "Nan Ferrow: I sent you out to see Hettie. I keep trying to fit this into the same morning.",
-  "Corin: I know. But I need to leave Millwood. Maddock thinks the old rider temple can help us.",
-  "Nan Ferrow: Then we'll make sure you leave prepared. Your father's compass—is it in your bag?",
-  "Corin: With the map. I took them from my desk before coming down.",
-  "Nan Ferrow: When your parents died, you were too small to hold my finger properly. Now I'm checking whether you've packed for a journey I can't follow.",
-  "Corin: Sometimes I miss them without knowing what it is I'm missing.",
-  "Nan Ferrow: Come home and ask me. Even the small things. I remember more than I know how to begin telling you.",
-  "Corin: Start with something embarrassing about Dad. I'll come back for the rest.",
-  "Nan Ferrow: That would take a second visit. For now, follow the road east to Thornwell. Use the map and compass before you're properly lost.",
-  "Corin: Before, not after. I heard that part.",
-  "Nan Ferrow: Take this hare meat for him, and my crafting kit. Pot, folding grill, spoon, and a few recipes for the road.",
-  "Corin: You've thought of food for both of us already.",
-  "Nan Ferrow: It gives my hands something to do, love. Look after each other. And come by when you can; I'll keep an elixir ready."
+  "Nan Ferrow: Corin. Tell me that isn't a dragon behind you.",
+  "Corin: It is. An egg hatched beside Maddock's house. I brought it from the woods.",
+  "Nan Ferrow: Come here. No, let me look before you say you're fine.",
+  "Corin: I am fine. Frightened, but fine. He seems to want to stay with me.",
+  "Nan Ferrow: Oh, love. I thought the worst this morning could bring was Hettie asking too much of you.",
+  "Corin: I can't stay. If Halvard finds him here... Maddock says we should find the old rider temple.",
+  "Nan Ferrow: Then we'll begin with what you can carry. Have you your father's compass?",
+  "Corin: It's with the map. I picked up my Travel Gear before coming downstairs.",
+  "Nan Ferrow: When your parents died, you were small enough to fall asleep across my arm. Some days I still expect that little boy when you come through the door.",
+  "Corin: Will you try? Just enough to let me go?",
+  "Nan Ferrow: I'll let you go. Looking at you differently may take me longer.",
+  "Corin: You can still tell me to eat. I expect I'll still need that.",
+  "Nan Ferrow: Then eat, and look at your map before you lose your way. Thornwell is east along the road.",
+  "Corin: East to Thornwell. I'll remember.",
+  "Nan Ferrow: This hare meat is for your companion. And take my crafting kit: a pot, a folding grill, a spoon, and recipes. You can cook and brew on the road.",
+  "Corin: You'll need these at home.",
+  "Nan Ferrow: I've other pots. I've only one of you. Come back when you can; there'll be an elixir here, and someone who wants to hear how you are."
 ];
 function fatherCompassGift(nan){
   if(npcSeesDragon(nan))return FATHER_COMPASS_GIFT.slice();
-  return ["Nan Ferrow: I've been looking down this road for you. What happened in the woods?",
-    "Corin: I found a dragon's egg. It hatched when I brought it back to Maddock. There's something I need to tell you.",
+  return ["Nan Ferrow: There you are. I've been inventing dreadful explanations. Please give me the real one.",
+    "Corin: I brought an egg back to Maddock. A dragon hatched from it. He's travelling with me now.",
     ...FATHER_COMPASS_GIFT.slice(2)];
 }
 function restoreFatherCompass(saved) {
@@ -84,7 +84,7 @@ function morningSuppliesPending(){return !bagOwned || !templeCompass.mapGiven ||
 function startMorning(){
   if(quest!==Q.ABED||templeCompass.morningSpoken)return;
   templeCompass.morningSpoken=true;
-  playScene(["Corin: I'd better take the Travel Gear from my desk. Nan will ask before I reach the door."],{after:showMorningMoveHelp});
+  playScene(["Corin: My Travel Gear's on the desk. Bag, map, Dad's compass... I'd forget my own head without Nan."],{after:showMorningMoveHelp});
 }
 function startNanMorning(nan){
   if(hasDragon()||!nanMorningPending())return false;
@@ -94,9 +94,9 @@ function startNanMorning(nan){
   const target=spots.sort((a,b)=>Math.hypot(a[0]-nan.x,a[1]-nan.y)-Math.hypot(b[0]-nan.x,b[1]-nan.y))[0];
   if(target&&Math.hypot(nan.x-P.x,nan.y-P.y)>34){nan.home=home;nan.stationary=false;nan.scriptWalking=true;nan.packWalk=true;nan.packDirections=true;nan.goto=target;}
   playScene([
-    "Nan Ferrow: You're up. Hettie came looking for you; she's outside trying to negotiate with the cows.",
-    "Corin: I'll find her. Cows usually take longer to persuade than I do.",
-    "Nan Ferrow: Off you go, then. Leave a little of the morning for breakfast next time."
+    "Nan Ferrow: Morning, sleepyhead. Hettie wants a hand outside. The cows have opinions about where the lane ought to be.",
+    "Corin: I'll go before she teaches them to knock.",
+    "Nan Ferrow: Mind you come back hungry enough to eat and sensible enough to admit it."
   ],{who:nan.n,npcActor:nan,nanMorning:true,after:()=>{
     templeCompass.morningMet=true;nan.scriptWalking=false;nan.goto=home;
     saveGame();

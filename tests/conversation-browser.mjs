@@ -2,7 +2,8 @@
 // frame loop or fast-forward typewriter/scene state: visible speech is the gate.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-const playwright=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const imported=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const playwright=imported.default||imported;
 const engine=process.env.PLAYWRIGHT_BROWSER||'chromium';
 const browser=await playwright[engine].launch({headless:true,
   executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||undefined});
@@ -27,7 +28,7 @@ try{
   });
   await page.getByRole('button',{name:'Got it — let’s talk'}).tap();
   await page.getByRole('button',{name:'Chat with The Shroom King'}).tap();
-  await page.getByRole('button',{name:/^Will you teach me to craft\?/}).tap();
+  await page.getByRole('button',{name:/^A lesson for the road/}).tap();
   // This assertion fails on the abandoned full-screen deck, even though its
   // hidden speech is typing normally and the topic callback did execute.
   await page.waitForFunction(()=>getComputedStyle(document.getElementById('bagAsk')).display==='none');
@@ -42,7 +43,7 @@ try{
   await page.locator('.craft-close').tap();
   await page.evaluate(()=>openNpcTopics(npcs.find(n=>n.n==='The Shroom King')));
   await page.getByRole('button',{name:'Chat with The Shroom King'}).tap();
-  await page.getByRole('button',{name:/^Being called king/}).tap();
+  await page.getByRole('button',{name:/^The royal nap/}).tap();
   await page.waitForFunction(()=>typeWho==='The Shroom King'&&typeDone());
   assert(await page.locator('.conversationNpcSpeech #say').isVisible());
   await page.getByRole('button',{name:'Next',exact:true}).tap();

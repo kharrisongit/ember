@@ -185,26 +185,26 @@ const DragonChapels=(()=>{
     if(isGuest(n)||MAPID==='forgewick_chapel')return false;
     if(n?.packSpr!=='chapel_priest')return false;
     ask=null;sayNpc=null;clearPadInputs();running=false;P.act=null;
-    const lesson="Brother Cael: I'll write our consecration recipe for you: one measure of mineral dust, two of sunblooms. Scatter the mixture on cleared ground to keep enemies from returning.";
+    const lesson="Brother Cael: We also make consecration here. One mineral dust, two sunblooms. Clear an arena first, then scatter it; the creatures will not gather there again. I'll write the amounts for you.";
     const teach=()=>{if(typeof Crafting!=='undefined')Crafting.learn('chapel',true);};
-    if(blessed){playScene(["Brother Cael: The Sky Blessing stays with you. A second ceremony would add nothing except time on your feet.",
-      "Brother Cael: Mount Aurelius, take flight, then hold the sprint control. You'll feel the speed the blessing restored.",lesson],{who:n.n,npcActor:n,after:teach});return true;}
-    if(!hasDragon()||!dragonIntroDone){playScene(["Brother Cael: I'm Cael. There hasn't been much company here lately. Sit wherever the light suits you.",
-      "Brother Cael: Travellers need no special reason to rest in a chapel.",lesson],{who:n.n,npcActor:n,after:teach});return true;}
+    if(blessed){playScene(["Brother Cael: There is no need to stand through the words twice. The Sky Blessing is still yours.",
+      "Brother Cael: Once you're riding Aurelius in the air, hold sprint. Let him show you what has changed.",lesson],{who:n.n,npcActor:n,after:teach});return true;}
+    if(!hasDragon()||!dragonIntroDone){playScene(["Brother Cael: Cael, at your service. You may have whichever seat you please. We aren't short of them.",
+      "Brother Cael: Stay as long as you need. Nobody must earn a quiet place to sit.",lesson],{who:n.n,npcActor:n,after:teach});return true;}
     playScene([
-      "Corin: I've never seen a chapel keep statues of dragons. Who made these?",
-      "Brother Cael: People grateful to the old riders and their companions. They came here before a journey to ask for clear skies, and afterward to give thanks for returning.",
-      lesson,"Corin: Would you bless our journey too?",
-      "Brother Cael: With pleasure. Stand near me. Your bond will carry the blessing to Aurelius wherever he waits."],
+      "Corin: I'm Corin. My companion is a dragon called Aurelius. I didn't expect to find his kind remembered in a chapel.",
+      "Brother Cael: I'm Brother Cael. We remember them gladly. Riders used to stop here before setting out; the happiest visits were the ones they made on their way home.",
+      lesson,"Corin: Could we have the blessing they asked for?",
+      "Brother Cael: Of course. Come close. Aurelius needn't fit through the door; your bond will carry the blessing to him."],
       {who:n.n,npcActor:n,after:()=>{teach();beginBlessing(n);}});
     return true;
   }
   function beginBlessing(n){
     if(blessed||MAPID!=='desert_chapel'||ritual)return false;
     ritual={npc:n,phase:'cast',time:0};n.scriptWalking=false;n.f='d';n.flip=false;
-    playScene(["Brother Cael: May your wings find clear air, and your journey find its way home."],{who:n.n,npcActor:n,hold:()=>!ritual,
-      after:()=>playScene(["Corin: Something changed. I can feel him wanting to rise.",
-        "Brother Cael: Then take him flying. Some gifts are best understood in use.",
+    playScene(["Brother Cael: May the sky bear you gently. May those who wait for you hear your return."],{who:n.n,npcActor:n,hold:()=>!ritual,
+      after:()=>playScene(["Corin: Oh. He felt that. It's like he's already leaning into the wind.",
+        "Brother Cael: Don't keep him waiting on my account. Go and see how high the afternoon is.",
         'Sky Blessing received! Sprinting in flight now uses Aurelius’s full speed.'],{who:n.n,npcActor:n})});
     return true;
   }

@@ -16,7 +16,7 @@ run('elixirs=0;gold=123;restoreNanCooking(null);giveNanElixir(nan)');
 assert.equal(run('elixirs'),0,'Reward waits for the exchange');finish();
 assert.equal(run('elixirs'),1);assert.equal(run('nanElixirReadyAt'),now+600000);assert.equal(saves,1);assert.equal(reveal[0],'inventory_elixir');assert.equal(run('gold'),123);
 const saved=run('captureSave().nanElixirReadyAt');
-run('restoreNanCooking(0);restoreNanCooking('+saved+');giveNanElixir(nan)');assert.match(run('scene.lines[0]'),/10 minutes left/);finish();assert.equal(run('elixirs'),1);
+run('restoreNanCooking(0);restoreNanCooking('+saved+');giveNanElixir(nan)');assert.match(run('scene.lines[0]'),/10 minutes/);finish();assert.equal(run('elixirs'),1);
 now+=599999;run('giveNanElixir(nan)');finish();assert.equal(run('elixirs'),1);
 now++;run('giveNanElixir(nan)');finish();assert.equal(run('elixirs'),2);assert.equal(saves,2);
 run('restoreFatherCompass(null);loadMap("house26")');

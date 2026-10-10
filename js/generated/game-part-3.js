@@ -3884,13 +3884,13 @@ function beginKnightFight(ring, f) {
   arenaLock = ring; arenaT = Math.max(arenaT, .05); arenaGoing = false;
   faceCorinAt(f.x, f.y); f.dir = "u";
   playScene([
-    "King's Knight: Stop. The boy with the basket. I remember you from Millwood.",
-    "King's Knight: You let the king question you, then walked away with this secret.",
-    "King's Knight: Step away from the dragon. The crown will decide what happens to it.",
-    "Corin: Aurelius isn't yours to claim.",
-    "King's Knight: You are a village boy carrying an old man's sword. Consider your position.",
-    "Corin: If you want a fight, you'll have to face us both.",
-    "King's Knight: So be it. Defend yourself."
+    "King's Knight: You. The boy His Majesty questioned in Millwood. So this is what you kept from us.",
+    "King's Knight: A dragon, walking openly on the king's road. Did you think nobody would report you?",
+    "King's Knight: Stand aside. It belongs in royal custody.",
+    "Corin: He doesn't belong to you. Or the king.",
+    "King's Knight: That old sword won't make you a match for me, boy.",
+    "Corin: Then I hope you've counted properly. There are two of us.",
+    "King's Knight: You've chosen badly. Draw."
   ], { stay:true, after:() => {
     knightEncounterPhase = "fight";
     f.storyPassive = false; f.st = "walk"; f.t = 0; f.cool = .35;
@@ -3917,9 +3917,9 @@ function stepKnightEncounter(dt) {
     if (f.storyT >= .9 && !scene) {
       knightEncounterPhase = "yield";
       playScene([
-        "King's Knight: Hold! My sword is down. I yield.",
-        "Corin: You can still walk away. Tell Halvard we won't surrender.",
-        "King's Knight: He will hear of this. And he will come himself."
+        "King's Knight: Enough! I yield. See? I've lowered my sword.",
+        "Corin: Then leave it lowered and go. Tell Halvard we're still coming.",
+        "King's Knight: He'll hear every word. You won't enjoy being remembered."
       ], { stay:true, after:() => {
         knightEncounterPhase = "rise"; f.st = "rise"; f.storyT = 0;
       }});
@@ -3980,7 +3980,7 @@ function stepArena(dt) {
       arenaT=Math.min(.18,arenaT+dt*3);return;
     }
     const waves = ring.waves
-      || (ring.wave2 ? [{ say: "Oh no! There's more!", at: ring.wave2 }] : []);
+      || (ring.wave2 ? [{ say: "Corin: Wait. Something else is moving.", at: ring.wave2 }] : []);
     if (ring._wave === undefined) ring._wave = 0;
     if (!arenaGoing && !arenaFoesLeft(ring) && !ring._waving && ring._wave < waves.length) {
       const w0 = waves[ring._wave];

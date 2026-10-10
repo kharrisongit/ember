@@ -1,11 +1,11 @@
 const FROSTCRAG_BRIEFING=[
- 'Aurelius: Shadow was the last temple stone. We have what we came for; now we need the road through the mountains.',
- 'Corin: Frostcrag is next, then?',
- 'Aurelius: Yes. Find its cave entrance and follow the passage east into Ashcrag. The volcanic country lies on the far side.',
- 'Corin: And from Ashcrag we can reach Cinderhold.',
- 'Aurelius: Along the eastern road. The creatures ahead are stronger. Let us restock healing supplies and food before entering the passage together.',
- 'Corin: I’ll check the bag. Frostcrag, east through the mountain, then the volcanic road.',
- 'Aurelius: That is the route. We need only take the part in front of us today.'
+  "Aurelius: That makes three. Lightning, Ice, Shadow. There is no more temple we must visit before facing him.",
+  "Corin: I liked having one more temple to visit.",
+  "Aurelius: I know. We still have the mountains. Find the entrance at Frostcrag and take the passage east to Ashcrag.",
+  "Corin: Then the volcanic road to Cinderhold.",
+  "Aurelius: Yes. But first, food and healing supplies. Fear is difficult enough without an empty bag.",
+  "Corin: Let me count what we have. My hands could use something ordinary to do.",
+  "Aurelius: I shall stay here while you count."
 ];
 /* Aurelius's optional telepathic banter never opens a blocking game dialogue. */
 const dragonBanterSeen=new Set();
@@ -13,516 +13,516 @@ let dragonBanterQueue=[],dragonBanterActive=null,dragonBanterGap=0,dragonBanterP
 let dragonBanterQuiet=0;
 const DRAGON_PLACE_LINES={
   "Millwood": [
-    "You know where every path here ends.",
-    "I used to. Now I keep wondering where they begin."
+    "Which house were you born in?",
+    "Ours. Nan says the whole village heard me introduce myself."
   ],
   "Thornwell": [
-    "Someone has started watching us from a window.",
-    "Wave. It saves them wondering whether we noticed."
+    "You are looking at every face.",
+    "Nobody here knows me. It's a strange feeling."
   ],
   "Forgewick": [
-    "I can feel those hammers through the ground.",
-    "Dunstan would probably call that a quiet afternoon."
+    "Does the sound ever stop?",
+    "Perhaps they take turns keeping the town awake."
   ],
   "Forgefalls": [
-    "The spray feels colder than the river looks.",
-    "Don't shake it off until I'm out of reach."
+    "Say something. Can I hear you over the waterfall?",
+    "I'm thinking it very loudly. Does that help?"
   ],
   "Sandspire": [
-    "We should fill your water before leaving town.",
-    "For once my bag will be heavier for a sensible reason."
+    "Your shadow has become rather small.",
+    "It's trying to get out of the heat too."
   ],
   "Coralmere": [
-    "I knew the taste of salt. The air is another matter.",
-    "Nan will smell the sea on my coat before I tell her."
+    "I could follow that smell for miles.",
+    "I'd rather follow someone who knows which fish stall is good."
   ],
   "Hollybeck": [
-    "You're hiding your hands in your sleeves again.",
-    "My fingers have voted against the weather."
+    "You can warm your hands against me.",
+    "If you start purring, neither of us mentions it afterward."
   ],
   "Infernia": [
-    "The heat is coming through the rock beneath us.",
-    "Let's find a place to stop that isn't cooking my boots."
+    "There is fire under this country.",
+    "I'd be happier if it stayed under it."
   ],
   "Shroom Pass": [
-    "That cap is large enough to shelter us both.",
-    "Ask before sitting under someone's house."
+    "Do their children hide beneath the caps?",
+    "Let's ask one. You sound as though you'd like to try."
   ],
   "Frostcrag": [
-    "Keep me in sight if the snow thickens.",
-    "You'll be the easiest thing here to recognise."
+    "The snow holds every footstep.",
+    "I wish mine looked a little less uncertain."
   ],
   "Ashcrag": [
-    "I can smell hot stone farther up the road.",
-    "We'll stay on the sound ground. Carefully."
+    "Walk where I walk. Some of this stone is loose.",
+    "Your feet are wider than mine. I'll do my best."
   ],
   "Witchmoor": [
-    "There are too many scents here to separate.",
-    "Maelis probably knows the name of every one."
+    "You are holding your breath.",
+    "I can't decide whether that smell belongs in medicine or soup."
   ],
   "Dreadmarsh": [
-    "The solid-looking ground isn't always the safest.",
-    "Stay near me. I'd prefer help before I lose a boot."
+    "That was a frog, Corin.",
+    "I know. I was moving aside out of respect."
   ],
   "Sporehollow": [
-    "They've made the paths fit the roots.",
-    "After you see it, cutting through them seems the odd choice."
+    "I had not imagined a village like this.",
+    "Neither had I. I'm trying not to stare into people's houses."
   ],
   "Sporewood": [
-    "Mind that cloud drifting across the path.",
-    "I'll wait. I don't need to breathe every part of the forest."
+    "Close your mouth when the wind comes this way.",
+    "I wasn't planning to taste the scenery."
   ],
   "Northern Woods": [
-    "I remember the air here before I remember faces.",
-    "This is where I first realised my errand had changed."
+    "The trees look very tall from down here.",
+    "I suppose your first view was from an egg."
   ],
   "Hollybeck Graveyard": [
-    "Slowly through here. Watch the ground between the stones.",
-    "I'm watching. I wish it would stop moving."
+    "Something heard us.",
+    "Then I wish my boots were quieter."
   ],
   "Forgewick Temple": [
-    "The old riders expected company in these halls.",
-    "Let's hope their guardians can still recognise it."
+    "For a moment, this place felt familiar.",
+    "Your memories, or someone else's?"
   ],
   "Hollybeck Temple": [
-    "Our footsteps carry a long way in here.",
-    "So anything ahead already knows we're coming."
+    "Your hand went straight to your sword.",
+    "Yes. It can stay there until the shadows behave."
   ],
   "Sandspire Temple": [
-    "Sand has worked its way into every joint.",
-    "Including mine, and we haven't reached the far door."
+    "The air changes beyond the entrance.",
+    "Cooler. I'd enjoy that more without the guardian."
   ],
   "Cinderhold Castle": [
-    "Stay where we can see one another.",
-    "I'm not taking a corridor without you."
+    "You have gone very quiet.",
+    "I'm trying to leave room to hear you."
   ],
   "Cinderhold": [
-    "We have come a long way to reach this hall.",
-    "Let's make sure we both walk out of it."
+    "We can still take a breath before we go on.",
+    "Just one. Then stand beside me."
   ]
 };
 const DRAGON_POST_PLACE_LINES={
   "Millwood": [
-    "You slowed down as soon as you saw the houses.",
-    "I wanted another moment before everyone starts asking."
+    "Shall I wait while you decide what to tell Nan?",
+    "No. You're helping with the explanation."
   ],
   "Thornwell": [
-    "No royal party to hide from this time.",
-    "We could actually finish a meal here."
+    "You aren't counting the guards today.",
+    "I hadn't noticed I'd stopped."
   ],
   "Forgewick": [
-    "The work didn't stop when the king fell.",
-    "No. But they ought to choose who gets paid for it."
+    "What will they make when fewer people need swords?",
+    "Hinges. Cooking pots. I'd like to ask."
   ],
   "Forgefalls": [
-    "The bridge is much more pleasant with you on this side.",
-    "I'm not leaving you waiting under it again."
+    "This was a miserable place to wait for you.",
+    "It's a lovely place to stop together."
   ],
   "Sandspire": [
-    "Do we have somewhere urgent to reach today?",
-    "We could try the shade first. See how that suits us."
+    "We could stay until the heat eases.",
+    "Listen to us, making plans around the weather."
   ],
   "Coralmere": [
-    "You keep looking at the boats.",
-    "I like imagining where I'd go without needing a reason."
+    "Would you take a boat simply to see the other shore?",
+    "If you'd agree not to criticise it for being slow."
   ],
   "Hollybeck": [
-    "We've returned before our tracks have disappeared.",
-    "Good. I can prove how much walking we've done."
+    "They still need firewood.",
+    "Then we can help with something smaller than a kingdom."
   ],
   "Infernia": [
-    "We needn't hurry through this country anymore.",
-    "I'll still be pleased to reach cooler ground."
+    "The earth hasn't cooled on our account.",
+    "It would have been a nice gesture."
   ],
   "Shroom Pass": [
-    "Same narrow path. Rather different travellers.",
-    "At least I've learned which way my sword faces."
+    "We have time to visit now.",
+    "And nobody gets to call it a detour."
   ],
   "Frostcrag": [
-    "We could choose a gentler route now.",
-    "For my knees, let's seriously consider it."
+    "You are walking more slowly.",
+    "I can finally spare a glance for the mountains."
   ],
   "Ashcrag": [
-    "There are places here we passed without looking.",
-    "We were busy surviving. I'd like another look."
+    "This road remembers nothing of us.",
+    "My knees remember plenty of it."
   ],
   "Witchmoor": [
-    "Shall we tell Maelis how it ended?",
-    "She'll claim she expected it. I still want to see her face."
+    "Will you ask Maelis how she has been?",
+    "Yes. A conversation that doesn't begin with needing something."
   ],
   "Dreadmarsh": [
-    "Would you call this a pleasure walk?",
-    "Ask me again when both boots are dry."
+    "You still dislike the mud.",
+    "Victory hasn't improved my boots."
   ],
   "Sporehollow": [
-    "We owe this village a proper visit.",
-    "One that doesn't begin with an alarming noise."
+    "Do you think they will mind another visit?",
+    "We can knock and find out."
   ],
   "Sporewood": [
-    "For a moment I thought that branch was following us.",
-    "I've spent too long fighting trees to laugh at you."
+    "There is room for a quiet life here.",
+    "A damp one. But yes."
   ],
   "Northern Woods": [
-    "We can stand here without looking for the king's men.",
-    "I hadn't noticed I was still listening for them."
+    "You keep looking at the place where we began.",
+    "I was only meant to carry eggs that day."
   ],
   "Hollybeck Graveyard": [
-    "Winning elsewhere hasn't made this place safe.",
-    "Then we keep our guard up here too."
+    "Some places will need watching for a long time.",
+    "We haven't forgotten them."
   ],
   "Forgewick Temple": [
-    "We came here wondering whether we were ready.",
-    "I remember deciding not to ask that aloud."
+    "I wonder how long the doors stood without a rider.",
+    "Perhaps somebody can come to study them now."
   ],
   "Hollybeck Temple": [
-    "These halls feel smaller on our return.",
-    "Maybe we're no longer measuring them by what could kill us."
+    "Would you have come back without me?",
+    "No. I wouldn't have come the first time without you."
   ],
   "Sandspire Temple": [
-    "You remember the turns now.",
-    "I remember the wrong ones particularly well."
+    "You are checking your pockets.",
+    "Habit. I don't want to leave anything precious behind."
   ],
   "Cinderhold Castle": [
-    "An empty throne leaves people with decisions.",
-    "I hope they get time to make them together."
+    "Does it feel smaller?",
+    "It feels like a building. That will do."
   ],
   "Cinderhold": [
-    "Would you like to leave?",
-    "Yes. It's a relief to be able to say that."
+    "We needn't stay to prove anything.",
+    "Then let's go somewhere with a window that opens."
   ]
 };
 const DRAGON_ENEMY_LINES={
   "skeleton": [
-    "It's lifting the weapon before it steps.",
-    "I'll move when the arm rises."
+    "The bones are holding a weapon.",
+    "I was hoping they'd have enough to do holding together."
   ],
   "skeleton1": [
-    "Don't let it trap you against the wall.",
-    "I'll keep the open ground behind me."
+    "There. Between the trees.",
+    "Seen it. I won't let it get behind us."
   ],
   "skeleton3": [
-    "Armour will make that one harder to stop.",
-    "Then I won't trade blows with it."
+    "That one is still coming.",
+    "Then we keep moving too."
   ],
   "wraith": [
-    "Keep moving. It's closing without footsteps.",
-    "I miss enemies that announce their feet."
+    "I dislike the way it slips out of sight.",
+    "Tell me where you see it next."
   ],
   "mage1": [
-    "A spell is coming. Watch where it aims.",
-    "I've got room to dodge."
+    "The caster has room to aim.",
+    "I'll make that less comfortable."
   ],
   "mage2": [
-    "Stay out of that caster's line.",
-    "Moving across it now."
+    "Watch the spell, not the robe.",
+    "A shame. The robe is much easier to dislike."
   ],
   "devil1": [
-    "Don't stand in the fire to reach it.",
-    "I wasn't planning to. Remind me if I get foolish."
+    "It wants us to retreat into the others.",
+    "We're going round, then."
   ],
   "devil3": [
-    "Give that flame some distance.",
-    "Gladly. My sleeves have had a difficult week."
+    "Mind the space beside it.",
+    "I would mind several more feet of space, happily."
   ],
   "boneguard": [
-    "It still knows how to use that weapon.",
-    "I'll respect the weapon, whatever's holding it."
+    "It has planted its feet.",
+    "Then I won't plant mine."
   ],
   "ent": [
-    "The whole trunk is turning toward you.",
-    "I'll try to get out of its reach before it finishes."
+    "That tree has decided to object.",
+    "I could have accepted a strongly worded rustle."
   ],
   "ent1": [
-    "Mind the roots near your feet.",
-    "Looking down and ahead. I'd like a third pair of eyes."
+    "The roots move with it.",
+    "I'll watch where I land."
   ],
   "ent2": [
-    "Let it commit to a strike before closing.",
-    "You make patience sound less frightening than it is."
+    "Do not stand beneath the swing.",
+    "I have no wish to become part of the soil."
   ],
   "eye2": [
-    "That eye is tracking our movement.",
-    "I'll give it movement worth tracking."
+    "It is following your movement.",
+    "There's plenty more movement where that came from."
   ],
   "eyePurple": [
-    "Watch for the attack behind the glow.",
-    "I'm keeping space to one side."
+    "Now would be a good time to step aside.",
+    "Already stepping."
   ],
   "eyeRed": [
-    "It's lining up another shot.",
-    "Then we won't be where it expects."
+    "I think we have its attention.",
+    "I'd like to return it."
   ],
   "ghost": [
-    "Keep it in front of us.",
-    "I'd prefer that to finding it in my shoulder."
+    "Cold, to your left.",
+    "Thank you. Keep telling me."
   ],
   "ghost3": [
-    "Don't let the crown distract you from its hands.",
-    "Believe me, I'm watching the hands."
+    "It has noticed the sword.",
+    "Let's hope that's discouraging."
   ],
   "gnoll1": [
-    "It's trying to draw you closer.",
-    "It can be disappointed."
+    "You are too close to the edge.",
+    "Moving in. I see a way through."
   ],
   "gnoll2": [
-    "Leave yourself room after your swing.",
-    "One strike, then move. I remember."
+    "It is waiting for you to overreach.",
+    "It may have a longer wait than it expected."
   ],
   "gnoll3": [
-    "That one's keeping its guard.",
-    "So will I. No rushing in."
+    "We need to separate them.",
+    "I'll draw this one away."
   ],
   "plant1": [
-    "Don't reach for those leaves.",
-    "My interest in gardening has limits."
+    "Those leaves have teeth behind them.",
+    "Nan never warned me about that sort of weeding."
   ],
   "plant2": [
-    "It's moving before the others.",
-    "I'll keep it out of the corner of my eye."
+    "There is movement at your feet.",
+    "My least favourite height for surprises."
   ],
   "plant3": [
-    "There is very little flower between those teeth.",
-    "Enough to make me distrust the rest of the garden."
+    "It is reaching again.",
+    "Then it can reach into empty air."
   ],
   "reptile": [
-    "Let the first lunge pass.",
-    "I'm saving a step to the side."
+    "Its weight has shifted forward.",
+    "I'll let it go past."
   ],
   "reptile2": [
-    "Watch how quickly it turns.",
-    "I'll avoid getting boxed in beside it."
+    "Careful. It has turned toward you.",
+    "I haven't stopped watching."
   ],
   "reptile3": [
-    "It has reach. Don't stop just outside your own.",
-    "Right. Its arms are longer than my optimism."
+    "Keep away from the wall.",
+    "Yes. I'd like another direction to choose."
   ],
   "shroomBrown": [
-    "That one isn't a villager, Corin.",
-    "The charging helped me decide."
+    "This one will not talk to us.",
+    "I gathered that from its manners."
   ],
   "shroomPurple": [
-    "Keep out of the spores around it.",
-    "I'm trying to keep breathing ordinary air."
+    "Don't breathe the cloud.",
+    "An excellent argument for leaving it behind."
   ],
   "shroomRed": [
-    "The bright cap is moving our way.",
-    "We can admire it from farther off."
+    "It has cut across our path.",
+    "Then we'll make another path."
   ],
   "royalguard": [
-    "He has seen us. Be ready.",
-    "I'd still rather he lowered the sword."
+    "His sword is coming up.",
+    "I wish he'd given us a moment to speak."
   ]
 };
 const DRAGON_BOSS_LINES={
   "ghost": [
-    "It has the room's centre. Take space carefully.",
-    "I'll keep an escape to either side."
+    "Stay with me. We can follow its movement together.",
+    "I'm here. Which way first?"
   ],
   "ghost3": [
-    "That crown isn't slowing it down.",
-    "Then I won't wait for it to tire."
+    "The room gives us space. Use the corners carefully.",
+    "And don't get trapped in one. Understood."
   ],
   "golem1": [
-    "Heavy strikes. Don't be where they land.",
-    "I'll watch the arms before I move in."
+    "Wait until its weight has committed.",
+    "Then move in. I can do that."
   ],
   "golem2": [
-    "Look for the pause after its attack.",
-    "That's our opening, then."
+    "Listen for the strike behind you before turning.",
+    "I'd rather listen than feel it."
   ],
   "golem3": [
-    "We need room around that guardian.",
-    "I'll draw it away from the wall."
+    "It is larger than the last thing we fought.",
+    "You could have kept that observation to yourself."
   ],
   "golem4": [
-    "One clean opening at a time.",
-    "I can be patient for both of us if I have to."
+    "Steady. It cannot occupy the whole room.",
+    "It seems willing to try."
   ],
   "devil": [
-    "There's room to move. Keep using it.",
-    "No standing still to finish a swing."
+    "Keep your next step in mind.",
+    "Preferably somewhere less hot."
   ],
   "lich": [
-    "Do not lose sight of the caster.",
-    "I'm watching him. Tell me if anything closes behind us."
+    "He is trying to make you watch everything at once.",
+    "I'll watch him. Help me with the rest."
   ],
   "knight": [
-    "He expects you to fight alone.",
-    "That's the first thing he's wrong about."
+    "Your hand is shaking.",
+    "It can shake and hold a sword."
   ],
   "treasuryknight": [
-    "We cannot reach the chest while he stands there.",
-    "I'll concentrate on surviving him first."
+    "He means to keep us from that chest.",
+    "Then let's give him something else to think about."
   ],
   "kdragon": [
-    "Corin, look at me. We still know how to fight together.",
-    "I needed that. Stay close."
+    "I am with you, Corin. Whatever he does.",
+    "I know. I won't let go of that."
   ]
 };
 const DRAGON_BOSS_DEFEAT_LINES={
   "ghost": [
-    "It's gone. Check yourself before we move.",
-    "A few bruises. I can walk."
+    "Corin, lower your shoulders.",
+    "Had I put them up that far?"
   ],
   "ghost3": [
-    "Nothing else is moving in the chamber.",
-    "Give me a moment to believe that."
+    "We have a moment to ourselves.",
+    "I'd like two, if nothing objects."
   ],
   "golem1": [
-    "The guardian has stopped. Look for its reward chest.",
-    "After I remember how to unclench my hand."
+    "The chest is still waiting.",
+    "Good. It can wait while I get my breath."
   ],
   "golem2": [
-    "The path is clear now. We should claim the chest.",
-    "I'm glad we can hear each other again."
+    "Look there. We can reach the reward now.",
+    "I nearly forgot the chest. Nearly."
   ],
   "golem3": [
-    "We earned our way through. Don't leave the treasure behind.",
-    "I haven't come this far to forget why."
+    "We should collect what the guardian kept.",
+    "Remind me to use my hand gently on the lid."
   ],
   "golem4": [
-    "No more movement. Catch your breath before searching.",
-    "You've no idea how happy I am to obey that."
+    "You can loosen your grip.",
+    "Tell my fingers. They seem to have made a decision."
   ],
   "devil": [
-    "Check the chamber while the fire settles.",
-    "From the cooler end of it, if possible."
+    "The fighting has stopped.",
+    "My heart could do with hearing that."
   ],
   "lich": [
-    "We can move freely again.",
-    "Then let's find what he was guarding."
+    "His hold on this place has broken.",
+    "Let's collect what we came for and leave him to it."
   ],
   "knight": [
-    "He's beaten. Give him room to yield.",
-    "Only if he leaves you alone."
+    "He cannot fight us any longer.",
+    "Then he doesn't have to."
   ],
   "treasuryknight": [
-    "The chest is reachable now.",
-    "I'll open it once we've checked each other."
+    "We have earned a look inside.",
+    "If it's another knight, I'm closing the lid."
   ],
   "kdragon": [
-    "Corin. I can hear you. We're both here.",
-    "Keep talking for a moment. Please."
+    "Listen to my voice. I haven't left you.",
+    "Don't stop. Not quite yet."
   ]
 };
 const DRAGON_NPC_THOUGHTS={
   "Odo": [
-    "He notices more than the float on his line.",
-    "He's had years of watching me try to sneak past."
+    "Does he always make you wait for an answer?",
+    "Since I was small. I used to think fish could hear questions."
   ],
   "Hettie": [
-    "She talks to you as though you'll be back tomorrow.",
-    "She always has. I rather need her to."
+    "You stood straighter when she spoke.",
+    "Old habit. She can find a chore for a crooked back."
   ],
   "Nan": [
-    "She watches until you're out of sight.",
-    "Don't tell me when she stops. I'll keep turning around."
+    "She tucked that loose bit of cloth into your collar.",
+    "She'll still do it when I'm older than Maddock."
   ],
   "Maddock": [
-    "He pauses before the parts that frighten him.",
-    "I used to think that meant he knew all the answers."
+    "You waited for him to finish even when he hesitated.",
+    "He used to wait for me when I stumbled over reading."
   ],
   "Sela": [
-    "He seems pleased someone will use his work.",
-    "I'd be pleased to return without breaking it."
+    "I liked the care he took with his words.",
+    "The same care as with the glass, I think."
   ],
   "Dunstan": [
-    "He checked you were listening before explaining the equipment.",
-    "He's met people who nod and forget. Including me."
+    "His hands hardly stop working when he talks.",
+    "I wonder whether sitting still makes him uncomfortable."
   ],
   "Toft": [
-    "I'd ask him before trusting an unfamiliar mine passage.",
-    "So would I. He has reasons for every warning."
+    "He looked at our boots.",
+    "A miner has good reason to notice where people stand."
   ],
   "Maelis": [
-    "Did you notice she waited for your question?",
-    "She knew I had three and was choosing the least foolish."
+    "You found it easier once you started speaking.",
+    "Yes. I was making a much worse conversation in my head."
   ],
   "Wren": [
-    "She makes room for people to admit they need help.",
-    "That can be harder than the asking."
+    "She does not seem afraid of other people's pain.",
+    "Perhaps she is. She still helps."
   ],
   "Rowan": [
-    "He listens for footsteps while he speaks.",
-    "Bramble's, most likely. A familiar sound is reassuring."
+    "He keeps an ear turned toward Bramble.",
+    "I suspect the dog considers that a basic duty."
   ],
   "Iven": [
-    "He seems to enjoy a question that takes time.",
-    "I'd have liked him as a teacher."
+    "He wanted to know what you thought.",
+    "I wasn't expecting to be asked. I liked it."
   ],
   "Elowen": [
-    "She wants to know where a story came from.",
-    "Maddock would have a long afternoon here."
+    "Would you enjoy working among those books?",
+    "Until somebody asked me to put the one I was reading away."
   ],
   "Idris": [
-    "He can point to something he has made useful.",
-    "I'd like to leave a few things like that behind us."
+    "There is pleasure in knowing how to mend something.",
+    "I can manage a button. On a patient shirt."
   ],
   "Linna": [
-    "She notices the details before anyone has finished speaking.",
-    "I'll check my sums before buying anything."
+    "She made sure you understood the price.",
+    "I'd rather that than discover it while counting my coins."
   ],
   "Orin": [
-    "He has watched a good deal of your life from that bench.",
-    "Most of the embarrassing parts, certainly."
+    "You wanted to sit and talk to Orin a little longer.",
+    "He makes a bench sound like an excellent use of an afternoon."
   ],
   "Gwil": [
-    "Does he ever finish everything he intended in a day?",
-    "He'd invent another job if he did."
+    "He seems pleased to have someone to talk to.",
+    "So am I. The road can get quiet even with us both on it."
   ],
   "Halvard": [
-    "He listens for obedience before he listens for meaning.",
-    "Then he and I are going to disappoint each other."
+    "He watched what you did with your hands.",
+    "Then I hope he enjoyed the effort of keeping them still."
   ]
 };
 const DRAGON_REACTION_LINES={
   "freedom": [
-    "People will need time to trust that the danger has passed.",
-    "We can't hurry them into feeling safe."
+    "Somebody can disagree out loud now.",
+    "I hope the first argument is over something wonderfully dull."
   ],
   "rebuilding": [
-    "There is work here we could help with when we return.",
-    "I wouldn't mind a problem that needs a hammer."
+    "They are already thinking about what comes next.",
+    "Good. I want there to be a next."
   ],
   "fishing": [
-    "You look very determined about the fishing.",
-    "I like a task where sitting down is part of the method."
+    "We could try the water when there is time.",
+    "You mean when there is room in your stomach."
   ],
   "shield": [
-    "Practise raising the field before you're desperate.",
-    "I will. Remembering the button is a modest beginning."
+    "Will you practise with the Glass Shield?",
+    "Until raising it feels less like remembering a lesson."
   ],
   "bond": [
-    "People bring their own ideas to a rider's bond.",
-    "We can tell them ours when they ask."
+    "It is odd hearing other people describe us.",
+    "They should try sharing a headache before they write a ballad."
   ],
   "reunion": [
-    "Bramble seems satisfied with our arrangements.",
-    "He's the only one who never doubted we'd find Rowan."
+    "That dog has a very effective way of thanking people.",
+    "Yes. I'll dry my face in a moment."
   ],
   "missing": [
-    "We should remember the name they gave us.",
-    "I will. It matters to someone who's waiting."
+    "Someone is waiting for an answer.",
+    "Then we should be careful about the answer we bring."
   ],
   "king": [
-    "They waited until nobody was close before saying that.",
-    "I've noticed. It makes me angry every time."
+    "They lowered their voice.",
+    "I hate how normal that has become."
   ],
   "memory": [
-    "That account includes things the dragon memories don't.",
-    "Then I'm glad we stopped to hear it."
+    "I have never heard that part told before.",
+    "Then it was a good thing we asked."
   ],
   "food": [
-    "Talking about meals has given me an appetite.",
-    "You arrived with one. The conversation merely kept up."
+    "Could we stop for something to eat soon?",
+    "There it is. I wondered how long you'd manage."
   ],
   "depths": [
-    "Let's check our light before entering the deep workings.",
-    "Preferably somewhere we can still see the bag."
+    "We need Torvald's lantern before going farther into the mine.",
+    "I'll check the bag while there's light enough to see it."
   ],
   "home": [
-    "They've made a place worth returning to.",
-    "I hope they get to keep it that way."
+    "They spoke differently when they mentioned home.",
+    "You probably hear me do that too."
   ]
 };
 function dragonStoryStage(){return wonAll?'victory':'journey';}
@@ -670,52 +670,52 @@ function resetDragonBanter(seen=[]){
 }
 const DRAGON_DOOR_EXCHANGES=[
   [
-    "I’ll ask inside. Find yourself a comfortable spot.",
-    "I see three. I intend to inspect them all."
+    "Try not to frighten anyone while I am in there.",
+    "I shall look thoughtfully at something else."
   ],
   [
-    "Back in a little while. Keep clear of the door.",
-    "I have noticed how small humans make their entrances."
+    "You can hear me if I need you?",
+    "Even through an exceptionally ordinary wall."
   ],
   [
-    "Let’s hope this won’t take long.",
-    "Take the time the conversation needs. I’m comfortable."
+    "There is barely room for my shoulders in that doorway.",
+    "A flaw in human architecture. I shall wait."
   ],
   [
-    "I need to speak with someone in here.",
-    "Go ahead. I’ll watch who comes up the road."
+    "A short visit, I think.",
+    "You thought that about the last one. Take your time."
   ],
   [
-    "Will you be all right out here?",
-    "Yes. We can spend a few minutes doing different things."
+    "Save me a patch of sun.",
+    "I make no promises if the sun moves."
   ],
   [
-    "I’ll come straight back when we’re done.",
-    "I’ll be the conspicuous dragon outside."
+    "I hope I remember what I came to ask.",
+    "Begin with hello. The rest may follow."
   ],
   [
-    "I’m going inside before I invent an excuse.",
-    "You needn’t rehearse every word at the doorstep."
+    "Stay here a moment.",
+    "That is generally what a closed door asks of me."
   ],
   [
-    "There might be supplies in here.",
-    "Please remember that supplies can include supper."
+    "I'll see whether they have food.",
+    "A fine opening to any visit."
   ],
   [
-    "Wait for me by the path.",
-    "Of course. I promise to leave enough path for everyone else."
+    "Don't let me leave the bag behind when I come out.",
+    "I will mention it before you accuse the door."
   ],
   [
-    "I’ll tell you what I learn.",
-    "I’d like that. Especially the parts nobody thought to write down."
+    "I don't like leaving you out here.",
+    "I am quite capable of enjoying a little fresh air."
   ],
   [
-    "A short visit, then we can move on.",
-    "Or a long one, if someone needs you. I can rest."
+    "Would you like me to describe the inside?",
+    "Only if it contains something better than chairs."
   ],
   [
-    "I wish you fitted through these doors.",
-    "So do the hinges, I suspect. Go on; I’ll stay outside."
+    "Right. Wish me luck.",
+    "For a conversation? All the luck you require."
   ]
 ];
 function dragonDoorExchange(){

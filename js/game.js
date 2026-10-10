@@ -5496,26 +5496,26 @@ function stepBirds(dt) {
   for (const b of BIRDS) { b.x += b.vx * dt; b.y += b.vy * dt; }
 }
 const HATCH_LINES = [
-      "Maddock: Corin? What have you got there?",
-      "Corin: Maddock, I found something in the north field.",
-      "Maddock: Let me see. Where did you find an egg that size?",
-      "Maddock: Set it here, gently. It is moving.",
-      "Maddock: A dragon’s egg. I never thought I would see one hatch.",
-      "The egg moves.",
-      "It shakes again -- harder.",
-      "The shell splits. A hatchling pushes free.",
-      "The hatchling turns to Maddock.",
-      "Then it turns to Corin and crosses the space between them.",
-      "A smooth stone lies in the broken shell. It glows as Corin lifts it.",
-      "Corin: Why did it come to me?",
-      "Maddock: He has chosen you, Corin. That is how a rider’s bond begins.",
-      "Maddock: Halvard has spent fifty years making sure there would be no more riders. When he hears about this, he will come for you both.",
-      "Corin: Then where can we go?",
-      "Maddock: You cannot hide from him forever. Sooner or later, you will have to face him at Cinderhold, his fortress in the far east.",
-      "Corin: I would not last a minute against his guards.",
-      "Maddock: That is why you start at the old rider temple near Forgewick. Learn what that stone is, and what the two of you can do together.",
-      "Corin: How do we get to Forgewick?",
-      "Maddock: Forgewick is east of Thornwell. Follow the road through Thornwell and keep heading east. Ask for the old temple when you reach Forgewick.",
+  "Maddock: Corin, don't take another step. Something's moving in your arms.",
+  "Corin: The dragon left an egg. I thought I could get it here before... I don't know before what.",
+  "Maddock: An egg. Gently, lad. Let me see.",
+  "Maddock: Set it here, on the ground. We'll both move back.",
+  "Maddock: That crack wasn't there a moment ago. Corin, watch.",
+  "A tremor runs through the egg.",
+  "Another shudder knocks loose a flake of shell.",
+  "The shell splits beneath a small, determined head.",
+  "The hatchling studies Maddock.",
+  "Then it finds Corin and comes unsteadily toward him.",
+  "Among the fragments lies a smooth stone. Corin lifts it into the light.",
+  "Corin: Hello. You're... much smaller than she was. Maddock, why is he coming to me?",
+  "Maddock: Because he wants to. Give him room to decide, Corin. A rider's bond begins with trust.",
+  "Maddock: I wish this could be only a wonderful thing. But Halvard will hunt him. He's hunted every other dragon for fifty years.",
+  "Corin: He can't. Look at him. He's only just learned to stand.",
+  "Maddock: I know. Hiding will buy you days, perhaps. To keep him safe for a lifetime, someone must overthrow Halvard at Cinderhold.",
+  "Corin: Someone. You mean me.",
+  "Maddock: I mean you must find help before you face him. The old rider temple near Forgewick may have answers I don't. Don't mistake my worry for knowledge.",
+  "Corin: All right. I'm not handing him over. Where do we begin?",
+  "Maddock: Forgewick, east of Thornwell. Ask for its old rider temple. Begin with that road, not the whole kingdom."
 ];
 
 let hatchScene = null;
@@ -7726,11 +7726,11 @@ function interactTrialPedestal() {
   if (!trialPedestalHere() || trial ||
       Math.hypot(P.x - TRIAL_PEDESTAL.x, P.y - TRIAL_PEDESTAL.y) > 48) return false;
   faceCorinAt(TRIAL_PEDESTAL.x, TRIAL_PEDESTAL.y);
-  if (!wonAll) {playScene(["The seal chamber is silent. The Crown still holds the throne."]);return true;}
+  if (!wonAll) {playScene(["Nothing stirs beyond the pedestal. Halvard has not yet relinquished this place."]);return true;}
   if (!cinderSeal) {
-    playScene(["A pale stone pedestal stands against the north wall, at the end of the rug.",
-      "A seal-shaped hollow has been cut into its crown."], { hold: false });
-  } else if(trialSealPlaced)playScene(["The seal rests in its socket. The demon awaits you in the throne room."]);
+    playScene(["The rug ends at a stone pedestal beneath the north wall.",
+      "Something is missing from the hollow in its top: a seal, by the shape of it."], { hold: false });
+  } else if(trialSealPlaced)playScene(["The seal fits so neatly that its edges nearly disappear. Your visitor is waiting in the throne room."]);
   else trialAsk();
   return true;
 }
@@ -7772,7 +7772,7 @@ function startTrial() {
   arenaT = 1; arenaGoing = false;
   const run = trial;
   playScene(["Demon: Then let the trial begin.",
-    "Shapes begin to gather across the throne room."],
+    "The air thickens at the far end of the hall. Something steps out of it."],
     { hold: false, after: () => {
       if (trial === run && MAPID === "cinderhold") nextTrialWave();
     } });
@@ -7783,7 +7783,7 @@ function nextTrialWave() {
   run.index++;
   if (run.index >= run.waves.length) {
     trialWins++; stopTrial(""); saveGame();
-    playScene(["The last shape breaks apart. Cinderhold falls quiet.",
+    playScene(["The final creature unravels, leaving only the sound of Corin's breathing.",
       "Demon: Every creature, and still you stand. Come again when the silence bores you.",
       "Cinderhold trial complete! Victories: " + trialWins], { hold: false });
     return;
@@ -8198,8 +8198,8 @@ function winGame() {
   rebuildSolid();
   saveGame();
   playScene([
-    "The King goes down in his own hall.",
-    "The two heads come to rest, one across the other.",
+    "Halvard's last shape collapses. Nothing rises to take its place.",
+    "For the first time, the hall is quiet without anyone being afraid to speak.",
     "Corin: It is done, then.",
     "Corin: Come on. There is a long road home and nothing chasing us down it.",
     "-- EMBERFELL --",
@@ -10060,7 +10060,7 @@ function stepThornwellWelcome(dt) {
     const nearby=bramblePath([dog.x,dog.y],[P.x+24,P.y]);if(!nearby)return;thornwellArrival={dog,path:nearby};
   }else{[dog.x,dog.y]=path[0];thornwellArrival={dog,path:path.slice(1)};}
   brambleQuest=1;thornwellMet=true;
-  playScene(["Corin: Oh! Hello there. Come here, boy.","Corin scratches the dog's ears. His tail wags furiously.","Corin: You have a collar. We'd better find your owner.","The dog falls into step behind Corin."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];}});
+  playScene(["Corin: Oh! Hello there. Come here, boy.","The dog presses into Corin's hand as he scratches behind its ears.","Corin: You have a collar. We'd better find your owner.","The dog follows, apparently satisfied with the arrangement."],{bramble:true,hold:()=>!thornwellArrival,after:()=>{brambleTrail=[];}});
 }
 function skipBrambleForTest(){
   if(scene?.bramble){scene=null;walker=null;sayOff();showFace(null);}
@@ -10222,6 +10222,7 @@ function interact() {
         return;
       }
       const giver = sayNpc;
+      if(giver.n==='The Shroom King'&&typeof DialogueRenewal!=='undefined')DialogueRenewal.introduction(giver)?.done();
       sayNpc = null; sayOff(); showFace(null);
       if(giver.n==='Liora'&&!fishingPole){
         fishingPole=true;
@@ -14891,7 +14892,7 @@ function stepArena(dt) {
   } else {
     const ring = arenaLock;
     const waves = ring.waves
-      || (ring.wave2 ? [{ say: "Oh no! There's more!", at: ring.wave2 }] : []);
+      || (ring.wave2 ? [{ say: "Corin: Wait. Something else is moving.", at: ring.wave2 }] : []);
     if (ring._wave === undefined) ring._wave = 0;
     if (!arenaGoing && !arenaFoesLeft(ring) && !ring._waving && ring._wave < waves.length) {
       const w0 = waves[ring._wave];

@@ -44,7 +44,7 @@ check('foes.every(f=>f.y<P.y)','All tutorial enemies stand ahead of Corin after 
 check('Math.hypot(dragon.x-P.x,dragon.y-P.y)<55','Dragon stands beside Corin before talking');
 for(let i=0;i<10;i++)run('EmberArenaEntry.step(.05);stepArena(.05);EmberRiding.step(.05);stepCombat(.05)');
 assert.equal(run('JSON.stringify(foes.map(f=>[f.x,f.y,f.hp]))'),before,'Enemies idle in place throughout the rising walls and dialogue');
-check("scene.lines[0]==='Aurelius: On my back, Corin! We need to move as one!'",'Correct opening line at full walls');
+check("scene.lines[0].startsWith('Aurelius: Corin, climb onto my back.')",'Correct opening line at full walls');
 const finish=()=>run('{const next=scene.after;scene=null;next?.();}');
 finish();check("ovl==='airm'&&EmberRiding.capture().phase==='mount'",'Command menu opens for Mount');
 assert.equal(dom.element('ridingHint').dataset.dismiss,'control');
@@ -63,7 +63,7 @@ run('actionButton()');check("EmberRiding.capture().phase==='dragonButton'&&ovl==
 assert.equal(c.reveals.at(-1)[1],'CORIN TAKES THE REINS','Tutorial mount retains the normal mount popup');
 assert.match(c.reveals.at(-1)[0],/^corinride_.*idle_s$/);
 run("setOvl('itemm')");check('ovl===null','Wrong control cannot advance the lesson');
-dom.touch(dom.element('btnL'));check("scene.lines[0].includes('Choose our attack')",'Dragon asks for the attack');
+dom.touch(dom.element('btnL'));check("scene.lines[0].includes('which attack to use')",'Dragon asks for the attack');
 check("ovl==='atkm'&&EmberRiding.capture().phase==='fire'",'A touch opens Fire immediately without an extra A press');
 check("ATTACKS.length===4&&!ATTACKS.some(a=>a.el==='claw')",'The attack menu contains only the four breaths; Slash remains on A');
 run('MENUS.atkm.pick=1;ovlTake()');check("EmberRiding.capture().phase==='fire'",'Lightning cannot bypass Fire lesson');
@@ -101,7 +101,7 @@ run('dragon.hp=5;dragon.tr={to:true};groundInjuredDragon()');check('!dragon.tr&&
 run('dragon.hp=6');check('!dragonTooHurtToFly()','Health above one quarter allows flight');
 run("foes.forEach(f=>f.st='dead');");
 for(let i=0;i<20;i++)run('stepArena(.05)');
-check("scene.lines[0].includes('Climb down so I can rest')",'Cleared battle teaches dismount');
+check("scene.lines[0].includes('Down you get')",'Cleared battle teaches dismount');
 check('dragon.hp<=dragonFlightMinimum()&&hareMeat>=1','Recovery always has low health and usable food');
 finish();check("ovl==='airm'&&EmberRiding.capture().phase==='dismount'",'Dismount is the required command');
 run('MENUS.airm.pick=0;ovlTake()');check('!mounted','Real dismount gets Corin off the dragon');finish();

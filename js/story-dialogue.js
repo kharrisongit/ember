@@ -2,148 +2,115 @@
 const MILLWOOD_STORY_DIALOGUE={
   "Hettie": {
     "d": [
-      "Hettie: Give me a moment, Corin. The cows have decided this is the best grass in Millwood.",
-      "Corin: Right in the middle of the lane?",
-      "Hettie: Apparently it tastes better when someone is waiting."
+      "Hettie: Corin, mind your toes. They have four feet apiece and no regard for where yours happen to be.",
+      "Corin: I can see who has right of way."
     ],
     "d2": [
-      "Hettie: Maddock asked for six eggs. The basket is by the coop behind the mill.",
-      "Hettie: Check under the straw. The brown hen has been hiding hers."
+      "Hettie: Six eggs for Maddock. Coop behind the mill. The basket will spare you trying to grow a third hand."
     ],
     "dm": [
-      "Hettie: Is that Maddock’s sword?",
-      "Corin: He lent it to me.",
-      "Hettie: Then I hope you bring it back without needing it."
+      "Hettie: That's a serious bit of steel, Corin.",
+      "Corin: Maddock thought I should take it.",
+      "Hettie: Then listen to the rest of what he told you as well."
     ],
     "dd": [
-      "Hettie: Oh, look at you. I thought the wings would be smaller.",
-      "Corin: So did I.",
-      "Hettie: The cattle are keeping their distance. Give them a little room until they get used to him."
+      "Hettie: Well. I knew something had happened, but I had not allowed for wings.",
+      "Corin: Neither had I.",
+      "Hettie: Keep him clear of the cows until they have made up their minds."
     ],
     "dd2": [
-      "Hettie: Gwil and I have the farm in hand. How are you getting on with your dragon?",
-      "Corin: He follows me everywhere. I keep thinking about all the work I left you.",
-      "Hettie: We can manage. There will be plenty of muddy jobs left when you get back."
+      "Hettie: You look as though you are about to apologise for leaving the farm work.",
+      "Corin: Was it that obvious?",
+      "Hettie: Go on with you. Gwil and I can manage a few muddy mornings."
     ],
     "dragonNear": [
-      "Hettie: He has been watching the hens. Tell him those are spoken for."
+      "Hettie: Those hens are not his dinner. Tell him before he starts thinking hopefully."
     ],
     "dragonRumor": [
-      "Hettie: A trader asked whether I knew the young rider from Millwood.",
-      "Corin: What did you tell him?",
-      "Hettie: That you are a good lad, and he could leave a message if he had something useful to say."
+      "Hettie: Someone asked me about a rider from Millwood. I asked what business it was of theirs.",
+      "Corin: What did they say?",
+      "Hettie: Not enough to earn another answer."
     ],
     "dragonRumor2": [
-      "Hettie: Your grandmother came by this morning. Go and see her before you leave again. She would rather hear from you."
+      "Hettie: Nan has been listening for your steps. Go and give her the sound itself."
     ],
     "dv": [
-      "Hettie: There you are! Come here and let me see you.",
-      "Corin: I am all right, Hettie.",
-      "Hettie: Good. I have been waiting to hear that from you."
+      "Hettie: Come into the light, lad. I want to see for myself.",
+      "Corin: All the important bits are here.",
+      "Hettie: Good. I was fond of every one of them."
     ],
     "dv2": [
-      "Hettie: Two families came down the road together this morning. They are visiting relatives in Thornwell.",
-      "Hettie: Nobody asked for a guard to go with them. It has been years since that happened."
+      "Hettie: I saw travellers go past without looking over their shoulders. Took me a moment to work out what was different."
     ]
   },
   "Elder Maddock": {
     "d": [
-      "Maddock: Come in, Corin. There is room by the table.",
-      "Maddock: I was looking through these old maps. Half the paths I knew have grown over."
+      "Maddock: Corin. Come and put a younger pair of eyes on this map. The ink seems to be retreating from mine."
     ],
     "d2": [
-      "Maddock: Nan used to walk to Thornwell to visit the market. There would be a dozen neighbours going with her.",
-      "Corin: All that way on foot?",
-      "Maddock: They made a day of it. The road was safe then."
+      "Maddock: Nan once walked to Thornwell and back with a sack of flour.",
+      "Corin: She never told me that.",
+      "Maddock: Ask her. I expect she will add that I complained about carrying the smaller sack."
     ],
     "dm": [
-      "Maddock: Keep that sword where you can reach it. There are monsters beyond the northern woods.",
-      "Maddock: If the path gets too dangerous, turn back. I would rather hear what stopped you than have to go looking."
+      "Maddock: A sword is not a reason to keep going when your sense tells you to stop. Turn back if the road demands more than you can give it."
     ],
     "dd": [
-      "Maddock: Start at the old rider temple near Forgewick. Forgewick is east of Thornwell; follow the road through town and keep heading east.",
-      "Maddock: Halvard rules from Cinderhold, far to the east. You will need what the temples can teach you before you face him there."
+      "Maddock: Forgewick is east of Thornwell. Take the road through town, then look for the rider temple south of Forgewick.",
+      "Maddock: Halvard is at Cinderhold. What waits in the temples may give you a chance to reach him."
     ],
     "dd2": [
-      "Maddock: How is he settling in?",
-      "Corin: There is a great deal he wants to see.",
-      "Maddock: Then leave time for that. He has a life ahead of him, and so do you."
+      "Maddock: I find myself listening for wings. I had not realised how much I missed doing that."
     ],
     "dragonNear": [
-      "Maddock: He looks stronger already. Have you been getting enough rest to keep up with him?"
+      "Maddock: He keeps an eye on you even while he looks elsewhere. You will have to grow used to being cared for."
     ],
     "dragonRumor": [
-      "Maddock: Forgewick lies east of Thornwell. Ask Dunstan to look at your sword while you are there, then find the old rider temple nearby.",
-      "Maddock: Cinderhold is where you will find Halvard. Take the time to prepare before you go that far."
+      "Maddock: Keep Forgewick in mind, east of Thornwell. Its temple is your first step toward being ready for Cinderhold.",
+      "Maddock: You need not carry the whole journey in your head at once."
     ],
     "dragonRumor2": [
-      "Maddock: I have heard people talking about you without lowering their voices.",
-      "Corin: Is that wise?",
-      "Maddock: Perhaps they are tired of being frightened. I know I am."
+      "Maddock: Have you been sleeping? I ask because brave young people are tiresome about admitting they need a bed."
     ],
     "dv": [
-      "Maddock: Corin. You made it.",
-      "Corin: Both of us.",
-      "Maddock: I kept thinking about the morning you stood here holding that egg. Sit with me a while. I want to hear everything."
+      "Maddock: For years I wondered what I should have done. You gave me something better to wonder about: what we might do now."
     ],
     "dv2": [
-      "Maddock: Keep the sword. I gave it to you because you needed it.",
-      "Corin: You are sure?",
-      "Maddock: Yes. Though I would be glad to see you hang it over a hearth someday."
+      "Maddock: Sit down, Corin. Tell me a part of the journey nobody else will think to ask about."
     ]
   },
   "Nan Ferrow": {
     "d": [
-      "Nan Ferrow: Morning, love. Have you eaten?",
-      "Corin: I was going to get something on the way.",
-      "Nan Ferrow: There is bread on the table. Take a piece before Hettie finds you another job."
+      "Nan Ferrow: Hettie is outside with the cows, love. See what she needs before you disappear into a book."
     ],
     "d2": [
-      "Corin: Was Mum much like me?",
-      "Nan Ferrow: She asked just as many questions. And she never could leave a hurt creature alone.",
-      "Corin: And Dad?",
-      "Nan Ferrow: That look you get when you have decided something? His, exactly. I used to see it across this very table.",
-      "Nan Ferrow: You were so small when I brought you home. I worried I had forgotten how to care for a baby.",
-      "Corin: You worked it out.",
-      "Nan Ferrow: So did you, love. We grew into this family together."
+      "Nan Ferrow: Did you eat enough? That was a question, Corin, not an invitation to look innocent."
     ],
     "dm": [
-      "Nan Ferrow: Come closer. Let me fasten that strap.",
-      "Corin: Maddock said the sword was his father’s.",
-      "Nan Ferrow: Then it has been looked after. You must look after yourself just as carefully."
+      "Nan Ferrow: Maddock lent you his sword? Then I hope he lent you some sense to go with it."
     ],
     "dd": [
-      "Nan Ferrow: How is your dragon settling in? He looks quite at home beside you.",
-      "Corin: He follows me even when I only go a few steps.",
-      "Nan Ferrow: Then mind where you put your feet. You used to do the same to me when you were small."
+      "Nan Ferrow: I am trying to look at the dragon and look at you at the same time. One of you must stand still."
     ],
     "dd2": [
-      "Nan Ferrow: Does he sleep well? And are you sleeping at all?",
-      "Corin: We rest when we can.",
-      "Nan Ferrow: Make time, love. You cannot keep each other safe if you are both worn through."
+      "Nan Ferrow: Come here a moment. There is something on your sleeve.",
+      "Corin: You could have asked for a hug.",
+      "Nan Ferrow: I could. Hold still anyway."
     ],
     "dragonNear": [
-      "Nan Ferrow: Mind the washing with that tail, sweetheart. The sheets have only just dried."
+      "Nan Ferrow: He can rest nearby, but I am not widening the door. Your grandfather hung that one properly."
     ],
     "dragonRumor": [
-      "Nan Ferrow: I heard you were leaving Millwood. I hoped you would come and tell me yourself.",
-      "Corin: I did not know how to say it.",
-      "Nan Ferrow: Neither do I. I want you here, and I know why you have to go. Come and sit beside me for a little while."
+      "Nan Ferrow: I have heard several accounts of your journey. I should like the one in which you tell me how you actually are."
     ],
     "dragonRumor2": [
-      "Nan Ferrow: When you have a quiet evening, tell me something you have enjoyed.",
-      "Corin: You want to hear about the journey?",
-      "Nan Ferrow: All of it. I would like to picture you happy somewhere, too."
+      "Nan Ferrow: You can be quiet here, love. Nobody needs you to be impressive at the kitchen table."
     ],
     "dv": [
-      "Nan Ferrow: Corin? Oh, my darling.",
-      "Corin: I am home, Nan.",
-      "Nan Ferrow: Let me hold you a moment. There will be time for the story."
+      "Nan Ferrow: There you are. Come here. We can talk about everything else when I have held you for a moment."
     ],
     "dv2": [
-      "Nan Ferrow: I woke early and put the kettle on, then remembered I did not have to wonder where you were.",
-      "Corin: I might stay a few days.",
-      "Nan Ferrow: I would like that very much."
+      "Nan Ferrow: I keep making enough for a visit. It is a much happier habit now I know you can come."
     ]
   }
 };

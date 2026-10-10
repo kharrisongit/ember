@@ -224,15 +224,14 @@ const ThornwellDialogue = (()=>{
   }
   function reunion(n){
     const met=remembers(n,'met');
-    return ["Rowan: Bramble! Come here, you enormous worry. Let me look at you.",
-      met?"Corin: He found me on the road. I thought you'd want him brought straight back.":"Corin: He started following me outside town. People here helped me find you.",
-      met?"Rowan: I'd checked our path twice. Thank you for bringing the part I couldn't find.":"Rowan: I'm Rowan. I'd been searching our usual path. Thank you for trying the people instead.",
-      smithUpgrade?"Rowan: You've found a smith for that blade already. Good. I'd hate to see your kindness send you onto a road you weren't ready for.":"Rowan: If you're going east, ask Dunstan in Forgewick to improve your sword and armour. He'll give you useful help, and I'd like to know you've had it.",
-      !glassShield?"Rowan: Ask him about other protection while you're there. Dunstan knows who makes work worth carrying.":"Rowan: With a Glass Shield too, you're better prepared than I was on my first long journey. Keep using your head as well.",
-      "Rowan: Ada will be waiting at home. Visit us in Thornwell when you can; Bramble clearly wants to keep the acquaintance."];
-
+    return ["Rowan: Bramble, you great nuisance. Come here. No, nearer than that. Let me have you.",
+      met?"Corin: He was on the road. I don't think he's missed a chance to sniff anything since.":"Corin: I'm Corin. He joined me outside town. Your neighbours told me where to bring him.",
+      met?"Rowan: That's him. Not a care in the world, so long as I do all the worrying.":"Rowan: Rowan. Sorry—I'm forgetting my manners. I've been imagining every ditch between here and the woods.",
+      smithUpgrade?"Rowan: Someone has done good work on your equipment. I'm glad. I'd hate for this favour to cost you anything on the next road.":"Rowan: Going east? Find Dunstan in Forgewick. Ask him to improve your sword and armour before you go much farther.",
+      !glassShield?"Rowan: Ask Dunstan what else might protect you, too. He knows people whose work he trusts.":"Rowan: A Glass Shield as well. Good. Use it, and don't let the armour persuade you to stand still.",
+      "Rowan: Come and see us at home in Thornwell. Ada will want to thank you, and this idiot will want to lick your hands again."];
   }
-  function rememberReunion(n){discussedTopics.add(key(n,'met'));saveGame();}
+  function rememberReunion(n){discussedTopics.add(key(n,'met'));if(typeof DialogueRenewal!=='undefined')DialogueRenewal.introduction(n)?.done();saveGame();}
   function dossier(name,actor){
     const n=actor?.n===name?actor:{n:name},p=profile(n);if(!p)return null;
     return {name,role:p.role,home:name==='Calder'?'Road from Millwood to Thornwell':'Thornwell',bio:p.bio,interests:p.rows.slice(0,3).map(r=>r.title).join(' · '),memory:''};

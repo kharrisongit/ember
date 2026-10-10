@@ -24,22 +24,23 @@ function talkShroomLookout(n){
   if(!n?.shroomLookout)return false;
   const memory=quest>=Q.FLED?'Mosslet:return':'Mosslet:crash';
   const heard=discussedTopics.has('Mosslet:crash');
+  const met=discussedTopics.has('@renewal-v1:'+n.n+':met');
   const lines=quest>=Q.FLED?[
-    "Mosslet: You're back. I was beginning to regret not going after you.",
-    "Corin: A dragon came down in the field. It managed to fly away again.",
-    "Mosslet: A dragon made that noise? I thought half the hill had fallen. Tell our king—he needs to hear this from you."
+    met?"Mosslet: You came back! I've been trying to decide whether that was a good sign.":"Mosslet: Have you come from the northern woods? Something shook the ground over there.",
+    met?"Corin: It was a dragon. She left again. I saw her fly.":"Corin: I'm Corin, from Millwood. A dragon landed there. She managed to fly away.",
+    "Mosslet: A dragon. I thought a tree had fallen. Please tell our king what you saw; I shouldn't be the one to pass that on."
   ]:heard?[
-    "Mosslet: Our king is under the great caps in the village. Take this turning before you head farther north.",
-    "Corin: I'll ask him what he knows about the woods."
+    "Mosslet: Take the turning beneath the great caps. Our king is there, if you haven't found him yet.",
+    "Corin: Thanks. I'll speak to him before I go farther."
   ]:[
-    "Mosslet: Something hit the northern woods hard enough to shake this path. I've been waiting for someone to tell me they heard it too.",
-    "Corin: I heard it from Millwood. Did anything come out afterward?",
-    "Mosslet: Nothing I could see. The trees were moving, then everything went quiet. I didn't like the quiet much better.",
-    "Mosslet: Speak with the Shroom King before going on. Our village is through here, beneath the great caps. He'll know what help we can offer.",
-    "Corin: That's worth a short detour. I'll go to him first."
+    "Mosslet: Did you feel that? I was standing here and the path jumped under my feet.",
+    "Corin: I'm Corin, from Millwood. We heard it there. Did you see what happened?",
+    "Mosslet: I'm Mosslet. All I saw was the trees shaking. Nothing has come out since, which isn't making me feel better.",
+    "Mosslet: Speak with the Shroom King. Through here, under the great caps. If anyone can help before you go into those woods, he can.",
+    "Corin: I'll find him. Keep away from the trees until we know what fell."
   ];
   clearPadInputs();running=false;P.act=null;P.moving=false;n.goto=null;
-  faceToward(n,P.x,P.y);playScene(lines,{who:n.n,npcActor:n,after:()=>{discussedTopics.add(memory);saveGame();}});return true;
+  faceToward(n,P.x,P.y);playScene(lines,{who:n.n,npcActor:n,after:()=>{discussedTopics.add(memory);if(typeof DialogueRenewal!=='undefined')DialogueRenewal.introduction(n)?.done();saveGame();}});return true;
 }
 
 // Reserve the doorstep and approach to each mushroom house for the player.

@@ -197,8 +197,8 @@
     if(scene?.conversationReplies){scene=null;sayOff();}
     askShut();if(callback)callback();
     if(farewellNpc?.n==='Nan Ferrow')playScene([
-      'Corin: I’ll be off then, Nan.',
-      'Nan Ferrow: Take care, love. Stop by sometime and I’ll whip you up something special.'
+      "Corin: I should go. Thank you for the company, Nan.",
+      "Nan Ferrow: You never have to thank me for that. Come back when you can, love."
     ],{who:farewellNpc.n,npcActor:farewellNpc});
     return true;
   }

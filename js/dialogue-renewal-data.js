@@ -4,1152 +4,1152 @@ const DIALOGUE_RENEWAL_CAST = {
     "name": "Hettie",
     "home": "Millwood",
     "role": "Cattle farmer",
-    "source": "01-millwood.txt:5",
+    "source": "01-millwood.txt:2",
     "topics": [
       {
-        "title": "The cow that escaped",
-        "opening": "How did you keep that cow from escaping?",
-        "first": "One of my cows learned to lift the gate latch. I spent a week blaming Gwil for leaving it open.",
+        "title": "The milk argument",
+        "opening": "Why does everyone argue about whose milk is best?",
+        "first": "Joss says our milk tastes of clover. Tam says grass. I said it tastes of getting up before either of them.",
         "replies": [
           [
-            "Did you apologise to him?",
-            "Yes. He has been enjoying my apology rather longer than I enjoyed making it."
+            "What did they say to that?",
+            "Asked for another jug. Critics are thirsty people."
           ],
           [
-            "How did you catch her doing it?",
-            "I hid where she couldn't see me. She waited until I moved, then lifted the latch. I had to respect that."
+            "Can you tell the difference?",
+            "Between pastures, yes. Between their opinions, no."
           ],
           [
-            "Can she still get out?",
-            "I changed the fastening. Now she watches my hands whenever I open it. The contest continues."
+            "I'd have said milk.",
+            "And that's why you're welcome at breakfast."
           ]
         ]
       },
       {
-        "title": "Raising a calf",
-        "opening": "What is it like raising a calf?",
-        "first": "A newborn calf tries to stand before it knows what its legs are for. I never get tired of watching that part.",
+        "title": "Hettie's day off",
+        "opening": "What would you do with a whole day off?",
+        "first": "I'd go somewhere nobody knew me. Order an enormous breakfast. Let someone else ask whether I'd had enough.",
         "replies": [
           [
-            "Do you help it up?",
-            "Only if it needs me. Mostly I kneel nearby and get covered in straw."
+            "Would you get bored?",
+            "By noon, probably. But I mean to enjoy the morning."
           ],
           [
-            "Were you always good with animals?",
-            "No. I used to rush frightened ones. My aunt made me sit beside the pen until I learned to wait."
+            "You could do that here.",
+            "Here they'd ask me to look at a sick hen between courses."
           ],
           [
-            "What do you like about the work?",
-            "Knowing them. I can hear one call and tell you which cow it is. Gwil thinks that deserves its own wage."
+            "Would you take Gwil?",
+            "If he promised to discuss something besides the farm. We've yet to agree on a subject."
           ]
         ]
       },
       {
-        "title": "My place on the farm",
-        "opening": "Do I still have a place here when I'm not helping with the work?",
-        "first": "You don't have to earn your welcome here by carrying something, Corin. You've done enough mornings' work for that.",
+        "title": "An unwelcome title",
+        "opening": "Who started calling you the mayor of the cows?",
+        "first": "Hal. At a wedding. He made a speech and everything. I hadn't even finished my pudding.",
         "replies": [
           [
-            "I like being useful.",
-            "I know. I also like you when you're sitting down."
+            "Did you give a speech back?",
+            "I thanked my constituents. One had just eaten his hat."
           ],
           [
-            "I wasn't sure you'd manage without me.",
-            "We've arranged the chores between us. You may still receive complaints, but those are mostly for Gwil."
+            "Do you mind the name?",
+            "Only when people say it instead of listening to me."
           ],
           [
-            "Could I work here again someday?",
-            "If you want to. Ask me then. You needn't decide the rest of your life beside a cow."
+            "It does sound quite important.",
+            "Then remember it next time I ask you to shut a gate."
           ]
         ]
       }
     ],
     "greetings": [
-      "You have that look again, Corin. What are you about to ask me?",
-      "Does it always mean more work for you?",
-      "There you are. I've already counted the cows, so this can be a social visit.",
-      "Then I picked my moment well.",
-      "Corin, there's a dragon behind you. Please say that was deliberate.",
-      "Mostly. He hatched from an egg I found, and followed me home."
+      "Corin, have you been eating Nan's burnt bits again? She says you prefer them.",
+      "I prefer them to telling her they're burnt.",
+      "Ah, my favourite interruption.",
+      "I'll try to live up to it.",
+      "Good heavens. Does Nan know about the dragon?",
+      "She's getting used to the idea. Slowly."
     ]
   },
   "Gwil": {
     "name": "Gwil",
     "home": "Millwood",
     "role": "Farmhand and woodworker",
-    "source": "01-millwood.txt:10",
+    "source": "01-millwood.txt:7",
     "topics": [
       {
-        "title": "A chair too grand",
-        "opening": "Have you ever made something that turned out too grand for its purpose?",
-        "first": "I once carved a chair so elaborately that no one could sit on it without snagging a sleeve. Beautiful waste of a month.",
+        "title": "The village play",
+        "opening": "Were you really a tree in Nan's village play?",
+        "first": "An oak. Three evenings of rehearsal, and my only direction was to stop scratching.",
         "replies": [
           [
-            "What happened to it?",
-            "I shaved the arms smooth. My mother used it for twenty years and never once admired the carving."
+            "Why did you agree?",
+            "Nan said I had presence. She meant I was wide enough to hide the curtain."
           ],
           [
-            "Would you make another?",
-            "A plainer one. I'd rather someone wore it out than kept it under a cloth."
+            "Did the play go well?",
+            "Until a child tried to climb me. I broke character rather loudly."
           ],
           [
-            "How did you miss the problem?",
-            "I kept standing back to look at it. Sitting down should have occurred to me earlier."
+            "Would you do it again?",
+            "Only as something with a chair. A seated oak, perhaps."
           ]
         ]
       },
       {
-        "title": "Working with Hettie",
-        "opening": "How do you and Hettie get the work done together?",
-        "first": "Hettie can tell I'm avoiding a job before I've decided how to avoid it.",
+        "title": "The missing whistle",
+        "opening": "Why don't you whistle while you work anymore?",
+        "first": "Swallowed a fly halfway through a tune. Put me off the whole performance.",
         "replies": [
           [
-            "What were you avoiding?",
-            "Clearing a blocked drain in the rain. I suggested waiting for better weather. She pointed out the drain's purpose."
+            "Surely not forever?",
+            "I'm considering humming. Less room for an audience to get in."
           ],
           [
-            "Does she ever avoid anything?",
-            "Accounts. That's when she develops a powerful interest in checking the cattle."
+            "Was it a good tune?",
+            "It had been. The ending surprised everyone."
           ],
           [
-            "Do you ever get a quiet day together?",
-            "Sometimes we finish early and say absolutely nothing for half an hour. It's rather companionable."
+            "Hettie must miss it.",
+            "She said the peace was lovely. Rather too quickly, I thought."
           ]
         ]
       },
       {
-        "title": "Something worth keeping",
-        "opening": "What have you made that you'd never part with?",
-        "first": "My father's old saw is worn down nearly to its spine. I bought a replacement, but I haven't thrown the old one out.",
+        "title": "A secret purchase",
+        "opening": "Have you ever bought something completely useless?",
+        "first": "A telescope. Wanted to see the moon properly. Spent my first evening looking through the wrong end.",
         "replies": [
           [
-            "Do you still use it?",
-            "For small jobs. It cuts crookedly now, so I have to be honest about what it can manage."
+            "What did you see?",
+            "A very disappointing moon. Excellent distance on it, though."
           ],
           [
-            "Did he teach you with it?",
-            "He taught me on scrap. I wasn't allowed near that saw until I could explain where both my hands would be."
+            "Do you still have it?",
+            "At home. Clear nights, I drag a stool outside and forget my back aches."
           ],
           [
-            "You don't have to throw it away.",
-            "Perhaps I'll hang it up. Retiring a saw ought to be easier than retiring its owner."
+            "Could I look sometime?",
+            "When we're both home on a clear evening, ask me. No promises from the weather."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin, settle an argument. Is fixing a stool an excuse to sit on it?",
-      "I think you have to test your work.",
-      "Hettie hasn't sent you to fetch me, has she?",
-      "You're safe. I came on my own.",
-      "I thought the noise was another cart. That's your dragon?",
-      "He's with me, Gwil. I'll keep him clear of the cart."
+      "Corin! Tell me you've come with gossip. Mine's gone stale.",
+      "How old is it?",
+      "Still here, lad. Still claiming I'm nearly finished.",
+      "Does Hettie believe that yet?",
+      "I was about to ask you to lend a hand. You've brought rather more than that.",
+      "I'll do the lifting. He gets distracted."
     ]
   },
   "Odo": {
     "name": "Odo",
     "home": "Millwood",
     "role": "Fisher and Calder's grandfather",
-    "source": "01-millwood.txt:15",
+    "source": "01-millwood.txt:12",
     "topics": [
       {
-        "title": "The fish you let go",
-        "opening": "What's the most embarrassing catch you've ever lost?",
-        "first": "I caught a fine trout once and dropped it while explaining how firmly to hold a trout. Calder was watching.",
+        "title": "The birthday lie",
+        "opening": "How old are you actually, Odo?",
+        "first": "Old enough to have stopped correcting people. Someone gave me an extra birthday once. Nice cake. Seemed rude to object.",
         "replies": [
           [
-            "Did he laugh?",
-            "He waited until it hit the water. Very polite boy."
+            "You accepted the presents too?",
+            "I wasn't going to embarrass them by stopping halfway."
           ],
           [
-            "Did you catch it again?",
-            "Probably. Every large trout in that stretch has received a personal accusation."
+            "Does Calder know?",
+            "He knows the proper date. He's threatened to count my rings."
           ],
           [
-            "What did you tell Calder?",
-            "That he had just witnessed the wrong way. A useful lesson, regrettably well illustrated."
+            "Nan would know.",
+            "Nan knows far too much. Don't involve her."
           ]
         ]
       },
       {
-        "title": "Calder's camp",
-        "opening": "Do you hear much from Calder at his camp?",
-        "first": "Calder writes that the camp is doing well. Then he asks whether I've eaten. I appear to have raised a second grandmother.",
+        "title": "The wedding speech",
+        "opening": "Why does Nan laugh about your wedding speech?",
+        "first": "Because I proposed a toast to the wrong bride. I'd rehearsed with my sister's name and couldn't get rid of it.",
         "replies": [
           [
-            "Do you write back?",
-            "Of course. I give him enough news to stop him coming home to inspect me."
+            "What did the bride do?",
+            "Said she'd answer to anything if I'd sit down."
           ],
           [
-            "Do you miss having him here?",
-            "Especially when something ridiculous happens. A good story needs the right listener."
+            "Were you nervous?",
+            "Terrified. Fish never ask you to address a room."
           ],
           [
-            "Is he good at running a camp?",
-            "He notices who hasn't joined the fire. He always did. People remember being included."
+            "Did you finish the speech?",
+            "Mercifully, no. Someone started clapping and rescued the marriage."
           ]
         ]
       },
       {
-        "title": "Fishing alone",
-        "opening": "Don't you get lonely fishing out here?",
-        "first": "Some days I don't care whether I catch anything. I just want an hour when nobody expects an answer.",
+        "title": "A place at supper",
+        "opening": "Do you ever wish Calder lived closer?",
+        "first": "There's a cup I still put out for him sometimes. Force of habit. I put it back before anyone comes in.",
         "replies": [
           [
-            "Am I interrupting one of those?",
-            "No. I would have told you. I'm old enough to enjoy being clear about it."
+            "You can miss him, Odo.",
+            "I know, lad. Doesn't mean I want him to see it every time he leaves."
           ],
           [
-            "I find it hard to sit still.",
-            "Watch one patch of water. You can be busy without walking anywhere."
+            "Have you told him?",
+            "In a letter. It took up less space than I expected."
           ],
           [
-            "Doesn't an empty basket bother you?",
-            "Only when I've promised supper. Peace and poor planning look very similar until evening."
+            "Does he visit much?",
+            "When he can. He comes hungry, which is considerate of him."
           ]
         ]
       }
     ],
     "greetings": [
-      "Quietly, Corin. I'm trying to convince the fish this is an unoccupied bank.",
-      "Will talking in a whisper fool them?",
-      "Back for another fishing report? I've prepared a shorter version.",
-      "Does that mean fewer fish or smaller ones?",
-      "Well, your companion has made quite a shadow over the water.",
-      "This is my dragon. I can move him if he's spoiling your cast."
+      "Don't tell me the time, Corin. I'm having a very good morning in ignorance.",
+      "I'll let it stay morning, then.",
+      "Ah, you again. I was just winning an argument with myself.",
+      "Which side were you on?",
+      "That dragon looks interested in my catch. So am I. We may have a problem.",
+      "I'll explain the ownership rules."
     ]
   },
   "Elder Maddock": {
     "name": "Elder Maddock",
     "home": "Millwood",
     "role": "Elder and Corin's mentor",
-    "source": "01-millwood.txt:20",
+    "source": "01-millwood.txt:17",
     "topics": [
       {
-        "title": "When you gave up travelling",
-        "opening": "What made you stop travelling?",
-        "first": "I stopped travelling after I injured my knee. For months I called it a temporary delay. Eventually I planted beans.",
+        "title": "A locked drawer",
+        "opening": "Why did you keep your old letters tied up?",
+        "first": "Because untied letters get read. I wasn't always proud of the fellow who wrote my half of them.",
         "replies": [
           [
-            "Was staying here hard?",
-            "At first. I missed leaving more than I missed any destination. It took me a while to notice that difference."
+            "Have you read them since?",
+            "Yes. He was less foolish than I remembered. More frightened, mostly."
           ],
           [
-            "Did the knee ever get better?",
-            "Enough for ordinary days. Not enough to pretend I was twenty. I made that mistake twice."
+            "Who were they from?",
+            "People I thought I'd have years to answer."
           ],
           [
-            "Do you regret settling down?",
-            "No. I met people I'd spent years walking past. Nan, for one, improved my sense considerably."
+            "Would you throw them out?",
+            "No. I've forgiven him enough to keep them."
           ]
         ]
       },
       {
-        "title": "An unreliable map",
-        "opening": "Have you ever trusted a bad map?",
-        "first": "I once followed a map to a bridge that had washed away fifteen years earlier. The innkeeper had been trying to tell me all morning.",
+        "title": "Maddock's temper",
+        "opening": "Did Nan ever stop speaking to you?",
+        "first": "For nine days. I'd said she worried too much. On the tenth, I discovered how much she did without mentioning it.",
         "replies": [
           [
-            "Why didn't you listen?",
-            "I was busy explaining my route. I was a tiresome young man."
+            "Did you apologise?",
+            "On day two. Being sorry didn't entitle me to be forgiven immediately."
           ],
           [
-            "How did you get across?",
-            "I went back and asked him. Then I walked two days to the next crossing, with a very quiet mouth."
+            "What made her speak again?",
+            "She asked whether I intended to eat that dreadful stew. I chose to hear affection."
           ],
           [
-            "Should I trust our map?",
-            "Use it, but listen when the road disagrees. A drawing cannot tell you what happened yesterday."
+            "What had you done?",
+            "Made light of something that frightened her. It's an easy cruelty when you're not the frightened one."
           ]
         ]
       },
       {
-        "title": "The seven riders",
-        "opening": "What were the seven riders like?",
-        "first": "There were seven riders before Wingfall. Halvard was one of them. He betrayed the others and made a crime of the bond they shared.",
+        "title": "The names beneath the crown",
+        "opening": "Why are there so few stories about the riders as people?",
+        "first": "Halvard wants six rivals remembered, not six people he betrayed at Wingfall. It makes the silence easier to defend.",
         "replies": [
           [
-            "Why would a rider turn on them?",
-            "He wanted the power without anyone able to challenge him. The other riders stood in his way."
+            "What should we remember instead?",
+            "That they trusted him. Betrayal needs that part, however inconvenient it is to the victor."
           ],
           [
-            "Did you see Wingfall?",
-            "No. I won't pretend I did. What I know comes from survivors' accounts and what happened afterward."
+            "Did you know any of them?",
+            "No. I won't borrow someone else's grief to make my account sound weightier."
           ],
           [
-            "Could they have stopped him?",
-            "I can't give you an honest answer to that. They trusted a man who had fought beside them."
+            "Can their stories come back?",
+            "Some can. Listen for names when people speak. Names survive in surprising places."
           ]
         ]
       },
       {
-        "title": "Why help me?",
-        "opening": "Why did you decide to help me?",
-        "first": "I gave you the sword because the woods were dangerous. I didn't expect it to put you on a road to Cinderhold.",
+        "title": "A frightened adviser",
+        "opening": "Do you ever give advice you're afraid to follow yourself?",
+        "first": "Frequently. Courage is much easier to recommend from a comfortable room.",
         "replies": [
           [
-            "Do you wish you'd kept it?",
-            "I wish you didn't need it. That's a different regret."
+            "Then how can I trust you?",
+            "Ask me what I would risk. And whether I'm asking you to risk more."
           ],
           [
-            "Are you asking too much of me?",
-            "Perhaps. You deserve to ask that. I can advise you, but I cannot make the danger smaller by calling it destiny."
+            "Are you afraid for me?",
+            "Yes, Corin. I can say that without deciding your life for you."
           ],
           [
-            "I'll come back when I can.",
-            "Then I'll listen when you do. You won't need to arrive with a victory to tell me about."
+            "I'm frightened too.",
+            "Then neither of us needs to waste strength pretending otherwise."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ah, Corin. Shut the worries out for a moment. What brings you?",
-      "I could use someone to talk things through with.",
-      "You needn't have an important reason to visit me.",
-      "Good. I haven't worked out whether this is one.",
-      "A living dragon in Millwood. I keep checking that I'm truly awake.",
-      "You and me both. He's staying close to me."
+      "Corin. Good. I've been arguing with a thought and could use another person.",
+      "Am I allowed to take the thought's side?",
+      "You've found me in a charitable mood. Ask before it passes.",
+      "I'll try not to waste it.",
+      "Well, Corin. I imagine privacy has become rather difficult.",
+      "He does notice when I try to slip away."
     ]
   },
   "Nan Ferrow": {
     "name": "Nan Ferrow",
     "home": "Millwood",
     "role": "Corin's grandmother",
-    "source": "01-millwood.txt:26",
+    "source": "01-millwood.txt:23",
     "topics": [
       {
-        "title": "A memory of Mum",
-        "opening": "Would you tell me something you remember about Mum?",
-        "first": "Your mother hated singing in front of people, but she sang while she mended clothes. If I entered, she would pretend she had been humming.",
+        "title": "The borrowed surname",
+        "opening": "Did Mum ever get into trouble she couldn't talk her way out of?",
+        "first": "She gave a neighbour a false name after breaking his window. Unfortunately, she borrowed mine.",
         "replies": [
           [
-            "Was she any good?",
-            "Lovely voice. She thought lovely voices belonged to other people."
+            "He came to you?",
+            "With the bill. I said my throwing arm must be improving."
           ],
           [
-            "What songs did she know?",
-            "Old ones with too many verses. She forgot half the words and made up remarkably cheerful disasters to fill the gaps."
+            "What did you do to her?",
+            "Made her tell him herself. She spent longer outside his door than she'd spent inventing the lie."
           ],
           [
-            "I wish I remembered her voice.",
-            "So do I, love. I can sing you what I remember, when you'd like that."
+            "Was she sorry?",
+            "Very. Mostly because he'd been kind about it. That finished her."
           ]
         ]
       },
       {
-        "title": "A memory of Dad",
-        "opening": "What was Dad like when he wasn't being sensible?",
-        "first": "Your father once spent an entire afternoon helping a neighbour find a lost goose. It had been following him for the last hour.",
+        "title": "Dad's terrible dancing",
+        "opening": "Was Dad any good at dancing?",
+        "first": "Your father counted out loud. Your mother said she felt as though she were being measured for curtains.",
         "replies": [
           [
-            "How did he miss it?",
-            "He kept looking into bushes. The goose kept stopping when he stopped."
+            "Did she dance with him anyway?",
+            "Always. She'd pull him out before he could invent an excuse."
           ],
           [
-            "Did Mum tease him?",
-            "She asked whether he'd checked behind himself for any other livestock. He laughed until he couldn't explain the story."
+            "Did he ever get better?",
+            "He got quieter. We counted that as progress."
           ],
           [
-            "Was he always that helpful?",
-            "Usually. Occasionally I had to remind him that his own supper was getting cold."
+            "I wish I'd seen them.",
+            "So do I, darling. They laughed a great deal together."
           ]
         ]
       },
       {
-        "title": "Bringing me home",
-        "opening": "Do you remember the first night you brought me home?",
-        "first": "The first night you stayed with me, you cried whenever I put you down. I ate my supper standing up with you against my shoulder.",
+        "title": "My first word",
+        "opening": "What was the first thing I called you?",
+        "first": "You called everyone Nan for a while. Even Maddock. He answered without a murmur.",
         "replies": [
           [
-            "Did I ever let you sleep?",
-            "Eventually. I was so surprised I stayed awake listening to make sure you were all right."
+            "That must have pleased him.",
+            "He said it was a promotion."
           ],
           [
-            "Were you frightened?",
-            "Terrified. I'd lost so much, and suddenly there was someone who needed me every minute."
+            "When did I stop?",
+            "When you discovered 'no'. A busy week for both of us."
           ],
           [
-            "I'm glad it was you.",
-            "Oh, love. So am I. Even after the years when you hid beetles in the flour bin."
+            "Did you want me to call you something else?",
+            "Never. I liked being the name you reached for."
           ]
         ]
       },
       {
-        "title": "Your own adventures",
-        "opening": "Did you ever sneak off on an adventure?",
-        "first": "I went to a dance in Thornwell once without telling my mother. I thought I'd be home before she noticed.",
+        "title": "Nan's hidden money",
+        "opening": "Did you really hide money inside a cabbage?",
+        "first": "Once. I was saving for a day out and didn't want to be sensible with it.",
         "replies": [
           [
-            "Did you make it?",
-            "I found her there. She was having a splendid time."
+            "What happened to the cabbage?",
+            "Winnie nearly made soup. I arrived at the thrilling part."
           ],
           [
-            "Was she angry?",
-            "She said I might have offered her a place on the cart. That was worse than a lecture."
+            "Did you get your day out?",
+            "Yes. Bought a ribbon I didn't need and ate something somebody else had cooked."
           ],
           [
-            "Were you a good dancer?",
-            "Very. Don't look astonished, Corin. I wasn't born holding a soup spoon."
+            "Why hide it from yourself?",
+            "Because I knew exactly where the roof leaked. Sometimes I wanted to forget."
           ]
         ]
       },
       {
-        "title": "Leaving home",
-        "opening": "Is it hard watching me leave?",
-        "first": "I want you home. I also know why you go. Both things are true, and you needn't fix that for me.",
+        "title": "The unasked question",
+        "opening": "Is there anything you're afraid to ask me?",
+        "first": "Whether you're happy, love. I can fuss over a torn sleeve. I wouldn't know where to begin with an unhappy life.",
         "replies": [
           [
-            "I feel guilty when I enjoy being away.",
-            "Please don't. Tell me about the good parts. I'd like to picture those too."
+            "You could still ask.",
+            "Then I will. And you needn't give me a reassuring answer."
           ],
           [
-            "What if I come back different?",
-            "Then I'll get to know those parts of you. You haven't stopped changing since the day I brought you here."
+            "I'm not always sure.",
+            "Neither was I at your age. There were good days inside difficult years."
           ],
           [
-            "I miss the ordinary mornings.",
-            "Your cup is still your cup. We'll have another ordinary morning when you're back."
+            "Would you be disappointed?",
+            "In you? No. I'd be cross with anyone who made you think you couldn't tell me."
           ]
         ]
       }
     ],
     "greetings": [
-      "Come in, love. I've had quite enough conversation with the cooking pot.",
-      "Was it disagreeing with you?",
-      "Corin! Let me have a look at you before you start telling me you're fine.",
-      "All right. Then I get to ask how you are.",
-      "Oh, sweetheart. You really have brought a dragon home.",
-      "I wanted you to meet him before anyone else told you about him."
+      "There you are. I was just about to worry properly.",
+      "You haven't started yet?",
+      "Come close enough for a kiss. You can survive the embarrassment.",
+      "I'm not making any promises.",
+      "Oh, love. He's bigger every time I look away.",
+      "I think he takes it as a challenge."
     ]
   },
   "Winnie": {
     "name": "Winnie",
     "home": "Millwood",
     "role": "Nan's old friend",
-    "source": "01-millwood.txt:33",
+    "source": "01-millwood.txt:30",
     "topics": [
       {
-        "title": "Nan's competitive streak",
-        "opening": "Has Nan always been this competitive?",
-        "first": "Nan once entered a cake contest under a false name because she'd promised not to enter again.",
+        "title": "The imaginary admirer",
+        "opening": "Did you ever have a secret admirer?",
+        "first": "I invented one to annoy my sister. Then she insisted on meeting him. I spent a month claiming he was away on business.",
         "replies": [
           [
-            "Why had she promised?",
-            "She'd won three years running. People wanted a chance."
+            "How did you get out of it?",
+            "I broke my own heart very publicly. Best acting I've ever done."
           ],
           [
-            "Did anyone recognise her cake?",
-            "Everyone. She uses enough spice to announce herself before the judging begins."
+            "Did Nan know?",
+            "Nan suggested making him taller. She's always had useful instincts."
           ],
           [
-            "Did you tell on her?",
-            "I helped her choose the name. I am not a reliable witness."
+            "Did your sister believe you?",
+            "Not for a moment. She was enjoying my predicament."
           ]
         ]
       },
       {
-        "title": "An evening with friends",
-        "opening": "What do you and your friends do of an evening?",
-        "first": "We used to take turns hosting suppers. The host cooked, and everyone else pretended not to notice the burnt parts.",
+        "title": "The seat at the wedding",
+        "opening": "Why won't you sit beside Hal at weddings?",
+        "first": "He critiques the ceremony. Last time he whispered that the groom could have made better use of the pause.",
         "replies": [
           [
-            "Was there much pretending?",
-            "With me, yes. I was more interested in the company than in watching a pan."
+            "Did you tell him off?",
+            "I moved his pudding. Silence followed."
           ],
           [
-            "Why take turns?",
-            "Otherwise the person with the biggest table ended up doing all the work."
+            "Does he know why you avoid him?",
+            "He thinks I can't hear him properly. He's started speaking louder."
           ],
           [
-            "Do you still do it?",
-            "Less often. I should invite Nan again before we both decide we're too busy for an evening."
+            "You could sit beside me.",
+            "Dangerous offer, Corin. I'll remember it."
           ]
         ]
       },
       {
-        "title": "Growing older together",
-        "opening": "What changes when you've known someone for years?",
-        "first": "Your grandmother remembers the versions of me that everyone else has forgotten. Including several I'd prefer she forgot.",
+        "title": "An ordinary photograph",
+        "opening": "What do you remember most about being young here?",
+        "first": "Not the grand occasions. Nan with flour on her nose, trying to look furious. I can see that better than my own wedding.",
         "replies": [
           [
-            "Does that annoy you?",
-            "Sometimes. Then she'll mention something I thought nobody had noticed, and I'm glad."
+            "What had made her angry?",
+            "Me laughing at the flour. I wasn't helping my case."
           ],
           [
-            "What did she notice?",
-            "That I stopped coming to supper after my husband died. She started bringing supper to me."
+            "Does remembering it make you sad?",
+            "Sometimes. Then she says something absurd and I remember she's still here."
           ],
           [
-            "I'm glad she had you too.",
-            "She did. People tell her she's strong as though strength means never needing a neighbour."
+            "Have you told her?",
+            "She'd say there wasn't that much flour. We disagree about the important details."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin, you can stop hovering. Nan isn't the only person you're allowed to visit.",
-      "I wasn't sure whether you wanted company.",
-      "Back again? I'm beginning to feel fashionable.",
-      "Don't tell Nan I said yours was the quieter house.",
-      "Corin, is that a dragon? Come here and tell me how you've ended up with him!",
-      "He hatched from an egg I found, Winnie. I couldn't leave him on his own."
+      "Corin, you're just in time to hear my side of something.",
+      "Should I hear Nan's first?",
+      "I've thought of a much better answer since you left.",
+      "To which question?",
+      "A dragon! Well. I shall have to improve my gossip considerably.",
+      "Please don't improve this part. It's already complicated."
     ]
   },
   "Ned": {
     "name": "Ned",
     "home": "Millwood",
     "role": "Leatherworker",
-    "source": "01-millwood.txt:38",
+    "source": "01-millwood.txt:35",
     "topics": [
       {
-        "title": "A failed bargain",
-        "opening": "Have you ever come out badly in a bargain?",
-        "first": "I bought cheap leather once. Finished six belts before the first buckle tore through. I had to find all six customers.",
+        "title": "The splendid moustache",
+        "opening": "Did you really grow a moustache once?",
+        "first": "For seventeen days. I kept a record because your father said it looked like a frightened caterpillar.",
         "replies": [
           [
-            "Did you repay them?",
-            "Replaced the belts. It cost more than the good leather would have."
+            "What did Nan say?",
+            "Asked whether it needed feeding."
           ],
           [
-            "Were they angry?",
-            "One was. His trousers had fallen during a speech. I could hardly argue."
+            "Did you like it?",
+            "I liked the idea. The execution disappointed us all."
           ],
           [
-            "Why did you buy it?",
-            "Wanted a bigger profit. I'd like a nobler answer, but that's the one."
+            "Would you try again?",
+            "Not while anyone in Millwood remembers the first one."
           ]
         ]
       },
       {
-        "title": "My father's hands",
-        "opening": "Was my father good at making things?",
-        "first": "Your father was good at delicate work. Huge hands, but he could pass a needle through a hole I'd missed twice.",
+        "title": "The father's favour",
+        "opening": "What was Dad like when nobody was watching?",
+        "first": "He'd bring a repair and pretend it could wait. Then ask whether I'd eaten. He knew I skipped meals when work was thin.",
         "replies": [
           [
-            "Did he teach you anything?",
-            "To stop gripping so hard. I was wearing my hands out trying to look capable."
+            "Did you mind him asking?",
+            "Fiercely. I miss it now."
           ],
           [
-            "Did he make things for Mum?",
-            "A little leather case for her sewing needles. He asked me to check every stitch."
+            "Did he do that often?",
+            "Often enough that I learned to keep bread in the house before he called."
           ],
           [
-            "Did they argue much?",
-            "Enough to be married. Usually about him agreeing to help three people on the same afternoon."
+            "I don't know how to picture him.",
+            "Picture someone trying to help without making you feel small. He didn't always manage it. He tried."
           ]
         ]
       },
       {
-        "title": "The repair you refused",
-        "opening": "Have you ever refused a repair?",
-        "first": "Someone asked me to mend a rotten harness. I told him a patch wouldn't make the rest safe. He called me lazy.",
+        "title": "The price of a name",
+        "opening": "Why don't you put your name on your work?",
+        "first": "So a man can afford a decent belt without paying extra for knowing who made it.",
         "replies": [
           [
-            "Did he come back?",
-            "With the broken harness, yes. Fortunately the horse hadn't been hurt."
+            "Wouldn't you like people to know?",
+            "They find me when it breaks. That's recognition enough."
           ],
           [
-            "How can you tell leather's gone bad?",
-            "Bend it gently. Deep cracks mean trouble. Don't mistake a shiny surface for strength."
+            "Other makers charge for the name.",
+            "Other makers enjoy hearing themselves discussed."
           ],
           [
-            "Would you refuse a friend too?",
-            "Especially a friend. I'd rather endure an argument than see them injured by my work."
+            "I'd recognise your stitching.",
+            "That'll do, Corin. That'll do very nicely."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin. If you're here about a broken strap, begin with what you were carrying.",
-      "For once, nothing needs repairing.",
-      "Your boots have brought you back, then.",
-      "They deserve a rest as much as I do.",
-      "That's a very unusual travelling companion. Does he mind strangers?",
-      "Give him a little room. He's still getting used to people."
+      "Corin. Boots holding together? That's my preferred sort of conversation starter.",
+      "You've set a reassuringly low bar.",
+      "You've caught me thinking. Don't look so surprised.",
+      "I was trying to look respectful.",
+      "Those claws would make short work of good leather. Keep him off my feet.",
+      "I'll keep both of us clear."
     ]
   },
   "Joss": {
     "name": "Joss",
     "home": "Millwood",
     "role": "Apple grower and cider maker",
-    "source": "01-millwood.txt:43",
+    "source": "01-millwood.txt:40",
     "topics": [
       {
-        "title": "Moving to Millwood",
-        "opening": "What brought you to Millwood?",
-        "first": "I came from Thornwell for one harvest. Tam hired me for a week and corrected my work every day.",
+        "title": "The counterfeit ghost",
+        "opening": "Were you the ghost people saw in the orchard?",
+        "first": "A sheet on a pole. I wanted to frighten Emmet. Unfortunately, Tam came past first.",
         "replies": [
           [
-            "Did you resent it?",
-            "At first. Then I noticed how much better the fruit survived handling."
+            "Did she scream?",
+            "She asked why her clean sheet was muddy. I was the frightened one."
           ],
           [
-            "When did you decide to stay?",
-            "When I started saying 'our trees' without thinking about it."
+            "Did Emmet ever find out?",
+            "He helped me wash it. At a price."
           ],
           [
-            "Did Tam ask you to stay?",
-            "She asked what work I'd planned for the following spring. Subtle woman."
+            "Why frighten him?",
+            "He'd put an onion in my apple basket. Our feud lacked dignity."
           ]
         ]
       },
       {
-        "title": "The first cider",
-        "opening": "How did your first batch of cider turn out?",
-        "first": "Our first batch tasted so sour that Tam suggested cleaning the press with it. I insisted it needed time.",
+        "title": "A name for the baby",
+        "opening": "How did you choose your children's names?",
+        "first": "Tam chose sensible names. I kept suggesting names that sounded magnificent shouted across a field.",
         "replies": [
           [
-            "Did time help?",
-            "It became older sour cider. I finally admitted the apples had been wrong."
+            "Such as?",
+            "I'll spare the children. They may still forgive me."
           ],
           [
-            "What did you change?",
-            "We tried small batches and kept notes. Fewer heroic speeches, more tasting."
+            "Did any of yours survive?",
+            "One middle name. I invoke it only when I'm losing an argument."
           ],
           [
-            "Does Tam still remind you?",
-            "Only when I say I'm certain about something. So, regularly."
+            "Was choosing difficult?",
+            "Terrifying. You meet someone smaller than a loaf and they're yours to name."
           ]
         ]
       },
       {
-        "title": "Being a father",
-        "opening": "What surprised you about being a father?",
-        "first": "Our children ask why things work. I answer until I reach a question I don't know, then they look delighted.",
+        "title": "The thing you can't grow",
+        "opening": "What would you like that the orchard can't give you?",
+        "first": "One week by the sea. No counting baskets. I'd probably count waves. But I'd like to find out.",
         "replies": [
           [
-            "Do they try to catch you out?",
-            "Absolutely. It's become a household sport."
+            "Have you been before?",
+            "Once as a boy. I remember the noise more than the water."
           ],
           [
-            "What do you do when you're wrong?",
-            "Admit it before Tam gets there. She enjoys a good correction too."
+            "Would Tam come?",
+            "She'd already be packed before I finished asking."
           ],
           [
-            "Do you like all the questions?",
-            "Most of them. 'Why can't we have cake before supper?' has exhausted its possibilities."
+            "What's stopping you?",
+            "There's always another season. That's becoming a rather poor answer."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hello, Corin. Tam says I need a conversation that isn't about apples.",
-      "I'm willing to try. No promises.",
-      "Come and sit with me, Corin. I've been calculating the harvest all morning.",
-      "I could use a rest too, Joss.",
-      "A dragon. Well, that should finally distract me from the orchard.",
-      "I'm glad he's useful before he's even said hello."
+      "Corin! Settle something: is tasting your own cider work?",
+      "How much tasting are we discussing?",
+      "I've saved you from a very long story. Tam said to shorten it.",
+      "How much is left?",
+      "I suppose a dragon makes a decent scarecrow, if nobody minds the fire.",
+      "That's a fairly large if."
     ]
   },
   "Tam": {
     "name": "Tam",
     "home": "Millwood",
     "role": "Apple grower and mother",
-    "source": "01-millwood.txt:48",
+    "source": "01-millwood.txt:45",
     "topics": [
       {
-        "title": "The children's harvest",
-        "opening": "Do the children help with the harvest?",
-        "first": "We let the children choose names for three apple trees. We now harvest from Lady Crunch, Boots, and Uncle Ned.",
+        "title": "The forbidden drawer",
+        "opening": "What did your children always want to get into?",
+        "first": "My drawer of things I'd forbidden them to touch. Mainly buttons. The prohibition made them priceless.",
         "replies": [
           [
-            "Does Ned know?",
-            "He receives apples from his namesake every autumn. He's taken it very seriously."
+            "Why forbid buttons?",
+            "Because one went up a nose. I refuse to say whose."
           ],
           [
-            "Why name them?",
-            "It helped the children remember which fruit was ready first. Boots remains a mystery to me."
+            "Did hiding them work?",
+            "Until they formed a committee. Nothing defeats a determined committee of children."
           ],
           [
-            "Who chose Lady Crunch?",
-            "Joss. He joined in before remembering he'd called the idea silly."
+            "I remember wanting to look.",
+            "Yes, Corin. You chaired the committee."
           ]
         ]
       },
       {
-        "title": "A useful disagreement",
-        "opening": "Can a disagreement ever make the work better?",
-        "first": "Joss likes to start a job immediately. I like to check whether we've promised the same afternoon to someone else.",
+        "title": "A midnight celebration",
+        "opening": "What's the strangest party you've had?",
+        "first": "Joss forgot a birthday until bedtime. We ate breakfast in our nightclothes at midnight and pretended that was the plan.",
         "replies": [
           [
-            "Who usually wins?",
-            "The person holding the calendar. Which is why I keep it."
+            "Whose birthday?",
+            "Mine. He's very fortunate I like breakfast."
           ],
           [
-            "Does he mind?",
-            "Only until he discovers I'd left him time for lunch."
+            "Were the children awake?",
+            "By the second pan he dropped, everyone was."
           ],
           [
-            "Are you ever the impatient one?",
-            "When I want something, certainly. Marriage doesn't make you permanently sensible."
+            "Was it a good birthday?",
+            "Lovely. Disorganised affection still counts."
           ]
         ]
       },
       {
-        "title": "Food for Nan",
-        "opening": "Do you and Nan exchange food?",
-        "first": "I send Nan apple preserves, and she sends the jars back with something in them. We've been exchanging the same jars for years.",
+        "title": "The afternoon alone",
+        "opening": "Do you ever get tired of everyone needing you?",
+        "first": "Yes. Then they all go out and I wonder when they're coming back. Irritating arrangement.",
         "replies": [
           [
-            "Who started it?",
-            "I've forgotten. Neither of us will let the other call it a debt."
+            "What do you do alone?",
+            "Finish a cup of tea while it's hot. You'd think that was a small ambition."
           ],
           [
-            "What's the best thing she's sent?",
-            "A plum cake when I had a miserable cold. I could barely taste it, but I remember the trouble she took."
+            "Do you tell Joss?",
+            "I tell him plainly. Guessing isn't one of his gifts."
           ],
           [
-            "She likes looking after people.",
-            "She does. It's useful to occasionally catch her accepting the same treatment."
+            "Does that make you feel guilty?",
+            "Sometimes. Being tired doesn't mean I love them less."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin, tell me you've come to talk about something besides Joss's cider.",
-      "I can offer news with fewer tasting notes.",
-      "Come and keep me company. I've been outnumbered by opinions today.",
-      "Whose opinion was loudest?",
-      "Corin, would you look at the size of him! How did you end up with a dragon following you?",
-      "He hatched from an egg I found, Tam. I wasn't expecting it either."
+      "Corin, don't let Joss feed you a story before I've checked it.",
+      "Does he submit many for approval?",
+      "Good, someone who might let me finish a sentence.",
+      "I'll give it my best effort.",
+      "I thought my children brought home difficult pets. You've surpassed them.",
+      "I hadn't realised we were competing."
     ]
   },
   "Tilda": {
     "name": "Tilda",
     "home": "Millwood",
     "role": "Spinner and knitter",
-    "source": "01-millwood.txt:53",
+    "source": "01-millwood.txt:50",
     "topics": [
       {
-        "title": "The uneven sleeves",
-        "opening": "Have you ever finished something and found it didn't fit?",
-        "first": "My first jumper had one sleeve longer than the other. I told my sister she'd been standing crookedly.",
+        "title": "The wrong funeral",
+        "opening": "Have you ever gone somewhere you weren't invited?",
+        "first": "A funeral. Wrong day, wrong family. I stayed because an elderly woman had taken my hand.",
         "replies": [
           [
-            "Did she believe you?",
-            "She put it on backwards to test the theory. I had to undo the sleeve."
+            "Did you know her?",
+            "Not then. We became quite fond of each other afterward."
           ],
           [
-            "Did you finish it properly?",
-            "Yes. She wore it until both elbows went. A kinder verdict than I deserved."
+            "Did you admit your mistake?",
+            "Over tea. She laughed until she cried, and then cried properly."
           ],
           [
-            "Would you teach someone now?",
-            "I do, and I show them my mistakes. It keeps them from hiding theirs."
+            "Why didn't you leave?",
+            "She needed someone beside her. I happened to be there."
           ]
         ]
       },
       {
-        "title": "Wool in spring",
-        "opening": "What do you do with the spring wool?",
-        "first": "Everyone thinks winter is my busiest season. In spring I wash wool, sort it, and prepare for winter all over again.",
+        "title": "A private song",
+        "opening": "Why do you stop singing when people come near?",
+        "first": "Because I can sing beautifully until somebody hears me. A curious affliction.",
         "replies": [
           [
-            "Does it ever feel finished?",
-            "For about three days a year. I guard those days fiercely."
+            "Even if it's only me?",
+            "Especially you. You remember things."
           ],
           [
-            "What's the least pleasant part?",
-            "Picking burrs out. Whoever invented sheep left room for improvement."
+            "What do you sing?",
+            "Nonsense mostly. It's difficult to forget words you invented."
           ],
           [
-            "What's the best part?",
-            "Spinning a thread that stays even. I can feel when it's going well before I look."
+            "I could pretend not to hear.",
+            "You may. I shall pretend to believe you."
           ]
         ]
       },
       {
-        "title": "Choosing a colour",
-        "opening": "How do you settle on a colour?",
-        "first": "I spent years making sensible brown things. Then I made myself a bright blue scarf and wore it everywhere.",
+        "title": "The impossible scarf",
+        "opening": "What's the strangest thing anyone asked you to make?",
+        "first": "A scarf that wouldn't get wet. I suggested staying indoors. Apparently that wasn't the service he wanted.",
         "replies": [
           [
-            "Did people comment?",
-            "They asked who I'd made it for. Apparently I wasn't an obvious candidate for a present."
+            "Did you try?",
+            "No. Wool has enough troubles without impossible expectations."
           ],
           [
-            "Why blue?",
-            "Because I liked it. It was surprisingly difficult to let that be enough."
+            "What did he buy?",
+            "A hat. An imperfect solution to a very damp man."
           ],
           [
-            "Do you still wear it?",
-            "Whenever it's cold enough. I don't intend to develop a dignified preference for brown again."
+            "Would you make something for a dragon?",
+            "I'd need measurements and a very long winter."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hold on, Corin, let me finish counting this row. You know what happens when I stop halfway.",
-      "I remember, Tilda. I'll wait until you put the needles down.",
-      "Corin! I reached the end of the row this time.",
-      "Then I picked a better moment.",
-      "Corin, I've patched your clothes since you were little. How have you come home with a dragon?",
-      "His name's Aurelius. I'm still getting used to it myself."
+      "Corin, stand still. No, there's nothing wrong. I just like people still occasionally.",
+      "I'll try not to fidget.",
+      "Back already? Good. I hadn't finished being interested.",
+      "In what?",
+      "That's a dragon. I had a perfectly ordinary remark ready, and now it's useless.",
+      "Keep it. We could use something ordinary."
     ]
   },
   "Emmet": {
     "name": "Emmet",
     "home": "Millwood",
     "role": "Orchard worker",
-    "source": "01-millwood.txt:58",
+    "source": "01-millwood.txt:55",
     "topics": [
       {
-        "title": "The hidden apple",
-        "opening": "Have you ever hidden an apple for later?",
-        "first": "As a boy I hid the best apple behind a shed so my brothers wouldn't find it. When I returned, the wasps had claimed it.",
+        "title": "An excellent excuse",
+        "opening": "What's the worst excuse you've given for being late?",
+        "first": "Said I'd lost my boot. Arrived wearing both. Had to claim I'd found it, which ruined the tragic effect.",
         "replies": [
           [
-            "Did you get any of it?",
-            "A very disappointing bite. I'd protected it from everyone I might have shared it with."
+            "Who were you telling?",
+            "Hettie. She looked at my feet until I confessed."
           ],
           [
-            "Did your brothers find out?",
-            "They saw me running from the wasps. I supplied the explanation later."
+            "Where had you been?",
+            "Asleep. The truth lacked adventure."
           ],
           [
-            "Do you still choose the best one?",
-            "Naturally. I eat it immediately now. Wisdom has its limits."
+            "Did it work at all?",
+            "I was allowed to finish speaking. That's the generous part."
           ]
         ]
       },
       {
-        "title": "A tree with two crops",
-        "opening": "Can one tree really give you two kinds of crop?",
-        "first": "People are surprised you can graft one apple variety onto another. They expect trees to object to the arrangement.",
+        "title": "The dance lesson",
+        "opening": "Who taught you to dance?",
+        "first": "Winnie. She kept saying I was leading with the wrong foot. I appeared to have two of them.",
         "replies": [
           [
-            "How do you make it work?",
-            "Fit the cut surfaces closely and protect the join. It takes care, and sometimes it fails."
+            "Did you improve?",
+            "I stopped looking at my feet. Still stepped on hers, but with confidence."
           ],
           [
-            "Have you tried it?",
-            "Many times. The first successes felt rather like getting away with something."
+            "Was she patient?",
+            "She wore her thickest shoes to the second lesson."
           ],
           [
-            "Could one tree grow every kind?",
-            "I wouldn't try. It's easier to care for a tree than to win an argument with it."
+            "Why did you want to learn?",
+            "There was someone I wanted to ask. No, I'm not saying who."
           ]
         ]
       },
       {
-        "title": "A neighbour's ladder",
-        "opening": "Do you lend your tools to the neighbours?",
-        "first": "I borrowed a neighbour's ladder for an afternoon. Kept it so long he asked if he might borrow mine.",
+        "title": "A different life",
+        "opening": "If you weren't working in the orchard, what would you do?",
+        "first": "Keep an inn. I'd like hearing where people had been. I'd hate changing the beds, which may be a flaw.",
         "replies": [
           [
-            "That got your attention?",
-            "More effectively than shouting. I carried it back before he finished the sentence."
+            "You'd have plenty of gossip.",
+            "And no time to pass it on. Another flaw."
           ],
           [
-            "Did you offer him anything?",
-            "An apology and the first basket of fruit. He accepted both without mentioning the ladder again."
+            "Would you leave Millwood?",
+            "I used to think I would. Now I want somewhere that feels like it."
           ],
           [
-            "Do you lend things yourself?",
-            "Yes. I write down who has them. Memory becomes wonderfully generous around borrowed tools."
+            "What would you call the inn?",
+            "The Early Finish. Entirely misleading, I imagine."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin, come and settle something for me. Nan's apple pie or Lark's?",
-      "You're asking me to choose against Nan? You know better than that, Emmet.",
-      "I've been thinking about our last conversation instead of pruning.",
-      "I hope I haven't endangered the apples.",
-      "Corin, that's a dragon beside you. I nearly dropped the pruning shears.",
-      "This is Aurelius. We'll stand back until you've put those down."
+      "Ah, Corin. You look like someone who's avoided my morning so far.",
+      "Is there still time to keep avoiding it?",
+      "I was hoping you'd come past. I've had nobody to complain to.",
+      "That's a warm welcome.",
+      "Does he eat apples? I'd rather ask before offering my hand.",
+      "Let's start with the apple at a distance."
     ]
   },
   "Lark": {
     "name": "Lark",
     "home": "Millwood",
     "role": "Baker",
-    "source": "01-millwood.txt:63",
+    "source": "01-millwood.txt:60",
     "topics": [
       {
-        "title": "Bread before dawn",
-        "opening": "How early do you have to get up to bake?",
-        "first": "The hardest part of baking early is being hungry while everything still needs another quarter of an hour.",
+        "title": "The pie tribunal",
+        "opening": "Why did Hal refuse to judge the pie contest again?",
+        "first": "Because he said all the pies were equally good. Six bakers spent an hour explaining why that was insulting.",
         "replies": [
           [
-            "Do you steal a little dough?",
-            "No. I eat yesterday's bread and resent today's bread until it's ready."
+            "Who won?",
+            "Nobody. We ate the evidence before agreement could be reached."
           ],
           [
-            "Why start so early?",
-            "People want breakfast before their work. Mine has to happen before theirs."
+            "Was your pie there?",
+            "Yes. Mine was clearly the best."
           ],
           [
-            "Do you like the quiet?",
-            "Very much. Then a customer arrives and tells me how peaceful my life must be."
+            "Would you ask him again?",
+            "No. Next time we need someone with less concern for survival."
           ]
         ]
       },
       {
-        "title": "The disastrous cake",
-        "opening": "What's the worst thing you've baked?",
-        "first": "I once iced a cake while it was warm. The decoration slid off in a magnificent white heap.",
+        "title": "Flour on the doorstep",
+        "opening": "Why did you leave flour outside your door once?",
+        "first": "I thought something was stealing my cooling bread. Wanted footprints. Found my own from a midnight snack I'd forgotten.",
         "replies": [
           [
-            "What did you do?",
-            "Cut it into pieces and served it in bowls. Everyone called it a lovely pudding."
+            "You'd forgotten eating it?",
+            "I'd been half asleep. Apparently still quite hungry."
           ],
           [
-            "Did you confess?",
-            "After they liked it. Timing matters in confession as well as baking."
+            "Did you accuse anybody?",
+            "Only a cat. It declined to accept my apology."
           ],
           [
-            "Would you make it again?",
-            "On purpose, yes. Preferably without the first hour of panic."
+            "Was the bread good?",
+            "Evidently. I left myself no evidence to taste."
           ]
         ]
       },
       {
-        "title": "A recipe from home",
-        "opening": "Is there a recipe that reminds you of home?",
-        "first": "Nan taught me a loaf she measures mostly by touch. Writing it down was an argument between my pencil and her hands.",
+        "title": "A quiet celebration",
+        "opening": "What makes a really good celebration for you?",
+        "first": "People staying after the food's gone. That's when I know they've come for each other.",
         "replies": [
           [
-            "Could you copy it?",
-            "Eventually. 'Enough flour' became a number only after I weighed what she used."
+            "You don't mind the mess?",
+            "I mind it in the morning. At night I'm wonderfully generous."
           ],
           [
-            "Does it taste the same?",
-            "Nearly. She says mine is better. I think she's being generous."
+            "What's your favourite part?",
+            "Hearing laughter from another room while I'm washing up."
           ],
           [
-            "Would she like hearing that?",
-            "She has heard it often enough to change the subject. You might have better luck."
+            "Do you ever sit down?",
+            "Nan makes me. Usually by hiding the cloth."
           ]
         ]
       }
     ],
     "greetings": [
-      "Morning, Corin. Is Nan sending you for a loaf, or have you followed the smell again?",
-      "The smell got me this time, Lark. How's the baking going?",
-      "You're back. Tell me something from outside the kitchen for once.",
-      "Gladly. I've smelled enough bread to become distracted.",
-      "Corin! A dragon outside my kitchen? Nan must have had a shock when you brought him home.",
-      "This is Aurelius. I thought we should stop and see you."
+      "Corin, you're looking suspiciously innocent. What have you smelled?",
+      "I was hoping you wouldn't notice.",
+      "There you are. I have an opinion nobody's asked for.",
+      "That sounds promising.",
+      "Oh! Please tell your dragon the village ovens are not a challenge.",
+      "I'll make that very clear."
     ]
   },
   "Hal": {
     "name": "Hal",
     "home": "Millwood",
     "role": "Retired miller",
-    "source": "01-millwood.txt:68",
+    "source": "01-millwood.txt:65",
     "topics": [
       {
-        "title": "The mill's sound",
-        "opening": "Can you tell whether the mill is working by its sound?",
-        "first": "I could tell when a bearing needed attention from the sound across the yard. At home I still listen for it.",
+        "title": "A pocketful of screws",
+        "opening": "Why do you always keep screws in your pockets?",
+        "first": "Because once, forty years ago, I needed one and hadn't got it. I've spent the rest of my life preparing for the rematch.",
         "replies": [
           [
-            "Does that make it hard to retire?",
-            "It made the first month difficult. I visited so often they gave me a chair and no tools."
+            "Has it happened again?",
+            "No. That's how you know I'm ready."
           ],
           [
-            "What happened if you ignored it?",
-            "Heat, wear, and eventually a very expensive stoppage. Machines complain before they give up."
+            "Doesn't it spoil your clothes?",
+            "Winnie has expressed that concern in considerable detail."
           ],
           [
-            "Do you miss knowing every sound?",
-            "Yes. I don't miss waking in the night to worry about one."
+            "How many have you got?",
+            "I don't count them. That would make it seem peculiar."
           ]
         ]
       },
       {
-        "title": "A flooded morning",
-        "opening": "Has the river ever flooded the mill?",
-        "first": "After a heavy rain, I arrived to find a duck inside the mill. It looked thoroughly offended by the accommodation.",
+        "title": "The visitor from nowhere",
+        "opening": "Who's the most interesting person you've met?",
+        "first": "A traveller who wouldn't say where he'd come from. Turned out he'd forgotten the name of the village and was embarrassed.",
         "replies": [
           [
-            "How did it get in?",
-            "Through an opening I'd promised to repair. The duck had inspected it more promptly."
+            "Did you work it out?",
+            "After he described every pig in it. Remarkable memory for pigs."
           ],
           [
-            "Did you catch it?",
-            "It walked out when I stopped chasing it. I learned very little dignity that morning."
+            "Why was that interesting?",
+            "I'd invented a royal exile. Reality had much better pigs."
           ],
           [
-            "Did you repair the opening?",
-            "Before lunch. Nothing motivates maintenance like an audience of amused neighbours."
+            "Did he stay long?",
+            "Long enough to learn Millwood. I tested him before he left."
           ]
         ]
       },
       {
-        "title": "Your unplanned afternoon",
-        "opening": "What do you do with an afternoon you haven't planned?",
-        "first": "I used to schedule every hour. Now I sometimes walk to the river without deciding when to return.",
+        "title": "An old man's envy",
+        "opening": "Do you miss being young?",
+        "first": "I miss bending down without planning how to get up. The rest varies.",
         "replies": [
           [
-            "Doesn't that feel strange?",
-            "It did. I kept inventing reasons the walk was useful. Eventually I just went."
+            "Even the adventures?",
+            "Especially the things I refused because I thought I'd have time later."
           ],
           [
-            "What do you watch?",
-            "Water, birds, people hurrying. The people are especially educational."
+            "What did you refuse?",
+            "A journey with friends. Had a perfectly sensible reason. I've forgotten it."
           ],
           [
-            "Would you go back to work?",
-            "For an emergency. Not because I feel guilty about a pleasant afternoon."
+            "You could still go somewhere.",
+            "Yes. Keep saying that. I get stubborn when left alone with a chair."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin! Walk with me a moment. I want to hear how you're getting on.",
-      "Of course, Hal. We can take the long way by the river.",
-      "You caught me enjoying retirement. Don't tell anyone; they'll suggest a job.",
-      "Your secret is safe for this conversation.",
-      "I've seen some unusual loads arrive at the mill, but never on wings.",
-      "Aurelius is travelling with me. No grain delivery today."
+      "Corin. I've been told I repeat myself. Have I told you that?",
+      "Not today.",
+      "Sit—well, stand if you're in a hurry. Young people make conversation athletic.",
+      "I can slow down.",
+      "I remember when bringing home a stray dog caused a stir.",
+      "I may have raised expectations."
     ]
   },
   "Edwin": {
     "name": "Edwin",
     "home": "Millwood",
     "role": "Poultry keeper",
-    "source": "01-millwood.txt:73",
+    "source": "01-millwood.txt:70",
     "topics": [
       {
-        "title": "The missing egg",
-        "opening": "Do eggs ever go missing from the coop?",
-        "first": "A hen started laying in my spare boot. I found three eggs before I realised why that boot had become so popular.",
+        "title": "The goose with a grievance",
+        "opening": "Why are you so suspicious of geese?",
+        "first": "One chased me through a wedding. I was carrying the flowers. Everybody thought it was part of the entertainment.",
         "replies": [
           [
-            "Did you move her nest?",
-            "Gave her a proper box in a sheltered spot. She returned to the boot twice before accepting promotion."
+            "Why did it chase you?",
+            "I don't know. That uncertainty troubles me most."
           ],
           [
-            "How did you discover it?",
-            "Very cautiously, fortunately. I'd felt something round with my toe."
+            "Did anyone help?",
+            "The bride hit it with her bouquet. I remain devoted to her memory."
           ],
           [
-            "Do you still leave boots outside?",
-            "Only if I'm willing to lend them to poultry."
+            "Would you keep a goose now?",
+            "I'd sooner keep a grudge. Takes less feeding."
           ]
         ]
       },
       {
-        "title": "Keeping watch",
-        "opening": "What do you watch for around the farm?",
-        "first": "People think watching chickens is dull. Then a fox begins coming near the fence and every small change matters.",
+        "title": "A very small kingdom",
+        "opening": "Do your hens actually recognise you?",
+        "first": "They recognise the person with breakfast. I like to imagine a little affection has crept into the arrangement.",
         "replies": [
           [
-            "What do you look for?",
-            "Birds bunching together, alarm calls, disturbed earth. I check the flock before guessing why."
+            "Would they notice you gone?",
+            "They'd notice breakfast gone. Let's not press the distinction."
           ],
           [
-            "Have you lost any?",
-            "Yes. I learned to repair the weak part of a fence before waiting for proof."
+            "Have you got a favourite?",
+            "Yes, but I tell each of them a different answer."
           ],
           [
-            "Do the hens recognise you?",
-            "They recognise my footsteps. I flatter myself it's affection; the grain bucket may contribute."
+            "Does talking to them help?",
+            "It helps me. They're discreet listeners."
           ]
         ]
       },
       {
-        "title": "A quieter ambition",
-        "opening": "Is there something you'd like to do beyond the farm?",
-        "first": "I'd like to learn to draw birds. Every time I try, the subject turns its back on me.",
+        "title": "Edwin's surprise",
+        "opening": "What would surprise people about you?",
+        "first": "I can stand on my hands. Could, anyway. Please don't ask for a demonstration on this ground.",
         "replies": [
           [
-            "Could you draw from memory?",
-            "I do. The results suggest I've never seen a chicken."
+            "How did you learn?",
+            "Trying to impress someone who'd already gone home."
           ],
           [
-            "Why birds?",
-            "I spend my days noticing them. I'd like to keep some of what I notice."
+            "Did they ever see?",
+            "Eventually. They asked why my face was so red."
           ],
           [
-            "Will you keep trying?",
-            "Certainly. Eventually either I'll improve or a hen will sit still."
+            "Will you teach anyone?",
+            "If my wrists agree to it. They've become rather independent."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin, don't let the hens crowd you by the gate. They still think your pockets are full of grain.",
-      "They never remember the days I come empty-handed, Edwin.",
-      "Corin, you arrived between feeding times. The hens may let us speak.",
-      "I'll try not to sound like grain.",
-      "Your dragon has their full attention. That's almost a holiday for me.",
-      "Aurelius and I will give the flock some room."
+      "Corin, if you hear anybody calling me timid, ask what they think of geese.",
+      "I don't think I'd argue with one.",
+      "I've had a peaceful ten minutes. Don't tell the hens.",
+      "Your secret's safe.",
+      "That dragon and I need an understanding about poultry.",
+      "I'll translate. Please keep it polite."
     ]
   },
   "Tolan": {
     "name": "Tolan",
     "home": "Millwood",
     "role": "Village guard",
-    "source": "01-millwood.txt:78",
+    "source": "01-millwood.txt:75",
     "topics": [
       {
-        "title": "The first patrol",
-        "opening": "Do you remember your first patrol?",
-        "first": "On my first patrol I rehearsed what to say to a suspicious stranger. The first stranger asked where to buy bread.",
+        "title": "The stolen helmet",
+        "opening": "Who put flowers in your helmet?",
+        "first": "Winnie. Said I looked gloomy. I spent half a patrol shedding petals.",
         "replies": [
           [
-            "Were you able to help?",
-            "I sent him the wrong way. I'd memorised the gates and forgotten the baker."
+            "Did anyone warn you?",
+            "They smiled. I thought I was becoming popular."
           ],
           [
-            "What did your serjeant say?",
-            "That local knowledge included breakfast. He made me walk every lane the next day."
+            "Were you angry?",
+            "Until Nan said it suited me. Then I lost the argument entirely."
           ],
           [
-            "Did you get more confident?",
-            "Slowly. Being useful helped more than looking stern."
+            "Did you get her back?",
+            "I haven't found a dignified way. She's safe for now."
           ]
         ]
       },
       {
-        "title": "Why a steady wage mattered",
-        "opening": "What made you join the guard?",
-        "first": "My sister needed boots the winter I enlisted. We had food, but never quite enough money for the thing that broke next.",
+        "title": "The guard's nightmare",
+        "opening": "What do you dream about when you're worried?",
+        "first": "Being called to an emergency and finding I've put my boots on the wrong feet. The danger waits politely while I struggle.",
         "replies": [
           [
-            "Did the wage help?",
-            "Yes. I sent most of the first one home. She wore those boots for years."
+            "Does that happen often?",
+            "The dream does. The boots have behaved so far."
           ],
           [
-            "Did you want to be a guard?",
-            "I wanted my family warm. I found reasons to care about the work afterward."
+            "What are you actually afraid of?",
+            "Someone needing me and discovering I'm not enough."
           ],
           [
-            "Do they worry about you?",
-            "Of course. I leave the dull parts out of letters, then regret making the job sound exciting."
+            "I think they'd be glad you came.",
+            "Perhaps. It's easier to believe that in daylight."
           ]
         ]
       },
       {
-        "title": "An order you questioned",
-        "opening": "Have you ever questioned an order?",
-        "first": "An officer wanted a man held because he looked nervous. I asked what he'd done. The officer disliked the question.",
+        "title": "Who watches the watcher",
+        "opening": "Who looks after you when you're tired?",
+        "first": "Nan notices. I can fool almost everyone else.",
         "replies": [
           [
-            "Was the man released?",
-            "Eventually. He'd been frightened of the uniform. Holding him wouldn't have improved that."
+            "What does she do?",
+            "Hands me food and asks a question that requires sitting down."
           ],
           [
-            "Did you get punished?",
-            "An unpleasant shift and a lecture. It could have been worse."
+            "Do you let her?",
+            "With a convincing show of reluctance."
           ],
           [
-            "Would you ask again?",
-            "Yes. But I won't pretend every guard has the same room to risk it."
+            "You could ask for help yourself.",
+            "Yes. Knowing that and doing it are different jobs."
           ]
         ]
       }
     ],
     "greetings": [
-      "Morning, Corin. How's Nan? I haven't seen her out today.",
-      "She's well. I'll tell her you asked, Tolan.",
-      "Corin. It's good to have someone approach without needing me to settle a quarrel.",
-      "I'll try to keep this peaceful.",
-      "Corin, that's a dragon. I've known you for years, and you've never given me a fright like that.",
-      "I'm all right, Tolan. He's with me."
+      "Corin. Nothing to report, which is how I like my reports.",
+      "I'll try to keep yours short.",
+      "There you are. Nan asked whether I'd seen you. I can stop looking alert now.",
+      "She has the whole village working for her.",
+      "I was prepared for trouble. I wasn't prepared for wings.",
+      "Neither was I, honestly."
     ]
   },
   "Pip": {
@@ -1159,70 +1159,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:1",
     "topics": [
       {
-        "title": "Hearing rain",
-        "opening": "Does the rain sound different to you?",
-        "first": "Rain sounds different under every cap. I like the little drops best. The heavy ones make me sneeze.",
+        "title": "The pocket problem",
+        "opening": "Why are you so interested in pockets?",
+        "first": "You carry little rooms in your clothes. Anything could be in them. A stone. Breakfast. A smaller pair of trousers.",
         "replies": [
           [
-            "Can you tell rain is coming?",
-            "Sometimes the ground feels it before the drops reach me. Then Bolete says he already knew."
+            "Usually crumbs.",
+            "A room for crumbs! Humans are astonishing hosts."
           ],
           [
-            "Do you hide from it?",
-            "Only when it gets too loud. You hide from thunder, don't you?"
+            "Would you want pockets?",
+            "Six. I'd forget what was in them and have surprises all day."
           ],
           [
-            "Can you hear snow?",
-            "Not falling. That's what makes it odd. The whole wood changes without telling me."
+            "You can just ask what's inside.",
+            "That spoils the best bit. I like the possibility of trousers."
           ]
         ]
       },
       {
-        "title": "A human game",
-        "opening": "Have you tried any human games?",
-        "first": "A child taught me hide-and-seek. I was very good at hiding until I laughed.",
+        "title": "A borrowed sneeze",
+        "opening": "Can mushrooms sneeze?",
+        "first": "No. I tried making the noise after a visitor did it. Everyone thought I'd fallen apart.",
         "replies": [
           [
-            "What made you laugh?",
-            "He asked a perfectly ordinary mushroom where I'd gone."
+            "Did you explain?",
+            "They kept asking which bit hurt. Eventually I said my dignity."
           ],
           [
-            "Did he find you?",
-            "Yes. I tried to tell him all mushrooms laugh. He wanted another one to prove it."
+            "Why copy it?",
+            "It looked terribly satisfying. Such a dramatic interruption."
           ],
           [
-            "Would you play again?",
-            "If the seeker doesn't pick anyone up. Some humans need that rule explained."
+            "You're not missing much.",
+            "Easy for someone who can do it whenever he likes."
           ]
         ]
       },
       {
-        "title": "What counts as tall",
-        "opening": "Do I seem tall to you?",
-        "first": "I thought humans stopped growing when they could see over grass. Then I met one taller than you.",
+        "title": "Pip's expedition",
+        "opening": "How far would you like to travel?",
+        "first": "Far enough to see the forest end. I'm not sure I want to step out of it.",
         "replies": [
           [
-            "Adults can get taller still.",
-            "How inconvenient. Do they keep needing larger doors?"
+            "What do you think is beyond it?",
+            "Too much sky. It might feel like a ceiling had fallen off."
           ],
           [
-            "Are you finished growing?",
-            "Mostly. My cap will widen. I have plans for an excellent shadow."
+            "Would you go alone?",
+            "Absolutely. With someone else nearby, in case absolutely went wrong."
           ],
           [
-            "Do you want to be taller?",
-            "Only long enough to see what the beetles are looking at on the high branches."
+            "You could turn back.",
+            "Yes. That's my favourite part of the plan."
           ]
         ]
       }
     ],
     "greetings": [
-      "Wait! Say something again. Your voice sounds different from your footsteps.",
-      "I'm Corin. I didn't know my footsteps had introduced me.",
-      "I knew that quick step was you.",
-      "Should I try arriving more mysteriously?",
-      "That one's footsteps are enormous. Is it going to stand there?",
-      "That's Aurelius. I'll ask him to be careful."
+      "Oh! A person with knees. Do they ever go the wrong way?",
+      "I'm Corin. I try very hard to prevent it.",
+      "I've thought of another question about your face.",
+      "Should I be worried?",
+      "That one's got knees AND wings. You're rather plain by comparison.",
+      "I'm Corin. I've been trying not to notice."
     ]
   },
   "Mycella": {
@@ -1232,70 +1232,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:6",
     "topics": [
       {
-        "title": "Remembering a drought",
-        "opening": "How did the hollow manage during the drought?",
-        "first": "One summer the streams shrank to threads. We carried wet leaves to the youngest growth every evening.",
+        "title": "A memory with no owner",
+        "opening": "Can you remember something that happened to someone else?",
+        "first": "A little. A cold season, a patch of sunlight. Not a whole life. More like finding a familiar scent in an unfamiliar room.",
         "replies": [
           [
-            "Did everyone survive?",
-            "No. We remember that summer because we lost people, not because we overcame it neatly."
+            "Does it frighten you?",
+            "Sometimes I miss a place I've never stood. That's a lonely feeling."
           ],
           [
-            "Could you have moved?",
-            "Some did. The smallest could not travel far. Those of us who stayed shared the water."
+            "Can you choose what you remember?",
+            "No more than you choose which dream stays after waking."
           ],
           [
-            "What changed afterward?",
-            "We learned which hollows held moisture longest. We teach that before the old songs now."
+            "How do you know it's real?",
+            "I don't always. I tell the young ones when I'm uncertain."
           ]
         ]
       },
       {
-        "title": "A human who listened",
-        "opening": "Have humans ever stopped to listen to you?",
-        "first": "A traveller once sat with me for three evenings without asking how old I was. I found that very refreshing.",
+        "title": "The empty place in the ring",
+        "opening": "Does everyone stay in the hollow forever?",
+        "first": "No. Some settle farther among the roots. We leave space when we gather. A visitor shouldn't have to ask whether they still belong.",
         "replies": [
           [
-            "What did he ask instead?",
-            "Which bird kept waking me. He was having the same difficulty."
+            "Do they come back?",
+            "Some do. Changed, generally. So are we."
           ],
           [
-            "How old are you?",
-            "Old enough to notice you waited one whole question."
+            "What if nobody returns?",
+            "Then the space is useful to someone new."
           ],
           [
-            "Did he return?",
-            "Several times. Then his daughter came. I recognised the way she tipped her head to listen."
+            "Would you ever leave?",
+            "I've wondered. Being needed can become a comfortable excuse."
           ]
         ]
       },
       {
-        "title": "The old dragon shadows",
-        "opening": "Do you remember seeing dragons overhead?",
-        "first": "I remember the shade of passing wings before I remember faces. A dragon could cross the sunlight and make the whole hollow look up.",
+        "title": "The story nobody finishes",
+        "opening": "Is there a story the hollow refuses to tell?",
+        "first": "There is one whose ending we disagree about. We stop at the disagreement and let the young ones argue.",
         "replies": [
           [
-            "Did they land here?",
-            "Some did, in clear ground. They learned to approach slowly; we learned not to crowd their feet."
+            "Why not choose an ending?",
+            "Because the people who were there are gone. Agreement wouldn't bring them back."
           ],
           [
-            "Were you frightened of them?",
-            "Of the first, yes. Familiarity came from meetings, not from being told there was nothing to fear."
+            "What's it about?",
+            "A traveller who heard someone calling beneath a hill. Whether he answered depends on the teller."
           ],
           [
-            "Did they speak to you?",
-            "Not as humans speak. The riders helped us understand. I remember particular kindnesses better than any grand speech."
+            "Which ending do you believe?",
+            "That he was afraid. Both tellings agree on that, though neither says it plainly."
           ]
         ]
       }
     ],
     "greetings": [
-      "A visitor with questions. I am Mycella. Take your time choosing the first.",
-      "Corin. I have rather a lot to choose from.",
-      "You have found your way back to us.",
-      "I wanted to hear something I missed before.",
-      "Wings over the hollow again. I hoped to live long enough to see that.",
-      "His name is Aurelius. We're still learning about one another."
+      "Walk gently, visitor. Some of us are listening below the soil.",
+      "I'm Corin. I'll mind my feet.",
+      "Your footsteps are becoming familiar.",
+      "I hope that's a good thing.",
+      "The roots went quiet before I saw your dragon. Even old things can be surprised.",
+      "I'm Corin. He's surprised me a few times too."
     ]
   },
   "Bolete": {
@@ -1305,70 +1305,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:11",
     "topics": [
       {
-        "title": "Roots across the path",
-        "opening": "What do you do when roots grow across the path?",
-        "first": "A root I cut back kept returning under the same stepping place. Finally I moved the path a little.",
+        "title": "A path nobody takes",
+        "opening": "Why keep a path clear if nobody uses it?",
+        "first": "An old neighbour used to come that way. I still find myself clearing it before I remember.",
         "replies": [
           [
-            "Did that solve it?",
-            "For now. We each have room to continue being stubborn."
+            "Could somebody else use it?",
+            "Perhaps. Mostly it's something my hands know how to do."
           ],
           [
-            "Why not cut it again?",
-            "I could have. I was tired of fighting the same root every morning."
+            "Does clearing it help?",
+            "Some mornings. Other mornings I leave it alone."
           ],
           [
-            "Do all paths change like that?",
-            "Slowly. A fallen tree, a wet patch, new growth. A path is a suggestion we keep repairing."
+            "What was the neighbour like?",
+            "Complained about every puddle. I miss being criticised so thoroughly."
           ]
         ]
       },
       {
-        "title": "A visitor in a hurry",
-        "opening": "Do hurried visitors cause trouble here?",
-        "first": "Someone once told me the hollow needed straight paths. He drew one directly through a patch of young shoots.",
+        "title": "The boot collection",
+        "opening": "What's the oddest thing you've found on a path?",
+        "first": "Three left boots. Different sizes. I'm still troubled by the mathematics.",
         "replies": [
           [
-            "Did he know what they were?",
-            "Not until I explained. He put the drawing away very quickly."
+            "Perhaps three people lost one.",
+            "That's the sensible explanation. I was hoping for a stranger one."
           ],
           [
-            "Was he trying to help?",
-            "Yes. That's why I explained before becoming thoroughly annoyed."
+            "Did you keep them?",
+            "For a time. A beetle family took the smallest."
           ],
           [
-            "Would a straight path be easier?",
-            "For him, briefly. Much less convenient for those of us growing in it."
+            "Could you ask the travellers?",
+            "I do. It makes an unusual first question."
           ]
         ]
       },
       {
-        "title": "Work after rain",
-        "opening": "Does the rain leave you much work?",
-        "first": "After rain I check where water has carried loose soil away. People notice mud sooner than they notice a hollow beneath it.",
+        "title": "Visitors after dark",
+        "opening": "Do humans frighten you?",
+        "first": "The ones who whisper do. They think they're being gentle. It sounds as though they're arranging something.",
         "replies": [
           [
-            "Can I help?",
-            "By following the firm path. More feet in a soft patch make more work."
+            "What should we do instead?",
+            "Say hello in your ordinary voice. We understand hello."
           ],
           [
-            "How do you repair it?",
-            "Small stones, packed earth, and time to settle. Nothing particularly impressive to watch."
+            "Even noisy visitors?",
+            "Noise tells me where to look. Sneaking tells me to worry."
           ],
           [
-            "Do you enjoy the work?",
-            "I like seeing people pass safely. I would enjoy it even more if fewer of them called it effortless."
+            "I'll remember that.",
+            "Good. I'd rather meet a clumsy guest than a mysterious boot."
           ]
         ]
       }
     ],
     "greetings": [
-      "Stay on the clear ground, please. I'm Bolete; I spend rather a lot of time making it clear.",
-      "I'm Corin. I'll watch where I step.",
-      "You remembered the path. I appreciate an observant visitor.",
-      "I've had good instructions.",
-      "Those claws need a wider turning space than boots.",
-      "I'll keep Aurelius away from the young growth."
+      "Mind the soft ground. It looks obliging until it has your boot.",
+      "I'm Corin. Thanks. I'd like to keep both.",
+      "You found the path again. I shall take some credit.",
+      "I'll leave you the difficult parts.",
+      "Please keep the dragon's tail out of the young growth.",
+      "I'm Corin. I'll watch his tail if he watches my feet."
     ]
   },
   "Truffle": {
@@ -1378,70 +1378,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:16",
     "topics": [
       {
-        "title": "A name that stuck",
-        "opening": "How did you get your name?",
-        "first": "They call me Truffle because I spent my first season refusing to come out of the soil. I wanted another week.",
+        "title": "The question after bedtime",
+        "opening": "What do the young ones ask when they should be sleeping?",
+        "first": "Whether the moon follows everyone or only them. I said everyone. They were rather disappointed to share.",
         "replies": [
           [
-            "Was it frightening above ground?",
-            "Bright. Noisy. Far too much sky. I liked the rain better."
+            "What did you say next?",
+            "That it was a very busy moon. This restored some respect."
           ],
           [
-            "Do you mind the name?",
-            "No. It reminds people that shy youngsters sometimes become quite talkative."
+            "Did they go to sleep?",
+            "No. They began organising its route."
           ],
           [
-            "What made you come out?",
-            "Someone described the moon. I had to see whether a thing that improbable was real."
+            "Did you believe things like that?",
+            "I thought roots were holding the trees down so they wouldn't wander off."
           ]
         ]
       },
       {
-        "title": "Teaching the youngest",
-        "opening": "What do you teach the youngest mushrooms?",
-        "first": "The young ones keep asking whether a falling leaf is alive. I spend autumn explaining the difference between a leaf and a beetle.",
+        "title": "Truffle's bad mood",
+        "opening": "Are you ever tired of being patient?",
+        "first": "Yesterday I told a leaf to get out of my way. A leaf, Corin. It had no means of complying.",
         "replies": [
           [
-            "Is that difficult?",
-            "When the beetle is hiding under the leaf, remarkably."
+            "Did anyone hear?",
+            "One little one. Now they all apologise to leaves."
           ],
           [
-            "Do you get tired of the question?",
-            "I get tired. The question remains reasonable."
+            "What do you do when you're cross?",
+            "Find a quiet place until my thoughts stop arriving elbow-first."
           ],
           [
-            "How do you explain it?",
-            "We watch what happens. A beetle will eventually disagree with being called a leaf."
+            "You don't have to be patient with me.",
+            "Thank you. I'll try to deserve the offer without using it too often."
           ]
         ]
       },
       {
-        "title": "A small visitor",
-        "opening": "Do small creatures visit the hollow too?",
-        "first": "A hedgehog used to sleep near my growing patch. I learned its route well enough to leave the crossing clear.",
+        "title": "A celebration underground",
+        "opening": "How do you celebrate something in the hollow?",
+        "first": "We tell everyone the good news. Repeatedly. The young ones enjoy being important messengers.",
         "replies": [
           [
-            "Did it recognise you?",
-            "It stopped curling up when I moved. That was enough of an introduction."
+            "What counts as good news?",
+            "A recovery. A return. Someone learning a difficult thing."
           ],
           [
-            "Was it dangerous to the shoots?",
-            "It could be clumsy. I guided it around them without expecting it to understand a lecture."
+            "Do you have music?",
+            "Voices, and feet against the earth. You feel some of it more than hear it."
           ],
           [
-            "Do you still see it?",
-            "Not lately. Wild visitors don't leave forwarding addresses. I hope it found a warm place."
+            "I'd like to hear that.",
+            "Then listen when the hollow is happy. We're not particularly secretive about it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Truffle. Please ask before touching the little caps. Some are younger than they look.",
-      "Corin. I'll keep my hands to myself.",
-      "You've come back quietly. The youngsters may stay asleep.",
-      "I'll try not to ruin that achievement.",
-      "A dragon! That is rather more visitor than I prepared for.",
-      "Aurelius can keep back while we talk."
+      "Oh, a visitor. Give me a moment to stop thinking about everybody else.",
+      "I'm Corin. Take your time.",
+      "You've come back. The little ones will want a full report.",
+      "About me?",
+      "Such a large creature to look after. Do you get any sleep?",
+      "I'm Corin. We take turns being restless."
     ]
   },
   "The Shroom King": {
@@ -1451,89 +1451,89 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:21",
     "topics": [
       {
-        "title": "Being called king",
-        "opening": "Do you enjoy being called king?",
-        "first": "The title makes humans expect commands. My people expect me to remember what everyone has already agreed.",
+        "title": "The royal nap",
+        "opening": "Does a king ever get to sleep undisturbed?",
+        "first": "They wake me for disputes. Once, two neighbours woke me to decide which had woken me first.",
         "replies": [
           [
-            "Can you tell them what to do?",
-            "I can try. Bolete would provide a detailed account of why I shouldn't."
+            "How did you decide?",
+            "I went back to sleep. They considered it an unsatisfactory judgement."
           ],
           [
-            "Why keep the title?",
-            "It saves explaining our entire arrangement to every traveller. Then, admittedly, I explain it anyway."
+            "What were they really arguing about?",
+            "Who had disturbed whom. The matter had become beautifully circular."
           ],
           [
-            "Is there anything you can decide alone?",
-            "When I would like a rest. Whether I get one is another matter."
+            "Does everyone argue here?",
+            "Of course. Peace isn't the absence of irritating neighbours."
           ]
         ]
       },
       {
-        "title": "An argument about shade",
-        "opening": "What do people here argue about?",
-        "first": "Two neighbours once spent a season arguing over whose cap shaded the other. Both insisted they were being deprived of sunlight.",
+        "title": "The name of the forest",
+        "opening": "What did you call these woods before humans named them?",
+        "first": "We didn't require one name. A place changes from root to root. Humans ask a great deal of a single word.",
         "replies": [
           [
-            "How did you settle it?",
-            "We watched the sun move. The shade changed sides. This offended both of them equally."
+            "How do you give directions?",
+            "By things we know together. Damp ground, old growth, a particular bend."
           ],
           [
-            "Did they stop arguing?",
-            "About shade, yes. Their next disagreement concerned fallen leaves."
+            "Does our name offend you?",
+            "No. It simply tells me where the speaker comes from."
           ],
           [
-            "That sounds exhausting.",
-            "It was. I took particular pleasure in the next quiet rainfall."
+            "What would you call my home?",
+            "I'd have to know it first. That seems only courteous."
           ]
         ]
       },
       {
-        "title": "Gifts and guests",
-        "opening": "What makes a good guest in your hollow?",
-        "first": "A gift should make a visit easier, not purchase the visitor. I distrust hosts who remember every favour aloud.",
+        "title": "The visitor who bowed",
+        "opening": "Has anyone mistaken you for Halvard's equal?",
+        "first": "A traveller once bowed so deeply that he couldn't see my answer. I had to ask him to look up before refusing his taxes.",
         "replies": [
           [
-            "Do people try that here?",
-            "Occasionally. Usually they want someone to take their side at the next gathering."
+            "He offered you money?",
+            "He offered to collect it. A rather different appetite."
           ],
           [
-            "How should I repay kindness?",
-            "You can thank someone without becoming their servant. Many guests need to hear that."
+            "What did you tell him?",
+            "That my neighbours knew exactly where I slept."
           ],
           [
-            "What do you want from travellers?",
-            "Care with our young, honesty about danger, and news beyond these trees. All quite practical wishes."
+            "Would you want his kind of power?",
+            "I would dislike needing guards against the people I claimed to serve."
           ]
         ]
       },
       {
-        "title": "News beyond the hollow",
-        "opening": "Does much news reach you from outside?",
-        "first": "We learn about humans from the people who arrive. It gives us a rather uneven picture of your kind.",
+        "title": "The root and the road",
+        "opening": "What would you like to ask a human traveller?",
+        "first": "Whether you feel smaller when you leave home, or larger. I've heard convincing accounts of both.",
         "replies": [
           [
-            "What have you concluded?",
-            "That all of you are either lost, hungry, or absolutely certain you're going the right way."
+            "Smaller, usually.",
+            "Then perhaps you are paying attention."
           ],
           [
-            "That sounds fair.",
-            "I suspected so. You are welcome to improve the sample."
+            "Larger. There's more I could become.",
+            "And more people who won't already know who you are. That must be frighteningly pleasant."
           ],
           [
-            "What news would you like?",
-            "How people live when nothing remarkable is happening. Travellers often forget to mention that part."
+            "Both, on the same day.",
+            "That sounds less tidy. I suspect it's the truest answer."
           ]
         ]
       }
     ],
     "greetings": [
-      "Welcome, Corin. You may speak before anyone decides this needs a ceremony.",
-      "I'd be grateful for that.",
-      "A familiar visitor. Excellent; we can omit several formalities.",
-      "How many are left?",
-      "A dragon in our hollow. The ring will have questions for years.",
-      "I'll begin with his name. This is Aurelius."
+      "A human visitor. Come where we can speak without shouting over our differences in height.",
+      "I'm Corin. Gladly. My neck was beginning to object.",
+      "Ah, the hollow has not quite exhausted your curiosity.",
+      "Not even close.",
+      "A dragon beneath our trees. The old stories have become inconveniently large.",
+      "I'm Corin. He tries to be careful."
     ]
   },
   "Cap": {
@@ -1543,70 +1543,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:27",
     "topics": [
       {
-        "title": "Winter stores",
-        "opening": "How do you keep enough food for winter?",
-        "first": "We store food in several places. One damp cellar going bad is trouble; our entire winter going bad would be disaster.",
+        "title": "The invisible inventory",
+        "opening": "How do you keep track of everything without writing?",
+        "first": "Ilsa asks where something is. I say confidently. Then I remember while she's looking at me.",
         "replies": [
           [
-            "Who checks the stores?",
-            "We take turns. I dislike waiting until something smells wrong."
+            "That sounds risky.",
+            "Marriage improves the speed of thought."
           ],
           [
-            "Do you ever miscount?",
-            "Ilsa checks my numbers. I return the favour by pretending I enjoy being corrected."
+            "What if you don't remember?",
+            "I stop being confident. She's grateful for the variety."
           ],
           [
-            "Is winter difficult here?",
-            "Growth slows and the ground hardens. We manage because the preparations began long before the cold."
+            "Couldn't you make marks?",
+            "I tried. Forgot what the marks meant. Very well-organised confusion."
           ]
         ]
       },
       {
-        "title": "An adventurous recipe",
-        "opening": "Have you ever tried a recipe you regretted?",
-        "first": "I once added something new to supper without telling Ilsa. She noticed before the first bite.",
+        "title": "Cap's grand entrance",
+        "opening": "Why did Ilsa laugh when you mentioned dancing?",
+        "first": "I attempted a leap at a gathering. Landed beautifully. The ground continued downward.",
         "replies": [
           [
-            "Was it the smell?",
-            "The colour. I had made a meal of an alarming blue."
+            "You fell in a hollow?",
+            "A shallow one. Deep enough to finish the performance."
           ],
           [
-            "Did you eat it?",
-            "It was edible. That is the most generous review I can honestly offer."
+            "Were you hurt?",
+            "Only when people asked for it again."
           ],
           [
-            "Would you experiment again?",
-            "Certainly. In a smaller pot, and with advance warning."
+            "Would you dance now?",
+            "At ground level. I've matured artistically."
           ]
         ]
       },
       {
-        "title": "Living with Ilsa",
-        "opening": "What's it like sharing a home with Ilsa?",
-        "first": "Ilsa remembers who likes what. I remember how much we have. Together we produce a respectable supper.",
+        "title": "The troublesome guest",
+        "opening": "What makes a difficult guest?",
+        "first": "Someone who says they don't want anything while looking sadly at everything.",
         "replies": [
           [
-            "What happens when you disagree?",
-            "We make separate portions. Not every household dispute needs a winner."
+            "Perhaps they're being polite.",
+            "Then I wish they'd be impolite enough to have supper."
           ],
           [
-            "Do you have many visitors?",
-            "Enough that I keep a little extra. I still complain when we run short."
+            "Do you tell them that?",
+            "Ilsa tells them more gently. We divide the work."
           ],
           [
-            "Does she mind the complaining?",
-            "She says she'd worry if I stopped. I try to keep it interesting for her."
+            "What should I say?",
+            "What you mean. It's restful."
           ]
         ]
       }
     ],
     "greetings": [
-      "Cap. Yes, just Cap. We have complicated names too, if that disappoints you.",
-      "I'm Corin. A short name seems useful.",
-      "Back to our damp corner of the world?",
-      "It's a pleasant change from the road.",
-      "Your friend carries quite a bit of warmth with him.",
-      "That's Aurelius. Let us know if we're crowding you."
+      "A visitor! Tell Ilsa I was being useful if she asks.",
+      "I'm Corin. How much of a lie would that be?",
+      "Back for conversation? Good. Conversation doesn't need carrying.",
+      "You make it sound suspiciously attractive.",
+      "Does the dragon understand 'not for eating'? We begin every friendship there.",
+      "I'm Corin. He understands. Agreement takes longer."
     ]
   },
   "Ilsa": {
@@ -1616,70 +1616,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:32",
     "topics": [
       {
-        "title": "A human breakfast",
-        "opening": "Have you ever tried a human breakfast?",
-        "first": "Do humans really eat food before they're fully awake? That seems a dangerous time to make decisions about chewing.",
+        "title": "The borrowed human word",
+        "opening": "Is there a human word you particularly like?",
+        "first": "Perhaps. Such a useful word. It lets a thought sit down before you make it leave.",
         "replies": [
           [
-            "Some of us need breakfast to wake up.",
-            "So the first mouthful is an act of faith. Fascinating."
+            "Cap must use it often.",
+            "Cap uses 'certainly', then spends an hour finding out whether he meant it."
           ],
           [
-            "Is it different for you?",
-            "We take our time. You seem determined to swallow a morning and leave it behind."
+            "Is there a word you dislike?",
+            "Weeds. Humans sound so sure the plant is the one in the wrong."
           ],
           [
-            "Nan would agree with you.",
-            "Then I'd like her. Breakfast sounds better with someone enforcing a pause."
+            "Perhaps is my answer to chores.",
+            "Then Hettie has probably developed an opinion about it."
           ]
         ]
       },
       {
-        "title": "Teaching patience",
-        "opening": "How do you teach somebody to be patient?",
-        "first": "I once told the young ones to watch a shoot grow. They complained that it wasn't doing anything. Then I went away and missed it opening.",
+        "title": "The youngest teacher",
+        "opening": "Has a young one ever taught you something?",
+        "first": "One asked why I answered questions nobody had asked. I spent a very uncomfortable afternoon noticing how often I did it.",
         "replies": [
           [
-            "Did they tease you?",
-            "Mercilessly. It was a successful lesson with an unfortunate teacher."
+            "What did you change?",
+            "I let silences last longer. Surprisingly, the world continued."
           ],
           [
-            "What did you say?",
-            "That watching requires being present. They asked whether I intended to try that next time."
+            "Was it difficult?",
+            "Dreadfully. I'm resisting the urge to explain three things to you now."
           ],
           [
-            "Do you still give that lesson?",
-            "Yes. They love telling new pupils why I stay until the end."
+            "What were they?",
+            "No. You nearly got me."
           ]
         ]
       },
       {
-        "title": "Food for company",
-        "opening": "What do you cook when you have company?",
-        "first": "Cap plans enough for dinner. I plan enough for whoever arrives. We have been disagreeing about portions for years.",
+        "title": "A quarrel worth having",
+        "opening": "Do you and Cap ever really argue?",
+        "first": "We argued over taking in a visitor. I wanted to help. He was worried we'd have too little for ourselves.",
         "replies": [
           [
-            "Who is usually right?",
-            "Cap when no one visits. Me whenever someone does. We both keep count of our victories."
+            "Who was right?",
+            "Both of us about different things. Most annoying."
           ],
           [
-            "Do you mind unexpected guests?",
-            "I mind guests who announce that feeding them will be no trouble."
+            "What did you decide?",
+            "We shared what we could and said plainly when we couldn't give more."
           ],
           [
-            "I'll remember to ask.",
-            "Good. Asking gives the host a chance to tell the truth."
+            "Was Cap angry afterward?",
+            "Until supper. His convictions are vulnerable to supper."
           ]
         ]
       }
     ],
     "greetings": [
-      "I'm Ilsa. Have you come to ask how we grow, or may I ask something about humans?",
-      "I'm Corin. I'd like to hear your question.",
-      "Corin, I thought of another thing to ask you after you left.",
-      "I'll try to be a useful human.",
-      "That dragon has changed all my questions about human travel.",
-      "His name's Aurelius. He's changed mine too."
+      "Come along. Cap's probably told you his version already.",
+      "I'm Corin. Which version should I worry about?",
+      "It's pleasant to see someone without a problem for me to solve.",
+      "I'll try to stay pleasant.",
+      "Goodness. I hope that dragon has better manners than Cap at supper.",
+      "I'm Corin. That's a surprisingly low bar to set."
     ]
   },
   "Mosslet": {
@@ -1689,70 +1689,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:37",
     "topics": [
       {
-        "title": "Taking the lookout shift",
-        "opening": "How did you become the lookout?",
-        "first": "I volunteered to watch the path because I wanted to meet travellers. Then I realised most travellers would simply walk past.",
+        "title": "The false alarm",
+        "opening": "Have you ever raised an alarm by mistake?",
+        "first": "I mistook my own shadow for something following me. Turning around did not improve the situation.",
         "replies": [
           [
-            "How do you stop them?",
-            "I call out. Loudly. You've experienced the method."
+            "How did you realise?",
+            "The sun went behind a cloud. My pursuer showed excellent timing."
           ],
           [
-            "Do you get lonely?",
-            "Sometimes. Then several people arrive together and I wish for a quiet hour."
+            "Did everyone laugh?",
+            "Once I did. They were very considerate for nearly a minute."
           ],
           [
-            "Would you rather stay home?",
-            "Some days. I'd like to choose before the rain starts, ideally."
+            "Are you embarrassed still?",
+            "Less than I'd be if a real danger arrived and I said nothing."
           ]
         ]
       },
       {
-        "title": "A beetle's directions",
-        "opening": "Can a beetle help you find your way?",
-        "first": "I tried following a beetle to see where it lived. After an hour it returned to the same log.",
+        "title": "Things from above",
+        "opening": "What would you most like to see from the treetops?",
+        "first": "Whether the paths look as tangled from above as they feel down here.",
         "replies": [
           [
-            "Did it live there?",
-            "Apparently. I had accompanied it on an errand."
+            "Perhaps they're worse.",
+            "Then I'd feel much better about getting lost."
           ],
           [
-            "Was it annoyed with you?",
-            "Hard to say. Beetles have a very fixed expression."
+            "Would you be frightened?",
+            "Of falling, yes. Of seeing, no."
           ],
           [
-            "Would you follow another?",
-            "Only if I had no plans. They don't respect an observer's schedule."
+            "I'd want to see home.",
+            "Oh. Yes. I hadn't thought of how small it would look."
           ]
         ]
       },
       {
-        "title": "Coming back to the hollow",
-        "opening": "What do you miss when you're away from the hollow?",
-        "first": "After standing beside the road, the hollow sounds crowded. You wouldn't think roots and dripping leaves could make such a fuss.",
+        "title": "Mosslet's visitor list",
+        "opening": "Do you remember everyone who passes here?",
+        "first": "Most. There was a man who said goodbye to every tree. Took him most of the afternoon to leave.",
         "replies": [
           [
-            "Do you prefer it here?",
-            "When I'm tired, yes. I recognise the sounds I can ignore."
+            "Why was he doing that?",
+            "He'd promised his child to be polite in the forest."
           ],
           [
-            "Do you tell everyone about travellers?",
-            "The interesting ones. I leave out anything a visitor asked me to keep private."
+            "Did it bother you?",
+            "Not at all. It gave me a chance to finish my lunch."
           ],
           [
-            "Will you tell them about me?",
-            "Someone arriving with a dragon is difficult to omit. I'll try to get the details right."
+            "Did the trees answer?",
+            "If they did, he was the only one patient enough to hear it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Over here—careful, you nearly walked past me. I'm Mosslet.",
-      "Corin. Sorry; I'm still learning where to look.",
-      "Corin! Much easier to get your attention this time.",
-      "I've learned to listen for you.",
-      "Those wings explain a great deal about the noise I've been hearing.",
-      "This dragon is with me. His name is Aurelius."
+      "Stop a moment. Friend, stranger, or someone who hasn't decided?",
+      "I'm Corin. Stranger hoping for friend.",
+      "I heard you coming. You have a rather recognisable step.",
+      "Should I apologise to the ground?",
+      "Wings. Actual wings. I need a more ambitious lookout spot.",
+      "I'm Corin. Please don't climb anything on our account."
     ]
   },
   "Weft": {
@@ -1762,70 +1762,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:42",
     "topics": [
       {
-        "title": "Spare ground",
-        "opening": "Do you leave any of your ground unplanted?",
-        "first": "I kept a patch clear for passing carts. Now travellers ask whether I'll clear another. Success seems to involve less grass every year.",
+        "title": "A traveller's disguise",
+        "opening": "Have you ever pretended to be someone else?",
+        "first": "Told a bore I was deaf. Then somebody offered me cake and I answered immediately.",
         "replies": [
           [
-            "Will you expand it?",
-            "Only if I can keep the place decent. I don't want a queue of people regretting stopping."
+            "Did the bore notice?",
+            "He said it was a miracle and resumed talking."
           ],
           [
-            "What makes people choose your camp?",
-            "Space, mostly. Families like being able to unpack without performing in front of everyone."
+            "Why not just leave?",
+            "I was young and thought politeness required suffering."
           ],
           [
-            "Do they help with the work?",
-            "Some do. I remember those people rather fondly."
+            "Would you do it now?",
+            "I'd offer the bore a job. Conversations shorten remarkably near a shovel."
           ]
         ]
       },
       {
-        "title": "A guest who stayed",
-        "opening": "Have any travellers stayed longer than they meant to?",
-        "first": "A carter hurt his ankle here and stayed a week. He was so bored he repaired three things I'd been avoiding.",
+        "title": "The weather wager",
+        "opening": "Why don't you wager on the weather anymore?",
+        "first": "Lost a dinner to a woman who predicted rain by looking behind me.",
         "replies": [
           [
-            "Did you pay him?",
-            "Fed him, and knocked the cost off his stay. We argued until both of us felt properly generous."
+            "Was there a cloud?",
+            "A wall of it. I was too busy explaining the sky."
           ],
           [
-            "What had you been avoiding?",
-            "A crooked gate, a loose bench, and an admission that I needed help."
+            "Did you pay up?",
+            "Yes. She ate beautifully and offered no further education."
           ],
           [
-            "Did he come back?",
-            "He did. Inspected the gate before saying hello."
+            "What had you predicted?",
+            "A clear evening. I remain grateful nobody wrote it down."
           ]
         ]
       },
       {
-        "title": "Farming beside a road",
-        "opening": "What's it like farming beside a busy road?",
-        "first": "People lean over a fence and tell me how they'd grow my crops. None return for the weeding.",
+        "title": "Weft's good china",
+        "opening": "What's something you save for special occasions?",
+        "first": "Used to save my good cup. Then I thought, if Tuesday isn't worth a good cup, we're in trouble.",
         "replies": [
           [
-            "Do you argue with them?",
-            "Only if it's a slow day. Otherwise I offer them a hoe."
+            "Do you use it every day?",
+            "When I'm home. Makes washing it slightly less dreary."
           ],
           [
-            "Has anyone accepted?",
-            "Once. She worked twice as fast as I did. I listened to her advice afterward."
+            "What if it breaks?",
+            "I'll be upset. At least it won't have spent its life waiting."
           ],
           [
-            "Do you like the road being busy?",
-            "Yes. I sell more, hear more, and get much better at nodding politely."
+            "Is Tuesday your favourite day?",
+            "Now it has a cup, yes."
           ]
         ]
       }
     ],
     "greetings": [
-      "Weft. Farmer, occasional host, and reluctant expert on muddy boots.",
-      "Corin. Mine may qualify for your attention.",
-      "Another visit, Corin? My camp must have made some impression.",
-      "I remembered the person as well as the place.",
-      "A dragon would certainly make my camp easier to spot from the road.",
-      "Aurelius isn't a signpost, but I'll introduce you."
+      "You can relax your shoulders here. The road doesn't pay you for looking stern.",
+      "I'm Corin. I'd hoped it might.",
+      "Back this way? Good. I was getting bored with my own news.",
+      "Mine may be worse.",
+      "Keep his wings off the crops and we shall get along splendidly.",
+      "I'm Corin. That's fair. I'll stand where you point."
     ]
   },
   "Cartwright Oswin": {
@@ -1835,70 +1835,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:47",
     "topics": [
       {
-        "title": "A wheel's wobble",
-        "opening": "How do you find what's making a wheel wobble?",
-        "first": "A man asked me to straighten his wheel. The wheel was sound; he'd loaded all his stone on one side.",
+        "title": "The racing snail",
+        "opening": "Did you really lose a race to a snail?",
+        "first": "I said my repaired cart could beat anything. My niece chose a snail, then insisted I start with the cart dismantled.",
         "replies": [
           [
-            "Did he believe you?",
-            "After we unloaded it. Before that, he described my trade to me at length."
+            "You agreed?",
+            "I hadn't heard all the terms. A family failing."
           ],
           [
-            "Could you have charged for a repair?",
-            "Easily. Then he'd still have the same trouble with the next load."
+            "Who won?",
+            "The snail. She'd given it a generous head start."
           ],
           [
-            "Does that happen often?",
-            "Often enough that I look at the load before reaching for tools."
+            "Did you pay the wager?",
+            "A bun. Cheapest lesson I've ever bought."
           ]
         ]
       },
       {
-        "title": "A father's cart",
-        "opening": "Did your father teach you about carts?",
-        "first": "My father built carts and tested them himself. I thought that meant a pleasant ride. He made me walk beside him listening for trouble.",
+        "title": "An unwanted retirement",
+        "opening": "Will you ever give up cartwrighting?",
+        "first": "People keep suggesting it as if sitting down were a magnificent discovery. I know about chairs.",
         "replies": [
           [
-            "What trouble?",
-            "A loose joint, a binding axle, anything that should be quiet and wasn't."
+            "You could do something else.",
+            "I might. I'd rather choose before everyone chooses for me."
           ],
           [
-            "Did you like working with him?",
-            "More once I stopped trying to impress him every minute."
+            "What would you miss?",
+            "Someone arriving unhappy and leaving with a problem gone."
           ],
           [
-            "Do you build them the same way?",
-            "Mostly. He'd complain about my shortcuts, then quietly copy the useful ones."
+            "What would you keep doing?",
+            "Mending things badly for free, according to my daughter."
           ]
         ]
       },
       {
-        "title": "An expensive colour",
-        "opening": "Can painting a cart really cost that much?",
-        "first": "A customer once demanded a red cart because red carts travelled faster. I painted it beautifully and let him enjoy the theory.",
+        "title": "The royal carriage",
+        "opening": "Would you build a carriage for Halvard?",
+        "first": "Only if someone else measured it. I don't fancy being blamed for a king who doesn't fit.",
         "replies": [
           [
-            "Did you tell him he was wrong?",
-            "I told him I charged for paint, not speed. He seemed content."
+            "Would he pay you?",
+            "That's the question I'd ask last, if I intended to survive the first meeting."
           ],
           [
-            "Was it faster?",
-            "He whipped the horse harder. I had words about that."
+            "What would you build instead?",
+            "A good ordinary cart. Nobody has to kneel when it arrives."
           ],
           [
-            "What colour would you choose?",
-            "One that hides mud. I prefer my improvements practical."
+            "Could you refuse?",
+            "A man can refuse in conversation more easily than at his door."
           ]
         ]
       }
     ],
     "greetings": [
-      "Oswin. If you're in a hurry, I regret to say carts have no sympathy for it.",
-      "Corin. I've discovered roads don't either.",
-      "Well met, Corin. Another day, another opinion about wheels.",
-      "I'll ask before supplying mine.",
-      "Wings would solve some of my customers' problems. Create a few others, I expect.",
-      "Aurelius still needs somewhere to land."
+      "Stand clear of anything that might roll. That includes my temper.",
+      "I'm Corin. I'll give both some room.",
+      "You again. Good. A face with no broken axle attached.",
+      "Not that I've noticed.",
+      "A dragon. Well, I can't put wheels on that.",
+      "I'm Corin. He'd be disappointed if you tried."
     ]
   },
   "Miner Marn": {
@@ -1908,70 +1908,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:52",
     "topics": [
       {
-        "title": "A tired crew",
-        "opening": "How do you know when the crew needs a rest?",
-        "first": "The worst mistakes happen near the end of a shift, when everyone wants one last load finished.",
+        "title": "The crew's lucky pebble",
+        "opening": "Why does your crew carry a lucky pebble?",
+        "first": "Because Nerik said it was lucky. Now nobody wants to be the fellow who loses it before a bad day.",
         "replies": [
           [
-            "How do you stop that?",
-            "I call the finish before we're exhausted. Then I argue with whoever thinks a deadline changes gravity."
+            "Do you believe it works?",
+            "I believe Nerik checks his pockets. That's useful in itself."
           ],
           [
-            "Have you made that mistake?",
-            "Yes. A falling load missed Nerik by less than I'd care to measure."
+            "What's special about it?",
+            "Absolutely nothing. Don't say that where it can hear."
           ],
           [
-            "Do the crew listen?",
-            "They do now. I'd prefer we had learned without the demonstration."
+            "Who carries it now?",
+            "We take turns. Superstition has acquired a rota."
           ]
         ]
       },
       {
-        "title": "The stone animals",
-        "opening": "Why do you carve those little stone animals?",
-        "first": "I carve animals from waste stone. My first duck looked like a boot, so I carved another and called them a pair.",
+        "title": "The boss at home",
+        "opening": "Are you in charge at home too?",
+        "first": "My youngest once sent me out of a room for interrupting a puppet show. I went.",
         "replies": [
           [
-            "Did anyone want them?",
-            "My niece. She said they were the finest stone boots she'd seen."
+            "Did you object?",
+            "She'd explained the rules clearly. Difficult to argue with decent management."
           ],
           [
-            "Have you improved?",
-            "Enough to make a recognisable badger. I am reluctant to risk a horse."
+            "Was it a good show?",
+            "Excellent. The villain sounded suspiciously like me."
           ],
           [
-            "Why carve after moving stone all day?",
-            "This stone stays where I put it, and no foreman asks for six more by sunset."
+            "Do you have hobbies?",
+            "I'm apparently a supporting actor."
           ]
         ]
       },
       {
-        "title": "Teaching Nerik",
-        "opening": "What was Nerik like when you first taught him?",
-        "first": "Nerik apologises whenever he asks a question. I keep telling him an apology takes longer than the answer.",
+        "title": "The unsent complaint",
+        "opening": "What would you tell the crown if they'd listen?",
+        "first": "That a road crew needs stone, food, and time. Threatening us supplies none of them.",
         "replies": [
           [
-            "Was someone patient with you?",
-            "Eventually. My first foreman thought shouting counted as explanation."
+            "Have you tried saying it?",
+            "In writing. The answer thanked me for my loyalty."
           ],
           [
-            "Do you ever lose your temper?",
-            "Certainly. Then I have to decide whether the temper helped. It seldom did."
+            "Were you being loyal?",
+            "I was being practical. It's often mistaken for something grander."
           ],
           [
-            "Does he know you trust him?",
-            "I give him work that matters. I should probably say it aloud occasionally too."
+            "Would you say it in person?",
+            "If they'd really listen. That's the expensive part of your question."
           ]
         ]
       }
     ],
     "greetings": [
-      "Marn. Keep clear of the work until I've told you where it's safe.",
-      "Corin. Where would you like me?",
-      "Corin. You're welcome to talk; just don't start lifting to be polite.",
-      "I'll wait for instructions.",
-      "That's quite a helper you've brought. Does he understand a warning shout?",
-      "Aurelius understands me. We'll keep clear of the crew."
+      "If you've come to tell me stone is heavy, you're too late.",
+      "I'm Corin. I'll cross that off my list.",
+      "Back again? I might put you in the headcount.",
+      "Would I get paid?",
+      "Keep the dragon outside the crew's working room. Nobody needs a surprise wing.",
+      "I'm Corin. We'll give you space."
     ]
   },
   "Miner Nerik": {
@@ -1981,70 +1981,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:57",
     "topics": [
       {
-        "title": "The first wage",
-        "opening": "What did you do with your first wages?",
-        "first": "I bought my mother a good lamp with my first pay. She said it was too expensive and spent the evening trying it in every room.",
+        "title": "A name worth shouting",
+        "opening": "Why did you want to join a road crew?",
+        "first": "I wanted someone to shout my name because they needed me. At home it usually meant I'd broken something.",
         "replies": [
           [
-            "Was she proud?",
-            "She didn't stop introducing me to neighbours for a week."
+            "Has that happened?",
+            "Both versions. I'm improving the balance."
           ],
           [
-            "What did you buy yourself?",
-            "Socks. The lamp makes a better story."
+            "Was your family pleased?",
+            "Mum packed enough food for three workers. Subtle vote of confidence."
           ],
           [
-            "Do you still send money home?",
-            "Some. She insists I keep enough to eat properly, then asks what I ate."
+            "What do you want next?",
+            "To know my job well enough to help the next frightened newcomer."
           ]
         ]
       },
       {
-        "title": "Asking for help",
-        "opening": "Is it difficult asking the other miners for help?",
-        "first": "I once carried a load too heavy for me because I didn't want the crew to think I was weak. I slowed everyone down.",
+        "title": "The invented sweetheart",
+        "opening": "Why did you tell the crew you had a sweetheart?",
+        "first": "They kept asking. I panicked. Now they ask how she is, which is worse.",
         "replies": [
           [
-            "Did Marn notice?",
-            "Immediately. He took half and asked whether I'd prefer a useful partner or an admiring audience."
+            "What do you tell them?",
+            "That she's busy. She's the busiest woman who never lived."
           ],
           [
-            "Was that embarrassing?",
-            "Very. Less embarrassing than dropping it on someone."
+            "You could tell the truth.",
+            "Marn already knows. He asked whether her imaginary father liked me."
           ],
           [
-            "Would you do it differently now?",
-            "I'd ask for another pair of hands before mine started shaking."
+            "Why did you feel you needed one?",
+            "Everyone seemed to have a life already. I thought mine sounded unfinished."
           ]
         ]
       },
       {
-        "title": "After work",
-        "opening": "What do you like doing after a shift?",
-        "first": "I like lying down somewhere I can't hear stones being moved. It isn't an ambitious hobby.",
+        "title": "A pocket book",
+        "opening": "What do you write when the shift's over?",
+        "first": "Little descriptions. Someone's voice, a funny remark. I'm afraid I'll forget the parts that make the day mine.",
         "replies": [
           [
-            "It sounds reasonable after a shift.",
-            "Thank you. People keep suggesting pursuits that involve further effort."
+            "Poems?",
+            "Not if anyone from work asks."
           ],
           [
-            "Do you ever go anywhere?",
-            "On a free day. I enjoy a road much more when I'm allowed to walk past the damaged parts."
+            "Would you read one aloud?",
+            "Perhaps when I've stopped hearing all its faults."
           ],
           [
-            "Will you stay in this trade?",
-            "For now. I like the crew. I'm still deciding how much I like the work."
+            "Do you write about Marn?",
+            "Under a false name. I'm young, not reckless."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nerik. Marn says I can talk and work, but the evidence is still disputed.",
-      "Corin. I'll keep the conversation clear of falling stones.",
-      "Corin! I recognised you before Marn had to remind me.",
-      "A promising start.",
-      "A dragon! I'd rehearsed a sensible question, and it's completely gone.",
-      "Aurelius gets that reaction more often than you might think."
+      "Hello! Sorry, I thought you were Marn for a moment. You both arrived unexpectedly.",
+      "I'm Corin. I hope that's the only resemblance.",
+      "It's you. Good. I can ask a question without looking new at my job.",
+      "Ask away.",
+      "Oh, that's brilliant. Sorry. Am I allowed to say that about a dragon?",
+      "I'm Corin. He seems pleased."
     ]
   },
   "Snowbuilder Nessa": {
@@ -2054,70 +2054,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "02-shrooms-roads.txt:62",
     "topics": [
       {
-        "title": "A face in snow",
-        "opening": "How do you choose the faces for your snow figures?",
-        "first": "I give each snow figure a different expression. My brother says every one looks annoyed with him.",
+        "title": "A face everyone knew",
+        "opening": "Have you ever sculpted someone without telling them?",
+        "first": "Made a snowman that looked like a neighbour. Everyone recognised him except the neighbour. He complained about its expression.",
         "replies": [
           [
-            "Is he right?",
-            "Only about two. The others are annoyed with different people."
+            "What expression?",
+            "His complaining one."
           ],
           [
-            "Do you copy real people?",
-            "Sometimes. I deny it if they arrive before I've finished the nose."
+            "Did you confess?",
+            "He guessed when I couldn't stop laughing."
           ],
           [
-            "What's the hardest part?",
-            "Stopping. One more adjustment can turn a dignified face into a collapsed potato."
+            "Was he angry?",
+            "For a day. Then he brought his sister to see it."
           ]
         ]
       },
       {
-        "title": "When they melt",
-        "opening": "Does it bother you when your work melts?",
-        "first": "I used to patch every thawing figure. Now I let the weather finish what it started.",
+        "title": "Summer employment",
+        "opening": "What do you do when there isn't any snow?",
+        "first": "I draw. Badly at first. Summer gives me months to learn a face winter will let me build.",
         "replies": [
           [
-            "Doesn't that upset you?",
-            "A little. Then I get my scarf back and make something else next winter."
+            "Do you miss the snow?",
+            "Only until I can feel my toes again."
           ],
           [
-            "Do you remember the old ones?",
-            "The good ones. Also a spectacularly bad horse."
+            "Why not work in stone?",
+            "Stone expects a permanent decision. I'm not always ready for one."
           ],
           [
-            "Why was the horse bad?",
-            "Everyone thought it was a chair. Several people attempted to sit on it."
+            "Do you ever change your mind?",
+            "Constantly. A thaw is an excellent accomplice."
           ]
         ]
       },
       {
-        "title": "Winter visitors",
-        "opening": "Do many visitors come through in winter?",
-        "first": "People stop to look at the snow figures and end up telling me who used to build them in their village.",
+        "title": "A visitor's portrait",
+        "opening": "What would you notice if you made a sculpture of me?",
+        "first": "You look as though you're about to ask a question even while somebody's answering.",
         "replies": [
           [
-            "Do you like hearing it?",
-            "Yes. Everyone has a different trick for keeping a head attached."
+            "Is that bad?",
+            "No. Difficult to carve, though. I'd need the eyebrows just right."
           ],
           [
-            "Do children help?",
-            "They choose most of the faces. I do the lifting."
+            "What else?",
+            "You hold yourself differently when you think nobody's worried about you."
           ],
           [
-            "Does anyone complain?",
-            "One neighbour claimed a figure was staring into his window. I turned it around. Apparently that was worse."
+            "Do I look frightened?",
+            "Sometimes. So does everyone worth drawing."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nessa. If anyone asks, these snow figures are a serious artistic undertaking.",
-      "Corin. I'll use my most serious voice.",
-      "Corin! Arrived before the thaw, I see.",
-      "I didn't want to miss the exhibition.",
-      "Keep your warm friend a little way back, please.",
-      "Aurelius and I will admire them from here."
+      "You've arrived before my fingers have completely surrendered. Lucky timing.",
+      "I'm Corin. Should we keep this brief?",
+      "Ah, an audience with a pulse. My usual sort melts.",
+      "I'll try to be more durable.",
+      "Please ask your dragon to admire winter from a sensible distance.",
+      "I'm Corin. I'll mention the melting problem."
     ]
   },
   "Linna": {
@@ -2127,70 +2127,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:1",
     "topics": [
       {
-        "title": "An honest shortage",
-        "opening": "What happens when the mill's figures don't add up?",
-        "first": "A miller reported a missing sack before I noticed. I believed his next correction much more readily.",
+        "title": "The disputed inheritance",
+        "opening": "What's the strangest thing you've had to put a value on?",
+        "first": "A woman's collection of spoons. Her sons were quarrelling over it. Neither had visited her for years.",
         "replies": [
           [
-            "Did you find the sack?",
-            "On the wrong wagon. Honesty made the search shorter."
+            "How did you value it?",
+            "I asked which spoon she'd used. Neither knew."
           ],
           [
-            "Was he embarrassed?",
-            "Bright red. I didn't make him repeat himself."
+            "What happened to them?",
+            "Sold, eventually. I bought the plainest one."
           ],
           [
-            "Do people often hide mistakes?",
-            "Enough that finding one openly feels like cooperation."
+            "Why buy it?",
+            "Because I did know. She used to bring me soup."
           ]
         ]
       },
       {
-        "title": "The wedding order",
-        "opening": "Have you ever had trouble with a wedding order?",
-        "first": "I enjoy wedding accounts. Large quantities of butter suggest someone expects happiness.",
+        "title": "Linna's expensive habit",
+        "opening": "Do you spend money on anything foolish?",
+        "first": "Beautiful blank paper. Then I won't write on it because my thoughts seem unworthy of the expense.",
         "replies": [
           [
-            "Do you attend the weddings?",
-            "When invited. I leave my sums at home."
+            "What would you write?",
+            "Something with no figures in it. I haven't narrowed it further."
           ],
           [
-            "What's the hardest cost to predict?",
-            "Relatives who announce they hardly eat, then arrive early."
+            "You could spoil the first page.",
+            "That is a disturbingly practical suggestion."
           ],
           [
-            "Would you plan a feast yourself?",
-            "Gladly, provided someone else washed every dish."
+            "Could you draw instead?",
+            "You haven't seen my drawings. Even the paper would object."
           ]
         ]
       },
       {
-        "title": "Keeping your own accounts",
-        "opening": "Are your own accounts as tidy as the mill's?",
-        "first": "My household accounts are a disgrace. Apparently I spend my precision at work.",
+        "title": "A troublesome signature",
+        "opening": "Why do you sign your full name every time?",
+        "first": "When I began, people assumed the accounts belonged to the man standing nearest me. I became difficult to overlook.",
         "replies": [
           [
-            "Does anything go missing?",
-            "Mostly my certainty about what bread used to cost."
+            "Did it work?",
+            "Eventually. Repetition can be a form of stubbornness."
           ],
           [
-            "Wouldn't a tidy ledger help?",
-            "Yes. That sensible answer is profoundly unwelcome."
+            "Was anyone helpful?",
+            "A woman who insisted I explain my own figures. She wouldn't let my employer answer."
           ],
           [
-            "What do you enjoy spending on?",
-            "Good paper. I've decided that doesn't require defending."
+            "Does it still happen?",
+            "Less. I still enjoy correcting it more than I ought."
           ]
         ]
       }
     ],
     "greetings": [
-      "Linna. Please tell me you haven't brought another disputed invoice.",
-      "Corin. Just a question, with no figures attached.",
-      "Corin! A welcome interruption.",
-      "I was hoping you'd say that.",
-      "That's a dragon. For once I have nothing sensible to add.",
-      "I'm Corin; this is Aurelius. Take your time."
+      "Are you looking for someone, or just looking? Both are popular occupations here.",
+      "Just looking for now. I'm Corin.",
+      "Ah, Corin. You've caught me between numbers.",
+      "Is there much room there?",
+      "A dragon? I'd like to establish whether I ought to be running.",
+      "No. I'm Corin. He's travelling with me."
     ]
   },
   "Garrow": {
@@ -2200,70 +2200,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:6",
     "topics": [
       {
-        "title": "A tree left standing",
-        "opening": "How do you decide which trees to leave standing?",
-        "first": "I left a sound tree because birds had nested in it. My customer grumbled about the delay.",
+        "title": "The untouched forest",
+        "opening": "Is there a part of the woods you won't enter?",
+        "first": "There's a hollow where the birds always seem to stop singing. Probably a perfectly good explanation. I'm content without it.",
         "replies": [
           [
-            "Did you lose the job?",
-            "No. I offered other timber. He liked that less dramatically."
+            "You think it's haunted?",
+            "I think I'm paid to cut wood, not settle questions about ghosts."
           ],
           [
-            "Do you check every tree?",
-            "As well as I can. Looking first saves trouble."
+            "Have you seen anything?",
+            "No. That's the pleasing part of staying out."
           ],
           [
-            "Would you always leave it?",
-            "During nesting, yes. The wood can wait a season."
+            "Would you tell people to avoid it?",
+            "I'd tell them what I heard. The rest would be theirs."
           ]
         ]
       },
       {
-        "title": "The axe handle",
-        "opening": "Do you make your own axe handles?",
-        "first": "I once fitted a handle beautifully and forgot to test its grip. It twisted every time I swung.",
+        "title": "The winter beard",
+        "opening": "Why do you grow your beard longer in winter?",
+        "first": "Warmth. Also my sister says I look respectable clean-shaven. I try not to raise false expectations.",
         "replies": [
           [
-            "How did you fix it?",
-            "Reshaped it. Admiration had made me stop too soon."
+            "Does she visit often?",
+            "Often enough to complain about it."
           ],
           [
-            "Did anyone warn you?",
-            "My brother. He enjoyed being right enormously."
+            "What do you complain about?",
+            "Her habit of being right before I've finished my explanation."
           ],
           [
-            "Do you still use it?",
-            "Yes. It's less handsome and much less dangerous."
+            "Would you shave for her?",
+            "For her wedding, I did. She cried. Claimed it was the ceremony."
           ]
         ]
       },
       {
-        "title": "An afternoon indoors",
-        "opening": "What keeps you indoors on a free afternoon?",
-        "first": "I mend little wooden toys when rain keeps me home. Wheels, mostly. Children are demanding drivers.",
+        "title": "A surprisingly gentle pastime",
+        "opening": "What do you do when you're not cutting wood?",
+        "first": "Press flowers between old pages. Go on, get the surprised face over with.",
         "replies": [
           [
-            "Do you charge them?",
-            "For materials if they can spare it. Not for complaints."
+            "I wasn't going to laugh.",
+            "Good. Some of them took considerable finding."
           ],
           [
-            "What's the strangest repair?",
-            "A horse missing all four legs. Optimistic owner."
+            "Why flowers?",
+            "My daughter used to bring them home. I started keeping the ones she forgot."
           ],
           [
-            "Do you enjoy it?",
-            "Especially when the repaired toy immediately suffers another expedition."
+            "Does she know?",
+            "She found them once. Went very quiet, then brought me another."
           ]
         ]
       }
     ],
     "greetings": [
-      "Garrow. You're welcome to talk if you don't expect me to be entertaining on command.",
-      "Corin. I can manage half the work.",
-      "Corin. I've had a whole morning to think of an answer for you.",
-      "I hope it wasn't a difficult question.",
-      "Those wings need clear space. I'll stay where he can see me.",
-      "I'm Corin. Aurelius will appreciate that."
+      "You look lost. If you aren't, don't let me discourage you.",
+      "I'm Corin. Still deciding where to go.",
+      "Back, eh? That's almost a conversation habit.",
+      "I've had worse habits.",
+      "I've seen some large lizards, but none that made me reconsider my axe.",
+      "I'm Corin. Please leave the axe out of our introduction."
     ]
   },
   "Wren": {
@@ -2273,70 +2273,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:11",
     "topics": [
       {
-        "title": "Learning what works",
-        "opening": "How do you learn which remedies actually work?",
-        "first": "I keep notes when a remedy disappoints someone. Those entries teach me more than the compliments.",
+        "title": "The name you chose",
+        "opening": "Was Wren always your name?",
+        "first": "It's the one I chose. The old one belonged to somebody everybody had already decided about.",
         "replies": [
           [
-            "Do customers tell you plainly?",
-            "Not always. I ask questions that allow an unhappy answer."
+            "Was leaving it difficult?",
+            "Explaining was. Using it felt easy."
           ],
           [
-            "Have you stopped selling anything?",
-            "Yes. Being fond of a recipe isn't evidence it helps."
+            "Do people accept it?",
+            "Most do. The others hear it again until they tire of the argument."
           ],
           [
-            "Who taught you that?",
-            "Berta. She made me explain every confident claim."
+            "Why Wren?",
+            "Small bird, extraordinary noise. It seemed a useful ambition."
           ]
         ]
       },
       {
-        "title": "A customer's cure",
-        "opening": "Do customers bring you remedies of their own?",
-        "first": "A customer said my tea restored his energy. Then he mentioned sleeping two extra hours each night.",
+        "title": "A customer after sunset",
+        "opening": "Has a customer ever come only for company?",
+        "first": "An older man used to invent complaints so I'd visit. Eventually I asked whether we could have tea without discussing his elbow.",
         "replies": [
           [
-            "Was it the sleep?",
-            "I suspect it helped considerably. I told him so."
+            "Was he offended?",
+            "Relieved. Inventing ailments was becoming hard work."
           ],
           [
-            "Did he still buy the tea?",
-            "Yes. He liked the taste. An excellent reason."
+            "Did you keep visiting?",
+            "When I could. He made terrible tea and listened beautifully."
           ],
           [
-            "Were you disappointed?",
-            "Relieved. I don't need credit for someone's sensible bedtime."
+            "How did you know?",
+            "His elbow changed sides halfway through the week."
           ]
         ]
       },
       {
-        "title": "Work after closing",
-        "opening": "Can you stop thinking about work once you close?",
-        "first": "After hearing everyone's troubles, I sometimes want an evening without being useful.",
+        "title": "A kindness you resent",
+        "opening": "Can someone be too helpful?",
+        "first": "My aunt keeps sending me advice. Wrapped around things I actually need. Very difficult to refuse gracefully.",
         "replies": [
           [
-            "Who looks after you?",
-            "Berta notices. She invites me over and forbids remedy talk."
+            "Have you told her?",
+            "Yes. Now she says the advice is for someone else who might happen to be nearby."
           ],
           [
-            "What do you do instead?",
-            "Argue over card games. She cheats more subtly than I do."
+            "Does any of it help?",
+            "Some. That's the most irritating part."
           ],
           [
-            "Would you leave the trade?",
-            "No. I'd simply like to keep some hours for myself."
+            "What would you like her to send?",
+            "A letter asking how I am, with room for the answer."
           ]
         ]
       }
     ],
     "greetings": [
-      "I'm Wren. Tell me what you're after before someone recommends everything I sell.",
-      "Corin. I'd appreciate an honest answer.",
-      "Corin, have you eaten before coming to discuss remedies?",
-      "Yes. Nan would approve of that question.",
-      "I know a little about people and nothing reliable about dragons.",
-      "I'm Corin; this is Aurelius. We can start with introductions."
+      "You don't look like my usual customer. What brings you through Thornwell?",
+      "I'm Corin, from Millwood. A little curiosity, mostly.",
+      "Corin. A social visit, I hope?",
+      "Unless curiosity's an illness.",
+      "Oh. Is your companion likely to put his nose into things?",
+      "I'm Corin, and I'm afraid curiosity runs through the party."
     ]
   },
   "Calder": {
@@ -2346,70 +2346,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:16",
     "topics": [
       {
-        "title": "Odo's letters",
-        "opening": "Does Odo write to you often?",
-        "first": "Grandfather's letters devote three lines to his health and a whole page to a disputed fish.",
+        "title": "The night of the snoring",
+        "opening": "What's the worst night you've had at camp?",
+        "first": "Three strangers snoring in different rhythms. Whenever I adjusted to one, another began. Like musicians who hated each other.",
         "replies": [
           [
-            "Does he exaggerate in writing?",
-            "Less. He knows I can keep the evidence."
+            "Did you wake them?",
+            "They all denied it. One blamed the trees."
           ],
           [
-            "Do you visit often?",
-            "Less than I should. A camp is difficult to leave."
+            "How did you sleep?",
+            "Badly, once they'd left."
           ],
           [
-            "What do you write back?",
-            "Ordinary news. He worries if I only mention adventures."
+            "Would you turn them away next time?",
+            "No. I'd sleep first and let them watch the road."
           ]
         ]
       },
       {
-        "title": "A place by the fire",
-        "opening": "Is there room for anyone beside your fire?",
-        "first": "I ask newcomers whether they want company before introducing them to everyone.",
+        "title": "A map of stars",
+        "opening": "Do you know the names of the stars?",
+        "first": "Odo taught me a few. Then admitted he'd invented some because I wouldn't stop asking.",
         "replies": [
           [
-            "Do some prefer being alone?",
-            "Often. A warm fire needn't come with an interview."
+            "Which ones were invented?",
+            "Probably the Crooked Teapot. Though I remain fond of it."
           ],
           [
-            "Have you had unwelcome guests?",
-            "A few. Kindness doesn't oblige me to tolerate cruelty."
+            "Were you angry?",
+            "For an afternoon. Then I invented a worse one and told him he was wrong."
           ],
           [
-            "What makes a good guest?",
-            "Someone who asks where things belong before rearranging them."
+            "Do you still use his names?",
+            "Yes. The sky would feel less like home without them."
           ]
         ]
       },
       {
-        "title": "Breakfast in the rain",
-        "opening": "How do you make breakfast when it's pouring?",
-        "first": "I once protected breakfast from rain so carefully that I forgot the fire underneath it had gone out.",
+        "title": "The life you didn't choose",
+        "opening": "Did you always want to keep a camp?",
+        "first": "Wanted to go everywhere at first. Discovered I liked the part where everyone stopped moving and started talking.",
         "replies": [
           [
-            "What did you serve?",
-            "Cold porridge and an explanation nobody requested."
+            "Do you still want to travel?",
+            "Sometimes. Staying by choice doesn't cure curiosity."
           ],
           [
-            "Did people complain?",
-            "One traveller said she'd paid extra for less elsewhere."
+            "Who tells the best stories?",
+            "People who don't begin by announcing they're good at stories."
           ],
           [
-            "Have you improved the shelter?",
-            "Yes. Breakfast now survives my conversations much better."
+            "What do you tell them?",
+            "Small things. They can find their own monsters on the road."
           ]
         ]
       }
     ],
     "greetings": [
-      "Calder. The road's brought you to a decent stopping place.",
-      "Corin. I'm glad to hear that.",
-      "Corin! Tell me how the journey's treating you.",
-      "Better now that I've stopped walking.",
-      "I was expecting boots. Wings are a considerable surprise.",
-      "I'm Corin, and this is Aurelius. Are we welcome?"
+      "Come off the road a moment. No need to arrive anywhere breathless.",
+      "Thanks. I'm Corin, from Millwood.",
+      "Corin! How much road have you collected since last time?",
+      "Enough to appreciate stopping.",
+      "Well, that's one way to discourage uninvited camp visitors.",
+      "I'm Corin. He's with me, if that's all right."
     ]
   },
   "Orin": {
@@ -2419,70 +2419,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:21",
     "topics": [
       {
-        "title": "The disappointing seeds",
-        "opening": "Have you ever planted seeds that disappointed you?",
-        "first": "I bought seeds with a magnificent picture on the packet. The plants looked nothing like it.",
+        "title": "The harvest moon party",
+        "opening": "Why do you dislike the harvest moon celebration?",
+        "first": "I don't dislike it. I dislike being appointed to arrange it because I once made the mistake of doing it well.",
         "replies": [
           [
-            "Wrong seeds?",
-            "No. Impossible picture. The artist had harvested imagination."
+            "Can't someone else arrange it?",
+            "Everyone says they'd hate to disappoint me. Very flattering imprisonment."
           ],
           [
-            "Did you complain?",
-            "Yes. The seller offered another packet. I declined the adventure."
+            "What would you change?",
+            "I'd arrive late, eat too much, and complain about the arrangements."
           ],
           [
-            "Were the plants useful?",
-            "Perfectly good beans. I had wanted flowers."
+            "You could say no.",
+            "I've rehearsed. It sounded magnificent to the cabbages."
           ]
         ]
       },
       {
-        "title": "A borrowed garden",
-        "opening": "Did you always have a garden of your own?",
-        "first": "I tended a neighbour's garden while she was ill. She complained that I'd arranged everything too neatly.",
+        "title": "Orin's rival",
+        "opening": "Who's your fiercest gardening rival?",
+        "first": "A woman who claims she doesn't garden at all. Throws seeds down, forgets them, grows glorious things.",
         "replies": [
           [
-            "Had you changed much?",
-            "Enough. I thought I was helping; she missed her own choices."
+            "Does that annoy you?",
+            "Beyond all reason. I'm delighted for her in a very strained voice."
           ],
           [
-            "Did you put it back?",
-            "As closely as I could. Then I asked what she wanted."
+            "Have you asked her secret?",
+            "She says she hasn't one. Cruel woman."
           ],
           [
-            "Did you stay friends?",
-            "Yes. She still supervises my enthusiasm very effectively."
+            "Perhaps you're trying too hard.",
+            "Yes, that's precisely the sort of thing I'd prefer not to hear."
           ]
         ]
       },
       {
-        "title": "Growing for pleasure",
-        "opening": "What would you grow just for the pleasure of it?",
-        "first": "I keep a corner for flowers that do nothing but please me.",
+        "title": "The tree for a wedding",
+        "opening": "Why plant a tree when someone marries?",
+        "first": "So in twenty years there's somewhere to sit when they're tired of explaining how they met.",
         "replies": [
           [
-            "Why would they need another use?",
-            "Exactly. I wish everyone asked that question."
+            "Have you planted one?",
+            "For my parents. Father complained about its position for years. Now it's his favourite shade."
           ],
           [
-            "What colours do you choose?",
-            "Whatever looks cheerful after a miserable morning."
+            "What kind was it?",
+            "One that would grow well there. Romance shouldn't kill the tree."
           ],
           [
-            "Do you give flowers away?",
-            "Some. Keeping a few for myself took longer to learn."
+            "Would you plant one for yourself?",
+            "I'd need someone prepared to disagree about the position with me."
           ]
         ]
       }
     ],
     "greetings": [
-      "Orin. You needn't pretend to recognise plants to speak to me.",
-      "Corin. That removes several possible embarrassments.",
-      "Back again, Corin? I haven't assigned you any weeding.",
-      "Then this is already going well.",
-      "That's rather more shade than I planned for.",
-      "I'm Corin. Aurelius can stand clear of the beds."
+      "Careful. I'm deciding something and looking much wiser than I feel.",
+      "I'm Corin. Should I come back?",
+      "Ah, Corin. I decided. Changed my mind afterward, naturally.",
+      "That's progress of a kind.",
+      "Please tell me the dragon dislikes vegetables.",
+      "I'm Corin. I haven't asked him about every vegetable yet."
     ]
   },
   "Isolde": {
@@ -2492,70 +2492,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:26",
     "topics": [
       {
-        "title": "A walk too far",
-        "opening": "Have you ever walked farther than you meant to?",
-        "first": "I followed a pleasant lane until I realised I had no idea where it joined the road.",
+        "title": "The neighbour's secret",
+        "opening": "Have you ever learned a secret you wished you hadn't?",
+        "first": "A neighbour confessed she'd never liked my singing. We'd been friends for twelve years. That's an impressive endurance.",
         "replies": [
           [
-            "How did you get home?",
-            "Turned around. Less impressive than discovering a shortcut, considerably quicker."
+            "Did it hurt?",
+            "Yes. Then she said she'd still like me to come round."
           ],
           [
-            "Were you frightened?",
-            "A little. Enough to stop pretending I knew the way."
+            "Do you still sing for her?",
+            "Less loudly. Friendship involves negotiations."
           ],
           [
-            "Would you take it again?",
-            "Yes, with more daylight and less confidence."
+            "What made her confess?",
+            "I offered lessons. There's only so far loyalty can stretch."
           ]
         ]
       },
       {
-        "title": "Your aunt's recipe",
-        "opening": "How did you learn your aunt's recipe?",
-        "first": "My aunt measures ingredients by the bowl she happens to use. I borrowed the bowl before asking for the recipe.",
+        "title": "A room of your own",
+        "opening": "What would you do with a room nobody else used?",
+        "first": "Paint it yellow. Read untidy books. Leave a cup exactly where I put it.",
         "replies": [
           [
-            "Did that help?",
-            "Enormously. She had forgotten every other bowl was different."
+            "Untidy books?",
+            "Books I can disagree with in the margins."
           ],
           [
-            "Was the food good?",
-            "Eventually. My first attempt could have repaired a wall."
+            "Why yellow?",
+            "My mother hated it. I loved her, but I also love yellow."
           ],
           [
-            "Have you changed the recipe?",
-            "Only the measurements. Family diplomacy has limits."
+            "Do you need a whole room?",
+            "Probably not. But it's a pleasant size for a wish."
           ]
         ]
       },
       {
-        "title": "Knowing a town",
-        "opening": "What makes a town feel familiar to you?",
-        "first": "I like learning people's routes: who walks early, who stops everywhere, who always seems late.",
+        "title": "A stranger at the table",
+        "opening": "Would you invite a stranger to dinner?",
+        "first": "Depends whether they listen. A charming talker can be a very long supper.",
         "replies": [
           [
-            "Do you watch me too?",
-            "Only now you've given me permission to be curious."
+            "What would you ask them?",
+            "What surprised them that day. It usually produces something better than their title."
           ],
           [
-            "Does everyone have a pattern?",
-            "Until something changes. Then I ask whether they're all right."
+            "What surprised you today?",
+            "You asking me back. People often forget that part."
           ],
           [
-            "What's your own pattern?",
-            "A longer walk than necessary whenever the weather allows."
+            "Would I qualify?",
+            "So far. Don't grow overconfident before pudding."
           ]
         ]
       }
     ],
     "greetings": [
-      "Isolde. Are you exploring, or taking the long way to an errand?",
-      "Corin. At the moment, a little of both.",
-      "Corin. Another walk through town?",
-      "I was hoping to find familiar company.",
-      "Oh, those wings are real. I wasn't expecting that today.",
-      "I'm Corin. Aurelius surprises most people at first."
+      "Hello. You have the look of someone with a question.",
+      "I'm Corin. I've usually got several.",
+      "Corin, you've arrived before I finished wondering where you went.",
+      "Shall I spoil the mystery?",
+      "My word. I was expecting ordinary company today.",
+      "I'm Corin. So was I, until recently."
     ]
   },
   "Ada": {
@@ -2565,70 +2565,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:31",
     "topics": [
       {
-        "title": "Your anniversary",
-        "opening": "Does Rowan remember your anniversary?",
-        "first": "Rowan remembers the day we met perfectly. He remembers our wedding a day late.",
+        "title": "The argument Rowan lost",
+        "opening": "What's the longest argument you've had with Rowan?",
+        "first": "Whether 'nearly home' includes an hour's walk. He thinks distance changes if you're cheerful about it.",
         "replies": [
           [
-            "Do you remind him?",
-            "The day before. I prefer a pleasant evening to proving a point."
+            "Who won?",
+            "I stopped asking where he was and started asking what he could see."
           ],
           [
-            "How did you meet?",
-            "He returned a basket I'd dropped. Bramble later adopted the same habit, less helpfully."
+            "Does that work?",
+            "Better. A hill is harder to exaggerate than a feeling."
           ],
           [
-            "Is he romantic?",
-            "In his own way. He remembers which paths I like walking."
+            "Do you mind him being late?",
+            "I mind not knowing whether to worry or keep supper warm."
           ]
         ]
       },
       {
-        "title": "Bramble's loyalties",
-        "opening": "Who does Bramble listen to most?",
-        "first": "Bramble follows Rowan outdoors and follows me whenever food is involved. A thoroughly practical division.",
+        "title": "Ada's own adventure",
+        "opening": "What have you done that Rowan hasn't?",
+        "first": "Travelled without needing to explain every footprint. He finds this deeply suspicious.",
         "replies": [
           [
-            "Who trained him?",
-            "Both of us. He has trained us as well."
+            "Where did you go?",
+            "Visiting family. I remember the conversation. He asks about the terrain."
           ],
           [
-            "Does he behave indoors?",
-            "When he remembers he's indoors. Excitement occasionally obscures the distinction."
+            "Does that bother you?",
+            "Sometimes. I want him interested in what mattered to me."
           ],
           [
-            "Who's his favourite?",
-            "Whoever is leaving. He cannot bear being excluded from a walk."
+            "Have you told him?",
+            "Yes. He tries. So do I when the conversation involves droppings."
           ]
         ]
       },
       {
-        "title": "Time to myself",
-        "opening": "Do you get much time to yourself?",
-        "first": "I like an afternoon when neither husband nor dog needs locating.",
+        "title": "An old love letter",
+        "opening": "Did Rowan write you love letters?",
+        "first": "One. It began with the weather and took two pages to reach the point.",
         "replies": [
           [
-            "How do you spend it?",
-            "Reading, usually. Something without lost hunters."
+            "What was the point?",
+            "That he missed me. He'd disguised it brilliantly beneath rainfall."
           ],
           [
-            "Does Rowan understand?",
-            "He does when I explain before becoming irritated."
+            "Did you keep it?",
+            "Of course. I'm fond of the rainfall now."
           ],
           [
-            "Would you travel alone?",
-            "For a short visit. I'd enjoy choosing every stop myself."
+            "What did you write back?",
+            "That I missed him too. One line. He said it was too short."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ada. If Rowan has promised you something, let me hear the exact wording.",
-      "Corin. I'll remember to keep witnesses.",
-      "Corin, come in. This visit needn't involve my husband.",
-      "I came to speak with you.",
-      "So you're the one travelling with a dragon.",
-      "I'm Corin. His name is Aurelius."
+      "Are you after Rowan, or have I finally got a visitor of my own?",
+      "I'm Corin. I'd be glad to speak to you.",
+      "Corin! Good. Come and tell me something that isn't about muddy boots.",
+      "I'll choose carefully.",
+      "Oh. Rowan comes home with a dog; you've made rather different arrangements.",
+      "I'm Corin. I didn't plan the dragon part."
     ]
   },
   "Bren": {
@@ -2638,70 +2638,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:36",
     "topics": [
       {
-        "title": "Ordinary history",
-        "opening": "Do you keep records of ordinary people's lives?",
-        "first": "A feast's records list the guests but never the people who cooked. I'd rather know how they fed so many.",
+        "title": "History's missing meals",
+        "opening": "What would you ask someone from a hundred years ago?",
+        "first": "What they ate when nobody important was visiting. The records give everyone magnificent banquets and no breakfast.",
         "replies": [
           [
-            "Can you find out?",
-            "Sometimes household accounts survive. Butter leaves a better trail than glory."
+            "Why breakfast?",
+            "Because it happened every day. History neglects the things people actually did most."
           ],
           [
-            "Why does that matter?",
-            "Because a famous evening was also someone's exhausting shift."
+            "Would that change anything?",
+            "It would change how I pictured them. That's enough for a start."
           ],
           [
-            "Would anyone read that history?",
-            "I'd read it. A modest but dependable audience."
+            "I'd ask whether they were happy.",
+            "A harder question. I'd let them finish breakfast first."
           ]
         ]
       },
       {
-        "title": "The wrong date",
-        "opening": "What happens when a history gives the wrong date?",
-        "first": "I corrected a neighbour's date for a festival. Then found my own source had copied an error.",
+        "title": "The portrait nobody liked",
+        "opening": "Have you ever found an unflattering royal portrait?",
+        "first": "A written description of one. The painter apparently made the ruler look exactly like himself. Serious diplomatic error.",
         "replies": [
           [
-            "Did you tell him?",
-            "Immediately, though I practised a dignified version first."
+            "What happened to the painting?",
+            "Painted over. You can learn a great deal from a missing picture."
           ],
           [
-            "Was he pleased?",
-            "Delighted. He had remembered the rain; I'd trusted the ink."
+            "What happened to the painter?",
+            "The account doesn't say. I dislike that silence."
           ],
           [
-            "Do you trust memory now?",
-            "As evidence to examine, not an opponent to defeat."
+            "Could it be a joke?",
+            "Certainly. I wish the writer had been clearer about who was laughing."
           ]
         ]
       },
       {
-        "title": "What gets remembered",
-        "opening": "How do you decide which stories deserve remembering?",
-        "first": "My grandmother remembered a great procession chiefly because her shoes hurt.",
+        "title": "A future historian",
+        "opening": "What would you want someone to write about you?",
+        "first": "That I was pleasant to disagree with. I'm still gathering evidence in support of it.",
         "replies": [
           [
-            "Was it an important procession?",
-            "Very. Her account is the only one that made me laugh."
+            "You like arguments?",
+            "I like finding something out. I sometimes confuse the two."
           ],
           [
-            "Did you write that down?",
-            "With her permission. She insisted I include the blisters."
+            "What would they get wrong?",
+            "They'd imagine I knew where every book was."
           ],
           [
-            "Does that spoil the grandeur?",
-            "It adds a person who actually stood there."
+            "Do you?",
+            "Not remotely. Please don't spread that about."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bren. Tell me where you're from; I promise only one question to begin.",
-      "Corin, from Millwood. I'm counting.",
-      "Corin! I've remembered the question I forgot last time.",
-      "I suspected there would be another.",
-      "A dragon. My usual questions have become inadequate.",
-      "I'm Corin; this is Aurelius. Begin with an easy one."
+      "A new face. I promise not to ask your ancestry before your name.",
+      "Corin. That seems a fair exchange.",
+      "Corin! I've found something wonderfully inconclusive.",
+      "You sound pleased about that.",
+      "A dragon. This will make several confident books extremely embarrassing.",
+      "I'm Corin. He's already embarrassed a few confident people."
     ]
   },
   "Berta": {
@@ -2711,70 +2711,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:41",
     "topics": [
       {
-        "title": "Being a beginner",
-        "opening": "Is it difficult being a beginner again?",
-        "first": "I'm learning to draw. My first pear looked like a boot. It's pinned up at home.",
+        "title": "An opinion nobody wanted",
+        "opening": "What do you enjoy most about retirement?",
+        "first": "Giving an opinion and leaving before anyone asks me to do the work.",
         "replies": [
           [
-            "Why keep the bad drawing?",
-            "To make the next one look encouraging."
+            "Doesn't that feel unfair?",
+            "Enormously. I'm catching up on decades of fairness."
           ],
           [
-            "Who teaches you?",
-            "Mostly mistakes. An extremely punctual instructor."
+            "Do people still ask your advice?",
+            "Constantly. I make them bring their own chairs."
           ],
           [
-            "Will you draw people?",
-            "Eventually. I owe my neighbours better than the pear."
+            "What do you miss?",
+            "Being expected somewhere. Don't tell anyone; they'll find me a committee."
           ]
         ]
       },
       {
-        "title": "Advice withheld",
-        "opening": "Have you ever decided someone didn't need your advice?",
-        "first": "I still catch myself telling Wren how to arrange her work. She lets me finish, then asks whether I've retired.",
+        "title": "The patient who lied",
+        "opening": "Could you tell when people weren't being honest?",
+        "first": "A man once swore he'd rested his ankle. His boot had fresh roof tar on it.",
         "replies": [
           [
-            "Does that upset you?",
-            "Briefly. Then I remember why I wanted time off."
+            "Had he been on his roof?",
+            "His wife's roof, he said, as if that altered the ankle."
           ],
           [
-            "Do you help when asked?",
-            "Gladly. Being asked makes a considerable difference."
+            "Were you furious?",
+            "Mostly frightened. People underestimate how frightening it is to care for them."
           ],
           [
-            "Do you miss the customers?",
-            "Some. Others have improved tremendously in memory."
+            "What did you say?",
+            "That the roof could wait longer than his bones could."
           ]
         ]
       },
       {
-        "title": "The quiet house",
-        "opening": "Does the house feel too quiet sometimes?",
-        "first": "Retirement made my house unexpectedly quiet. I hadn't realised how much company came with work.",
+        "title": "Berta's unfinished business",
+        "opening": "Is there something you still want to learn?",
+        "first": "To swim. Everyone reacts as though I'd announced an intention to sprout wings.",
         "replies": [
           [
-            "What did you do?",
-            "Invited people without offering them anything medicinal."
+            "Why now?",
+            "Because 'someday' has begun to sound rather insulting."
           ],
           [
-            "Did they come?",
-            "Yes. Apparently some had liked me rather than my stock."
+            "Are you nervous?",
+            "Very. I intend to be nervous in shallow water with help."
           ],
           [
-            "Was that a surprise?",
-            "A pleasant one. Useful people can forget they're also enjoyable."
+            "Would you tell people afterward?",
+            "I may become unbearable about it. A risk worth taking."
           ]
         ]
       }
     ],
     "greetings": [
-      "Berta. If this is about remedies, Wren deserves the first question now.",
-      "Corin. I was hoping to meet you.",
-      "Corin, you've caught me doing something badly for pleasure.",
-      "That sounds worth hearing about.",
-      "Well. A dragon rather outclasses my afternoon plans.",
-      "I'm Corin. Aurelius and I won't disturb them for long."
+      "Speak up, dear. My ears are selective and haven't selected you yet.",
+      "I'm Corin. Can you hear me now?",
+      "Corin, yes. I remember the questions.",
+      "I've brought replacements.",
+      "Well, that's a creature I never had to fit through a consulting-room door.",
+      "I'm Corin. Fortunately he's feeling well."
     ]
   },
   "Della": {
@@ -2784,70 +2784,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:46",
     "topics": [
       {
-        "title": "The enormous marrow",
-        "opening": "What's the largest thing you've grown?",
-        "first": "I grew a marrow so large I couldn't carry it. For three days it was an achievement. Then it was a problem.",
+        "title": "The secret competition",
+        "opening": "Why do you get cross about the town flower display?",
+        "first": "Because I say I don't care who wins, then spend a week caring with tremendous energy.",
         "replies": [
           [
-            "How did you move it?",
-            "Asked two neighbours, who demanded a share. Fair payment."
+            "Why pretend?",
+            "Because losing gracefully seems easier if you never admitted entering properly."
           ],
           [
-            "Did it taste good?",
-            "Perfectly ordinary. A humbling quantity of ordinary."
+            "Have you won?",
+            "Once. Became appallingly gracious overnight."
           ],
           [
-            "Will you grow another?",
-            "Smaller ones. Ambition should fit through the kitchen door."
+            "Who knows you care?",
+            "Everybody. I'm the last to receive this information."
           ]
         ]
       },
       {
-        "title": "A plant you disliked",
-        "opening": "Have you ever kept a plant you didn't like?",
-        "first": "Someone gave me a plant I disliked. I kept it for years because throwing it away felt rude.",
+        "title": "A garden for nobody",
+        "opening": "Would you keep a garden if nobody saw it?",
+        "first": "Yes. But I'd probably tell passersby how little I cared whether they looked.",
         "replies": [
           [
-            "Did the giver notice?",
-            "Not once. I had constructed the entire obligation myself."
+            "You like an audience.",
+            "I like sharing pleasure. Also compliments. Both can be true."
           ],
           [
-            "What happened to it?",
-            "A neighbour loved it. We were both relieved."
+            "What do you enjoy alone?",
+            "The first smell after rain. Nobody has improved it by talking."
           ],
           [
-            "What do you grow now?",
-            "Things I actually want to look after. Revolutionary arrangement."
+            "Should I leave you to it?",
+            "Not now. It's quite pleasant talking to you."
           ]
         ]
       },
       {
-        "title": "The best garden visitor",
-        "opening": "Who is your favourite visitor to the garden?",
-        "first": "My favourite visitor asks one question and listens to the answer. Some ask six and leave during the first.",
+        "title": "The borrowed dress",
+        "opening": "Have you ever ruined something you borrowed?",
+        "first": "A dress, at a wedding. Sat on berry juice. Spent the evening backing away from people.",
         "replies": [
           [
-            "Would you rather work alone?",
-            "Sometimes. I say so, which surprises people."
+            "Did the owner notice?",
+            "Immediately. She'd done the same thing the previous year."
           ],
           [
-            "What's a good question?",
-            "What I'm trying this year. It leaves room for an unfinished answer."
+            "Was she angry?",
+            "She said I should have asked where to sit."
           ],
           [
-            "What are you trying?",
-            "Letting one patch grow less tidily. I'm resisting the urge to interfere."
+            "Did it wash out?",
+            "Most of it. We called the remainder family history."
           ]
         ]
       }
     ],
     "greetings": [
-      "Della. Sit if you like; standing politely makes me feel I should hurry.",
-      "Corin. I'm happy to stop for a while.",
-      "Corin. A conversation, or a comfortable silence?",
-      "Let's see which arrives first.",
-      "Your companion is beautiful. I'll admire him from here.",
-      "I'm Corin. Aurelius will appreciate the space."
+      "Hello! Please don't ask whether rain would be good for the garden. Everyone has.",
+      "I'm Corin. I can find a different question.",
+      "Corin, how nice. Have you brought news or an appetite?",
+      "Is there a wrong answer?",
+      "Oh, goodness. I'd better stop calling snails my largest problem.",
+      "I'm Corin. He's quite gentle when nobody startles him."
     ]
   },
   "Ewan": {
@@ -2857,70 +2857,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:51",
     "topics": [
       {
-        "title": "Two festival stories",
-        "opening": "Can two people tell the same festival story differently?",
-        "first": "One account calls a festival splendid. Another says the rain spoiled everything. Both writers attended.",
+        "title": "A hero's laundry",
+        "opening": "Why are you interested in famous people's ordinary days?",
+        "first": "Someone had to wash a hero's socks. I'd like to know whether they thought he was terribly impressive.",
         "replies": [
           [
-            "Which one is right?",
-            "One watched from a balcony. The other carried food across the square."
+            "Would that spoil the story?",
+            "Only if the story needed him never to smell."
           ],
           [
-            "Did they mention each other?",
-            "No. They hardly seem to describe the same afternoon."
+            "What would you ask them?",
+            "Whether he was kind when nobody needed him to be brave."
           ],
           [
-            "Does that happen often?",
-            "Enough that I now ask where the writer was standing."
+            "Would you ask the hero?",
+            "I'd rather ask the person doing the washing."
           ]
         ]
       },
       {
-        "title": "A ridiculous book",
-        "opening": "Have you read anything delightfully ridiculous lately?",
-        "first": "I enjoy terrible adventure stories. The hero always recognises poison by looking offended at it.",
+        "title": "The examination dream",
+        "opening": "Do you worry about your studies?",
+        "first": "I dream I'm asked a question and can only remember the page number. A very precise form of uselessness.",
         "replies": [
           [
-            "Does anyone ever die?",
-            "Only people who ignore the hero's offended expression."
+            "Has that really happened?",
+            "Once. The teacher was delighted by the page number. Less delighted by the silence."
           ],
           [
-            "Why keep reading?",
-            "I like knowing someone will escape a ridiculous predicament."
+            "What scares you most?",
+            "Discovering I only know how to remember, not how to think."
           ],
           [
-            "Would you write one?",
-            "I've tried. My villain keeps becoming the most sensible person."
+            "You're thinking about it now.",
+            "Yes. Inconveniently, there's no mark for that."
           ]
         ]
       },
       {
-        "title": "Admitting an error",
-        "opening": "Is it hard admitting you've got a story wrong?",
-        "first": "I defended a story so fiercely that admitting it was wrong felt worse than the error itself.",
+        "title": "The forbidden question",
+        "opening": "Is there a question you're embarrassed to ask?",
+        "first": "Whether I'm allowed to stop reading a book I hate. People speak as if abandoning it were a moral collapse.",
         "replies": [
           [
-            "What changed your mind?",
-            "A friend asked whether I wanted the truth or an audience."
+            "Of course you can stop.",
+            "That's reassuringly brisk."
           ],
           [
-            "Did you apologise?",
-            "Yes. She accepted, then made me read the whole source."
+            "What book?",
+            "One whose author takes six pages to enter a room."
           ],
           [
-            "Are you less certain now?",
-            "More precise about what I'm certain of. Less entertaining at arguments."
+            "Perhaps he gets lost.",
+            "If so, I wish he'd take the reader's advice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ewan. I've been arguing with a book. A person would be a welcome change.",
-      "Corin. I may argue back more promptly.",
-      "Corin! I found another account of that story.",
-      "Does this one agree with the first?",
-      "A dragon makes my reading seem terribly limited.",
-      "I'm Corin; this is Aurelius. Books miss quite a bit."
+      "Are you visiting? I've been trying to guess, which is a poor substitute for asking.",
+      "Yes. I'm Corin, from Millwood.",
+      "Corin! I have a question I haven't managed to make smaller.",
+      "I'll brace myself.",
+      "A living dragon. I suddenly have far too many questions.",
+      "I'm Corin. Let's begin with names and work upward."
     ]
   },
   "Elric": {
@@ -2930,70 +2930,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:56",
     "topics": [
       {
-        "title": "The apology letter",
-        "opening": "How do you put an apology into a letter?",
-        "first": "A customer wanted an apology that didn't admit fault. We spent an hour discovering what an apology was.",
+        "title": "The letter to nobody",
+        "opening": "Has anyone asked you to write to someone who couldn't answer?",
+        "first": "A woman wrote to her dead husband. She knew he'd never receive it. She wanted the words somewhere outside herself.",
         "replies": [
           [
-            "Did you write it?",
-            "After he agreed to say what he'd done."
+            "Did it help?",
+            "She stopped holding her breath while she dictated. I took that as something."
           ],
           [
-            "Was it accepted?",
-            "I don't know. Writing the letter wasn't the whole repair."
+            "What did she say?",
+            "That belongs to her."
           ],
           [
-            "Did he blame you?",
-            "Briefly. People sometimes expect ink to do difficult work for them."
+            "Did you charge her?",
+            "For the paper. She insisted on paying for the work too."
           ]
         ]
       },
       {
-        "title": "A letter never sent",
-        "opening": "Have you ever written a letter and kept it?",
-        "first": "I once wrote to an old friend and carried the letter for weeks. I worried it sounded foolish.",
+        "title": "A beautiful lie",
+        "opening": "Would you write something you knew was false?",
+        "first": "I've written 'I am quite well' for people who were plainly struggling. I ask whether they're sure.",
         "replies": [
           [
-            "Did you send it eventually?",
-            "Yes. She replied that she'd been trying to write too."
+            "Do you refuse?",
+            "Not that lie. Sometimes it's all the dignity they can afford that morning."
           ],
           [
-            "What had you wanted to say?",
-            "That I missed our conversations. A short truth with excessive preparation."
+            "Would you lie for money?",
+            "Depends on the lie. I won't help someone steal a life with a neat signature."
           ],
           [
-            "Do you keep her reply?",
-            "Folded in a book. I know exactly which page."
+            "What would you write for yourself?",
+            "Something less cautious than I usually say aloud."
           ]
         ]
       },
       {
-        "title": "Difficult handwriting",
-        "opening": "Can you make sense of anyone's handwriting?",
-        "first": "My writing grows worse when I'm excited. Customers assume a letter writer has beautiful personal correspondence.",
+        "title": "The sound of ink",
+        "opening": "Do you hear a person's voice when you read their letter?",
+        "first": "If I know them. My brother's letters sound impatient even when he only lists vegetables.",
         "replies": [
           [
-            "Does anyone complain?",
-            "My sister encloses guesses at the illegible words."
+            "What do yours sound like?",
+            "My sister says I sound dressed for a wedding."
           ],
           [
-            "Is she usually right?",
-            "Alarmingly. She knows my news before deciphering it."
+            "Are you that formal?",
+            "On paper. It's armour nobody can see."
           ],
           [
-            "Could you write more slowly?",
-            "Certainly. Then I'd lose half the pleasure of telling her."
+            "Would you like to change it?",
+            "Yes. I'm practising signing without apologising for taking up space."
           ]
         ]
       }
     ],
     "greetings": [
-      "Elric. Words for a letter, or words for their own sake?",
-      "I'm Corin. The second sort today.",
-      "Corin, have you brought news you can share?",
-      "A little. Nothing requiring a seal.",
-      "I could spend a page describing those wings and still fail.",
-      "I'm Corin, and his name is Aurelius. That's a useful first sentence."
+      "Need words written, or have you brought your own?",
+      "My own. I'm Corin.",
+      "Corin. A familiar voice makes a pleasant break from unfamiliar handwriting.",
+      "I'll try to speak legibly.",
+      "I shall struggle to describe this in a letter without sounding drunk.",
+      "I'm Corin. You can blame me for the dragon if necessary."
     ]
   },
   "Mara": {
@@ -3003,70 +3003,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:61",
     "topics": [
       {
-        "title": "The unpopular loaf",
-        "opening": "Have you ever baked a loaf nobody wanted?",
-        "first": "I made a loaf with a flavour I adored. Nobody bought a second one. I ate my conviction for a week.",
+        "title": "The baker's rival",
+        "opening": "Who makes the best food in Thornwell?",
+        "first": "For bread, me. For anything I can eat sitting down while somebody else cooks, almost anyone.",
         "replies": [
           [
-            "What flavour?",
-            "Far too much fennel. I now measure enthusiasm."
+            "Would you say that publicly?",
+            "The bread part, certainly."
           ],
           [
-            "Did you stop experimenting?",
-            "No. Smaller batches make failure considerably more affordable."
+            "Do you ever get cooked for?",
+            "My sister tries. She asks for instructions every few minutes, which somewhat defeats the pleasure."
           ],
           [
-            "Did anyone like it?",
-            "My uncle claimed to. He also owed me money."
+            "What would you ask for?",
+            "Something I don't know how to make. Then I'd have to keep quiet."
           ]
         ]
       },
       {
-        "title": "A borrowed recipe",
-        "opening": "Do you borrow recipes from other bakers?",
-        "first": "A neighbour shared a recipe and asked me to use her mother's name for it.",
+        "title": "The rumour of wealth",
+        "opening": "Why do people think bakers are rich?",
+        "first": "They count the coins and forget the flour, the fuel, the rent. A tray full of food looks like money until you sell it.",
         "replies": [
           [
-            "Did you agree?",
-            "Of course. It was easier than pretending I invented everything."
+            "Does that make you bitter?",
+            "On rent day. I recover by breakfast."
           ],
           [
-            "Did it sell well?",
-            "Very. The name gave people a story to ask about."
+            "What do you enjoy about it?",
+            "Feeding someone who wasn't sure they could afford to eat."
           ],
           [
-            "Do you share your own?",
-            "Most. A recipe isn't the same as doing the work."
+            "Do people repay you?",
+            "Sometimes in coin. Sometimes by coming back when they're doing better."
           ]
         ]
       },
       {
-        "title": "The last customer",
-        "opening": "Do you ever stay open for one last customer?",
-        "first": "One regular arrived just before closing because he disliked crowded shops. I nearly mistook it for carelessness.",
+        "title": "Mara's birthday rule",
+        "opening": "Why won't you bake your own birthday cake?",
+        "first": "Because I want someone to make it without me correcting them. My birthday present is resisting the urge.",
         "replies": [
           [
-            "How did you find out?",
-            "I asked why he always looked relieved when everyone left."
+            "What if it's awful?",
+            "Then I eat an awful cake made for me. I've had worse birthdays."
           ],
           [
-            "Did you change anything?",
-            "Kept his order aside. No grand arrangement needed."
+            "Does anyone dare bake it?",
+            "My niece. She fears nothing, including quantities."
           ],
           [
-            "Does he talk more now?",
-            "A little. He shouldn't have to become chatty to buy bread."
+            "What does she put in it?",
+            "Everything she considers festive. Last year was unusually crunchy."
           ]
         ]
       }
     ],
     "greetings": [
-      "Mara. If you're deciding whether to ask a question, ask before I start talking about bread.",
-      "Corin. Too late for the bread warning, perhaps.",
-      "Corin! I have an opinion ready, if needed.",
-      "I'll try to choose a suitable subject.",
-      "A dragon will certainly make my regulars forget their complaints.",
-      "I'm Corin. Aurelius may inspire new ones."
+      "Hello, stranger. You've arrived with excellent timing or terrible hunger.",
+      "I'm Corin. Possibly both.",
+      "Corin! I remembered the name before you said it.",
+      "That's more than I manage sometimes.",
+      "Please tell me a dragon doesn't count as one hungry customer.",
+      "I'm Corin. I wouldn't trust that arithmetic either."
     ]
   },
   "Kit": {
@@ -3076,70 +3076,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:66",
     "topics": [
       {
-        "title": "The wrong recipient",
-        "opening": "Have you ever delivered a message to the wrong person?",
-        "first": "Two people named Mara lived on my route. I once delivered a birthday greeting to the wrong one.",
+        "title": "The fastest route",
+        "opening": "Why do you know so many shortcuts?",
+        "first": "Because adults keep saying 'just a quick errand'. I decided to make the lie true.",
         "replies": [
           [
-            "Did she return it?",
-            "After enjoying being remembered. I felt dreadful."
+            "What's your favourite shortcut?",
+            "The one where nobody calls my name halfway through."
           ],
           [
-            "What did you do?",
-            "Explained, then returned on her actual birthday with a greeting."
+            "Do you ever get lost?",
+            "Briefly. I call it investigating."
           ],
           [
-            "Do you check names now?",
-            "Names, households, and occasionally relatives. Embarrassment improves a system."
+            "What if someone asks you to hurry?",
+            "I ask whether they want speed or their parcel intact."
           ]
         ]
       },
       {
-        "title": "A slow walk",
-        "opening": "Do you enjoy walking when you aren't making deliveries?",
-        "first": "On free evenings I walk without anything to deliver. At first I kept speeding up out of habit.",
+        "title": "A message for yourself",
+        "opening": "What message would you like someone to bring you?",
+        "first": "That a whole day belongs to me. No errands hidden inside favours.",
         "replies": [
           [
-            "Can you relax now?",
-            "Mostly. I still judge streets by how quickly I could cross them."
+            "What would you do?",
+            "Follow a road without carrying anything for anyone."
           ],
           [
-            "Where do you like walking?",
-            "Anywhere with enough room to stop without blocking someone."
+            "Would you come back?",
+            "Of course. I'd want to tell somebody where I'd been."
           ],
           [
-            "Would you choose different work?",
-            "Some days. Then I carry good news and remember why I like it."
+            "Could you take a day off?",
+            "I'm learning to say no without adding a long explanation."
           ]
         ]
       },
       {
-        "title": "A sealed message",
-        "opening": "Are you ever curious about the messages you carry?",
-        "first": "People ask what I'm carrying. I tell them whose door I'm looking for, not what's inside.",
+        "title": "Kit's great invention",
+        "opening": "What would make your work easier?",
+        "first": "A town where everyone stayed at the address written on their letters. Wild ambition, I know.",
         "replies": [
           [
-            "Are you ever curious?",
-            "Constantly. Curiosity doesn't open the seal."
+            "You'd be out of work.",
+            "I'd deliver congratulations to everybody for being findable."
           ],
           [
-            "Has someone offered you money?",
-            "Once. I remember him much better than the amount."
+            "What about a flying messenger?",
+            "I suppose I'd have to learn to wave professionally."
           ],
           [
-            "What if it's urgent?",
-            "Then it reaches the right person sooner. It doesn't become everyone's business."
+            "Do you like the work at all?",
+            "Most days. Complaining is the part they let me do sitting down."
           ]
         ]
       }
     ],
     "greetings": [
-      "Kit. If this is a message, give me the name before the description of the house.",
-      "Corin. Luckily, I'm delivering myself.",
-      "Corin, you're standing still. An excellent idea.",
-      "I thought a messenger might appreciate it.",
-      "Wings! Do you know how many hills I've climbed today?",
-      "I'm Corin. Aurelius isn't accepting delivery work."
+      "If you're asking for directions, I charge one interesting fact.",
+      "I'm Corin. Does being from Millwood count?",
+      "Corin! Still moving, then?",
+      "Whenever nobody stops me with an interesting question.",
+      "Can the dragon deliver messages? Asking for professional reasons.",
+      "I'm Corin. Let's introduce ourselves before recruiting him."
     ]
   },
   "Mabel": {
@@ -3149,70 +3149,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:71",
     "topics": [
       {
-        "title": "The itchy masterpiece",
-        "opening": "Have you ever made something beautiful that nobody could bear to wear?",
-        "first": "I wove a beautiful scarf from wool that irritated everyone's neck. Beauty had failed a basic inspection.",
+        "title": "The family portrait",
+        "opening": "Why did you leave yourself out of a family hanging?",
+        "first": "I was the one making it. Somehow I remembered everybody except myself.",
         "replies": [
           [
-            "Did you sell it?",
-            "No. It became a wall hanging."
+            "Did someone notice?",
+            "My youngest asked where I'd gone. I had no good answer."
           ],
           [
-            "Could you soften it?",
-            "Not enough. I tried before admitting the problem."
+            "Did you add yourself?",
+            "Yes. Larger than strictly necessary."
           ],
           [
-            "What do you check first now?",
-            "How something feels against skin. Admiration can wait."
+            "What did your family say?",
+            "That it looked more like us. I hadn't realised how much I wanted to hear that."
           ]
         ]
       },
       {
-        "title": "Choosing a gift",
-        "opening": "How do you choose something to make as a gift?",
-        "first": "My sister likes colours I would never wear. I finally learned to make her presents she would choose.",
+        "title": "A colour you hate",
+        "opening": "Is there a colour you can't stand?",
+        "first": "A particular dull brown. I wore it for years because it was practical. I came to resent its good sense.",
         "replies": [
           [
-            "Was she polite before?",
-            "Painfully. She wore them whenever I visited."
+            "What do you wear now?",
+            "Whatever pleases me. Practicality hasn't stopped the sun rising."
           ],
           [
-            "Did she tell you?",
-            "She asked for orange so firmly I recognised an intervention."
+            "Did anyone object?",
+            "Several people. None offered to live my life for me, so I ignored them."
           ],
           [
-            "Do you enjoy making orange things?",
-            "For her, yes. She looks delighted instead of dutiful."
+            "Does colour matter that much?",
+            "On a hard morning, a little. Little things get more opportunities than grand ones."
           ]
         ]
       },
       {
-        "title": "A pattern remembered",
-        "opening": "Are there patterns you can make from memory?",
-        "first": "I recreated a pattern from my grandmother's cloth, then found the original. Mine was completely different.",
+        "title": "The traveller's cloth",
+        "opening": "Can you tell where someone comes from by their clothes?",
+        "first": "Sometimes. More often I can tell who repaired them with care.",
         "replies": [
           [
-            "Were you disappointed?",
-            "At first. Then I realised I'd remembered the colours I loved."
+            "How?",
+            "The hidden stitches. The ones nobody expects to be admired."
           ],
           [
-            "Did you undo it?",
-            "No. I labelled the two honestly."
+            "Would you recognise Nan's work?",
+            "Not yet. But I expect you would."
           ],
           [
-            "Which do you prefer?",
-            "Hers for the memory, mine because I made it."
+            "What would mine tell you?",
+            "That you've had a life before this conversation. People forget that about strangers."
           ]
         ]
       }
     ],
     "greetings": [
-      "Mabel. You can admire a colour without knowing its proper name.",
-      "Corin. That's fortunate for me.",
-      "Corin! You look as though you've been somewhere worth describing.",
-      "I'll begin with the parts I can name.",
-      "Those scales would be impossible to capture in plain thread.",
-      "I'm Corin, and this is Aurelius. He changes with the light."
+      "A visitor. How nice to meet someone who hasn't already heard my opinion.",
+      "I'm Corin. I'll hear it fresh.",
+      "Corin, you've come back. I didn't frighten you off, then.",
+      "Should you have?",
+      "Well, I've woven stranger creatures. None of them breathed at me.",
+      "I'm Corin. This one's rather more alive."
     ]
   },
   "Maren": {
@@ -3222,70 +3222,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "03-thornwell.txt:76",
     "topics": [
       {
-        "title": "The tired guest",
-        "opening": "How can you tell when a guest needs some kindness?",
-        "first": "A traveller asked the same direction three times. I finally walked him to the door instead of repeating it louder.",
+        "title": "The guest book",
+        "opening": "Why keep names after people leave?",
+        "first": "A woman once returned and asked whether her husband had stayed with us years before. I could tell her he had.",
         "replies": [
           [
-            "Was he embarrassed?",
-            "Less once I stopped acting as though he was testing me."
+            "Was she looking for him?",
+            "No. He'd died. She was visiting places he'd told her about."
           ],
           [
-            "Did he find his room?",
-            "Yes, and slept through breakfast."
+            "What else could you tell her?",
+            "That he'd asked for a second blanket and praised breakfast. Small things. They mattered."
           ],
           [
-            "Do you get impatient?",
-            "Naturally. I try not to make tired people manage my temper too."
+            "Do you remember everybody?",
+            "No. That's why I write things down."
           ]
         ]
       },
       {
-        "title": "What you can promise",
-        "opening": "What can a traveller count on at your inn?",
-        "first": "I can promise a prepared room. I cannot promise that every other guest will sleep without snoring.",
+        "title": "The room nobody wanted",
+        "opening": "Have you ever had a room people thought was haunted?",
+        "first": "A shutter knocked at night. The first guest called it a ghost. After that every draught had a personality.",
         "replies": [
           [
-            "Do people ask that?",
-            "They ask for silence while explaining loudly how lightly they sleep."
+            "Did you fix the shutter?",
+            "Yes. Lost my most interesting advertisement."
           ],
           [
-            "What do you do?",
-            "Offer the quietest place available and tell them its limits."
+            "Did anyone want the ghost room?",
+            "More people than wanted the ordinary ones."
           ],
           [
-            "Would you stay at your own inn?",
-            "Gladly, if someone else answered the door."
+            "Were you tempted to leave it?",
+            "Briefly. Then I imagined being the tired guest trying to sleep."
           ]
         ]
       },
       {
-        "title": "A returning traveller",
-        "opening": "Do you remember guests when they come back?",
-        "first": "A woman returned after ten years and remembered exactly where she'd sat at breakfast. I'd forgotten her name.",
+        "title": "A holiday in your own town",
+        "opening": "Where would you go on holiday?",
+        "first": "Somewhere I'd never have to ask whether anyone needed another towel.",
         "replies": [
           [
-            "Did you pretend to remember?",
-            "No. She told me, and we began again."
+            "Would you stay at an inn?",
+            "Yes. I'd be a dreadful guest. I'd notice everything."
           ],
           [
-            "What had she remembered?",
-            "I'd lent her dry socks after a miserable crossing."
+            "What would make you happy?",
+            "Someone telling me when dinner was ready."
           ],
           [
-            "Did you still have the socks?",
-            "She brought them back. I hadn't expected such determined honesty."
+            "Could someone mind this place?",
+            "They could. I have to stop treating that possibility as an insult."
           ]
         ]
       }
     ],
     "greetings": [
-      "Maren. Rest first, questions second, unless the question is where to rest.",
-      "I'm Corin. That sounds like a sensible order.",
-      "Corin. You needn't rent a room to say hello.",
-      "Then hello, properly.",
-      "A dragon is a new kind of arrival for me.",
-      "I'm Corin. Aurelius can wait where there's room."
+      "Welcome. Before you ask, people who say they don't snore usually do.",
+      "I'm Corin. I'll make no promises.",
+      "Corin, back through Thornwell? It's good to have a name for a returning face.",
+      "It's good to be remembered.",
+      "Oh, dear. My room sizes have become a sensitive subject.",
+      "I'm Corin. We'll keep the dragon outside."
     ]
   },
   "Asta": {
@@ -3295,70 +3295,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:1",
     "topics": [
       {
-        "title": "Predicting rain",
-        "opening": "How do you decide whether rain is coming?",
-        "first": "I predicted a dry afternoon, announced it confidently, and got drenched. My notes survived better than my reputation.",
+        "title": "The moth at the window",
+        "opening": "Why do moths interest you?",
+        "first": "One kept visiting my window. I gave it a name before discovering there were at least seven of them.",
         "replies": [
           [
-            "What went wrong?",
-            "I trusted one sign and ignored the changing wind."
+            "Did they all keep the name?",
+            "Yes. They seemed unlikely to complain."
           ],
           [
-            "Did anyone follow your advice?",
-            "My brother. He discusses it whenever clouds appear."
+            "Could you tell them apart?",
+            "Eventually. I was embarrassed by how little I'd looked before naming them."
           ],
           [
-            "Will you try again?",
-            "Yes. Next time I'll distinguish a guess from a promise."
+            "What was the name?",
+            "Professor. They looked exceedingly busy without explaining themselves."
           ]
         ]
       },
       {
-        "title": "Watching snails",
-        "opening": "What do you learn from watching snails?",
-        "first": "Snails are surprisingly difficult subjects. They look stationary until you turn away.",
+        "title": "Asta's frightening discovery",
+        "opening": "Have you ever found something you were afraid to touch?",
+        "first": "A shed snake skin. I knew what it was. My hands took longer to be convinced.",
         "replies": [
           [
-            "What are you studying?",
-            "Which surfaces they prefer. So far, my notebook appears popular."
+            "Did you pick it up?",
+            "With a stick first. Bravery arrived in stages."
           ],
           [
-            "Do you mark them?",
-            "I recognise a few shells. I'd rather leave them undisturbed."
+            "What did you do with it?",
+            "Drew it, then left it. It didn't need to become my possession."
           ],
           [
-            "Have you learned anything?",
-            "That ten minutes is shorter when you're not waiting for a snail."
+            "Would you touch a live snake?",
+            "Not without knowing what I was doing. Curiosity isn't a qualification."
           ]
         ]
       },
       {
-        "title": "A failed experiment",
-        "opening": "Have any of your experiments gone badly?",
-        "first": "I planted seeds in three different soils and forgot to label the pots.",
+        "title": "The wrong sort of book",
+        "opening": "Why don't you read stories very often?",
+        "first": "I get distracted wondering whether the animals are behaving plausibly. Ruins the suspense.",
         "replies": [
           [
-            "Could you work out which was which?",
-            "Not reliably. Inventing certainty wouldn't rescue the experiment."
+            "Even talking animals?",
+            "Especially those. They all sound like disappointed schoolteachers."
           ],
           [
-            "Did you begin again?",
-            "Yes. With labels before seeds."
+            "What would your talking animals say?",
+            "Probably ask us to leave."
           ],
           [
-            "Were you annoyed?",
-            "Furious. Mostly because the mistake was so preventable."
+            "Would you write that book?",
+            "It would be very short and refreshingly rude."
           ]
         ]
       }
     ],
     "greetings": [
-      "Asta. Can you tell rain is coming, or do you just get wet like I do?",
-      "I'm Corin. Usually the second.",
-      "Corin! I've revised my prediction.",
-      "Should I bring a coat?",
-      "A dragon! I'd better ask permission before beginning the questions.",
-      "I'm Corin. Aurelius and I appreciate being asked."
+      "Sorry, I was watching something very small. Hello.",
+      "I'm Corin. I can wait for the small thing.",
+      "Corin! You haven't stepped on anything interesting, have you?",
+      "Not knowingly.",
+      "Oh. My notes are about to become entirely inadequate.",
+      "I'm Corin. This is a larger interruption than usual."
     ]
   },
   "Colm": {
@@ -3368,70 +3368,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:6",
     "topics": [
       {
-        "title": "Salt and confidence",
-        "opening": "How did you learn to judge the salt in a meal?",
-        "first": "I salted a soup twice because I forgot doing it the first time. Confidence made the second handful particularly generous.",
+        "title": "A meal in the dark",
+        "opening": "Have you ever eaten without knowing what it was?",
+        "first": "During a powerfully smoky supper. I praised the onions. They were apples. Nobody corrected me until I'd explained my expertise.",
         "replies": [
           [
-            "Could you save it?",
-            "By making enough unsalted soup to feed the neighbours."
+            "Was it good?",
+            "Excellent. I was the only bad ingredient."
           ],
           [
-            "Did they discover why?",
-            "I told them before anyone praised my generosity."
+            "Did you ask for the recipe?",
+            "Eventually. Pride delayed the paperwork."
           ],
           [
-            "What do you do now?",
-            "Taste before adding. A revolutionary technique I once considered unnecessary."
+            "Would you eat it again?",
+            "In daylight, ideally."
           ]
         ]
       },
       {
-        "title": "Cooking for strangers",
-        "opening": "How do you cook for people whose tastes you don't know?",
-        "first": "I ask guests what they dislike. Asking what they love produces a much longer and less useful answer.",
+        "title": "The invitation you feared",
+        "opening": "Have you ever dreaded a dinner invitation?",
+        "first": "Yes. A man invited six people to admire his new chairs. The food was merely a reason to sit in them.",
         "replies": [
           [
-            "Do people tell you honestly?",
-            "Eventually. Nobody wants to offend the cook before eating."
+            "Were the chairs comfortable?",
+            "No. We were apparently supposed to admire them standing up."
           ],
           [
-            "What's your own dislike?",
-            "Being surprised by sweetness where I expected savoury food."
+            "Did you say anything?",
+            "I praised his courage in choosing them."
           ],
           [
-            "Would you cook separate meals?",
-            "If practical. Supper shouldn't become a test of obedience."
+            "Was that kind?",
+            "It was the kindest available sentence."
           ]
         ]
       },
       {
-        "title": "A meal remembered",
-        "opening": "Is there a meal you still think about?",
-        "first": "My best meal was bread and cheese after a day walking in rain. I've failed to recreate it indoors.",
+        "title": "A taste of childhood",
+        "opening": "What food do you miss most?",
+        "first": "Burnt porridge. My father was a terrible cook. After he died I discovered nobody burned it quite the same way.",
         "replies": [
           [
-            "Maybe hunger was the ingredient.",
-            "And dry socks. Difficult things to put in a recipe."
+            "Have you tried making it?",
+            "Yes. I keep making it better by accident."
           ],
           [
-            "What cheese was it?",
-            "I don't remember. An inconvenient flaw in the research."
+            "Did you like it then?",
+            "No. I liked him sitting beside me while I complained."
           ],
           [
-            "Would you walk through rain again?",
-            "For pleasure, no. For an exceptionally convincing cheese, perhaps."
+            "Would you serve it to someone?",
+            "Only someone willing to hear why."
           ]
         ]
       }
     ],
     "greetings": [
-      "Colm. Have you eaten? I'm collecting opinions, not offering to feed the whole street.",
-      "Corin. I can contribute an opinion.",
-      "Corin! I have a new theory about supper.",
-      "Is it edible yet?",
-      "I was about to ask how many portions you need. Perhaps introductions first.",
-      "I'm Corin. This is Aurelius, who won't fit an ordinary portion."
+      "You look like someone with an opinion about supper.",
+      "I'm Corin. Usually a favourable one.",
+      "Corin, I've had an idea. Nobody's suffered from it yet.",
+      "That sounds cautiously promising.",
+      "I was going to ask how many you're feeding. The answer has become complicated.",
+      "I'm Corin. His appetite needs its own conversation."
     ]
   },
   "Tessa": {
@@ -3441,70 +3441,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:11",
     "topics": [
       {
-        "title": "The wrong tempo",
-        "opening": "Have you ever started a tune at completely the wrong speed?",
-        "first": "I played a dance too quickly and watched everyone become cross with their feet.",
+        "title": "The tune without a name",
+        "opening": "Have you ever forgotten where a tune came from?",
+        "first": "One follows me everywhere. My mother hummed it, but she couldn't remember who taught her.",
         "replies": [
           [
-            "Did they ask you to slow down?",
-            "One woman clapped the proper rhythm at me. Very effective criticism."
+            "Does that bother you?",
+            "Sometimes. I feel as though I'm carrying somebody's letter without the address."
           ],
           [
-            "Were you embarrassed?",
-            "Briefly. Then relieved the floor was moving together again."
+            "Could it be hers?",
+            "Perhaps. She never believed anything she made deserved keeping."
           ],
           [
-            "Do you prefer listening music?",
-            "It depends on the room. People dancing tell you immediately what works."
+            "Will you keep playing it?",
+            "Yes. Even without a name, it knows where to go."
           ]
         ]
       },
       {
-        "title": "A child's request",
-        "opening": "Do children ask you for particular songs?",
-        "first": "A child asked me to play a tune I'd never heard. She sang three notes and expected the rest.",
+        "title": "An audience of one",
+        "opening": "Who's the best audience you've ever had?",
+        "first": "A tired woman who closed her eyes halfway through. I thought she'd fallen asleep. She asked me not to stop.",
         "replies": [
           [
-            "Could you recognise it?",
-            "Her father eventually supplied another three. We built it together."
+            "What did you play?",
+            "Something quiet. It hardly mattered which tune."
           ],
           [
-            "Did she like your version?",
-            "She corrected the ending with complete authority."
+            "Did she explain afterward?",
+            "No. I didn't ask her to pay for the song with a story."
           ],
           [
-            "Would you play it again?",
-            "Yes. I wrote it down before everyone forgot their contribution."
+            "Was she grateful?",
+            "She looked rested. I liked that better than applause."
           ]
         ]
       },
       {
-        "title": "Practising alone",
-        "opening": "Do you enjoy practising when nobody's listening?",
-        "first": "The awkward part of practice is repeating the bit you dislike instead of the bit you already play well.",
+        "title": "A travelling argument",
+        "opening": "What's hardest about travelling with other musicians?",
+        "first": "Agreeing whether a silence is peaceful or a chance to practise.",
         "replies": [
           [
-            "How do you make yourself do it?",
-            "Slowly, and before I let myself play something pleasant."
+            "Which side are you on?",
+            "Depends who is practising."
           ],
           [
-            "Do mistakes still bother you?",
-            "Yes. Less when I recognise one I know how to fix."
+            "Do you quarrel often?",
+            "About small things until someone admits they're homesick."
           ],
           [
-            "What do you enjoy most?",
-            "When a difficult passage finally feels like music instead of work."
+            "What helps?",
+            "Eating. It's remarkable how many artistic disputes require a meal."
           ]
         ]
       }
     ],
     "greetings": [
-      "Tessa. You may speak; I'm not counting that as interrupting a performance.",
-      "I'm Corin. I was hoping to meet you.",
-      "Corin, a familiar face in a new day.",
-      "It's good to hear a familiar voice.",
-      "A dragon in the audience. That may test my concentration.",
-      "I'm Corin. Aurelius is usually a patient listener."
+      "Hello. If you're about to request a song, tell me your name first.",
+      "Corin. No request yet.",
+      "Corin! A listener I recognise.",
+      "And a musician I can find by ear.",
+      "A dragon. I wonder what sort of music he hears in his head.",
+      "I'm Corin. I could ask him, though he may be biased."
     ]
   },
   "Rowan the Hunter": {
@@ -3514,70 +3514,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:16",
     "topics": [
       {
-        "title": "Reading a trail",
-        "opening": "What do you look for when you follow a trail?",
-        "first": "A track tells you where something was. Young hunters often mistake that for knowing where it is.",
+        "title": "A dog's judgement",
+        "opening": "Has Bramble ever disliked someone you liked?",
+        "first": "A charming fellow offered to buy him. Bramble sat behind Ada and refused to come out.",
         "replies": [
           [
-            "Have you followed the wrong trail?",
-            "For half a day. I was following yesterday's deer with today's enthusiasm."
+            "Would you have sold him?",
+            "Never. I was annoyed with myself for laughing at the offer."
           ],
           [
-            "How do you tell the age?",
-            "Weather, disturbed ground, what crosses it. Then admit when you can't tell."
+            "Could he understand?",
+            "He understood the reaching hand. That was enough."
           ],
           [
-            "Does Bramble help?",
-            "His nose catches what my eyes miss. I still have to use my judgement."
+            "Did Ada like the man?",
+            "Not after that. Our household reached a swift agreement."
           ]
         ]
       },
       {
-        "title": "Ada's patience",
-        "opening": "Does Ada mind how often you're out in the woods?",
-        "first": "Ada says I can describe a woodland path perfectly and forget where I left my coat.",
+        "title": "The first lie to Ada",
+        "opening": "Have you ever lied to Ada about a bad day?",
+        "first": "Said I'd had an easy walk. Then fell asleep holding a spoon. Not my most convincing performance.",
         "replies": [
           [
-            "Is she right?",
-            "Frequently. I dislike how often that improves her argument."
+            "Why lie?",
+            "Didn't want her worrying. She disliked being excluded more."
           ],
           [
-            "What does she enjoy doing?",
-            "Reading and walking where nobody is chasing anything."
+            "What did she say?",
+            "That she could bear hearing I'd struggled. She couldn't bear having to guess."
           ],
           [
-            "Do you join her?",
-            "When invited. A married person may still want an afternoon alone."
+            "Do you tell her now?",
+            "More. Old habits don't retire just because you've embarrassed them."
           ]
         ]
       },
       {
-        "title": "Knowing when to stop",
-        "opening": "How do you decide when to turn back?",
-        "first": "I've turned back from hunts that looked promising. Bad light makes good tracks useless.",
+        "title": "The hunter's mercy",
+        "opening": "Have you ever let an animal go when you needed the food?",
+        "first": "Yes. Once I'd made a poor shot possible, not a clean one. Hunger didn't make my hands steadier.",
         "replies": [
           [
-            "Do you regret it?",
-            "Until I get home. Warmth improves my judgement retroactively."
+            "Was turning back hard?",
+            "Very. Being hungry with a reason is still being hungry."
           ],
           [
-            "What if you've walked all day?",
-            "Then I'm tired enough to make worse decisions."
+            "Did anyone blame you?",
+            "I blamed myself enough without recruiting help."
           ],
           [
-            "Would you trust Bramble's warning?",
-            "I'd stop and look. Ignoring him because I'm impatient would be foolish."
+            "Would you do the same again?",
+            "Yes. I need to be able to live with what I do out there."
           ]
         ]
       }
     ],
     "greetings": [
-      "Rowan. If Bramble has stolen your attention, I understand completely.",
-      "Corin. He's very persuasive.",
-      "Corin. It's good to see you without a search to organise.",
-      "I prefer this sort of meeting too.",
-      "So this is your dragon companion. I'll let him approach first.",
-      "Aurelius appreciates that. He likes deciding his own introductions."
+      "Rowan. Are you looking for someone, lad?",
+      "Corin. Perhaps you can help.",
+      "Corin! Good to see you walking into town of your own accord.",
+      "Better than being dragged by a dog.",
+      "I've hunted all my life and never expected a dragon to come looking for conversation.",
+      "I'm Corin. We're hoping for a friendly welcome."
     ]
   },
   "Osric": {
@@ -3587,70 +3587,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:21",
     "topics": [
       {
-        "title": "A disappointing ending",
-        "opening": "Has a book ever let you down at the end?",
-        "first": "A hero escaped because a stranger arrived with exactly the right key. We'd never heard of him before.",
+        "title": "The margin argument",
+        "opening": "Why do you write objections in your books?",
+        "first": "Because an author shouldn't get the last word just by being absent.",
         "replies": [
           [
-            "That sounds rather convenient.",
-            "Convenient for the author. Infuriating for me."
+            "Do you ever change your mind?",
+            "Then I argue with my earlier handwriting."
           ],
           [
-            "Could the ending be improved?",
-            "Introduce the stranger earlier. Give me a reason to care."
+            "Doesn't it ruin the book?",
+            "It makes the book mine. I leave borrowed ones in peace."
           ],
           [
-            "Why finish the book?",
-            "I hoped the author had thought further ahead than I had."
+            "What do you argue about?",
+            "Usually someone declaring that people are simple. People who say that make me suspicious."
           ]
         ]
       },
       {
-        "title": "Cloth that lasts",
-        "opening": "How can you tell whether a piece of cloth will last?",
-        "first": "A customer wanted delicate cloth for a child's everyday coat. I suggested something that could survive a hedge.",
+        "title": "The reader at dinner",
+        "opening": "Have you ever read at the table?",
+        "first": "Once I was asked to pass the salt and handed over my book. It was a much more interesting contribution.",
         "replies": [
           [
-            "Did they listen?",
-            "After I described washing it. Practicality won that round."
+            "Did anyone appreciate it?",
+            "My sister put salt on the page. Fair criticism."
           ],
           [
-            "Did the child choose anything?",
-            "The colour. Bright enough to locate across a field."
+            "Have you stopped?",
+            "At family meals. Supper alone remains negotiable."
           ],
           [
-            "What would you choose?",
-            "Something comfortable. Clothes should allow a person to forget them."
+            "What was so interesting?",
+            "I've forgotten. I remember the salt vividly."
           ]
         ]
       },
       {
-        "title": "Reading aloud",
-        "opening": "Do you enjoy reading aloud to someone?",
-        "first": "I read aloud when a sentence refuses to make sense. Sometimes it remains nonsense with more volume.",
+        "title": "An unwritten ending",
+        "opening": "Would you ever write a story yourself?",
+        "first": "I have an ending. Unfortunately, nobody in it has done anything to deserve it yet.",
         "replies": [
           [
-            "Does that happen often?",
-            "Often enough that my neighbours recognise the tone."
+            "What happens at the end?",
+            "Someone comes home. That's all I'm sure of."
           ],
           [
-            "Do you read to other people?",
-            "Friends, if they choose the book too."
+            "Sounds like a beginning too.",
+            "Yes. That's precisely the trouble."
           ],
           [
-            "What do you enjoy reading?",
-            "Stories about difficult people who become understandable without becoming perfect."
+            "Why that ending?",
+            "I like knowing there's somewhere a person is expected."
           ]
         ]
       }
     ],
     "greetings": [
-      "Osric. Cloth questions cost nothing; literary arguments may take the afternoon.",
-      "Corin. I'll choose carefully.",
-      "Corin! I've reached an ending worth complaining about.",
-      "I'll hear the complaint.",
-      "A dragon makes even my least plausible books seem modest.",
-      "I'm Corin. This is Aurelius, without the book's embellishments."
+      "Hello. If I've been staring, forgive me. I was thinking past you.",
+      "I'm Corin. I'll try not to obstruct the thought.",
+      "Corin, you've arrived at a good stopping place.",
+      "In the book or the thinking?",
+      "A dragon! I can no longer complain that the interesting things only happen in books.",
+      "I'm Corin. I used to think that too."
     ]
   },
   "Alder": {
@@ -3660,70 +3660,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:26",
     "topics": [
       {
-        "title": "A swarm overhead",
-        "opening": "What do you do when the bees swarm?",
-        "first": "A swarm once settled where I couldn't reach it. I spent an hour planning, then they left while I fetched help.",
+        "title": "The honey thief",
+        "opening": "Who steals the most honey from you?",
+        "first": "Me. I taste a batch for quality and lose all respect for measurement.",
         "replies": [
           [
-            "Were you disappointed?",
-            "At losing the swarm, yes. At not climbing, rather less."
+            "Does Gwyneth know?",
+            "She says my professional standards are making me sticky."
           ],
           [
-            "Why do they swarm?",
-            "Part of a colony leaves to establish another. It's impressive and inconvenient."
+            "Have you ever been caught?",
+            "Holding the spoon. Difficult to call that circumstantial."
           ],
           [
-            "Could you have hurried?",
-            "I could have fallen. Patience was the cheaper option."
+            "Is every batch different?",
+            "Enough to justify another taste. You see my difficulty."
           ]
         ]
       },
       {
-        "title": "Different honey",
-        "opening": "Does honey taste different from one hive to another?",
-        "first": "Honey changes with the flowers. People ask for the same flavour every season as though bees follow my orders.",
+        "title": "A bee's reputation",
+        "opening": "Does it annoy you when people call bees vicious?",
+        "first": "Yes. Imagine someone lifting your roof and complaining when you objected.",
         "replies": [
           [
-            "Can you guide them?",
-            "Only by where I keep the hives. They make the journeys."
+            "You've been stung, though.",
+            "Often. Knowing the reason doesn't make it pleasant."
           ],
           [
-            "Do you have a favourite?",
-            "A spring batch with a light floral taste. I finished it too quickly."
+            "Are you ever afraid?",
+            "When something changes and I don't understand it. That's a useful time to slow down."
           ],
           [
-            "Can customers tell the difference?",
-            "Some can. Some prefer the label they remember."
+            "Would you rather keep gentler creatures?",
+            "I've met people. I'm not sure where I'd find them."
           ]
         ]
       },
       {
-        "title": "Gwyneth's limit",
-        "opening": "Does Gwyneth ever tell you to stop talking about bees?",
-        "first": "Gwyneth lets me speak about bees until she asks how the rest of my day went.",
+        "title": "A letter from a child",
+        "opening": "What's the nicest thing anyone's said about your work?",
+        "first": "A child asked whether I knew every bee's name. I'd never felt so magnificently overqualified.",
         "replies": [
           [
-            "Does that stop you?",
-            "It reminds me I had a rest of the day."
+            "What did you tell them?",
+            "That they changed shifts too quickly."
           ],
           [
-            "Do you listen to her interests?",
-            "I try. She notices when I'm waiting to mention bees."
+            "Did they believe you?",
+            "They offered to help with introductions."
           ],
           [
-            "What else interests you?",
-            "Cooking. Unfortunately that sometimes leads back to honey."
+            "Did you accept?",
+            "We named three. Probably the same bee twice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Alder. I can discuss bees briefly, despite what Gwyneth tells you.",
-      "Corin. I'll give you a chance to prove it.",
-      "Corin, I have prepared a shorter bee explanation.",
-      "How short is shorter?",
-      "Those wings would make a tremendous draught near a hive.",
-      "I'm Corin. Aurelius can keep a respectful distance."
+      "Hello there. If you're afraid of bees, say so. No shame in honest distance.",
+      "I'm Corin. Respectfully cautious.",
+      "Corin! Still curious about everything?",
+      "I haven't found a cure.",
+      "A dragon. I must tell Gwyneth before somebody improves the story.",
+      "I'm Corin. Please keep the size accurate."
     ]
   },
   "Gwyneth": {
@@ -3733,70 +3733,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:31",
     "topics": [
       {
-        "title": "A crowded supper",
-        "opening": "Have you ever had more supper guests than you expected?",
-        "first": "I once invited so many people that the quiet guests couldn't finish a sentence.",
+        "title": "The guest who rearranged everything",
+        "opening": "What's the rudest thing a guest has done?",
+        "first": "Moved all my furniture to improve the conversation. Then sat where nobody could see him.",
         "replies": [
           [
-            "Did you notice at the time?",
-            "Too late. I spent the evening pleased with the noise."
+            "Did you move it back?",
+            "After he left. I discovered I liked one change, which made me cross."
           ],
           [
-            "What changed afterward?",
-            "Smaller suppers. More chances for each person to speak."
+            "Why didn't you stop him?",
+            "I was waiting for the astonishment to become words."
           ],
           [
-            "Did anyone complain?",
-            "A friend told me she'd hardly heard herself think. I believed her."
+            "Would you invite him again?",
+            "For a walk. No furniture available."
           ]
         ]
       },
       {
-        "title": "An honest invitation",
-        "opening": "How do you invite someone without making them feel obliged?",
-        "first": "I tell guests they may leave early. Otherwise a pleasant invitation can become an endurance trial.",
+        "title": "Gwyneth's small rebellion",
+        "opening": "What's something you do purely to please yourself?",
+        "first": "Buy flowers with no practical use. Alder keeps suggesting varieties useful to bees.",
         "replies": [
           [
-            "Do people actually leave?",
-            "Yes, and return another time. I prefer that bargain."
+            "Do you listen?",
+            "Occasionally. Then I buy something gloriously unhelpful."
           ],
           [
-            "Do you ever refuse invitations?",
-            "When I'm tired. I've practised saying it without inventing an illness."
+            "Does he mind?",
+            "No. He just has difficulty seeing an unoccupied opportunity for honey."
           ],
           [
-            "What makes a good evening?",
-            "People staying because they want to, including me."
+            "What do you like about flowers?",
+            "That liking them is enough."
           ]
         ]
       },
       {
-        "title": "The unfinished song",
-        "opening": "Is there a song you've never managed to finish?",
-        "first": "I know the beginning of a song perfectly and none of the middle. Alder supplies invented verses.",
+        "title": "The empty invitation",
+        "opening": "Have you ever invited someone out of politeness and regretted it?",
+        "first": "Yes. They came, and I discovered I liked them. It was my original politeness I regretted.",
         "replies": [
           [
-            "Are they good?",
-            "Appalling. He rhymed 'honey' with 'more honey'."
+            "Why?",
+            "I'd decided they were tiresome without really listening."
           ],
           [
-            "Have you found the real words?",
-            "Not yet. I'm almost afraid they'd disappoint us."
+            "What changed your mind?",
+            "They asked a question nobody else had thought to ask."
           ],
           [
-            "Do you sing it for guests?",
-            "Only trusted ones. Standards matter less among friends."
+            "What question?",
+            "Whether I was tired. Such a small thing to notice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Gwyneth. If Alder has kept you talking, you may ask for a rest.",
-      "Corin. I haven't needed rescuing yet.",
-      "Corin, come and give me your version of the day.",
-      "It's probably less organised than Alder's.",
-      "A dragon! I should ask your names before asking anything else.",
-      "I'm Corin. My companion is Aurelius."
+      "Hello. Come and say something I haven't already heard from Alder.",
+      "I'm Corin. I'll avoid bees initially.",
+      "Corin, how lovely. I remember you left me with a question.",
+      "Was it a good one?",
+      "Oh, my. Alder will talk about this for a month.",
+      "I'm Corin. I apologise in advance for the repetition."
     ]
   },
   "Eira": {
@@ -3806,70 +3806,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:36",
     "topics": [
       {
-        "title": "The disputed batch",
-        "opening": "What do you do when someone disputes a batch?",
-        "first": "Half my neighbours liked a new batch; half hated it. Both groups advised me to listen to everyone.",
+        "title": "The ceremonial barrel",
+        "opening": "Why did you refuse to name a barrel after the king?",
+        "first": "Because a barrel is useful. I didn't say that part aloud.",
         "replies": [
           [
-            "What did you decide?",
-            "Made less of it and labelled it clearly."
+            "What did you say?",
+            "That the name wouldn't fit."
           ],
           [
-            "Did you like it yourself?",
-            "Yes. That mattered, just not more than every customer."
+            "Did anyone believe you?",
+            "They appreciated my concern for lettering."
           ],
           [
-            "Did the argument end?",
-            "They found something else to discuss. People are resourceful."
+            "Were you frightened?",
+            "Afterward. During it I was mostly irritated."
           ]
         ]
       },
       {
-        "title": "Work at a celebration",
-        "opening": "Do you still end up working at celebrations?",
-        "first": "People invite me to parties and ask me to explain the drinks. I sometimes want to simply attend.",
+        "title": "A talent for silence",
+        "opening": "Are you quiet at home too?",
+        "first": "No. At home I sing at a volume my neighbours consider ambitious.",
         "replies": [
           [
-            "Do you tell them?",
-            "More often now. They usually hadn't considered it work."
+            "Are you any good?",
+            "No. Home is where I don't have to be."
           ],
           [
-            "What would you rather discuss?",
-            "Who chose the music, where someone travelled, anything without barrels."
+            "Do you take requests?",
+            "Mostly requests to stop."
           ],
           [
-            "Do you still enjoy parties?",
-            "Very much, especially when someone pours my drink."
+            "Does that bother you?",
+            "Only if they're shouted before the chorus."
           ]
         ]
       },
       {
-        "title": "A useful failure",
-        "opening": "Has a mistake ever taught you something useful?",
-        "first": "I tried copying a rival's cider and made something dull. My own worst batch had more character.",
+        "title": "The bottle saved too long",
+        "opening": "Have you ever saved something for so long you wasted it?",
+        "first": "A bottle for an occasion important enough. When I opened it, it had gone sour.",
         "replies": [
           [
-            "Did you admit trying?",
-            "Yes. The rival found it extremely funny."
+            "What occasion did you choose?",
+            "An ordinary supper. I'd finally come to my senses too late."
           ],
           [
-            "What did you learn?",
-            "I knew my apples better than I knew his process."
+            "Did you throw it away?",
+            "Yes. Kept the bottle as an irritating reminder."
           ],
           [
-            "Would you collaborate instead?",
-            "Gladly. Asking is less embarrassing than bad imitation."
+            "What do you celebrate now?",
+            "People turning up. It happens less often than we assume."
           ]
         ]
       }
     ],
     "greetings": [
-      "Eira. If you're tasting cider, tell me what you think, not what sounds polite.",
-      "I'm Corin. I can offer the same service for conversation.",
-      "Corin. An opinion I haven't heard this morning.",
-      "I'll try to make it a useful one.",
-      "A dragon would certainly complicate a tasting.",
-      "I'm Corin. Aurelius and I came for company."
+      "New face. I'm Eira. Don't believe everything people say about my cider.",
+      "Corin. I'll reserve judgement.",
+      "Corin! Still here to tell the tale?",
+      "Which tale have you heard?",
+      "Does dragon fire count as assistance or a catastrophe in cider making?",
+      "I'm Corin. I'd assume catastrophe until proven otherwise."
     ]
   },
   "Fenton": {
@@ -3879,70 +3879,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:41",
     "topics": [
       {
-        "title": "Walking past the inn",
-        "opening": "Have you ever kept walking when you ought to have stopped at an inn?",
-        "first": "I walked past the inn I wanted because I was describing it to another traveller.",
+        "title": "The story you stole",
+        "opening": "Have you ever told someone else's story as your own?",
+        "first": "Once. The person whose story it was walked into the room halfway through.",
         "replies": [
           [
-            "Did they stop you?",
-            "They'd never seen it. I was their supposed expert."
+            "What did you do?",
+            "Introduced him as a reliable witness. He introduced me as an unreliable narrator."
           ],
           [
-            "How far did you go?",
-            "Far enough to become hungry and less authoritative."
+            "Were you ashamed?",
+            "Dreadfully. Everyone laughed, but he didn't owe me that kindness."
           ],
           [
-            "Did you admit the mistake?",
-            "After a brief, unsuccessful attempt to blame the sign."
+            "Did you stop doing it?",
+            "Yes. My own mistakes supply plenty of material."
           ]
         ]
       },
       {
-        "title": "Someone else's rescue",
-        "opening": "Has a stranger ever had to rescue you?",
-        "first": "A woman once found my lost pack. I kept telling the story as though my search had been heroic.",
+        "title": "A town you disliked",
+        "opening": "Have you ever left somewhere and missed it unexpectedly?",
+        "first": "A noisy town where I slept badly. Missed the woman who sold breakfast. Never even learned her name.",
         "replies": [
           [
-            "What did she say?",
-            "That she found it where I'd put it down."
+            "Would you go back?",
+            "I'd like to. I'm afraid I'd make too much of an ordinary kindness."
           ],
           [
-            "Did you change the story?",
-            "Yes. It's funnier when I'm honestly foolish."
+            "What did she do?",
+            "Remembered I disliked onions. After weeks of being a stranger, that felt enormous."
           ],
           [
-            "What was in it?",
-            "Food, socks, and a map that hadn't prevented anything."
+            "You could just thank her.",
+            "Yes. I complicate things for a living."
           ]
         ]
       },
       {
-        "title": "Travelling for pleasure",
-        "opening": "Where would you travel if you had no business to finish?",
-        "first": "I like choosing a destination for no better reason than wanting to see it.",
+        "title": "Fenton's honest ending",
+        "opening": "Why do you always finish stories neatly?",
+        "first": "Because life generally refuses to. I like giving people somewhere to put the feeling down.",
         "replies": [
           [
-            "Can you always afford that?",
-            "No. Which makes the occasions precious."
+            "Doesn't that make them untrue?",
+            "Sometimes. I'm learning to say when I've improved something."
           ],
           [
-            "Do you ever regret a journey?",
-            "Certainly. Usually the one I hurried through."
+            "What's your least tidy story?",
+            "Someone I loved left. I still don't know whether I should have followed."
           ],
           [
-            "Where would you return?",
-            "Somewhere I met good company. Scenery rarely remembers you."
+            "How do you tell that one?",
+            "Rarely. And without jokes."
           ]
         ]
       }
     ],
     "greetings": [
-      "Fenton. I have a story if you have time to question the details.",
-      "Corin. That sounds like a fair arrangement.",
-      "Corin! I've found a shorter route to the point.",
-      "I'll believe it when we arrive.",
-      "Well, you've brought evidence for an extraordinary story.",
-      "I'm Corin. Aurelius isn't part of a performance."
+      "A fellow traveller? Tell me your name before I invent one.",
+      "Corin. Please use that version.",
+      "Corin! I was hoping the road would bring you back.",
+      "It's been reasonably cooperative.",
+      "Now that's an entrance. Mine suddenly seems under-rehearsed.",
+      "I'm Corin. The dragon wasn't hired for effect."
     ]
   },
   "Celia": {
@@ -3952,70 +3952,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "04-thornwell-neighbours.txt:46",
     "topics": [
       {
-        "title": "A household account",
-        "opening": "How do you keep track of a household's expenses?",
-        "first": "I found an old household list with shoes crossed out and medicine written beneath them.",
+        "title": "The woman in the footnote",
+        "opening": "Who do you wish people remembered better?",
+        "first": "A woman who kept a town fed during a siege. The account gives three pages to a captain's horse and half a line to her.",
         "replies": [
           [
-            "What did that tell you?",
-            "Someone had to choose. More than the grand account mentioned."
+            "Do you know her name?",
+            "Only part of it. I keep hoping another account will finish the sentence."
           ],
           [
-            "Could you find their names?",
-            "Only one. I kept looking rather than supplying a story."
+            "Why the horse?",
+            "The captain commissioned the book."
           ],
           [
-            "Was the family important?",
-            "To each other, certainly. That's enough reason to ask."
+            "Would you write a different one?",
+            "I'd start by asking who did the work."
           ]
         ]
       },
       {
-        "title": "The borrowed pot",
-        "opening": "Have you ever had trouble returning something you borrowed?",
-        "first": "A neighbour recalled a terrible quarrel chiefly because one family never returned a cooking pot.",
+        "title": "A familiar superstition",
+        "opening": "Is there a superstition you follow even though you don't believe it?",
+        "first": "I greet the first bird I see in the morning. My grandmother insisted. It's less belief than affection now.",
         "replies": [
           [
-            "Was that the cause?",
-            "No. It was what she still encountered every supper."
+            "What if someone hears?",
+            "I introduce them to the bird."
           ],
           [
-            "Did they reconcile?",
-            "She didn't know. I wrote that down too."
+            "Does it bring good luck?",
+            "The bird has never filed a report."
           ],
           [
-            "Do you enjoy those details?",
-            "They make people less like names on a page."
+            "What if you forget?",
+            "Then I feel I've been rude to my grandmother, which is much worse than bad luck."
           ]
         ]
       },
       {
-        "title": "Learning for myself",
-        "opening": "What would you like to learn just for yourself?",
-        "first": "I learned a little embroidery last winter. It has nothing to do with my research.",
+        "title": "Tomorrow's history",
+        "opening": "What will people get wrong about us someday?",
+        "first": "They'll think we knew how things would turn out. Every account makes uncertainty look like a straight road.",
         "replies": [
           [
-            "Are you good at it?",
-            "Improving. My flowers have stopped resembling weather damage."
+            "What would you write instead?",
+            "That we guessed. That we changed our minds. That some days we just got through."
           ],
           [
-            "Who taught you?",
-            "A friend who refused to hurry the difficult part."
+            "Would anyone read that?",
+            "I would. It sounds considerably more like company."
           ],
           [
-            "Why choose embroidery?",
-            "I wanted to make something I could hold afterward."
+            "Should I remember my doubts?",
+            "Yes. They belong to the story too."
           ]
         ]
       }
     ],
     "greetings": [
-      "Celia. Are you interested in history that includes washing and supper?",
-      "Corin. Those sound like parts people might recognise.",
-      "Corin, I have another ordinary detail nobody thought to record.",
-      "I'd like to hear it.",
-      "A dragon's companion must still have ordinary mornings.",
-      "I'm Corin. We try to find a few."
+      "Hello. I'm Celia. You look as though you've actually been somewhere.",
+      "Corin. Mostly Millwood, until recently.",
+      "Corin! Tell me you noticed something odd on the road.",
+      "I'll have to narrow it down.",
+      "A dragon. Well, I asked for interesting news and have been thoroughly answered.",
+      "I'm Corin. I promise he's real."
     ]
   },
   "Archivist Elowen": {
@@ -4025,70 +4025,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:1",
     "topics": [
       {
-        "title": "A damaged page",
-        "opening": "Can you save a badly damaged page?",
-        "first": "A missing corner can change an entire account. I once found a warning quoted as a recommendation.",
+        "title": "The book returned late",
+        "opening": "What's the latest anyone's returned a book?",
+        "first": "Twenty-three years. The borrower apologised as though she'd only missed breakfast.",
         "replies": [
           [
-            "How could that happen?",
-            "The surviving sentence omitted the word 'never'."
+            "Did you charge a fine?",
+            "She offered. I asked her to tell me where the book had been instead."
           ],
           [
-            "Did you correct it?",
-            "In our copy, with a note explaining the damage."
+            "Where had it been?",
+            "Three homes, a marriage, a flood. It had lived more than some of its readers."
           ],
           [
-            "What if you can't reconstruct it?",
-            "Then I leave a gap. Certainty shouldn't be a decoration."
+            "Was it damaged?",
+            "Yes. And full of notes I was glad to have."
           ]
         ]
       },
       {
-        "title": "An embarrassed reader",
-        "opening": "What do you do when a reader is embarrassed to ask for help?",
-        "first": "A man pretended to know a book he couldn't read. He'd come to learn and feared being laughed at.",
+        "title": "The page you kept",
+        "opening": "Have you ever wanted to keep something you should have shared?",
+        "first": "A letter in an old collection. It felt so private I couldn't bear cataloguing it.",
         "replies": [
           [
-            "How did you help?",
-            "Asked him to read with me privately. No audience."
+            "What did you do?",
+            "Recorded that it existed without making a spectacle of its pain."
           ],
           [
-            "Did he return?",
-            "For months. Then he brought his daughter."
+            "Who decides what's private?",
+            "That's the question that kept me awake."
           ],
           [
-            "Was he a good student?",
-            "Determined. He deserved instruction long before he found courage."
+            "Would you make the same choice now?",
+            "Yes. Curiosity doesn't make every door ours to open."
           ]
         ]
       },
       {
-        "title": "Records under a king",
-        "opening": "Does the crown interfere with what you record?",
-        "first": "Official accounts can be accurate about dates and dishonest about reasons.",
+        "title": "Elowen's forgotten word",
+        "opening": "Do you ever forget an ordinary word?",
+        "first": "Yesterday I called a spoon a small soup shovel. My mind had supplied the function and abandoned the dignity.",
         "replies": [
           [
-            "How do you check reasons?",
-            "Compare who benefits, who is omitted, and who could speak freely."
+            "Did anyone laugh?",
+            "Iven wrote it down. Friendship has its limits."
           ],
           [
-            "Can ordinary letters help?",
-            "Often. A private complaint may reveal what a proclamation hides."
+            "Were you embarrassed?",
+            "Until somebody asked me to pass the large soup shovel."
           ],
           [
-            "Will history remember Halvard fairly?",
-            "Only if fairness includes the people his orders harmed."
+            "Does it happen often?",
+            "Only when I'm trying to sound particularly authoritative."
           ]
         ]
       }
     ],
     "greetings": [
-      "Elowen. Tell me what you're trying to find, even if you don't know what to call it.",
-      "Corin. That is exactly my problem.",
-      "Corin. A new question, or an old one behaving badly?",
-      "I may have brought both.",
-      "A living dragon. We have rather more to learn than our shelves suggest.",
-      "I'm Corin. Aurelius can speak for his own experience."
+      "Welcome. A question is a perfectly good reason to be here.",
+      "I'm Corin. I brought several.",
+      "Corin. Have your questions multiplied since last time?",
+      "They've been very industrious.",
+      "A dragon. I shall need a new definition of a quiet visitor.",
+      "I'm Corin. We'll try to respect the books."
     ]
   },
   "Mira": {
@@ -4098,70 +4098,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:6",
     "topics": [
       {
-        "title": "A miner's note",
-        "opening": "What can you learn from a miner's notes?",
-        "first": "One miner recorded a dangerous turn as 'the familiar bend'. Useless advice for anyone new.",
+        "title": "The first descent",
+        "opening": "What frightens you about going underground?",
+        "first": "Not the dark exactly. The moment the daylight becomes a small shape behind you.",
         "replies": [
           [
-            "Could you locate it?",
-            "By comparing other accounts. Familiarity had erased the detail."
+            "Have you felt that?",
+            "Yes. I kept turning to make sure it was still there."
           ],
           [
-            "What would you write?",
-            "A direction, a landmark, and what the danger was."
+            "Why study it then?",
+            "Because fear hasn't made me less curious."
           ],
           [
-            "Do your notes ever do that?",
-            "Yes. I ask someone else to read them now."
+            "What helps?",
+            "Knowing who's beside me. And being able to say I want to go back."
           ]
         ]
       },
       {
-        "title": "Why study underground?",
-        "opening": "What drew you to studying the mines?",
-        "first": "My uncle worked below ground and hated how visitors discussed mines without discussing miners.",
+        "title": "A stone from home",
+        "opening": "Do you keep a stone in your pocket?",
+        "first": "From outside the house where I grew up. Completely ordinary. I was disappointed when someone identified it so quickly.",
         "replies": [
           [
-            "Did he teach you?",
-            "He answered questions when I stopped interrupting with book knowledge."
+            "What had you hoped it was?",
+            "Something rare enough to explain why I couldn't throw it away."
           ],
           [
-            "Did he enjoy mining?",
-            "Some parts. He was allowed to dislike others."
+            "You don't need a rare stone.",
+            "I know that now. Then, I wanted a scholarly excuse."
           ],
           [
-            "What interested you most?",
-            "How much safe work depended on people noticing one another."
+            "Does carrying it help?",
+            "On strange mornings. My hand knows it before my head catches up."
           ]
         ]
       },
       {
-        "title": "A map without height",
-        "opening": "Can a map mislead you about what's underground?",
-        "first": "I copied a mine plan and forgot to mark changes in level. It looked wonderfully simple.",
+        "title": "The scholar's boots",
+        "opening": "Why do you dislike being called clever?",
+        "first": "I don't. I dislike when people use it to mean I couldn't possibly carry my own bag.",
         "replies": [
           [
-            "Did someone catch the error?",
-            "A miner asked whether I'd invented a flat mountain."
+            "Do they say that?",
+            "They say it kindly, which makes arguing harder."
           ],
           [
-            "Were you embarrassed?",
-            "Very. Then grateful he hadn't let it leave the room."
+            "What do you want them to notice?",
+            "That I've practised. Not everything I can do arrived as a gift."
           ],
           [
-            "Have you corrected it?",
-            "Yes. Clear drawings take more thought than tidy ones."
+            "I'd rather be useful than clever.",
+            "I'd like to be allowed both, depending on the day."
           ]
         ]
       }
     ],
     "greetings": [
-      "Mira. If you're asking about a mine, tell me which part before I answer.",
-      "I'm Corin. I appreciate the distinction.",
-      "Corin! Have you brought a practical question?",
-      "I usually end up with one.",
-      "A dragon can fit through doors I wouldn't have guessed.",
-      "I'm Corin; this is Aurelius. We still check the ceiling."
+      "Oh, hello. Are you interested in what lies under our feet?",
+      "I'm Corin. Usually I hope it's solid.",
+      "Corin! I've been thinking about something you might understand.",
+      "That's a generous assumption.",
+      "A dragon! Does he mind questions about places he can fit?",
+      "I'm Corin. He may prefer questions about open sky."
     ]
   },
   "Oren": {
@@ -4171,70 +4171,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:11",
     "topics": [
       {
-        "title": "The unnamed memorial",
-        "opening": "What do you do when a memorial has no name?",
-        "first": "I found a memorial described only by its stonework. Nobody had recorded whose name was worn away.",
+        "title": "The polite ghost",
+        "opening": "Do ghost stories ever make you laugh?",
+        "first": "One describes a spirit who kept apologising for frightening people. Eventually the household apologised for being frightened.",
         "replies": [
           [
-            "Could you recover it?",
-            "Not yet. I've been comparing family accounts."
+            "Do you believe it?",
+            "I believe the person telling it liked people."
           ],
           [
-            "Why keep trying?",
-            "Someone wanted that person remembered. The carving wasn't the point."
+            "Would you want to meet that ghost?",
+            "At a reasonable hour, with advance notice."
           ],
           [
-            "Does that make you sad?",
-            "Yes. It also gives me a specific question to pursue."
+            "How does the story end?",
+            "They grew accustomed to one another. A disappointingly sensible haunting."
           ]
         ]
       },
       {
-        "title": "A frightening story",
-        "opening": "Why do people keep telling frightening stories?",
-        "first": "I repeated a ghost story and discovered one listener knew the family in it.",
+        "title": "Oren's fear",
+        "opening": "What are you actually afraid of?",
+        "first": "Forgetting someone's voice. You can keep their words and still lose the sound.",
         "replies": [
           [
-            "What did you do?",
-            "Stopped. Then apologised for treating their grief as entertainment."
+            "Whose voice?",
+            "My grandfather's. I can remember his laugh better than his speaking."
           ],
           [
-            "Did the story change?",
-            "I no longer tell it for a shiver."
+            "Do you imitate it?",
+            "Badly, in private. I'm not ready to let anybody correct me."
           ],
           [
-            "Are all ghost stories wrong?",
-            "No. But their subjects may have living neighbours."
+            "Could you write it down?",
+            "I've tried. Words describe a sound without bringing it back."
           ]
         ]
       },
       {
-        "title": "Something cheerful",
-        "opening": "Do you ever read anything cheerful?",
-        "first": "I grow terrible little flowers at home. They lean, refuse schedules, and make me disproportionately happy.",
+        "title": "The funeral argument",
+        "opening": "Why do people argue so much about funerals?",
+        "first": "Because they're trying to make one decision that will prove they loved someone enough.",
         "replies": [
           [
-            "What kind?",
-            "Whatever survives my uncertain watering. I avoid impressive labels."
+            "Can it?",
+            "No. But I understand wanting it to."
           ],
           [
-            "Do you talk to them?",
-            "Occasionally. They're excellent at withholding criticism."
+            "Have you argued at one?",
+            "Yes. About flowers. I was really angry that there was a funeral at all."
           ],
           [
-            "Why call them terrible?",
-            "Affection. I would defend them fiercely to anyone else."
+            "What would you do differently?",
+            "Ask who needed company before asking which flowers were proper."
           ]
         ]
       }
     ],
     "greetings": [
-      "Oren. You may ask about ghosts, but I also know perfectly cheerful things.",
-      "I'm Corin. I'm relieved to have a choice.",
-      "Corin. Shall we leave something pleasant for the end this time?",
-      "That seems a good arrangement.",
-      "A dragon is a reassuringly living subject.",
-      "I'm Corin, and Aurelius is very much alive."
+      "Hello. Before you ask, studying spirits doesn't mean I can summon your relatives.",
+      "I'm Corin. That wasn't going to be my first question.",
+      "Corin. Still among the living, I see.",
+      "I try to remain consistent.",
+      "A dragon. Excellent. Something extraordinary that is unmistakably alive.",
+      "I'm Corin. We both prefer it that way."
     ]
   },
   "Tamsin": {
@@ -4244,70 +4244,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:16",
     "topics": [
       {
-        "title": "A villain with supper",
-        "opening": "Do villains in books ever get an ordinary evening?",
-        "first": "I wrote a villain who stopped a speech because he was hungry. My friend said it ruined the menace.",
+        "title": "The character who escaped",
+        "opening": "Have you ever written someone you couldn't control?",
+        "first": "A minor character refused to remain minor. Every time I tried to end her scene, she had something better to say.",
         "replies": [
           [
-            "Did you agree?",
-            "No. Even dreadful people must occasionally chew."
+            "Did you let her stay?",
+            "Yes. She has nearly taken over."
           ],
           [
-            "Was the story funny?",
-            "In parts. The villain resented being laughed at."
+            "Who was she supposed to be?",
+            "Someone carrying a basket through a doorway."
           ],
           [
-            "Did you finish it?",
-            "The scene, yes. The rest is still making demands."
+            "What's in the basket?",
+            "I still don't know. She's been very evasive."
           ]
         ]
       },
       {
-        "title": "A rumour about Maelis",
-        "opening": "Do you believe the stories about Maelis?",
-        "first": "People repeat frightening stories about Maelis without saying who actually met her.",
+        "title": "The reader you fear",
+        "opening": "Who would you be most afraid to show your writing?",
+        "first": "Someone who knows me well enough to recognise the parts I pretend I invented.",
         "replies": [
           [
-            "Do you believe them?",
-            "I believe people are frightened. That's not the same evidence."
+            "Your family?",
+            "Some of them. Strangers can dislike a story without asking whether I'm all right."
           ],
           [
-            "Why repeat the stories?",
-            "A familiar rumour feels safer than an unanswered question."
+            "Would you hide it forever?",
+            "No. I don't want to write only for a drawer."
           ],
           [
-            "Would you visit her?",
-            "If I had a reason, I'd speak to her myself."
+            "What would you want them to say?",
+            "That they wanted to keep reading. I'd survive almost anything after that."
           ]
         ]
       },
       {
-        "title": "The first page",
-        "opening": "What makes you keep reading after the first page?",
-        "first": "I kept rewriting an opening sentence until I forgot what happened next.",
+        "title": "A story with no battle",
+        "opening": "Can a story be exciting without anyone fighting?",
+        "first": "Absolutely. Two people who ought to say something and won't can keep me awake for hours.",
         "replies": [
           [
-            "How did you stop?",
-            "Wrote the next scene badly and promised to return later."
+            "That sounds frustrating.",
+            "So does a locked door. People still want to know what's behind it."
           ],
           [
-            "Did that work?",
-            "I have three pages now. Some contain sentences I like."
+            "Would you write one?",
+            "I'm trying. Unfortunately, everyone keeps being sensible too early."
           ],
           [
-            "Could I read them someday?",
-            "When I have an ending. I'm not inflicting suspense by accident."
+            "Why not let them?",
+            "Because I know how much courage sensible can take. I haven't written that part properly yet."
           ]
         ]
       }
     ],
     "greetings": [
-      "Tamsin. I'm choosing a book, which is easier if nobody calls it educational.",
-      "I'm Corin. I won't burden it with expectations.",
-      "Corin! I've found something worth arguing about.",
-      "A promising recommendation.",
-      "A dragon would completely spoil the surprise in my story.",
-      "I'm Corin. Aurelius tends to be noticed early."
+      "Hello. If I look guilty, I've been reading when I ought to be writing.",
+      "I'm Corin. I won't report you.",
+      "Corin! I've removed three pages. It feels like progress and vandalism.",
+      "Perhaps both can be useful.",
+      "A dragon! I'd have been told this was an implausible opening.",
+      "I'm Corin. Life didn't consult an editor."
     ]
   },
   "Master Iven": {
@@ -4317,70 +4317,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:21",
     "topics": [
       {
-        "title": "The quiet student",
-        "opening": "How do you know whether a quiet student understands?",
-        "first": "A student understood a lesson but would never answer aloud. I mistook silence for confusion.",
+        "title": "The question you couldn't answer",
+        "opening": "What do you do when a pupil asks something you don't know?",
+        "first": "I used to talk longer. Now I say I don't know before I damage anybody's education.",
         "replies": [
           [
-            "How did you find out?",
-            "Asked privately. He feared laughing classmates, not the question."
+            "Do they lose respect for you?",
+            "They stop pretending quite so much. I consider it a good exchange."
           ],
           [
-            "What changed?",
-            "I stopped making every answer a public performance."
+            "What was the hardest question?",
+            "Why adults insist things are fair when they plainly aren't."
           ],
           [
-            "Did he speak more?",
-            "Eventually. That wasn't the only measure of progress."
+            "What did you answer?",
+            "That adults sometimes want obedience more than an honest conversation."
           ]
         ]
       },
       {
-        "title": "Your worst lesson",
-        "opening": "Have you ever taught a lesson badly?",
-        "first": "I once explained a difficult idea three times using exactly the same words, louder each time.",
+        "title": "The empty desk",
+        "opening": "Do you remember pupils who leave early?",
+        "first": "Very clearly. You hope they know leaving a room isn't the same as becoming less capable.",
         "replies": [
           [
-            "Did anyone tell you?",
-            "A pupil asked for a different explanation, very politely."
+            "Do they come back?",
+            "Some visit. I try not to turn the visit into an examination."
           ],
           [
-            "Could you give one?",
-            "After admitting I needed a moment to think."
+            "What do you ask them?",
+            "What they've learned that I couldn't have taught them."
           ],
           [
-            "Do you remember the pupil?",
-            "Perfectly. Teachers remember being taught unexpectedly."
+            "Would you ask me that?",
+            "Yes. And I'd listen to the answer."
           ]
         ]
       },
       {
-        "title": "Learning without school",
-        "opening": "Can someone learn well without going to school?",
-        "first": "People apologise for what they haven't studied, then describe work I couldn't do.",
+        "title": "Iven's bad subject",
+        "opening": "Was there a subject you were terrible at?",
+        "first": "Music. I approached every note with conviction and frequently arrived somewhere else.",
         "replies": [
           [
-            "Can experience replace books?",
-            "It teaches different things. Neither excuses refusing to learn."
+            "Did your teacher despair?",
+            "She found other things for me to do during performances."
           ],
           [
-            "What should I ask first?",
-            "What you need to understand, not what sounds impressive."
+            "Were you upset?",
+            "At first. Then I discovered I enjoyed arranging the chairs."
           ],
           [
-            "Is it too late to begin?",
-            "Only if you insist it is. We can begin with one question."
+            "That's a rather different skill.",
+            "And one without which the audience falls over."
           ]
         ]
       }
     ],
     "greetings": [
-      "Iven. A question is welcome here, even if it's the first one in a long time.",
-      "I'm Corin. I have several waiting.",
-      "Corin. No examination today; you can relax.",
-      "I hadn't known I needed that reassurance.",
-      "A dragon! Today's lesson has become rather less theoretical.",
-      "I'm Corin. Aurelius and I are still learning too."
+      "Come in. You needn't be enrolled to ask a question.",
+      "I'm Corin. I wasn't sure.",
+      "Corin! What has the world been teaching you?",
+      "Its lessons are rather poorly scheduled.",
+      "Well. The children will never believe my description is restrained.",
+      "I'm Corin. The dragon does make restraint difficult."
     ]
   },
   "Brin": {
@@ -4390,70 +4390,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:26",
     "topics": [
       {
-        "title": "The narrow doorway",
-        "opening": "Have you ever found an entrance too narrow for your expedition?",
-        "first": "I drew a temple entrance beautifully and much too narrow. I had copied its decoration, not its proportions.",
+        "title": "A sanctuary's smell",
+        "opening": "What do you imagine an old sanctuary smelled like?",
+        "first": "Rain drying on stone. Leather. People coming in hungry. I dislike imagining ruins as though they were born empty.",
         "replies": [
           [
-            "How did you notice?",
-            "Tried placing a person beside it. Then a dragon."
+            "Why think about smells?",
+            "They make a place occupied in my head."
           ],
           [
-            "Did you start again?",
-            "Yes. The second drawing was less elegant and more useful."
+            "Could you be wrong?",
+            "Entirely. I'd like someone who knew to correct me."
           ],
           [
-            "Does that happen in old accounts?",
-            "Often. A striking detail can crowd out an essential one."
+            "I'd think of dragon smoke.",
+            "Yes. Ordinary to them, extraordinary to us."
           ]
         ]
       },
       {
-        "title": "Keeping a ruin",
-        "opening": "Should people leave ruins as they find them?",
-        "first": "A ruined building can preserve mistakes as well as achievements. I'd like to know both.",
+        "title": "The thing you'd save",
+        "opening": "If a ruin were collapsing, what would you save?",
+        "first": "People first. After that, something made by an ordinary hand. A note, perhaps.",
         "replies": [
           [
-            "What sort of mistakes?",
-            "Passages altered, entrances blocked, plans abandoned. People adapted them."
+            "Not a treasure?",
+            "Someone will already be arguing over the treasure."
           ],
           [
-            "Why does that interest you?",
-            "It makes the builders people solving problems, not flawless ancestors."
+            "Why a note?",
+            "Because it might say something nobody intended a monument to say."
           ],
           [
-            "Would you rebuild one?",
-            "I'd learn what remained before deciding what it ought to be."
+            "What would you hope it said?",
+            "Something funny. I want to know they laughed there."
           ]
         ]
       },
       {
-        "title": "An expedition postponed",
-        "opening": "What would make you postpone an expedition?",
-        "first": "I wanted to visit a temple before learning how to prepare. I mistook wanting for readiness.",
+        "title": "A difficult admission",
+        "opening": "Would you be brave enough to enter every place you study?",
+        "first": "No. I'm trying to stop treating that answer as a disgrace.",
         "replies": [
           [
-            "Who stopped you?",
-            "Iven asked what I'd do if someone was injured."
+            "Wouldn't you regret staying outside?",
+            "Perhaps. I'd also regret rushing in to prove something irrelevant."
           ],
           [
-            "Did you have an answer?",
-            "No. That was the point I finally heard."
+            "What would make you ready?",
+            "Training, company, and a proper reason."
           ],
           [
-            "Will you go someday?",
-            "I hope so, with people equipped for the journey."
+            "You can still study it.",
+            "Yes. I needed to hear that from someone without my voice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Brin. I'm interested in the temples, but I won't pretend I've explored them all.",
-      "I'm Corin. I'd rather know what you're sure of.",
-      "Corin. I have questions that won't fit neatly in my notes.",
-      "I'll answer the ones I can.",
-      "A dragon gives those old door measurements a purpose.",
-      "I'm Corin; this is Aurelius. Some doorways are still a challenge."
+      "Hello. I'm Brin. If you're asking about temples, you've found the right obsession.",
+      "Corin. I can see the attraction.",
+      "Corin! More questions, or have you brought answers?",
+      "I'm usually better supplied with questions.",
+      "A dragon. Please give me a moment to become articulate again.",
+      "I'm Corin. Take two if you need them."
     ]
   },
   "Nell": {
@@ -4463,70 +4463,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:31",
     "topics": [
       {
-        "title": "The convenient word",
-        "opening": "Do people ever choose a word because it helps their argument?",
-        "first": "A proclamation called a new levy 'temporary'. It didn't say what would make it end.",
+        "title": "The royal birthday",
+        "opening": "Why do histories record every ruler's birthday?",
+        "first": "Because somebody paid to have the ruler remembered. I want to know whose birthdays nobody wrote down.",
         "replies": [
           [
-            "Did anyone ask?",
-            "Not in the account I read. That's the missing question."
+            "Ordinary people's?",
+            "Especially the ones who couldn't afford a cake."
           ],
           [
-            "Could temporary mean anything?",
-            "Almost, without a condition or a date."
+            "Would you record them all?",
+            "I couldn't. I could at least stop pretending the list was complete."
           ],
           [
-            "Do people notice that?",
-            "More readily when they're the ones paying."
+            "Why does that matter?",
+            "Because absence on a page can start looking like absence from the world."
           ]
         ]
       },
       {
-        "title": "Winning badly",
-        "opening": "Can you win an argument and still regret it?",
-        "first": "I once won an argument by mocking the other person's mistake. She stopped speaking, and I called that success.",
+        "title": "Nell's stubbornness",
+        "opening": "Have you ever kept arguing after you knew you were wrong?",
+        "first": "Yes. A dreadful few minutes in which I defended a position I'd already abandoned privately.",
         "replies": [
           [
-            "Did you apologise?",
-            "Later. She accepted without reopening the discussion."
+            "Why keep going?",
+            "Pride. It wears surprisingly scholarly clothes."
           ],
           [
-            "What would you do now?",
-            "Ask what led her to the claim. I might learn something."
+            "Did you admit it afterward?",
+            "The next morning. I should have done it before supper."
           ],
           [
-            "Do you still like arguing?",
-            "Yes. I'd like people to return for the next conversation."
+            "Did the other person forgive you?",
+            "Immediately. I found that almost more embarrassing."
           ]
         ]
       },
       {
-        "title": "A question for pleasure",
-        "opening": "What would you ask if you didn't need to prove anything?",
-        "first": "I asked my sister what she'd do with a completely free afternoon. We spoke for an hour without debating anything.",
+        "title": "A history of laughter",
+        "opening": "Can you learn anything from an old joke?",
+        "first": "Who was allowed to laugh at whom. And who had to pretend it was funny.",
         "replies": [
           [
-            "What did she choose?",
-            "Walking somewhere new, then eating somewhere familiar."
+            "Do jokes last?",
+            "Some. Others need so much explanation they become punishments."
           ],
           [
-            "What would you choose?",
-            "A good book that doesn't require correcting in the margins."
+            "What's your favourite kind?",
+            "The kind where the powerful person hasn't noticed they're ridiculous."
           ],
           [
-            "Could you manage that?",
-            "With effort. Apparently relaxation has prerequisites for me."
+            "Would you tell one near the king?",
+            "I'd prefer to remain available for future research."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nell. If someone says a thing is necessary, I usually ask for whom.",
-      "I'm Corin. Does that get you into arguments?",
-      "Corin. I've been practising letting people finish before objecting.",
-      "I'll try to earn the patience.",
-      "The crown's descriptions of dragons leave out the individual entirely.",
-      "I'm Corin. This one's called Aurelius."
+      "You're new here, aren't you? I'm Nell.",
+      "Corin. Is it that obvious?",
+      "Corin! I have a theory. It may survive ten minutes.",
+      "Shall we see?",
+      "A dragon. That's going to ruin somebody's very confident essay.",
+      "I'm Corin. I hope it wasn't yours."
     ]
   },
   "Sable": {
@@ -4536,70 +4536,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:36",
     "topics": [
       {
-        "title": "A copied error",
-        "opening": "How do you spot an error everyone has copied?",
-        "first": "Three books repeated the same mistake. I nearly counted them as three witnesses.",
+        "title": "The forged diary",
+        "opening": "How would you spot a false old diary?",
+        "first": "I once found one whose author described a building erected after he supposedly died. Very observant ghost.",
         "replies": [
           [
-            "How did you catch it?",
-            "Identical unusual wording. They were copying one another."
+            "Was somebody trying to cheat?",
+            "Yes. They'd put more effort into staining the paper than checking dates."
           ],
           [
-            "Was the original available?",
-            "Yes. Its writer had marked the claim uncertain."
+            "Did you confront them?",
+            "With a question. They became offended remarkably quickly."
           ],
           [
-            "Did you correct the copies?",
-            "Added notes. Erasing the error would hide how it spread."
+            "Could it have fooled you?",
+            "Of course. Remembering that makes me check twice."
           ]
         ]
       },
       {
-        "title": "A dreadful riddle",
-        "opening": "Do you know any dreadful riddles?",
-        "first": "What has a spine, no bones, and too many opinions? A history book written by my tutor.",
+        "title": "A private superstition",
+        "opening": "Do you have any rituals before working?",
+        "first": "I sharpen a pencil I may not use. It tells my wandering mind we've begun.",
         "replies": [
           [
-            "Would your tutor laugh?",
-            "At the first half. I've tested neither half together."
+            "Does it work?",
+            "Sometimes. Other days I have an excellent pencil and no work."
           ],
           [
-            "Did you invent that?",
-            "Unfortunately, yes. Ownership is difficult to deny."
+            "Why not just start?",
+            "If I knew, I'd have a great deal more time."
           ],
           [
-            "Have you a better one?",
-            "Almost certainly. I save this one for resilient company."
+            "Could someone interrupt the ritual?",
+            "You just did. I appear to have survived."
           ]
         ]
       },
       {
-        "title": "Dating a memory",
-        "opening": "Can you work out when an old memory happened?",
-        "first": "Someone dated a storm by a wedding. The wedding had moved a week, but the family remembered both as one event.",
+        "title": "The unanswered letter",
+        "opening": "What research question matters to you personally?",
+        "first": "Why my great-aunt left home. Family stories make her either wicked or brave. None let her be uncertain.",
         "replies": [
           [
-            "How did you separate them?",
-            "Letters written between the two."
+            "Have you found an answer?",
+            "Pieces. She wrote that she couldn't bear another winter there."
           ],
           [
-            "Was the witness lying?",
-            "No. Memory had joined two memorable days."
+            "Does that change your view?",
+            "It makes her sound like a person instead of a verdict."
           ],
           [
-            "Does that make memories useless?",
-            "It makes them memories. Useful sources can still need checking."
+            "Would you have gone?",
+            "I don't know. That's why I dislike everyone else's certainty."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sable. I can offer an answer with a footnote or a guess without one.",
-      "I'm Corin. Tell me which it is and we'll manage.",
-      "Corin. I've checked a detail you didn't ask me to check.",
-      "Should I be worried?",
-      "A dragon is unusually strong evidence for a dragon's existence.",
-      "I'm Corin. Aurelius is pleased to settle that question."
+      "Hello. I'm Sable. Please interrupt; I've been circling the same thought for an hour.",
+      "Corin. Happy to provide a different circle.",
+      "Corin! You may be just the distraction I need.",
+      "I'll try to be a useful one.",
+      "A dragon. My concentration has surrendered completely.",
+      "I'm Corin. He has that effect."
     ]
   },
   "Pella": {
@@ -4609,70 +4609,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:41",
     "topics": [
       {
-        "title": "The blank patch",
-        "opening": "What do you put in a part of the map nobody has explored?",
-        "first": "A map left a district blank because its maker hadn't visited. Readers decided nobody lived there.",
+        "title": "The centre of the world",
+        "opening": "Where would you put the centre of a map?",
+        "first": "I used to put home. Now I wonder how that makes everybody else feel like the edge.",
         "replies": [
           [
-            "Could you fill it in?",
-            "Partly, from travellers who actually knew it."
+            "Does a map need a centre?",
+            "The paper does. The world doesn't seem particularly concerned."
           ],
           [
-            "Why hadn't they been asked?",
-            "They weren't considered authorities. An expensive prejudice for a mapmaker."
+            "Where would you put it now?",
+            "Where the journey begins. I'd write whose journey it was."
           ],
           [
-            "What did you mark first?",
-            "Settlements. Empty paper had hidden people's homes."
+            "I'd still choose home.",
+            "So would I sometimes. I just want to know I'm choosing."
           ]
         ]
       },
       {
-        "title": "Directions by memory",
-        "opening": "Can you give directions without looking at a map?",
-        "first": "My mother gives directions by people: past where someone lived, beside where someone fell over.",
+        "title": "A border in the rain",
+        "opening": "Have you ever seen a border you couldn't recognise?",
+        "first": "Yes. The map had a thick line. The ground had wet grass and a goat.",
         "replies": [
           [
-            "Can strangers follow them?",
-            "Rarely. Family history isn't a public signpost."
+            "Did that disappoint you?",
+            "It made me laugh. We'd argued about that line for an entire lesson."
           ],
           [
-            "Do you understand her?",
-            "Usually. Then I translate into turns and distances."
+            "What did the goat do?",
+            "Crossed without consulting anyone."
           ],
           [
-            "Which version do you prefer?",
-            "Hers for company, mine when I'm trying to arrive."
+            "Do borders matter?",
+            "To the people enforcing them. The goat offered a useful second opinion."
           ]
         ]
       },
       {
-        "title": "The way home",
-        "opening": "Do you ever have trouble finding your own way home?",
-        "first": "I practise giving directions back as well as onward. A place looks different when you're leaving.",
+        "title": "Pella's folded future",
+        "opening": "Where would you go if you had no obligations?",
+        "first": "I'd walk until nobody knew which direction my home was in.",
         "replies": [
           [
-            "Have you been lost?",
-            "In a town I'd confidently entered an hour earlier."
+            "Wouldn't that be lonely?",
+            "Yes. I'd like to know whether I could bear it for a little while."
           ],
           [
-            "What confused you?",
-            "I'd remembered a shopfront facing the other direction."
+            "Why that far?",
+            "Because every choice I make here comes with advice."
           ],
           [
-            "What helped?",
-            "Turning around and actually looking before continuing."
+            "Would you come home?",
+            "I think so. I'd like returning to be a choice too."
           ]
         ]
       }
     ],
     "greetings": [
-      "Pella. Where you're from is a better beginning than how far you've travelled.",
-      "I'm Corin, from Millwood.",
-      "Corin. Does Millwood feel nearer or farther away today?",
-      "That changes more than I expected.",
-      "Wings must change how a road looks.",
-      "I'm Corin. Aurelius sees turns I miss from the ground."
+      "Hello! Tell me somewhere you've been. I promise not to test you on it.",
+      "Corin, from Millwood. That's a comfortable starting point.",
+      "Corin! Has the road contradicted any maps lately?",
+      "I suspect it enjoys doing that.",
+      "A dragon. You could see all the awkward bits from above.",
+      "I'm Corin. We still have to find our way back down."
     ]
   },
   "Scholar Ilyan": {
@@ -4682,70 +4682,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "05-school.txt:46",
     "topics": [
       {
-        "title": "An uncertain translation",
-        "opening": "How do you translate something when you aren't sure what it means?",
-        "first": "One damaged phrase could mean 'heart of fire' or 'fire at the centre'. An expedition shouldn't depend on my favourite reading.",
+        "title": "The scholar's souvenir",
+        "opening": "What's the strangest souvenir you've kept?",
+        "first": "Sand. Accidentally, in every book I took home. Years later the desert is still interrupting my reading.",
         "replies": [
           [
-            "How do you choose?",
-            "Compare other uses, then record what remains uncertain."
+            "Why not shake it out?",
+            "I do. There appears to be a second desert hidden in the bindings."
           ],
           [
-            "Have you been wrong before?",
-            "Yes. A supposed royal title turned out to name a storehouse."
+            "Does it remind you of anything?",
+            "Heat before sunrise, oddly. The anticipation of it."
           ],
           [
-            "Was that disappointing?",
-            "To my pride. Extremely helpful to the rest of the work."
+            "Would you go back?",
+            "Yes. With fewer books and the same likely mistakes."
           ]
         ]
       },
       {
-        "title": "Research at a distance",
-        "opening": "Can you study a place without visiting it?",
-        "first": "Reading about a place makes it familiar in a dangerously incomplete way.",
+        "title": "An expedition argument",
+        "opening": "What do travellers argue about most?",
+        "first": "Pace. The eager call everybody slow; the exhausted call everybody thoughtless. Both forget to ask about blisters.",
         "replies": [
           [
-            "What gets left out?",
-            "Distance, fatigue, doors that no longer open."
+            "Have you been both?",
+            "In the same afternoon."
           ],
           [
-            "Does that discourage you?",
-            "It makes me listen carefully to people who've been there."
+            "How do you settle it?",
+            "Stop long enough for people to say what's actually wrong."
           ],
           [
-            "Would you travel yourself?",
-            "With preparation and suitable company. Curiosity doesn't carry supplies."
+            "Does stopping waste time?",
+            "Less than carrying someone who was afraid to admit they needed it."
           ]
         ]
       },
       {
-        "title": "Who gets the discovery?",
-        "opening": "Who should get the credit for a discovery?",
-        "first": "Scholars often name the person who wrote an account and omit everyone who made the journey possible.",
+        "title": "A discovery you regret",
+        "opening": "Have you ever wished you hadn't learned something?",
+        "first": "I found that a passage I'd admired was stolen from a less celebrated scholar. Admiration is awkward to take back.",
         "replies": [
           [
-            "Would you do that?",
-            "I try not to. Intentions need checking against the page."
+            "Did you stop reading it?",
+            "No. I started saying the other scholar's name."
           ],
           [
-            "Who should be included?",
-            "Guides, carriers, local people whose knowledge was borrowed."
+            "Did people mind?",
+            "People who liked the tidy version did."
           ],
           [
-            "What about the people who lived there?",
-            "Their history should remain theirs, however exciting our arrival feels."
+            "Would you rather not have known?",
+            "For a day. Then it became something I was glad not to repeat."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ilyan. I study the desert's ruins. I distinguish what I've read from what I've seen.",
-      "I'm Corin. That seems worth asking about.",
-      "Corin, I hope you've come with a question of your own.",
-      "I have. Your research can wait one moment.",
-      "A dragon beside a traveller. Our records are about to feel incomplete.",
-      "I'm Corin. Aurelius isn't an exhibit, but we can talk."
+      "Ilyan. Scholar, occasional traveller, frequent misjudger of luggage.",
+      "Corin. That last one sounds useful to know about.",
+      "Corin! I hope you're here with questions rather than an account of my mistakes.",
+      "Could be both.",
+      "A dragon. At last, a reason for my astonishment that nobody can call excessive.",
+      "I'm Corin. He may enjoy that description."
     ]
   },
   "Bess": {
@@ -4755,70 +4755,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:1",
     "topics": [
       {
-        "title": "The expert customer",
-        "opening": "Do customers often tell you how to run the tavern?",
-        "first": "A customer explained how to run my tavern. I asked which shift he'd like.",
+        "title": "The cup on the sign",
+        "opening": "Why is it called the Copper Cup?",
+        "first": "Because the Silver Goblet sounded expensive and the Wooden Bowl sounded desperate. My mother understood first impressions.",
         "replies": [
           [
-            "Did he volunteer?",
-            "He discovered an urgent appointment elsewhere."
+            "Was it always your family's?",
+            "Long enough that people mistake knowing my mother for knowing my business."
           ],
           [
-            "Was any advice useful?",
-            "One thing. I used it without adopting the lecturer."
+            "Would you change the name?",
+            "No. I've shouted it too often to learn another."
           ],
           [
-            "Do you get many experts?",
-            "They arrive thirsty and become authorities after the second cup."
+            "Does a name really matter?",
+            "It gets people through the door. Supper has to do the rest."
           ]
         ]
       },
       {
-        "title": "Closing time",
-        "opening": "How do you persuade people it's time to go home?",
-        "first": "The last guests always tell me they're no trouble. They're standing between me and my bed.",
+        "title": "Bess's forbidden subject",
+        "opening": "What conversation do you hate hearing here?",
+        "first": "Someone explaining how easy running a tavern must be while I carry their fourth drink.",
         "replies": [
           [
-            "How do you move them along?",
-            "Plainly. Hints only work on people already considering leaving."
+            "What do you say?",
+            "I offer them the tray. Enlightenment usually follows."
           ],
           [
-            "Does anyone take offence?",
-            "Occasionally. They recover by the following evening."
+            "Do you enjoy the work?",
+            "Most of it. I can enjoy a thing without declaring it effortless."
           ],
           [
-            "Do you enjoy the quiet afterward?",
-            "For a minute. Then I notice the washing-up."
+            "What's the worst part?",
+            "Knowing everybody's hungry before I've had time to be hungry myself."
           ]
         ]
       },
       {
-        "title": "Royal demands",
-        "opening": "What does a royal visit cost you?",
-        "first": "A royal visit means food taken from paying customers and a bill nobody wants to acknowledge.",
+        "title": "The price of a bow",
+        "opening": "Why do royal visits leave everyone so quiet?",
+        "first": "Because every request sounds polite until you imagine refusing it. Then you hear the order underneath.",
         "replies": [
           [
-            "Can you ask for payment?",
-            "I can ask. Whether a crowned guest listens is different."
+            "They should pay like anyone else.",
+            "They should. I keep the figures, even when nobody wants the bill."
           ],
           [
-            "Who bears the loss?",
-            "Me, the suppliers, and anyone whose supper is delayed."
+            "Could the town refuse together?",
+            "Perhaps. I'd want to know who was standing beside us when the answer arrived."
           ],
           [
-            "Why serve him at all?",
-            "Because refusing puts the staff at risk too. I resent that calculation."
+            "Does Halvard notice the silence?",
+            "He may mistake it for respect. People with guards can afford that mistake."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bess. You're welcome to talk, but please don't begin by saying you know the owner.",
-      "I'm Corin. I'll begin by meeting her.",
-      "Corin! Here for company this time?",
-      "That's the plan.",
-      "A dragon would make quite an entrance. Let's keep the entrance usable.",
-      "I'm Corin. Aurelius and I can give people room."
+      "Welcome to the Copper Cup. If you're trouble, be the sort that pays.",
+      "I'm Corin. I'll aim for no trouble at all.",
+      "Corin! Still in one piece. We like repeat customers that way.",
+      "I'll try to keep the arrangement.",
+      "A dragon. I need to reconsider what I meant by no animals on the furniture.",
+      "I'm Corin. We won't test the furniture."
     ]
   },
   "Ronan": {
@@ -4828,70 +4828,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:6",
     "topics": [
       {
-        "title": "Naming a batch",
-        "opening": "How do you name a new batch?",
-        "first": "I named a cider 'Golden Triumph' before tasting it. Confidence was the principal ingredient.",
+        "title": "The tasting face",
+        "opening": "Why do people pull such solemn faces tasting cider?",
+        "first": "They're afraid enjoying it too quickly will make them look unsophisticated.",
         "replies": [
           [
-            "Was it good?",
-            "Mediocre. 'Acceptable Tuesday' would have been accurate."
+            "Do you do that?",
+            "Professionally. In private I manage a smile."
           ],
           [
-            "Did you change the name?",
-            "After my friends began using it whenever I failed."
+            "Can you tell if they like it?",
+            "Watch whether they take another drink while talking."
           ],
           [
-            "What do you call batches now?",
-            "Dates. They make fewer promises."
+            "What face should I make?",
+            "Your own. It costs less effort."
           ]
         ]
       },
       {
-        "title": "A rival's opinion",
-        "opening": "Would you ask a rival what they thought of your work?",
-        "first": "A rival liked my least successful batch. I couldn't decide whether to thank him or feel insulted.",
+        "title": "A family feud in barrels",
+        "opening": "Does your family argue about your trade?",
+        "first": "My brother thinks I should make something more respectable. He sells buttons and regards himself as essential to civilisation.",
         "replies": [
           [
-            "What did you do?",
-            "Asked what he liked. His answer was specific enough to believe."
+            "He has a point.",
+            "Yes, but he makes it while drinking my cider."
           ],
           [
-            "Did it change your mind?",
-            "It changed what I thought he wanted from cider."
+            "Do you get along?",
+            "Very well once we stop discussing our achievements."
           ],
           [
-            "Are you friends?",
-            "Friendly competitors. We reserve the right to be irritating."
+            "Would you swap jobs?",
+            "No. I couldn't bear looking for a missing button all day."
           ]
         ]
       },
       {
-        "title": "Winter evenings",
-        "opening": "How do you spend the long winter evenings?",
-        "first": "In winter I mend things I've ignored all year. Most remain annoyed at me for waiting.",
+        "title": "Ronan's best compliment",
+        "opening": "What's the best compliment your cider ever got?",
+        "first": "Two people stopped quarrelling long enough to agree it was good. Then resumed at lower volume.",
         "replies": [
           [
-            "What breaks most often?",
-            "Handles. Apparently I expect wood to tolerate enthusiasm."
+            "Did you know them?",
+            "Married forty years. They had a tremendous amount of argument prepared."
           ],
           [
-            "Are you good at repairs?",
-            "Good enough to know when to ask Hobb."
+            "Was it your best batch?",
+            "No. That's what made it pleasing."
           ],
           [
-            "Would you rather be working?",
-            "No. I complain about the quiet while enjoying it."
+            "Did you tell anyone?",
+            "Only everyone who asked a remotely related question."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ronan. Don't let anyone describe my cider before you've tasted it yourself.",
-      "I'm Corin. Does that warning apply to your stories?",
-      "Corin! An audience without a purchasing obligation.",
-      "I'm happy with that arrangement.",
-      "A dragon! That'll overshadow any entrance I ever make.",
-      "I'm Corin; this is Aurelius. He hasn't rehearsed it."
+      "Ronan. If you're new to Thornwell, I can offer an opinion on almost anything.",
+      "Corin. I'll start with the harmless subjects.",
+      "Corin! Good. Somebody who hasn't heard this twice.",
+      "Yet.",
+      "A dragon? I've not had nearly enough cider to explain that.",
+      "I'm Corin. It's not the cider."
     ]
   },
   "Venn": {
@@ -4901,70 +4901,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:11",
     "topics": [
       {
-        "title": "The doorstep you missed",
-        "opening": "Have you ever walked straight past the right door?",
-        "first": "A family painted their door and I walked past it twice. I knew the colour better than the address.",
+        "title": "The scent on the envelope",
+        "opening": "Can a letter tell you something before it's opened?",
+        "first": "Someone once scented an envelope so heavily I knew which lane I'd delivered it to an hour later.",
         "replies": [
           [
-            "Did they see you?",
-            "Yes. They waved on the third pass."
+            "A love letter?",
+            "I don't read them. I sincerely hoped it was loved."
           ],
           [
-            "Did you admit it?",
-            "Before they could helpfully repaint the door for me."
+            "Did the recipient seem pleased?",
+            "They opened the window. An ambiguous response."
           ],
           [
-            "How do you remember now?",
-            "More than one feature. Memory likes shortcuts too much."
+            "Would you send one like that?",
+            "No. I prefer my affection to remain local."
           ]
         ]
       },
       {
-        "title": "Reading a message twice",
-        "opening": "Do you check a message before delivering it?",
-        "first": "I deliver spoken messages too. I repeat them back before leaving, however impatient the sender is.",
+        "title": "A farewell at the gate",
+        "opening": "What's the hardest letter to carry?",
+        "first": "The one someone keeps taking back before finally letting go.",
         "replies": [
           [
-            "Have you caught errors?",
-            "Wrong names, missing days, a request that sounded like an accusation."
+            "Do you wait?",
+            "Yes. Whatever's in it has already taken them longer than my round."
           ],
           [
-            "Does anyone mind?",
-            "Until the first correction. Then they usually slow down."
+            "Have they ever changed their mind?",
+            "Often. I return the stamp if I can."
           ],
           [
-            "What makes a useful message?",
-            "Who needs what, by when. Poetry can follow later."
+            "Do you wonder what it says?",
+            "Of course. Wondering is permitted. Opening isn't."
           ]
         ]
       },
       {
-        "title": "News of your own",
-        "opening": "Do you have any news of your own for a change?",
-        "first": "I carried everyone else's good news for years before announcing I'd saved enough for a holiday.",
+        "title": "Venn's own address",
+        "opening": "Do you like getting letters?",
+        "first": "Terribly. I pretend I don't so people won't feel obliged.",
         "replies": [
           [
-            "Where did you go?",
-            "Nowhere with a delivery route. That was the chief requirement."
+            "Why pretend?",
+            "Receiving a letter feels better when it wasn't an assignment."
           ],
           [
-            "Did you enjoy being away?",
-            "After I stopped checking the time at every turning."
+            "Who writes to you?",
+            "My sister. She includes ordinary details I didn't know I missed."
           ],
           [
-            "Would you go again?",
-            "Yes. I didn't cease being useful by resting."
+            "Do you answer quickly?",
+            "Shamefully slowly for someone with my occupation."
           ]
         ]
       }
     ],
     "greetings": [
-      "Venn. I carry messages, though tonight I'd prefer one without a destination.",
-      "I'm Corin. This one ends here.",
-      "Corin. Good to see someone I don't owe a delivery.",
-      "I'll keep it that way.",
-      "A dragon would make my route considerably more visible.",
-      "I'm Corin. Aurelius isn't a discreet companion."
+      "New face. Venn, letter carrier. No, I won't guess where you live.",
+      "Corin. Millwood saves you the effort.",
+      "Corin! You look easier to find than most of my deliveries.",
+      "Give me time.",
+      "A dragon would make finding an address rather simpler.",
+      "I'm Corin. Keeping the letters dry might be harder."
     ]
   },
   "Hobb": {
@@ -4974,70 +4974,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:16",
     "topics": [
       {
-        "title": "A chair for someone",
-        "opening": "Have you ever made a chair for one particular person?",
-        "first": "A customer said every chair felt wrong. His feet didn't reach the floor properly.",
+        "title": "The house in a dream",
+        "opening": "Do you ever dream about buildings?",
+        "first": "The same impossible house. Every time I finish a staircase it leads to another staircase.",
         "replies": [
           [
-            "Could you fix that?",
-            "A lower seat. The simplest part of the job."
+            "What's at the top?",
+            "More employment, apparently."
           ],
           [
-            "Why hadn't he asked before?",
-            "He thought discomfort meant he was sitting badly."
+            "Would you build it awake?",
+            "Not for a fixed price."
           ],
           [
-            "Did he like it?",
-            "He stayed sitting while we discussed the payment."
+            "Does it frighten you?",
+            "Only when I wake and remember I haven't charged anyone."
           ]
         ]
       },
       {
-        "title": "The borrowed saw",
-        "opening": "Are you happy lending out your saw?",
-        "first": "I lent a saw and got it back sharper than before. I nearly invented another reason to lend it.",
+        "title": "Hobb's wedding gift",
+        "opening": "What do you give people when they marry?",
+        "first": "Something plain they can use after they've stopped trying to impress visitors.",
         "replies": [
           [
-            "Who borrowed it?",
-            "A neighbour who believes tools deserve manners."
+            "Such as?",
+            "A sturdy box. Every household eventually needs somewhere for things nobody admits owning."
           ],
           [
-            "Did you thank them?",
-            "With a repair they'd been putting off."
+            "Is that romantic?",
+            "My wife used ours for letters. Made it romantic herself."
           ],
           [
-            "Do you lend all your tools?",
-            "No. Affection doesn't make every person careful."
+            "What do you put in yours?",
+            "Things I haven't found the courage to throw away."
           ]
         ]
       },
       {
-        "title": "Your own unfinished shelf",
-        "opening": "Does your own furniture get finished last?",
-        "first": "I finish customers' shelves promptly. My own spent months as a promise.",
+        "title": "A job too personal",
+        "opening": "Is it difficult working for friends?",
+        "first": "Very. They say 'whenever you have time', then ask how it's going every day.",
         "replies": [
           [
-            "What stopped you?",
-            "After work, more work had limited appeal."
+            "Do you charge them?",
+            "Yes. Less awkward than discovering we disagree about the size of a favour."
           ],
           [
-            "Did you finish it?",
-            "Eventually. My household applauded with excessive ceremony."
+            "Have you lost a friend over work?",
+            "Nearly. We learned to write things down before affection did the measuring."
           ],
           [
-            "Was it worth the wait?",
-            "A shelf rarely justifies a dramatic delay."
+            "Would you refuse a job?",
+            "I have. Some friendships need fewer shelves in them."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hobb. If you need a chair, describe the person before the wood.",
-      "Corin. I'm here without a commission.",
-      "Corin. Your timing suggests you're avoiding work too.",
-      "I prefer to call it a visit.",
-      "Those wings would make a remarkable carving.",
-      "I'm Corin; this is Aurelius. Best ask before studying him."
+      "Hobb. Carpenter. Currently engaged in the difficult work of not working.",
+      "Corin. I won't interfere.",
+      "Corin, you've found me resting again. Please don't draw conclusions.",
+      "I'll wait for more evidence.",
+      "A dragon. That's a considerable weight to introduce without warning.",
+      "I'm Corin. We'll mind where he puts it."
     ]
   },
   "Edric": {
@@ -5047,70 +5047,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:21",
     "topics": [
       {
-        "title": "A poor arrival",
-        "opening": "Have you ever arrived somewhere badly unprepared?",
-        "first": "I once entered a town and immediately explained what my last stop did better.",
+        "title": "A borrowed accent",
+        "opening": "Have you ever come home sounding different?",
+        "first": "After a month away, my sister asked why I'd begun talking through my nose. I'd thought I sounded distinguished.",
         "replies": [
           [
-            "How did they respond?",
-            "Very politely. Nobody invited me to stay long."
+            "Were you copying someone?",
+            "An innkeeper I admired. Unconsciously, which made it worse."
           ],
           [
-            "Did you notice why?",
-            "Not until a friend repeated my own words back."
+            "Did you stop?",
+            "After she imitated me through supper."
           ],
           [
-            "What do you do now?",
-            "Ask before comparing. Then remember I'm a guest."
+            "Do you change elsewhere?",
+            "A little. Sometimes travel shows you which parts of yourself were borrowed already."
           ]
         ]
       },
       {
-        "title": "The unnecessary luggage",
-        "opening": "What have you carried that you wished you'd left behind?",
-        "first": "I carried a spare cooking pot for weeks without using the first one.",
+        "title": "The meal you couldn't name",
+        "opening": "What's the best thing you've eaten on a journey?",
+        "first": "A stew I couldn't ask the name of. We didn't share a language. I held out my bowl and smiled rather desperately.",
         "replies": [
           [
-            "Why bring two?",
-            "One nested inside the other. It looked efficient."
+            "Did they understand?",
+            "Perfectly. Hunger travels well."
           ],
           [
-            "When did you leave it behind?",
-            "After carrying both uphill in rain."
+            "Could you make it yourself?",
+            "I've tried. Mine tastes like remembering, which isn't the same ingredient."
           ],
           [
-            "What do you pack now?",
-            "Things whose usefulness survives an honest question."
+            "Would you go back for it?",
+            "For the company, yes. The stew might disappoint a memory that large."
           ]
         ]
       },
       {
-        "title": "Asking directions again",
-        "opening": "Do you mind asking for directions a second time?",
-        "first": "I used to pretend I'd understood directions because I feared looking foolish.",
+        "title": "The traveller who stayed",
+        "opening": "Have you ever nearly settled somewhere else?",
+        "first": "Once. There was someone there. We spent weeks discussing the weather instead of what would happen when I left.",
         "replies": [
           [
-            "Did that help?",
-            "It made me foolish farther from the person who could help."
+            "Did you leave?",
+            "Yes. I wish we'd had the difficult conversation first."
           ],
           [
-            "What do you ask now?",
-            "The first turn, then the next landmark."
+            "Would it have changed things?",
+            "I don't know. That's the part I brought home."
           ],
           [
-            "Do you still get lost?",
-            "Certainly. I arrive at the admission sooner."
+            "Have you written since?",
+            "Once. Some answers take longer than letters."
           ]
         ]
       }
     ],
     "greetings": [
-      "Edric. I've been here long enough to know one useful direction.",
-      "I'm Corin. Which one?",
-      "Corin! Another traveller willing to remain seated.",
-      "A welcome ambition.",
-      "A dragon is a rather memorable way to arrive.",
-      "I'm Corin. Aurelius handles the memorable part."
+      "Room for one more conversation. I'm Edric.",
+      "Corin. I won't bring a speech.",
+      "Corin! Has anything surprised you since last time?",
+      "Quite a few things, unfortunately.",
+      "I've travelled for years to see something nobody would believe. You've brought it to the tavern.",
+      "I'm Corin. Please believe this part accurately."
     ]
   },
   "Dorr": {
@@ -5120,70 +5120,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:26",
     "topics": [
       {
-        "title": "Work after dark",
-        "opening": "What is it like working after everyone else has gone to bed?",
-        "first": "People see me resting in daylight and offer advice about industry. I was working while they slept.",
+        "title": "The town asleep",
+        "opening": "What's Thornwell like while everyone's asleep?",
+        "first": "Kinder-looking. No queues, no arguments. Then a cat knocks something over and restores proportion.",
         "replies": [
           [
-            "Do you explain?",
-            "If I have the energy. That's rather the problem."
+            "Do you like it?",
+            "Yes. I like being awake in a town that's resting."
           ],
           [
-            "Do you like night work?",
-            "The quiet, yes. The disrupted meals, less so."
+            "Does it feel lonely?",
+            "Sometimes. Then I see another lit window and imagine someone keeping me company."
           ],
           [
-            "Would you change shifts?",
-            "For the right work. Sleep deserves some negotiation."
+            "What do you hear?",
+            "Small noises daytime tramples over."
           ]
         ]
       },
       {
-        "title": "A tired promise",
-        "opening": "Have you ever agreed to something because you were too tired to argue?",
-        "first": "I once agreed to help someone move before remembering it followed my night shift.",
+        "title": "A misplaced breakfast",
+        "opening": "Do you eat breakfast when everyone else eats supper?",
+        "first": "Sometimes. People object as if eggs have signed an agreement with morning.",
         "replies": [
           [
-            "Did you manage?",
-            "Badly. We both would have preferred an honest refusal."
+            "Does it confuse you?",
+            "It confuses visitors. I offer toast and watch them reconsider the hour."
           ],
           [
-            "Did they forgive you?",
-            "Yes. They'd have asked someone else if I'd explained."
+            "What do you miss?",
+            "Meals where nobody's either arriving or falling asleep."
           ],
           [
-            "What do you say now?",
-            "Let me check when I'll actually be awake."
+            "Could you change your hours?",
+            "Perhaps eventually. For now, the work is steady."
           ]
         ]
       },
       {
-        "title": "A small holiday",
-        "opening": "What would you do with a little time off?",
-        "first": "My ideal holiday includes breakfast whenever I wake, with no apology.",
+        "title": "Dorr's strange talent",
+        "opening": "What's something you're unexpectedly good at?",
+        "first": "Remembering footsteps. I know several neighbours without ever seeing their faces at work.",
         "replies": [
           [
-            "No grand journey?",
-            "A grand journey often begins at an offensive hour."
+            "Could you recognise mine?",
+            "Not yet. You'd have to become a regular inconvenience."
           ],
           [
-            "What would you do afterward?",
-            "Walk somewhere pleasant, then sit somewhere pleasant."
+            "Is it useful?",
+            "When a familiar step hesitates, I know to check."
           ],
           [
-            "Would you want company?",
-            "Someone who doesn't consider resting a wasted day."
+            "What would your steps sound like?",
+            "Tired, I expect. I'd like to hear them from someone else's side of the door."
           ]
         ]
       }
     ],
     "greetings": [
-      "Dorr. I'm awake, despite appearances. Just on a different schedule.",
-      "I'm Corin. I'll keep my voice reasonable.",
-      "Corin. A conversation that won't require standing?",
-      "Gladly.",
-      "A dragon is a powerful argument for staying awake.",
-      "I'm Corin. Aurelius wasn't meant as an alarm."
+      "If I yawn, it's my hours, not your face. Dorr.",
+      "Corin. That's a relief.",
+      "Corin. You're getting easier to recognise through a yawn.",
+      "I'll count that as progress.",
+      "A dragon. That woke me up more effectively than expected.",
+      "I'm Corin. He's useful for unexpected wakefulness."
     ]
   },
   "Ser Anwen": {
@@ -5193,70 +5193,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:31",
     "topics": [
       {
-        "title": "An incomplete order",
-        "opening": "What do you do when an order leaves something important unsaid?",
-        "first": "An officer ordered a household searched and wouldn't explain what we were looking for.",
+        "title": "The armour beneath the title",
+        "opening": "Do people speak differently when they learn you're a knight?",
+        "first": "They either become painfully polite or begin a quarrel they've been saving for any uniform.",
         "replies": [
           [
-            "Did you question him?",
-            "Yes. Vague suspicion gives frightened soldiers too much freedom."
+            "Which is worse?",
+            "Politeness can hide fear. At least a quarrel tells me something."
           ],
           [
-            "Did he answer?",
-            "Enough to narrow the search. Not enough to justify his temper."
+            "Do you remove the title at home?",
+            "My sister removes it for me. With enthusiasm."
           ],
           [
-            "Was questioning dangerous?",
-            "Sometimes. Rank changes how safely you can object."
+            "Does that bother you?",
+            "No. It's restful to be someone who once fell out of an apple tree."
           ]
         ]
       },
       {
-        "title": "Fear in training",
-        "opening": "Do recruits admit when they're frightened?",
-        "first": "I was frightened of my first practice opponent and furious with myself for showing it.",
+        "title": "A command you remember",
+        "opening": "What order has stayed with you longest?",
+        "first": "A captain told me to sit beside a wounded man. I kept asking what useful thing I should do. He said I'd been told.",
         "replies": [
           [
-            "Did it get easier?",
-            "When someone taught me where to put my feet."
+            "Did sitting help?",
+            "The man stopped asking whether everyone had gone."
           ],
           [
-            "What about the fear?",
-            "It became something I could work through, not evidence I shouldn't be there."
+            "Did he survive?",
+            "Yes. I remember the sitting better than the fighting."
           ],
           [
-            "Do you still feel it?",
-            "Yes. Anyone promising otherwise may be selling courage too cheaply."
+            "Were you frightened?",
+            "Too frightened to feel useful. That didn't mean I wasn't."
           ]
         ]
       },
       {
-        "title": "An unrecorded kindness",
-        "opening": "Have you ever helped someone without putting it in a report?",
-        "first": "A guard once gave a cold prisoner his spare coat. No one put it in the report.",
+        "title": "Anwen's civilian wish",
+        "opening": "What would you do if you laid down your sword?",
+        "first": "Learn to make something people used without being afraid.",
         "replies": [
           [
-            "Did you?",
-            "No. I've regretted that omission."
+            "What would you make?",
+            "Perhaps doors. There's something pleasing about helping people come home."
           ],
           [
-            "Why remember it now?",
-            "Because duty is often described as though kindness interferes with it."
+            "Why haven't you begun?",
+            "I've been waiting for life to become uncomplicated. A foolish condition."
           ],
           [
-            "Did the prisoner thank him?",
-            "He was shaking too hard. Thanks wasn't the condition."
+            "Would you miss being a knight?",
+            "Parts of it. You can leave something without despising it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Anwen. You needn't stand straighter on my account.",
-      "I'm Corin. I'll stop trying, then.",
-      "Corin. Have we time to talk without orders interrupting?",
-      "I hope so.",
-      "A dragon beside a young traveller. I should hear your names first.",
-      "Corin, and Aurelius. We'd welcome that approach."
+      "Anwen. You may speak normally; I'm not conducting an inspection.",
+      "Corin. Good to know.",
+      "Corin. You seem less wary of me.",
+      "You keep giving me reasons to be.",
+      "A dragon. I should choose my next words carefully.",
+      "I'm Corin. We'd appreciate that."
     ]
   },
   "Grusk": {
@@ -5266,70 +5266,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:36",
     "topics": [
       {
-        "title": "The small favour",
-        "opening": "Do people ask you for help with small things?",
-        "first": "A neighbour called moving a wardrobe a small favour. I asked which part was small.",
+        "title": "The load you remember",
+        "opening": "What's the strangest thing you ever transported?",
+        "first": "An enormous portrait of a man who accompanied it. Both objects required flattering treatment.",
         "replies": [
           [
-            "Did you help?",
-            "After we found enough people to do it safely."
+            "Which was heavier?",
+            "The portrait. The man's opinion of himself was harder to carry."
           ],
           [
-            "Were they offended?",
-            "Only until they tried lifting their end."
+            "Did it arrive safely?",
+            "Yes. I wanted neither replacing."
           ],
           [
-            "Do people ask often?",
-            "Often enough that I can hear furniture in an introduction."
+            "Was he grateful?",
+            "He admired the portrait. I assume some gratitude was implied."
           ]
         ]
       },
       {
-        "title": "A delicate hobby",
-        "opening": "Do you have any hobbies that would surprise people?",
-        "first": "I mend small wooden boxes. People seem disappointed that I don't collect boulders.",
+        "title": "Grusk's reading glasses",
+        "opening": "Why do you keep mislaying your glasses?",
+        "first": "Because I take them off to look for something close. Then I need them to find what I've taken off.",
         "replies": [
           [
-            "Why boxes?",
-            "Precise work, quiet tools, a satisfying lid."
+            "Have you tried a cord?",
+            "Yes. Lost the cord."
           ],
           [
-            "Are your hands too large?",
-            "For other people's assumptions, apparently. The boxes manage."
+            "Do you mind being teased?",
+            "Only by people who never admit their own foolishness."
           ],
           [
-            "Do you sell them?",
-            "Sometimes. Mostly I enjoy giving them to particular friends."
+            "What do you read?",
+            "Love stories. You may adjust your expression at your leisure."
           ]
         ]
       },
       {
-        "title": "Being quiet",
-        "opening": "Do you mind sitting quietly with someone?",
-        "first": "If I don't speak in a group, people assume I'm angry. Usually I'm listening.",
+        "title": "A man without a load",
+        "opening": "Was it hard to stop hauling?",
+        "first": "For a while I measured every day by how tired I was. A pleasant day felt suspicious.",
         "replies": [
           [
-            "Do you tell them?",
-            "Yes. Then they ask what I'm thinking."
+            "What changed?",
+            "I spent an afternoon with my nephew and came home happy instead."
           ],
           [
-            "What are you thinking?",
-            "Often that somebody ought to let the quieter person finish."
+            "Do you miss the strength?",
+            "Yes. I miss trusting my back before I ask it."
           ],
           [
-            "Do you like company?",
-            "Very much. I simply don't need to occupy all of it."
+            "What do you do now?",
+            "More things badly. It's surprisingly enjoyable being a beginner nobody depends on."
           ]
         ]
       }
     ],
     "greetings": [
-      "Grusk. Before you ask, I came here to sit, not lift something.",
-      "I'm Corin. No lifting requested.",
-      "Corin. A visitor with conveniently empty hands.",
-      "I'm protecting your retirement.",
-      "Another large fellow people will ask to move things.",
-      "I'm Corin. Aurelius gets to decline as well."
+      "Grusk. You'll have to tell me your name; I've retired from guessing.",
+      "Corin. Happy to save you the effort.",
+      "Corin, good. A conversation I needn't begin from nothing.",
+      "Where did we leave it?",
+      "A dragon. I used to complain about moving wardrobes.",
+      "I'm Corin. Fortunately he moves himself."
     ]
   },
   "Fen": {
@@ -5339,70 +5339,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:41",
     "topics": [
       {
-        "title": "Missing the beat",
-        "opening": "Have you ever lost the beat while dancing?",
-        "first": "I once lost the rhythm and confidently led three people in the wrong direction.",
+        "title": "The serious face",
+        "opening": "Why do people look so stern when they're learning to dance?",
+        "first": "They're trying to remember their feet. Their faces get left in charge of worrying.",
         "replies": [
           [
-            "Did anyone fall?",
-            "No. We became a separate, confused dance."
+            "Were you like that?",
+            "Worse. I counted with my eyebrows."
           ],
           [
-            "What did you do?",
-            "Laughed, stopped, and found the beat again."
+            "What helps?",
+            "Someone willing to laugh with you instead of watching for mistakes."
           ],
           [
-            "Were they annoyed?",
-            "Less once I stopped pretending it was deliberate."
+            "Would I look foolish?",
+            "Briefly. Then you'd be busy doing something else."
           ]
         ]
       },
       {
-        "title": "Watching is joining",
-        "opening": "Does watching the dancing make you feel left out?",
-        "first": "I dislike pulling reluctant people into a dance. Watching can be their way of enjoying it.",
+        "title": "A dance for grief",
+        "opening": "Have you ever danced when you were unhappy?",
+        "first": "Yes. Not to cure it. I needed my body to remember it could do something besides sit with the feeling.",
         "replies": [
           [
-            "Have you done that before?",
-            "Yes. Their smile didn't mean what I wanted it to."
+            "Did it help?",
+            "For that evening. I don't ask every good thing to last forever."
           ],
           [
-            "How do you invite now?",
-            "Once, with an answer I'm willing to accept."
+            "Were other people there?",
+            "A few. They didn't demand I become cheerful."
           ],
           [
-            "What if they're merely shy?",
-            "Then they know the invitation exists. I leave them room."
+            "What did you dance to?",
+            "A tune I knew well enough not to think about."
           ]
         ]
       },
       {
-        "title": "Giving freely",
-        "opening": "How do you decide when to give something away?",
-        "first": "I like making gifts. I dislike hearing people list everything the recipient owes afterward.",
+        "title": "Fen's least graceful moment",
+        "opening": "What's your least graceful moment?",
+        "first": "Bowing after a performance and knocking heads with the person beside me. We received our loudest applause.",
         "replies": [
           [
-            "Have you felt indebted?",
-            "Yes. It spoiled a gift I had loved."
+            "Did it hurt?",
+            "Only until we started laughing. Then it hurt to laugh."
           ],
           [
-            "How do you avoid that?",
-            "Give only what I'm willing to part with."
+            "Did the audience think it was planned?",
+            "Some did. We declined requests to repeat it."
           ],
           [
-            "Is thanks enough?",
-            "Usually. Sometimes seeing something used is even nicer."
+            "Could you make it part of the act?",
+            "I prefer my art with fewer bruises."
           ]
         ]
       }
     ],
     "greetings": [
-      "Fen. You can join a celebration without proving you can dance.",
-      "I'm Corin. That's an encouraging rule.",
-      "Corin! Shall we leave your feet out of this conversation?",
-      "They'd be grateful.",
-      "A dragon! I suspect he has better balance than I do.",
-      "I'm Corin, and this is Aurelius. He gets more practice landing."
+      "Hello! Fen. You needn't dance to be good company.",
+      "Corin. That's reassuring.",
+      "Corin, you've returned. I shall assume the company was acceptable.",
+      "Better than acceptable.",
+      "If that dragon swishes his tail in time, I'm professionally threatened.",
+      "I'm Corin. I can't promise his sense of rhythm."
     ]
   },
   "Senn": {
@@ -5412,70 +5412,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:46",
     "topics": [
       {
-        "title": "A wager refused",
-        "opening": "Have you ever refused a wager?",
-        "first": "I refused a wager after noticing my opponent couldn't comfortably lose it.",
+        "title": "A rule nobody remembers",
+        "opening": "Why do old games have such strange rules?",
+        "first": "Because somebody once lost in an interesting way and made sure it couldn't happen again.",
         "replies": [
           [
-            "Did they insist?",
-            "Yes. I suggested playing for the pleasure of winning."
+            "Have you done that?",
+            "I once proposed a rule halfway through losing. It was poorly received."
           ],
           [
-            "Were they insulted?",
-            "Briefly. Then we had a better game."
+            "How do you learn the proper rules?",
+            "Ask three people, then agree which disagreement you'll use."
           ],
           [
-            "Do you never wager?",
-            "Small things, when everyone can laugh at losing."
+            "Doesn't that spoil the game?",
+            "Only if winning matters more than the evening."
           ]
         ]
       },
       {
-        "title": "A surprise for family",
-        "opening": "Have you managed to surprise your family?",
-        "first": "I organised a surprise supper for my brother. He'd planned an evening alone.",
+        "title": "The perfect opponent",
+        "opening": "Who do you most enjoy playing against?",
+        "first": "Someone who takes the game seriously and themselves lightly. Rarer than you'd think.",
         "replies": [
           [
-            "Was he unhappy?",
-            "Overwhelmed. I'd arranged what I would have liked."
+            "What about beginners?",
+            "I like teaching. I dislike people who pretend teaching means crushing someone slowly."
           ],
           [
-            "Did you apologise?",
-            "Yes. Then helped people leave before he had to ask."
+            "Are you a good loser?",
+            "I am a recovering bad one."
           ],
           [
-            "Would you try again?",
-            "With fewer surprises and his actual agreement."
+            "How can I tell?",
+            "If I explain why I lost before saying well played, remind me."
           ]
         ]
       },
       {
-        "title": "Learning a new game",
-        "opening": "Do you enjoy learning games you aren't good at yet?",
-        "first": "I enjoy being terrible at a new game before I begin caring about winning.",
+        "title": "The game in your head",
+        "opening": "Do you ever replay a game afterward?",
+        "first": "Constantly. In my head I'm brilliant about an hour too late.",
         "replies": [
           [
-            "How long does that last?",
-            "About twenty minutes. I'm working on extending it."
+            "Does that improve your next game?",
+            "Sometimes. Mostly it improves my walk home."
           ],
           [
-            "Do you ask for help?",
-            "After exhausting several obviously poor ideas."
+            "Do you ever stop thinking about it?",
+            "When someone asks a better question."
           ],
           [
-            "What's your favourite part?",
-            "The moment a rule becomes a possibility instead of an obstacle."
+            "Was that a better question?",
+            "Nearly. Give me a moment to resign mentally."
           ]
         ]
       }
     ],
     "greetings": [
-      "Senn. You look like someone who might read the rules before disagreeing with them.",
-      "I'm Corin. I can try.",
-      "Corin! I've found a game without wagers.",
-      "That sounds easier on my purse.",
-      "A dragon would make cheating considerably more intimidating.",
-      "I'm Corin. Aurelius isn't here to supervise your cards."
+      "Senn. Before you ask, the expression is concentration, not indigestion.",
+      "Corin. I was going to ask neither.",
+      "Corin! I've lost an argument with the rules.",
+      "Are you admitting defeat?",
+      "A dragon could settle a game dispute rather unfairly.",
+      "I'm Corin. We won't use him as an umpire."
     ]
   },
   "Dain": {
@@ -5485,70 +5485,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:51",
     "topics": [
       {
-        "title": "The quiet opponent",
-        "opening": "Can you tell much about a quiet opponent?",
-        "first": "I underestimated a quiet card player. She let me explain the game, then beat me three times.",
+        "title": "The face you can't read",
+        "opening": "Who's impossible to read across a table?",
+        "first": "My aunt. She looks disappointed whatever she's holding. I spent childhood training and learned nothing.",
         "replies": [
           [
-            "Did she already know it?",
-            "She'd taught my teacher. I learned that last."
+            "Is she good?",
+            "Appallingly. Pretends she barely knows the game."
           ],
           [
-            "Were you gracious?",
-            "Not immediately. I've improved the story since."
+            "Do you call her out?",
+            "And risk her remembering something I did at twelve? No."
           ],
           [
-            "Did you play her again?",
-            "Yes. I asked for advice before providing any."
+            "Have you ever beaten her?",
+            "Once. She congratulated me so sweetly I suspected a gift."
           ]
         ]
       },
       {
-        "title": "A growing story",
-        "opening": "Does a story get larger every time you tell it?",
-        "first": "Each time I described a victory, my opponent became more formidable. Eventually a friend asked whether I'd defeated an army.",
+        "title": "A debt forgiven",
+        "opening": "Have you ever forgiven a debt?",
+        "first": "A friend owed me enough that he stopped visiting. I realised I was missing him more than the money.",
         "replies": [
           [
-            "Had you exaggerated much?",
-            "Enough that the original opponent wouldn't recognise himself."
+            "Did you tell him?",
+            "Yes. He came round looking prepared for a punishment."
           ],
           [
-            "Did you correct it?",
-            "Yes. The real game was actually interesting."
+            "Did he repay you eventually?",
+            "Partly. We stopped measuring every visit against it."
           ],
           [
-            "Why add to it?",
-            "I wanted the attention more than I respected the memory."
+            "Would you lend again?",
+            "Not more than I could afford to lose without losing the person."
           ]
         ]
       },
       {
-        "title": "Playing without money",
-        "opening": "Would you still play if there were no money involved?",
-        "first": "Without a wager I take risks I'd never afford otherwise. The game becomes less tidy and more fun.",
+        "title": "Dain's lucky coat",
+        "opening": "Do you believe in lucky clothes?",
+        "first": "I won three games in a coat, then lost five refusing to take it off in a hot room.",
         "replies": [
           [
-            "Do you still want to win?",
-            "Fiercely. My purse simply gets an evening off."
+            "Did you blame the coat?",
+            "For the heat, certainly."
           ],
           [
-            "Do others agree?",
-            "Some. Others miss looking solemn over tiny coins."
+            "Why keep wearing it?",
+            "Because taking it off would admit the first three wins weren't magic."
           ],
           [
-            "Would you teach me?",
-            "Gladly, if you promise to interrupt a poor explanation."
+            "What do you believe now?",
+            "That fresh air improves judgement more reliably than tailoring."
           ]
         ]
       }
     ],
     "greetings": [
-      "Dain. Ignore anyone who introduces me as the fellow who lost yesterday.",
-      "I'm Corin. I hadn't heard, until now.",
-      "Corin! My reputation has had time to recover.",
-      "Should I avoid asking from what?",
-      "A dragon. Well, you've won the interesting entrance.",
-      "I'm Corin. Aurelius wasn't aware of the contest."
+      "Dain. If you want a seat, ask. If you want my secrets, buy your own.",
+      "Corin. I'll begin with conversation.",
+      "Corin! Looking for company or a theory about luck?",
+      "Company sounds cheaper.",
+      "A dragon at your shoulder would make bluffing difficult for everyone else.",
+      "I'm Corin. We'll keep him out of the game."
     ]
   },
   "Rusk": {
@@ -5558,70 +5558,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:56",
     "topics": [
       {
-        "title": "Old advice",
-        "opening": "Is there any advice you once believed and no longer do?",
-        "first": "I once recommended a bridge that no longer stood. My information had been sound and had become dangerous.",
+        "title": "The companion you disliked",
+        "opening": "Have you travelled with someone you couldn't stand?",
+        "first": "A man who sang constantly. Hated him for three days. On the fourth I was ill and he stayed without a word.",
         "replies": [
           [
-            "Did the traveller reach it?",
-            "Yes, then sensibly turned back. I apologised when he returned."
+            "Did that change things?",
+            "I still hated the singing. I stopped mistaking it for the whole man."
           ],
           [
-            "How do you check now?",
-            "Ask recent travellers and state what I haven't confirmed."
+            "Did you travel together again?",
+            "Yes. I requested quieter songs."
           ],
           [
-            "Do people dislike uncertainty?",
-            "Some do. A confident mistake remains worse company."
+            "What did he dislike about you?",
+            "My conviction that silence was everyone's favourite sound."
           ]
         ]
       },
       {
-        "title": "A journey declined",
-        "opening": "Have you ever decided against taking a journey?",
-        "first": "I turned down a profitable journey because the weather was worsening. Others called me timid.",
+        "title": "A door left open",
+        "opening": "What's the kindest welcome you've had?",
+        "first": "Someone opened a door before I could finish deciding whether I dared knock.",
         "replies": [
           [
-            "Were you proved right?",
-            "I don't know. Good judgement shouldn't require someone else suffering."
+            "Why were you hesitant?",
+            "I looked a state and had very little money."
           ],
           [
-            "Did you lose the money?",
-            "Yes. I kept the freedom to regret it somewhere warm."
+            "Did they ask questions?",
+            "After I was warm. That's the part I remember."
           ],
           [
-            "Was it an easy decision?",
-            "Not remotely. Fear of looking foolish is expensive."
+            "Did you go back?",
+            "Years later. They remembered less about it than I did."
           ]
         ]
       },
       {
-        "title": "Arriving safely",
-        "opening": "What matters most when you reach the end of a trip?",
-        "first": "My favourite part of a journey is taking my boots off somewhere I expect to sleep.",
+        "title": "The journey you haven't described",
+        "opening": "Is there a journey you never talk about?",
+        "first": "One where I came home alone. People keep asking for the exciting parts. There weren't any I'd care to offer.",
         "replies": [
           [
-            "Not the scenery?",
-            "Scenery improves after that too."
+            "I'm sorry.",
+            "Thank you. You needn't turn it into a question."
           ],
           [
-            "What do you do first?",
-            "Wash, eat, then decide whether I want conversation."
+            "Did talking ever help?",
+            "With someone who wasn't waiting for a story, yes."
           ],
           [
-            "Do you miss travelling at home?",
-            "After a while. I apparently require both arrival and departure."
+            "We can speak about something else.",
+            "I'd like that. Thank you for hearing the difference."
           ]
         ]
       }
     ],
     "greetings": [
-      "Rusk. Road advice comes with a date. Ask when I travelled before trusting it.",
-      "I'm Corin. That's useful advice already.",
-      "Corin. Arrived in one piece and willing to sit?",
-      "Both, fortunately.",
-      "Wings won't make every road report relevant to both of you.",
-      "I'm Corin. Aurelius and I still need places to rest."
+      "Rusk. If you've come far, sit before explaining how far.",
+      "Corin. I'd appreciate that order of events.",
+      "Corin. Still curious? Good.",
+      "Usually at inconvenient times.",
+      "I've shared roads with stranger things, but rarely shared a conversation near one.",
+      "I'm Corin. We'd like this to be a friendly oddity."
     ]
   },
   "Linnet": {
@@ -5631,70 +5631,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:61",
     "topics": [
       {
-        "title": "An unwelcome request",
-        "opening": "Do people request songs you'd rather not play?",
-        "first": "A guest requested a song another guest had asked me to avoid. I chose something else entirely.",
+        "title": "The song that changed",
+        "opening": "Have you ever heard someone change one of your songs?",
+        "first": "A child made up a verse about his brother's ears. The original had been a mournful love song.",
         "replies": [
           [
-            "Did they complain?",
-            "One did. I told him he wasn't the whole audience."
+            "Were you offended?",
+            "It was an excellent verse. I resented that briefly."
           ],
           [
-            "Why did the other dislike it?",
-            "A private reason. It didn't need public explanation."
+            "Did you keep it?",
+            "In my memory. His brother asked me not to perform it."
           ],
           [
-            "Was there a better solution?",
-            "Perhaps. Keeping the evening pleasant seemed sufficient."
+            "Who owns a song then?",
+            "Once people sing it, ownership becomes a rather crowded room."
           ]
         ]
       },
       {
-        "title": "Playing beside someone",
-        "opening": "What's it like playing alongside another musician?",
-        "first": "Another musician once slowed to match my playing instead of showing everyone I was behind.",
+        "title": "A musician's silence",
+        "opening": "Do you ever get tired of music?",
+        "first": "Yes. I like walking home with only my footsteps for company.",
         "replies": [
           [
-            "Did you thank them?",
-            "Afterward. During the tune I was busy recovering."
+            "Does that worry you?",
+            "It used to. Now I know enjoyment can need a rest."
           ],
           [
-            "Do you do that now?",
-            "Whenever I can. Music isn't improved by humiliating a partner."
+            "What do you hear afterward?",
+            "The tune more clearly, usually."
           ],
           [
-            "Were they the better player?",
-            "Much better. Secure enough not to announce it."
+            "Would you stop performing?",
+            "Perhaps someday. I'd keep the part nobody has to applaud."
           ]
         ]
       },
       {
-        "title": "A wrong note",
-        "opening": "What do you do when you hit a wrong note?",
-        "first": "One wrong note feels enormous to the player. Listeners may already be following the next phrase.",
+        "title": "A forgotten listener",
+        "opening": "Do you remember faces in an audience?",
+        "first": "One woman always looked bored. I thought she hated my playing. Then she brought her children to hear me.",
         "replies": [
           [
-            "Can you ignore it?",
-            "I notice it without stopping the whole tune."
+            "Did you ask why she looked bored?",
+            "Fortunately, I didn't. That might have shortened the friendship."
           ],
           [
-            "Do you ever start over?",
-            "If I've lost the piece entirely. It happens."
+            "What did you learn?",
+            "That a face isn't a review."
           ],
           [
-            "What helps you recover?",
-            "Knowing the music well enough to find another entrance."
+            "Do you still look for reactions?",
+            "Yes. I'm a musician, not a saint."
           ]
         ]
       }
     ],
     "greetings": [
-      "Linnet. If you've a request, humming is more useful than describing the third verse.",
-      "I'm Corin. I'll spare you my humming for now.",
-      "Corin! A listener I recognise.",
-      "I came to hear you talk this time.",
-      "Would your companion like music, or would that startle him?",
-      "I'm Corin. I'll ask Aurelius before deciding for him."
+      "Hello. Linnet. Are you listening, or trying to get past?",
+      "Corin. Listening for now.",
+      "Corin! Good to have a familiar ear.",
+      "I've brought both.",
+      "A dragon might make the lower notes rather more interesting.",
+      "I'm Corin. Please don't encourage a duet yet."
     ]
   },
   "Puck": {
@@ -5704,70 +5704,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:66",
     "topics": [
       {
-        "title": "The wrong chorus",
-        "opening": "Have you ever sung the wrong chorus?",
-        "first": "I sang a chorus wrong for years. Apparently I had been celebrating a wheelbarrow rather than a wedding.",
+        "title": "The song in your sleep",
+        "opening": "Have you ever woken with a song stuck in your head?",
+        "first": "One I couldn't identify. Spent a day humming it at people. It was a vendor's cry about onions.",
         "replies": [
           [
-            "Who corrected you?",
-            "Linnet, after trying very hard not to laugh."
+            "Did anyone recognise it?",
+            "Bess. Told me the price had gone up."
           ],
           [
-            "Did you change it?",
-            "In public. The wheelbarrow has sentimental value."
+            "Were you disappointed?",
+            "A little. I'd hoped for a forgotten masterpiece."
           ],
           [
-            "Were the words similar?",
-            "Enough to defend my childhood, not my adulthood."
+            "Do you still hum it?",
+            "Yes. The onions had excellent phrasing."
           ]
         ]
       },
       {
-        "title": "Enjoying music badly",
-        "opening": "Can someone enjoy music without being any good at it?",
-        "first": "I sing enthusiastically and inaccurately. Those qualities occasionally compete.",
+        "title": "The enthusiasm problem",
+        "opening": "Can you clap too much?",
+        "first": "Apparently. I once applauded halfway through a dramatic pause. Started an entire room.",
         "replies": [
           [
-            "Do people mind?",
-            "I ask, especially in small rooms."
+            "Was the performer angry?",
+            "He thanked us through his teeth and began the silence again."
           ],
           [
-            "Would lessons help?",
-            "Probably. I'd have to stop pretending enthusiasm was practice."
+            "Did you apologise?",
+            "Afterward. He said at least I'd been awake."
           ],
           [
-            "Why do you love it?",
-            "Everyone breathing toward the same next line. It's a lovely feeling."
+            "Would you do it again?",
+            "My hands occasionally act before consultation."
           ]
         ]
       },
       {
-        "title": "One more song",
-        "opening": "How do you know when to stop asking for one more song?",
-        "first": "I keep deciding to leave after the next song. Musicians are inconsiderate about playing another good one.",
+        "title": "Puck's quiet friend",
+        "opening": "Does everyone need to enjoy the same music to be friends?",
+        "first": "My best friend likes silence. We've built a surprisingly sturdy friendship around taking turns.",
         "replies": [
           [
-            "Do you miss appointments?",
-            "Only when I make the foolish mistake of promising punctuality."
+            "Do you argue?",
+            "Only when I call silence a very slow tune."
           ],
           [
-            "Is that worth staying for?",
-            "Some evenings. Others I discover I'm merely avoiding going home."
+            "How did you meet?",
+            "I sat beside him because he wasn't trying to talk over the song."
           ],
           [
-            "Would you perform yourself?",
-            "With friends, perhaps. An audience deserves some preparation."
+            "What does he like about you?",
+            "He says I'm pleased about things. I hadn't realised that could be useful."
           ]
         ]
       }
     ],
     "greetings": [
-      "Puck. Human, despite the name. My parents enjoyed making introductions longer.",
-      "I'm Corin. They seem to have succeeded.",
-      "Corin! I've learned most of a chorus.",
-      "Should I prepare for the remaining part?",
-      "A dragon! For once I won't be the loudest surprise.",
-      "I'm Corin. Aurelius hasn't heard your chorus yet."
+      "Puck. I listen better than I sing, which isn't difficult.",
+      "Corin. I'll trust your judgement.",
+      "Corin! You've missed a lively argument about a tune.",
+      "Was anyone actually singing it?",
+      "Oh, magnificent. A dragon. This evening's stories will require restraint.",
+      "I'm Corin. Please practise that restraint early."
     ]
   },
   "Vale": {
@@ -5777,70 +5777,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:71",
     "topics": [
       {
-        "title": "An obsolete word",
-        "opening": "Do you find words that nobody uses anymore?",
-        "first": "I found an old word for a person who promises to leave and continues talking. I've been hoping to use it.",
+        "title": "A book you outgrew",
+        "opening": "Have you ever stopped loving a favourite book?",
+        "first": "Yes. Read it again and found it cruel in places I'd once called clever.",
         "replies": [
           [
-            "Will you tell me the word?",
-            "I've forgotten it. A devastating failure of preparation."
+            "Did you throw it away?",
+            "No. I wanted to remember why I'd admired it, and why I no longer did."
           ],
           [
-            "Do you collect words?",
-            "Useful ones and splendidly useless ones."
+            "Was that sad?",
+            "A little. It's strange to outgrow someone who hasn't changed."
           ],
           [
-            "Which is this?",
-            "Potentially useful, provided I remember it before the guest leaves."
+            "Could you love parts of it?",
+            "I do. Affection needn't be a promise to agree forever."
           ]
         ]
       },
       {
-        "title": "A reliable breakfast",
-        "opening": "What makes a dependable breakfast?",
-        "first": "When travelling, I prefer a breakfast I recognise. I have the rest of the day for uncertainty.",
+        "title": "The stranger who knew you",
+        "opening": "Has someone ever mistaken you for someone else?",
+        "first": "A woman embraced me at an inn. When she realised, she began to cry. Her son hadn't come home.",
         "replies": [
           [
-            "Doesn't that seem dull?",
-            "Only to someone else eating it."
+            "What did you do?",
+            "Stayed while she gathered herself. I didn't know what else to offer."
           ],
           [
-            "What's your preference?",
-            "Bread, something warm, and no lecture about local delicacies."
+            "Did you learn what happened?",
+            "No. I still think about her when I enter a crowded room."
           ],
           [
-            "Do you ever try new food?",
-            "At lunch, when discovery feels less aggressive."
+            "That's a hard thing to carry.",
+            "Yes. Not every journey leaves you a useful lesson."
           ]
         ]
       },
       {
-        "title": "A question declined",
-        "opening": "Do you ever decide not to answer a question?",
-        "first": "A stranger once asked why I travelled alone. I told him I preferred discussing where I was going.",
+        "title": "The last unread page",
+        "opening": "Would you want to know how your own story ends?",
+        "first": "No. I'd begin arranging everything to explain it. I'd rather notice the middle.",
         "replies": [
           [
-            "Did he accept that?",
-            "After trying again. I repeated myself without elaborating."
+            "Even if the ending were good?",
+            "Especially then. I might grow careless with the people in it."
           ],
           [
-            "Was he being unkind?",
-            "Perhaps just curious. I still owed him no explanation."
+            "What if it were bad?",
+            "I'd spend good days waiting for it."
           ],
           [
-            "What may I ask you?",
-            "About books, roads, and breakfast. A generous territory."
+            "I'd be tempted to look.",
+            "So would I. Refusing an imaginary book is easy."
           ]
         ]
       }
     ],
     "greetings": [
-      "Vale. I prefer questions that permit a short answer.",
-      "I'm Corin. I'll begin with hello.",
-      "Corin. An exception to my usual preference for my book.",
-      "I'll try not to abuse the honour.",
-      "A dragon must attract questions you didn't invite.",
-      "I'm Corin. Aurelius and I have noticed that."
+      "Vale. You're welcome to interrupt my book; it's becoming pompous.",
+      "Corin. I'll try to improve the company.",
+      "Corin! The book has improved or I've become more forgiving.",
+      "Which seems likelier?",
+      "A dragon. At last, a travel account I can verify by looking up.",
+      "I'm Corin. He'd prefer not to be reduced to an account."
     ]
   },
   "Cerys": {
@@ -5850,70 +5850,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:76",
     "topics": [
       {
-        "title": "An unfair guess",
-        "opening": "Have you ever judged someone unfairly?",
-        "first": "I thought a quiet neighbour disliked everyone. Then discovered she was struggling to hear the conversation.",
+        "title": "A face in a crowd",
+        "opening": "Why do you like watching strangers?",
+        "first": "Everybody arrives in the middle of a life. You get a glimpse and never learn most of it.",
         "replies": [
           [
-            "How did you learn?",
-            "She asked me to face her when speaking."
+            "Do you invent the rest?",
+            "Constantly. I try not to mistake my invention for knowing them."
           ],
           [
-            "Did you feel foolish?",
-            "Yes. I'd made a personality out of missing information."
+            "What did you guess about me?",
+            "That you were looking for someone. It's a popular answer and often true."
           ],
           [
-            "Did you become friends?",
-            "We talk more easily now. I ask rather than interpret."
+            "Would you rather ask?",
+            "I'm trying that now."
           ]
         ]
       },
       {
-        "title": "Your sister's complaint",
-        "opening": "Does your sister enjoy being asked so many questions?",
-        "first": "My sister says I turn ordinary chats into investigations. She would sometimes like to mention lunch without explaining herself.",
+        "title": "The courage to interrupt",
+        "opening": "Do you find it easy to approach people?",
+        "first": "Only after I've rehearsed something natural so many times it no longer sounds natural.",
         "replies": [
           [
-            "Is she right?",
-            "Entirely. I had a follow-up question before she finished."
+            "Like this conversation?",
+            "I abandoned the rehearsal. You arrived too soon."
           ],
           [
-            "What did you say?",
-            "That I'd try. Then, with effort, stopped speaking."
+            "What were you going to say?",
+            "Something unbearable about the weather."
           ],
           [
-            "Do you manage better now?",
-            "Some days. She reminds me with the word 'lunch'."
+            "You could just say hello.",
+            "Yes. Deceptively sophisticated word, hello."
           ]
         ]
       },
       {
-        "title": "Being mistaken",
-        "opening": "What do you do when you realise you've been mistaken?",
-        "first": "I enjoy a surprising answer unless I've already announced the opposite too confidently.",
+        "title": "A question you regret",
+        "opening": "Have you asked something you wished you hadn't?",
+        "first": "Asked a man why he always ate alone. As though solitude required a defence.",
         "replies": [
           [
-            "What do you do then?",
-            "Try to look interested while my pride catches up."
+            "How did he answer?",
+            "Said he enjoyed his own company. I apologised for sounding surprised."
           ],
           [
-            "Does anyone notice?",
-            "My sister always notices."
+            "Did he mind?",
+            "Less than I did afterward."
           ],
           [
-            "Why keep asking questions?",
-            "Because being right about everything I already know sounds dull."
+            "Would you ask now?",
+            "I'd ask whether he wanted company. Much less work for him."
           ]
         ]
       }
     ],
     "greetings": [
-      "Cerys. I ask too many questions; you're allowed to return some of them.",
-      "I'm Corin. I'll remember the invitation.",
-      "Corin. Shall I listen first this time?",
-      "I might take you up on that.",
-      "A dragon's friend must have a life beyond introducing the dragon.",
-      "I'm Corin. Thank you for starting there."
+      "Cerys. I was trying to guess your business and doing it badly.",
+      "Corin. We can save you the trouble.",
+      "Corin! You've become an actual person instead of one of my guesses.",
+      "A promotion, I hope.",
+      "A dragon. I withdraw every guess I was making.",
+      "I'm Corin. You weren't going to guess that one."
     ]
   },
   "Nyra": {
@@ -5923,70 +5923,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "06-copper-cup.txt:81",
     "topics": [
       {
-        "title": "A failed trick",
-        "opening": "Have you ever had a trick fail in front of everyone?",
-        "first": "A coin fell from my sleeve before I'd asked anyone to choose a hand. The audience enjoyed it enormously.",
+        "title": "The trick you won't perform",
+        "opening": "Is there a trick you refuse to do?",
+        "first": "One that depends on humiliating the volunteer. Cheap laughter. Expensive for the person standing there.",
         "replies": [
           [
-            "Did you recover?",
-            "I asked them to forget what they'd just witnessed. That helped nobody."
+            "Did you learn that badly?",
+            "Yes. I laughed along when I should have stopped."
           ],
           [
-            "Were you upset?",
-            "For a moment. Then I realised they were still having fun."
+            "Can you surprise people kindly?",
+            "Of course. Astonishment doesn't need a victim."
           ],
           [
-            "Do you practise that trick?",
-            "Especially that one. Affectionate laughter is still information."
+            "What makes a good volunteer?",
+            "Someone who wants to be there. That's the whole secret of that part."
           ]
         ]
       },
       {
-        "title": "Knowing the secret",
-        "opening": "Is a trick still enjoyable once you know how it works?",
-        "first": "Some spectators enjoy a trick more after learning how it works. Others prefer the mystery.",
+        "title": "Nyra without an audience",
+        "opening": "Are you funny when you're alone?",
+        "first": "Mostly I'm quiet. People seem disappointed to discover I don't perform for the kettle.",
         "replies": [
           [
-            "Which do you prefer?",
-            "Knowing, then admiring the practice it took."
+            "Do you like being quiet?",
+            "Very much. It gives the next joke somewhere to come from."
           ],
           [
-            "Do you reveal every trick?",
-            "No. I ask what kind of pleasure they came for."
+            "Does performing tire you?",
+            "Pleasantly, until somebody follows me home expecting more."
           ],
           [
-            "Is pretending dishonest?",
-            "An agreed illusion is a game. Taking someone's money under false pretences is different."
+            "How do you tell them to stop?",
+            "Plainly. I have no clever version that works better."
           ]
         ]
       },
       {
-        "title": "A game worth losing",
-        "opening": "Can losing a game be worth it?",
-        "first": "I enjoy an opponent who makes a good move I didn't anticipate. Even when it ruins my plan.",
+        "title": "A vanished coin",
+        "opening": "Have you ever actually lost a coin during a trick?",
+        "first": "Yes. Disappeared perfectly. Reappeared three days later in my laundry, to a much smaller audience.",
         "replies": [
           [
-            "Do you congratulate them?",
-            "After a brief internal complaint."
+            "What did you tell the first audience?",
+            "That its return would be unusually mysterious."
           ],
           [
-            "Would you rather win easily?",
-            "Once, perhaps. Repeatedly would be tedious."
+            "Did they believe you?",
+            "One person applauded the confidence."
           ],
           [
-            "What makes a bad opponent?",
-            "Someone who treats losing as permission to be cruel."
+            "Would you admit it now?",
+            "I just have. Consider yourself specially trusted."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nyra. You may watch my hands, though that won't necessarily help.",
-      "I'm Corin. Should I watch your expression too?",
-      "Corin! No performance required this evening.",
-      "I'm glad to have met the person behind it.",
-      "A dragon makes a disappearing coin seem rather small.",
-      "I'm Corin. Aurelius leaves the coin tricks to you."
+      "Nyra. If I offer to guess your card, watch my other hand.",
+      "Corin. That's unusually honest advertising.",
+      "Corin! Still trusting me enough to say hello?",
+      "Only hello, so far.",
+      "A dragon. Hard act to follow. I'd need a much larger hat.",
+      "I'm Corin. Please don't try putting him in one."
     ]
   },
   "Prue": {
@@ -5996,70 +5996,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:1",
     "topics": [
       {
-        "title": "An arch without mortar",
-        "opening": "How does an arch stand without mortar?",
-        "first": "An arch can hold because each stone presses against its neighbours. Remove the wrong one and the whole arrangement objects.",
+        "title": "The mason's handwriting",
+        "opening": "Why is your handwriting so tiny?",
+        "first": "Spend all day making permanent marks and you become shy about the casual ones.",
         "replies": [
           [
-            "How do you build it safely?",
-            "Support it from underneath until the stones are fitted."
+            "Can anyone read it?",
+            "I can. Usually on the day I wrote it."
           ],
           [
-            "Who taught you?",
-            "A mason who made me draw the forces before touching a chisel."
+            "What do you write?",
+            "Letters to my sister. She sends a separate page of questions about my letters."
           ],
           [
-            "Could you make one alone?",
-            "A small one. For larger work, I'd prefer living colleagues."
+            "Would larger writing help?",
+            "Obviously. I'm resisting an easy solution on principle."
           ]
         ]
       },
       {
-        "title": "A commission you want",
-        "opening": "What would you most like to be commissioned to build?",
-        "first": "I'd like to build a covered gathering place where a person can sit without buying anything.",
+        "title": "A wall with a secret",
+        "opening": "Have you ever hidden something in a building?",
+        "first": "A scrap with our names inside a wall we repaired. Nothing grand. Just who had been there.",
         "replies": [
           [
-            "Why that building?",
-            "Rain shouldn't send every lonely person home."
+            "Why hide it?",
+            "It was for whoever came after us, not whoever paid us."
           ],
           [
-            "Who would pay for it?",
-            "That's the difficult drawing. Stone is simpler than funding."
+            "What if nobody finds it?",
+            "Then it can stay ours."
           ],
           [
-            "What would you include?",
-            "Broad steps, shelter, and seats with backs. Knees deserve consideration."
+            "What would you want to find?",
+            "A name. Something to say aloud while I worked."
           ]
         ]
       },
       {
-        "title": "A stubborn signature",
-        "opening": "Do you put your name on your work?",
-        "first": "I hide a tiny mark in finished stonework. My father said a mason shouldn't need applause.",
+        "title": "Prue's temper",
+        "opening": "What makes you lose your temper fastest?",
+        "first": "Someone lifting my tools without asking. People become remarkably familiar when they think they're helping.",
         "replies": [
           [
-            "Did he mark his work?",
-            "Of course. Underneath, where he thought nobody checked."
+            "Do you tell them?",
+            "Before I start shouting, if I'm quick enough."
           ],
           [
-            "Have you found his marks?",
-            "Several. I feel absurdly pleased whenever I do."
+            "Has anyone surprised you pleasantly?",
+            "An apprentice who asked where everything went and remembered."
           ],
           [
-            "Will people find yours?",
-            "I hope someone curious will, long after I've stopped explaining them."
+            "That doesn't sound difficult.",
+            "No. That's partly why the other thing irritates me."
           ]
         ]
       }
     ],
     "greetings": [
-      "Prue. Mason. If you ask whether the work is heavy, I'll make you carry some.",
-      "I'm Corin. I had a different question ready.",
-      "Corin, you're back before I've become famous.",
-      "I'll remember I knew you beforehand.",
-      "A dragon. Now there's a client who would test a foundation.",
-      "I'm Corin, and this is Aurelius. We're only visiting."
+      "Prue. If you've come to tell me that's heavy, I know.",
+      "Corin. I'll find something more useful to say.",
+      "Corin. Good. Someone who asks before advising.",
+      "I do try.",
+      "A dragon. Please keep him clear of anything I've only just finished.",
+      "I'm Corin. We'll watch where he steps."
     ]
   },
   "Toft": {
@@ -6069,70 +6069,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:6",
     "topics": [
       {
-        "title": "Leaving the mine",
-        "opening": "Why did you leave the mine?",
-        "first": "I left mining after my shoulder stopped forgiving me overnight. I disliked admitting it before I disliked the pain.",
+        "title": "The price of warmth",
+        "opening": "What sells when the weather turns miserable?",
+        "first": "Things people thought they could manage without. Dry socks acquire an astonishing dignity.",
         "replies": [
           [
-            "Was the shop your first plan?",
-            "No. I tried resting and became unbearable."
+            "Did you learn that underground?",
+            "I learned several unpleasant ways to regret wet feet."
           ],
           [
-            "Do you miss the crew?",
-            "Yes. They visit and insult my prices affectionately."
+            "Do you charge more then?",
+            "No. People remember being cornered."
           ],
           [
-            "Is trading easier?",
-            "On the shoulder. Arithmetic has found other ways to hurt me."
+            "Even if others do?",
+            "Especially then. I'd like customers who return willingly."
           ]
         ]
       },
       {
-        "title": "Stock that sells slowly",
-        "opening": "What happens to stock that doesn't sell?",
-        "first": "A shelf full of useful goods can still bankrupt a shop if nobody needs them this month.",
+        "title": "Toft's old nickname",
+        "opening": "Did the miners have a name for you?",
+        "first": "Songbird. I can't sing a note. Miners enjoy accuracy chiefly when it's inconvenient.",
         "replies": [
           [
-            "How do you choose stock?",
-            "Watch what people actually buy, then listen to what they couldn't find."
+            "Did you mind?",
+            "At first. Then I noticed they used it kindly."
           ],
           [
-            "Have you guessed badly?",
-            "Bought far too many cooking pots. Everyone owned one already."
+            "Who started it?",
+            "A man who snored in tune. Unfairly gifted."
           ],
           [
-            "What happened to them?",
-            "Sold slowly. I became exceptionally knowledgeable about pots."
+            "Do people still call you that?",
+            "Old friends. It's how I know who's come through the door."
           ]
         ]
       },
       {
-        "title": "Underground lunches",
-        "opening": "What did you eat underground during a shift?",
-        "first": "A warm meal after a shift could improve my opinion of the entire world.",
+        "title": "An unopened parcel",
+        "opening": "Have you ever kept something wrapped for years?",
+        "first": "A gift from my mother. Opened it after she died and hated myself for waiting.",
         "replies": [
           [
-            "What did you want most?",
-            "Thick stew and enough bread to clean the bowl."
+            "What was it?",
+            "A scarf she'd made too long. She'd included an apology for the length."
           ],
           [
-            "Did you cook it?",
-            "Eventually. Waiting for someone else made supper unreliable."
+            "Do you use it?",
+            "Every winter. Plenty of room for the apology."
           ],
           [
-            "Are you any good?",
-            "My former crew still visits at suspiciously convenient hours."
+            "Why hadn't you opened it?",
+            "Thought there'd be time to thank her properly. I was very busy being foolish."
           ]
         ]
       }
     ],
     "greetings": [
-      "Toft. Ask what you need, and I'll spare you a sales performance.",
-      "Corin. Much appreciated.",
-      "Corin! Customer, neighbour, or merely sheltering from conversation elsewhere?",
-      "A visitor, if that's allowed.",
-      "A dragon changes the scale of a provisions list.",
-      "I'm Corin. Aurelius and I still begin with the basics."
+      "Toft. Take a look around before deciding you can't afford anything.",
+      "Corin. Thank you.",
+      "Corin! Back with stories or an empty bag?",
+      "A little of both, probably.",
+      "I'd better learn what dragons eat before I attempt a sales pitch.",
+      "I'm Corin. That's a sensible order."
     ]
   },
   "Ovid": {
@@ -6142,70 +6142,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:11",
     "topics": [
       {
-        "title": "The shared passage",
-        "opening": "Do you get along with the people sharing your passage?",
-        "first": "Two traders claimed the same strip of market ground. Neither had noticed customers could no longer pass.",
+        "title": "The market bell",
+        "opening": "Why don't you use a bell to settle arguments?",
+        "first": "Because the first thing people would argue about is who gets to ring it.",
         "replies": [
           [
-            "How did you settle it?",
-            "Marked a passage before dividing the stalls."
+            "You sound certain.",
+            "We tried a whistle."
           ],
           [
-            "Were they satisfied?",
-            "After business improved. Principles bend nicely around customers."
+            "What happened?",
+            "Three people brought whistles of their own."
           ],
           [
-            "Does it happen often?",
-            "Whenever a successful stall acquires another basket."
+            "How do you settle things now?",
+            "I make everyone explain what they actually want. Most quarrels shrink after that."
           ]
         ]
       },
       {
-        "title": "A market sound",
-        "opening": "Is there a market sound you'd recognise anywhere?",
-        "first": "I can tell when a delivery has arrived by the change in voices. Everyone becomes briefly optimistic.",
+        "title": "A day without decisions",
+        "opening": "What would a perfect day off look like?",
+        "first": "Somebody else choosing lunch. I don't care what it is. I want no jurisdiction over it.",
         "replies": [
           [
-            "Even the complainers?",
-            "Especially them. Fresh goods provide fresh complaints."
+            "Even something you dislike?",
+            "I'd dislike it peacefully."
           ],
           [
-            "What do you enjoy buying?",
-            "Something I didn't have to organise personally."
+            "Do people ask you things at home?",
+            "Only everything."
           ],
           [
-            "Do you ever shop elsewhere?",
-            "Yes. Being anonymous is a delightful luxury."
+            "Have you told them you're tired?",
+            "Yes. They asked what they should do about it. We nearly had a breakthrough."
           ]
         ]
       },
       {
-        "title": "An empty stall",
-        "opening": "What happens when a stall stands empty?",
-        "first": "When an old trader retired, people complained about the empty space. Few had visited him lately.",
+        "title": "Ovid's secret favourite",
+        "opening": "Do you have a favourite market stall?",
+        "first": "Whichever one lets a nervous beginner take their time. You can hear impatience from across a square.",
         "replies": [
           [
-            "Did you tell them?",
-            "I suggested visiting his home while he could enjoy it."
+            "Were you a nervous beginner?",
+            "Painfully. I apologised before naming prices."
           ],
           [
-            "Did anyone go?",
-            "Several. He was pleased and pretended otherwise."
+            "Who helped?",
+            "A woman who bought something and treated me like I belonged there."
           ],
           [
-            "Will someone take the stall?",
-            "Eventually. I won't erase him by filling it quickly."
+            "Is that why you organise things?",
+            "Partly. I want people to have room before they know how to ask for it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ovid. If you're disputing a stall boundary, bring measurements, not indignation.",
-      "I'm Corin. No boundary dispute today.",
-      "Corin. A conversation with no paperwork attached?",
-      "That's my offer.",
-      "Your companion could draw a crowd. Let's leave space for people to pass.",
-      "I'm Corin; Aurelius and I will be careful."
+      "Ovid. If you're looking for the person responsible, I'd like to hear the complaint first.",
+      "Corin. No complaint yet.",
+      "Corin! Excellent. A conversation without a queue forming.",
+      "We'd better enjoy it quickly.",
+      "A dragon. This will require a wider definition of clear passage.",
+      "I'm Corin. We'll avoid blocking anyone."
     ]
   },
   "Garran": {
@@ -6215,70 +6215,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:16",
     "topics": [
       {
-        "title": "An ordinary hinge",
-        "opening": "Is an ordinary hinge harder to make than it looks?",
-        "first": "A good hinge gets ignored for years. A bad one makes its maker famous by supper.",
+        "title": "A ring you never sold",
+        "opening": "Have you ever made jewellery?",
+        "first": "A ring for someone I meant to ask a question. Took so long making it that she asked me first.",
         "replies": [
           [
-            "Which do you prefer making?",
-            "The forgotten sort. My customers can remember my name when paying."
+            "Did you say yes?",
+            "Before she finished. Ruined her preparation."
           ],
           [
-            "What's the hard part?",
-            "Getting the fit right. Small errors become loud movements."
+            "Did the ring fit?",
+            "After adjustment. Romance isn't always accurate on the first attempt."
           ],
           [
-            "Do you repair them too?",
-            "Yes. It tells me where my work actually fails."
+            "Do you still have it?",
+            "She does. Says she earned it by doing the difficult part."
           ]
         ]
       },
       {
-        "title": "Throwing contests",
-        "opening": "Do you ever compete at throwing things?",
-        "first": "We hold harmless throwing contests after work. Kerr says I'm too competitive about objects that aren't worth owning.",
+        "title": "The apprentice's prank",
+        "opening": "What's the best prank anyone played on you?",
+        "first": "Moved my lunch a little farther away every day. Took me a week to notice I was taking a longer break.",
         "replies": [
           [
-            "What do you throw?",
-            "Smooth stones at a mark, well away from people."
+            "Who did it?",
+            "An apprentice with excellent judgement about how much mischief I'd bear."
           ],
           [
-            "Are you good?",
-            "Good enough to notice when somebody improves."
+            "Were you angry?",
+            "I promoted the lunch to a cupboard."
           ],
           [
-            "Does Kerr beat you?",
-            "Occasionally. He insists those are the only recorded contests."
+            "Did you get revenge?",
+            "I paid him in small coins. He appreciated the craftsmanship."
           ]
         ]
       },
       {
-        "title": "A workday's noise",
-        "opening": "Does the noise of work stay with you afterward?",
-        "first": "After a day of metalwork, I enjoy hearing rain without hammers underneath it.",
+        "title": "A useful scar",
+        "opening": "Do you remember every scar?",
+        "first": "Not all. The one I show people least came from opening a cupboard.",
         "replies": [
           [
-            "Does silence feel strange?",
-            "For a few minutes. Then my shoulders settle."
+            "You tell them that?",
+            "Only if they've made the mistake of looking impressed."
           ],
           [
-            "Would you change trades?",
-            "No. I'd like fewer people mistaking endurance for enjoyment."
+            "Do you mind the others?",
+            "Some. I'm tired of people treating carelessness as proof I work hard."
           ],
           [
-            "What sound do you like at work?",
-            "A properly fitted latch. One clean click."
+            "What proves it then?",
+            "The finished piece. Look at that."
           ]
         ]
       }
     ],
     "greetings": [
-      "Garran. Little hinges, little hooks, surprisingly large opinions.",
-      "I'm Corin. I can manage the opinions.",
-      "Corin! Come to discuss something bigger than a door fitting?",
-      "I thought we might.",
-      "I wonder how much force those claws exert.",
-      "I'm Corin. Aurelius isn't volunteering for measurements."
+      "Garran. Speak from this side; the other ear's had a longer career.",
+      "Corin. Here all right?",
+      "Corin! I heard you that time.",
+      "I was hoping you would.",
+      "A dragon. If he understands shouting, he'll enjoy Forgewick.",
+      "I'm Corin. He hears more than you'd think."
     ]
   },
   "Nessa": {
@@ -6288,70 +6288,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:21",
     "topics": [
       {
-        "title": "A painted fish",
-        "opening": "Have you ever painted something that surprised its owner?",
-        "first": "A customer wanted a noble-looking fish on a cup. Fish have limited access to noble expressions.",
+        "title": "The colour nobody ordered",
+        "opening": "What's a colour you'd like to use more?",
+        "first": "A bruised violet people call gloomy. I think it's beautiful. Not every beautiful thing needs to cheer you up.",
         "replies": [
           [
-            "What did you paint?",
-            "A trout looking mildly offended. The customer adored it."
+            "What would you make?",
+            "Something small enough to keep close, not announce across a room."
           ],
           [
-            "Was it difficult?",
-            "Less difficult once I stopped imagining eyebrows."
+            "Would it sell?",
+            "Perhaps not. That's a separate question."
           ],
           [
-            "Would you paint another?",
-            "Gladly. Dignified vegetables are where I draw the line."
+            "Why does everyone want cheerful?",
+            "They may have enough sadness already. I try to remember that."
           ]
         ]
       },
       {
-        "title": "Working with light",
-        "opening": "How do you work with the light coming through glass?",
-        "first": "A colour that looks rich indoors may look thin in sunlight. Glass refuses to stay one picture.",
+        "title": "Nessa's childhood window",
+        "opening": "What first made you notice glass?",
+        "first": "A coloured bottle on a windowsill. The light put a patch on my hand. I kept moving to catch it.",
         "replies": [
           [
-            "How do you choose colours?",
-            "Try them in different light before declaring victory."
+            "Did someone teach you afterward?",
+            "Eventually. Curiosity got there years before training."
           ],
           [
-            "Do mistakes ruin a piece?",
-            "Some. Others suggest an effect I'd never planned."
+            "Do you still enjoy that?",
+            "Yes. Work hasn't quite managed to spoil it."
           ],
           [
-            "Do you keep failed pieces?",
-            "A few. They remind me what to test next time."
+            "Would you show a child now?",
+            "Gladly. I'd let them discover the moving part themselves."
           ]
         ]
       },
       {
-        "title": "A design of your own",
-        "opening": "What would you design if the choice were entirely yours?",
-        "first": "I'd like to make a window full of ordinary leaves, with no family crest demanding the centre.",
+        "title": "An insult you kept",
+        "opening": "Has a criticism ever helped you?",
+        "first": "Someone said my work was too careful to look alive. I disliked him for a month and experimented for a year.",
         "replies": [
           [
-            "Why leaves?",
-            "Their shapes vary without asking permission."
+            "Was he right?",
+            "Partly. He was unnecessarily pleased about it."
           ],
           [
-            "Would anyone buy it?",
-            "Perhaps. I want to draw it before worrying about that."
+            "Did you thank him?",
+            "Eventually. I waited until I could do it without gritting my teeth."
           ],
           [
-            "What colours?",
-            "Greens that shift toward gold. The difficult sort I keep promising myself."
+            "What changed?",
+            "I stopped correcting every irregularity merely because I could."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nessa. I decorate glass; Sela makes it. People keep combining us into one very busy person.",
-      "I'm Corin. I'll keep the distinction.",
-      "Corin. Have you developed a scandalous preference in colours?",
-      "Not yet, but there's time.",
-      "Those scales would defeat a flat colour completely.",
-      "I'm Corin. Aurelius changes with every angle."
+      "Nessa. If you're admiring something, tell me which bit. I like particulars.",
+      "Corin. I'll try to be specific.",
+      "Corin! Still looking closely at things?",
+      "When they let me stop.",
+      "A dragon. Those colours would be infuriating to reproduce.",
+      "I'm Corin. He'd probably move halfway through."
     ]
   },
   "Kerr": {
@@ -6361,70 +6361,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:26",
     "topics": [
       {
-        "title": "Dividing a load",
-        "opening": "How do you divide a load fairly?",
-        "first": "Two smaller journeys can be quicker than one load that stops you every ten steps.",
+        "title": "The bath argument",
+        "opening": "What's the first thing you want after work?",
+        "first": "A bath nobody interrupts to ask when I'll be finished.",
         "replies": [
           [
-            "Did you learn that painfully?",
-            "Yes. My back submitted the argument in writing."
+            "Does that happen often?",
+            "My family treats a closed door as a promising place for conversation."
           ],
           [
-            "Does everyone agree?",
-            "People watching from chairs favour heroic loads."
+            "What do they ask?",
+            "Things they ignored me all morning to avoid discussing."
           ],
           [
-            "What do you say to them?",
-            "I offer them the straps. Opinions change remarkably fast."
+            "Do you answer?",
+            "Eventually. I like them more once I'm clean."
           ]
         ]
       },
       {
-        "title": "Sweet peas",
-        "opening": "Do you grow sweet peas?",
-        "first": "I want to grow sweet peas. Something delicate after carrying black dust all day.",
+        "title": "A tune for walking",
+        "opening": "Do you count steps while carrying loads?",
+        "first": "No. I keep a tune in my head. Counting makes the remaining steps too interested in me.",
         "replies": [
           [
-            "Have you started?",
-            "A little. I'm learning that watering enthusiasm isn't a measurement."
+            "Which tune?",
+            "One my brother sang. He got half the words wrong."
           ],
           [
-            "Why those flowers?",
-            "The colour, the scent, and nobody orders them by the sack."
+            "Could you learn the proper ones?",
+            "Probably. I prefer his version."
           ],
           [
-            "Do neighbours tease you?",
-            "Some. Then ask how the flowers are doing."
+            "Does it make the load lighter?",
+            "No. It makes the journey less empty."
           ]
         ]
       },
       {
-        "title": "Clean clothes",
-        "opening": "Does keeping your clothes clean matter in your work?",
-        "first": "I can wash thoroughly and still discover coal dust behind an ear. It has ambitions beyond my employment.",
+        "title": "Kerr's ambition",
+        "opening": "What would you do with a little extra money?",
+        "first": "Pay someone to paint my mother's likeness. She thinks she's too ordinary for a portrait.",
         "replies": [
           [
-            "Does that bother you?",
-            "On special occasions. Ordinary days have surrendered."
+            "What would you tell her?",
+            "That ordinary is exactly the face I want."
           ],
           [
-            "Do you wear black?",
-            "No. That would let the coal win entirely."
+            "Would she agree?",
+            "She'd complain for an hour and choose her best clothes."
           ],
           [
-            "What's a special occasion?",
-            "Any evening I promised someone I wouldn't discuss work."
+            "Why a portrait?",
+            "I want something that remembers her when I'm not doing it properly."
           ]
         ]
       }
     ],
     "greetings": [
-      "Kerr. If I seem cheerful, assume I've put the load down recently.",
-      "I'm Corin. I'll catch you at a good moment.",
-      "Corin! You arrived during the lighter half of my day.",
-      "I won't add anything heavy.",
-      "Those wings make a sack of coal look particularly unfair.",
-      "I'm Corin. Aurelius has his own weight to carry."
+      "Kerr. Give me a moment to catch my breath before we exchange opinions.",
+      "Corin. No hurry.",
+      "Corin. Good timing. I've reached the part of the day with fewer loads in it.",
+      "My favourite part too.",
+      "A dragon could carry quite a lot. I imagine he'd dislike the suggestion.",
+      "I'm Corin. I'd ask before drawing up a rota."
     ]
   },
   "Brigid": {
@@ -6434,70 +6434,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:31",
     "topics": [
       {
-        "title": "A cold room",
-        "opening": "How would you make a cold room warmer?",
-        "first": "A grand room can be miserable if the door lets every gust through. People notice decoration before draughts.",
+        "title": "The house you wanted",
+        "opening": "Did you ever draw your ideal home?",
+        "first": "As a child. Every room had a fireplace. Nobody had explained chimneys or fuel bills.",
         "replies": [
           [
-            "What would you change first?",
-            "The gap admitting the wind. Then discuss expensive improvements."
+            "What else was in it?",
+            "A room only for maps. I still rather want that one."
           ],
           [
-            "Do customers listen?",
-            "After spending one winter with their beautiful draught."
+            "Would you build it now?",
+            "A smaller version. With fewer opportunities to burn down."
           ],
           [
-            "Can a small house be comfortable?",
-            "Certainly. Planning matters more than impressing passers-by."
+            "Why maps?",
+            "I liked thinking I could stay somewhere and still have the world nearby."
           ]
         ]
       },
       {
-        "title": "Solving a puzzle",
-        "opening": "Do you enjoy solving puzzles?",
-        "first": "I enjoy fitting an awkward staircase into a plan. It's a puzzle people must safely use afterward.",
+        "title": "A client's certainty",
+        "opening": "What's your least favourite thing a client says?",
+        "first": "That something should be simple. Usually just before describing a room larger inside than out.",
         "replies": [
           [
-            "What's the common mistake?",
-            "Making it fit on paper by forgetting a person's head."
+            "Do you explain?",
+            "With measurements. They find that terribly personal."
           ],
           [
-            "Have you done that?",
-            "In a sketch. Fortunately, sketches bruise less."
+            "Have you ever agreed too soon?",
+            "Yes. Paid for my confidence in long evenings."
           ],
           [
-            "Do you like being corrected?",
-            "More before the stone arrives than after."
+            "What do you say now?",
+            "Let me look first. Four extremely profitable words."
           ]
         ]
       },
       {
-        "title": "Building for neighbours",
-        "opening": "Is it different building something for a neighbour?",
-        "first": "A customer apologised for asking for a handrail. She thought it would spoil the appearance.",
+        "title": "Building after loss",
+        "opening": "Is it strange replacing a home someone loved?",
+        "first": "Very. They compare every new corner with a memory. You're building beside something you can't see.",
         "replies": [
           [
-            "What did you tell her?",
-            "That arriving safely mattered more than an empty wall."
+            "Can you make it right?",
+            "Not all of it. I ask which details they need kept."
           ],
           [
-            "Did it look awkward?",
-            "No. Careful work can be useful and handsome."
+            "What details matter?",
+            "A height mark. A particular view. Small things they can point to."
           ],
           [
-            "Do you have a favourite job?",
-            "One someone uses every day without struggling anymore."
+            "Do you get attached?",
+            "Sometimes. It's hard not to, once you've heard why a doorway matters."
           ]
         ]
       }
     ],
     "greetings": [
-      "Brigid. If you want a house judged, tell me where it leaks before describing the view.",
-      "I'm Corin. That's a useful priority.",
-      "Corin, come and interrupt an estimate.",
-      "I hope it wasn't adding up nicely.",
-      "A dragon would need a generous entrance.",
-      "I'm Corin. Aurelius prefers room to turn around."
+      "Brigid. If you're bringing advice, I hope it comes with a spare pair of hands.",
+      "Corin. Just questions today.",
+      "Corin! No, you haven't interrupted anything I can't blame on you later.",
+      "That's reassuringly honest.",
+      "A dragon. I'll be reconsidering several doorway widths in my dreams.",
+      "I'm Corin. He generally waits outside."
     ]
   },
   "Fara": {
@@ -6507,70 +6507,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:36",
     "topics": [
       {
-        "title": "A sleeve's explanation",
-        "opening": "Can a sleeve tell you why a garment doesn't fit?",
-        "first": "A customer blamed a torn sleeve on a heroic rescue. It had caught on his own gate.",
+        "title": "The costume nobody wore",
+        "opening": "Have you made something for a celebration that never happened?",
+        "first": "A costume for a play. The organiser ran away with the takings. We had splendid sleeves and no performance.",
         "replies": [
           [
-            "How did you know?",
-            "His wife had brought the other sleeve last month."
+            "What did you do?",
+            "Held our own evening. Made the organiser the villain."
           ],
           [
-            "Did you challenge him?",
-            "I charged for the repair, not the performance."
+            "Did people come?",
+            "Everyone he'd annoyed. We needed more chairs."
           ],
           [
-            "Was it a difficult repair?",
-            "No. The explanation took longer than the stitching."
+            "Did you get paid?",
+            "Enough. Revenge has surprisingly good attendance."
           ]
         ]
       },
       {
-        "title": "Worth repairing",
-        "opening": "How do you decide whether something is worth repairing?",
-        "first": "I ask what an old coat means before suggesting a replacement. Sometimes the answer changes the work.",
+        "title": "The mender's secret",
+        "opening": "Do you mend your own things promptly?",
+        "first": "Absolutely not. My good coat has been waiting behind everyone else's emergencies.",
         "replies": [
           [
-            "Has that happened?",
-            "A father's coat. The owner wanted the worn cuffs preserved."
+            "Why call it your good coat?",
+            "Because I'm sentimental and optimistic."
           ],
           [
-            "Could you manage it?",
-            "Strengthened them underneath and left the familiar surface."
+            "Would you let someone else mend it?",
+            "If I could stop supervising. So, possibly not."
           ],
           [
-            "Do you charge more for memories?",
-            "For the work. Memories aren't an item on my bill."
+            "What would make you do it?",
+            "An invitation I actually wanted to accept."
           ]
         ]
       },
       {
-        "title": "Choosing bright thread",
-        "opening": "Do you prefer working with bright thread?",
-        "first": "I sometimes mend with contrasting thread. A repair can look deliberate instead of apologetic.",
+        "title": "A name sewn inside",
+        "opening": "Why do people ask for names stitched inside clothes?",
+        "first": "Children lose things. Adults sometimes want proof something belongs to them.",
         "replies": [
           [
-            "Do customers like that?",
-            "When they choose it themselves. Surprise is risky on a favourite coat."
+            "Have you wanted that?",
+            "When I first earned enough for a coat of my own. I touched the name every time I put it on."
           ],
           [
-            "What colour do you like?",
-            "Red against dark blue. It looks confident."
+            "Did anyone see?",
+            "It wasn't for them."
           ],
           [
-            "Would you do mine that way?",
-            "If you brought a repair and asked. I won't invent one."
+            "Do you still have it?",
+            "No. I remember the feeling more clearly than the coat."
           ]
         ]
       }
     ],
     "greetings": [
-      "Fara. Torn cloth tells a story; people usually tell a more flattering one.",
-      "I'm Corin. I'll avoid presenting evidence.",
-      "Corin! Nothing dangling from your sleeve today?",
-      "Nothing I'd admit to yet.",
-      "A dragon would certainly test a traveller's seams.",
-      "I'm Corin. Aurelius is careful around my clothes."
+      "Fara. If you're apologising for a tear, save it. Cloth tears.",
+      "Corin. I'll remember that.",
+      "Corin! Still keeping yourself reasonably stitched together?",
+      "Mostly.",
+      "A dragon. I hope his claws aren't involved in fitting clothes.",
+      "I'm Corin. We keep him away from delicate work."
     ]
   },
   "Garrick": {
@@ -6580,70 +6580,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:41",
     "topics": [
       {
-        "title": "The wrong household",
-        "opening": "Have you ever taken a delivery to the wrong household?",
-        "first": "I delivered a letter to the wrong family and learned that two brothers had married two sisters with similar names.",
+        "title": "The parcel marked fragile",
+        "opening": "What's the oddest parcel you carried?",
+        "first": "One marked fragile that rattled like stones. The owner insisted it was supposed to sound broken.",
         "replies": [
           [
-            "How did you untangle it?",
-            "Asked everyone to stop saying 'the other one'."
+            "What was inside?",
+            "Pieces for a mosaic. I spent two days panicking over a finished result."
           ],
           [
-            "Was the letter private?",
-            "Fortunately it remained sealed. I checked before anything else."
+            "Did you ask before leaving?",
+            "No. I was young and thought questions looked unprofessional."
           ],
           [
-            "Did it happen again?",
-            "Not there. Those names remain permanently engraved in my embarrassment."
+            "What would you do now?",
+            "Open my mouth before setting out."
           ]
         ]
       },
       {
-        "title": "A good courier",
-        "opening": "What makes someone a good courier?",
-        "first": "A courier needs to know when a message matters more than looking brave about the weather.",
+        "title": "Garrick's slow walk",
+        "opening": "Why do you walk so slowly these days?",
+        "first": "Because nobody's paying me to hurry, and I've discovered the world continues without my assistance.",
         "replies": [
           [
-            "Did you ever delay one?",
-            "Yes, when continuing would have lost both messenger and letter."
+            "Does it frustrate people?",
+            "Occasionally. I step aside and wish them joy of arriving sooner."
           ],
           [
-            "Was the sender angry?",
-            "Initially. The recipient preferred a living courier."
+            "Do you notice more?",
+            "Windows mostly. I'd passed some for years without looking up."
           ],
           [
-            "What did you enjoy most?",
-            "Seeing relief before someone even opened the message."
+            "Do you miss being needed?",
+            "Yes. Slowly is a pleasure; unnecessary takes practice."
           ]
         ]
       },
       {
-        "title": "Life after deliveries",
-        "opening": "What was it like when people stopped expecting your arrival?",
-        "first": "Retirement felt strange because nobody waited for my arrival. I hadn't known how much I'd miss that.",
+        "title": "A message remembered",
+        "opening": "Is there a message you still remember exactly?",
+        "first": "A woman sent three words to her sister: Come if possible. I learned how much fear can fit in a small space.",
         "replies": [
           [
-            "What replaced it?",
-            "Visits I arranged for myself."
+            "Did the sister come?",
+            "Yes. I saw her on the road the next morning."
           ],
           [
-            "Was that difficult?",
-            "Only admitting I wanted the company."
+            "Was everything all right?",
+            "I never learned. Delivering didn't give me a right to the ending."
           ],
           [
-            "Do you enjoy them more?",
-            "I get to hear the story after delivering the news."
+            "Does that bother you?",
+            "Sometimes. I prefer it to being owed everybody's private life."
           ]
         ]
       }
     ],
     "greetings": [
-      "Garrick. I know many roads and have no intention of walking one immediately.",
-      "I'm Corin. We can talk from here.",
-      "Corin! Arriving without a deadline suits you.",
-      "It suits me too.",
-      "A dragon courier would cause tremendous gossip.",
-      "I'm Corin. Aurelius isn't collecting commissions."
+      "Garrick. I used to know every route. Now I enjoy admitting I've forgotten some.",
+      "Corin. I'll ask for company instead.",
+      "Corin! A familiar face without a delivery deadline.",
+      "A pleasant change?",
+      "A dragon. My old knees are suddenly jealous of wings.",
+      "I'm Corin. They have their own complications."
     ]
   },
   "Junia": {
@@ -6653,70 +6653,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:46",
     "topics": [
       {
-        "title": "Too many beginnings",
-        "opening": "Do you ever start too many stories at once?",
-        "first": "I have six beginnings and one ending. Unfortunately the ending belongs to none of them.",
+        "title": "The name that wouldn't fit",
+        "opening": "Have you ever changed a character's name halfway through?",
+        "first": "Yes. He immediately became less irritating. Apparently I'd been blaming his personality for a name I hated.",
         "replies": [
           [
-            "Could you combine them?",
-            "That was my first mistake, yes."
+            "How did you choose another?",
+            "Said them aloud until the neighbours became concerned."
           ],
           [
-            "What happens in the ending?",
-            "Someone finally admits where the missing pie went."
+            "Could you use a real person's name?",
+            "Only after making sure I wasn't also borrowing their nose."
           ],
           [
-            "I'd read that.",
-            "Then I owe you enough story to make the pie matter."
+            "Does the character know?",
+            "He seems relieved."
           ]
         ]
       },
       {
-        "title": "Your first reader",
-        "opening": "Who gets to read your first drafts?",
-        "first": "My friend reads my drafts and marks the places she wanted to stop.",
+        "title": "A story your mother read",
+        "opening": "What did your mother think of your first story?",
+        "first": "Asked why the mother in it was so unreasonable. She wasn't meant to be in it, which didn't help my defence.",
         "replies": [
           [
-            "Does that hurt?",
-            "Yes. Less than pretending every page works."
+            "Was she in it?",
+            "A little. More than I'd admitted to myself."
           ],
           [
-            "Does she explain why?",
-            "Usually. Sometimes she simply writes 'still talking about the door'."
+            "Did you change it?",
+            "I gave the mother a reason. It improved the story."
           ],
           [
-            "Do you listen?",
-            "After sulking privately. I try to make the sulk brief."
+            "Did your mother like that?",
+            "She said it was a start. Excellent critic, impossible audience."
           ]
         ]
       },
       {
-        "title": "A comic villain",
-        "opening": "Can a villain be funny without spoiling the story?",
-        "first": "I gave a villain excellent manners and terrible patience. He apologised before every threat.",
+        "title": "The sentence you deleted",
+        "opening": "What's hardest to cut from a story?",
+        "first": "A sentence I love that does nothing except announce how pleased I am with it.",
         "replies": [
           [
-            "Was he frightening?",
-            "Until he began correcting the hero's grammar."
+            "How do you recognise it?",
+            "I keep showing it to people without explaining the scene."
           ],
           [
-            "Did you change him?",
-            "No. I changed the sort of story I was writing."
+            "Do you save it elsewhere?",
+            "Yes. I have a small graveyard of very elegant sentences."
           ],
           [
-            "Is he based on someone?",
-            "Several people. None would accept the comparison gracefully."
+            "Will you use them later?",
+            "They all believe so."
           ]
         ]
       }
     ],
     "greetings": [
-      "Junia. If you ask whether I've finished my story, I reserve the right to change the subject.",
-      "I'm Corin. I can begin elsewhere.",
-      "Corin! I finished a paragraph I actually like.",
-      "That's worth celebrating.",
-      "A dragon is unfair competition for an invented adventure.",
-      "I'm Corin. Aurelius brings plenty of ordinary inconveniences too."
+      "Junia. If I stare into space, I'm either working or avoiding it. Hard to tell.",
+      "Corin. I won't demand proof.",
+      "Corin! I've finally given somebody a convincing motive.",
+      "Someone in a story, I hope.",
+      "A dragon. Everyone will think I've invented you badly.",
+      "I'm Corin. You may have to make the truth less exciting."
     ]
   },
   "Kellan": {
@@ -6726,70 +6726,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:51",
     "topics": [
       {
-        "title": "The first file",
-        "opening": "Do you remember using a file for the first time?",
-        "first": "I spent days learning to make a surface flat. Apparently 'looks flat' was an optimistic first draft.",
+        "title": "The master's handwriting",
+        "opening": "Can you read your master's notes?",
+        "first": "More by memory than reading. There's one mark that means either polish or completely remake. Context matters.",
         "replies": [
           [
-            "How do you check it?",
-            "Against a known straight edge, from several angles."
+            "Have you mistaken them?",
+            "Once. I polished a mistake beautifully."
           ],
           [
-            "Did you get frustrated?",
-            "Frequently. Then I could finally see what my teacher meant."
+            "Was the master angry?",
+            "Mostly with the handwriting. A rare and treasured victory."
           ],
           [
-            "Was that satisfying?",
-            "Enough that I made everyone inspect a very ordinary piece of metal."
+            "Why not ask?",
+            "I do now. Confidence was taking too long to repair."
           ]
         ]
       },
       {
-        "title": "Inventing a game",
-        "opening": "Have you ever invented a game?",
-        "first": "I designed a board game and won every trial because only I understood the rules.",
+        "title": "Kellan's first customer",
+        "opening": "What was it like selling something you'd made?",
+        "first": "Terrifying. I wanted to follow the customer home and check whether it worked.",
         "replies": [
           [
-            "Did your friends object?",
-            "They proposed a rule against explanations that changed mid-turn."
+            "Did you?",
+            "No. I rehearsed a casual meeting for several days instead."
           ],
           [
-            "Did you rewrite it?",
-            "Yes. It became harder for me and better for everyone."
+            "Did they come back?",
+            "For another. I pretended this was an ordinary event."
           ],
           [
-            "Would you make another?",
-            "After this one survives an evening without an argument."
+            "Were you proud?",
+            "I kept the first coin. Spent the others very sensibly on supper."
           ]
         ]
       },
       {
-        "title": "Your own workshop",
-        "opening": "Would you like a workshop of your own?",
-        "first": "I picture having my own workshop. In the picture, no one asks me to calculate rent.",
+        "title": "A skill you envy",
+        "opening": "What can someone else do that you wish you could?",
+        "first": "Draw what they mean. My sketches require an accompanying apology.",
         "replies": [
           [
-            "What would you make?",
-            "Tools small enough that I could inspect every part myself."
+            "Could you learn?",
+            "Ivo says so. He also says I must stop hiding the paper."
           ],
           [
-            "Would you work alone?",
-            "Probably not. I learn too much from other people's questions."
+            "Why hide it?",
+            "Because people can see the mistake before I explain it."
           ],
           [
-            "What's stopping you now?",
-            "Experience, money, and an entirely reasonable shortage of both."
+            "That's how learning looks.",
+            "Yes. I keep hoping to skip the visible part."
           ]
         ]
       }
     ],
     "greetings": [
-      "Kellan. Apprentice, before you entrust me with anything expensive.",
-      "I'm Corin. I appreciate the warning.",
-      "Corin! I've made something that fits on the first attempt.",
-      "A day worth remembering.",
-      "Those claws seem like tools with opinions.",
-      "I'm Corin. Aurelius would certainly have an opinion about that."
+      "Kellan. Apprentice, though I'm hoping the word wears off eventually.",
+      "Corin. Everyone starts somewhere.",
+      "Corin! I've managed something since last time.",
+      "Tell me before you decide it's too small.",
+      "A dragon. I'm trying to look calm and failing brilliantly.",
+      "I'm Corin. He doesn't mind enthusiasm."
     ]
   },
   "Lysa": {
@@ -6799,70 +6799,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:56",
     "topics": [
       {
-        "title": "A gift gone wrong",
-        "opening": "Have you ever chosen a gift badly?",
-        "first": "I made a friend a beautiful shawl in my favourite colour. Hers was entirely different.",
+        "title": "The pattern nobody saw",
+        "opening": "Have you woven a secret into something?",
+        "first": "A tiny bird in a cloth for my sister. She found it years later and wrote as though I'd just sent it.",
         "replies": [
           [
-            "Did she tell you?",
-            "She wore it only when I visited. Eventually I understood."
+            "Why hide it?",
+            "She likes noticing things. I wanted the gift to last beyond unwrapping."
           ],
           [
-            "What did you do?",
-            "Asked what she'd actually like and made that."
+            "Did she like it?",
+            "She sent me a drawing of where she'd found it."
           ],
           [
-            "Was the first wasted?",
-            "No. She gave it to someone delighted by purple."
+            "Would you do that for everyone?",
+            "No. Some people want their presents to behave plainly."
           ]
         ]
       },
       {
-        "title": "Cloth for daily use",
-        "opening": "How do you choose cloth for something people use every day?",
-        "first": "I like making sturdy cloth. Some customers hear 'sturdy' and imagine something ugly.",
+        "title": "A weaver's hands at rest",
+        "opening": "What do your hands do when you're nervous?",
+        "first": "Fold whatever I'm holding. Receipts, sleeves, other people's perfectly innocent napkins.",
         "replies": [
           [
-            "Can it be both?",
-            "Strong and beautiful, certainly. Expensive and unsuitable is also possible."
+            "Does it help?",
+            "A little. It gives the nervousness a small job."
           ],
           [
-            "What do you test?",
-            "Edges, seams, how it behaves after washing."
+            "Have you ruined anything?",
+            "A letter I was trying not to open."
           ],
           [
-            "What pleases you most?",
-            "Seeing a piece still used years after I forgot the order."
+            "Did you open it eventually?",
+            "Yes. It wasn't half as frightening as waiting had made it."
           ]
         ]
       },
       {
-        "title": "A journey you'd choose",
-        "opening": "Where would you go if you didn't have to sell anything?",
-        "first": "I'd like to see the sea without having to sell anything when I arrive.",
+        "title": "A compliment refused",
+        "opening": "Why do you argue when people praise your work?",
+        "first": "Because I can still see the part I nearly got wrong.",
         "replies": [
           [
-            "Why the sea?",
-            "A horizon nobody has divided into fields."
+            "But they can't.",
+            "I'm beginning to understand that this is allowed."
           ],
           [
-            "Would you stay long?",
-            "Long enough to stop thinking about the journey back."
+            "What would you like them to notice?",
+            "The colour. That's the part I choose with the least fear."
           ],
           [
-            "Would you go alone?",
-            "With someone content to sit quietly beside water."
+            "Then take the compliment.",
+            "All right. That felt oddly strenuous."
           ]
         ]
       }
     ],
     "greetings": [
-      "Lysa. If you dislike a colour, say so before I spend an afternoon praising it.",
-      "I'm Corin. I'll be honest.",
-      "Corin! Another chance to discuss something besides thread counts.",
-      "I can offer several subjects.",
-      "A dragon's colours change whenever he moves.",
-      "I'm Corin. Aurelius doesn't hold a pose for long."
+      "Lysa. Don't mind the silence; I was counting and haven't quite stopped.",
+      "Corin. I'll wait outside the numbers.",
+      "Corin! You've arrived at a friendlier moment.",
+      "I'll take advantage of it.",
+      "A dragon. That would make a splendid pattern and a terrible measuring appointment.",
+      "I'm Corin. He agrees about the appointment."
     ]
   },
   "Cinder": {
@@ -6872,70 +6872,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "07-forgewick.txt:61",
     "topics": [
       {
-        "title": "Watching the fire",
-        "opening": "What do you watch for in a fire?",
-        "first": "Tending a forge meant watching changes nobody else noticed until something went wrong.",
+        "title": "The name you kept",
+        "opening": "Did people tease you about your name at the forge?",
+        "first": "Endlessly. They all thought they'd invented the joke. I began rating their delivery.",
         "replies": [
           [
-            "Could you leave it alone?",
-            "Not for long. Heat changes work while you're distracted."
+            "What got the highest mark?",
+            "Someone who asked my name and said nothing else."
           ],
           [
-            "Did you enjoy it?",
-            "The skill, yes. The endless vigilance, less so."
+            "Did you ever wish for another?",
+            "As a boy. Now it sounds like me."
           ],
           [
-            "Why did you stop?",
-            "I'd earned mornings when I could look away."
+            "Would you name a child after your trade?",
+            "Only if I became a poet first. Better choices."
           ]
         ]
       },
       {
-        "title": "A serious stew",
-        "opening": "Do you take cooking as seriously as your other work?",
-        "first": "I prefer food that can wait a little if someone arrives late. A stew is more forgiving than its cook.",
+        "title": "A night without heat",
+        "opening": "Do you miss the forge's warmth?",
+        "first": "Sometimes I wake expecting it. The room feels wrong until I remember I'm home.",
         "replies": [
           [
-            "Who arrives late?",
-            "Friends who consider supper time a philosophical suggestion."
+            "Is that unpleasant?",
+            "Not always. Familiarity takes longer to cool than iron."
           ],
           [
-            "Do you complain?",
-            "Until they eat. Then I ask whether it needs salt."
+            "What do you like now?",
+            "Being warm because somebody lit a fire for supper, not because a shift began."
           ],
           [
-            "What's the secret?",
-            "Time, tasting, and not adding everything because it's available."
+            "Do you go back to visit?",
+            "Occasionally. I leave before my hands volunteer."
           ]
         ]
       },
       {
-        "title": "Quiet company",
-        "opening": "Do you enjoy company when nobody feels like talking?",
-        "first": "I like visitors who don't assume a pause means the evening has failed.",
+        "title": "Cinder's unexpected collection",
+        "opening": "Do you collect anything?",
+        "first": "Small smooth stones. Nothing valuable. I like something that doesn't need improving.",
         "replies": [
           [
-            "Do you prefer being alone?",
-            "Sometimes. Quiet company is a separate pleasure."
+            "Where do you keep them?",
+            "At home, where visitors occasionally mistake them for a chore."
           ],
           [
-            "What do you do together?",
-            "Eat, mend small things, remember an occasional story."
+            "Do they all mean something?",
+            "Some do. Some simply feel right in the hand."
           ],
           [
-            "Would that bore me?",
-            "You'd have to sit long enough to find out."
+            "Would you part with them?",
+            "A few. The one from my brother's garden stays."
           ]
         ]
       }
     ],
     "greetings": [
-      "Cinder. Yes, the name suited the work. People discovered that joke surprisingly often.",
-      "I'm Corin. I'll retire it for you.",
-      "Corin, welcome. I've had enough noise for one lifetime.",
-      "I'll keep the conversation gentle.",
-      "A dragon's fire is rather more alive than a furnace.",
-      "I'm Corin. Aurelius chooses where he puts it."
+      "Cinder. Before you ask, yes, the name predates the work.",
+      "Corin. You anticipated me.",
+      "Corin. Good. I was ready for a quiet conversation.",
+      "We can manage quiet.",
+      "A dragon. I know fire, but fire with opinions is new.",
+      "I'm Corin. He has plenty of those."
     ]
   },
   "Warden": {
@@ -6945,70 +6945,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:1",
     "topics": [
       {
-        "title": "Sharing the work",
-        "opening": "How do you make sure the work gets shared?",
-        "first": "When a miner is hurt, the household still needs food and repairs. I help neighbours divide the jobs.",
+        "title": "The meeting nobody needed",
+        "opening": "What's the worst meeting you've attended?",
+        "first": "One about whether we needed more meetings. It overran.",
         "replies": [
           [
-            "Does everyone contribute?",
-            "Differently. Time, food, a skill. I avoid keeping a score."
+            "What did you decide?",
+            "To discuss it again. I briefly considered leaving town."
           ],
           [
-            "Who helps you?",
-            "People I finally learned to ask."
+            "Why did you stay?",
+            "Somebody still had to arrange the actual work."
           ],
           [
-            "Is it difficult to arrange?",
-            "Less difficult when I describe the actual job instead of saying 'anything'."
+            "Could you cancel the next one?",
+            "I did. It was my most popular contribution."
           ]
         ]
       },
       {
-        "title": "Your husband's silence",
-        "opening": "What do you do when your husband comes home wanting quiet?",
-        "first": "My husband sometimes returns from the mine wanting quiet. I once mistook that for refusing to talk to me.",
+        "title": "Warden's hidden hobby",
+        "opening": "What would your neighbours never guess about you?",
+        "first": "I write very bad romantic poems. My husband thinks they're wonderful, which casts doubt on his judgement.",
         "replies": [
           [
-            "How did you sort it out?",
-            "He explained after supper. Hunger hadn't improved either of us."
+            "Do you read them aloud?",
+            "Only to him. He's already committed."
           ],
           [
-            "What do you do now?",
-            "Give him time, then ask."
+            "What are they about?",
+            "Him, mostly. That may explain the favourable reviews."
           ],
           [
-            "Does he ask about your day?",
-            "Yes. Mine doesn't disappear because his was hard."
+            "Would you publish them?",
+            "I'd rather organise three more meetings."
           ]
         ]
       },
       {
-        "title": "A favour refused",
-        "opening": "Have you ever had to refuse a favour?",
-        "first": "I refuse tasks I can't properly do. People occasionally call that unhelpful.",
+        "title": "The favour you remember",
+        "opening": "Who helped you when you first needed it?",
+        "first": "A neighbour who didn't wait for me to sound grateful. I was exhausted and rather rude.",
         "replies": [
           [
-            "Does it bother you?",
-            "Of course. Then I remember an unreliable promise helps nobody."
+            "Did you apologise?",
+            "Later. She said she'd heard worse from happier people."
           ],
           [
-            "What do you offer instead?",
-            "A clearer request, or someone with the right skill."
+            "Do you do the same now?",
+            "I try. It's harder when you're the one being snapped at."
           ],
           [
-            "Can you ever simply rest?",
-            "I'm learning. The neighbourhood survives an afternoon without supervision."
+            "Why remember that part?",
+            "So I don't require people to be charming before helping them."
           ]
         ]
       }
     ],
     "greetings": [
-      "Warden. That's my name, not a demand that you report anything.",
-      "I'm Corin. A useful distinction.",
-      "Corin. Have you come needing help or offering news?",
-      "A little conversation first, if possible.",
-      "Your friend must complicate everyone's estimate of a small favour.",
-      "I'm Corin. Aurelius gets a say in favours."
+      "Warden. That's my name, before you start wondering what you've done wrong.",
+      "Corin. I was only slightly worried.",
+      "Corin! No, I haven't found a job for you. Yet.",
+      "I'll enjoy this brief freedom.",
+      "A dragon. I'll need to warn people before the rumours acquire extra heads.",
+      "I'm Corin. One head is quite enough."
     ]
   },
   "Ember": {
@@ -7018,70 +7018,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:6",
     "topics": [
       {
-        "title": "A proper celebration",
-        "opening": "What makes a celebration feel special to you?",
-        "first": "A proper celebration needs something delicious and someone who remembers why you're gathering.",
+        "title": "A cake for an enemy",
+        "opening": "Would you bake for someone you disliked?",
+        "first": "I have. Made it beautifully. Refused to give them the satisfaction of an inferior cake.",
         "replies": [
           [
-            "Does it need a crowd?",
-            "No. Two people can celebrate very effectively."
+            "Did they thank you?",
+            "With their mouth full. I accepted the evidence."
           ],
           [
-            "What do you make?",
-            "Whatever the guest actually likes, after several leading questions."
+            "Did you like them afterward?",
+            "No. Cake isn't absolution."
           ],
           [
-            "What would you celebrate?",
-            "Finishing a difficult week counts. Dagna calls that frequent."
+            "Would you do it again?",
+            "If they paid. My principles require ingredients."
           ]
         ]
       },
       {
-        "title": "An experimental filling",
-        "opening": "Have you tried any unusual fillings?",
-        "first": "I tried a savoury filling in a sweet pastry. Dagna said my pastry was arguing with itself.",
+        "title": "The recipe in the wrong pocket",
+        "opening": "Have you ever lost a favourite recipe?",
+        "first": "Dagna washed it. We spent an evening trying to distinguish raisins from instructions.",
         "replies": [
           [
-            "Was she right?",
-            "Annoyingly. I had combined two good ideas badly."
+            "Did you recover it?",
+            "Enough to make something edible. Not enough to repeat it reliably."
           ],
           [
-            "Did you throw it out?",
-            "We ate it and discussed its future, which was brief."
+            "Were you angry?",
+            "For ten minutes. Then we began laughing at the ink."
           ],
           [
-            "Will you experiment again?",
-            "Yes. In portions small enough for civil disagreement."
+            "Have you written it down since?",
+            "Three copies. Love doesn't prevent laundry."
           ]
         ]
       },
       {
-        "title": "Living with Dagna",
-        "opening": "What's it like living with Dagna?",
-        "first": "Dagna knows when I'm pretending a mistake was intentional. It's a terrible inconvenience.",
+        "title": "The home you chose",
+        "opening": "What made Forgewick feel like home?",
+        "first": "The first time someone complained I'd been away too long. I hadn't realised anybody was counting.",
         "replies": [
           [
-            "Do you catch her mistakes?",
-            "She admits them before I can prepare a speech."
+            "Who said it?",
+            "Dagna. She disguised it as a complaint about supper."
           ],
           [
-            "What do you agree on?",
-            "That guests should feel welcome and doors should shut properly."
+            "Did you tell her you were pleased?",
+            "Not well. I made something enormous instead."
           ],
           [
-            "Do you enjoy the arguments?",
-            "The harmless ones. We stop when they cease being harmless."
+            "Does she understand that?",
+            "Usually. She'd still prefer words before the second helping."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ember. Yes, a promising name for a baker, until something burns.",
-      "I'm Corin. I'll avoid the obvious joke.",
-      "Corin! An impartial witness to my latest opinion.",
-      "I'll hear the evidence first.",
-      "A dragon would be an alarming baking assistant.",
-      "I'm Corin. Aurelius isn't applying for the position."
+      "Ember. No connection to every fire-related joke you may have prepared.",
+      "Corin. I'll retire them quietly.",
+      "Corin! Dagna said I'd talked your ears off.",
+      "They're still attached.",
+      "A dragon! Finally, someone who might appreciate an oven joke.",
+      "I'm Corin. I wouldn't guarantee his taste in jokes."
     ]
   },
   "Dagna": {
@@ -7091,70 +7091,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:11",
     "topics": [
       {
-        "title": "A missing garment",
-        "opening": "Have you ever lost track of a garment?",
-        "first": "A customer accused me of losing a shirt he was wearing. I let him finish the accusation.",
+        "title": "The shirt with two owners",
+        "opening": "What's the strangest quarrel your work has caused?",
+        "first": "Two brothers claimed the same shirt. Neither wanted it until he thought the other would get it.",
         "replies": [
           [
-            "How did you answer?",
-            "Asked whether I should wash that one next."
+            "How did you decide?",
+            "Asked who wanted to pay for cleaning it. Ownership became less urgent."
           ],
           [
-            "Was he embarrassed?",
-            "Thoroughly. He paid promptly afterward."
+            "Who took it?",
+            "Their mother. She'd bought it."
           ],
           [
-            "Did he return?",
-            "Yes, with considerably shorter explanations."
+            "Did they apologise?",
+            "They carried the laundry. Better than a speech."
           ]
         ]
       },
       {
-        "title": "A competitive afternoon",
-        "opening": "Do you get competitive when you have an afternoon off?",
-        "first": "I like games more than people expect. Ember says my pleasant face conceals ruthless arithmetic.",
+        "title": "Dagna's holiday weather",
+        "opening": "What weather would you choose for a day off?",
+        "first": "Rain. Nobody can tell me I ought to be making use of a beautiful drying day.",
         "replies": [
           [
-            "Is that accurate?",
-            "The arithmetic is excellent. Ruthlessness depends on the stakes."
+            "Wouldn't you rather go out?",
+            "I could. That's the splendid thing about waterproof clothes."
           ],
           [
-            "What do you play?",
-            "Anything with rules agreed before I begin winning."
+            "What would you do indoors?",
+            "Read without listening for a change in the wind."
           ],
           [
-            "Do you lose well?",
-            "I'm quiet about it. That is not the same as enjoying it."
+            "Does Ember understand?",
+            "Ember brings food. A very persuasive form of understanding."
           ]
         ]
       },
       {
-        "title": "Being called dependable",
-        "opening": "Do you like being the person everyone depends on?",
-        "first": "People call me dependable when they want something done. I'd enjoy hearing it occasionally afterward.",
+        "title": "A difficult compliment",
+        "opening": "What compliment makes you uncomfortable?",
+        "first": "That I never complain. I do complain. People just call it joking when they'd rather not listen.",
         "replies": [
           [
-            "Do you remind them?",
-            "When necessary. Resentment is poor communication."
+            "Have you told them?",
+            "More plainly lately."
           ],
           [
-            "Does Ember thank you?",
-            "Yes, often with food and unnecessary ceremony."
+            "Does that work?",
+            "With the people worth telling twice."
           ],
           [
-            "What would you choose for yourself?",
-            "An afternoon when all the work can wait."
+            "What would you prefer to hear?",
+            "That somebody noticed I needed a hand."
           ]
         ]
       }
     ],
     "greetings": [
-      "Dagna. People tell me stains are mysterious. Most aren't.",
-      "I'm Corin. I'll spare you a mystery.",
-      "Corin, come and provide a subject Ember hasn't already debated.",
-      "I'll make an attempt.",
-      "I hope your dragon doesn't expect me to launder anything enormous.",
-      "I'm Corin. Aurelius's scales manage without a washline."
+      "Dagna. If you're worried about soot, you've chosen an unfortunate town.",
+      "Corin. I'll try to make peace with it.",
+      "Corin! You look less bewildered by the place.",
+      "I'm learning which noises to ignore.",
+      "A dragon. I wonder whether smoke comes out of everything he touches.",
+      "I'm Corin. We'll try not to find out on your washing."
     ]
   },
   "Lode": {
@@ -7164,70 +7164,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:16",
     "topics": [
       {
-        "title": "The sound below",
-        "opening": "Could you tell what was happening below by the sound?",
-        "first": "Underground, a changed sound matters. I trusted the men who stopped talking to listen.",
+        "title": "The sound of your own name",
+        "opening": "Did you like hearing your name underground?",
+        "first": "Very much. In the dark, a familiar voice can make a whole room where there wasn't one.",
         "replies": [
           [
-            "What were you listening for?",
-            "Shifting rock, strained timber, water where none belonged."
+            "Who called you most?",
+            "My oldest friend. He always sounded annoyed, even when he was glad."
           ],
           [
-            "Did you ever turn back?",
-            "Yes. The rock doesn't care whether you're embarrassed."
+            "Do you still see him?",
+            "When his knees permit the journey. Mine complain at the other end."
           ],
           [
-            "Do you miss the work?",
-            "Parts of it. Memory tends to clean the dust away."
+            "Do you miss the mine?",
+            "I miss who we were together there."
           ]
         ]
       },
       {
-        "title": "Your terrible riddles",
-        "opening": "Are you any good at solving riddles?",
-        "first": "I love riddles and solve very few. The answer always appears obvious after someone says it.",
+        "title": "Lode's clean hands",
+        "opening": "Was it strange having clean hands after retiring?",
+        "first": "I kept looking at them as though they'd failed to report for work.",
         "replies": [
           [
-            "Why keep trying?",
-            "A cheap way to be surprised."
+            "What did you do with them?",
+            "Started cooking. Rediscovered dirt in a much more edible form."
           ],
           [
-            "Do you invent any?",
-            "Yes. Mine are either impossible or accidentally informative."
+            "Were you good?",
+            "No. My family became unusually willing to help."
           ],
           [
-            "Would you blame the riddle?",
-            "Naturally, before admitting the difficulty might be mine."
+            "Are you better now?",
+            "Enough that they let me finish before offering advice."
           ]
         ]
       },
       {
-        "title": "Soup after retirement",
-        "opening": "Has retirement changed the way you spend mealtimes?",
-        "first": "I learned cooking after retirement. My first soup had excellent ingredients and no agreement between them.",
+        "title": "An argument with the future",
+        "opening": "Do you worry about getting old?",
+        "first": "I dislike being spoken to as though I'm already a memory.",
         "replies": [
           [
-            "What improved it?",
-            "Fewer ingredients. I had treated the pot like a collection box."
+            "Who does that?",
+            "People who only ask what I used to do."
           ],
           [
-            "Who taught you?",
-            "Neighbours with strong opinions and generous patience."
+            "What should I ask?",
+            "What I'm doing tomorrow. I still make plans."
           ],
           [
-            "What's your best dish now?",
-            "A broth people finish before asking about the mine."
+            "What are you doing tomorrow?",
+            "Something I haven't yet agreed to let the weather spoil."
           ]
         ]
       }
     ],
     "greetings": [
-      "Lode. You're allowed to ask about things besides mining. I have other qualifications.",
-      "I'm Corin. Such as?",
-      "Corin! Arrived before I ran out of opinions.",
-      "I suspected there would be plenty.",
-      "Wings would have been of limited use in my old workplace.",
-      "I'm Corin. Aurelius still watches the ceiling."
+      "Lode. If you need a dramatic mining story, let me finish remembering an ordinary one.",
+      "Corin. Ordinary will do.",
+      "Corin! Good. I've been talking to myself and winning too easily.",
+      "I'll offer some resistance.",
+      "A dragon. There's a sight worth coming above ground for.",
+      "I'm Corin. Glad he makes a good first impression."
     ]
   },
   "Pike": {
@@ -7237,70 +7237,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:21",
     "topics": [
       {
-        "title": "Testing a basket",
-        "opening": "How do you test whether a basket is strong enough?",
-        "first": "I load a finished basket before selling it. A handsome weave must survive something heavier than admiration.",
+        "title": "The basket nobody opened",
+        "opening": "Have you ever delivered a mysterious basket?",
+        "first": "One for a wedding, tied shut. Everyone assumed food. It contained the bride's shoes, which she'd left at home.",
         "replies": [
           [
-            "What do you put in it?",
-            "Enough weight to reveal weak joins."
+            "Did you save the ceremony?",
+            "I saved her from marrying barefoot. Different level of achievement."
           ],
           [
-            "Have you broken your own work?",
-            "Certainly. Better here than on a customer's road."
+            "Were you thanked?",
+            "Enthusiastically. The shoes were blamed for the delay."
           ],
           [
-            "What makes one last?",
-            "Good material, a close weave, and sensible use afterward."
+            "What was the mystery?",
+            "Why anyone believed the bride would pack her own breakfast that carefully."
           ]
         ]
       },
       {
-        "title": "A sharp bargain",
-        "opening": "Have you ever regretted driving a hard bargain?",
-        "first": "A trader offered half my price and called it friendship. We'd met moments earlier.",
+        "title": "Pike's sharp ears",
+        "opening": "Why do you enjoy markets?",
+        "first": "People say interesting things when they think you're only looking at their coins.",
         "replies": [
           [
-            "What did you say?",
-            "That friendship was developing unusually expensive habits."
+            "Do you listen deliberately?",
+            "I try not to. Curiosity is an undisciplined employee."
           ],
           [
-            "Did you sell to him?",
-            "At a fair price, after the performance ended."
+            "What do you remember?",
+            "The way a nervous person asks the price twice."
           ],
           [
-            "Do you enjoy bargaining?",
-            "When both people can walk away without being threatened."
+            "What do you do then?",
+            "Give them room to decide without making poverty a public event."
           ]
         ]
       },
       {
-        "title": "Packing for a holiday",
-        "opening": "What would you pack for a holiday?",
-        "first": "I'd pack less for a holiday than for a working day. I want room to return with something unexpected.",
+        "title": "A basket for yourself",
+        "opening": "What do you keep in your own best basket?",
+        "first": "Nothing. It became the best basket precisely because I never used it.",
         "replies": [
           [
-            "What would you bring home?",
-            "A small useful thing made by someone I met."
+            "Doesn't that annoy you?",
+            "Now you've asked, yes."
           ],
           [
-            "Not a souvenir?",
-            "That is a souvenir. It can hold onions afterward."
+            "What could go in it?",
+            "Bread. Or the things I keep moving off the table."
           ],
           [
-            "Would your husband come?",
-            "If his mine shift allowed it. We'd choose the timing together."
+            "Would using it spoil it?",
+            "Probably improve our relationship."
           ]
         ]
       }
     ],
     "greetings": [
-      "Pike. A basket is only cheap until its bottom falls out.",
-      "I'm Corin. I'll remember that while packing.",
-      "Corin. Still carrying more than you meant to?",
-      "Usually.",
-      "A dragon's provisions would require a serious basket.",
-      "I'm Corin. Aurelius requires several serious meals."
+      "Pike. If you're looking for a bargain, begin by telling me your name.",
+      "Corin. Conversation first?",
+      "Corin! You've remembered where to find me.",
+      "My feet deserve some credit.",
+      "A dragon. I can confidently say I make no basket suitable for that.",
+      "I'm Corin. We weren't going to ask."
     ]
   },
   "Hallow": {
@@ -7310,70 +7310,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:26",
     "topics": [
       {
-        "title": "A clock that rushed",
-        "opening": "Have you ever had a clock that wouldn't keep proper time?",
-        "first": "I repaired a clock that gained time. The owner liked it because he was always late.",
+        "title": "The haunted cupboard",
+        "opening": "Have you ever been asked to fix a haunting?",
+        "first": "A cupboard sighed whenever it opened. The owner was convinced it regretted something.",
         "replies": [
           [
-            "Did you slow it properly?",
-            "After asking. He wanted it less inaccurate, not honest."
+            "What was wrong?",
+            "A loose fitting. I regretted only how long she'd been frightened."
           ],
           [
-            "Was that difficult?",
-            "Mechanically no. Philosophically, rather tiring."
+            "Was she relieved?",
+            "Disappointed. The cupboard had made her interesting at dinner."
           ],
           [
-            "Would you keep such a clock?",
-            "No. I'd find another way to distrust myself."
+            "Did you leave it sighing?",
+            "No. I don't charge extra for atmosphere."
           ]
         ]
       },
       {
-        "title": "Finding a fault",
-        "opening": "Where do you start when something stops working?",
-        "first": "I ask what changed before something broke. People often begin with what they've already hit with a hammer.",
+        "title": "The repairer's patience",
+        "opening": "Are you patient with people too?",
+        "first": "Less than with objects. Objects rarely insist they haven't been dropped while I'm holding the broken pieces.",
         "replies": [
           [
-            "Does hitting help?",
-            "Occasionally. It complicates the evidence more reliably."
+            "Do people lie often?",
+            "Mostly they're embarrassed. I try to remember that before sounding clever."
           ],
           [
-            "What's your first step?",
-            "Watch it work badly before taking it apart."
+            "Have you broken things yourself?",
+            "My own tools. The universe enjoys fairness."
           ],
           [
-            "Do you ever guess?",
-            "Yes, then test the guess before charging for confidence."
+            "Do you admit it?",
+            "Eventually, when I need someone else's help."
           ]
         ]
       },
       {
-        "title": "An unwanted mechanism",
-        "opening": "Have you ever made a mechanism nobody wanted?",
-        "first": "I keep a little broken music box. Repairing it would cost more time than anyone would pay for.",
+        "title": "An object beyond repair",
+        "opening": "How do you tell someone a thing can't be saved?",
+        "first": "Slowly. They often brought more than the object through the door.",
         "replies": [
           [
-            "Why keep it?",
-            "I want to hear the rest of its tune."
+            "Have you had to do that?",
+            "A child's old music box. The owner was grown. She'd carried it a long time."
           ],
           [
-            "Do you know the tune?",
-            "Only the first four notes. They're becoming irritatingly familiar."
+            "Could you save any part?",
+            "The case. She kept it. That was enough for her."
           ],
           [
-            "Will you finish it?",
-            "On my own time. Some jobs deserve that freedom."
+            "Does it upset you?",
+            "Yes. I prefer a problem that yields to my hands."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hallow. If it rattles, describe when, not how annoying it is.",
-      "I'm Corin. Nothing rattling today but questions.",
-      "Corin. Come distract me from an unreasonable mechanism.",
-      "Gladly.",
-      "I'm trying very hard not to ask how those wings work immediately.",
-      "I'm Corin. Aurelius might appreciate hello first."
+      "Hallow. If it rattles, describe the rattle before telling me it's cursed.",
+      "Corin. Nothing cursed to report.",
+      "Corin! You've returned without a sack of broken things.",
+      "A purely social miracle.",
+      "A dragon. For once, magic might be a reasonable explanation.",
+      "I'm Corin. I promise he isn't a repair job."
     ]
   },
   "Quarrel": {
@@ -7383,70 +7383,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:31",
     "topics": [
       {
-        "title": "An inherited name",
-        "opening": "How did you come by your name?",
-        "first": "My family thought Quarrel a fine name. Strangers regard it as instructions.",
+        "title": "The view from the wrong side",
+        "opening": "Have you ever defended a position you didn't believe?",
+        "first": "Yes. Everyone agreed too quickly. I thought somebody should test the floor before we all stood on it.",
         "replies": [
           [
-            "Does it suit you?",
-            "Often enough to be inconvenient."
+            "Did you admit what you were doing?",
+            "Eventually. They were less grateful than anticipated."
           ],
           [
-            "Would you change it?",
-            "No. I'd have to introduce the new name to everyone."
+            "Was the objection useful?",
+            "One was. The other six were vanity."
           ],
           [
-            "What's the worst joke?",
-            "The one the teller believes is entirely original."
+            "Would you do it again?",
+            "More briefly, I hope."
           ]
         ]
       },
       {
-        "title": "Being contradicted",
-        "opening": "Does being contradicted bother you?",
-        "first": "I like a person who can explain why I'm wrong. I dislike a person who assumes that guarantees I'll enjoy hearing it.",
+        "title": "The apology you practised",
+        "opening": "Do you find apologising difficult?",
+        "first": "I can explain exactly why I was wrong. Saying sorry without the explanation is harder.",
         "replies": [
           [
-            "Do you admit mistakes?",
-            "Yes, after confirming they exist."
+            "Why?",
+            "Because explanation gives me something to hide behind."
           ],
           [
-            "Does that take long?",
-            "Flint says longer than necessary."
+            "Does Flint notice?",
+            "Instantly. He waits until I've finished protecting myself."
           ],
           [
-            "Why argue at all?",
-            "Because thinking aloud with resistance can improve an idea."
+            "What do you say then?",
+            "Sorry. Astonishingly short word for so much work."
           ]
         ]
       },
       {
-        "title": "Flint's patience",
-        "opening": "Is Flint as patient as he seems?",
-        "first": "Flint lets me finish a magnificent argument, then asks whether I want tea. It ruins the grandeur.",
+        "title": "Quarrel's quiet pleasure",
+        "opening": "What makes you happy without starting an argument?",
+        "first": "Watching somebody unwrap a present I've chosen well.",
         "replies": [
           [
-            "Does that annoy you?",
-            "Briefly. Then I usually want tea."
+            "What makes it well chosen?",
+            "They stop being polite and start being pleased."
           ],
           [
-            "Do you ever win against him?",
-            "He refuses to count conversations as contests."
+            "Are you good at it?",
+            "Better than I am at receiving thanks."
           ],
           [
-            "Is he right about that?",
-            "Possibly. I haven't surrendered the question."
+            "Why dislike thanks?",
+            "I never know where to put my face."
           ]
         ]
       }
     ],
     "greetings": [
-      "Quarrel. Yes, really. You may get the joke out of your system.",
-      "I'm Corin. I'll save it for an emergency.",
-      "Corin. Brought an argument or merely a greeting?",
-      "Let's begin peacefully.",
-      "A dragon is persuasive evidence, though not an argument.",
-      "I'm Corin. Aurelius didn't come to win a debate."
+      "Quarrel. Yes, really. You may decide later whether it suits.",
+      "Corin. I'll keep an open mind.",
+      "Corin! Have you come prepared to disagree?",
+      "Only where necessary.",
+      "A dragon. I refuse to be the first person to object to that.",
+      "I'm Corin. We appreciate the restraint."
     ]
   },
   "Flint": {
@@ -7456,70 +7456,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:36",
     "topics": [
       {
-        "title": "A practical joke",
-        "opening": "Have you ever played a joke that went wrong?",
-        "first": "I once replaced a friend's empty lunch bag with a larger lunch. He spent the meal trying to locate the trick.",
+        "title": "The thing you never finished",
+        "opening": "Have you kept an unfinished piece?",
+        "first": "A little clay bird from my first year. One wing's wrong. I stopped trying to fix it long ago.",
         "replies": [
           [
-            "Was there one?",
-            "Only that I'd made him suspicious of generosity."
+            "Why keep it?",
+            "To remember I could love making something before I was good at it."
           ],
           [
-            "Did he laugh?",
-            "Eventually. Then demanded the recipe."
+            "Would you finish it now?",
+            "No. I'd spoil what it tells me."
           ],
           [
-            "What makes a bad joke?",
-            "Someone becoming smaller so everyone else can laugh."
+            "Does anyone else like it?",
+            "Quarrel. He calls it determined rather than malformed."
           ]
         ]
       },
       {
-        "title": "Working at the kiln",
-        "opening": "What do you enjoy about working at the kiln?",
-        "first": "A kiln rewards preparation and punishes distraction. I learned to enjoy boring checklists.",
+        "title": "Flint's family voice",
+        "opening": "Do you sound like your parents?",
+        "first": "I hear my father when I complain about a draught. It's alarming how faithfully irritation survives.",
         "replies": [
           [
-            "What did you check?",
-            "Fuel, space, placement, anything heat would make harder to fix."
+            "Did you like him?",
+            "Very much. I'd prefer to inherit his laugh as well."
           ],
           [
-            "Did you make mistakes?",
-            "Enough to respect the checks."
+            "Have you noticed that too?",
+            "Occasionally. Those are better days."
           ],
           [
-            "Do you miss the heat?",
-            "On cold mornings. Less when carrying groceries uphill."
+            "Do you mind becoming like him?",
+            "Only when it happens without asking me."
           ]
         ]
       },
       {
-        "title": "Life with Quarrel",
-        "opening": "Do you and Quarrel argue as much as the name suggests?",
-        "first": "Quarrel rehearses disagreements while doing chores. I occasionally object on behalf of the absent opponent.",
+        "title": "The argument you enjoy",
+        "opening": "What do you enjoy arguing about with Quarrel?",
+        "first": "Which of us first asked the other to stay. Neither can remember, so both claim the courage.",
         "replies": [
           [
-            "Does that help?",
-            "It makes the chores take longer."
+            "Does it matter?",
+            "Only because we like the story."
           ],
           [
-            "Do you always disagree?",
-            "No. He has good ideas beneath the introductions."
+            "What if you found the truth?",
+            "We'd probably dispute the evidence."
           ],
           [
-            "Why get along so well?",
-            "We know when the argument matters and when supper matters more."
+            "Who do you think it was?",
+            "Him. Don't tell him I said that."
           ]
         ]
       }
     ],
     "greetings": [
-      "Flint. Quarrel may have warned you about me; I'd like to hear the wording.",
-      "I'm Corin. No warning yet.",
-      "Corin! Just in time for a less serious conversation.",
-      "I'm happy to oblige.",
-      "A dragon should finally leave Quarrel short of an opinion.",
-      "I'm Corin. Aurelius may not manage that miracle."
+      "Flint. Ignore the name; I'm usually quite difficult to strike sparks off.",
+      "Corin. That sounds restful.",
+      "Corin! Quarrel hasn't sent you to recruit me, has he?",
+      "I'm acting independently.",
+      "A dragon. Finally, a sensible reason to ask about fire.",
+      "I'm Corin. We've had less sensible ones."
     ]
   },
   "Bors": {
@@ -7529,70 +7529,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:41",
     "topics": [
       {
-        "title": "Meeting your husband",
-        "opening": "How did you meet your husband?",
-        "first": "I met Kiln when I complained about a crooked cup. He asked whether my mouth was perfectly straight.",
+        "title": "The smallest commission",
+        "opening": "What's the smallest thing you've made for someone?",
+        "first": "A step so a child could reach a window. She wanted to watch for her father coming home.",
         "replies": [
           [
-            "Did you like him immediately?",
-            "I liked arguing with him. Recognition took longer."
+            "Did she like it?",
+            "She climbed up before I finished explaining it. Best review I've had."
           ],
           [
-            "Did you buy the cup?",
-            "Yes. We still use it."
+            "Did you charge?",
+            "Her mother paid. Proud people deserve the chance to pay."
           ],
           [
-            "Was that his plan?",
-            "He denies it. I suspect he simply enjoyed being impertinent."
+            "What became of it?",
+            "Passed to a younger child. The father still comes home."
           ]
         ]
       },
       {
-        "title": "Useful furniture",
-        "opening": "What makes a piece of furniture useful?",
-        "first": "I build for elbows, knees, and people who set things down clumsily. Showroom elegance has different customers.",
+        "title": "Bors's disastrous supper",
+        "opening": "Have you tried your husband's work?",
+        "first": "Tried making a pot. Produced something Kiln called a bold interpretation of a container.",
         "replies": [
           [
-            "Does that look plain?",
-            "Sometimes. Plain doesn't mean careless."
+            "Did it hold anything?",
+            "Our attention, mostly."
           ],
           [
-            "What are you proudest of?",
-            "A table that's still steady after years of family meals."
+            "Were you annoyed?",
+            "Until I remembered how kindly he'd described it."
           ],
           [
-            "Do you make your own furniture?",
-            "Eventually. Kiln is remarkably patient about unfinished promises."
+            "Would you try again?",
+            "Yes. We enjoy being bad at each other's cleverness."
           ]
         ]
       },
       {
-        "title": "Working with different materials",
-        "opening": "Do you like working with materials besides wood?",
-        "first": "Kiln can reshape clay where I've already cut away wood. I find that deeply unfair.",
+        "title": "A door that sticks",
+        "opening": "Why do you like old houses?",
+        "first": "They've already made room for mistakes. New houses sometimes look as if they're waiting to be disappointed.",
         "replies": [
           [
-            "Can you add wood back?",
-            "With a repair everyone pretends not to notice."
+            "You repair the mistakes, though.",
+            "The dangerous ones. A little wear isn't a failure."
           ],
           [
-            "Does he envy your work?",
-            "Wood doesn't collapse in a kiln. He reminds me."
+            "What would you keep?",
+            "Marks where someone grew taller. I always ask before touching those."
           ],
           [
-            "Do you work together?",
-            "Occasionally. Our materials cooperate better than our estimates."
+            "Did you have marks like that?",
+            "Yes. I remember standing straighter than I really was."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bors. Carpenter, husband, and defender of chairs built for actual sitting.",
-      "I'm Corin. The chairs have a strong advocate.",
-      "Corin. No commission needed; company is welcome.",
-      "I came on those terms.",
-      "A dragon makes my usual furniture seem rather limited.",
-      "I'm Corin. Aurelius is content with clear ground."
+      "Bors. If you need something measured, say so before I start guessing.",
+      "Corin. No measurements today.",
+      "Corin! Good to see someone who isn't describing a cupboard.",
+      "I can promise that much.",
+      "A dragon. I'd need another measuring stick just for the introduction.",
+      "I'm Corin. A name will do for now."
     ]
   },
   "Kiln": {
@@ -7602,70 +7602,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:46",
     "topics": [
       {
-        "title": "A crooked cup",
-        "opening": "Have you ever made a cup that wouldn't sit straight?",
-        "first": "A slightly uneven cup can fit a hand beautifully. People sometimes ask me to remove exactly what they enjoy holding.",
+        "title": "The potter's envy",
+        "opening": "What do you envy about Bors's work?",
+        "first": "He can stop halfway and go to supper without his material deciding to become something else.",
         "replies": [
           [
-            "How do you persuade them?",
-            "Let them use it before judging it from across a table."
+            "What does he envy?",
+            "That I can squash an ugly attempt and begin again."
           ],
           [
-            "Can unevenness be a fault?",
-            "Certainly. 'Handmade' doesn't excuse a cup that spills."
+            "Would you trade?",
+            "For an afternoon. We'd both return feeling underpaid."
           ],
           [
-            "Do you keep favourites?",
-            "A few. Bors keeps buying the ones I meant to sell."
+            "Do you help each other?",
+            "We listen to complaints neither of us fully understands. It counts."
           ]
         ]
       },
       {
-        "title": "Teaching clay",
-        "opening": "How do you teach someone to work clay?",
-        "first": "Beginners press too hard, then barely touch it. Clay receives the entire argument.",
+        "title": "A bowl for an absent friend",
+        "opening": "Have you ever made something for someone who couldn't receive it?",
+        "first": "A bowl after a friend died. I knew perfectly well. My hands needed something to do.",
         "replies": [
           [
-            "What do you tell them?",
-            "Slow their hands and watch what the material does."
+            "Where is it now?",
+            "At home. I use it."
           ],
           [
-            "Were you quick to learn?",
-            "No. My teacher had excellent control of his expression."
+            "Does that hurt?",
+            "Sometimes. Sometimes it feels like having him at supper."
           ],
           [
-            "Why teach now?",
-            "Someone was patient with my collapsing bowls. I remember."
+            "Would you make another?",
+            "No. That one says what it needed to."
           ]
         ]
       },
       {
-        "title": "A piece to keep",
-        "opening": "Have you made a piece you wanted to keep?",
-        "first": "I want to make a large serving bowl for our home. No customer, no deadline, no negotiation over the glaze.",
+        "title": "The glaze nobody bought",
+        "opening": "Have customers ever disliked something you loved?",
+        "first": "A green glaze I thought extraordinary. Everyone said it reminded them of soup.",
         "replies": [
           [
-            "What colour?",
-            "A deep blue Bors will pretend was his suggestion."
+            "Was that fair?",
+            "Unfortunately. A very specific soup."
           ],
           [
-            "Why a serving bowl?",
-            "It gives us a reason to invite people."
+            "Did you abandon it?",
+            "I kept one cup. I like it even more now it's failed commercially."
           ],
           [
-            "Will you finish it soon?",
-            "Ask Bors about his shelf before asking me that."
+            "What do you drink from it?",
+            "Tea. I'm not surrendering completely."
           ]
         ]
       }
     ],
     "greetings": [
-      "Kiln. Yes, a potter. I saved everyone a little biographical effort.",
-      "I'm Corin. Efficiently done.",
-      "Corin! Bors hasn't recruited you to admire another joint, has he?",
-      "I came to hear your side.",
-      "A dragon's bowl would be quite a firing problem.",
-      "I'm Corin. Aurelius hasn't requested tableware yet."
+      "Kiln. Yes, a potter. My parents were either prophetic or limiting my options.",
+      "Corin. At least you found the right work.",
+      "Corin! I haven't broken anything since breakfast. A good time to visit.",
+      "I'll tread carefully.",
+      "A dragon. That's one way to make firing pottery more personal.",
+      "I'm Corin. I wouldn't put him on the payroll yet."
     ]
   },
   "Merrin": {
@@ -7675,70 +7675,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:51",
     "topics": [
       {
-        "title": "A familiar detour",
-        "opening": "Do you ever take a longer route just because you like it?",
-        "first": "I take a longer way home because there's a stretch where the traffic quiets. People keep correcting my route.",
+        "title": "The walk with no destination",
+        "opening": "Can you enjoy a walk that goes nowhere?",
+        "first": "That's my favourite sort. Nobody can tell me I'm late.",
         "replies": [
           [
-            "Do you explain?",
-            "Sometimes. Sometimes I thank them and continue."
+            "Do you choose a route?",
+            "After the first turning. It feels more like choosing then."
           ],
           [
-            "Does it add much time?",
-            "Enough to arrive less irritated."
+            "What if it rains?",
+            "I become a walker with a purpose. Shelter."
           ],
           [
-            "Would you show someone?",
-            "If they weren't going to spend the walk hurrying me."
+            "Do you ever feel guilty?",
+            "Less than I used to. Pleasure doesn't need a receipt."
           ]
         ]
       },
       {
-        "title": "The difficult name",
-        "opening": "How do you remember a name you find difficult?",
-        "first": "I practised a neighbour's name privately after getting it wrong. He heard me through the wall.",
+        "title": "A familiar stranger",
+        "opening": "Do you greet people you don't know on walks?",
+        "first": "Yes. There's a man I've greeted for years. Neither of us knows the other's name.",
         "replies": [
           [
-            "Was he annoyed?",
-            "He came over to help with the difficult sound."
+            "Why not ask?",
+            "It now feels absurdly late."
           ],
           [
-            "Did you learn it?",
-            "Yes. Then we had a much easier conversation."
+            "What if he asked yours?",
+            "I'd be relieved beyond reason."
           ],
           [
-            "Why not ask immediately?",
-            "Embarrassment. It produces remarkably unnecessary work."
+            "You could go first.",
+            "Yes. I dislike how simple that sounds when you say it."
           ]
         ]
       },
       {
-        "title": "Learning to whistle",
-        "opening": "Did someone teach you to whistle?",
-        "first": "I cannot whistle. Small children keep offering lessons with brutal optimism.",
+        "title": "Merrin's least favourite advice",
+        "opening": "What do people keep advising you to do?",
+        "first": "Walk faster. As though the road were a problem I should finish.",
         "replies": [
           [
-            "Have you improved?",
-            "I've become better at producing a disappointed breeze."
+            "Sometimes it is.",
+            "True. I'm fortunate when mine isn't."
           ],
           [
-            "Why keep trying?",
-            "I want to answer a tune without words."
+            "What do you notice slowly?",
+            "People deciding whether they want company."
           ],
           [
-            "Would humming work?",
-            "Perfectly. Unfortunately I've become stubborn about the method."
+            "How do you tell?",
+            "I ask. I've learned not to turn noticing into mind-reading."
           ]
         ]
       }
     ],
     "greetings": [
-      "Merrin. I like knowing a town well enough to take the unnecessary route.",
-      "I'm Corin. I do that by accident.",
-      "Corin! Found any good ways to get pleasantly lost?",
-      "A few less pleasant ones too.",
-      "A dragon changes what counts as a narrow lane.",
-      "I'm Corin. Aurelius and I plan our turns together."
+      "Merrin. Out walking, or has someone sent you somewhere?",
+      "Corin. A bit of both.",
+      "Corin! Another road crossing ours.",
+      "A welcome one.",
+      "A dragon! I'd have to lengthen my stride considerably.",
+      "I'm Corin. He doesn't always wait for short legs."
     ]
   },
   "Tallis": {
@@ -7748,70 +7748,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:56",
     "topics": [
       {
-        "title": "Forgetting a verse",
-        "opening": "What do you do if you forget a verse?",
-        "first": "I forgot a verse in public and repeated the previous one with greater conviction.",
+        "title": "A borrowed melody",
+        "opening": "Have you ever used a tune someone else was humming?",
+        "first": "Yes. Asked where it came from. They said they thought I'd played it earlier.",
         "replies": [
           [
-            "Did anyone notice?",
-            "A child sang the missing verse louder than me."
+            "Had you?",
+            "Apparently. I was about to admire my own work in public."
           ],
           [
-            "What did you do?",
-            "Let her finish, then thanked my newly appointed assistant."
+            "Did you confess?",
+            "Too late. They looked delighted by my embarrassment."
           ],
           [
-            "Did the audience mind?",
-            "They preferred the rescue to a flawless performance."
+            "Was it a good tune?",
+            "Better before I knew whose it was."
           ]
         ]
       },
       {
-        "title": "Choosing the tune",
-        "opening": "How do you choose what to play next?",
-        "first": "I begin with something familiar. It tells me whether people want to listen, sing, or continue their conversation.",
+        "title": "The musician at a wedding",
+        "opening": "Do you like playing weddings?",
+        "first": "I like the moment people stop worrying about how they look and begin enjoying each other.",
         "replies": [
           [
-            "Do you mind being ignored?",
-            "Not if that's the arrangement. Supper needn't stop for my feelings."
+            "Does that always happen?",
+            "Not always. Sometimes the shoes prevent it."
           ],
           [
-            "What do you enjoy playing?",
-            "A tune people remember halfway through hearing it."
+            "What do you play then?",
+            "Something familiar. People trust a tune they know."
           ],
           [
-            "Do you write songs?",
-            "Slowly. Words are less cooperative than strings."
+            "Have you ever cried playing?",
+            "Yes. Kept going badly. Nobody seemed to mind."
           ]
         ]
       },
       {
-        "title": "A musician's reputation",
-        "opening": "Does a musician's reputation help or get in the way?",
-        "first": "Someone called me the finest player in three towns. I asked which towns; he hadn't heard the others.",
+        "title": "Tallis's unfinished song",
+        "opening": "Why haven't you finished your own song?",
+        "first": "Because once it's finished, it can disappoint me in a permanent form.",
         "replies": [
           [
-            "Did you accept the praise?",
-            "With appropriate caution and a pleased face."
+            "Could it surprise you?",
+            "That's what keeps me working."
           ],
           [
-            "Would you want to be famous?",
-            "Famous enough for work, obscure enough for breakfast."
+            "What's missing?",
+            "An ending that doesn't explain the feeling to death."
           ],
           [
-            "What should people remember?",
-            "That they enjoyed the evening. My name can follow."
+            "Perhaps it can just stop.",
+            "You're making dangerous sense, Corin."
           ]
         ]
       }
     ],
     "greetings": [
-      "Tallis. Musician. I accept requests and reserve the right to misunderstand them.",
-      "I'm Corin. I'll speak clearly.",
-      "Corin! Here before the difficult verse.",
-      "I chose my moment.",
-      "A dragon deserves his own melody, if he wants one.",
-      "I'm Corin. I'll ask Aurelius before commissioning anything."
+      "Tallis. If you've come to complain about the music, be specific. I'm sensitive and curious.",
+      "Corin. No complaint.",
+      "Corin! A returning listener. I'll try not to become conceited.",
+      "I'll warn you gently.",
+      "A dragon would make an excellent dramatic pause.",
+      "I'm Corin. He may not hold the pose."
     ]
   },
   "Ivo": {
@@ -7821,70 +7821,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "08-forgewick-homes.txt:61",
     "topics": [
       {
-        "title": "A machine for everything",
-        "opening": "Do you think every task needs a machine?",
-        "first": "I drew a machine to fetch water, wash clothes, and ring a bell. Then couldn't explain how it did any one job.",
+        "title": "A drawing of a sound",
+        "opening": "Can you draw something you can't see?",
+        "first": "I've tried drawing a hammer's sound. Everyone thought it was a badly frightened star.",
         "replies": [
           [
-            "Did you abandon it?",
-            "Split it into smaller drawings. Much less impressive, much more understandable."
+            "What did you intend?",
+            "The force of it. The way you feel it before you've decided to listen."
           ],
           [
-            "Why the bell?",
-            "I thought every good machine should announce itself."
+            "Would you try again?",
+            "Yes. Perhaps with fewer points."
           ],
           [
-            "What are you working on now?",
-            "A latch I can make rather than merely describe."
+            "Why draw that?",
+            "Because accurate isn't always the same as recognisable."
           ]
         ]
       },
       {
-        "title": "Asking craftspeople",
-        "opening": "Do craftspeople welcome your questions?",
-        "first": "Garran asked what material I planned to use. I'd written 'metal' as though that settled everything.",
+        "title": "The portrait you avoided",
+        "opening": "Whose face would be hardest to draw?",
+        "first": "My mother's. I know too many versions to choose one.",
         "replies": [
           [
-            "Did he explain?",
-            "Yes, after I stopped pretending I understood."
+            "Which would you choose?",
+            "The one when she's listening and doesn't know I'm looking."
           ],
           [
-            "Was that embarrassing?",
-            "Less than letting him build something from a bad drawing."
+            "Would she like it?",
+            "She'd ask why I hadn't made her younger."
           ],
           [
-            "Will you ask again?",
-            "Certainly. He asks questions that improve the next sketch."
+            "Would you?",
+            "No. I want her, not an apology for time."
           ]
         ]
       },
       {
-        "title": "A drawing for pleasure",
-        "opening": "Do you ever draw something with no plan to build it?",
-        "first": "Sometimes I draw impossible things without intending to build them. That's allowed too.",
+        "title": "Ivo's stolen afternoon",
+        "opening": "Have you ever abandoned work to do nothing?",
+        "first": "Once I went outside intending to think and spent an hour watching a dog decide where to sleep.",
         "replies": [
           [
-            "What sort of things?",
-            "A house with rooms that rotate toward sunshine."
+            "Did it help?",
+            "Immensely. The dog had a sensible relationship with deadlines."
           ],
           [
-            "Wouldn't the furniture slide?",
-            "It would be a terrible breakfast. I'm keeping it a drawing."
+            "Did you feel guilty?",
+            "Until I returned and solved something I'd been forcing all morning."
           ],
           [
-            "Do you enjoy practical work?",
-            "Yes. I just don't want every page to be an estimate."
+            "So it wasn't nothing.",
+            "Apparently not. I still wouldn't put the dog on my invoice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ivo. These are ideas, not promises that I can build them.",
-      "I'm Corin. I'd like to hear one anyway.",
-      "Corin! I've made an invention less impossible.",
-      "That's progress worth reporting.",
-      "A dragon can actually fly. My drawings remain less convincing.",
-      "I'm Corin. Aurelius had a head start on wings."
+      "Ivo. Don't look too closely at my expression; I'm calculating something badly.",
+      "Corin. I won't check your sums.",
+      "Corin! I've corrected a mistake and discovered two more.",
+      "A productive visit, then.",
+      "A dragon. I need several pages and a very patient companion.",
+      "I'm Corin. His patience varies with hunger."
     ]
   },
   "Nazim": {
@@ -7894,70 +7894,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:1",
     "topics": [
       {
-        "title": "Counting water",
-        "opening": "How do you make sure the water measures are right?",
-        "first": "I check the water measures myself. A small error repeated across a caravan becomes a serious shortage.",
+        "title": "The first drink of the day",
+        "opening": "What's the first thing you do each morning?",
+        "first": "Drink before I've started thinking about everyone else's thirst. Took me years to learn that much.",
         "replies": [
           [
-            "Do traders object?",
-            "The hurried ones. They object less after a dry journey."
+            "Did someone teach you?",
+            "My wife put a cup in my hand and refused to hear about work until it was empty."
           ],
           [
-            "Who taught you?",
-            "My father. He distrusted numbers nobody had checked."
+            "Does she still do that?",
+            "Only when I look particularly indispensable."
           ],
           [
-            "Do you ever miscount?",
-            "Yes. That's why I check rather than admire my experience."
+            "Do you like the work?",
+            "Yes. I'd like it less if nobody noticed when it exhausted me."
           ]
         ]
       },
       {
-        "title": "The broken lid",
-        "opening": "Can a broken cistern lid cause much trouble?",
-        "first": "A cracked cistern lid spoiled more water than a week's ordinary use. People had complained about replacing it.",
+        "title": "A quarrel over a cup",
+        "opening": "What's the smallest thing you've seen cause a serious quarrel?",
+        "first": "Two people arguing over who had filled a cup first. Neither was thirsty anymore. They'd become interested in winning.",
         "replies": [
           [
-            "Did they change their minds?",
-            "Afterward. I'd have preferred agreement before the loss."
+            "How did you stop them?",
+            "I asked who was waiting behind them."
           ],
           [
-            "What caused the crack?",
-            "A cart struck the edge. Nobody reported it."
+            "Did that work?",
+            "One looked embarrassed. That gave the other permission to stop."
           ],
           [
-            "What changed?",
-            "People know whom to tell now, without a lecture first."
+            "What if neither had stopped?",
+            "Then we'd have needed a longer conversation and two less important egos."
           ]
         ]
       },
       {
-        "title": "An evening off",
-        "opening": "What do you do when you have an evening free?",
-        "first": "I like listening to musicians after work. For once, nobody asks how much remains.",
+        "title": "Nazim's impossible garden",
+        "opening": "What would you grow if water were plentiful?",
+        "first": "A garden so lush I'd lose things in it. Very irresponsible fantasy for a water keeper.",
         "replies": [
           [
-            "What music?",
-            "Anything with a rhythm I can follow without counting."
+            "What would you lose?",
+            "My work hat, preferably."
           ],
           [
-            "Do you dance?",
-            "Badly and rarely. My sister disputes the order."
+            "Would you really want to leave it all?",
+            "For a day. Then I'd wonder whether anyone had checked the stores."
           ],
           [
-            "Would you live elsewhere?",
-            "Perhaps near rain. I'd like to complain about too much water."
+            "Could you trust someone else?",
+            "I should. Wanting to be useful can become wanting to be necessary."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nazim. If you need water, say that before telling me how far you've walked.",
-      "I'm Corin. I'd like to hear about the town.",
-      "Corin. Recovered from the crossing?",
-      "Enough to ask better questions.",
-      "A dragon must need a considerable drink.",
-      "I'm Corin; Aurelius and I are learning to plan for that."
+      "Welcome to Sandspire. Nazim. Take a breath before you ask where everything is.",
+      "Corin. Thank you.",
+      "Corin, back through town? You're beginning to look less surprised by the heat.",
+      "I'm learning to respect it.",
+      "A dragon. I hope he understands that water here isn't a toy.",
+      "I'm Corin. We'll treat it carefully."
     ]
   },
   "Halima": {
@@ -7967,70 +7967,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:6",
     "topics": [
       {
-        "title": "A scent from childhood",
-        "opening": "Is there a smell that takes you straight back to childhood?",
-        "first": "The smell of toasted cumin reminds me of my mother's kitchen before I remember a single meal.",
+        "title": "A bargain in another language",
+        "opening": "Have you misunderstood a bargain while travelling?",
+        "first": "Bought what I thought was a small quantity. It was the price for the whole sack.",
         "replies": [
           [
-            "Did she teach you to cook?",
-            "She taught me to smell spices before trusting their appearance."
+            "A lucky mistake?",
+            "Until I had to carry it."
           ],
           [
-            "What if they look fine?",
-            "Age can leave a beautiful, flavourless powder."
+            "What did you do?",
+            "Shared some with fellow travellers. Acquired friends and a manageable load."
           ],
           [
-            "Do you miss her cooking?",
-            "Especially dishes I thought I'd eaten too often."
+            "Would you call that good business?",
+            "Poor accounts, excellent journey."
           ]
         ]
       },
       {
-        "title": "The travelling sack",
-        "opening": "How do you know where your spices have come from?",
-        "first": "A sack can pass through many hands before reaching my stall. Each seller has a more impressive origin story.",
+        "title": "The scent you avoid",
+        "opening": "Is there a smell you can't bear?",
+        "first": "A spice my father used when he was trying too hard to impress guests. It smells of being told to sit still.",
         "replies": [
           [
-            "How do you choose whom to trust?",
-            "Consistency, samples, and whether complaints get answered."
+            "Even now?",
+            "I like the spice. I dislike suddenly being seven."
           ],
           [
-            "Have you been cheated?",
-            "Yes. I remember the lesson more vividly than the loss."
+            "Did you tell him?",
+            "Years later. He said he'd been nervous too."
           ],
           [
-            "Do you tell customers?",
-            "What I know. Uncertain origins remain uncertain."
+            "Did that change it?",
+            "A little. Now the memory has two frightened people in it."
           ]
         ]
       },
       {
-        "title": "Your least profitable habit",
-        "opening": "Do your stories ever distract people from buying anything?",
-        "first": "I enjoy telling stories about spices so much that customers occasionally forget to purchase any.",
+        "title": "Halima's trusted customer",
+        "opening": "What makes you trust a customer?",
+        "first": "They admit what they don't know. I can work with a question more easily than a performance.",
         "replies": [
           [
-            "Does that annoy you?",
-            "Only when I notice the day's accounts."
+            "Do people pretend often?",
+            "Especially when someone is watching."
           ],
           [
-            "Do you shorten the stories?",
-            "I try. Then someone asks the right question."
+            "Have you done it?",
+            "Naturally. I once praised a spice while holding the wrong jar."
           ],
           [
-            "What's the right question?",
-            "Who grew it. That leads somewhere more interesting than price."
+            "What happened?",
+            "The seller corrected me kindly. I've tried to return the favour ever since."
           ]
         ]
       }
     ],
     "greetings": [
-      "Halima. I can tell you where something came from without telling you to buy it.",
-      "I'm Corin. I'd enjoy hearing that.",
-      "Corin! Have your travels improved your appetite?",
-      "They've certainly enlarged it.",
-      "I've heard traders claim to see dragons. Yours is persuasive evidence.",
-      "I'm Corin. Aurelius isn't part of a sales pitch."
+      "Halima. If you sneeze, I promise not to take it personally.",
+      "Corin. That's generous in advance.",
+      "Corin! Still collecting questions?",
+      "They're lighter than most souvenirs.",
+      "A dragon. My strongest spices suddenly have competition.",
+      "I'm Corin. We'll avoid any contest."
     ]
   },
   "Tarek": {
@@ -8040,70 +8040,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:11",
     "topics": [
       {
-        "title": "An opinionated camel",
-        "opening": "Can a camel decide how a caravan ought to run?",
-        "first": "One camel refuses to move until the others are loaded. It has apparently appointed itself inspector.",
+        "title": "A camel's insult",
+        "opening": "Can a camel look offended?",
+        "first": "With extraordinary precision. One looked at me as though I'd ruined its entire ancestry by offering the wrong feed.",
         "replies": [
           [
-            "Does it delay the caravan?",
-            "Less than discovering an unsecured load on the road."
+            "Had you?",
+            "I'd offered the ordinary feed. It had tasted something nicer the day before."
           ],
           [
-            "Did you train that behaviour?",
-            "No. I'm accepting credit only for recognising it."
+            "Did you give in?",
+            "No. We disliked each other briefly and survived."
           ],
           [
-            "Is it your favourite?",
-            "Ask when it's cooperating. My answer varies."
+            "Do you get attached?",
+            "Of course. Annoyance is often a sign you've begun caring."
           ]
         ]
       },
       {
-        "title": "Learning an animal's mood",
-        "opening": "How do you recognise an animal's mood?",
-        "first": "I watch ears, stance, and breathing. People often notice teeth rather late in the discussion.",
+        "title": "The caravan child",
+        "opening": "Did you grow up around caravans?",
+        "first": "I thought everybody's family could pack a home in an hour. Fixed houses seemed impossibly trusting.",
         "replies": [
           [
-            "Were you ever bitten?",
-            "Once. I had ignored every earlier objection."
+            "Trusting how?",
+            "They couldn't leave when things went wrong."
           ],
           [
-            "What did you change?",
-            "Stopped treating patience as permission to crowd."
+            "Do you still feel that?",
+            "Sometimes. I also envy knowing where a thing will be tomorrow."
           ],
           [
-            "Can you always predict them?",
-            "No. Knowing an animal means respecting what you don't know too."
+            "Would you settle permanently?",
+            "I might. I'd keep my bags somewhere I could see them."
           ]
         ]
       },
       {
-        "title": "Caravan bells",
-        "opening": "Why do the caravan animals wear different bells?",
-        "first": "Different bells help me recognise which animal has moved before I turn around.",
+        "title": "The animal you couldn't help",
+        "opening": "Have you ever failed an animal you cared for?",
+        "first": "Yes. I knew too late that something was wrong. I still remember every moment I dismissed before it.",
         "replies": [
           [
-            "Do they dislike the bells?",
-            "Some do. I don't insist on one solution for all."
+            "I'm sorry.",
+            "Thank you. I don't tell that one often."
           ],
           [
-            "Can you sleep through them?",
-            "Familiar movement, yes. A sudden change wakes me."
+            "Did it change your work?",
+            "I ask sooner. Pride is a poor reason to wait."
           ],
           [
-            "Does silence worry you?",
-            "When I expected movement. Context matters more than the sound."
+            "Do you blame yourself still?",
+            "Some days. On better days, I use what I learned."
           ]
         ]
       }
     ],
     "greetings": [
-      "Tarek. Let an animal notice you before trying to become its friend.",
-      "I'm Corin. I'll approach slowly.",
-      "Corin. Travelling well, or practising an optimistic answer?",
-      "Some of each.",
-      "A dragon isn't a camel. I'd rather ask than pretend I know him.",
-      "I'm Corin. Aurelius will appreciate that."
+      "Tarek. Keep your movements easy until the animals know what you're doing.",
+      "Corin. I'll follow your lead.",
+      "Corin! Nothing bitten you since last time?",
+      "I'd like to preserve that record.",
+      "A dragon. We should introduce him slowly, to everyone concerned.",
+      "I'm Corin. Slowly suits us."
     ]
   },
   "Suhaila": {
@@ -8113,70 +8113,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:16",
     "topics": [
       {
-        "title": "Your daughter's loom",
-        "opening": "Does your daughter weave the same patterns you do?",
-        "first": "My daughter changed a pattern I'd used for years. I prepared a criticism before seeing the finished cloth.",
+        "title": "The wedding cloth returned",
+        "opening": "Has anyone returned something you made years ago?",
+        "first": "A woman brought back a cloth I'd woven for her marriage. She wanted it cut into gifts for her children.",
         "replies": [
           [
-            "Was it better?",
-            "Different, and successful. A deeply inconvenient combination."
+            "Did you agree?",
+            "After she told me why. Her husband had died; she wanted it used, not guarded."
           ],
           [
-            "Did you criticise it?",
-            "I asked how she'd done the difficult section."
+            "Was cutting it difficult?",
+            "Yes. My hands remembered making it."
           ],
           [
-            "Did she notice your change of mind?",
-            "Naturally. Children recognise a swallowed lecture."
+            "Were the gifts good?",
+            "Beautiful. She chose what each child would receive."
           ]
         ]
       },
       {
-        "title": "Working hands",
-        "opening": "Can you tell someone's work from their hands?",
-        "first": "My hands tire sooner now. I dislike admitting it more than I dislike taking breaks.",
+        "title": "A woman without a title",
+        "opening": "Do you mind people calling you retired?",
+        "first": "Only when they say it as though I've become a blank page.",
         "replies": [
           [
-            "Have you stopped weaving?",
-            "Large pieces. I still enjoy choosing and preparing thread."
+            "What would you prefer?",
+            "My name. It has served me longer than my occupation."
           ],
           [
-            "Do you miss the work?",
-            "The feeling of a pattern appearing, yes."
+            "Are you enjoying the time?",
+            "More now I've stopped trying to justify every hour."
           ],
           [
-            "What helps?",
-            "Teaching someone who actually wants the lesson."
+            "What do you do?",
+            "Things slowly. Sometimes simply because I like them."
           ]
         ]
       },
       {
-        "title": "Evening conversation",
-        "opening": "What do you like talking about in the evening?",
-        "first": "I like evening visits when the heat eases and nobody is trying to complete a task.",
+        "title": "Suhaila's first refusal",
+        "opening": "When did you learn to say no?",
+        "first": "Far too late. I said it once and discovered the world could survive my unhelpfulness.",
         "replies": [
           [
-            "Who visits?",
-            "Neighbours, relatives, people who claim they can only stay a minute."
+            "What were you refusing?",
+            "A job that required me to miss something important to my family."
           ],
           [
-            "Do you believe them?",
-            "Only until the second cup."
+            "Was the customer angry?",
+            "Briefly. My daughter remembered I came for years."
           ],
           [
-            "What do you discuss?",
-            "Everything the day was too hot to argue about."
+            "Was it easier afterward?",
+            "Not easy. Easier. There's a difference worth keeping."
           ]
         ]
       }
     ],
     "greetings": [
-      "Suhaila. My daughter says retirement should include my opinions. I disagree.",
-      "I'm Corin. I suppose she's heard that opinion.",
-      "Corin! Come distract me from offering unsolicited advice.",
-      "I'll choose a safe subject.",
-      "Those wings have patterns no loom could easily follow.",
-      "I'm Corin; this is Aurelius. He won't sit still for a pattern."
+      "Suhaila. You may sit in silence if you like; visitors needn't perform.",
+      "I'm Corin. I'd like a little conversation.",
+      "Corin. There you are. I've had time to think since we spoke.",
+      "Should I be concerned?",
+      "A dragon. At my age I enjoy being wrong about having seen everything.",
+      "I'm Corin. He's been correcting that idea elsewhere too."
     ]
   },
   "Idris": {
@@ -8186,70 +8186,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:21",
     "topics": [
       {
-        "title": "Three different sons",
-        "opening": "Are your sons much like one another?",
-        "first": "My three sons all claim they'll never become traders. Each bargains fiercely over chores.",
+        "title": "The merchant's son",
+        "opening": "Did your sons want to follow your trade?",
+        "first": "One did. One didn't. One wanted to follow it only on profitable afternoons.",
         "replies": [
           [
-            "Does that disappoint you?",
-            "No. I'd like them to choose their work."
+            "Which worried you most?",
+            "The one who agreed with everything I said. I needed to know what he wanted."
           ],
           [
-            "Do they help the shop?",
-            "Sometimes. They have different talents and identical excuses."
+            "Did you ask?",
+            "Eventually. Parents can mistake obedience for contentment."
           ],
           [
-            "Which resembles you?",
-            "Whichever has just made an excellent point, according to me."
+            "What did he say?",
+            "That he'd like to decide slowly. I had to learn to let him."
           ]
         ]
       },
       {
-        "title": "A fair price",
-        "opening": "How do you agree on a fair price?",
-        "first": "A fair price lets a customer return and a shop remain open. Neither side should require a rescue.",
+        "title": "A customer you refused",
+        "opening": "Have you ever refused a sale?",
+        "first": "A traveller wanted to carry far more than he could manage. I told him to put half back.",
         "replies": [
           [
-            "Do you bargain?",
-            "Within reason. Theatre isn't the same as business."
+            "Did he listen?",
+            "After I asked him to lift it all."
           ],
           [
-            "Have you lost customers over it?",
-            "Some. A sale can still cost too much."
+            "You lost money.",
+            "I gained a customer who returned alive and trusted me."
           ],
           [
-            "What makes you trust a buyer?",
-            "Plain dealing. An honest small purchase beats a grand promise."
+            "Do you always know what's best?",
+            "No. I know when I ought to ask another question."
           ]
         ]
       },
       {
-        "title": "The item forgotten",
-        "opening": "Have you ever forgotten something important while packing?",
-        "first": "People remember impressive equipment and forget ordinary food. Then hope the road supplies it.",
+        "title": "The journey in your window",
+        "opening": "Do you wish you travelled as much as your customers?",
+        "first": "Some days. I hear their plans and imagine myself halfway there.",
         "replies": [
           [
-            "What do you suggest first?",
-            "Count what you need before the next safe stop."
+            "What stops you?",
+            "People here. That's an answer, not always an excuse."
           ],
           [
-            "Do travellers listen?",
-            "Those who've gone hungry are very attentive."
+            "Where would you go first?",
+            "Somewhere cold enough that I'd complain in an entirely new way."
           ],
           [
-            "What's your own weakness?",
-            "Packing extra paper. I always imagine more time to write."
+            "Would you enjoy it?",
+            "I'd enjoy finding out how long before I missed Sandspire."
           ]
         ]
       }
     ],
     "greetings": [
-      "Idris. Tell me where you're going before we decide what you need.",
-      "I'm Corin. A sensible beginning.",
-      "Corin. How did your supplies hold up?",
-      "I'll give you an honest report.",
-      "A dragon makes an ordinary packing list rather incomplete.",
-      "I'm Corin; Aurelius and I are still refining ours."
+      "Idris. Tell me where you're going before I recommend what to carry.",
+      "Corin. Still learning the route.",
+      "Corin! How did the road treat you?",
+      "It had several opinions.",
+      "A dragon. I have no strap guaranteed for that circumstance.",
+      "I'm Corin. We'll begin with ordinary supplies."
     ]
   },
   "Rashida": {
@@ -8259,70 +8259,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:26",
     "topics": [
       {
-        "title": "The imperfect vase",
-        "opening": "Do you ever keep a vase that isn't quite perfect?",
-        "first": "I bought a vase with a small bubble in the glass. The seller apologised; it was the part I liked.",
+        "title": "The colour at sunset",
+        "opening": "Why do you like looking at glass late in the day?",
+        "first": "Something familiar changes without being replaced. I find that comforting.",
         "replies": [
           [
-            "Why that part?",
-            "Light caught inside it. The flaw made me look twice."
+            "Does it always look better?",
+            "Not better. Different. That's rather the point."
           ],
           [
-            "Was it cheaper?",
-            "A little. I resisted explaining how much I wanted it."
+            "What do you notice first?",
+            "Where the light stops. The dark parts make the bright ones believable."
           ],
           [
-            "Do you still have it?",
-            "Yes. Useful for flowers and defending my taste."
+            "I'd probably miss that.",
+            "You might notice something I'd miss. Looking isn't an examination."
           ]
         ]
       },
       {
-        "title": "Workshop rivalry",
-        "opening": "Is there much rivalry between the workshops?",
-        "first": "Forgewick and Sandspire argue about glass as though one good cup makes every other town incompetent.",
+        "title": "A keepsake you broke",
+        "opening": "Have you ever broken something precious?",
+        "first": "A cup from someone I loved. I was furious at myself, then ashamed of being so upset about a cup.",
         "replies": [
           [
-            "Which is better?",
-            "Sandspire. I warned you about my enthusiasm."
+            "It wasn't only a cup.",
+            "No. I needed somebody to say that."
           ],
           [
-            "Have you bought Forgewick work?",
-            "Yes. Quietly. Quality occasionally complicates loyalty."
+            "Did you repair it?",
+            "Not well enough to use. Well enough to keep."
           ],
           [
-            "Does Sela share your rivalry?",
-            "His brother is a smith in Forgewick. Their arguments are more personal."
+            "Would you rather have a new one?",
+            "No. I wanted the afternoon it came from. No maker could replace that."
           ]
         ]
       },
       {
-        "title": "Choosing a keepsake",
-        "opening": "How do you choose something worth keeping?",
-        "first": "I prefer one object attached to a memory over a shelf of expensive things.",
+        "title": "Rashida's museum",
+        "opening": "Would you collect glass if you had endless money?",
+        "first": "I'd collect fewer pieces than you'd think. I want to know each one, not own a room I hurry through.",
         "replies": [
           [
-            "What would you save first?",
-            "A cup my mother used. Unremarkable to anyone else."
+            "Would you let others see them?",
+            "Gladly. But no one would have to call them impressive."
           ],
           [
-            "Does it ever get used?",
-            "Often. Keeping it untouchable would lose half the memory."
+            "What would you ask instead?",
+            "Which one they'd live with."
           ],
           [
-            "Are you afraid of breaking it?",
-            "Yes. I use it carefully and enjoy it anyway."
+            "Is that different from the finest one?",
+            "Often. We don't always love what we're told to admire."
           ]
         ]
       }
     ],
     "greetings": [
-      "Rashida. I defend Sandspire's glass with absolutely unnecessary enthusiasm.",
-      "I'm Corin. I'll hear the case.",
-      "Corin! Have you come prepared to admire good workmanship?",
-      "I'm prepared to learn what I'm looking at.",
-      "Those scales catch light better than my favourite glass.",
-      "I'm Corin. Aurelius accepts admiration without a price tag."
+      "Rashida. If you're looking at glass, I may accidentally begin talking about it.",
+      "Corin. I'll risk it.",
+      "Corin! I've found another reason to be fascinated.",
+      "Only one?",
+      "A dragon. Those scales catch light in a way I'd never have believed.",
+      "I'm Corin. He'll enjoy being admired."
     ]
   },
   "Bilal": {
@@ -8332,70 +8332,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:31",
     "topics": [
       {
-        "title": "Goat names",
-        "opening": "Do all your goats have names?",
-        "first": "I named one goat Patience in the hope it would help. The name now sounds like a command directed at me.",
+        "title": "The goat at the wedding",
+        "opening": "Has a goat ever interrupted a ceremony?",
+        "first": "One ate part of a flower arrangement. The bride laughed; her mother declared it an omen.",
         "replies": [
           [
-            "What's it done?",
-            "Learned which rope I'd replaced and tested the next one."
+            "Of what?",
+            "An inadequate fence, in my opinion."
           ],
           [
-            "Would you rename it?",
-            "No. Stubbornness is established on both sides."
+            "Did you catch it?",
+            "Eventually. It had discovered the audience and wanted to stay."
           ],
           [
-            "Do they know their names?",
-            "They know which tone predicts food. Names are optional details."
+            "Was the wedding ruined?",
+            "No. People remembered it fondly. Except the florist."
           ]
         ]
       },
       {
-        "title": "A missing goat",
-        "opening": "What do you do when a goat goes missing?",
-        "first": "I once searched half a morning for a goat sleeping behind the water jars.",
+        "title": "A shepherd's voice",
+        "opening": "Why do you talk so softly to them?",
+        "first": "Because shouting only tells them something frightening is happening. Usually I'm asking them to walk ten steps.",
         "replies": [
           [
-            "Did it hear you?",
-            "Certainly. It yawned when I found it."
+            "Does it work on people?",
+            "Not consistently. People prefer reasons."
           ],
           [
-            "How did you miss it?",
-            "Looked where a troublesome goat should be, not where a tired one was."
+            "Do you ever shout?",
+            "When I'm frightened. Then I have to calm both of us."
           ],
           [
-            "Were you relieved?",
-            "Enough to postpone the lecture it wouldn't have understood."
+            "Can they recognise your mood?",
+            "Faster than my brother can. I mention this frequently."
           ]
         ]
       },
       {
-        "title": "Milk and neighbours",
-        "opening": "Do you share the milk with your neighbours?",
-        "first": "People want milk at convenient times. The goats have never attended a scheduling meeting.",
+        "title": "Bilal's one complaint",
+        "opening": "What bothers you most about your work?",
+        "first": "People assuming it's peaceful because the trouble has hooves.",
         "replies": [
           [
-            "Do you keep a strict routine?",
-            "As far as living creatures permit."
+            "It does look peaceful.",
+            "From a distance. So does an argument you can't hear."
           ],
           [
-            "Does it tie you to home?",
-            "Yes. I arrange help before leaving."
+            "What do you enjoy?",
+            "Knowing each animal well enough to notice a change."
           ],
           [
-            "Would you change that life?",
-            "Some days. Then a newborn stands up and ruins my argument."
+            "Would you choose another job?",
+            "On bad mornings. By evening I've usually chosen this one again."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bilal. If a goat has followed you, please don't encourage its ambitions.",
-      "I'm Corin. No goat yet.",
-      "Corin. Arriving with all your belongings?",
-      "As far as I've counted.",
-      "My goats would have opinions about a dragon. Loud ones.",
-      "I'm Corin. Aurelius can avoid their committee."
+      "Bilal. If a goat has offended you, describe it. That won't narrow things down much.",
+      "Corin. No complaints yet.",
+      "Corin! You're becoming familiar enough for the goats to develop opinions.",
+      "Should I be flattered?",
+      "A dragon. My goats may finally meet someone less impressed by them than I am.",
+      "I'm Corin. Let's keep that meeting cautious."
     ]
   },
   "Jamila": {
@@ -8405,70 +8405,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:36",
     "topics": [
       {
-        "title": "The light parcel",
-        "opening": "Have you ever carried a parcel lighter than it looked?",
-        "first": "My lightest parcel caused the most trouble. A customer had wrapped it without writing whose it was.",
+        "title": "The farewell you prolonged",
+        "opening": "Have you ever delayed leaving because saying goodbye hurt?",
+        "first": "Packed and unpacked the same bag for three mornings. Finally my sister carried it to the door herself.",
         "replies": [
           [
-            "How did you find out?",
-            "Visited three households and heard three confident guesses."
+            "Was she tired of you?",
+            "She was tired of watching me suffer twice."
           ],
           [
-            "What was inside?",
-            "A wedding ribbon. The bride identified it immediately."
+            "Did leaving help?",
+            "It made the sadness honest. Before that I kept calling it a packing problem."
           ],
           [
-            "Did you deliver on time?",
-            "Barely. I became unreasonable about labels afterward."
+            "Were you glad you went?",
+            "Yes. I can miss her and mean that."
           ]
         ]
       },
       {
-        "title": "A stranger's kindness",
-        "opening": "Has a stranger ever helped you on the road?",
-        "first": "A stranger helped me lift a fallen load and left before I could learn his name.",
+        "title": "A trader's disguise",
+        "opening": "Did you ever pretend to be wealthier than you were?",
+        "first": "At my first big market. Wore borrowed finery and couldn't afford lunch.",
         "replies": [
           [
-            "Did you see him again?",
-            "No. I've looked at many faces expecting to."
+            "Did anyone believe you?",
+            "Someone offered a costly purchase. I spent ten minutes escaping my own costume."
           ],
           [
-            "What did you do instead?",
-            "Helped other people with fallen loads."
+            "What did you wear afterward?",
+            "Clothes I could breathe in."
           ],
           [
-            "Do you still remember him?",
-            "His voice better than his face. He made the trouble feel manageable."
+            "Was it easier?",
+            "Much. Confidence is cheaper when you aren't renting it."
           ]
         ]
       },
       {
-        "title": "Why stop travelling?",
-        "opening": "What made you stop travelling?",
-        "first": "I wanted to wake in one place without calculating the distance before supper.",
+        "title": "Jamila's newest lesson",
+        "opening": "What are you learning now that you stay in one place?",
+        "first": "How to have a disagreement without solving it by leaving for the next town.",
         "replies": [
           [
-            "Do you regret stopping?",
-            "On lovely mornings. Not during dust storms."
+            "Is that difficult?",
+            "Terribly. Neighbours remain inconveniently present."
           ],
           [
-            "What do you miss?",
-            "Arriving somewhere that had changed since my last visit."
+            "What helps?",
+            "Returning the next day with less performance and more truth."
           ],
           [
-            "Could you still take a trip?",
-            "Yes. Choosing one feels different from needing the next sale."
+            "Do you like staying?",
+            "Yes. I'm becoming known in ways a quick visit never allowed."
           ]
         ]
       }
     ],
     "greetings": [
-      "Jamila. I used to carry goods between towns. Now I prefer hearing about the road while seated.",
-      "I'm Corin. I can provide recent impressions.",
-      "Corin! Your boots look more experienced.",
-      "They'd appreciate less experience tomorrow.",
-      "Wings would have changed my old journeys considerably.",
-      "I'm Corin. Aurelius still needs food and rest."
+      "Jamila. Come and tell me something the road hasn't told everybody yet.",
+      "I'm Corin. I'll try to find a small story.",
+      "Corin! You've come back before I forgot your voice.",
+      "I'm glad of that.",
+      "A dragon. I used to think my luggage attracted attention.",
+      "I'm Corin. Attention has become difficult to avoid."
     ]
   },
   "Farid": {
@@ -8478,70 +8478,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:41",
     "topics": [
       {
-        "title": "A stale bargain",
-        "opening": "Have you ever bought something that looked better than it tasted?",
-        "first": "I bought a cheap sack before smelling it. My father asked how cheaply I'd purchased flavourless dust.",
+        "title": "The spice you hated",
+        "opening": "Did you always like the flavours you sell?",
+        "first": "No. My father insisted I'd acquire taste. I acquired a talent for hiding food.",
         "replies": [
           [
-            "Could you return it?",
-            "No. The seller had been very careful about that part."
+            "Where did you hide it?",
+            "Nowhere I'd recommend. He found enough to end the experiment."
           ],
           [
-            "Did your father help?",
-            "He helped me count the loss. I disliked the thoroughness."
+            "What changed?",
+            "Someone let me dislike something without treating it as a defect."
           ],
           [
-            "Have you repeated it?",
-            "Not with spices. Other forms of optimism remain available."
+            "Did you grow to like it?",
+            "Some of it. Being allowed to refuse made trying easier."
           ]
         ]
       },
       {
-        "title": "A family recipe",
-        "opening": "Who taught you your family recipe?",
-        "first": "My family argues about the exact spice mix for the same dish. Everyone cites the same grandmother.",
+        "title": "A merchant's memory",
+        "opening": "What do you remember about customers?",
+        "first": "What they cook for someone else. People soften when they describe another person's favourite food.",
         "replies": [
           [
-            "Who's right?",
-            "She changed it according to what she had."
+            "Do you ask deliberately?",
+            "If they seem inclined to talk."
           ],
           [
-            "Did anyone admit that?",
-            "Eventually. It deprived us of a cherished argument."
+            "What would you cook for someone?",
+            "Something simple enough that I could stay with them instead of fussing."
           ],
           [
-            "Do you keep experimenting?",
-            "Yes. I call it tradition when it succeeds."
+            "Who cooks for you?",
+            "My sister, when she decides I'm neglecting the privilege of supper."
           ]
         ]
       },
       {
-        "title": "A customer's memory",
-        "opening": "Do customers remember what they bought from you?",
-        "first": "A traveller recognised a spice by a childhood meal and nearly cried at my stall.",
+        "title": "The disputed smell",
+        "opening": "Can two people smell the same thing differently?",
+        "first": "My brother says one spice smells like celebration. I say it smells like a crowded room I couldn't escape.",
         "replies": [
           [
-            "What did you say?",
-            "Asked if she wanted a moment. She did."
+            "Same memory?",
+            "Same wedding. He was dancing. I was helping serve."
           ],
           [
-            "Did she buy some?",
-            "A little. Enough to try the dish again."
+            "Did you tell him?",
+            "Yes. He brought me supper the next time."
           ],
           [
-            "Did she return?",
-            "Yes, with a description that made me hungry all afternoon."
+            "Did that change the smell?",
+            "A little. Memories can acquire better neighbours."
           ]
         ]
       }
     ],
     "greetings": [
-      "Farid. Smell first, bargain second. That's my entire first lesson.",
-      "I'm Corin. A lesson short enough to remember.",
-      "Corin! Learned any new flavours on the road?",
-      "A few I couldn't name.",
-      "A dragon could overwhelm every scent in my working day.",
-      "I'm Corin. Aurelius won't breathe on your stock."
+      "Farid. If you ask whether something's spicy, I'll ask compared with what.",
+      "Corin. Fair enough.",
+      "Corin! Your nose found us again.",
+      "It deserves some credit.",
+      "A dragon. I shall avoid making jokes about hot food until I know him better.",
+      "I'm Corin. Wise of you."
     ]
   },
   "Samira": {
@@ -8551,70 +8551,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:46",
     "topics": [
       {
-        "title": "Cloth in the heat",
-        "opening": "What makes cloth comfortable in this heat?",
-        "first": "Light cloth needs to shade without trapping every breath of air. Thickness alone doesn't explain comfort.",
+        "title": "The cloth nobody touched",
+        "opening": "Why do people save beautiful things instead of using them?",
+        "first": "Fear, sometimes. They think wearing something out means they haven't valued it enough.",
         "replies": [
           [
-            "How do you test it?",
-            "Wear it while working. A flattering display proves little."
+            "Do you agree?",
+            "No. I like a cloth with a life in it."
           ],
           [
-            "Have you made a bad piece?",
-            "A magnificent, suffocating one. My sister named it Winter."
+            "Even if it gets stained?",
+            "Especially if the stain has a good story."
           ],
           [
-            "Did you reuse it?",
-            "Yes. The material hadn't promised summer; I had."
+            "What do you save?",
+            "A piece my mother made. I'm better at giving this advice than taking it."
           ]
         ]
       },
       {
-        "title": "A difficult pattern",
-        "opening": "Do you enjoy a difficult pattern?",
-        "first": "I enjoy repeating patterns until someone asks me to explain how I keep count.",
+        "title": "Samira's wedding bargain",
+        "opening": "Did you ever bargain with your own family?",
+        "first": "My cousin wanted wedding cloth cheaply. I wanted him to stop calling my work a pleasant pastime.",
         "replies": [
           [
-            "Do you count every thread?",
-            "At first. Then the rhythm helps, until an interruption."
+            "What did you agree?",
+            "He helped prepare materials for a day. Then asked my usual price."
           ],
           [
-            "Have I interrupted?",
-            "Only a conversation. You may relax."
+            "Was he resentful?",
+            "Tired. Respect arrived around the same time."
           ],
           [
-            "What happens after a mistake?",
-            "Unpick enough to repair it. Pretending not to see it grows expensive."
+            "Did you forgive him?",
+            "Yes. Ignorance can be corrected if it's willing to stay for the work."
           ]
         ]
       },
       {
-        "title": "Clothes for myself",
-        "opening": "Do you make different clothes for yourself?",
-        "first": "My own clothes are usually plainer than my work. I prefer not to carry a demonstration everywhere.",
+        "title": "The unfinished colour",
+        "opening": "Can you imagine a colour you can't make?",
+        "first": "Often. Usually just before sleep. By morning I remember wanting it more clearly than the colour.",
         "replies": [
           [
-            "Do people expect more?",
-            "They ask why I don't advertise myself."
+            "Do you write it down?",
+            "Words like 'warm but lonely'. Not enormously helpful at the loom."
           ],
           [
-            "What do you tell them?",
-            "That I know where to find my shop."
+            "Would anyone else understand?",
+            "Perhaps. I'd like to meet them."
           ],
           [
-            "Do you enjoy fine clothes?",
-            "On an evening I choose. Choice improves finery."
+            "Does it frustrate you?",
+            "Pleasantly. It gives tomorrow something to attempt."
           ]
         ]
       }
     ],
     "greetings": [
-      "Samira. I weave travelling cloth. Fashion must negotiate with sand here.",
-      "I'm Corin. Sand seems a forceful negotiator.",
-      "Corin. Are your clothes still winning that negotiation?",
-      "Only in sheltered conditions.",
-      "Those wings have a much better drape than my work.",
-      "I'm Corin. Aurelius doesn't have to hem them."
+      "Samira. If you've come for advice about cloth, I'll need to know what you actually do in it.",
+      "Corin. Mostly travel lately.",
+      "Corin! Still on your feet?",
+      "With some complaints from them.",
+      "A dragon. I hope his claws understand the value of finished cloth.",
+      "I'm Corin. We'll keep a respectful distance."
     ]
   },
   "Leila": {
@@ -8624,70 +8624,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:51",
     "topics": [
       {
-        "title": "The second count",
-        "opening": "Why count a caravan's supplies twice?",
-        "first": "A driver complained that I counted twice. The totals disagreed, which shortened his complaint.",
+        "title": "The forgotten luxury",
+        "opening": "What luxury do travellers miss most?",
+        "first": "Privacy. People plan for hunger and weather, then discover they're tired of being observed.",
         "replies": [
           [
-            "What was missing?",
-            "Two water jars still beside the loading place."
+            "Can you provide that?",
+            "Not in a sack. I tell them to allow one another a quiet walk."
           ],
           [
-            "Did he thank you?",
-            "He called it fortunate. I accepted that translation."
+            "Do they listen?",
+            "After the first quarrel, usually."
           ],
           [
-            "Do you always count twice?",
-            "Essential supplies, yes. Pride doesn't quench thirst."
+            "What do you miss on a journey?",
+            "Being able to be cross without it becoming everyone else's evening."
           ]
         ]
       },
       {
-        "title": "Caravans and tempers",
-        "opening": "How do you deal with tempers on the road?",
-        "first": "People argue most fiercely before leaving. Every small delay seems to threaten the entire journey.",
+        "title": "A list with one extra line",
+        "opening": "Do you ever put something unnecessary on a supply list?",
+        "first": "A small treat for the person organising everything. They invariably forget themselves.",
         "replies": [
           [
-            "How do you calm them?",
-            "Name the next task and who can do it."
+            "What sort of treat?",
+            "Whatever they'd be embarrassed to call important."
           ],
           [
-            "Do you ever snap?",
-            "Certainly. Then I apologise without abandoning the count."
+            "Do you include yourself?",
+            "I'm learning. Other people's needs make a very convenient hiding place."
           ],
           [
-            "What helps most?",
-            "A plan people can understand, and something to eat."
+            "Who taught you that?",
+            "Someone who noticed I'd packed everybody's supper except mine."
           ]
         ]
       },
       {
-        "title": "Your own journey",
-        "opening": "Do you pack as carefully for your own trips?",
-        "first": "I once packed for a personal trip and forgot my comb. Perfect provisions, hopeless hair.",
+        "title": "Leila's retirement plan",
+        "opening": "Would you like to travel without organising it?",
+        "first": "Yes. I'd be unbearable. I'd notice every omission and try to take charge by breakfast.",
         "replies": [
           [
-            "Did that amuse everyone?",
-            "Far too much. They'd been waiting for evidence."
+            "Could you stop yourself?",
+            "For perhaps an hour. A promising beginning."
           ],
           [
-            "What did you forget next time?",
-            "Nothing essential. I'm refusing further detail."
+            "Where would you go?",
+            "Somewhere I couldn't pretend to know the route."
           ],
           [
-            "Do you travel often?",
-            "When work allows. It's useful to be a passenger occasionally."
+            "Would that frighten you?",
+            "A little. I think that's part of wanting it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Leila. I check the lists. Someone has to ask whether the water was actually loaded.",
-      "I'm Corin. Better here than halfway out.",
-      "Corin! Setting out, or enjoying being somewhere?",
-      "Enjoying being somewhere for a moment.",
-      "A dragon requires a revised list, not a guess.",
-      "I'm Corin. Aurelius and I are learning that."
+      "Leila. Are you setting out or recovering from arriving?",
+      "Corin. Perhaps both.",
+      "Corin! You look as though you've learned something inconvenient.",
+      "Several things.",
+      "A dragon. We should discuss appetite before quantities.",
+      "I'm Corin. That's sensible planning."
     ]
   },
   "Zaid": {
@@ -8697,70 +8697,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "09-sandspire.txt:56",
     "topics": [
       {
-        "title": "A short line on a map",
-        "opening": "Can a short route on a map turn into a long walk?",
-        "first": "A route can look short and take a miserable day. Heat and a heavy pack don't appear as ink.",
+        "title": "The mirage you believed",
+        "opening": "Have you ever trusted something you knew might be a mirage?",
+        "first": "When I was young and thirsty. Knowing a trick exists doesn't mean longing stops showing it to you.",
         "replies": [
           [
-            "Did you learn that early?",
-            "Early enough to survive being ashamed of it."
+            "What brought you back?",
+            "My companion caught my sleeve. Didn't mock me afterward."
           ],
           [
-            "How do you plan now?",
-            "Conditions, load, and the slowest member of the party."
+            "Were you ashamed?",
+            "Yes. He said thirst had made fools of better guides."
           ],
           [
-            "What about an urgent journey?",
-            "Urgency changes the need, not the body's limits."
+            "Do you tell others?",
+            "Often. I'd rather they borrow my embarrassment than repeat it."
           ]
         ]
       },
       {
-        "title": "Reading the ground",
-        "opening": "What can you tell from the ground ahead?",
-        "first": "I look for firm ground and signs of recent passage. A clear view doesn't mean an easy walk.",
+        "title": "A guide's refusal",
+        "opening": "Have you ever refused to lead someone?",
+        "first": "A man wanted to prove he needed less water than other people. I declined to participate in the proof.",
         "replies": [
           [
-            "Can you always find the way?",
-            "No. Then I stop before uncertainty becomes distance."
+            "Did he listen?",
+            "He was angry enough to stay in town arguing. I considered that a success."
           ],
           [
-            "Do people resist stopping?",
-            "Often. Moving feels useful even in the wrong direction."
+            "Would you take him later?",
+            "If he'd changed his plan."
           ],
           [
-            "Have you turned a party back?",
-            "Yes. Everyone returned alive to complain."
+            "What if he offered more money?",
+            "Money makes poor shade and worse drinking water."
           ]
         ]
       },
       {
-        "title": "A place to rest",
-        "opening": "How do you choose a good place to rest?",
-        "first": "Good shade is worth planning around. I dislike arriving exhausted at a spot that only looked useful from afar.",
+        "title": "The desert at night",
+        "opening": "What do you love about the desert?",
+        "first": "The first cool air after a hard day. You feel your whole body forgive the world.",
         "replies": [
           [
-            "What do you check?",
-            "Shelter, stable ground, enough space for the group."
+            "Does everyone feel that?",
+            "Many do. They stop talking for a little while."
           ],
           [
-            "Do you have a favourite stop?",
-            "Several. Which one depends on the journey."
+            "Is it beautiful?",
+            "Yes. And still a place where you must pay attention."
           ],
           [
-            "Would you live outside the desert?",
-            "Perhaps. I'd have to learn which familiar warnings no longer applied."
+            "Can both be true?",
+            "Most beautiful places I've known haven't promised to keep me safe."
           ]
         ]
       }
     ],
     "greetings": [
-      "Zaid. If you're planning a crossing, begin with daylight and water.",
-      "I'm Corin. I'd like to learn the rest.",
-      "Corin. The desert let you return with questions.",
-      "Quite a few.",
-      "A dragon can cross distance quickly, but someone still needs to plan the landing.",
-      "I'm Corin. Aurelius and I discuss that together."
+      "Zaid. If you're asking about the desert, tell me what you've already been told.",
+      "Corin. Probably less than I need.",
+      "Corin! Back with both boots. A respectable result.",
+      "I'd like to keep improving it.",
+      "A dragon. Even wings need somewhere sensible to land.",
+      "I'm Corin. We'll take that seriously."
     ]
   },
   "Petra": {
@@ -8770,70 +8770,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:1",
     "topics": [
       {
-        "title": "The duplicate charge",
-        "opening": "Have you ever caught the same charge being entered twice?",
-        "first": "A trader charged the same fee twice under different names. He called it an administrative distinction.",
+        "title": "A number you remember",
+        "opening": "Is there a number you'll never forget?",
+        "first": "The price of my first journey alone. Saved for months. I can still feel the coins disappearing from my hand.",
         "replies": [
           [
-            "Did you pay?",
-            "Once. I asked what the second fee purchased."
+            "Was it worth it?",
+            "Yes. I was terrified until the road began."
           ],
           [
-            "Could he explain?",
-            "At great length, without answering."
+            "Where did you go?",
+            "Not far. Far enough that nobody could answer for me."
           ],
           [
-            "Did the caravan continue?",
-            "Yes. Clear questions proved cheaper than an argument."
+            "Would you spend it again?",
+            "Without that same fear, perhaps. I miss the bravery of the first time."
           ]
         ]
       },
       {
-        "title": "Remembering a date",
-        "opening": "How do you remember an important date?",
-        "first": "My aunt dates everything by births and weddings. I convert them into years when writing accounts.",
+        "title": "The accountant's dream",
+        "opening": "Do you dream about figures?",
+        "first": "Occasionally. They refuse to add up while everyone watches. My mind is a cruel employer.",
         "replies": [
           [
-            "Is she accurate?",
-            "Remarkably. The celebrations matter more than the calendar."
+            "Do you ever dream something nice?",
+            "Flying once. No luggage, no accounts."
           ],
           [
-            "Do you enjoy the stories?",
-            "Yes, after I've established which cousin married whom."
+            "Would you want to fly?",
+            "Yes. Though I'd probably wonder about the expense halfway up."
           ],
           [
-            "What do you remember that way?",
-            "My first paid job. I still remember the meal afterward."
+            "Could you forget work for an hour?",
+            "I intend to. Eventually. Please note the weakness of that answer."
           ]
         ]
       },
       {
-        "title": "Work left at work",
-        "opening": "Can you leave work behind at the end of the day?",
-        "first": "I refuse to divide a shared supper into everyone's exact contribution. People assume I'd enjoy it.",
+        "title": "A generous mistake",
+        "opening": "Have you ever quietly forgiven a small debt?",
+        "first": "Yes. A woman had forgotten it entirely. Reminding her would have made her last kindness to me feel purchased.",
         "replies": [
           [
-            "Wouldn't that be fair?",
-            "Perhaps mathematically. Hospitality has other concerns."
+            "Was it a large kindness?",
+            "At the time. She probably doesn't remember that either."
           ],
           [
-            "Do you always treat friends?",
-            "No. We take turns without conducting an audit."
+            "Did you tell her?",
+            "No. This one was mine to settle."
           ],
           [
-            "Can you stop noticing numbers?",
-            "Not entirely. I can choose not to announce them."
+            "Is that good accounting?",
+            "Not everything belongs in a ledger."
           ]
         ]
       }
     ],
     "greetings": [
-      "Petra. If a story begins with 'everyone knows', I start taking notes.",
-      "I'm Corin. I'll begin with what I know.",
-      "Corin. More road behind you than last time.",
-      "And more questions ahead.",
-      "A dragon is one claim I can verify immediately.",
-      "I'm Corin. His name is Aurelius."
+      "Petra. If you owe someone money, I'm not automatically on their side.",
+      "Corin. A reassuring introduction.",
+      "Corin! A visitor without a disputed total.",
+      "For now.",
+      "A dragon. I'd hate to calculate his board and lodging.",
+      "I'm Corin. So would I."
     ]
   },
   "Raff": {
@@ -8843,70 +8843,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:6",
     "topics": [
       {
-        "title": "Shutters at noon",
-        "opening": "Does closing the shutters help in the midday heat?",
-        "first": "I close the shutters before the heat builds. My brother waits until the room is already unbearable.",
+        "title": "The neighbour's rooster",
+        "opening": "What noise would you remove from the world?",
+        "first": "My neighbour's rooster at the hour it considers dawn. It has ambitious ideas about sunrise.",
         "replies": [
           [
-            "Does he listen to you?",
-            "He calls me fussy, then visits my cooler house."
+            "Have you complained?",
+            "The neighbour says the bird is enthusiastic."
           ],
           [
-            "Do you let him in?",
-            "Yes. Family provides continuing opportunities for smugness."
+            "What would you suggest?",
+            "Enthusiasm after breakfast."
           ],
           [
-            "Would thicker walls help?",
-            "Perhaps. Closing a shutter is considerably cheaper."
+            "Do you actually dislike it?",
+            "Less when I'm awake. It's easy to be charitable then."
           ]
         ]
       },
       {
-        "title": "Evening errands",
-        "opening": "Do you leave your errands until evening?",
-        "first": "I save ordinary errands for evening whenever I can. Everyone else has the same brilliant idea.",
+        "title": "A story you tell badly",
+        "opening": "Is there a story you can never tell properly?",
+        "first": "How I met my oldest friend. He fell over. I laughed. He laughed. Written down, it sounds unkind.",
         "replies": [
           [
-            "Does that make it busy?",
-            "Very. The quiet afternoon has simply moved its noise."
+            "Was he hurt?",
+            "Only his pride, which recovered when mine suffered the following week."
           ],
           [
-            "Do you enjoy meeting people?",
-            "Most. A queue supplies both company and complaints."
+            "Are you still friends?",
+            "Yes. He tells the story worse."
           ],
           [
-            "What errand do you dislike?",
-            "One I could have combined with yesterday's trip."
+            "Why does it matter?",
+            "Because the important bit was his laugh. I can't lend you that sound."
           ]
         ]
       },
       {
-        "title": "A guest who hurried",
-        "opening": "Have you ever had a guest who was always in a hurry?",
-        "first": "A guest insisted on leaving at noon to save time, then returned exhausted an hour later.",
+        "title": "The unfinished visit",
+        "opening": "Have you ever wished a visitor would stay longer?",
+        "first": "My sister always says she must go just when the conversation becomes easy.",
         "replies": [
           [
-            "Did you lecture him?",
-            "No. I gave him water and waited for evening."
+            "Do you ask her to stay?",
+            "I used to hint. Now I ask."
           ],
           [
-            "Was he grateful?",
-            "After he'd stopped being angry with himself."
+            "Does she?",
+            "Sometimes. Other times she really has to go, which is easier to accept when I know."
           ],
           [
-            "Did he listen next time?",
-            "He asked when I would leave. Considerable progress."
+            "What do you talk about?",
+            "Nothing impressive. That's why I want more of it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Raff. If you're here to praise the sunshine, I've already heard its defence.",
-      "I'm Corin. I'll ask about the shade.",
-      "Corin! An excuse to remain where it's comfortable.",
-      "A useful purpose for a visit.",
-      "Your friend makes quite a shadow.",
-      "I'm Corin. Aurelius didn't bring it specifically for us."
+      "Raff. Looking for someone? I might know them, which is different from knowing where they are.",
+      "Corin. I'll accept the distinction.",
+      "Corin! You found me again.",
+      "You're easier than some destinations.",
+      "A dragon. I shall have to sit down mentally before responding.",
+      "I'm Corin. Take your time."
     ]
   },
   "Suri": {
@@ -8916,70 +8916,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:11",
     "topics": [
       {
-        "title": "A seam that failed",
-        "opening": "What makes a seam give way?",
-        "first": "I made a travelling shirt with elegant, weak seams. It came apart during its first hard day.",
+        "title": "The invisible work",
+        "opening": "Does it bother you when people can't see your repair?",
+        "first": "Sometimes. Success makes me disappear. Then I remember they wanted their coat back, not a monument to me.",
         "replies": [
           [
-            "Did you replace it?",
-            "Yes, and changed how I reinforced the joins."
+            "How do you know you've done well?",
+            "They forget to be careful with it."
           ],
           [
-            "Were you embarrassed?",
-            "Enough to remember every stitch afterward."
+            "Do they thank you?",
+            "Most. Some return with another thing, which says enough."
           ],
           [
-            "Did the customer return?",
-            "Eventually. I had to earn that return."
+            "Would you rather make new clothes?",
+            "Occasionally. I like beginning without somebody else's damage."
           ]
         ]
       },
       {
-        "title": "Repairing a favourite",
-        "opening": "Is repairing a favourite garment different from other work?",
-        "first": "A customer brought a coat too worn for ordinary repair. She wanted one sound pocket saved.",
+        "title": "A wedding sleeve",
+        "opening": "Have you had to mend something during a wedding?",
+        "first": "A groom's sleeve five minutes before the ceremony. He kept asking whether his bride would mind.",
         "replies": [
           [
-            "Why the pocket?",
-            "Her father had sewn it inside for her valuables."
+            "Did she?",
+            "She was worried he'd changed his mind. A torn sleeve was excellent news."
           ],
           [
-            "Could you keep it?",
-            "Moved it carefully into a new coat."
+            "Was he nervous?",
+            "So much that I had to ask him to stop apologising long enough to breathe."
           ],
           [
-            "Did she like the result?",
-            "She put her hand inside and smiled before speaking."
+            "Did the repair hold?",
+            "Through the dancing. I considered my obligation fulfilled."
           ]
         ]
       },
       {
-        "title": "Choosing your own clothes",
-        "opening": "Do people expect your own clothes to be perfect?",
-        "first": "People expect me to dress perfectly because I mend clothes. My favourite shirt contains three visible repairs.",
+        "title": "Suri's childhood bargain",
+        "opening": "What did you want to be when you were small?",
+        "first": "A queen. Mostly because I thought queens never had to untangle thread.",
         "replies": [
           [
-            "Why keep it?",
-            "It fits, it's soft, and I know every patch."
+            "Would you still want that?",
+            "No. I prefer people able to tell me I'm being ridiculous."
           ],
           [
-            "Does anyone criticise it?",
-            "Only people who haven't worn it."
+            "Could queens learn to mend?",
+            "They could. Whether anybody lets them be bad at it is another question."
           ],
           [
-            "Would you make a new one?",
-            "Eventually. Familiar comfort deserves a fair contest."
+            "Were you good at first?",
+            "Terrible. A useful childhood for an ordinary person."
           ]
         ]
       }
     ],
     "greetings": [
-      "Suri. If sand has found a seam, it will have brought friends.",
-      "I'm Corin. My boots can confirm that.",
-      "Corin! Clothes surviving the journey?",
-      "With varying enthusiasm.",
-      "I won't offer to measure a dragon without asking him first.",
-      "I'm Corin. Aurelius thanks you for the restraint."
+      "Suri. If your sleeve's torn, I can look without hearing a confession.",
+      "Corin. Nothing torn at the moment.",
+      "Corin! Still recognisable beneath the road dust.",
+      "That's encouraging.",
+      "A dragon. I hope repairing his rider isn't a regular appointment.",
+      "I'm Corin. I'm hoping the same."
     ]
   },
   "Tavin": {
@@ -8989,70 +8989,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:16",
     "topics": [
       {
-        "title": "Too many guests",
-        "opening": "Have you ever invited more guests than you could manage?",
-        "first": "I once agreed to host two families on the same night. I'd said yes before checking the first arrangement.",
+        "title": "The guest who stayed silent",
+        "opening": "Have you hosted someone who hardly spoke?",
+        "first": "A man who answered everything politely and briefly. I thought he disliked us. He wrote later to thank us for leaving him in peace.",
         "replies": [
           [
-            "Where did they sleep?",
-            "With help from neighbours, after a very honest apology."
+            "Had you left him in peace?",
+            "Eventually. Took me too long to stop entertaining him."
           ],
           [
-            "Were they angry?",
-            "Some were tired. I didn't ask them to comfort me."
+            "Why had he come?",
+            "He didn't say. I decided gratitude wasn't an invitation to investigate."
           ],
           [
-            "What changed afterward?",
-            "I write promises down before making more."
+            "Would you host him again?",
+            "Gladly, and more quietly."
           ]
         ]
       },
       {
-        "title": "A useful guest",
-        "opening": "What can a guest do to make things easier?",
-        "first": "The best guests ask where to put things. The worst explain how my house should be arranged.",
+        "title": "A host away from home",
+        "opening": "Are you a good guest yourself?",
+        "first": "I try. I keep offering to help until people wish I'd simply sit down.",
         "replies": [
           [
-            "Do you tell them?",
-            "Politely once. Clearly after that."
+            "Why do that?",
+            "Being looked after makes me feel I ought to earn it."
           ],
           [
-            "Has anyone improved the place?",
-            "Certainly, after asking what I wanted."
+            "Do your guests have to earn it?",
+            "No. I'm aware of the inconsistency."
           ],
           [
-            "What help do you appreciate?",
-            "Cleaning up without converting it into a public achievement."
+            "What would help?",
+            "Someone patient enough to hand me a cup and ignore my protests."
           ]
         ]
       },
       {
-        "title": "News from elsewhere",
-        "opening": "Do you like hearing news from other places?",
-        "first": "I hear wildly different accounts of the same town. A bad meal apparently transforms entire populations.",
+        "title": "The story over breakfast",
+        "opening": "Why do people confess things over breakfast?",
+        "first": "They're tired enough to forget their prepared version and about to leave, which makes honesty feel safer.",
         "replies": [
           [
-            "Which do you believe?",
-            "The details, cautiously. The sweeping conclusions, rarely."
+            "Do you give advice?",
+            "Only if asked. Toast isn't a licence to rearrange a stranger's life."
           ],
           [
-            "Do you travel yourself?",
-            "Less than I'd like. Hosting brings some of the road here."
+            "Do you remember the confessions?",
+            "Some. I remember the relief more often than the details."
           ],
           [
-            "Would you miss the visitors?",
-            "After enjoying three quiet days, probably."
+            "Have you confessed anything?",
+            "Once. It made my own breakfast go cold."
           ]
         ]
       }
     ],
     "greetings": [
-      "Tavin. Come with a name before a story; it helps me keep the travellers straight.",
-      "Corin. I'll keep the story manageable.",
-      "Corin! A guest I can place without a description.",
-      "That's becoming a pleasant feeling.",
-      "A dragon will make this visit difficult to confuse with another.",
-      "I'm Corin; this is Aurelius. We'll stay clear of the doorway."
+      "Tavin. New to Sandspire? Start with a little shade and your name.",
+      "Corin. Gladly.",
+      "Corin! You look as though you've found your bearings.",
+      "Some of them.",
+      "A dragon. I'll need to rethink my idea of a large travelling party.",
+      "I'm Corin. There's only the two of us, thankfully."
     ]
   },
   "Una": {
@@ -9062,70 +9062,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:21",
     "topics": [
       {
-        "title": "The parcel exchange",
-        "opening": "Have you ever received somebody else's parcel?",
-        "first": "My sister and I send parcels back and forth. We both insist the other needn't send anything.",
+        "title": "The letter written angry",
+        "opening": "Have you ever sent a letter while you were furious?",
+        "first": "Once. Spent the next two days composing apologies faster than a courier could carry them.",
         "replies": [
           [
-            "Do either of you listen?",
-            "Never. It's a highly stable arrangement."
+            "What had happened?",
+            "A misunderstanding that became much clearer after I'd made it permanent in ink."
           ],
           [
-            "What's the best parcel?",
-            "Ordinary things that tell me she's been thinking of home."
+            "Were you forgiven?",
+            "Yes. I was asked to sleep before sending the next one."
           ],
           [
-            "What do you send?",
-            "Small comforts she actually likes, after some failed experiments."
+            "Do you now?",
+            "Usually. My drawer is full of arguments the world has been spared."
           ]
         ]
       },
       {
-        "title": "A broken cup",
-        "opening": "Would you mend a cup after it broke?",
-        "first": "I packed a cup poorly and it arrived in pieces. My sister sent a drawing of the pieces arranged like a flower.",
+        "title": "A sister's old name",
+        "opening": "Does your family still use a childhood nickname?",
+        "first": "My sister does. Nobody else dares. She's earned certain privileges by remembering me before I was dignified.",
         "replies": [
           [
-            "Was she upset?",
-            "She'd worried I'd be upset. We wasted several letters reassuring each other."
+            "Were you ever dignified?",
+            "I'm attempting it currently."
           ],
           [
-            "Did you replace it?",
-            "With something less fragile. I learned the practical part too."
+            "What's the nickname?",
+            "That privilege hasn't transferred to you yet."
           ],
           [
-            "Did she keep the drawing?",
-            "I did. It's rather better than the cup."
+            "Do you mind it?",
+            "Not from her. It tells me I'm still somebody she knew first."
           ]
         ]
       },
       {
-        "title": "Writing ordinary news",
-        "opening": "Is ordinary news worth putting in a letter?",
-        "first": "I used to wait for important news before writing. That left whole months empty.",
+        "title": "The news you don't send",
+        "opening": "What do you leave out of letters?",
+        "first": "The things I'm afraid will worry people. Then I complain they don't understand how I'm doing.",
         "replies": [
           [
-            "What do you write now?",
-            "Who visited, what annoyed me, a meal that went wrong."
+            "Have you changed that?",
+            "I'm trying to include one honest sentence before the cheerful ones take over."
           ],
           [
-            "Does she enjoy it?",
-            "She says it lets her hear my voice."
+            "Is it difficult?",
+            "Very. I'd rather be missed than worried about."
           ],
           [
-            "Would you live nearer her?",
-            "I'd like to visit longer first. We have different daily lives now."
+            "Can they do both?",
+            "Apparently. My sister has explained this firmly."
           ]
         ]
       }
     ],
     "greetings": [
-      "Una. My sister says my letters are longer than her visits.",
-      "I'm Corin. Is she right?",
-      "Corin! Have you time for news without a destination?",
-      "I'd enjoy that.",
-      "A dragon. My next letter may require another page.",
-      "I'm Corin. Aurelius would prefer an accurate description."
+      "Una. You look like someone with news from somewhere else.",
+      "Corin, from Millwood. A little news.",
+      "Corin! Tell me something ordinary. Those are my favourite details.",
+      "I'll choose something suitably unheroic.",
+      "A dragon! My next letter will require a very patient reader.",
+      "I'm Corin. Please explain that we're real."
     ]
   },
   "Vela": {
@@ -9135,70 +9135,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:26",
     "topics": [
       {
-        "title": "A deliberate mismatch",
-        "opening": "Would you ever choose colours that didn't match?",
-        "first": "I once repeated an accidental knot because I liked the shape. It became a pattern customers requested.",
+        "title": "The unfinished border",
+        "opening": "Why do you sometimes leave a pattern open at the edge?",
+        "first": "Because a room continues beyond a rug. I like the eye to keep going.",
         "replies": [
           [
-            "Did you admit its origin?",
-            "Yes. They seemed disappointed it wasn't an ancient secret."
+            "Is that a tradition?",
+            "In my work. I don't claim generations merely because I like an idea."
           ],
           [
-            "Could you repeat it exactly?",
-            "After writing down what I'd done by accident."
+            "Do customers object?",
+            "Some prefer everything neatly enclosed. I can understand that."
           ],
           [
-            "Was that frustrating?",
-            "Extremely. Accidents are poor teachers until you examine them."
+            "What do you prefer at home?",
+            "Space. My thoughts make enough borders without help."
           ]
         ]
       },
       {
-        "title": "A family route",
-        "opening": "Does your family travel the same route every year?",
-        "first": "One family pattern marks the places our grandparents travelled. The bends mean more than decoration to us.",
+        "title": "Vela's earliest customer",
+        "opening": "Who first believed your work was worth buying?",
+        "first": "A neighbour who refused my attempt to call it a gift. She made me name a price.",
         "replies": [
           [
-            "Do you know every place?",
-            "Not all. Some names have changed."
+            "Was that difficult?",
+            "Excruciating. I wanted her to decide what my hours were worth."
           ],
           [
-            "Would you visit them?",
-            "I'd like to. A pattern isn't a route guide."
+            "Did you charge enough?",
+            "No. She paid more and told me why."
           ],
           [
-            "Do customers learn the story?",
-            "If they ask. I don't attach a lecture to every rug."
+            "Did it change you?",
+            "It made the next price come out with less apology."
           ]
         ]
       },
       {
-        "title": "Working slowly",
-        "opening": "Do you mind taking your time over the work?",
-        "first": "A large rug takes enough time for my opinions to change before it's finished.",
+        "title": "A pattern from a dream",
+        "opening": "Have you ever tried to weave a dream?",
+        "first": "Yes. In the dream it was magnificent. Awake, it was mostly triangles behaving badly.",
         "replies": [
           [
-            "About the design?",
-            "Sometimes. Usually I finish the plan before beginning another argument."
+            "Did you finish it?",
+            "I made something else from the attempt."
           ],
           [
-            "Do you lose patience?",
-            "Yes. I stop before impatience becomes bad work."
+            "Were you disappointed?",
+            "Briefly. The new thing didn't owe me the dream."
           ],
           [
-            "What keeps you going?",
-            "Seeing a section complete. Small finishes help a large job."
+            "Would you try again?",
+            "Of course. Sleep supplies ideas without charging for them."
           ]
         ]
       }
     ],
     "greetings": [
-      "Vela. A pattern can begin with a mistake, but please don't tell my apprentices I said so.",
-      "I'm Corin. I'll keep the secret.",
-      "Corin. Have you noticed any colours worth stealing?",
-      "A few worth describing.",
-      "Those scales contain a difficult weaving problem.",
-      "I'm Corin. Aurelius isn't promising to hold still."
+      "Vela. If you're looking for a pattern, tell me what you want to live with.",
+      "Corin. I'm here to talk, if you've time.",
+      "Corin! You've remembered the person behind the weaving.",
+      "I'd hoped to.",
+      "A dragon. No rug I make could compete with that entrance.",
+      "I'm Corin. Competition wasn't our intention."
     ]
   },
   "Wystan": {
@@ -9208,70 +9208,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:31",
     "topics": [
       {
-        "title": "A reputation's cost",
-        "opening": "Has your reputation ever cost you something?",
-        "first": "I once returned money after a buyer overpaid. He became a customer for years.",
+        "title": "The bargain you lost happily",
+        "opening": "Have you ever been glad to lose money?",
+        "first": "Paid too much for a meal when I was stranded. Years later I learned the family had shared their last supplies.",
         "replies": [
           [
-            "Was that your reason?",
-            "No. It was his money. The good consequence arrived later."
+            "Did you repay them?",
+            "I returned what I could. They'd never called it a debt."
           ],
           [
-            "Did everyone approve?",
-            "A colleague called it foolish. He didn't keep customers long."
+            "Why call it losing money?",
+            "I did then. I was measuring the wrong thing."
           ],
           [
-            "Have you always been honest?",
-            "I've made mistakes. I corrected the ones I could."
+            "Would you recognise that now?",
+            "I hope sooner."
           ]
         ]
       },
       {
-        "title": "The second cup",
-        "opening": "Is a second cup an excuse to stay and talk?",
-        "first": "The first cup is often business. The second is when someone finally says what troubles them.",
+        "title": "An old trader's pockets",
+        "opening": "Why do you still check your pockets so often?",
+        "first": "Habit. For years, forgetting one small thing could spoil a whole day's journey.",
         "replies": [
           [
-            "Do you offer it deliberately?",
-            "If I have time to listen properly."
+            "What do you carry now?",
+            "Less than my hands expect."
           ],
           [
-            "Must a guest explain themselves?",
-            "No. A cup isn't an interrogation fee."
+            "Does that feel good?",
+            "Mostly. Sometimes lightness feels like having forgotten a purpose."
           ],
           [
-            "What do you talk about?",
-            "Family, weather, the price of getting older. Ordinary subjects."
+            "What helps?",
+            "Finding a new reason to go out that isn't a sale."
           ]
         ]
       },
       {
-        "title": "An unsold treasure",
-        "opening": "Have you ever kept something on the stall because you didn't want it sold?",
-        "first": "I kept a small carved box because I liked it too much to sell. A poor decision for stock, an excellent one for me.",
+        "title": "Wystan's greatest exaggeration",
+        "opening": "What's the biggest boast you ever made?",
+        "first": "That I could judge a person at a glance. Took me years to realise how often a glance had lied.",
         "replies": [
           [
-            "What's inside?",
-            "Letters. Nothing that improves its resale value."
+            "What changed your mind?",
+            "Someone I dismissed helped me when people I'd admired vanished."
           ],
           [
-            "Who carved it?",
-            "A woman who refused to hurry the final details."
+            "Did you tell them?",
+            "Yes. They were kinder about it than I deserved."
           ],
           [
-            "Would you sell it now?",
-            "No. Retirement permits a certain improvement in bad business decisions."
+            "Do you still judge quickly?",
+            "Yes. I try to let the second thought speak louder."
           ]
         ]
       }
     ],
     "greetings": [
-      "Wystan. I've retired from bargaining, except where conversation is concerned.",
-      "I'm Corin. What's the asking price?",
-      "Corin! Another chance to improve my collection of travellers' opinions.",
-      "I'll try to supply an original.",
-      "A dragon is a splendid way to defeat scepticism.",
-      "I'm Corin. Aurelius usually lets people look twice."
+      "Wystan. No, I'm not selling anything. I enjoy watching people adjust to that.",
+      "Corin. Conversation, then.",
+      "Corin! You've come without an offer to consider.",
+      "Only company.",
+      "A dragon. I once boasted I'd traded everything worth meeting.",
+      "I'm Corin. He's not available for trade."
     ]
   },
   "Rania": {
@@ -9281,70 +9281,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:36",
     "topics": [
       {
-        "title": "Meeting Latif",
-        "opening": "How did you meet Latif?",
-        "first": "Latif offered to help plan a feast. He brought figures; I needed someone to move chairs.",
+        "title": "The household election",
+        "opening": "How do you decide who's right at home?",
+        "first": "We used to argue until one of us got tired. Now we try asking what each of us is worried about.",
         "replies": [
           [
-            "Did he help?",
-            "After I explained that chairs were the urgent numbers."
+            "Does that work?",
+            "More often than proving one another foolish."
           ],
           [
-            "Were you impressed?",
-            "Eventually. He stayed to wash up."
+            "What worries Latif?",
+            "That something important will be forgotten."
           ],
           [
-            "Did he calculate that too?",
-            "Yes. I married him despite considerable advance warning."
+            "And you?",
+            "That we'll spend our whole lives preparing to enjoy them."
           ]
         ]
       },
       {
-        "title": "Chairs after sunset",
-        "opening": "Do you sit outside when the evening cools down?",
-        "first": "I like taking chairs outside when the heat eases. Neighbours join without arranging a formal visit.",
+        "title": "Rania's empty afternoon",
+        "opening": "What would you do if nobody needed you today?",
+        "first": "At first, worry. Then remember a book I wanted to finish.",
         "replies": [
           [
-            "Does everyone stay long?",
-            "As long as they like. We don't count departures."
+            "Would you finish it?",
+            "Possibly. I might sleep instead and pretend that was the plan."
           ],
           [
-            "What do you discuss?",
-            "Whatever the first person has been waiting to tell someone."
+            "Why feel guilty?",
+            "People have praised me for being useful so long that rest feels like disappointing them."
           ],
           [
-            "Who takes the chairs back?",
-            "Latif and me. Hospitality has a physical conclusion."
+            "Would you praise someone else for resting?",
+            "Yes. I'm working on applying the rule fairly."
           ]
         ]
       },
       {
-        "title": "Fixing things myself",
-        "opening": "Do you prefer fixing things yourself?",
-        "first": "People ask whether Latif will mend something. I usually have the repair half finished.",
+        "title": "A quarrel you treasure",
+        "opening": "Can you remember an argument fondly?",
+        "first": "Latif and I once argued about which of us loved the other more. Terrible logic, excellent evening.",
         "replies": [
           [
-            "Does it bother you?",
-            "Enough to hand them the tool I'm using."
+            "Who won?",
+            "We settled out of court."
           ],
           [
-            "Is he good at repairs?",
-            "Some. I'm better at others. We enjoy remaining distinct."
+            "Do you still argue like that?",
+            "Less often. I sometimes miss having so much energy for nonsense."
           ],
           [
-            "What do you like fixing?",
-            "A small annoying thing everyone had learned to tolerate."
+            "Could you begin again?",
+            "Perhaps tonight. I'll let him think he's thought of it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Rania. Latif may have mentioned me. I'll correct the account if necessary.",
-      "I'm Corin. I'll hear yours first.",
-      "Corin! Come join a conversation without an agenda.",
-      "A welcome invitation.",
-      "A dragon! Latif will ask about provisions before saying hello.",
-      "I'm Corin. Aurelius can survive a proper introduction first."
+      "Rania. If Latif sent you, tell me whether he's remembered the actual question.",
+      "Corin. I came on my own.",
+      "Corin! Good. Someone who isn't asking where they left a thing.",
+      "I'll try not to disappoint you.",
+      "A dragon. Latif will want to know what feeding him costs.",
+      "I'm Corin. I'd rather not calculate it too closely."
     ]
   },
   "Latif": {
@@ -9354,70 +9354,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "10-desert-homes.txt:41",
     "topics": [
       {
-        "title": "Figures in the shade",
-        "opening": "Is it easier to keep accounts in the shade?",
-        "first": "I work better when the room is cool. Heat makes every column seem personally unreasonable.",
+        "title": "The account you don't keep",
+        "opening": "Is there anything you refuse to count?",
+        "first": "Favours between Rania and me. We'd both feel underpaid.",
         "replies": [
           [
-            "Do you stop at noon?",
-            "When I can. Errors cost more than a pause."
+            "Do you count everything else?",
+            "Less than she claims. More than is restful."
           ],
           [
-            "What errors worry you?",
-            "Small ones that look plausible. Large nonsense is easier to spot."
+            "Why do it?",
+            "Numbers feel manageable when other things aren't."
           ],
           [
-            "Do you check your own work?",
-            "After stepping away. Familiar numbers can hide in plain sight."
+            "Does that help?",
+            "Until I try counting something that needs a conversation instead."
           ]
         ]
       },
       {
-        "title": "Rania's repairs",
-        "opening": "Does Rania repair things around the house?",
-        "first": "Rania repairs things while I explain possible causes. She says my commentary is an optional extra.",
+        "title": "Latif's secret purchase",
+        "opening": "Have you ever bought something without checking the price?",
+        "first": "Flowers, once. The seller looked astonished. I nearly asked whether I'd done it wrong.",
         "replies": [
           [
-            "Do you stop talking?",
-            "Occasionally, when handed something useful to hold."
+            "Were they for Rania?",
+            "Yes. She laughed before she cried. I was briefly alarmed."
           ],
           [
-            "Does she enjoy your company?",
-            "I believe so. She keeps inviting the commentary back."
+            "Was it worth it?",
+            "Very. An irritatingly unquantifiable success."
           ],
           [
-            "What do you do for her?",
-            "The accounts she dislikes and the errands she postpones."
+            "Would you do it again?",
+            "Yes. Though she says surprise loses something when scheduled."
           ]
         ]
       },
       {
-        "title": "An evening purchase",
-        "opening": "Do you ever buy something just for an enjoyable evening?",
-        "first": "I once bargained so long that the seller closed. Rania bought the thing elsewhere while I was still considering strategy.",
+        "title": "A future you can't total",
+        "opening": "Does uncertainty bother you?",
+        "first": "Immensely. I like a plan with a number at the end.",
         "replies": [
           [
-            "What was it?",
-            "A perfectly ordinary cooking pot."
+            "What if there isn't one?",
+            "Rania reminds me that marrying her wasn't an audited decision."
           ],
           [
-            "Did you save money?",
-            "No. I purchased an enduring family story."
+            "What do you say?",
+            "That the returns have been excellent. She tells me to stop speaking like a ledger."
           ],
           [
-            "Have you changed?",
-            "I now recognise when bargaining costs an entire evening."
+            "Is she right?",
+            "Usually. Especially when she's laughing."
           ]
         ]
       }
     ],
     "greetings": [
-      "Latif. Rania says I introduce myself like an invoice. I'm trying a shorter version.",
-      "I'm Corin. That one worked.",
-      "Corin! Rania hasn't assigned you chair duty, has she?",
-      "Not yet. Should I be prepared?",
-      "A dragon's daily food must be a remarkable figure.",
-      "I'm Corin. Aurelius would rather begin with hello."
+      "Latif. Have we met? No? Good, I haven't forgotten you.",
+      "Corin. A clean beginning.",
+      "Corin! I remembered before asking this time.",
+      "We're making progress.",
+      "A dragon. There must be a sensible number of meals involved. I dread discovering it.",
+      "I'm Corin. I'm still discovering it myself."
     ]
   },
   "Bevan": {
@@ -9427,70 +9427,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:1",
     "topics": [
       {
-        "title": "Choosing apples",
-        "opening": "How do you choose the best apples?",
-        "first": "People ask for the biggest apple, then complain it tastes less sweet. Size has excellent advertising.",
+        "title": "The inland visitor",
+        "opening": "What surprises visitors most about Coralmere?",
+        "first": "How far salt travels without permission. A man once accused me of seasoning his laundry.",
         "replies": [
           [
-            "How do you choose?",
-            "Variety and ripeness. A small apple can win honestly."
+            "What did you tell him?",
+            "That the sea hadn't consulted me either."
           ],
           [
-            "Do you grow them yourself?",
-            "Some produce, yes. I also buy what neighbours grow well."
+            "Did he stay?",
+            "Long enough to buy more clothes."
           ],
           [
-            "What's your favourite?",
-            "One eaten when I'm hungry after work. Context improves flavour."
+            "Does the salt bother you?",
+            "Some days. Other days I miss it after an hour away."
           ]
         ]
       },
       {
-        "title": "Salt in the garden",
-        "opening": "Does the sea air trouble your garden?",
-        "first": "Wind carries salt farther inland than visitors expect. Young plants complain before people notice.",
+        "title": "A vegetable with a history",
+        "opening": "Have you grown something for a particular person?",
+        "first": "My father's favourite beans. After he died I kept planting them, though I never liked the taste.",
         "replies": [
           [
-            "How do you protect them?",
-            "Shelter and careful watering. Then see what actually thrives."
+            "Do you still grow them?",
+            "A few. I give most away."
           ],
           [
-            "Have you lost a crop?",
-            "Yes. I learned which advice came from gardeners elsewhere."
+            "Why not stop?",
+            "I may. I don't want stopping to feel like forgetting."
           ],
           [
-            "Why keep growing here?",
-            "It's home. I prefer adapting to abandoning it."
+            "Does anyone understand?",
+            "My neighbour took a basket without telling me what I ought to feel. That helped."
           ]
         ]
       },
       {
-        "title": "The crooked carrot",
-        "opening": "Does a crooked carrot taste any different?",
-        "first": "Children prefer my odd-shaped vegetables. Adults call them imperfect and pay more for straight ones.",
+        "title": "Bevan's seaside wish",
+        "opening": "Would you ever live away from the coast?",
+        "first": "I'd like to try waking without listening for the weather. Then I wonder what I'd listen for instead.",
         "replies": [
           [
-            "Do they taste different?",
-            "No. The soup has no interest in appearances."
+            "People, perhaps.",
+            "They're even less predictable."
           ],
           [
-            "What do you do with them?",
-            "Sell them honestly, or eat them myself."
+            "Do you love it here?",
+            "Yes. Love includes a fair amount of complaining."
           ],
           [
-            "Would you enter a competition?",
-            "For absurd carrots, immediately. I have strong candidates."
+            "Where would you try?",
+            "Somewhere quiet enough to discover whether I am."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bevan. I grow vegetables, despite the coast's determination to salt everything.",
-      "I'm Corin. That sounds like an ongoing argument.",
-      "Corin! The road brought you back before the next harvest.",
-      "I'm glad it did.",
-      "A dragon isn't a customer I've planned crops for.",
-      "I'm Corin. Aurelius won't inspect the garden uninvited."
+      "Bevan. If you're after directions, tell me whether you mean by road or by smell.",
+      "Corin. Road seems safer.",
+      "Corin! Still keeping dry where possible?",
+      "Where possible covers less than I'd hoped.",
+      "A dragon. Please tell me he isn't interested in a vegetable patch.",
+      "I'm Corin. We'll keep him out of yours."
     ]
   },
   "Nerissa": {
@@ -9500,70 +9500,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:6",
     "topics": [
       {
-        "title": "Learning to swim",
-        "opening": "How did you learn to swim?",
-        "first": "I learned swimming late because I was ashamed to admit living by the sea hadn't taught me.",
+        "title": "The customer who came back",
+        "opening": "Has a stranger ever surprised you by returning?",
+        "first": "A traveller came back years later to pay for food I'd forgotten giving him.",
         "replies": [
           [
-            "Who helped you?",
-            "A patient friend in sheltered water."
+            "Did you take the money?",
+            "Yes. He'd carried the wish to repay it much longer than I'd carried the cost."
           ],
           [
-            "Was it difficult?",
-            "Admitting the beginning. The learning came after."
+            "What did you say?",
+            "That I was glad he'd made it."
           ],
           [
-            "Do you swim far now?",
-            "Within what I can manage. Confidence isn't a tide forecast."
+            "Did you ask about the years between?",
+            "He told me over a meal. This time he bought mine."
           ]
         ]
       },
       {
-        "title": "Watching the tide",
-        "opening": "How do you keep track of the tide?",
-        "first": "A place that was dry when you arrived may not stay your path home.",
+        "title": "Nerissa's worst sales pitch",
+        "opening": "Have you ever talked someone out of buying something?",
+        "first": "A man wanted enough fish to impress his guests, though he didn't know how to keep it.",
         "replies": [
           [
-            "Have people been caught?",
-            "Yes. Usually while insisting they'd only stay a moment."
+            "What did you suggest?",
+            "Less fish and less ambition."
           ],
           [
-            "What do you tell visitors?",
-            "Check the return route before becoming absorbed in the shore."
+            "Did he listen?",
+            "He returned to thank me. Apparently the guests survived without being overwhelmed."
           ],
           [
-            "Do you ever forget?",
-            "I still look, even when I think I know."
+            "Is that good business?",
+            "Dead confidence doesn't buy supper tomorrow."
           ]
         ]
       },
       {
-        "title": "A merchant's supper",
-        "opening": "What does a merchant cook for supper?",
-        "first": "I sell provisions and occasionally discover I've forgotten to keep my own supper.",
+        "title": "The shore after visitors leave",
+        "opening": "What's Coralmere like when the visitors have gone?",
+        "first": "You hear familiar voices again. Lovely, until you realise they know exactly what you did yesterday.",
         "replies": [
           [
-            "What do you do?",
-            "Buy something back from a neighbour and endure their amusement."
+            "Does that bother you?",
+            "Sometimes I'd like to be mysterious for an afternoon."
           ],
           [
-            "Does it happen often?",
-            "Less often since I began packing my own food first."
+            "What would you do mysteriously?",
+            "Buy a pastry nobody offered an opinion about."
           ],
           [
-            "What would you choose?",
-            "Something I can eat without discussing the price."
+            "That's a modest ambition.",
+            "You haven't met all my neighbours."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nerissa. If you're stocking up, remember the part where someone carries it.",
-      "I'm Corin. My shoulders remember.",
-      "Corin! Here to trade or exchange news?",
-      "News first.",
-      "A dragon could tempt a traveller into packing everything.",
-      "I'm Corin. Aurelius still gets to object."
+      "Nerissa. Welcome. If you need food, ask before your pride starts making decisions.",
+      "Corin. I'll remember that.",
+      "Corin! Good to see you back on dry ground.",
+      "I appreciate the ground more lately.",
+      "A dragon. I ought to ask whether that's one customer or two.",
+      "I'm Corin. Definitely two appetites."
     ]
   },
   "Sella": {
@@ -9573,70 +9573,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:11",
     "topics": [
       {
-        "title": "The changing stew",
-        "opening": "Do you make your stew the same way every time?",
-        "first": "My stew changes with the catch. My husband calls that improvisation when the fishing goes badly.",
+        "title": "The recipe you won't share",
+        "opening": "Do you keep any recipes secret?",
+        "first": "One. Not because it's special. Because the woman who taught me said I could keep something for myself.",
         "replies": [
           [
-            "Does it taste different each time?",
-            "Enough to keep me interested."
+            "Do people press you?",
+            "Constantly. They hear a closed door and start rattling it."
           ],
           [
-            "Do customers object?",
-            "Only when I accidentally make their favourite once."
+            "Would you teach someone eventually?",
+            "If I wanted to. That's the pleasant part."
           ],
           [
-            "Can you repeat that version?",
-            "If the sea and my memory cooperate on the same day."
+            "Is it worth all the mystery?",
+            "Probably not. I enjoy it anyway."
           ]
         ]
       },
       {
-        "title": "Waiting for the boat",
-        "opening": "What do you do while you're waiting for the boat?",
-        "first": "I can usually keep busy while my husband is out. Bad weather makes ordinary chores strangely difficult.",
+        "title": "A cook's sick day",
+        "opening": "Who cooks when you're ill?",
+        "first": "My brother. He treats instructions as encouraging suggestions.",
         "replies": [
           [
-            "Do you worry every time?",
-            "Some days more than others. Familiarity doesn't abolish it."
+            "Does the food turn out?",
+            "Sometimes in unexpected directions."
           ],
           [
-            "What helps?",
-            "Company that doesn't insist everything must be fine."
+            "Do you correct him?",
+            "Less now. Being cared for isn't improved by criticism from bed."
           ],
           [
-            "What do you say when he returns?",
-            "Usually something practical. Relief takes a moment to find words."
+            "What's the kindest thing he made?",
+            "Tea. Correctly. At exactly the moment I stopped pretending I could manage."
           ]
         ]
       },
       {
-        "title": "Cooking for yourself",
-        "opening": "Do you cook differently when it's only for you?",
-        "first": "When I cook only for myself, I choose something simple and eat before it cools.",
+        "title": "The taste of a place",
+        "opening": "Can a meal tell you where you are?",
+        "first": "More by what people argue about than what's in it. Every town has a correct way somebody's grandmother disputes.",
         "replies": [
           [
-            "Don't you want something special?",
-            "Being spared anyone else's preferences is special."
+            "Do you argue?",
+            "With conviction and very little consistency."
           ],
           [
-            "What's your favourite?",
-            "Bread, fish, something sharp beside it."
+            "What matters to you?",
+            "That people at the table can eat it and enjoy being there."
           ],
           [
-            "Do you miss company?",
-            "Sometimes. Solitude and loneliness aren't always the same evening."
+            "That sounds simple.",
+            "Then someone asks whether my grandmother would approve."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sella. My husband catches fish; I argue them into becoming supper.",
-      "I'm Corin. Who wins the argument?",
-      "Corin! I can offer conversation without assigning you a meal.",
-      "I'll gladly accept.",
-      "A dragon makes my usual idea of hungry look modest.",
-      "I'm Corin. Aurelius has brought no demand for supper."
+      "Sella. If you're going to praise something, taste it first.",
+      "Corin. Fair rule.",
+      "Corin! Arrived hungry or merely hopeful?",
+      "Those often travel together.",
+      "A dragon. My ordinary notion of a serving has become inadequate.",
+      "I'm Corin. Mine did too."
     ]
   },
   "Neri": {
@@ -9646,70 +9646,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:16",
     "topics": [
       {
-        "title": "The lost knife",
-        "opening": "Have you ever lost a tool you depended on?",
-        "first": "I dropped a good knife into the harbour and spent days looking whenever the water cleared.",
+        "title": "A net with no catch",
+        "opening": "Have you ever made a net for something besides fishing?",
+        "first": "A child wanted one to catch the moon's reflection. I explained it wouldn't work. She asked whether I was certain.",
         "replies": [
           [
-            "Did you find it?",
-            "Three spoons, no knife. Apparently the harbour stocks cutlery."
+            "Did you make it?",
+            "A little one. She tested my theory thoroughly."
           ],
           [
-            "Why was it special?",
-            "It fitted my hand after years of use."
+            "Was she disappointed?",
+            "Briefly. Then caught a leaf shaped like a boat."
           ],
           [
-            "Will you keep searching?",
-            "When I'm passing. I won't devote another whole afternoon to the sea's possessions."
+            "Would you have tried?",
+            "At her age, yes. I admired the experiment."
           ]
         ]
       },
       {
-        "title": "A net's small holes",
-        "opening": "Do the little holes in a net matter much?",
-        "first": "Small holes become large ones under strain. People bring me damage they could have repaired much earlier.",
+        "title": "The hands you recognise",
+        "opening": "Can you recognise another mender's work?",
+        "first": "Yes. We all have habits. Sometimes I see a knot and hear the person's voice.",
         "replies": [
           [
-            "Do you scold them?",
-            "Only if we're friends and they're amused by it."
+            "Even if they're gone?",
+            "Especially then."
           ],
           [
-            "What's difficult to mend?",
-            "A rushed repair tied across rotten cord."
+            "Does that make you sad?",
+            "And glad. I don't always separate them."
           ],
           [
-            "Can you always save a net?",
-            "No. I explain before charging someone to postpone the inevitable."
+            "Would someone recognise yours?",
+            "I hope so. Though preferably not by a mistake."
           ]
         ]
       },
       {
-        "title": "Work by touch",
-        "opening": "Can you do any of your work by touch?",
-        "first": "I can feel some faults before seeing them. My hands remember the pattern.",
+        "title": "Neri's first storm",
+        "opening": "Do you remember your first proper storm?",
+        "first": "Remember hiding because the adults looked frightened. I could bear the noise until I saw their faces.",
         "replies": [
           [
-            "Can you work in darkness?",
-            "Not safely with a blade. Skill has sensible limits."
+            "Did someone find you?",
+            "My aunt. Sat down without calling me silly."
           ],
           [
-            "Did it take years?",
-            "Enough that I stopped counting them."
+            "What did she say?",
+            "That she was frightened too, and we'd wait together."
           ],
           [
-            "Do you enjoy the rhythm?",
-            "Yes, until someone asks me to demonstrate quickly."
+            "Did that help?",
+            "More than being told there was nothing to fear."
           ]
         ]
       }
     ],
     "greetings": [
-      "Neri. If you've found a knife in the water, I have an optimistic question.",
-      "I'm Corin. No knife, unfortunately.",
-      "Corin! I've lost nothing important since we last spoke.",
-      "A promising report.",
-      "A dragon would make a difficult catch to explain.",
-      "I'm Corin. Aurelius would rather avoid the net entirely."
+      "Neri. Mind your fingers around loose cord; it likes new acquaintances.",
+      "Corin. I'll keep mine to myself.",
+      "Corin! You've picked a moment when I can look up.",
+      "I'll try to deserve it.",
+      "A dragon. I don't suppose his claws are trained for delicate knots.",
+      "I'm Corin. We won't volunteer them."
     ]
   },
   "Finnick": {
@@ -9719,70 +9719,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:21",
     "topics": [
       {
-        "title": "A thrown fish",
-        "opening": "Have you ever thrown a fish and regretted it?",
-        "first": "Someone threw me a fish before I turned around. I caught it with most of my shirt.",
+        "title": "The boat's unpopular name",
+        "opening": "What's the worst name you've heard for a boat?",
+        "first": "Unsinkable. I dislike a vessel beginning a quarrel with the sea.",
         "replies": [
           [
-            "Did it hurt?",
-            "My dignity suffered the larger injury."
+            "Did it sink?",
+            "No. The owner never put it in the water. Perfect record."
           ],
           [
-            "Did you throw it back?",
-            "No. Supper shouldn't become ammunition."
+            "What would you name one?",
+            "Something modest. Please, perhaps."
           ],
           [
-            "What did the thrower say?",
-            "That he'd warned me. We discussed useful warnings."
+            "Would people laugh?",
+            "Until a storm. Then they'd find it eloquent."
           ]
         ]
       },
       {
-        "title": "A loose mooring",
-        "opening": "How do you notice when a mooring has worked loose?",
-        "first": "A boat can look settled while a rope rubs itself thin. I check where the strain actually falls.",
+        "title": "Finnick's lucky charm",
+        "opening": "Do you carry anything for luck?",
+        "first": "A button from my mother's coat. The luck is remembering somebody expects me back.",
         "replies": [
           [
-            "Have you caught one in time?",
-            "Yes. The owner called it luck; I called it looking."
+            "Does she know you have it?",
+            "She complained about the missing button. I confessed years later."
           ],
           [
-            "What happens in a storm?",
-            "We prepare before one arrives. During it, choices shrink."
+            "Was she pleased?",
+            "She sewed another one onto a scrap for me. Said theft was an unnecessary method."
           ],
           [
-            "Do you like the work?",
-            "When preparation makes a difficult day uneventful."
+            "Do you still carry the first?",
+            "Yes. It's earned the position."
           ]
         ]
       },
       {
-        "title": "Your imaginary voyage",
-        "opening": "Where would you go on a voyage of your own?",
-        "first": "I talk about taking a long voyage. So far I've planned the food more carefully than the destination.",
+        "title": "The sea in winter",
+        "opening": "Do you like the sea when it's cold?",
+        "first": "From somewhere warm. People call that cowardice until I offer to swap places.",
         "replies": [
           [
-            "Where would you go?",
-            "Somewhere I couldn't reach by simply walking east."
+            "Would you leave it?",
+            "I'd miss it. I'd also enjoy dry socks."
           ],
           [
-            "Would you miss home?",
-            "Probably before we cleared the harbour."
+            "What would bring you back?",
+            "The sound at night. Inland quiet feels unfinished."
           ],
           [
-            "What's stopping you?",
-            "Money, mostly. Also an improving appreciation for a steady bed."
+            "Do you sleep well here?",
+            "Usually. Familiar noise is different from noise."
           ]
         ]
       }
     ],
     "greetings": [
-      "Finnick. If someone shouts 'catch', ask what they're throwing before turning.",
-      "I'm Corin. That sounds learned the hard way.",
-      "Corin! You arrived dry. A respectable achievement here.",
-      "I'll try to preserve it.",
-      "Those wings would make unloading a boat look very ordinary.",
-      "I'm Corin. Aurelius isn't taking anyone's shift."
+      "Finnick. If you're looking for someone sensible, I can point.",
+      "Corin. I'll risk you first.",
+      "Corin! Still on speaking terms with the sea?",
+      "We maintain a cautious distance.",
+      "A dragon. That's an unusually impressive alternative to an oar.",
+      "I'm Corin. Oars have advantages indoors."
     ]
   },
   "Maris": {
@@ -9792,70 +9792,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:26",
     "topics": [
       {
-        "title": "The soup dispute",
-        "opening": "Can people really argue over a pot of soup?",
-        "first": "My mother wants fish soup thick. My father wants it clear. I serve it differently when they visit separately.",
+        "title": "The meal after an argument",
+        "opening": "What do you cook after a family quarrel?",
+        "first": "Something everybody likes. Not to settle it. To make sure nobody has to apologise on an empty stomach.",
         "replies": [
           [
-            "What if they come together?",
-            "I remind them they've survived this disagreement for decades."
+            "Does the quarrel continue?",
+            "Sometimes. At a more manageable volume."
           ],
           [
-            "Which do you prefer?",
-            "Thick, though I'm careful when announcing that."
+            "Do you ever apologise first?",
+            "When I can stop preparing my defence long enough."
           ],
           [
-            "Does the argument spoil dinner?",
-            "No. They enjoy having a familiar position to defend."
+            "What works best?",
+            "Saying what I did wrong without adding what they did wrong beside it."
           ]
         ]
       },
       {
-        "title": "A borrowed bowl",
-        "opening": "Do you lend bowls to the neighbours?",
-        "first": "I returned a borrowed bowl with food in it. It came back with something else. Neither household has seen it empty since.",
+        "title": "Maris's written recipes",
+        "opening": "Why don't you write down quantities?",
+        "first": "Because I learned by watching. My daughter says watching me say 'enough' isn't a transferable skill.",
         "replies": [
           [
-            "Who owns it?",
-            "We have decided that's less interesting than supper."
+            "Is she right?",
+            "Entirely. I find that inconvenient."
           ],
           [
-            "What have you sent?",
-            "Soup, stewed fruit, a pudding that travelled poorly."
+            "Will you write them properly?",
+            "We're trying together. She measures while I object."
           ],
           [
-            "Will you end the exchange?",
-            "Not while it's pleasant. Obligation would spoil the flavour."
+            "Does it help?",
+            "It gives us time together. Even the objections have become enjoyable."
           ]
         ]
       },
       {
-        "title": "An afternoon by the water",
-        "opening": "What do you like doing down by the water?",
-        "first": "I sometimes watch the sea without planning what might come out of it for dinner.",
+        "title": "A supper alone",
+        "opening": "Is eating alone lonely?",
+        "first": "Sometimes. Other times it's glorious to choose exactly what I fancy and explain nothing.",
         "replies": [
           [
-            "Is that difficult?",
-            "For a cook, initially."
+            "What do you choose?",
+            "Something my family calls insufficient for a proper meal."
           ],
           [
-            "What do you notice?",
-            "The changing light and how everyone walks differently on wet ground."
+            "Do you miss them then?",
+            "By the second quiet evening."
           ],
           [
-            "Would you live inland?",
-            "I'd miss the horizon. I'd enjoy less salt on the windows."
+            "Can you want both?",
+            "I seem to. Fortunately, supper doesn't demand a consistent philosophy."
           ]
         ]
       }
     ],
     "greetings": [
-      "Maris. You may discuss fish with me, but I reserve some conversation for other subjects.",
-      "I'm Corin. I'll offer variety.",
-      "Corin! A fresh audience for an old household dispute.",
-      "I won't promise a verdict.",
-      "A dragon would make our supper calculations rather ambitious.",
-      "I'm Corin. Aurelius isn't joining unannounced."
+      "Maris. You look new to the coast. Have people given you too much advice yet?",
+      "Corin. There's still room for a little.",
+      "Corin! I was hoping to hear how you got on.",
+      "Some parts went better than planned.",
+      "A dragon. I shall have to stop calling my family difficult to feed.",
+      "I'm Corin. Don't give them ideas."
     ]
   },
   "Perrin": {
@@ -9865,70 +9865,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:31",
     "topics": [
       {
-        "title": "Your first oar",
-        "opening": "How did your first attempt at carving an oar turn out?",
-        "first": "I carved my first oar too heavily and insisted on rowing home with it. Pride supplied the extra labour.",
+        "title": "The boat that came home",
+        "opening": "Have you recognised a boat after years away?",
+        "first": "One returned with half my work replaced. I knew it by a small mark nobody had bothered smoothing out.",
         "replies": [
           [
-            "Did you keep it?",
-            "As evidence. My next oar was considerably plainer."
+            "Did it feel like yours?",
+            "No. It felt like an old acquaintance."
           ],
           [
-            "How do you judge the balance?",
-            "Use it. A workshop inspection can't replace the motion."
+            "Were you proud?",
+            "Mostly relieved it had served people well."
           ],
           [
-            "Was the carving good?",
-            "Excellent. Entirely irrelevant to my aching arms."
+            "Would you remove the mark now?",
+            "If it caused trouble. Sentiment shouldn't catch a rope."
           ]
         ]
       },
       {
-        "title": "A hidden leak",
-        "opening": "How do you find a leak you can't see?",
-        "first": "Water appeared far from the damaged seam. The owner wanted me to patch where the puddle was.",
+        "title": "Perrin's dry-land fear",
+        "opening": "What frightens you on dry land?",
+        "first": "Heights. Put me on a roof and I become extremely interested in coming down.",
         "replies": [
           [
-            "How did you trace it?",
-            "Followed the water's path while the boat was still wet."
+            "Even low roofs?",
+            "The ground's opinion of low differs from mine."
           ],
           [
-            "Would the patch have helped?",
-            "It would have hidden the evidence briefly."
+            "Do people tease you?",
+            "Until I invite them into a boat in rough water."
           ],
           [
-            "Do people accept the explanation?",
-            "Usually after seeing it themselves."
+            "Does that prove something?",
+            "Only that everybody has a place they'd rather not be laughed at."
           ]
         ]
       },
       {
-        "title": "A boat of your own",
-        "opening": "Would you like to build yourself a boat?",
-        "first": "I'd like a little boat maintained to my own schedule. Customers' boats always get there first.",
+        "title": "A repair refused",
+        "opening": "Would you repair a boat beyond its useful life?",
+        "first": "I'd explain what I could and couldn't make safe. People hear hope very selectively when they love a thing.",
         "replies": [
           [
-            "Would you go fishing?",
-            "Sometimes. Mostly I'd enjoy leaving without an invoice."
+            "Have they argued?",
+            "Of course. They're often saying goodbye to more than wood."
           ],
           [
-            "Have you begun it?",
-            "In drawings and saved pieces of wood."
+            "Can you save part of it?",
+            "Sometimes. A seat, a name board. Something that can retire without taking anyone down."
           ],
           [
-            "Will it be beautiful?",
-            "It will float. Beauty can apply afterward."
+            "Is that satisfying?",
+            "In a quieter way than sending it out again."
           ]
         ]
       }
     ],
     "greetings": [
-      "Perrin. Boats need repairs because people insist on putting them in water.",
-      "I'm Corin. An awkward flaw in the whole arrangement.",
-      "Corin! Come discuss something that isn't leaking.",
-      "I'll do my best.",
-      "A dragon crosses water without needing my trade. Slightly insulting.",
-      "I'm Corin. Aurelius still admires a well-made boat."
+      "Perrin. If you're asking whether a boat is safe, I'll inspect it before sounding reassuring.",
+      "Corin. I'd trust that answer.",
+      "Corin! Back without a leak to report?",
+      "None in anything important.",
+      "A dragon. I hope nobody asks me to build a boat around him.",
+      "I'm Corin. We'll avoid that commission."
     ]
   },
   "Hester": {
@@ -9938,70 +9938,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:36",
     "topics": [
       {
-        "title": "The first net",
-        "opening": "Who taught you to make your first net?",
-        "first": "My first net narrowed as I worked. I had made an impressive bag by accident.",
+        "title": "Hester's childhood race",
+        "opening": "Were you competitive as a child?",
+        "first": "Fiercely. I'd challenge people to anything I could already do and call it fair.",
         "replies": [
           [
-            "Could you use it?",
-            "For carrying things. Not for the catch I'd imagined."
+            "Did anyone beat you?",
+            "My sister, by choosing the next contest."
           ],
           [
-            "What went wrong?",
-            "Uneven spacing. Repeating a small error made a large shape."
+            "What did she choose?",
+            "Sitting quietly. I was defeated before she finished explaining."
           ],
           [
-            "Did you begin again?",
-            "Yes. My grandmother supervised the counting this time."
+            "Are you still competitive?",
+            "Ask me when I'm winning."
           ]
         ]
       },
       {
-        "title": "A knot remembered",
-        "opening": "Do you ever forget how to tie a knot?",
-        "first": "My grandmother taught one knot while telling a story. I still remember the story whenever I tie it.",
+        "title": "A knot for a wedding",
+        "opening": "Why do people talk about marriage as a knot?",
+        "first": "Because somebody poetic had never spent an hour untangling wet rope.",
         "replies": [
           [
-            "What was the story?",
-            "Her brother losing a boot overboard while arguing he'd never fall."
+            "You dislike the comparison?",
+            "I prefer a conversation. Knots aren't known for listening."
           ],
           [
-            "Did he fall?",
-            "Only the boot. He defended that distinction for years."
+            "Are you married?",
+            "Widowed. We had many years of listening badly and trying again."
           ],
           [
-            "Does the story help?",
-            "It reminds my hands where to pause."
+            "Do you miss the trying?",
+            "Every day. Even the arguments had somewhere to go."
           ]
         ]
       },
       {
-        "title": "Keeping spare cord",
-        "opening": "Why keep spare cord with you?",
-        "first": "I carry spare cord because something always needs tying when nobody expects it.",
+        "title": "The pupil who rushed",
+        "opening": "What's hardest to teach?",
+        "first": "Slowing down before the mistake, instead of after it. Everybody understands once they're unpicking.",
         "replies": [
           [
-            "What's it rescued?",
-            "A broken strap, a parcel, a hat from a drain."
+            "Did you rush?",
+            "Terribly. I have no claim to inherited wisdom."
           ],
           [
-            "Do people ask you first?",
-            "They've begun to. Reputation can become additional luggage."
+            "What changed?",
+            "Having to undo my own work. Repeatedly."
           ],
           [
-            "Would you stop carrying it?",
-            "After the day I don't need it, perhaps. That day remains elusive."
+            "Are you patient with learners?",
+            "More when I remember the hours someone gave me."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hester. My grandmother taught me knots and a few words for when they go wrong.",
-      "I'm Corin. I'll ask about the knots first.",
-      "Corin! Another visitor who hasn't tangled anything yet.",
-      "There's still time.",
-      "A dragon seems unlikely to respect the size of an ordinary net.",
-      "I'm Corin. Aurelius won't be testing it."
+      "Hester. You're welcome to talk, but don't expect me to stop my hands.",
+      "Corin. I can keep up with both.",
+      "Corin! You've found me doing exactly what you'd expect.",
+      "There's comfort in that.",
+      "A dragon. My hands have actually stopped. That takes some doing.",
+      "I'm Corin. Sorry for the interruption."
     ]
   },
   "Yara": {
@@ -10011,70 +10011,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:41",
     "topics": [
       {
-        "title": "Salt on the hinges",
-        "opening": "Does the salt get into everything here?",
-        "first": "Salt works its way into everything. I oil hinges more often than visitors think reasonable.",
+        "title": "The neighbour's light",
+        "opening": "Why do you like seeing lights across the water?",
+        "first": "Because somebody else is still awake. It makes a lonely evening feel less exclusive.",
         "replies": [
           [
-            "Does it help?",
-            "Enough to make opening a door less dramatic."
+            "Do you know who's there?",
+            "Some nights. Other nights I invent pleasant possibilities."
           ],
           [
-            "What's hardest to protect?",
-            "Anything someone promises is perfectly weatherproof."
+            "What if the light goes out?",
+            "Then I should probably go to bed too."
           ],
           [
-            "Why stay here?",
-            "Because I love the place between its maintenance demands."
+            "Do you leave yours lit for others?",
+            "Occasionally. I like imagining it helps."
           ]
         ]
       },
       {
-        "title": "A storm's preparations",
-        "opening": "What do you do when a storm is coming?",
-        "first": "Before a storm I check ordinary things: shutters, loose objects, where water might get in.",
+        "title": "A house full of shells",
+        "opening": "Do you collect shells?",
+        "first": "I did as a child. My mother finally asked whether the sea could keep a few.",
         "replies": [
           [
-            "Do neighbours help?",
-            "We check on anyone who needs another pair of hands."
+            "Did you stop?",
+            "I became more selective. Then called that maturity."
           ],
           [
-            "Have you missed something?",
-            "A loose bucket once travelled farther than I'd planned to."
+            "Have you kept any?",
+            "One from a day I barely remember except that I was happy."
           ],
           [
-            "Were you frightened?",
-            "Of course. Preparation gives fear something useful to do."
+            "Why that one?",
+            "Perhaps because happiness didn't need an explanation then."
           ]
         ]
       },
       {
-        "title": "A familiar sound",
-        "opening": "What sound tells you you're home?",
-        "first": "I sleep better with the sea audible. Inland, I kept waking because something seemed missing.",
+        "title": "Yara's inland visit",
+        "opening": "What did you miss when you went inland?",
+        "first": "The changing edge of things. Here the water moves the boundary every day.",
         "replies": [
           [
-            "Did you get used to it?",
-            "Eventually. Then coming home disturbed me in reverse."
+            "Was inland life too still?",
+            "Only at first. Then I noticed other changes."
           ],
           [
-            "Do you hear every wave?",
-            "No. I notice when the pattern changes."
+            "Would you live there?",
+            "Perhaps. I'd have to stop judging it for not being here."
           ],
           [
-            "Would you travel again?",
-            "Certainly. Missing home can be part of enjoying elsewhere."
+            "That's difficult.",
+            "Yes. Home makes a demanding comparison."
           ]
         ]
       }
     ],
     "greetings": [
-      "Yara. If you admire living by the sea, wait until we've discussed the hinges.",
-      "I'm Corin. I'm ready for the less picturesque account.",
-      "Corin! Come in before the wind joins us.",
-      "I'd prefer a smaller conversation.",
-      "A dragon makes even a coastal wind seem ordinary.",
-      "I'm Corin. Aurelius will keep his wings folded nearby."
+      "Yara. If you're new here, don't trust a dry-looking seat without checking.",
+      "Corin. That's useful hospitality.",
+      "Corin! You've learned where to put your feet.",
+      "Some lessons repeat themselves.",
+      "A dragon. I'll stop complaining about gulls near the roof.",
+      "I'm Corin. Hopefully he won't give you a new complaint."
     ]
   },
   "Doryn": {
@@ -10084,70 +10084,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:46",
     "topics": [
       {
-        "title": "Reading gulls",
-        "opening": "What can you learn by watching gulls?",
-        "first": "People think gulls predict weather. Mine mainly predict that someone has food.",
+        "title": "The town before you knew it",
+        "opening": "Has Coralmere changed much?",
+        "first": "Enough that I sometimes give directions to things that aren't there anymore.",
         "replies": [
           [
-            "Have they stolen yours?",
-            "A bun. Directly from a moment of misplaced confidence."
+            "Do people correct you?",
+            "Young ones do. Old ones argue about when the thing disappeared."
           ],
           [
-            "Did you chase it?",
-            "Briefly. The gull had an unfair geographical advantage."
+            "Does that sadden you?",
+            "Some changes. Others were overdue."
           ],
           [
-            "Do you still feed them?",
-            "Not deliberately. They contest the distinction."
+            "What would you keep?",
+            "Places where people can stop without having to buy something."
           ]
         ]
       },
       {
-        "title": "A reputation for temper",
-        "opening": "Do you deserve your reputation for being bad-tempered?",
-        "first": "Someone called me ill-tempered after I asked him to stop blocking my gate. He omitted the first three polite requests.",
+        "title": "A reputation for wisdom",
+        "opening": "Do people assume you're wise because you're older?",
+        "first": "Constantly. I've made some of my finest mistakes quite recently.",
         "replies": [
           [
-            "Did you explain?",
-            "To people whose opinions mattered."
+            "Do you tell them?",
+            "They call it modesty. There's no escaping an audience determined to admire you."
           ],
           [
-            "Do you lose patience quickly?",
-            "With repeated preventable trouble, yes."
+            "What mistake?",
+            "Bought shoes too small because they were a bargain. Age failed to intervene."
           ],
           [
-            "What cheers you?",
-            "An ordinary day in which things remain where I put them."
+            "Did you keep them?",
+            "No. I eventually respected my feet's objections."
           ]
         ]
       },
       {
-        "title": "The view you keep",
-        "opening": "Is there a view here you never get tired of?",
-        "first": "There's a particular evening light that still stops me mid-complaint.",
+        "title": "The person you waited for",
+        "opening": "Have you ever waited for someone who didn't arrive?",
+        "first": "Yes. Weather delayed them. I spent hours preparing to be angry and was too relieved when they came.",
         "replies": [
           [
-            "Can you describe it?",
-            "Gold on the water beneath a dark horizon."
+            "Did you tell them?",
+            "Not that evening. They were tired and needed warmth, not the history of my worry."
           ],
           [
-            "Do you see it often?",
-            "Not often enough to become tired of it."
+            "Were you angry later?",
+            "A little. Then we talked."
           ],
           [
-            "Would you paint it?",
-            "Badly. Looking may be my proper contribution."
+            "What would you do differently?",
+            "Ask for news sooner instead of practising speeches at the horizon."
           ]
         ]
       }
     ],
     "greetings": [
-      "Doryn. I complain about the sea because I know it well, not because I intend to leave.",
-      "I'm Corin. I'll keep that distinction.",
-      "Corin! The sea remains unreasonable.",
-      "A consistent subject for conversation.",
-      "A dragon is a better surprise than another storm.",
-      "I'm Corin. Aurelius usually arrives more gently."
+      "Doryn. Been here long enough to be suspicious of anyone calling it quaint.",
+      "Corin. I'll avoid that word.",
+      "Corin! Still taking an interest?",
+      "There's plenty left.",
+      "A dragon. That ought to discourage the word picturesque for an afternoon.",
+      "I'm Corin. We make no promises about descriptions."
     ]
   },
   "Bry": {
@@ -10157,70 +10157,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:51",
     "topics": [
       {
-        "title": "The slippery step",
-        "opening": "Have you ever slipped on the dock steps?",
-        "first": "I stepped onto wet stone while explaining how sure-footed I'd become. The timing was exceptionally cruel.",
+        "title": "A fear you acquired",
+        "opening": "Have you ever become afraid of something you used to enjoy?",
+        "first": "Swimming alone. Nothing happened. One day I understood what could.",
         "replies": [
           [
-            "Were you hurt?",
-            "Only enough to resent the laughter."
+            "Did you stop swimming?",
+            "No. I found company."
           ],
           [
-            "Who helped you?",
-            "A neighbour who laughed and offered a hand simultaneously."
+            "Do you miss the old confidence?",
+            "Sometimes. I don't miss the ignorance supporting it."
           ],
           [
-            "Do you watch your step now?",
-            "Especially while making claims about myself."
+            "Is it less enjoyable now?",
+            "Different. I like having someone to laugh with afterward."
           ]
         ]
       },
       {
-        "title": "Making a home",
-        "opening": "When did this place begin to feel like home?",
-        "first": "I knew this was home when someone noticed I'd been absent before I told them I was away.",
+        "title": "The houseplant at the coast",
+        "opening": "Can you keep houseplants alive here?",
+        "first": "One. It has survived my care with impressive determination.",
         "replies": [
           [
-            "Did that feel intrusive?",
-            "It felt kind. They asked whether I was all right."
+            "What happened to the others?",
+            "I mistook worry for watering."
           ],
           [
-            "Had you moved far?",
-            "Far enough to miss being recognised."
+            "Have you learned?",
+            "The surviving plant seems cautiously optimistic."
           ],
           [
-            "Do you welcome newcomers?",
-            "I try. I remember what the first easy conversation meant."
+            "Why keep trying?",
+            "I like something growing indoors that hasn't arrived through a crack."
           ]
         ]
       },
       {
-        "title": "A poor sailor",
-        "opening": "Are you comfortable out on a boat?",
-        "first": "I enjoy looking at boats considerably more than travelling in them.",
+        "title": "Bry's unexpected welcome",
+        "opening": "When did you feel you belonged here?",
+        "first": "A neighbour borrowed something without explaining who they were. Assumed we'd reached that stage.",
         "replies": [
           [
-            "Do you get seasick?",
-            "With impressive speed."
+            "Wasn't that rude?",
+            "A little. I was absurdly pleased."
           ],
           [
-            "Have you tried again?",
-            "Yes. Optimism has repeatedly misunderstood my stomach."
+            "Did they return it?",
+            "Eventually. Belonging has inconveniences."
           ],
           [
-            "Would flying be easier?",
-            "I would ask about the motion before making promises."
+            "Would you rather be a stranger again?",
+            "For a day now and then. Not permanently."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bry. If someone mentions me falling in, ask which occasion before accepting the story.",
-      "I'm Corin. You've made that difficult to ignore.",
-      "Corin! I've remained mostly dry.",
-      "A promising beginning.",
-      "A dragon would have made my last rescue much more dramatic.",
-      "I'm Corin. Aurelius prefers uneventful arrivals."
+      "Bry. You look like you're learning the coast one surprise at a time.",
+      "Corin. That's accurate.",
+      "Corin! Fewer surprises today, I hope?",
+      "I'd settle for gentler ones.",
+      "A dragon. Well, that outdoes my entire morning.",
+      "I'm Corin. Mine has been difficult to summarise too."
     ]
   },
   "Coral": {
@@ -10230,70 +10230,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:56",
     "topics": [
       {
-        "title": "The crooked patch",
-        "opening": "Does a patch have to be straight to do its job?",
-        "first": "My husband called a sail patch crooked. I suggested he admire it while staying afloat.",
+        "title": "The sail you painted",
+        "opening": "Have you ever decorated a sail?",
+        "first": "A small one for a child. Painted a terrifying sea creature. Her mother thought it was a cheerful cabbage.",
         "replies": [
           [
-            "Was he right?",
-            "About the angle, yes. About its usefulness, no."
+            "Was the child pleased?",
+            "Delighted. She made the cabbage attack things."
           ],
           [
-            "Did you redo it?",
-            "When I had time, not because the sea cared."
+            "Did you correct the mother?",
+            "No. The child had improved the design."
           ],
           [
-            "Did he thank you?",
-            "He did. I allowed him to begin there next time."
+            "Would you paint another?",
+            "With less green, perhaps."
           ]
         ]
       },
       {
-        "title": "A window light",
-        "opening": "Why leave a light in the window?",
-        "first": "I keep a light where my husband recognises it when returning. It's become part of how we end the day.",
+        "title": "A seam in a storm",
+        "opening": "Do you think about your work when the weather turns?",
+        "first": "Every time. I remember where each seam went and hope I wasn't tired when I finished it.",
         "replies": [
           [
-            "Does he notice?",
-            "He mentions it more when the weather's been poor."
+            "Does that keep you awake?",
+            "Sometimes. I check carefully so I have an answer for the worry."
           ],
           [
-            "What if you're away?",
-            "I tell him beforehand. Familiar signals deserve clear changes."
+            "Can you ever be certain?",
+            "No. But I can know I didn't rush."
           ],
           [
-            "Does it comfort you too?",
-            "Yes. Preparing a welcome helps with the waiting."
+            "Do people understand that?",
+            "The ones who've waited for a boat do."
           ]
         ]
       },
       {
-        "title": "Mending in company",
-        "opening": "Do you like having company while you mend things?",
-        "first": "I like working while someone tells me a story. My hands stay busy without demanding the whole conversation.",
+        "title": "Coral's private ambition",
+        "opening": "What would you make if it didn't have to be useful?",
+        "first": "A hanging full of impossible birds. Wings that couldn't carry them, colours no sensible creature would wear.",
         "replies": [
           [
-            "Do mistakes happen?",
-            "When the story becomes especially surprising."
+            "Why birds?",
+            "I've spent years making things obey the wind. I'd like one afternoon of disobedience."
           ],
           [
-            "Should I avoid surprises?",
-            "No. I can pause the needle."
+            "Would you show people?",
+            "When I stopped apologising for it."
           ],
           [
-            "Who tells the best stories?",
-            "People willing to admit what they got wrong."
+            "Would it make you happy?",
+            "I think so. That ought to be enough reason to start."
           ]
         ]
       }
     ],
     "greetings": [
-      "Coral. My husband catches fish; I keep the wind from escaping his sail through holes.",
-      "I'm Corin. Both sound useful.",
-      "Corin! Come and interrupt my weather predictions.",
-      "I'll avoid bringing a forecast.",
-      "Those wings make cloth sails look rather temporary.",
-      "I'm Corin. Aurelius has to look after them too."
+      "Coral. No, I wasn't named after the town. The joke remains available anyway.",
+      "Corin. I'll leave it available.",
+      "Corin! You came back before I had time to invent a story about your absence.",
+      "Please keep the true version.",
+      "A dragon. Those wings make me very protective of my needle.",
+      "I'm Corin. We won't ask you to mend them."
     ]
   },
   "Zella": {
@@ -10303,70 +10303,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:61",
     "topics": [
       {
-        "title": "Leftover cord",
-        "opening": "What do you do with leftover cord?",
-        "first": "Short pieces of cord become ties, handles, and repairs. Eventually even I admit a piece is too short.",
+        "title": "The knot in the love letter",
+        "opening": "Why would someone tie a knot around a letter?",
+        "first": "To make the recipient work for the words, apparently. My cousin tied his so well his sweetheart cut the cord.",
         "replies": [
           [
-            "Where is that limit?",
-            "Further away than my neighbours would prefer."
+            "Was he offended?",
+            "He called it symbolic. She called it opening a letter."
           ],
           [
-            "Have you saved something valuable?",
-            "A traveller's broken bag. Mostly I save small inconveniences."
+            "Did it work out?",
+            "They're together. She manages the knots now."
           ],
           [
-            "Do you sell the scraps?",
-            "No. Explaining the pricing would cost more than the cord."
+            "Would you do that?",
+            "No. I'd already find the words difficult enough."
           ]
         ]
       },
       {
-        "title": "Your grandmother's net",
-        "opening": "What did your grandmother teach you about nets?",
-        "first": "My grandmother made me repair small damage before tackling the impressive tear. I thought she'd misunderstood ambition.",
+        "title": "A skill in the fingers",
+        "opening": "Can your hands remember something you've forgotten?",
+        "first": "Yes. Ask me to explain a knot and I stumble. Give me the cord and I know.",
         "replies": [
           [
-            "Had she?",
-            "No. She understood how damage spreads under strain."
+            "Does that frustrate you?",
+            "When teaching. I have to slow the knowledge down enough to speak."
           ],
           [
-            "Did you listen?",
-            "After the impressive repair failed beside the neglected hole."
+            "Who taught you?",
+            "My grandmother. She let me watch before asking me to perform."
           ],
           [
-            "Do you teach that now?",
-            "Yes, with the embarrassing part included."
+            "Do you teach that way?",
+            "I try. Her patience took years to appreciate properly."
           ]
         ]
       },
       {
-        "title": "A knot contest",
-        "opening": "Have you ever competed at tying knots?",
-        "first": "A child challenged me to tie a knot blindfolded. I agreed before asking which knot.",
+        "title": "Zella's silent contest",
+        "opening": "Do you ever compete without telling the other person?",
+        "first": "I used to race another worker finishing a length. She was unaware and therefore infuriatingly relaxed.",
         "replies": [
           [
             "Did you win?",
-            "We discovered he'd invented one."
+            "Sometimes. She enjoyed every afternoon, so the greater victory may have been hers."
           ],
           [
-            "Could you reproduce it?",
-            "Not without becoming equally confused."
+            "Did you tell her?",
+            "She laughed and asked whether there were prizes."
           ],
           [
-            "Was he pleased?",
-            "Enormously. I prefer that sort of defeat."
+            "Were there?",
+            "Only tired fingers. Poorly organised competition."
           ]
         ]
       }
     ],
     "greetings": [
-      "Zella. I mend nets and collect useful scraps. Some people reverse those priorities in describing me.",
-      "I'm Corin. I'll hear your version.",
-      "Corin! I've found a use for something everyone wanted thrown away.",
-      "That sounds satisfying.",
-      "A dragon makes my idea of useful cord rather inadequate.",
-      "I'm Corin. Aurelius isn't in need of tying up."
+      "Zella. If you're tangled in something, start by stopping the pulling.",
+      "Corin. Practical advice for many things.",
+      "Corin! You've arrived without a knot for me.",
+      "Only conversational ones.",
+      "A dragon. I can see several reasons to keep loose rope out of the way.",
+      "I'm Corin. We'll mind it."
     ]
   },
   "Kip": {
@@ -10376,70 +10376,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "11-coast.txt:66",
     "topics": [
       {
-        "title": "The wonderful shard",
-        "opening": "What's the best thing you've found on the beach?",
-        "first": "I found blue glass worn smooth by water. It looked precious until someone called it an old bottle.",
+        "title": "The sea's handwriting",
+        "opening": "Do the marks in sand ever look like writing to you?",
+        "first": "Constantly. I used to invent messages. Mostly they said I was allowed to stay out longer.",
         "replies": [
           [
-            "Did that spoil it?",
-            "For a minute. Then I still liked it."
+            "Did anyone believe that?",
+            "My aunt asked whether the sea could sign the permission properly."
           ],
           [
-            "Will you keep it?",
-            "Yes. The sea did most of the work."
+            "What do they say now?",
+            "Usually that the tide's been somewhere I wasn't watching."
           ],
           [
-            "What else do you collect?",
-            "Shells with odd shapes. Only empty ones."
+            "Do you still invent messages?",
+            "Yes. Less useful ones, more interesting."
           ]
         ]
       },
       {
-        "title": "A crab's objection",
-        "opening": "Have you ever annoyed a crab?",
-        "first": "I lifted a shell and discovered its resident strongly opposed moving house.",
+        "title": "A treasure you returned",
+        "opening": "Have you ever found something and put it back?",
+        "first": "A living creature inside a shell I wanted. I was furious with it for already owning its house.",
         "replies": [
           [
-            "Did it pinch you?",
-            "Nearly. I put it back very politely."
+            "You returned it, though.",
+            "Yes. Complained all the way."
           ],
           [
-            "Do you check now?",
-            "I wait and watch before touching."
+            "Were you glad afterward?",
+            "I was glad I hadn't become the sort of person who kept it."
           ],
           [
-            "Was it frightening?",
-            "Surprising. I had mistaken a home for an object."
+            "Do you still want the shell?",
+            "A little. Doing the right thing doesn't always cure wanting."
           ]
         ]
       },
       {
-        "title": "Looking down",
-        "opening": "Do you find more by looking down than looking ahead?",
-        "first": "I find things because I look down. I miss things because I look down. It's an inconvenient system.",
+        "title": "Kip's distant shore",
+        "opening": "Do you wonder what's on the opposite shore?",
+        "first": "Every day. I know there are places beyond what I can see, but knowing doesn't stop me staring.",
         "replies": [
           [
-            "What have you missed?",
-            "A friend waving for quite a long time."
+            "Would you go?",
+            "Yes. With someone who understood boats better than my imagination does."
           ],
           [
-            "Could you alternate?",
-            "That's my new method. Ground, horizon, ground."
+            "What would you look for first?",
+            "What children there pick up and call treasure."
           ],
           [
-            "Has it helped?",
-            "I noticed you arriving, didn't I?"
+            "Why that?",
+            "I'd like to know what I've walked past without noticing."
           ]
         ]
       }
     ],
     "greetings": [
-      "Kip! Have you seen anything shiny on the shore?",
-      "I'm Corin. Nothing I can identify yet.",
-      "Corin! I found something that might be treasure.",
-      "How certain is might?",
-      "A dragon! That's better than anything I've found today.",
-      "I'm Corin. His name is Aurelius."
+      "Kip. Are you looking for something, or just looking?",
+      "Corin. Just looking sounds good.",
+      "Corin! I've found something ordinary in an interesting way.",
+      "That's a promising description.",
+      "A dragon. I don't think I can improve on your discovery today.",
+      "I'm Corin. I wasn't keeping score."
     ]
   },
   "Astrid": {
@@ -10449,70 +10449,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:1",
     "topics": [
       {
-        "title": "The first winter",
-        "opening": "What was your first winter here like?",
-        "first": "My first winter here, I stored plenty of food and nowhere near enough fuel. I had prepared for hunger and overlooked cold.",
+        "title": "The winter you remember",
+        "opening": "Which winter stays in your mind?",
+        "first": "One when neighbours began checking on each other without making it an occasion. I remember the knocking more than the snow.",
         "replies": [
           [
-            "Who helped you?",
-            "Neighbours who remembered their own first winter."
+            "Were things bad?",
+            "Bad enough that pride became less useful than company."
           ],
           [
-            "Did you repay them?",
-            "Helped when I could. They hadn't opened an account."
+            "Did everyone accept help?",
+            "Not gracefully. We helped anyway."
           ],
           [
-            "What do you check now?",
-            "Food, fuel, and who might be too proud to ask."
+            "Does that still happen?",
+            "Yes. I'd like it to continue when the weather gives us fewer excuses."
           ]
         ]
       },
       {
-        "title": "Feeding neighbours",
-        "opening": "How do you make sure your neighbours have enough to eat?",
-        "first": "When someone needs supper, I try to make the invitation ordinary. Being helped can already feel difficult.",
+        "title": "A shopkeeper's secret",
+        "opening": "What do you know about people that they don't realise?",
+        "first": "Who buys less than usual. Who says they're not hungry. I notice without announcing it across the shop.",
         "replies": [
           [
-            "Do people refuse?",
-            "Sometimes. I leave room for them to return."
+            "What do you do?",
+            "Offer something they can accept without an audience."
           ],
           [
-            "Who cooks for you?",
-            "Runa occasionally. Her confidence exceeds her experience in interesting ways."
+            "Does anyone refuse?",
+            "Yes. I leave room for another day."
           ],
           [
-            "Do you enjoy a crowd?",
-            "With enough supplies and someone else washing bowls."
+            "Does it weigh on you?",
+            "Sometimes. It helps when somebody remembers to ask how I'm doing."
           ]
         ]
       },
       {
-        "title": "A thaw's promise",
-        "opening": "What do you look forward to when the thaw comes?",
-        "first": "The first thaw makes everyone plan too much. Mud then provides a correction.",
+        "title": "Astrid's extravagant plan",
+        "opening": "What would you do with a truly free evening?",
+        "first": "Wear something impractical and go nowhere that required checking supplies.",
         "replies": [
           [
-            "What do you look forward to?",
-            "Opening a door without bracing against the weather."
+            "Who would you go with?",
+            "People who could discuss something besides winter preparations."
           ],
           [
-            "Would you leave the snow?",
-            "For a visit. I'd miss knowing this town's habits."
+            "What would you talk about?",
+            "I don't know. Discovering would be the luxury."
           ],
           [
-            "Even the complaints?",
-            "Especially the familiar ones. I know which need attention."
+            "Have you planned it?",
+            "Only in the moments between more responsible plans."
           ]
         ]
       }
     ],
     "greetings": [
-      "Astrid. Come out of the wind before explaining that you aren't cold.",
-      "I'm Corin. I won't waste time denying it.",
-      "Corin! Warm enough to talk properly?",
-      "Getting there.",
-      "A dragon in Hollybeck. I hope you both found a manageable route.",
-      "I'm Corin; this is Aurelius. We're glad to stop."
+      "Astrid. New to Hollybeck? Tell me before pretending you aren't cold.",
+      "Corin. I'm new, and a little cold.",
+      "Corin! Good. I prefer seeing people to wondering whether they arrived.",
+      "So do the people arriving.",
+      "A dragon. He looks better prepared for winter than some travellers I've met.",
+      "I'm Corin. I'm trying to keep up."
     ]
   },
   "Sverre": {
@@ -10522,70 +10522,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:6",
     "topics": [
       {
-        "title": "Following a fence",
-        "opening": "Can a fence help you find your way through snow?",
-        "first": "In a blizzard I followed a fence toward a farmhouse. I could barely see the next post.",
+        "title": "The mountain's silence",
+        "opening": "What's the strangest sound in the mountains?",
+        "first": "Sudden silence after wind. Your ears keep expecting the noise, and you hear your own breathing as if someone else were there.",
         "replies": [
           [
-            "How did you know where it led?",
-            "I'd walked that boundary earlier. Guessing would have been dangerous."
+            "Is it peaceful?",
+            "Sometimes. Sometimes you notice how alone you've become."
           ],
           [
-            "Did you reach the house?",
-            "Yes, cold and ashamed I'd stayed out so late."
+            "Do you like being alone?",
+            "For a while. I like knowing where company is."
           ],
           [
-            "What would you change?",
-            "Turn back while I could still see the weather arriving."
+            "What do you do in that silence?",
+            "Check my direction before getting poetic about it."
           ]
         ]
       },
       {
-        "title": "A traveller's gloves",
-        "opening": "Have you ever helped a traveller who wasn't dressed for the cold?",
-        "first": "A visitor once had splendid gloves packed at the bottom of a bag and numb hands opening the straps.",
+        "title": "A young man's boast",
+        "opening": "What boast do you most regret?",
+        "first": "Said I never got lost. Spent the next journey refusing to admit I had.",
         "replies": [
           [
-            "Did you help?",
-            "Opened the bag, then explained accessible packing."
+            "How did you get back?",
+            "Someone with less experience asked why we were seeing the same ridge twice."
           ],
           [
-            "Was he grateful?",
-            "After his fingers warmed and his pride cooled."
+            "Did you listen?",
+            "After an ugly minute I still dislike remembering."
           ],
           [
-            "What belongs near the top?",
-            "What you'll need before you're comfortable unpacking everything."
+            "Do you tell young travellers?",
+            "Yes. They deserve better than my reputation polished clean."
           ]
         ]
       },
       {
-        "title": "An ordinary welcome",
-        "opening": "What makes a stranger feel welcome here?",
-        "first": "I remember a stranger offering me a dry place to sit without first asking why I'd been foolish.",
+        "title": "Sverre's soft spot",
+        "opening": "What makes you sentimental?",
+        "first": "Someone saving me a place without asking whether I'll come. I pretend not to notice.",
         "replies": [
           [
-            "Did you tell him later?",
-            "Over supper. He listened without improving my shame."
+            "Why pretend?",
+            "Habit. I've spent years sounding harder than I feel."
           ],
           [
-            "Do you offer the same?",
-            "When I can. Warmth first, questions afterward."
+            "Who does that for you?",
+            "People here. Hollybeck can be kinder than its weather suggests."
           ],
           [
-            "Did you see him again?",
-            "No. I still remember where he put the spare blanket."
+            "You could thank them.",
+            "I do. Badly, but with increasing practice."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sverre. Before the mountain, check what you can still change in town.",
-      "I'm Corin. I'd like to hear your advice.",
-      "Corin! A face returned from the road.",
-      "It's good to be recognised.",
-      "A dragon can face the cold differently from a rider.",
-      "I'm Corin. Aurelius is managing better than my fingers."
+      "Sverre. If you're heading into the mountains, I'd rather hear your plan than admire your confidence.",
+      "Corin. I'll bring the plan first.",
+      "Corin! Glad to hear your footsteps again.",
+      "They're glad to be here.",
+      "A dragon. Mountains still have ways of humbling wings.",
+      "I'm Corin. We'll listen before finding out."
     ]
   },
   "Runa": {
@@ -10595,70 +10595,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:11",
     "topics": [
       {
-        "title": "Your first broth",
-        "opening": "How did your first broth turn out?",
-        "first": "I put everything fragrant into my first broth. It smelled magnificent and tasted like an argument.",
+        "title": "The cook you want to become",
+        "opening": "What sort of cook would you like to be?",
+        "first": "The sort people remember when they say they were looked after. I don't need them to remember every ingredient.",
         "replies": [
           [
-            "Did Astrid eat it?",
-            "A little, then asked me to identify each flavour."
+            "Who cooks like that for you?",
+            "Astrid, when she has time. She notices if someone goes quiet."
           ],
           [
-            "Could you?",
-            "Not one. They had defeated each other."
+            "Is that cooking?",
+            "Partly. Food arrives in a person's day, not an empty room."
           ],
           [
-            "What do you do now?",
-            "Choose fewer ingredients and taste before celebrating."
+            "Do you worry about getting it wrong?",
+            "Constantly. I'm learning not to serve the worry with the meal."
           ]
         ]
       },
       {
-        "title": "The thaw",
-        "opening": "What changes here when the snow starts melting?",
-        "first": "I love the thaw and hate the mud. Apparently wanting spring involves accepting its entrance.",
+        "title": "Runa's first lie",
+        "opening": "What's the first lie you remember telling?",
+        "first": "That I'd eaten something I hated. Then I was offered another helping because I'd finished so quickly.",
         "replies": [
           [
-            "What do you do first?",
-            "Walk farther than winter allowed, then clean my boots."
+            "What did you do?",
+            "Discovered that honesty had become more attractive."
           ],
           [
-            "Does everyone celebrate?",
-            "After checking what the melting snow has damaged."
+            "Were you punished?",
+            "No. Asked to say what I meant next time."
           ],
           [
-            "Would you prefer warm weather all year?",
-            "I'd miss the excitement of the change. Briefly, perhaps."
+            "Did you?",
+            "Not always. Lessons need inconvenient amounts of practice."
           ]
         ]
       },
       {
-        "title": "Learning from Astrid",
-        "opening": "What have you learned from Astrid?",
-        "first": "Astrid lets me try things, then asks what I think went wrong. It's much harder than being told.",
+        "title": "A song from somewhere warm",
+        "opening": "Why do you like songs about summer?",
+        "first": "Because even in winter somebody remembered it would come back.",
         "replies": [
           [
-            "Does that annoy you?",
-            "Yes. Then I remember the answer longer."
+            "Do you have a favourite?",
+            "One with a ridiculous chorus. Nobody can sing it solemnly."
           ],
           [
-            "Does she make mistakes?",
-            "She admits them, which makes mine less frightening."
+            "Do you sing while cooking?",
+            "Quietly. I'm still negotiating with my own voice."
           ],
           [
-            "What would you teach someone?",
-            "How to begin again before declaring dinner ruined."
+            "Would you travel south?",
+            "I'd like to. Then come back with more than a description of the heat."
           ]
         ]
       }
     ],
     "greetings": [
-      "Runa. Astrid says enthusiasm is not a substitute for measuring. I remain under review.",
-      "I'm Corin. What are the findings?",
-      "Corin! Nobody has complained about today's cooking yet.",
-      "An encouraging report.",
-      "A dragon would require a recipe I haven't attempted.",
-      "I'm Corin. Aurelius isn't requesting an experiment."
+      "Runa. Are you visiting? I'm still collecting stories about anywhere warmer.",
+      "Corin, from Millwood. Warmer sometimes.",
+      "Corin! I've been hoping for more road news.",
+      "I'll choose the less alarming parts.",
+      "A dragon. Does he feel the cold? Sorry, I should ask your name first.",
+      "Corin. That's a perfectly reasonable question."
     ]
   },
   "Solveig": {
@@ -10668,70 +10668,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:16",
     "topics": [
       {
-        "title": "The unfinished mitten",
-        "opening": "Have you ever left a mitten unfinished?",
-        "first": "I knitted one mitten beautifully, then couldn't remember exactly how I'd shaped it.",
+        "title": "The coat passed down",
+        "opening": "What do you notice in clothes passed through a family?",
+        "first": "Different heights in the hems. Different hands in the repairs. Sometimes three lives in one coat.",
         "replies": [
           [
-            "Could you make its partner?",
-            "After several attempts. The first pair belonged to different hands entirely."
+            "Do you like that?",
+            "Yes. Unless the youngest is tired of being dressed in everybody else's history."
           ],
           [
-            "Did anyone wear them?",
-            "My niece, who regarded asymmetry as a distinction."
+            "Were you that child?",
+            "Occasionally. I wanted one thing nobody had already outgrown."
           ],
           [
-            "Do you keep notes now?",
-            "Enough to prevent another household investigation."
+            "Did you get it?",
+            "Eventually. I remember the colour better than the occasion."
           ]
         ]
       },
       {
-        "title": "Mending winter clothes",
-        "opening": "Do winter clothes need constant mending?",
-        "first": "A small hole matters when the wind finds it. People notice the cold before they notice the seam.",
+        "title": "A mender's eyesight",
+        "opening": "What do you do when your eyes get tired?",
+        "first": "Stop. A revolutionary method I resisted for years.",
         "replies": [
           [
-            "Can you fix it quickly?",
-            "Often, if brought before it tears further."
+            "Why resist?",
+            "Because unfinished work looked like failure, even when my hands were shaking."
           ],
           [
-            "Do you dislike the work?",
-            "No. A useful repair gives an immediate result."
+            "What changed?",
+            "Someone made me look at what rushing had done."
           ],
           [
-            "What's your favourite material?",
-            "Wool that has been cared for. It repays the attention."
+            "Do you rest easily now?",
+            "More easily. I still need reminding that sitting isn't a character flaw."
           ]
         ]
       },
       {
-        "title": "Tea that never boiled",
-        "opening": "Have you ever waited ages for water that wasn't heating?",
-        "first": "I once knitted through the time I'd meant to heat water. The kettle had been sitting above a dead fire.",
+        "title": "Solveig's summer box",
+        "opening": "Do you keep anything for warmer weather?",
+        "first": "A light dress folded away. Every winter I wonder whether I imagined needing it.",
         "replies": [
           [
-            "Did you notice the quiet?",
-            "Only when I grew thirsty enough to investigate."
+            "Does it still fit?",
+            "We'll see. I prefer not to conduct that inquiry while it's snowing."
           ],
           [
-            "Was the knitting finished?",
-            "A fine cuff and no tea."
+            "Why keep it?",
+            "Because I like the person I feel like wearing it."
           ],
           [
-            "Have you repeated that?",
-            "I'm refusing to provide a total."
+            "Is that person different?",
+            "A little less prepared for disaster."
           ]
         ]
       }
     ],
     "greetings": [
-      "Solveig. Warm clothing is worth discussing before your teeth begin doing the talking.",
-      "I'm Corin. I'll take that advice early.",
-      "Corin! Seams holding and fingers working?",
-      "Both, fortunately.",
-      "Your companion doesn't appear to need a scarf.",
-      "I'm Corin. Aurelius has considerable advantages in the cold."
+      "Solveig. Let me know if the cold's getting through; bravery makes poor lining.",
+      "Corin. I won't argue with that.",
+      "Corin! Still keeping yourself warm enough?",
+      "I'm doing my best.",
+      "A dragon. At least one of you arrived in a sensible coat.",
+      "I'm Corin. His came fitted."
     ]
   },
   "Nils": {
@@ -10741,70 +10741,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:21",
     "topics": [
       {
-        "title": "Snow before breakfast",
-        "opening": "Do you have to clear snow before breakfast?",
-        "first": "I once postponed clearing fresh snow until after breakfast. By then it had hardened under traffic.",
+        "title": "The neighbour with the broom",
+        "opening": "Who helps you without being asked?",
+        "first": "An old woman who insists she's only clearing her own step. Her step has expanded halfway down the lane.",
         "replies": [
           [
-            "Was it much harder?",
-            "Enough that breakfast became my least favourite memory."
+            "Do you thank her?",
+            "She pretends not to hear. Then clears a little more."
           ],
           [
-            "Do you always begin early?",
-            "When I can. Fresh trouble is easier than settled trouble."
+            "Why won't she admit helping?",
+            "I think she'd rather be useful than praised."
           ],
           [
-            "Do neighbours help?",
-            "Yes, especially when their door is involved."
+            "Does it make a difference?",
+            "On bad mornings, more than she lets herself believe."
           ]
         ]
       },
       {
-        "title": "A cleared path",
-        "opening": "Is there always somebody keeping the paths clear?",
-        "first": "A clear lane lets people do ordinary things again. Nobody praises it as dramatically as a new building.",
+        "title": "Nils's weather prediction",
+        "opening": "What's your most reliable sign of bad weather?",
+        "first": "Everyone telling me it probably won't be much. Hope becomes remarkably loud before snowfall.",
         "replies": [
           [
-            "Does that bother you?",
-            "Only when someone assumes it clears itself."
+            "Do you say it too?",
+            "Of course. I like being wrong in company."
           ],
           [
-            "What do you enjoy?",
-            "Seeing a neighbour make a trip they'd postponed."
+            "Can you really predict it?",
+            "Not precisely. I prepare for being surprised."
           ],
           [
-            "Would you choose other work?",
-            "On bitter mornings, absolutely. Then the work starts and I settle."
+            "Isn't that tiring?",
+            "Less than pretending surprise was impossible."
           ]
         ]
       },
       {
-        "title": "Predicting the thaw",
-        "opening": "Can you tell when the thaw is coming?",
-        "first": "Everyone asks when the thaw will come. I give them the same answer as the sky: eventually.",
+        "title": "A path for one person",
+        "opening": "Would you clear a route hardly anyone uses?",
+        "first": "If one person needs it, yes. Popularity is a poor test for getting home.",
         "replies": [
           [
-            "Can't you tell?",
-            "Sometimes signs help. They don't sign a contract."
+            "Have people complained?",
+            "About the time. Usually from a perfectly clear path."
           ],
           [
-            "Do people want certainty?",
-            "Especially when certainty would be convenient."
+            "What do you tell them?",
+            "Who uses it. A name works better than a principle sometimes."
           ],
           [
-            "What do you hope for?",
-            "A gradual melt and fewer people testing ice to prove a point."
+            "Do they understand?",
+            "Often enough to keep me explaining."
           ]
         ]
       }
     ],
     "greetings": [
-      "Nils. If you've found a slippery patch, describe where before describing the fall.",
-      "I'm Corin. No fall to report yet.",
-      "Corin! Still upright. Good.",
-      "I'm trying to maintain the record.",
-      "A dragon's feet will leave an unmistakable report in snow.",
-      "I'm Corin; this is Aurelius. We'll avoid the narrowest lanes."
+      "Nils. Watch the ground while saying hello; it occasionally objects to visitors.",
+      "Corin. I'll divide my attention.",
+      "Corin! You found the safe footing again.",
+      "Mostly through caution.",
+      "A dragon. That's quite a footprint to plan around.",
+      "I'm Corin. We'll leave you room to work."
     ]
   },
   "Freya": {
@@ -10814,70 +10814,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:26",
     "topics": [
       {
-        "title": "The red scarf",
-        "opening": "Is there a story behind your red scarf?",
-        "first": "I wore a red scarf while playing hide-and-seek in snow. My brother found me every time.",
+        "title": "The snowball truce",
+        "opening": "Have you ever lost a snowball fight spectacularly?",
+        "first": "My brother negotiated a truce, then stood behind me when his friends resumed. A gifted diplomat.",
         "replies": [
           [
-            "Did you change scarves?",
-            "No. I changed games. Some victories cost too much."
+            "Did you forgive him?",
+            "After I put snow in his boots."
           ],
           [
-            "Were you angry?",
-            "Until he explained how visible I'd made myself."
+            "Did that settle it?",
+            "Until the following winter. Family keeps excellent records."
           ],
           [
-            "Do you still wear red?",
-            "Certainly. Being found is useful when I'm not playing."
+            "Would you play now?",
+            "If nobody insisted I behave according to my age."
           ]
         ]
       },
       {
-        "title": "A sibling's challenge",
-        "opening": "Do you and your siblings challenge one another?",
-        "first": "My brother challenged me to stay silent all morning. He lasted six minutes before asking whether I was still playing.",
+        "title": "A letter never finished",
+        "opening": "Why do you have trouble finishing letters?",
+        "first": "I keep waiting for news important enough. Meanwhile whole ordinary weeks go unreported.",
         "replies": [
           [
-            "Did you win?",
-            "With considerable effort not to laugh."
+            "What would you write today?",
+            "That I met someone called Corin who asked an awkwardly useful question."
           ],
           [
-            "What was the prize?",
-            "Choosing supper. I made a strategically irritating choice."
+            "I'd be honoured.",
+            "Then I might actually finish one."
           ],
           [
-            "Do you often compete?",
-            "Enough to keep ordinary chores unnecessarily interesting."
+            "Do you like ordinary letters yourself?",
+            "Very much. I've been applying the wrong rule to my own life."
           ]
         ]
       },
       {
-        "title": "A quiet snowfall",
-        "opening": "Do you like watching snow fall when everything's quiet?",
-        "first": "I like the first quiet after fresh snow. Before anyone begins moving it into other people's way.",
+        "title": "Freya's dream of warmth",
+        "opening": "Would you move somewhere without snow?",
+        "first": "For a winter, perhaps. I'd like to miss it voluntarily.",
         "replies": [
           [
-            "Do you go out immediately?",
-            "Sometimes. Other times I watch from somewhere warm."
+            "What would you miss?",
+            "The hush after a fresh fall. And having an excellent reason to stay indoors."
           ],
           [
-            "What do you notice?",
-            "How familiar shapes look strange under a white edge."
+            "What wouldn't you miss?",
+            "The moment cold finds the gap between glove and sleeve."
           ],
           [
-            "Would you paint it?",
-            "I'd rather learn to describe it without saying 'beautiful' six times."
+            "Would you return?",
+            "I think so. I want to test the thought, not swear an oath to it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Freya. If my brother sent you to ask where I've hidden something, I deny everything.",
-      "I'm Corin. No investigation today.",
-      "Corin! Arriving without my brother is a promising start.",
-      "I'll try not to disappoint you.",
-      "A dragon! He'll never believe this when I tell him.",
-      "I'm Corin. My companion's name is Aurelius."
+      "Freya. You've picked a brisk place to stop for conversation.",
+      "Corin. I'll try to make it worthwhile.",
+      "Corin! Still interested in our cold little corner?",
+      "More than ever.",
+      "A dragon. That's an ambitious answer to winter.",
+      "I'm Corin. He's more companion than heating arrangement."
     ]
   },
   "Oskar": {
@@ -10887,70 +10887,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:31",
     "topics": [
       {
-        "title": "Your own wet boots",
-        "opening": "Have you ever broken one of your own rules about wet boots?",
-        "first": "I told a visitor to clean his boots and then walked in with mine covered in snow.",
+        "title": "The winter wedding",
+        "opening": "Did people really marry in the deepest winter?",
+        "first": "Yes. Fewer guests could travel, which some couples considered an advantage.",
         "replies": [
           [
-            "Did he point it out?",
-            "Handed me a cloth without a word. Devastating courtesy."
+            "Did you?",
+            "I appreciated everyone who came. Also the people who sent food instead of advice."
           ],
           [
-            "Were you embarrassed?",
-            "Enough to clean both sets of tracks."
+            "Was it a good day?",
+            "Very. We remember the cold as funny now. It wasn't at the time."
           ],
           [
-            "Do you still give that advice?",
-            "Yes. I check my own feet first."
+            "What do you remember best?",
+            "My partner's face when the door opened. Everything else had to share space with that."
           ]
         ]
       },
       {
-        "title": "Winter memories",
-        "opening": "Which winter do you remember most clearly?",
-        "first": "People call old winters worse. I remember being younger and having worse coats.",
+        "title": "The old man's new friend",
+        "opening": "Is it difficult making friends when you're older?",
+        "first": "Only if you insist everyone arrive with years of shared history. New people can't help being new.",
         "replies": [
           [
-            "Do you think they exaggerate?",
-            "Sometimes. Memory compares feelings more readily than measurements."
+            "Have you made any lately?",
+            "Yes. Someone young enough to disagree without borrowing my manners."
           ],
           [
-            "Were there terrible winters?",
-            "Certainly. We shouldn't need to enlarge them."
+            "Do you enjoy that?",
+            "Usually after I've finished being offended."
           ],
           [
-            "What do you remember fondly?",
-            "Who sat with us when the weather kept everyone close."
+            "What makes friendship work?",
+            "Coming back after an ordinary conversation. Not every meeting needs a revelation."
           ]
         ]
       },
       {
-        "title": "A visitor's pace",
-        "opening": "Do visitors ever try to hurry you?",
-        "first": "Visitors often rush a conversation because they assume I tire easily. Some of them exhaust me explaining that.",
+        "title": "A thing you changed your mind about",
+        "opening": "What have you changed your mind about late in life?",
+        "first": "Used to think leaving home meant rejecting it. Then someone I loved left and kept loving us.",
         "replies": [
           [
-            "Would you rather they asked?",
-            "Yes. I can generally describe my own condition."
+            "Was that hard to accept?",
+            "Harder to admit I'd been unfair."
           ],
           [
-            "Do you enjoy long visits?",
-            "With people interested in hearing an answer."
+            "Did you tell them?",
+            "Yes. I'd spent enough years expecting the young to do all the apologising."
           ],
           [
-            "May I come again?",
-            "Please. We can decide the length when you arrive."
+            "Did it help?",
+            "It gave their return visits more room to be happy."
           ]
         ]
       }
     ],
     "greetings": [
-      "Oskar. You can stamp snow off your boots without apologising to the floor.",
-      "I'm Corin. I'll do both if necessary.",
-      "Corin! Come share an ordinary moment.",
-      "I'd welcome one.",
-      "A dragon. Give an old man time to arrange a suitable expression.",
-      "I'm Corin. Aurelius isn't in a hurry."
+      "Oskar. You look new. Don't worry; the cold introduces itself thoroughly.",
+      "Corin. It already has.",
+      "Corin! You're beginning to move like someone who knows the ground.",
+      "With appropriate suspicion.",
+      "A dragon. Well, I've lived long enough for a new surprise.",
+      "I'm Corin. I'm glad it's a welcome one."
     ]
   },
   "Edda": {
@@ -10960,70 +10960,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:36",
     "topics": [
       {
-        "title": "The roof repair",
-        "opening": "How did you manage when the roof needed repairing?",
-        "first": "I postponed a small roof repair until rain made the decision expensive.",
+        "title": "The room kept ready",
+        "opening": "Do you keep a place ready for visitors?",
+        "first": "A blanket, mostly. Keeping an entire room untouched made me feel as though I was waiting instead of living.",
         "replies": [
           [
-            "Did it damage much?",
-            "Enough to erase the savings I imagined I'd made."
+            "Did someone stop visiting?",
+            "They moved farther away. Nobody had done anything wrong, which made being sad feel foolish."
           ],
           [
-            "Who repaired it?",
-            "A neighbour with the right experience. I stopped guessing."
+            "It wasn't foolish.",
+            "I know that more kindly now."
           ],
           [
-            "What did you learn?",
-            "Ask before a small problem begins choosing for you."
+            "Do they still come?",
+            "When they can. I want them welcomed, not charged for the months between."
           ]
         ]
       },
       {
-        "title": "Saving for pleasure",
-        "opening": "Do you ever save money for something you simply want?",
-        "first": "Every time I save for something pleasant, the house invents a need.",
+        "title": "Edda's extravagant cup",
+        "opening": "What's your most unnecessary possession?",
+        "first": "A cup far too delicate for my usual hands. I bought it on a day I wanted to be someone else.",
         "replies": [
           [
-            "What were you saving for?",
-            "A visit to family. Less urgent than a roof, more important than I admitted."
+            "Do you use it?",
+            "Yes. Turns out the same person can drink from different cups."
           ],
           [
-            "Will you still go?",
-            "Yes, when I can. I won't let the plan disappear quietly."
+            "Has it broken?",
+            "Not yet. I try not to make enjoying it a waiting period for disaster."
           ],
           [
-            "Would you leave the house?",
-            "For a visit, gladly. Permanently is another question."
+            "Would you buy it again?",
+            "I would. That still surprises me."
           ]
         ]
       },
       {
-        "title": "A room repainted",
-        "opening": "Can repainting a room make much difference?",
-        "first": "I changed a room's colour and discovered how much I'd disliked the old one.",
+        "title": "The neighbour's argument",
+        "opening": "Do you get involved in neighbours' quarrels?",
+        "first": "Less than I used to. Hearing one side can make you very helpfully wrong.",
         "replies": [
           [
-            "Why hadn't you changed it?",
-            "It was serviceable. I had mistaken that for a rule."
+            "Have you been wrong?",
+            "Loudly. I apologised less loudly, which wasn't fair either."
           ],
           [
-            "What did you choose?",
-            "A warmer shade that looks cheerful in winter light."
+            "What do you do now?",
+            "Ask whether they want help or company."
           ],
           [
-            "Was it worth the work?",
-            "I enjoy it every morning. A fair return."
+            "Is that enough?",
+            "Often. People don't always need an amateur judge."
           ]
         ]
       }
     ],
     "greetings": [
-      "Edda. If you hear a repair estimate in my voice, forgive me. Houses are expensive listeners.",
-      "I'm Corin. I won't request any renovations.",
-      "Corin! A visitor with no ladder.",
-      "A modest but dependable advantage.",
-      "A dragon is a cheerful distraction from roof worries.",
-      "I'm Corin. Aurelius can remain outside the fragile parts."
+      "Edda. If you're looking for a warm welcome, I can provide the welcome immediately.",
+      "Corin. I'll appreciate that part.",
+      "Corin! Good to see you back among us.",
+      "Good to be here.",
+      "A dragon. I hope he doesn't mistake every roof for a landing place.",
+      "I'm Corin. We'll be careful."
     ]
   },
   "Fennel": {
@@ -11033,70 +11033,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:41",
     "topics": [
       {
-        "title": "Herbs in winter",
-        "opening": "How do you keep herbs through the winter?",
-        "first": "Growing herbs here involves shelter, timing, and accepting that some plants dislike my ambitions.",
+        "title": "The plant with the wrong name",
+        "opening": "Have you ever named a plant incorrectly for years?",
+        "first": "One my aunt named after an unpleasant neighbour. I discovered much later it wasn't the accepted term.",
         "replies": [
           [
-            "What grows best?",
-            "The varieties suited to the cold. Predictable, but I tested others anyway."
+            "Did you use it publicly?",
+            "To someone who knew the neighbour. A complicated afternoon."
           ],
           [
-            "Were the tests successful?",
-            "Enough failures to improve my respect for neighbours' advice."
+            "Was your aunt embarrassed?",
+            "Not remotely. She maintained the resemblance."
           ],
           [
-            "Why keep trying?",
-            "A small success smells particularly good after winter."
+            "What do you call it now?",
+            "The proper name. Quietly, the other one survives."
           ]
         ]
       },
       {
-        "title": "The open back door",
-        "opening": "What happens when someone leaves the back door open?",
-        "first": "I once forgot the back door while carrying supplies. Spent the evening complaining about an inexplicable draught.",
+        "title": "Fennel's impatience",
+        "opening": "What makes you impatient?",
+        "first": "People telling me growing things teaches patience. Mostly it gives me opportunities to discover I haven't enough.",
         "replies": [
           [
-            "Who found it?",
-            "Bjorn, with considerable restraint."
+            "Do you enjoy it?",
+            "Yes. Enjoyment and serenity aren't the same trade."
           ],
           [
-            "Did anything get in?",
-            "Mostly cold. Fortunately."
+            "What do you do while waiting?",
+            "Something else, if I'm sensible."
           ],
           [
-            "Do you check now?",
-            "Every evening. Repetition has become cheaper than another frozen kitchen."
+            "Are you sensible?",
+            "Intermittently. Bjorn could provide references."
           ]
         ]
       },
       {
-        "title": "Home before dusk",
-        "opening": "Why do you like getting home before dusk?",
-        "first": "I enjoy the moment the evening chores are done and the door is fastened.",
+        "title": "The meal that felt like home",
+        "opening": "When do you feel most at home?",
+        "first": "When Bjorn asks me to taste something and really wants my answer, not approval.",
         "replies": [
           [
-            "Doesn't that feel restrictive?",
-            "It feels comfortable. Your preferred hour may be different."
+            "Are you blunt?",
+            "Too blunt sometimes. I'm learning the difference between honest and hurried."
           ],
           [
-            "Do you ever stay out?",
-            "For company I trust and a sensible way home."
+            "Does he mind?",
+            "He tells me. That's part of being at home too."
           ],
           [
-            "What do you do indoors?",
-            "Read, prepare herbs, and stop pretending every minute needs employment."
+            "What if you disagree?",
+            "We eat it anyway and continue the argument comfortably."
           ]
         ]
       }
     ],
     "greetings": [
-      "Fennel. I prefer getting home before dark. You may call it cautious after I've shut the door.",
-      "I'm Corin. Cautious sounds sensible here.",
-      "Corin! Still time for a conversation before I worry about the light.",
-      "I'll respect your schedule.",
-      "A dragon is reassuring, but I'd still watch the road.",
-      "I'm Corin. Aurelius and I do both."
+      "Fennel. You can ask about herbs, but I reserve the right to talk about something else.",
+      "Corin. That sounds fair.",
+      "Corin! Come with a question that isn't about frost.",
+      "I'll try.",
+      "A dragon. I suddenly feel protective of every growing thing I know.",
+      "I'm Corin. He'll keep his fire to himself here."
     ]
   },
   "Bjorn": {
@@ -11106,70 +11106,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:46",
     "topics": [
       {
-        "title": "The second helping",
-        "opening": "How do you decide who needs a second helping?",
-        "first": "I used to offer second helpings until people surrendered. Fennel explained that wasn't quite the same as generosity.",
+        "title": "A recipe from a quarrel",
+        "opening": "Have you ever invented food while angry?",
+        "first": "Made a very vigorous dough after an argument. Fennel said it was the best bread I'd produced.",
         "replies": [
           [
-            "Did you listen?",
-            "After remembering meals where I'd felt trapped."
+            "Did that make you angrier?",
+            "For a moment. Then it became difficult to remain impressive."
           ],
           [
-            "What do you do now?",
-            "Offer once and believe the answer."
+            "What was the argument?",
+            "I've forgotten. We remember the bread."
           ],
           [
-            "Do you still cook too much?",
-            "Frequently. I've made peace with tomorrow's lunch."
+            "Would you recommend the method?",
+            "No. Too many ingredients outside the kitchen."
           ]
         ]
       },
       {
-        "title": "A proper broth",
-        "opening": "What makes a really good broth?",
-        "first": "A proper broth tastes of what you put in it, rather than everything you could find.",
+        "title": "The cook's empty chair",
+        "opening": "Do you notice when someone isn't at the table?",
+        "first": "Immediately. I cook the old quantity before remembering who's away.",
         "replies": [
           [
-            "Have you made that mistake?",
-            "An enthusiastic attempt involving far too many herbs."
+            "What do you do with the extra?",
+            "Share it. Food is a practical way of admitting I miss someone."
           ],
           [
-            "Could you rescue it?",
-            "Only by making an enormous amount of plainer broth."
+            "Do you tell them?",
+            "Sometimes. A parcel says it without demanding they come home."
           ],
           [
-            "Who ate it?",
-            "Neighbours who now ask how much I've made before accepting."
+            "Does Fennel understand?",
+            "Yes. He doesn't call the extra a mistake."
           ]
         ]
       },
       {
-        "title": "Cooking for grief",
-        "opening": "Can cooking help when someone is grieving?",
-        "first": "When someone is grieving, I bring food they can warm easily. I don't expect a conversation in return.",
+        "title": "Bjorn's best meal out",
+        "opening": "What's the best meal someone else has cooked for you?",
+        "first": "One where they didn't apologise for every dish. They let me enjoy being a guest.",
         "replies": [
           [
-            "Who taught you that?",
-            "Someone who did the same for me."
+            "Do people apologise often?",
+            "They imagine I'm secretly judging. Usually I'm delighted not to be washing the pan."
           ],
           [
-            "Do people appreciate it?",
-            "Usually. I ask what they can actually use."
+            "Would you say if it was bad?",
+            "Only if the information could help, kindly."
           ],
           [
-            "Why not stay and help?",
-            "Sometimes they want that. Sometimes the kindest visit is short."
+            "What do you praise?",
+            "What I honestly liked. There's usually something."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bjorn. If you've already eaten, say so before I mistake politeness for appetite.",
-      "I'm Corin. I'll be honest about both.",
-      "Corin! Company is welcome even when supper isn't ready.",
-      "That's why I came.",
-      "A dragon would require advance notice and several larger pots.",
-      "I'm Corin. Aurelius isn't expecting you to feed us."
+      "Bjorn. If you're cold, say so. It's the easiest problem to admit here.",
+      "Corin. A little, yes.",
+      "Corin! Have you been looking after yourself?",
+      "With varying competence.",
+      "A dragon. I ought to ask what counts as a modest appetite.",
+      "I'm Corin. I haven't found that limit yet."
     ]
   },
   "Iris": {
@@ -11179,70 +11179,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "12-winter.txt:51",
     "topics": [
       {
-        "title": "Firewood indoors",
-        "opening": "Where do you keep enough firewood for winter?",
-        "first": "One winter the outer door froze shut with my dry wood beyond it. I rearranged the stores before the next snowfall.",
+        "title": "The winter diary",
+        "opening": "Why do you keep a diary?",
+        "first": "So winter doesn't become one long complaint in my memory. I write down something that actually happened.",
         "replies": [
           [
-            "How did you keep warm?",
-            "Burned spare wood from a broken stool. Not an ideal plan."
+            "Even dull things?",
+            "Especially those. A laugh, a visitor, a meal that turned out."
           ],
           [
-            "Was anyone hurt?",
-            "No. Mostly cold and cross."
+            "Do you reread it?",
+            "Sometimes. I'm often kinder to an old day than I was while living it."
           ],
           [
-            "What do you check now?",
-            "What I can reach when a door refuses cooperation."
+            "Would you let someone read it?",
+            "Not yet. It isn't written to defend itself."
           ]
         ]
       },
       {
-        "title": "A neighbour's errand",
-        "opening": "Do you run errands for the neighbours?",
-        "first": "A neighbour kept visiting to borrow kindling. I finally realised the tea mattered more than the wood.",
+        "title": "Iris's secret fear",
+        "opening": "What are you afraid people will notice about you?",
+        "first": "How often I'm unsure. Everyone seems to expect a settled opinion by my age.",
         "replies": [
           [
-            "Did you tell her?",
-            "I began inviting her directly."
+            "Do they really?",
+            "Perhaps not. I may be providing both sides of the pressure."
           ],
           [
-            "Did she keep coming?",
-            "Yes, without having to invent a shortage."
+            "What do you do?",
+            "Ask questions anyway. The embarrassment generally passes."
           ],
           [
-            "Do you miss those visits?",
-            "When the house is quiet. I visit others now too."
+            "Does it get easier?",
+            "With people who answer without making me feel small."
           ]
         ]
       },
       {
-        "title": "The spring list",
-        "opening": "What do you want to do when spring comes?",
-        "first": "I write a winter list of repairs for spring. By spring, some entries look like accusations.",
+        "title": "The first day of thaw",
+        "opening": "What do you do on the first day that feels like spring?",
+        "first": "Go outside too lightly dressed and spend the afternoon claiming it's lovely.",
         "replies": [
           [
-            "Do you finish them all?",
-            "The necessary ones first. The heroic plans receive reconsideration."
+            "Why not fetch a coat?",
+            "Because I've made a declaration."
           ],
           [
-            "Who helps you?",
-            "Neighbours with skills I lack. I return what help I can."
+            "Does anyone believe you?",
+            "No. They let me enjoy my stubbornness briefly."
           ],
           [
-            "What's a pleasant task?",
-            "Opening the house to mild air after months of guarding warmth."
+            "Wouldn't warmth be better?",
+            "Yes. Please remind me when the occasion comes."
           ]
         ]
       }
     ],
     "greetings": [
-      "Iris. Come in if you've time; doorways make poor sitting rooms.",
-      "I'm Corin. I'd like to stop.",
-      "Corin! A visit that wasn't postponed until spring.",
-      "I'm glad I came.",
-      "A dragon is quite a visitor for an ordinary day.",
-      "I'm Corin. This is Aurelius, who shares the opinion."
+      "Iris. New face, unless winter has changed someone I know beyond recognition.",
+      "Corin. Genuinely new.",
+      "Corin! I know the face now, even with the cold in it.",
+      "That's comforting.",
+      "A dragon. I'd like to revise my definition of an interesting visitor.",
+      "I'm Corin. He makes a strong first impression."
     ]
   },
   "Dunstan": {
@@ -11252,89 +11252,89 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:1",
     "topics": [
       {
-        "title": "Choosing the forge",
-        "opening": "What made you choose the forge?",
-        "first": "I liked the moment rough metal began doing what I intended. Took years to make that happen reliably.",
+        "title": "The sword with a name",
+        "opening": "Should a sword have a name?",
+        "first": "Only if its owner can remember it isn't a person. I've met men kinder to their blades than their apprentices.",
         "replies": [
           [
-            "Who taught you?",
-            "A smith with no patience for explanations offered before measurements."
+            "Would you name yours?",
+            "No. I'd rather the fellow holding it answer when called."
           ],
           [
-            "Was Sela there too?",
-            "My brother preferred glass. We learned different ways of ruining a hot day's work."
+            "Does a name make it special?",
+            "To you, perhaps. It doesn't improve the edge."
           ],
           [
-            "Do you still enjoy it?",
-            "Yes. Even when I complain. Especially after a difficult piece fits."
+            "Maddock's sword already has a history.",
+            "Then add something better to it than a boast."
           ]
         ]
       },
       {
-        "title": "Your brother's trade",
-        "opening": "Do you and Sela agree about each other's work?",
-        "first": "Sela works glass in Sandspire. I tease him about fragile material; he asks why I keep buying his work.",
+        "title": "A letter to Sela",
+        "opening": "What do you write to your brother about?",
+        "first": "Orders, weather, the cost of fuel. Then Sela writes back asking whether I'm well. He knows what I've left out.",
         "replies": [
           [
-            "Do you get along?",
-            "Well enough to argue honestly. That's family at its best."
+            "Why leave it out?",
+            "Harder to put on paper. A furnace temperature doesn't reveal much of a man."
           ],
           [
-            "Do you visit often?",
-            "Less than we should. Furnaces make demanding excuses."
+            "Do you miss him?",
+            "Yes. There. Quicker than three paragraphs about coal."
           ],
           [
-            "Who chose the better trade?",
-            "Ask him. Then return for the accurate answer."
+            "Will you tell him?",
+            "I might. He'd become impossible for a week."
           ]
         ]
       },
       {
-        "title": "Equipment and habit",
-        "opening": "Can good equipment make up for bad habits?",
-        "first": "Good equipment gives you a chance. It doesn't correct where you put your feet.",
+        "title": "The blacksmith's refusal",
+        "opening": "Have you ever refused to make a weapon?",
+        "first": "A man wanted something to frighten a neighbour. Described the neighbour before the blade. Saved us both some time.",
         "replies": [
           [
-            "What should I practise?",
-            "Moving clear of danger before relying on protection."
+            "What did you tell him?",
+            "That I was busy for the foreseeable future."
           ],
           [
-            "How do I judge a blade?",
-            "Balance, sound condition, and whether you can control it."
+            "Were you afraid he'd return?",
+            "A little. Refusal doesn't come with a guarantee."
           ],
           [
-            "Do you blame a broken weapon?",
-            "I ask how it broke. Sometimes the steel deserves the blame."
+            "What if the crown asked?",
+            "Then it'd be harder. I won't pretend a principle makes a threat small."
           ]
         ]
       },
       {
-        "title": "A gift for the road",
-        "opening": "Why give equipment to someone who's only passing through?",
-        "first": "I remember needing help before I could pay for it. Someone helped anyway.",
+        "title": "The day the forge went quiet",
+        "opening": "What would make you close the forge for a day?",
+        "first": "Someone I care about asking me plainly. I spend too much time expecting them to interrupt iron.",
         "replies": [
           [
-            "Is that why you're helping me?",
-            "Partly. I've also met you. That matters."
+            "Why don't they ask?",
+            "Because I look busy. Busy can become a wall you build yourself."
           ],
           [
-            "Will you need repayment?",
-            "No. Don't turn my choice into your debt."
+            "Would you really leave work?",
+            "I'd like to think so. I've failed at it before."
           ],
           [
-            "What can I do instead?",
-            "Use what I give you carefully and return alive to complain about it."
+            "Who would you visit?",
+            "Sela. He'd say the world must be ending. Then put the kettle on."
           ]
         ]
       }
     ],
     "greetings": [
-      "Dunstan. Smith. Tell me what the blade does wrong before telling me who sold it.",
-      "I'm Corin. I'd welcome an experienced look.",
-      "Corin. You and your equipment still speaking to each other?",
-      "We've had disagreements.",
-      "A dragon, here. That's a furnace I won't be giving orders to.",
-      "I'm Corin; this is Aurelius. A sensible introduction."
+      "Dunstan. Smith. You can stop looking as though you need permission to speak.",
+      "Corin. Good. I've got a few questions.",
+      "Corin. Still carrying yourself behind that sword?",
+      "Most of me, yes.",
+      "Well. That's a dragon. I'd been enjoying an ordinary day.",
+      "I'm Corin. Ordinary's been difficult lately."
     ]
   },
   "Sela": {
@@ -11344,70 +11344,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:7",
     "topics": [
       {
-        "title": "Glass in motion",
-        "opening": "What do you watch for while you're shaping glass?",
-        "first": "Hot glass keeps moving. Hesitate without supporting it and yesterday's confidence becomes today's strange lump.",
+        "title": "The mistake that caught the light",
+        "opening": "Have you ever preferred a failed piece?",
+        "first": "A bowl slumped into a shape I'd never have chosen. I kept turning it in the light instead of throwing it away.",
         "replies": [
           [
-            "How do you learn the timing?",
-            "Practice on pieces simple enough to understand."
+            "Did you sell it?",
+            "No. Wanted to understand it without a customer deciding for me."
           ],
           [
-            "Do you still ruin things?",
-            "Of course. The furnace doesn't recognise seniority."
+            "Was it actually good?",
+            "I liked it. I'm trying to let that answer stand occasionally."
           ],
           [
-            "Can failed glass be reused?",
-            "Often. Not every mistake has to remain its first shape."
+            "Could you make it again?",
+            "Not exactly. Annoying and rather wonderful."
           ]
         ]
       },
       {
-        "title": "Dunstan's advice",
-        "opening": "Does Dunstan give you much advice?",
-        "first": "Dunstan tells me glass breaks. I remind him people visit his smithy because metal breaks too.",
+        "title": "Two brothers at supper",
+        "opening": "What were you and Dunstan like as children?",
+        "first": "He insisted on being responsible. I specialised in making that difficult.",
         "replies": [
           [
-            "Does he admit that?",
-            "In increasingly technical language."
+            "Did you get him into trouble?",
+            "Once he took the blame before discovering what I'd done. He demanded a full report afterward."
           ],
           [
-            "Do you make things together?",
-            "We exchange materials and tools. Each claims the other benefits more."
+            "Did you thank him?",
+            "I laughed. I've been trying to improve on that response ever since."
           ],
           [
-            "Do you miss living near him?",
-            "Yes. Arguments travel poorly in letters."
+            "Who's more responsible now?",
+            "We take turns claiming it. Letters are an excellent medium for untested superiority."
           ]
         ]
       },
       {
-        "title": "Making protection",
-        "opening": "How did you start making glass that could protect someone?",
-        "first": "The Glass Shield uses a field to turn force aside. Treating it like an ordinary metal shield misunderstands the work.",
+        "title": "A shield you can see through",
+        "opening": "Why make a shield from glass?",
+        "first": "I wanted protection that didn't shut out what was coming. The field does the hard work; the glass gives it form.",
         "replies": [
           [
-            "Does carrying it protect me?",
-            "You must raise its field with B during battle."
+            "Does it work by itself?",
+            "No. Raise the field with B in battle. It can't make the decision for you."
           ],
           [
-            "Can it replace moving away?",
-            "No. Avoid what you can; use protection deliberately."
+            "Is it delicate?",
+            "Treat it properly. The field turns force aside; that doesn't make care unnecessary."
           ],
           [
-            "Are you proud of it?",
-            "Very. I'd be prouder to know it brought someone home."
+            "What would make you proud of it?",
+            "Someone coming back annoyed about an ordinary problem because they survived the extraordinary one."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sela. Glassmaker. If Dunstan sent you, I expect his description needs correcting.",
-      "I'm Corin. I'll let you speak for yourself.",
-      "Corin! Come through before I begin explaining a furnace to myself.",
-      "I'd like to hear the human version.",
-      "A dragon's fire and a glass furnace are very different arrangements.",
-      "I'm Corin. Aurelius isn't offering a demonstration indoors."
+      "Sela. Glassmaker. If you're lost, you're welcome to remain lost here a moment.",
+      "Corin. I'd like to ask about your work.",
+      "Corin! You found the place again.",
+      "I remembered the company.",
+      "A dragon. Please spare my brother the comparison with his furnace.",
+      "I'm Corin. I'll try to resist it too."
     ]
   },
   "Meriel": {
@@ -11417,70 +11417,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:12",
     "topics": [
       {
-        "title": "Explaining a price",
-        "opening": "How do you explain the price of handmade glass?",
-        "first": "Customers see a cup and ask why it costs more than another. I explain the work before defending the number.",
+        "title": "The piece a child chose",
+        "opening": "Do children choose differently from adults?",
+        "first": "A child chose the smallest piece because it looked lonely. Her father kept trying to buy something impressive.",
         "replies": [
           [
-            "Do they understand?",
-            "Sometimes. Sometimes they simply wanted the cheaper cup."
+            "What did you do?",
+            "Asked which one the gift was for. The child answered before he could."
           ],
           [
-            "Does that bother you?",
-            "No. Taste and budget needn't agree with my enthusiasm."
+            "Was he upset?",
+            "Briefly. Then he saw how carefully she carried it."
           ],
           [
-            "What do you enjoy selling?",
-            "A piece someone clearly intends to use."
+            "Would you choose like that?",
+            "I have. I merely explain it in more expensive words."
           ]
         ]
       },
       {
-        "title": "A gift chosen badly",
-        "opening": "Have you ever helped someone choose entirely the wrong gift?",
-        "first": "Someone asked me to choose a gift for a wife he described only as 'particular'. I asked what she actually liked.",
+        "title": "Meriel's honest window",
+        "opening": "Would you display something with a flaw?",
+        "first": "If I explain the flaw. I won't disguise it and let somebody discover it as a disappointment.",
         "replies": [
           [
-            "Could he answer?",
-            "After some thought. Green, simple shapes, nothing fragile for display."
+            "Does that lose sales?",
+            "Some. It also lets a buyer decide whether the flaw matters to them."
           ],
           [
-            "Did you find something?",
-            "Yes. He returned to say she'd used it immediately."
+            "What flaws do you like?",
+            "Slight irregularities. Evidence of a hand, not evidence of carelessness."
           ],
           [
-            "Was he surprised?",
-            "Pleasantly. Listening improved the purchase."
+            "Is there a difference?",
+            "A very important one. Sela could discuss it until tomorrow."
           ]
         ]
       },
       {
-        "title": "Working with Sela",
-        "opening": "What's Sela like to work with?",
-        "first": "Sela can explain a flaw for ten minutes while a customer is deciding whether a cup feels comfortable.",
+        "title": "A shop after closing",
+        "opening": "What's the best moment of the working day?",
+        "first": "Just after closing, when the place belongs to itself again. I can look without explaining.",
         "replies": [
           [
-            "Do you interrupt?",
-            "When needed. He appreciates it afterward."
+            "Does it feel different?",
+            "Quieter in my head, mostly."
           ],
           [
-            "Does he like selling?",
-            "He likes people understanding the work. The transaction interests him less."
+            "Do you still enjoy the glass?",
+            "Yes. That's how I know I haven't only been selling it."
           ],
           [
-            "Do you enjoy the partnership?",
-            "Yes. We notice different things a customer needs."
+            "What do you look at first?",
+            "Whatever the changing light has made unfamiliar."
           ]
         ]
       }
     ],
     "greetings": [
-      "Meriel. You may look without buying; looking carefully is rather the point.",
-      "I'm Corin. I'd like to learn what I'm seeing.",
-      "Corin! Another visit with time to look?",
-      "Yes, and time to talk.",
-      "Those scales would put a window display to shame.",
-      "I'm Corin. Aurelius isn't competing for customers."
+      "Meriel. Look as long as you like. Silence doesn't count as a purchase.",
+      "Corin. That's a pleasant policy.",
+      "Corin! Still curious about glass?",
+      "And the people around it.",
+      "A dragon. Sela will want to discuss those scales for an unreasonable length of time.",
+      "I'm Corin. I'll warn him."
     ]
   },
   "Elin": {
@@ -11490,70 +11490,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:17",
     "topics": [
       {
-        "title": "A flower in glass",
-        "opening": "Can you make a flower look alive in glass?",
-        "first": "I wanted a glass flower until I realised I preferred watching sunlight through it to owning it.",
+        "title": "The present for yourself",
+        "opening": "Why is buying something for yourself difficult?",
+        "first": "Because I start listing more sensible uses for the money. A gift for somebody else escapes the tribunal.",
         "replies": [
           [
-            "Will you still buy it?",
-            "Perhaps. Enjoying something doesn't have to become a purchase."
+            "What do you want?",
+            "Something small and beautiful that needs no further explanation."
           ],
           [
-            "What colour is your favourite?",
-            "The one that changes when you move. Unhelpful answer for a shop."
+            "Could you afford it?",
+            "Yes. I'm arguing with permission, not the price."
           ],
           [
-            "Do you visit often?",
-            "When I have time. Meriel doesn't make looking feel like a debt."
+            "Who has to give permission?",
+            "Apparently me. I'm proving a tiresome official."
           ]
         ]
       },
       {
-        "title": "Your own window",
-        "opening": "Would you like coloured glass in your own window?",
-        "first": "I'd like a little coloured glass at home, somewhere the morning light reaches.",
+        "title": "A friend's different taste",
+        "opening": "Does it bother you when a friend dislikes something you love?",
+        "first": "More than it should. I hear an opinion about a colour and somehow defend my entire personality.",
         "replies": [
           [
-            "A grand design?",
-            "No. Just enough colour to change an ordinary wall."
+            "What do you do?",
+            "Laugh, eventually. Preferably before the friendship requires repair."
           ],
           [
-            "Why morning light?",
-            "It's when I'm usually there to enjoy it."
+            "Have you done the same to them?",
+            "Yes. I'm trying to say it isn't for me instead of declaring it ugly."
           ],
           [
-            "Have you chosen anything?",
-            "Not yet. The imagining has been pleasant too."
+            "Does that help?",
+            "It leaves us both somewhere comfortable to stand."
           ]
         ]
       },
       {
-        "title": "Taking your time",
-        "opening": "Do people mind when you stop to enjoy a place?",
-        "first": "People ask what I'm waiting for when I linger. Sometimes I'm simply enjoying being somewhere.",
+        "title": "The day you noticed beauty",
+        "opening": "When do you notice beautiful things most?",
+        "first": "On days I've nearly walked past everything. Something catches my eye and I realise how far away I've been.",
         "replies": [
           [
-            "Does that annoy you?",
-            "Only when I begin explaining myself unnecessarily."
+            "Far away thinking?",
+            "Worrying, usually."
           ],
           [
-            "Do you like company while looking?",
-            "If they aren't selecting things on my behalf."
+            "Does looking fix it?",
+            "No. It gives the worry less than the whole world for a moment."
           ],
           [
-            "Could I join you?",
-            "Certainly. We can disagree about colours without consequences."
+            "Is that enough?",
+            "Sometimes enough is a smaller thing than we expected."
           ]
         ]
       }
     ],
     "greetings": [
-      "Elin. I've been looking at glass longer than I intended.",
-      "I'm Corin. Is it easy to choose?",
-      "Corin! Still undecided, in case you wondered.",
-      "I wasn't going to hurry you.",
-      "A dragon has rather distracted me from the colours.",
-      "I'm Corin. Aurelius often changes a person's plans briefly."
+      "Elin. I'm not staff. I just look convincing while being indecisive.",
+      "Corin. I'll avoid asking for prices.",
+      "Corin! You've caught me considering again.",
+      "An important occupation.",
+      "A dragon. Now I've forgotten what I was choosing.",
+      "I'm Corin. He does interrupt a plan."
     ]
   },
   "Alderic": {
@@ -11563,89 +11563,89 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:22",
     "topics": [
       {
-        "title": "Lightning and the bond",
-        "opening": "What does Lightning change about the bond?",
-        "first": "The Lightning Heartstone lets Aurelius draw on another kind of power. Both of you must learn how to use it deliberately.",
+        "title": "The keeper's first morning",
+        "opening": "What was your first morning here like?",
+        "first": "Cold. I had imagined a calling would feel more impressive. Mostly I couldn't find a dry place to put my things.",
         "replies": [
           [
-            "Does the stone command him?",
-            "No. Power doesn't transfer ownership of the creature who bears it."
+            "Did you want to leave?",
+            "Yes. I stayed one more day. Several years are built out of that decision."
           ],
           [
-            "Will it make us invincible?",
-            "No. It broadens what you can do; judgement remains necessary."
+            "What convinced you?",
+            "Someone had kept the place before me without knowing who would come next."
           ],
           [
-            "Why preserve it here?",
-            "So the knowledge and the power could be found together."
+            "Was it worth it?",
+            "You're asking me a question here. That is part of the answer."
           ]
         ]
       },
       {
-        "title": "Separate sanctuaries",
-        "opening": "Why are the Heartstones kept in separate sanctuaries?",
-        "first": "The Heartstones were kept in separate sanctuaries. A rider had to travel, learn, and encounter people beyond home.",
+        "title": "The stone and the listener",
+        "opening": "Why can't a Heartstone simply be taken like treasure?",
+        "first": "Its power belongs in the bond between rider and dragon. Possession alone doesn't teach either of you how to bear it.",
         "replies": [
           [
-            "Was it a test?",
-            "An education with real danger. I won't make the danger sound noble merely because it's old."
+            "What does this one awaken?",
+            "Lightning. Another way for Aurelius to answer danger."
           ],
           [
-            "Were the riders united?",
-            "Not always. Their disagreements deserve remembering too."
+            "Do you decide whether we deserve it?",
+            "The sanctuary has its trials. I can help you understand; I cannot live them for you."
           ],
           [
-            "Why keep teaching after Wingfall?",
-            "Because Halvard's victory shouldn't decide what future generations may learn."
+            "Could Halvard use it?",
+            "Power does not become good merely because someone strong wants it."
           ]
         ]
       },
       {
-        "title": "A keeper's doubts",
-        "opening": "Have you ever doubted what you're keeping them for?",
-        "first": "I spent years preserving lessons for someone who might never arrive. Some mornings the task felt foolish.",
+        "title": "A lesson Halvard refused",
+        "opening": "What did Halvard misunderstand about being a rider?",
+        "first": "He understood enough to betray the others. I find that harder to forgive than ignorance.",
         "replies": [
           [
-            "Why continue?",
-            "Abandoning it would have answered the question permanently."
+            "You think he knew what he was doing?",
+            "He had lived beside them. He knew there were lives beneath the titles he destroyed."
           ],
           [
-            "Did anyone help you?",
-            "People whose quiet support rarely appears in grand histories."
+            "Can you be sure of his motives?",
+            "No. I can judge the choices we know he made."
           ],
           [
-            "Was meeting us worth the wait?",
-            "It gives the work a future. That is more than reassurance."
+            "Could anyone have stopped him?",
+            "Perhaps. Be careful with questions that turn every survivor into someone who failed."
           ]
         ]
       },
       {
-        "title": "What a rider owes",
-        "opening": "What does being a rider require of me?",
-        "first": "A rider owes a dragon attention and honesty. Obedience extracted through fear is a different relationship.",
+        "title": "After the last visitor",
+        "opening": "What do you do when nobody is here?",
+        "first": "Ordinary work. Eat, mend, sleep. Sacred places require a surprising amount of housekeeping.",
         "replies": [
           [
-            "What if we disagree?",
-            "Then you have something to discuss, not a defect to punish."
+            "Doesn't that feel lonely?",
+            "Sometimes. I don't consider loneliness proof that my work is noble."
           ],
           [
-            "What if I make a mistake?",
-            "Acknowledge the harm and change what caused it."
+            "Why tell me that?",
+            "Because people may call your suffering important when what you need is rest."
           ],
           [
-            "Did the old riders always manage that?",
-            "No. Their title did not make them wise by itself."
+            "What would you like for the sanctuary?",
+            "Visitors who come to learn without first being hunted."
           ]
         ]
       }
     ],
     "greetings": [
-      "Alderic. You've reached a place built to teach riders, though much of its welcome has been lost.",
-      "I'm Corin. I want to understand what remains.",
-      "Corin. The sanctuary remembers visitors less well than I do.",
-      "Then I'm glad you're here.",
-      "A living dragon. At last, these teachings have someone to address.",
-      "I'm Corin. Aurelius and I will listen together."
+      "Alderic. You may ask what this place is before deciding what it expects of you.",
+      "Corin. I'd like that very much.",
+      "Corin. You've returned with a different look about you.",
+      "I may have more questions now.",
+      "A dragon at the sanctuary again. Forgive me; I need a moment.",
+      "I'm Corin. We're both here to listen."
     ]
   },
   "Maelis": {
@@ -11655,89 +11655,89 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:28",
     "topics": [
       {
-        "title": "Your reputation",
-        "opening": "Why do people call you wicked?",
-        "first": "Someone blamed me for sour milk from a dirty pail. Apparently washing was less appealing than accusing a witch.",
+        "title": "The invitation nobody sent",
+        "opening": "Do people ever invite you to celebrations?",
+        "first": "They invite me when something goes wrong. Apparently my talents become respectable once the roof leaks.",
         "replies": [
           [
-            "Did you answer the accusation?",
-            "Suggested hot water. They were disappointed by the lack of ceremony."
+            "Do you go?",
+            "Sometimes. I don't require a fool to become wise before I stop the draught."
           ],
           [
-            "Did they apologise?",
-            "They stopped repeating it within earshot. A modest improvement."
+            "Doesn't it hurt?",
+            "Yes. I can admit that without granting them a very interesting curse."
           ],
           [
-            "Does it hurt you?",
-            "Sometimes. Repetition wears where one foolish remark would not."
+            "Would you accept a proper invitation?",
+            "If the food were good and nobody expected a demonstration."
           ]
         ]
       },
       {
-        "title": "Learning remedies",
-        "opening": "How did you learn to make remedies?",
-        "first": "My first teacher made me name what I couldn't cure before explaining what I could.",
+        "title": "A witch's education",
+        "opening": "What was the first thing you learned that frightened you?",
+        "first": "How easily a confident voice can make people believe. Including mine.",
         "replies": [
           [
-            "Why begin there?",
-            "Because frightened people may believe a promise you shouldn't make."
+            "Had you misled someone?",
+            "I sounded certain before I was. I've remembered the temptation ever since."
           ],
           [
-            "Was your teacher kind?",
-            "Direct. I learned that was sometimes the kindness I needed."
+            "How do you resist it?",
+            "By saying what I don't know while I still have the chance."
           ],
           [
-            "Do you teach others?",
-            "Those willing to listen before collecting impressive ingredients."
+            "Does that weaken your reputation?",
+            "With people who prefer a performance. They'll find one elsewhere."
           ]
         ]
       },
       {
-        "title": "Life in the marsh",
-        "opening": "Do you like living out here in the marsh?",
-        "first": "I like living where visitors have made a deliberate effort to arrive.",
+        "title": "The marsh after midnight",
+        "opening": "What keeps you awake out here?",
+        "first": "Frogs, usually. People imagine I spend midnight consulting dreadful powers. Mostly I'm considering dreadful language.",
         "replies": [
           [
-            "Does it get lonely?",
-            "Occasionally. I invite company instead of blaming the trees."
+            "Don't you like the marsh?",
+            "Very much. Affection doesn't require agreeing with its volume."
           ],
           [
-            "What do you dislike?",
-            "Damp finding its way into things I'd declared protected."
+            "Do you ever get frightened?",
+            "Of course. I investigate in daylight when possible. Being a witch isn't an obligation to be stupid."
           ],
           [
-            "Would you move to town?",
-            "And exchange frogs for neighbours discussing my laundry? Unlikely."
+            "Would town be quieter?",
+            "The frogs ask fewer personal questions."
           ]
         ]
       },
       {
-        "title": "Making a ward",
-        "opening": "What goes into making a protective ward?",
-        "first": "A ward is useful protection, not permission to become careless. People hear the first part more eagerly.",
+        "title": "The cost of kindness",
+        "opening": "Why help someone you've only just met?",
+        "first": "Because I decide what my hands are for. I needn't wait for the whole world to become grateful.",
         "replies": [
           [
-            "What does yours do?",
-            "It helps lessen harm when worn. Equip the charm; carrying a gift isn't using it."
+            "Do you expect repayment?",
+            "No. I'd ask plainly if I wanted a bargain."
           ],
           [
-            "Why give one away?",
-            "Because I can choose to help someone without selling them a mystery."
+            "What if someone abuses it?",
+            "Then I remember their name and change what I offer next time."
           ],
           [
-            "Should I still avoid attacks?",
-            "Unless you enjoy testing protection with your ribs, yes."
+            "What does your ward ask of me?",
+            "To wear it. Equip it in your Bag; even useful magic dislikes being forgotten among spare socks."
           ]
         ]
       }
     ],
     "greetings": [
-      "Maelis. If you've come to ask whether the rumours are true, choose a specific rumour.",
-      "I'm Corin. I'd rather meet you first.",
-      "Corin. Returned without a crowd carrying torches. Encouraging.",
-      "I came for a conversation.",
-      "A dragon has chosen interesting company. Or perhaps you have.",
-      "I'm Corin. Aurelius and I are working that out together."
+      "Maelis. You can ask your question without backing toward the door.",
+      "Corin. I was trying to be polite, not ready to flee.",
+      "Corin. You've survived one conversation with me and risked another.",
+      "I found the first encouraging.",
+      "A dragon. At least one of you has arrived without pretending to be ordinary.",
+      "I'm Corin. Pretending wasn't likely to work."
     ]
   },
   "Sahir": {
@@ -11747,70 +11747,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:34",
     "topics": [
       {
-        "title": "A buried landmark",
-        "opening": "Can you still find a landmark after the sand buries it?",
-        "first": "A sand drift hid a landmark I'd relied on for years. I walked past the turning while feeling experienced.",
+        "title": "A ruin in the distance",
+        "opening": "Have you ever approached a ruin and changed your mind?",
+        "first": "Yes. Something about the ground bothered me. I couldn't explain it well enough to sound impressive, so I left unimpressively.",
         "replies": [
           [
-            "How did you recover?",
-            "Stopped when the next landmark failed to appear."
+            "Did you learn whether you were right?",
+            "No. I'm content with that particular ignorance."
           ],
           [
-            "Were you far off course?",
-            "Far enough. I returned before pretending it was a shortcut."
+            "Would you tell other travellers?",
+            "What I noticed, not a monster I invented afterward."
           ],
           [
-            "What do you use now?",
-            "Several signs together. No single stone owes me permanence."
+            "Did you feel cowardly?",
+            "For a while. Then I enjoyed being alive enough to be embarrassed."
           ]
         ]
       },
       {
-        "title": "Travellers' tales",
-        "opening": "How much of a traveller's tale do you believe?",
-        "first": "People return from dangerous places and leave out how much time they spent afraid.",
+        "title": "The companion who sang",
+        "opening": "What's the best company on a difficult road?",
+        "first": "Someone who knows when to stop cheering you up. I once travelled with a man determined to improve every silence.",
         "replies": [
           [
-            "Why do you think that is?",
-            "Fear sounds less impressive after a safe meal."
+            "Was he kind?",
+            "Yes. Exhaustingly."
           ],
           [
-            "Do you leave it out?",
-            "I try not to. Someone might make plans from my story."
+            "Did you tell him?",
+            "We agreed on quiet stretches. He discovered he liked them."
           ],
           [
-            "What should I listen for?",
-            "What they actually saw, what they guessed, and when they went."
+            "Would you travel together again?",
+            "Gladly. He'd learned to hear a request without hearing rejection."
           ]
         ]
       },
       {
-        "title": "A journey refused",
-        "opening": "Have you ever refused to lead someone on a journey?",
-        "first": "I refused a journey when my companion fell ill. The customer called the delay inconvenient.",
+        "title": "Sahir's return gift",
+        "opening": "What do you bring home from a journey?",
+        "first": "A small story for each person who worried. Something they'd find funny or interesting.",
         "replies": [
           [
-            "What did you tell him?",
-            "That a sick traveller wasn't a scheduling problem to solve by shouting."
+            "Why not a souvenir?",
+            "Sometimes I do. A story travels without taking water or space."
           ],
           [
-            "Did you lose the work?",
-            "Yes. My companion recovered."
+            "Do you leave out danger?",
+            "Some. I try not to make comfort into dishonesty."
           ],
           [
-            "Would you decide differently?",
-            "No. I disliked the cost, not the decision."
+            "What would you tell me?",
+            "That asking sensible questions rarely looks heroic. It remains a good idea."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sahir. If you're considering the pyramid road, ask before setting off.",
-      "I'm Corin. I'd like to know what I'm facing.",
-      "Corin. Staying in town for a moment?",
-      "Long enough to listen.",
-      "A dragon may help on a dangerous road, but preparation still matters.",
-      "I'm Corin. Aurelius and I agree on that."
+      "Sahir. If you're planning a desert detour, I'd like to hear how much water you consider enough.",
+      "Corin. I'm willing to be corrected.",
+      "Corin! Arrived with questions again?",
+      "Safer than arriving with assumptions.",
+      "A dragon. That's useful company, provided you both know the way.",
+      "I'm Corin. We're asking before setting off."
     ]
   },
   "Olin": {
@@ -11820,70 +11820,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:39",
     "topics": [
       {
-        "title": "Packing the sled",
-        "opening": "How do you decide what goes on the sled?",
-        "first": "A sled's load needs balance, not merely enough rope. An uneven load fights every turn.",
+        "title": "The borrowed bravery",
+        "opening": "Are you braver with Signe beside you?",
+        "first": "Usually. Sometimes I only act braver and make her do the worrying for both of us.",
         "replies": [
           [
-            "Who packs yours?",
-            "Signe and I. We check each other's work."
+            "Does she notice?",
+            "Immediately. She's become an expert on my cheerful voice."
           ],
           [
-            "Have you overturned it?",
-            "Once. Repacking in snow teaches a memorable lesson."
+            "What do you do then?",
+            "Tell her the actual problem."
           ],
           [
-            "What's hardest to carry?",
-            "Whatever must stay dry while everything around it melts."
+            "Does that make you feel weaker?",
+            "No. Mostly tired of the time I wasted pretending."
           ]
         ]
       },
       {
-        "title": "The long return",
-        "opening": "Does the return journey feel longer to you?",
-        "first": "Being close to home makes a delay harder. I keep thinking of the last ordinary meal before we left.",
+        "title": "A traveller's unfinished meal",
+        "opening": "What meal do you keep imagining on the road?",
+        "first": "One where nobody asks when we must leave again. The food changes. That part doesn't.",
         "replies": [
           [
-            "What meal?",
-            "Astrid's soup. Nothing grand; that's why I want it."
+            "Who would be there?",
+            "Signe. Whoever wants to join without discussing loads."
           ],
           [
-            "Do you regret the journey?",
-            "No. I regret underestimating the final stretch."
+            "Would silence be welcome?",
+            "After the first few mouthfuls, very."
           ],
           [
-            "What keeps you going?",
-            "Signe. She notices when worry starts doing the talking."
+            "Do you like travelling?",
+            "Yes. I also like being expected somewhere warm."
           ]
         ]
       },
       {
-        "title": "Working with Signe",
-        "opening": "How do you and Signe divide the work?",
-        "first": "Signe checks the plan while I want to begin moving. We prevent different mistakes.",
+        "title": "Olin's small souvenir",
+        "opening": "Do you keep anything from your journeys?",
+        "first": "A scrap from an old packing list. Signe wrote something kind beneath the supplies.",
         "replies": [
           [
-            "Do you argue?",
-            "Certainly. Usually before doing something that needs two people."
+            "What did it say?",
+            "That's mine, if you don't mind."
           ],
           [
-            "Who's usually right?",
-            "She'll give you a remarkably detailed answer."
+            "Of course.",
+            "Thank you. Not everything precious improves by being explained."
           ],
           [
-            "Would you travel with someone else?",
-            "Not by choice. Trust is valuable luggage."
+            "Does she know you kept it?",
+            "Yes. She pretends to be embarrassed and checks it hasn't torn."
           ]
         ]
       }
     ],
     "greetings": [
-      "Olin. We brought supplies from Sandspire and encountered more winter than intended.",
-      "I'm Corin. Tell me what happened.",
-      "Corin! A familiar face on this trail helps.",
-      "I wanted to check on you.",
-      "A dragon is welcome company on a blocked winter road.",
-      "I'm Corin; this is Aurelius. We'll hear you out."
+      "Olin. I'd shake your hand if mine weren't busy remembering warmth.",
+      "Corin. What happened here?",
+      "Corin! Good to see someone returning on purpose.",
+      "I wanted to see how you were.",
+      "A dragon. Signe, our circumstances have become more interesting.",
+      "I'm Corin. We'd like them to become better, too."
     ]
   },
   "Signe": {
@@ -11893,70 +11893,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "13-crafts-and-keepers.txt:44",
     "topics": [
       {
-        "title": "Checking the ropes",
-        "opening": "Do you check every rope before setting out?",
-        "first": "I check a knot after the load settles. Rope can look secure before the weight truly pulls on it.",
+        "title": "The plan you didn't share",
+        "opening": "Do you always tell Olin when you're worried?",
+        "first": "Not always. Then I resent him for not guessing. I'm attempting to retire that system.",
         "replies": [
           [
-            "Did someone teach you?",
-            "A driver who made me unload my careless work."
+            "Does he do the same?",
+            "With a different expression. We each think ours is convincing."
           ],
           [
-            "Were you angry?",
-            "Furious, then grateful when I saw what had slipped."
+            "What helps?",
+            "Naming one worry at a time. Otherwise everything sounds impossible."
           ],
           [
-            "Do you make Olin check?",
-            "Yes. He complains while doing it correctly."
+            "Does that solve it?",
+            "It lets us begin. I don't demand more from the first sentence."
           ]
         ]
       },
       {
-        "title": "Keeping watch together",
-        "opening": "Is keeping watch easier with someone you trust?",
-        "first": "When you're stranded, company can become short-tempered. We take turns worrying aloud.",
+        "title": "Signe's homecoming ritual",
+        "opening": "What do you do first after a long journey?",
+        "first": "Put everything down. Properly down, not ready to lift again. Then I wash my face.",
         "replies": [
           [
-            "Does that help?",
-            "It stops one person's silence from becoming the other's guess."
+            "Why that first?",
+            "Until then, some part of me thinks we're still travelling."
           ],
           [
-            "What if you're both frightened?",
-            "We say so and choose the next practical task."
+            "What comes after?",
+            "Food, and refusing to discuss the next trip before morning."
           ],
           [
-            "Do you sleep easily?",
-            "Not here. I rest better knowing whose turn it is to listen."
+            "Does Olin cooperate?",
+            "After one reminder. Sometimes two affectionate ones."
           ]
         ]
       },
       {
-        "title": "What waits at home",
-        "opening": "What do you look forward to at home?",
-        "first": "I want to put down the work and be Signe for an evening, rather than half of the missing supplies.",
+        "title": "A kindness on the road",
+        "opening": "What's the smallest kindness you've remembered longest?",
+        "first": "Someone warming my gloves without saying I should have brought better ones.",
         "replies": [
           [
-            "What would you do?",
-            "Eat, wash, and sit without inventorying anything."
+            "You were expecting criticism?",
+            "I'd prepared a whole defence. Didn't need any of it."
           ],
           [
-            "Will you travel again?",
-            "Eventually. I won't decide while cold and exhausted."
+            "Did you thank them?",
+            "I hope well enough. I was younger and less good at it."
           ],
           [
-            "What will you remember?",
-            "Who came looking, more than who was supposed to receive the goods."
+            "Do you do that for others?",
+            "When I notice. I'd like to notice more without being congratulated for it."
           ]
         ]
       }
     ],
     "greetings": [
-      "Signe. Olin will tell you about the distance. I'll tell you what stopped us.",
-      "I'm Corin. I need to hear both.",
-      "Corin, I'm glad you returned.",
-      "I didn't want to leave you wondering.",
-      "A dragon gives us a reason to reconsider our options.",
-      "I'm Corin. Aurelius and I will help where we can."
+      "Signe. Before Olin tells you we're managing splendidly, we're managing.",
+      "Corin. I'd rather hear it plainly.",
+      "Corin. Thank you for coming back.",
+      "I didn't want you left guessing.",
+      "A dragon. Perhaps there's a practical possibility behind all this astonishment.",
+      "I'm Corin. We'll hear what you need."
     ]
   },
   "Dorrick": {
@@ -11966,70 +11966,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:1",
     "topics": [
       {
-        "title": "The unexplored turn",
-        "opening": "Have you ever left a turning in the mine unexplored?",
-        "first": "I once entered a passage because I disliked admitting I'd lost my bearings. It led nowhere useful.",
+        "title": "The miner's hearing",
+        "opening": "Can you sleep through loud noises?",
+        "first": "Through familiar ones. A tiny sound where there shouldn't be one wakes me immediately.",
         "replies": [
           [
-            "How did you return?",
-            "Retraced my steps while I could still recognise them."
+            "From working underground?",
+            "Partly. The body keeps lessons after the shift ends."
           ],
           [
-            "Did you tell the crew?",
-            "Yes. They needed accurate directions, not my pride."
+            "Is that useful?",
+            "And tiring. I don't always need to be on watch."
           ],
           [
-            "What changed afterward?",
-            "I mark uncertainty before it becomes a confident instruction."
+            "What helps you rest?",
+            "Somebody I trust saying they'll listen for a while."
           ]
         ]
       },
       {
-        "title": "Miners' songs",
-        "opening": "Do miners really sing while they work?",
-        "first": "We sang above ground after shifts. People imagine underground work as one long heroic chorus.",
+        "title": "The tool you lent",
+        "opening": "Have you ever regretted lending a tool?",
+        "first": "Lent my best pick to someone who returned it cleaned and sharpened. Made my own care look shameful.",
         "replies": [
           [
-            "Why not sing below?",
-            "You need to hear warnings and changing sounds."
+            "That's your regret?",
+            "I had to improve. Very inconsiderate of him."
           ],
           [
-            "What did you sing afterward?",
-            "Anything everyone knew badly enough to enjoy together."
+            "Did you lend it again?",
+            "Of course. I'm not entirely foolish."
           ],
           [
-            "Do you miss that?",
-            "More than I miss most of the work."
+            "Did you thank him?",
+            "With supper. We both preferred it to a speech."
           ]
         ]
       },
       {
-        "title": "A good lamp",
-        "opening": "What makes a lamp safe to depend on underground?",
-        "first": "A lamp isn't useful because it looks bright in a shop. It needs to keep working when conditions turn poor.",
+        "title": "Dorrick's imagined riches",
+        "opening": "What would you do if you struck it rich?",
+        "first": "Pay what I owe, fix my roof, then discover I don't know how to be rich.",
         "replies": [
           [
-            "What do you check?",
-            "Fuel, condition, and whether it's suited to where we're going."
+            "Would you stop mining?",
+            "For a while. I'd like the next decision to be mine."
           ],
           [
-            "Can dragon fire replace it?",
-            "Not in every corner. Carry proper light."
+            "Would you miss the others?",
+            "Yes. I'd come back to hear them complain about my leisure."
           ],
           [
-            "Would you enter the deep dark?",
-            "Not without the Hollybeck Lantern. Ask Sverre about it."
+            "What's left after the roof?",
+            "A quiet amount of time. That's the expensive thing."
           ]
         ]
       }
     ],
     "greetings": [
-      "Dorrick. Ask about the mine before going farther than the light.",
-      "I'm Corin. What should I know?",
-      "Corin! Back above ground where conversation carries properly.",
-      "I'm glad to be here.",
-      "A dragon underground needs room as much as courage.",
-      "I'm Corin. Aurelius and I check both."
+      "Dorrick. If you're asking about the mine, don't begin with 'surely'.",
+      "Corin. I'll begin with hello.",
+      "Corin! Still asking before entering dark places?",
+      "Whenever possible.",
+      "A dragon. Mind where those wings go near a tunnel mouth.",
+      "I'm Corin. We'll keep clear."
     ]
   },
   "Hask": {
@@ -12039,70 +12039,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:6",
     "topics": [
       {
-        "title": "The wrong room",
-        "opening": "Have you ever given someone the wrong room?",
-        "first": "I once gave a guest directions to the room he'd just left. We both believed me for several steps.",
+        "title": "The guest who cleaned",
+        "opening": "Have you ever had a guest leave a room better than they found it?",
+        "first": "One repaired a loose catch. Left a note apologising for interfering.",
         "replies": [
           [
-            "How did you notice?",
-            "He recognised his own forgotten hat."
+            "Did you mind?",
+            "Not at all. I minded that I'd stopped noticing it needed fixing."
           ],
           [
-            "Was he annoyed?",
-            "Too tired. We laughed the following morning."
+            "Did they return?",
+            "Yes. I made sure the next room required no improvement."
           ],
           [
-            "Do you give clearer directions now?",
-            "I establish where we're starting before announcing where we're going."
+            "What did the note say?",
+            "That they'd slept well. I kept that part."
           ]
         ]
       },
       {
-        "title": "An empty evening",
-        "opening": "What do you do when the inn has no guests?",
-        "first": "Quiet evenings sound pleasant until you're paying to keep an inn open.",
+        "title": "An innkeeper's ear",
+        "opening": "Can you tell why someone has travelled?",
+        "first": "Sometimes. I try not to force the reason out of them.",
         "replies": [
           [
-            "Do you miss the noise?",
-            "After enjoying the first hour of silence."
+            "What gives it away?",
+            "The questions they avoid more than the ones they ask."
           ],
           [
-            "What do you do when it's quiet?",
-            "Repairs, accounts, and excessive speculation about tomorrow."
+            "Do you want to know?",
+            "Of course. Wanting isn't a right."
           ],
           [
-            "Why keep an inn?",
-            "I like arrivals. People bring a different day through the door."
+            "What do you offer instead?",
+            "A clear price, a place to rest, and no surprise interrogation."
           ]
         ]
       },
       {
-        "title": "A guest remembered",
-        "opening": "Is there a guest you've never forgotten?",
-        "first": "A traveller returned years later and remembered a meal I'd forgotten cooking.",
+        "title": "Hask's own journey",
+        "opening": "Where would you go if someone else watched the inn?",
+        "first": "I'd visit someone I keep promising to visit. Distance has become a very respectable excuse.",
         "replies": [
           [
-            "Was it especially good?",
-            "Apparently he'd been very hungry and very lonely."
+            "Who?",
+            "An old friend. We write as though next month is infinitely available."
           ],
           [
-            "Did that surprise you?",
-            "How much an ordinary welcome had mattered."
+            "Could you go soon?",
+            "I could try arranging it instead of describing the difficulty."
           ],
           [
-            "Do you remember every guest?",
-            "No. I still try to welcome the one in front of me."
+            "Would they be pleased?",
+            "Yes. That's the part I should keep thinking about."
           ]
         ]
       }
     ],
     "greetings": [
-      "Hask. A young visitor! My conversations have been repeating themselves lately.",
-      "I'm Corin. I'll try to bring something new.",
-      "Corin! Another excuse to stop predicting the weather.",
-      "I'd enjoy a different subject.",
-      "A dragon would certainly change the usual guest list.",
-      "I'm Corin. Aurelius needs open space, not a room key."
+      "Hask. Welcome. Let me know what you need before deciding we're too busy.",
+      "Corin. Thank you.",
+      "Corin! You know the way in now.",
+      "And a familiar face inside.",
+      "A dragon. We'll need to be sensible about where everyone stays.",
+      "I'm Corin. Sensible sounds welcome."
     ]
   },
   "Marek": {
@@ -12112,70 +12112,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:11",
     "topics": [
       {
-        "title": "Watching the carts",
-        "opening": "What do you notice when you watch the carts go by?",
-        "first": "Carts pass all day and rarely stop. I used to resent that, as though every traveller owed me company.",
+        "title": "The fish nobody believed",
+        "opening": "Have you ever told the truth and been accused of boasting?",
+        "first": "Caught a very large fish. Nobody believed me. Invented a smaller version and became credible.",
         "replies": [
           [
-            "What changed?",
-            "I remembered how often I'd passed someone while thinking of supper."
+            "Did that annoy you?",
+            "Enormously. Honesty shouldn't require editing the fish."
           ],
           [
-            "Do you still count them?",
-            "Occasionally. Old habits remain entertaining."
+            "Did you have proof?",
+            "By then, supper. The evidence was unavailable."
           ],
           [
-            "Would you travel farther?",
-            "I'd like to, when I can leave without worrying about home."
+            "Would you tell it properly now?",
+            "Only to someone prepared to be unusually trusting."
           ]
         ]
       },
       {
-        "title": "The quiet pool",
-        "opening": "Do you have a favourite quiet fishing place?",
-        "first": "I prefer water where I can see the current change. Fishing becomes less guessing when I pay attention.",
+        "title": "Marek's silence",
+        "opening": "Why do you like fishing near a busy town?",
+        "first": "I can be alone without feeling far away. The noise says life is continuing somewhere behind me.",
         "replies": [
           [
-            "Do you always catch something?",
-            "No. Attention doesn't guarantee cooperation."
+            "Don't the sounds bother you?",
+            "Less than being asked whether I'm lonely."
           ],
           [
-            "What do you enjoy most?",
-            "A reason to stay still outdoors."
+            "Are you?",
+            "Sometimes. Then I go and speak to someone."
           ],
           [
-            "Do you fish alone?",
-            "Often. Good company is welcome if it can tolerate waiting."
+            "So being alone is a choice?",
+            "On good days. I try to notice when it stops being one."
           ]
         ]
       },
       {
-        "title": "A borrowed rod",
-        "opening": "Has anyone ever lent you a rod?",
-        "first": "I borrowed a rod and returned it with new line. The owner seemed more pleased by that than by the fish.",
+        "title": "A promise to a child",
+        "opening": "Have you ever promised a child they'd catch something?",
+        "first": "Once. Never again. Fish are poor partners in an adult's guarantee.",
         "replies": [
           [
-            "Why replace the line?",
-            "I'd damaged it. Returning a tool should include the damage."
+            "Were they disappointed?",
+            "Until we found something else to enjoy. I took longer to forgive the afternoon."
           ],
           [
-            "Did he lend it again?",
-            "Yes, without the warning speech."
+            "Why?",
+            "I'd wanted to be impressive."
           ],
           [
-            "Would you lend yours?",
-            "To someone willing to ask before improvising a repair."
+            "What do you promise now?",
+            "Time together. I can actually provide that."
           ]
         ]
       }
     ],
     "greetings": [
-      "Marek. I know the water better than I know the traffic passing it.",
-      "I'm Corin. The water sounds a better subject.",
-      "Corin! Stopping instead of hurrying through?",
-      "For a while.",
-      "A dragon would make a memorable fishing partner.",
-      "I'm Corin. Aurelius is more interested in the catch than the waiting."
+      "Marek. You may talk, but I reserve the right to blame you for any fish I don't catch.",
+      "Corin. An unusually generous warning.",
+      "Corin! Back to test my patience socially?",
+      "Only gently.",
+      "A dragon. That's a larger fishing companion than I'd planned.",
+      "I'm Corin. He'll keep his appetite at a distance."
     ]
   },
   "Bregga": {
@@ -12185,70 +12185,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:16",
     "topics": [
       {
-        "title": "Winter ground",
-        "opening": "Can anything grow in the winter ground?",
-        "first": "Frozen ground makes yesterday's easy job impossible. I try to finish repairs before the soil hardens.",
+        "title": "The farmer's calendar",
+        "opening": "How do you remember important dates?",
+        "first": "By what was growing, freezing, or failing to do either. My family would prefer numbers.",
         "replies": [
           [
-            "Does that always happen?",
-            "No. Then I have a long winter to resent my optimism."
+            "Does that confuse them?",
+            "Apparently 'the year the potatoes sulked' lacks precision."
           ],
           [
-            "What gets priority?",
-            "Anything animals or people depend on daily."
+            "Do you remember birthdays?",
+            "Yes. I simply have a different filing system."
           ],
           [
-            "Do you enjoy the spring?",
-            "After the mud and before the new list of jobs grows teeth."
+            "What date matters most?",
+            "The first day somebody trusted me to manage without supervising."
           ]
         ]
       },
       {
-        "title": "A late harvest",
-        "opening": "What happens when the harvest is late?",
-        "first": "I once waited for a crop to improve and lost part of it to an early freeze.",
+        "title": "A crop you won't grow",
+        "opening": "Is there something you refuse to grow?",
+        "first": "A vegetable I detested as a child. I could grow it perfectly well. I choose peace.",
         "replies": [
           [
-            "Could you save any?",
-            "Enough, with neighbours helping quickly."
+            "Is that sensible?",
+            "Not especially. It's a small freedom."
           ],
           [
-            "Did you wait again next year?",
-            "I watched conditions instead of my preferred date."
+            "Does anyone complain?",
+            "People who don't have to eat it."
           ],
           [
-            "Was the lesson expensive?",
-            "Yes. Advice from others would have been cheaper."
+            "Would you try it again?",
+            "Perhaps. Let me enjoy the refusal a little longer."
           ]
         ]
       },
       {
-        "title": "The living trees",
-        "opening": "How do you look after the trees through the cold?",
-        "first": "Winter trees look idle, but I dislike people treating them as spare firewood.",
+        "title": "The work you share",
+        "opening": "What's hardest about accepting help?",
+        "first": "Not explaining every detail while someone is trying to do it.",
         "replies": [
           [
-            "Do you gather fallen wood?",
-            "Where permitted and sensible. Living shelter has value too."
+            "Why do you explain?",
+            "Because worry disguises itself as instruction very convincingly."
           ],
           [
-            "Have you planted any?",
-            "A few, protected while young."
+            "Do you catch yourself?",
+            "Sometimes after the third unnecessary sentence."
           ],
           [
-            "Will you see them grown?",
-            "Perhaps. Someone will benefit either way."
+            "What do you say then?",
+            "Thank you. And, with effort, nothing else."
           ]
         ]
       }
     ],
     "greetings": [
-      "Bregga. Cold enough that I'm reconsidering every outdoor ambition.",
-      "I'm Corin. I can sympathise.",
-      "Corin! Arrived between complaints about the weather.",
-      "A narrow opening.",
-      "Your dragon looks better prepared for warmth than I am.",
-      "I'm Corin. Aurelius has advantages I envy."
+      "Bregga. If you're new here, don't mistake stubbornness for immunity to cold.",
+      "Corin. I'll wear the distinction carefully.",
+      "Corin! Still sensible enough to stop and speak?",
+      "Usually.",
+      "A dragon. I hope he respects fences better than the weather does.",
+      "I'm Corin. We'll make an effort."
     ]
   },
   "Torvald": {
@@ -12258,70 +12258,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:21",
     "topics": [
       {
-        "title": "Leaving the lantern",
-        "opening": "What made you leave your lantern for another traveller?",
-        "first": "I left my special lantern with Sverre. It belongs with someone who'll pass it to a traveller who needs it.",
+        "title": "A miner's last shift",
+        "opening": "Did you know your last shift would be the last?",
+        "first": "No. I left expecting another ordinary morning. Strange how a life can finish a chapter without telling you.",
         "replies": [
           [
-            "Why not keep it?",
-            "I wasn't using it where it mattered."
+            "Do you regret that?",
+            "Sometimes I'd like to have looked around properly."
           ],
           [
-            "Does Sverre understand it?",
-            "He understands enough to explain why ordinary light won't do."
+            "What would you look at?",
+            "The people. I can remember the stone well enough."
           ],
           [
-            "Would you want it returned?",
-            "I'd rather it kept someone alive than sat unused for my sake."
+            "Can you still see them?",
+            "Some. I try not to wait for a grand occasion."
           ]
         ]
       },
       {
-        "title": "The road south",
-        "opening": "Do you miss travelling the southern road?",
-        "first": "A passable road isn't necessarily a pleasant one. I choose my words carefully when people ask.",
+        "title": "The lantern's keeper",
+        "opening": "Why entrust your lantern to Sverre?",
+        "first": "Because he'd lend it for a good reason and refuse for a foolish one. Both mattered.",
         "replies": [
           [
-            "What should I ask?",
-            "When I last travelled it and what delayed me."
+            "Did it mean much to you?",
+            "Yes. That's why I wanted it useful rather than hidden."
           ],
           [
-            "Do you ever refuse advice?",
-            "I refuse to pretend an old journey is current knowledge."
+            "Were you afraid to part with it?",
+            "A little. An object can begin pretending it's the only keeper of your memories."
           ],
           [
-            "Does that frustrate people?",
-            "Less than discovering my confidence was borrowed from last year."
+            "Was it?",
+            "No. I remember without holding it."
           ]
         ]
       },
       {
-        "title": "An unexpected day off",
-        "opening": "What do you do with an unexpected day off?",
-        "first": "A halted shift once gave me an afternoon free. I spent half of it deciding how not to waste it.",
+        "title": "Torvald's newer life",
+        "opening": "What's surprised you since leaving mine work?",
+        "first": "How long I kept introducing myself by a job I wasn't doing.",
         "replies": [
           [
-            "What did you finally do?",
-            "Visited a friend. We discussed nothing important."
+            "What do you say now?",
+            "My name. Then see whether anyone wants the rest."
           ],
           [
-            "Was that wasteful?",
-            "It was the part I remembered afterward."
+            "Does that feel empty?",
+            "Less so now I've put other things into the days."
           ],
           [
-            "Would you do it sooner now?",
-            "I hope so. Experience ought to earn something."
+            "What things?",
+            "Family. Walking. Being bad at activities nobody pays me for."
           ]
         ]
       }
     ],
     "greetings": [
-      "Torvald. If you're heading below ground, let's discuss light before bravery.",
-      "I'm Corin. I'd prefer seeing what I'm facing.",
-      "Corin! Back with daylight on your shoulders.",
-      "A welcome change.",
-      "A dragon brings fire, but a mine still has corners.",
-      "I'm Corin. Aurelius and I won't rely on flame alone."
+      "Torvald. You're new to me. Travelling through, or looking for someone?",
+      "Corin. Travelling, with a few questions.",
+      "Corin! Glad to see you above ground.",
+      "It has its advantages.",
+      "A dragon. That's a companion a man would notice missing.",
+      "I'm Corin. I certainly would."
     ]
   },
   "Ingrid": {
@@ -12331,70 +12331,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:26",
     "topics": [
       {
-        "title": "Recognising regulars",
-        "opening": "How do you recognise people who come back here?",
-        "first": "I remember people's usual drinks before their names. I'm working to reverse that order.",
+        "title": "The guest who listened",
+        "opening": "What makes a memorable customer?",
+        "first": "Someone who asks how I am and waits through the answer. The waiting is rarer than the question.",
         "replies": [
           [
-            "Does anyone mind?",
-            "One man changed his order to see whether I'd notice."
+            "Do people rush you?",
+            "Usually they don't notice they've done it."
           ],
           [
-            "Did you?",
-            "Immediately. Then had to ask his name."
+            "What would your answer be today?",
+            "That I'm tired, but glad of a decent conversation."
           ],
           [
-            "Do you know it now?",
-            "Yes. He's become delightfully difficult to forget."
+            "Can I help?",
+            "Being here without demanding a performance already helps."
           ]
         ]
       },
       {
-        "title": "Closing in winter",
-        "opening": "What does closing up involve in winter?",
-        "first": "Winter customers linger because leaving means facing the cold. Unfortunately I must go home too.",
+        "title": "A tavern in a storm",
+        "opening": "Does the tavern feel different during bad weather?",
+        "first": "People stop pretending they came only for a drink. They listen when the door opens.",
         "replies": [
           [
-            "How do you persuade them?",
-            "Remind them I own a coat, not an endless evening."
+            "For someone expected?",
+            "Often. Sometimes just to know another person made it inside."
           ],
           [
-            "Are they considerate?",
-            "Most, once I say it plainly."
+            "Does it frighten you?",
+            "A little. Keeping busy gives the fear somewhere to go."
           ],
           [
-            "Do you enjoy the work?",
-            "The company, yes. The final wet floor, less so."
+            "What's the best moment?",
+            "When the last expected face comes through the door."
           ]
         ]
       },
       {
-        "title": "Beyond the graves",
-        "opening": "Do you ever wish your work took you somewhere beyond the graves?",
-        "first": "I avoid the graveyard after dark. People occasionally challenge me to prove I'm not frightened.",
+        "title": "Ingrid's little deception",
+        "opening": "Have you ever pretended not to recognise someone?",
+        "first": "A person who'd embarrassed himself badly the night before. He looked ready to flee.",
         "replies": [
           [
-            "What do you tell them?",
-            "That being frightened is already established. I'm proving I can choose."
+            "Did you let him forget it?",
+            "I let him order breakfast without an audience for his shame."
           ],
           [
-            "Have you seen anything there?",
-            "Enough strange movement to keep my caution."
+            "Was he grateful?",
+            "He came back sober and friendly. Good enough."
           ],
           [
-            "Would you warn a traveller?",
-            "Yes, without inventing a monster to make the warning exciting."
+            "Would you do it for everyone?",
+            "For ordinary foolishness. Cruelty doesn't get the same breakfast."
           ]
         ]
       }
     ],
     "greetings": [
-      "Ingrid. Warm up before trying to convince me you're comfortable.",
-      "I'm Corin. My expression has betrayed me.",
-      "Corin! Come lend this day another voice.",
-      "I'd like that.",
-      "A dragon's warmth must be welcome on this road.",
-      "I'm Corin. Aurelius has been much appreciated."
+      "Ingrid. If you need something, ask before shivering becomes your introduction.",
+      "Corin. Fair advice.",
+      "Corin! You've returned. Good news before you've even spoken.",
+      "I'll try to keep it good.",
+      "A dragon. I'll need advance warning before anyone attempts an indoor visit.",
+      "I'm Corin. He'll stay clear of the doorway."
     ]
   },
   "Sigrun": {
@@ -12404,70 +12404,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:31",
     "topics": [
       {
-        "title": "Broth for a crowd",
-        "opening": "How do you make enough broth for a crowd?",
-        "first": "When feeding a crowd, I prepare what can wait without spoiling. Guests arrive according to their own clocks.",
+        "title": "The pot you inherited",
+        "opening": "Have you inherited any kitchen things?",
+        "first": "A pot that looks older than several buildings. My aunt swore nothing burned in it. My first supper disproved her.",
         "replies": [
           [
-            "Doesn't that limit the menu?",
-            "It improves my temper, which improves the meal."
+            "Was she teasing you?",
+            "I suspect she was encouraging me with unreliable evidence."
           ],
           [
-            "What's most popular?",
-            "Food served hot to people who are actually hungry."
+            "Do you still use it?",
+            "Yes. It has survived my education."
           ],
           [
-            "Do you enjoy big meals?",
-            "With enough help. Generosity still creates dishes."
+            "Does it remind you of her?",
+            "Especially when I blame it instead of myself."
           ]
         ]
       },
       {
-        "title": "A secret ingredient",
-        "opening": "Do you have an ingredient you keep secret?",
-        "first": "People keep asking for my secret ingredient. Usually I tell them patience, which disappoints shoppers.",
+        "title": "A meal for a stranger",
+        "opening": "How do you cook for someone you know nothing about?",
+        "first": "Ask what they can eat. Start simply. Don't make them praise the effort before they've tasted it.",
         "replies": [
           [
-            "Is that the whole secret?",
-            "Taste before serving. Another poorly kept mystery."
+            "Have you ever got it wrong?",
+            "Yes. I once tried so hard to impress that I forgot to listen."
           ],
           [
-            "Do you follow recipes?",
-            "Until I understand what they're trying to achieve."
+            "What did they want?",
+            "Something familiar after a difficult day."
           ],
           [
-            "Can anyone learn?",
-            "Anyone willing to make an ordinary meal before a masterpiece."
+            "What did you learn?",
+            "To ask before deciding what kindness should look like."
           ]
         ]
       },
       {
-        "title": "A meal remembered",
-        "opening": "Is there a meal that brings back a particular memory?",
-        "first": "My mother once burned supper, and we ate bread together laughing about the smoke.",
+        "title": "Sigrun's favourite sound",
+        "opening": "What's your favourite sound at supper?",
+        "first": "The first quiet after everyone begins eating. Then the conversation returning.",
         "replies": [
           [
-            "Was she upset?",
-            "Initially. Then my father made the first useful joke."
+            "Why that?",
+            "It tells me they've stopped worrying about the meal and started being together."
           ],
           [
-            "Why remember that meal?",
-            "We were comfortable enough to let it go wrong."
+            "Do you join them?",
+            "More often now. I used to hide in the work."
           ],
           [
-            "Do you manage that yourself?",
-            "More easily when I stop treating dinner as an examination."
+            "Why hide?",
+            "It's easier to be useful than to discover whether you're wanted sitting down."
           ]
         ]
       }
     ],
     "greetings": [
-      "Sigrun. A hot bowl helps more than an argument about how cold it is.",
-      "I'm Corin. A practical philosophy.",
-      "Corin! Come discuss something while I rest my feet.",
-      "Gladly.",
-      "A dragon would require a very different soup pot.",
-      "I'm Corin. Aurelius isn't expecting catering."
+      "Sigrun. Hungry, cold, curious? We can usually address one of those quickly.",
+      "Corin. Curious, for now.",
+      "Corin! Good. A familiar appetite for questions.",
+      "Still healthy.",
+      "A dragon. I'd better not casually offer seconds.",
+      "I'm Corin. That could become a lengthy commitment."
     ]
   },
   "Serjeant Bram": {
@@ -12477,89 +12477,89 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:36",
     "topics": [
       {
-        "title": "A recruit's name",
-        "opening": "Do you remember the names of new recruits?",
-        "first": "I learn recruits' names before correcting them. A person should know I'm speaking to him, not merely shouting at a uniform.",
+        "title": "The serjeant's gloves",
+        "opening": "Why keep your gloves on at the table?",
+        "first": "So I needn't apologise for leaving quickly. A royal visit is work, whatever the furniture suggests.",
         "replies": [
           [
-            "Who taught you that?",
-            "A serjeant who remembered mine after a disastrous first patrol."
+            "Does the king ever let you rest?",
+            "When I'm no longer required."
           ],
           [
-            "What went wrong?",
-            "I lost the route and tried to hide it."
+            "That sounds like a convenient answer.",
+            "It is also the answer available to you."
           ],
           [
-            "Did he punish you?",
-            "Made me learn it properly. Humiliation wasn't the objective."
+            "I'll keep this short.",
+            "An excellent beginning."
           ]
         ]
       },
       {
-        "title": "Orders and consequences",
-        "opening": "Who answers for what happens when an order is carried out?",
-        "first": "An order can be clear and still be wrong. Rank makes that distinction difficult to discuss aloud.",
+        "title": "A recruit's question",
+        "opening": "Do recruits ever question your orders?",
+        "first": "Frequently. The sensible ones ask before obeying badly.",
         "replies": [
           [
-            "Have you refused one?",
-            "I've questioned them. The rest isn't a tavern conversation."
+            "What if the order is cruel?",
+            "They should understand exactly what they're refusing before calling refusal easy."
           ],
           [
-            "Does silence make you responsible?",
-            "Sometimes. I'm not offering myself an easy answer."
+            "You could refuse too.",
+            "I know. You aren't the first person to imagine that hadn't occurred to me."
           ],
           [
-            "What should a soldier protect?",
-            "People. Remembering which people is the difficult test."
+            "I wouldn't want your position.",
+            "Many people prefer authority at a distance. Fewer enjoy its actual arrangements."
           ]
         ]
       },
       {
-        "title": "A quiet ambition",
-        "opening": "Is there anything you want beyond your rank?",
-        "first": "I'd like a garden small enough to finish tending before supper.",
+        "title": "The road after service",
+        "opening": "What would you do if you left royal service?",
+        "first": "Walk through a town without anyone trying to guess what I want from them.",
         "replies": [
           [
-            "Would you retire there?",
-            "If circumstances permit. I'm tired of planning only the next duty."
+            "Could you?",
+            "Eventually. A uniform leaves a longer shadow than people think."
           ],
           [
-            "What would you grow?",
-            "Food first. Flowers afterward, if I discover some patience."
+            "Would you miss the power?",
+            "I'd miss being obeyed. I'd prefer not to disguise that as a nobler feeling."
           ],
           [
-            "Do you think you'd enjoy peace?",
-            "I'd like the opportunity to find out badly."
+            "I hope you get that walk.",
+            "Perhaps. For now, remain clear of the royal route."
           ]
         ]
       },
       {
-        "title": "A name in the report",
-        "opening": "What happens after you put someone's name in a report?",
-        "first": "I write down names while people still think the conversation is informal. Later, everyone remembers the distance differently.",
+        "title": "An entry crossed out",
+        "opening": "Have you ever changed a report to help someone?",
+        "first": "I've corrected reports. Whether that helped somebody depended on what was wrong.",
         "replies": [
           [
-            "Would you record your own mistake?",
-            "An officer who conceals a mistake makes himself useful to anyone who discovers it."
+            "That's a careful answer.",
+            "You're asking an officer about his records in public."
           ],
           [
-            "That sounds like mistrust of everyone.",
-            "It is a habit formed by reading explanations after something has gone wrong."
+            "Does the king read them?",
+            "He reads what interests him. I don't rely on knowing which part that will be."
           ],
           [
-            "Could an innocent person suffer for a report?",
-            "They could suffer more for an inaccurate one. I take the writing seriously; you should take the questions seriously."
+            "Then I'll stop asking.",
+            "Sensible. We may yet finish this conversation comfortably."
           ]
         ]
       }
     ],
     "greetings": [
-      "Serjeant Bram. Mind your words around the crown, and don't mistake that advice for agreement.",
-      "I'm Corin. I'll listen carefully.",
-      "Corin. You keep finding your way into difficult company.",
-      "I'm beginning to notice.",
-      "A dragon beside you changes the stakes of this meeting.",
-      "Aurelius is my companion. I'll speak for my own choices."
+      "State your business. Bram, royal serjeant.",
+      "Corin. I was hoping to ask a question.",
+      "You again, Corin. Be concise.",
+      "I'll choose my words.",
+      "A dragon. Explain yourself before anybody reaches for a weapon.",
+      "Corin. We're speaking peacefully."
     ]
   },
   "Doran": {
@@ -12569,70 +12569,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:42",
     "topics": [
       {
-        "title": "Armour maintenance",
-        "opening": "Does armour take much looking after?",
-        "first": "People notice a polished breastplate. I notice a strap about to fail.",
+        "title": "The weight of a title",
+        "opening": "Did becoming a knight feel how you expected?",
+        "first": "No. I expected to feel larger. Mostly I felt watched.",
         "replies": [
           [
-            "What do you check first?",
-            "Fastenings and fit. Appearance won't hold armour in place."
+            "By whom?",
+            "Officers. Recruits. People waiting to see whether I'd behave like the stories."
           ],
           [
-            "Has yours failed?",
-            "During training. I prefer that lesson to a battlefield version."
+            "Did you?",
+            "Not consistently."
           ],
           [
-            "Do you enjoy polishing?",
-            "Only when it doesn't replace the useful inspections."
+            "What did you learn?",
+            "A title makes people expect things. It doesn't make you able to provide them."
           ]
         ]
       },
       {
-        "title": "Patrol supper",
-        "opening": "What do you eat when you're out on patrol?",
-        "first": "I learned cooking because our patrol treated burnt porridge as unavoidable.",
+        "title": "Doran's first pay",
+        "opening": "What did you buy with your first pay?",
+        "first": "A gift too expensive to send home without admitting what I'd spent.",
         "replies": [
           [
-            "Did you improve it?",
-            "By watching the pot. A startling innovation."
+            "Did your family like it?",
+            "My mother kept asking whether I had enough to eat."
           ],
           [
-            "Were they grateful?",
-            "They gave me the next shift of cooking. Gratitude has consequences."
+            "Were you annoyed?",
+            "Then. Now I understand what she was actually asking."
           ],
           [
-            "Do you still cook?",
-            "When I can. It's pleasant to make something that isn't a threat."
+            "Would you choose differently?",
+            "I'd send something smaller and a longer letter."
           ]
         ]
       },
       {
-        "title": "A frightened horse",
-        "opening": "How do you calm a frightened horse?",
-        "first": "A horse once refused a bridge. I tried forcing it before noticing a loose board.",
+        "title": "A knight at home",
+        "opening": "Does your family treat you like a knight?",
+        "first": "My brother treats me like someone who once got stuck in a fence. Historical evidence is against me.",
         "replies": [
           [
-            "Did you apologise to it?",
-            "I loosened the reins and fixed the problem. More useful than a speech."
+            "Does that bother you?",
+            "Not often. It's restful to be ridiculous safely."
           ],
           [
-            "Was anyone hurt?",
-            "No. I had time to be merely ashamed."
+            "How did you get stuck?",
+            "That account remains under seal."
           ],
           [
-            "Did it change your training?",
-            "I listen before deciding reluctance is disobedience."
+            "Who rescued you?",
+            "The brother. Hence his regrettably permanent authority."
           ]
         ]
       }
     ],
     "greetings": [
-      "Doran. Keep clear of the moving party and we can speak.",
-      "I'm Corin. I'll stand here.",
-      "Corin. Another conversation between duties?",
-      "If you have time.",
-      "A dragon is a serious travelling companion.",
-      "Aurelius is his name. We're learning together."
+      "Doran. Keep your hands where I can see them while we talk.",
+      "Corin. They're staying right here.",
+      "Corin. You're becoming a familiar interruption.",
+      "I'll try to be a brief one.",
+      "A dragon. Everyone stay still a moment.",
+      "I'm Corin. We're not here to attack."
     ]
   },
   "King Halvard": {
@@ -12642,165 +12642,165 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:47",
     "topics": [
       {
-        "title": "A king's authority",
-        "opening": "What gives you the right to rule everyone?",
-        "first": "A kingdom survives because somebody can end an argument. I have spent years being that somebody.",
+        "title": "A crown at supper",
+        "opening": "Why do you need ceremony even when you're eating?",
+        "first": "Because familiarity spreads. A man who forgets his place at supper may remember himself too grandly tomorrow.",
         "replies": [
           [
-            "And if your decision is wrong?",
-            "Then I bear a consequence larger than your disapproval."
+            "A crown shouldn't need people kept small.",
+            "A charming principle from someone who has never had to hold a kingdom together."
           ],
           [
-            "You decide who may disagree.",
-            "Naturally. A challenge to the crown is never merely a difference of opinion."
+            "Surely you could let people relax.",
+            "They may relax when I leave. I don't require their comfort to accompany mine."
           ],
           [
-            "Does nobody advise you?",
-            "Many people do. Few understand the burden they are advising me to carry."
+            "I see that the visit matters to you.",
+            "Everything done in public matters. Remember that before you mistake a casual tone for privacy."
           ]
         ]
       },
       {
-        "title": "The old riders",
-        "opening": "What happened between you and the other riders?",
-        "first": "The riders mistook equal power for shared purpose. They could agree on a rescue and quarrel endlessly over what came after.",
+        "title": "Six empty places",
+        "opening": "Do you ever think about the riders who aren't here?",
+        "first": "You mean the six who believed a disagreement gave them power over me. Yes. Their absence resolved several difficulties.",
         "replies": [
           [
-            "They trusted you.",
-            "They trusted that I would remain satisfied with their limitations."
+            "You speak as if killing them was housekeeping.",
+            "I speak as someone who survived the decision. They would have described their victory differently."
           ],
           [
-            "You killed people who stood beside you.",
-            "You offer the accusation as though I have never heard it in my own voice."
+            "They trusted you before Wingfall.",
+            "Then they should have understood me better. Trust is no defence against misjudgement."
           ],
           [
-            "Were you afraid of them?",
-            "I knew what seven riders could do to a kingdom. I was one of them."
+            "I wanted to hear your account.",
+            "Now you have. Take care which parts you repeat and to whom."
           ]
         ]
       },
       {
-        "title": "Keeping the roads",
-        "opening": "Do your roads protect the people who use them?",
-        "first": "People demand safe roads and resent the men stationed on them. They want the result without the cost.",
+        "title": "The bill nobody presents",
+        "opening": "Who pays when your party visits a town?",
+        "first": "The town contributes to its own stability. Merchants have a tiresome habit of imagining every obligation ends in a sale.",
         "replies": [
           [
-            "Your collectors leave people hungry.",
-            "Every province considers its own burden exceptional."
+            "Those people still need to feed their families.",
+            "Then they ought to welcome a kingdom in which their families know who rules."
           ],
           [
-            "Fear isn't the same as safety.",
-            "Fear is immediate. You may discover how useful immediacy becomes when persuasion fails."
+            "They can't refuse you, can they?",
+            "They can petition. I don't promise to find the petition persuasive."
           ],
           [
-            "Who protects people from you?",
-            "You seem eager to nominate yourself. Consider carefully what follows that claim."
+            "I hadn't understood the arrangement.",
+            "Few subjects do. They enjoy the benefits before asking which portions they may decline to fund."
           ]
         ]
       },
       {
-        "title": "The egg errand",
-        "opening": "Do you remember taking Hettie's eggs in Millwood?",
-        "first": "You carried that basket through a royal escort without breaking an egg. Millwood evidently teaches useful caution.",
+        "title": "An egg in a boy's hands",
+        "opening": "Why remember a boy carrying eggs?",
+        "first": "Because you looked determined to protect something ordinary. People reveal themselves before they learn to perform.",
         "replies": [
           [
-            "You helped yourself to the eggs.",
-            "Your village provided refreshment to its king. I suggest you describe it that way when you return."
+            "You took what didn't belong to you.",
+            "I accepted what the village owed its king. Your elder evidently neglected that lesson."
           ],
           [
-            "Maddock was waiting for them.",
-            "Then he was fortunate I left him breakfast. A minor delay is a small contribution to the crown."
+            "You frightened people over a basket.",
+            "I made a small request. If they were frightened, they understood something you did not."
           ],
           [
-            "I was trying to finish a job.",
-            "Continue cultivating that habit. It will serve you better than cultivating grievances."
+            "It was an unusual morning.",
+            "For you. For me, one village on a royal road. Consider the difference in scale."
           ]
         ]
       },
       {
-        "title": "Hunting dragons",
-        "opening": "Why hunt dragons that have done nothing to you?",
-        "first": "One surviving dragon can give a dissatisfied subject the power to make his dissatisfaction everyone else's problem.",
+        "title": "A creature born guilty",
+        "opening": "Why should a dragon be condemned before it harms anyone?",
+        "first": "Because waiting for a rival to become dangerous is the luxury of someone who doesn't occupy my throne.",
         "replies": [
           [
-            "A hatchling hasn't threatened your throne.",
-            "A hatchling grows. I have no intention of waiting until its rider thinks himself ready."
+            "A living creature isn't a claim on your throne.",
+            "A dragon gives its rider the strength to make one. Intentions are reassuring until they change."
           ],
           [
-            "Could a rider choose to live quietly?",
-            "Until he changes his mind, or someone persuades him the kingdom needs rescuing. I know how that story begins."
+            "You're afraid of someone else having what you have.",
+            "I recognise power. Call that fear if the smaller word comforts you."
           ],
           [
-            "You were a rider yourself.",
-            "Which is why I require no lecture on how dangerous one can become."
+            "You take the possibility seriously.",
+            "As should you. Do not mistake a young creature for a small consequence."
           ]
         ]
       },
       {
-        "title": "Reports from Millwood",
-        "opening": "What are your men looking for near Millwood?",
-        "first": "A heavy landing, broken branches, witnesses who suddenly remember other errands. My officers have enough to continue searching.",
+        "title": "A witness with nothing to say",
+        "opening": "What do you expect people to report from the woods?",
+        "first": "Anything too large, too strange, or too conveniently forgotten. My men can decide which details matter.",
         "replies": [
           [
-            "Would they punish someone for being mistaken?",
-            "They can distinguish confusion from an invented account. You would be wise not to test how patiently."
+            "People shouldn't be punished for being afraid.",
+            "Fear is a reason to speak carefully. It isn't a licence to conceal."
           ],
           [
-            "What if somebody saw only part of it?",
-            "Then he reports that part. I employ officers to assemble an account, not villagers to decide whether it interests me."
+            "Perhaps they saw nothing.",
+            "Then a truthful account should be brief. Evasion usually requires more effort."
           ],
           [
-            "People are frightened of your men.",
-            "Fear can sharpen a memory. My men will ask again if the first answer is unhelpful."
+            "I'll remember what you've said.",
+            "See that you do. Memory is a useful quality when properly directed."
           ]
         ]
       },
       {
-        "title": "Shelter for an injured dragon",
-        "opening": "What would you do to someone who sheltered an injured dragon?",
-        "first": "Anyone finding an injured dragon should withdraw and summon my officers. An attempt to hide it would make the finder part of the investigation.",
+        "title": "A kindness forbidden",
+        "opening": "Would you punish someone for helping an injured dragon?",
+        "first": "I'd ask why they preferred a creature's needs to their king's command. Their answer would interest me greatly.",
         "replies": [
           [
-            "You would criminalise helping it?",
-            "I would investigate someone who chose a wild dragon's safety over obedience to his king."
+            "Because suffering matters even when you forbid it.",
+            "You confuse tenderness with exemption. The law needn't share your sympathies."
           ],
           [
-            "What would your officers do with it?",
-            "Secure the creature and await my orders. No villager needs to appoint himself its guardian."
+            "What if they couldn't bear to leave it?",
+            "Then they would learn what their compassion cost. People should understand their own choices."
           ],
           [
-            "Would reporting it protect the finder?",
-            "Cooperation is a much better beginning than concealment. I offer no guarantees to people whose accounts I have not heard."
+            "I wanted the rule made clear.",
+            "It is clear. Report it, withdraw, and allow my officers to act."
           ]
         ]
       },
       {
-        "title": "What follows your reign?",
-        "opening": "What do you expect to happen after your reign?",
-        "first": "You speak of the future as though a kingdom could be left to grow like an unattended hedge. Someone must impose its shape.",
+        "title": "The future you allow",
+        "opening": "What kind of future do you want for Emberfell?",
+        "first": "One that does not require me to survive the same challenge twice. Continuity is underrated by those who have never secured it.",
         "replies": [
           [
-            "People could help choose that shape.",
-            "People agree most readily on what someone else ought to surrender. Rule requires an answer after the agreement ends."
+            "People deserve more than an endless version of you.",
+            "They deserve peace under a law that can be enforced. Gratitude would be pleasant, but I have learned to manage without it."
           ],
           [
-            "Do you expect to rule forever?",
-            "I expect you to concern yourself with the king before you, not a convenient absence you have imagined."
+            "You can't prevent everything from changing.",
+            "I can decide which changes are permitted to gather strength. That is what governing means."
           ],
           [
-            "Are you afraid of being forgotten?",
-            "I have arranged for that to be exceedingly difficult."
+            "You intend your rule to endure.",
+            "At last, a conclusion we needn't debate."
           ]
         ]
       }
     ],
     "greetings": [
-      "Corin. You have a habit of appearing where decisions are being made.",
-      "I prefer hearing them from the person responsible.",
-      "Still here? Then ask something worth my time.",
-      "I intend to.",
-      "You arrive beside a dragon as though that grants you standing.",
-      "It gives me a companion. I can answer for myself."
+      "Speak. If I must ask your business twice, make it worth the trouble.",
+      "Corin, Your Majesty. I have a question.",
+      "Corin. Still collecting answers you may not enjoy?",
+      "I'd rather hear them than guess.",
+      "A dragon at your side. You have made yourself difficult to overlook.",
+      "Corin. We came together."
     ]
   },
   "Demon": {
@@ -12810,70 +12810,70 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "14-remaining-cast.txt:57",
     "topics": [
       {
-        "title": "The keeper's part",
-        "opening": "What is your part in the trials?",
-        "first": "I arrange the contest and judge its end. I do not enter the fight disguised as its referee.",
+        "title": "The pleasure of a rule",
+        "opening": "Why do you bother with rules?",
+        "first": "Because watching someone choose is more interesting than simply devouring them. Rules give a contest its shape.",
         "replies": [
           [
-            "Why offer the trials?",
-            "To test strength under known terms. Your kingdom supplies enough surprises already."
+            "Do you obey them?",
+            "The trials' rules, yes. Otherwise your victories would be worthless and my amusement brief."
           ],
           [
-            "Can we refuse?",
-            "Before beginning, certainly. An unwilling contestant proves little worth observing."
+            "That doesn't make you trustworthy.",
+            "No. It makes this particular arrangement intelligible. Don't inflate a useful fact into a friendship."
           ],
           [
-            "Do you enjoy watching us struggle?",
-            "I enjoy a contest answered well. Pain alone is a dull performance."
+            "What do you get from it?",
+            "An answer to what you can survive when survival isn't being demanded of you."
           ]
         ]
       },
       {
-        "title": "The waves you summon",
-        "opening": "What exactly happens when I summon a wave?",
-        "first": "Each wave joins two lesser creatures with one stronger opponent. You must account for all three.",
+        "title": "An audience after death",
+        "opening": "Do you ever get bored?",
+        "first": "Dreadfully. Mortals imagine eternity as plenty of time. They rarely ask what happens when novelty becomes scarce.",
         "replies": [
           [
-            "Is defeating the largest enough?",
-            "No. The remaining creatures remain opponents, not scenery."
+            "Is that why you watch fights?",
+            "Partly. Courage remains interesting because it costs its owner something."
           ],
           [
-            "Can we return for another attempt?",
-            "Yes. Speak to me again when you choose."
+            "That sounds cruel.",
+            "It is certainly comfortable for the spectator. You are right to notice."
           ],
           [
-            "Should we prepare first?",
-            "I recommend arriving with the supplies you intend to use rather than an explanation of those you forgot."
+            "What else interests you?",
+            "A refusal made without fear. People so often need an excuse to leave."
           ]
         ]
       },
       {
-        "title": "The Cinderhold Seal",
-        "opening": "What is the Cinderhold Seal for?",
-        "first": "The seal calls me to the chamber adjoining Cinderhold's throne room. Place it in the pedestal there.",
+        "title": "The door you offer",
+        "opening": "What exactly does your seal open?",
+        "first": "The Cinderhold trials. Lesser creatures in pairs, greater ones alone. An invitation to a fight, not an obligation to accept it.",
         "replies": [
           [
-            "Will you follow us anywhere?",
-            "No. The seal has a particular purpose and a particular place."
+            "Can I return another time?",
+            "Yes. The seal is patient. I find patience easier when it belongs to an object."
           ],
           [
-            "Does taking it begin the trial?",
-            "No. You still speak to me and choose to begin."
+            "Does it change what we already won?",
+            "No. A finished struggle needn't be made unfinished to furnish another."
           ],
           [
-            "Why use the castle?",
-            "It has room for the contest. Its former owner's opinions are no longer required."
+            "Why would I accept?",
+            "Because you want to test yourselves. If you don't, you've already answered my offer."
           ]
         ]
       }
     ],
     "greetings": [
-      "You have survived a king. Do you seek another contest, or merely a conversation?",
-      "I would like to know who is offering it.",
-      "The traveller returns. I have not mistaken that for accepting a trial.",
-      "Good. I prefer choosing before the fighting starts.",
-      "A dragon and rider make a suitable pair for these trials.",
-      "Aurelius chooses whether to join me. Tell us what you offer."
+      "A visitor with a pulse. How reassuringly temporary. What shall I call you?",
+      "Corin. What should I call you?",
+      "Corin. Still interested in choices nobody forced upon you?",
+      "Some of them.",
+      "A dragon. Two formidable appetites, I imagine: his for food, yours for trouble.",
+      "I'm Corin. Don't confuse curiosity with agreement."
     ]
   },
   "Aurelius": {
@@ -12883,355 +12883,355 @@ const DIALOGUE_RENEWAL_CAST = {
     "source": "15-aurelius.txt:1",
     "topics": [
       {
-        "title": "Our bond / A voice without sound",
-        "opening": "Can you hear thoughts I haven't meant to share?",
-        "first": "When you speak toward me, I hear you. The rest of your thoughts aren't a room I can wander through.",
+        "title": "Between us / An unwanted rescue",
+        "opening": "Would you always rescue me, even if I told you not to?",
+        "first": "I'd want to. Then I'd have to work out whether you meant it or were trying to spare me a choice.",
         "replies": [
           [
-            "Can you tell when I'm hiding something?",
-            "Sometimes from your face. You have a particularly elaborate expression for 'nothing is wrong'."
+            "What if helping me put you in danger?",
+            "It often will. I'd still like to be consulted before you decide I'm too precious to help."
           ],
           [
-            "Could someone else hear us?",
-            "Not simply by standing nearby. This exchange belongs to our bond."
+            "I might be trying to protect you.",
+            "I know. We could make a dreadful team by protecting each other out of every conversation."
           ],
           [
-            "What does my voice sound like?",
-            "Like you, without the air between us. I still notice when you're trying not to laugh."
+            "Then we should have a signal.",
+            "A plain request would do. We spend enough time guessing what strangers mean."
           ]
         ]
       },
       {
-        "title": "Our bond / The memories you inherited",
-        "opening": "What is it like remembering lives you haven't lived?",
-        "first": "I remember places I've never stood. Then I turn my head and this body is the one that moves. That difference still surprises me.",
+        "title": "Between us / A day without words",
+        "opening": "Would you mind if I didn't want to talk for a whole day?",
+        "first": "I'd mind if you felt obliged to invent a reason. Quiet is quite comfortable when I know I'm welcome in it.",
         "replies": [
           [
-            "Do you remember being other dragons?",
-            "I receive fragments of their experience. I don't become the dragon who lived each one."
+            "You wouldn't think I was angry?",
+            "I might ask once. You could answer once. An efficient arrangement, almost suspiciously mature."
           ],
           [
-            "Can you choose what to remember?",
-            "Not reliably. A scent or a shape sometimes brings something forward; a direct question may bring nothing."
+            "Sometimes I don't know what's wrong.",
+            "Then you could say that. I won't demand a name before believing the feeling exists."
           ],
           [
-            "Does it make you lonely?",
-            "Occasionally. I can miss something I never personally had. Speaking to you helps me return to the present."
+            "Could you do the same for me?",
+            "Yes. Though you may have to resist solving me immediately. You're enthusiastic about repairs."
           ]
         ]
       },
       {
-        "title": "Our bond / Hatching beside me",
-        "opening": "What do you remember about hatching beside me?",
-        "first": "My first clear memory of this life is trying to stand while everyone watched. The ground felt much less cooperative than it looked.",
+        "title": "Between us / A terrible bargain",
+        "opening": "Would you ever wish you'd chosen somebody else?",
+        "first": "On a steep path, I occasionally wish I'd chosen somebody who packed less. That's as far as the fantasy goes.",
         "replies": [
           [
-            "Were you frightened of me?",
-            "Startled, mostly. You moved carefully. That gave me time to decide to stay near you."
+            "You could have anyone lighter.",
+            "And miss your expression when someone says something ridiculous? A poor exchange."
           ],
           [
-            "Did you know I'd become a rider?",
-            "I didn't emerge with a schedule, Corin. I wanted warmth, steadiness, and a person who wasn't grabbing at me."
+            "I'm serious.",
+            "So am I, underneath the teasing. I don't want an improved stranger. I want us to learn together."
           ],
           [
-            "Why did you follow me?",
-            "Because I wanted to. The bond grew from being together; it wasn't permission for somebody to claim me."
+            "I worry I'm not enough sometimes.",
+            "I didn't choose an amount, Corin. I chose a person."
           ]
         ]
       },
       {
-        "title": "Our bond / When we disagree",
-        "opening": "What happens when we disagree about where to go?",
-        "first": "I can carry you somewhere quickly and still think going there is a mistake. I'd rather say so before taking off.",
+        "title": "Between us / The word rider",
+        "opening": "Do you like people calling me your rider?",
+        "first": "When it describes what we do, yes. When it makes them speak to you as though I'm luggage, less so.",
         "replies": [
           [
-            "What if I think it's urgent?",
-            "Tell me why. Urgency deserves an explanation, not an end to the conversation."
+            "Should I correct them?",
+            "You can introduce me. I'll handle the rest when I can."
           ],
           [
-            "Will you ever refuse me?",
-            "Yes, if I think I must. I'd like you to be able to refuse me too."
+            "Does being called a companion suit you better?",
+            "Usually. It leaves more room for the days we do nothing impressive."
           ],
           [
-            "Does that worry you?",
-            "Less than a friendship where one of us is afraid to object."
+            "What should I call you?",
+            "Aurelius. You've had excellent results with that one."
           ]
         ]
       },
       {
-        "title": "Dragon life / Your first rain",
-        "opening": "How did your first rain compare with the memories you'd inherited?",
-        "first": "Old memories told me what rain was. They failed to mention how annoying a drop inside a nostril could be.",
+        "title": "Small wonders / A dragon's favourite smell",
+        "opening": "What's the best thing you've smelled so far?",
+        "first": "Supper when I hadn't realised how hungry I was. The world becomes wonderfully uncomplicated for a moment.",
         "replies": [
           [
-            "Did you enjoy any of it?",
-            "The smell afterward. Also watching you discover your coat wasn't as waterproof as advertised."
+            "That's not very mystical.",
+            "I apologise. Shall I claim it was starlight and disappoint my stomach?"
           ],
           [
-            "Do inherited memories leave out ordinary things?",
-            "Constantly. Nobody seems to have preserved a useful account of itching between scales."
+            "What smell do you dislike?",
+            "Fear on someone who is trying to be welcoming. I wish I could make introductions easier."
           ],
           [
-            "Would you like another rainy walk?",
-            "A short one, ending somewhere dry. Wisdom has developed remarkably specific conditions."
+            "Can you smell my fear?",
+            "Sometimes. I don't treat it as a confession you failed to conceal."
           ]
         ]
       },
       {
-        "title": "Dragon life / Being stared at",
-        "opening": "Does it bother you when people stare?",
-        "first": "I understand people staring. I still get tired of every arrival becoming a demonstration that dragons exist.",
+        "title": "Small wonders / A very bad hiding place",
+        "opening": "Where would you hide if you were my size?",
+        "first": "Somewhere everyone was too busy being important to look down. Humans overlook a remarkable amount beneath their own opinions.",
         "replies": [
           [
-            "Should I ask them to stop?",
-            "If they're crowding us. A little curiosity is easier when I can choose how close to stand."
+            "Under a table, then?",
+            "An excellent centre of unnoticed political life, I suspect."
           ],
           [
-            "Does admiration bother you too?",
-            "When it replaces listening. I can be admired and still want lunch or a quiet place."
+            "Where do you hide at your size?",
+            "With considerably less smugness. Trees help. Silence helps more."
           ],
           [
-            "What sort of greeting do you prefer?",
-            "My name, a little room, and a question that allows me an ordinary answer."
+            "Would you enjoy being small?",
+            "For an afternoon. I'd like to enter a room without the room becoming the subject."
           ]
         ]
       },
       {
-        "title": "Dragon life / A dream of landing",
-        "opening": "What do you dream about?",
-        "first": "I dreamed I couldn't land because every clear patch became water just before I reached it. I woke with my feet moving.",
+        "title": "Small wonders / The shape of boredom",
+        "opening": "Do you ever get bored waiting for me?",
+        "first": "Yes. Then I inspect something, imagine supper, or judge the doorway that has taken you hostage.",
         "replies": [
           [
-            "Was that an inherited memory?",
-            "I don't think so. Nan was organising the water, which seems unlikely in ancient history."
+            "Do you want me to hurry?",
+            "Sometimes. I also want you to enjoy talking to people. Two wants can occupy one dragon."
           ],
           [
-            "Were you frightened?",
-            "Mostly annoyed. I had apparently promised to arrive before supper."
+            "What do you inspect?",
+            "Clouds. Insects. Humans who glance at me and pretend they weren't. They're not convincing."
           ],
           [
-            "Do dragons always dream of flying?",
-            "No. I also dreamed of a fish that gave an extremely long speech. I blame your conversations."
+            "You could tell me when you've had enough.",
+            "I will. Before I begin naming the stones beneath my feet."
           ]
         ]
       },
       {
-        "title": "Dragon life / What you want",
-        "opening": "Where would you go if we could choose any destination?",
-        "first": "I'd like to choose a place because I want to see it, without first asking whether it makes us stronger.",
+        "title": "Small wonders / A name for the moon",
+        "opening": "Would you give the moon a different name?",
+        "first": "Something less solemn. Everybody looks at it as though it's about to deliver advice. Perhaps Turnip.",
         "replies": [
           [
-            "Where would you choose?",
-            "Somewhere with open water, good food, and no one who has prepared a prophecy for me."
+            "That ruins a great many poems.",
+            "Some could stand the improvement."
           ],
           [
-            "Would you want me there?",
-            "Yes. That part of the choice is easy."
+            "Why does solemn bother you?",
+            "It doesn't always. I simply dislike being told what feeling a beautiful thing requires."
           ],
           [
-            "What if I wanted to stay home?",
-            "Then we could discuss a shorter journey. Wanting something doesn't require deciding everything today."
+            "I think I'll keep moon.",
+            "Then we have reached a peaceful disagreement of enormous astronomical importance."
           ]
         ]
       },
       {
-        "title": "Travelling / A rider's balance",
-        "opening": "How can I make riding easier for you?",
-        "first": "When you tense every muscle, I feel you fighting the movement. Let your body follow mine before trying to correct it.",
+        "title": "On the road / A stop worth making",
+        "opening": "What would make you ask us to stop somewhere?",
+        "first": "Something neither of us had planned to see. I'd like our journey to contain a few things that aren't trying to improve us.",
         "replies": [
           [
-            "How do I learn that?",
-            "Start with gentle movement and tell me when you're uncertain. I can adjust if I know."
+            "Such as?",
+            "A good view. A peculiar tree. You laughing before you've remembered to worry."
           ],
           [
-            "Do I hurt you when I grip too hard?",
-            "You can make me uncomfortable. I'll tell you before discomfort turns into anger."
+            "We haven't always got time.",
+            "No. But sometimes we do, and keep walking out of habit."
           ],
           [
-            "Will I ever feel natural up there?",
-            "You already have moments when you stop thinking about it. We can build on those."
+            "Will you tell me when you notice?",
+            "Yes. You're allowed to say no. I'd just like us both to notice the choice."
           ]
         ]
       },
       {
-        "title": "Travelling / Fighting beside you",
-        "opening": "What do you need from me when we fight together?",
-        "first": "In a fight, I need room to turn and a clear sense of where you are. Charging after everything makes both harder.",
+        "title": "On the road / The story we tell later",
+        "opening": "How will we tell people about this journey afterward?",
+        "first": "You'll begin in the middle, remember three earlier things, and accuse me of interrupting when I repair the order.",
         "replies": [
           [
-            "Should I stay close?",
-            "Close enough to coordinate, with room to dodge. We can move together without standing on each other."
+            "That sounds unfairly plausible.",
+            "I've been gathering evidence."
           ],
           [
-            "What if I need you to breathe fire?",
-            "Use the breath command when it's ready. Give me a clear approach, and don't expect another breath before I've recovered."
+            "What will you leave out?",
+            "Perhaps the worst fear, at first. I'll need time before turning some moments into something listeners can carry."
           ],
           [
-            "Do you get frightened?",
-            "When I lose you among enemies. I won't disguise that as ancient wisdom."
+            "Will we tell it together?",
+            "I'd like that. You notice people; I notice the things above their heads."
           ]
         ]
       },
       {
-        "title": "Travelling / Food and recovery",
-        "opening": "How do I know when you need food or rest?",
-        "first": "Food helps me recover, and carrying it matters more than remembering it once I'm already hurt.",
+        "title": "On the road / The thing I watch",
+        "opening": "What do you watch while I'm busy watching the road?",
+        "first": "You, rather often. You get a particular set to your shoulders when you're determined not to ask for help.",
         "replies": [
           [
-            "What should I keep for you?",
-            "Fish or meat, raw or prepared. Use Items when I need healing."
+            "That must get tiresome.",
+            "Only when you insist the shoulders are lying."
           ],
           [
-            "What if you're knocked down?",
-            "Food that restores me can get me back up. Don't keep fighting as though I'm still beside you."
+            "What should I do differently?",
+            "Ask before the problem becomes proof of your character. Sometimes a heavy bag is simply heavy."
           ],
           [
-            "Would you prefer catching your own supper?",
-            "Some days. Your fishing rod does have a reassuring tendency to keep hooks away from my mouth."
+            "You can ask me too.",
+            "I intend to. Try not to look so delighted at being useful that I feel obliged to need rescuing."
           ]
         ]
       },
       {
-        "title": "Travelling / Slowing down",
-        "opening": "Will you tell me when we need to slow down?",
-        "first": "I notice when your steps shorten and you insist you aren't tired. You're not particularly convincing at that point.",
+        "title": "On the road / An ordinary tomorrow",
+        "opening": "What would a good ordinary day look like for us?",
+        "first": "Enough food. No pursuit. Somewhere you could walk without keeping a hand near your sword. I'd like to learn what we argue about then.",
         "replies": [
           [
-            "Are you telling me to stop?",
-            "I'm asking you to consider it before fatigue chooses for you."
+            "Probably whose turn it is to choose the route.",
+            "Good. A disagreement with a tolerable worst outcome."
           ],
           [
-            "Do you need rests too?",
-            "Yes. Wings and scales aren't an exemption from having a body."
+            "Would you miss the excitement?",
+            "I suspect excitement would miss us more than we'd miss it."
           ],
           [
-            "Could we have a quiet moment now?",
-            "Gladly. We don't need to fill every pause with a plan."
+            "I want that day.",
+            "So do I. We can want it without pretending it's already here."
           ]
         ]
       },
       {
-        "title": "History / Wingfall",
-        "opening": "What do you remember about Wingfall?",
-        "first": "Halvard belonged to the seven riders. He turned against the others, then made their bond a threat his kingdom was taught to fear.",
+        "title": "What survives / A dragon's witness",
+        "opening": "Whose memories do you trust most?",
+        "first": "The ones that admit what they didn't see. A memory with no gaps makes me suspicious; living is rarely so well arranged.",
         "replies": [
           [
-            "What do the dragon memories show?",
-            "Fragments of terror and broken trust. I won't pretend they form a complete witness account."
+            "Even your inherited memories?",
+            "Especially those. A powerful feeling can make a fragment seem complete."
           ],
           [
-            "Was he always cruel?",
-            "I don't have an honest answer. Knowing what he did doesn't tell me every earlier thought he had."
+            "Does that make knowing the past impossible?",
+            "No. It makes comparing accounts necessary. Certainty shouldn't arrive simply because a voice sounds ancient."
           ],
           [
-            "Could it happen again?",
-            "Power and trust will always need care. Remembering the betrayal should make people attentive, not obedient to another tyrant."
+            "What can you be certain of?",
+            "That I'm here with you. I begin there when the older voices crowd too close."
           ]
         ]
       },
       {
-        "title": "History / Ordinary rider work",
-        "opening": "What did riders do when they weren't fighting?",
-        "first": "The old riders carried news and searched for missing people. Songs prefer the battles because waiting and wrong turns make awkward verses.",
+        "title": "What survives / A king without an audience",
+        "opening": "What do you think Halvard is like when nobody's watching?",
+        "first": "I don't know. I'd rather not invent a private sadness that excuses what he does in public.",
         "replies": [
           [
-            "Would you have liked that work?",
-            "Some of it. Helping someone get home sounds worthwhile without needing an audience."
+            "I wasn't trying to excuse him.",
+            "I know. Curiosity is allowed. I only want to keep a guess from becoming an explanation we trust."
           ],
           [
-            "Were all the riders good people?",
-            "They were people. Their abilities didn't settle their judgement for them."
+            "Could he love his dragon?",
+            "He might. Loving someone doesn't prevent a person from being cruel to others."
           ],
           [
-            "What should we copy from them?",
-            "The useful work, examined honestly. We needn't inherit every custom along with the name."
+            "Does that make him harder to fight?",
+            "It makes him harder to reduce to a story. We still have to stop what he does."
           ]
         ]
       },
       {
-        "title": "History / What ruins leave out",
-        "opening": "What do the ruins leave out of their stories?",
-        "first": "A ruined hall preserves its size better than the voices that filled it. It's easy to imagine everyone solemn all the time.",
+        "title": "What survives / The unwritten names",
+        "opening": "Do dragons remember people the histories forgot?",
+        "first": "Sometimes a face without a name, or a hand held out with food. Such small things can remain after grander matters blur.",
         "replies": [
           [
-            "You think they laughed there?",
-            "Certainly. Somebody dropped supper in an important room. History rarely preserves the helpful details."
+            "I'd want to find their names.",
+            "So would I. We may never manage it, but wanting matters to how we listen."
           ],
           [
-            "Can your memories fill the gaps?",
-            "Some. They also leave out things dragons didn't notice."
+            "Were they riders?",
+            "Not all. Dragons met people who never climbed onto their backs."
           ],
           [
-            "How do we learn the rest?",
-            "Listen to the people who kept the stories, and ask where their accounts came from."
+            "What do you remember most clearly?",
+            "The feeling of being welcomed without being claimed. I understand it better now."
           ]
         ]
       },
       {
-        "title": "History / The other dragons",
-        "opening": "What do you know about the other dragons?",
-        "first": "I have memories of flight and hiding after Wingfall. I cannot turn them into a reliable map of where dragons live now.",
+        "title": "What survives / A future with no prophecy",
+        "opening": "What if there's no grand purpose behind us meeting?",
+        "first": "Then we met, and it changed our lives. That seems substantial without somebody having written it in advance.",
         "replies": [
           [
-            "Do you believe some survived?",
-            "I hope so. Hope isn't a location, however much I want one."
+            "Doesn't destiny make it less frightening?",
+            "Perhaps. It can also make people very comfortable asking you to suffer."
           ],
           [
-            "Would you want to find them?",
-            "Yes, without arriving as though they owed us a meeting."
+            "I'd like to know we matter.",
+            "To Nan, you already did. To me, you do. We needn't wait for the realm to vote."
           ],
           [
-            "Do you feel alone?",
-            "Sometimes. Less when you ask without immediately trying to solve it."
+            "So we decide what comes next?",
+            "As far as we can. The world will interrupt, but it doesn't get every word."
           ]
         ]
       },
       {
-        "title": "Us / Missing home",
-        "opening": "Do you miss home too?",
-        "first": "Home can arrive in a smell before you've decided you miss it. Woodsmoke sometimes does that to you; I can see your expression change.",
+        "title": "Just us / What I haven't told Nan",
+        "opening": "How do I tell Nan about the parts that frightened me?",
+        "first": "Begin with one true thing. You needn't empty the whole journey into her lap before she can hold your hand.",
         "replies": [
           [
-            "Does Millwood feel like home to you?",
-            "It's where this life began, and where people first learned my name. That matters."
+            "She'll worry more.",
+            "She already worries. Truth might give the worry a shape instead of leaving it everywhere."
           ],
           [
-            "I worry Nan thinks I don't want to return.",
-            "Then tell her what you miss. She deserves words more specific than 'I'm fine'."
+            "What if I cry?",
+            "Then she'll have her grandson in front of her instead of a brave report. I doubt she'll consider that a failure."
           ],
           [
-            "Can we enjoy travelling and still miss it?",
-            "We seem to be managing both already. I wouldn't call that a failure."
+            "Will you stay nearby?",
+            "Of course. I can be quiet company when it matters."
           ]
         ]
       },
       {
-        "title": "Us / A bad joke",
-        "opening": "Do dragons tell jokes?",
-        "first": "I've been trying to invent a joke about a dragon who hoards maps. Unfortunately every ending gets lost.",
+        "title": "Just us / The joke worth keeping",
+        "opening": "What's the funniest thing about travelling with me?",
+        "first": "The way you apologise to things you bump into. A tree received a very sincere explanation yesterday.",
         "replies": [
           [
-            "Was that the joke?",
-            "It was the best surviving attempt. You may assess it honestly."
+            "It startled me.",
+            "You startled it too, apparently. I'm glad you settled matters politely."
           ],
           [
-            "Why maps rather than gold?",
-            "Maps promise interesting places. Gold mostly promises someone asking where you keep it."
+            "You could have warned me.",
+            "I thought you'd seen it. It had made considerable effort to be a tree."
           ],
           [
-            "I think you should keep practising.",
-            "A supportive answer with a merciful absence of praise. I appreciate the distinction."
+            "You're never letting that go, are you?",
+            "Eventually. I expect you'll provide replacement material before then."
           ]
         ]
       }
     ],
     "greetings": [
-      "You went quiet. Was that thinking, or have you forgotten I can answer?",
-      "Thinking. I was getting to the part where I ask you.",
-      "There you are. I can hear you more clearly when you stop trying to ask three things at once.",
-      "I'll choose one to begin with.",
-      "I'm already here, Corin. You needn't introduce me to myself.",
-      "Fair point. I was practising."
+      "You're forming a question. I can tell by what your eyebrows are doing.",
+      "I didn't know they were involved.",
+      "Shall we talk before one of us decides the silence means something?",
+      "Probably wise.",
+      "Corin, you have my attention. You needn't clear your throat inside your own head.",
+      "I wasn't certain the first attempt worked."
     ]
   }
 };

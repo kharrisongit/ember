@@ -25,13 +25,13 @@ const Crafting=(()=>{
   ];
   const foods=[['boarMeat','Boar'],['hareMeat','Hare'],['deerMeat','Venison'],['foxMeat','Fox'],['birdMeat','Bird'],['dragonFish','Fish']];
   for(const [raw,name] of foods)recipes.push({id:'cooked_'+raw,name:raw==='dragonFish'?'Herb-baked Fish':'Roast '+name,teacher:'nan',cost:{[raw]:1,herb:1},kind:'cook',raw,effect:'Restores '+(raw==='dragonFish'?45:40)+' dragon HP and revives a fallen Aurelius.'});
-  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:"Start with a potion: two herbs and one bitterroot. You can gather them along the chest trail north of Millwood. My kit lets you brew or cook on the road; keep these recipes beside the ingredients."},
-    healer:{name:'Wren',where:'Thornwell market',line:"An elixir restores you fully. Three herbs, two sunblooms and one bitterroot; I’ll write it down so you aren’t trusting a tired memory in the dark."},
-    shroom:{name:'The Shroom King',where:'Sporehollow',line:"Three mushrooms and a bitterroot make Madness Dust. Grind them together and you can confuse nearby enemies into attacking one another. Mind where the powder goes."},
-    smith:{name:'Dunstan',where:'Forgewick smithy',line:"Keep mineral dust from the mines and golems. Two measures with two bitterroots make a Bell Stake to draw enemies. Two with a mushroom make a Grave Marker to recover lost gold."},
-    chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:"Use one measure of mineral dust and two sunblooms for consecration. Scatter it in an arena after clearing the enemies; they will not return to that ground."},
-    witch:{name:'Maelis',where:'Witchmoor',line:"My Curse needs two ghostcaps, two marsh reeds and one spirit essence. Brew it carefully. It opens a way out of an ordinary battle; don’t expect it to break the seal on a major fight."},
-    winter:{name:'Sverre',where:'Hollybeck',line:"Two snowbells, two frostberries and spirit essence make Saint’s Breath: sixteen seconds of protection. For a Resurrection Stone, use three mineral dust, two snowbells and one essence. That raises a fallen enemy to help you."}};
+  const teachers={nan:{name:'Nan',where:'Millwood — your home',line:"You'll want a potion first: two healing herbs, one bitterroot. The chest trail north of Millwood has both. For supper, one piece of raw meat or fish with one herb. Use the pot or grill in the kit; write the amounts where you'll find them."},
+    healer:{name:'Wren',where:'Thornwell market',line:"An elixir takes three healing herbs, two sunblooms and one bitterroot. It restores all your health. I'll put the amounts on paper; people remember the useful part and forget what goes in."},
+    shroom:{name:'The Shroom King',where:'Sporehollow',line:"Three mushrooms, one bitterroot. Grind them into Madness Dust. Nearby enemies become confused and fight each other. Keep your nose away while you work; your dignity is not an ingredient."},
+    smith:{name:'Dunstan',where:'Forgewick smithy',line:"Two mineral dust and two bitterroots make a Bell Stake; the ringing draws enemies. For a Grave Marker, use two mineral dust and one mushroom. That will recover gold you left when you fell. Different jobs, different mixtures."},
+    chapel:{name:'A chapel preacher',where:'Forgewick chapel or the secret desert chapel',line:"One mineral dust, two sunblooms: consecration. Clear the arena before scattering it. The enemies will not return to that ground. A quiet place is worth keeping quiet."},
+    witch:{name:'Maelis',where:'Witchmoor',line:"Two ghostcaps, two marsh reeds, one spirit essence. That is my Curse. Brew it and you can escape an ordinary fight. A major battle stays sealed, so don't walk into one expecting this to excuse you."},
+    winter:{name:'Sverre',where:'Hollybeck',line:"Saint's Breath takes two snowbells, two frostberries and one spirit essence: sixteen seconds without damage. A Resurrection Stone needs three mineral dust, two snowbells and one essence. It raises a fallen enemy to help you. Label the recipes; those are very different surprises."}};
   const fresh=()=>({version:2,kit:false,ingredients:{},cooked:{},learned:[],harvested:{},starter:false,kills:0,mastered:{},seenHelp:false,pending:null});
   const coopStates=new Map();let coopOwner=null;
   let state=fresh(),session=null,opened=false,vendor=null,nodes=[],art=null,artReady=false;
@@ -125,9 +125,9 @@ const Crafting=(()=>{
   }
   function topics(n){
     const group=teacherFor(n);if(!state.kit||!group||n.n==='Nan Ferrow'&&!templeCompass.morningMet)return [];
-    return [{title:state.learned.includes(group)?'Let’s look at my recipes':'Will you teach me to craft?',category:'lead',friendship:false,go:()=>{
+    return [{title:state.learned.includes(group)?"Checking the recipe book":"A lesson for the road",category:'lead',friendship:false,go:()=>{
       askShut();window.EmberConversationFlow?.shut();sayNpc=null;scene=null;sayOff();
-      playScene([n.n+': '+teachers[group].line,"Corin: Let me write that down before I muddle the amounts."],{npcActor:n,who:n.n,after:()=>{learn(group);open();}});
+      playScene([n.n+': '+teachers[group].line,"Corin: Wait, I'll copy the quantities. I'd rather ask twice than get them wrong."],{npcActor:n,who:n.n,after:()=>{learn(group);open();}});
     }}];
   }
   function useFood(id){

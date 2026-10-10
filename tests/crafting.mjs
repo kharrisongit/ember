@@ -56,7 +56,7 @@ reset();run('Crafting.skip();Crafting.open();Crafting.start("potion")');
 run('Crafting.tick(NaN);Crafting.tick(-1)');assert.equal(run('Crafting.current().progress'),0);
 reset();
 for(const [n,group,packSpr] of [['Nan Ferrow','nan'],['Wren','healer'],['The Shroom King','shroom'],['Dunstan','smith'],['Brother Edrin','chapel','chapel_priest'],['Maelis','witch'],['Sverre','winter']]){
- run(`scene=null;sayNpc=null;Crafting.close();Crafting.restore({starter:true});var teacher={n:${JSON.stringify(n)},packSpr:${JSON.stringify(packSpr)},x:100,y:100};var topic=npcStoryTopics(teacher).find(t=>t.title==='Will you teach me to craft?');`);
+ run(`scene=null;sayNpc=null;Crafting.close();Crafting.restore({starter:true});var teacher={n:${JSON.stringify(n)},packSpr:${JSON.stringify(packSpr)},x:100,y:100};var topic=npcStoryTopics(teacher).find(t=>t.title==='A lesson for the road');`);
  assert(run('!!topic'),n+' has recipe topic in actual conversation');
  run('topic.go();var finishLesson=scene.after;scene=null;sayNpc=null;finishLesson()');
  assert(run(`Crafting.capture().learned.includes('${group}')`));assert(run('Crafting.active()'),n+' opens book after lesson');

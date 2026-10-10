@@ -39,11 +39,11 @@ for(const name of names){
   }
  }
 }
-assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].opening"),'Why do people call you wicked?');
-assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].title"),'Your reputation');
-assert.equal(run("DialogueRenewal.cast.Ned.topics[1].title"),"My father's hands",'Corin asks Ned about Corin’s father');
+assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].opening"),'Do people ever invite you to celebrations?');
+assert.equal(run("DialogueRenewal.cast.Maelis.topics[0].title"),'The invitation nobody sent');
+assert.equal(run("DialogueRenewal.cast.Ned.topics[1].title"),"The father's favour",'Corin asks Ned about Corin’s father');
 run('wonAll=true');
-assert.equal(run("DialogueRenewal.topics({n:'Bess'},{all:true})[2].opening"),'Will the people who supplied Halvard’s meals finally be paid?');
+assert.equal(run("DialogueRenewal.topics({n:'Bess'},{all:true})[2].opening"),'What would a good evening look like now?');
 run('wonAll=false');
 // Church NPCs remain world conversations, including their ritual.
 reset();for(const name of json('Object.keys(DIALOGUE_CHURCH_LINES)')){
@@ -53,7 +53,7 @@ reset();for(const name of json('Object.keys(DIALOGUE_CHURCH_LINES)')){
 }
 // Aurelius uses the full telepathic screen and real choice branches.
 reset();run(`npcs=[];dragon.down=false;dragon.air=false;dragon.placed=MAPID;ride=null;doorMotion=null;fadeDir=0;editing=false;arenaLock=null;foes=[];lastFight=0;openDragonConversation();`);assert(run('ask.dragonConversation&&EmberConversationFlow.active()'));
-run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='Our bond');askTake();EmberConversationFlow.openChat();askPick=1;askTake();typeAll();scene.t=1;EmberConversationFlow.advance()`);assert(run('ask.replyChoices&&scene.telepathy'));
+run(`EmberConversationFlow.openChat();askPick=ask.opts.findIndex(o=>o.n==='Between us');askTake();EmberConversationFlow.openChat();askPick=1;askTake();typeAll();scene.t=1;EmberConversationFlow.advance()`);assert(run('ask.replyChoices&&scene.telepathy'));
 run('askPick=2;askTake();typeAll();scene.t=1;EmberConversationFlow.advance()');assert.equal(run('typeWho'),'Aurelius');
 // Waiting at doors does not repeat a single automatic exchange, including after save restoration.
 reset();run('dragonBanterQuiet=0');

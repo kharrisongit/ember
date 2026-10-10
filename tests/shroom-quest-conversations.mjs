@@ -37,7 +37,7 @@ box.querySelector('.conversationPanelFooter').querySelector('button').onclick({s
 assert(!run('EmberConversationPanels.isOpen()'));
 assert.equal(box.querySelector('.conversationPlayer').getAttribute('inert'),undefined);
 box.querySelector('.conversationChat').onclick({stopPropagation(){}});
-const storyIndex=run('ask.opts.findIndex(o=>o.friendshipId==="renewal-0")');
+const storyIndex=run('ask.opts.findIndex(o=>o.friendshipId==="renewal-v2-0")');
 box.querySelectorAll('.deckTopic').find(b=>Number(b.dataset.askIndex)===storyIndex).onclick({stopPropagation(){}});
 assert(run('scene?.conversationReplies'),'King topics start normally');
 run('typeAll();scene.t=1;EmberConversationFlow.next()');
@@ -47,7 +47,7 @@ assert.equal(run('typeWho'),'Corin');
 run('typeAll();scene.t=1;EmberConversationFlow.next();typeAll();scene.t=1;EmberConversationFlow.next()');
 assert.equal(gifts,1,'Optional topics never grant a duplicate gift');
 run('scene=null;sayNpc=null;askShut();quest=Q.FLED;EmberConversationFlow.prompt(mosslet)');
-assert(run('scene.lines.some(l=>l.includes("Tell our king"))&&!EmberConversationFlow.active()'));
+assert(run('scene.lines.some(l=>/tell our king/i.test(l))&&!EmberConversationFlow.active()'));
 finishScene();assert(run('discussedTopics.has("Mosslet:return")'));
 run('EmberConversationFlow.prompt(mosslet)');finishScene();
 assert(run('ask.conversationPrompt'),'Mosslet keeps optional conversations after both required clues');

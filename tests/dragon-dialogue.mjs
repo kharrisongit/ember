@@ -35,8 +35,8 @@ c.P.y=6337;assert.equal(run('stepDragonIntroduction()'),false,'Allow eighteen ti
 c.P.y=6338;c.hatchCamera={};assert.equal(run('stepDragonIntroduction()'),false);c.hatchCamera=null;
 c.P.moving=false;assert.equal(run('stepDragonIntroduction()'),false);c.P.moving=true;
 assert.equal(run('stepDragonIntroduction()'),true);
-assert.match(pendingScene.lines[0],/voice.*inside your head/);
-assert(pendingScene.lines.join(' ').includes('shared consciousness'));
+assert.match(pendingScene.lines[0],/voice.*Corin's thoughts/);
+assert.match(pendingScene.lines.join(' '),/share(?:d| a) consciousness/);
 assert(!pendingScene.lines.some(line=>/COMMAND|Mount|ride you/i.test(line)),'Introduction does not teach riding');
 pendingScene.after();pendingScene=null;assert.equal(menu,null);
 assert.equal(run('stepDragonIntroduction()'),false,'Only once');
