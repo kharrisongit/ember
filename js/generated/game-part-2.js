@@ -7230,10 +7230,17 @@ function playScene(lines, opts) {
   P.moving = false;
   walker = scene.offscreen ? null : scene.npcActor || speakerNamed(scene.who);
   if (walker) {
+    if (scene.conversationGreeting) {
+      // A player-initiated greeting interrupts the NPC's patrol. Waiting for
+      // that route can deadlock when Corin blocks it while dialogue owns input.
+      walker.goto = null;
+      walker.arrived = true;
+      faceSceneSpeaker(walker);
+    }
     faceCorinAt(walker.x, walker.y);
     const dx = walker.x - P.x, dy = walker.y - P.y;
     const d = Math.max(1, Math.hypot(dx, dy));
-    if (!scene.npcActor && d > 46 && !walker.goto && !walker.stationary) {
+    if (!scene.conversationGreeting && !scene.npcActor && d > 46 && !walker.goto && !walker.stationary) {
       if (!walker.home) walker.home = [walker.x, walker.y];
       const px = -dy / d, py = dx / d;      /* perpendicular, unit length */
       const side = (walker.x >= P.x) ? 1 : -1;
@@ -7242,7 +7249,7 @@ function playScene(lines, opts) {
     }
   }
   // Finish an approach before revealing or accepting input on its first line.
-  scene.arriving = !scene.hatch && !!(walker?.goto || walker?.houseWalk);
+  scene.arriving = !scene.hatch && !scene.conversationGreeting && !!(walker?.goto || walker?.houseWalk);
   showScene();
 }
 function sendWalkerHome(stay) {

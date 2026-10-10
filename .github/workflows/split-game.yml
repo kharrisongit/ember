@@ -49,6 +49,7 @@ jobs:
           CONVERSATION_ARTIFACTS: conversation-test-results
         run: |
           python3 -m http.server 8765 >/tmp/conversation-http.log 2>&1 &
+          node tests/greeting-patrol-browser.mjs
           PLAYWRIGHT_BROWSER=chromium node tests/conversation-browser.mjs
           PLAYWRIGHT_BROWSER=webkit node tests/conversation-browser.mjs
       - uses: actions/upload-artifact@v4
@@ -75,6 +76,8 @@ jobs:
           node-version: '22'
       - name: Check the scripts loaded by the game
         run: node tools/check-game-scripts.mjs
+      - name: Check greetings interrupt blocked NPC patrols
+        run: node tests/greeting-patrol.mjs
       - name: Check save recovery and fallen co-op dialogue
         run: |
           node tests/audit-2026-10-09.mjs
