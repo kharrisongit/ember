@@ -17,8 +17,12 @@ function prepareShroomLookout(){
   if(MAPID!=='world')return;
   for(const n of npcs)if(n.shroomLookout){n.stationary=true;n.goto=null;}
 }
+function shroomLookoutCluePending(n){
+  return !!n?.shroomLookout&&!discussedTopics.has(quest>=Q.FLED?'Mosslet:return':'Mosslet:crash');
+}
 function talkShroomLookout(n){
   if(!n?.shroomLookout)return false;
+  const memory=quest>=Q.FLED?'Mosslet:return':'Mosslet:crash';
   const heard=discussedTopics.has('Mosslet:crash');
   const lines=quest>=Q.FLED?[
     "Mosslet: You're back. I was beginning to regret not going after you.",
@@ -34,7 +38,8 @@ function talkShroomLookout(n){
     "Mosslet: Speak with the Shroom King before going on. Our village is through here, beneath the great caps. He'll know what help we can offer.",
     "Corin: That's worth a short detour. I'll go to him first."
   ];
-  faceToward(n,P.x,P.y);playScene(lines,{who:n.n,npcActor:n,after:()=>{discussedTopics.add('Mosslet:crash');saveGame();}});return true;
+  clearPadInputs();running=false;P.act=null;P.moving=false;n.goto=null;
+  faceToward(n,P.x,P.y);playScene(lines,{who:n.n,npcActor:n,after:()=>{discussedTopics.add(memory);saveGame();}});return true;
 }
 
 // Reserve the doorstep and approach to each mushroom house for the player.

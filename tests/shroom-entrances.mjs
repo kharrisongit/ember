@@ -7,7 +7,7 @@ const game=await loadEditorGame(process.cwd(),{log(){},warn(){}},{furniture:fals
 const world=JSON.parse(game.run('JSON.stringify(W.maps.world)'));
 const c=vm.createContext({MAPID:'world',MD:world,TS:16,P:{x:0,y:0},Q:{ARMED:6,FLED:7},
  npcs:world.npcs.filter(n=>/^shroom_/.test(n.sk||'')),discussedTopics:new Set(),isSolid:()=>false,
- geometryEdits:{},npcCollisionActor:null,faceToward(){},saveGame(){}});
+ geometryEdits:{},npcCollisionActor:null,clearPadInputs(){},faceToward(){},saveGame(){}});
 const run=s=>vm.runInContext(s,c);
 run(source.slice(source.indexOf('function doorRect('),source.indexOf('function collisionOverride(')));
 run(source.slice(source.indexOf('function canNpcStand('),source.indexOf('function repairSeating(')));

@@ -46,6 +46,7 @@ function prepareDialoguePortraitCast(m,id) {
   }
 }
 FACE_OF.Edwin=184;
+FACE_OF.Mosslet=FACE_OF.Pip;
 const PORTRAIT_FILES={Maelis:'maelis-full-hat',Edwin:'edwin',Dunstan:'dunstan','Elder Maddock':'maddock',Sverre:'hollybeck-sverre',Runa:'hollybeck-runa',Tobin:'hollybeck-tobin',Aurelius:'aurelius',Fen:'fen','Rowan the Hunter':'rowan',Isolde:'isolde',Linna:'linna',Bevan:'bevan',Ovid:'ovid',Prue:'prue','Cartwright Oswin':'oswin'};
 for(const [index,person]of (typeof REGIONAL_VILLAGERS==='undefined'?[]:REGIONAL_VILLAGERS).entries()){
   PORTRAIT_FILES[person.name]='regional/'+person.id;
@@ -93,7 +94,9 @@ function portraitFor(who) {
   if(CHAPEL_PORTRAITS[name])return CHAPEL_PORTRAITS[name];
   if(name==='Corin'){const custom=window.EmberPlayerIdentity?.portrait(undefined,typeof smithUpgrade!=='undefined'&&!!smithUpgrade);if(custom)return custom;}
   if(name==='Corin'&&typeof smithUpgrade!=='undefined'&&smithUpgrade)return {id:133,pack:8,cell:0};
-  const portrait=DIALOGUE_PORTRAITS[name];
+  // Mosslet's authored map placements share Pip's mushroom artwork, while his
+  // speaker name, lookout profile and conversation history remain his own.
+  const portrait=DIALOGUE_PORTRAITS[name==='Mosslet'?'Pip':name];
   if(PORTRAIT_FILES[name])return {...(portrait||{id:FACE_OF[name]??(name==='Tobin'?135:134)}),src:'assets/portraits/'+PORTRAIT_FILES[name]+'.webp?v=20260930-hatless-farmer'};
   return portrait||null;
 }

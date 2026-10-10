@@ -41,10 +41,15 @@
         const pixels=g.getImageData(0,0,w,h),data=pixels.data,base=colors.find(c=>c.id===p.hair).rgb;
         // Both outfits use their exact original portrait. Only the cool plum
         // hair pixels above the face/ears change; geometry and alpha never do.
-        const bounds=p.armored?{x0:.29,x1:.73,y0:.14,y1:.53}:{x0:.28,x1:.81,y0:.025,y1:.50};
-        const back=p.armored?[[67,57],[81,62],[81,72],[85,82],[82,91],[69,93],[64,83]]:[[63,53],[77,53],[79,67],[83,75],[74,83],[63,81]];
+        // Coordinates are in the original 192px portrait cell. The old rear
+        // polygons extended below the hair onto both outfits' raised collars.
+        const bounds=p.armored?{x0:.29,x1:.73,y0:.14,y1:84/192}:{x0:.28,x1:.81,y0:.025,y1:77/192};
+        const back=p.armored?[[67,57],[76,57],[77,67],[80,73],[84,75],[83,81],[81,84],[78,83],[72,79],[68,72]]:[[63,50],[77,50],[77,59],[80,64],[84,66],[84,72],[81,77],[76,77],[70,68],[66,62]];
         const inBack=(x,y)=>{x=x*192/w;y=y*192/h;let inside=false;for(let i=0,j=back.length-1;i<back.length;j=i++){const [a,b]=back[i],[c,d]=back[j];if((b>y)!==(d>y)&&x<(c-a)*(y-b)/(d-b)+a)inside=!inside;}return inside;};
         if(base)for(let y=Math.floor(h*bounds.y0);y<h*bounds.y1;y++)for(let x=Math.floor(w*bounds.x0);x<w*bounds.x1;x++){
+          // Beneath the ears only the rear locks are hair. Never tint the neck,
+          // collar, or shoulders even when their shadows share the hair hue.
+          if(y*192/h>=(p.armored?79:65)&&!inBack(x,y))continue;
           const i=(y*w+x)*4,r=data[i],green=data[i+1],b=data[i+2];
           if(!data[i+3]||r<8||(!inBack(x,y)&&(b<green*1.05||r<green*1.06||b<r*.70||b>r*1.32)))continue;
           const light=(r*.28+green*.5+b*.22)/74;

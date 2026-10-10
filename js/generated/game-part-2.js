@@ -11932,6 +11932,8 @@ function canCamperGiveFishingPole(n) {
 }
 function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     if(beginThroneConfrontation(best))return;
+    if(shroomLookoutCluePending(best)){talkShroomLookout(best);return;}
+    if(best.n==='The Shroom King'&&best.charm&&!charm[best.charm])greetingOnly=true;
     if(typeof DialogueRenewal!=="undefined"){
       if(!greetingOnly&&DialogueRenewal.profile(best)&&DialogueRenewal.open(best))return;
       if(DialogueRenewal.church(best)){

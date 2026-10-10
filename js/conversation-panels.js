@@ -14,6 +14,13 @@
     const box=document.getElementById('bagAsk');for(const child of box.children){child.removeAttribute('inert');child.removeAttribute('aria-hidden');}
     returnFocus?.focus?.();returnFocus=null;window.EmberConversationFlow?.sync();return true;
   }
+  function mount(box=document.getElementById('bagAsk')){
+    if(!panel)return;
+    // askDraw replaces the deck's children. Keep the help dialog attached and
+    // protect the new controls as well, or an invisible modal blocks all taps.
+    for(const child of box.children)if(child!==panel){child.setAttribute('inert','');child.setAttribute('aria-hidden','true');}
+    box.appendChild(panel);
+  }
   function open(which='friendship'){
     if(panel)return;
     const box=document.getElementById('bagAsk');kind=which;returnFocus=document.activeElement;
@@ -56,8 +63,7 @@
     }
     const footer=node('footer','conversationPanelFooter');footer.append(button(which==='tutorial'?'Got it — let’s talk':'Back to conversation',()=>close()));
     panel.append(header,body,footer);
-    for(const child of box.children){child.setAttribute('inert','');child.setAttribute('aria-hidden','true');}
-    box.append(panel);title.tabIndex=-1;title.focus?.({preventScroll:true});panel.scrollTop=0;
+    mount(box);title.tabIndex=-1;title.focus?.({preventScroll:true});panel.scrollTop=0;
   }
   function key(e){
     if(!panel)return false;
@@ -75,5 +81,5 @@
     if(k.startsWith('arrow')){e.preventDefault();panel.querySelector('.conversationPanelBody').scrollTop+=(k==='arrowdown'?72:k==='arrowup'?-72:0);return true;}
     return true;
   }
-  window.EmberConversationPanels={open,close,key,isOpen:()=>!!panel};
+  window.EmberConversationPanels={open,close,mount,key,isOpen:()=>!!panel};
 })();

@@ -163,6 +163,7 @@
       rows.append(b);
     }
     workspace.scrollTop=oldScroll||0;updateTopicScrollHint();
+    window.EmberConversationPanels?.mount(box);
   }
   window.EmberConversationDeck={draw,prompt,visible,category,back};
 })();

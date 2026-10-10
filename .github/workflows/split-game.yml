@@ -80,6 +80,8 @@ jobs:
           node tests/quest-notifications.mjs
           node tests/millwood-shroom-dialogue.mjs
           node tests/shroom-entrances.mjs
+          node tests/shroom-quest-conversations.mjs
+          node tests/portrait-hair-mask.mjs
           node tests/chest-access.mjs
           node tests/crafting.mjs
           node tests/odo-hatch-gate.mjs

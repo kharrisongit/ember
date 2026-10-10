@@ -6,12 +6,16 @@
   const isMenu=menu=>!!(menu?.npcConversation||menu?.dragonConversation);
   function prompt(actor,{dragon:telepathy=false,talk,leave,greeted=false}={}){
     if(!telepathy&&beginThroneConfrontation(actor))return true;
+    // Required Shroom Pass beats precede the optional social catalogue.
+    if(!telepathy&&shroomLookoutCluePending(actor))return talkShroomLookout(actor);
+    if(!telepathy&&actor?.n==='The Shroom King'&&actor.charm&&!charm[actor.charm]){
+      beginNpcTalk(actor,true);return true;
+    }
     if(typeof DialogueRenewal!=="undefined"){
       if(!telepathy&&DialogueRenewal.church(actor))return false;
       const subject=telepathy?{...actor,n:'Aurelius'}:actor;
       if(DialogueRenewal.profile(subject))return DialogueRenewal.prompt(subject,{dragon:telepathy,talk,leave,greeted});
     }
-    if(!telepathy&&talkShroomLookout(actor))return true;
     if(!telepathy&&actor?.n==='King Halvard'&&MAPID!=='tavern')return false;
     clearPadInputs();running=false;P.act=null;P.moving=false;
     // Fen's gift used to bypass introductions and prepend a familiar greeting.

@@ -6,7 +6,7 @@ scene=null;ask=null;sayNpc=null;P.act=null;ride=null;fade=0;fadeDir=0;doorMotion
 for(const name of ['faceToward','faceCorinAt','dragonConversationReaction','saveGame'])c[name]=()=>{};
 for(const name of ['interactTrialPedestal','tryFerrySign','ferryTry','tryHouseLootChest','tryTreasuryChest','tryExpandedTempleLever','tryTempleLever','tryCellarSupplies','tryChest','itemAt','questTalk'])c[name]=()=>false;
 let rewards=0;c.showReveal=()=>rewards++;
-for(const [name,key] of [['The Shroom King','spore'],['Fen','twin'],['Maelis','ward'],['Rashida','brand'],['Sverre','lamp']]){
+for(const [name,key] of [['Fen','twin'],['Maelis','ward'],['Rashida','brand'],['Sverre','lamp']]){
  c.actor={n:name,charm:key,x:100,y:100,d:[name+': Take this for your journey.']};
  run('scene=null;ask=null;sayNpc=null;EmberConversationFlow.prompt(actor)');
  assert(run('scene?.conversationGreeting'),name+' begins with the new introduction');
@@ -17,11 +17,11 @@ for(const [name,key] of [['The Shroom King','spore'],['Fen','twin'],['Maelis','w
  run('askShut();beginNpcTalk(actor,true)');
  assert(run('sayNpc===actor'),name+' explicit gift starts the authored offer');
  assert(run('actor.said.some(s=>/equip|key item/i.test(s))'));
- assert.equal(rewards,['spore','twin','ward','brand','lamp'].indexOf(key),'No reward before the greeting and offer finish');
+ assert.equal(rewards,['twin','ward','brand','lamp'].indexOf(key),'No reward before the greeting and offer finish');
  for(let i=0;i<30&&run('!!sayNpc');i++)run('typeAll();interact()');
  assert(run(`charm.${key}`),name+' awards the item after greeting');
  const before=rewards;run('beginNpcTalk(actor,true)');
  for(let i=0;i<30&&run('!!sayNpc');i++)run('typeAll();interact()');
  assert.equal(rewards,before,name+' never awards the gift twice');
 }
-console.log('PASS: five gift givers have full conversation menus and explicit offers, granting each reward once.');
+console.log('PASS: four optional gift givers have full conversation menus and explicit offers, granting each reward once.');
