@@ -168,7 +168,10 @@
     accountBusy=true;
     const provider=new sdk.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});
     // The popup opens directly from the button gesture (important on mobile Safari).
-    return sdk.signInWithPopup(auth,provider).catch(fail).finally(()=>{accountBusy=false;render();});
+    const operation=window.LDRNativeSignIn
+      ?window.LDRNativeSignIn().then(token=>sdk.signInWithCredential(auth,sdk.GoogleAuthProvider.credential(token)))
+      :sdk.signInWithPopup(auth,provider);
+    return operation.catch(fail).finally(()=>{accountBusy=false;render();});
   }
   async function signOut(){
     if(playing()||busy)return;

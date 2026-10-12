@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   if(typeof CanvasRenderingContext2D==='undefined')return;
-  const ENDPOINT=location.hostname==='localhost'||location.hostname==='127.0.0.1'?location.origin:'https://ldr-coop-preview.onrender.com';
+  const ENDPOINT=!window.LDRNativeApp&&(location.hostname==='localhost'||location.hostname==='127.0.0.1')?location.origin:'https://ldr-coop-preview.onrender.com';
   const el=(tag,text)=>{const node=document.createElement(tag);if(text)node.textContent=text;return node;};
   const button=(text,fn)=>{const node=el('button',text);node.type='button';node.addEventListener('click',fn);return node;};
   let client,room,active=false,hosting=false,connecting=false,reconnecting=false,leaving=false,players=[],hostId='',uid='',seq=0,commandSeq=0,frameAt=0,syncAt=0,saveAt=0,pendingSave=false,latestSave=null,campaignId='',cloudSlot=0,remoteSize={w:640,h:480},startPromise=null,ready=false,controllerState=null;
