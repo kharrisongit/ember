@@ -13,6 +13,6 @@ LDR_VERSION=1.0.0 LDR_BUILD=1 native/build.sh
 native/smoke.sh
 ```
 
-The device build creates `native/build/LastDragonrider.ipa`. AltStore signs it during installation. The icon reuses the game's flame favicon. The workflow in `kharrisongit/Opalinetest/.github/workflows/last-dragonrider.yml` builds the current game commit, checks an actual iOS simulator (including launch, local audio, and storage across relaunch), publishes a release, then updates the existing shared source. Game snapshots are identified in the release notes and `source/dragonrider/build.json`.
+The device build creates `native/build/LastDragonrider.ipa`. AltStore signs it during installation. The icon reuses the exact Corin/Aurelius raised-wing silhouette from the title screen. `native/render-icon.mjs` recreates the master PNG from that sprite frame; it needs `@napi-rs/canvas` when regenerating artwork, but regular app builds use the committed PNG and have no Node dependency. The workflow in `kharrisongit/Opalinetest/.github/workflows/last-dragonrider.yml` builds the current game commit, checks an actual iOS simulator (including launch, local audio, and storage across relaunch), publishes a release, then updates the existing shared source. Game snapshots are identified in the release notes and `source/dragonrider/build.json`.
 
 The release build excludes the `DEBUG` smoke-test code. It does not need JIT, an Apple developer team in CI, or unrestricted file/network access entitlements. iOS 15 or newer is required.
