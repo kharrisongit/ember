@@ -2553,6 +2553,7 @@ const whyBlocked = (px, py) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return "off the map";
   if(progressionSolid(px,py))return "roadworks";
+  if (odoShuts(x, y)) return "odo";
   if (solid[y * MW + x] === 1) return "solid[]";
   if (blockedByTrialPedestal(px, py)) return "trial pedestal";
   if (blockedByNpcBuffer(px, py)) return "npc half-tile buffer";
@@ -2567,7 +2568,6 @@ const whyBlocked = (px, py) => {
   }
   if (fenceAt && fenceAt.has(y * MW + x)) return "fence list";
   if (blockedByGuard(x, y)) return "guard";
-  if (odoShuts(x, y)) return "odo";
   if (blockedByItem(x, y)) return "item";
   if (blockedByHerd(x, y)) return "herd";
   return "not blocked";
@@ -2576,6 +2576,8 @@ const isSolid = (px, py, ignoreNpcBuffer = false, navigation = false) => {
   const x = Math.floor(px / TS), y = Math.floor(py / TS);
   if (x < 0 || y < 0 || x >= MW || y >= MH) return true;
   if(progressionSolid(px,py)||nanMorningSolid(px,py)||greenNorthBlocked(px,py))return true;
+  // Walkable bridge edits change the terrain, never the pre-hatch story gate.
+  if (odoShuts(x, y)) return true;
   const override=collisionOverride(px,py);if(override!==undefined)return override;
   if (MAPID === "witchmoor" && wonAll && px >= 184 && px < 213 && py >= 282 && py < 311) return true;
   const wallEdit=editedTempleWallCollision(px,py);if(wallEdit===true)return true;
@@ -2600,7 +2602,6 @@ const isSolid = (px, py, ignoreNpcBuffer = false, navigation = false) => {
   }
   if (fenceAt && fenceAt.has(y * MW + x)) return true;
   if (!navigation && blockedByGuard(x, y)) return true;
-  if (odoShuts(x, y)) return true;
   if (blockedByItem(x, y)) return true;
   return blockedByHerd(x, y);
 };
@@ -6472,35 +6473,32 @@ const MAD_DOOR_TILE = [54, 373];
 const ELDER_WELL = [48, 373];
 
 const ODO_BRIDGE = { x0: 45, x1: 49, y0: 432, y1: 435 };
-let odoSaid = 0, odoNearBridge = false;
+const ODO_BRIDGE_LINE = "Odo: Not now Corin! I’m trying to catch a big one!";
+let odoNearBridge = false;
 function odoBlocks() {
   return !hasDragon();
 }
 function odoShuts(x, y) {
   if (!odoBlocks() || MAPID !== "world") return false;
-  const fisher = npcs.find(m => (m.n || "") === "Odo");
-  const from = fisher ? Math.floor(fisher.x / TS) : ODO_BRIDGE.x0;
-  return x >= from && x <= ODO_BRIDGE.x1 &&
+  // Cover the whole crossing independently of Odo's position or editor moves.
+  return x >= ODO_BRIDGE.x0 && x <= ODO_BRIDGE.x1 &&
          y >= ODO_BRIDGE.y0 && y <= ODO_BRIDGE.y1;
 }
 
 function odoTurnsYouBack() {
-  if (!odoBlocks() || MAPID !== "world" || scene) return false;
+  if (!odoBlocks() || MAPID !== "world") { odoNearBridge = false; return false; }
   const tx = P.x / TS, ty = (P.y - 1) / TS;
-  const fisher0 = npcs.find(m => (m.n || "") === "Odo");
-  const hx = fisher0 ? fisher0.x / TS : 47;
-  const near = tx > hx - 2.2 && tx < ODO_BRIDGE.x1 + 1.6 &&
-               ty > ODO_BRIDGE.y0 - 0.5 && ty < ODO_BRIDGE.y1 + 0.5;
-  if (!near) return false;
+  // Trigger on the reachable approach, before Corin's feet meet the gate.
+  const near = tx >= ODO_BRIDGE.x0 - 1 && tx <= ODO_BRIDGE.x1 + 2 &&
+               ty >= ODO_BRIDGE.y0 - 1 && ty <= ODO_BRIDGE.y1 + 2;
+  if (!near) { odoNearBridge = false; return false; }
+  if (mode !== "play" || editing || scene || sayNpc || ask || bagOpen || ovl || atlasOpen) return false;
+  if (odoNearBridge) return true;
   const fisher = npcs.find(m => (m.n || "") === "Odo");
   if (!fisher) return false;
-  if (!odoSaid) {
-    odoSaid = 1;
-    faceToward(fisher, P.x, P.y);
-    playScene([
-      "Odo: A little quieter, Corin. The fish needn't know there's a village meeting up here.",
-    ]);
-  }
+  odoNearBridge = true;
+  faceToward(fisher, P.x, P.y);
+  playScene([ODO_BRIDGE_LINE], {who:'Odo', npcActor:fisher});
   return true;
 }
 
@@ -10908,6 +10906,7 @@ function standUp() {
 function blockReason(px, py) {
   if(px<0||py<0||px>=MW*TS||py>=MH*TS)return "edge";
   if(progressionSolid(px,py))return "story";
+  if (odoShuts(Math.floor(px / TS), Math.floor(py / TS))) return "odo";
   const override=collisionOverride(px,py);if(override!==undefined)return override?"custom":null;
   if(blockedByNpcBody(px,py)||blockedByNpcBuffer(px,py))return "npc";
   if(MD.roomBlocks?.some(r=>px>=r[0]&&px<r[2]&&py>=r[1]&&py<r[3]))return "furniture";
@@ -10931,7 +10930,6 @@ function blockReason(px, py) {
   }
   if (fenceAt && fenceAt.has(y * MW + x)) return "fence";
   if (blockedByGuard(x, y)) return "guard";
-  if (odoShuts(x, y)) return "odo";
   if (blockedByItem(x, y)) return "item";
   if (blockedByHerd(x, y)) return "herd";
   return null;
@@ -11953,7 +11951,7 @@ function beginNpcTalk(best, greetingOnly=false, rodRequest=false) {
     }
     if(best.n==='Odo'&&!hasDragon()){
       askShut();sayOff();P.moving=false;faceToward(best,P.x,P.y);
-      playScene(["Odo: A little quieter, Corin. The fish needn't know there's a village meeting up here."],{who:'Odo'});
+      playScene([ODO_BRIDGE_LINE],{who:'Odo',npcActor:best});
       return;
     }
     if(talkShroomLookout(best))return;
